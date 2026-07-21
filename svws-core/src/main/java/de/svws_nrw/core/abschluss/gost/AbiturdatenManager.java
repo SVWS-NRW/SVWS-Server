@@ -205,7 +205,9 @@ public class AbiturdatenManager {
 	private @NotNull List<GostBelegpruefung> getPruefungenAbi2030(final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		final @NotNull ArrayList<GostBelegpruefung> pruefungen = new ArrayList<>();
 		pruefungen.add(new Abi30BelegpruefungDeutsch(this, pruefungsArt));
-		final @NotNull Abi30BelegpruefungFremdsprachen pruefungFremdsprachen = new Abi30BelegpruefungFremdsprachen(this, pruefungsArt);
+		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
+		pruefungen.add(pruefungProjektkurse);
+		final @NotNull Abi30BelegpruefungFremdsprachen pruefungFremdsprachen = new Abi30BelegpruefungFremdsprachen(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(pruefungFremdsprachen);
 		pruefungen.add(new Abi30BelegpruefungLatinum(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
@@ -213,8 +215,6 @@ public class AbiturdatenManager {
 		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefungNaturwissenschaften = new Abi30BelegpruefungNaturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
 		pruefungen.add(new Abi30BelegpruefungSport(this, pruefungsArt));
-		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
-		pruefungen.add(pruefungProjektkurse);
 		// Die Prüfung zu dem Schwerpunkt muss nach den Prüfungen des naturwissenschaftlichen und der Fremdsprachen durchgeführt werden, da hier eine Abhängigkeit besteht.
 		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
 		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt, pruefungProjektkurse));
@@ -1952,15 +1952,30 @@ public class AbiturdatenManager {
 			if (zaehleBelegung(fb) <= 0) {
 				continue;
 			}
-			final GostFach fach = getFach(fb);
-			if ((fach != null) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach))
-					&& (fach.biliSprache != null) && (!"D".equals(fach.biliSprache))) {
+			if (istFachbelegungBilingualesSachfach(fb)) {
 				result.add(fb);
 			}
 		}
 		return result;
 	}
 
+
+
+	/**
+	 * Prüft, ob es sich bei der übergebenen Fachbelegung um eine bilinguale Belegung handelt oder nicht.
+	 *
+	 * @param fachbelegung   die Fachbelegung
+	 *
+	 * @return true, wenn es sich bei der Fachbelegung um die Belegung eines bilingualen Sachfaches handelt.
+	 */
+	public final boolean istFachbelegungBilingualesSachfach(final AbiturFachbelegung fachbelegung) {
+		if (fachbelegung == null) {
+			return false;
+		}
+		final GostFach fach = getFach(fachbelegung);
+		return (fach != null) && (!"PX".equals(fach.kuerzel)) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach))
+				&& (fach.biliSprache != null) && (!"D".equals(fach.biliSprache));
+	}
 
 
 	/**
@@ -2403,12 +2418,14 @@ public class AbiturdatenManager {
 			}
 			// Prüfe die Belegungen der Referenzfächer und deren Schriftlichkeit
 			final AbiturFachbelegung referenzfach1 = getFachbelegungByID(fach.projektKursLeitfach1ID);
-			if ((referenzfach1 != null) && pruefeBelegungMitKursart(referenzfach1, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
+			if ((referenzfach1 != null)
+					&& pruefeBelegungMitKursart(referenzfach1, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
 					&& pruefeBelegungMitSchriftlichkeit(referenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;
 			}
 			final AbiturFachbelegung referenzfach2 = getFachbelegungByID(fach.projektKursLeitfach2ID);
-			if ((referenzfach2 != null) && pruefeBelegungMitKursart(referenzfach2, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
+			if ((referenzfach2 != null)
+					&& pruefeBelegungMitKursart(referenzfach2, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
 					&& pruefeBelegungMitSchriftlichkeit(referenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return kursart;
 			}

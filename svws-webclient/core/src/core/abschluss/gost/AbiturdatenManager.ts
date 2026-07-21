@@ -226,7 +226,9 @@ export class AbiturdatenManager extends JavaObject {
 	private getPruefungenAbi2030(pruefungsArt: GostBelegpruefungsArt): List<GostBelegpruefung> {
 		const pruefungen: ArrayList<GostBelegpruefung> = new ArrayList<GostBelegpruefung>();
 		pruefungen.add(new Abi30BelegpruefungDeutsch(this, pruefungsArt));
-		const pruefungFremdsprachen: Abi30BelegpruefungFremdsprachen = new Abi30BelegpruefungFremdsprachen(this, pruefungsArt);
+		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
+		pruefungen.add(pruefungProjektkurse);
+		const pruefungFremdsprachen: Abi30BelegpruefungFremdsprachen = new Abi30BelegpruefungFremdsprachen(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(pruefungFremdsprachen);
 		pruefungen.add(new Abi30BelegpruefungLatinum(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungLiterarischKuenstlerisch(this, pruefungsArt));
@@ -234,8 +236,6 @@ export class AbiturdatenManager extends JavaObject {
 		const pruefungNaturwissenschaften: Abi30BelegpruefungNaturwissenschaften = new Abi30BelegpruefungNaturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
 		pruefungen.add(new Abi30BelegpruefungSport(this, pruefungsArt));
-		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = new Abi30BelegpruefungProjektkurse(this, pruefungsArt);
-		pruefungen.add(pruefungProjektkurse);
 		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
 		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt, pruefungProjektkurse));
 		pruefungen.add(new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
@@ -1847,12 +1847,26 @@ export class AbiturdatenManager extends JavaObject {
 			if (this.zaehleBelegung(fb) <= 0) {
 				continue;
 			}
-			const fach: GostFach | null = this.getFach(fb);
-			if ((fach !== null) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach)) && (fach.biliSprache !== null) && (!JavaObject.equalsTranspiler("D", (fach.biliSprache)))) {
+			if (this.istFachbelegungBilingualesSachfach(fb)) {
 				result.add(fb);
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Prüft, ob es sich bei der übergebenen Fachbelegung um eine bilinguale Belegung handelt oder nicht.
+	 *
+	 * @param fachbelegung   die Fachbelegung
+	 *
+	 * @return true, wenn es sich bei der Fachbelegung um die Belegung eines bilingualen Sachfaches handelt.
+	 */
+	public istFachbelegungBilingualesSachfach(fachbelegung: AbiturFachbelegung | null): boolean {
+		if (fachbelegung === null) {
+			return false;
+		}
+		const fach: GostFach | null = this.getFach(fachbelegung);
+		return (fach !== null) && (!JavaObject.equalsTranspiler("PX", (fach.kuerzel))) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach)) && (fach.biliSprache !== null) && (!JavaObject.equalsTranspiler("D", (fach.biliSprache)));
 	}
 
 	/**

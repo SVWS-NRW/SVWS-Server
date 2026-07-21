@@ -1,8 +1,8 @@
 {
-  "erfolgreich" : true,
+  "erfolgreich" : false,
   "fehlercodes" : [ {
-    "code" : "BIL_11_INFO",
-    "art" : "HINWEIS",
+    "code" : "BIL_11",
+    "art" : "BELEGUNG",
     "beschreibung" : "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt."
   }, {
     "code" : "NW_FS_13_INFO",

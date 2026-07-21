@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../../core/data/gost/GostFach';
+import { Abi30BelegpruefungProjektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungProjektkurse';
 import { GostAbiturFach } from '../../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostFachUtils } from '../../../../../core/utils/gost/GostFachUtils';
@@ -48,11 +49,12 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	/**
 	 * Erstellt eine neue Belegprüfung für die Fremdsprachen.
 	 *
-	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager                der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungProjektkurse   das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public constructor(manager: AbiturdatenManager, pruefungsArt: GostBelegpruefungsArt) {
-		super(manager, pruefungsArt);
+	public constructor(manager: AbiturdatenManager, pruefungsArt: GostBelegpruefungsArt, pruefungProjektkurse: Abi30BelegpruefungProjektkurse) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 	protected init(): void {
@@ -309,8 +311,8 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.GOST30_BIL_15);
 			return;
 		}
-		if (this._biliSachfaecher.size() < 2) {
-			this.addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
+		if ((this.manager.faecher().getBilingualeSachfaecher(biligualeSprache).size() > 1) && (this._biliSachfaecher.size() < 2)) {
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_11);
 		}
 	}
 
@@ -551,9 +553,12 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.GOST30_BIL_15);
 			return;
 		}
-		if (biliSachfaecherEF.size() < 2) {
-			this.addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
+		if ((this.manager.faecher().getBilingualeSachfaecher(biligualeSprache).size() > 1) && (biliSachfaecherEF.size() < 2)) {
+			this.addFehler(GostBelegungsfehler.GOST30_BIL_11);
 		}
+		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse(this.pruefungen_vorher[0]));
+		const projektkurs: AbiturFachbelegung | null = pruefungProjektkurse.getProjektkurs();
+		const referenzFach: AbiturFachbelegung | null = ((projektkurs !== null) && (projektkurs.idReferenzfach !== null)) ? this.manager.getFachbelegungByID(projektkurs.idReferenzfach) : null;
 		let hatBiliSachfaecherDurchgehendSchriftlich: boolean = false;
 		if (this._biliSachfaecher !== null) {
 			for (const fach of this._biliSachfaecher) {
@@ -562,11 +567,14 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 					break;
 				}
 			}
+			if (!hatBiliSachfaecherDurchgehendSchriftlich && (projektkurs !== null) && (referenzFach !== null) && this.manager.istFachbelegungBilingualesSachfach(referenzFach) && this.manager.pruefeBelegung(referenzFach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12) && this.manager.pruefeBelegungMitSchriftlichkeit(referenzFach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
+				hatBiliSachfaecherDurchgehendSchriftlich = true;
+			}
 		}
 		if (!hatBiliSachfaecherDurchgehendSchriftlich) {
 			this.addFehler(GostBelegungsfehler.GOST30_BIL_12);
 		}
-		if (!this.manager.pruefeExistiertAbiFach(this._biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4)) {
+		if (!this.manager.pruefeExistiertAbiFach(this._biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4, GostAbiturFach.AB5) && ((projektkurs === null) || (referenzFach === null) || !this.manager.istFachbelegungBilingualesSachfach(referenzFach))) {
 			this.addFehler(GostBelegungsfehler.GOST30_BIL_13);
 		}
 	}

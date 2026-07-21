@@ -35,11 +35,14 @@ public class GostFaecherManager {
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<Long, GostFach> mapIdFachNachFach = new HashMap<>();
 
+	/** Eine HashMap für den schnellen Zugriff auf die bilingualen Sachfächer zu einem Fremdsprachenkürzel */
+	private final @NotNull HashMap<String, List<GostFach>> mapSprachkuerzelNachBiliSachfaecher = new HashMap<>();
+
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches */
 	private final @NotNull HashMap<String, List<GostFach>> mapStatistikKuerzelNachListFach = new HashMap<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels */
-	private final @NotNull HashMap<String, List<GostFach>> mapSprachenKuerzelNachListFach = new HashMap<>();
+	private final @NotNull HashMap<String, List<GostFach>> mapSprachkuerzelNachListFach = new HashMap<>();
 
 	/** Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen. */
 	private final @NotNull List<GostFach> listLeitfaecher = new ArrayList<>();
@@ -129,14 +132,26 @@ public class GostFaecherManager {
 		}
 		listForKuerzel.add(fach);
 		if (fach.istFremdsprache && fke.istFremdsprache) {
-			List<GostFach> listForSprachkuerzel = mapSprachenKuerzelNachListFach.get(fke.kuerzel);
+			List<GostFach> listForSprachkuerzel = mapSprachkuerzelNachListFach.get(fke.kuerzel);
 			if (listForSprachkuerzel == null) {
 				listForSprachkuerzel = new ArrayList<>();
-				mapSprachenKuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
+				mapSprachkuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
 		}
+
+		// Ergänze das Fach in der Liste der bilingualen Sachfächer für die entsprechende Fremdsprache
+		if (!"PX".equals(fach.kuerzel) && !GostFachbereich.FREMDSPRACHE.hat(fach) && !GostFachbereich.DEUTSCH.hat(fach)
+				&& (fach.biliSprache != null) && !"D".equals(fach.biliSprache)) {
+			final List<GostFach> sachfaecher = mapSprachkuerzelNachBiliSachfaecher.computeIfAbsent(fach.biliSprache, f -> new ArrayList<>());
+			if (sachfaecher != null) {
+				sachfaecher.add(fach);
+			}
+		}
+
+		// Füge das Fach zu der allgemeinen Liste der Fächer hinzu
 		final boolean added = listFaecher.add(fach);
+
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			final Fachgruppe fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr);
@@ -144,6 +159,7 @@ public class GostFaecherManager {
 				listLeitfaecher.add(fach);
 			}
 		}
+
 		return added;
 	}
 
@@ -306,7 +322,7 @@ public class GostFaecherManager {
 	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
 	 */
 	public @NotNull List<GostFach> getBySprachkuerzel(final @NotNull String sprache) {
-		final List<GostFach> faecher = mapSprachenKuerzelNachListFach.get(sprache);
+		final List<GostFach> faecher = mapSprachkuerzelNachListFach.get(sprache);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
@@ -359,6 +375,22 @@ public class GostFaecherManager {
 
 
 	/**
+	 * Gibt die Liste der bilingualen Sachfächer für das übergebene einstellige Sprachkürzel zurück.
+	 *
+	 * @param sprachkuerzel   das einstellige Sprachkürzel
+	 *
+	 * @return die Liste der bilingualen Sachfächer
+	 */
+	public @NotNull List<GostFach> getBilingualeSachfaecher(final String sprachkuerzel) {
+		if (sprachkuerzel == null) {
+			return new ArrayList<>();
+		}
+		final List<GostFach> result = mapSprachkuerzelNachBiliSachfaecher.get(sprachkuerzel);
+		return (result == null) ? new ArrayList<>() : result;
+	}
+
+
+	/**
 	 * Gibt eine Liste aller Fremdsprachen-Kürzel zurück, welche bei
 	 * den im Manager enthaltenen Fächer definiert sind.
 	 *
@@ -366,7 +398,7 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<String> getFremdsprachenkuerzel() {
 		final @NotNull List<String> result = new ArrayList<>();
-		result.addAll(mapSprachenKuerzelNachListFach.keySet());
+		result.addAll(mapSprachkuerzelNachListFach.keySet());
 		result.sort((final @NotNull String a, final @NotNull String b) -> a.compareToIgnoreCase(b));
 		return result;
 	}
