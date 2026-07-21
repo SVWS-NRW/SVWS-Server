@@ -62,12 +62,13 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 	/**
 	 * Erstellt eine neue Belegprüfung für den Bereich der Gesellschaftswissenschaften und Religion.
 	 *
-	 * @param manager        der Daten-Manager für die Abiturdaten
-	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager                der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungProjektkurse   das Ergebnis für die Belegprüfung der Projektkurse
 	 */
 	public Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(final @NotNull AbiturdatenManager manager,
-			final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		super(manager, pruefungsArt);
+			final @NotNull GostBelegpruefungsArt pruefungsArt, final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 
@@ -197,6 +198,18 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		if (manager.pruefeBelegungExistiertDurchgehendSchriftlich(religion)) {
 			return;
 		}
+		// Behandlung des Spezialfalles, dass die einzige durchgängige schriftliche Belegung durch einen Projektkurs als 5.-tem Abiturfach erfüllt wird
+		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = ((@NotNull Abi30BelegpruefungProjektkurse) pruefungen_vorher[0]);
+		final AbiturFachbelegung projektkurs = pruefungProjektkurse.getProjektkurs();
+		final GostFach referenzFach = ((projektkurs != null) && (projektkurs.idReferenzfach != null)) ? manager.faecher().get(projektkurs.idReferenzfach) : null;
+		if ((projektkurs != null) && (referenzFach != null) && (projektkurs.abiturFach == 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
+			final AbiturFachbelegung fachbelegung = manager.getFachbelegungByID(referenzFach.id);
+			if ((manager.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
+					&& (manager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))) {
+				return;
+			}
+		}
+
 		// Behandlung des Spezialfalles bei Philosophie, wenn diese die einzige Gesellschaftswissenschaft ist, aber in der EF nicht unbedingt schriftlich belegt ist
 		if (manager.pruefeBelegung(philosophie, GostHalbjahr.getQualifikationsphase())
 				&& manager.pruefeBelegungMitSchriftlichkeit(philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12,

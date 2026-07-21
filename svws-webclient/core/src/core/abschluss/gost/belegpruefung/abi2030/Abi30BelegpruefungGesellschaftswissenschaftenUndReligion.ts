@@ -1,5 +1,6 @@
 import { GostFach } from '../../../../../core/data/gost/GostFach';
 import { Fach } from '../../../../../asd/types/fach/Fach';
+import { Abi30BelegpruefungProjektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse } from '../../../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungProjektkurse';
 import { AbiturFachbelegung } from '../../../../../core/data/gost/AbiturFachbelegung';
 import { GostFachUtils } from '../../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../../java/util/ArrayList';
@@ -56,11 +57,12 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 	/**
 	 * Erstellt eine neue Belegprüfung für den Bereich der Gesellschaftswissenschaften und Religion.
 	 *
-	 * @param manager        der Daten-Manager für die Abiturdaten
-	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager                der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungProjektkurse   das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public constructor(manager: AbiturdatenManager, pruefungsArt: GostBelegpruefungsArt) {
-		super(manager, pruefungsArt);
+	public constructor(manager: AbiturdatenManager, pruefungsArt: GostBelegpruefungsArt, pruefungProjektkurse: Abi30BelegpruefungProjektkurse) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 	protected init(): void {
@@ -159,6 +161,15 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		}
 		if (this.manager.pruefeBelegungExistiertDurchgehendSchriftlich(this.religion)) {
 			return;
+		}
+		const pruefungProjektkurse: Abi30BelegpruefungProjektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungProjektkurse(this.pruefungen_vorher[0]));
+		const projektkurs: AbiturFachbelegung | null = pruefungProjektkurse.getProjektkurs();
+		const referenzFach: GostFach | null = ((projektkurs !== null) && (projektkurs.idReferenzfach !== null)) ? this.manager.faecher().get(projektkurs.idReferenzfach) : null;
+		if ((projektkurs !== null) && (referenzFach !== null) && (projektkurs.abiturFach === 5) && GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(referenzFach)) {
+			const fachbelegung: AbiturFachbelegung | null = this.manager.getFachbelegungByID(referenzFach.id);
+			if ((this.manager.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))) {
+				return;
+			}
 		}
 		if (this.manager.pruefeBelegung(this.philosophie, ...GostHalbjahr.getQualifikationsphase()) && this.manager.pruefeBelegungMitSchriftlichkeit(this.philosophie, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;

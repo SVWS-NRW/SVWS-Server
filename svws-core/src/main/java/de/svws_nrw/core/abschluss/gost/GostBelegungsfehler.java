@@ -293,7 +293,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt GW_12 */
 	GOST30_GW_12("GW_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden.",
+			"Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 für eine Belegung als Abiturfach schriftlich belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt IGF_10 */
@@ -523,8 +523,8 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt WAEHLBARKEIT_0 */
 	GOST30_WAEHLBARKEIT_0("WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
-			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.",
-			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist."),
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist."),
 
 	/** BelegungsfehlerArt WAEHLBARKEIT_1 */
 	GOST30_WAEHLBARKEIT_1("WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
@@ -1091,8 +1091,8 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt WAEHLBARKEIT_0 */
 	WAEHLBARKEIT_0("WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
-			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.",
-			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist."),
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist."),
 
 	/** BelegungsfehlerArt WAEHLBARKEIT_1 */
 	WAEHLBARKEIT_1("WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,

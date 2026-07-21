@@ -281,7 +281,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt GW_12
 	 */
-	public static readonly GOST30_GW_12: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GW_12", 53, "GW_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden.", null);
+	public static readonly GOST30_GW_12: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GW_12", 53, "GW_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 für eine Belegung als Abiturfach schriftlich belegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt IGF_10
@@ -511,7 +511,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_0
 	 */
-	public static readonly GOST30_WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("GOST30_WAEHLBARKEIT_0", 99, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.");
+	public static readonly GOST30_WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("GOST30_WAEHLBARKEIT_0", 99, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_1
@@ -1077,7 +1077,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_0
 	 */
-	public static readonly WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_0", 212, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.");
+	public static readonly WAEHLBARKEIT_0: GostBelegungsfehler = new GostBelegungsfehler("WAEHLBARKEIT_0", 212, "WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.", "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnasialen Oberstufe vorhanden ist.");
 
 	/**
 	 * BelegungsfehlerArt WAEHLBARKEIT_1

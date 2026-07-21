@@ -62,8 +62,8 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 	/**
 	 * Erstellt eine neue Belegprüfung für die Projektkurse.
 	 *
-	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager                 der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt            die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
 	 */
 	public Abi30BelegpruefungAbiFaecher(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt,
