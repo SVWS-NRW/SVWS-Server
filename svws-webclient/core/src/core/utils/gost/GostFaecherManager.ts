@@ -39,6 +39,11 @@ export class GostFaecherManager extends JavaObject {
 	private readonly mapIdFachNachFach: HashMap<number, GostFach> = new HashMap<number, GostFach>();
 
 	/**
+	 * Eine HashMap für den schnellen Zugriff auf die bilingualen Sachfächer zu einem Fremdsprachenkürzel
+	 */
+	private readonly mapSprachkuerzelNachBiliSachfaecher: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
+
+	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches
 	 */
 	private readonly mapStatistikKuerzelNachListFach: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
@@ -46,7 +51,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels
 	 */
-	private readonly mapSprachenKuerzelNachListFach: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
+	private readonly mapSprachkuerzelNachListFach: HashMap<string, List<GostFach>> = new HashMap<string, List<GostFach>>();
 
 	/**
 	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
@@ -153,12 +158,18 @@ export class GostFaecherManager extends JavaObject {
 		}
 		listForKuerzel.add(fach);
 		if (fach.istFremdsprache && fke.istFremdsprache) {
-			let listForSprachkuerzel: List<GostFach> | null = this.mapSprachenKuerzelNachListFach.get(fke.kuerzel);
+			let listForSprachkuerzel: List<GostFach> | null = this.mapSprachkuerzelNachListFach.get(fke.kuerzel);
 			if (listForSprachkuerzel === null) {
 				listForSprachkuerzel = new ArrayList();
-				this.mapSprachenKuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
+				this.mapSprachkuerzelNachListFach.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
+		}
+		if (!JavaObject.equalsTranspiler("PX", (fach.kuerzel)) && !GostFachbereich.FREMDSPRACHE.hat(fach) && !GostFachbereich.DEUTSCH.hat(fach) && (fach.biliSprache !== null) && !JavaObject.equalsTranspiler("D", (fach.biliSprache))) {
+			const sachfaecher: List<GostFach> | null = this.mapSprachkuerzelNachBiliSachfaecher.computeIfAbsent(fach.biliSprache, { apply: (f: string | null) => new ArrayList() });
+			if (sachfaecher !== null) {
+				sachfaecher.add(fach);
+			}
 		}
 		const added: boolean = this.listFaecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
@@ -326,7 +337,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
 	 */
 	public getBySprachkuerzel(sprache: string): List<GostFach> {
-		const faecher: List<GostFach> | null = this.mapSprachenKuerzelNachListFach.get(sprache);
+		const faecher: List<GostFach> | null = this.mapSprachkuerzelNachListFach.get(sprache);
 		return (faecher === null) ? new ArrayList() : faecher;
 	}
 
@@ -376,6 +387,21 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Liste der bilingualen Sachfächer für das übergebene einstellige Sprachkürzel zurück.
+	 *
+	 * @param sprachkuerzel   das einstellige Sprachkürzel
+	 *
+	 * @return die Liste der bilingualen Sachfächer
+	 */
+	public getBilingualeSachfaecher(sprachkuerzel: string | null): List<GostFach> {
+		if (sprachkuerzel === null) {
+			return new ArrayList();
+		}
+		const result: List<GostFach> | null = this.mapSprachkuerzelNachBiliSachfaecher.get(sprachkuerzel);
+		return (result === null) ? new ArrayList() : result;
+	}
+
+	/**
 	 * Gibt eine Liste aller Fremdsprachen-Kürzel zurück, welche bei
 	 * den im Manager enthaltenen Fächer definiert sind.
 	 *
@@ -383,7 +409,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getFremdsprachenkuerzel(): List<string> {
 		const result: List<string> = new ArrayList<string>();
-		result.addAll(this.mapSprachenKuerzelNachListFach.keySet());
+		result.addAll(this.mapSprachkuerzelNachListFach.keySet());
 		result.sort({ compare: (a: string, b: string) => JavaString.compareToIgnoreCase(a, b) });
 		return result;
 	}

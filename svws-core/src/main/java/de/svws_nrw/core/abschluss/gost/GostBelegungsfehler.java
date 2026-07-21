@@ -151,10 +151,10 @@ public enum GostBelegungsfehler {
 			"Im bilingualen Bildungsgang muss die bilinguale Fremdsprache in EF.1 und EF.2 schriftlich und in Q1.1 bis Q2.2 als Leistungskurs belegt werden.",
 			"Im bilingualen Bildungsgang muss die bilinguale Fremdsprache schriftlich belegt werden."),
 
-	/** BelegungsfehlerArt BIL_11_INFO */
-	GOST30_BIL_11_INFO("BIL_11_INFO", GostBelegungsfehlerArt.HINWEIS,
+	/** BelegungsfehlerArt BIL_11 */
+	GOST30_BIL_11("BIL_11", GostBelegungsfehlerArt.BELEGUNG,
 			"Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt.",
-			"Im bilingualen Bildungsgang sollten zwei bilinguale Sachfächer belegt werden."),
+			"Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt."),
 
 	/** BelegungsfehlerArt BIL_12 */
 	GOST30_BIL_12("BIL_12", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,

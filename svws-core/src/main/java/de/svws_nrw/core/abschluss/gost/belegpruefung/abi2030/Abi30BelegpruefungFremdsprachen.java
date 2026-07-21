@@ -55,11 +55,13 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	/**
 	 * Erstellt eine neue Belegprüfung für die Fremdsprachen.
 	 *
-	 * @param manager         der Daten-Manager für die Abiturdaten
-	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param manager                der Daten-Manager für die Abiturdaten
+	 * @param pruefungsArt           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
+	 * @param pruefungProjektkurse   das Ergebnis für die Belegprüfung der Projektkurse
 	 */
-	public Abi30BelegpruefungFremdsprachen(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		super(manager, pruefungsArt);
+	public Abi30BelegpruefungFremdsprachen(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt,
+			final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse) {
+		super(manager, pruefungsArt, pruefungProjektkurse);
 	}
 
 
@@ -429,8 +431,8 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob nur ein bilinguales Sachfach gewählt wurde.
-		if (_biliSachfaecher.size() < 2) {
-			addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
+		if ((manager.faecher().getBilingualeSachfaecher(biligualeSprache).size() > 1) && (_biliSachfaecher.size() < 2)) {
+			addFehler(GostBelegungsfehler.GOST30_BIL_11);
 		}
 	}
 
@@ -819,9 +821,15 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob nur ein bilinguales Sachfach in der EF gewählt wurde.
-		if (biliSachfaecherEF.size() < 2) {
-			addFehler(GostBelegungsfehler.GOST30_BIL_11_INFO);
+		if ((manager.faecher().getBilingualeSachfaecher(biligualeSprache).size() > 1) && (biliSachfaecherEF.size() < 2)) {
+			addFehler(GostBelegungsfehler.GOST30_BIL_11);
 		}
+
+		// Der Projektkurs muss bei der Prüfung des bilingualen Bildungsganges beachtet werden
+		final @NotNull Abi30BelegpruefungProjektkurse pruefungProjektkurse = ((@NotNull Abi30BelegpruefungProjektkurse) pruefungen_vorher[0]);
+		final AbiturFachbelegung projektkurs = pruefungProjektkurse.getProjektkurs();
+		final AbiturFachbelegung referenzFach =
+				((projektkurs != null) && (projektkurs.idReferenzfach != null)) ? manager.getFachbelegungByID(projektkurs.idReferenzfach) : null;
 
 		// Prüfe, ob mindestens eines der Sachfächer von EF.1 bis Q2.2 belegt und von Q1.1 bis Q2.1 schriftlich belegt wurde
 		boolean hatBiliSachfaecherDurchgehendSchriftlich = false;
@@ -832,13 +840,21 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 					break;
 				}
 			}
+			// Prüfe, ob die Bedingung durch einen Projektkurs als 5.-tem Abiturfach erfüllt werden kann
+			if (!hatBiliSachfaecherDurchgehendSchriftlich && (projektkurs != null) && (referenzFach != null)
+					&& manager.istFachbelegungBilingualesSachfach(referenzFach)
+					&& manager.pruefeBelegung(referenzFach, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)
+					&& manager.pruefeBelegungMitSchriftlichkeit(referenzFach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
+				hatBiliSachfaecherDurchgehendSchriftlich = true;
+			}
 		}
 		if (!hatBiliSachfaecherDurchgehendSchriftlich) {
 			addFehler(GostBelegungsfehler.GOST30_BIL_12);
 		}
 
-		// Prüfe, ob ein zum bilingualen Bildungsgang zugehöriges Sachfach 3. oder 4. Abiturfach ist
-		if (!manager.pruefeExistiertAbiFach(_biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4)) {
+		// Prüfe, ob ein zum bilingualen Bildungsgang zugehöriges Sachfach 3., 4. oder 5. Abiturfach ist
+		if (!manager.pruefeExistiertAbiFach(_biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4, GostAbiturFach.AB5)
+				&& ((projektkurs == null) || (referenzFach == null) || !manager.istFachbelegungBilingualesSachfach(referenzFach))) {
 			addFehler(GostBelegungsfehler.GOST30_BIL_13);
 		}
 	}

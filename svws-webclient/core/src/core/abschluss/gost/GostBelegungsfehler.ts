@@ -139,9 +139,9 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	public static readonly GOST30_BIL_10: GostBelegungsfehler = new GostBelegungsfehler("GOST30_BIL_10", 24, "BIL_10", GostBelegungsfehlerArt.BELEGUNG, "Im bilingualen Bildungsgang muss die bilinguale Fremdsprache in EF.1 und EF.2 schriftlich und in Q1.1 bis Q2.2 als Leistungskurs belegt werden.", "Im bilingualen Bildungsgang muss die bilinguale Fremdsprache schriftlich belegt werden.");
 
 	/**
-	 * BelegungsfehlerArt BIL_11_INFO
+	 * BelegungsfehlerArt BIL_11
 	 */
-	public static readonly GOST30_BIL_11_INFO: GostBelegungsfehler = new GostBelegungsfehler("GOST30_BIL_11_INFO", 25, "BIL_11_INFO", GostBelegungsfehlerArt.HINWEIS, "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt.", "Im bilingualen Bildungsgang sollten zwei bilinguale Sachfächer belegt werden.");
+	public static readonly GOST30_BIL_11: GostBelegungsfehler = new GostBelegungsfehler("GOST30_BIL_11", 25, "BIL_11", GostBelegungsfehlerArt.BELEGUNG, "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt.", "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt.");
 
 	/**
 	 * BelegungsfehlerArt BIL_12
