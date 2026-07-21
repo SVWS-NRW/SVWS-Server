@@ -125,8 +125,8 @@ H;H/APO-SI05/5-9;APO-SI 05: Klassen 5-9;-***-H**-H-;0;10;-05-06-07-08-09-;null;n
 H;H/APO-SI05/10B;APO-SI 05: Klasse 10B;-***-H**-H-;0;20;-10-;null;null
 H;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-H**-H-;0;10;-05-06-07-08-09-10-;null;null
 H;H/APO-SI05/10A;APO-SI 05: Klasse 10A;-***-H**-H-;0;10;-10-;null;null
-R;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-R01-R**-R-;0;10;-05-06-07-08-09-10-;null;null
-R;R/APO-SI05/5-10;APO-SI05: Klassen 5-10;-***-R01-R**-R-;0;10;-05-06-07-08-09-10-;null;null
+R;S/AOSF-SI05/5-10;AOSF-SI 05: Jahrgänge 5-10;-***-R01-R**-R-H-;0;10;-05-06-07-08-09-10-;null;null
+R;R/APO-SI05/5-10;APO-SI05: Klassen 5-10;-***-R01-R**-R-H-;0;10;-05-06-07-08-09-10-;null;null
 S;H/APO-SI05/5-9;APO-SI 05: Klassen 5-9;-***-H**-;0;10;-05-06-07-08-09-;null;null
 S;H/APO-SI05/10B;APO-SI 05: Klasse 10B;-***-H**-;0;20;-10-;null;null
 S;S/AO-SI99/10B;AO-SI 99: Klasse 10B;-***-;0;0;-10-;null;null
