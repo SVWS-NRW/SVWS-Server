@@ -20,7 +20,7 @@
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit grid content-center auto-cols-min gap-2">
+		<div class="grow overflow-y-auto overflow-x-hidden min-w-fit grid content-start auto-cols-min gap-2">
 			<div v-if="manager.istAbiturAb2030" class="p-2 rounded-md bg-ui-caution text-ui-oncaution min-w-fit font-bold flex flex-row items-center gap-2">
 				<span class="icon-lg i-ri-error-warning-fill icon-ui-oncaution" />
 				Sie verwenden den experimentellen Belegprüfungsalgorithmus für das Abitur 2030. Dieser kann noch Fehler enthalten, so dass zur Zeit noch alle Ergebnisse manuell geprüft werden müssen.
