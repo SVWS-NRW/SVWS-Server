@@ -2329,6 +2329,591 @@
             "moduleLicense": "The Apache Software License, Version 2.0",
             "moduleVersion": ".*",
             "moduleName": "org.unbescape:unbescape"
-        }	
+        },
+	  {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.22",
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-core"
+        },
+        {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.22",
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-pdfbox"
+        },
+        {
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.22",
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-svg-support"
+        },
+        {
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "5.1.1",
+            "moduleName": "io.github.spannm:ucanaccess"
+        },
+        {
+            "moduleLicense": "The Apache License, Version 2.0",
+            "moduleVersion": "5.1.1",
+            "moduleName": "io.github.spannm:ucanaccess"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": "EPL 2.0",
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": "GPL2 w/ CPE",
+            "moduleVersion": "6.1.0",
+            "moduleName": "jakarta.servlet:jakarta.servlet-api"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server"
+        },
+        {
+            "moduleLicense": null,
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty:jetty-session"
+        },
+        {
+            "moduleLicense": "Apache Software License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty:jetty-session"
+        },
+        {
+            "moduleLicense": "Eclipse Public License - Version 2.0",
+            "moduleVersion": "12.0.14",
+            "moduleName": "org.eclipse.jetty:jetty-session"
+        },
+        {
+            "moduleLicense": "\"LGPL-2.1-or-later\"",
+            "moduleVersion": "3.5.2",
+            "moduleName": "org.mariadb.jdbc:mariadb-java-client"
+        },
+        {
+            "moduleLicense": "LGPL-2.1-or-later",
+            "moduleVersion": "3.5.2",
+            "moduleName": "org.mariadb.jdbc:mariadb-java-client"
+        },
+                {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "2.21.2"
+        },
+        {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "2.21.2"
+        },
+        {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "2.22.0"
+        },
+        {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "2.22.0"
+        },
+        {
+            "moduleName": "com.fasterxml:classmate",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "1.7.3"
+        },
+        {
+            "moduleName": "com.fasterxml:classmate",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "1.7.3"
+        },
+        {
+            "moduleName": "com.zaxxer:SparseBitSet",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "1.3"
+        },
+        {
+            "moduleName": "de.vwsoft:barcodelib4j",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "3.2.0"
+        },
+        {
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-core",
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.37"
+        },
+        {
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-pdfbox",
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.37"
+        },
+        {
+            "moduleName": "io.github.openhtmltopdf:openhtmltopdf-svg-support",
+            "moduleLicense": "GNU Lesser General Public License (LGPL), version 2.1 or later",
+            "moduleVersion": "1.1.37"
+        },
+        {
+            "moduleName": "io.github.spannm:jackcess",
+            "moduleLicense": "The Apache License, Version 2.0",
+            "moduleVersion": "5.1.2"
+        },
+        {
+            "moduleName": "io.github.spannm:ucanaccess",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "5.1.5"
+        },
+        {
+            "moduleName": "io.github.spannm:ucanaccess",
+            "moduleLicense": "The Apache License, Version 2.0",
+            "moduleVersion": "5.1.5"
+        },
+        {
+            "moduleName": "io.smallrye:jandex",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "3.4.0"
+        },
+        {
+            "moduleName": "jakarta.el:jakarta.el-api",
+            "moduleLicense": null,
+            "moduleVersion": "6.0.1"
+        },
+        {
+            "moduleName": "jakarta.el:jakarta.el-api",
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": "6.0.1"
+        },
+        {
+            "moduleName": "jakarta.el:jakarta.el-api",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "6.0.1"
+        },
+        {
+            "moduleName": "jakarta.el:jakarta.el-api",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "6.0.1"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.cdi-api",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.cdi-api",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.cdi-api",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.cdi-api",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.lang-model",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.lang-model",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.lang-model",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.enterprise:jakarta.enterprise.lang-model",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "4.1.0"
+        },
+        {
+            "moduleName": "jakarta.inject:jakarta.inject-api",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "2.0.1"
+        },
+        {
+            "moduleName": "jakarta.inject:jakarta.inject-api",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "2.0.1"
+        },
+        {
+            "moduleName": "jakarta.inject:jakarta.inject-api",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "2.0.1"
+        },
+        {
+            "moduleName": "jakarta.inject:jakarta.inject-api",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "2.0.1"
+        },
+        {
+            "moduleName": "jakarta.interceptor:jakarta.interceptor-api",
+            "moduleLicense": null,
+            "moduleVersion": "2.2.0"
+        },
+        {
+            "moduleName": "jakarta.interceptor:jakarta.interceptor-api",
+            "moduleLicense": "EPL 2.0",
+            "moduleVersion": "2.2.0"
+        },
+        {
+            "moduleName": "jakarta.interceptor:jakarta.interceptor-api",
+            "moduleLicense": "Eclipse Public License - v 2.0",
+            "moduleVersion": "2.2.0"
+        },
+        {
+            "moduleName": "jakarta.interceptor:jakarta.interceptor-api",
+            "moduleLicense": "GPL2 w/ CPE",
+            "moduleVersion": "2.2.0"
+        },
+        {
+            "moduleName": "jakarta.servlet:jakarta.servlet-api",
+            "moduleLicense": null,
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "jakarta.servlet:jakarta.servlet-api",
+            "moduleLicense": "EPL 2.0",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "jakarta.servlet:jakarta.servlet-api",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "jakarta.servlet:jakarta.servlet-api",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "jakarta.servlet:jakarta.servlet-api",
+            "moduleLicense": "GPL2 w/ CPE",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "org.apache.commons:commons-math3",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "3.6.1"
+        },
+        {
+            "moduleName": "org.apache.logging.log4j:log4j-api",
+            "moduleLicense": "\"Apache-2.0\";link=\"https://www.apache.org/licenses/LICENSE-2.0.txt\"",
+            "moduleVersion": "2.24.3"
+        },
+        {
+            "moduleName": "org.apache.logging.log4j:log4j-api",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "2.24.3"
+        },
+        {
+            "moduleName": "org.apache.logging.log4j:log4j-api",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "2.24.3"
+        },
+        {
+            "moduleName": "org.apache.poi:poi",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "5.5.1"
+        },
+        {
+            "moduleName": "org.bouncycastle:bcpkix-jdk18on",
+            "moduleLicense": "Bouncy Castle Licence",
+            "moduleVersion": "1.84"
+        },
+        {
+            "moduleName": "org.bouncycastle:bcprov-jdk18on",
+            "moduleLicense": "Bouncy Castle Licence",
+            "moduleVersion": "1.84"
+        },
+        {
+            "moduleName": "org.bouncycastle:bcutil-jdk18on",
+            "moduleLicense": "Bouncy Castle Licence",
+            "moduleVersion": "1.84"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlet",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.ee10:jetty-ee10-servlets",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-common",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-hpack",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty.http2:jetty-http2-server",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty:jetty-session",
+            "moduleLicense": null,
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty:jetty-session",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.eclipse.jetty:jetty-session",
+            "moduleLicense": "EPL-2.0",
+            "moduleVersion": "12.1.10"
+        },
+        {
+            "moduleName": "org.glassfish.expressly:expressly",
+            "moduleLicense": null,
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "org.glassfish.expressly:expressly",
+            "moduleLicense": "Eclipse Public License v. 2.0",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "org.glassfish.expressly:expressly",
+            "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+            "moduleVersion": "6.0.0"
+        },
+        {
+            "moduleName": "org.hibernate.validator:hibernate-validator",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "9.1.0.Final"
+        },
+        {
+            "moduleName": "org.hibernate.validator:hibernate-validator",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "9.1.0.Final"
+        },
+        {
+            "moduleName": "org.jboss.logging:jboss-logging",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "3.6.3.Final"
+        },
+        {
+            "moduleName": "org.jboss.resteasy:resteasy-cdi",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "7.0.2.Final"
+        },
+        {
+            "moduleName": "org.jboss.resteasy:resteasy-validator-provider",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "7.0.2.Final"
+        },
+        {
+            "moduleName": "org.mapstruct:mapstruct",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "1.6.3"
+        },
+        {
+            "moduleName": "org.mapstruct:mapstruct",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "1.6.3"
+        },
+        {
+            "moduleName": "org.mariadb.jdbc:mariadb-java-client",
+            "moduleLicense": "\"LGPL-2.1-or-later\"",
+            "moduleVersion": "3.5.9"
+        },
+        {
+            "moduleName": "org.mariadb.jdbc:mariadb-java-client",
+            "moduleLicense": "LGPL-2.1-or-later",
+            "moduleVersion": "3.5.9"
+        },
+        {
+            "moduleName": "org.openapitools:jackson-databind-nullable",
+            "moduleLicense": "Apache License 2.0",
+            "moduleVersion": "0.2.10"
+        },
+        {
+            "moduleName": "org.openapitools:jackson-databind-nullable",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "0.2.10"
+        },
+        {
+            "moduleName": "org.openapitools:jackson-databind-nullable",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "0.2.10"
+        },
+        {
+            "moduleName": "org.slf4j:slf4j-api",
+            "moduleLicense": "MIT",
+            "moduleVersion": "2.0.17"
+        },
+        {
+            "moduleName": "org.webjars.npm:scarf__scarf",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "1.4.0"
+        },
+        {
+            "moduleName": "org.webjars.npm:scarf__scarf",
+            "moduleLicense": "Apache-2.0",
+            "moduleVersion": "1.4.0"
+        },
+                {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "Apache License, Version 2.0",
+            "moduleVersion": "2.22.1"
+        },
+        {
+            "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+            "moduleLicense": "The Apache Software License, Version 2.0",
+            "moduleVersion": "2.22.1"
+        }
   ]
 }
