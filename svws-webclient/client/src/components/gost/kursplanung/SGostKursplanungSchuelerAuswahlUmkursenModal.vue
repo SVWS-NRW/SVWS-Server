@@ -246,7 +246,7 @@
 		if (kurs === undefined) {
 			return;
 		}
-		const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(id), kurs.id, false);
+		const update = props.getErgebnismanager().kursSchuelerUpdateEntferneSchuelermengeAusKurs(SetUtils.create1(id), kurs.id, false);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
@@ -255,7 +255,7 @@
 		if (kurs === undefined) {
 			return;
 		}
-		const update = props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(SetUtils.create1(kurs.id), false);
+		const update = props.getErgebnismanager().kursSchuelerUpdateLeereKursmenge(SetUtils.create1(kurs.id), false);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
@@ -271,7 +271,7 @@
 			return;
 		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, id);
-		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+		const update = props.getErgebnismanager().kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
@@ -282,11 +282,11 @@
 		}
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
 		if (((neuer_kurs === undefined) || (neuer_kurs === null)) && (alter_kurs !== null)) {
-			const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(schueler.id), alter_kurs.id, false);
+			const update = props.getErgebnismanager().kursSchuelerUpdateEntferneSchuelermengeAusKurs(SetUtils.create1(schueler.id), alter_kurs.id, false);
 			await props.updateKursSchuelerZuordnungen(update);
 		} else if (neuer_kurs instanceof GostBlockungsergebnisKurs) {
 			const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(neuer_kurs.id, schueler.id);
-			const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+			const update = props.getErgebnismanager().kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(SetUtils.create1(zuordnung));
 			await props.updateKursSchuelerZuordnungen(update);
 		}
 	}
@@ -319,7 +319,7 @@
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 			update.listEntfernen.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs));
 		} else {
-			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+			update = props.getErgebnismanager().regelupdateCreateSchuelerFixierenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
 		}
 		await props.regelnUpdate(update);
 	}
@@ -335,8 +335,8 @@
 			setSchueler.add(s.id);
 		}
 		const update = (kursSchuelerFixierungen.value === true)
-			? props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
-			: props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id));
+			? props.getErgebnismanager().regelupdateRemoveSchuelerFixierenInKurs(setSchueler, SetUtils.create1(kurs.id))
+			: props.getErgebnismanager().regelupdateCreateSchuelerFixierenInKurs(setSchueler, SetUtils.create1(kurs.id));
 		await props.regelnUpdate(update);
 	}
 
@@ -398,7 +398,7 @@
 		if (kurs === undefined || zielSet.isEmpty()) {
 			return;
 		}
-		const update = props.getErgebnismanager().kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(kurs.id, zielSet, props.fixierteVerschieben(), props.inZielkursFixieren(), zielkurseLeeren.value);
+		const update = props.getErgebnismanager().kursSchuelerUpdateBildeKerngruppen(kurs.id, zielSet, props.fixierteVerschieben(), props.inZielkursFixieren(), zielkurseLeeren.value);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 

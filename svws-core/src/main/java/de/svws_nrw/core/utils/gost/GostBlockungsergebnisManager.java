@@ -1703,7 +1703,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart LK.
 	 */
-	public int getOfBewertung3Wert_nur_LK() {
+	public int getOfBewertung3WertNurLk() {
 		return bewertungKursdifferenzNurLK;
 	}
 
@@ -1712,7 +1712,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur LK) im Bereich [0;1], mit 0=optimal.
 	 */
-	public double getOfBewertung3Farbcode_nur_LK() {
+	public double getOfBewertung3FarbcodeNurLk() {
 		final int wert = bewertungKursdifferenzNurLK;
 		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
@@ -1722,7 +1722,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf die Kursart GK.
 	 */
-	public int getOfBewertung3Wert_nur_GK() {
+	public int getOfBewertung3WertNurGk() {
 		return bewertungKursdifferenzNurGK;
 	}
 
@@ -1731,7 +1731,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, nur GK) im Bereich [0;1], mit 0=optimal.
 	 */
-	public double getOfBewertung3Farbcode_nur_GK() {
+	public double getOfBewertung3FarbcodeNurGk() {
 		final int wert = bewertungKursdifferenzNurGK;
 		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
@@ -1741,7 +1741,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return den Wert des 3. Bewertungskriteriums (Kursdifferenz) nur bezogen auf Kursarten die nicht LK oder GK sind.
 	 */
-	public int getOfBewertung3Wert_nur_REST() {
+	public int getOfBewertung3WertNurRest() {
 		return bewertungKursdifferenzRest;
 	}
 
@@ -1750,7 +1750,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return eine Güte des 3. Bewertungskriteriums (Kursdifferenz, alles außer LK und GK) im Bereich [0;1], mit 0=optimal.
 	 */
-	public double getOfBewertung3Farbcode_nur_REST() {
+	public double getOfBewertung3FarbcodeNurRest() {
 		final int wert = bewertungKursdifferenzRest;
 		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
@@ -2583,8 +2583,8 @@ public class GostBlockungsergebnisManager {
 				continue;
 			}
 			// Nur dann den Schüler hinzufügen, wenn es überhaupt eine Kurszuordnung oder eine Regel noch gibt.
-			if (!kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()
-					|| !regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()) {
+			if (!kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()
+					|| !regelupdateCreateSchuelermengeEntfernen(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()) {
 				menge.add(schueler);
 			}
 		}
@@ -3456,7 +3456,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Map, welche der verletzten Regel-ID (long) die Beschreibung (String) zuordnet.
 	 */
-	public @NotNull Map<Long, String> regelGetMap_regelID_to_verletzungString() {
+	public @NotNull Map<Long, String> regelGetMapRegelIdToVerletzungString() {
 		return regelverletzungsBeschreibungByRegelID;
 	}
 
@@ -3646,7 +3646,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(final int kursart, final int schienenNrVon,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursartSperreSchienenVonBis(final int kursart, final int schienenNrVon,
 			final int schienenNrBis) {
 		final int von = Math.min(schienenNrVon, schienenNrBis);
 		final int bis = Math.max(schienenNrVon, schienenNrBis);
@@ -3702,7 +3702,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung einer Rechtecks-Auswahl zu realisieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInSchieneMarkiert(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -3751,7 +3751,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereMengeInIhrenSchienen(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -3783,8 +3783,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurse komplett in ihrer Lage zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
-		return regelupdateCreate_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(parent.kursmengeGetSetDerIDs());
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereAlleInIhrenSchienen() {
+		return regelupdateCreateKursFixiereMengeInIhrenSchienen(parent.kursmengeGetSetDerIDs());
 	}
 
 	/**
@@ -3798,7 +3798,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Fixierung zu realisieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInSchieneToggle(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -3846,11 +3846,11 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um einen Kurs in einer Schiene zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
-		return regelupdateCreate02eHelper(idKurs, schienenNr, true);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInEinerSchiene(final long idKurs, final int schienenNr) {
+		return regelupdateCreateKursFixiereInEinerSchieneHelper(idKurs, schienenNr, true);
 	}
 
-	private @NotNull GostBlockungRegelUpdate regelupdateCreate02eHelper(final long idKurs, final int schienenNr, final boolean checkErlaubt) {
+	private @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInEinerSchieneHelper(final long idKurs, final int schienenNr, final boolean checkErlaubt) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -3893,7 +3893,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursSperreInSchiene(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -3925,7 +3925,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Toggle-Sperrung zu realisieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursSperreInSchieneToggle(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -3967,7 +3967,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<Long> setSchuelerID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenInKurs(final @NotNull Set<Long> setSchuelerID,
 			final @NotNull Set<Long> setKursID) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
@@ -3977,7 +3977,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -3991,13 +3991,13 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenInDenKursen(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
 			// (1) (2) (3) (4)
 			final @NotNull GostBlockungRegelUpdate u2 =
-					regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+					regelupdateCreateSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
 			u.listEntfernen.addAll(u2.listEntfernen);
 			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
 		}
@@ -4007,12 +4007,12 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler in ihren aktuellen Kursen zu fixieren.
-	 * <br>Die Methode delegiert alles an {@link #regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS}.
+	 * <br>Die Methode delegiert alles an {@link #regelupdateCreateSchuelerFixierenInKurs}.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler in ihren aktuellen Kursen zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() {
-		return regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kursByID.keySet());
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenInAllenKursen() {
+		return regelupdateCreateSchuelerFixierenInDenKursen(kursByID.keySet());
 	}
 
 	/**
@@ -4023,8 +4023,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LK-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK() {
-		return regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypLk() {
+		return regelupdateCreateSchuelerFixierenTypLkDerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4037,7 +4037,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle LK-Schüler einer Kursmenge zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypLkDerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4048,7 +4048,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4059,8 +4059,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3() {
-		return regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAb3() {
+		return regelupdateCreateSchuelerFixierenTypAb3DerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4073,7 +4073,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB3-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAb3DerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4084,7 +4084,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4095,8 +4095,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3() {
-		return regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypLkUndAb3() {
+		return regelupdateCreateSchuelerFixierenTypLkUndAb3DerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4109,7 +4109,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller LKs und AB3-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypLkUndAb3DerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4120,7 +4120,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4131,8 +4131,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4() {
-		return regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAb4() {
+		return regelupdateCreateSchuelerFixierenTypAb4DerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4145,7 +4145,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB4-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAb4DerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4156,7 +4156,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4167,8 +4167,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB() {
-		return regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAb() {
+		return regelupdateCreateSchuelerFixierenTypAbDerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4181,7 +4181,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller AB-Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypAbDerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4192,7 +4192,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4203,8 +4203,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH() {
-		return regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kursIDs);
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypSchriftlich() {
+		return regelupdateCreateSchuelerFixierenTypSchriftlichDerKursmenge(kursIDs);
 	}
 
 	/**
@@ -4217,7 +4217,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Menge aller schriftlichen Schüler zu fixieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(final @NotNull Set<Long> kursIDs) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenTypSchriftlichDerKursmenge(final @NotNull Set<Long> kursIDs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 
 		for (final long idKurs : kursIDs) {
@@ -4228,7 +4228,7 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4246,7 +4246,7 @@ public class GostBlockungsergebnisManager {
 	private @NotNull GostBlockungRegelUpdate regelupdateCreate04xSchuelerFixierenInKurs(final long idSchueler, final long idKurs) {
 		final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare = new HashSet<>();
 		schuelerKursPaare.add(new PairNN<>(idSchueler, idKurs));
-		return regelupdateCreate04xSchuelerFixierenInKursmenge(schuelerKursPaare);
+		return regelupdateCreateSchuelerFixierenInKursmenge(schuelerKursPaare);
 	}
 
 	/**
@@ -4260,7 +4260,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateCreate04xSchuelerFixierenInKursmenge(
+	private @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenInKursmenge(
 			final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare) {
 		// TODO Wenn der Schüler gar nicht den Kurs wählen kann --> ignorieren.
 
@@ -4312,7 +4312,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(final @NotNull Set<Long> setSchuelerID,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerVerbietenInKurs(final @NotNull Set<Long> setSchuelerID,
 			final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -4352,7 +4352,7 @@ public class GostBlockungsergebnisManager {
 
 		// (1) (2)
 		for (final long idKurs : setKursID) {
-			GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
+			GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 		}
 
 		return u;
@@ -4371,7 +4371,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Allein-Zuordnung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(final int kursart, final int schienenNrVon,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursartAlleinInSchienenVonBis(final int kursart, final int schienenNrVon,
 			final int schienenNrBis) {
 		final int von = Math.min(schienenNrVon, schienenNrBis);
 		final int bis = Math.max(schienenNrVon, schienenNrBis);
@@ -4425,7 +4425,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursVerbietenMitKurs(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID) {
@@ -4476,7 +4476,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Zusammen-Gebote von setKursID (alle Paarungen) zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursZusammenMitKurs(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID) {
@@ -4527,7 +4527,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Anzahl der Dummy-Schüler eines Kurses zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(final long idKurs, final int anzahl) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursMitDummySusAuffuellen(final long idKurs, final int anzahl) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -4554,7 +4554,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um "Lehrkräfte beachten" zu aktivieren/deaktivieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(final boolean erstellen) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateLehrkaefteBeachten(final boolean erstellen) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ });
@@ -4588,7 +4588,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zusammen zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(final long idSchueler1, final long idSchueler2,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerZusammenMitSchuelerInFach(final long idSchueler1, final long idSchueler2,
 			final long idFach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
@@ -4677,7 +4677,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in einem Fach zu verbieten.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(final long idSchueler1, final long idSchueler2,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerVerbietenMitSchuelerInFach(final long idSchueler1, final long idSchueler2,
 			final long idFach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
@@ -4764,7 +4764,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zusammen zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerZusammenMitSchueler(final long idSchueler1, final long idSchueler2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4818,7 +4818,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um zwei Schüler in jedem gemeinsamen Fach zu verbieten.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final long idSchueler1, final long idSchueler2) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerVerbietenMitSchueler(final long idSchueler1, final long idSchueler2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idS1 = Math.min(idSchueler1, idSchueler2);
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
@@ -4869,7 +4869,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(final long idKurs, final int anzahl) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursMaximaleSchueleranzahl(final long idKurs, final int anzahl) {
 		// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -4896,7 +4896,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermenge beim Blocken zu ignorieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_16_SCHUELER_IGNORIEREN(final @NotNull Set<Long> setSchuelerID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerIgnorieren(final @NotNull Set<Long> setSchuelerID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID) {
@@ -4920,7 +4920,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge von Kursdifferenz-Berechnungen auszuschließen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursKursdifferenzBeiDerVisualisierungIgnorieren(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -4950,7 +4950,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Kursen einer bestimmten Fachart (in jeder Schiene) zu begrenzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_18_FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(final long idFach, final int idKursart,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateFachKursartMaximaleAnzahlProSchiene(final long idFach, final int idKursart,
 			final int maximal) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -4988,7 +4988,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(final @NotNull Set<Long> setSchuelerID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelermengeEntfernen(final @NotNull Set<Long> setSchuelerID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final GostBlockungRegel regel : parent.regelGetListe()) {
@@ -5016,7 +5016,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_01_KURSART_SPERRE_SCHIENEN_VON_BIS(final long idRegelAlt, final int kursart,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursartSperreSchienenVonBis(final long idRegelAlt, final int kursart,
 			final int schienenNrVon, final int schienenNrBis) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final int von = Math.min(schienenNrVon, schienenNrBis);
@@ -5036,7 +5036,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart, von, bis));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursartSperreSchienenVonBis(kursart, von, bis));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5057,7 +5057,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idRegelAlt, final long idKurs,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursFixiereInEinerSchiene(final long idRegelAlt, final long idKurs,
 			final int schienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5075,7 +5075,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate02eHelper(idKurs, schienenNr, false));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursFixiereInEinerSchieneHelper(idKurs, schienenNr, false));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5096,7 +5096,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_03_KURS_SPERRE_IN_SCHIENE(final long idRegelAlt, final long idKurs, final int schienenNr) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursSperreInSchiene(final long idRegelAlt, final long idKurs, final int schienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5113,7 +5113,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursSperreInSchiene(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5134,7 +5134,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_04_SCHUELER_FIXIEREN_IN_KURS(final long idRegelAlt, final long idSchueler, final long idKurs) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerFixierenInKurs(final long idRegelAlt, final long idSchueler, final long idKurs) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5172,7 +5172,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_05_SCHUELER_VERBIETEN_IN_KURS(final long idRegelAlt, final long idSchueler,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenInKurs(final long idRegelAlt, final long idSchueler,
 			final long idKurs) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5190,7 +5190,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5212,7 +5212,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(final long idRegelAlt, final int kursart,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursartAlleinInSchienenVonBis(final long idRegelAlt, final int kursart,
 			final int schienenNrVon, final int schienenNrBis) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final int von = Math.min(schienenNrVon, schienenNrBis);
@@ -5232,7 +5232,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursartAlleinInSchienenVonBis(kursart, von, bis));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5253,7 +5253,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_07_KURS_VERBIETEN_MIT_KURS(final long idRegelAlt, final long idKurs1, final long idKurs2) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursVerbietenMitKurs(final long idRegelAlt, final long idKurs1, final long idKurs2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idKursMin = Math.min(idKurs1, idKurs2);
 		final long idKursMax = Math.max(idKurs1, idKurs2);
@@ -5272,7 +5272,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursVerbietenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5293,7 +5293,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_08_KURS_ZUSAMMEN_MIT_KURS(final long idRegelAlt, final long idKurs1, final long idKurs2) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursZusammenMitKurs(final long idRegelAlt, final long idKurs1, final long idKurs2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idKursMin = Math.min(idKurs1, idKurs2);
 		final long idKursMax = Math.max(idKurs1, idKurs2);
@@ -5312,7 +5312,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursZusammenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5333,7 +5333,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(final long idRegelAlt, final long idKurs, final int anzahl) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursMitDummySusAuffuellen(final long idRegelAlt, final long idKurs, final int anzahl) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5350,7 +5350,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs, anzahl));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursMitDummySusAuffuellen(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5374,7 +5374,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(final long idRegelAlt, final long idSchueler1,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerZusammenMitSchuelerInFach(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2, final long idFach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
@@ -5395,7 +5395,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerZusammenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5417,7 +5417,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(final long idRegelAlt, final long idSchueler1,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenMitSchuelerInFach(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2, final long idFach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
@@ -5438,7 +5438,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5459,7 +5459,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(final long idRegelAlt, final long idSchueler1,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerZusammenMitSchueler(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
@@ -5480,7 +5480,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerZusammenMitSchueler(idSchuelerMin, idSchuelerMax));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5501,7 +5501,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_14_SCHUELER_VERBIETEN_MIT_SCHUELER(final long idRegelAlt, final long idSchueler1,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenMitSchueler(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
@@ -5522,7 +5522,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenMitSchueler(idSchuelerMin, idSchuelerMax));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5543,7 +5543,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_15_KURS_MAXIMALE_SCHUELERANZAHL(final long idRegelAlt, final long idKurs, final int anzahl) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursMaximaleSchueleranzahl(final long idRegelAlt, final long idKurs, final int anzahl) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5560,7 +5560,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs, anzahl));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursMaximaleSchueleranzahl(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5580,7 +5580,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_16_SCHUELER_IGNORIEREN(final long idRegelAlt, final long idSchueler) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerIgnorieren(final long idRegelAlt, final long idSchueler) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5597,7 +5597,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(idSchueler)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerIgnorieren(SetUtils.create1(idSchueler)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5619,7 +5619,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByID_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(final long idRegelAlt,
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursKursdifferenzBeiDerVisualisierungIgnorieren(final long idRegelAlt,
 			final long idKursNeu) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5644,7 +5644,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (4)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(idKursNeu)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursKursdifferenzBeiDerVisualisierungIgnorieren(SetUtils.create1(idKursNeu)));
 		// Falls die Regel bereits durch Kaskaden gelöscht werden soll, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
 			u.listEntfernen.add(rAlt);
@@ -5662,7 +5662,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveKursFixiereInSchieneMarkiert(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5693,7 +5693,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Fixierung einer Kursmenge komplett zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveKursFixiereMengeInIhrenSchienen(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
@@ -5715,8 +5715,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Schienen-Fixierungen zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02c_KURS_FIXIERE_ALLE_IN_IHREN_SCHIENEN() {
-		return regelupdateRemove_02b_KURS_FIXIERE_MENGE_IN_IHREN_SCHIENEN(parent.kursmengeGetSetDerIDs());
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveKursFixiereAlleInIhrenSchienen() {
+		return regelupdateRemoveKursFixiereMengeInIhrenSchienen(parent.kursmengeGetSetDerIDs());
 	}
 
 	/**
@@ -5728,7 +5728,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kurs-Schienen-Fixierung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(final long idKurs, final int schienenNr) {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveKursFixiereInEinerSchiene(final long idKurs, final int schienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
@@ -5750,7 +5750,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Sperrung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(final @NotNull Set<Long> setKursID,
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveKursSperreInSchiene(final @NotNull Set<Long> setKursID,
 			final @NotNull Set<Integer> setSchienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5778,7 +5778,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Fixierung zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(final @NotNull Set<Long> setSchuelerID,
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerFixierenInKurs(final @NotNull Set<Long> setSchuelerID,
 			final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -5805,13 +5805,13 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen einer Kursmenge zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerFixierenInDenKursen(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs : setKursID) {
 			// (1)
 			final @NotNull GostBlockungRegelUpdate u2 =
-					regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
+					regelupdateRemoveSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
 			u.listEntfernen.addAll(u2.listEntfernen);
 			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
 		}
@@ -5821,11 +5821,11 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
-	 * <br>Die Methode delegiert alles an {@link #regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS}.
+	 * <br>Die Methode delegiert alles an {@link #regelupdateCreateSchuelerFixierenInKurs}.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04c_SCHUELER_FIXIEREN_IN_ALLEN_KURSEN() {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerFixierenInAllenKursen() {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		u.listEntfernen.addAll(parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
 		return u;
@@ -5841,7 +5841,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um ein Schüler-Kurs-Fixierung-Toggle zu realisieren.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(final @NotNull Set<Long> setKursID) {
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerFixierenInDenKursenToggle(final @NotNull Set<Long> setKursID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idKurs1 : setKursID) {
@@ -6017,8 +6017,8 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus den derzeit zugeordneten Kursen zu entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01_LEERE_ALLE_KURSE(final boolean entferneAuchFixierte) {
-		return kursSchuelerUpdate_01b_LEERE_KURSMENGE(kursIDs, entferneAuchFixierte);
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateLeereAlleKurse(final boolean entferneAuchFixierte) {
+		return kursSchuelerUpdateLeereKursmenge(kursIDs, entferneAuchFixierte);
 	}
 
 	/**
@@ -6031,7 +6031,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um alle Schüler aus der übergebenen Kursmenge zu entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_01b_LEERE_KURSMENGE(final @NotNull Set<Long> kursIDs,
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateLeereKursmenge(final @NotNull Set<Long> kursIDs,
 			final boolean entferneAuchFixierte) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
@@ -6058,7 +6058,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneSchuelermengeAusKurs(
 			final @NotNull Set<Long> schuelerIDs, final long idKurs, final boolean entferneAuchFixierte) {
 		// TODO ungültige Zuordnungen überprüfen.
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
@@ -6098,7 +6098,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(final @NotNull Set<Long> schuelerIDs) {
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(final @NotNull Set<Long> schuelerIDs) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		for (final long idSchueler : schuelerIDs) {
@@ -6121,7 +6121,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(
 			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
@@ -6209,7 +6209,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler aus Kursen zu entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneKursSchuelerPaare(
 			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen) {
 
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
@@ -6246,7 +6246,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(final long idQuellKurs,
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateBildeKerngruppen(final long idQuellKurs,
 			final @NotNull Set<Long> idZielKurse, final boolean verschiebeFixierteDesQuellkurses, final boolean inZielKursenFixieren,
 			final boolean zielKurseLeeren) {
 		// Datenkonsistenz überprüfen.
@@ -6327,7 +6327,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse in Schienen zu setzen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdateFuegeKursSchienenPaareHinzu(
 			final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen) {
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate u = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
 
@@ -6349,7 +6349,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse aus Schienen zu entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdateEntferneKursSchienenPaare(
 			final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen) {
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate u = new GostBlockungsergebnisKursSchienenZuordnungUpdate();
 
@@ -6377,7 +6377,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um einen Kurs von einer Schiene zu einer anderen Schiene zu verschieben.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(
+	public @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate kursSchienenUpdateVerschiebeKursVonSchieneNachSchiene(
 			final long idKurs,
 			final long idSchieneQuelle,
 			final long idSchieneZiel) {

@@ -773,7 +773,7 @@
 			return;
 		}
 		if (istVorlage.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id)) {
-			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(dragKurs.value.id, dragSchiene.value.id));
+			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemoveKursFixiereInEinerSchiene(dragKurs.value.id, dragSchiene.value.id));
 		}
 		await props.updateKursSchienenZuordnung(dragKurs.value.id, dragSchiene.value.id, dropSchiene.value.id);
 	}
@@ -825,42 +825,42 @@
 					if (set === null) {
 						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 8 übergeben');
 					}
-					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(set);
+					return props.getErgebnismanager().regelupdateCreateKursZusammenMitKurs(set);
 				case 'kurse nie zusammen':
 					if (set === null) {
 						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 7 übergeben');
 					}
-					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(set);
+					return props.getErgebnismanager().regelupdateCreateKursVerbietenMitKurs(set);
 				case 'schüler fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenInDenKursen(kurse);
 				case 'schüler lösen':
-					return props.getErgebnismanager().regelupdateRemove_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
+					return props.getErgebnismanager().regelupdateRemoveSchuelerFixierenInDenKursen(kurse);
 				case 'toggle schüler':
-					return props.getErgebnismanager().regelupdateRemove_04d_SCHUELER_FIXIEREN_IN_DEN_KURSEN_TOGGLE(kurse);
+					return props.getErgebnismanager().regelupdateRemoveSchuelerFixierenInDenKursenToggle(kurse);
 				case 'kurse fixieren':
-					return props.getErgebnismanager().regelupdateCreate_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+					return props.getErgebnismanager().regelupdateCreateKursFixiereInSchieneMarkiert(kurse, schienen);
 				case 'kurse lösen':
-					return props.getErgebnismanager().regelupdateRemove_02_KURS_FIXIERE_IN_SCHIENE_MARKIERT(kurse, schienen);
+					return props.getErgebnismanager().regelupdateRemoveKursFixiereInSchieneMarkiert(kurse, schienen);
 				case 'toggle kurse':
-					return props.getErgebnismanager().regelupdateCreate_02d_KURS_FIXIERE_IN_SCHIENE_TOGGLE(kurse, schienen);
+					return props.getErgebnismanager().regelupdateCreateKursFixiereInSchieneToggle(kurse, schienen);
 				case 'schienen sperren':
-					return props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+					return props.getErgebnismanager().regelupdateCreateKursSperreInSchiene(kurse, schienen);
 				case 'schienen entsperren':
-					return props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(kurse, schienen);
+					return props.getErgebnismanager().regelupdateRemoveKursSperreInSchiene(kurse, schienen);
 				case 'toggle schienen':
-					return props.getErgebnismanager().regelupdateCreate_03b_KURS_SPERRE_IN_SCHIENE_TOGGLE(kurse, schienen);
+					return props.getErgebnismanager().regelupdateCreateKursSperreInSchieneToggle(kurse, schienen);
 				case 'Schüler AB fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04i_SCHUELER_FIXIEREN_TYP_AB_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypAbDerKursmenge(kurse);
 				case 'Schüler AB3 fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04f_SCHUELER_FIXIEREN_TYP_AB3_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypAb3DerKursmenge(kurse);
 				case 'Schüler AB4 fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04h_SCHUELER_FIXIEREN_TYP_AB4_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypAb4DerKursmenge(kurse);
 				case 'Schüler LK fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04e_SCHUELER_FIXIEREN_TYP_LK_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypLkDerKursmenge(kurse);
 				case 'Schüler LK und AB3 fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04g_SCHUELER_FIXIEREN_TYP_LK_UND_AB3_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypLkUndAb3DerKursmenge(kurse);
 				case 'Schüler schriftlichen fixieren':
-					return props.getErgebnismanager().regelupdateCreate_04j_SCHUELER_FIXIEREN_TYP_SCHRIFTLICH_DER_KURSMENGE(kurse);
+					return props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypSchriftlichDerKursmenge(kurse);
 			}
 		})();
 		await props.regelnUpdate(update);
@@ -967,7 +967,7 @@
 		if (lehrer_regel.value !== undefined) {
 			return;
 		}
-		const update = props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(true);
+		const update = props.getErgebnismanager().regelupdateCreateLehrkaefteBeachten(true);
 		await props.regelnUpdate(update);
 	}
 
@@ -1038,8 +1038,8 @@
 	async function toggleRegelSperreKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
 		const update = (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
-			? props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
-			: props.getErgebnismanager().regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer));
+			? props.getErgebnismanager().regelupdateRemoveKursSperreInSchiene(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
+			: props.getErgebnismanager().regelupdateCreateKursSperreInSchiene(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer));
 		await props.regelnUpdate(update);
 	}
 
@@ -1050,8 +1050,8 @@
 	async function toggleRegelFixiereKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
 		const update = (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
-			? props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)
-			: props.getErgebnismanager().regelupdateCreate_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer);
+			? props.getErgebnismanager().regelupdateRemoveKursFixiereInEinerSchiene(kurs.id, s.nummer)
+			: props.getErgebnismanager().regelupdateCreateKursFixiereInEinerSchiene(kurs.id, s.nummer);
 		await props.regelnUpdate(update);
 	}
 

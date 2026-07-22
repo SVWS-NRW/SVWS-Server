@@ -887,7 +887,7 @@ export class KursblockungDynDaten extends JavaObject {
 				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
 			}
 		}
-		const uKursSchienen: GostBlockungsergebnisKursSchienenZuordnungUpdate = out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+		const uKursSchienen: GostBlockungsergebnisKursSchienenZuordnungUpdate = out.kursSchienenUpdateFuegeKursSchienenPaareHinzu(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
 		const kursSchuelerZuordnungen: JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const dynSchueler of this.schuelerMenge) {
@@ -906,7 +906,7 @@ export class KursblockungDynDaten extends JavaObject {
 				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
 		}
-		const uKursSchueler: GostBlockungsergebnisKursSchuelerZuordnungUpdate = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+		const uKursSchueler: GostBlockungsergebnisKursSchuelerZuordnungUpdate = out.kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);
 		return out;
 	}

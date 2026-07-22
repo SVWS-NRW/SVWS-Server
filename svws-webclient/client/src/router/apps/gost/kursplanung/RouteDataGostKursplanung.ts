@@ -692,7 +692,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				return false;
 			}
 			await api.server.updateGostBlockungsergebnisKursSchieneZuordnung(api.schema, this._state.value.auswahlErgebnis.id, idSchieneAlt, idKurs, idSchieneNeu);
-			const update = this.ergebnismanager.kursSchienenUpdate_02a_VERSCHIEBE_KURS_VON_SCHIENE_NACH_SCHIENE(idKurs, idSchieneAlt, idSchieneNeu);
+			const update = this.ergebnismanager.kursSchienenUpdateVerschiebeKursVonSchieneNachSchiene(idKurs, idSchieneAlt, idSchieneNeu);
 			this.ergebnismanager.kursSchienenUpdateExecute(update);
 			this.commit();
 			return true;

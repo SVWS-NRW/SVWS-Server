@@ -1286,7 +1286,7 @@ public class KursblockungDynDaten {
 
 		// UPDATE - Kurs - Schiene
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
-				out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+				out.kursSchienenUpdateFuegeKursSchienenPaareHinzu(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
 
 		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
@@ -1315,7 +1315,7 @@ public class KursblockungDynDaten {
 
 		// UPDATE - Kurs - Schüler
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
-				out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+				out.kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);
 
 		return out;

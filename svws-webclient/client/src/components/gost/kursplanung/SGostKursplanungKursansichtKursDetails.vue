@@ -79,7 +79,7 @@
 		if (curr === anzahl || (anzahl === null) || anzahl < 0) {
 			return;
 		}
-		const update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(props.kurs.id, anzahl);
+		const update = props.getErgebnismanager().regelupdateCreateKursMitDummySusAuffuellen(props.kurs.id, anzahl);
 		await props.regelnUpdate(update);
 	}
 

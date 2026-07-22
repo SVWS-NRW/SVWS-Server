@@ -217,8 +217,8 @@ class GostBlockungsergebnisManagerTest {
 		z.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(kursID, schieneID));
 
 		final GostBlockungsergebnisKursSchienenZuordnungUpdate update = hinzufuegen
-				? manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(z)
-				: manager.kursSchienenUpdate_01b_ENTFERNE_KURS_SCHIENEN_PAARE(z);
+				? manager.kursSchienenUpdateFuegeKursSchienenPaareHinzu(z)
+				: manager.kursSchienenUpdateEntferneKursSchienenPaare(z);
 
 		manager.kursSchienenUpdateExecute(update);
 	}

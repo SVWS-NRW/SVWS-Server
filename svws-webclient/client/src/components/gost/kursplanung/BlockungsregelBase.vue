@@ -80,7 +80,7 @@
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const aufgeklappt = ref<boolean>(![GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE].includes(props.regelTyp));
 
-	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
+	const verletzungen = computed(() => props.getErgebnismanager().regelGetMapRegelIdToVerletzungString());
 
 	const regeln = computed(() => {
 		const list: List<GostBlockungRegel> = new ArrayList();

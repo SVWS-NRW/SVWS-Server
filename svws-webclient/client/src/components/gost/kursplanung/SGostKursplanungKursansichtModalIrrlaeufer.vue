@@ -54,7 +54,7 @@
 		}
 		show.value = false;
 		if (!set.isEmpty()) {
-			const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);
+			const update = props.getErgebnismanager().kursSchuelerUpdateEntferneKursSchuelerPaare(set);
 			await props.updateKursSchuelerZuordnungen(update);
 		}
 		selected.value = [];

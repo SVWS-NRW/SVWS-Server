@@ -134,7 +134,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
 			}
 			final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
-					manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+					manager.kursSchienenUpdateFuegeKursSchienenPaareHinzu(kursSchienenZuordnungen);
 			manager.kursSchienenUpdateExecute(uKursSchienen);
 
 			// Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
@@ -146,7 +146,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
 			}
 			final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
-					manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+					manager.kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(kursSchuelerZuordnungen);
 			manager.kursSchuelerUpdateExecute(uKursSchueler);
 
 			// Erzeuge das Ergebnis.
@@ -182,7 +182,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(ks.Blockung_Kurs_ID, ks.Schienen_ID));
 		}
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
-				manager.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
+				manager.kursSchienenUpdateFuegeKursSchienenPaareHinzu(kursSchienenZuordnungen);
 		manager.kursSchienenUpdateExecute(uKursSchienen);
 
 		// Bestimme alle Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
@@ -195,7 +195,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
 		}
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
-				manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
+				manager.kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(kursSchuelerZuordnungen);
 		manager.kursSchuelerUpdateExecute(uKursSchueler);
 
 		// Erzeuge das Ergebnis.

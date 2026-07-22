@@ -261,7 +261,7 @@
 			return;
 		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler.value);
-		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
+		const update = props.getErgebnismanager().kursSchuelerUpdateFuegeKursSchuelerPaareHinzu(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
@@ -271,7 +271,7 @@
 			return;
 		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(obj.id, idSchueler.value);
-		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(SetUtils.create1(zuordnung));
+		const update = props.getErgebnismanager().kursSchuelerUpdateEntferneKursSchuelerPaare(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
@@ -307,7 +307,7 @@
 		let update = new GostBlockungRegelUpdate();
 		const regel = fixier_regel(idKurs);
 		if (regel === null) {
-			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
+			update = props.getErgebnismanager().regelupdateCreateSchuelerFixierenInKurs(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
 		} else {
 			update.listEntfernen.add(regel);
 		}
@@ -318,7 +318,7 @@
 		let update = new GostBlockungRegelUpdate();
 		const regel = verbieten_regel(idKurs);
 		if (regel === null) {
-			update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
+			update = props.getErgebnismanager().regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
 		} else {
 			update.listEntfernen.add(regel);
 		}

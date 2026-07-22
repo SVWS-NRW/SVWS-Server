@@ -42,9 +42,9 @@
 		}
 		show.value = false;
 		if (!set.isEmpty()) {
-			const kursUpdate = props.getErgebnismanager().kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(set);
+			const kursUpdate = props.getErgebnismanager().kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(set);
 			await props.updateKursSchuelerZuordnungen(kursUpdate);
-			const regelUpdate = props.getErgebnismanager().regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(set);
+			const regelUpdate = props.getErgebnismanager().regelupdateCreateSchuelermengeEntfernen(set);
 			await props.regelnUpdate(regelUpdate);
 		}
 		selected.value = [];

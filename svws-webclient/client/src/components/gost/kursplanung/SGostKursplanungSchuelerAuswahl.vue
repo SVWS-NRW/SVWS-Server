@@ -324,7 +324,7 @@
 	});
 
 	async function fixieren_regel_hinzufuegen(idKurs: number, idSchueler: number) {
-		const update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		const update = props.getErgebnismanager().regelupdateCreateSchuelerFixierenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
 		await props.regelnUpdate(update);
 	}
 
@@ -333,7 +333,7 @@
 		if (idRegel === undefined) {
 			return;
 		}
-		const update = props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		const update = props.getErgebnismanager().regelupdateRemoveSchuelerFixierenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
 		await props.regelnUpdate(update);
 	}
 

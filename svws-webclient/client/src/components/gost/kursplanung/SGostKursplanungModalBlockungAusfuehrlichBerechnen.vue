@@ -58,9 +58,9 @@
 						<svws-ui-tooltip autosize>
 							<div class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
 								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
-									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3FarbcodeNurLk())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3WertNurLk() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3FarbcodeNurGk())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3WertNurGk() }} </span>
+									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="`color: var(--color-text-uistatic); background-color: ${getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3FarbcodeNurRest())}`"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3WertNurRest() }} </span>
 								</template>
 								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
 							</div>
