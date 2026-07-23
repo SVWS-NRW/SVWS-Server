@@ -112,7 +112,10 @@ export class GostKlausurplanManager extends JavaObject {
 		if (a.halbjahr !== b.halbjahr) {
 			return JavaInteger.compare(a.halbjahr, b.halbjahr);
 		}
-		return JavaInteger.compare(a.quartal, b.quartal);
+		if (a.quartal !== b.quartal) {
+			return JavaInteger.compare(a.quartal, b.quartal);
+		}
+		return JavaLong.compare(a.id, b.id);
 	} };
 
 	private static readonly _compTermin: Comparator<GostKlausurtermin> = { compare: (a: GostKlausurtermin, b: GostKlausurtermin) => {
