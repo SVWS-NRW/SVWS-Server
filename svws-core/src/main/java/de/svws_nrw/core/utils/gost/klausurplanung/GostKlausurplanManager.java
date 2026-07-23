@@ -4727,6 +4727,18 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKursklausur}.
+	 *
+	 * @param k die {@link GostKursklausur}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKursklausur}.
+	 */
+	public GostFach fachOrNullByKursklausur(final @NotNull GostKursklausur k) {
+		final GostKlausurvorgabe vorgabe = vorgabeByKursklausur(k);
+		return fachOrNullByVorgabe(vorgabe);
+	}
+
+	/**
 	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
 	 *
 	 * @param v die {@link GostKlausurvorgabe}
@@ -4735,7 +4747,18 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull GostFach fachByVorgabe(final @NotNull GostKlausurvorgabe v) {
 		return DeveloperNotificationException.ifNull("Fach mit ID " + v.idFach + " nicht in GostFaecherManager vorhanden.",
-				getFaecherManager(v.abiJahrgang).get(v.idFach));
+				fachOrNullByVorgabe(v));
+	}
+
+	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 *
+	 * @param v die {@link GostKlausurvorgabe}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 */
+	public GostFach fachOrNullByVorgabe(final @NotNull GostKlausurvorgabe v) {
+		return getFaecherManager(v.abiJahrgang).get(v.idFach);
 	}
 
 	/**
@@ -4815,8 +4838,12 @@ public class GostKlausurplanManager {
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public @NotNull String fachHTMLFarbeRgbaByKursklausur(final @NotNull GostKursklausur k) {
+		final GostFach fach = fachOrNullByKursklausur(k);
+		if (fach == null) {
+			return "rgba(220,220,220,1.0)";
+		}
 		final GostKlausurvorgabe vorgabe = vorgabeByKursklausur(k);
-		return Fach.getBySchluesselOrDefault(fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(vorgabe.abiJahrgang - 1, 1.0);
+		return Fach.getBySchluesselOrDefault(fach.kuerzel).getHMTLFarbeRGBA(vorgabe.abiJahrgang - 1, 1.0);
 	}
 
 	/**

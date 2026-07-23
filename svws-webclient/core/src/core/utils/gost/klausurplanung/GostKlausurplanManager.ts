@@ -4411,6 +4411,18 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKursklausur}.
+	 *
+	 * @param k die {@link GostKursklausur}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKursklausur}.
+	 */
+	public fachOrNullByKursklausur(k: GostKursklausur): GostFach | null {
+		const vorgabe: GostKlausurvorgabe | null = this.vorgabeByKursklausur(k);
+		return this.fachOrNullByVorgabe(vorgabe);
+	}
+
+	/**
 	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
 	 *
 	 * @param v die {@link GostKlausurvorgabe}
@@ -4418,7 +4430,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
 	 */
 	public fachByVorgabe(v: GostKlausurvorgabe): GostFach {
-		return DeveloperNotificationException.ifNull("Fach mit ID " + v.idFach + " nicht in GostFaecherManager vorhanden.", this.getFaecherManager(v.abiJahrgang).get(v.idFach));
+		return DeveloperNotificationException.ifNull("Fach mit ID " + v.idFach + " nicht in GostFaecherManager vorhanden.", this.fachOrNullByVorgabe(v));
+	}
+
+	/**
+	 * Liefert das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 *
+	 * @param v die {@link GostKlausurvorgabe}
+	 *
+	 * @return das {@link GostFach} zur übergebenen {@link GostKlausurvorgabe}.
+	 */
+	public fachOrNullByVorgabe(v: GostKlausurvorgabe): GostFach | null {
+		return this.getFaecherManager(v.abiJahrgang).get(v.idFach);
 	}
 
 	/**
@@ -4498,8 +4521,12 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public fachHTMLFarbeRgbaByKursklausur(k: GostKursklausur): string {
+		const fach: GostFach | null = this.fachOrNullByKursklausur(k);
+		if (fach === null) {
+			return "rgba(220,220,220,1.0)";
+		}
 		const vorgabe: GostKlausurvorgabe | null = this.vorgabeByKursklausur(k);
-		return Fach.getBySchluesselOrDefault(this.fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(vorgabe.abiJahrgang - 1, 1.0);
+		return Fach.getBySchluesselOrDefault(fach.kuerzel).getHMTLFarbeRGBA(vorgabe.abiJahrgang - 1, 1.0);
 	}
 
 	/**

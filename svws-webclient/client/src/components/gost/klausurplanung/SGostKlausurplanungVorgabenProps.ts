@@ -12,5 +12,6 @@ export interface GostKlausurplanungVorgabenProps {
 	loescheKlausurvorgaben: (vorgaben: List<GostKlausurvorgabe>) => Promise<void>;
 	erzeugeVorgabenAusVorlage: (quartal: number) => Promise<void>;
 	erzeugeDefaultKlausurvorgaben: (quartal: number) => Promise<void>;
+	gotoFach: (idFach: number) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

@@ -38,7 +38,7 @@
 			</template>
 			<svws-ui-table :items="vorgaben()" :columns="addStatusColumn(colsVorgaben, '')">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(value)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :title="fachFehltText(value)" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(value)}`">{{ fachBezeichnungById(value) }}</span>
 				</template>
 				<template #cell(quartal)="{ value }">
 					{{ value }}
@@ -499,6 +499,14 @@
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1);
 	}
 
+	function fachBezeichnungById(idFach: number): string {
+		return props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(idFach)?.bezeichnung ?? `Fach-ID ${idFach}`;
+	}
+
+	function fachFehltText(idFach: number): string | undefined {
+		return props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(idFach) === null ? `Fach mit ID ${idFach} ist nicht als Fach der Oberstufe definiert.` : undefined;
+	}
+
 	function resolveFachkuerzel(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurTermin): string | null {
 		if (input === null) {
 			return null;
@@ -516,9 +524,9 @@
 		} else if (input instanceof GostSchuelerklausurTermin) {
 			vorgabe = props.kMan().vorgabeBySchuelerklausurTermin(input);
 		} else {
-			vorgabe = props.kMan().vorgabeByKursklausur(input);
+			return props.kMan().fachOrNullByKursklausur(input)?.kuerzel ?? null;
 		}
-		const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(vorgabe.idFach);
+		const fach = props.kMan().fachOrNullByVorgabe(vorgabe);
 		return fach?.kuerzel ?? null;
 	}
 
@@ -558,4 +566,3 @@
 	}
 
 </script>
-
