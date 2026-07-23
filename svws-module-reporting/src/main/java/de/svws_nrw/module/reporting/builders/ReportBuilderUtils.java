@@ -21,6 +21,16 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
  */
 public final class ReportBuilderUtils {
 
+	/**
+	 * Die geteilte TemplateEngine für HTML-Report-Templates. Thymeleaf-TemplateEngines sind thread-sicher und als
+	 * langlebige Singletons konzipiert; die Instanz wird lazy bei erstem Klassenzugriff erzeugt (JVM-garantiert
+	 * thread-sicher) und über alle Builder-Aufrufe hinweg geteilt, damit der Template-Cache der Engine wirkt.
+	 */
+	private static final TemplateEngine HTML_TEMPLATE_ENGINE = createTemplateEngine(TemplateMode.HTML);
+
+	/** Die geteilte TemplateEngine für TEXT-Mode-Templates (Dateinamensvorlagen). Siehe {@link #HTML_TEMPLATE_ENGINE}. */
+	private static final TemplateEngine TEXT_TEMPLATE_ENGINE = createTemplateEngine(TemplateMode.TEXT);
+
 	private ReportBuilderUtils() {
 		// Utility
 	}
@@ -56,23 +66,23 @@ public final class ReportBuilderUtils {
 
 
 	/**
-	 * Erstellt eine TemplateEngine für HTML-Report-Templates.
+	 * Gibt die geteilte TemplateEngine für HTML-Report-Templates zurück.
 	 * Diese Engine wird für die Verarbeitung von HTML-Report-Templates verwendet.
 	 *
 	 * @return TemplateEngine im HTML-Mode
 	 */
-	public static TemplateEngine createHtmlTemplateEngine() {
-		return createTemplateEngine(TemplateMode.HTML);
+	public static TemplateEngine getHtmlTemplateEngine() {
+		return HTML_TEMPLATE_ENGINE;
 	}
 
 	/**
-	 * Erstellt eine TemplateEngine für TEXT-Mode-Templates.
+	 * Gibt die geteilte TemplateEngine für TEXT-Mode-Templates zurück.
 	 * Diese Engine wird speziell für die Verarbeitung von Dateinamensvorlagen (Textual Syntax von Thymeleaf).
 	 *
 	 * @return TemplateEngine im TEXT-Mode
 	 */
-	private static TemplateEngine createTextTemplateEngine() {
-		return createTemplateEngine(TemplateMode.TEXT);
+	private static TemplateEngine getTextTemplateEngine() {
+		return TEXT_TEMPLATE_ENGINE;
 	}
 
 	/**
@@ -123,7 +133,7 @@ public final class ReportBuilderUtils {
 
 		try {
 			// Verwende immer TEXT-Mode Engine für Dateinamensvorlagen (ignoriere übergebene Engine)
-			final TemplateEngine textEngine = createTextTemplateEngine();
+			final TemplateEngine textEngine = getTextTemplateEngine();
 
 			// Verarbeite die Vorlage im TEXT-Mode (unterstützt Textual Syntax)
 			final String textOutput = textEngine.process(dateinamensvorlage, context);

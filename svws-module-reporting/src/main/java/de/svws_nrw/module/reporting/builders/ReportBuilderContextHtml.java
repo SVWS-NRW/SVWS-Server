@@ -208,7 +208,7 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	 */
 	TemplateEngine getHtmlTemplateEngine() {
 		if (this.htmlTemplateEngine == null) {
-			this.htmlTemplateEngine = ReportBuilderUtils.createHtmlTemplateEngine();
+			this.htmlTemplateEngine = ReportBuilderUtils.getHtmlTemplateEngine();
 		}
 		return htmlTemplateEngine;
 	}
