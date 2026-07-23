@@ -71,7 +71,7 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 		if (typ != CalDavKalenderTyp.OEFFENTLICH) {
 			return null;
 		}
-		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
+		final Long idCollection = CalDavKalenderTyp.OEFFENTLICH.getDbId(idCal);
 
 		final DavRessource davRessource = new DavRessource();
 		davRessource.idCollection = idCollection;
