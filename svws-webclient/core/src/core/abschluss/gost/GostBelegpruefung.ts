@@ -78,17 +78,17 @@ export abstract class GostBelegpruefung extends JavaObject {
 	}
 
 	/**
-	 * Git zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
+	 * Gibt zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
 	 *
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public hatBelegungsfehler(): boolean {
 		for (const fehler of this.belegungsfehler) {
 			if (!fehler.istInfo()) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**

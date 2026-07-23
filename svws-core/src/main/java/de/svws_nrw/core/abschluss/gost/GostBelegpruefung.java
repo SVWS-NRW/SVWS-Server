@@ -78,17 +78,17 @@ public abstract class GostBelegpruefung {
 
 
 	/**
-	 * Git zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
+	 * Gibt zurück, ob ein "echter" Belegungsfehler vorliegt und nicht nur eine Warnung oder ein Hinweis.
 	 *
 	 * @return true, falls ein "echter" Belegungsfehler vorliegt.
 	 */
 	public boolean hatBelegungsfehler() {
 		for (final @NotNull GostBelegungsfehler fehler : belegungsfehler) {
 			if (!fehler.istInfo()) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 
