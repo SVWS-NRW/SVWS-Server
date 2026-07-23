@@ -485,7 +485,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	public Response updateKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKursAlt, final Long idKursNeu)
 			throws ApiOperationException {
 		if (idKursNeu == null) {
-			return deleteKursSchuelerZuordnung(idZwischenergebnis, idKursAlt, idSchueler);
+			return deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursAlt);
 		}
 		// TODO prüfe, ob die Kursarten übereinstimmen...
 		this._deleteKursSchuelerZuordnung(idZwischenergebnis, idSchueler, idKursAlt);
