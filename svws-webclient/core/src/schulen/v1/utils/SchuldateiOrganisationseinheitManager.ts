@@ -478,7 +478,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		}
 		let eintrag: SchuldateiOrganisationseinheitGrunddaten = grunddaten.get(0);
 		for (let i: number = 1; i < grunddaten.size(); i++) {
-			const other: SchuldateiOrganisationseinheitGrunddaten = grunddaten.get(0);
+			const other: SchuldateiOrganisationseinheitGrunddaten = grunddaten.get(i);
 			if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, other.gueltigbis)) {
 				eintrag = other;
 			}
@@ -786,7 +786,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	public getSchulformASD(schuljahr: number): string {
 		if (!this._mapSchulformASDBySchuljahr.containsKey(schuljahr)) {
-			this.getGrunddaten(schuljahr);
+			this.getSchulform(schuljahr);
 		}
 		const result: string | null = this._mapSchulformASDBySchuljahr.get(schuljahr);
 		if (result === null) {
@@ -807,7 +807,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	 */
 	public getSchulart(schuljahr: number): string {
 		if (!this._mapSchulartBySchuljahr.containsKey(schuljahr)) {
-			this.getGrunddaten(schuljahr);
+			this.getSchulform(schuljahr);
 		}
 		const result: string | null = this._mapSchulartBySchuljahr.get(schuljahr);
 		return (result === null) ? "" : result;

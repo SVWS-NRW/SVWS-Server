@@ -573,7 +573,7 @@ public class SchuldateiOrganisationseinheitManager {
 		// ... und übernehme den Eintrag aus dem Ergebnis, dessen Gültigkeit noch am längsten währt.
 		@NotNull SchuldateiOrganisationseinheitGrunddaten eintrag = grunddaten.get(0);
 		for (int i = 1; i < grunddaten.size(); i++) {
-			final @NotNull SchuldateiOrganisationseinheitGrunddaten other = grunddaten.get(0);
+			final @NotNull SchuldateiOrganisationseinheitGrunddaten other = grunddaten.get(i);
 			if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, other.gueltigbis)) {
 				eintrag = other;
 			}
@@ -878,7 +878,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	public @NotNull String getSchulform(final int schuljahr) throws IllegalArgumentException {
 		if (!_mapSchulformBySchuljahr.containsKey(schuljahr)) {
-			// Bestimme nun die Informationen zu der Schulform und speicher diese in den zugehörigen Maps
+			// Bestimme nun die Informationen zu der Schulform und speichert diese in den zugehörigen Maps
 			final @NotNull String @NotNull [] sf = getSchulformInfo(schuljahr, this._organisationseinheit);
 			_mapSchulformBySchuljahr.put(schuljahr, sf[0]);
 			_mapSchulformASDBySchuljahr.put(schuljahr, sf[1]);
@@ -905,7 +905,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	public @NotNull String getSchulformASD(final int schuljahr) throws IllegalArgumentException {
 		if (!_mapSchulformASDBySchuljahr.containsKey(schuljahr)) {
-			this.getGrunddaten(schuljahr);
+			this.getSchulform(schuljahr);
 		}
 		final String result = _mapSchulformASDBySchuljahr.get(schuljahr);
 		if (result == null) {
@@ -928,7 +928,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	public @NotNull String getSchulart(final int schuljahr) throws IllegalArgumentException {
 		if (!_mapSchulartBySchuljahr.containsKey(schuljahr)) {
-			this.getGrunddaten(schuljahr);
+			this.getSchulform(schuljahr);
 		}
 		final String result = _mapSchulartBySchuljahr.get(schuljahr);
 		return (result == null) ? "" : result;
