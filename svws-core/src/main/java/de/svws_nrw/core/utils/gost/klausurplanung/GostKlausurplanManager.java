@@ -108,7 +108,10 @@ public class GostKlausurplanManager {
 				if (a.halbjahr != b.halbjahr) {
 					return Integer.compare(a.halbjahr, b.halbjahr);
 				}
-				return Integer.compare(a.quartal, b.quartal);
+				if (a.quartal != b.quartal) {
+					return Integer.compare(a.quartal, b.quartal);
+				}
+				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a,
