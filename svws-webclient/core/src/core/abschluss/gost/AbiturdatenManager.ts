@@ -640,13 +640,7 @@ export class AbiturdatenManager extends JavaObject {
 	public hatFachbereichInLKAbiturfaechern(...bereiche: Array<GostFachbereich>): boolean {
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach !== null) {
-				continue;
-			}
-			if ((abiturFach as unknown !== GostAbiturFach.LK1 as unknown) && (abiturFach as unknown !== GostAbiturFach.LK2 as unknown)) {
-				continue;
-			}
-			if (this.hatFachbereich(belegung, ...bereiche)) {
+			if ((abiturFach !== null) && ((abiturFach as unknown === GostAbiturFach.LK1 as unknown) || (abiturFach as unknown === GostAbiturFach.LK2 as unknown)) && this.hatFachbereich(belegung, ...bereiche)) {
 				return true;
 			}
 		}
@@ -663,13 +657,7 @@ export class AbiturdatenManager extends JavaObject {
 	public hatFachbereichInGKAbiturfaechern(...bereiche: Array<GostFachbereich>): boolean {
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach !== null) {
-				continue;
-			}
-			if ((abiturFach as unknown === GostAbiturFach.LK1 as unknown) || (abiturFach as unknown === GostAbiturFach.LK2 as unknown)) {
-				continue;
-			}
-			if (this.hatFachbereich(belegung, ...bereiche)) {
+			if ((abiturFach !== null) && (abiturFach as unknown !== GostAbiturFach.LK1 as unknown) && (abiturFach as unknown !== GostAbiturFach.LK2 as unknown) && this.hatFachbereich(belegung, ...bereiche)) {
 				return true;
 			}
 		}

@@ -658,13 +658,8 @@ public class AbiturdatenManager {
 	public boolean hatFachbereichInLKAbiturfaechern(final @NotNull GostFachbereich... bereiche) {
 		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach != null) {
-				continue;
-			}
-			if ((abiturFach != GostAbiturFach.LK1) && (abiturFach != GostAbiturFach.LK2)) {
-				continue;
-			}
-			if (this.hatFachbereich(belegung, bereiche)) {
+			if ((abiturFach != null) && ((abiturFach == GostAbiturFach.LK1) || (abiturFach == GostAbiturFach.LK2))
+					&& this.hatFachbereich(belegung, bereiche)) {
 				return true;
 			}
 		}
@@ -682,13 +677,8 @@ public class AbiturdatenManager {
 	public boolean hatFachbereichInGKAbiturfaechern(final @NotNull GostFachbereich... bereiche) {
 		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach != null) {
-				continue;
-			}
-			if ((abiturFach == GostAbiturFach.LK1) || (abiturFach == GostAbiturFach.LK2)) {
-				continue;
-			}
-			if (this.hatFachbereich(belegung, bereiche)) {
+			if ((abiturFach != null) && (abiturFach != GostAbiturFach.LK1) && (abiturFach != GostAbiturFach.LK2)
+					&& this.hatFachbereich(belegung, bereiche)) {
 				return true;
 			}
 		}
