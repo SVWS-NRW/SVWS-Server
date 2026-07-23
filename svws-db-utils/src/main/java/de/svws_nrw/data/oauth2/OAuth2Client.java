@@ -278,10 +278,13 @@ public final class OAuth2Client {
 		if ((keyValuePairs.length % 2) != 0) {
 			throw new IllegalArgumentException("Invalid nameValuePairs");
 		}
-		String input = "";
+
+		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < keyValuePairs.length; i += 2) {
-			input = keyValuePairs[i] + "=" + keyValuePairs[i + 1] + "\n";
+		    sb.append(keyValuePairs[i]).append("=").append(keyValuePairs[i + 1]).append("\n");
 		}
+		final String input = sb.toString();
+
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofString(input)).header("Content-Type", "application/x-www-form-urlencoded")
 				.header("Accept", "application/json")
