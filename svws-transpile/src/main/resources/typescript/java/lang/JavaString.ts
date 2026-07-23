@@ -32,7 +32,7 @@ export abstract class JavaString {
 	}
 
 	public static matches(s: string, regex: string): boolean {
-		const regexp = new RegExp(regex);
+		const regexp = new RegExp("^(?:" + regex + ")$");
 		return regexp.test(s);
 	}
 
