@@ -1,9 +1,9 @@
 package de.svws_nrw.davapi.util.vcard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.ArrayList;
 
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
@@ -129,14 +129,7 @@ public class VCard {
 
 		addSimplePropertyIfNotNull("EMAIL", kontakt.email);
 		addSimplePropertyIfNotNull("URL", kontakt.webAdresse);
-		final VCardProperty categoriesProperty;
-		if (kontakt.kategorien.isEmpty()) {
-			categoriesProperty = new CategoriesProperty(kontakt.adressbuchId);
-		} else {
-
-			categoriesProperty = new CategoriesProperty(kontakt.kategorien);
-			addProperty(categoriesProperty);
-		}
+		addProperty(kontakt.kategorien.isEmpty() ? new CategoriesProperty(kontakt.adressbuchId) : new CategoriesProperty(kontakt.kategorien));
 		for (final Telefonnummer t : kontakt.telefonnummern) {
 			addProperty(new PhoneProperty(t.type, t.number));
 		}
