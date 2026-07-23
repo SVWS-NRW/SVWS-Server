@@ -26,10 +26,10 @@
 						</svws-ui-tooltip>
 					</td>
 					<td class="ui-divider">
-						<ui-select v-model="gklEFSprachlich" :manager="managerEFSprachlich" :removable="false" headless />
+						<ui-select v-model="gklEFSprachlich" :manager="managerEFSprachlich" headless />
 					</td>
 					<td>
-						<ui-select v-model="gklQSprachlich" :manager="managerQSprachlich" :removable="false" headless />
+						<ui-select v-model="gklQSprachlich" :manager="managerQSprachlich" headless />
 					</td>
 				</template>
 				<template v-else-if="row === 2">
@@ -42,10 +42,10 @@
 						</svws-ui-tooltip>
 					</td>
 					<td class="ui-divider">
-						<ui-select v-model="gklEF_GW" :manager="managerEFGesellschaftswissenschaftlich" :removable="false" headless />
+						<ui-select v-model="gklEF_GW" :manager="managerEFGesellschaftswissenschaftlich" headless />
 					</td>
 					<td>
-						<ui-select v-model="gklQ_GW" :manager="managerQGesellschaftswissenschaftlich" :removable="false" headless />
+						<ui-select v-model="gklQ_GW" :manager="managerQGesellschaftswissenschaftlich" headless />
 					</td>
 				</template>
 				<template v-else-if="row === 3">
@@ -58,10 +58,10 @@
 						</svws-ui-tooltip>
 					</td>
 					<td class="ui-divider">
-						<ui-select v-model="gklEF_NW" :manager="managerEFNaturwissenschaftlich" :removable="false" headless />
+						<ui-select v-model="gklEF_NW" :manager="managerEFNaturwissenschaftlich" headless />
 					</td>
 					<td>
-						<ui-select v-model="gklQ_NW" :manager="managerQNaturwissenschaftlich" :removable="false" headless />
+						<ui-select v-model="gklQ_NW" :manager="managerQNaturwissenschaftlich" headless />
 					</td>
 				</template>
 			</template>
