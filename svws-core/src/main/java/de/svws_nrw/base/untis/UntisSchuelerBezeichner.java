@@ -33,6 +33,20 @@ public enum UntisSchuelerBezeichner {
 		this.id = id;
 	}
 
+	/**
+	 * Liefert den verkürzten Vornamen auf maximal 3 Zeichen begrenzt.
+	 *
+	 * @param vorname   der übergebene Vorname
+	 *
+	 * @return der verkürzte Vorname
+	 */
+	private static String getVornameKurz(final String vorname) {
+		if ((vorname == null) || "".equals(vorname.trim())) {
+			return "???";
+		}
+		final String tmp = vorname.trim().replace(" ", "");
+		return (tmp.length() <= 3) ? tmp : tmp.substring(0, 3);
+	}
 
 	/**
 	 * Gibt den Bezeichner für den Schüler mit dieser Variante zurück.
@@ -51,8 +65,7 @@ public enum UntisSchuelerBezeichner {
 				final LocalDate date = ((isoDate == null) || "".equals(isoDate)) ? null : LocalDate.parse(isoDate);
 				final String geburtsdatum = (date == null) ? null : "%04d%02d%02d".formatted(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
 				yield ((nachname == null) || ("".equals(nachname.trim())) ? "???" : nachname.trim().replace(" ", ""))
-						+ "_" + (((vorname == null) || "".equals(vorname.trim())) ? "???" : vorname.trim().replace(" ", "").substring(0, 3))
-						+ "_" + ((geburtsdatum == null) ? "????????" : geburtsdatum);
+						+ "_" + getVornameKurz(vorname) + "_" + ((geburtsdatum == null) ? "????????" : geburtsdatum);
 			}
 			case 3 -> {
 				final LocalDate date = ((isoDate == null) || "".equals(isoDate)) ? null : LocalDate.parse(isoDate);
