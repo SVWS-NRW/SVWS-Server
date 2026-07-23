@@ -18,7 +18,20 @@
 					</svws-ui-tooltip>
 				</template>
 				<template #cell(idFach)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(kMan().fachByVorgabe(rowData).kuerzel || null)}`">{{ kMan().fachByVorgabe(rowData).bezeichnung }}</span>
+					<span class="svws-ui-badge inline-flex items-center gap-1" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(kMan().fachOrNullByVorgabe(rowData)?.kuerzel ?? null)}`">
+						{{ fachBezeichnungByVorgabe(rowData) }}
+						<svws-ui-tooltip v-if="kMan().fachOrNullByVorgabe(rowData) === null" position="top" :indicator="false">
+							<button type="button" class="inline-flex items-center justify-center" @click.stop="gotoFach(rowData.idFach)" title="Zum Fach">
+								<span class="icon-sm icon-ui-warning i-ri-alert-line -my-0.5" />
+							</button>
+							<template #content>
+								<span>Das Fach mit der ID {{ rowData.idFach }} ist nicht als Fach der Oberstufe definiert.</span>
+								<button type="button" class="inline-flex items-center justify-center ml-1" @click.stop="gotoFach(rowData.idFach)" title="Zum Fach">
+									<span class="icon i-ri-link" />
+								</button>
+							</template>
+						</svws-ui-tooltip>
+					</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -42,7 +55,7 @@
 					</button>
 				</template>
 				<template #cell(istMdlPruefung)="{ value, rowData }">
-					<button v-if="(jahrgangsdaten !== undefined) && (rowData.idFach >= 0) && (halbjahr.id !== GostHalbjahr.Q22.id) && kMan().getFaecherManager(jahrgangsdaten.abiturjahr).fachIstModerneFremdsprache(kMan().fachByVorgabe(rowData).id)" type="button" class="inline-flex items-center justify-center" :title="value ? 'Mündliche Kommunikationsprüfung' : 'Normale Klausur'" :class="{'cursor-pointer hover:opacity-70': hatKompetenzUpdate}" @click.stop="toggleVorgabeBoolean(rowData, 'istMdlPruefung')" :disabled="!hatKompetenzUpdate">
+					<button v-if="(jahrgangsdaten !== undefined) && (rowData.idFach >= 0) && (halbjahr.id !== GostHalbjahr.Q22.id) && vorgabeIstModerneFremdsprache(rowData)" type="button" class="inline-flex items-center justify-center" :title="value ? 'Mündliche Kommunikationsprüfung' : 'Normale Klausur'" :class="{'cursor-pointer hover:opacity-70': hatKompetenzUpdate}" @click.stop="toggleVorgabeBoolean(rowData, 'istMdlPruefung')" :disabled="!hatKompetenzUpdate">
 						<span class="icon i-ri-chat-1-line -my-0.5" :class="{'opacity-25': !value}" />
 					</button>
 				</template>
@@ -95,7 +108,8 @@
 				<template v-else>
 					<div class="flex flex-col gap-4">
 						<svws-ui-input-wrapper>
-							<svws-ui-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" :model-value="activeVorgabe.idFach !== -1 ? kMan().fachByVorgabe(activeVorgabe) : undefined" @update:model-value="fach => activeVorgabe.idFach = fach?.id ?? -1" title="Fach" :disabled="activeVorgabe.id !== 0" />
+							<svws-ui-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" :model-value="activeVorgabe.idFach !== -1 ? kMan().fachOrNullByVorgabe(activeVorgabe) ?? undefined : undefined" @update:model-value="fach => activeVorgabe.idFach = fach?.id ?? -1" title="Fach" :disabled="activeVorgabe.id !== 0" />
+							<span v-if="activeVorgabe.id > 0 && kMan().fachOrNullByVorgabe(activeVorgabe) === null" class="text-ui-danger text-sm leading-tight">{{ fachFehltText(activeVorgabe) }}</span>
 							<svws-ui-radio-group id="rbgKursart" :row="true">
 								<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.id !== 0" />
 							</svws-ui-radio-group>
@@ -120,7 +134,7 @@
 									<svws-ui-radio-option v-for="value in formMoeglichNichtMoeglich" :class="value.key ? 'order-1' : 'order-0'" :key="value.label" :value="value.key" name="formGklMoeglich" :label="value.label" v-model="istGklMoeglich" :disabled="activeVorgabe.id < 0" />
 								</svws-ui-radio-group>
 							</div>
-							<div v-if="(jahrgangsdaten !== undefined) && (activeVorgabe.idFach >= 0) && (halbjahr.id !== GostHalbjahr.Q22.id) && kMan().getFaecherManager(jahrgangsdaten.abiturjahr).fachIstModerneFremdsprache(kMan().fachByVorgabe(activeVorgabe).id)" class="mt-4">
+							<div v-if="(jahrgangsdaten !== undefined) && (activeVorgabe.idFach >= 0) && (halbjahr.id !== GostHalbjahr.Q22.id) && vorgabeIstModerneFremdsprache(activeVorgabe)" class="mt-4">
 								<label class="block font-bold mb-1" for="rbgMdlPruefung">Mündliche Kommunikationsprüfung</label>
 								<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 									<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.key" name="formMdlPruefung" :label="value.name" v-model="istMdlPruefung" :disabled="activeVorgabe.id < 0">
@@ -233,6 +247,28 @@
 		return gklInHalbjahrMoeglich.value && (vorgabe.kursart === 'GK');
 	}
 
+	function fachBezeichnungByVorgabe(vorgabe: GostKlausurvorgabe): string {
+		return props.kMan().fachOrNullByVorgabe(vorgabe)?.bezeichnung ?? `Fach-ID ${vorgabe.idFach}`;
+	}
+
+	function fachFehltText(vorgabe: GostKlausurvorgabe): string | undefined {
+		return props.kMan().fachOrNullByVorgabe(vorgabe) === null ? `Fach mit ID ${vorgabe.idFach} ist nicht als Fach der Oberstufe definiert.` : undefined;
+	}
+
+	function vorgabeIstModerneFremdsprache(vorgabe: GostKlausurvorgabe): boolean {
+		const fach = props.kMan().fachOrNullByVorgabe(vorgabe);
+		return (fach !== null) && props.kMan().getFaecherManager(vorgabe.abiJahrgang).fachIstModerneFremdsprache(fach.id);
+	}
+
+	function vorgabeIstNeuEinsetzendeFremdsprache(vorgabe: GostKlausurvorgabe): boolean {
+		const fach = props.kMan().fachOrNullByVorgabe(vorgabe);
+		return (fach !== null) && fach.istFremdSpracheNeuEinsetzend;
+	}
+
+	function berechneGostKlausurdauerByVorgabeOrNull(vorgabe: GostKlausurvorgabe): number | null {
+		return props.kMan().fachOrNullByVorgabe(vorgabe) === null ? null : props.kMan().berechneGostKlausurdauerByVorgabe(vorgabe);
+	}
+
 	function setDauerAufApoVorgabe() {
 		void setDauerAufGostVorgabe([activeVorgabe.value]);
 	}
@@ -247,7 +283,11 @@
 			if (vorgabe.id <= 0) {
 				continue;
 			}
-			patches.add({ id: vorgabe.id, dauer: props.kMan().berechneGostKlausurdauerByVorgabe(vorgabe) });
+			const dauer = berechneGostKlausurdauerByVorgabeOrNull(vorgabe);
+			if (dauer === null) {
+				continue;
+			}
+			patches.add({ id: vorgabe.id, dauer });
 		}
 		if (patches.isEmpty()) {
 			return;
@@ -257,9 +297,9 @@
 
 	function validiereDauer(vorgabe: GostKlausurvorgabe = activeVorgabe.value): List<ValidatorFehler> {
 		const validator = new ValidatorGostKlausurdauer(
-			() => vorgabe.id > 0 ? vorgabe : null,
+			() => (vorgabe.id > 0) && (props.kMan().fachOrNullByVorgabe(vorgabe) !== null) ? vorgabe : null,
 			vorgabe => props.kMan().berechneGostKlausurdauerByVorgabe(vorgabe),
-			vorgabe => props.kMan().getFaecherManager(vorgabe.abiJahrgang).fachIstModerneFremdsprache(props.kMan().fachByVorgabe(vorgabe).id)
+			vorgabe => vorgabeIstNeuEinsetzendeFremdsprache(vorgabe)
 		);
 		validator.run();
 		return validator.getFehler();

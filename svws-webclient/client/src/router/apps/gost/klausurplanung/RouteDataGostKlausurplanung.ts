@@ -325,6 +325,10 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(routeStundenplan.getRoute({ idSchuljahresabschnitt: this.abschnitt!.id }));
 	};
 
+	gotoFach = async (idFach: number) => {
+		await RouteManager.doRoute({ name: "schule.faecher.daten", params: { id: idFach } });
+	};
+
 	get zeigeAlleJahrgaenge(): boolean {
 		return this.getConfigValue("zeigeAlleJahrgaenge") === 'true';
 	}

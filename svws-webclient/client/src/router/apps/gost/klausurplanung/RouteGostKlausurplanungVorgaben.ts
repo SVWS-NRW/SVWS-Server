@@ -31,6 +31,7 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<any, RouteGostKla
 			loescheKlausurvorgaben: routeGostKlausurplanung.data.loescheKlausurvorgaben,
 			erzeugeVorgabenAusVorlage: routeGostKlausurplanung.data.erzeugeVorgabenAusVorlage,
 			erzeugeDefaultKlausurvorgaben: routeGostKlausurplanung.data.erzeugeDefaultKlausurvorgaben,
+			gotoFach: routeGostKlausurplanung.data.gotoFach,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		};
 	}
