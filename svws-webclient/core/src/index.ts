@@ -168,6 +168,7 @@ export { HerkunftBildungsgangTypKatalogEintrag } from './asd/data/schueler/Herku
 export { HerkunftSchulformKatalogEintrag } from './asd/data/schueler/HerkunftSchulformKatalogEintrag';
 export { HerkunftSonstigeKatalogEintrag } from './asd/data/schueler/HerkunftSonstigeKatalogEintrag';
 export { HerkunftsartenKatalogEintrag } from './asd/data/schueler/HerkunftsartenKatalogEintrag';
+export { HochschulabschlussKatalogEintrag } from './asd/data/schueler/HochschulabschlussKatalogEintrag';
 export { Schueler } from './asd/data/schueler/Schueler';
 export { SchuelerBetrieb } from './asd/data/schueler/SchuelerBetrieb';
 export { SchuelerFoerderempfehlung } from './asd/data/schueler/SchuelerFoerderempfehlung';
@@ -280,6 +281,7 @@ export { HerkunftBildungsgangTyp } from './asd/types/schueler/HerkunftBildungsga
 export { HerkunftSchulform } from './asd/types/schueler/HerkunftSchulform';
 export { HerkunftSonstige } from './asd/types/schueler/HerkunftSonstige';
 export { Herkunftsarten } from './asd/types/schueler/Herkunftsarten';
+export { Hochschulabschluss } from './asd/types/schueler/Hochschulabschluss';
 export { SchuelerStatus } from './asd/types/schueler/SchuelerStatus';
 export { Uebergangsempfehlung } from './asd/types/schueler/Uebergangsempfehlung';
 export { AllgemeinbildendOrganisationsformen } from './asd/types/schule/AllgemeinbildendOrganisationsformen';

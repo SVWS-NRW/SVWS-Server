@@ -50,6 +50,7 @@ import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HochschulabschlussKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag;
@@ -120,6 +121,7 @@ import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Herkunftsarten;
+import de.svws_nrw.asd.types.schueler.Hochschulabschluss;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
@@ -524,6 +526,8 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/FormOffenerGanztag.json");
 		add(Laender.class, LaenderKatalogEintrag.class, Laender.values(),
 				"de/svws_nrw/asd/types/schule/Laender.json");
+		add(Hochschulabschluss.class, HochschulabschlussKatalogEintrag.class, Hochschulabschluss.values(),
+				"de/svws_nrw/asd/types/schueler/Hochschulabschluss.json");
 		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,

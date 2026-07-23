@@ -1,0 +1,213 @@
+{
+    "version": 1,
+    "daten": [
+      {
+        "bezeichner": "OHNE_HOCHSCHULABSCHLUSS",
+        "idStatistik": "1",
+        "historie": [
+          {
+            "id": 1000,
+            "schluessel": "O-HA",
+            "kuerzel": "O-HA",
+            "text": "ohne Hochschulabschluss",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": null
+          }         
+        ]
+      },
+      {
+        "bezeichner": "BACHELOR",
+        "idStatistik": "2",
+        "historie": [
+          {
+            "id": 2000,
+            "schluessel": "BA",
+            "kuerzel": "BA",
+            "text": "Bachelor",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_6"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "MASTER",
+        "idStatistik": "3",
+        "historie": [
+          {
+            "id": 3000,
+            "schluessel": "MA",
+            "kuerzel": "MA",
+            "text": "Master",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "PROMOTION",
+        "idStatistik": "4",
+        "historie": [
+          {
+            "id": 4000,
+            "schluessel": "PR",
+            "kuerzel": "PR",
+            "text": "Promotion",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_8"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "STAATSEXAMEN_1_BACHELOR",
+        "idStatistik": "5",
+        "historie": [
+          {
+            "id": 5000,
+            "schluessel": "1S-B",
+            "kuerzel": "1S-B",
+            "text": "1. Staatsexamen (Bachelor-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_6"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "STAATSEXAMEN_2_BACHELOR",
+        "idStatistik": "6",
+        "historie": [
+          {
+            "id": 6000,
+            "schluessel": "2S-B",
+            "kuerzel": "2S-B",
+            "text": "2. Staatsexamen (Bachelor-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_6"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "STAATSEXAMEN_1_MASTER",
+        "idStatistik": "7",
+        "historie": [
+          {
+            "id": 7000,
+            "schluessel": "1S-M",
+            "kuerzel": "1S-M",
+            "text": "1. Staatsexamen (Master-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "STAATSEXAMEN_2_MASTER",
+        "idStatistik": "8",
+        "historie": [
+          {
+            "id": 8000,
+            "schluessel": "2S-M",
+            "kuerzel": "2S-M",
+            "text": "2. Staatsexamen (Master-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]
+      },      
+      {
+        "bezeichner": "DIPLOM_FACHHOCHSCHULE",
+        "idStatistik": "9",
+        "historie": [
+          {
+            "id": 9000,
+            "schluessel": "D-F",
+            "kuerzel": "D-F",
+            "text": "Diplom (Fachhochschule)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_6"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "DIPLOM_UNIVERSITAET",
+        "idStatistik": "10",
+        "historie": [
+          {
+            "id": 10000,
+            "schluessel": "D-U",
+            "kuerzel": "D-U",
+            "text": "Diplom (Universität)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]
+      },
+      {
+        "bezeichner": "MAGISTER",
+        "idStatistik": "11",
+        "historie": [
+          {
+            "id": 11000,
+            "schluessel": "MAG",
+            "kuerzel": "MAG",
+            "text": "Magister",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]      
+      },
+      {
+        "bezeichner": "SONSTIGER_HOCHSCHULABSCHLUSS_BACHELOR",
+        "idStatistik": "12",
+        "historie": [
+          {
+            "id": 12000,
+            "schluessel": "S-H-B",
+            "kuerzel": "S-H-B",
+            "text": "Sonstiger Hochschulabschluss (Bachelor-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_6"
+          }         
+        ]      
+      },
+      {
+        "bezeichner": "SONSTIGER_HOCHSCHULABSCHLUSS_MASTER",
+        "idStatistik": "13",
+        "historie": [
+          {
+            "id": 13000,
+            "schluessel": "S-H-M",
+            "kuerzel": "S-H-M",
+            "text": "Sonstiger Hochschulabschluss (Master-Niveau)",
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "dqrNiveau": "DQR_NIVEAU_7"
+          }         
+        ]      
+      }
+    ]
+  }
