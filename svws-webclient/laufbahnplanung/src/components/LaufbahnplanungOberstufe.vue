@@ -34,13 +34,13 @@
 			</Teleport>
 
 			<div v-if="gostLaufbahnplanungState.schueler.abiturjahrgang !== null" class="page page-flex-row">
-				<div class="grow overflow-y-auto overflow-x-hidden min-w-fit">
+				<div class="overflow-y-auto overflow-x-hidden min-w-fit">
 					<s-laufbahnplanung-card-planung :manager />
 				</div>
-				<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden pr-4">
-					<div class="flex flex-col gap-y-16 lg:gap-y-20">
-						<s-laufbahnplanung-card-status />
+				<div class="grow min-w-xl max-w-3xl overflow-y-auto overflow-x-hidden pr-4">
+					<div class="flex flex-col gap-y-12 lg:gap-y-16">
 						<s-laufbahnplanung-card-gkl v-if="manager.zeigeGKLWahlen()" />
+						<s-laufbahnplanung-card-status />
 					</div>
 				</div>
 			</div>

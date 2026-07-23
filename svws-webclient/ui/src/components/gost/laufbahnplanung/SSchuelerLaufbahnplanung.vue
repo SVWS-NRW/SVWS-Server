@@ -28,10 +28,10 @@
 			<s-laufbahnplanung-card-planung v-if="visible" :manager />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-xl overflow-y-auto overflow-x-hidden pr-4">
-			<div class="flex flex-col gap-y-16 lg:gap-y-20">
+			<div class="flex flex-col gap-y-12 lg:gap-y-16">
 				<s-laufbahnplanung-card-beratung v-if="visible && hatUpdateKompetenz" :patch-beratungsdaten="doPatchBeratungsdaten" :updated />
-				<s-laufbahnplanung-card-status v-if="visible" />
 				<s-laufbahnplanung-card-gkl v-if="visible && manager.zeigeGKLWahlen()" />
+				<s-laufbahnplanung-card-status v-if="visible" />
 			</div>
 		</div>
 	</div>
