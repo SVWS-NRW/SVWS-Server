@@ -48,9 +48,9 @@ public abstract class DataManagerCardDav {
 
 
 	/**
-	 * Erstellt einen Kontakt ohne Payload, d.h. nur mit der Kontakt-ID der zugrundliegenden Daten.
+	 * Erstellt einen Kontakt ohne Payload, d.h. nur mit der Kontakt-ID der zugrundeliegenden Daten.
 	 *
-	 * @param id   die ID der zugrundliegenden Daten (z.B. Schüler-ID)
+	 * @param id   die ID der zugrundeliegenden Daten (z.B. Schüler-ID)
 	 *
 	 * @return der Adressbuch-Eintrag ohne Payload
 	 */
@@ -108,7 +108,7 @@ public abstract class DataManagerCardDav {
 		if ((telefonnummer == null) || (type == null)) {
 			return;
 		}
-		final boolean isDuplicate = telefonnummern.stream().anyMatch(t -> t.number.replace("\\D+", "").equals(telefonnummer.replace("\\D+", "")));
+		final boolean isDuplicate = telefonnummern.stream().anyMatch(t -> t.number.replaceAll("\\D+", "").equals(telefonnummer.replaceAll("\\D+", "")));
 		if (isDuplicate) {
 			return;
 		}
