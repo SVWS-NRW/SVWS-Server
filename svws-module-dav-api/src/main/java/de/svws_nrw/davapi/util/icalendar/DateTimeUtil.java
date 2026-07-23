@@ -32,7 +32,8 @@ public final class DateTimeUtil {
 	 * formatter für Dates nach RFC5545 Spezifikation wie es in .ics-Dateien
 	 * verwendet wird
 	 */
-	private static final DateTimeFormatter DAV_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyMMdd");
+	private static final DateTimeFormatter DAV_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+
 	/**
 	 * Die Standardzeitzone
 	 */
@@ -80,7 +81,7 @@ public final class DateTimeUtil {
 		try {
 			return ZonedDateTime.parse(input, DAV_ISO_FORMATTER_WITHZONE).toInstant();
 		} catch (@SuppressWarnings("unused") final DateTimeParseException dtpe) {
-			// Ausdruck konnte nicht geparst werden, daher mit default zeitzone parsen
+			// Ausdruck konnte nicht geparst werden, daher mit default Zeitzone parsen
 			return parseCalDav(input, TIMEZONE_DEFAULT);
 		}
 	}
