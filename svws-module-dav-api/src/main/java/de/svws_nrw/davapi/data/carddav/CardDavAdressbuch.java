@@ -46,7 +46,7 @@ public final class CardDavAdressbuch {
 		if (book == null) {
 			return null;
 		}
-		if (!withContacts) {
+		if (withContacts) {
 			book.adressbuchEintraege.addAll(getKontakteByAdressbuch(idBook, withPayload));
 		}
 		return book;
