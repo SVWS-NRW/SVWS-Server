@@ -9,7 +9,7 @@
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzergruppe" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll scroll-into-view :focus-switching-enabled :focus-help-visible>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #actions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe

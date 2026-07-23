@@ -74,7 +74,6 @@
 			</span>
 			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
-		<span v-if="removable && (type === 'date' || type === 'datetime-local') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !isFirefox" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
@@ -120,7 +119,6 @@
 		maxLen?: number;
 		minLen?: number;
 		span?: 'full' | '2';
-		removable?: boolean;
 	}>(), {
 		type: "text",
 		minDate: undefined,
@@ -141,7 +139,6 @@
 		maxLen: undefined,
 		minLen: undefined,
 		span: undefined,
-		removable: false,
 	});
 
 	const emit = defineEmits<{

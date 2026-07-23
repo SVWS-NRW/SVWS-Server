@@ -11,7 +11,7 @@
 				<li v-if="lehrerFehlerhafteEmail === 1">{{ lehrerFehlerhafteEmail }} fehlerhafte Adresse</li>
 			</ul>
 			<div v-if="!manager().daten.lehrer.isEmpty()" class="w-64">
-				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 			</div>
 		</svws-ui-header>
 		<div class="page ">

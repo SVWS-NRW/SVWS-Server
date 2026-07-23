@@ -11,7 +11,7 @@
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection
 				:focus-switching-enabled :focus-help-visible>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" />

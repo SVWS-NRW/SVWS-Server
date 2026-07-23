@@ -10,7 +10,7 @@
 				:items="filteredAnkreuzkompetenz" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
-					<svws-ui-text-input placeholder="Suchen" type="search" v-model="searchTerm" removable />
+					<svws-ui-text-input placeholder="Suchen" type="search" v-model="searchTerm" />
 				</template>
 
 				<template #filterAdvanced>

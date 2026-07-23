@@ -121,11 +121,6 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		const wrapper = mount(SvwsUiTextInput, { props: { innerSpan } });
 		expect(wrapper.html()).includes(className);
 	});
-
-	test('Prop removable wird an das Input Feld übergeben', () => {
-		const wrapper = mount(SvwsUiTextInput, { props: { removable: true, type: 'date' } });
-		expect(wrapper.find('.svws-icon--remove').exists()).toBe(true);
-	});
 });
 
 

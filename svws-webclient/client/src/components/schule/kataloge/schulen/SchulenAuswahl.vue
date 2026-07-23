@@ -11,8 +11,7 @@
 				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input type="search" placeholder="Suchen (Ort, Schulnr., Kürzel, Kurzbez.)"
-						v-model="searchTerm"
-						removable />
+						v-model="searchTerm" />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle"

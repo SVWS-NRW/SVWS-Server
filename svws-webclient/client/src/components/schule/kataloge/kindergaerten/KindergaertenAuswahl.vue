@@ -10,7 +10,7 @@
 				:items="rowsFiltered" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
-					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="sichtbareKindergaerten">Nur Sichtbare</svws-ui-checkbox>

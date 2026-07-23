@@ -111,7 +111,7 @@
 				</svws-ui-tooltip>
 			</div>
 			<div class="flex">
-				<ui-select label="type" v-model="activeState.type.value" :manager="typeSelectManager" :removable="false" />
+				<ui-select label="type" v-model="activeState.type.value" :manager="typeSelectManager" />
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
@@ -167,18 +167,6 @@
 					<template #content>
 						Gibt an, ob das Input readonly ist. Dadurch ist es nicht editierbar und erhält ein Schloss-Icon, um dies zu visualisieren. Es wird aber nicht ausgegraut wie bei <code class="bg-ui-selected">disabled</code>.<br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">readonly: false</code>
-					</template>
-				</svws-ui-tooltip>
-			</div>
-			<div class="flex">
-				<HstCheckbox title="removable"
-					v-model="activeState.removable.value" />
-				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line" />
-					<template #content>
-						Gibt an, ob das Input mit einem Button geleert werden kann. Nur relevant für die Typen <code class="bg-ui-selected">date</code> und
-						<code class="bg-ui-selected">datetime-local</code>
-						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">removable: false</code>
 					</template>
 				</svws-ui-tooltip>
 			</div>
@@ -261,7 +249,7 @@
 			</div>
 			<div class="flex">
 				<div>
-					<svws-ui-text-input placeholder="MinDate" v-model="activeState.minDate.value" type="date" removable />
+					<svws-ui-text-input placeholder="MinDate" v-model="activeState.minDate.value" type="date" />
 				</div>
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
@@ -274,7 +262,7 @@
 			</div>
 			<div class="flex">
 				<div>
-					<svws-ui-text-input placeholder="MaxDate" v-model="activeState.maxDate.value" type="date" removable />
+					<svws-ui-text-input placeholder="MaxDate" v-model="activeState.maxDate.value" type="date" />
 				</div>
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
@@ -338,7 +326,6 @@
 		maxLen?: number;
 		minLen?: number;
 		span?: "full" | "2" | undefined;
-		removable?: boolean;
 		muss?: boolean;
 		kann?: boolean;
 		hinweis?: boolean;
@@ -354,7 +341,6 @@
 		public maxLen: Ref<number | undefined> = ref();
 		public minLen: Ref<number | undefined> = ref();
 		public statistics = ref(false);
-		public removable = ref(false);
 		public disabled = ref(false);
 		public required = ref(false);
 		public readonly = ref(false);
@@ -409,7 +395,6 @@
 			disabled: this.disabled,
 			required: this.required,
 			readonly: this.readonly,
-			removable: this.removable,
 			headless: this.headless,
 			focus: this.focus,
 			span: this.spanValue,
@@ -503,7 +488,6 @@
 			activeState.value.disabled.value ? `disabled` : "",
 			activeState.value.required.value ? `required` : "",
 			activeState.value.readonly.value ? `readonly` : "",
-			activeState.value.removable.value ? `removable` : "",
 			activeState.value.headless.value ? `headless` : "",
 			activeState.value.focus.value ? `focus` : "",
 			activeState.value.url.value ? "url" : "",

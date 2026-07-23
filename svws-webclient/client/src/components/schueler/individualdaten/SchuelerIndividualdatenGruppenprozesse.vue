@@ -51,7 +51,7 @@
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="aufnahmedatum">
 						<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="aufnahmedatum"
-							@update:model-value="setAufnahmedatum" type="date" :removable="false" statistics />
+							@update:model-value="setAufnahmedatum" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<svws-ui-spacing />
 					<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes gap-y-2!">
@@ -123,11 +123,11 @@
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionabmeldung">
 						<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="religionabmeldung"
-							@update:model-value="setReligionabmeldung" type="date" :removable="false" statistics />
+							@update:model-value="setReligionabmeldung" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionanmeldung">
 						<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="religionanmeldung"
-							@update:model-value="setReligionanmeldung" type="date" :removable="false" statistics />
+							@update:model-value="setReligionanmeldung" type="date" statistics />
 					</ui-gruppenprozesse-wrapper>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>

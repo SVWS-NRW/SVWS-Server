@@ -5,7 +5,7 @@
 			:filtered="(schuelerFilter().kurs_toggle.value === 'kurs') || (schuelerFilter().fach_toggle.value === 'fach') || (schuelerFilter().radio_filter !== 'alle')"
 			:columns :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
-				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" removable />
+				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" />
 			</template>
 			<template #filterAdvanced>
 				<div class="radio radio--row flex flex-row">

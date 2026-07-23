@@ -11,7 +11,7 @@
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>

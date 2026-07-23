@@ -6,7 +6,7 @@
 			<div class="flex w-fit">
 				<svws-ui-text-input type="datetime-local" :placeholder="`Eingabe ${props.modus === 'ab' ? 'von' : 'bis'}`"
 					:model-value="model" class="min-w-64"
-					@change="update" :disabled removable />
+					@change="update" :disabled />
 				<div class="content-end mb-1">
 					<svws-ui-button type="secondary" @click="setToNow" :disabled class=""> Aktuelle&nbsp;Zeit </svws-ui-button>
 				</div>

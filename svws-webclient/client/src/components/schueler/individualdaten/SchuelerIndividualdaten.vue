@@ -104,11 +104,11 @@
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly
 					v-model="model.proxy.anmeldedatum"
 					@change="model.patch"
-					type="date" removable />
+					type="date" />
 				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly
 					v-model="model.proxy.aufnahmedatum"
 					@change="model.patch"
-					type="date" removable statistics />
+					type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
 					<svws-ui-checkbox :readonly
@@ -205,11 +205,11 @@
 				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly
 					v-model="model.proxy.religionabmeldung"
 					@change="model.patch"
-					type="date" removable statistics />
+					type="date" statistics />
 				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly
 					v-model="model.proxy.religionanmeldung"
 					@change="model.patch"
-					type="date" removable statistics />
+					type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<schueler-telefonnummern v-if="serverState.hasDev && hatKompetenzAnsehen && zeigeAlles"

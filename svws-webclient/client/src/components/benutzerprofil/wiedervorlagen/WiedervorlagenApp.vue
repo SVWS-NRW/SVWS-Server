@@ -22,10 +22,10 @@
 		<div class="bg-ui-neutral rounded-md w-full pt-1 pb-2 px-1 mb-5">
 			<div class="flex flex-col md:flex-row flex-wrap lg:flex-nowrap gap-x-3 gap-y-1">
 				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink">
-					<svws-ui-text-input type="search" placeholder="Suche in Bemerkung/Name" v-model="filter.search" removable />
+					<svws-ui-text-input type="search" placeholder="Suche in Bemerkung/Name" v-model="filter.search" />
 				</div>
 				<div class="max-w-[30em] md:max-width-auto md:basis-[30em] shrink">
-					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" removable class="max-w-[30em]" />
+					<svws-ui-text-input type="date" placeholder="Wiedervorlage bis" v-model="filter.tsWiedervorlage" class="max-w-[30em]" />
 				</div>
 				<div class="flex md:basis-full lg:basis-auto md:mt-[0.6em]">
 					<svws-ui-checkbox type="toggle" v-model="filter.toggleUnerledigt">

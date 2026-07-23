@@ -10,7 +10,7 @@
 				:items="manager().filtered()" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
-					<svws-ui-text-input placeholder="Suchen" v-model="searchTerm" type="search" removable />
+					<svws-ui-text-input placeholder="Suchen" v-model="searchTerm" type="search" />
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom">

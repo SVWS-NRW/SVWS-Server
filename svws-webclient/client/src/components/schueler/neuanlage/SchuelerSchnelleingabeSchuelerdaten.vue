@@ -119,7 +119,7 @@
 			<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 				:model-value="manager().stammdaten.idSchuelerausweis"
 				@change="patchIdSchuelerausweis"
-				:max-len="30" removable :readonly />
+				:max-len="30" :readonly />
 			<svws-ui-checkbox v-model="schwerbehinderung">
 				Schwerstbehinderung
 			</svws-ui-checkbox>

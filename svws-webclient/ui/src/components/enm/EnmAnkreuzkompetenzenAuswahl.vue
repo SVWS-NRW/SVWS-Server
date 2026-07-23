@@ -6,7 +6,7 @@
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
 			<div class="w-full px-2">
-				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 			</div>
 			<svws-ui-table :items="rowsFiltered" :model-value="auswahlMehrfach()" @update:model-value="setMehrfachauswahl"
 				:clickable="!enmManager().mapLerngruppenAuswahl.isEmpty()" :clicked="auswahlEinzel()" @update:clicked="setEinzelauswahl"

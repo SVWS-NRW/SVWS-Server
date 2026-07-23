@@ -10,7 +10,7 @@
 				:items="props.manager().filtered()" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
-					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
 					<ui-select-multi label="Jahrgang"
