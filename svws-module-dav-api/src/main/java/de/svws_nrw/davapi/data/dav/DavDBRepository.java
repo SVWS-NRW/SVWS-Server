@@ -565,7 +565,7 @@ public final class DavDBRepository {
 
 		// Prüfe, ob bereits eine Berechtigung des Benutzers auf der Ressource vorliegt
 		final List<DTODavRessourceCollectionsACL> dtosPermissions =
-				conn.queryList("SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = ?1 AND e.RessourceCollection_ID = ?1",
+				conn.queryList("SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = ?1 AND e.RessourceCollection_ID = ?2",
 						DTODavRessourceCollectionsACL.class, conn.getUser().getId(), dtoCollection.ID);
 		// Prüfe, ob es mehr als einen Eintrag für einen Benutzer auf einer Collection gibt. Dies ist nicht zulässig
 		if (dtosPermissions.size() > 1) {
@@ -621,7 +621,7 @@ public final class DavDBRepository {
 
 		// Prüfe, ob bereits eine Berechtigung des Benutzers auf der Ressource vorliegt - es wird genau ein Ergebnis erwartet
 		final List<DTODavRessourceCollectionsACL> dtosPermissions =
-				conn.queryList("SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = ?1 AND e.RessourceCollection_ID = ?1",
+				conn.queryList("SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = ?1 AND e.RessourceCollection_ID = ?2",
 						DTODavRessourceCollectionsACL.class, idBenutzer, dtoCollection.ID);
 		if (dtosPermissions.size() != 1) {
 			conn.transactionRollback();
