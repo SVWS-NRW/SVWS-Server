@@ -372,7 +372,7 @@ public final class MethodNode {
 	private static boolean areStatic(final List<MethodNode> methods) {
 		final boolean result = methods.get(0).isStatic;
 		for (int i = 1; i < methods.size(); i++) {
-			if (methods.get(0).isStatic != result) {
+			if (methods.get(i).isStatic != result) {
 				throw new TranspilerException("Methods with the same name must either all be static or none of them.");
 			}
 		}
