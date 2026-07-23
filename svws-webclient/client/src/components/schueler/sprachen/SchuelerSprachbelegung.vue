@@ -1,8 +1,13 @@
 <template>
 	<svws-ui-content-card title="Sprachenfolge">
 		<div v-if="!readonly && verfuegbareSprachen.length > 0" class="w-1/4 mb-4">
-			<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="hinzufuegen"
-				:items="verfuegbareSprachen" :item-text="getTextBySprache" ref="selectSprachen" autofocus focus-class-content />
+			<svws-ui-select ref="selectSprachen"
+				title="Hinzufügen..."
+				:model-value="undefined"
+				@update:model-value="hinzufuegen"
+				:items="verfuegbareSprachen"
+				:item-text="getTextBySprache"
+				removable autofocus focus-class-content />
 		</div>
 		<ui-table-grid v-if="!gridManager.daten.isEmpty()" name="Sprachbelegungen" :manager="() => gridManager" hide-selection>
 			<template #header>
@@ -41,7 +46,11 @@
 				</td>
 				<template v-if="hatSpaltenZeitraum">
 					<td>
-						<svws-ui-select v-if="!readonly" title="Von Jahrgang" headless v-model="row.belegungVonJahrgang.value" :items="sprachJahrgaenge" :item-text="jahrgangText" />
+						<svws-ui-select v-if="!readonly" title="Von Jahrgang"
+							v-model="row.belegungVonJahrgang.value"
+							:items="sprachJahrgaenge"
+							:item-text="jahrgangText"
+							headless />
 						<div v-else> {{ row.belegungVonJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
@@ -54,8 +63,12 @@
 						<div v-else> {{ row.belegungVonAbschnitt ?? "?" }} </div>
 					</td>
 					<td>
-						<svws-ui-select v-if="!readonly" title="Bis Jahrgang" headless removable v-model="row.belegungBisJahrgang.value"
-							:items="sprachJahrgaengeBis(row.belegungVonJahrgang.value)" :item-text="jahrgangText" />
+						<svws-ui-select v-if="!readonly"
+							title="Bis Jahrgang"
+							v-model="row.belegungBisJahrgang.value"
+							:items="sprachJahrgaengeBis(row.belegungVonJahrgang.value)"
+							:item-text="jahrgangText"
+							headless use-null removable />
 						<div v-else> {{ row.belegungBisJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
@@ -80,13 +93,21 @@
 						<div v-else>-</div>
 					</template>
 					<template v-else-if="row.proxy.sprache === 'L'">
-						<svws-ui-select v-if="!readonly" headless :items="latein" removable :item-text="i => i.text"
-							:model-value="latinum" @update:model-value="val => patchLatinum(val ?? null, row)" />
+						<svws-ui-select v-if="!readonly"
+							:model-value="latinum"
+							@update:model-value="val => patchLatinum(val ?? null, row)"
+							:items="latein"
+							:item-text="i => i.text"
+							headless use-null removable />
 						<div v-else> {{ latinum?.text ?? '-' }} </div>
 					</template>
 					<template v-else>
-						<svws-ui-select v-if="!readonly" title="Referenzniveau" headless removable v-model="row.referenzniveau.value"
-							:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
+						<svws-ui-select v-if="!readonly"
+							title="Referenzniveau"
+							v-model="row.referenzniveau.value"
+							:items="Sprachreferenzniveau.values()"
+							:item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'"
+							headless use-null removable />
 						<div v-else> {{ row.referenzniveau }} </div>
 					</template>
 				</td>
@@ -212,7 +233,7 @@
 	});
 
 	const sprachJahrgaenge = computed(() => {
-		const schulform = props.schuelerListeManager().schulform();
+		const schulform = schuleState.schulform;
 		if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE);
 		}
@@ -259,7 +280,7 @@
 		data.reihenfolge = gridManager.daten.size() + 1;
 		data.belegungVonAbschnitt = 1;
 		data.belegungBisAbschnitt = 2;
-		const schulform = props.schuelerListeManager().schulform();
+		const schulform = schuleState.schulform;
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
 			data.belegungVonJahrgang = Jahrgaenge.data().getEintragByID(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
 		}
@@ -267,8 +288,8 @@
 		selectSprachen.value.reset();
 	}
 
-	function jahrgangText(jg: Jahrgaenge | undefined) {
-		if (jg === undefined) {
+	function jahrgangText(jg: Jahrgaenge | null) {
+		if (jg === null) {
 			return '—';
 		}
 		const jgDaten = jg.daten(schuljahr.value);
