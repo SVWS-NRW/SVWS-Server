@@ -581,7 +581,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 		if ((halbjahre === null) || (halbjahre.length !== 2)) {
 			return false;
 		}
-		return ((halbjahre[0] as unknown === GostHalbjahr.EF1 as unknown) && (halbjahre[0] as unknown === GostHalbjahr.EF2 as unknown)) || ((halbjahre[0] as unknown === GostHalbjahr.EF2 as unknown) && (halbjahre[0] as unknown === GostHalbjahr.EF1 as unknown));
+		return ((halbjahre[0] as unknown === GostHalbjahr.EF1 as unknown) && (halbjahre[1] as unknown === GostHalbjahr.EF2 as unknown)) || ((halbjahre[0] as unknown === GostHalbjahr.EF2 as unknown) && (halbjahre[1] as unknown === GostHalbjahr.EF1 as unknown));
 	}
 
 	/**

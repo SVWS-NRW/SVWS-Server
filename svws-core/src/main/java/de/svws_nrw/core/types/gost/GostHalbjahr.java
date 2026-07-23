@@ -554,8 +554,8 @@ public enum GostHalbjahr {
 		if ((halbjahre == null) || (halbjahre.length != 2)) {
 			return false;
 		}
-		return ((halbjahre[0] == GostHalbjahr.EF1) && (halbjahre[0] == GostHalbjahr.EF2))
-				|| ((halbjahre[0] == GostHalbjahr.EF2) && (halbjahre[0] == GostHalbjahr.EF1));
+		return ((halbjahre[0] == GostHalbjahr.EF1) && (halbjahre[1] == GostHalbjahr.EF2))
+				|| ((halbjahre[0] == GostHalbjahr.EF2) && (halbjahre[1] == GostHalbjahr.EF1));
 	}
 
 
