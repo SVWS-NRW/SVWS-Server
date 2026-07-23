@@ -106,7 +106,7 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public getFachwahlen(idFach: number): List<GostFachwahl> {
-		const fwFach: ArrayList<GostFachwahl> | null = this.mapSchueler.get(idFach);
+		const fwFach: ArrayList<GostFachwahl> | null = this.mapFach.get(idFach);
 		return (fwFach === null) ? new ArrayList() : fwFach;
 	}
 

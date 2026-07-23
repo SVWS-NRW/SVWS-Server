@@ -101,7 +101,7 @@ public class GostFachwahlManager {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public @NotNull List<GostFachwahl> getFachwahlen(final long idFach) {
-		final ArrayList<GostFachwahl> fwFach = mapSchueler.get(idFach);
+		final ArrayList<GostFachwahl> fwFach = mapFach.get(idFach);
 		return (fwFach == null) ? new ArrayList<>() : fwFach;
 	}
 
