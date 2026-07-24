@@ -2,8 +2,6 @@ package de.svws_nrw.schulen.v1.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

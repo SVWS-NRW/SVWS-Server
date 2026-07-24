@@ -323,7 +323,7 @@ public class SchuldateiKatalogManager {
 	 * @param schuljahrAb			das erste Schuljahr
 	 * @param schuljahrBis			das letzte Schuljahr
 	 * @param wert                  der Wert, auf den geprüft wird
-	 * @param mitTeilgueltigkeit	wenn true, reichts es, wenn der Wert nicht im gesamten Zeitraum definiert ist.
+	 * @param mitTeilgueltigkeit	wenn true, reicht es, wenn der Wert nicht im gesamten Zeitraum definiert ist.
 	 *
 	 * @return boolean, true wenn Eintrag entsprechend vorliegt, sonst false
 	 */
@@ -336,8 +336,8 @@ public class SchuldateiKatalogManager {
 		final int ab = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
 		int bis = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
 		for (final SchuldateiKatalogeintrag eintrag : list) {
-			if ((eintrag.gueltigbis == null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis) {
-				return false;
+			if ((eintrag.gueltigbis != null) && SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis) {
+				return (mitTeilgueltigkeit && (SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) >= ab));
 			}
 			final int vonSchuljahr = (eintrag.gueltigab == null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
 			if (vonSchuljahr <= bis) {

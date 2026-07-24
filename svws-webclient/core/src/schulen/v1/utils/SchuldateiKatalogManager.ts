@@ -317,7 +317,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * @param schuljahrAb			das erste Schuljahr
 	 * @param schuljahrBis			das letzte Schuljahr
 	 * @param wert                  der Wert, auf den geprüft wird
-	 * @param mitTeilgueltigkeit	wenn true, reichts es, wenn der Wert nicht im gesamten Zeitraum definiert ist.
+	 * @param mitTeilgueltigkeit	wenn true, reicht es, wenn der Wert nicht im gesamten Zeitraum definiert ist.
 	 *
 	 * @return boolean, true wenn Eintrag entsprechend vorliegt, sonst false
 	 */
@@ -353,8 +353,8 @@ export class SchuldateiKatalogManager extends JavaObject {
 			const ab: number = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
 			let bis: number = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
 			for (const eintrag of list) {
-				if ((eintrag.gueltigbis === null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis) {
-					return false;
+				if ((eintrag.gueltigbis !== null) && SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis) {
+					return (mitTeilgueltigkeit && (SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) >= ab));
 				}
 				const vonSchuljahr: number = (eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
 				if (vonSchuljahr <= bis) {

@@ -88,7 +88,7 @@ export class SchuldateiUtils extends JavaObject {
 	}
 
 	/**
-	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 * Ermittlung des Schuljahres in dem der Zeitpunkt des angegebenen Datumstrings liegt
 	 * Wenn die Gültigkeit von Katalogeinträgen innerhalb eines Schuljahres wechseln, so ist der alte Eintrag
 	 * bis zum Ende des Schuljahres gültig und der neue Eintrag erst ab kommenden Schuljahr.
 	 * Eintrag1: "gueltigab": "01.01.1970",	"gueltigbis": "07.03.2022"

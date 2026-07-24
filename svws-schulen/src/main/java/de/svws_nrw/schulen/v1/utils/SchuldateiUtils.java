@@ -86,7 +86,7 @@ public final class SchuldateiUtils {
 
 
 	/**
-	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 * Ermittlung des Schuljahres in dem der Zeitpunkt des angegebenen Datumstrings liegt
 	 * Wenn die Gültigkeit von Katalogeinträgen innerhalb eines Schuljahres wechseln, so ist der alte Eintrag
 	 * bis zum Ende des Schuljahres gültig und der neue Eintrag erst ab kommenden Schuljahr.
 	 * Eintrag1: "gueltigab": "01.01.1970",	"gueltigbis": "07.03.2022"
@@ -105,7 +105,7 @@ public final class SchuldateiUtils {
 	public static @NotNull Integer schuljahrGueltigAb(final @NotNull String ab) throws IllegalArgumentException {
 		final @NotNull int[] dmyAb = splitDate(ab);
 		int jahrAb = dmyAb[2];
-		if ((dmyAb[1] > 8) || ((dmyAb[1] == 8) && (dmyAb[0] > 1))) { //alle Tage nach dem 01.08. eines Jahres
+		if ((dmyAb[1] > 8) || ((dmyAb[1] == 8) && (dmyAb[0] > 1))) { //alle Tage nach dem 01.08. eines Jahres -> Wechsel im Schuljahr -> gilt erst ab nächstem
 			jahrAb++;
 		}
 		return jahrAb;
