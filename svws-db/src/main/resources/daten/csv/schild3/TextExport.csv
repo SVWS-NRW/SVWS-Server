@@ -166,6 +166,18 @@ Schueler;ID;Erzieher: Ortsteil;S;;;Bezeichnung;SELECT K_Ortsteil.Bezeichnung, Sc
 Schueler;ID;Erzieher: Postleitzahl;S;;;PLZ;SELECT O.PLZ, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Straße;S;;;ErzStrasse;SELECT CONCAT(IFNULL(ErzStrassenname,''),' ',IFNULL(ErzHausNr,''),IFNULL(ErzHausNrZusatz,'')) as ErzStrasse FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Interne ID-Nummer;I;;;;;ALLE
+Schueler;ID;Klassenlehrer: Nachname;S;;;Nachname;SELECT L.Nachname FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Klassenlehrer: Vorname;S;;;Vorname;SELECT L.Vorname FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Klassenlehrer: Titel;S;;;Titel;SELECT L.Titel FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Klassenlehrer: Anrede;S;;;Anrede;SELECT L.Anrede FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Klassenlehrer: Kürzel;S;;;Kuerzel;SELECT L.Kuerzel FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Klassenlehrer: Amtsbezeichnung;S;;;Amtsbezeichnung;SELECT L.Amtsbezeichnung FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=1 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Nachname;S;;;Nachname;SELECT L.Nachname FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Vorname;S;;;Vorname;SELECT L.Vorname FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Titel;S;;;Titel;SELECT L.Titel FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Anrede;S;;;Anrede;SELECT L.Anrede FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Kürzel;S;;;Kuerzel;SELECT L.Kuerzel FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
+Schueler;ID;Stv. Klassenlehrer: Amtsbezeichnung;S;;;Amtsbezeichnung;SELECT L.Amtsbezeichnung FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
 Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_Telefonart T, SchuelerTelefone ST WHERE T.ID=ST.Telefonart_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Bemerkung;S;;;Bemerkung;SELECT Bemerkung FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Telefon-Nummer;S;;;Telefonnummer;SELECT Telefonnummer FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
@@ -213,8 +225,8 @@ Schueler;Telefon;Telefon-Nr.;S;;;;;ALLE
 Schueler;Uebergangsempfehlung_JG5;Übergangsempfehlung;S;;;;;ALLE
 Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie;S;;;mtblVerkehrssprachen.bezeichnung;kuerzel=%;ALLE
 Schueler;Volljaehrig;Volljährig;B;;;;;ALLE
-Schueler;Vorname;Vorname;S;;;;;ALLE
-Schueler;Zusatz;Alle Vornamen;S;;;;;ALLE
+Schueler;Vorname;Rufname;S;;;;;ALLE
+Schueler;ID;Vorname;S;;;Vname;SELECT COALESCE(NULLIF(Zusatz, ''), Vorname) AS VName FROM Schueler WHERE ID=%;ALLE
 Schueler;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Tel;Bemerkung;Bemerkung;S;;;;;ALLE
 Tel;Schueler_ID;Schüler-Nachname;S;;;Name;SELECT Name FROM Schueler WHERE ID=%;ALLE
