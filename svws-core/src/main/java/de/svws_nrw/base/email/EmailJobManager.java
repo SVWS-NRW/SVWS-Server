@@ -11,6 +11,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import de.svws_nrw.base.LogUtils;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -129,7 +132,8 @@ public final class EmailJobManager {
 	 *
 	 * @return der Name des SVWS-Datenbank-Schemas
 	 */
-	@NotNull String getSchema() {
+	@NotNull
+	String getSchema() {
 		return this.schema;
 	}
 
@@ -213,16 +217,34 @@ public final class EmailJobManager {
 	 * das Interrupt-Signal (beim Warten auf einen neuen Job in {@code jobs.take()})
 	 * oder nach Abschluss des aktuell laufenden Jobs, da dieser über
 	 * {@link EmailJob#hasCancellationRequest()} das Abbruch-Flag auswertet.
+	 * {@link #processJob} fängt reguläre Fehler beim Versand bereits selbst ab und markiert den
+	 * Job entsprechend als fehlgeschlagen. Sollte dennoch eine unerwartete Exception bis hierher durchschlagen,
+	 * wurde der Job durch {@code jobs.take()} bereits aus der Warteschlange entnommen und kann nicht mehr regulär
+	 * abgeschlossen werden. Die zugehörigen E-Mails gehen damit unwiederbringlich verloren.
+	 * Damit die Ursache im Fehlerfall nachvollzogen werden kann, wird ein solcher Fehler geloggt,
+	 * bevor der Worker mit dem nächsten Job fortfährt.
 	 */
 	private void run() {
 		while (running) {
+			EmailJob job = null;
 			try {
-				processJob(jobs.take());
+				job = jobs.take();
+				processJob(job);
 			} catch (@SuppressWarnings("unused") final InterruptedException e) {
 				Thread.currentThread().interrupt();
 				return;
-			} catch (@SuppressWarnings("unused") final Exception ignore) {
-				// Der Worker läuft weiter, ohne Fehler zu verursachen.
+			} catch (final Exception e) {
+				final String jobInfo = (job == null) ? "unbekannt" : String.valueOf(job.getId());
+				final String meldung = "- FEHLER: Unerwarteter Fehler bei der Verarbeitung von Job " + jobInfo + ". "
+						+ "Der Job konnte nicht abgeschlossen werden, die zugehörigen E-Mails gehen verloren: "
+						+ ((e.getMessage() != null) ? e.getMessage() : e.getClass().getSimpleName());
+				// Job-internes Fehler-Log (Paket-Konvention), damit der Fehler über den Job-Status abrufbar bleibt.
+				if (job != null) {
+					job.addLogError(meldung);
+				}
+				// Zusätzlich server-seitig inklusive Stacktrace loggen, damit die Ursache diagnostiziert werden kann.
+				Logger.global().logLn(LogLevel.ERROR, "EmailJobManager (Schema: " + schema + ", Benutzer-ID: " + idUser + "): " + meldung);
+				LogUtils.logStacktrace(Logger.global(), e);
 			}
 		}
 	}
@@ -250,7 +272,7 @@ public final class EmailJobManager {
 	 */
 	private void processJob(final EmailJob job) {
 		// Sichere den Übergang von QUEUED zu SENDING atomar ab, damit cancelJob() nicht gleichzeitig von QUEUED zu CANCELED wechseln kann.
-		boolean canceledBeforeStart;
+		final boolean canceledBeforeStart;
 		synchronized (queueTransitionLock) {
 			canceledBeforeStart = job.hasCancellationRequest();
 			if (canceledBeforeStart) {
@@ -299,9 +321,8 @@ public final class EmailJobManager {
 	 * @param allSuccessful  true, wenn alle E-Mails ohne Fehler versendet wurden
 	 */
 	private void setStatusAfterProcessJob(final EmailJob job, final boolean allSuccessful) {
-		@SuppressWarnings("java:S1854") // finalStatus kann hier nicht final sein (bedingte Zuweisung im synchronized-Block)
-		EmailJobStatus finalStatus;
 		synchronized (queueTransitionLock) {
+			final EmailJobStatus finalStatus;
 			// Ein Abbruch-Request hat immer Vorrang, unabhängig davon, wann er gesetzt wurde.
 			if (job.hasCancellationRequest()) {
 				job.addLogError("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
@@ -518,7 +539,8 @@ public final class EmailJobManager {
 				// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
 				if (job.getContext().isForceMaxAttachmentSize()) {
 					// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
-					job.addLogSkipped(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
+					job.addLogSkipped(
+							("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
 									.formatted(recipient));
 				} else {
 					// Fall 2: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration erlaubt. Erzeuge daher ein Einzelpaket am Ende der Ergebnisliste
