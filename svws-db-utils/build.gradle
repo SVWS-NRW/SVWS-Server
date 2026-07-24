@@ -5,7 +5,7 @@ plugins {
 }
 
 configurations {
-	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, email, mapstructApi)
+	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, email, mapstructApi, tika)
 	annotationProcessor.extendsFrom(mapstructProcessor)
 }
 

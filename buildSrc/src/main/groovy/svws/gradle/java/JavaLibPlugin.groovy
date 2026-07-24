@@ -1,12 +1,11 @@
-package svws.gradle.java;
+package svws.gradle.java
 
 import org.gradle.api.GradleException
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.JavaVersion
-import org.gradle.api.tasks.Exec
-import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
 
 /**
@@ -172,6 +171,12 @@ class JavaLibPlugin implements Plugin<Project> {
 	}
 
 
+	void addTika() {
+		project.configurations.create('tika');
+		project.dependencies.add('tika', 'org.apache.tika:tika-core:3.3.1');
+	}
+
+
 	@Override
 	void apply(Project project) {
 		this.project = project;
@@ -220,6 +225,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addJaxbRuntime()
 		this.addXjc()
 		this.addMapstruct()
+		this.addTika()
 	}
 
 }

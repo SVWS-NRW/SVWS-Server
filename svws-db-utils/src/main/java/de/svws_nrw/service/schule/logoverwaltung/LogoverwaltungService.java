@@ -1,9 +1,11 @@
 package de.svws_nrw.service.schule.logoverwaltung;
 
-import java.time.LocalDateTime;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -16,17 +18,21 @@ import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
 import de.svws_nrw.service.schule.SchuleService;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.Strings;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import static de.svws_nrw.data.TransactionSupport.transactional;
 
 public class LogoverwaltungService {
 
+	private static final Set<String> ALLOWED_IMAGE_MIME_TYPES = Set.of("image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/tiff");
 	private static final String NOT_FOUND_MESSAGE = "Es wurde kein Logo mit der ID %d gefunden.";
+	private static final double MAX_LOGO_SIZE_KB = 2 * 1024d;
 
 	private final LogoverwaltungRepository repository;
 	private final LogoverwaltungMapper mapper;
 
 	private final SchuleService schuleService;
+	private final Clock clock;
 
 	/**
 	 * Erstellt einen neuen Service für die Logoverwaltung.
@@ -34,11 +40,16 @@ public class LogoverwaltungService {
 	 * @param repository das Repository für die Logoverwaltung
 	 * @param mapper    der Mapper für die Logoverwaltung
 	 * @param schuleService der Service für die Schule
+	 * @param clock die Clock für die Zeitangaben
 	 */
-	public LogoverwaltungService(final LogoverwaltungRepository repository, final LogoverwaltungMapper mapper, final SchuleService schuleService) {
+	public LogoverwaltungService(final LogoverwaltungRepository repository,
+			final LogoverwaltungMapper mapper,
+			final SchuleService schuleService,
+			final Clock clock) {
 		this.repository = repository;
 		this.mapper = mapper;
 		this.schuleService = schuleService;
+		this.clock = clock;
 	}
 
 	/**
@@ -54,7 +65,7 @@ public class LogoverwaltungService {
 						Response.Status.NOT_FOUND,
 						NOT_FOUND_MESSAGE.formatted(id))
 				);
-		return mapper.toApi(entity);
+		return toApi(entity);
 	}
 
 	/**
@@ -64,7 +75,7 @@ public class LogoverwaltungService {
 	 */
 	public List<Logo> getAll() {
 		return repository.getAll().stream()
-				.map(mapper::toApi)
+				.map(this::toApi)
 				.toList();
 	}
 
@@ -76,6 +87,7 @@ public class LogoverwaltungService {
 	 */
 	public Logo create(final LogoCreateRequest createRequest) {
 		return transactional(() -> {
+			prepareCreate(createRequest);
 			validateCreate(createRequest);
 
 			var entity = mapper.toDomain(createRequest);
@@ -94,6 +106,7 @@ public class LogoverwaltungService {
 	 */
 	public Logo patch(final Long id, final LogoPatchRequest patchRequest) {
 		return transactional(() -> {
+			preparePatch(patchRequest);
 			validatePatch(patchRequest);
 
 			var entity = repository.findById(id)
@@ -149,10 +162,19 @@ public class LogoverwaltungService {
 		});
 	}
 
+	private Logo toApi(final DTOLogo entity) {
+		final var dto = mapper.toApi(entity);
+		// fix DATA-URL, falls möglich
+		dto.logoBase64 = DataUrlResolver.resolve(dto.logoBase64)
+				.map(DataUrl::value)
+				.orElse(dto.logoBase64);
+		return dto;
+	}
+
 	private void applyPatch(final DTOLogo entity, final LogoPatchRequest patchRequest) {
 		patchRequest.logoBase64.ifPresent(value -> {
 			if (isLogoDifferent(entity.logoBase64, value)) {
-				entity.hinzugefuegtAm = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
+				entity.hinzugefuegtAm = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE);
 			}
 			entity.logoBase64 = value;
 		});
@@ -165,10 +187,6 @@ public class LogoverwaltungService {
 
 	private void validatePatch(final LogoPatchRequest patchRequest) {
 		validateLogoBase64(patchRequest.logoBase64.get());
-	}
-
-	private static void validateLogoBase64(final String logoBase64) {
-		// TODO: Valieren ob Base64 ein valides Image ist und ob der enthaltene MIME-Type erlaubt ist
 	}
 
 	private void validateKennung(final String kennung) {
@@ -190,8 +208,37 @@ public class LogoverwaltungService {
 		return ReportingBildDefinition.getByKennungAndSchulform(kennung, schuleService.getSchulform());
 	}
 
-	private static boolean isLogoDifferent(final String logoOld, final  String logoNew) {
+	private static void validateLogoBase64(final String logoBase64) {
+		final var resolvedDataUrl = DataUrlResolver.resolve(logoBase64)
+				.orElseThrow(() -> new ApiOperationException(
+						Response.Status.BAD_REQUEST,
+						"Der übergebene Base64-String enthält keine validen Daten."
+				));
+
+		if (!resolvedDataUrl.hasAnyMimeTypeOf(ALLOWED_IMAGE_MIME_TYPES)) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der MIME-Type des Logos ist nicht zulässig.");
+		}
+
+		if (resolvedDataUrl.sizeInKB() > MAX_LOGO_SIZE_KB) {
+			throw new ApiOperationException(Response.Status.REQUEST_ENTITY_TOO_LARGE, "Das Logo überschreitet die maximale Größe von 2MB.");
+		}
+	}
+
+	private static boolean isLogoDifferent(final String logoOld, final String logoNew) {
 		return !Strings.CS.equals(logoOld, logoNew);
 	}
 
+	private static void prepareCreate(final LogoCreateRequest createRequest) {
+		createRequest.logoBase64 = DataUrlResolver.resolve(createRequest.logoBase64)
+				.map(DataUrl::value)
+				.orElse(createRequest.logoBase64);
+	}
+
+	private static void preparePatch(final LogoPatchRequest patchRequest) {
+		patchRequest.logoBase64.ifPresent(value ->
+				patchRequest.logoBase64 = JsonNullable.of(DataUrlResolver.resolve(value)
+						.map(DataUrl::value)
+						.orElse(value))
+		);
+	}
 }

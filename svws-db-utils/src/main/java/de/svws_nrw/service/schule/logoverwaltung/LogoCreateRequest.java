@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class LogoCreateRequest {
+public final class LogoCreateRequest {
 
 	/** Die Kennung des Logos {@link ReportingBildDefinition}. */
 	@Schema(description = "die Kennung des Logos", example = "DIN5008_BRIEFKOPF")

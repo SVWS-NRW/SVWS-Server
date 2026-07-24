@@ -1,5 +1,8 @@
 package de.svws_nrw.service.schule.logoverwaltung;
 
+import java.time.Clock;
+import java.time.ZoneId;
+
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
@@ -40,6 +43,7 @@ public final class LogoverwaltungServiceFactory {
 	 * @return eine neue Instanz des LogoverwaltungService
 	 */
 	public LogoverwaltungService getService() {
-		return new LogoverwaltungService(repoFactory.getRepository(), mapper, schuleServiceFactory.getSchuleService());
+		return new LogoverwaltungService(repoFactory.getRepository(), mapper, schuleServiceFactory.getSchuleService(),
+				Clock.system(ZoneId.of("Europe/Berlin")));
 	}
 }

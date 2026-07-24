@@ -1,5 +1,8 @@
 package de.svws_nrw.service.schule.logoverwaltung;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,6 +39,8 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,13 +57,36 @@ class LogoverwaltungServiceTest {
 	@Mock
 	private SchuleService schuleService;
 
+	@Mock
+	private Clock clock;
+
 	@InjectMocks
 	private LogoverwaltungService service;
 
 	private MockedStatic<TransactionSupport> transactionSupportMock;
 
+	private static final String VALID_BASE64_PNG =
+			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+
+	private static final String VALID_BASE64_JPEG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8U"
+			+ "HRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgN"
+			+ "DRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy"
+			+ "MjL/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAA"
+			+ "AAAAAAAAAAAAAP/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oA"
+			+ "DAMBAAIRAxEAPwCwABmX/9k=";
+
+	private static final String VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER = "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8U"
+			+ "HRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgN"
+			+ "DRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy"
+			+ "MjL/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAA"
+			+ "AAAAAAAAAAAAAP/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oA"
+			+ "DAMBAAIRAxEAPwCwABmX/9k=";
+
 	@BeforeEach
 	void beforeEach() {
+		lenient().when(clock.instant()).thenReturn(Instant.parse("2026-07-20T10:00:00Z"));
+		lenient().when(clock.getZone()).thenReturn(ZoneId.of("Europe/Berlin"));
+
 		transactionSupportMock = mockStatic(TransactionSupport.class);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any())).thenAnswer(invocation -> {
 			final java.util.function.Supplier<?> supplier = invocation.getArgument(0);
@@ -83,9 +112,10 @@ class LogoverwaltungServiceTest {
 		return new DTOLogo(id, kennung, base64, hinzugefuegtAm);
 	}
 
-	private static Logo buildLogo(final long id) {
+	private static Logo buildLogo(final long id, final String logoBase64) {
 		final Logo logo = new Logo();
 		logo.id = id;
+		logo.logoBase64 = logoBase64;
 		return logo;
 	}
 
@@ -98,8 +128,8 @@ class LogoverwaltungServiceTest {
 
 		@Test
 		void gibtLogoZurueck_wennIdExistiert() {
-			final DTOLogo entity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, "base64data", "2024-01-01");
-			final Logo expected = buildLogo(1L);
+			final DTOLogo entity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final Logo expected = buildLogo(1L, VALID_BASE64_JPEG);
 
 			when(repository.findById(1L)).thenReturn(Optional.of(entity));
 			when(mapper.toApi(entity)).thenReturn(expected);
@@ -107,6 +137,23 @@ class LogoverwaltungServiceTest {
 			final Logo result = service.getById(1L);
 
 			assertThat(result).isEqualTo(expected);
+			verify(repository).findById(1L);
+			verify(mapper).toApi(entity);
+		}
+
+		@Test
+		void gibtLogoZurueckUndErgaenzeMimeTypeHeader_wennIdExistiertUndMimeTypeHeaderFehlt() {
+			final DTOLogo entity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER, "2024-01-01");
+			final Logo expected = buildLogo(1L, VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER);
+
+			when(repository.findById(1L)).thenReturn(Optional.of(entity));
+			when(mapper.toApi(entity)).thenReturn(expected);
+
+			final Logo result = service.getById(1L);
+
+			assertThat(result)
+					.extracting(e -> e.id, e -> e.logoBase64)
+					.containsExactly(1L, VALID_BASE64_JPEG);
 			verify(repository).findById(1L);
 			verify(mapper).toApi(entity);
 		}
@@ -139,10 +186,10 @@ class LogoverwaltungServiceTest {
 
 		@Test
 		void gibtAlleMappedLogosZurueck() {
-			final DTOLogo dto1 = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, "base64a", "2024-01-01");
-			final DTOLogo dto2 = buildDtoLogo(2L, ReportingBildDefinition.SCHULLOGO_QUADRATISCH, "base64b", "2024-01-02");
-			final Logo logo1 = buildLogo(1L);
-			final Logo logo2 = buildLogo(2L);
+			final DTOLogo dto1 = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final DTOLogo dto2 = buildDtoLogo(2L, ReportingBildDefinition.SCHULLOGO_QUADRATISCH, VALID_BASE64_JPEG, "2024-01-02");
+			final Logo logo1 = buildLogo(1L, VALID_BASE64_JPEG);
+			final Logo logo2 = buildLogo(2L, VALID_BASE64_JPEG);
 
 			when(repository.getAll()).thenReturn(List.of(dto1, dto2));
 			when(mapper.toApi(dto1)).thenReturn(logo1);
@@ -169,11 +216,33 @@ class LogoverwaltungServiceTest {
 		void erstelltLogo_beiGueltigerKennung() {
 			final LogoCreateRequest request = new LogoCreateRequest();
 			request.kennung = ReportingBildDefinition.SCHULLOGO_SCHILD.getKennung();
-			request.logoBase64 = "validBase64";
+			request.logoBase64 = VALID_BASE64_PNG;
 
 			final DTOLogo mappedEntity = buildDtoLogo(0L, ReportingBildDefinition.SCHULLOGO_SCHILD, request.logoBase64, "2024-01-01");
 			final DTOLogo savedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, request.logoBase64, "2024-01-01");
-			final Logo expected = buildLogo(1L);
+			final Logo expected = buildLogo(1L, VALID_BASE64_PNG);
+
+			when(schuleService.getSchulform()).thenReturn(null);
+			when(mapper.toDomain(request)).thenReturn(mappedEntity);
+			when(repository.create(mappedEntity)).thenReturn(savedEntity);
+			when(mapper.toApi(savedEntity)).thenReturn(expected);
+
+
+			final Logo result = service.create(request);
+
+			assertThat(result).isEqualTo(expected);
+			verify(repository).create(mappedEntity);
+		}
+
+		@Test
+		void erstelltLogo_ErgaenzeFehlendenMimeTypeHeader() {
+			final LogoCreateRequest request = new LogoCreateRequest();
+			request.kennung = ReportingBildDefinition.SCHULLOGO_SCHILD.getKennung();
+			request.logoBase64 = VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER;
+
+			final DTOLogo mappedEntity = buildDtoLogo(0L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final DTOLogo savedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final Logo expected = buildLogo(1L, VALID_BASE64_JPEG);
 
 			when(schuleService.getSchulform()).thenReturn(null);
 			when(mapper.toDomain(request)).thenReturn(mappedEntity);
@@ -186,6 +255,9 @@ class LogoverwaltungServiceTest {
 			assertThat(result).isEqualTo(expected);
 			verify(repository).create(mappedEntity);
 
+			// Prüfen, ob der MIME-Type Header im Base64 vor dem Anlegen ergänzt wurde
+			final ArgumentMatcher<LogoCreateRequest> base64Matcher = arg -> arg.logoBase64.equals(VALID_BASE64_JPEG);
+			verify(mapper).toDomain(argThat(base64Matcher));
 		}
 
 		@ParameterizedTest
@@ -193,11 +265,11 @@ class LogoverwaltungServiceTest {
 		void erstelltLogo_fuerJedeGueltigeBildDefinition(final ReportingBildDefinition bildDefinition) {
 			final LogoCreateRequest request = new LogoCreateRequest();
 			request.kennung = bildDefinition.getKennung();
-			request.logoBase64 = "validBase64";
+			request.logoBase64 = VALID_BASE64_PNG;
 
 			final DTOLogo mappedEntity = buildDtoLogo(0L, bildDefinition, request.logoBase64, "2024-01-01");
 			final DTOLogo savedEntity = buildDtoLogo(1L, bildDefinition, request.logoBase64, "2024-01-01");
-			final Logo expected = buildLogo(1L);
+			final Logo expected = buildLogo(1L, VALID_BASE64_PNG);
 
 			when(schuleService.getSchulform()).thenReturn(null);
 			when(mapper.toDomain(request)).thenReturn(mappedEntity);
@@ -211,7 +283,7 @@ class LogoverwaltungServiceTest {
 		void wirftApiOperationException_beiVoelligUngueltigerKennung() {
 			final LogoCreateRequest request = new LogoCreateRequest();
 			request.kennung = "KENNUNG_EXISTIERT_NICHT";
-			request.logoBase64 = "validBase64";
+			request.logoBase64 = VALID_BASE64_PNG;
 
 			when(schuleService.getSchulform()).thenReturn(null);
 
@@ -220,7 +292,6 @@ class LogoverwaltungServiceTest {
 					.isInstanceOf(ApiOperationException.class)
 					.satisfies(ex -> assertThat(((ApiOperationException) ex).getStatus())
 							.isEqualTo(Response.Status.BAD_REQUEST));
-
 		}
 
 		@Test
@@ -230,7 +301,7 @@ class LogoverwaltungServiceTest {
 			// Aktuell testen wir mit einer komplett ungültigen Kennung + konkreter Schulform.
 			final LogoCreateRequest request = new LogoCreateRequest();
 			request.kennung = "UNGUELTIG";
-			request.logoBase64 = "validBase64";
+			request.logoBase64 = VALID_BASE64_PNG;
 
 			when(schuleService.getSchulform()).thenReturn(Schulform.GY);
 
@@ -270,11 +341,11 @@ class LogoverwaltungServiceTest {
 		@Test
 		void aktualisiertLogo_beiGueltigemRequest() {
 			final LogoPatchRequest request = new LogoPatchRequest();
-			request.logoBase64 = JsonNullable.of("newBase64");
+			request.logoBase64 = JsonNullable.of(VALID_BASE64_PNG);
 
-			final DTOLogo existingEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, "newBase64", "2024-01-01");
-			final DTOLogo updatedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, "newBase64", "2024-01-01");
-			final Logo expected = buildLogo(1L);
+			final DTOLogo existingEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final DTOLogo updatedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_PNG, "2024-01-01");
+			final Logo expected = buildLogo(1L, VALID_BASE64_PNG);
 
 			when(repository.findById(1L)).thenReturn(Optional.of(existingEntity));
 			when(repository.update(existingEntity)).thenReturn(updatedEntity);
@@ -285,21 +356,21 @@ class LogoverwaltungServiceTest {
 
 			assertThat(result).isEqualTo(expected);
 			verify(repository).update(existingEntity);
-
 		}
 
 		@Test
 		void setzt_hinzugefuegtAm_wennLogoBase64SichAendert() {
 			final LogoPatchRequest request = new LogoPatchRequest();
-			request.logoBase64 = JsonNullable.of("ANDERES_BASE64"); // unterscheidet sich vom Entity-Wert
+			request.logoBase64 = JsonNullable.of(VALID_BASE64_JPEG); // unterscheidet sich vom Entity-Wert
 
 			// Entity hat altes Base64 → isLogoDifferent() wird true
-			final DTOLogo existingEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, "ALTES_BASE64", "2024-01-01");
+			final DTOLogo existingEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_PNG, "2024-01-01");
 			final String hinzugefuegtAmVorher = existingEntity.hinzugefuegtAm;
+			final Logo logo = buildLogo(1L, VALID_BASE64_JPEG);
 
 			when(repository.findById(1L)).thenReturn(Optional.of(existingEntity));
 			when(repository.update(any(DTOLogo.class))).thenReturn(existingEntity);
-			when(mapper.toApi(any())).thenReturn(buildLogo(1L));
+			when(mapper.toApi(any())).thenReturn(logo);
 
 
 			service.patch(1L, request);
@@ -312,17 +383,18 @@ class LogoverwaltungServiceTest {
 
 		@Test
 		void setzt_hinzugefuegtAm_nicht_wennLogoBase64Unveraendert() {
-			final String gleichesBase64 = "GLEICHES_BASE64";
+			final String gleichesBase64 = VALID_BASE64_PNG;
 			final LogoPatchRequest request = new LogoPatchRequest();
 			request.logoBase64 = JsonNullable.of(gleichesBase64);
 
 			// Entity hat dasselbe Base64 → isLogoDifferent() wird false
 			final DTOLogo existingEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, gleichesBase64, "2024-01-01");
 			final String hinzugefuegtAmVorher = existingEntity.hinzugefuegtAm;
+			final Logo logo = buildLogo(1L, VALID_BASE64_PNG);
 
 			when(repository.findById(1L)).thenReturn(Optional.of(existingEntity));
 			when(repository.update(any(DTOLogo.class))).thenReturn(existingEntity);
-			when(mapper.toApi(any())).thenReturn(buildLogo(1L));
+			when(mapper.toApi(any())).thenReturn(logo);
 
 
 			service.patch(1L, request);
@@ -334,7 +406,7 @@ class LogoverwaltungServiceTest {
 		@Test
 		void wirftApiOperationException_wennIDNichtExistiert() {
 			final LogoPatchRequest request = new LogoPatchRequest();
-			request.logoBase64 = JsonNullable.of("test");
+			request.logoBase64 = JsonNullable.of(VALID_BASE64_PNG);
 
 			assertThatThrownBy(() -> service.patch(1L, request))
 					.isInstanceOf(ApiOperationException.class)
@@ -363,7 +435,6 @@ class LogoverwaltungServiceTest {
 
 			assertThat(response.success).isTrue();
 			assertThat(response.id).isEqualTo(1L);
-
 		}
 
 		@Test
@@ -375,7 +446,6 @@ class LogoverwaltungServiceTest {
 
 			assertThat(response.success).isFalse();
 			assertThat(response.id).isEqualTo(99L);
-
 		}
 	}
 
@@ -410,7 +480,6 @@ class LogoverwaltungServiceTest {
 					.filter(r -> !r.success)
 					.findFirst().orElseThrow();
 			assertThat(errorResponse.id).isEqualTo(3L);
-
 		}
 
 		@Test
@@ -436,7 +505,6 @@ class LogoverwaltungServiceTest {
 			final List<SimpleOperationResponse> responses = service.delete(List.of());
 
 			assertThat(responses).isEmpty();
-
 		}
 
 		@Test
@@ -454,8 +522,6 @@ class LogoverwaltungServiceTest {
 			assertThat(responses).hasSize(2);
 			assertThat(responses.get(0).success).isTrue();   // deleted zuerst
 			assertThat(responses.get(1).success).isFalse();  // notFound danach
-
-
 		}
 	}
 }
