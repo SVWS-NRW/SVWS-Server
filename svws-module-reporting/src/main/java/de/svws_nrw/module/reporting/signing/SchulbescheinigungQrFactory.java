@@ -11,7 +11,6 @@ import de.svws_nrw.base.compression.GZip;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.encoding.Base45;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.utils.ReportingBarcodeUtils;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -101,7 +100,7 @@ public final class SchulbescheinigungQrFactory {
 	private SchulbescheinigungAusstellungsdaten ermittleAusstellungsdaten(final List<Long> idsSchueler,
 			final Map<Long, SchulbescheinigungQrDaten> ergebnis) {
 		try {
-			final ReportingSchule schule = new ProxyReportingSchule(this.reportingContext);
+			final ReportingSchule schule = this.reportingContext.repositorySchule().schule();
 			final String bildungsgangEnddatum = (schule.aktuellerSchuljahresabschnitt().schuljahr() + 1) + "-07-31";
 			return new SchulbescheinigungAusstellungsdaten(schule, schule.ort(), LocalDate.now().toString(), bildungsgangEnddatum);
 		} catch (final Exception e) {

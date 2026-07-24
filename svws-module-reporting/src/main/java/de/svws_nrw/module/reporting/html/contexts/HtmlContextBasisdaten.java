@@ -8,7 +8,6 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
-import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
@@ -44,7 +43,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	private void erzeugeContext() throws ApiOperationException {
 		final Context context = new Context();
 
-		context.setVariable("Schule", new ProxyReportingSchule(this.reportingContext));
+		context.setVariable("Schule", this.reportingContext.repositorySchule().schule());
 		context.setVariable("Benutzer", this.reportingContext.benutzer());
 		context.setVariable("Parameter", this.reportingContext.reportingParameter());
 

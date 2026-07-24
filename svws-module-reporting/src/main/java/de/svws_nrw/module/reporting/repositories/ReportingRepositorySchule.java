@@ -13,7 +13,9 @@ import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
@@ -30,6 +32,9 @@ public class ReportingRepositorySchule {
 	private final Long idAktuellerSchuljahresabschnitt;
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
+
+	/** Zwischenspeicher für das Reporting-Objekt der Schule, damit es nicht mehrfach instanziiert wird. */
+	private ReportingSchule schule;
 
 	/** Zwischenspeichert das Ergebnis der GOSt-Schul-Vorbedingung: {@code null} = noch nicht geprüft, {@code true}/{@code false} = geprüft. */
 	private Boolean istSchuleMitGost = null;
@@ -86,6 +91,18 @@ public class ReportingRepositorySchule {
 	 */
 	public String schullogoBase64() {
 		return schullogoBase64;
+	}
+
+	/**
+	 * Gibt das Reporting-Objekt der Schule zurück. Wird bei erstmaligem Zugriff erzeugt und danach zwischengespeichert.
+	 *
+	 * @return Das Reporting-Objekt der Schule.
+	 */
+	public ReportingSchule schule() {
+		if (schule == null) {
+			schule = new ProxyReportingSchule(this.reportingContext);
+		}
+		return schule;
 	}
 
 
