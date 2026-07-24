@@ -1,0 +1,316 @@
+{
+    "version": 1,
+    "daten": [
+      {
+        "bezeichner": "VERSETZT",
+        "idStatistik": "10",
+        "historie": [
+          {
+            "id": 10,
+            "schluessel": "11",
+            "kuerzel": "V",
+            "text": "Versetzt",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "G",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "S",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "0"
+          }
+         ]
+      },
+      {
+        "bezeichner": "VERSETZT_ANFORERUNGEN_UNERFUELLT",
+        "idStatistik": "20",
+        "historie": [
+          {
+            "id": 20,
+            "schluessel": "V",
+            "kuerzel": "VN",
+            "text": "Versetzt, Anforderungen nicht erfüllt",
+            "schulformen": 
+            [
+                "BK",
+                "SB"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "0"
+          }
+         ]
+      },
+      {
+        "bezeichner": "VORVERSETZT",
+        "idStatistik": "30",
+        "historie": [
+          {
+            "id": 30,
+            "schluessel": "12",
+            "kuerzel": "VV",
+            "text": "Vorversetzt",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "G",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "S",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "0"
+          }
+         ]
+      },
+      {
+        "bezeichner": "FREIWILLIG_ZURUECK",
+        "idStatistik": "40",
+        "historie": [
+          {
+            "id": 40,
+            "schluessel": "03",
+            "kuerzel": "FR",
+            "text": "Freiwillig zurück",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "G",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "S",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "2"
+          }
+         ]
+      },      
+      {
+        "bezeichner": "NICHT_VERSETZT",
+        "idStatistik": "50",
+        "historie": [
+          {
+            "id": 50,
+            "schluessel": "00",
+            "kuerzel": "N",
+            "text": "Nicht versetzt",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "G",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "S",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "1"
+          }
+         ]
+      }, 
+      {
+        "bezeichner": "NICHT_VERSETZT_NACHPRUEFUNG",
+        "idStatistik": "60",
+        "historie": [
+          {
+            "id": 60,
+            "schluessel": "00",
+            "kuerzel": "NP",
+            "text": "Nicht versetzt, Nachprüfung möglich",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "1"
+          }
+         ]
+      }, 
+      {
+        "bezeichner": "ABSCHLUSS",
+        "idStatistik": "70",
+        "historie": [
+          {
+            "id": 70,
+            "schluessel": "11",
+            "kuerzel": "A",
+            "text": "Abschluss",
+            "schulformen": 
+            [
+                "BK",
+                "FW",
+                "GE",
+                "GY",
+                "H",
+                "HI",
+                "KS",
+                "PS",
+                "R",
+                "S",
+                "SB",
+                "SG",
+                "SK",
+                "SR",
+                "V",
+                "WB",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "0"
+          }
+         ]
+      }, 
+      {
+        "bezeichner": "VERBLEIB_SCHULEINGANGSPHASE",
+        "idStatistik": "80",
+        "historie": [
+          {
+            "id": 80,
+            "schluessel": "04",
+            "kuerzel": "BE",
+            "text": "Verbleib in der Schuleingangsphase",
+            "schulformen": 
+            [
+                "FW",
+                "G",
+                "HI",
+                "KS",
+                "PS",
+                "S",
+                "V",
+                "WF"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "3"
+          }
+         ]
+      }, 
+      {
+        "bezeichner": "VERBLEIB_STUFE",
+        "idStatistik": "90",
+        "historie": [
+          {
+            "id": 90,
+            "schluessel": "03",
+            "kuerzel": "BS",
+            "text": "Verbleib in Stufe",
+            "schulformen": 
+            [
+                "S"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "4"
+          }
+         ]
+      }, 
+      {
+        "bezeichner": "VERSETZUNG_PROBE",
+        "idStatistik": "100",
+        "historie": [
+          {
+            "id": 100,
+            "schluessel": "13",
+            "kuerzel": "VP",
+            "text": "Versetzung auf Probe",
+            "schulformen": 
+            [
+                "GE",
+                "H",
+                "PS",
+                "SK",
+                "R"
+              ],
+            "gueltigVon": null,
+            "gueltigBis": null,
+            "auslaufdauer": 0,
+            "schluesselDeprecated": "5"
+          }
+         ]
+      }                       
+    ]
+}
