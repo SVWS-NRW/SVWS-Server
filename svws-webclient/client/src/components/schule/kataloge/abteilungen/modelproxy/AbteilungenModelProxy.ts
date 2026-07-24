@@ -1,5 +1,7 @@
 import type { Abteilung, LehrerListeEintrag } from "@core";
 import type { AbteilungenListeManager, ViewType } from "@ui";
+import { ValidatorInputRequired } from "@ui";
+import { ValidatorNumberRange } from "@ui";
 import { ModelProxy, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern } from "@ui";
 import { ValidatorAbteilungBezeichnung } from "~/components/schule/kataloge/abteilungen/modelproxy/validation/ValidatorAbteilungBezeichnung";
 import { computed } from "vue";
@@ -35,6 +37,9 @@ export class AbteilungenModelProxy extends ModelProxy<Abteilung> {
 
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER_OR_EXTENSION), 'durchwahl');
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.durchwahl, null, 20), 'durchwahl');
+
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	abteilungsleiter = computed<LehrerListeEintrag | null>({

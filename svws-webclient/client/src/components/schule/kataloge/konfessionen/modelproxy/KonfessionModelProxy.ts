@@ -33,8 +33,8 @@ export class KonfessionModelProxy extends ModelProxy<ReligionEintrag> {
 		this.addBlockingValidator(new ValidatorKonfessionBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 50), "bezeichnungZeugnis");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bezeichnungZeugnis");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	selectedKonfession = computed<CoreTypeData | null>({

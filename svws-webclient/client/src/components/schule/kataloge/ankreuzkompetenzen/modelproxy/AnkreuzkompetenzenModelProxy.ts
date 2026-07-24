@@ -54,6 +54,7 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 		// Abschnitt
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.abschnitt.value), "abschnitt");
 		// sortierung
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 

@@ -56,6 +56,7 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 		// anzahlRestabschnitte
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
 		// sortierung
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 

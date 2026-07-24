@@ -13,7 +13,7 @@ export class OrtModelProxy extends ModelProxy<OrtKatalogEintrag> {
 		alleOrte: () => Iterable<OrtKatalogEintrag>,
 		patch?: (data: Partial<OrtKatalogEintrag>) => Promise<boolean>
 	) {
-		const listOfAutopatchProps: Iterable<keyof OrtKatalogEintrag> = ['sortierung', 'istSichtbar'];
+		const listOfAutopatchProps: Iterable<keyof OrtKatalogEintrag> = ['istSichtbar'];
 		super({ data, patch, listOfAutopatchProps });
 
 		this.addValidatoren(alleOrte);
@@ -28,7 +28,7 @@ export class OrtModelProxy extends ModelProxy<OrtKatalogEintrag> {
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kreis, StringPattern.NO_WHITESPACES), "kreis");
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.kuerzelBundesland, null, 2), "kuerzelBundesland");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kuerzelBundesland, StringPattern.NO_WHITESPACES), "kuerzelBundesland");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

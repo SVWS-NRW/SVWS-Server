@@ -37,9 +37,8 @@ export class FachklassenModelProxy extends ModelProxy<FachklasseEintrag> {
 
 		this.addBlockingValidator(new ValidatorInputRequired((): number | null => this.proxy.idFachklasse), 'idFachklasse');
 
-
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	fachklasse = computed<FachklasseKatalogEintrag | null>({

@@ -52,8 +52,8 @@ export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.email, null, 40), 'email');
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
 
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 
 		this.addBlockingValidator(new ValidatorInputRequired((): number | null => this.proxy.idSchulform), 'idSchulform');
 

@@ -27,7 +27,7 @@ export class TelefonartenModelProxy extends ModelProxy<Telefonart> {
 
 	private addValidatoren(liste: () => Iterable<Telefonart>) {
 		this.addBlockingValidator(new ValidatorTelefonartBezeichnung((): Telefonart => this.proxy, liste), "bezeichnung");
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

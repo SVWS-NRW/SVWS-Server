@@ -58,8 +58,8 @@ export class KindergaertenModelProxy extends ModelProxy<Kindergarten> {
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.ort, null, 30), "ort");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.ort, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "ort");
 		// Sortierung
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	adresse = computed({

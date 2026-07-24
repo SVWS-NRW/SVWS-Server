@@ -1,4 +1,4 @@
-import { ModelProxy, ValidatorNumberRange } from "@ui";
+import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 import type { Beschaeftigungsart } from "@core";
 import { ValidatorBeschaeftigungsartBezeichnung } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/ValidatorBeschaeftigungsartBezeichnung";
 
@@ -24,6 +24,7 @@ export class BeschaeftigungsartModelProxy extends ModelProxy<Beschaeftigungsart>
 
 	private addValidatoren(liste: () => Iterable<Beschaeftigungsart>) {
 		this.addBlockingValidator(new ValidatorBeschaeftigungsartBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

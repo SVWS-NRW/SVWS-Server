@@ -1,5 +1,5 @@
 import type { Teilleistungsart } from "@core";
-import { ModelProxy } from "@ui";
+import { ModelProxy, ValidatorInputRequired } from "@ui";
 import { ValidatorNumberRange } from "@ui";
 import { ValidatorTeilleistungsartBezeichnung } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/validation/ValidatorBezeichnung";
 
@@ -31,6 +31,7 @@ export class TeilleistungsartenModelProxy extends ModelProxy<Teilleistungsart> {
 
 	private addValidatoren(liste: () => Iterable<Teilleistungsart>) {
 		this.addBlockingValidator(new ValidatorTeilleistungsartBezeichnung(() => this.proxy, liste), "bezeichnung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

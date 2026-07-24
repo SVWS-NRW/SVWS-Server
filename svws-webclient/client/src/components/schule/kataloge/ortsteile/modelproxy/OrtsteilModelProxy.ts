@@ -48,6 +48,7 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		// Ort
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idOrt), 'idOrt');
 		// sortierung
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
