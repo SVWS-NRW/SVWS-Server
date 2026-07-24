@@ -486,6 +486,11 @@ export { ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburtslandMutter
 export { ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter } from './asd/validate/schueler/ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 export { ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter } from './asd/validate/schueler/ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 export { ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter } from './asd/validate/schueler/ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter';
+export { ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVater } from './asd/validate/schueler/ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVater';
+export { ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater } from './asd/validate/schueler/ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater';
+export { ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater } from './asd/validate/schueler/ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater';
+export { ValidatorSsmv03SchuelerStammdatenMigrationshintergrundGeburtslandVater } from './asd/validate/schueler/ValidatorSsmv03SchuelerStammdatenMigrationshintergrundGeburtslandVater';
+export { ValidatorSsmvSchuelerStammdatenMigrationshintergrundGeburtslandVater } from './asd/validate/schueler/ValidatorSsmvSchuelerStammdatenMigrationshintergrundGeburtslandVater';
 export { ValidatorSsn00SchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsn00SchuelerStammdatenNachname';
 export { ValidatorSsn10SchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsn10SchuelerStammdatenNachname';
 export { ValidatorSsnSchuelerStammdatenNachname } from './asd/validate/schueler/ValidatorSsnSchuelerStammdatenNachname';
