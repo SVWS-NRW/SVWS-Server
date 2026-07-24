@@ -9,7 +9,7 @@
   "PortHTTPPrivilegedAccess" : null,
   "UseCORSHeader" : true,
   "TempPath" : "./Temp",
-  "TLSKeyAlias" : null,
+  "TLSKeyAlias" : "svws",
   "TLSKeystorePath" : ".",
   "TLSKeystorePassword" : "svwskeystore",
   "ClientPath" : "./SVWS-Server/svws-webclient/client/build/output",
