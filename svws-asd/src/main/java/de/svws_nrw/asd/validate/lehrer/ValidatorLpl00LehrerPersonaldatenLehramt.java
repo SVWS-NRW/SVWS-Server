@@ -39,7 +39,9 @@ public final class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
 
-		_validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLpl10LehrerPersonaldatenLehramt(lehraemter, kontext));
+		_validatoren.add(new ValidatorLpl11LehrerPersonaldatenLehramt(lehraemter, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLpl12LehrerPersonaldatenLehramt(lehraemter, lehrerId, kontext));
 	}
 
 	@Override

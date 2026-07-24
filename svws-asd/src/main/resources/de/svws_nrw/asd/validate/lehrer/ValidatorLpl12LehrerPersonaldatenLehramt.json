@@ -1,8 +1,8 @@
 {
   "version" : 1,
-  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpl01LehrerPersonaldatenLehramt",
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpl12LehrerPersonaldatenLehramt",
   "historie" : [ {
-    "praefix" : "LPL01",
+    "praefix" : "LPL12",
     "altes_kuerzel" : "",
     "zweig" : "LehrerPersonaldatenLehramt",
     "dtos" : "",

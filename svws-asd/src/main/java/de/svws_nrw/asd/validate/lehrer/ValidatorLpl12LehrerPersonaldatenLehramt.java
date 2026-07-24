@@ -5,17 +5,15 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
-import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Validator führt eine Statistikprüfung auf ein vorhandenes Lehramt
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
+public final class ValidatorLpl12LehrerPersonaldatenLehramt extends Validator {
 
 	/** Die Lehrämter */
 	private final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter;
@@ -28,16 +26,13 @@ public final class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
 	 *
 	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param lehrerId   			die LehrerId
-	 * @param geburtsdatum
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLpl01LehrerPersonaldatenLehramt(final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter, final @NotNull Supplier<Long> lehrerId, final @NotNull Supplier<@AllowNull DateManager> geburtsdatum, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLpl12LehrerPersonaldatenLehramt(final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter, final @NotNull Supplier<Long> lehrerId, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
 
-		_validatoren.add(new ValidatorLpl10LehrerPersonaldatenLehramt(lehraemter, kontext));
-		_validatoren.add(new ValidatorLpl11LehrerPersonaldatenLehramt(lehraemter, geburtsdatum, kontext));
 	}
 
 
@@ -47,7 +42,7 @@ public final class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
 		final boolean istFW = Schulform.FW.equals(schulform);
 		final int anzahlLehraemter = this.lehraemter.get().size();
 
-		// Fehlerkürzel: LPL1 Bei Freien Waldorfschulen darf kein Lehramt erfasst sein
+		// Fehlerkürzel: LPL12 Bei Freien Waldorfschulen darf kein Lehramt erfasst sein
 		// FW: KEIN Lehramt erlaubt
 		if (istFW && anzahlLehraemter > 0) {
 			this.addFehler(1, "Bei Freien Waldorfschulen darf kein Lehramt erfasst sein. Lehrer ID: " + this.lehrerId.get());

@@ -2,12 +2,14 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { DateManager } from '../../../asd/validate/DateManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { ValidatorLpl01LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl01LehrerPersonaldatenLehramt';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
+import { ValidatorLpl12LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl12LehrerPersonaldatenLehramt';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { ValidatorLpl11LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl11LehrerPersonaldatenLehramt';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLpl10LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl10LehrerPersonaldatenLehramt';
 
 export class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 
@@ -34,7 +36,9 @@ export class ValidatorLpl00LehrerPersonaldatenLehramt extends Validator {
 		super(kontext);
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
-		this._validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLpl10LehrerPersonaldatenLehramt(lehraemter, kontext));
+		this._validatoren.add(new ValidatorLpl11LehrerPersonaldatenLehramt(lehraemter, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLpl12LehrerPersonaldatenLehramt(lehraemter, lehrerId, kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -1,16 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
-import { DateManager } from '../../../asd/validate/DateManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { ValidatorLpl11LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl11LehrerPersonaldatenLehramt';
 import { Validator } from '../../../asd/validate/Validator';
-import { ValidatorLpl10LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl10LehrerPersonaldatenLehramt';
 
-export class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
+export class ValidatorLpl12LehrerPersonaldatenLehramt extends Validator {
 
 	/**
 	 * Die Lehrämter
@@ -28,15 +25,12 @@ export class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
 	 *
 	 * @param lehraemter   			die Lehrämter, die geprüft werden sollen
 	 * @param lehrerId   			die LehrerId
-	 * @param geburtsdatum
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, geburtsdatum: Supplier<DateManager | null>, kontext: ValidatorKontext) {
+	public constructor(lehraemter: Supplier<List<LehrerLehramtEintrag>>, lehrerId: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.lehraemter = lehraemter;
 		this.lehrerId = lehrerId;
-		this._validatoren.add(new ValidatorLpl10LehrerPersonaldatenLehramt(lehraemter, kontext));
-		this._validatoren.add(new ValidatorLpl11LehrerPersonaldatenLehramt(lehraemter, geburtsdatum, kontext));
 	}
 
 	protected pruefe(): boolean {
@@ -51,17 +45,17 @@ export class ValidatorLpl01LehrerPersonaldatenLehramt extends Validator {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLpl01LehrerPersonaldatenLehramt';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLpl12LehrerPersonaldatenLehramt';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLpl01LehrerPersonaldatenLehramt', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLpl12LehrerPersonaldatenLehramt', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorLpl01LehrerPersonaldatenLehramt>('de.svws_nrw.asd.validate.lehrer.ValidatorLpl01LehrerPersonaldatenLehramt');
+	public static readonly class = new Class<ValidatorLpl12LehrerPersonaldatenLehramt>('de.svws_nrw.asd.validate.lehrer.ValidatorLpl12LehrerPersonaldatenLehramt');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLpl01LehrerPersonaldatenLehramt(obj: unknown): ValidatorLpl01LehrerPersonaldatenLehramt {
-	return obj as ValidatorLpl01LehrerPersonaldatenLehramt;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLpl12LehrerPersonaldatenLehramt(obj: unknown): ValidatorLpl12LehrerPersonaldatenLehramt {
+	return obj as ValidatorLpl12LehrerPersonaldatenLehramt;
 }
