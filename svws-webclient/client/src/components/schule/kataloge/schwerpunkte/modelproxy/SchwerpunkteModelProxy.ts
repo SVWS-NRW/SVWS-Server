@@ -27,7 +27,7 @@ export class SchwerpunkteModelProxy extends ModelProxy<SchuelerSchwerpunkt> {
 
 	private addValidatoren(liste: () => Iterable<SchuelerSchwerpunkt>) {
 		this.addBlockingValidator(new ValidatorSchwerpunktBezeichnung((): SchuelerSchwerpunkt => this.proxy, liste), "bezeichnung");
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 }

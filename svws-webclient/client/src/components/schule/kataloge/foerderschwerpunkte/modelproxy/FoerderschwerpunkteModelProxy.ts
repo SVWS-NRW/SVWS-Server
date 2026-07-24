@@ -43,6 +43,7 @@ export class FoerderschwerpunkteModelProxy extends ModelProxy<Foerderschwerpunkt
 		// asd
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// sortierung
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 

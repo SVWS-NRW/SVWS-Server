@@ -15,18 +15,18 @@ export class FloskelModelProxy extends ModelProxy<Floskel> {
 		manager: () => FloskelnListeManager,
 		patch?: (data: Partial<Floskel>) => Promise<boolean>
 	) {
-		const listOfAutopatchProps: Iterable<keyof Floskel> = ['idFloskelgruppe', 'idFach', 'niveau', 'idsJahrgaenge', 'sortierung'];
+		const listOfAutopatchProps: Iterable<keyof Floskel> = ['idFloskelgruppe', 'idFach', 'niveau', 'idsJahrgaenge'];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren(alleFloskeln);
 		this.validate();
-
 	}
 
 	private addValidatoren(liste: () => Iterable<Floskel>) {
 		this.addBlockingValidator(new ValidatorFloskelKuerzel(() => this.proxy, liste), 'kuerzel');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.text), 'text');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idFloskelgruppe), 'idFloskelgruppe');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
