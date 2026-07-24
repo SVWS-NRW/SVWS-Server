@@ -384,18 +384,22 @@ public class ReportingRepositoryGostKursplanung {
 			return;
 		}
 		String fachwahlAbiturfach = "";
-		boolean fachwahlGueltig = false;
 		boolean fachwahlSchriftlich = false;
-		try {
-			final GostFachwahl gostFachwahl = manager.getOfSchuelerOfKursFachwahl(idKursschueler, kursId);
-			fachwahlAbiturfach = (gostFachwahl.abiturfach != null) ? String.valueOf(gostFachwahl.abiturfach) : "";
-			fachwahlGueltig = true;
-			fachwahlSchriftlich = gostFachwahl.istSchriftlich;
-		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
-					e, reportingContext.logger(), LogLevel.INFO, 0);
+		boolean fachwahlGueltig = !manager.getOfSchuelerOfKursIstUngueltig(idKursschueler, kursId);
+
+		if (fachwahlGueltig) {
+			try {
+				final GostFachwahl gostFachwahl = manager.getOfSchuelerOfKursFachwahl(idKursschueler, kursId);
+				fachwahlAbiturfach = (gostFachwahl.abiturfach != null) ? String.valueOf(gostFachwahl.abiturfach) : "";
+				fachwahlSchriftlich = gostFachwahl.istSchriftlich;
+			} catch (final Exception e) {
+				fachwahlGueltig = false;
+				ReportingExceptionUtils.logException(
+						"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
+						e, reportingContext.logger(), LogLevel.INFO, 0);
+			}
 		}
+
 		schueler.gostKursplanungKursbelegungen().add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
 				fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich, reportingKurs));
 	}
