@@ -3,6 +3,8 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
 import de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung;
@@ -85,7 +87,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import org.jboss.resteasy.annotations.GZIP;
 
 
 /**
@@ -1780,7 +1781,7 @@ public class APISchueler {
 	@Operation(summary = "Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an.",
 			description = "Passt die Einwilligung zu der angegebenen Schüler- und Einwilligungsart-ID an und speichert das Ergebnis in der Datenbank."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Einwilligungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lernplattform integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Lernplattform integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lernplattform der Schüler zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler oder keine Lernplattform der angegebenen Art gefunden.")

@@ -2,6 +2,7 @@ package de.svws_nrw.data.schueler;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
 import de.svws_nrw.data.DataManagerRevised;
@@ -111,6 +112,7 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 			case "einwilligungNutzung" -> dto.EinwilligungNutzung = JSONMapper.convertToBoolean(value, false, name);
 			case "einwilligungAudiokonferenz" -> dto.EinwilligungAudiokonferenz = JSONMapper.convertToBoolean(value, false, name);
 			case "einwilligungVideokonferenz" -> dto.EinwilligungVideokonferenz = JSONMapper.convertToBoolean(value, false, name);
+			case "idCredential" -> dto.CredentialID = JSONMapper.convertToLong(value, true, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
@@ -138,6 +140,75 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 		daten.benutzername = credentials.Benutzername;
 		daten.initialKennwort = credentials.Initialkennwort;
 	}
+
+	@Override
+	/**
+	 * Wendet die angegebenen Mappings für die Attribute des Core-DTOs (übergebene Map) auf das übergebene Datenbank-DTO an.
+	 *
+	 * @param dto                das Datenbank-DTO
+	 * @param patchMappings      eine Map mit den Attributen und den Attributwerten des Core-DTOs
+	 * @param attributesToPatch  eine Menge von Attributen, die gepatched werden sollen; <code>null</code> wenn alle Attribute berücksichtigt werden sollen
+	 * @param attributesToSkip   eine Menge von Attributen, die beim Patch ausgelassen werden sollen
+	 * @param isCreation         gibt an, ob es sich um ein neues DTO handelt. Wenn <code>true</code>, dann werden die Attribute aus
+	 *                           {@link #attributesNotPatchable} ignoriert.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	protected void applyPatchMappings(final DTOSchuelerLernplattform dto, final Map<String, Object> patchMappings, final Set<String> attributesToPatch,
+			final Set<String> attributesToSkip, final boolean isCreation) throws ApiOperationException {
+		if (patchMappings != null) {
+			// Verhindern, dass ein Datensatz mit beliebigen Credentials verknüpft wird.
+			if (patchMappings.containsKey("idCredential")) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Ein Setzen der ID des Credentials ist nicht erlaubt. Bitte verwenden Sie 'benutzername' und 'initialKennwort' zum Patchen der Credentials.");
+			}
+			// Überprüfen, ob DTOCredentialsLernplattformen betroffen ist.
+			if (patchMappings.containsKey("benutzername") ) {
+				DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, dto.CredentialID);			
+				if (isCreation || credentials == null) {
+					final String benutzername = (String) patchMappings.get("benutzername");
+					// Setzen der ID und Erstellen des DTO nicht atomar - kann zu Race Conditions führen.
+					final long nextID = conn.transactionGetNextID(DTOCredentialsLernplattformen.class);
+					credentials = new DTOCredentialsLernplattformen(nextID, dto.LernplattformID,  benutzername);
+					// Datensatz mit dem korrekten Credential verknüpfen
+					patchMappings.put("idCredential", credentials.ID);
+				}
+				patchMappings.remove("benutzername");
+				if (patchMappings.containsKey("initialKennwort")) {
+					credentials.Initialkennwort = (String) patchMappings.get("initialKennwort");
+					patchMappings.remove("initialKennwort");
+				}
+				if (!conn.transactionPersist(credentials)) {
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Entität.");
+				}
+				conn.transactionFlush();
+				dto.CredentialID = credentials.ID;
+			} else if (patchMappings.containsKey("initialKennwort")) {
+				// Vereinfachung: initialKennwort kann nur gepatcht werden, wenn auch benutzername gepatcht wird. Ansonsten wird eine Exception geworfen.
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut 'initialKennwort' kann nicht ohne 'benutzername' gepatcht werden.");
+			}
+		}				
+		super.applyPatchMappings(dto, patchMappings, attributesToPatch, attributesToSkip, isCreation);
+	}
+
+	@Override
+	/**
+	 * Methode löscht das übergebene Datenbank-DTO aus der Datenbank.
+	 *
+	 * @param dto Datenbank-DTO, das gelöscht werden soll
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	protected void deleteDatabaseDTO(final DTOSchuelerLernplattform dto) throws ApiOperationException {
+		final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, dto.CredentialID);
+		if (credentials != null) {
+			if (!conn.transactionRemove(credentials)) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Entität.");
+			}
+			conn.transactionFlush();
+		}
+		super.deleteDatabaseDTO(dto);
+	}
+
 }
 
 
