@@ -59,12 +59,11 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 		}
 		super.halbjahresbelegungen = belegungenHJ;
 
-		// Für die Daten des Faches wird mindestens der Abschnitt Q11 benötigt. Wenn dieser nicht existiert, dann kann die Belegung nicht existieren.
-		// Da in der Q-Phase konstante Fachbedingungen gelten müssen, kann hier die Q11 verwendet werden.
-		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingContext.repositorySchule().schuljahresabschnitt(schuljahrAbitur - 1, 1);
-		if (abschnittQ11 != null) {
-			super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
-		}
+		// Für die Daten des Faches wird der Abschnitt Q11 benötigt. Da in der Q-Phase konstante Fachbedingungen gelten müssen, kann hier die Q11
+		// verwendet werden. Hat die Schule diesen Abschnitt nicht angelegt, so wird ein virtueller Abschnitt verwendet, der die Fächer des Schuljahres
+		// unverändert liefert; das Fach bliebe sonst ohne Not leer.
+		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingContext.repositorySchule().schuljahresabschnittOderVirtuell(schuljahrAbitur - 1, 1);
+		super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
 	}
 
 

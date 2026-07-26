@@ -277,19 +277,49 @@ public class ReportingRepositoryGostKursplanung {
 	// ##### Build #####
 
 	/**
+	 * Ermittelt das {@link GostHalbjahr} zu der in den Blockungsdaten hinterlegten Halbjahres-ID.
+	 *
+	 * <p>Aus dem Halbjahr werden Schuljahr und Abschnitt der Blockung abgeleitet. Eine ungültige ID darf deshalb nicht
+	 * stillschweigend übergangen werden: Sie führte zu einem falsch berechneten Schuljahresabschnitt und damit zu den
+	 * Fachdaten eines falschen Schuljahres.</p>
+	 *
+	 * @param idGostHalbjahr Die ID des GOSt-Halbjahres aus den Blockungsdaten.
+	 * @param idBlockung     Die ID der Blockung; wird für die Fehlermeldung benötigt.
+	 *
+	 * @return Das GOSt-Halbjahr der Blockung.
+	 *
+	 * @throws ApiOperationException Falls die ID kein gültiges GOSt-Halbjahr bezeichnet.
+	 */
+	private GostHalbjahr ermittleGostHalbjahr(final int idGostHalbjahr, final long idBlockung) throws ApiOperationException {
+		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(idGostHalbjahr);
+		if (gostHalbjahr == null) {
+			final String fehlermeldung = "FEHLER: Zur Blockung mit der ID %d konnte aus dem Wert %d kein gültiges GOSt-Halbjahr ermittelt werden."
+					.formatted(idBlockung, idGostHalbjahr);
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
+			throw new ApiOperationException(Response.Status.NOT_FOUND, fehlermeldung);
+		}
+		return gostHalbjahr;
+	}
+
+	/**
 	 * Baut die Reporting-Objekte des Blockungsergebnisses, aller Schienen und Kurse aus dem Manager auf und legt
 	 * sie in den Cache-Maps ab. Schüler werden über das zentrale Schüler-Repository bezogen und sind damit bereits
 	 * gefiltert; Kursbelegungen für zentral herausgefilterte Schüler werden übersprungen.
 	 *
 	 * @param blockungsergebnis Das Blockungsergebnis.
 	 * @param datenManager      Der zugehörige Blockungsdaten-Manager.
+	 *
+	 * @throws ApiOperationException Falls die Blockungsdaten kein gültiges GOSt-Halbjahr enthalten.
 	 */
-	private void erzeugeReportingObjekte(final GostBlockungsergebnis blockungsergebnis, final GostBlockungsdatenManager datenManager) {
+	private void erzeugeReportingObjekte(final GostBlockungsergebnis blockungsergebnis, final GostBlockungsdatenManager datenManager)
+			throws ApiOperationException {
 		final var blockungsdaten = datenManager.daten();
-		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(blockungsdaten.gostHalbjahr);
-		final int schuljahr = (blockungsdaten.abijahrgang - 3) + (blockungsdaten.gostHalbjahr / 2);
-		final int abschnitt = (blockungsdaten.gostHalbjahr % 2) + 1;
-		final var schuljahresabschnitt = reportingContext.repositorySchule().schuljahresabschnitt(schuljahr, abschnitt);
+		final GostHalbjahr gostHalbjahr = ermittleGostHalbjahr(blockungsdaten.gostHalbjahr, blockungsdaten.id);
+		final int schuljahr = gostHalbjahr.getSchuljahrFromAbiturjahr(blockungsdaten.abijahrgang);
+		final int abschnitt = gostHalbjahr.halbjahr;
+		// Blockungen sind auch für Halbjahre möglich, für die die Schule noch keinen Schuljahresabschnitt angelegt hat.
+		// Der Abschnitt dient hier allein als Zugriff auf die Fächer des Schuljahres, daher genügt ein virtueller Abschnitt.
+		final var schuljahresabschnitt = reportingContext.repositorySchule().schuljahresabschnittOderVirtuell(schuljahr, abschnitt);
 
 		final List<ReportingSchueler> schueler = reportingContext.repositorySchueler()
 				.schueler(datenManager.schuelerGetListe().stream().map(s -> s.id).toList());

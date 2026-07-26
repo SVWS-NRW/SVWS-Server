@@ -16,10 +16,17 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt.
+ *
+ * <p>Ein Schuljahresabschnitt kann entweder einen in der Datenbank angelegten Abschnitt abbilden oder virtuell sein.
+ * Virtuelle Abschnitte besitzen eine negative Pseudo-ID und werden über {@link #istVirtuell()} erkannt; siehe dort für
+ * den fachlichen Hintergrund.</p>
  */
 public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 
-	/** Die ID des Schuljahresabschnittes */
+	/**
+	 * Die ID des Schuljahresabschnittes. Bei einem Abschnitt aus der Datenbank ist dies dessen Datenbank-ID, bei einem
+	 * virtuellen Abschnitt eine negative Pseudo-ID (siehe {@link #istVirtuell()}).
+	 */
 	protected long id;
 
 	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
@@ -92,6 +99,31 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 
 
 	// ##### Berechnete Methoden #####
+
+	/**
+	 * Gibt an, ob es sich um einen virtuellen Schuljahresabschnitt handelt, also um einen Abschnitt, den es in der
+	 * Datenbank der Schule (noch) nicht gibt.
+	 *
+	 * <p>Virtuelle Abschnitte werden dort benötigt, wo aus fachlichen Daten ein Schuljahr und ein Abschnitt abgeleitet
+	 * werden, für die kein Datenbank-Abschnitt existiert. Typischer Fall ist die GOSt-Kursplanung: Der Client erlaubt
+	 * Blockungen für Halbjahre, die zeitlich hinter dem letzten angelegten Schuljahresabschnitt der Schule liegen. Ohne
+	 * virtuellen Abschnitt liefe ein solcher Report ins Leere, obwohl die benötigten Daten vorhanden sind.</p>
+	 *
+	 * <p>Ein virtueller Abschnitt liefert alle Daten, die allein vom Schuljahr abhängen, vollständig und korrekt —
+	 * Fächer, Jahrgänge und Ankreuzkompetenzen stammen aus schemaweiten Katalogen und benötigen den Abschnitt selbst
+	 * nicht. Abschnittsgebundene Daten, also Klassen und Kurse, bleiben dagegen leer: Sie sind ohne
+	 * Datenbank-Abschnitt fachlich nicht vorhanden.</p>
+	 *
+	 * <p>Zur Unterscheidung von den stets positiven Datenbank-IDs tragen virtuelle Abschnitte eine negative, aus
+	 * Schuljahr und Abschnitt abgeleitete Pseudo-ID. Diese ID ist rein modulintern und darf nicht als Datenbank-ID
+	 * verwendet werden.</p>
+	 *
+	 * @return true, wenn der Schuljahresabschnitt virtuell ist, andernfalls false.
+	 */
+	public boolean istVirtuell() {
+		return this.id < 0;
+	}
+
 	/**
 	 * Kurzer Text zum Schuljahresabschnitt im Format 20XX/YY.A
 	 *

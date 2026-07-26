@@ -33,6 +33,13 @@ public class ReportingRepositorySchule {
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
 
+	/**
+	 * Cache der virtuellen Schuljahresabschnitte dieses Reports, indiziert nach ihrer negativen Pseudo-ID. Bewusst
+	 * getrennt von {@link #mapSchuljahresabschnitte} gehalten, damit virtuelle Abschnitte nicht in den Listen der
+	 * tatsächlich vorhandenen Abschnitte der Schule auftauchen. Siehe {@link #schuljahresabschnittOderVirtuell(int, int)}.
+	 */
+	private final Map<Long, ReportingSchuljahresabschnitt> mapVirtuelleSchuljahresabschnitte = new HashMap<>();
+
 	/** Zwischenspeicher für das Reporting-Objekt der Schule, damit es nicht mehrfach instanziiert wird. */
 	private ReportingSchule schule;
 
@@ -110,6 +117,7 @@ public class ReportingRepositorySchule {
 
 	/**
 	 * Gibt alle Schuljahresabschnitte der Schule als sortierte Liste zurück (nach Schuljahr und Abschnitt).
+	 * Virtuelle Abschnitte sind nicht enthalten, da sie keine Abschnitte der Schule sind.
 	 *
 	 * @return Alle Schuljahresabschnitte der Schule.
 	 */
@@ -121,18 +129,25 @@ public class ReportingRepositorySchule {
 	}
 
 	/**
-	 * Gibt den Schuljahresabschnitt zur übergebenen ID zurück.
+	 * Gibt den Schuljahresabschnitt zur übergebenen ID zurück. Berücksichtigt neben den Abschnitten der Schule auch die
+	 * in diesem Report erzeugten virtuellen Abschnitte, sodass auch deren negative Pseudo-IDs auflösbar bleiben.
 	 *
 	 * @param id Die ID des angeforderten Schuljahresabschnitts.
 	 *
-	 * @return Der Schuljahresabschnitt zur ID.
+	 * @return Der Schuljahresabschnitt zur ID oder null, falls keiner existiert.
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final long id) {
-		return mapSchuljahresabschnitte.get(id);
+		final ReportingSchuljahresabschnitt schuljahresabschnitt = mapSchuljahresabschnitte.get(id);
+		if (schuljahresabschnitt != null) {
+			return schuljahresabschnitt;
+		}
+		return mapVirtuelleSchuljahresabschnitte.get(id);
 	}
 
 	/**
-	 * Gibt den Schuljahresabschnitt zum angegebenen Schuljahr und Abschnitt zurück.
+	 * Gibt den Schuljahresabschnitt zum angegebenen Schuljahr und Abschnitt zurück. Es werden ausschließlich die in der
+	 * Datenbank vorhandenen Abschnitte der Schule betrachtet; wird auch für einen nicht vorhandenen Abschnitt ein
+	 * Reporting-Objekt benötigt, so ist {@link #schuljahresabschnittOderVirtuell(int, int)} zu verwenden.
 	 *
 	 * @param schuljahr Das Schuljahr.
 	 * @param abschnitt Der Abschnitt.
@@ -146,6 +161,40 @@ public class ReportingRepositorySchule {
 			return null;
 		}
 		return result.getFirst();
+	}
+
+	/**
+	 * Gibt den Schuljahresabschnitt zum angegebenen Schuljahr und Abschnitt zurück und erzeugt ihn als virtuellen
+	 * Abschnitt, falls die Schule ihn in der Datenbank nicht besitzt. Der Rückgabewert ist daher nie {@code null}.
+	 *
+	 * <p>Zu verwenden überall dort, wo Schuljahr und Abschnitt aus fachlichen Daten abgeleitet werden und deshalb auch
+	 * in der Zukunft liegen können — etwa bei einer GOSt-Blockung oder einer Fachwahlstatistik für einen Jahrgang, für
+	 * den die betroffenen Abschnitte noch nicht angelegt sind. Was ein virtueller Abschnitt leisten kann und was nicht,
+	 * beschreibt {@link ReportingSchuljahresabschnitt#istVirtuell()}.</p>
+	 *
+	 * <p>Virtuelle Abschnitte werden pro Report zwischengespeichert, sodass für dieselbe Kombination aus Schuljahr und
+	 * Abschnitt stets dasselbe Objekt geliefert wird. Sie erscheinen bewusst nicht in {@link #schuljahresabschnitte()}
+	 * und {@link #mapSchuljahresabschnitte()}, da sie keine Abschnitte der Schule sind.</p>
+	 *
+	 * @param schuljahr Das Schuljahr.
+	 * @param abschnitt Der Abschnitt.
+	 *
+	 * @return Der vorhandene Schuljahresabschnitt der Schule oder andernfalls ein virtueller Schuljahresabschnitt.
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnittOderVirtuell(final int schuljahr, final int abschnitt) {
+		final ReportingSchuljahresabschnitt vorhandenerAbschnitt = schuljahresabschnitt(schuljahr, abschnitt);
+		if (vorhandenerAbschnitt != null) {
+			return vorhandenerAbschnitt;
+		}
+		// Die Pseudo-ID wird negativ vergeben, um Kollisionen mit den stets positiven Datenbank-IDs auszuschließen.
+		// Der Abschnitt ist stets einstellig (die Schule kennt maximal vier Abschnitte), daher ist er als letzte Stelle eindeutig.
+		final long idVirtuellerAbschnitt = -((schuljahr * 10L) + abschnitt);
+		return mapVirtuelleSchuljahresabschnitte.computeIfAbsent(idVirtuellerAbschnitt, id -> {
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8,
+					"Zum Schuljahr %d und Abschnitt %d existiert kein Schuljahresabschnitt der Schule. Es wird ein virtueller Abschnitt verwendet."
+							.formatted(schuljahr, abschnitt));
+			return new ProxyReportingSchuljahresabschnitt(this.reportingContext, id, schuljahr, abschnitt);
+		});
 	}
 
 	/**
@@ -167,7 +216,8 @@ public class ReportingRepositorySchule {
 	}
 
 	/**
-	 * Gibt die Map der Schuljahresabschnitte zurück, indiziert nach ID.
+	 * Gibt die Map der Schuljahresabschnitte der Schule zurück, indiziert nach ID.
+	 * Virtuelle Abschnitte sind nicht enthalten, da sie keine Abschnitte der Schule sind.
 	 *
 	 * @return Map der Schuljahresabschnitte.
 	 */

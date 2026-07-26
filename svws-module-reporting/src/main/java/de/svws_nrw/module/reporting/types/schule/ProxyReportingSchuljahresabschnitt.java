@@ -48,6 +48,27 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 		this.reportingContext = reportingContext;
 	}
 
+	/**
+	 * Erstellt ein neues Proxy-Reporting-Objekt für einen virtuellen {@link ReportingSchuljahresabschnitt}, also für
+	 * einen Abschnitt, der in der Datenbank der Schule (noch) nicht existiert. Zum fachlichen Hintergrund und zu den
+	 * Einschränkungen eines solchen Abschnitts siehe {@link ReportingSchuljahresabschnitt#istVirtuell()}.
+	 *
+	 * <p>Der Abschnitt erhält die übergebene negative Pseudo-ID; Vorgänger und Nachfolger bleiben unbesetzt, da sich
+	 * ein virtueller Abschnitt nicht in die Abschnittskette der Schule einreiht.</p>
+	 *
+	 * @param reportingContext 	Repository für das Reporting.
+	 * @param id				Die negative Pseudo-ID des virtuellen Abschnitts, vergeben von
+	 *                          {@link de.svws_nrw.module.reporting.repositories.ReportingRepositorySchule}.
+	 * @param schuljahr			Das Schuljahr, in welchem der Schuljahresabschnitt liegt.
+	 * @param abschnitt			Die Nummer des Abschnitts im Schuljahr.
+	 */
+	public ProxyReportingSchuljahresabschnitt(final ReportingContext reportingContext, final long id, final int schuljahr, final int abschnitt) {
+		super(id, schuljahr, abschnitt, null, null, null, null,
+				new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
+
+		this.reportingContext = reportingContext;
+	}
+
 
 	/**
 	 * Gibt den folgenden Schuljahresabschnitt zurück (lazy-loading).
@@ -109,10 +130,17 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	/**
 	 * Gibt die Map der Klassen dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Map der Klassen, die in diesem Schuljahresabschnitt gültig sind.
+	 * <p>Bei einem virtuellen Abschnitt bleibt die Map leer, da Klassen an einen Abschnitt in der Datenbank gebunden
+	 * sind und für einen nicht existierenden Abschnitt fachlich nicht vorhanden sein können. Die Abfrage wird deshalb
+	 * gar nicht erst an die Datenbank gestellt — siehe {@link ReportingSchuljahresabschnitt#istVirtuell()}.</p>
+	 *
+	 * @return Map der Klassen, die in diesem Schuljahresabschnitt gültig sind; bei einem virtuellen Abschnitt leer.
 	 */
 	@Override
 	public Map<Long, ReportingKlasse> klassen() {
+		if (istVirtuell()) {
+			return super.klassen;
+		}
 		if ((super.klassen == null) || super.klassen.isEmpty()) {
 			super.klassen = new HashMap<>();
 			for (final ReportingKlasse klasse : this.reportingContext.repositoryLerngruppen().klassen(this.id())) {
@@ -125,10 +153,18 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	/**
 	 * Gibt die Map der Kurse dieses Schuljahresabschnitts zurück.
 	 *
-	 * @return Map der Kurse, die in diesem Schuljahresabschnitt gültig sind.
+	 * <p>Bei einem virtuellen Abschnitt bleibt die Map leer, da Kurse an einen Abschnitt in der Datenbank gebunden sind
+	 * und für einen nicht existierenden Abschnitt fachlich nicht vorhanden sein können. Die Abfrage wird deshalb gar
+	 * nicht erst an die Datenbank gestellt — siehe {@link ReportingSchuljahresabschnitt#istVirtuell()}. Die Kurse einer
+	 * GOSt-Blockung sind davon unberührt; sie stammen aus dem Blockungsergebnis und nicht aus dem Abschnitt.</p>
+	 *
+	 * @return Map der Kurse, die in diesem Schuljahresabschnitt gültig sind; bei einem virtuellen Abschnitt leer.
 	 */
 	@Override
 	public Map<Long, ReportingKurs> kurse() {
+		if (istVirtuell()) {
+			return super.kurse;
+		}
 		if ((super.kurse == null) || super.kurse.isEmpty()) {
 			super.kurse = new HashMap<>();
 			for (final ReportingKurs kurs : this.reportingContext.repositoryLerngruppen().kurse(this.id())) {
