@@ -1,3 +1,4 @@
+
 import type { ComputedRef, Ref, ShallowRef } from "vue";
 import { computed, ref, shallowRef, watch } from "vue";
 
@@ -212,8 +213,8 @@ export class ModelProxy<T extends object> {
 			return false;
 		}
 
-		// Wenn nicht, dann führe die konfigurierte Patch-Methode mit allen Attribute aus, nicht durch blockierende Fehler vom Patch ausgenommen sind.
-		const result = await this._config.patch(pending);
+		// Wenn nicht, dann führe die konfigurierte Patch-Methode nur mit den Attributen aus, die nicht durch blockierende Fehler vom Patch ausgenommen sind.
+		const result = await this._config.patch(patchData);
 		if (result) {
 			const remainingPending = {} as Partial<T>;
 			for (const prop of keys) {
