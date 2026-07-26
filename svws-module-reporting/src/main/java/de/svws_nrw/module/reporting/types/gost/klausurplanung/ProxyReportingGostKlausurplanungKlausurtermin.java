@@ -2,7 +2,7 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 
 /**

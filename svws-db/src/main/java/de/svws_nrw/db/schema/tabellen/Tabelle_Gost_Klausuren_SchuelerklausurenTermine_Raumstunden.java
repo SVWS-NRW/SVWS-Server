@@ -62,7 +62,7 @@ public class Tabelle_Gost_Klausuren_SchuelerklausurenTermine_Raumstunden extends
 		super("Gost_Klausuren_SchuelerklausurenTermine_Raumstunden", SchemaRevisionen.REV_9);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenSchuelerklausurenTermineRaumstunden");
 		setJavaComment("Tabelle für die Definition von Schülerklausurtermin-Raumstunden");
 	}

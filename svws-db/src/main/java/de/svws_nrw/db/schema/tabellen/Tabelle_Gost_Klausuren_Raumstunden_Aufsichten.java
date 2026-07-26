@@ -68,7 +68,7 @@ public class Tabelle_Gost_Klausuren_Raumstunden_Aufsichten extends SchemaTabelle
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenRaumstundenAufsichten");
 		setJavaComment("Tabelle für die Definition von Aufsichten für Klausur-Raumstunden");
 	}

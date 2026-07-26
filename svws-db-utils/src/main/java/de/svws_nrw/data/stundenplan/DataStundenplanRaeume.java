@@ -13,12 +13,12 @@ import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -242,7 +242,8 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 	@Override
 	protected void saveDatabaseDTO(final DTOStundenplanRaum dto) throws ApiOperationException {
 		super.saveDatabaseDTO(dto);
-		DataGostKlausurenRaum.dbHookStundenplangueltigkeitPlus(conn, DataStundenplan.getDTOStundenplan(conn, dto.Stundenplan_ID));
+		GostKlausurenRepositoryFactory.getNewInstance().getGostKlausurenStundenplanHookRepository()
+				.handleStundenplangueltigkeitPlus(DataStundenplan.getDTOStundenplan(conn, dto.Stundenplan_ID));
 	}
 
 	/**

@@ -12,7 +12,7 @@ import type { GostHalbjahr } from "../../../core/src/core/types/gost/GostHalbjah
 import type { List } from "../../../core/src/java/util/List";
 import type { GostBeratungslehrer } from "../../../core/src/core/data/gost/GostBeratungslehrer";
 import { AppContext } from "../AppContext";
-import type { GostKlausurvorgabe } from "../../../core/src/core/data/gost/klausurplanung/GostKlausurvorgabe";
+import type { GostKlausurvorgabe } from "../../../core/src/core/data/gost/klausuren/GostKlausurvorgabe";
 import type { GostSchuelerGKLWahl } from "../../../core/src/core/data/gost/GostSchuelerGKLWahl";
 import type { GostFach } from "../../../core/src/core/data/gost/GostFach";
 

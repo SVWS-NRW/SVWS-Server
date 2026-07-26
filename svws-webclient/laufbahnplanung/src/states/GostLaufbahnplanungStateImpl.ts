@@ -39,7 +39,7 @@ import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import { GostFach } from "@core/core/data/gost/GostFach";
 import { GostLaufbahnplanungExportV2GKL } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2GKL";
-import { GostKlausurvorgabe } from "@core/core/data/gost/klausurplanung/GostKlausurvorgabe";
+import { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 
 

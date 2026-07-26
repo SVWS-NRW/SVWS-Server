@@ -4,12 +4,12 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausurenProps";
+import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausurenProps";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
-const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SchuelerLernabschnittGostKlausuren.vue");
+const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausuren.vue");
 
 export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
@@ -55,9 +55,9 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			kMan: () => routeSchuelerLernabschnitte.data.klausurManager,
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,
-			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
-			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,
-			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin,
+			createSchuelerklausurtermin: routeSchuelerLernabschnitte.data.createSchuelerklausurtermin,
+			deleteSchuelerklausurtermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurtermin,
+			patchSchuelerklausurtermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurtermin,
 			patchSchuelerklausur: routeSchuelerLernabschnitte.data.patchSchuelerklausur,
 			gotoPlanung: routeSchuelerLernabschnitte.data.gotoPlanung,
 		};

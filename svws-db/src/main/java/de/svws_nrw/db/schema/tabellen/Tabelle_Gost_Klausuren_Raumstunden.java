@@ -84,7 +84,7 @@ public class Tabelle_Gost_Klausuren_Raumstunden extends SchemaTabelle {
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenRaumstunden");
 		setJavaComment("Tabelle für die Definition von Klausurraumstunden");
 	}

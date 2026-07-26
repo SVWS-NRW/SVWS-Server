@@ -1,0 +1,126 @@
+import { JavaLong } from '../../../../java/lang/JavaLong';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
+
+export class GostSchuelerklausur extends JavaObject {
+
+	/**
+	 * Die ID der Schülerklausur.
+	 */
+	public id: number = -1;
+
+	/**
+	 * Die ID der zugehörigen Kursklausur.
+	 */
+	public idKursklausur: number = -1;
+
+	/**
+	 * Die ID des zugehörigen Schülers.
+	 */
+	public idSchueler: number = -1;
+
+	/**
+	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
+	 */
+	public bemerkung: string | null = null;
+
+	/**
+	 * Gibt an, ob der Schüler bei dieser Klausur mitschreibt oder nicht.
+	 */
+	public aktiv: boolean = true;
+
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public constructor() {
+		super();
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte identisch sind, sonst false
+	 */
+	public equals(another: unknown | null): boolean {
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur')))) && (this.id === (another as unknown as GostSchuelerklausur).id);
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	public hashCode(): number {
+		return JavaLong.hashCode((this.id));
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur';
+	}
+
+	isTranspiledInstanceOf(name: string): boolean {
+		return ['de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur'].includes(name);
+	}
+
+	public static readonly class = new Class<GostSchuelerklausur>('de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur');
+
+	public static transpilerFromJSON(json: string): GostSchuelerklausur {
+		const obj = JSON.parse(json) as Partial<GostSchuelerklausur>;
+		const result = new GostSchuelerklausur();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (obj.idKursklausur === undefined)
+			throw new Error('invalid json format, missing attribute idKursklausur');
+		result.idKursklausur = obj.idKursklausur;
+		if (obj.idSchueler === undefined)
+			throw new Error('invalid json format, missing attribute idSchueler');
+		result.idSchueler = obj.idSchueler;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		if (obj.aktiv === undefined)
+			throw new Error('invalid json format, missing attribute aktiv');
+		result.aktiv = obj.aktiv;
+		return result;
+	}
+
+	public static transpilerToJSON(obj: GostSchuelerklausur): string {
+		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
+		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"aktiv" : ' + obj.aktiv.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj: Partial<GostSchuelerklausur>): string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idKursklausur !== undefined) {
+			result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
+		}
+		if (obj.idSchueler !== undefined) {
+			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		}
+		if (obj.bemerkung !== undefined) {
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		}
+		if (obj.aktiv !== undefined) {
+			result += '"aktiv" : ' + obj.aktiv.toString() + ',';
+		}
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+}
+
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostSchuelerklausur(obj: unknown): GostSchuelerklausur {
+	return obj as GostSchuelerklausur;
+}

@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurtermin;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -22,7 +22,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGo
 	 * @param schueler					Der Schüler zu dieser Schülerklausur.
 	 */
 	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostSchuelerklausur gostSchuelerklausur,
-			final GostSchuelerklausurTermin gostSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
+			final GostSchuelerklausurtermin gostSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
 			final ReportingSchueler schueler) {
 		super(ersetzeNullBlankTrim(gostSchuelerklausur.bemerkung),

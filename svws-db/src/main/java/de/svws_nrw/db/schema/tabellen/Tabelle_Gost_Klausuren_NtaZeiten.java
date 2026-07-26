@@ -58,7 +58,7 @@ public class Tabelle_Gost_Klausuren_NtaZeiten extends SchemaTabelle {
 		super("Gost_Klausuren_NtaZeiten", SchemaRevisionen.REV_9);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenNtaZeiten");
 		setJavaComment("Tabelle für die Definition von Nachteilsausgleichen");
 	}

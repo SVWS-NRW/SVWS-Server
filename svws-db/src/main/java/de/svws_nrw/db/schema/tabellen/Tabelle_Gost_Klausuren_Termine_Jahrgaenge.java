@@ -83,7 +83,7 @@ public class Tabelle_Gost_Klausuren_Termine_Jahrgaenge extends SchemaTabelle {
 		super("Gost_Klausuren_Termine_Jahrgaenge", SchemaRevisionen.REV_9);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenTermineJahrgaenge");
 		setJavaComment("Tabelle für die Definition von zugelassenen Jahrgangsstufen zu Klausurterminen");
 		setVeraltet(SchemaRevisionen.REV_19);

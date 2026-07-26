@@ -48,9 +48,10 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
-import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
@@ -278,6 +279,7 @@ public class GenerateTestdatenLaufbahn {
 					LehrerRepositoryFactory.getNewInstance(),
 					benutzerRepositoryFactory,
 					KatalogeRepositoryFactory.getNewInstance(),
+					SchuleRepositoryFactory.getNewInstance(),
 					BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory),
 					CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
 					SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),

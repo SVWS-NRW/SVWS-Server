@@ -25,7 +25,6 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenVorgabe;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
@@ -40,6 +39,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -391,7 +391,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		}
 
 		// Kopiere die Informationen zu Gost-Klausurvorgaben aus der Vorlage
-		new DataGostKlausurenVorgabe(conn).copyVorgabenToJahrgang(abiturjahr, null, 0);
+		GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
+				.getGostKlausurenVorgabeVorlagenService()
+				.copyVorlagenToJahrgang(abiturjahr, null, 0);
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}

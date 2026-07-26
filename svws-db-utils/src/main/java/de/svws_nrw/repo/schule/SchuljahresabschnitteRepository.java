@@ -1,5 +1,7 @@
 package de.svws_nrw.repo.schule;
 
+import java.util.Optional;
+
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.repo.Repository;
 
@@ -13,5 +15,15 @@ public interface SchuljahresabschnitteRepository extends Repository<DTOSchuljahr
 	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
 	 */
 	boolean existsById(Long idSchuljahresabschnitt);
+
+	/**
+	 * Ermittelt einen Schuljahresabschnitt anhand von Schuljahr und Abschnitt.
+	 *
+	 * @param schuljahr das Schuljahr
+	 * @param abschnitt der Abschnitt
+	 *
+	 * @return der Schuljahresabschnitt, falls vorhanden
+	 */
+	Optional<DTOSchuljahresabschnitte> findBySchuljahrAndAbschnitt(int schuljahr, int abschnitt);
 
 }

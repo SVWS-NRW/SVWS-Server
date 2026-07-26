@@ -79,7 +79,7 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenRaeume");
 		setJavaComment("Tabelle für die Definition von Räumen für Klausuren");
 	}

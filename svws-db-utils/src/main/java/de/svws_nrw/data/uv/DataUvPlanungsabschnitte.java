@@ -7,13 +7,13 @@ import de.svws_nrw.core.data.uv.UvPlanungsabschnitt;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnitt;
 import de.svws_nrw.db.dto.current.uv.DTOUvPlanungsabschnittLehrer;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
@@ -101,7 +101,7 @@ public final class DataUvPlanungsabschnitte extends DataManagerRevised<Long, DTO
 			case "gueltigAb" -> dto.GueltigVon = JSONMapper.convertToString(value, false, false, null, name);
 			case "gueltigBis" -> dto.GueltigBis = JSONMapper.convertToString(value, true, false, null, name);
 			case "beschreibung" -> dto.Beschreibung =
-					DataGostKlausuren.convertEmptyStringToNull(
+					StringUtils.trimToNull(
 							JSONMapper.convertToString(value, true, true, Schema.tab_UV_Planungsabschnitte.col_Beschreibung.datenlaenge(), name));
 			case "idsLehrer" -> DataUvSchuelergruppen.updateJoinTable(
 					conn,

@@ -15,12 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.base.CsvReader;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausurRich;
-import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus;
-import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurterminblockungDaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurterminblockungErgebnis;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurterminblockungErgebnisTermin;
+import de.svws_nrw.core.data.gost.klausuren.GostKursklausurRich;
+import de.svws_nrw.core.utils.gost.klausuren.KlausurblockungSchienenAlgorithmus;
+import de.svws_nrw.core.utils.gost.klausuren.KlausurterminblockungAlgorithmus;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
@@ -259,7 +259,7 @@ class KlausurterminblockungTests {
 
 		final @NotNull GostKlausurterminblockungDaten daten = new GostKlausurterminblockungDaten();
 		daten.konfiguration.maxTimeMillis = BLOCKUNGS_ZEIT;
-		daten.richKlausuren = pInput;
+		daten.kursklausurenRich = pInput;
 
 		// Blockung starten
 		final @NotNull GostKlausurterminblockungErgebnis ergebnis = alg.apply(daten);
@@ -276,13 +276,13 @@ class KlausurterminblockungTests {
 
 		// Map: Klausur-ID --> Klausur-Objekt
 		final HashMap<@NotNull Long, @NotNull GostKursklausurRich> mapKlausur = new HashMap<>();
-		for (final @NotNull GostKursklausurRich klausur : daten.richKlausuren) {
+		for (final @NotNull GostKursklausurRich klausur : daten.kursklausurenRich) {
 			mapKlausur.put(klausur.id, klausur);
 		}
 
 		for (final @NotNull GostKlausurterminblockungErgebnisTermin termin : ergebnis.termine) {
 			final TreeSet<Long> schueler = new TreeSet<>();
-			for (final long klausurID : termin.kursklausuren) {
+			for (final long klausurID : termin.idsKursklausuren) {
 				for (final long susID : mapKlausur.get(klausurID).schuelerIds) {
 					if (!schueler.add(susID)) {
 						fail("Doppelter Schüler an einem Termin!");

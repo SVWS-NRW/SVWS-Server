@@ -51,13 +51,13 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFachwahl;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenAlleKlausurdaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
@@ -72,13 +72,12 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
+import de.svws_nrw.core.utils.gost.klausuren.GostKlausurplanManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecher;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
@@ -114,6 +113,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRau
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -1553,10 +1553,10 @@ public final class DataUntis {
 		}
 		logger.logLn("-> für den Schuljahresabschnitt %d.%d".formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt));
 
-		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
-		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 3, schuljahresabschnitt.abschnitt - 1));
-		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 2, schuljahresabschnitt.abschnitt + 1));
-		selection.add(new GostKlausurenCollectionHjData(schuljahresabschnitt.schuljahr + 1, schuljahresabschnitt.abschnitt + 3));
+		final List<GostKlausurenHalbjahresdaten> selection = new ArrayList<>();
+		selection.add(new GostKlausurenHalbjahresdaten(schuljahresabschnitt.schuljahr + 3, schuljahresabschnitt.abschnitt - 1));
+		selection.add(new GostKlausurenHalbjahresdaten(schuljahresabschnitt.schuljahr + 2, schuljahresabschnitt.abschnitt + 1));
+		selection.add(new GostKlausurenHalbjahresdaten(schuljahresabschnitt.schuljahr + 1, schuljahresabschnitt.abschnitt + 3));
 
 		selection.forEach(hjData -> {
 			hjData.schueler = new ArrayList<>();
@@ -1564,7 +1564,8 @@ public final class DataUntis {
 		});
 
 		logger.logLn("-> bestimme die Klausurplan-Daten...");
-		final GostKlausurenCollectionAllData data = DataGostKlausuren.getAllData(conn, selection);
+		final GostKlausurenAlleKlausurdaten data = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
+				.getGostKlausurenAllDataService().getAllData(selection);
 		final GostKlausurplanManager manager = new GostKlausurplanManager(data);
 
 		logger.logLn("-> laden der Stundenpläne für den Schuljahresabschnitt...");

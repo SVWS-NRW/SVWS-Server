@@ -23,7 +23,6 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
@@ -34,6 +33,8 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsich
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenStundenplanHookRepository;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -279,8 +280,9 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	@Override
 	protected void saveDatabaseDTO(final DTOStundenplan dto) throws ApiOperationException {
 		super.saveDatabaseDTO(dto);
-		DataGostKlausurenRaum.dbHookStundenplangueltigkeitMinus(conn, dto);
-		DataGostKlausurenRaum.dbHookStundenplangueltigkeitPlus(conn, dto);
+		final GostKlausurenStundenplanHookRepository hookRepository = getGostKlausurenStundenplanHookRepository();
+		hookRepository.handleStundenplangueltigkeitMinus(dto);
+		hookRepository.handleStundenplangueltigkeitPlus(dto);
 	}
 
 	@Override
@@ -289,10 +291,14 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		final String cacheEnde = dto.Ende;
 		dto.Beginn = "1970-01-01";
 		dto.Ende = "1970-01-02";
-		DataGostKlausurenRaum.dbHookStundenplangueltigkeitMinus(conn, dto);
+		getGostKlausurenStundenplanHookRepository().handleStundenplangueltigkeitMinus(dto);
 		dto.Beginn = cacheBeginn;
 		dto.Ende = cacheEnde;
 		super.deleteDatabaseDTO(dto);
+	}
+
+	private GostKlausurenStundenplanHookRepository getGostKlausurenStundenplanHookRepository() {
+		return GostKlausurenRepositoryFactory.getNewInstance().getGostKlausurenStundenplanHookRepository();
 	}
 
 	/**

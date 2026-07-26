@@ -12,7 +12,7 @@ import org.thymeleaf.context.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGostKlausurplanung;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
@@ -85,26 +85,26 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 		// 20253 für Abitur 2025 in Q1.2.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (HtmlFactory).
 		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
-		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
+		final List<GostKlausurenHalbjahresdaten> selection = new ArrayList<>();
 
 		if (!parameterDaten.isEmpty()) {
 			for (final Long kombinierteId : parameterDaten) {
 				if (kombinierteId != null) {
 					final int abiturjahr = (int) (kombinierteId / 10);
 					final int gostHalbjahr = (int) (kombinierteId % 10);
-					selection.add(new GostKlausurenCollectionHjData(abiturjahr, gostHalbjahr));
+					selection.add(new GostKlausurenHalbjahresdaten(abiturjahr, gostHalbjahr));
 				}
 			}
 		} else {
 			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
 			// EF:
-			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 3,
+			selection.add(new GostKlausurenHalbjahresdaten(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 3,
 					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() - 1));
 			// Q1:
-			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 2,
+			selection.add(new GostKlausurenHalbjahresdaten(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 2,
 					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 1));
 			// Q2:
-			selection.add(new GostKlausurenCollectionHjData(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 1,
+			selection.add(new GostKlausurenHalbjahresdaten(reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr() + 1,
 					reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt() + 3));
 		}
 

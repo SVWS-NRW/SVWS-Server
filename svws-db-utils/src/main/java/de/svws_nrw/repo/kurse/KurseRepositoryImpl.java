@@ -28,6 +28,14 @@ public final class KurseRepositoryImpl extends RepositoryImpl<DTOKurs> implement
 	}
 
 	@Override
+	public List<DTOKurs> getListBySchuljahresabschnittAndJahrgang(final long idSchuljahresabschnitt, final String asdJahrgang) {
+		return conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class)
+				.setParameter("sja", idSchuljahresabschnitt)
+				.setParameter("jg", asdJahrgang)
+				.getResultList();
+	}
+
+	@Override
 	public Map<Long, DTOKurs> getMapBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
 		return this.getListBySchuljahresabschnitt(idSchuljahresabschnitt).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}

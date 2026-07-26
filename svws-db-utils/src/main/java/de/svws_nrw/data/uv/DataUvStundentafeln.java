@@ -5,12 +5,12 @@ import java.util.Map;
 import de.svws_nrw.core.data.uv.UvStundentafel;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.uv.DTOUvStundentafel;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
@@ -85,12 +85,11 @@ public final class DataUvStundentafeln extends DataManagerRevised<Long, DTOUvStu
 			case "jahrgangId" -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false, name);
 			case "gueltigAb" -> dto.GueltigVon = JSONMapper.convertToString(value, false, false, null, name);
 			case "gueltigBis" -> dto.GueltigBis = JSONMapper.convertToString(value, true, false, null, name);
-			case "bezeichnung" -> dto.Bezeichnung = DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, false, false,
+			case "bezeichnung" -> dto.Bezeichnung = StringUtils.trimToNull(JSONMapper.convertToString(value, false, false,
 					Schema.tab_UV_Stundentafeln.col_Bezeichnung.datenlaenge(), name));
-			case "beschreibung" -> dto.Beschreibung = DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true,
+			case "beschreibung" -> dto.Beschreibung = StringUtils.trimToNull(JSONMapper.convertToString(value, true, true,
 					Schema.tab_UV_Stundentafeln.col_Beschreibung.datenlaenge(), name));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}
 }
-

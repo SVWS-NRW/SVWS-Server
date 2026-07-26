@@ -36,6 +36,11 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 	}
 
 	@Override
+	public List<DTOSchuelerLeistungsdaten> findListByKurs(final long idKurs) {
+		return conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Kurs_ID = ?1", DTOSchuelerLeistungsdaten.class, idKurs);
+	}
+
+	@Override
 	public List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFachlehrer(final Collection<Long> idsLernabschnitte, final Collection<Long> idsFachlehrer) {
 		if (idsLernabschnitte.isEmpty() || idsFachlehrer.isEmpty()) {
 			return new ArrayList<>();

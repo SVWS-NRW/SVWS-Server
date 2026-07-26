@@ -1,0 +1,96 @@
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { KlausurblockungSchienenAlgorithmusGreedy3 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy3';
+import { KlausurblockungSchienenDynDaten } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenDynDaten';
+import { KlausurblockungSchienenAlgorithmusGreedy2 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy2';
+import { KlausurblockungSchienenAlgorithmusGreedy5 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy5';
+import { KlausurblockungSchienenAlgorithmusGreedy4 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy4';
+import { KlausurblockungSchienenAlgorithmusGreedy1 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy1';
+import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../../core/logger/Logger';
+import { KlausurblockungSchienenAlgorithmusGreedy7 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy7';
+import { KlausurblockungSchienenAlgorithmusGreedy6 } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy6';
+import { System } from '../../../../java/lang/System';
+import { KlausurblockungSchienenAlgorithmusGreedy1b } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy1b';
+import { KlausurblockungSchienenAlgorithmusAbstract } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusAbstract';
+import { KlausurblockungSchienenAlgorithmusGreedy2b } from '../../../../core/utils/gost/klausuren/KlausurblockungSchienenAlgorithmusGreedy2b';
+import { Random } from '../../../../java/util/Random';
+import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
+import { GostKursklausurRich } from '../../../../core/data/gost/klausuren/GostKursklausurRich';
+
+export class KlausurblockungSchienenAlgorithmus extends JavaObject {
+
+	private static readonly _random: Random = new Random();
+
+	/**
+	 * Ein Logger für Debug-Zwecke.
+	 */
+	private readonly log: Logger;
+
+
+	/**
+	 * Der Konstruktor.
+	 */
+	public constructor();
+
+	/**
+	 * Der Konstruktor.
+	 *
+	 * @param pLogger  Ein Logger für Debug-Zwecke.
+	 */
+	public constructor(pLogger: Logger);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0?: Logger) {
+		super();
+		if ((__param0 === undefined)) {
+			this.log = new Logger();
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.Logger'))))) {
+			const pLogger: Logger = cast_de_svws_nrw_core_logger_Logger(__param0);
+			this.log = pLogger;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Berechnet die Blockung von Klausuren
+	 *
+	 * @param pInput          Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
+	 * @param pMaxTimeMillis  Logger für Benutzerhinweise, Warnungen und Fehler.
+	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
+	 */
+	public berechne(pInput: List<GostKursklausurRich>, pMaxTimeMillis: number): List<List<number>> {
+		const zeitEndeGesamt: number = System.currentTimeMillis() + pMaxTimeMillis;
+		const seed: number = KlausurblockungSchienenAlgorithmus._random.nextLong();
+		const random: Random = new Random(seed);
+		const dynDaten: KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(this.log, random, pInput);
+		const algorithmen: Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten)];
+		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
+		dynDaten.aktionZustand2Speichern();
+		let zeitProAlgorithmus: number = 10;
+		do {
+			for (const algorithmus of algorithmen) {
+				const zeitEndeRunde: number = System.currentTimeMillis() + zeitProAlgorithmus;
+				algorithmus.berechne(zeitEndeRunde);
+			}
+			zeitProAlgorithmus *= 2;
+		} while ((System.currentTimeMillis() + (algorithmen.length * zeitProAlgorithmus)) <= zeitEndeGesamt);
+		dynDaten.aktionZustand2Laden();
+		return dynDaten.gibErzeugeOutput();
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.klausuren.KlausurblockungSchienenAlgorithmus';
+	}
+
+	isTranspiledInstanceOf(name: string): boolean {
+		return ['de.svws_nrw.core.utils.gost.klausuren.KlausurblockungSchienenAlgorithmus'].includes(name);
+	}
+
+	public static readonly class = new Class<KlausurblockungSchienenAlgorithmus>('de.svws_nrw.core.utils.gost.klausuren.KlausurblockungSchienenAlgorithmus');
+
+}
+
+export function cast_de_svws_nrw_core_utils_gost_klausuren_KlausurblockungSchienenAlgorithmus(obj: unknown): KlausurblockungSchienenAlgorithmus {
+	return obj as KlausurblockungSchienenAlgorithmus;
+}

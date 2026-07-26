@@ -1,0 +1,75 @@
+package de.svws_nrw.core.data.gost.klausuren;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
+ * Sie liefert die mit Daten des zugehörigen Stundenplan-Raums angereicherten Informationen zu einem Gost-Klausurraum.
+ */
+@XmlRootElement
+@Schema(description = "die mit Daten des zugehörigen {@link StundenplanRaum} angereicherten Informationen zu einem {@link GostKlausurraum}.")
+@TranspilerDTO
+public class GostKlausurraumRich {
+
+	/** Die ID des Klausurtermins. */
+	@Schema(description = "die ID des Klausurtermins", example = "2242")
+	public @NotNull GostKlausurraum klausurraum = new GostKlausurraum();
+
+	/** Die Größe des Raumes an Arbeitsplätzen für Schüler. */
+	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
+	public int groesse = -1;
+
+	/** Ein Array mit den IDs des im Raum enthaltenen Schülerklausurtermins. */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen."))
+	public @NotNull List<Long> idsSchuelerklausurtermine = new ArrayList<>();
+
+	/**
+	 * Konstruktor zur Erstellung des Rich-Objekts.
+	 *
+	 * @param klausurraum      Das zugehörige {@link GostKlausurraum}-Objekt.
+	 * @param stundenplanraum  Das zugehörige {@link StundenplanRaum}-Objekt.
+	 *
+	 */
+	public GostKlausurraumRich(final @NotNull GostKlausurraum klausurraum, final StundenplanRaum stundenplanraum) {
+		this.klausurraum = klausurraum;
+		if (stundenplanraum != null) {
+			groesse = stundenplanraum.groesse;
+		}
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurraumRich() {
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte identisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return (another != null) && (another instanceof final GostKlausurraumRich raum) && (this.klausurraum.equals(raum.klausurraum));
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return klausurraum.hashCode();
+	}
+
+}

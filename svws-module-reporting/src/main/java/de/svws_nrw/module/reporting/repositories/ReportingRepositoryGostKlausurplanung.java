@@ -8,15 +8,14 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.ToLongFunction;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenAlleKlausurdaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurtermin;
+import de.svws_nrw.core.utils.gost.klausuren.GostKlausurplanManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
@@ -31,6 +30,7 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 
 /**
  * Domänen-Repository für die GOSt-Klausurplanung. Hält pro Reporting-Request genau einen
@@ -91,11 +91,12 @@ public class ReportingRepositoryGostKlausurplanung {
 	 *
 	 * @throws ApiOperationException Falls die Klausurplandaten nicht ermittelt werden konnten.
 	 */
-	public void initManager(final List<GostKlausurenCollectionHjData> selection) throws ApiOperationException {
+	public void initManager(final List<GostKlausurenHalbjahresdaten> selection) throws ApiOperationException {
 		if (manager != null) {
 			return;
 		}
-		final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(this.reportingContext.conn(), selection);
+		final GostKlausurenAlleKlausurdaten allData = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
+				.getGostKlausurenAllDataService().getAllData(selection);
 		manager = new GostKlausurplanManager(allData);
 		erzeugeReportingObjekte();
 	}
@@ -340,8 +341,8 @@ public class ReportingRepositoryGostKlausurplanung {
 
 	private void erzeugeSchuelerklausuren() {
 		for (final GostSchuelerklausur sk : manager.schuelerklausurGetMengeAsList()) {
-			for (final GostSchuelerklausurTermin skTermin : manager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
-				erzeugeSchuelerklausurTermin(sk, skTermin);
+			for (final GostSchuelerklausurtermin skTermin : manager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
+				erzeugeSchuelerklausurtermin(sk, skTermin);
 			}
 		}
 	}
@@ -380,7 +381,7 @@ public class ReportingRepositoryGostKlausurplanung {
 	}
 
 
-	private void erzeugeSchuelerklausurTermin(final GostSchuelerklausur sk, final GostSchuelerklausurTermin skTermin) {
+	private void erzeugeSchuelerklausurtermin(final GostSchuelerklausur sk, final GostSchuelerklausurtermin skTermin) {
 		final ReportingSchueler schueler = reportingContext.repositorySchueler().schueler(sk.idSchueler);
 		if (schueler == null) {
 			return;

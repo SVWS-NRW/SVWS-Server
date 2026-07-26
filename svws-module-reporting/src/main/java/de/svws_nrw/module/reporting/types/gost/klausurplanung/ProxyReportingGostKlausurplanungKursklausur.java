@@ -2,8 +2,8 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 
 

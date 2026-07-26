@@ -6,9 +6,10 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
-import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
@@ -46,6 +47,7 @@ public final class GostLaufbahnplanungControllerFactory {
 				LehrerRepositoryFactory.getNewInstance(),
 				benutzerRepositoryFactory,
 				katalogeRepositoryFactory,
+				SchuleRepositoryFactory.getNewInstance(),
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
 				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),

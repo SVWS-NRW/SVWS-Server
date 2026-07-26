@@ -61,7 +61,7 @@ public class Tabelle_Gost_Klausuren_Entfall extends SchemaTabelle {
 		super("Gost_Klausuren_Entfall", SchemaRevisionen.REV_9);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenEntfall");
 		setJavaComment("Tabelle für die Definition von Entfall für Klausuren");
 	}

@@ -113,7 +113,7 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenTermine");
 		setJavaComment("Tabelle für die Definition von Terminen für Klausuren");
 	}

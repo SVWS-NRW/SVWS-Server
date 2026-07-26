@@ -7,7 +7,7 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
-import { routeGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
+import { routeGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
 import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";

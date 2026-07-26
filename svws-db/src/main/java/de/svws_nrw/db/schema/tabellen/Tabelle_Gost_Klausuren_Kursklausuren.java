@@ -95,7 +95,7 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenKursklausuren");
 		setJavaComment("Tabelle für die konkreten Kursklausurentitäten");
 	}

@@ -61,7 +61,7 @@ public class Tabelle_Gost_Klausuren_Kalenderinformationen extends SchemaTabelle 
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenKalenderinformationen");
 		setJavaComment("Tabelle für die Definition von Kalenderinformationen");
 	}

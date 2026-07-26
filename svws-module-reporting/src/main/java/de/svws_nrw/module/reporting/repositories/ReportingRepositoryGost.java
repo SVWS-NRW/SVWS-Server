@@ -11,7 +11,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -23,12 +23,9 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.repo.gost.GostRepositoryFactory;
-import de.svws_nrw.repo.gost.klausurplan.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
-import de.svws_nrw.service.gost.klausurplan.GostKlausurenServiceFactory;
-import de.svws_nrw.service.gost.klausurplan.GostKlausurenVorgabeService;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenVorgabeService;
 
 /**
  * Domänen-Repository für GOSt-Daten (Abiturjahrgänge, Beratungsdaten, Kursplanung).
@@ -330,11 +327,7 @@ public class ReportingRepositoryGost {
 	 * @return der Service
 	 */
 	private static GostKlausurenVorgabeService gostKlausurenVorgabeService() {
-		return GostKlausurenServiceFactory.getNewInstance(
-				GostKlausurenRepositoryFactory.getNewInstance(),
-				GostRepositoryFactory.getNewInstance(),
-				KatalogeRepositoryFactory.getNewInstance())
-				.getGostKlausurenVorgabeService();
+		return GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory().getGostKlausurenVorgabeService();
 	}
 
 

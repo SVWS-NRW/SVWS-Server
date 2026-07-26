@@ -8,11 +8,11 @@ import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -220,7 +220,8 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 	@Override
 	protected void saveDatabaseDTO(final DTOStundenplanZeitraster dto) throws ApiOperationException {
 		super.saveDatabaseDTO(dto);
-		DataGostKlausurenRaum.dbHookStundenplangueltigkeitPlus(conn, DataStundenplan.getDTOStundenplan(conn, dto.Stundenplan_ID));
+		GostKlausurenRepositoryFactory.getNewInstance().getGostKlausurenStundenplanHookRepository()
+				.handleStundenplangueltigkeitPlus(DataStundenplan.getDTOStundenplan(conn, dto.Stundenplan_ID));
 	}
 
 }

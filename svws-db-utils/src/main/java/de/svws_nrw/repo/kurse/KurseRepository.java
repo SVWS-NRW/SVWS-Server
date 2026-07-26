@@ -21,6 +21,16 @@ public interface KurseRepository extends Repository<DTOKurs> {
 	List<DTOKurs> getListBySchuljahresabschnitt(long idSchuljahresabschnitt);
 
 	/**
+	 * Gibt eine Liste aller Kurse für den angegebenen Schuljahresabschnitt und Statistik-Jahrgang zurück.
+	 *
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnittes
+	 * @param asdJahrgang der Statistik-Jahrgang
+	 *
+	 * @return die Liste der Kurse
+	 */
+	List<DTOKurs> getListBySchuljahresabschnittAndJahrgang(long idSchuljahresabschnitt, String asdJahrgang);
+
+	/**
 	 * Gibt eine Map aller Kurse für den angegebenen Schuljahresabschnitt zurück.
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes

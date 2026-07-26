@@ -89,7 +89,7 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren extends SchemaTabelle {
 		setMigrate(false);
 		setImportExport(true);
 		setPKAutoIncrement();
-		setJavaSubPackage("gost.klausurplanung");
+		setJavaSubPackage("gost.klausuren");
 		setJavaClassName("DTOGostKlausurenSchuelerklausuren");
 		setJavaComment("Tabelle für die konkreten Schuelerklausurenentitäten");
 	}

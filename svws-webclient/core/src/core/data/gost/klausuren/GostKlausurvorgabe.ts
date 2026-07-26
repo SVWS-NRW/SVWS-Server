@@ -1,0 +1,222 @@
+import { JavaLong } from '../../../../java/lang/JavaLong';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
+
+export class GostKlausurvorgabe extends JavaObject {
+
+	/**
+	 * Die ID der Klausurvorgabe.
+	 */
+	public id: number = -1;
+
+	/**
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird, -1 für die Vorlage.
+	 */
+	public abiturjahrgang: number = -1;
+
+	/**
+	 * Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
+	 */
+	public halbjahr: number = -1;
+
+	/**
+	 * Das Quartal, in welchem die Klausur geschrieben wird.
+	 */
+	public quartal: number = -1;
+
+	/**
+	 * Die ID des Faches.
+	 */
+	public idFach: number = -1;
+
+	/**
+	 * Das Kürzel einer verallgemeinerten Kursart.
+	 */
+	public kursart: string = "";
+
+	/**
+	 * Die Dauer der Klausur in Minuten.
+	 */
+	public dauer: number = 0;
+
+	/**
+	 * Die Auswahlzeit in Minuten, sofern vorhanden.
+	 */
+	public auswahlzeit: number = 0;
+
+	/**
+	 * Die Information, ob es möglich ist, diese Klausur durch eine GKL zu ersetzen.
+	 */
+	public istGklMoeglich: boolean = false;
+
+	/**
+	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
+	 */
+	public istMdlPruefung: boolean = false;
+
+	/**
+	 * Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
+	 */
+	public istAudioNotwendig: boolean = false;
+
+	/**
+	 * Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
+	 */
+	public istVideoNotwendig: boolean = false;
+
+	/**
+	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden.
+	 */
+	public bemerkungVorgabe: string | null = null;
+
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public constructor() {
+		super();
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte identisch sind, sonst false
+	 */
+	public equals(another: unknown | null): boolean {
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe')))) && (this.id === (another as unknown as GostKlausurvorgabe).id);
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+	 *
+	 * @return den HashCode
+	 */
+	public hashCode(): number {
+		return JavaLong.hashCode((this.id));
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe';
+	}
+
+	isTranspiledInstanceOf(name: string): boolean {
+		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe'].includes(name);
+	}
+
+	public static readonly class = new Class<GostKlausurvorgabe>('de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe');
+
+	public static transpilerFromJSON(json: string): GostKlausurvorgabe {
+		const obj = JSON.parse(json) as Partial<GostKlausurvorgabe>;
+		const result = new GostKlausurvorgabe();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (obj.abiturjahrgang === undefined)
+			throw new Error('invalid json format, missing attribute abiturjahrgang');
+		result.abiturjahrgang = obj.abiturjahrgang;
+		if (obj.halbjahr === undefined)
+			throw new Error('invalid json format, missing attribute halbjahr');
+		result.halbjahr = obj.halbjahr;
+		if (obj.quartal === undefined)
+			throw new Error('invalid json format, missing attribute quartal');
+		result.quartal = obj.quartal;
+		if (obj.idFach === undefined)
+			throw new Error('invalid json format, missing attribute idFach');
+		result.idFach = obj.idFach;
+		if (obj.kursart === undefined)
+			throw new Error('invalid json format, missing attribute kursart');
+		result.kursart = obj.kursart;
+		if (obj.dauer === undefined)
+			throw new Error('invalid json format, missing attribute dauer');
+		result.dauer = obj.dauer;
+		if (obj.auswahlzeit === undefined)
+			throw new Error('invalid json format, missing attribute auswahlzeit');
+		result.auswahlzeit = obj.auswahlzeit;
+		if (obj.istGklMoeglich === undefined)
+			throw new Error('invalid json format, missing attribute istGklMoeglich');
+		result.istGklMoeglich = obj.istGklMoeglich;
+		if (obj.istMdlPruefung === undefined)
+			throw new Error('invalid json format, missing attribute istMdlPruefung');
+		result.istMdlPruefung = obj.istMdlPruefung;
+		if (obj.istAudioNotwendig === undefined)
+			throw new Error('invalid json format, missing attribute istAudioNotwendig');
+		result.istAudioNotwendig = obj.istAudioNotwendig;
+		if (obj.istVideoNotwendig === undefined)
+			throw new Error('invalid json format, missing attribute istVideoNotwendig');
+		result.istVideoNotwendig = obj.istVideoNotwendig;
+		result.bemerkungVorgabe = (obj.bemerkungVorgabe === undefined) ? null : obj.bemerkungVorgabe === null ? null : obj.bemerkungVorgabe;
+		return result;
+	}
+
+	public static transpilerToJSON(obj: GostKlausurvorgabe): string {
+		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"abiturjahrgang" : ' + obj.abiturjahrgang.toString() + ',';
+		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
+		result += '"quartal" : ' + obj.quartal.toString() + ',';
+		result += '"idFach" : ' + obj.idFach.toString() + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
+		result += '"dauer" : ' + obj.dauer.toString() + ',';
+		result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
+		result += '"istGklMoeglich" : ' + obj.istGklMoeglich.toString() + ',';
+		result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
+		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
+		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
+		result += '"bemerkungVorgabe" : ' + ((obj.bemerkungVorgabe === null) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj: Partial<GostKlausurvorgabe>): string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.abiturjahrgang !== undefined) {
+			result += '"abiturjahrgang" : ' + obj.abiturjahrgang.toString() + ',';
+		}
+		if (obj.halbjahr !== undefined) {
+			result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
+		}
+		if (obj.quartal !== undefined) {
+			result += '"quartal" : ' + obj.quartal.toString() + ',';
+		}
+		if (obj.idFach !== undefined) {
+			result += '"idFach" : ' + obj.idFach.toString() + ',';
+		}
+		if (obj.kursart !== undefined) {
+			result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
+		}
+		if (obj.dauer !== undefined) {
+			result += '"dauer" : ' + obj.dauer.toString() + ',';
+		}
+		if (obj.auswahlzeit !== undefined) {
+			result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
+		}
+		if (obj.istGklMoeglich !== undefined) {
+			result += '"istGklMoeglich" : ' + obj.istGklMoeglich.toString() + ',';
+		}
+		if (obj.istMdlPruefung !== undefined) {
+			result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
+		}
+		if (obj.istAudioNotwendig !== undefined) {
+			result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
+		}
+		if (obj.istVideoNotwendig !== undefined) {
+			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
+		}
+		if (obj.bemerkungVorgabe !== undefined) {
+			result += '"bemerkungVorgabe" : ' + ((obj.bemerkungVorgabe === null) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
+		}
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+}
+
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurvorgabe(obj: unknown): GostKlausurvorgabe {
+	return obj as GostKlausurvorgabe;
+}

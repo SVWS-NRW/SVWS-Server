@@ -1,6 +1,6 @@
 import type { List, FachDaten, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag,
 	SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen,
-	GostSchuelerklausurTermin, GostSchuelerklausur } from "@core";
+	GostSchuelerklausurtermin, GostSchuelerklausur } from "@core";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -143,8 +143,8 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {
-				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
-				klausurManager = new GostKlausurplanManager(gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
+				const gostKlausurdaten = await api.server.getGostKlausurenKlausurdatenBySchuelerId(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
+				klausurManager = new GostKlausurplanManager(gostKlausurdaten.vorgaben, gostKlausurdaten.kursklausuren, gostKlausurdaten.termine, gostKlausurdaten.schuelerklausuren, gostKlausurdaten.schuelerklausurtermine);
 				klausurManager.getKursManager().addAll(listKurse);
 				for (const l of listLehrer) {
 					klausurManager.getLehrerMap().put(l.id, l);
@@ -261,28 +261,31 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		this.commit();
 	};
 
-	createSchuelerklausurTermin = async (skt: Partial<GostSchuelerklausurTermin>) => {
+	createSchuelerklausurtermin = async (skt: Partial<GostSchuelerklausurtermin>) => {
 		delete skt.id;
+		delete skt.folgeNr;
 		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(skt, api.schema);
 		this.klausurManager.schuelerklausurterminAdd(skNeu);
 		this.commit();
 	};
 
-	deleteSchuelerklausurTermin = async (skt: GostSchuelerklausurTermin) => {
+	deleteSchuelerklausurtermin = async (skt: GostSchuelerklausurtermin) => {
 		await api.server.deleteGostKlausurenSchuelerklausurtermin(api.schema, skt.id);
 		this.klausurManager.schuelerklausurterminRemoveById(skt.id);
 		this.commit();
 	};
 
-	patchSchuelerklausurTermin = async (id: number, skt: Partial<GostSchuelerklausurTermin>) => {
+	patchSchuelerklausurtermin = async (id: number, skt: Partial<GostSchuelerklausurtermin>) => {
 		const sktAlt = this.klausurManager.schuelerklausurterminGetByIdOrException(id);
-		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
+		skt.id = id;
+		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema);
 		this.klausurManager.schuelerklausurterminPatchAttributes(Object.assign(sktAlt, skt));
 	};
 
 	patchSchuelerklausur = async (id: number, sk: Partial<GostSchuelerklausur>) => {
 		const skAlt = this.klausurManager.schuelerklausurGetByIdOrException(id);
-		await api.server.patchGostKlausurenSchuelerklausur(sk, api.schema, id);
+		sk.id = id;
+		await api.server.patchGostKlausurenSchuelerklausur(sk, api.schema);
 		this.klausurManager.schuelerklausurPatchAttributes(Object.assign(skAlt, sk));
 		this.commit();
 	};
