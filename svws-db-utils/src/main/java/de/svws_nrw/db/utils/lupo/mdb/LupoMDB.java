@@ -429,7 +429,7 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
 					continue;
 				}
-				final Fach fach2 = Fach.data().getWertBySchluessel(dtoFach1.StatistikKuerzel);
+				final Fach fach2 = Fach.data().getWertBySchluessel(dtoFach2.StatistikKuerzel);
 				if (fach2 == null) {
 					logger.logLn(0, "FEHLER - Das zweite Fach %s in der Fächerkombination ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
 							.formatted(dtoFach2.Kuerzel, dtoFach2.StatistikKuerzel));
