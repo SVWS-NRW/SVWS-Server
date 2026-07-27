@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
@@ -72,8 +74,9 @@ public class ReportingRepositoryGostKursplanung {
 	/**
 	 * Initialisiert den {@link GostBlockungsergebnisManager} anhand der ID des Blockungsergebnisses und baut die
 	 * Reporting-Objekte für das Blockungsergebnis, die Schienen und die Kurse auf. Das Blockungsergebnis und der
-	 * zugehörige Daten-Manager werden aus der Datenbank geladen. Wird einmalig pro Reporting-Request vom HtmlContext
-	 * aufgerufen. Folgeaufrufe sind No-Ops (Single-Threaded pro Request).
+	 * zugehörige Daten-Manager werden aus der Datenbank geladen. Kurs-Schüler-Zuordnungen von Schülern, die nicht
+	 * mehr Teil der Blockung sind (z. B. Abgänger), werden vor dem Aufbau entfernt. Wird einmalig pro
+	 * Reporting-Request vom HtmlContext aufgerufen. Folgeaufrufe sind No-Ops (Single-Threaded pro Request).
 	 *
 	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses.
 	 *
@@ -91,7 +94,35 @@ public class ReportingRepositoryGostKursplanung {
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
 
 		manager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
+		entferneKurszuordnungenUnbekannterSchueler(blockungsergebnis, datenManager);
 		erzeugeReportingObjekte(blockungsergebnis, datenManager);
+	}
+
+	/**
+	 * Entfernt über die Manager-API alle Kurs-Schüler-Zuordnungen von Schülern, die im Blockungsdaten-Manager
+	 * nicht (mehr) existieren (z. B. Abgänger). Die Datenbank kann für solche Schüler noch Kurs-Schüler-Zuordnungen
+	 * des Zwischenergebnisses enthalten; der Einzel-Ergebnis-Ladepfad übernimmt diese ungefiltert. Ohne Bereinigung
+	 * würden Manager-Methoden, die Schüler-IDs auflösen (z. B. {@link GostBlockungsergebnisManager#getOfKursSchuelermenge}),
+	 * beim Aufbau der Reporting-Objekte eine Exception werfen. Entspricht inhaltlich dem Filter in
+	 * {@link DataGostBlockungsergebnisse#getErgebnisListe}.
+	 *
+	 * @param blockungsergebnis Das geladene Blockungsergebnis.
+	 * @param datenManager      Der zugehörige Blockungsdaten-Manager.
+	 */
+	private void entferneKurszuordnungenUnbekannterSchueler(final GostBlockungsergebnis blockungsergebnis,
+			final GostBlockungsdatenManager datenManager) {
+		final Set<Long> unbekannteSchuelerIDs = blockungsergebnis.schienen.stream()
+				.flatMap(s -> s.kurse.stream())
+				.flatMap(k -> k.schueler.stream())
+				.filter(idSchueler -> datenManager.schuelerGetOrNull(idSchueler) == null)
+				.collect(Collectors.toSet());
+		if (unbekannteSchuelerIDs.isEmpty()) {
+			return;
+		}
+		manager.kursSchuelerUpdateExecute(manager.kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(unbekannteSchuelerIDs));
+		this.reportingContext.logger().logLn(LogLevel.INFO, 4,
+				"INFO: Es wurden Kurszuordnungen von %d Schülern entfernt, die nicht mehr zur Blockung gehören (z. B. Abgänger)."
+						.formatted(unbekannteSchuelerIDs.size()));
 	}
 
 	/**
