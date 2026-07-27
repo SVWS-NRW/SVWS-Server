@@ -3,9 +3,12 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeViewType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined"
-						:alt="foto !== null ? `Foto von ${manager().daten().vorname} ${manager().daten().nachname}` : ''" upload capture
-						@image:base64="val => patch({ val })" />
+					<svws-ui-avatar :src="fotoSrc"
+						:alt="fotoSrcAlt"
+						@image:base64="foto => patch({ foto })"
+						:upload="!readonly"
+						:capture="!readonly"
+						:removable="!readonly" />
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							{{ manager().daten().titel }} {{ manager().daten().vorname }} {{ manager().daten().nachname }}
@@ -50,14 +53,25 @@
 
 	import { computed } from "vue";
 	import type { LehrerAppProps } from "./LehrerAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<LehrerAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const foto = computed<string | null>(() => {
-		return props.manager().daten().foto;
+	const benutzerState = useBenutzerState();
+
+	const readonly = computed<boolean>(() => !benutzerState.kompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN) || !benutzerState.kompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
+	const fotoSrc = computed<string | undefined>(() => {
+		const base64Payload = props.manager().daten().foto;
+		if (base64Payload !== null) {
+			return `data:image/png;base64, ${base64Payload}`;
+		}
+		return undefined;
 	});
+	const fotoSrcAlt = computed<string>(() => (fotoSrc.value !== undefined) ? `Foto von ${vorname.value} ${nachname.value}` : '');
+	const vorname = computed<string>(() => props.manager().daten().vorname);
+	const nachname = computed<string>(() => props.manager().daten().nachname);
 
 	const lehrerSubline = computed(() => {
 		const auswahlLehrerList = props.manager().liste.auswahlSorted();

@@ -1,13 +1,13 @@
 <template>
 	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
-		<div v-if="capture || upload || (src.length > 0)" class="avatar--edit">
+		<div v-if="capture || upload || removable" class="avatar--edit">
 			<span class="avatar--edit-trigger">
 				<span class="icon i-ri-camera-line w-full h-full opacity-50" />
 			</span>
-			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen — 2 x klicken">
+			<svws-ui-button v-if="removable && srcIsValid" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen — 2 x klicken">
 				<span class="icon i-ri-delete-bin-line" :class="{'icon-ui-caution': stage}" />
 			</svws-ui-button>
-			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
+			<svws-ui-button v-if="upload && !srcIsValid" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
 				<input class="hidden" ref="fileInputEl" type="file" accept="image/*" @change="onFileChanged">
 				<span class="icon i-ri-upload-2-line" />
 			</svws-ui-button>
@@ -62,11 +62,13 @@
 		alt?: string;
 		upload?: boolean;
 		capture?: boolean;
+		removable?: boolean;
 	}>(), {
 		src: '',
 		alt: '',
 		upload: false,
 		capture: false,
+		removable: false,
 	});
 
 	const emit = defineEmits<{
@@ -74,8 +76,9 @@
 		'image:base64': [val: string | null];
 	}>();
 
-	const hasVideoDevice = ref(false);
+	const srcIsValid = computed<boolean>(() => props.src.split(',').length > 1);
 
+	const hasVideoDevice = ref(false);
 	const stage = ref<boolean>(false);
 
 	onMounted(async () => {

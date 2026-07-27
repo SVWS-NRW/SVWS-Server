@@ -3,9 +3,12 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="((activeViewType === ViewType.DEFAULT) || (activeViewType === ViewType.NEU))">
-					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined"
-						:alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture
-						@image:base64="foto => patch({ foto })" />
+					<svws-ui-avatar :src="fotoSrc"
+						:alt="fotoSrcAlt"
+						@image:base64="foto => patch({ foto })"
+						:upload="!readonly"
+						:capture="!readonly"
+						:removable="!readonly" />
 					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
@@ -50,7 +53,7 @@
 					</div>
 				</template>
 			</div>
-			<div class="svws-ui-header--actions print:!hidden" />
+			<div class="svws-ui-header--actions print:hidden!" />
 		</header>
 
 		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
@@ -67,10 +70,11 @@
 
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
-	import { useRegionSwitch, useSchuleState, ViewType } from "@ui";
-	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlassenDaten } from "@core";
+	import { useBenutzerState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
+	import { BenutzerKompetenz, type KlassenDaten, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
 
 	const schuleState = useSchuleState();
+	const benutzerState = useBenutzerState();
 
 	const props = defineProps<SchuelerAppProps>();
 
@@ -79,7 +83,9 @@
 	const primarschulformen = new Set(
 		[Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]
 	);
-	const primarstufe = computed(() => primarschulformen.has(props.schulform));
+
+	const readonly = computed<boolean>(() => !benutzerState.kompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
+	const primarstufe = computed<boolean>(() => primarschulformen.has(props.schulform));
 	const epJahre = computed<string | null>(() => {
 		if (!primarstufe.value) {
 			return null;
@@ -88,8 +94,7 @@
 		if (ep === null) {
 			return null;
 		}
-		const schuljahr = schuleState.schuljahr;
-		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr)?.kuerzel ?? null;
+		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuleState.schuljahr)?.kuerzel ?? null;
 	});
 
 	const schuelerSubline = computed(() => {
@@ -103,7 +108,14 @@
 		return [...auswahlSchuelerList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	});
 
-	const foto = computed<string | null>(() => props.manager().daten().foto);
+	const fotoSrc = computed<string | undefined>(() => {
+		const base64Payload = props.manager().daten().foto;
+		if (base64Payload !== null) {
+			return `data:image/png;base64, ${base64Payload}`;
+		}
+		return undefined;
+	});
+	const fotoSrcAlt = computed<string>(() => (fotoSrc.value !== undefined) ? `Foto von ${vorname.value} ${nachname.value}` : '');
 	const nachname = computed<string>(() => props.manager().daten().nachname);
 	const vorname = computed<string>(() => props.manager().daten().vorname);
 
