@@ -6624,7 +6624,7 @@ public class StundenplanManager {
 		}
 
 		// Remove
-		DeveloperNotificationException.ifMapRemoveFailes(_schiene_by_id, idSchueler);
+		DeveloperNotificationException.ifMapRemoveFailes(_schueler_by_id, idSchueler);
 	}
 
 	/**

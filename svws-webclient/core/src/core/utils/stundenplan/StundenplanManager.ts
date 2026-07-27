@@ -5930,7 +5930,7 @@ export class StundenplanManager extends JavaObject {
 		for (const ku of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idSchueler, idSchueler)) {
 			ku.schueler.remove(idSchueler);
 		}
-		DeveloperNotificationException.ifMapRemoveFailes(this._schiene_by_id, idSchueler);
+		DeveloperNotificationException.ifMapRemoveFailes(this._schueler_by_id, idSchueler);
 	}
 
 	/**
