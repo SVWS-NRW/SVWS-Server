@@ -139,7 +139,7 @@ public final class ExpressionClassType extends ExpressionType {
 					}
 					if (elemType instanceof final TypeVariable tv) {
 						result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
-						result.typeVariables.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, tv));
+						result.typeArguments.add(new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, tv), dim));
 						continue;
 					}
 					if (elemType instanceof final PrimitiveType pt) {

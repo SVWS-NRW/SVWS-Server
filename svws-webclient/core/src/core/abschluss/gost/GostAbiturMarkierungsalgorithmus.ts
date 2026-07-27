@@ -66,7 +66,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	readonly abi: Array<AbiturFachbelegung | null> = Array(4).fill(null);
 
 	/**
-	 * Gibt an, ob die Zulassung mit diesem Ergebniss erreicht wurde oder nicht.
+	 * Gibt an, ob die Zulassung mit diesem Ergebnis erreicht wurde oder nicht.
 	 */
 	private hatZulassung: boolean = false;
 
@@ -96,7 +96,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	private defiziteGK: number = 0;
 
 	/**
-	 * Gibt an, wieviele Fremdsprachen im Abiturbereich markiert wurden.
+	 * Gibt an, wie viele Fremdsprachen im Abiturbereich markiert wurden.
 	 */
 	private anzahlAbiFremdsprachen: number = 0;
 
@@ -280,7 +280,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 
 	/**
 	 * Führt eine automatische Markierung von Halbjahresbelegungen zur Verwendung in Block II
-	 * von anrechenbaren Kursen für die Abiturberechnung durch. Vorraussetzung hierfür ist, dass
+	 * von anrechenbaren Kursen für die Abiturberechnung durch. Voraussetzung hierfür ist, dass
 	 * alle anrechenbare Kurse ein gültige Note zugeordnet haben.
 	 *
 	 * @param manager           der Manager zur Verwaltung der Abiturdaten.
@@ -359,7 +359,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	}
 
 	/**
-	 * Ermittel die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
+	 * Ermittelt die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
 	 *
 	 * @return die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen
 	 */
@@ -601,7 +601,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				return false;
 			}
 			if (note as unknown === Note.UNGENUEGEND as unknown) {
-				this.ergebnis.log.add("%s  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt. " + JavaString.format("Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.", this.logIndent, hj.kuerzel));
+				this.ergebnis.log.add(JavaString.format("%s  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt. ", this.logIndent, hj.kuerzel) + "Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
 			if ((this.markiert.getOrNull(fach.id, hj.id) === null) && (!this.markiereHalbjahresbelegung(current, hj))) {
@@ -997,7 +997,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 	/**
 	 * Markierungsbaum - Ebene 5:
 	 * Markiere bei Einsprachlern die beiden Halbjahre in der Q2 einer neu einsetzenden Fremdsprache, falls
-	 * diese Bedingungn nicht bereits zuvor erfüllt wurde.
+	 * diese Bedingungen nicht bereits zuvor erfüllt wurde.
 	 * Führe für diese Knoten dabei jeweils die Berechnung aus der 6. Ebene aus.
 	 *
 	 * @return die resultierenden möglichen Zustände
@@ -1021,7 +1021,7 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 		}
-		if (!istEinsprachler && hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
+		if (hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
 			this.ergebnis.log.add(this.logIndent + "  Es ist bereits eine neu einsetzende Fremdsprache in der Q2 markiert.");
 		}
 		if (!istEinsprachler || hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {

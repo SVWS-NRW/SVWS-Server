@@ -51,7 +51,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	/** Die Belegungen der vier Abiturfächer */
 	final @NotNull AbiturFachbelegung[] abi = new AbiturFachbelegung[4];
 
-	/** Gibt an, ob die Zulassung mit diesem Ergebniss erreicht wurde oder nicht. */
+	/** Gibt an, ob die Zulassung mit diesem Ergebnis erreicht wurde oder nicht. */
 	private boolean hatZulassung = false;
 
 	/** Die Summe der Notenpunkte, normiert nach der Formel aus der APO-Gost */
@@ -69,7 +69,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	/** Die Summe der markierten Defizite im GK-Bereich */
 	private int defiziteGK = 0;
 
-	/** Gibt an, wieviele Fremdsprachen im Abiturbereich markiert wurden. */
+	/** Gibt an, wie viele Fremdsprachen im Abiturbereich markiert wurden. */
 	private int anzahlAbiFremdsprachen = 0;
 
 	/** Gibt an, ob im Abitur eine neu einsetzende Fremdsprache markiert wurde */
@@ -231,7 +231,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 	/**
 	 * Führt eine automatische Markierung von Halbjahresbelegungen zur Verwendung in Block II
-	 * von anrechenbaren Kursen für die Abiturberechnung durch. Vorraussetzung hierfür ist, dass
+	 * von anrechenbaren Kursen für die Abiturberechnung durch. Voraussetzung hierfür ist, dass
 	 * alle anrechenbare Kurse ein gültige Note zugeordnet haben.
 	 *
 	 * @param manager           der Manager zur Verwaltung der Abiturdaten.
@@ -335,7 +335,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 
 	/**
-	 * Ermittel die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
+	 * Ermittelt die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen.
 	 *
 	 * @return die Menge aller Sprachbelegungen, die für den Sprachenschwerpunkt in Frage kommen
 	 */
@@ -620,11 +620,8 @@ public final class GostAbiturMarkierungsalgorithmus {
 			}
 			// Prüfe, ob es sich bei der Note um ein Ungenügend handelt oder nicht
 			if (note == Note.UNGENUEGEND) {
-				ergebnis.log.add("%s  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt. "
-						+ "Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.".formatted(
-								logIndent,
-								hj.kuerzel
-						));
+				ergebnis.log.add("%s  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt. ".formatted(logIndent, hj.kuerzel)
+						+ "Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
 				return false;
 			}
 
@@ -913,7 +910,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 		ergebnis.log.add(logIndent + "Markierung der zweiten Schwerpunktfaches (Fremdsprache oder Naturwissenschaft in der Q2):");
 		final @NotNull List<GostAbiturMarkierungsalgorithmus> newStates = new ArrayList<>();
 
-		// Prüfe, ob im Abiturbereich bereits zwei fremdsprachen markiert wurden.
+		// Prüfe, ob im Abiturbereich bereits zwei Fremdsprachen markiert wurden.
 		if (anzahlAbiFremdsprachen >= 2) {
 			ergebnis.log.add(logIndent + "  Eine zweite Fremdsprache wurde bereits im Abiturbereich markiert.");
 			newStates.addAll((new GostAbiturMarkierungsalgorithmus(this)).markiereKunstMusikOderErsatz());
@@ -1100,7 +1097,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 	/**
 	 * Markierungsbaum - Ebene 5:
 	 * Markiere bei Einsprachlern die beiden Halbjahre in der Q2 einer neu einsetzenden Fremdsprache, falls
-	 * diese Bedingungn nicht bereits zuvor erfüllt wurde.
+	 * diese Bedingungen nicht bereits zuvor erfüllt wurde.
 	 * Führe für diese Knoten dabei jeweils die Berechnung aus der 6. Ebene aus.
 	 *
 	 * @return die resultierenden möglichen Zustände
@@ -1115,7 +1112,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 			ergebnis.log.add(logIndent + "  Es wurde in der Sek I mehr als eine Fremdsprache belegt.");
 		}
 
-		// Prüfe, on ein Einsprachler bereits die Q2-Halbjahre einer durchgehend belegten neu einsetzenen Fremdsprache belegt hat
+		// Prüfe, ob ein Einsprachler bereits die Q2-Halbjahre einer durchgehend belegten neu einsetzenden Fremdsprache belegt hat
 		// Bestimme dabei auch mögliche Belegungen einer neu einsetzenden Fremdsprache
 		final @NotNull List<AbiturFachbelegung> belegungen = new ArrayList<>();
 		boolean hatEinsprachlerBereitsNeueinsetzendeFremdsprache = false;
@@ -1131,7 +1128,7 @@ public final class GostAbiturMarkierungsalgorithmus {
 			}
 		}
 
-		if (!istEinsprachler && hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
+		if (hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
 			ergebnis.log.add(logIndent + "  Es ist bereits eine neu einsetzende Fremdsprache in der Q2 markiert.");
 		}
 
