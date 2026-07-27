@@ -1,6 +1,10 @@
 package de.svws_nrw.data.schema;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -87,18 +91,33 @@ public final class DBUtilsSchema {
 		if (credentials == null) {
 			return false;
 		}
-		DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(credentials.user, credentials.password);
+
+		final DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(credentials.user, credentials.password);
+		final String location = dbconfig.getDBLocation();
+
+		String url;
 		switch (dbconfig.getDBDriver()) {
-			case MYSQL, MARIA_DB:
-				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "mysql");
+			case MARIA_DB:
+				url = String.format("jdbc:mariadb://%s/", location);
 				break;
+			case MYSQL:
+				url = String.format("jdbc:mysql://%s/", location);
+				break;
+
 			default:
 				return false;
 		}
-		final Benutzer user = Benutzer.create(dbconfig);
-		try (DBEntityManager em = user.getEntityManager()) {
-			return (em != null);
-		} catch (@SuppressWarnings("unused") final Exception pe) {
+
+		try (Connection conn = DriverManager.getConnection(url, credentials.user, credentials.password);
+				Statement stmt = conn.createStatement()) {
+			final String sql = "SELECT COUNT(*) FROM information_schema.USER_PRIVILEGES WHERE PRIVILEGE_TYPE IN ('SUPER', 'CREATE USER', 'GRANT OPTION')";
+			try (ResultSet rs = stmt.executeQuery(sql)) {
+				if (rs.next()) {
+					return (rs.getInt(1) > 0);
+				}
+				return false;
+			}
+		} catch (@SuppressWarnings("unused") final Exception e) {
 			return false;
 		}
 	}
