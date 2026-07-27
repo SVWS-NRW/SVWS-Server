@@ -33,34 +33,29 @@ def svws_version = version
 def base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")
 
 def jdk = "21"
-def jdk_version = "21.0.6"
-def jdk_fix = "7"
+def jdk_version = "21.0.11"
+def jdk_fix = "10"
 def jdk_win_url = (base_url == null)
 	? "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 	: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 //def jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
 
-def mariadb_version = "11.4.10"
+def mariadb_version = "12.3.2"
 def mariadb_win_url = (base_url == null)
 	? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
 	: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
 
-def innosetup_version = "6.0.5"
+def innosetup_version = "7.0.2"
 def innosetup_win_url = (base_url == null)
-	? "https://files.jrsoftware.org/is/6/innosetup-${innosetup_version}.exe"
-	: "${base_url}/innosetup-${innosetup_version}.exe"
-
-def innoextract_version = "1.9"
-def innoextract_win_url = (base_url == null)
-	? "https://constexpr.org/innoextract/files/innoextract-${innoextract_version}-windows.zip"
-	: "${base_url}/innoextract-${innoextract_version}-windows.zip"
+	? "https://github.com/jrsoftware/issrc/releases/download/is-{innosetup_version.replace('.', '_')}/innosetup-${innosetup_version}-x64.exe"
+	: "${base_url}/innosetup-${innosetup_version}-x64.exe"
 
 def windowsservicewrapper_version = "2.10.3"
 def windowsservicewrapper_win_url = (base_url == null)
 	? "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
 	: "${base_url}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
 
-def curl_version = "8.10.1_3"
+def curl_version = "8.21.0_4"
 def curl_win_url = (base_url == null)
 	? "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
 	: "${base_url}/curl-${curl_version}-win64-mingw.zip"
@@ -188,21 +183,6 @@ task downloadInnosetup {
 }
 
 
-task downloadInnoextract {
-	def file = new File("${downloadDir}/innoextract-${innoextract_version}-windows.zip")
-	doLast {
-		if (file.exists()) {
-			println "Datei innoextract-${innoextract_version}-windows.zip wurde bereits heruntergeladen, skipping download"
-		} else {
-			fileDownloadDir.mkdirs()
-			def url = new URL(innoextract_win_url)
-			println "Downloading innoextract-${innoextract_version}-windows.zip from $url..."
-			url.withInputStream { i -> file.withOutputStream { it << i } }
-		}
-	}
-}
-
-
 task downloadWindowsServiceWrapper {
 	def file = new File("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
 	doLast {
@@ -238,7 +218,6 @@ task download {
 	dependsOn "downloadJarsAll"
 	dependsOn "downloadCurl"
 	dependsOn "downloadWindowsServiceWrapper"
-	dependsOn "downloadInnoextract"
 	dependsOn "downloadInnosetup"
 	dependsOn "downloadMariaDB"
 	dependsOn "downloadJDK"
@@ -316,31 +295,26 @@ task copyInstallerScript(type:Copy) {
 }
 
 
-task copyInnoExtractor(type: Copy) {
-	dependsOn "download"
-	from zipTree(file("${downloadDir}/innoextract-${innoextract_version}-windows.zip"))
-	into "${buildDir}/inno"
-	include "innoextract.exe"
-}
-
-
 task extractInnoSetup(type:Exec) {
-	dependsOn "copyInnoExtractor"
-	workingDir file("${buildDir}/inno")
+	dependsOn "downloadInnosetup"
+	workingDir file("${buildDir}")
+	doFirst {
+		file("${buildDir}/inno").mkdirs()
+	}
 	if (OperatingSystem.current().isWindows()) {
-		commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${downloadDir}/innosetup-${innosetup_version}.exe"
+		commandLine "cmd", "/c", file("${downloadDir}/innosetup-${innosetup_version}.exe"),
+			"/PORTABLE=1", "/CURRENTUSER", "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=${buildDir}/inno"
 	} else {
-		commandLine "wine", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${downloadDir}/innosetup-${innosetup_version}.exe"
+		commandLine "wine", file("${downloadDir}/innosetup-${innosetup_version}.exe"),
+			"/PORTABLE=1", "/CURRENTUSER", "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=${buildDir}/inno"
 	}
 }
-
 
 task buildPrepare {
 	group = 'build'
 	dependsOn "extract"
 	dependsOn "extractClient"
 	dependsOn "extractAdminClient"
-	dependsOn "copyInnoExtractor"
 	dependsOn "extractInnoSetup"
 	dependsOn "copyInstallerScript"
 }
@@ -352,9 +326,9 @@ task buildWindowsInstaller(type:Exec) {
 	def outputDir = file("$buildDir/output")
 	group = 'build'
 	if (OperatingSystem.current().isWindows()) {
-		commandLine "cmd", "/c", "${projectBuildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
+		commandLine "cmd", "/c", "${projectBuildDir}/inno/iscc.exe", "SVWS_Installer_full.iss"
 	} else {
-		commandLine "wine", "../inno/app/iscc.exe", "SVWS_Installer_full.iss"
+		commandLine "wine", "../inno/iscc.exe", "SVWS_Installer_full.iss"
 	}
 	dependsOn "buildPrepare"
 	doFirst {

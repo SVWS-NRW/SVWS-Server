@@ -10,7 +10,7 @@ function CheckCertificateHostname(name : String): Boolean;
     for i := 1 to Length(name) do
       begin
         case name[i] of 
-          '0'..'9', 'A'..'Z', 'a'..'z', '-':
+          '0'..'9', 'A'..'Z', 'a'..'z', '-', '.':
             ;
           else
             begin

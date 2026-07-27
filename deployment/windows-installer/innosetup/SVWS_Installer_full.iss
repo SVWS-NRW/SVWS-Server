@@ -18,8 +18,9 @@ WizardSizePercent=120
 OutputDir=../output
 OutputBaseFilename=win64-installer-@version@@snapshot@
 MinVersion=10.0
-ArchitecturesAllowed=x64
-ArchitecturesInstallIn64BitMode=x64
+SetupArchitecture=x64
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
 RestartIfNeededByRun=yes
 
@@ -94,7 +95,7 @@ Source: "create_default_schema.cmd"; DestDir: "{app}"; AfterInstall: FinishInsta
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\db\mariadb"
 Type: dirifempty; Name: "{app}\db"
-Type: filesandordirs; Name: "{app}\jdk"
+Type: filesandordirs; Name: "{app}\java"
 Type: dirifempty; Name: "{app}"
 
 [_ISTool]
@@ -203,6 +204,32 @@ function NextButtonClick(CurPageID: Integer): Boolean;
   end;
 
 
+{ Hilfsfunktion: Entfernt alte JAR-Dateien vor dem Entpacken der neuen Bibliotheken }
+procedure EntferneAlteJars();
+  var
+    ServerDir: String;
+    FindRec: TFindRec;
+  begin
+    ServerDir := ExpandConstant('{app}\svws-server');
+    if DirExists(ServerDir) then
+      begin
+        if FindFirst(ServerDir + '\*.jar', FindRec) then
+          begin
+            try
+              repeat
+                if (FindRec.Attributes and FILE_ATTRIBUTE_DIRECTORY) = 0 then
+                  begin
+                    DeleteFile(ServerDir + '\' + FindRec.Name);
+                  end;
+              until not FindNext(FindRec);
+            finally
+              FindClose(FindRec);
+            end;
+          end;
+      end;
+  end;
+
+
 { Wird vor dem Kopieren aller Dateien ausgeführt... }
 procedure StartInstall();
   begin
@@ -216,6 +243,9 @@ procedure StartInstall();
     // Schreibe das verwendete Programm- und Datenverzeichnis in die Registry
     RegWriteStringValue(HKLM, 'SOFTWARE\SVWSServer', 'ProgrammVerzeichnis', ExpandConstant('{app}'));
     RegWriteStringValue(HKLM, 'SOFTWARE\SVWSServer', 'DatenVerzeichnis', SVWSDataDir);
+
+    // Entferne alte JARs im Server-Ordner, um Classpath-Konflikte bei Versionsänderungen zu vermeiden
+    EntferneAlteJars();
 
     // Starte die Installation von MariaDB
     StartMariaDBInstall;

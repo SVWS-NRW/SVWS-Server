@@ -301,7 +301,7 @@ function CheckSVWSServerConfigurationSectionValues(CurPageID: Integer) : Boolean
             Exit;
           end;
         SVWSDBUser := EditSVWSServerDBUser.Text;
-        if SVWSDBSchema = '' then
+        if SVWSDBUser = '' then
           begin
             MsgBox('Es muss ein gültiger Datenbank-Benutzer angegeben werden bevor die Installation fortgesetzt werden kann.', mbInformation, mb_Ok);
             result := False;

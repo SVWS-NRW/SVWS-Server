@@ -287,16 +287,16 @@ begin
       if Exec(BinPath + '\' + ExeName, Params, BinPath, SW_HIDE, ewNoWait, ResultCode) then
         begin
           // Kurz warten, bis der Prozess bereit ist (hier 3 Sekunden)
-          Sleep(3000);
+          WaitTillPortUsed(MariaDBPort, 30, 100);
 
           // Upgrade-Tool kann jetzt ohne Passwort ausgeführt werden
           Log('Führe mariadb-upgrade aus...');
           Exec(BinPath + '\mariadb-upgrade.exe', '--user=root --port=' + IntToStr(MariaDBPort) + ' --force', BinPath, SW_HIDE, ewWaitUntilTerminated, ResultCode);
 
           // Beende den temporären Prozess wieder
-          Exec('taskkill.exe', '/f /im ' + ExeName, BinPath, SW_HIDE, ewWaitUntilTerminated, ResultCode);
-          Sleep(2000);
-      
+          Exec(BinPath + '\mariadb-admin.exe', '--user=root --port=' + IntToStr(MariaDBPort) + ' shutdown', BinPath, SW_HIDE, ewWaitUntilTerminated, ResultCode);
+          WaitTillPortFree(MariaDBPort, 30, 100);
+
           Log('Upgrade-Vorgang abgeschlossen.');
         end;
     end;
