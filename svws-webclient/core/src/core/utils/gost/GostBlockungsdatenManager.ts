@@ -673,7 +673,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (cmpFach !== 0) {
 			return cmpFach;
 		}
-		const cmpNummer: number = JavaLong.compare(aKurs.fach_id, bKurs.fach_id);
+		const cmpNummer: number = JavaLong.compare(aKurs.nummer, bKurs.nummer);
 		if (cmpNummer !== 0) {
 			return cmpNummer;
 		}

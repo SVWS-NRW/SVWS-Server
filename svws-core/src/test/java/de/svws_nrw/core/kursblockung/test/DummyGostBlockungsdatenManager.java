@@ -294,7 +294,7 @@ public class DummyGostBlockungsdatenManager {
 			return cmpFach;
 		}
 
-		final int cmpNummer = Long.compare(aKurs.fach_id, bKurs.fach_id);
+		final int cmpNummer = Long.compare(aKurs.nummer, bKurs.nummer);
 		if (cmpNummer != 0) {
 			return cmpNummer;
 		}
