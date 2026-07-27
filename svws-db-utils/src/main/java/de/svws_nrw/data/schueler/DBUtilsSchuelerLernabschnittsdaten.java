@@ -146,7 +146,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			return false;
 		}
 		return conn.queryByKeyList(DTOSchuljahresabschnitte.class, schuljahresabschnitte).stream()
-				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.abschnitt));
+				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.schuljahr));
 	}
 
 
