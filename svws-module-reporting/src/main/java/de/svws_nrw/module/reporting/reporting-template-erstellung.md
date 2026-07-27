@@ -263,6 +263,44 @@ Reporting-Objekte hängen zusammen (ein Schüler hat einen Lernabschnitt, der ei
 
 Das Muster ist immer gleich: **erst auf `!= null` prüfen, dann den Wert holen, sonst `''`**.
 
+Bei längeren Ketten wird das unleserlich. Binde die Zwischenwerte dann einmalig mit `th:with` und
+prüfe sie einzeln – das ist auch die schnellere Variante, weil jeder Wert nur einmal geholt wird:
+
+```html
+<td th:with="la=${schueler.auswahlLernabschnitt()},kl=${la != null ? la.klasse() : null}"
+    th:text="${kl != null ? kl.kuerzel() : ''}">06C</td>
+```
+
+#### Was `null` sein kann – und was nicht
+
+Nicht jeder Wert braucht eine Prüfung. Die Reporting-Typen sind so gebaut, dass du dich darauf
+verlassen kannst:
+
+| Art des Werts | `null` möglich? | Was du tust |
+|---|---|---|
+| Unterobjekt, Enum oder Zahl-Objekt (`klasse()`, `note()`, `fachlehrer()`) | **ja** | auf `!= null` prüfen |
+| Text und Datum (`vorname()`, `geburtsdatum()`) | nein – leer ist `''` | mit `isEmpty()` prüfen, nicht mit `== null` |
+| Liste oder Map (`leistungsdaten()`, `erzieher()`) | nein – höchstens leer | kein Null-Guard; bei Bedarf `isEmpty()` |
+
+Ob ein Unterobjekt `null` sein darf, steht in der Java-Klasse am Getter im `@return`-Kommentar.
+
+Bei indiziertem Zugriff auf eine Liste prüfe vorher die Größe – eine Liste kann leer sein, und dann
+läuft der Zugriff ins Leere. Das gilt für alle Formen: `liste[0]`, `liste[i]` und `liste.get(n)`:
+
+```html
+<span th:if="${#lists.size(schuelerListe) == 1}"
+      th:text="${schuelerListe[0].nachname()}">Mustermann</span>
+```
+
+> **Wichtig: keine Ausnahmen aus Erfahrungswerten.** „Jeder Schüler hat eine Klasse, da brauche ich
+> keine Prüfung" ist trügerisch. Setzt der Nutzer einen Filter, blenden die Daten-Getter gefilterte
+> Objekte aus und liefern `null` – auch für Verweise, die sonst immer gefüllt sind. Sichere
+> Unterobjekte deshalb **immer** ab, auch wenn sie fachlich nie fehlen können.
+
+Erfahrungsgemäß fehlen in der Praxis am häufigsten: die Kursleitung eines Kurses, die bewertende
+Lehrkraft eines Unterrichts, die Fachlehrkraft einer Leistung, die Leistungsdaten zu einem Schüler
+in einem bestimmten Kurs sowie Klasse und Lernabschnitt eines Schülers.
+
 ### Praktische Standard-Helfer von Thymeleaf
 
 Diese „`#`-Objekte" sind eingebaut und oft nützlich:
@@ -479,7 +517,7 @@ Sie nutzt die kompakte „Text-Schreibweise" von Thymeleaf (`[# ...]` statt HTML
 [# th:if="${!Schueler.isEmpty()}"]
     [# th:each="schueler,iterState : ${Schueler}"]
         [# th:if="${iterState.first}"]
-            Schueler-Liste-Kontaktdaten-Erzieher_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+            Schueler-Liste-Kontaktdaten-Erzieher_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })]
         [/]
     [/]
 [/]
@@ -500,6 +538,35 @@ Es gibt zwei Wege, eine Vorlage zu prüfen:
 2. **Echter Test im SVWS-Client** – mit echten Daten. Im Client unter **Schule → Reporting** die Vorlage auswählen, Optionen setzen und ausgeben (HTML/PDF). Nur so siehst du das tatsächliche Ergebnis inklusive Daten, Seitenumbrüchen und Druck-Layout.
 
 > Da Browser und OpenHtmlToPdf unterschiedlich rendern, ist für das **endgültige Aussehen immer das im Client erzeugte PDF maßgeblich** – nicht die Browser-Vorschau. Print-CSS-Effekte (Seitenränder, Kopf-/Fußzeilen) zeigt die Browser-Vorschau oft gar nicht oder fehlerhaft an.
+
+### Null-Prüfung der Vorlage
+
+Ein Testlauf zeigt nur, was die verwendeten Daten hergeben. Fehlt ein Wert erst beim Echteinsatz,
+bricht die Ausgabe ab – deshalb wird die Null-Sicherheit **nicht** ertestet, sondern geprüft. Diese
+Prüfung ist für jede neue und jede geänderte Vorlage verbindlich und umfasst die `.html`-Datei
+**und** die zugehörige `.name.tpl`.
+
+Sie ist bewusst so formuliert, dass sie ohne Kenntnis der Daten abarbeitbar ist – von Hand oder
+KI-gestützt. In letzterem Fall gib die Vorlage zusammen mit dieser Liste zur Prüfung; die Antwort
+soll jeden Fund mit Zeilennummer und verletzter Regel benennen.
+
+- [ ] **N1 – Ketten:** Jeder Ausdruck mit mehr als einem Aufruf (`a.b().c()`) prüft jedes
+      Zwischenglied auf `!= null`, oder die Zwischenwerte sind per `th:with` gebunden und einzeln
+      geprüft. **Ein `th:if` am umschließenden Element zählt als Guard** für alles darin – prüfe
+      also den umgebenden Baum, nicht nur die Zeile.
+- [ ] **N2 – Unterobjekte:** Jeder Zugriff auf ein Unterobjekt, Enum oder Zahl-Objekt hat einen
+      Guard. Maßgeblich ist der `@return`-Kommentar des Getters in der Java-Klasse.
+- [ ] **N3 – Listen/Maps:** Kein überflüssiger Null-Guard auf Listen oder Maps – die sind nie
+      `null`. Wo nötig, wird auf *leer* geprüft.
+- [ ] **N4 – Text/Datum:** Leere Texte und Datumswerte werden mit `isEmpty()` geprüft, nicht mit
+      `== null`.
+- [ ] **N5 – Indizierter Zugriff:** Jedes `liste[0]`, `liste[i]` und `liste.get(n)` steht hinter
+      einer Größenprüfung.
+- [ ] **Keine Ausnahmen:** Kein Guard wurde mit der Begründung weggelassen, der Wert könne
+      fachlich nicht fehlen (siehe den Hinweis zum Filter in Schritt 4).
+
+Findet die Prüfung nichts, ist die Vorlage in diesem Punkt fertig. Findet sie etwas, ist es ein
+Fehler in der Vorlage – ein Absturz bei der Ausgabe ist nie ein „normaler Datenzustand".
 
 ---
 
@@ -554,6 +621,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
 
 - **Werte immer mit Klammern abrufen.** Reporting-Daten sind Methoden: `schueler.vorname()`, nicht `schueler.vorname`.
 - **Keine `?.`- oder `?:`-Kurzschreibweise.** Diese „Null-Sicherheits"-Operatoren gibt es hier nicht. Prüfe `null` immer ausdrücklich: `${x != null ? x.wert() : ''}`.
+- **Null-Guards auch dort, wo der Wert „nie fehlt".** Ein gesetzter Filter kann jeden Verweis auf ein anderes Objekt leeren – auch die Klasse eines Schülers.
+- **`liste[0]` nur nach Größenprüfung.** Listen können leer sein; ein indizierter Zugriff darauf bricht ab.
 - **Layout nur mit Tabellen.** Kein Flexbox/Grid – OpenHtmlToPdf unterstützt das nicht.
 - **Layout-Tabellen brauchen einen versteckten `<thead th:if="${false}">`** mit je einem `<th scope="col">` pro Spalte – sonst meckert SonarQube (siehe Schritt 7).
 - **`th:utext` braucht gültiges XML.** Schreibe `<br/>` statt `<br>`. Nackte `<`, `>`, `&` brechen die Erzeugung – auch in Kommentaren innerhalb von eingebettetem CSS/HTML. Im Zweifel `&lt;`, `&gt;`, `&amp;` verwenden.
@@ -572,7 +641,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
 - [ ] **Drei Dateien** im richtigen Themenordner: `.html`, `.css`, `.name.tpl` – gleicher Basisname.
 - [ ] **HTML-Grundgerüst** mit `reportHtmlHead`- und `reportPageHeaderFooter`-Fragment übernommen.
 - [ ] **Seitenformat** (`namePageCSS`) gewählt.
-- [ ] **Inhalt** mit `th:text`/`th:utext`, `th:each`, `th:if` umgesetzt; `null` überall abgesichert.
+- [ ] **Inhalt** mit `th:text`/`th:utext`, `th:each`, `th:if` umgesetzt.
+- [ ] **Null-Prüfung** für `.html` und `.name.tpl` durchgeführt (Liste in Schritt 9) – ohne Befund.
 - [ ] **Layout-Tabellen** mit verstecktem `<thead th:if="${false}">` (ein `<th scope="col">` pro Spalte) gegen die SonarQube-Regel abgesichert.
 - [ ] **Optionen** über `VorlageParameter.get('…')` eingebunden (falls vorhanden).
 - [ ] **Datum/Sonderelemente** über `#convert` formatiert.

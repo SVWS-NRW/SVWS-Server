@@ -284,7 +284,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	/**
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.
 	 *
-	 * @return Daten zum Abitur in der GOSt
+	 * @return Daten zum Abitur in der GOSt; kann {@code null} sein, wenn zum Schüler keine Abiturdaten vorliegen.
 	 */
 	@Override
 	public ReportingSchuelerGostAbitur gostAbitur() {

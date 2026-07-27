@@ -210,7 +210,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	/**
 	 * Gibt den Kurs zurück, sofern es sich um Kursunterricht handelt.
 	 *
-	 * @return Der Kurs dieser Unterrichtseinheit oder NULL, wenn keiner existiert.
+	 * @return Der Kurs dieser Unterrichtseinheit; kann {@code null} sein, wenn keiner existiert.
 	 */
 	public ReportingKurs kurs() {
 		return kurs;

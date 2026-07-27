@@ -537,7 +537,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Die Abiturdaten der GOSt.
 	 *
-	 * @return Inhalt des Feldes gostAbitur
+	 * @return Inhalt des Feldes gostAbitur; kann {@code null} sein, wenn zum Schüler keine Abiturdaten vorliegen.
 	 */
 	public ReportingSchuelerGostAbitur gostAbitur() {
 		return this.gostAbitur;

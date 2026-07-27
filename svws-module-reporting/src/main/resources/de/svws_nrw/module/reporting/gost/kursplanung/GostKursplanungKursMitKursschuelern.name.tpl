@@ -3,10 +3,10 @@
         GOSt-Blockung-Kurs-Schueler
     [/]
     [# th:if="${anzahlGefilterteKurse == 1}"]
-        GOSt-Blockung-Kurs-Schueler_[(${#strings.replace(gefilterteKurse[0].gostHalbjahr().kuerzel, '.', '')})]_[(${#strings.replace(gefilterteKurse[0].bezeichnung(), ' ', '_')})]_[(${#strings.replace(gefilterteKurse[0].lehrkraefteAuflistung(), ',', '-')})]_Abi_[(${GostBlockungsergebnis.abiturjahr()})]
+        GOSt-Blockung-Kurs-Schueler_[(${gefilterteKurse[0].gostHalbjahr() != null ? #strings.replace(gefilterteKurse[0].gostHalbjahr().kuerzel, '.', '') : ''})]_[(${#strings.replace(gefilterteKurse[0].bezeichnung(), ' ', '_')})]_[(${#strings.replace(gefilterteKurse[0].lehrkraefteAuflistung(), ',', '-')})]_Abi_[(${GostBlockungsergebnis.abiturjahr()})]
     [/]
     [# th:if="${anzahlGefilterteKurse > 1}"]
-        GOSt-Blockung-Kurs-Schueler_[(${#strings.replace(gefilterteKurse[0].gostHalbjahr().kuerzel, '.', '')})]_Abi_[(${GostBlockungsergebnis.abiturjahr()})]
+        GOSt-Blockung-Kurs-Schueler_[(${gefilterteKurse[0].gostHalbjahr() != null ? #strings.replace(gefilterteKurse[0].gostHalbjahr().kuerzel, '.', '') : ''})]_Abi_[(${GostBlockungsergebnis.abiturjahr()})]
     [/]
 [/]
 [# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })][/]

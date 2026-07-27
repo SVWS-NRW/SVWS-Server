@@ -97,14 +97,54 @@ Ergänzende Regeln:
 
 ## 5. Templates & OGNL-Grenzen
 
-Die Templates laufen gegen Thymeleaf-Standard-OGNL (ohne Spring). Der **verbindliche Weg** für
-null-sichere Property-Ketten ist die `th:if`/`th:with`-Vorprüfung — bei tiefen Ketten werden
-Zwischenwerte einmalig gebunden und geprüft:
+Die Templates laufen gegen Thymeleaf-Standard-OGNL (ohne Spring). Es gibt **keine**
+Safe-Navigation (`?.`) und kein Elvis (`?:`) — jede Null-Absicherung muss ausgeschrieben werden.
 
-```html
-<td th:with="la=${schueler.auswahlLernabschnitt()},kl=${la != null ? la.klasse() : null}"
-    th:text="${kl != null ? kl.kuerzel() : ''}"></td>
-```
+### 5.1 Null-Regeln für Templates (verbindlich)
+
+**Geltungsbereich:** alle Dateien, die durch die Template-Engine laufen — die `.html`-Vorlagen
+**und** die `.name.tpl`-Dateinamensvorlagen. Für beide gelten dieselben Grenzen.
+
+- **N1 — Ketten absichern.** Ein Zugriff mit mehr als einem Aufruf (`a.b().c()`) ist nur zulässig,
+  wenn jedes Zwischenglied vorher geprüft wurde. Bei tiefen Ketten die Zwischenwerte einmalig per
+  `th:with` binden und einzeln prüfen:
+  ```html
+  <td th:with="la=${schueler.auswahlLernabschnitt()},kl=${la != null ? la.klasse() : null}"
+      th:text="${kl != null ? kl.kuerzel() : ''}"></td>
+  ```
+- **N2 — Was nullable ist, steht im JavaDoc.** Maßgeblich ist das `@return` des Getters:
+  Objekt-, Enum- und Boxed-Getter dürfen fachlich `null` liefern und sind dort so dokumentiert
+  (Abschnitt 2). Genau diese Getter brauchen einen Guard. Weil das JavaDoc damit die normative
+  Quelle ist, gilt: **Ein Getter, der `null` liefern kann, ohne es zu dokumentieren, ist ein
+  Fehler im Typ, nicht in der Vorlage.** Einheitliche Schreibweise, damit die Angabe auffindbar
+  bleibt: `; kann {@code null} sein, wenn …`.
+- **N3 — Listen und Maps sind nie `null`** (Abschnitt 2). Sie brauchen **keinen** Null-Guard; wo
+  es fachlich nötig ist, auf *leer* prüfen (`isEmpty()`), nicht auf `null`.
+- **N4 — String- und Datumsfelder sind nie `null`, sondern `""`** (Abschnitt 2). Folge-Logik prüft
+  mit `isEmpty()`, nicht mit `== null`.
+- **N5 — Indizierter Listenzugriff nur nach Größenprüfung.** Betrifft **alle** Zugriffsformen:
+  fester Index (`liste[0]`), Variablen-Index (`liste[i]`) und `liste.get(n)`. Der Zugriff ist erst
+  zulässig, wenn die Größe feststeht — etwa `#lists.size(liste) == 1`, `i < liste.size()`,
+  `liste.size() > 0` oder `iterState.first`.
+
+**Ein Guard darf am umschließenden Element stehen.** `th:if`/`th:unless` an einem Elternelement
+sichert alle Ausdrücke darin ab, weil dessen Inhalt bei `false` nicht ausgewertet wird — auch das
+`th:with` am selben Element (Attribut-Präzedenz: `th:each` → `th:if` → `th:with`). Ein einzelner
+Guard am Wurzelblock einer Vorlage ist damit ein zulässiger und oft der bessere Weg gegenüber
+Dutzenden Einzelprüfungen. Wer prüft, muss den umgebenden Baum ansehen; ein rein zeilenweiser
+Abgleich erzeugt hier Fehlalarme.
+
+**Keine Ausnahmen aus fachlicher Plausibilität.** „Dieses Feld kann in der Praxis nicht `null`
+sein" rechtfertigt keinen Verzicht auf N1/N2. Bei aktivem Benutzerfilter liefern die
+Single-Object-Getter `null` (Abschnitt 3), und das propagiert in alle Backrefs — ein Schüler ohne
+Klasse entsteht dann, obwohl fachlich jeder Schüler eine Klasse hat.
+
+Die Regeln sind bewusst so formuliert, dass sie ohne Kenntnis des Einzelfalls prüfbar sind, auch
+automatisiert. Der abarbeitbare Prüfschritt für neue und geänderte Vorlagen steht in
+[`reporting-template-erstellung.md`](reporting-template-erstellung.md), Abschnitt „Null-Prüfung
+der Vorlage“.
+
+### 5.2 Ausgeschlossene Alternativen
 
 Alle Alternativen wurden in einer Spike-Serie (2026-05/06) empirisch ausgeschlossen oder sind
 projektpolitisch blockiert — **nicht erneut versuchen**:

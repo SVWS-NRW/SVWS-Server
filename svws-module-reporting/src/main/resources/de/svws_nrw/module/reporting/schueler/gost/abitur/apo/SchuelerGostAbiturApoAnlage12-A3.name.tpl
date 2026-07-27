@@ -3,10 +3,10 @@
         APO-GOSt-Anlage12
     [/]
     [# th:if="${anzahl == 1}"]
-        Abitur[(${ schueler[0].gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + #strings.replace(schueler[0].nachname(), ' ', '_') + '__' + #strings.replace(schueler[0].vorname(), ' ', '_') + '_(' + schueler[0].id() + ')' })]
+        Abitur[(${ (schueler[0].gostAbitur() != null ? '' + schueler[0].gostAbitur().abiturjahr() : '') + '_APO-GOSt-Anlage12_' + #strings.replace(schueler[0].nachname(), ' ', '_') + '__' + #strings.replace(schueler[0].vorname(), ' ', '_') + '_(' + schueler[0].id() + ')' })]
     [/]
     [# th:if="${anzahl > 1}"]
-        Abitur[(${ schueler[0].gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12' })]
+        Abitur[(${ (schueler[0].gostAbitur() != null ? '' + schueler[0].gostAbitur().abiturjahr() : '') + '_APO-GOSt-Anlage12' })]
     [/]
 [/]
 [# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })][/]

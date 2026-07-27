@@ -265,7 +265,7 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	/**
 	 * Liefert die Zeit in Minuten seit 0 Uhr, wann dieses Element beginnt.
 	 *
-	 * @return Die Minuten seit 0 Uhr oder NULL, wenn nicht definiert.
+	 * @return Die Minuten seit 0 Uhr; kann {@code null} sein, wenn nicht definiert.
 	 */
 	public Integer beginn() {
 		return beginn;
@@ -274,7 +274,7 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	/**
 	 * Liefert die Zeit in Minuten seit 0 Uhr, wann dieses Element endet.
 	 *
-	 * @return Die Minuten seit 0 Uhr oder NULL, wenn nicht definiert.
+	 * @return Die Minuten seit 0 Uhr; kann {@code null} sein, wenn nicht definiert.
 	 */
 	public Integer ende() {
 		return ende;
