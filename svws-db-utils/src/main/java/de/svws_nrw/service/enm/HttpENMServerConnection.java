@@ -72,13 +72,15 @@ final class HttpENMServerConnection {
 
 		// Lese die Verbindungsdaten aus der Datenbank ein.
 		logger.logLn("Lese die Verbindung mit der ID %d aus der Datenbank...".formatted(id));
-		this.dto = repository.findById(id).orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Verbindung mit der ID %d gefunden.".formatted(id)));
+		this.dto = repository.findById(id)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Verbindung mit der ID %d gefunden.".formatted(id)));
 		if ((dto.url == null) || dto.url.isBlank()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde keine Server-URL angegeben.");
 		}
 		if ((dto.clientID == null) || dto.clientID.isBlank()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde keine Client-ID für die Authentifizierung angegeben.");
 		}
+		dto.url = removeTrailingSlash(dto.url);
 		if (updateToken) {
 			if ((dto.clientSecret == null) || dto.clientSecret.isBlank()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde kein Client-Secret für die Authentifizierung angegeben.");
@@ -98,6 +100,20 @@ final class HttpENMServerConnection {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Entfernt von der übergebenen URL ein slash am Ende, sofern eines vorhanden ist.
+	 *
+	 * @param url   die URL
+	 *
+	 * @return die URL ohne trailing slash
+	 */
+	private static String removeTrailingSlash(final String url) {
+		return (url != null && url.endsWith("/"))
+				? url.substring(0, url.length() - 1)
+				: url;
 	}
 
 
@@ -202,14 +218,16 @@ final class HttpENMServerConnection {
 		if ((dto.serverTLSCertIsKnown == null) || (!dto.serverTLSCertIsKnown)) {
 			try {
 				if (dto.serverTLSCert == null) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist keine TLS-Zertifikatskette des TLS-Servers zur Nutzung hinterlegt.");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							"In der Datenbank ist keine TLS-Zertifikatskette des TLS-Servers zur Nutzung hinterlegt.");
 				}
 				final List<X509Certificate> certList = TLSUtils.decodeCertListJson(dto.serverTLSCert);
 				if (certList.isEmpty()) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist kein TLS-Zertifikat zur Nutzung hinterlegt.");
 				}
 				if (!Boolean.TRUE.equals(dto.serverTLSCertIsTrusted)) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							"Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
 				}
 				final KeyStore keystore = KeyStoreUtils.newKeystore();
 				KeyStoreUtils.addCertificate(keystore, dto.url, certList.getFirst());
