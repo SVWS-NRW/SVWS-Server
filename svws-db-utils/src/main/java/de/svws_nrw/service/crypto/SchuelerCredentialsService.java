@@ -38,7 +38,7 @@ public class SchuelerCredentialsService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param credentialsRepository   das Repository für den Zugriff auf die Credeitials
+	 * @param credentialsRepository   das Repository für den Zugriff auf die Credentials
 	 * @param schuelerRepository      das Repository für den Zugriff auf die Schülerdaten
 	 */
 	public SchuelerCredentialsService(final CredentialsRepository credentialsRepository,
@@ -108,7 +108,7 @@ public class SchuelerCredentialsService {
 
 	/**
 	 * Ermittelt das AES-Verschlüsselungsobjekt für den Schüler mit der übergebenen ID aus der Datenbank.
-	 * Liegen noch kein Credentials-Eintrag für den Schüeler vor, so wird ein neuer generiert.
+	 * Liegen noch kein Credentials-Eintrag für den Schüler vor, so wird ein neuer generiert.
 	 *
 	 * @param idSchueler   die ID des Schülers
 	 *
@@ -125,11 +125,11 @@ public class SchuelerCredentialsService {
 
 	/**
 	 * Ermittelt die AES-Verschlüsselungsobjekte für die Schüler mit der übergebenen IDs aus der Datenbank.
-	 * Liegen noch keine Credentials-Einträge für die Schüeler vor, so werden neue generiert.
+	 * Liegen noch keine Credentials-Einträge für die Schüler vor, so werden neue generiert.
 	 *
 	 * @param ids   die IDs der Schüler
 	 *
-	 * @return eine Map mit den AES-Verschlüsselungsobjekten zugeordnet zu deren zueghörigen Schüler-IDs
+	 * @return eine Map mit den AES-Verschlüsselungsobjekten zugeordnet zu deren zugehörigen Schüler-IDs
 	 */
 	public Map<Long, AES> getOrCreateMap(final Collection<Long> ids) {
 		return transactional(() -> {
@@ -216,7 +216,7 @@ public class SchuelerCredentialsService {
 		final Map<DTOSchueler, DTOCredentials> result = new HashMap<>();
 		for (final DTOSchueler schueler: listSchuelerOhneCreds) {
 			// Erstelle den nächsten Credentials-Eintrag
-			final DTOCredentials cred = new DTOCredentials(credNextId++, determineUsername(schueler.Vorname, schueler.Nachname, 16, allUsernames));
+			final DTOCredentials cred = new DTOCredentials(credNextId++, determineUsername(schueler.Nachname, schueler.Vorname, 16, allUsernames));
 			cred.BenutzernamePseudonym = determinePseudonym("s", cred.ID, allUserPseudonyms);
 			cred.Initialkennwort = Passwords.generateRandomPassword(12);
 			cred.PasswordHash = Benutzer.erstellePasswortHash(cred.Initialkennwort);
