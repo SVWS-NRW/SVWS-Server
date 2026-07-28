@@ -13,7 +13,7 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 
 		const listOfAutopatchProps: Iterable<keyof Sprachbelegung> = [
 			"istNachweis",
-			"belegungVonJahrgang", "belegungVonAbschnitt", "belegungBisJahrgang", "belegungBisAbschnitt",
+			"belegungVonJahrgang", "belegungBisJahrgang",
 			"hatGraecum", "hatHebraicum",
 			"referenzniveau",
 		];
@@ -34,17 +34,21 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 		},
 		set: (value) => {
 			if (value === null) {
+				this.proxy.belegungVonAbschnitt = null;
 				this.proxy.belegungVonJahrgang = null;
 				return;
 			}
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
-			this.proxy.belegungVonJahrgang = jahrgang?.kuerzel ?? null;
-		},
-	});
 
-	belegungVonAbschnitt = computed<number | null>({
-		get: () => this.proxy.belegungVonAbschnitt,
-		set: (value) => this.proxy.belegungVonAbschnitt = value === 1 ? 2 : 1,
+			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			if ((jahrgang?.kuerzel === this.proxy.belegungBisJahrgang) && (this.proxy.belegungBisAbschnitt === 1)) {
+				this.proxy.belegungVonAbschnitt = 1;
+				void this.patch().then(_ => {
+					this.proxy.belegungVonJahrgang = jahrgang.kuerzel;
+				});
+			} else {
+				this.proxy.belegungVonJahrgang = jahrgang?.kuerzel ?? null;
+			}
+		},
 	});
 
 	belegungBisJahrgang = computed<Jahrgaenge | null>({
@@ -57,17 +61,21 @@ export class SchuelerSprachbelegungModelProxy extends ModelProxy<Sprachbelegung>
 		},
 		set: (value) => {
 			if (value === null) {
+				this.proxy.belegungBisAbschnitt = null;
 				this.proxy.belegungBisJahrgang = null;
 				return;
 			}
-			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
-			this.proxy.belegungBisJahrgang = jahrgang?.kuerzel ?? null;
-		},
-	});
 
-	belegungBisAbschnitt = computed<number | null>({
-		get: () => this.proxy.belegungBisAbschnitt,
-		set: (value) => this.proxy.belegungBisAbschnitt = value === 1 ? 2 : 1,
+			const jahrgang = value.daten(this._manager().schuelerGetSchuljahrOrException());
+			if ((this.proxy.belegungVonJahrgang === jahrgang?.kuerzel) && (this.proxy.belegungVonAbschnitt === 2)) {
+				this.proxy.belegungBisAbschnitt = 2;
+				void this.patch().then(_ => {
+					this.proxy.belegungBisJahrgang = jahrgang.kuerzel;
+				});
+			} else {
+				this.proxy.belegungBisJahrgang = jahrgang?.kuerzel ?? null;
+			}
+		},
 	});
 
 	referenzniveau = computed<Sprachreferenzniveau | null>({

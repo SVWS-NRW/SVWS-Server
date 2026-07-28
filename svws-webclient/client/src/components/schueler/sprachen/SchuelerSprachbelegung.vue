@@ -54,13 +54,20 @@
 						<div v-else> {{ row.belegungVonJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
-						<div v-if="!readonly" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
-							@click="row.belegungVonAbschnitt.value = row.belegungVonAbschnitt.value">
-							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt.value === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt.value === 2}">1</span>
+						<div v-if="!readonly && alleVonAbschnitteErlaubt(row) && (row.belegungVonJahrgang.value !== null)"
+							class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
+							@click="toggleVonAbschnitt(row)">
+							<span :class="{
+								'opacity-100 font-bold': row.proxy.belegungVonAbschnitt === 1,
+								'opacity-25 hover:opacity-100 font-medium': row.proxy.belegungVonAbschnitt === 2
+							}">1</span>
 							<span class="opacity-50">|</span>
-							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt.value === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt.value === 1}">2</span>
+							<span :class="{
+								'opacity-100 font-bold': row.proxy.belegungVonAbschnitt === 2,
+								'opacity-25 hover:opacity-100 font-medium': row.proxy.belegungVonAbschnitt === 1
+							}">2</span>
 						</div>
-						<div v-else> {{ row.belegungVonAbschnitt ?? "?" }} </div>
+						<div v-else class="p-1"> {{ row.proxy.belegungVonAbschnitt ?? "" }} </div>
 					</td>
 					<td>
 						<svws-ui-select v-if="!readonly"
@@ -72,13 +79,20 @@
 						<div v-else> {{ row.belegungBisJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
-						<div v-if="!readonly" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
-							@click="row.belegungBisAbschnitt.value = row.belegungBisAbschnitt.value">
-							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt.value === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt.value === 2}">1</span>
+						<div v-if="!readonly && alleBisAbschnitteErlaubt(row) && (row.belegungBisJahrgang.value !== null)"
+							class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
+							@click="toggleBisAbschnitt(row)">
+							<span :class="{
+								'opacity-100 font-bold': row.proxy.belegungBisAbschnitt === 1,
+								'opacity-25 hover:opacity-100 font-medium': row.proxy.belegungBisAbschnitt === 2
+							}">1</span>
 							<span class="opacity-50">|</span>
-							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt.value === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt.value === 1}">2</span>
+							<span :class="{
+								'opacity-100 font-bold': row.proxy.belegungBisAbschnitt === 2,
+								'opacity-25 hover:opacity-100 font-medium': row.proxy.belegungBisAbschnitt === 1,
+							}">2</span>
 						</div>
-						<div v-else> {{ row.belegungBisAbschnitt ?? "?" }} </div>
+						<div v-else class="p-1"> {{ row.proxy.belegungBisAbschnitt ?? "" }} </div>
 					</td>
 				</template>
 				<td>
@@ -167,6 +181,14 @@
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});
+
+	function alleVonAbschnitteErlaubt(rowModel: SchuelerSprachbelegungModelProxy) {
+		return !((rowModel.belegungVonJahrgang.value === rowModel.belegungBisJahrgang.value) && (rowModel.proxy.belegungBisAbschnitt === 1));
+	}
+
+	function alleBisAbschnitteErlaubt(rowModel: SchuelerSprachbelegungModelProxy) {
+		return !((rowModel.belegungVonJahrgang.value === rowModel.belegungBisJahrgang.value) && (rowModel.proxy.belegungVonAbschnitt === 2));
+	}
 
 	function createList(sprachbelegungen: List<Sprachbelegung>) {
 		const list = new ArrayList<SchuelerSprachbelegungModelProxy>();
@@ -278,8 +300,6 @@
 		const data: Partial<Sprachbelegung> = {};
 		data.sprache = sprache;
 		data.reihenfolge = gridManager.daten.size() + 1;
-		data.belegungVonAbschnitt = 1;
-		data.belegungBisAbschnitt = 2;
 		const schulform = schuleState.schulform;
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
 			data.belegungVonJahrgang = Jahrgaenge.data().getEintragByID(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
@@ -401,6 +421,32 @@
 		} else {
 			auswahl.value.splice(idx, 1);
 		}
+	}
+
+	async function toggleBisAbschnitt(rowModel: SchuelerSprachbelegungModelProxy) {
+		if (!alleBisAbschnitteErlaubt(rowModel)) {
+			return;
+		}
+
+		if (rowModel.proxy.belegungBisAbschnitt === 1) {
+			rowModel.proxy.belegungBisAbschnitt = 2;
+		} else {
+			rowModel.proxy.belegungBisAbschnitt = 1;
+		}
+		await rowModel.patch();
+	}
+
+	async function toggleVonAbschnitt(rowModel: SchuelerSprachbelegungModelProxy) {
+		if (!alleVonAbschnitteErlaubt(rowModel)) {
+			return;
+		}
+
+		if (rowModel.proxy.belegungVonAbschnitt === 1) {
+			rowModel.proxy.belegungVonAbschnitt = 2;
+		} else {
+			rowModel.proxy.belegungVonAbschnitt = 1;
+		}
+		await rowModel.patch();
 	}
 
 </script>
