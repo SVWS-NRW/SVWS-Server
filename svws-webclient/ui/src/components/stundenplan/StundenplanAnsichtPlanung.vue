@@ -1,9 +1,9 @@
 <template>
 	<div v-if="manager().getListZeitraster().size()" class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'}`">
 		<div class="svws-ui-stundenplan--head">
-			<span class="icon i-ri-time-line svws-time-icon print:!hidden" v-if="showZeitachse" />
+			<span class="icon i-ri-time-line svws-time-icon print:hidden!" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
-			<div class="inline-flex gap-1 items-center justify-center print:!pl-2 print:!justify-start opacity-50 text-sm font-bold pb-0.5" />
+			<div class="inline-flex gap-1 items-center justify-center print:pl-2! print:justify-start! opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label group" :class="{'svws-selected': selected===wochentag}">
 				<span class="px-2 py-1 rounded-xs group group-hover:bg-ui-25!"> {{ wochentag.beschreibung }}</span>
@@ -13,10 +13,16 @@
 		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
 			<!-- Die Zeitachse des Stundenplans auf der linken Seite -->
 			<div class="svws-ui-stundenplan--zeitraster svws-zeitachse" v-if="showZeitachse">
-				<template v-for="n in zeitrasterRows" :key="n">
-					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
-						<template v-if="n % 4 === 2">
-							{{ Math.floor((beginn + (n * 5)) / 60) }}:00
+				<template v-for="row in zeitrasterRows" :key="row">
+					<span v-if="istViertelstundeMarkierung(row)"
+						class="svws-ui-stundenplan--einheit"
+						:class="{
+							'svws-extended': istStundeMarkierung(row),
+							'svws-small': istViertelstundeMarkierung(row)
+						}"
+						:style="`grid-row: ${row} / ${row+2}; grid-column: 1`">
+						<template v-if="istStundeMarkierung(row)">
+							{{ DateUtils.gibZeitStringOfMinuten(beginn + (row - 1) * 5) }}
 						</template>
 					</span>
 				</template>
@@ -44,7 +50,7 @@
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected === pause}">
+					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(pause)" :class="{'svws-selected': selected === pause}">
 						<div v-if="selected===pause" class="svws-ui-stundenplan--pausen-aufsicht">
 							<span class="icon i-ri-cup-line" />
 						</div>
@@ -102,6 +108,7 @@
 	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
 	import { useSchuleState } from "../../states/SchuleState";
+	import { DateUtils } from "../../../../core/src/core/utils/DateUtils";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
 	const schuleState = useSchuleState();
@@ -175,7 +182,7 @@
 		return "grid-row-start: " + Math.round(rowStart + 1).toString() + "; grid-row-end: " + Math.round(rowEnd + 1).toString() + ";";
 	}
 
-	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
+	function posPause(pause: StundenplanPausenzeit): string {
 		let rowStart;
 		let rowEnd = 10;
 		if ((pause.beginn === null) || (pause.ende === null)) {
@@ -219,6 +226,14 @@
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
+	}
+
+	function istViertelstundeMarkierung(zeitrasterRow: number) {
+		return ((beginn.value + ((zeitrasterRow - 1) * 5)) % 15) === 0;
+	}
+
+	function istStundeMarkierung(zeitrasterRow: number) {
+		return ((beginn.value + ((zeitrasterRow - 1) * 5)) % 60) === 0;
 	}
 
 </script>
