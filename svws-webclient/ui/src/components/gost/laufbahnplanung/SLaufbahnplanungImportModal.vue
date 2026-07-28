@@ -19,6 +19,7 @@
 	const props = defineProps<{
 		show: boolean;
 		multiple?: boolean;
+		importLaufbahnplanung: (data: FormData) => Promise<void>;
 	}>();
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
@@ -45,7 +46,7 @@
 			formData.append("data", target.files[i], "lpfile" + (i + 1));
 		}
 		try {
-			await gostLaufbahnplanungState.importLaufbahnplanung(formData);
+			await props.importLaufbahnplanung(formData);
 			emit('update:show', false);
 		} catch (e) {
 			failed.value = true;
