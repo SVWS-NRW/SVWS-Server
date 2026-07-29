@@ -123,7 +123,7 @@ public class ReportingRepositoryGost {
 	 * @return Die Beratungsdaten oder {@code null}, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
 	public GostLaufbahnplanungBeratungsdaten beratungsdaten(final long idSchueler) {
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().stammdaten().keySet());
+		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
 		ids.add(idSchueler);
 		beratungsdaten(ids);
 		return mapBeratungsdaten.get(idSchueler);
@@ -156,7 +156,7 @@ public class ReportingRepositoryGost {
 	 * @return Die Beratungs-Abiturdaten oder {@code null}, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
 	public Abiturdaten beratungsdatenAbiturdaten(final long idSchueler) {
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().stammdaten().keySet());
+		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
 		ids.add(idSchueler);
 		beratungsdatenAbiturdaten(ids);
 		return mapBeratungsdatenAbiturdaten.get(idSchueler);
@@ -193,7 +193,7 @@ public class ReportingRepositoryGost {
 	 * @return Die Abiturdaten oder {@code null}, falls keine vorhanden sind oder das Laden fehlgeschlagen ist.
 	 */
 	public Abiturdaten schuelerAbiturdaten(final long idSchueler) {
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().stammdaten().keySet());
+		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
 		ids.add(idSchueler);
 		schuelerAbiturdaten(ids);
 		return mapSchuelerAbiturdaten.get(idSchueler);
@@ -256,7 +256,7 @@ public class ReportingRepositoryGost {
 	 *         hinterlegt sind oder das Laden fehlgeschlagen ist.
 	 */
 	public GostSchuelerGKLWahl gklWahl(final long idSchueler) {
-		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().stammdaten().keySet());
+		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
 		ids.add(idSchueler);
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
 				ids,

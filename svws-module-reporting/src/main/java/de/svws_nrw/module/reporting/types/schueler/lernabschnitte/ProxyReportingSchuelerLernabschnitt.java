@@ -98,15 +98,17 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 		this.reportingContext = reportingContext;
 
-		super.foerderschwerpunkt1 = this.reportingContext.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
-		super.foerderschwerpunkt2 = this.reportingContext.repositoryKataloge().foerderschwerpunkte().get(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
+		super.foerderschwerpunkt1 = this.reportingContext.repositoryKataloge().foerderschwerpunkt(schuelerLernabschnittsdaten.foerderschwerpunkt1ID);
+		super.foerderschwerpunkt2 = this.reportingContext.repositoryKataloge().foerderschwerpunkt(schuelerLernabschnittsdaten.foerderschwerpunkt2ID);
 
 		super.schuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.idSchuljahresabschnitt());
 
-		super.schueler = this.reportingContext.repositorySchueler().schueler().get(schuelerLernabschnittsdaten.schuelerID);
+		// Der Rückverweis auf den Schüler wird ungefiltert aufgelöst - der Lernabschnitt gehört fachlich zu diesem Schüler,
+		// unabhängig davon, ob der Schüler selbst in der Ausgabe erscheint.
+		super.schueler = this.reportingContext.repositorySchueler().schuelerOhneFilter(schuelerLernabschnittsdaten.schuelerID);
 
 		schuelerLernabschnittsdaten.leistungsdaten.forEach(
-				l -> this.reportingContext.repositorySchueler().leistungsdaten().add(schueler().id(), id(), l.id, l));
+				l -> this.reportingContext.repositorySchueler().leistungsdaten().add(schuelerLernabschnittsdaten.schuelerID, id(), l.id, l));
 	}
 
 

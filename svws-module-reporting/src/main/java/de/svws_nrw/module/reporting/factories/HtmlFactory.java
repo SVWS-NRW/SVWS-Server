@@ -454,9 +454,11 @@ public class HtmlFactory {
 					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
 					return Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store").build();
 				} else {
+					// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die
+					// HTML-Ausgabe auf dem fertig kombinierten Parametersatz auf false festlegt - ohne Aufteilung entsteht genau ein Builder.
 					reportingContext.logger().logLn(LogLevel.ERROR, 0,
 							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					throw new ApiOperationException(Status.BAD_REQUEST,
 							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
 				}
 			}
@@ -567,8 +569,7 @@ public class HtmlFactory {
 	private List<Long> getContextsIds() {
 		final List<Long> ids = new ArrayList<>();
 
-		for (final Map.Entry<String, HtmlContext<?>> entry : mapHtmlContexts.entrySet()) {
-			final HtmlContext<?> context = entry.getValue();
+		for (final HtmlContext<?> context : mapHtmlContexts.values()) {
 			if (context == null) {
 				continue;
 			}

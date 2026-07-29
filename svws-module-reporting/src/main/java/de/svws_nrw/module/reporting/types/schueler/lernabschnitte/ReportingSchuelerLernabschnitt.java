@@ -996,7 +996,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	/**
 	 * Der Schüler, zu dem diese Lernabschnittsdaten gehören.
 	 *
-	 * @return Inhalt des Feldes schueler
+	 * @return Inhalt des Feldes schueler; kann {@code null} sein, wenn die Daten des Schülers nicht geladen werden konnten.
 	 */
 	public ReportingSchueler schueler() {
 		return this.schueler;

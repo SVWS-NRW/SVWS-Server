@@ -28,6 +28,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
@@ -104,7 +105,7 @@ class TestReportingParameterBuilder {
 	}
 
 	@Test
-	void testSammleUebermittelteWerteNamensbasiertUndEinzelausgabeSonderregel() {
+	void testSammleUebermittelteWerteNamensbasiert() {
 		final ReportingParameter rp = new ReportingParameter();
 		rp.ausgabeformat = ReportingAusgabeformat.HTML.getId();
 		rp.reportvorlageParameterGruppen = List.of(
@@ -113,16 +114,28 @@ class TestReportingParameterBuilder {
 
 		final Map<String, String> werte = ReportingParameterBuilder.sammleUebermittelteWerte(rp);
 		assertEquals("X", werte.get("titel"), "Werte werden namensbasiert über alle Gruppen gesammelt.");
-		assertEquals("false", werte.get("einzelausgabeDaten"), "Bei HTML wird die Einzelausgabe auf false erzwungen.");
-
-		rp.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
-		assertEquals("true", ReportingParameterBuilder.sammleUebermittelteWerte(rp).get("einzelausgabeDaten"),
-				"Beim E-Mail-Versand wird die Einzelausgabe auf true erzwungen.");
-
-		rp.ausgabeformat = ReportingAusgabeformat.PDF.getId();
-		assertEquals("true", ReportingParameterBuilder.sammleUebermittelteWerte(rp).get("einzelausgabeDaten"),
-				"Bei PDF bleibt der übermittelte Wert unverändert.");
+		assertEquals("true", werte.get("einzelausgabeDaten"),
+				"Beim Sammeln der übermittelten Werte greift keine ausgabeformatabhängige Regel mehr - der Wert bleibt unverändert.");
 	}
+
+	@Test
+	void testEinzelausgabeWirdAusgabeformatabhaengigErzwungen() {
+		// Die Vorlage dient hier nur als Träger der Setter-Methode; erzwungen wird auf dem übergebenen Parametersatz.
+		final ReportingReportvorlage vorlage = ReportingReportvorlage.LEHRER_V_STAMMDATENLISTE;
+
+		final ReportingParameter html = parameterMitEinzelausgabe(ReportingAusgabeformat.HTML.getId(), true);
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(html, vorlage);
+		assertEquals("false", einzelausgabeWert(html), "Bei HTML wird die Einzelausgabe auf false erzwungen.");
+
+		final ReportingParameter email = parameterMitEinzelausgabe(ReportingAusgabeformat.EMAIL.getId(), false);
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(email, vorlage);
+		assertEquals("true", einzelausgabeWert(email), "Beim E-Mail-Versand wird die Einzelausgabe auf true erzwungen.");
+
+		final ReportingParameter pdf = parameterMitEinzelausgabe(ReportingAusgabeformat.PDF.getId(), true);
+		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(pdf, vorlage);
+		assertEquals("true", einzelausgabeWert(pdf), "Bei PDF bleibt der kombinierte Wert unverändert.");
+	}
+
 
 	@Test
 	void testSammleStandardWerteErsteQuelleGewinnt() {
@@ -368,6 +381,17 @@ class TestReportingParameterBuilder {
 	private static ReportingReportvorlageParameter boolParam(final String name, final boolean wert) {
 		return ReportingReportvorlageUtils.erzeugeVorlageParameter(name, name, ReportingReportvorlageParameterTyp.BOOLEAN, "" + wert, true,
 				ReportingUIKomponentenTyp.CHECKBOX, 1);
+	}
+
+	private static ReportingParameter parameterMitEinzelausgabe(final int ausgabeformat, final boolean wert) {
+		final ReportingParameter rp = new ReportingParameter();
+		rp.ausgabeformat = ausgabeformat;
+		rp.reportvorlageParameterGruppen = List.of(gruppe("Ausgabeoptionen", true, boolParam("einzelausgabeDaten", wert)));
+		return rp;
+	}
+
+	private static String einzelausgabeWert(final ReportingParameter reportingParameter) {
+		return reportingParameter.reportvorlageParameterGruppen.getFirst().reportvorlageParameter.getFirst().wert;
 	}
 
 	private static ReportingReportvorlageParameter stringParam(final String name, final String wert) {

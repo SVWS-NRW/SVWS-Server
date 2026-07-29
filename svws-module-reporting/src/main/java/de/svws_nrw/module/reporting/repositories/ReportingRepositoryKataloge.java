@@ -2,7 +2,9 @@ package de.svws_nrw.module.reporting.repositories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
@@ -67,11 +69,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Entlassgründe zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Entlassgrund zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Entlassgründe
+	 * @param idEntlassgrund Die ID des Entlassgrundes; {@code null} ist zulässig.
+	 *
+	 * @return Der Entlassgrund oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, KatalogEntlassgrund> entlassgruende() {
+	public KatalogEntlassgrund entlassgrund(final Long idEntlassgrund) {
+		return (idEntlassgrund == null) ? null : ladeEntlassgruende().get(idEntlassgrund);
+	}
+
+	private Map<Long, KatalogEntlassgrund> ladeEntlassgruende() {
 		if (katalogEntlassgruende == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Entlassgründe.");
@@ -85,11 +93,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Förderschwerpunkt-Katalogeinträge zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Förderschwerpunkt-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Förderschwerpunkt-Katalogeinträge
+	 * @param idFoerderschwerpunkt Die ID des Förderschwerpunktes; {@code null} ist zulässig.
+	 *
+	 * @return Der Förderschwerpunkt oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, FoerderschwerpunktEintrag> foerderschwerpunkte() {
+	public FoerderschwerpunktEintrag foerderschwerpunkt(final Long idFoerderschwerpunkt) {
+		return (idFoerderschwerpunkt == null) ? null : ladeFoerderschwerpunkte().get(idFoerderschwerpunkt);
+	}
+
+	private Map<Long, FoerderschwerpunktEintrag> ladeFoerderschwerpunkte() {
 		if (katalogFoerderschwerpunkte == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Förderschwerpunkte.");
@@ -103,11 +117,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Ort-Katalogeinträge zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Ort-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Ort-Katalogeinträge
+	 * @param idOrt Die ID des Ortes; {@code null} ist zulässig.
+	 *
+	 * @return Der Ort oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, OrtKatalogEintrag> orte() {
+	public OrtKatalogEintrag ort(final Long idOrt) {
+		return (idOrt == null) ? null : ladeOrte().get(idOrt);
+	}
+
+	private Map<Long, OrtKatalogEintrag> ladeOrte() {
 		if (katalogOrte == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Orte.");
@@ -120,11 +140,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Ortsteil-Katalogeinträge zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Ortsteil-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Ortsteil-Katalogeinträge
+	 * @param idOrtsteil Die ID des Ortsteils; {@code null} ist zulässig.
+	 *
+	 * @return Der Ortsteil oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, OrtsteilKatalogEintrag> ortsteile() {
+	public OrtsteilKatalogEintrag ortsteil(final Long idOrtsteil) {
+		return (idOrtsteil == null) ? null : ladeOrtsteile().get(idOrtsteil);
+	}
+
+	private Map<Long, OrtsteilKatalogEintrag> ladeOrtsteile() {
 		if (katalogOrtsteile == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Ortsteile.");
@@ -139,11 +165,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Religions-Katalogeinträge zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Religions-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Religions-Katalogeinträge
+	 * @param idReligion Die ID der Religion; {@code null} ist zulässig.
+	 *
+	 * @return Die Religion oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, ReligionEintrag> religionen() {
+	public ReligionEintrag religion(final Long idReligion) {
+		return (idReligion == null) ? null : ladeReligionen().get(idReligion);
+	}
+
+	private Map<Long, ReligionEintrag> ladeReligionen() {
 		if (katalogReligionen == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Religionen.");
@@ -156,11 +188,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Schul-Katalogeinträge zurück, indiziert nach ihrer ID im Katalog. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Schul-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Schul-Katalogeinträge
+	 * @param idSchule Die ID der Schule im Katalog; {@code null} ist zulässig.
+	 *
+	 * @return Die Schule oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, SchulEintrag> schulen() {
+	public SchulEintrag schule(final Long idSchule) {
+		return (idSchule == null) ? null : ladeSchulen().get(idSchule);
+	}
+
+	private Map<Long, SchulEintrag> ladeSchulen() {
 		if (katalogSchulen == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulen, indiziert nach IDs.");
@@ -174,12 +212,18 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Schul-Katalogeinträge zurück, indiziert nach Schulnummer. Sofern eine Schulnummer mehrfach vergeben wurde,
-	 * wird nur der erste Eintrag berücksichtigt. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt den Schul-Katalogeintrag zur übergebenen Schulnummer zurück. Sofern eine Schulnummer mehrfach vergeben wurde,
+	 * wird nur der erste Eintrag berücksichtigt. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Schul-Katalogeinträge
+	 * @param schulnummer Die statistische Schulnummer; {@code null} ist zulässig.
+	 *
+	 * @return Die Schule oder null, falls keine Schulnummer übergeben wurde oder zu ihr kein Eintrag vorliegt.
 	 */
-	public Map<String, SchulEintrag> schulenNachSchulnummer() {
+	public SchulEintrag schuleNachSchulnummer(final String schulnummer) {
+		return (schulnummer == null) ? null : ladeSchulenNachSchulnummer().get(schulnummer);
+	}
+
+	private Map<String, SchulEintrag> ladeSchulenNachSchulnummer() {
 		if (katalogSchulenNachSchulnummer == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulen, indiziert nach Schulnummern.");
@@ -194,11 +238,26 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Schulform-Katalogeinträge zurück, indiziert nach ID. Wird beim ersten Zugriff aufgebaut.
+	 * Gibt den Schulform-Katalogeintrag zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aufgebaut.
 	 *
-	 * @return Map der Schulform-Katalogeinträge
+	 * @param idSchulform Die ID der Schulform; {@code null} ist zulässig.
+	 *
+	 * @return Die Schulform oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, SchulformKatalogEintrag> schulformen() {
+	public SchulformKatalogEintrag schulform(final Long idSchulform) {
+		return (idSchulform == null) ? null : ladeSchulformen().get(idSchulform);
+	}
+
+	/**
+	 * Gibt alle Schulform-Katalogeinträge zurück. Der Katalog wird beim ersten Zugriff aufgebaut.
+	 *
+	 * @return Unveränderliche Liste der Schulform-Katalogeinträge.
+	 */
+	public List<SchulformKatalogEintrag> schulformen() {
+		return List.copyOf(ladeSchulformen().values());
+	}
+
+	private Map<Long, SchulformKatalogEintrag> ladeSchulformen() {
 		if (katalogSchulformen == null) {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Schulformen.");
 			final ArrayList<SchulformKatalogEintrag> schulformen = new ArrayList<>();
@@ -211,11 +270,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Telefonnummer-Arten zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt die Telefonnummer-Art zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Telefonnummer-Arten
+	 * @param idTelefonart Die ID der Telefonnummer-Art; {@code null} ist zulässig.
+	 *
+	 * @return Die Telefonnummer-Art oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, Telefonart> telefonnummerArten() {
+	public Telefonart telefonnummerArt(final Long idTelefonart) {
+		return (idTelefonart == null) ? null : ladeTelefonnummerArten().get(idTelefonart);
+	}
+
+	private Map<Long, Telefonart> ladeTelefonnummerArten() {
 		if (katalogTelefonnummerArten == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog TelefonnummerArten.");
@@ -229,11 +294,15 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Fächer-DTOs zurück, indiziert nach der ID des Faches. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt alle Fächer-DTOs zurück. Sie werden beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Fächer-DTOs
+	 * @return Unveränderliche Liste der Fächer-DTOs.
 	 */
-	public Map<Long, DTOFach> faecher() {
+	public List<DTOFach> faecher() {
+		return List.copyOf(ladeFaecher().values());
+	}
+
+	private Map<Long, DTOFach> ladeFaecher() {
 		if (mapFaecher == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Fächer.");
@@ -246,11 +315,16 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Jahrgangsdaten zurück, indiziert nach Jahrgangs-ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt alle Jahrgangsdaten zurück. Sie werden beim ersten Zugriff aus der Datenbank geladen.
+	 * Negativ-Einträge, die {@link #jahrgang(long)} für nicht ermittelbare Jahrgänge hinterlegt, sind nicht enthalten.
 	 *
-	 * @return Map der Jahrgangsdaten
+	 * @return Unveränderliche Liste der Jahrgangsdaten.
 	 */
-	public Map<Long, JahrgangsDaten> jahrgaenge() {
+	public List<JahrgangsDaten> jahrgaenge() {
+		return ladeJahrgaenge().values().stream().filter(Objects::nonNull).toList();
+	}
+
+	private Map<Long, JahrgangsDaten> ladeJahrgaenge() {
 		if (mapJahrgaenge == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Jahrgangsdaten.");
@@ -275,7 +349,7 @@ public class ReportingRepositoryKataloge {
 		if (idJahrgang < 0) {
 			return null;
 		}
-		final Map<Long, JahrgangsDaten> map = jahrgaenge();
+		final Map<Long, JahrgangsDaten> map = ladeJahrgaenge();
 		if (map.containsKey(idJahrgang)) {
 			return map.get(idJahrgang);
 		}
@@ -293,11 +367,17 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Erzieherarten als Reporting-Objekte zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
+	 * Gibt die Erzieherart zur übergebenen ID zurück. Der Katalog wird beim ersten Zugriff aus der Datenbank geladen.
 	 *
-	 * @return Map der Erzieherarten
+	 * @param idErzieherArt Die ID der Erzieherart; {@code null} ist zulässig.
+	 *
+	 * @return Die Erzieherart oder null, falls keine ID übergeben wurde oder zur ID kein Eintrag vorliegt.
 	 */
-	public Map<Long, ReportingErzieherArt> erzieherarten() {
+	public ReportingErzieherArt erzieherart(final Long idErzieherArt) {
+		return (idErzieherArt == null) ? null : ladeErzieherarten().get(idErzieherArt);
+	}
+
+	private Map<Long, ReportingErzieherArt> ladeErzieherarten() {
 		if (mapErzieherarten == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Erzieherarten.");
@@ -311,12 +391,16 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Gibt die Map der Ankreuzkompetenzen zurück, indiziert nach ID. Wird beim ersten Zugriff aus der Datenbank geladen.
-	 * Die in den Ankreuzkompetenzen enthaltenen Jahrgangszuordnungen werden ebenfalls mitgeladen.
+	 * Gibt alle Ankreuzkompetenzen zurück. Sie werden beim ersten Zugriff aus der Datenbank geladen; die darin enthaltenen
+	 * Jahrgangszuordnungen werden ebenfalls mitgeladen.
 	 *
-	 * @return Map der Ankreuzkompetenzen
+	 * @return Unveränderliche Liste der Ankreuzkompetenzen.
 	 */
-	public Map<Long, Ankreuzkompetenz> ankreuzkompetenzen() {
+	public List<Ankreuzkompetenz> ankreuzkompetenzen() {
+		return List.copyOf(ladeAnkreuzkompetenzen().values());
+	}
+
+	private Map<Long, Ankreuzkompetenz> ladeAnkreuzkompetenzen() {
 		if (mapAnkreuzkompetenzen == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Ankreuzkompetenzen.");

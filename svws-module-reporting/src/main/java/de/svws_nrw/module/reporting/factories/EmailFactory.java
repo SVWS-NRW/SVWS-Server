@@ -75,7 +75,8 @@ public final class EmailFactory {
 			final ReportingParameterTypisiert parameter = pruefeParameter();
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Parameter wurden geprüft und erfolgreich ermittelt.");
 
-			final String subject = buildEMailBetreff(parameter);
+			// Betreff und Text sind durch pruefeParameter() bereits als vorhanden und nicht leer bestätigt.
+			final String subject = parameter.eMailDaten().betreff;
 			final String body = buildEMailHTMLBody(parameter);
 
 			final EmailJobContext jobContext = reportingContext.repositorySchule().defaultEmailJobContext();
@@ -176,14 +177,15 @@ public final class EmailFactory {
 	 */
 	private ReportingEMailEmpfaengerTyp ermittleEmpfaengerTyp() throws ApiOperationException {
 		final ReportingParameterTypisiert parameter = this.reportingContext.reportingParameter();
-		if ((parameter != null) && (parameter.eMailDaten() != null)
-				&& (ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp) != ReportingEMailEmpfaengerTyp.UNDEFINED)) {
-			reportingContext.logger().logLn(LogLevel.DEBUG, 4,
-					"Der E-Mail-Empfänger-Typ wurde ermittelt: %s".formatted(ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp).name()));
-			return ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp);
+		final ReportingEMailEmpfaengerTyp empfaengerTyp = ((parameter == null) || (parameter.eMailDaten() == null))
+				? ReportingEMailEmpfaengerTyp.UNDEFINED
+				: ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp);
+		if ((empfaengerTyp == null) || (empfaengerTyp == ReportingEMailEmpfaengerTyp.UNDEFINED)) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt.");
 		}
-		reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
-		throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt.");
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der E-Mail-Empfänger-Typ wurde ermittelt: %s".formatted(empfaengerTyp.name()));
+		return empfaengerTyp;
 	}
 
 
@@ -468,70 +470,43 @@ public final class EmailFactory {
 	}
 
 	/**
-	 * Erstellt den Betreff einer E-Mail basierend auf den übergebenen Reporting-Parametern und validiert, ob ein gültiger Betreff vorliegt. Falls kein
-	 * Betreff angegeben ist, wird ein Fehler geloggt und eine ApiOperationException ausgelöst.
-	 *
-	 * @param parameter Die ReportingParameter, die die relevanten Daten für die E-Mail enthalten. Insbesondere wird das Feld {@code eMailDaten.betreff}
-	 *                  verwendet.
-	 *
-	 * @return Der generierte Betreff der E-Mail als String.
-	 *
-	 * @throws ApiOperationException Falls kein gültiger Betreff definiert ist.
-	 */
-	private String buildEMailBetreff(final ReportingParameterTypisiert parameter) throws ApiOperationException {
-		if ((parameter != null) && (parameter.eMailDaten() != null) && (parameter.eMailDaten().betreff != null)
-				&& (!parameter.eMailDaten().betreff.isBlank())) {
-			return parameter.eMailDaten().betreff;
-		}
-		reportingContext.logger().logLn(LogLevel.ERROR, 4,
-				"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff für die E-Mail angegeben wurde.");
-		throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
-	}
-
-	/**
 	 * Erzeugt den HTML-Body für die E-Mail basierend auf den übergebenen Parametern.
 	 * Der Text wird aus einem Plain-Text-Feld entnommen, normalisiert, in HTML umgewandelt und strukturiert.
 	 * Leerzeilen und Zeilenumbrüche werden dabei entsprechend formatiert.
 	 *
-	 * @param parameter Die Parameter, die die E-Mail-Daten, einschließlich des Textes, enthalten
+	 * @param parameter Die Parameter, die die E-Mail-Daten, einschließlich des Textes, enthalten. Dass ein nicht leerer Text vorliegt, hat bereits
+	 *                  {@link #pruefeParameter()} sichergestellt.
 	 *
 	 * @return der generierte E-Mail-Text als HTML-String
-	 *
-	 * @throws ApiOperationException Falls die übergebenen Parameter ungültig sind oder der Text fehlt
 	 */
-	private String buildEMailHTMLBody(final ReportingParameterTypisiert parameter) throws ApiOperationException {
-		if ((parameter != null) && (parameter.eMailDaten() != null) && (parameter.eMailDaten().text != null) && (!parameter.eMailDaten().text.isBlank())) {
-			// Der Text kommt als Plain-Text aus dem Client. Normalisiere zunächst den übergebenen Text.
-			final String emailBodyPlainText = normalisierterPlainText(parameter.eMailDaten().text);
+	private String buildEMailHTMLBody(final ReportingParameterTypisiert parameter) {
+		// Der Text kommt als Plain-Text aus dem Client. Normalisiere zunächst den übergebenen Text.
+		final String emailBodyPlainText = normalisierterPlainText(parameter.eMailDaten().text);
 
-			// Plain-Text in HTML transformieren. Dazu HTML-escaped	Text erstellen.
-			final String escaped = htmlEscape(emailBodyPlainText);
+		// Plain-Text in HTML transformieren. Dazu HTML-escaped	Text erstellen.
+		final String escaped = htmlEscape(emailBodyPlainText);
 
-			// Einen StringBuilder für den HTML-Code erzeugen und ein minimales HTML-Grundgerüst einfügen, damit Clients korrekt als HTML rendern.
-			final StringBuilder html = new StringBuilder(escaped.length() + 128);
+		// Einen StringBuilder für den HTML-Code erzeugen und ein minimales HTML-Grundgerüst einfügen, damit Clients korrekt als HTML rendern.
+		final StringBuilder html = new StringBuilder(escaped.length() + 128);
 
-			html.append("<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body>");
+		html.append("<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head><body>");
 
-			// Teile den Text in Absätze. Doppel-CRLF werden als Absatz (<p>) behandelt, Einzel-CRLF als Zeilenumbruch.
-			final String[] absaetze = escaped.split("\\r\\n\\r\\n");
-			for (final String absatz : absaetze) {
-				// Ersetze verbleibende Einzelzeilenumbrüche im Absatz durch <br>
-				final String absatzMitBr = absatz.replace("\r\n", "<br>");
-				// Leere Absätze als echte Leerzeile darstellen
-				if (absatzMitBr.isBlank()) {
-					html.append("<p><br></p>");
-				} else {
-					html.append("<p>").append(absatzMitBr).append("</p>");
-				}
+		// Teile den Text in Absätze. Doppel-CRLF werden als Absatz (<p>) behandelt, Einzel-CRLF als Zeilenumbruch.
+		final String[] absaetze = escaped.split("\\r\\n\\r\\n");
+		for (final String absatz : absaetze) {
+			// Ersetze verbleibende Einzelzeilenumbrüche im Absatz durch <br>
+			final String absatzMitBr = absatz.replace("\r\n", "<br>");
+			// Leere Absätze als echte Leerzeile darstellen
+			if (absatzMitBr.isBlank()) {
+				html.append("<p><br></p>");
+			} else {
+				html.append("<p>").append(absatzMitBr).append("</p>");
 			}
-
-			html.append("</body></html>");
-
-			return html.toString();
 		}
-		reportingContext.logger().logLn(LogLevel.ERROR, 4,
-				"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Text für die E-Mail angegeben wurde.");
-		throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
+
+		html.append("</body></html>");
+
+		return html.toString();
 	}
 
 	/**

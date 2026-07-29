@@ -5,7 +5,6 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
-import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public HtmlContextSchueler(final ReportingContext reportingContext, final List<ReportingSchueler> reportingSchueler) {
 		super(reportingContext);
-		erzeugeContextFromSchueler(reportingSchueler);
+		erzeugeContext("Schueler", reportingSchueler);
 	}
 
 	/**
@@ -34,40 +33,8 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public HtmlContextSchueler(final ReportingContext reportingContext) {
 		super(reportingContext);
-		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
-	}
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Schülern.
-	 *
-	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
-
-		setContextData(reportingSchueler);
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Schueler", getContextData());
-
-		super.setContext(context);
-	}
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Schüler-IDs.
-	 *
-	 * @param idsSchueler	Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
-
 		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
-		setContextData(this.reportingContext.repositorySchueler().schueler(idsSchueler));
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Schueler", getContextData());
-
-		super.setContext(context);
+		erzeugeContext("Schueler", reportingContext.repositorySchueler().schueler(reportingContext.reportingParameter().idsHauptdaten()));
 	}
 
 	/**

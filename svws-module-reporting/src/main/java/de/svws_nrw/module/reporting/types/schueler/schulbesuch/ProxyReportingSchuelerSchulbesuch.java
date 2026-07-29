@@ -71,7 +71,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 			return null;
 		}
 
-		final SchulEintrag schulEintrag = reportingContext.repositoryKataloge().schulen().get(idSchule);
+		final SchulEintrag schulEintrag = reportingContext.repositoryKataloge().schule(idSchule);
 		if (schulEintrag == null) {
 			return null;
 		}
@@ -84,7 +84,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 			return null;
 		}
 
-		return reportingContext.repositoryKataloge().entlassgruende().get(idEntlassgrund);
+		return reportingContext.repositoryKataloge().entlassgrund(idEntlassgrund);
 	}
 
 	private static String uebergangsempfehlungKuerzel(final Long idUebergangsempfehlung) {

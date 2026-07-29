@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
-import org.thymeleaf.context.Context;
 
 
 /**
@@ -21,7 +20,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	public HtmlContextKlassen(final ReportingContext reportingContext, final List<ReportingKlasse> reportingKlassen) {
 		super(reportingContext);
-		erzeugeContextFromKlassen(reportingKlassen);
+		erzeugeContext("Klassen", reportingKlassen);
 	}
 
 	/**
@@ -31,41 +30,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	 */
 	public HtmlContextKlassen(final ReportingContext reportingContext) {
 		super(reportingContext);
-		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Klassen.
-	 *
-	 * @param reportingKlassen   	Liste der Klassen, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromKlassen(final List<ReportingKlasse> reportingKlassen) {
-
-		setContextData(reportingKlassen);
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Klassen", getContextData());
-
-		super.setContext(context);
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Klassen-IDs.
-	 *
-	 * @param idsKlassen	Liste der IDs der Klassen, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromIds(final List<Long> idsKlassen) {
-
-		setContextData(reportingContext.repositoryLerngruppen().klassen(idsKlassen));
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Klassen", getContextData());
-
-		super.setContext(context);
+		erzeugeContext("Klassen", reportingContext.repositoryLerngruppen().klassen(reportingContext.reportingParameter().idsHauptdaten()));
 	}
 
 

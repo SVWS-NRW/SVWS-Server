@@ -107,7 +107,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 		if ((super.faecher == null) || super.faecher.isEmpty()) {
 			super.faecher = new HashMap<>();
 			this.reportingContext.repositoryKataloge().faecher()
-					.forEach((idFach, fach) -> super.faecher.put(idFach, new ProxyReportingFach(fach, this.schuljahr)));
+					.forEach(fach -> super.faecher.put(fach.ID, new ProxyReportingFach(fach, this.schuljahr)));
 		}
 		return super.faecher;
 	}
@@ -121,7 +121,7 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingJahrgang> jahrgaenge() {
 		if ((super.jahrgaenge == null) || super.jahrgaenge.isEmpty()) {
 			super.jahrgaenge = new HashMap<>();
-			this.reportingContext.repositoryKataloge().jahrgaenge().forEach((idJahrgang, jahrgang) -> super.jahrgaenge.put(idJahrgang,
+			this.reportingContext.repositoryKataloge().jahrgaenge().forEach(jahrgang -> super.jahrgaenge.put(jahrgang.id,
 					new ProxyReportingJahrgang(this.reportingContext, jahrgang, this)));
 		}
 		return super.jahrgaenge;
@@ -184,9 +184,9 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 		if ((super.ankreuzkompetenzen == null) || super.ankreuzkompetenzen.isEmpty()) {
 			super.ankreuzkompetenzen = new HashMap<>();
 			this.reportingContext.repositoryKataloge().ankreuzkompetenzen()
-					.forEach((idAnkreuzkompetenz, ankreuzkompetenz) -> {
+					.forEach(ankreuzkompetenz -> {
 						if ((ankreuzkompetenz.abschnitt == 0) || (ankreuzkompetenz.abschnitt == super.abschnitt)) {
-							super.ankreuzkompetenzen.put(idAnkreuzkompetenz, new ProxyReportingAnkreuzkompetenz(ankreuzkompetenz, this));
+							super.ankreuzkompetenzen.put(ankreuzkompetenz.id, new ProxyReportingAnkreuzkompetenz(ankreuzkompetenz, this));
 						}
 					});
 		}

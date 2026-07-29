@@ -3,6 +3,7 @@ package de.svws_nrw.module.reporting.factories;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
@@ -18,6 +19,7 @@ import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterBuilder;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.utils.ReportingServerUtils;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -29,6 +31,14 @@ import jakarta.ws.rs.core.Response.Status;
  * <p>Rückgabe ist eine dem Zielformat entsprechende Response oder im Fehlerfall eine SimpleOperationResponse mit Log-Informationen.</p>
  */
 public final class ReportingFactory {
+
+	/** Meldung für Fehler, die während der Initialisierung und Validierung der Factory auftreten. */
+	private static final String FEHLER_INITIALISIERUNG =
+			"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.";
+
+	/** Meldung für Fehler, die während der Erzeugung der API-Response auftreten. */
+	private static final String FEHLER_RESPONSE =
+			"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.";
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
@@ -59,6 +69,7 @@ public final class ReportingFactory {
 			// Initialisiere Log für Status- und Fehlermeldungen
 			this.logger.addConsumer(log);
 
+			this.logger.logLn(LogLevel.DEBUG, 0, ">>> Aufruf des Reporting in SVWS-Server-Version %s - Modus: %s".formatted(ReportingServerUtils.serverversion(), ReportingServerUtils.servermodetext()));
 			this.logger.logLn(LogLevel.DEBUG, 0, ">>> Beginn des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 
 			// Validiere Datenbankverbindung
@@ -143,24 +154,10 @@ public final class ReportingFactory {
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final ApiOperationException aoe) {
-			// Die ApiOperationException wird unverändert weitergereicht, damit der ursprüngliche Status-Code nach außen erhalten bleibt.
-			// Stacktrace und Log werden dennoch wie im allgemeinen catch-Zweig protokolliert und auf der Konsole ausgegeben.
-			ReportingExceptionUtils.logException(
-					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", aoe, logger,
-					LogLevel.ERROR, 0);
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
-			sop.log.forEach(Logger.global()::logLn);
-			// Wirf die Exception mit dem ursprünglichen Status-Code neu, aber mit dem vollständigen Log als Body
-			throw new ApiOperationException(aoe.getStatus(), aoe, sop, MediaType.APPLICATION_JSON);
+			// Die ApiOperationException wird mit ihrem ursprünglichen Status-Code weitergereicht, damit dieser nach außen erhalten bleibt.
+			throw zuApiOperationException(aoe, FEHLER_INITIALISIERUNG, aoe.getStatus());
 		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", e, logger,
-					LogLevel.ERROR, 0);
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
-			sop.log.forEach(Logger.global()::logLn);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);
+			throw zuApiOperationException(e, FEHLER_INITIALISIERUNG, Status.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -187,54 +184,22 @@ public final class ReportingFactory {
 				}
 				case ReportingAusgabeformat.HTML -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
-					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarCube-Angabe)
-					try (Response autocloseResponse = htmlFactory.createHtmlResponse()) {
-						if (!log.getText(LogLevel.ERROR).isEmpty()) {
-							logger.logLn(LogLevel.ERROR, 0,
-									"### FEHLER: Während der Erzeugung einer HTML-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
-						}
-						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
-						reportResponse = Response.fromResponse(autocloseResponse).build();
-					}
+					final HtmlFactory htmlFactory = erzeugeHtmlFactory();
+					reportResponse = erzeugeResponse(htmlFactory::createHtmlResponse,
+							"### FEHLER: Während der Erzeugung einer HTML-Response zur Report-Generierung ist ein Fehler geloggt worden.");
 				}
 				case ReportingAusgabeformat.PDF -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "PDF als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
-					final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
-					this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingContext);
-					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarCube-Angabe)
-					try (Response autocloseResponse = pdfFactory.createPdfResponse()) {
-						if (!log.getText(LogLevel.ERROR).isEmpty()) {
-							logger.logLn(LogLevel.ERROR, 0,
-									"### FEHLER: Während der Erzeugung einer PDF-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
-						}
-						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
-						reportResponse = Response.fromResponse(autocloseResponse).build();
-					}
+					final PdfFactory pdfFactory = new PdfFactory(erzeugeHtmlBuilders(), reportingContext);
+					reportResponse = erzeugeResponse(pdfFactory::createPdfResponse,
+							"### FEHLER: Während der Erzeugung einer PDF-Response zur Report-Generierung ist ein Fehler geloggt worden.");
 				}
 				case ReportingAusgabeformat.EMAIL -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "EMAIL als Ausgabeformat für die Report-Generierung gewählt.");
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
-					final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
-					this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-					final PdfFactory pdfFactory = new PdfFactory(htmlBuilders, reportingContext);
+					final PdfFactory pdfFactory = new PdfFactory(erzeugeHtmlBuilders(), reportingContext);
 					final EmailFactory emailFactory = new EmailFactory(reportingContext);
-					// Erzeuge im try-Block eine temporäre Response, die bei einem Fehler automatisch geschlossen wird (SonarQube-Angabe)
-					try (Response autocloseResponse = emailFactory.sendEmails(pdfFactory)) {
-						if (!log.getText(LogLevel.ERROR).isEmpty()) {
-							logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während des E-Mail-Versands (Response) wurde ein Fehler geloggt.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
-						}
-						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
-						reportResponse = Response.fromResponse(autocloseResponse).build();
-					}
+					reportResponse = erzeugeResponse(() -> emailFactory.sendEmails(pdfFactory),
+							"### FEHLER: Während des E-Mail-Versands (Response) wurde ein Fehler geloggt.");
 				}
 				case null, default -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
@@ -244,33 +209,96 @@ public final class ReportingFactory {
 			}
 			// Prüfe nun, ob während der Report-Generierung ein Fehler aufgetreten ist, der als Error ins Log geschrieben wurde, aber nicht als Fehler
 			// geworfen wurde.
-			if (!log.getText(LogLevel.ERROR).isEmpty()) {
-				logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-				final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
-			}
+			pruefeLogAufFehler("### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler geloggt worden.");
 			// Wenn kein Fehler vermerkt wurde, kann der Report zurückgegeben werden.
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;
 		} catch (final ApiOperationException aoe) {
-			// Die ApiOperationException wird unverändert weitergereicht, damit der ursprüngliche Status-Code nach außen erhalten bleibt.
-			// Stacktrace und Log werden dennoch wie im allgemeinen catch-Zweig protokolliert und auf der Konsole ausgegeben.
-			ReportingExceptionUtils.logException(
-					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", aoe, logger,
-					LogLevel.ERROR, 0);
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
-			sop.log.forEach(Logger.global()::logLn);
-			// Wirf die Exception mit dem ursprünglichen Status-Code neu, aber mit dem vollständigen Log als Body
-			throw new ApiOperationException(aoe.getStatus(), aoe, sop, MediaType.APPLICATION_JSON);
+			// Die ApiOperationException wird mit ihrem ursprünglichen Status-Code weitergereicht, damit dieser nach außen erhalten bleibt.
+			throw zuApiOperationException(aoe, FEHLER_RESPONSE, aoe.getStatus());
 		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", e, logger,
-					LogLevel.ERROR, 0);
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
-			sop.log.forEach(Logger.global()::logLn);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);
+			throw zuApiOperationException(e, FEHLER_RESPONSE, Status.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+
+	/**
+	 * Erzeugt die HtmlFactory für diesen Report. Einziger Ort der Konstruktion, damit ein Umbau der HtmlFactory — insbesondere das Lösen der
+	 * Datenladung aus ihrem Konstruktor — nur hier ansetzen muss.
+	 *
+	 * @return Die HtmlFactory zum Reporting-Context dieses Aufrufs.
+	 *
+	 * @throws ApiOperationException Im Fehlerfall.
+	 */
+	private HtmlFactory erzeugeHtmlFactory() throws ApiOperationException {
+		return new HtmlFactory(reportingContext);
+	}
+
+	/**
+	 * Erzeugt die HTML-Builder, aus denen die PDF- und die E-Mail-Ausgabe ihre Dokumente erstellen.
+	 *
+	 * @return Die Liste der HTML-Builder.
+	 *
+	 * @throws ApiOperationException Im Fehlerfall.
+	 */
+	private List<ReportBuilderHtml> erzeugeHtmlBuilders() throws ApiOperationException {
+		final List<ReportBuilderHtml> htmlBuilders = erzeugeHtmlFactory().createHtmlBuilders();
+		this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
+		return htmlBuilders;
+	}
+
+	/**
+	 * Erzeugt die Response eines Ausgabeformats und prüft anschließend, ob während der Erzeugung ein Fehler ins Log geschrieben wurde.
+	 * Die Response entsteht innerhalb eines try-with-resources, damit sie im Fehlerfall automatisch geschlossen wird (SonarQube-Vorgabe);
+	 * zurückgegeben wird ein Klon, damit die Antwort nicht auf der bereits geschlossenen Ressource sitzt.
+	 *
+	 * @param erzeuger      Die Methode des jeweiligen Ausgabeformats, die die Response erzeugt. Sie darf eine
+	 *                      {@link ApiOperationException} werfen; diese ist ungeprüft und wird unverändert weitergereicht.
+	 * @param fehlermeldung Die Meldung, die bei einem im Log vermerkten Fehler protokolliert und geworfen wird.
+	 *
+	 * @return Die geklonte Response des Ausgabeformats.
+	 *
+	 * @throws ApiOperationException Im Fehlerfall oder wenn während der Erzeugung ein Fehler geloggt wurde.
+	 */
+	private Response erzeugeResponse(final Supplier<Response> erzeuger, final String fehlermeldung) throws ApiOperationException {
+		try (Response autocloseResponse = erzeuger.get()) {
+			pruefeLogAufFehler(fehlermeldung);
+			return Response.fromResponse(autocloseResponse).build();
+		}
+	}
+
+	/**
+	 * Prüft, ob im Log ein Fehler vermerkt ist, und bricht die Report-Generierung in diesem Fall mit dem gesammelten Log als Body ab.
+	 * Damit werden auch Fehler nach außen sichtbar, die zwar geloggt, aber nicht geworfen wurden.
+	 *
+	 * @param fehlermeldung Die Meldung, die vor dem Abbruch protokolliert wird.
+	 *
+	 * @throws ApiOperationException Wenn das Log mindestens einen Eintrag mit {@link LogLevel#ERROR} enthält.
+	 */
+	private void pruefeLogAufFehler(final String fehlermeldung) throws ApiOperationException {
+		if (log.getText(LogLevel.ERROR).isEmpty()) {
+			return;
+		}
+		logger.logLn(LogLevel.ERROR, 0, fehlermeldung);
+		final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
+	}
+
+	/**
+	 * Protokolliert einen aufgetretenen Fehler samt Stacktrace, gibt das gesammelte Log für Entwicklungszwecke auf der Konsole aus und
+	 * erzeugt die nach außen zu werfende Exception mit dem vollständigen Log als Body.
+	 *
+	 * @param fehlerursache Die aufgetretene Exception.
+	 * @param meldung       Die Meldung, die protokolliert wird.
+	 * @param status        Der HTTP-Status der zu erzeugenden Exception. Bei einer durchgereichten {@link ApiOperationException} ist das
+	 *                      deren ursprünglicher Status, damit 400/403/404 am API-Rand nicht zu 500 werden.
+	 *
+	 * @return Die zu werfende {@link ApiOperationException}.
+	 */
+	private ApiOperationException zuApiOperationException(final Exception fehlerursache, final String meldung, final Status status) {
+		ReportingExceptionUtils.logException(meldung, fehlerursache, logger, LogLevel.ERROR, 0);
+		final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
+		sop.log.forEach(Logger.global()::logLn);
+		return new ApiOperationException(status, fehlerursache, sop, MediaType.APPLICATION_JSON);
 	}
 }

@@ -173,8 +173,8 @@ public class ReportingRepositorySchule {
 	 * beschreibt {@link ReportingSchuljahresabschnitt#istVirtuell()}.</p>
 	 *
 	 * <p>Virtuelle Abschnitte werden pro Report zwischengespeichert, sodass für dieselbe Kombination aus Schuljahr und
-	 * Abschnitt stets dasselbe Objekt geliefert wird. Sie erscheinen bewusst nicht in {@link #schuljahresabschnitte()}
-	 * und {@link #mapSchuljahresabschnitte()}, da sie keine Abschnitte der Schule sind.</p>
+	 * Abschnitt stets dasselbe Objekt geliefert wird. Sie erscheinen bewusst nicht in {@link #schuljahresabschnitte()},
+	 * da sie keine Abschnitte der Schule sind.</p>
 	 *
 	 * @param schuljahr Das Schuljahr.
 	 * @param abschnitt Der Abschnitt.
@@ -213,16 +213,6 @@ public class ReportingRepositorySchule {
 	 */
 	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
 		return this.mapSchuljahresabschnitte.get(idAuswahlSchuljahresabschnitt);
-	}
-
-	/**
-	 * Gibt die Map der Schuljahresabschnitte der Schule zurück, indiziert nach ID.
-	 * Virtuelle Abschnitte sind nicht enthalten, da sie keine Abschnitte der Schule sind.
-	 *
-	 * @return Map der Schuljahresabschnitte.
-	 */
-	public Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte() {
-		return mapSchuljahresabschnitte;
 	}
 
 	/**

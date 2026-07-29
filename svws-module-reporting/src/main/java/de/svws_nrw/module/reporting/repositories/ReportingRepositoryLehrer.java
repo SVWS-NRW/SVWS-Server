@@ -21,7 +21,7 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 /**
  * Domänen-Repository für Lehrkräfte (Stammdaten und Reporting-Objekte).
  * Die Lehrerstammdaten werden erst bei Bedarf aus der Datenbank geladen: per einzelner ID über {@link #lehrer(long)},
- * per Liste über {@link #lehrer(List)} mit Bulk-Nachladen oder als Vollbestand beim ersten Zugriff auf {@link #stammdaten()}.
+ * per Liste über {@link #lehrer(List)} mit Bulk-Nachladen oder als Vollbestand über {@link #alleLehrer()}.
  */
 public class ReportingRepositoryLehrer {
 
@@ -139,24 +139,29 @@ public class ReportingRepositoryLehrer {
 	}
 
 	/**
-	 * Gibt die Map der bereits erzeugten ReportingLehrer-Objekte zurück, indiziert nach Lehrer-ID.
+	 * Gibt alle Lehrkräfte der Schule als Reporting-Objekte zurück. Beim ersten Aufruf werden die Stammdaten aller Lehrkräfte aus der
+	 * Datenbank geladen, damit der Vollbestand für aggregierte Auswertungen verfügbar ist; bereits per Einzel- oder Bulk-Zugriff
+	 * geladene Einträge bleiben erhalten. Sortierung und Benutzerfilter werden wie bei {@link #lehrer(List)} angewendet.
 	 *
-	 * @return Map der ReportingLehrer-Objekte
+	 * @return Sortierte Liste aller Lehrkräfte.
 	 */
-	public Map<Long, ReportingLehrer> mapLehrer() {
-		return mapLehrer;
+	public List<ReportingLehrer> alleLehrer() {
+		ladeAlleLehrerStammdaten();
+		return lehrer(List.copyOf(mapLehrerStammdaten.keySet()));
 	}
 
 	/**
-	 * Gibt die Map der Lehrerstammdaten zurück, indiziert nach der ID des Lehrers.
-	 * Beim ersten Aufruf werden die Stammdaten aller Lehrkräfte aus der Datenbank geladen, damit der Vollbestand
-	 * für aggregierte Auswertungen verfügbar ist. Bereits per Einzel-/Bulk-Zugriff geladene Einträge bleiben erhalten.
+	 * Prüft, ob zur übergebenen ID eine Lehrkraft existiert. Beim ersten Aufruf wird dafür der Vollbestand der Lehrerstammdaten
+	 * geladen. Die Prüfung ist <b>unabhängig vom Benutzerfilter</b> und liefert daher auch für ausgeblendete Lehrkräfte
+	 * {@code true} — anders als {@link #lehrer(long)}, das für sie {@code null} zurückgibt.
 	 *
-	 * @return Map der Lehrerstammdaten
+	 * @param idLehrer Die ID der Lehrkraft.
+	 *
+	 * @return true, wenn zur ID eine Lehrkraft existiert, andernfalls false.
 	 */
-	public Map<Long, LehrerStammdaten> stammdaten() {
+	public boolean existiertLehrer(final long idLehrer) {
 		ladeAlleLehrerStammdaten();
-		return mapLehrerStammdaten;
+		return mapLehrerStammdaten.containsKey(idLehrer);
 	}
 
 	private void ladeAlleLehrerStammdaten() {
@@ -177,6 +182,22 @@ public class ReportingRepositoryLehrer {
 			ReportingExceptionUtils.logException(meldung, e, this.reportingContext.logger(), LogLevel.ERROR, 0);
 			throw new IllegalStateException(meldung, e);
 		}
+	}
+
+	/**
+	 * Übernimmt die Stammdaten einer Lehrkraft in den Cache dieses Repositories, sofern dort noch kein Eintrag zu dieser ID vorliegt.
+	 * Die Methode ist für die Selbstregistrierung des {@link ProxyReportingLehrer} bei dessen Konstruktion vorgesehen; sie ersetzt
+	 * den früheren direkten Schreibzugriff auf die Cache-Map.
+	 * Wie dieser stellt sie zuvor den Vollbestand der Lehrerstammdaten sicher. Das ist <b>bewusst</b> so: Erzeugt
+	 * {@link #lehrer(long)} einen Fallback-Lehrer mit leeren Stammdaten, bliebe dieser andernfalls dauerhaft im Cache stehen, da der
+	 * spätere Vollbestand-Load die vorhandenen Einträge nicht überschreibt.
+	 *
+	 * @param idLehrer   Die ID der Lehrkraft.
+	 * @param stammdaten Die Stammdaten der Lehrkraft.
+	 */
+	public void registriereStammdaten(final long idLehrer, final LehrerStammdaten stammdaten) {
+		ladeAlleLehrerStammdaten();
+		mapLehrerStammdaten.putIfAbsent(idLehrer, stammdaten);
 	}
 
 

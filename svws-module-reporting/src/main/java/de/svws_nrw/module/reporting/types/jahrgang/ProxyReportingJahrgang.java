@@ -96,7 +96,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public ReportingJahrgang folgejahrgang() {
 		if ((super.folgejahrgang() == null) && (super.idFolgejahrgang() != null) && (super.idFolgejahrgang() >= 0)) {
-			if (!this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(super.idFolgejahrgang())) {
+			if (this.reportingContext.repositoryKataloge().jahrgang(super.idFolgejahrgang()) == null) {
 				return super.folgejahrgang();
 			}
 			// Die ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, daher holt man ihn aus dem Lernabschnitt.

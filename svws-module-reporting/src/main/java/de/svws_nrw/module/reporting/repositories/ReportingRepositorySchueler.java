@@ -96,6 +96,22 @@ public class ReportingRepositorySchueler {
 	}
 
 	/**
+	 * Gibt das ReportingSchueler-Objekt zur übergebenen ID für die modulinterne Auflösung von Rückverweisen zurück. Fehlt der Eintrag im Cache,
+	 * wird er aus der Datenbank nachgeladen.
+	 * Anders als {@link #schueler(long)} wird der Benutzerfilter <b>nicht</b> angewendet: Der Rückverweis eines Objektes auf den Schüler, zu dem
+	 * es fachlich gehört, darf nicht davon abhängen, ob dieser Schüler in der Ausgabe erscheint. Für Daten, die an die Vorlagen gehen, ist
+	 * weiterhin {@link #schueler(long)} zu verwenden.
+	 *
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Das ReportingSchueler-Objekt oder null, falls der Schüler nicht existiert oder nicht geladen werden konnte.
+	 */
+	public ReportingSchueler schuelerOhneFilter(final long idSchueler) {
+		final List<ReportingSchueler> result = schueler(List.of(idSchueler), false, false);
+		return result.isEmpty() ? null : result.getFirst();
+	}
+
+	/**
 	 * Gibt eine sortierte Liste von ReportingSchueler-Objekten zu den übergebenen IDs zurück.
 	 *
 	 * @param idsSchueler Liste der Schüler-IDs.
@@ -115,11 +131,24 @@ public class ReportingRepositorySchueler {
 	 * @return Liste von ReportingSchueler-Objekten.
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
+		return schueler(idsSchueler, sortiereListe, true);
+	}
+
+	/**
+	 * Gibt eine Liste von ReportingSchueler-Objekten zu den übergebenen IDs zurück, optional sortiert und optional gefiltert.
+	 *
+	 * @param idsSchueler   Liste der Schüler-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 * @param mitFilter     Gibt an, ob der Benutzerfilter auf die Rückgabe angewendet werden soll. Die Caches werden unabhängig davon vollständig gefüllt.
+	 *
+	 * @return Liste von ReportingSchueler-Objekten.
+	 */
+	private List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe, final boolean mitFilter) {
 		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingSchueler.class.getSimpleName(),
 				ReportingSchueler.SORTIERUNG, sortiereListe);
-		final Predicate<ReportingSchueler> filter = ReportingSchueler.FILTER.bedingung(
-				this.reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null);
+		final Predicate<ReportingSchueler> filter = mitFilter ? ReportingSchueler.FILTER.bedingung(
+				this.reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null) : null;
 
 		return ReportingRepositoryUtils.erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
 				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
@@ -130,21 +159,26 @@ public class ReportingRepositorySchueler {
 	}
 
 	/**
-	 * Gibt die Map der bereits erzeugten ReportingSchueler-Objekte zurück, indiziert nach Schüler-ID.
+	 * Gibt die IDs aller Schüler zurück, deren Stammdaten bereits im Cache dieses Repositories liegen. Die Methode lädt selbst nichts
+	 * nach und wendet keinen Filter an; sie dient dazu, ohnehin benötigte Daten für den bereits bekannten Bestand gebündelt
+	 * nachladen zu können, statt je Schüler eine eigene Abfrage abzusetzen.
 	 *
-	 * @return Map der ReportingSchueler-Objekte.
+	 * @return Unveränderliche Liste der IDs. Aufrufer, die die Liste erweitern wollen, legen eine eigene Kopie an.
 	 */
-	public Map<Long, ReportingSchueler> schueler() {
-		return mapSchueler;
+	public List<Long> idsGeladenerSchueler() {
+		return List.copyOf(mapSchuelerStammdaten.keySet());
 	}
 
 	/**
-	 * Gibt die Map der Schülerstammdaten zurück, indiziert nach Schüler-ID.
+	 * Übernimmt die Stammdaten eines Schülers in den Cache dieses Repositories und ersetzt dabei einen bereits vorhandenen Eintrag.
+	 * Die Methode ist für die Selbstregistrierung des {@link ProxyReportingSchueler} bei dessen Konstruktion vorgesehen; sie ersetzt
+	 * den früheren direkten Schreibzugriff auf die Cache-Map.
 	 *
-	 * @return Map der Schülerstammdaten.
+	 * @param idSchueler Die ID des Schülers.
+	 * @param stammdaten Die Stammdaten des Schülers.
 	 */
-	public Map<Long, SchuelerStammdaten> stammdaten() {
-		return mapSchuelerStammdaten;
+	public void registriereStammdaten(final long idSchueler, final SchuelerStammdaten stammdaten) {
+		mapSchuelerStammdaten.put(idSchueler, stammdaten);
 	}
 
 
@@ -444,15 +478,6 @@ public class ReportingRepositorySchueler {
 
 
 	// ##### Schüler-Zuweisungen #####
-
-	/**
-	 * Gibt die Map der Zuweisungen der Schüler zurück, indiziert nach Lernabschnitts-ID.
-	 *
-	 * @return Map der Zuweisungen.
-	 */
-	public Map<Long, List<ReportingSchuelerZuweisung>> zuweisungen() {
-		return mapSchuelerZuweisungen;
-	}
 
 	/**
 	 * Lädt die Schüler-Zuweisungen zum übergebenen Lernabschnitt aus der Datenbank und cachet sie. Bei erneutem Aufruf wird der

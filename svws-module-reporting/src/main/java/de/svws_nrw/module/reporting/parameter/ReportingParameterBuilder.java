@@ -42,6 +42,9 @@ import de.svws_nrw.db.DBEntityManager;
  */
 public class ReportingParameterBuilder {
 
+	/** Der Name des Vorlage-Parameters, der die Aufteilung der Ausgabe in Einzeldateien steuert. */
+	private static final String PARAMETER_EINZELAUSGABE_DATEN = "einzelausgabeDaten";
+
 	/** Logger, über den nicht typkonforme (und damit verworfene) Werte protokolliert werden. */
 	private final Logger logger;
 
@@ -81,6 +84,30 @@ public class ReportingParameterBuilder {
 		baueParameterGruppen(reportingParameter, reportvorlage, gespeicherteVorlagenwerte, leseGespeicherteBenutzerweiteWerte(conn));
 		wendeGespeicherteEinstellungenAuswahlAn(reportingParameter, reportvorlage, vorlagenEinstellungen);
 		setzeUnerlaubteEinstellungenZurueck(reportingParameter, reportvorlage);
+		// Zuletzt, damit die ausgabeformatabhängigen Zwangswerte von keiner anderen Ebene mehr überschrieben werden können.
+		erzwingeAusgabeformatabhaengigeParameter(reportingParameter, reportvorlage);
+	}
+
+	/**
+	 * Setzt die Parameter, deren Wert das Ausgabeformat zwingend vorgibt, auf dem <b>fertig kombinierten</b> Parametersatz — also nachdem
+	 * Katalog-Defaults, gespeicherte und übermittelte Werte zusammengeführt und unerlaubte Einstellungen zurückgesetzt wurden. Nur so gilt die
+	 * Zusage unabhängig davon, ob der Client den Parameter überhaupt mitgesendet hat: Fehlt er, wirkte zuvor der Katalog-Default oder ein
+	 * gespeicherter Benutzerwert.
+	 *
+	 * <p>Derzeit betrifft das ausschließlich {@code einzelausgabeDaten}: Bei der HTML-Ausgabe (Browser, keine Einzeldateien) gilt zwingend
+	 * {@code false}, beim E-Mail-Versand (je Datensatz eine Datei an einen eigenen Empfänger) zwingend {@code true}. Bei der PDF-Ausgabe bleibt es
+	 * beim kombinierten Wert. Weitere ausgabeformatabhängige Festlegungen gehören ebenfalls hierher und an keine andere Stelle.</p>
+	 *
+	 * @param reportingParameter das Reporting-Parameter-Objekt mit dem fertig kombinierten Parametersatz (wird verändert)
+	 * @param reportvorlage      die Reportvorlage, über die der Parameterwert gesetzt wird
+	 */
+	static void erzwingeAusgabeformatabhaengigeParameter(final ReportingParameter reportingParameter,
+			final ReportingReportvorlage reportvorlage) {
+		if (reportingParameter.ausgabeformat == ReportingAusgabeformat.HTML.getId()) {
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, PARAMETER_EINZELAUSGABE_DATEN, "false");
+		} else if (reportingParameter.ausgabeformat == ReportingAusgabeformat.EMAIL.getId()) {
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, PARAMETER_EINZELAUSGABE_DATEN, "true");
+		}
 	}
 
 	/**
@@ -189,9 +216,9 @@ public class ReportingParameterBuilder {
 	}
 
 	/**
-	 * Sammelt die übergebenen Parameter-Werte rein namensbasiert über alle übergebenen Gruppen. Für den Parameter {@code einzelausgabeDaten} wird dabei die
-	 * ausgabeformatabhängige Sonderregel angewendet: Bei der HTML-Ausgabe (Browser, keine Einzeldateien) wird er auf {@code false} erzwungen, beim
-	 * E-Mail-Versand aus Datenschutzgründen auf {@code true}.
+	 * Sammelt die übergebenen Parameter-Werte rein namensbasiert über alle übergebenen Gruppen. Ausgabeformatabhängige Zwangswerte werden hier
+	 * <b>nicht</b> angewendet — sie greifen erst auf dem fertig kombinierten Parametersatz, siehe
+	 * {@link #erzwingeAusgabeformatabhaengigeParameter(ReportingParameter, ReportingReportvorlage)}.
 	 *
 	 * @param reportingParameter das Reporting-Parameter-Objekt mit den übergebenen Parametergruppen
 	 *
@@ -203,7 +230,7 @@ public class ReportingParameterBuilder {
 			return werte;
 		}
 		for (final ReportingReportvorlageParameterGruppe gruppe : reportingParameter.reportvorlageParameterGruppen) {
-			sammleUebermittelteWerteDerGruppe(reportingParameter, gruppe, werte);
+			sammleUebermittelteWerteDerGruppe(gruppe, werte);
 		}
 		return werte;
 	}
@@ -212,12 +239,10 @@ public class ReportingParameterBuilder {
 	 * Sammelt die übergebenen Werte der Parameter einer einzelnen Gruppe namensbasiert in die Zielmap. Ungültige Parameter (null, ohne Namen oder ohne Wert)
 	 * werden übersprungen.
 	 *
-	 * @param reportingParameter das Reporting-Parameter-Objekt (für die ausgabeformatabhängige Sonderregel)
-	 * @param gruppe             die zu verarbeitende Parametergruppe
-	 * @param werte              die Zielmap, in die die Werte (Name → Wert) eingetragen werden
+	 * @param gruppe die zu verarbeitende Parametergruppe
+	 * @param werte  die Zielmap, in die die Werte (Name → Wert) eingetragen werden
 	 */
-	private static void sammleUebermittelteWerteDerGruppe(final ReportingParameter reportingParameter, final ReportingReportvorlageParameterGruppe gruppe,
-			final Map<String, String> werte) {
+	private static void sammleUebermittelteWerteDerGruppe(final ReportingReportvorlageParameterGruppe gruppe, final Map<String, String> werte) {
 		if ((gruppe == null) || (gruppe.reportvorlageParameter == null)) {
 			return;
 		}
@@ -225,30 +250,8 @@ public class ReportingParameterBuilder {
 			if ((p == null) || (p.name == null) || p.name.isBlank() || (p.wert == null)) {
 				continue;
 			}
-			werte.put(p.name, ermittleUebermitteltenWert(reportingParameter, p));
+			werte.put(p.name, p.wert);
 		}
-	}
-
-	/**
-	 * Ermittelt den zu verwendenden übermittelten Wert eines Parameters. Für {@code einzelausgabeDaten} greift die ausgabeformatabhängige Sonderregel: Bei der
-	 * HTML-Ausgabe (Browser, keine Einzeldateien) wird {@code false} erzwungen, beim E-Mail-Versand (pro Datensatz eine Datei) {@code true}; sonst gilt der
-	 * übermittelte Wert.
-	 *
-	 * @param reportingParameter das Reporting-Parameter-Objekt (für das Ausgabeformat)
-	 * @param p                  der übermittelte Parameter
-	 *
-	 * @return der zu verwendende Wert
-	 */
-	private static String ermittleUebermitteltenWert(final ReportingParameter reportingParameter, final ReportingReportvorlageParameter p) {
-		if (p.name.equalsIgnoreCase("einzelausgabeDaten")) {
-			if (reportingParameter.ausgabeformat == ReportingAusgabeformat.HTML.getId()) {
-				return "false";
-			}
-			if (reportingParameter.ausgabeformat == ReportingAusgabeformat.EMAIL.getId()) {
-				return "true";
-			}
-		}
-		return p.wert;
 	}
 
 	/**

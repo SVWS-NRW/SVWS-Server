@@ -4,11 +4,11 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import de.svws_nrw.module.reporting.utils.ReportingServerUtils;
 import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
 
 /**
@@ -63,8 +63,7 @@ public class AktuellExpressionDialect extends AbstractDialect implements IExpres
 	 * @return die zu verwendende {@link Clock}, nie {@code null}.
 	 */
 	private static Clock standardClock() {
-		if (Boolean.parseBoolean(System.getenv(ENV_USE_FIXED_DATE))
-				&& (SVWSKonfiguration.get().getServerMode() == ServerMode.DEV)) {
+		if (Boolean.parseBoolean(System.getenv(ENV_USE_FIXED_DATE)) && (ReportingServerUtils.servermode() == ServerMode.DEV)) {
 			final ZoneId zone = ZoneId.systemDefault();
 			return Clock.fixed(SNAPSHOT_FIXED_DATE.atStartOfDay(zone).toInstant(), zone);
 		}

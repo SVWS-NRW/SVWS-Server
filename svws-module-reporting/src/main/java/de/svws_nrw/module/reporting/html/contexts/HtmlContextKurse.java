@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
-import org.thymeleaf.context.Context;
 
 
 /**
@@ -21,7 +20,9 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	 */
 	public HtmlContextKurse(final ReportingContext reportingContext, final List<ReportingKurs> reportingKurse) {
 		super(reportingContext);
-		erzeugeContextFromKurse(reportingKurse);
+		// Die übergebene Liste wird gemäß der für ReportingKurs konfigurierten Sortierung (benutzerdefiniert oder Standard) sortiert,
+		// damit beide Konstruktor-Pfade dasselbe Ordnungsverhalten zeigen.
+		erzeugeContextSortiert("Kurse", reportingKurse, ReportingKurs.SORTIERUNG, ReportingKurs.class);
 	}
 
 	/**
@@ -31,43 +32,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	 */
 	public HtmlContextKurse(final ReportingContext reportingContext) {
 		super(reportingContext);
-		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Kursen. Die Liste wird gemäß der für {@link ReportingKurs}
-	 * konfigurierten Sortierung (benutzerdefiniert oder Standard) sortiert, damit beide Konstruktor-Pfade
-	 * dasselbe Ordnungsverhalten zeigen.
-	 *
-	 * @param reportingKurse   	Liste der Kurse, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromKurse(final List<ReportingKurs> reportingKurse) {
-
-		setContextDataSortiert(reportingKurse, ReportingKurs.SORTIERUNG, ReportingKurs.class);
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Kurse", getContextData());
-
-		super.setContext(context);
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Kurs-IDs.
-	 *
-	 * @param idsKurse	Liste der IDs der Kurse, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromIds(final List<Long> idsKurse) {
-
-		setContextData(reportingContext.repositoryLerngruppen().kurse(idsKurse));
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Kurse", getContextData());
-
-		super.setContext(context);
+		erzeugeContext("Kurse", reportingContext.repositoryLerngruppen().kurse(reportingContext.reportingParameter().idsHauptdaten()));
 	}
 
 	/**

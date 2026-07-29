@@ -94,7 +94,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 
 		// Prüfe, ob der angemeldete Benutzer Lehrer ist. Übernehme dann dessen Informationen. Andernfalls weitere Informationen aus der Datenbank laden.
 		// Hinweis: lehrer(id) kann trotz Cache-Treffer null liefern, wenn die Lehrkraft per User-Filter ausgeschlossen ist.
-		super.lehrer = ((benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().stammdaten().containsKey(benutzer.getIdLehrer()))
+		super.lehrer = ((benutzer.getIdLehrer() != null) && this.reportingContext.repositoryLehrer().existiertLehrer(benutzer.getIdLehrer()))
 				? this.reportingContext.repositoryLehrer().lehrer(benutzer.getIdLehrer())
 				: null;
 		if (super.lehrer != null) {

@@ -55,15 +55,6 @@ public class ReportingRepositoryLerngruppen {
 	// ##### Klassen #####
 
 	/**
-	 * Gibt die Map der bereits erzeugten ReportingKlasse-Objekte zurück, indiziert nach Klassen-ID.
-	 *
-	 * @return Map der Klassen
-	 */
-	public Map<Long, ReportingKlasse> klassen() {
-		return mapKlassen;
-	}
-
-	/**
 	 * Gibt das ReportingKlasse-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
 	 * Die Methode delegiert an {@link #klassen(List, boolean)}, damit auch die Map der Klassenstammdaten konsistent gefüllt wird.
 	 *
@@ -177,15 +168,6 @@ public class ReportingRepositoryLerngruppen {
 
 
 	// ##### Kurse #####
-
-	/**
-	 * Gibt die Map der bereits erzeugten ReportingKurs-Objekte zurück, indiziert nach Kurs-ID.
-	 *
-	 * @return Map der Kurse
-	 */
-	public Map<Long, ReportingKurs> kurse() {
-		return mapKurse;
-	}
 
 	/**
 	 * Gibt das ReportingKurs-Objekt zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.

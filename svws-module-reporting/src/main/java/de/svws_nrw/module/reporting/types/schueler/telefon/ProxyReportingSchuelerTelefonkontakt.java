@@ -38,10 +38,11 @@ public class ProxyReportingSchuelerTelefonkontakt extends ReportingSchuelerTelef
 	 * @return						Die Bezeichnung der Telefon-Art oder ein Leerstring
 	 */
 	private static String getBezeichnungFuerTelefonArt(final ReportingContext reportingContext, final long idTelefonArt) {
-		if (reportingContext.repositoryKataloge().telefonnummerArten().containsKey(idTelefonArt)) {
-			return ersetzeNullBlankTrim(reportingContext.repositoryKataloge().telefonnummerArten().get(idTelefonArt).bezeichnung);
+		final var telefonArt = reportingContext.repositoryKataloge().telefonnummerArt(idTelefonArt);
+		if (telefonArt == null) {
+			return "";
 		}
-		return "";
+		return ersetzeNullBlankTrim(telefonArt.bezeichnung);
 	}
 
 }

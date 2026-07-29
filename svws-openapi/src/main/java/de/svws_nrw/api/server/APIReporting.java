@@ -22,6 +22,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.annotations.GZIP;
 
 
 /**
@@ -53,6 +54,7 @@ public class APIReporting {
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/html")
+	@GZIP
 	@Operation(summary = "Erstellt einen Report als HTML-Dokument für eine direkte Anzeige im Browser.",
 			description = "Erstellt den angeforderten Report gemäß den Reporting-Parametern als HTML-Dokument. "
 					+ "Das HTML ist selbsttragend (CSS inline) und kann unmittelbar angezeigt werden. "
@@ -91,6 +93,7 @@ public class APIReporting {
 	@Produces("application/pdf")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("/ausgabe")
+	@GZIP
 	@Operation(summary = "Erstellt einen Report als PDF-Datei gemäß den übergebenen Daten.",
 			description = "Erstellt den angeforderten Report gemäß den in den Reporting-Parametern angegebenen Daten und Einstellungen und bietet ihn als PDF-Datei zum Download an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "

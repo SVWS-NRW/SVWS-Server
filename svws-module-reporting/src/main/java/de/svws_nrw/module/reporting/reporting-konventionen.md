@@ -52,9 +52,11 @@ Datei; Regel-Änderungen werden hier gepflegt.
 - **Single-Object-Getter** (`schueler(id)`, `lehrer(id)`, `klasse(id)`, `kurs(id)`) liefern bei
   aktivem User-Filter `null`. Aufrufer und Proxies müssen null-safe sein; **kein `null` in
   Listen/Maps** einfügen.
-- Für Einzel-Lookups die **nachladenden Einzel-Getter** verwenden, nicht die rohen
-  Cache-Map-Getter (`kurse().get(id)` u. ä.) — Letztere enthalten nur bereits geladene Objekte
-  und umgehen die Filter-Konvention.
+- **Repositories geben ihre Cache-Maps nicht heraus.** Einzelzugriffe laufen über die nachladenden
+  Lookup-Methoden (`schueler(id)`, `klasse(id)`, `ort(id)`, `erzieherart(id)` …), Mengenzugriffe
+  über Methoden, die eine **unveränderliche Liste** liefern (`faecher()`, `jahrgaenge()`,
+  `alleLehrer()` …). Ein Getter, der die interne `Map` zurückgibt, wäre ein Rückschritt: Er lässt
+  den Cache von außen verändern und umgeht die Filter-Konvention.
 - Konfiguration typsicher über die Konstanten `Reporting<Typ>.SORTIERUNG` /
   `Reporting<Typ>.FILTER`; die Begleit-Dateien `Reporting<Typ>Sortierung` /
   `Reporting<Typ>Filter` liegen direkt neben dem Typ.

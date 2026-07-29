@@ -92,6 +92,43 @@ public abstract class HtmlContext<T> {
 	}
 
 	/**
+	 * Übernimmt die übergebenen Daten als Context-Daten und erzeugt daraus den Thymeleaf-Context, in dem sie unter dem angegebenen
+	 * Variablennamen für die Vorlage bereitstehen. Null-Werte werden dabei wie in {@link #setContextData} herausgefiltert.
+	 *
+	 * @param variablenname Der Name der Thymeleaf-Variablen, unter dem die Vorlage die Daten anspricht (z. B. "Schueler").
+	 * @param data          Die Daten des Contexts.
+	 */
+	protected void erzeugeContext(final String variablenname, final List<T> data) {
+		setContextData(data);
+		setzeThymeleafContext(variablenname);
+	}
+
+	/**
+	 * Wie {@link #erzeugeContext}, sortiert die Daten zuvor jedoch gemäß der konfigurierten Sortierung des Reporting-Typs. Zu verwenden für
+	 * Contexts, deren Daten bereits fertig übergeben werden und die dieselbe Ordnung zeigen sollen wie der Weg über die ID-Liste.
+	 *
+	 * @param variablenname Der Name der Thymeleaf-Variablen, unter dem die Vorlage die Daten anspricht.
+	 * @param data          Die Daten des Contexts.
+	 * @param sortierung    Die Sortierkonfiguration des Reporting-Typs.
+	 * @param typ           Die Klasse des Reporting-Typs (für das Auflösen der ReportParameter-Sortierung).
+	 */
+	protected void erzeugeContextSortiert(final String variablenname, final List<T> data, final ReportingSortierung<T> sortierung, final Class<T> typ) {
+		setContextDataSortiert(data, sortierung, typ);
+		setzeThymeleafContext(variablenname);
+	}
+
+	/**
+	 * Erzeugt den Thymeleaf-Context und stellt die aktuellen Context-Daten unter dem angegebenen Variablennamen bereit.
+	 *
+	 * @param variablenname Der Name der Thymeleaf-Variablen.
+	 */
+	private void setzeThymeleafContext(final String variablenname) {
+		final Context thymeleafContext = new Context();
+		thymeleafContext.setVariable(variablenname, getContextData());
+		setContext(thymeleafContext);
+	}
+
+	/**
 	 * Sortiert die übergebene Liste über {@link HtmlContextSortierung#sortiere} und übernimmt das Ergebnis als Context-Daten.
 	 * Null-Werte werden herausgefiltert. Bei Übergabe von null wird eine leere Liste gesetzt.
 	 *

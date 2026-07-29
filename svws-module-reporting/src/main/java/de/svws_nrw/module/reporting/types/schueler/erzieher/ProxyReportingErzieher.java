@@ -51,12 +51,12 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				ersetzeNullBlankTrim(erzieherStammdaten.titel),
 				ersetzeNullBlankTrim(erzieherStammdaten.vorname),
 				ersetzeNullBlankTrim(erzieherStammdaten.vorname),
-				(erzieherStammdaten.wohnortID != null) ? reportingContext.repositoryKataloge().orte().get(erzieherStammdaten.wohnortID) : null,
-				(erzieherStammdaten.ortsteilID != null) ? reportingContext.repositoryKataloge().ortsteile().get(erzieherStammdaten.ortsteilID) : null);
+				reportingContext.repositoryKataloge().ort(erzieherStammdaten.wohnortID),
+				reportingContext.repositoryKataloge().ortsteil(erzieherStammdaten.ortsteilID));
 
 		this.reportingContext = reportingContext;
 		if (erzieherStammdaten.idErzieherArt != null) {
-			super.art = this.reportingContext.repositoryKataloge().erzieherarten().get(erzieherStammdaten.idErzieherArt);
+			super.art = this.reportingContext.repositoryKataloge().erzieherart(erzieherStammdaten.idErzieherArt);
 		}
 	}
 

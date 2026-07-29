@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.repositories;
 
 import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -17,6 +16,7 @@ import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
+import de.svws_nrw.module.reporting.utils.ReportingServerUtils;
 
 /**
  * Zentraler Kontext-Container des Reporting-Moduls, der Infrastruktur (Datenbankverbindung, Logger, Services) bereitstellt
@@ -98,7 +98,7 @@ public class ReportingContext {
 
 		// Die Validierung von conn und reportingParameter erfolgt in der ReportingFactory.
 		this.conn = conn;
-		this.serverMode = SVWSKonfiguration.get().getServerMode();
+		this.serverMode = ReportingServerUtils.servermode();
 		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
 
 		// Erzeuge die Services für Sortierung und Filterung und die Domänen-Repositories.

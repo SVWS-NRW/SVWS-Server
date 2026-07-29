@@ -59,7 +59,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 
 		super.schullogo = this.reportingContext.repositorySchule().schullogoBase64();
 
-		super.schulform = this.reportingContext.repositoryKataloge().schulformen().values()
+		super.schulform = this.reportingContext.repositoryKataloge().schulformen()
 				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingContext.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
 				.findFirst().orElse(null);
 
@@ -88,9 +88,8 @@ public class ProxyReportingSchule extends ReportingSchule {
 	@Override
 	public ReportingLehrer schulleitung() {
 		if (super.schulleitung == null) {
-			super.schulleitung =
-					this.reportingContext.repositoryLehrer().lehrer(this.reportingContext.repositoryLehrer().stammdaten().keySet().stream().toList())
-							.stream().filter(ReportingLehrer::istSchulleitungAktuell).findFirst().orElse(null);
+			super.schulleitung = this.reportingContext.repositoryLehrer().alleLehrer()
+					.stream().filter(ReportingLehrer::istSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.schulleitung;
 	}
@@ -103,9 +102,8 @@ public class ProxyReportingSchule extends ReportingSchule {
 	@Override
 	public ReportingLehrer stvSchulleitung() {
 		if (super.stvSchulleitung == null) {
-			super.stvSchulleitung =
-					this.reportingContext.repositoryLehrer().lehrer(this.reportingContext.repositoryLehrer().stammdaten().keySet().stream().toList())
-							.stream().filter(ReportingLehrer::istStvSchulleitungAktuell).findFirst().orElse(null);
+			super.stvSchulleitung = this.reportingContext.repositoryLehrer().alleLehrer()
+					.stream().filter(ReportingLehrer::istStvSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.stvSchulleitung;
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import org.thymeleaf.context.Context;
 
 
 /**
@@ -21,7 +20,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	public HtmlContextLehrer(final ReportingContext reportingContext, final List<ReportingLehrer> reportingLehrer) {
 		super(reportingContext);
-		erzeugeContextFromLehrer(reportingLehrer);
+		erzeugeContext("Lehrer", reportingLehrer);
 	}
 
 	/**
@@ -31,41 +30,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	public HtmlContextLehrer(final ReportingContext reportingContext) {
 		super(reportingContext);
-		erzeugeContextFromIds(this.reportingContext.reportingParameter().idsHauptdaten());
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Lehrern.
-	 *
-	 * @param reportingLehrer   	Liste der Lehrer, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromLehrer(final List<ReportingLehrer> reportingLehrer) {
-
-		setContextData(reportingLehrer);
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Lehrer", getContextData());
-
-		super.setContext(context);
-	}
-
-
-	/**
-	 * Erzeugt den Context aus einer Liste von Lehrer-IDs.
-	 *
-	 * @param idsLehrer	Liste der IDs der Lehrer, die berücksichtigt werden sollen.
-	 */
-	private void erzeugeContextFromIds(final List<Long> idsLehrer) {
-
-		setContextData(this.reportingContext.repositoryLehrer().lehrer(idsLehrer));
-
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("Lehrer", getContextData());
-
-		super.setContext(context);
+		erzeugeContext("Lehrer", reportingContext.repositoryLehrer().lehrer(reportingContext.reportingParameter().idsHauptdaten()));
 	}
 
 	/**

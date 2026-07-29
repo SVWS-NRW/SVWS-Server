@@ -81,7 +81,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 		}
 
 		for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-			if (this.reportingContext.repositoryKataloge().jahrgaenge().containsKey(idJahrgang)) {
+			if ((idJahrgang != null) && (this.reportingContext.repositoryKataloge().jahrgang(idJahrgang) != null)) {
 				final ReportingJahrgang jahrgang = super.schuljahresabschnitt.jahrgang(idJahrgang);
 				if (jahrgang != null) {
 					super.jahrgaenge.add(jahrgang);

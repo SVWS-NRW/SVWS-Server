@@ -115,14 +115,12 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 		this.reportingContext = reportingContext;
 
-		super.religion =
-				(schuelerStammdaten.religionID != null) ? this.reportingContext.repositoryKataloge().religionen().get(schuelerStammdaten.religionID) : null;
-		super.wohnort = (schuelerStammdaten.wohnortID != null) ? this.reportingContext.repositoryKataloge().orte().get(schuelerStammdaten.wohnortID) : null;
-		super.wohnortsteil =
-				(schuelerStammdaten.ortsteilID != null) ? this.reportingContext.repositoryKataloge().ortsteile().get(schuelerStammdaten.ortsteilID) : null;
+		super.religion = this.reportingContext.repositoryKataloge().religion(schuelerStammdaten.religionID);
+		super.wohnort = this.reportingContext.repositoryKataloge().ort(schuelerStammdaten.wohnortID);
+		super.wohnortsteil = this.reportingContext.repositoryKataloge().ortsteil(schuelerStammdaten.ortsteilID);
 
-		// Füge Stammdaten des Schülers für weitere Verwendung in der Map im Repository hinzu.
-		this.reportingContext.repositorySchueler().stammdaten().put(super.id(), schuelerStammdaten);
+		// Registriere die Stammdaten des Schülers für die weitere Verwendung im Repository.
+		this.reportingContext.repositorySchueler().registriereStammdaten(super.id(), schuelerStammdaten);
 	}
 
 	/**
@@ -271,7 +269,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	@Override
 	public String externesSchulKuerzel() {
 		if ((super.externeSchulNr() != null) && !super.externeSchulNr().isEmpty() && super.externesSchulKuerzel.isEmpty()) {
-			final SchulEintrag schule = this.reportingContext.repositoryKataloge().schulenNachSchulnummer().get(super.externeSchulNr());
+			final SchulEintrag schule = this.reportingContext.repositoryKataloge().schuleNachSchulnummer(super.externeSchulNr());
 			if ((schule != null) && (schule.kuerzel != null) && !schule.kuerzel.isEmpty()) {
 				super.externesSchulKuerzel = schule.kuerzel;
 			} else {

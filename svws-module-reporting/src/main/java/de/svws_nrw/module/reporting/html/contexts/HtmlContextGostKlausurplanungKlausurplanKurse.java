@@ -15,6 +15,13 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 /**
  * Ein Thymeleaf-html-Daten-Context zum Bereich "GostKlausurplanung", der die Aufteilung in Einzel-Contexts pro
  * Kurs unterstützt. Wird für Vorlagen verwendet, bei denen die Einzelausgabe pro Kurs erfolgen soll.
+ *
+ * <p><b>Hinweis:</b> Diese Klasse wird derzeit von der {@code HtmlFactory} nicht erzeugt, weil die zugehörige
+ * Reportvorlage (Klausurplan je Kurs, analog zu {@code GostKlausurplanung-SchuelerMitKlausuren}) noch aussteht.
+ * Sie ist damit <b>kein toter Code, sondern Vorbereitung</b> und bleibt erhalten; sobald die Vorlage im Enum
+ * {@code ReportingReportvorlage} ergänzt ist, genügt ein weiterer Zweig in der Context-Auswahl der
+ * {@code HtmlFactory}. Der Hinweis steht hier, damit die Klasse bei einer Durchsicht nicht erneut als
+ * Löschkandidat geprüft werden muss.</p>
  */
 public final class HtmlContextGostKlausurplanungKlausurplanKurse extends HtmlContextGostKlausurplanungKlausurplan
 		implements HtmlContextAufteilbar<HtmlContextGostKlausurplanungKlausurplanKurse> {
