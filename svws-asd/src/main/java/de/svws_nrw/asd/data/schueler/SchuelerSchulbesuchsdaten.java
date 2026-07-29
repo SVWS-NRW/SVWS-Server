@@ -34,12 +34,8 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
 
-	/** Die ID der HerkunftSchulform der zuvor besuchten Schule. */
-	@Schema(description = "Die ID der HerkunftSchulform der zuvor besuchten Schule.", example = "Grundschule")
-	public Long idHerkunftSchulformVorherigeSchule;
-
-	/** Die ID der HerkunftSonstige der zuvor besuchten Schule. */
-	@Schema(description = "Die ID der HerkunftSonstige der zuvor besuchten Schule.", example = "Grundschule")
+	/** Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch). */
+	@Schema(description = "Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).", example = "1000")
 	public Long idHerkunftSonstigeVorherigeSchule;
 
 	/** Das Entlassdatum an der zuvor besuchten Schule. */
@@ -71,9 +67,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule.", example = "2")
 	public String schluesselAbschlussartBerufsbildendVorherigeSchule;
 
-	/** Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule. */
-	@Schema(description = "Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule.", example = "A12")
-	public String schluesselSchulgliederungVorherigeSchule;
+	/** Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule. */
+	@Schema(description = "Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule.", example = "2000")
+	public Long idSchulgliederungVorherigeSchule;
 
 	/** Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB). */
 	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")

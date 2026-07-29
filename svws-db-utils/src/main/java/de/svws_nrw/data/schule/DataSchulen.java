@@ -5,13 +5,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -20,6 +22,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -92,7 +95,8 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		}
 		final var result = this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, schulnummer);
 		if (result.size() != 1) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulnummer %s kann nicht eindeutig einer Schule zugeordnert werden".formatted(schulnummer));
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Schulnummer %s kann nicht eindeutig einer Schule zugeordnert werden".formatted(schulnummer));
 		}
 		return result.getFirst();
 	}
@@ -133,8 +137,9 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		schule.kuerzel = dto.Kuerzel;
 		schule.kurzbezeichnung = dto.KurzBez;
 		schule.schulnummerStatistik = dto.SchulNr_SIM;
+		schule.schulnummerIntern = dto.SchulNr;
 		schule.name = Objects.requireNonNullElse(dto.Name, "");
-		schule.idSchulform = mapIdSchulform(dto.SchulformNr);
+		schule.idSchulform = mapIdSchulform(dto.SchulformNr, dto.SchulNr_SIM);
 		schule.strassenname = dto.Strassenname;
 		schule.hausnummer = dto.HausNr;
 		schule.zusatzHausnummer = dto.HausNrZusatz;
@@ -153,11 +158,11 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	protected void mapAttribute(final DTOSchuleNRW dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
-			case SCHULNUMMER_STATISTIK -> mapSchulnummer(dto, value, name);
+			case SCHULNUMMER_STATISTIK -> updateSchulnummer(dto, value, name);
 			case "kuerzel" -> updateKuerzel(dto, value, name);
 			case "kurzbezeichnung" -> updateKurzbezeichnung(dto, name, value);
 			case "name" -> updateName(dto, name, value);
-			case "idSchulform" -> updateIdSchulform(dto, name, value);
+			case "idSchulform" -> updateIdSchulform(dto, name, value, map);
 			case "strassenname" -> updateStrassenname(dto, name, value);
 			case "hausnummer" -> updateHausnummer(dto, name, value);
 			case "zusatzHausnummer" -> updateZusatzHausnummer(dto, name, value);
@@ -181,26 +186,40 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 				.forEach(s -> markResponseAsFailed(mapResponses.get(s.ID), s.KurzBez));
 	}
 
-
-	private Long mapIdSchulform(final String schulformNr) {
-		if (schulformNr == null) {
-			return null;
-		}
-		final Schulform schulform = Schulform.data().getWertBySchluessel(schulformNr);
-		if (schulform == null) {
-			return null;
-		}
+	private Long mapIdSchulform(final String schulformNr, final String schulnummerStatistik) {
 		final int schuljahr = conn.getUser().schuleGetSchuljahr();
-		final SchulformKatalogEintrag eintrag = schulform.daten(schuljahr);
-		return (eintrag != null) ? eintrag.id : null;
+		if ((schulformNr == null) || (schulnummerStatistik == null)) {
+			return null;
+		}
+		if (isOeffentlicheOderErsatzschuleNRW(schulnummerStatistik)) {
+			return getIdSchulformForOeffentlicheOderErsatzschuleNRW(schulformNr, schuljahr);
+		}
+		if (isSonstigeSchule(schulnummerStatistik)) {
+			return getIdSchulformForSonstigeSchule(schulformNr, schuljahr);
+		}
+		return null;
 	}
 
-	private void mapSchulnummer(final DTOSchuleNRW dto, final Object value, final String name) throws ApiOperationException {
+	private Long getIdSchulformForOeffentlicheOderErsatzschuleNRW(final String schulformNr, final int schuljahr) {
+		return Optional.ofNullable(Schulform.data().getWertBySchluessel(schulformNr))
+				.map(s -> s.daten(schuljahr))
+				.map(s -> s.id)
+				.orElse(null);
+	}
+
+	private Long getIdSchulformForSonstigeSchule(final String schulformNr, final int schuljahr) {
+		return Optional.ofNullable(HerkunftSchulform.data().getWertBySchluessel(schulformNr))
+				.map(s -> s.daten(schuljahr))
+				.map(s -> s.id)
+				.orElse(null);
+	}
+
+	private void updateSchulnummer(final DTOSchuleNRW dto, final Object value, final String name) throws ApiOperationException {
 		final String schulnummer = JSONMapper.convertToString(value, false, false, Schema.tab_K_Schule.col_SchulNr.datenlaenge(), name);
-		if (schulnummer.startsWith("1")) {
+		if (isOeffentlicheOderErsatzschuleNRW(schulnummer)) {
 			dto.SchulNr = schulnummer;
 			dto.SchulNr_SIM = schulnummer;
-		} else if (schulnummer.startsWith("9")) {
+		} else if (isSonstigeSchule(schulnummer)) {
 			dto.SchulNr = String.valueOf(dto.ID + 200000);
 			dto.SchulNr_SIM = schulnummer;
 		} else {
@@ -209,7 +228,15 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		}
 	}
 
-	private void updateKuerzel(final DTOSchuleNRW dto, final Object value, final String name) throws ApiOperationException {
+	private static boolean isOeffentlicheOderErsatzschuleNRW(final String schulnummerStatistik) {
+		return schulnummerStatistik.startsWith("1");
+	}
+
+	private static boolean isSonstigeSchule(final String schulnummerStatistik) {
+		return schulnummerStatistik.startsWith("9");
+	}
+
+	private void updateKuerzel(final DTOSchuleNRW dto, final Object value, final String name) {
 		final String kuerzel = JSONMapper.convertToString(
 				value, true, true, Schema.tab_K_Schule.col_Kuerzel.datenlaenge(), name);
 		if ((kuerzel == null) || kuerzel.isEmpty()) {
@@ -241,21 +268,53 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		dto.Name = JSONMapper.convertToString(value, false, false, Schema.tab_K_Schule.col_Name.datenlaenge(), name);
 	}
 
-	private static void updateIdSchulform(final DTOSchuleNRW dto, final String name, final Object value) throws ApiOperationException {
+	private static void updateIdSchulform(final DTOSchuleNRW dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, name);
 		if (id == null) {
 			dto.SchulformBez = null;
 			dto.SchulformKrz = null;
 			dto.SchulformNr = null;
-		} else {
-			final SchulformKatalogEintrag eintrag = Schulform.data().getEintragByID(id);
-			if (eintrag == null) {
-				throw new ApiOperationException(Status.NOT_FOUND, "SchulformKatalogEintrag mit der id %d nicht gefunden".formatted(id));
-			}
-			dto.SchulformBez = eintrag.text;
-			dto.SchulformKrz = eintrag.kuerzel;
-			dto.SchulformNr = eintrag.schluessel;
+			return;
 		}
+		final var schulnummer = getSchulnummer(dto, map);
+		final var eintrag = getEintrag(id, schulnummer);
+		dto.SchulformBez = eintrag.text;
+		dto.SchulformKrz = eintrag.kuerzel;
+		dto.SchulformNr = eintrag.schluessel;
+
+	}
+
+	private static CoreTypeData getEintrag(final Long id, final String schulnummerStatistik) {
+		if (isOeffentlicheOderErsatzschuleNRW(schulnummerStatistik)) {
+			return Optional.ofNullable(Schulform.data().getEintragByID(id))
+					.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "SchulformKatalogEintrag mit der id %d nicht gefunden".formatted(id)));
+		}
+		if (isSonstigeSchule(schulnummerStatistik)) {
+			return Optional.ofNullable(HerkunftSchulform.data().getEintragByID(id))
+					.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST,
+							"HerkunftSchulformKatalogEintrag mit der id %d nicht gefunden".formatted(id)));
+		}
+		throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulnummer %s ist ungültig".formatted(schulnummerStatistik));
+	}
+
+
+	private static @NotNull String getSchulnummer(final DTOSchuleNRW dto, final Map<String, Object> map) {
+		if (isCreate(map)) {
+			return JSONMapper.convertToString(map.get(SCHULNUMMER_STATISTIK), false, false, null, SCHULNUMMER_STATISTIK);
+		}
+		if (isPatch(dto.SchulNr_SIM)) {
+			return dto.SchulNr_SIM;
+		}
+		throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Schulnummer ermittelt werden");
+	}
+
+	private static boolean isCreate(final Map<String, Object> map) {
+		return (map != null) && map.containsKey(SCHULNUMMER_STATISTIK);
+	}
+
+	private static boolean isPatch(final String schulnummerStatistik) {
+		return schulnummerStatistik != null;
 	}
 
 	private static void updateStrassenname(final DTOSchuleNRW dto, final String name, final Object value) throws ApiOperationException {

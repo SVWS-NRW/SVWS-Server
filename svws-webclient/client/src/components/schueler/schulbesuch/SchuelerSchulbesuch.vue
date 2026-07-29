@@ -27,89 +27,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<div v-else />
-		<!-- Im Schuljahr vor der Aufname !-->
-		<svws-ui-content-card title="Im Schuljahr vor der Aufname" class="[&_.content-card--content]:min-h-105">
-			<div class="pb-4 flex flex-row gap-6 items-center">
-				<svws-ui-radio-option label="Öffentliche oder Ersatzschule in NRW"
-					:model-value="currentMode"
-					@update:model-value="setMode(Schulauswahl.INTERNAL)"
-					:value="Schulauswahl.INTERNAL"
-					:disabled="readonly && (currentMode !== Schulauswahl.INTERNAL)" />
-				<svws-ui-radio-option label="Sonstige Schule"
-					:model-value="currentMode"
-					@update:model-value="setMode(Schulauswahl.EXTERNAL)"
-					:value="Schulauswahl.EXTERNAL"
-					:disabled="readonly && (currentMode !== Schulauswahl.EXTERNAL)" />
-				<svws-ui-radio-option label="Kein Schulbesuch"
-					:model-value="currentMode"
-					@update:model-value="setMode(Schulauswahl.NONE)"
-					:value="Schulauswahl.NONE"
-					:disabled="readonly && (currentMode !== Schulauswahl.NONE)" />
-			</div>
-			<div class="flex" v-if="!keinSchulbesuch">
-				<ui-select :label="labelVorherigeSchuleAuswahl" v-if="!keinSchulbesuch"
-					:manager="vorherigeSchuleManager"
-					v-model="model.vorherigeSchule.value"
-					:readonly />
-				<svws-ui-button type="transparent" class="min-w-fit"
-					@click="goToSchule(manager().daten.idVorherigeSchule ?? -1)"
-					:disabled="manager().daten.idVorherigeSchule === null">
-					<span class="icon i-ri-link" />Zur Schule
-				</svws-ui-button>
-			</div>
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Schulform" v-if="!keinSchulbesuch"
-					:model-value="model.bezeichnungSchulformVorherigeSchule.value"
-					statistics readonly />
-				<ui-select label="vorherige Tätigkeit / Herkunft" v-if="currentMode === Schulauswahl.NONE"
-					:manager="schulformVorherigKeinAbschlussManager"
-					v-model="model.schulformVorherigeSchuleKeinAbschluss.value"
-					:readonly required :removable="false" />
-				<svws-ui-text-input placeholder="Statistik-Schulnummer" v-if="!keinSchulbesuch"
-					:model-value="model.schulnummerStatistik.value"
-					statistics readonly />
-				<svws-ui-text-input :placeholder="labelEntlassdatum" type="date"
-					v-model="model.proxy.entlassdatumVorherigeSchule"
-					statistics :readonly />
-				<svws-ui-text-input placeholder="Bemerkung" span="full"
-					v-model="model.proxy.bemerkungVorherigeSchule"
-					:validation="() => model.getFehler('bemerkungVorherigeSchule')"
-					@change="model.patch"
-					:max-len="255" :readonly />
-				<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
-					:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
-					v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
-					:readonly />
-				<ui-select label="Höchster berufsbildender Abschluss" v-if="abschlussartBerufsbildendSelectable"
-					:manager="abschlussartBerufsbildendVorherigeSchuleManager"
-					v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
-					:readonly />
-				<ui-select label="Versetzung" class="col-span-full"
-					:manager="herkunftsartenManager"
-					v-model="model.idHerkunftsartVersetzungVorherigeSchule.value"
-					statistics :readonly />
-				<ui-select label="Entlassjahrgang"
-					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
-					:manager="vorherigeEntlassjahrgaengeManager"
-					v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
-					statistics
-					:disabled="model.vorherigeSchule.value === undefined" :readonly />
-				<ui-select label="Entlassgrund"
-					:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.NONE }"
-					:manager="vorherigerEntlassgrundManager"
-					v-model="model.idEntlassgrundVorherigeSchule.value"
-					:readonly />
-				<ui-select label="Schulgliederung" v-if="vorherigeSchuleIstBKOderWBK"
-					:manager="schulgliederungManager"
-					v-model="model.schulgliederungVorherigeSchule.value"
-					:readonly />
-				<ui-select label="Fachklasse" v-if="vorherigeSchuleIstBK"
-					:manager="fachklasseManager"
-					v-model="model.fachklasseVorherigeSchule.value"
-					:readonly />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-
+		<schulbesuch-vorherige-schule :manager :go-to-schule :model :readonly />
 		<!-- Entlassung von eigener Schule !-->
 		<svws-ui-content-card title="Entlassung von eigener Schule">
 			<svws-ui-input-wrapper :grid="2">
@@ -250,13 +168,14 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, List, SchulEintrag } from "@core";
-	import { ArrayList, BenutzerKompetenz, Einschulungsart, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Herkunftsarten,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung, SchulabschlussBerufsbildend, HerkunftSonstige, Schulgliederung, Fachklasse } from "@core";
+	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, SchulEintrag } from "@core";
+	import { BenutzerKompetenz, Einschulungsart, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
+		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung } from "@core";
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
-	import { computed, ref, watch } from "vue";
+	import { computed, ref } from "vue";
 	import { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
+	import SchulbesuchVorherigeSchule from "~/components/schueler/schulbesuch/SchulbesuchVorherigeSchule.vue";
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 	const benutzerState = useBenutzerState();
@@ -271,21 +190,13 @@
 		(data) => props.patch(props.manager().daten.id, data)
 	);
 	const schuljahr = computed(() => props.manager().schuljahr);
-	const vorherigeSchuleIstBK = computed(() => {
-		return model.vorherigeSchulform.value !== null &&
-			[Schulform.BK, Schulform.SB].includes(model.vorherigeSchulform.value);
-	});
-	const vorherigeSchuleIstBKOderWBK = computed(() => {
-		return model.vorherigeSchulform.value !== null &&
-			[Schulform.BK, Schulform.SB, Schulform.WB].includes(model.vorherigeSchulform.value);
-	});
+
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const eigeneSchuleIstBKOderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 
 	const wechselBevorstehend = ref<boolean>(false);
-	const keinSchulbesuch = computed(() => currentMode.value === Schulauswahl.NONE);
 
 	// --- Schulbesuchsjahre ---
 	const showSchulbesuchsjahre = computed(
@@ -309,135 +220,12 @@
 
 
 	// --- Toggle Schulauswahl ---
-	const schulauswahlMode = ref<Schulauswahl | null>(null);
-
-	watch(() => props.manager().daten.id, () => {
-		schulauswahlMode.value = null;
-	});
-
-	const currentMode = computed<Schulauswahl>(() => {
-		if (schulauswahlMode.value !== null) {
-			return schulauswahlMode.value;
-		}
-		const firstDigit = model.vorherigeSchule.value?.schulnummerStatistik?.charAt(0);
-		if (firstDigit === "1") {
-			return Schulauswahl.INTERNAL;
-		}
-		if (firstDigit === "9") {
-			return Schulauswahl.EXTERNAL;
-		}
-		return Schulauswahl.NONE;
-	});
-
-	function setMode(newMode: Schulauswahl) {
-		if (newMode === currentMode.value) {
-			return;
-		}
-		model.vorherigeSchule.value = null;
-		schulauswahlMode.value = newMode;
-		vorherigeSchuleManager.updateFilteredOptions();
-	}
-
-	enum Schulauswahl { INTERNAL, EXTERNAL, NONE }
-
-	const abschlussartBerufsbildendSelectable = computed(() => {
-		if (currentMode.value === Schulauswahl.NONE) {
-			return true;
-		}
-		return model.vorherigeSchulform.value !== null &&
-			[Schulform.SB, Schulform.BK, Schulform.WB].includes(model.vorherigeSchulform.value);
-	});
-
-	const abschlussartAllgemeinbildendSelectable = computed(() => {
-		return !(model.vorherigeSchulform.value !== null && [Schulform.G].includes(model.vorherigeSchulform.value));
-	});
-
-
-	const vorherigeSchuleFilter = {
-		key: "schulauswahlModus",
-		apply: (options: List<SchulEintrag>) => {
-			const filtered = new ArrayList<SchulEintrag>();
-			let praefix: string | null;
-			if (currentMode.value === Schulauswahl.INTERNAL) {
-				praefix = "1";
-			} else if (currentMode.value === Schulauswahl.EXTERNAL) {
-				praefix = "9";
-			} else {
-				return filtered;
-			}
-			for (const option of options) {
-				if (option.schulnummerStatistik?.charAt(0) === praefix) {
-					filtered.add(option);
-				}
-			}
-			return filtered;
-		},
-	};
-
-	const labelVorherigeSchuleAuswahl = computed(() => {
-		if (currentMode.value === Schulauswahl.INTERNAL) {
-			return 'Öffentliche oder Ersatz-Schule in NRW';
-		}
-		if (currentMode.value === Schulauswahl.EXTERNAL) {
-			return 'Schule außerhalb von NRW oder sonstige Schule in NRW';
-		}
-		return '';
-	});
-
-	const labelEntlassdatum = computed(() => {
-		if (currentMode.value === Schulauswahl.NONE) {
-			return 'Datum';
-		}
-		return 'Entlassen am';
-	});
 
 	const hoechsterAbschlussManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
-	});
-
-	const vorherigeSchuleManager = new SelectManager<SchulEintrag>({
-		filters: [vorherigeSchuleFilter],
-		options: computed(() => props.manager().schulenById.values()),
-		optionDisplayText: bezeichnungSchule,
-		selectionDisplayText: bezeichnungSchule,
-	});
-
-	const vorherigeEntlassjahrgaengeManager = new CoreTypeSelectManager({
-		clazz: Jahrgaenge.class,
-		schuljahr: schuljahr,
-		schulformen: model.vorherigeSchulform,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const schulformVorherigKeinAbschlussManager = new CoreTypeSelectManager({
-		clazz: HerkunftSonstige.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const vorherigerEntlassgrundManager = new SelectManager<KatalogEntlassgrund>({
-		options: computed(() => props.manager().entlassgruendeById.values()),
-		optionDisplayText: s => s.bezeichnung,
-		selectionDisplayText: s => s.bezeichnung,
-	});
-
-	const abschlussartAllgemeinbildendVorherigeSchuleManager = new CoreTypeSelectManager({
-		clazz: SchulabschlussAllgemeinbildend.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const abschlussartBerufsbildendVorherigeSchuleManager = new CoreTypeSelectManager({
-		clazz: SchulabschlussBerufsbildend.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
 	});
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
@@ -497,29 +285,6 @@
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
-	});
-
-	const schulgliederungManager = new CoreTypeSelectManager({
-		clazz: Schulgliederung.class,
-		schuljahr: schuljahr,
-		schulformen: model.schulformenVorherigeSchule.value,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const fachklasseManager = new CoreTypeSelectManager({
-		clazz: Fachklasse.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const herkunftsartenManager = new CoreTypeSelectManager({
-		clazz: Herkunftsarten.class,
-		schuljahr: schuljahr,
-		schulformen: model.vorherigeSchulform,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
 	});
 
 	const schulwechselGrundSelectManager = new SelectManager({

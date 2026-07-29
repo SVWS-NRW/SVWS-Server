@@ -116,7 +116,6 @@ class SchulbesuchMapperTest {
 			assertThat(result.kuerzelEntlassjahrgangVorherigeSchule).isEqualTo("10");
 			assertThat(result.idHerkunftsartVersetzungVorherigeSchule).isEqualTo("V");
 			assertThat(result.bemerkungVorherigeSchule).isEqualTo("Guter Schüler");
-			assertThat(result.schluesselSchulgliederungVorherigeSchule).isEqualTo("A12");
 		}
 
 		@Test
@@ -133,18 +132,6 @@ class SchulbesuchMapperTest {
 		}
 
 		@Test
-		@DisplayName("map | idHerkunftSchulformVorherigeschule")
-		void toApi_idHerkunftSchulformVorherigeschule() {
-			final var entity = createEntity(1L);
-			entity.LSSchulform = "BK";
-			entity.LSSchulEntlassDatum = "2020-06-30";
-
-			final var result = mapper.toApi(entity, emptyContext());
-
-			assertThat(result.idHerkunftSchulformVorherigeSchule).isEqualTo(1000);
-		}
-
-		@Test
 		@DisplayName("map | idSchulformVorherigeschule")
 		void toApi_idSchulformVorherigeSchule() {
 			final var entity = createEntity(1L);
@@ -154,17 +141,6 @@ class SchulbesuchMapperTest {
 			final var result = mapper.toApi(entity, emptyContext());
 
 			assertThat(result.idHerkunftSonstigeVorherigeSchule).isEqualTo(1000);
-		}
-
-		@Test
-		@DisplayName("map | idSchulformVorherigeschule null")
-		void toApi_idHerkunftSchulformVorherigeschuleNull() {
-			final var entity = createEntity(1L);
-			entity.LSSchulform = "YYY";
-
-			final var result = mapper.toApi(entity, emptyContext());
-
-			assertThat(result.idHerkunftSchulformVorherigeSchule).isNull();
 		}
 
 		@Test
@@ -459,7 +435,6 @@ class SchulbesuchMapperTest {
 			request.idKindergarten = JsonNullable.of(7L);
 			request.verpflichtungSprachfoerderkurs = JsonNullable.of(true);
 			request.teilnahmeSprachfoerderkurs = JsonNullable.of(false);
-			request.schluesselSchulgliederungVorherigeSchule = JsonNullable.of("A12");
 			final var entity = createEntity(1L);
 
 			mapper.patch(request, entity);
@@ -481,8 +456,6 @@ class SchulbesuchMapperTest {
 						assertThat(e.Kindergarten_ID).isEqualTo(7L);
 						assertThat(e.VerpflichtungSprachfoerderkurs).isTrue();
 						assertThat(e.TeilnahmeSprachfoerderkurs).isFalse();
-						assertThat(e.LSSGL).isEqualTo("A12");
-						assertThat(e.LSSGL_SIM).isEqualTo("A12");
 					});
 		}
 

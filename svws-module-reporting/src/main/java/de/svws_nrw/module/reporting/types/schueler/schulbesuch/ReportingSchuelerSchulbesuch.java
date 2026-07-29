@@ -17,9 +17,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/** Die vorher besuchte Schule. */
 	protected final ReportingSchulkatalogEintragNRW vorherigeSchule;
 
-	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. */
-	protected final String vorigeAllgHerkunft;
-
 	/** Das Entlassdatum an der zuvor besuchten Schule. */
 	protected final String vorigeEntlassdatum;
 
@@ -105,7 +102,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * Erstellt ein neues Reporting-Objekt auf Basis der übergebenen Parameter.
 	 *
 	 * @param vorherigeSchule Die vorher besuchte Schule.
-	 * @param vorigeAllgHerkunft Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule.
 	 * @param vorigeEntlassdatum Das Entlassdatum an der zuvor besuchten Schule.
 	 * @param vorigeEntlassjahrgang Der Entlassjahrgang an der zuvor besuchten Schule.
 	 * @param vorigeArtLetzteVersetzung Die ID der Art der letzten Versetzung an der zuvor besuchten Schule.
@@ -135,7 +131,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param alleSchulen Die Informationen zu allen bisher besuchten Schulen.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ReportingSchuelerSchulbesuch(final ReportingSchulkatalogEintragNRW vorherigeSchule, final String vorigeAllgHerkunft,
+	public ReportingSchuelerSchulbesuch(final ReportingSchulkatalogEintragNRW vorherigeSchule,
 			final String vorigeEntlassdatum, final String vorigeEntlassjahrgang, final String vorigeArtLetzteVersetzung,
 			final String vorigeBemerkung, final KatalogEntlassgrund vorigeEntlassgrund, final String vorigeAbschlussartID,
 			final String entlassungDatum, final Long idEntlassjahrgang, final KatalogEntlassgrund entlassungGrund,
@@ -146,7 +142,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 			final Long idDauerKindergartenbesuch, final Long idKindergarten, final boolean verpflichtungSprachfoerderkurs,
 			final boolean teilnahmeSprachfoerderkurs, final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
 		this.vorherigeSchule = vorherigeSchule;
-		this.vorigeAllgHerkunft = ersetzeNullBlankTrim(vorigeAllgHerkunft);
 		this.vorigeEntlassdatum = ersetzeNullBlankTrim(vorigeEntlassdatum);
 		this.vorigeEntlassjahrgang = ersetzeNullBlankTrim(vorigeEntlassjahrgang);
 		this.vorigeArtLetzteVersetzung = ersetzeNullBlankTrim(vorigeArtLetzteVersetzung);
@@ -185,15 +180,6 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 */
 	public ReportingSchulkatalogEintragNRW vorherigeSchule() {
 		return vorherigeSchule;
-	}
-
-	/**
-	 * Gibt die allgemeine Herkunftsart des Schülers zurück.
-	 *
-	 * @return Die allgemeine Herkunftsart des Schülers; nie {@code null}, bei fehlendem Wert ein leerer String.
-	 */
-	public String vorigeAllgHerkunft() {
-		return vorigeAllgHerkunft;
 	}
 
 	/**

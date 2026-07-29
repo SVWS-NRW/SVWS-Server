@@ -1,6 +1,7 @@
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern,
 	ValidatorStrasse } from "@ui";
-import type { SchulEintrag, SchulformKatalogEintrag } from "@core";
+import type { HerkunftSchulformKatalogEintrag, SchulEintrag } from "@core";
+import { HerkunftSchulform } from "@core";
 import { AdressenUtils, Schulform } from "@core";
 import { ValidatorSchuleKuerzel } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKuerzel";
 import { ValidatorSchuleKurzbezeichnung } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKurzbezeichnung";
@@ -73,9 +74,10 @@ export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 		},
 	});
 
-	selectedSchulform = computed<SchulformKatalogEintrag | null>({
-		get: () => Schulform.data().getEintragByID(this.proxy.idSchulform ?? -1),
+	selectedSchulformSonstigeSchule = computed<HerkunftSchulformKatalogEintrag | null>({
+		get: () => HerkunftSchulform.data().getEintragByID(this.proxy.idSchulform ?? -1),
 		set: (value) => this.proxy.idSchulform = value?.id ?? null,
 	});
 
+	schulformInternal = computed<string | null>(() => Schulform.data().getEintragByID(this.proxy.idSchulform ?? -1)?.text ?? '');
 }

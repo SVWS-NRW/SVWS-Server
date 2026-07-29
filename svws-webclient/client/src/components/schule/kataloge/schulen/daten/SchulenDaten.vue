@@ -3,9 +3,12 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Schulangaben" v-if="manager().hasDaten()">
 				<svws-ui-input-wrapper :grid="2">
-					<ui-select label="Schulform"
+					<svws-ui-text-input placeholder="Schulform" v-if="isInternal"
+						:model-value="model.schulformInternal.value"
+						readonly />
+					<ui-select label="Schulform" v-else-if="!isInternal"
 						class="contentFocusField"
-						v-model="model.selectedSchulform.value"
+						v-model="model.selectedSchulformSonstigeSchule.value"
 						:manager="schulformSelectManager"
 						:readonly="isInternal"
 						:validation="() => model.getFehler('idSchulform')"
@@ -86,7 +89,7 @@
 <script setup lang="ts">
 	import type { SchulenDatenProps } from "./SchulenDatenProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz, Schulform } from "@core";
+	import { BenutzerKompetenz, HerkunftSchulform } from "@core";
 	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
@@ -100,7 +103,7 @@
 	const isInternal = computed<boolean>(() => model.proxy.schulnummerStatistik?.charAt(0) === "1");
 
 	const schulformSelectManager = new CoreTypeSelectManager({
-		clazz: Schulform.class,
+		clazz: HerkunftSchulform.class,
 		schuljahr: schuleState.abschnitt.schuljahr,
 		schulformen: schuleState.schulform,
 		optionDisplayText: "text",

@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
-import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
@@ -35,7 +34,6 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 	public ProxyReportingSchuelerSchulbesuch(final ReportingContext reportingContext, final SchuelerSchulbesuchsdaten schulbesuchsdaten) {
 		super(
 				createReportingSchulkatalogEintragNRW(reportingContext, schulbesuchsdaten.idVorherigeSchule),
-				getSchulformVorherigeSchule(schulbesuchsdaten.idHerkunftSchulformVorherigeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.entlassdatumVorherigeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.kuerzelEntlassjahrgangVorherigeSchule),
 				ersetzeNullBlankTrim(schulbesuchsdaten.idHerkunftsartVersetzungVorherigeSchule),
@@ -65,17 +63,6 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				convertAlleSchulen(reportingContext, schulbesuchsdaten.bisherBesuchteSchulen)
 		);
 		this.reportingContext = reportingContext;
-	}
-
-	private static String getSchulformVorherigeSchule(final Long idSchulformVorherigeSchule) {
-		if (idSchulformVorherigeSchule == null) {
-			return null;
-		}
-		final var schulform = HerkunftSchulform.data().getEintragByID(idSchulformVorherigeSchule);
-		if (schulform == null) {
-			return null;
-		}
-		return schulform.schluessel;
 	}
 
 	private static ProxyReportingSchulkatalogEintragNRW createReportingSchulkatalogEintragNRW(final ReportingContext reportingContext,

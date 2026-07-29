@@ -15,6 +15,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,10 +33,10 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -55,6 +56,12 @@ class DataSchulenTest {
 	@BeforeAll
 	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		lenient().when(conn.getUser()).thenReturn(mock(Benutzer.class));
+		lenient().when(conn.getUser().schuleGetSchuljahr()).thenReturn(2012);
 	}
 
 	@Test
@@ -215,7 +222,7 @@ class DataSchulenTest {
 		assertThat(this.data.map(dtoSchuleNRW))
 				.isInstanceOf(SchulEintrag.class)
 				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("schulnummerStatistik", "456")
+				.hasFieldOrPropertyWithValue("schulnummerStatistik", "123456")
 				.hasFieldOrPropertyWithValue("idSchulform", 10000L)
 				.hasFieldOrPropertyWithValue("strassenname", "RollercoasterRoad")
 				.hasFieldOrPropertyWithValue("hausnummer", "42")
@@ -263,11 +270,10 @@ class DataSchulenTest {
 	private static Stream<Arguments> provideMappingAttributes() {
 		return Stream.of(
 				arguments("id", 35),
-				arguments("schulnummer", "123456"),
+				arguments("schulnummerStatistik", "123456"),
 				arguments("kuerzel", "1234567890"),
 				arguments("kurzbezeichnung", "eine ganz kurze be"),
 				arguments("name", "Telefonmann"),
-				arguments("idSchulform", 10000L),
 				arguments("strassenname", "CoasterRollerStr"),
 				arguments("hausnummer", "101"),
 				arguments("zusatzHausnummer", "a"),
@@ -297,14 +303,10 @@ class DataSchulenTest {
 					.isInstanceOf(ApiOperationException.class)
 					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-			case "schulnummer" -> assertThat(expectedDTO.SchulNr).isEqualTo(value);
+			case "schulnummerStatistik" -> assertThat(expectedDTO.SchulNr).isEqualTo(value);
 			case "kuerzel" -> assertThat(expectedDTO.Kuerzel).isEqualTo(value);
 			case "kurzbezeichnung" -> assertThat(expectedDTO.KurzBez).isEqualTo(value);
 			case "name" -> assertThat(expectedDTO.Name).isEqualTo(value);
-			case "idSchulform" -> assertThat(expectedDTO)
-					.hasFieldOrPropertyWithValue("SchulformBez", "Realschule")
-					.hasFieldOrPropertyWithValue("SchulformKrz", "R")
-					.hasFieldOrPropertyWithValue("SchulformNr", "10");
 			case "strassenname" -> assertThat(expectedDTO.Strassenname).isEqualTo(value);
 			case "hausnummer" -> assertThat(expectedDTO.HausNr).isEqualTo(value);
 			case "zusatzHausnummer" -> assertThat(expectedDTO.HausNrZusatz).isEqualTo(value);
@@ -324,21 +326,36 @@ class DataSchulenTest {
 	}
 
 	@Test
+	@DisplayName("mapAttribute | idSchulform | Erfolg")
+	void mapAttributeTest_idSchulform() throws ApiOperationException {
+		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
+		expectedDTO.SchulNr_SIM = "123456";
+
+		this.data.mapAttribute(expectedDTO, "idSchulform", 10000L, null);
+
+		assertThat(expectedDTO)
+				.hasFieldOrPropertyWithValue("SchulformBez", "Realschule")
+				.hasFieldOrPropertyWithValue("SchulformKrz", "R")
+				.hasFieldOrPropertyWithValue("SchulformNr", "10");
+	}
+
+	@Test
 	@DisplayName("mapAttribute | wrong idSchulform")
 	void mapAttributeTest_WrongIdSchulform() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
+		expectedDTO.SchulNr_SIM = "123456";
 
 		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "idSchulform", 1L, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("SchulformKatalogEintrag mit der id 1 nicht gefunden")
-				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("mapAttribute | idSchulform null")
-	void mapAttributeTest_idSchulformNull() throws ApiOperationException {
+	void mapAttributeTest_idSchulformNull() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "123456");
 
 		this.data.mapAttribute(expectedDTO, "idSchulform", null, null);
@@ -351,7 +368,7 @@ class DataSchulenTest {
 
 	@Test
 	@DisplayName("mapAttribute | updateSchulnummer | interne Schule | Erfolg")
-	void mapAttributeTest_interneSchulnummer() throws ApiOperationException {
+	void mapAttributeTest_interneSchulnummer() {
 		final var expectedDTO = new DTOSchuleNRW(1L, "1");
 
 		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
@@ -363,7 +380,7 @@ class DataSchulenTest {
 
 	@Test
 	@DisplayName("mapAttribute | updateSchulnummer | externe Schule | Erfolg")
-	void mapAttributeTest_externeSchulnummer() throws ApiOperationException {
+	void mapAttributeTest_externeSchulnummer() {
 		final var expectedDTO = new DTOSchuleNRW(123L, "1");
 
 		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "987654", null);
@@ -394,7 +411,6 @@ class DataSchulenTest {
 		this.data.mapAttribute(expectedDTO, "schulnummerStatistik", "123456", null);
 
 		assertThat(expectedDTO).hasFieldOrPropertyWithValue("SchulNr", "123456");
-		verifyNoInteractions(this.conn);
 	}
 
 
@@ -442,7 +458,7 @@ class DataSchulenTest {
 		@SuppressWarnings("unchecked")
 		final TypedQuery<String> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("schulnummern"), any())).thenReturn(queryMock);
-		when(queryMock.getResultList()).thenReturn(List.of("456"));
+		when(queryMock.getResultList()).thenReturn(List.of("123456"));
 		when(conn.query(anyString(), eq(String.class))).thenReturn(queryMock);
 		final var response = new SimpleOperationResponse();
 		response.id = 1L;
@@ -481,8 +497,9 @@ class DataSchulenTest {
 
 	private static DTOSchuleNRW getDtoSchuleNRW() {
 		final var dtoSchuleNRW = new DTOSchuleNRW(1L, "123");
-		dtoSchuleNRW.SchulNr = "456";
-		dtoSchuleNRW.SchulNr_SIM = "456";
+		dtoSchuleNRW.SchulNr = "123456";
+		dtoSchuleNRW.SchulNr_SIM = "123456";
+		dtoSchuleNRW.SchulformNr = "10";
 		dtoSchuleNRW.Name = "Schöne Schule";
 		dtoSchuleNRW.KurzBez = "Herder Schule";
 		dtoSchuleNRW.SchulformNr = "10";

@@ -31,6 +31,10 @@ public class SchulEintrag {
 	@Schema(description = "Die Statistik-Schulnummer der Schule", example = "989123")
 	public String schulnummerStatistik;
 
+	/** Die interne Schulnummer der Schule */
+	@Schema(description = "Die interne Schulnummer der Schule", example = "2989123", accessMode = Schema.AccessMode.READ_ONLY)
+	public String schulnummerIntern;
+
 	/** Der Name des Schule. */
 	@Schema(description = "der Name des Schule", example = "Erich-Kästner-Realschule der Stadt Düsseldorf - Sekundarstufe I -")
 	public @NotNull String name = "";
@@ -72,7 +76,7 @@ public class SchulEintrag {
 	public String email;
 
 	/** Der Name des/der Schuleiters/Schulleiterin. */
-	@Schema(description = "der Name des/der Schuleiters/Schulleiterin", example = "")
+	@Schema(description = "der Name des/der Schuleiters/Schulleiterin", example = "Alfred")
 	public String schulleiter;
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
@@ -86,12 +90,5 @@ public class SchulEintrag {
 	/** Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht. */
 	@Schema(description = "Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public boolean referenziertInAnderenTabellen;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public SchulEintrag() {
-		// leer
-	}
 
 }

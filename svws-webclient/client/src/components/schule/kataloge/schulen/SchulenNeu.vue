@@ -29,11 +29,13 @@
 				<div v-if="!schuleAlreadyCreated">
 					<svws-ui-content-card title="Schulangaben" />
 					<svws-ui-input-wrapper :grid="2">
-						<ui-select label="Schulform"
-							:manager="schulformenSelectManager"
-							v-model="model.selectedSchulform.value"
+						<svws-ui-text-input placeholder="Schulform" v-if="isInternal"
+							:model-value="model.schulformInternal.value"
+							readonly />
+						<ui-select label="Schulform" v-else-if="!isInternal"
+							:manager="schulformenExternSelectManager"
+							v-model="model.selectedSchulformSonstigeSchule.value"
 							:disabled="!hatKompetenzAdd"
-							:readonly="isInternal"
 							:validation="() => model.getFehler('idSchulform')"
 							required />
 						<svws-ui-text-input placeholder="Statistik-Schulnummer"
@@ -114,15 +116,14 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz } from "@core";
+	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz, HerkunftSchulform } from "@core";
 	import type { HerkunftsschulnummerKatalogEintrag, SchulenKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
 
 	const props = defineProps<SchulenNeuProps>();
 	const benutzerState = useBenutzerState();
-	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
 
 	const initialData = ref<SchulEintrag>(Object.assign(new SchulEintrag(), { sortierung: 32000, istSichtbar: true }));
@@ -134,13 +135,13 @@
 	const schuljahr = computed<number>(() => schuleState.schuljahr);
 
 	const selectedExterneSchulen = computed<HerkunftsschulnummerKatalogEintrag | null>({
-		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(abschnittState.auswahl.schuljahr, model.proxy.schulnummerStatistik ?? ""),
+		get: () => Herkunftsschulnummer.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, model.proxy.schulnummerStatistik ?? ""),
 		set: (value) => model.proxy.schulnummerStatistik = value?.schluessel ?? null,
 	});
 
 	const externeSchulenSelectManager = new CoreTypeSelectManager({
 		clazz: Herkunftsschulnummer.class,
-		schuljahr: abschnittState.auswahl.schuljahr,
+		schuljahr: schuljahr.value,
 		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
@@ -152,9 +153,9 @@
 		selectionDisplayText: (s) => schulenKatalogEintragText(s),
 	});
 
-	const schulformenSelectManager = new CoreTypeSelectManager({
-		clazz: Schulform.class,
-		schuljahr: abschnittState.auswahl.schuljahr,
+	const schulformenExternSelectManager = new CoreTypeSelectManager({
+		clazz: HerkunftSchulform.class,
+		schuljahr: schuleState.schuljahr,
 		schulformen: schuleState.schulform,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
@@ -214,7 +215,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
+		const { id, referenziertInAnderenTabellen, schulnummerIntern, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}

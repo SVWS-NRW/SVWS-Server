@@ -11,14 +11,11 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
-import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
-import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -79,8 +76,6 @@ public final class SchulbesuchService {
 		return this.map(schueler, getSchulenBySchulnummer(), getEntlassartenByBezeichnung());
 	}
 
-
-
 	/**
 	 * Ruft alle Schulbesuch-Entitäten für die Schüler mit den gegebenen IDs ab.
 	 *
@@ -122,7 +117,11 @@ public final class SchulbesuchService {
 	}
 
 	private void validateAndResolvePatch(final DTOSchueler entity, final SchulbesuchPatchRequest patchRequest) {
-		patchRequest.idVorherigeSchule.ifPresent(id -> patchLSSchulNr(entity, id));
+		if (patchRequest.idVorherigeSchule.isPresent() && patchRequest.idHerkunftSonstigeVorherigeSchule.isPresent()) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"idVorherigeSchule und idHerkunftSonstigeVorherigeSchule dürfen nicht gleichzeitig gesetzt sein");
+		}
+		patchRequest.idVorherigeSchule.ifPresent(id -> SchulbesuchResolver.patchVorherigeSchuleAndSchulform(entity, id, dataSchulen));
 		patchRequest.idEntlassgrundVorherigeSchule.ifPresent(id -> patchLSEntlassgrund(entity, id));
 		patchRequest.idEntlassgrundDieseSchule.ifPresent(id -> patchEntlassgrund(entity, id));
 		patchRequest.idAufnehmendeSchule.ifPresent(id -> patchSchulwechselNr(entity, id));
@@ -131,39 +130,10 @@ public final class SchulbesuchService {
 		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
 		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
-		patchRequest.schluesselSchulgliederungVorherigeSchule.ifPresent(this::validateSchulgliederung);
+		patchRequest.idSchulgliederungVorherigeSchule.ifPresent(id -> SchulbesuchResolver.patchHerkunftbildungsgang(entity, id));
 		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
-		patchRequest.idHerkunftSchulformVorherigeSchule.ifPresent(id -> patchIdHerkunftSchulformVorherigeSchule(entity, id));
-		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> patchIdHerkunftSonstigeVorherigeSchule(entity, id));
+		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> SchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, id));
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
-	}
-
-	private void patchIdHerkunftSchulformVorherigeSchule(final DTOSchueler entity, final Long id) {
-		if (id == null) {
-			entity.LSSchulform = null;
-			entity.LSSchulformSIM = null;
-			return;
-		}
-		final var schulform = HerkunftSchulform.data().getEintragByID(id);
-		if (schulform == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSchulform mit der ID %d gefunden.".formatted(id));
-		}
-		entity.LSSchulform = schulform.kuerzel;
-		entity.LSSchulformSIM = schulform.kuerzel;
-	}
-
-	private void patchIdHerkunftSonstigeVorherigeSchule(final DTOSchueler entity, final Long id) {
-		if (id == null) {
-			entity.LSSchulform = null;
-			entity.LSSchulformSIM = null;
-			return;
-		}
-		final var schulform = HerkunftSonstige.data().getEintragByID(id);
-		if (schulform == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Keine HerkunftSonstige mit der ID %d gefunden.".formatted(id));
-		}
-		entity.LSSchulform = null;
-		entity.LSSchulformSIM = schulform.schluessel;
 	}
 
 	private void patchFachklasse(final DTOSchueler entity, final String schluessel) {
@@ -186,17 +156,6 @@ public final class SchulbesuchService {
 		final var sb = new StringBuilder(schluessel);
 		entity.LSFachklKennung = sb.insert(sb.length() - 2, "-").toString();
 		entity.LSFachklSIM = schluessel.substring(schluessel.indexOf("-") + 1);
-	}
-
-	private void validateSchulgliederung(final String schluessel) {
-		if (schluessel == null) {
-			return;
-		}
-		if (Schulgliederung.data().getWertBySchluessel(schluessel) == null) {
-			throw new ApiOperationException(
-					Status.BAD_REQUEST,
-					"Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(schluessel));
-		}
 	}
 
 	private void patchAbschlussartVorherigeSchule(final DTOSchueler entity, final SchulbesuchPatchRequest patchRequest) {
@@ -268,14 +227,6 @@ public final class SchulbesuchService {
 		}
 		validateSchulabschlussAllgemeinbildend(schluessel);
 		entity.Entlassart = schluessel;
-	}
-
-	private void patchLSSchulNr(final DTOSchueler entity, final Long id) {
-		if (id == null) {
-			entity.LSSchulNr = null;
-		} else {
-			entity.LSSchulNr = this.dataSchulen.getEntityById(id).SchulNr;
-		}
 	}
 
 	private void patchLSEntlassgrund(final DTOSchueler entity, final Long id) {
@@ -398,6 +349,5 @@ public final class SchulbesuchService {
 			return null;
 		}
 	}
-
 
 }

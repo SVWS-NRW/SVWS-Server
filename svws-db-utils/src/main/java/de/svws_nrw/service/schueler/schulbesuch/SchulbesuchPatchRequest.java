@@ -21,14 +21,9 @@ public class SchulbesuchPatchRequest {
 	@Schema(description = "Die ID der zuvor besuchten Schule.", example = "12")
 	public JsonNullable<Long> idVorherigeSchule = JsonNullable.undefined();
 
-	/** Die ID der HerkunftSchulform der zuvor besuchten Schule. */
-	@Schema(description = "Die ID der HerkunftSchulform der zuvor besuchten Schule.", example = "1000")
-	public JsonNullable<Long> idHerkunftSchulformVorherigeSchule = JsonNullable.undefined();
-
-	/** Die ID der HerkunftSonstige der zuvor besuchten Schule. */
-	@Schema(description = "Die ID der HerkunftSonstige der zuvor besuchten Schule.", example = "1000")
+	/** Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch). */
+	@Schema(description = "Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).", example = "1000")
 	public JsonNullable<Long> idHerkunftSonstigeVorherigeSchule = JsonNullable.undefined();
-
 
 	/** Das Entlassdatum an der zuvor besuchten Schule. */
 	@Schema(description = "Das Entlassdatum an der zuvor besuchten Schule.", example = "1901-03-11")
@@ -64,10 +59,9 @@ public class SchulbesuchPatchRequest {
 	@Size(max = 1)
 	public JsonNullable<String> schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.undefined();
 
-	/** Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule. */
-	@Schema(description = "Der Schlüssel der Schulgliederung (BK/SB) der zuvor besuchten Schule.", example = "A12")
-	@Size(max = 5)
-	public JsonNullable<String> schluesselSchulgliederungVorherigeSchule = JsonNullable.undefined();
+	/** Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule. */
+	@Schema(description = "Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule.", example = "2000")
+	public JsonNullable<Long> idSchulgliederungVorherigeSchule = JsonNullable.undefined();
 
 	/** Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB). */
 	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")

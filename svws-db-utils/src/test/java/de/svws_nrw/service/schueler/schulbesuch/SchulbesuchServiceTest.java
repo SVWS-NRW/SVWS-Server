@@ -14,6 +14,7 @@ import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -300,25 +301,6 @@ class SchulbesuchServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// patch - Schulgliederung
-	// -------------------------------------------------------------------------
-
-	@Test
-	@DisplayName("patch - Schulgliederung - wrong schluessel")
-	void patchSchulgliederung_wrongSchluessel() {
-		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.schluesselSchulgliederungVorherigeSchule = JsonNullable.of("--");
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		assertThatException()
-				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Keine Schulgliederung mit dem Schlüssel -- gefunden.")
-				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
-	}
-
-
-	// -------------------------------------------------------------------------
 	// patch - Fachklasse
 	// -------------------------------------------------------------------------
 
@@ -386,59 +368,6 @@ class SchulbesuchServiceTest {
 		assertThat(schuelerCaptor.getValue().LSFachklKennung).isNull();
 	}
 
-	// -------------------------------------------------------------------------
-	// patch - HerkunftSchulform
-	// -------------------------------------------------------------------------
-
-	@Test
-	@DisplayName("patch - HerkunftSchulform - wrong schluessel")
-	void patchHerkunftSchulform_wrongSchluessel() {
-		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idHerkunftSchulformVorherigeSchule = JsonNullable.of(99999L);
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		assertThatException()
-				.isThrownBy(() -> schulbesuchService.patch(idSchueler, patchRequest))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Keine HerkunftSchulform mit der ID 99999 gefunden.")
-				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch - HerkunftSchulform")
-	void patchHerkunftSchulform() {
-		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idHerkunftSchulformVorherigeSchule = JsonNullable.of(1000L);
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		schueler.LSSchulform = "beforePatch";
-		schueler.LSSchulformSIM = "beforePatch";
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		schulbesuchService.patch(idSchueler, patchRequest);
-
-		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSSchulform).isEqualTo("BK");
-		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isEqualTo("BK");
-	}
-
-	@Test
-	@DisplayName("patch - HerkunftSchulform - null")
-	void patchHerkunftSchulform_null() {
-		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idHerkunftSchulformVorherigeSchule = JsonNullable.of(null);
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		schueler.LSSchulform = "beforePatch";
-		schueler.LSSchulformSIM = "beforePatch";
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
-		schulbesuchService.patch(idSchueler, patchRequest);
-
-		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSSchulform).isNull();
-		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isNull();
-	}
 
 	// -------------------------------------------------------------------------
 	// patch - HerkunftSonstige
@@ -462,9 +391,9 @@ class SchulbesuchServiceTest {
 	@DisplayName("patch - HerkunftSonstige")
 	void patchHerkunftSonstige() {
 		final var patchRequest = new SchulbesuchPatchRequest();
-		patchRequest.idHerkunftSonstigeVorherigeSchule = JsonNullable.of(1000L);
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-
+		final var eintrag = de.svws_nrw.asd.types.schueler.HerkunftSonstige.data()
+				.getWerte().getFirst().historie().getFirst();
+		patchRequest.idHerkunftSonstigeVorherigeSchule = JsonNullable.of(eintrag.id);
 		schueler.LSSchulform = "beforePatch";
 		schueler.LSSchulformSIM = "beforePatch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
@@ -473,7 +402,7 @@ class SchulbesuchServiceTest {
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
 		assertThat(schuelerCaptor.getValue().LSSchulform).isNull();
-		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isEqualTo("AS");
+		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isEqualTo(eintrag.kuerzel);
 	}
 
 	@Test
@@ -483,9 +412,6 @@ class SchulbesuchServiceTest {
 		patchRequest.idHerkunftSonstigeVorherigeSchule = JsonNullable.of(null);
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
-		schueler.LSSchulform = "beforePatch";
-		schueler.LSSchulformSIM = "beforePatch";
-		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schulbesuchService.patch(idSchueler, patchRequest);
 
@@ -501,22 +427,32 @@ class SchulbesuchServiceTest {
 
 	@Test
 	@DisplayName("patch - patchLSSchulNr")
-	void patchLSSchulNr() {
+	void patchVorherigeSchuleAndSchulform() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		patchRequest.idVorherigeSchule = JsonNullable.of(1L);
 		schueler.LSSchulNr = "beforePatch";
+
+		final var schulEintrag = new SchulEintrag();
+		schulEintrag.id = 1L;
+		schulEintrag.schulnummerIntern = "100001";
+		schulEintrag.schulnummerStatistik = "100001";
+		// GY: Schulform.json id=6000 – kein BK/WB/SB, daher LSSchulform=LSSchulformSIM="GY"
+		schulEintrag.idSchulform = 6000L;
+
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
-		when(dataSchulen.getEntityById(1L)).thenReturn(schule);
+		when(dataSchulen.getById(1L)).thenReturn(schulEintrag);
 
 		schulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSSchulNr).isEqualTo("123");
+		assertThat(schuelerCaptor.getValue().LSSchulNr).isEqualTo("100001");
+		assertThat(schuelerCaptor.getValue().LSSchulform).isEqualTo("GY");
+		assertThat(schuelerCaptor.getValue().LSSchulformSIM).isEqualTo("GY");
 	}
 
 	@Test
 	@DisplayName("patch - patchLSSchulNr - null")
-	void patchLSSchulNr_null() {
+	void patchVorherigeSchule_AndSchulform_null() {
 		final var patchRequest = new SchulbesuchPatchRequest();
 		patchRequest.idVorherigeSchule = JsonNullable.of(null);
 		schueler.LSSchulNr = "beforePatch";
