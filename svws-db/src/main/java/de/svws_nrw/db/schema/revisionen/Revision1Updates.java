@@ -2760,7 +2760,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				                GROUP_CONCAT(
 				                    '{"Gruppe_ID":',
 				                    REPLACE(
-				                        REPLACE(US_UserGroups,'$','-1'),
+				                        REPLACE(REGEXP_REPLACE(REGEXP_REPLACE(TRIM(US_UserGroups), '^;+|;+$', ''), ';+', ';'), '$', '-1'),
 				                        ';',
 				                        CONCAT(
 				                            ', "Benutzer_ID": ',
@@ -2778,7 +2778,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				            Users
 				        WHERE
 				            US_UserGroups IS NOT NULL
-				            AND TRIM(US_UserGroups) <> ""
+				            AND REGEXP_REPLACE(TRIM(US_UserGroups), '^;+|;+$', '') <> ""
 				    ),
 				    '$[*]' columns(
 				        Gruppe_ID bigint path '$.Gruppe_ID',
