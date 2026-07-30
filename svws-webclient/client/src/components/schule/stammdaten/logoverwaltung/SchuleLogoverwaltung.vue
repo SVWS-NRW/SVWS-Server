@@ -6,9 +6,10 @@
 					<template #header>
 						<template v-for="col of gridManager.cols.values()" :key="col.kuerzel">
 							<th v-if="col.kuerzel === 'Auswahl'" class="flex items-start justify-center">
-								<svws-ui-checkbox :model-value="bulkChecked"
+								<svws-ui-checkbox :model-value="bulkAllChecked"
 									:indeterminate="bulkIntermediate"
-									@update:model-value="toggleAll" />
+									:disabled="bulkSelectable.length === 0"
+									@update:model-value="toggleBulkAll" />
 							</th>
 							<th v-else-if="col.kuerzel === 'RowActions'" />
 							<th v-else-if="col.kuerzel === 'Bild'" class="flex items-center justify-center">
@@ -21,37 +22,24 @@
 					</template>
 					<template #default="{ row: logo }">
 						<td class="flex items-start justify-center">
-							<svws-ui-checkbox :model-value="auswahl.includes(logo)" @update:model-value="(value) => toggleSelection(logo, value)" />
+							<svws-ui-checkbox :model-value="bulkSelectedLogos.includes(logo)"
+								:disabled="logo.proxy.base64 === ''"
+								@update:model-value="(value) => toggleBulkSelection(logo, value)" />
 						</td>
-						<td class="flex items-start justify-center text-left">
-							{{ logo.bezeichnung }}
+						<td class="flex justify-center text-left">
+							{{ logo.proxy.bezeichnung }}
 						</td>
-						<td class="flex items-start justify-center text-left">
-							{{ logo.beschreibung }}
+						<td class="flex justify-center text-left">
+							{{ logo.proxy.beschreibung }}
 						</td>
 						<td class="flex items-center justify-center">
 							<div class="h-22 py-1">
-								<button v-if="logoDisplayMode(logo) === 'image'"
-									type="button"
-									class="h-full hover:ring-2 focus:ring-2 focus:outline-hidden rounded-md ring-ui p-0.5"
-									@click="selectLogo(logo)"
-									:aria-label="`Logo '${logo.bezeichnung}' in Vorschau öffnen`">
-									<img :src="getImgSrcString(logo.mimeType, logo.logoBase64)"
-										class="h-full w-full"
-										:alt="`Kleine Vorschau des Logos '${logo.bezeichnung}'`">
-								</button>
-								<svws-ui-tooltip v-else-if="logoDisplayMode(logo) === 'empty'" class="h-full" position="top">
-									<span class="icon-xl i-ri-file-close-line icon-ui-caution" />
-									<template #content>
-										Für dieses Logo wurde noch kein Bild hochgeladen
-									</template>
-								</svws-ui-tooltip>
-								<svws-ui-tooltip v-else class="h-full" position="top">
-									<span class="icon-xl i-ri-eye-off-line icon-ui-warning" />
-									<template #content>
-										Für dieses Logo ist keine Vorschau möglich.
-									</template>
-								</svws-ui-tooltip>
+								<logo-image mode="tooltip"
+									:logo-base64="logo.proxy.base64"
+									:alt="`Kleine Vorschau des Bildes für das Logo '${logo.proxy.bezeichnung}'`"
+									aria-label="Öffnet eine größere Vorschau des Bildes neben der Tabelle"
+									@click="selectPreviewLogo(logo)"
+									clickable />
 							</div>
 						</td>
 						<td>
@@ -60,127 +48,79 @@
 					</template>
 					<template #footer>
 						<td class="col-span-full my-1">
-							<ui-table-actions :actions="bulkActions" :items="auswahl" always-visible />
+							<ui-table-actions :actions="bulkActions" :items="bulkSelectedLogos" always-visible />
 						</td>
 					</template>
 				</ui-table-grid>
 			</svws-ui-content-card>
-			<svws-ui-content-card :title="selectedLogo.bezeichnung" v-if="selectedLogo !== null">
-				<img :src="getImgSrcString(selectedLogo.mimeType, selectedLogo.logoBase64)"
-					class="max-w-full max-h-full"
-					:alt="`Große Vorschau des Logos '${selectedLogo.bezeichnung}'`">
+			<svws-ui-content-card :title="previewLogo.proxy.bezeichnung" v-if="previewLogo !== null">
+				<logo-image mode="tooltip"
+					:logo-base64="previewLogo.proxy.base64"
+					:alt="`Kleine Vorschau des Bildes für das Logo '${previewLogo.proxy.bezeichnung}'`" />
 			</svws-ui-content-card>
 		</div>
-		<svws-ui-modal v-model:show="warningModalIsShown"
-			:auto-close="false"
-			size="medium" type="danger">
-			<template #modalTitle>
-				<slot name="title">Logos löschen</slot>
-			</template>
-			<template #modalDescription>
-				<div class="text-left">
-					<slot name="description">
-						<div class="mb-4">Möchten Sie folgende Logos wirklich löschen:</div>
-						<div v-for="logo in logosToDelete" :key="logo.id" class="p-2 grid grid-cols-2 border-b border-ui">
-							<div class="flex items-center">{{ logo.bezeichnung }}</div>
-							<img v-if="logoDisplayMode(logo) === 'image'" :src="getImgSrcString(logo.mimeType, logo.logoBase64)"
-								class="h-20"
-								:alt="`Kleine Vorschau des Logos '${logo.bezeichnung}'`">
-							<svws-ui-tooltip v-else-if="logoDisplayMode(logo) === 'empty'" class="h-full w-fit" position="top">
-								<span class="icon-xl i-ri-file-close-line icon-ui-caution" />
-								<template #content>
-									Für dieses Logo wurde noch kein Bild hochgeladen
-								</template>
-							</svws-ui-tooltip>
-							<svws-ui-tooltip v-else class="h-full w-fit" position="top">
-								<span class="icon-xl i-ri-eye-off-line icon-ui-warning" />
-								<template #content>
-									Für dieses Logo ist keine Vorschau möglich.
-								</template>
-							</svws-ui-tooltip>
-						</div>
-					</slot>
-				</div>
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="closeWarningModal">Abbrechen</svws-ui-button>
-				<svws-ui-button type="danger" @click="deleteLogos(logosToDelete)">Logos löschen</svws-ui-button>
-			</template>
-		</svws-ui-modal>
+		<logo-image-upload-modal v-if="uploadModalIsOpen"
+			:is-open="uploadModalIsOpen"
+			:add="addLogo"
+			:logo="() => logoForUpload"
+			@close-modal="closeUploadModal()" />
+		<logo-image-delete-modal :is-open="deleteModalIsOpen"
+			:logos="logoImagesToDelete"
+			@cancel="closeDeleteModal"
+			@confirm="deleteLogoBilder" />
 	</div>
 </template>
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
-	import { ArrayList, HashMap, type List, Logo, ReportingBildDefinition } from "@core";
-	import { GridManager, UiTableActions, useSchuleState } from "@ui";
+	import { computed, ref, shallowRef, type ShallowRef } from "vue";
+	import { ArrayList, DeveloperNotificationException, type List, type Logo, ReportingBildDefinition } from "@core";
+	import { GridManager, useSchuleState, type TableActions } from "@ui";
 	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
-	import type { TableActions } from "../../../../../../ui/src/ui/controls/tablegrid/UiTableActions.vue";
+	import { SUPPORTED_IMAGE_TYPES, type TableLogo } from "./LogoUtils";
+	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
+	import LogoImage from "./LogoImage.vue";
+	import LogoImageUploadModal from "./modals/LogoImageUploadModal.vue";
+	import LogoImageDeleteModal from "./modals/LogoImageDeleteModal.vue";
 
 	const props = defineProps<SchuleLogoverwaltungProps>();
 	const schuleState = useSchuleState();
-	const warningModalIsShown = ref<boolean>(false);
-	const logosToDelete = ref<Logo[]>([]);
-
-	const SUPPORTED_IMAGE_TYPES = [
-		{ mimeType: 'image/png', extension: 'png' },
-		{ mimeType: 'image/jpeg', extension: 'jpg' },
-		{ mimeType: 'image/gif', extension: 'gif' },
-		{ mimeType: 'image/webp', extension: 'webp' },
-		{ mimeType: 'image/svg+xml', extension: 'svg' },
-		{ mimeType: 'image/avif', extension: 'avif' },
-		{ mimeType: 'image/bmp', extension: 'bmp' },
-	] as const;
-
-
-	function logoDisplayMode(logo: Logo): 'image' | 'empty' | 'unsupported' {
-		if (logo.logoBase64 === '') {
-			return 'empty';
-		}
-		if (!SUPPORTED_IMAGE_TYPES.some(t => t.mimeType === logo.mimeType)) {
-			return 'unsupported';
-		}
-		return 'image';
-	}
 
 	/**
 	 * Tabellendaten
 	 */
-	const mergedLogos = computed(() => {
-		const logoByKennung = mapLogosByKennung(props.logos());
 
-		const result = new ArrayList<Logo>();
-		for (const logo of logoByKennung.values()) {
-			result.add(logo);
+	const logoModels = computed(() => {
+		const definitions = ReportingBildDefinition.getBySchulform(schuleState.schulform);
+		const dbLogos = [...props.logos()];
+		const models = new ArrayList<LogoModelProxy>();
+		for (const definition of definitions) {
+			const dbLogo = dbLogos.find(dbLogo => dbLogo.kennung === definition.getKennung());
+			models.add(createModel(definition, dbLogo));
 		}
-		return result;
+		return models;
 	});
 
-	function mapLogosByKennung(definedLogos: List<Logo>): HashMap<string, Logo> {
-		const allLogosDefinitions = ReportingBildDefinition.getBySchulform(schuleState.schulform);
-		const logoByKennung = new HashMap<string, Logo>();
-		for (const definition of allLogosDefinitions) {
-			const logo = new Logo();
-			logo.kennung = definition.getKennung() ?? "";
-			logo.bezeichnung = definition.getBezeichnung() ?? "";
-			logo.beschreibung = definition.getBeschreibung() ?? "";
-			logoByKennung.put(logo.kennung, logo);
-		}
-		mergeDefinedLogos(logoByKennung, definedLogos);
-		return logoByKennung;
+	function createModel(definition: ReportingBildDefinition, dbLogo: Logo | undefined): LogoModelProxy {
+		const id = dbLogo?.id ?? -1;
+		const kennung = definition.getKennung() ?? '';
+		const bezeichnung = definition.getBezeichnung() ?? '';
+		const beschreibung = definition.getBeschreibung() ?? '';
+		const base64 = dbLogo?.logoBase64 ?? '';
+		const hinzugefuegtAm = dbLogo?.hinzugefuegtAm ?? '';
+		return new LogoModelProxy(
+			(): TableLogo => ({ id, kennung, bezeichnung, beschreibung, base64, hinzugefuegtAm }),
+			(data: Partial<TableLogo>) => patchTableLogo(data.base64 ?? '', id)
+		);
 	}
 
-	function mergeDefinedLogos(logoByKennung: HashMap<string, Logo>, definedLogos: List<Logo>) {
-		for (const logo of definedLogos) {
-			if (logoByKennung.containsKey(logo.kennung)) {
-				logoByKennung.put(logo.kennung, logo);
-			}
-		}
+	async function patchTableLogo(base64: string, id: number): Promise<boolean> {
+		const patchData: Partial<Logo> = { logoBase64: base64 };
+		return props.patchLogo(patchData, id);
 	}
 
-	const gridManager = computed(() => new GridManager<string, Logo, List<Logo>>({
-		daten: mergedLogos,
-		getRowKey: row => row.kennung,
+	const gridManager = shallowRef(new GridManager<string, LogoModelProxy, List<LogoModelProxy>>({
+		daten: logoModels,
+		getRowKey: row => row.proxy.kennung,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
 			{ kuerzel: "Bezeichnung", name: "Bezeichnung", width: "1fr" },
@@ -190,117 +130,168 @@
 		],
 	}));
 
-	function rowActions(logo: Logo): TableActions<Logo>[] {
+	function rowActions(logo: LogoModelProxy): TableActions<LogoModelProxy>[] {
+		const hasImage = logo.proxy.base64 !== "";
 		return [
-			{ label: "Logo aktualisieren", action: () => alert("Hier fehlt noch das Upload Modal"), iconClasses: "i-ri-loop-right-line" },
-			{ label: "Logo exportieren", action: () => exportLogo(logo), iconClasses: "i-ri-download-2-line", disabled: logo.logoBase64 === "" },
-			{ label: "Logo entfernen", action: () => openWarningModal([logo]), iconClasses: "i-ri-close-line icon-ui-danger", disabled: logo.logoBase64 === "" },
+			{
+				label: hasImage ? "Bild aktualisieren" : "Bild hochladen",
+				action: () => openUploadModal(logo),
+				iconClasses: hasImage ? "i-ri-edit-2-line" : "i-ri-add-line",
+			},
+			{ label: "Bild exportieren", action: () => exportImage(logo), iconClasses: "i-ri-download-2-line", disabled: !hasImage },
+			{ label: "Bild löschen", action: () => openDeleteModal([logo]), iconClasses: "i-ri-close-line icon-ui-danger", disabled: !hasImage },
 		];
 	}
-
-	const bulkChecked = computed(() => (auswahl.value.length === gridManager.value.daten.size()) && (auswahl.value.length > 0));
-	const bulkIntermediate = computed(() => (auswahl.value.length < gridManager.value.daten.size()) && (auswahl.value.length > 0));
-	const bulkActions = computed(() => {
-		return [
-			{ label: "Logos exportieren", action: () => void exportZip(), iconClasses: "i-ri-download-2-line", disabled: validBulkSelection.value.length === 0 },
-			{ label: "Logos entfernen", action: () => openWarningModal(validBulkSelection.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: validBulkSelection.value.length === 0 },
-		];
-	});
-
-	const validBulkSelection = computed(() => {
-		return auswahl.value.filter(logo => logo.logoBase64 !== "");
-	});
-
-	function getImgSrcString(mimeType: string, base64: string): string {
-		return `data:${mimeType};base64,${base64}`;
-	}
-
 
 	/**
-	 * Selektion
+	 * Große Bildvorschau
 	 */
 
-	const auswahl = ref<Logo[]>([]);
+	const previewLogo = shallowRef<LogoModelProxy | null>(null);
 
-	function toggleSelection(logo: Logo, value: boolean): void {
+	function selectPreviewLogo(logo: LogoModelProxy): void {
+		if (previewLogo.value?.proxy.kennung === logo.proxy.kennung) {
+			// Zweiter Klick auf dasselbe Bild → schließt die Preview
+			previewLogo.value = null;
+			return;
+		}
+		previewLogo.value = logo;
+	}
+
+	/**
+	 * Bulk-Selektion
+	 */
+
+	const bulkSelectedLogos: ShallowRef<LogoModelProxy[]> = shallowRef([]);
+	const bulkSelectable = computed(() => [...gridManager.value.daten].filter(logo => logo.proxy.base64 !== ''));
+	const bulkAllChecked = computed(() => (bulkSelectedLogos.value.length === bulkSelectable.value.length) && (bulkSelectedLogos.value.length > 0));
+	const bulkIntermediate = computed(() => (bulkSelectedLogos.value.length < bulkSelectable.value.length) && (bulkSelectedLogos.value.length > 0));
+	const bulkActions = computed(() => {
+		return [
+			{ label: "Bilder exportieren", action: () => void exportImagesAsZip(), iconClasses: "i-ri-download-2-line", disabled: bulkSelectedLogos.value.length === 0 },
+			{ label: "Bilder entfernen", action: () => openDeleteModal(bulkSelectedLogos.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: bulkSelectedLogos.value.length === 0 },
+		];
+	});
+
+	function toggleBulkSelection(logo: LogoModelProxy, value: boolean): void {
 		if (value) {
-			auswahl.value.push(logo);
-			logosToDelete.value.push(logo);
+			bulkSelectedLogos.value = [...bulkSelectedLogos.value, logo];
 		} else {
-			const idx = auswahl.value.indexOf(logo);
+			const idx = bulkSelectedLogos.value.indexOf(logo);
 			if (idx !== -1) {
-				auswahl.value.splice(idx, 1);
-				logosToDelete.value.splice(idx, 1);
+				bulkSelectedLogos.value = bulkSelectedLogos.value.filter((_, i) => i !== idx);
 			}
 		}
 	}
 
-	function toggleAll(value: boolean): void {
-		auswahl.value = value ? [...gridManager.value.daten] : [];
-	}
-
-	const selectedLogo = ref<Logo | null>(null);
-
-	function selectLogo(logo: Logo): void {
-		if (selectedLogo.value?.kennung === logo.kennung) {
-			// Zweiter Klick auf dasselbe Logo → schließt die Preview
-			selectedLogo.value = null;
-			return;
-		}
-		if (logoDisplayMode(logo) !== 'image') {
-			return;
-		}
-		selectedLogo.value = logo;
+	function toggleBulkAll(value: boolean): void {
+		bulkSelectedLogos.value = value ? [...bulkSelectable.value] : [];
 	}
 
 	/**
 	 * Export
 	 */
 
-	function exportLogo(logo: Logo): void {
-		const extension = getExtension(logo.mimeType);
-		const filename = `${logo.kennung}.${extension}`;
+	function exportImage(logo: LogoModelProxy): void {
+		const extension = getExtension(logo.proxy.base64);
+		const filename = `${logo.proxy.kennung}${extension}`;
 
-		triggerExport(getImgSrcString(logo.mimeType, logo.logoBase64), filename);
+		triggerExport(logo.proxy.base64, filename);
 	}
 
-	async function exportZip(): Promise<void> {
-		console.log("Zip-Export ist noch nicht implementiert");
-		/* const blob = await props.zipLogos(auswahl.value.map(logo => logo.id));
+	async function exportImagesAsZip(): Promise<void> {
+		throw new DeveloperNotificationException("Zip-Export ist noch nicht implementiert. Bitte Bilder einzeln exportieren");
+	}
+
+	function base64ToBlob(base64: string): Blob {
+		const parsed = parseBase64(base64);
+		if (parsed === null) {
+			throw new Error("Ungültiger Base64 String. Es fehlt die DataUrl: data:[mimeType];base64;...");
+		}
+
+		const binary = atob(parsed.data);
+		const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+		return new Blob([bytes], { type: parsed.mimeType });
+	}
+
+	function triggerExport(base64: string, filename: string): void {
+		const blob = base64ToBlob(base64);
 		const url = URL.createObjectURL(blob);
 
-		triggerExport(url, "schullogos.zip");
-
-		URL.revokeObjectURL(url);*/
-	}
-
-	function triggerExport(url: string, filename: string) {
-		const link = document.createElement('a');
+		const link = document.createElement("a");
 		link.href = url;
 		link.download = filename;
 		link.click();
+
+		URL.revokeObjectURL(url);
 	}
 
-	function getExtension(mimeType: string): string {
-		return SUPPORTED_IMAGE_TYPES.find(t => t.mimeType === mimeType)?.extension ?? 'bin';
+	function getExtension(base64: string): string {
+		const mimeType = parseBase64(base64)?.mimeType;
+		return SUPPORTED_IMAGE_TYPES.find(t => t.mimeType === mimeType)?.extensions[0] ?? '.bin';
+	}
+
+
+	/**
+	 * Ermittelt den MimeType und den Daten-String aus einem Base64-String
+	 *
+	 * @param base64   vollständiger Base64-String mit DataURL
+	 *
+	 * @returns ein Objekt mit dem berechneten MimeType und dem Datenstring
+	 */
+	function parseBase64(base64: string): { mimeType: string, data: string } | null {
+		const match = /^data:([^;]+);base64,(.+)$/.exec(base64);
+		if (match === null) {
+			return null;
+		}
+		return {
+			mimeType: match[1],
+			data: match[2],
+		};
+	}
+
+	/**
+	 * Upload - Modal
+	 */
+
+	const uploadModalIsOpen = ref(false);
+	const logoForUpload = shallowRef<LogoModelProxy>();
+
+	function closeUploadModal() {
+		uploadModalIsOpen.value = false;
+		bulkSelectedLogos.value = [];
+	}
+
+	function openUploadModal(logo: LogoModelProxy) {
+		previewLogo.value = null;
+		uploadModalIsOpen.value = true;
+		logoForUpload.value = logo;
 	}
 
 	/**
 	 * Delete - Modal
 	 */
 
-	function openWarningModal(logos: Logo[]): void {
-		warningModalIsShown.value = true;
-		logosToDelete.value = logos;
+	const deleteModalIsOpen = ref<boolean>(false);
+	const logoImagesToDelete: ShallowRef<LogoModelProxy[]> = shallowRef([]);
+
+	function openDeleteModal(logos: LogoModelProxy[]): void {
+		deleteModalIsOpen.value = true;
+		logoImagesToDelete.value = logos;
 	}
 
-	function closeWarningModal(): void {
-		warningModalIsShown.value = false;
+	function closeDeleteModal(): void {
+		deleteModalIsOpen.value = false;
+		logoImagesToDelete.value = [];
 	}
 
-	async function deleteLogos(logos: Logo[]): Promise<void> {
-		await props.deleteLogo(logos);
-		closeWarningModal();
+	async function deleteLogoBilder(logos: LogoModelProxy[]): Promise<void> {
+		const kennungen = new Set<string>(logos.map(l => l.proxy.kennung));
+		const dbLogosToDelete = [...props.logos()].filter(dbLogo => kennungen.has(dbLogo.kennung));
+		await props.deleteLogo(dbLogosToDelete);
+		bulkSelectedLogos.value = [];
+		previewLogo.value = null;
+		closeDeleteModal();
 	}
 
 </script>
