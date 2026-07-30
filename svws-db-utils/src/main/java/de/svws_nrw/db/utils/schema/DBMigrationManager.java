@@ -74,6 +74,7 @@ import de.svws_nrw.db.dto.migration.schild.personengruppen.MigrationDTOPersoneng
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchueler;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerDatenschutz;
+import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFehlstunden;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoto;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerGrundschuldaten;
@@ -101,6 +102,17 @@ import jakarta.ws.rs.core.Response.Status;
  * ein SVWS-Datenbank-Schema zu übertragen.
  */
 public final class DBMigrationManager {
+
+	/**
+	 * Speichert nur Schuljahr und Halbjahr für eine Zuordnung zu Schuljahresabschnitten
+	 *
+	 * @param jahr       das Schuljahr
+	 * @param halbjahr   das Halbjahr
+	 */
+	private record SchuljahrHalbjahr(int jahr, int halbjahr) {
+		// empty
+	}
+
 
 	private final DBConfig tgtConfig;
 	private final int maxUpdateRevision;
@@ -147,6 +159,9 @@ public final class DBMigrationManager {
 
 	// Eine Liste zum Zwischenspeichern der Schüler-Lernabschnitts-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> schuelerLernabschnittsIDs = new HashSet<>();
+
+	// Eine Map von Lernabschnitts-ID auf Schuljahr und Halbjahr
+	private final HashMap<Long, SchuljahrHalbjahr> mapLernabschnittHalbjahr = new HashMap<>();
 
 	// Eine Liste zum Zwischenspeichern der Fächer-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> faecherIDs = new HashSet<>();
@@ -1274,8 +1289,47 @@ public final class DBMigrationManager {
 				final int abschnitt = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? 1 : (daten.Abschnitt + 1);
 				folgeAbschnitteFuerKlassen.put(daten.Jahr, daten.Abschnitt, new Pair<>(schuljahr, abschnitt));
 			}
+			// Merke Schuljahr und Halbjahr für die jeweilige ID für Prüfungen in anderen Tabellen
+			int halbjahr = daten.Abschnitt;
+			if (schuleAnzahlAbschnitte == 4) {
+				halbjahr = (daten.Abschnitt + 1) / 2;
+			}
+			mapLernabschnittHalbjahr.put(daten.ID, new SchuljahrHalbjahr(daten.Jahr, halbjahr));
+
 			// Merke die IDs für Überprüfung von Foreign-Key-Constraints in anderen Tabellen
 			schuelerLernabschnittsIDs.add(daten.ID);
+		}
+		return true;
+	}
+
+
+	/**
+	 * Prüft die Entitäten der Tabelle "SchuelerFehlstunden".
+	 * Hierbei wird geprüft, ob der zugehörige Lernabschnitt existiert. Ist kein Datum gesetzt,
+	 * wird dieses abschnittsspezifisch ergänzt (1.1. für das 1. Halbjahr, 1.7. für das 2. Halbjahr).
+	 *
+	 * @param entities die zu prüfenden Entitäten
+	 *
+	 * @return true, falls die Daten erfolgreich geprüft wurden
+	 */
+	private boolean checkSchuelerFehlstunden(final List<MigrationDTOSchuelerFehlstunden> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			final MigrationDTOSchuelerFehlstunden daten = entities.get(i);
+			if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLernabschnitt.formatted(daten.Abschnitt_ID));
+				entities.remove(i);
+				continue;
+			}
+			if ((daten.Datum == null) || ("".equals(daten.Datum.trim()))) {
+				final SchuljahrHalbjahr info = mapLernabschnittHalbjahr.get(daten.Abschnitt_ID);
+				if (info != null) {
+					if (info.halbjahr() == 1) {
+						daten.Datum = "%d-01-01".formatted(info.jahr() + 1);
+					} else {
+						daten.Datum = "%d-07-01".formatted(info.jahr() + 1);
+					}
+				}
+			}
 		}
 		return true;
 	}
@@ -2325,6 +2379,9 @@ public final class DBMigrationManager {
 		}
 		if (firstObject instanceof MigrationDTOSchuelerLernabschnittsdaten) {
 			return checkSchuelerLernabschnittsdaten((List<MigrationDTOSchuelerLernabschnittsdaten>) entities);
+		}
+		if (firstObject instanceof MigrationDTOSchuelerFehlstunden) {
+			return checkSchuelerFehlstunden((List<MigrationDTOSchuelerFehlstunden>) entities);
 		}
 		if (firstObject instanceof MigrationDTOSchuelerLeistungsdaten) {
 			return checkSchuelerLeistungsdaten((List<MigrationDTOSchuelerLeistungsdaten>) entities);
