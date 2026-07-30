@@ -29,6 +29,11 @@ public class FachklasseEintragCreateRequest {
 	@NotNull
 	public Long idFachklasse;
 
+	/** Die ID der Schulgliederung */
+	@Schema(description = "Die ID der Schulgliederung", example = "1001000")
+	@NotNull
+	public Long idSchulgliederung;
+
 	/** Die Sichtbarkeit */
 	@Schema(description = "Die Sichtbarkeit", example = "true")
 	public boolean istSichtbar;

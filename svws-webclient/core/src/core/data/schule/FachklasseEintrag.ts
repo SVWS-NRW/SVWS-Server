@@ -24,9 +24,9 @@ export class FachklasseEintrag extends JavaObject {
 	public idFachklasse: number | null = null;
 
 	/**
-	 * Der Schlüssel der Schulgliderung der ausgewählten Fachklasse
+	 * Die ID der Schulgliederung
 	 */
-	public schluesselSchulgliederung: string | null = null;
+	public idSchulgliederung: number | null = null;
 
 	/**
 	 * Die Sichtbarkeit
@@ -67,7 +67,7 @@ export class FachklasseEintrag extends JavaObject {
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
-		result.schluesselSchulgliederung = (obj.schluesselSchulgliederung === undefined) ? null : obj.schluesselSchulgliederung === null ? null : obj.schluesselSchulgliederung;
+		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -86,7 +86,7 @@ export class FachklasseEintrag extends JavaObject {
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
-		result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
+		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -109,8 +109,8 @@ export class FachklasseEintrag extends JavaObject {
 		if (obj.idFachklasse !== undefined) {
 			result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		}
-		if (obj.schluesselSchulgliederung !== undefined) {
-			result += '"schluesselSchulgliederung" : ' + ((obj.schluesselSchulgliederung === null) ? 'null' : JSON.stringify(obj.schluesselSchulgliederung)) + ',';
+		if (obj.idSchulgliederung !== undefined) {
+			result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

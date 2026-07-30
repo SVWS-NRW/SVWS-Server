@@ -2,7 +2,6 @@ package de.svws_nrw.asd.types.schule;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
 import de.svws_nrw.asd.types.CoreTypeSimple;
@@ -51,17 +50,22 @@ public class Fachklasse extends CoreTypeSimple<FachklasseKatalogEintrag, Fachkla
 	}
 
 	/**
-	 * Liefert die zulässigen Fachklassen für die angegebenen bkIndex in dem angegebenen Schuljahr
+	 * Liefert die zulässigen Fachklassen für den angegebenen bkIndex in dem angegebenen Schuljahr
+	 * Wenn der angegebene bkIndex null ist, dann werden alle Fachklassen für das angegebene Schuljahr zurückgegeben
 	 *
 	 * @param schuljahr das Schuljahr
-	 * @param bkIndizes die BKIndizes
+	 * @param bkIndex der BKIndex
 	 *
 	 * @return Liste von {@link FachklasseKatalogEintrag}
 	 */
-	public static @NotNull List<FachklasseKatalogEintrag> getBySchuljahrAndBKIndizes(final int schuljahr, final @NotNull Set<Integer> bkIndizes) {
+	public static @NotNull List<FachklasseKatalogEintrag> getBySchuljahrAndBKIndex(final int schuljahr, final Integer bkIndex) {
 		final var result = new ArrayList<FachklasseKatalogEintrag>();
-		for (final FachklasseKatalogEintrag fachklasse : data().getEintraegeBySchuljahr(schuljahr)) {
-			if ((bkIndizes.contains(fachklasse.bkIndex))) {
+		final var fachklassen = data().getEintraegeBySchuljahr(schuljahr);
+		if (bkIndex == null) {
+			return fachklassen;
+		}
+		for (final FachklasseKatalogEintrag fachklasse : fachklassen) {
+			if (bkIndex.equals(fachklasse.bkIndex)) {
 				result.add(fachklasse);
 			}
 		}

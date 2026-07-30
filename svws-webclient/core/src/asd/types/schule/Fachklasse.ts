@@ -1,5 +1,5 @@
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { CoreTypeSimple } from '../../../asd/types/CoreTypeSimple';
-import type { JavaSet } from '../../../java/util/JavaSet';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
@@ -48,17 +48,22 @@ export class Fachklasse extends CoreTypeSimple<FachklasseKatalogEintrag, Fachkla
 	}
 
 	/**
-	 * Liefert die zulässigen Fachklassen für die angegebenen bkIndex in dem angegebenen Schuljahr
+	 * Liefert die zulässigen Fachklassen für den angegebenen bkIndex in dem angegebenen Schuljahr
+	 * Wenn der angegebene bkIndex null ist, dann werden alle Fachklassen für das angegebene Schuljahr zurückgegeben
 	 *
 	 * @param schuljahr das Schuljahr
-	 * @param bkIndizes die BKIndizes
+	 * @param bkIndex der BKIndex
 	 *
 	 * @return Liste von {@link FachklasseKatalogEintrag}
 	 */
-	public static getBySchuljahrAndBKIndizes(schuljahr: number, bkIndizes: JavaSet<number>): List<FachklasseKatalogEintrag> {
+	public static getBySchuljahrAndBKIndex(schuljahr: number, bkIndex: number | null): List<FachklasseKatalogEintrag> {
 		const result = new ArrayList<FachklasseKatalogEintrag>();
-		for (const fachklasse of Fachklasse.data().getEintraegeBySchuljahr(schuljahr)) {
-			if ((bkIndizes.contains(fachklasse.bkIndex))) {
+		const fachklassen = Fachklasse.data().getEintraegeBySchuljahr(schuljahr);
+		if (bkIndex === null) {
+			return fachklassen;
+		}
+		for (const fachklasse of fachklassen) {
+			if (JavaObject.equalsTranspiler(bkIndex, (fachklasse.bkIndex))) {
 				result.add(fachklasse);
 			}
 		}

@@ -739,24 +739,6 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	}
 
 	/**
-	 * Liefert die zulässigen Schulgliederungen für das angegebene Schuljahr und die angegebene Schulform
-	 *
-	 * @param schuljahr das Schuljahr
-	 * @param schulform die Schulform
-	 * @return Liste von {@link SchulgliederungKatalogEintrag}
-	 */
-	public static getEintraegeBySchuljahrAndSchulform(schuljahr: number, schulform: Schulform): List<SchulgliederungKatalogEintrag> {
-		const result = new ArrayList<SchulgliederungKatalogEintrag>();
-		for (const schulgliederung of Schulgliederung.data().getWerteBySchulform(schulform)) {
-			const eintrag = schulgliederung.daten(schuljahr);
-			if (eintrag !== null) {
-				result.add(schulgliederung.daten(schuljahr));
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

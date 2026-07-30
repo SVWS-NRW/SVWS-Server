@@ -48,7 +48,7 @@ export class FachklassenListeManager extends AuswahlManager<number, FachklasseEi
 		}
 
 		if (this._filterSchulgliederungen.length > 0) {
-			if ((eintrag.schluesselSchulgliederung === null) || !this._filterSchulgliederungen.some(sg => sg.schluessel === eintrag.schluesselSchulgliederung)) {
+			if ((eintrag.idSchulgliederung === null) || !this._filterSchulgliederungen.some(sg => sg.id === eintrag.idSchulgliederung)) {
 				return false;
 			}
 		}

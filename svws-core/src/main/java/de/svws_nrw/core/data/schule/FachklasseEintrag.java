@@ -28,9 +28,9 @@ public class FachklasseEintrag {
 	@Schema(description = "Die ID der Fachklasse (CoreType)", example = "7000")
 	public Long idFachklasse;
 
-	/** Der Schlüssel der Schulgliderung der ausgewählten Fachklasse */
-	@Schema(description = "Der Schlüssel der Schulgliderung der ausgewählten Fachklasse", example = "K02", accessMode = Schema.AccessMode.READ_ONLY)
-	public String schluesselSchulgliederung;
+	/** Die ID der Schulgliederung */
+	@Schema(description = "Die ID der Schulgliederung", example = "1001000")
+	public Long idSchulgliederung;
 
 	/** Die Sichtbarkeit */
 	@Schema(description = "Die Sichtbarkeit", example = "true")

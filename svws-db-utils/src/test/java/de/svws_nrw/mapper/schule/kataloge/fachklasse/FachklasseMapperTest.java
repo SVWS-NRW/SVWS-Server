@@ -35,6 +35,7 @@ class FachklasseMapperTest {
 	private FachklasseEintragCreateRequest createRequest() {
 		final var dto = new FachklasseEintragCreateRequest();
 		dto.idFachklasse = 5000L;
+		dto.idSchulgliederung = 1001000L; // A01
 		dto.bezeichnung = "Anlagenmechaniker/-in";
 		dto.kuerzel = "AM";
 		dto.istSichtbar = true;
@@ -125,7 +126,7 @@ class FachklasseMapperTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// mapIdFachklasseToApi
+	// mapKennungToApi
 	// -------------------------------------------------------------------------
 
 	@Nested
@@ -155,18 +156,18 @@ class FachklasseMapperTest {
 		}
 
 		@Test
-		@DisplayName("Befüllt schluesselSchulgliederung bei bekanntem Schlüssel und gültigem Schuljahr")
-		void mapKennungToApi_befuelltSchluesselSchulgliederung() {
+		@DisplayName("Befüllt idSchulgliederung bei bekanntem BKIndexTyp und gültigem Schuljahr")
+		void toApi_befuelltIdSchulgliederung() {
 			final var entity = createEntity(1L);
-			entity.Kennung = "60-102-00";
+			entity.BKIndexTyp = "A01";
 
-			final var result = mapper.toApi(entity, 2000);
+			final var result = mapper.toApi(entity, 2024);
 
-			assertThat(result.schluesselSchulgliederung).isNotNull();
+			assertThat(result.idSchulgliederung).isNotNull();
 		}
 
 		@Test
-		@DisplayName("Liefert null für beide Felder bei unbekanntem Schlüssel")
+		@DisplayName("Liefert null für idFachklasse bei unbekanntem Schlüssel")
 		void mapKennungToApi_liefertNullBeiUnbekanntemSchluessel() {
 			final var entity = createEntity(1L);
 			entity.Kennung = "99-999-99";
@@ -174,11 +175,21 @@ class FachklasseMapperTest {
 			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.idFachklasse).isNull();
-			assertThat(result.schluesselSchulgliederung).isNull();
+		}
+
+		@Test
+		@DisplayName("Liefert null für idSchulgliederung bei unbekanntem BKIndexTyp")
+		void toApi_liefertNullIdSchulgliederungBeiUnbekanntemBKIndexTyp() {
+			final var entity = createEntity(1L);
+			entity.BKIndexTyp = "UNBEKANNT";
+
+			final var result = mapper.toApi(entity, 2024);
+
+			assertThat(result.idSchulgliederung).isNull();
 		}
 
 		@ParameterizedTest
-		@DisplayName("Liefert null bei null oder leerem Kennung-Feld")
+		@DisplayName("Liefert null für idFachklasse bei null oder leerem Kennung-Feld")
 		@NullSource
 		@ValueSource(strings = {" ", "   "})
 		void mapKennungToApi_liefertNullBeiNullOderBlank(final String kennung) {
@@ -188,7 +199,6 @@ class FachklasseMapperTest {
 			final var result = mapper.toApi(entity, 2024);
 
 			assertThat(result.idFachklasse).isNull();
-			assertThat(result.schluesselSchulgliederung).isNull();
 		}
 	}
 
@@ -213,8 +223,17 @@ class FachklasseMapperTest {
 					.hasFieldOrPropertyWithValue("AP", "00")
 					.hasFieldOrPropertyWithValue("Kennung", "10-101-00")
 					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100")
-					.hasFieldOrPropertyWithValue("BKIndexTyp", "A01")
 					.hasFieldOrPropertyWithValue("DQR_Niveau", 4);
+		}
+
+		@Test
+		@DisplayName("Befüllt BKIndexTyp korrekt aus idSchulgliederung")
+		void toDomain_mapptBKIndexTypAusIdSchulgliederung() {
+			final var dto = createRequest();
+
+			final var result = mapper.toDomain(dto, 2024);
+
+			assertThat(result.BKIndexTyp).isEqualTo("A01");
 		}
 
 		@Test
@@ -245,7 +264,6 @@ class FachklasseMapperTest {
 					.hasFieldOrPropertyWithValue("AP", null)
 					.hasFieldOrPropertyWithValue("Kennung", null)
 					.hasFieldOrPropertyWithValue("FKS_AP_SIM", null)
-					.hasFieldOrPropertyWithValue("BKIndexTyp", null)
 					.hasFieldOrPropertyWithValue("DQR_Niveau", null);
 		}
 
@@ -307,8 +325,20 @@ class FachklasseMapperTest {
 					.hasFieldOrPropertyWithValue("AP", "00")
 					.hasFieldOrPropertyWithValue("Kennung", "10-101-00")
 					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100")
-					.hasFieldOrPropertyWithValue("BKIndexTyp", "A01")
 					.hasFieldOrPropertyWithValue("DQR_Niveau", 4);
+		}
+
+		@Test
+		@DisplayName("BKIndexTyp wird beim Patch nicht verändert (nicht patchbar)")
+		void patch_veraendertBKIndexTypNicht() {
+			final var dto = new FachklasseEintragPatchRequest();
+			dto.idFachklasse = JsonNullable.of(5000L);
+			final var entity = createEntity(1L);
+			entity.BKIndexTyp = "ORIGINAL";
+
+			mapper.patch(dto, 2024, entity);
+
+			assertThat(entity.BKIndexTyp).isEqualTo("ORIGINAL");
 		}
 
 		@Test

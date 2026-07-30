@@ -7,7 +7,7 @@
 		<div class="secondary-menu--content">
 			<svws-ui-table v-model="selectedFachklassen"
 				v-model:clicked="clickedFachklasse"
-				:items="filteredFachklassen" :columns
+				:items="filteredFachklassenMitSchluesselSchulgliederung" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" />
@@ -45,6 +45,10 @@
 	import type { FachklassenAuswahlProps } from "~/components/schule/kataloge/fachklassen/FachklassenAuswahlProps";
 	import { computed } from "vue";
 
+	interface FachklasseEintragListe extends FachklasseEintrag {
+		schluesselSchulgliederung: string;
+	}
+
 	const schuleState = useSchuleState();
 
 	const columns: DataTableColumn[] = [
@@ -68,6 +72,17 @@
 		showOnlyVisible,
 		noFilteredItems,
 	} = useKatalogAuswahl<FachklasseEintrag>(props);
+
+	// schluesselSchulgliederung wird zur Laufzeit aus idSchulgliederung gemappt,
+	// damit die Tabellensortierung auf dem Schlüssel operieren kann.
+	const filteredFachklassenMitSchluesselSchulgliederung = computed<FachklasseEintragListe[]>(() =>
+		[...filteredFachklassen.value].map(eintrag => {
+			const mapped = eintrag as FachklasseEintragListe;
+			mapped.schluesselSchulgliederung =
+				Schulgliederung.data().getEintragByID(eintrag.idSchulgliederung)?.schluessel ?? '';
+			return mapped;
+		})
+	);
 
 	const filterSchulgliederungen = computed<SchulgliederungKatalogEintrag[]>({
 		get: () => manager().filterSchulgliederungen,

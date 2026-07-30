@@ -13,10 +13,12 @@
 						:validation="() => model.getFehler('bezeichnung')"
 						@change="model.patch"
 						:max-len="100" required :readonly />
-					<ui-select label="Fachklasse" class="col-span-full"
-						v-model="model.fachklasse.value"
-						:manager="fachklassenManager"
-						:readonly required />
+					<svws-ui-text-input placeholder="Schulgliederung" span="full"
+						:model-value="model.bezeichnungSchulgliederung.value"
+						readonly />
+					<svws-ui-text-input placeholder="Fachklasse" span="full"
+						:model-value="model.bezeichnungFachklasse.value"
+						readonly />
 					<svws-ui-spacing />
 					Die Lernfelder sind zur Zeit nur in Schild3 einsehbar und editiertbar.
 				</svws-ui-input-wrapper>
@@ -47,32 +49,15 @@
 	import type { FachklassenDatenProps } from "~/components/schule/kataloge/fachklassen/daten/FachklassenDatenProps";
 	import { FachklassenModelProxy } from "~/components/schule/kataloge/fachklassen/modelproxy/FachklassenModelProxy";
 	import { computed } from "vue";
-	import type { FachklasseKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, Fachklasse, HashSet, Schulgliederung } from "@core";
-	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { BenutzerKompetenz } from "@core";
+	import { useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<FachklassenDatenProps>();
 	const schuleState = useSchuleState();
 	const benutzerState = useBenutzerState();
-	const model = new FachklassenModelProxy(() => props.manager().daten(), () => props.manager(), props.patch);
+	const model = new FachklassenModelProxy(() => props.manager().daten(), () => props.manager(), schuleState.abschnitt.schuljahr, props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
-	const fachklassen = computed<Iterable<FachklasseKatalogEintrag>>(() => {
-		const bkIndizes = new HashSet<number>();
-		const schulgliederungen = Schulgliederung.getEintraegeBySchuljahrAndSchulform(schuleState.abschnitt.schuljahr, schuleState.schulform);
-		for (const s of schulgliederungen) {
-			if (s.bkIndex !== null) {
-				bkIndizes.add(s.bkIndex);
-			}
-		}
-		return Fachklasse.getBySchuljahrAndBKIndizes(schuleState.abschnitt.schuljahr, bkIndizes);
-	});
-
-	const fachklassenManager = new SelectManager<FachklasseKatalogEintrag>({
-		options: fachklassen,
-		optionDisplayText: f => f.kuerzel,
-		selectionDisplayText: f => f.kuerzel,
-	});
 
 </script>

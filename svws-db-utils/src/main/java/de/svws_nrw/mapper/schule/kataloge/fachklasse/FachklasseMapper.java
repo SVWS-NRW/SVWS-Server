@@ -1,7 +1,6 @@
 package de.svws_nrw.mapper.schule.kataloge.fachklasse;
 
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
@@ -40,9 +40,27 @@ public interface FachklasseMapper {
 	 * @return das befüllte DTO
 	 */
 	@Mapping(target = "idFachklasse", ignore = true)
-	@Mapping(target = "schluesselSchulgliederung", ignore = true)
 	@Mapping(target = "referenziertInAnderenTabellen", ignore = true)
+	@Mapping(source = "BKIndexTyp", target = "idSchulgliederung", qualifiedByName = "mapIdSchulgliederung")
 	FachklasseEintrag toApi(DTOFachklassen entity, @Context int schuljahr);
+
+	/**
+	 * Löst den Schlüssel der Schulgliederung auf die ID auf.
+	 *
+	 * @param schluesselSchulgliederung Schlüssel der Schulgliederung
+	 * @param schuljahr das aktuelle Schuljahr für den {@link Schulgliederung}-Lookup
+	 * @return die ID der Schulgliederung
+	 */
+	@Named("mapIdSchulgliederung")
+	default Long mapIdSchulgliederung(final String schluesselSchulgliederung, @Context final int schuljahr) {
+		if (schluesselSchulgliederung == null) {
+			return null;
+		}
+
+		return Optional.ofNullable(Schulgliederung.data().getEintragBySchuljahrUndSchluessel(schuljahr, schluesselSchulgliederung))
+				.map(s -> s.id)
+				.orElse(null);
+	}
 
 	/**
 	 * Rekonstruiert nach dem Basis-Mapping den Fachklassen-Schlüssel aus dem Feld
@@ -50,19 +68,14 @@ public interface FachklasseMapper {
 	 * Bindestrichs (z.B. {@code "10-17902"}) und löst damit den zum Schuljahr passenden
 	 * {@link Fachklasse}-Katalogeintrag auf.
 	 * <p>
-	 * Bei Erfolg werden folgende Felder am {@link FachklasseEintrag} gesetzt:
-	 * <ul>
-	 *   <li>{@link FachklasseEintrag#idFachklasse} – die ID des zum Schuljahr gültigen Katalogeintrags</li>
-	 *   <li>{@link FachklasseEintrag#schluesselSchulgliederung} – der Schlüssel der letzten
-	 *       {@link Schulgliederung}, die zum {@code bkIndex} der Fachklasse im angegebenen
-	 *       Schuljahr gefunden wird; {@code null} wenn keine gefunden wird</li>
-	 * </ul>
+	 * Bei Erfolg wird das Feld {@link FachklasseEintrag#idFachklasse} – die ID des zum Schuljahr gültigen Katalogeintrags - gesetzt.
+	 * <p>
 	 * Ist {@link DTOFachklassen#Kennung} {@code null}, leer oder der rekonstruierte Schlüssel
 	 * im angegebenen Schuljahr unbekannt, werden die Felder nicht gesetzt.
 	 *
 	 * @param entity    die Quell-Entity mit dem zu rekonstruierenden {@link DTOFachklassen#Kennung}-Feld
-	 * @param schuljahr das aktuelle Schuljahr für den {@link Fachklasse}- und {@link Schulgliederung}-Lookup
-	 * @param dto       das Ziel-DTO, in das {@code idFachklasse} und {@code schluesselSchulgliederung} geschrieben werden
+	 * @param schuljahr das aktuelle Schuljahr für den {@link Fachklasse}-Lookup
+	 * @param dto       das Ziel-DTO, in das {@code idFachklasse} geschrieben werden
 	 */
 	@AfterMapping
 	default void mapKennungToApi(
@@ -81,14 +94,6 @@ public interface FachklasseMapper {
 			return;
 		}
 		dto.idFachklasse = fachklasse.id;
-		if (fachklasse.bkIndex == null) {
-			return;
-		}
-		final var schulgliederungen = Schulgliederung.getBySchuljahrAndBKIndex(schuljahr, fachklasse.bkIndex);
-		if (schulgliederungen.isEmpty()) {
-			return;
-		}
-		dto.schluesselSchulgliederung = schulgliederungen.getFirst().schluessel;
 	}
 
 	/**
@@ -105,10 +110,25 @@ public interface FachklasseMapper {
 	 */
 	@BeanMapping(ignoreByDefault = true)
 	@Mapping(source = "bezeichnung", target = "bezeichnung")
-	@Mapping(source = "kuerzel",     target = "kuerzel")
+	@Mapping(source = "kuerzel", target = "kuerzel")
 	@Mapping(source = "istSichtbar", target = "istSichtbar")
-	@Mapping(source = "sortierung",  target = "sortierung")
+	@Mapping(source = "sortierung", target = "sortierung")
+	@Mapping(source = "idSchulgliederung", target = "BKIndexTyp", qualifiedByName = "updateIdSchulgliederung")
 	DTOFachklassen toDomain(FachklasseEintragCreateRequest dto, @Context Integer schuljahr);
+
+	/**
+	 * Löst die Id der Schulgliederung auf den Schlüssel auf.
+	 *
+	 * @param idSchulgliederung Id der Schulgliederung
+	 * @return der Schlüssel der Schulgliederung
+	 */
+	@Named("updateIdSchulgliederung")
+	default String updateIdSchulgliederung(final Long idSchulgliederung) {
+		return Optional.ofNullable(Schulgliederung.data().getEintragByID(idSchulgliederung))
+				.map(s -> s.schluessel)
+				.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST,
+						"Keine Schulgliederung für die id %d gefunden".formatted(idSchulgliederung)));
+	}
 
 	/**
 	 * Wendet die Änderungen eines {@link FachklasseEintragPatchRequest} auf eine bestehende
@@ -123,21 +143,20 @@ public interface FachklasseMapper {
 	@BeanMapping(ignoreByDefault = true,
 			nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "bezeichnung", target = "bezeichnung")
-	@Mapping(source = "kuerzel",     target = "kuerzel")
+	@Mapping(source = "kuerzel", target = "kuerzel")
 	@Mapping(source = "istSichtbar", target = "istSichtbar")
-	@Mapping(source = "sortierung",  target = "sortierung")
+	@Mapping(source = "sortierung", target = "sortierung")
 	void patch(FachklasseEintragPatchRequest dto, @Context Integer schuljahr, @MappingTarget DTOFachklassen entity);
 
 	/**
 	 * Löst nach dem Mapping eines {@link FachklasseEintragCreateRequest} die {@code idFachklasse}
-	 * auf den zugehörigen {@link de.svws_nrw.asd.types.schule.Fachklasse}-CoreType auf
+	 * auf den zugehörigen {@link Fachklasse}-CoreType auf
 	 * und befüllt die abhängigen Felder der {@link DTOFachklassen}-Entity.
 	 *
 	 * @param dto       der Create-Request mit der aufzulösenden {@code idFachklasse}
 	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @param entity    die zu befüllende {@link DTOFachklassen}-Entity
-	 * @throws ApiOperationException wenn {@code idFachklasse} null oder unbekannt ist,
-	 *                               kein DQR-Niveau oder keine Schulgliederung gefunden wird
+	 * @throws ApiOperationException wenn {@code idFachklasse} null oder unbekannt ist oder kein DQR-Niveau gefunden wird
 	 */
 	@AfterMapping
 	default void mapIdFachklasseFromCreate(
@@ -149,7 +168,7 @@ public interface FachklasseMapper {
 
 	/**
 	 * Löst nach dem Mapping eines {@link FachklasseEintragPatchRequest} die {@code idFachklasse}
-	 * auf den zugehörigen {@link de.svws_nrw.asd.types.schule.Fachklasse}-CoreType auf
+	 * auf den zugehörigen {@link Fachklasse}-CoreType auf
 	 * und befüllt die abhängigen Felder der {@link DTOFachklassen}-Entity,
 	 * sofern {@code idFachklasse} im Request explizit gesetzt wurde.
 	 * Bei {@code undefined} wird kein Lookup durchgeführt.
@@ -157,8 +176,7 @@ public interface FachklasseMapper {
 	 * @param dto       der Patch-Request mit der aufzulösenden {@code idFachklasse}
 	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @param entity    die zu aktualisierende {@link DTOFachklassen}-Entity
-	 * @throws ApiOperationException wenn {@code idFachklasse} gesetzt, aber unbekannt ist,
-	 *                               kein DQR-Niveau oder keine Schulgliederung gefunden wird
+	 * @throws ApiOperationException wenn {@code idFachklasse} gesetzt, aber unbekannt ist oder kein DQR-Niveau gefunden wird
 	 */
 	@AfterMapping
 	default void mapIdFachklasseFromPatch(
@@ -182,7 +200,6 @@ public interface FachklasseMapper {
 		entity.AP = fachklasse.fkSchluessel2;
 		entity.Kennung = getKennung(fachklasse);
 		entity.FKS_AP_SIM = getFksApSim(fachklasse);
-		entity.BKIndexTyp = getSchluesselSchulgliederung(fachklasse, schuljahr);
 		entity.DQR_Niveau = getIdDQRNiveau(fachklasse, schuljahr);
 	}
 
@@ -206,16 +223,6 @@ public interface FachklasseMapper {
 				.map(Long::intValue)
 				.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Kein DQRNiveau zum Schlüssel %s zur Fachklasse mit der id %d gefunden".formatted(fachklasse.dqrNiveau, fachklasse.id)));
-	}
-
-	private static String getSchluesselSchulgliederung(final FachklasseKatalogEintrag fachklasse, final int schuljahr) {
-		return Optional.of(Schulgliederung.getBySchuljahrAndBKIndex(schuljahr, fachklasse.bkIndex))
-				.filter(list -> !list.isEmpty())
-				.map(List::getFirst)
-				.map(s -> s.schluessel)
-				.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST,
-						"keine Schulgliederung zum BKIndex %s im Schuljahr %d zur Fachklasse mit der id %d gefunden".formatted(fachklasse.bkIndex, schuljahr,
-								fachklasse.id)));
 	}
 
 }

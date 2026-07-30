@@ -11,10 +11,14 @@
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
 						:max-len="100" required :disabled />
+					<ui-select label="Schulgliederung" class="col-span-full"
+						v-model="model.schulgliederung.value"
+						:manager="schulgliederungManager"
+						:disabled required />
 					<ui-select label="Fachklasse" class="col-span-full"
 						v-model="model.fachklasse.value"
 						:manager="fachklassenManager"
-						:disabled required />
+						:disabled="fachklasseSelectDisabled" required />
 					<svws-ui-spacing />
 					Die Lernfelder sind zur Zeit nur in Schild3 einsehbar und editiertbar.
 				</svws-ui-input-wrapper>
@@ -52,9 +56,10 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { FachklassenNeuProps } from "~/components/schule/kataloge/fachklassen/FachklassenNeuProps";
-	import { BenutzerKompetenz, Fachklasse, FachklasseEintrag, type FachklasseKatalogEintrag, HashSet, Schulgliederung } from "@core";
+	import type { SchulgliederungKatalogEintrag, FachklasseKatalogEintrag, List } from "@core";
+	import { ArrayList, BenutzerKompetenz, FachklasseEintrag, Schulgliederung } from "@core";
 	import { FachklassenModelProxy } from "~/components/schule/kataloge/fachklassen/modelproxy/FachklassenModelProxy";
-	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<FachklassenNeuProps>();
 	const schuleState = useSchuleState();
@@ -64,24 +69,36 @@
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzUpdate.value);
 	const initialData = ref<FachklasseEintrag>(Object.assign(new FachklasseEintrag(), { istSichtbar: true, sortierung: 32000 }));
-	const model = new FachklassenModelProxy(() => initialData.value, props.manager);
+	const model = new FachklassenModelProxy(() => initialData.value, props.manager, schuleState.abschnitt.schuljahr);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
-
-	const fachklassen = computed<Iterable<FachklasseKatalogEintrag>>(() => {
-		const bkIndizes = new HashSet<number>();
-		const schulgliederungen = Schulgliederung.getEintraegeBySchuljahrAndSchulform(schuleState.abschnitt.schuljahr, schuleState.schulform);
-		for (const s of schulgliederungen) {
-			if (s.bkIndex !== null) {
-				bkIndizes.add(s.bkIndex);
-			}
-		}
-		return Fachklasse.getBySchuljahrAndBKIndizes(schuleState.abschnitt.schuljahr, bkIndizes);
-	});
+	const fachklasseSelectDisabled = computed<boolean>(() => disabled.value || model.proxy.idSchulgliederung === null);
 
 	const fachklassenManager = new SelectManager<FachklasseKatalogEintrag>({
-		options: fachklassen,
+		options: model.fachklassen,
 		optionDisplayText: f => f.kuerzel,
 		selectionDisplayText: f => f.kuerzel,
+	});
+
+	const schulgliederungFilter = {
+		key: "isBK",
+		apply: (options: List<SchulgliederungKatalogEintrag>) => {
+			const filtered = new ArrayList<SchulgliederungKatalogEintrag>();
+			for (const option of options) {
+				if (option.istBK) {
+					filtered.add(option);
+				}
+			}
+			return filtered;
+		},
+	};
+
+	const schulgliederungManager = new CoreTypeSelectManager({
+		clazz: Schulgliederung.class,
+		filters: [schulgliederungFilter],
+		schuljahr: schuleState.abschnitt.schuljahr,
+		schulformen: schuleState.schulform,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	async function addFachklasse(): Promise<void> {
@@ -91,7 +108,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, schluesselSchulgliederung, ...partialData } = model.proxy;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
