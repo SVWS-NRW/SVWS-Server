@@ -3,6 +3,7 @@ package de.svws_nrw.service.schule.kataloge.fachklasse;
 import java.util.Comparator;
 import java.util.List;
 
+import de.svws_nrw.asd.types.schule.DQRNiveau;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.FachklasseEintrag;
@@ -61,9 +62,9 @@ public final class FachklasseService {
 	public FachklasseEintrag create(final FachklasseEintragCreateRequest dto) {
 		return TransactionSupport.transactional(() -> {
 			this.validateCreate(dto);
-			final var schuljahr = schuleService.getSchuljahr();
-			final var fachklasse = mapper.toDomain(dto, schuljahr);
+			final var fachklasse = mapper.toDomain(dto);
 			final var created = repo.create(fachklasse);
+			final var schuljahr = schuleService.getSchuljahr();
 			return mapper.toApi(created, schuljahr);
 		});
 	}
@@ -84,8 +85,8 @@ public final class FachklasseService {
 		return TransactionSupport.transactional(() -> {
 			final var entity = repo.getById(id);
 			validatePatch(dto, id);
+			mapper.patch(dto, entity);
 			final var schuljahr = schuleService.getSchuljahr();
-			mapper.patch(dto, schuljahr, entity);
 			return this.mapper.toApi(entity, schuljahr);
 		});
 	}
@@ -113,16 +114,27 @@ public final class FachklasseService {
 	private void validateCreate(final FachklasseEintragCreateRequest dto) {
 		validateUniqueKuerzel(dto.kuerzel, null);
 		validateIdFachklasse(dto.idFachklasse);
+		validateIdDqrNiveau(dto.idDqrNiveau);
 	}
 
 	private void validatePatch(final FachklasseEintragPatchRequest dto, final long id) {
 		dto.kuerzel.ifPresent(kuerzel -> validateUniqueKuerzel(kuerzel, id));
 		dto.idFachklasse.ifPresent(this::validateIdFachklasse);
+		dto.idDqrNiveau.ifPresent(this::validateIdDqrNiveau);
 	}
 
 	private void validateIdFachklasse(final Long idFachklasse) {
 		if (Fachklasse.data().getEintragByID(idFachklasse) == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine Fachklasse für die id %d gefunden".formatted(idFachklasse));
+		}
+	}
+
+	private void validateIdDqrNiveau(final Integer idDqrNiveau) {
+		if (idDqrNiveau == null) {
+			return;
+		}
+		if (DQRNiveau.data().getEintragByID(Long.valueOf(idDqrNiveau)) == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein DQR-Niveau für die id %d gefunden".formatted(idDqrNiveau));
 		}
 	}
 

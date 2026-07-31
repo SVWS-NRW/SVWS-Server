@@ -215,15 +215,14 @@ class FachklasseMapperTest {
 		void toDomain_mapptCoreTypeFelder() {
 			final var dto = createRequest();
 
-			final var result = mapper.toDomain(dto, 2024);
+			final var result = mapper.toDomain(dto);
 
 			assertThat(result)
 					.hasFieldOrPropertyWithValue("BKIndex", 10)
 					.hasFieldOrPropertyWithValue("FKS", "101")
 					.hasFieldOrPropertyWithValue("AP", "00")
 					.hasFieldOrPropertyWithValue("Kennung", "10-101-00")
-					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100")
-					.hasFieldOrPropertyWithValue("DQR_Niveau", 4);
+					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100");
 		}
 
 		@Test
@@ -231,7 +230,7 @@ class FachklasseMapperTest {
 		void toDomain_mapptBKIndexTypAusIdSchulgliederung() {
 			final var dto = createRequest();
 
-			final var result = mapper.toDomain(dto, 2024);
+			final var result = mapper.toDomain(dto);
 
 			assertThat(result.BKIndexTyp).isEqualTo("A01");
 		}
@@ -241,7 +240,7 @@ class FachklasseMapperTest {
 		void toDomain_mapptEinfacheFelder() {
 			final var dto = createRequest();
 
-			final var result = mapper.toDomain(dto, 2024);
+			final var result = mapper.toDomain(dto);
 
 			assertThat(result)
 					.hasFieldOrPropertyWithValue("bezeichnung", "Anlagenmechaniker/-in")
@@ -251,20 +250,59 @@ class FachklasseMapperTest {
 		}
 
 		@Test
+		@DisplayName("Befüllt bezeichnungWeiblich und Berufsebenen korrekt")
+		void toDomain_mapptBezeichnungWeiblichUndBerufsebenen() {
+			final var dto = createRequest();
+			dto.bezeichnungWeiblich = "Anlagenmechanikerin";
+			dto.berufsebene1 = "Metall";
+			dto.berufsebene2 = "Sanitär";
+			dto.berufsebene3 = "Heizung";
+
+			final var result = mapper.toDomain(dto);
+
+			assertThat(result)
+					.hasFieldOrPropertyWithValue("bezeichnungWeiblich", "Anlagenmechanikerin")
+					.hasFieldOrPropertyWithValue("berufsebene1", "Metall")
+					.hasFieldOrPropertyWithValue("berufsebene2", "Sanitär")
+					.hasFieldOrPropertyWithValue("berufsebene3", "Heizung");
+		}
+
+		@Test
+		@DisplayName("Befüllt idDqrNiveau direkt aus Request")
+		void toDomain_mapptIdDqrNiveau() {
+			final var dto = createRequest();
+			dto.idDqrNiveau = 3;
+
+			final var result = mapper.toDomain(dto);
+
+			assertThat(result.idDqrNiveau).isEqualTo(3);
+		}
+
+		@Test
+		@DisplayName("Setzt idDqrNiveau auf null wenn im Request nicht gesetzt")
+		void toDomain_idDqrNiveauNullWennNichtGesetzt() {
+			final var dto = createRequest();
+			dto.idDqrNiveau = null;
+
+			final var result = mapper.toDomain(dto);
+
+			assertThat(result.idDqrNiveau).isNull();
+		}
+
+		@Test
 		@DisplayName("Befüllt keine CoreType-Felder bei null idFachklasse")
 		void toDomain_mapptKeineCoreTypeFelderBeiNullId() {
 			final var dto = createRequest();
 			dto.idFachklasse = null;
 
-			final var result = mapper.toDomain(dto, 2024);
+			final var result = mapper.toDomain(dto);
 
 			assertThat(result)
 					.hasFieldOrPropertyWithValue("BKIndex", null)
 					.hasFieldOrPropertyWithValue("FKS", null)
 					.hasFieldOrPropertyWithValue("AP", null)
 					.hasFieldOrPropertyWithValue("Kennung", null)
-					.hasFieldOrPropertyWithValue("FKS_AP_SIM", null)
-					.hasFieldOrPropertyWithValue("DQR_Niveau", null);
+					.hasFieldOrPropertyWithValue("FKS_AP_SIM", null);
 		}
 
 		@Test
@@ -273,7 +311,7 @@ class FachklasseMapperTest {
 			final var dto = createRequest();
 			dto.idFachklasse = -1L;
 
-			final var result = mapper.toDomain(dto, 2024);
+			final var result = mapper.toDomain(dto);
 
 			assertThat(result)
 					.hasFieldOrPropertyWithValue("BKIndex", null)
@@ -301,7 +339,7 @@ class FachklasseMapperTest {
 			dto.sortierung = JsonNullable.of(200);
 			final var entity = createEntity(1L);
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity)
 					.hasFieldOrPropertyWithValue("bezeichnung", "Neue Bezeichnung")
@@ -311,21 +349,63 @@ class FachklasseMapperTest {
 		}
 
 		@Test
+		@DisplayName("Aktualisiert bezeichnungWeiblich und Berufsebenen korrekt")
+		void patch_aktualisiertBezeichnungWeiblichUndBerufsebenen() {
+			final var dto = new FachklasseEintragPatchRequest();
+			dto.bezeichnungWeiblich = JsonNullable.of("Anlagenmechanikerin");
+			dto.berufsebene1 = JsonNullable.of("Metall");
+			dto.berufsebene2 = JsonNullable.of("Sanitär");
+			dto.berufsebene3 = JsonNullable.of("Heizung");
+			final var entity = createEntity(1L);
+
+			mapper.patch(dto, entity);
+
+			assertThat(entity)
+					.hasFieldOrPropertyWithValue("bezeichnungWeiblich", "Anlagenmechanikerin")
+					.hasFieldOrPropertyWithValue("berufsebene1", "Metall")
+					.hasFieldOrPropertyWithValue("berufsebene2", "Sanitär")
+					.hasFieldOrPropertyWithValue("berufsebene3", "Heizung");
+		}
+
+		@Test
+		@DisplayName("Aktualisiert idDqrNiveau direkt aus Request")
+		void patch_aktualisiertIdDqrNiveau() {
+			final var dto = new FachklasseEintragPatchRequest();
+			dto.idDqrNiveau = JsonNullable.of(3);
+			final var entity = createEntity(1L);
+
+			mapper.patch(dto, entity);
+
+			assertThat(entity.idDqrNiveau).isEqualTo(3);
+		}
+
+		@Test
+		@DisplayName("Lässt idDqrNiveau unverändert wenn undefined")
+		void patch_laesst_idDqrNiveau_unveraendert_bei_undefined() {
+			final var dto = new FachklasseEintragPatchRequest();
+			final var entity = createEntity(1L);
+			entity.idDqrNiveau = 4;
+
+			mapper.patch(dto, entity);
+
+			assertThat(entity.idDqrNiveau).isEqualTo(4);
+		}
+
+		@Test
 		@DisplayName("Aktualisiert CoreType-Felder bei gesetzter idFachklasse")
 		void patch_aktualisiertCoreTypeFelder() {
 			final var dto = new FachklasseEintragPatchRequest();
 			dto.idFachklasse = JsonNullable.of(5000L);
 			final var entity = createEntity(1L);
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity)
 					.hasFieldOrPropertyWithValue("BKIndex", 10)
 					.hasFieldOrPropertyWithValue("FKS", "101")
 					.hasFieldOrPropertyWithValue("AP", "00")
 					.hasFieldOrPropertyWithValue("Kennung", "10-101-00")
-					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100")
-					.hasFieldOrPropertyWithValue("DQR_Niveau", 4);
+					.hasFieldOrPropertyWithValue("FKS_AP_SIM", "10100");
 		}
 
 		@Test
@@ -336,7 +416,7 @@ class FachklasseMapperTest {
 			final var entity = createEntity(1L);
 			entity.BKIndexTyp = "ORIGINAL";
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity.BKIndexTyp).isEqualTo("ORIGINAL");
 		}
@@ -350,7 +430,7 @@ class FachklasseMapperTest {
 			entity.kuerzel = "OR";
 			entity.BKIndex = 10;
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity)
 					.hasFieldOrPropertyWithValue("bezeichnung", "Original")
@@ -366,7 +446,7 @@ class FachklasseMapperTest {
 			entity.BKIndex = 99;
 			entity.Kennung = "ORIGINAL";
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity)
 					.hasFieldOrPropertyWithValue("BKIndex", 99)
@@ -382,7 +462,7 @@ class FachklasseMapperTest {
 			entity.bezeichnung = "Alt";
 			entity.kuerzel = "ORIGINAL";
 
-			mapper.patch(dto, 2024, entity);
+			mapper.patch(dto, entity);
 
 			assertThat(entity)
 					.hasFieldOrPropertyWithValue("bezeichnung", "Geändert")

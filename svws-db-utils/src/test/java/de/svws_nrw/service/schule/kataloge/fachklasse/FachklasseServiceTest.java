@@ -28,7 +28,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -110,7 +109,7 @@ class FachklasseServiceTest {
 			when(repo.getAll()).thenReturn(List.of());
 
 			assertThat(service.getAll()).isEmpty();
-			verify(mapper, never()).toApi(any(), anyInt());
+			verify(mapper, never()).toApi(any(), any(Integer.class));
 		}
 
 		@Test
@@ -142,9 +141,9 @@ class FachklasseServiceTest {
 			final var dto = createRequest();
 
 			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
-			when(schuleService.getSchuljahr()).thenReturn(2024);
-			when(mapper.toDomain(dto, 2024)).thenReturn(entity);
+			when(mapper.toDomain(dto)).thenReturn(entity);
 			when(repo.create(entity)).thenReturn(entity);
+			when(schuleService.getSchuljahr()).thenReturn(2024);
 			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
 
 			final var result = service.create(dto);
@@ -185,6 +184,40 @@ class FachklasseServiceTest {
 
 			verify(repo, never()).create(any(DTOFachklassen.class));
 		}
+
+		@Test
+		@DisplayName("Wirft BAD_REQUEST wenn idDqrNiveau unbekannt")
+		void create_idDqrNiveauUnbekannt() {
+			final var dto = createRequest();
+			dto.idDqrNiveau = -1;
+
+			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
+
+			assertThatException()
+					.isThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.withMessageContaining("-1")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verify(repo, never()).create(any(DTOFachklassen.class));
+		}
+
+		@Test
+		@DisplayName("Legt Fachklasse ohne idDqrNiveau korrekt an (null erlaubt)")
+		void create_ohneIdDqrNiveau() {
+			final var dto = createRequest();
+			dto.idDqrNiveau = null;
+
+			when(repo.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
+			when(mapper.toDomain(dto)).thenReturn(entity);
+			when(repo.create(entity)).thenReturn(entity);
+			when(schuleService.getSchuljahr()).thenReturn(2024);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
+
+			final var result = service.create(dto);
+
+			assertThat(result).isEqualTo(apiModel);
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -208,7 +241,7 @@ class FachklasseServiceTest {
 			final var result = service.patch(1L, dto);
 
 			assertThat(result).isEqualTo(apiModel);
-			verify(mapper).patch(dto, 2024, entity);
+			verify(mapper).patch(dto, entity);
 		}
 
 		@Test
@@ -226,7 +259,7 @@ class FachklasseServiceTest {
 					.withMessageContaining("DK")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 
-			verify(mapper, never()).patch(any(), anyInt(), any());
+			verify(mapper, never()).patch(any(), any(DTOFachklassen.class));
 		}
 
 		@Test
@@ -243,14 +276,30 @@ class FachklasseServiceTest {
 					.withMessageContaining("-1")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 
-			verify(mapper, never()).patch(any(), anyInt(), any());
+			verify(mapper, never()).patch(any(), any(DTOFachklassen.class));
+		}
+
+		@Test
+		@DisplayName("Wirft BAD_REQUEST wenn idDqrNiveau unbekannt")
+		void patch_idDqrNiveauUnbekannt() {
+			final var dto = new FachklasseEintragPatchRequest();
+			dto.idDqrNiveau = JsonNullable.of(-1);
+
+			when(repo.getById(1L)).thenReturn(entity);
+
+			assertThatException()
+					.isThrownBy(() -> service.patch(1L, dto))
+					.isInstanceOf(ApiOperationException.class)
+					.withMessageContaining("-1")
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+			verify(mapper, never()).patch(any(), any(DTOFachklassen.class));
 		}
 
 		@Test
 		@DisplayName("Lässt undefined Felder unverändert — kein Validierungsaufruf")
 		void patch_allUndefined() {
 			final var dto = new FachklasseEintragPatchRequest();
-			// alle Felder bleiben undefined
 
 			when(repo.getById(1L)).thenReturn(entity);
 			when(schuleService.getSchuljahr()).thenReturn(2024);
@@ -258,8 +307,24 @@ class FachklasseServiceTest {
 
 			service.patch(1L, dto);
 
-			verify(repo, never()).kuerzelIsAlreadyUsedPatch(any(), anyInt());
-			verify(mapper).patch(dto, 2024, entity);
+			verify(repo, never()).kuerzelIsAlreadyUsedPatch(any(), any(Long.class));
+			verify(mapper).patch(dto, entity);
+		}
+
+		@Test
+		@DisplayName("Mischt definierte und undefined Felder korrekt")
+		void patch_mischtDefinierteUndUndefinierteFelder() {
+			final var dto = new FachklasseEintragPatchRequest();
+			dto.bezeichnung = JsonNullable.of("Geändert");
+
+			when(repo.getById(1L)).thenReturn(entity);
+			when(schuleService.getSchuljahr()).thenReturn(2024);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
+
+			service.patch(1L, dto);
+
+			verify(mapper).patch(dto, entity);
+			verify(repo, never()).kuerzelIsAlreadyUsedPatch(any(), any(Long.class));
 		}
 	}
 
@@ -285,7 +350,7 @@ class FachklasseServiceTest {
 					.hasSize(2)
 					.allMatch(r -> r.success);
 			assertThat(result.stream().map(r -> r.id).toList())
-					.containsExactly(1L, 2L); // aufsteigend sortiert
+					.containsExactly(1L, 2L);
 		}
 
 		@Test

@@ -14,6 +14,11 @@ export class FachklasseEintrag extends JavaObject {
 	public bezeichnung: string | null = null;
 
 	/**
+	 * Die Bezeichnung (weibliche Form)
+	 */
+	public bezeichnungWeiblich: string | null = null;
+
+	/**
 	 * Das Kürzel
 	 */
 	public kuerzel: string | null = null;
@@ -27,6 +32,26 @@ export class FachklasseEintrag extends JavaObject {
 	 * Die ID der Schulgliederung
 	 */
 	public idSchulgliederung: number | null = null;
+
+	/**
+	 * Die ID des DQR-Niveaus (CoreType)
+	 */
+	public idDqrNiveau: number | null = null;
+
+	/**
+	 * Die 1. Berufsebene
+	 */
+	public berufsebene1: string | null = null;
+
+	/**
+	 * Die 2. Berufsebene
+	 */
+	public berufsebene2: string | null = null;
+
+	/**
+	 * Die 3. Berufsebene
+	 */
+	public berufsebene3: string | null = null;
 
 	/**
 	 * Die Sichtbarkeit
@@ -65,9 +90,14 @@ export class FachklasseEintrag extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.bezeichnungWeiblich = (obj.bezeichnungWeiblich === undefined) ? null : obj.bezeichnungWeiblich === null ? null : obj.bezeichnungWeiblich;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
 		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
+		result.idDqrNiveau = (obj.idDqrNiveau === undefined) ? null : obj.idDqrNiveau === null ? null : obj.idDqrNiveau;
+		result.berufsebene1 = (obj.berufsebene1 === undefined) ? null : obj.berufsebene1 === null ? null : obj.berufsebene1;
+		result.berufsebene2 = (obj.berufsebene2 === undefined) ? null : obj.berufsebene2 === null ? null : obj.berufsebene2;
+		result.berufsebene3 = (obj.berufsebene3 === undefined) ? null : obj.berufsebene3 === null ? null : obj.berufsebene3;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -84,9 +114,14 @@ export class FachklasseEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnungWeiblich" : ' + ((obj.bezeichnungWeiblich === null) ? 'null' : JSON.stringify(obj.bezeichnungWeiblich)) + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
+		result += '"idDqrNiveau" : ' + ((obj.idDqrNiveau === null) ? 'null' : obj.idDqrNiveau.toString()) + ',';
+		result += '"berufsebene1" : ' + ((obj.berufsebene1 === null) ? 'null' : JSON.stringify(obj.berufsebene1)) + ',';
+		result += '"berufsebene2" : ' + ((obj.berufsebene2 === null) ? 'null' : JSON.stringify(obj.berufsebene2)) + ',';
+		result += '"berufsebene3" : ' + ((obj.berufsebene3 === null) ? 'null' : JSON.stringify(obj.berufsebene3)) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -103,6 +138,9 @@ export class FachklasseEintrag extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
+		if (obj.bezeichnungWeiblich !== undefined) {
+			result += '"bezeichnungWeiblich" : ' + ((obj.bezeichnungWeiblich === null) ? 'null' : JSON.stringify(obj.bezeichnungWeiblich)) + ',';
+		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
@@ -111,6 +149,18 @@ export class FachklasseEintrag extends JavaObject {
 		}
 		if (obj.idSchulgliederung !== undefined) {
 			result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
+		}
+		if (obj.idDqrNiveau !== undefined) {
+			result += '"idDqrNiveau" : ' + ((obj.idDqrNiveau === null) ? 'null' : obj.idDqrNiveau.toString()) + ',';
+		}
+		if (obj.berufsebene1 !== undefined) {
+			result += '"berufsebene1" : ' + ((obj.berufsebene1 === null) ? 'null' : JSON.stringify(obj.berufsebene1)) + ',';
+		}
+		if (obj.berufsebene2 !== undefined) {
+			result += '"berufsebene2" : ' + ((obj.berufsebene2 === null) ? 'null' : JSON.stringify(obj.berufsebene2)) + ',';
+		}
+		if (obj.berufsebene3 !== undefined) {
+			result += '"berufsebene3" : ' + ((obj.berufsebene3 === null) ? 'null' : JSON.stringify(obj.berufsebene3)) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

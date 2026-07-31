@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Fachklassen")
-@JsonPropertyOrder({"id", "BKIndex", "FKS", "AP", "bezeichnung", "sortierung", "istSichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "SchulnrEigner", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
+@JsonPropertyOrder({"id", "BKIndex", "FKS", "AP", "bezeichnung", "sortierung", "istSichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "bezeichnungWeiblich", "Status", "SchulnrEigner", "Lernfelder", "idDqrNiveau", "berufsebene1", "berufsebene2", "berufsebene3"})
 public final class MigrationDTOFachklassen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -107,11 +107,11 @@ public final class MigrationDTOFachklassen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes BKIndexTyp */
 	public static final String QUERY_LIST_BY_BKINDEXTYP = "SELECT e FROM MigrationDTOFachklassen e WHERE e.BKIndexTyp IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Beschreibung_W */
-	public static final String QUERY_BY_BESCHREIBUNG_W = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Beschreibung_W = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes bezeichnungWeiblich */
+	public static final String QUERY_BY_BEZEICHNUNGWEIBLICH = "SELECT e FROM MigrationDTOFachklassen e WHERE e.bezeichnungWeiblich = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Beschreibung_W */
-	public static final String QUERY_LIST_BY_BESCHREIBUNG_W = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Beschreibung_W IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes bezeichnungWeiblich */
+	public static final String QUERY_LIST_BY_BEZEICHNUNGWEIBLICH = "SELECT e FROM MigrationDTOFachklassen e WHERE e.bezeichnungWeiblich IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Status */
 	public static final String QUERY_BY_STATUS = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Status = ?1";
@@ -131,29 +131,29 @@ public final class MigrationDTOFachklassen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lernfelder */
 	public static final String QUERY_LIST_BY_LERNFELDER = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Lernfelder IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes DQR_Niveau */
-	public static final String QUERY_BY_DQR_NIVEAU = "SELECT e FROM MigrationDTOFachklassen e WHERE e.DQR_Niveau = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idDqrNiveau */
+	public static final String QUERY_BY_IDDQRNIVEAU = "SELECT e FROM MigrationDTOFachklassen e WHERE e.idDqrNiveau = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes DQR_Niveau */
-	public static final String QUERY_LIST_BY_DQR_NIVEAU = "SELECT e FROM MigrationDTOFachklassen e WHERE e.DQR_Niveau IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idDqrNiveau */
+	public static final String QUERY_LIST_BY_IDDQRNIVEAU = "SELECT e FROM MigrationDTOFachklassen e WHERE e.idDqrNiveau IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene1Klartext */
-	public static final String QUERY_BY_EBENE1KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene1Klartext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes berufsebene1 */
+	public static final String QUERY_BY_BERUFSEBENE1 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene1 = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene1Klartext */
-	public static final String QUERY_LIST_BY_EBENE1KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene1Klartext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes berufsebene1 */
+	public static final String QUERY_LIST_BY_BERUFSEBENE1 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene1 IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene2Klartext */
-	public static final String QUERY_BY_EBENE2KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene2Klartext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes berufsebene2 */
+	public static final String QUERY_BY_BERUFSEBENE2 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene2 = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene2Klartext */
-	public static final String QUERY_LIST_BY_EBENE2KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene2Klartext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes berufsebene2 */
+	public static final String QUERY_LIST_BY_BERUFSEBENE2 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene2 IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Ebene3Klartext */
-	public static final String QUERY_BY_EBENE3KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene3Klartext = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes berufsebene3 */
+	public static final String QUERY_BY_BERUFSEBENE3 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene3 = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ebene3Klartext */
-	public static final String QUERY_LIST_BY_EBENE3KLARTEXT = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene3Klartext IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes berufsebene3 */
+	public static final String QUERY_LIST_BY_BERUFSEBENE3 = "SELECT e FROM MigrationDTOFachklassen e WHERE e.berufsebene3 IN ?1";
 
 	/** ID der Fachklasse im schulinternen Katalog der Fachklassen nur BK und SBK */
 	@Id
@@ -220,7 +220,7 @@ public final class MigrationDTOFachklassen {
 	/** Weiblicher Beschreibungstext für die Fachklassenbezeichnung */
 	@Column(name = "Beschreibung_W")
 	@JsonProperty
-	public String Beschreibung_W;
+	public String bezeichnungWeiblich;
 
 	/** Status der Fachklasse kann auslaufend sein */
 	@Column(name = "Status")
@@ -240,22 +240,22 @@ public final class MigrationDTOFachklassen {
 	/** DQR-Niveau der Fachklasse Deutscher Qualitätsrahmen */
 	@Column(name = "DQR_Niveau")
 	@JsonProperty
-	public Integer DQR_Niveau;
+	public Integer idDqrNiveau;
 
 	/** Berufsebene 1 */
 	@Column(name = "Ebene1Klartext")
 	@JsonProperty
-	public String Ebene1Klartext;
+	public String berufsebene1;
 
 	/** Berufsebene 2 */
 	@Column(name = "Ebene2Klartext")
 	@JsonProperty
-	public String Ebene2Klartext;
+	public String berufsebene2;
 
 	/** Berufsebene 3 */
 	@Column(name = "Ebene3Klartext")
 	@JsonProperty
-	public String Ebene3Klartext;
+	public String berufsebene3;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOFachklassen ohne eine Initialisierung der Attribute.
@@ -314,7 +314,7 @@ public final class MigrationDTOFachklassen {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOFachklassen(id=" + this.id + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", bezeichnung=" + this.bezeichnung + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", Beschreibung_W=" + this.Beschreibung_W + ", Status=" + this.Status + ", SchulnrEigner=" + this.SchulnrEigner + ", Lernfelder=" + this.Lernfelder + ", DQR_Niveau=" + this.DQR_Niveau + ", Ebene1Klartext=" + this.Ebene1Klartext + ", Ebene2Klartext=" + this.Ebene2Klartext + ", Ebene3Klartext=" + this.Ebene3Klartext + ")";
+		return "MigrationDTOFachklassen(id=" + this.id + ", BKIndex=" + this.BKIndex + ", FKS=" + this.FKS + ", AP=" + this.AP + ", bezeichnung=" + this.bezeichnung + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", Aenderbar=" + this.Aenderbar + ", Kennung=" + this.Kennung + ", FKS_AP_SIM=" + this.FKS_AP_SIM + ", BKIndexTyp=" + this.BKIndexTyp + ", bezeichnungWeiblich=" + this.bezeichnungWeiblich + ", Status=" + this.Status + ", SchulnrEigner=" + this.SchulnrEigner + ", Lernfelder=" + this.Lernfelder + ", idDqrNiveau=" + this.idDqrNiveau + ", berufsebene1=" + this.berufsebene1 + ", berufsebene2=" + this.berufsebene2 + ", berufsebene3=" + this.berufsebene3 + ")";
 	}
 
 }

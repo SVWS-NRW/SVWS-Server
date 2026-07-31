@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
-import de.svws_nrw.asd.types.schule.DQRNiveau;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.schule.FachklasseEintrag;
@@ -101,20 +100,24 @@ public interface FachklasseMapper {
 	 * Einfache Felder werden direkt übertragen. Die CoreType-abhängigen Felder
 	 * ({@link DTOFachklassen#BKIndex}, {@link DTOFachklassen#FKS}, {@link DTOFachklassen#AP},
 	 * {@link DTOFachklassen#Kennung}, {@link DTOFachklassen#FKS_AP_SIM},
-	 * {@link DTOFachklassen#BKIndexTyp}, {@link DTOFachklassen#DQR_Niveau})
+	 * {@link DTOFachklassen#BKIndexTyp}, {@link DTOFachklassen#idDqrNiveau})
 	 * werden via {@link #mapIdFachklasseFromCreate} nach dem Mapping gesetzt.
 	 *
 	 * @param dto       der Create-Request mit den zu übernehmenden Feldern
-	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @return die befüllte {@link DTOFachklassen}-Entity
 	 */
 	@BeanMapping(ignoreByDefault = true)
 	@Mapping(source = "bezeichnung", target = "bezeichnung")
+	@Mapping(source = "bezeichnungWeiblich", target = "bezeichnungWeiblich")
 	@Mapping(source = "kuerzel", target = "kuerzel")
+	@Mapping(source = "berufsebene1", target = "berufsebene1")
+	@Mapping(source = "berufsebene2", target = "berufsebene2")
+	@Mapping(source = "berufsebene3", target = "berufsebene3")
+	@Mapping(source = "idDqrNiveau", target = "idDqrNiveau")
 	@Mapping(source = "istSichtbar", target = "istSichtbar")
 	@Mapping(source = "sortierung", target = "sortierung")
 	@Mapping(source = "idSchulgliederung", target = "BKIndexTyp", qualifiedByName = "updateIdSchulgliederung")
-	DTOFachklassen toDomain(FachklasseEintragCreateRequest dto, @Context Integer schuljahr);
+	DTOFachklassen toDomain(FachklasseEintragCreateRequest dto);
 
 	/**
 	 * Löst die Id der Schulgliederung auf den Schlüssel auf.
@@ -137,16 +140,20 @@ public interface FachklasseMapper {
 	 * via {@link #mapIdFachklasseFromPatch} neu aufgelöst.
 	 *
 	 * @param dto       der Patch-Request mit den zu ändernden Feldern
-	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @param entity    die zu aktualisierende {@link DTOFachklassen}-Entity
 	 */
 	@BeanMapping(ignoreByDefault = true,
 			nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(source = "bezeichnung", target = "bezeichnung")
+	@Mapping(source = "bezeichnungWeiblich", target = "bezeichnungWeiblich")
 	@Mapping(source = "kuerzel", target = "kuerzel")
+	@Mapping(source = "berufsebene1", target = "berufsebene1")
+	@Mapping(source = "berufsebene2", target = "berufsebene2")
+	@Mapping(source = "berufsebene3", target = "berufsebene3")
+	@Mapping(source = "idDqrNiveau", target = "idDqrNiveau")
 	@Mapping(source = "istSichtbar", target = "istSichtbar")
 	@Mapping(source = "sortierung", target = "sortierung")
-	void patch(FachklasseEintragPatchRequest dto, @Context Integer schuljahr, @MappingTarget DTOFachklassen entity);
+	void patch(FachklasseEintragPatchRequest dto, @MappingTarget DTOFachklassen entity);
 
 	/**
 	 * Löst nach dem Mapping eines {@link FachklasseEintragCreateRequest} die {@code idFachklasse}
@@ -154,16 +161,14 @@ public interface FachklasseMapper {
 	 * und befüllt die abhängigen Felder der {@link DTOFachklassen}-Entity.
 	 *
 	 * @param dto       der Create-Request mit der aufzulösenden {@code idFachklasse}
-	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @param entity    die zu befüllende {@link DTOFachklassen}-Entity
 	 * @throws ApiOperationException wenn {@code idFachklasse} null oder unbekannt ist oder kein DQR-Niveau gefunden wird
 	 */
 	@AfterMapping
 	default void mapIdFachklasseFromCreate(
 			final FachklasseEintragCreateRequest dto,
-			@Context final Integer schuljahr,
 			@MappingTarget final DTOFachklassen entity) {
-		resolveAndMapFachklasse(dto.idFachklasse, schuljahr, entity);
+		resolveAndMapFachklasse(dto.idFachklasse, entity);
 	}
 
 	/**
@@ -174,33 +179,30 @@ public interface FachklasseMapper {
 	 * Bei {@code undefined} wird kein Lookup durchgeführt.
 	 *
 	 * @param dto       der Patch-Request mit der aufzulösenden {@code idFachklasse}
-	 * @param schuljahr das aktuelle Schuljahr für CoreType-Lookups
 	 * @param entity    die zu aktualisierende {@link DTOFachklassen}-Entity
 	 * @throws ApiOperationException wenn {@code idFachklasse} gesetzt, aber unbekannt ist oder kein DQR-Niveau gefunden wird
 	 */
 	@AfterMapping
 	default void mapIdFachklasseFromPatch(
 			final FachklasseEintragPatchRequest dto,
-			@Context final Integer schuljahr,
 			@MappingTarget final DTOFachklassen entity) {
-		dto.idFachklasse.ifPresent(kuerzel -> resolveAndMapFachklasse(kuerzel, schuljahr, entity));
+		dto.idFachklasse.ifPresent(kuerzel -> resolveAndMapFachklasse(kuerzel, entity));
 	}
 
-	private static void resolveAndMapFachklasse(final Long idFachklasse, final Integer schuljahr, final DTOFachklassen entity) {
+	private static void resolveAndMapFachklasse(final Long idFachklasse, final DTOFachklassen entity) {
 		final var fachklasse = Fachklasse.data().getEintragByID(idFachklasse);
 		if (fachklasse == null) {
 			return;
 		}
-		mapFachklasse(fachklasse, schuljahr, entity);
+		mapFachklasse(fachklasse, entity);
 	}
 
-	private static void mapFachklasse(final FachklasseKatalogEintrag fachklasse, final Integer schuljahr, final DTOFachklassen entity) {
+	private static void mapFachklasse(final FachklasseKatalogEintrag fachklasse, final DTOFachklassen entity) {
 		entity.BKIndex = fachklasse.bkIndex;
 		entity.FKS = fachklasse.fkSchluessel;
 		entity.AP = fachklasse.fkSchluessel2;
 		entity.Kennung = getKennung(fachklasse);
 		entity.FKS_AP_SIM = getFksApSim(fachklasse);
-		entity.DQR_Niveau = getIdDQRNiveau(fachklasse, schuljahr);
 	}
 
 	private static String getFksApSim(final FachklasseKatalogEintrag fachklasse) {
@@ -212,17 +214,6 @@ public interface FachklasseMapper {
 				Objects.toString(fachklasse.bkIndex, ""),
 				Objects.toString(fachklasse.fkSchluessel, ""),
 				Objects.toString(fachklasse.fkSchluessel2, ""));
-	}
-
-	private static Integer getIdDQRNiveau(final FachklasseKatalogEintrag fachklasse, final int schuljahr) {
-		if (fachklasse.dqrNiveau == null) {
-			return null;
-		}
-		return Optional.ofNullable(DQRNiveau.data().getEintragBySchuljahrUndSchluessel(schuljahr, fachklasse.dqrNiveau))
-				.map(d -> d.id)
-				.map(Long::intValue)
-				.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST,
-						"Kein DQRNiveau zum Schlüssel %s zur Fachklasse mit der id %d gefunden".formatted(fachklasse.dqrNiveau, fachklasse.id)));
 	}
 
 }

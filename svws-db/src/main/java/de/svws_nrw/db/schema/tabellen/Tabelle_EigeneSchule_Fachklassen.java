@@ -82,6 +82,7 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Beschreibung_W */
 	public final SchemaTabelleSpalte col_Beschreibung_W = add("Beschreibung_W", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("bezeichnungWeiblich")
 			.setDatenlaenge(100)
 			.setJavaComment("Weiblicher Beschreibungstext für die Fachklassenbezeichnung");
 
@@ -102,20 +103,24 @@ public class Tabelle_EigeneSchule_Fachklassen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DQR_Niveau */
 	public final SchemaTabelleSpalte col_DQR_Niveau = add("DQR_Niveau", SchemaDatentypen.INT, false)
+			.setJavaName("idDqrNiveau")
 			.setJavaComment("DQR-Niveau der Fachklasse Deutscher Qualitätsrahmen");
 
 	/** Die Definition der Tabellenspalte Ebene1Klartext */
 	public final SchemaTabelleSpalte col_Ebene1Klartext = add("Ebene1Klartext", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("berufsebene1")
 			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 1");
 
 	/** Die Definition der Tabellenspalte Ebene2Klartext */
 	public final SchemaTabelleSpalte col_Ebene2Klartext = add("Ebene2Klartext", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("berufsebene2")
 			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 2");
 
 	/** Die Definition der Tabellenspalte Ebene3Klartext */
 	public final SchemaTabelleSpalte col_Ebene3Klartext = add("Ebene3Klartext", SchemaDatentypen.VARCHAR, false)
+			.setJavaName("berufsebene3")
 			.setDatenlaenge(255)
 			.setJavaComment("Berufsebene 3");
 
