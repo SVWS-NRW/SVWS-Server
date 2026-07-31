@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie",
+    "historie" : [ {
+      "praefix" : "SSMS00",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-VerkehrsspracheFamilie",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Verkehrssprache'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Verkehrssprache: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Verkehrssprache' besetzt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = TRUE ∧ SchuelerStammdaten.idVerkehrsspracheFamilie = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

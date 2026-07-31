@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie",
+    "historie" : [ {
+      "praefix" : "SSMS02",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-VerkehrsspracheFamilie",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Verkehrssprache'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSMS01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Verkehrssprache: Der eingetragene Wert für das Feld 'Verkehrssprache' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
+      "bedingung" : "SchuelerStammdaten.idVerkehrsspracheFamilie ≙ einem gültigen Historieneintrag in Verkehrssprache.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  
