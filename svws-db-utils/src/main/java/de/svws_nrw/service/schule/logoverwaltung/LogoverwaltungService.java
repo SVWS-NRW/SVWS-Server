@@ -92,7 +92,7 @@ public class LogoverwaltungService {
 
 			var entity = mapper.toDomain(createRequest);
 			entity = repository.create(entity);
-			return mapper.toApi(entity);
+			return toApi(entity);
 		});
 	}
 
@@ -117,7 +117,7 @@ public class LogoverwaltungService {
 			applyPatch(entity, patchRequest);
 			entity = repository.update(entity);
 
-			return mapper.toApi(entity);
+			return toApi(entity);
 		});
 	}
 
@@ -230,14 +230,14 @@ public class LogoverwaltungService {
 
 	private static void prepareCreate(final LogoCreateRequest createRequest) {
 		createRequest.logoBase64 = DataUrlResolver.resolve(createRequest.logoBase64)
-				.map(DataUrl::value)
+				.map(DataUrl::payload)
 				.orElse(createRequest.logoBase64);
 	}
 
 	private static void preparePatch(final LogoPatchRequest patchRequest) {
 		patchRequest.logoBase64.ifPresent(value ->
 				patchRequest.logoBase64 = JsonNullable.of(DataUrlResolver.resolve(value)
-						.map(DataUrl::value)
+						.map(DataUrl::payload)
 						.orElse(value))
 		);
 	}

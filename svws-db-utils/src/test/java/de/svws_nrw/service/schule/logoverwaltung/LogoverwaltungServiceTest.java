@@ -256,7 +256,7 @@ class LogoverwaltungServiceTest {
 			verify(repository).create(mappedEntity);
 
 			// Prüfen, ob der MIME-Type Header im Base64 vor dem Anlegen ergänzt wurde
-			final ArgumentMatcher<LogoCreateRequest> base64Matcher = arg -> arg.logoBase64.equals(VALID_BASE64_JPEG);
+			final ArgumentMatcher<LogoCreateRequest> base64Matcher = arg -> arg.logoBase64.equals(VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER);
 			verify(mapper).toDomain(argThat(base64Matcher));
 		}
 
@@ -383,7 +383,7 @@ class LogoverwaltungServiceTest {
 
 		@Test
 		void setzt_hinzugefuegtAm_nicht_wennLogoBase64Unveraendert() {
-			final String gleichesBase64 = VALID_BASE64_PNG;
+			final String gleichesBase64 = VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER;
 			final LogoPatchRequest request = new LogoPatchRequest();
 			request.logoBase64 = JsonNullable.of(gleichesBase64);
 

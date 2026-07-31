@@ -3630,6 +3630,7 @@ public class APISchule {
 	@Operation(summary = "Aktualisiert das Bild und die zugehörigen Daten eines Logos.",
 			description = "Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Die Anfrage enthält ungültige oder fehlende Daten.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.")

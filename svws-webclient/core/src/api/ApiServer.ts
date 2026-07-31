@@ -18054,6 +18054,7 @@ export class ApiServer extends BaseApi {
 	 * Aktualisiert das Base64-kodierte Bild sowie die zugehörigen Daten des Logos mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schuldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
 	 *   Code 204: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Die Anfrage enthält ungültige oder fehlende Daten.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuldaten zu ändern.
