@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: ENM-Server Tests",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"type": "module",
 	"scripts": {
 		"test:setup": "vitest run ./tests/setup --mode allowDestructiveTests --outputFile build/test-results/setup-test-results.xml",
