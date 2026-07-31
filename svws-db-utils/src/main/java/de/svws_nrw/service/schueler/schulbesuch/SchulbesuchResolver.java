@@ -219,8 +219,8 @@ public final class SchulbesuchResolver {
 	 *                  gesetzt wird
 	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird
 	 */
-	public static void mapSchulgliederung(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final int schuljahr) {
-		if (schulgliederungGesetzt(entity)) {
+	public static void mapSchulgliederung(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
+		if (schulgliederungGesetzt(entity) && (schuljahr != null)) {
 			target.idSchulgliederungVorherigeSchule = Optional.ofNullable(HerkunftBildungsgang.data().getWertByKuerzel(entity.LSSchulformSIM))
 					.map(h -> h.daten(schuljahr))
 					.map(h -> h.id)
@@ -251,8 +251,8 @@ public final class SchulbesuchResolver {
 	 *                  gesetzt wird
 	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird
 	 */
-	public static void mapHerkunftSonstige(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final int schuljahr) {
-		if (keinSchulbesuch(entity)) {
+	public static void mapHerkunftSonstige(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
+		if (keinSchulbesuch(entity) && (schuljahr != null)) {
 			target.idHerkunftSonstigeVorherigeSchule = Optional.ofNullable(HerkunftSonstige.data().getWertByKuerzel(entity.LSSchulformSIM))
 					.map(h -> h.daten(schuljahr))
 					.map(h -> h.id)

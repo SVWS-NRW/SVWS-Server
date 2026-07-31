@@ -29,30 +29,30 @@ class SchulbesuchResolverTest {
 	// -------------------------------------------------------------------------
 
 	/** Schulform.json: GY, id=6000, kuerzel="GY" – NRW, kein BK/WB/SB */
-	private static final long   ID_SCHULFORM_GY_NRW        = 6000L;
-	private static final String KUERZEL_GY                 = "GY";
+	private static final long ID_SCHULFORM_GY_NRW = 6000L;
+	private static final String KUERZEL_GY = "GY";
 
 	/** Schulform.json: BK, id=1000, kuerzel="BK" – NRW, BK-Schulform */
-	private static final long   ID_SCHULFORM_BK_NRW        = 1000L;
-	private static final String KUERZEL_BK                 = "BK";
+	private static final long ID_SCHULFORM_BK_NRW = 1000L;
+	private static final String KUERZEL_BK = "BK";
 
 	/** Schulform.json: WB, id=18000, kuerzel="WB" – NRW, WB-Schulform */
-	private static final long   ID_SCHULFORM_WB_NRW        = 18000L;
-	private static final String KUERZEL_WB                 = "WB";
+	private static final long ID_SCHULFORM_WB_NRW = 18000L;
+	private static final String KUERZEL_WB = "WB";
 
 	/** Schulform.json: SB, id=13000, kuerzel="SB" – NRW, SB-Schulform */
-	private static final long   ID_SCHULFORM_SB_NRW        = 13000L;
-	private static final String KUERZEL_SB                 = "SB";
+	private static final long ID_SCHULFORM_SB_NRW = 13000L;
+	private static final String KUERZEL_SB = "SB";
 
 	/** HerkunftSchulform.json: GY, id=6001, kuerzel="GY" – sonstige Schule, kein BK/WB/SB/SF */
-	private static final long   ID_HERKUNFT_SCHULFORM_GY   = 6001L;
+	private static final long ID_HERKUNFT_SCHULFORM_GY = 6001L;
 
 	/** HerkunftSchulform.json: BK, id=1000, kuerzel="BK" – sonstige Schule, BK */
-	private static final long   ID_HERKUNFT_SCHULFORM_BK   = 1000L;
+	private static final long ID_HERKUNFT_SCHULFORM_BK = 1000L;
 
 	/** HerkunftSchulform.json: SF, id=25001, kuerzel="SF" – sonstige Schulform */
-	private static final long   ID_HERKUNFT_SCHULFORM_SF   = 25001L;
-	private static final String KUERZEL_SF                 = "SF";
+	private static final long ID_HERKUNFT_SCHULFORM_SF = 25001L;
+	private static final String KUERZEL_SF = "SF";
 
 	@Mock
 	private DataSchulen dataSchulen;
@@ -448,6 +448,21 @@ class SchulbesuchResolverTest {
 
 			assertThat(target.idSchulgliederungVorherigeSchule).isEqualTo(eintrag.id);
 		}
+
+		@Test
+		@DisplayName("schuljahr null - kein Mapping")
+		void schuljahrNull_keinMapping() {
+			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = "100001";
+			entity.LSSchulform = KUERZEL_BK;
+			entity.LSSchulformSIM = "BK1";
+			final var target = new SchuelerSchulbesuchsdaten();
+			target.idSchulgliederungVorherigeSchule = 99L;
+
+			SchulbesuchResolver.mapSchulgliederung(entity, target, null);
+
+			assertThat(target.idSchulgliederungVorherigeSchule).isEqualTo(99L);
+		}
 	}
 
 	// =========================================================================
@@ -536,6 +551,21 @@ class SchulbesuchResolverTest {
 			SchulbesuchResolver.mapHerkunftSonstige(entity, target, schuljahr);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(erwartetId);
+		}
+
+		@Test
+		@DisplayName("schuljahr null - kein Mapping")
+		void schuljahrNull_keinMapping() {
+			final var entity = new DTOSchueler(1L, "123", true);
+			entity.LSSchulNr = null;
+			entity.LSSchulform = null;
+			entity.LSSchulformSIM = "AS";
+			final var target = new SchuelerSchulbesuchsdaten();
+			target.idHerkunftSonstigeVorherigeSchule = 99L;
+
+			SchulbesuchResolver.mapHerkunftSonstige(entity, target, null);
+
+			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(99L);
 		}
 	}
 
