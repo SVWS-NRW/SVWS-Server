@@ -13,7 +13,7 @@ export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN],
 			"schueler.betriebe", "betriebe", SchuelerBetriebe, new RouteDataSchuelerBetriebe());
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Betriebe";
 		super.setCheckpoint = true;
