@@ -73,12 +73,12 @@ public class AggregationStatistikExport {
 
 
 	/**
-	 * Zuordnug der Foerderschwerpunkt-IDs der Schule zu den idFoerderschwerpunkt des Katalogs.
+	 * Zuordnung der Foerderschwerpunkt-IDs der Schule zu den idFoerderschwerpunkt des Katalogs.
 	 */
 	private final Map<Long, Long> foerderschwerpunktIdMap;
 
 	/**
-	 * Zuordnug der Jahrgang-IDs der Schule zu den idJahrgang des Katalogs.
+	 * Zuordnung der Jahrgang-IDs der Schule zu den idJahrgang des Katalogs.
 	 */
 	private final Map<Long, Long> jahrgangIdMap;
 
@@ -93,7 +93,7 @@ public class AggregationStatistikExport {
 	private Map<Long, LehrerStatistikGesamt> lehrerIdMap = new HashMap<>();
 
 	/**
-	 * Zuordnug der Religion-IDs der Schule zu den idReligion des Katalogs.
+	 * Zuordnung der Religion-IDs der Schule zu den idReligion des Katalogs.
 	 */
 	private final Map<Long, Long> religionIdMap;
 
@@ -194,7 +194,7 @@ public class AggregationStatistikExport {
 	}
 
 	/**
-	 * Gibt das Feld {@link #fehlermeldungen} zurueck.
+	 * Gibt das Feld {@link #fehlermeldungen} zurück.
 	 *
 	 * @return das Feld {@link #fehlermeldungen}
 	 */
@@ -203,7 +203,7 @@ public class AggregationStatistikExport {
 	}
 
 	/**
-	 * Gibt das Feld {@link #statistikExport} zurueck.
+	 * Gibt das Feld {@link #statistikExport} zurück.
 	 *
 	 * @return das Feld {@link #statistikExport}
 	 */
@@ -225,30 +225,35 @@ public class AggregationStatistikExport {
 		}
 
 		statistikExport = new StatistikExport();
-		boolean erfolg;
+		boolean erfolg = true;
+
 		// B01 und B02
 		final AggregationSchuleStatistikExport aggregationSchuleStatistikExport =
 				new AggregationSchuleStatistikExport(statistikGesamt, statistikExport, fehlermeldungen);
-		erfolg = aggregationSchuleStatistikExport.run();
+		erfolg &= aggregationSchuleStatistikExport.run();
+
 		// S42
 		final AggregationReligionStatistikExport aggregationReligionStatistikExport =
 				new AggregationReligionStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, foerderschwerpunktIdMap, religionIdMap,
 						aktuellesSchuljahr);
-		erfolg = aggregationReligionStatistikExport.run();
+		erfolg &= aggregationReligionStatistikExport.run();
+
 		// L61-L68
 		final AggregationLehrerStatistikExport aggregationLehrerStatistikExport =
 				new AggregationLehrerStatistikExport(statistikGesamt, statistikExport, fehlermeldungen);
-		erfolg = aggregationLehrerStatistikExport.run();
+		erfolg &= aggregationLehrerStatistikExport.run();
+
 		// Klassendaten
 		final AggregationKlassenStatistikExport aggregationKlassenStatistikExport =
 				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap,
 						aktuellesSchuljahr);
-		erfolg = aggregationKlassenStatistikExport.run();
+		erfolg &= aggregationKlassenStatistikExport.run();
+
 		// Unterrichtverteilungsdaten
 		final AggregationUvdStatistikExport aggregationUvdStatistikExport =
 				new AggregationUvdStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap,
 						kurseIdMap, aktuellesSchuljahr);
-		erfolg = aggregationUvdStatistikExport.run();
+		erfolg &= aggregationUvdStatistikExport.run();
 
 		return erfolg;
 	}
