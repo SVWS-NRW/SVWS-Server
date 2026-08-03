@@ -209,7 +209,7 @@ Ablauf:
 3. Ist die Attributliste leer, wird ebenfalls die Identität zurückgegeben.
 4. Sonst wird `sortierung.comparator(attribute, validierungsfehler)` aufgerufen; eventuelle Validierungsfehler werden ins Log geschrieben.
 
-Die Domänen-Repositories (z. B. `ReportingRepositoryLehrer.lehrer(List<Long>, boolean)`) nutzen diese Methode, um beim Bulk-Load direkt sortierte Listen zurückzugeben. `HtmlContext` greift dagegen direkt auf `Typ.SORTIERUNG.comparator(...)` bzw. `Typ.SORTIERUNG.comparatorStandard()` zu (siehe Abschnitt 6.2).
+Die Domänen-Repositories (z. B. `ReportingRepositoryLehrer.lehrer(List<Long>, boolean)`) nutzen diese Methode, um beim Bulk-Load direkt sortierte Listen zurückzugeben. `HtmlContext` greift dagegen direkt auf `Typ.SORTIERUNG.comparator(...)` bzw. `Typ.SORTIERUNG.comparatorStandard()` zu (siehe Abschnitt 6.3).
 
 #### 4.3.5 `ReportingFilterung<T>` und Begleit-Datei `Reporting<Typ>Filter`
 
@@ -321,13 +321,13 @@ reportingContext.sortierungService().getSortierungsAttribute(
 
 ### 4.5 Validierung der Eingabeparameter
 
-Die Eingabe-Validierung erfolgt direkt in der `HtmlFactory` über private Helfer-Methoden, die vor dem Bau der `HtmlContext`-Instanzen aufgerufen werden:
+Die Eingabe-Validierung liegt in der paketprivaten Hilfsklasse `HtmlContextValidierung` (Paket `html.contexts.initializer`) und wird von den Initializern vor dem Bau der `HtmlContext`-Instanzen aufgerufen. Ihre Methoden sind statisch und nehmen den `ReportingContext` als ersten Parameter — nur so sind sie sowohl aus den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwendbar. Neben den allgemeinen Prüfungen enthält sie die je Datenaufbau gebündelten Zusatzprüfungen (`pruefungenGostAbitur(...)`, `pruefungenGostLaufbahnplanung(...)`, `pruefungenStundenplan…(...)`), die in der Registry als Methodenreferenz eingetragen sind:
 
 - `validiereIds(...)` — drei Überladungen prüfen, dass eine übergebene ID-Liste nicht leer ist und alle IDs in den aus dem Repository geladenen Objekten (Collection mit ID-Extractor bzw. `Map<Long, V>`) tatsächlich vorhanden sind. Die Bulk-Loader-Methoden der Domänen-Repositories werden direkt mit `false` (kein hartes Throw bei fehlenden IDs) aufgerufen und das Ergebnis an `validiereIds` übergeben; der Helper bündelt Existenz-Prüfung und Fehler-Logging.
 - `validiereSchuleMitGost()` — delegiert an `repositorySchule().istSchuleMitGost()` und wirft bei `false` eine `ApiOperationException`.
 - `validiereParameterFuerAbiturjahrgangUndHalbjahre(boolean paarweise)` — vereint die Validierungen für die GOSt-Klausurplanung; je nach Flag werden Abiturjahre und Halbjahre paarweise (z. B. (2026, EF.1), (2026, EF.2)) oder unabhängig validiert. Stützt sich auf `validiereAbiturjahr(...)`, `validiereHalbjahr(...)`, `validiereParameterPaarweise(...)` und `validiereParameterEinzeln(...)`.
 
-Alle Validierer werfen bei Fehlern eine `ApiOperationException` und protokollieren über `reportingContext.logger()`. Die Validierungs-Logik liegt damit direkt bei dem, was sie auslöst (die `HtmlFactory`-Branchen pro Daten-Typ).
+Alle Validierer werfen bei Fehlern eine `ApiOperationException` und behalten ihr bisheriges Logging-Verhalten: `validiereIds(...)` und `validiereSchuleMitGost(...)` protokollieren zuvor über `reportingContext.logger()`, `validiereParameterFuerAbiturjahrgangUndHalbjahre(...)` und die von ihr genutzten Prüfungen werfen ohne eigenen Log-Eintrag. Die Prüf-Logik steht damit an einer Stelle und ist nicht an die `HtmlFactory` gebunden.
 
 ### 4.6 Signierte Schulbescheinigung (QR-Code) — Paket `signing/`
 
@@ -402,16 +402,47 @@ Pfad: `module.reporting.factories.HtmlFactory`
 Aufgaben:
 
 1. Validiert die HTML-Vorlage und prüft die Benutzer-Kompetenzen gegen die in der Vorlage hinterlegten Pflicht-Kompetenzen.
-2. Baut über `getContexts()` eine Map `mapHtmlContexts: String → HtmlContext<?>`. Die Schlüssel sind die Bezeichnungen der Thymeleaf-Variablen (z. B. `"Schueler"`, `"Klassen"`, `"GostBlockungsergebnis"`, `"FaecherStundenplaene"`).
-3. Wählt anhand des `ReportingReportvorlageDatenContext` die passende `initContextXxx()`-Methode (Schüler, Klassen, Kurse, Lehrer, GOSt-Kursplanung, GOSt-Klausurplanung, GOSt-Laufbahnplanung, Stundenplanung). Diese Methoden sind derzeit `public`, haben aber keine externen Aufrufer.
+2. Baut über `erzeugeContexts()` eine Map `mapHtmlContexts: String → HtmlContext<?>`. Die Schlüssel sind interne Bezeichnungen der Context-Map und dienen insbesondere dem Nachschlagen und Ersetzen des Haupt-Contexts bei der Einzelausgabe. Sie sind nicht mit den Thymeleaf-Variablennamen gleichzusetzen und stehen als Konstanten in `HtmlContextSchluessel` (Paket `html.contexts.initializer`), auf die sowohl die `HtmlFactory` als auch die Registry zugreifen.
+3. Holt sich über die `HtmlContextInitializerRegistry` den zum `ReportingReportvorlageDatenContext` gehörenden Initializer und stößt dessen Aufbau an — die Factory kennt die einzelnen Datenaufbauten nicht mehr. Der `ReportingReportvorlageDatenContext` benennt mit seinen 16 Werten je genau einen Ablauf des Datenaufbaus; die 28 Reportvorlagen verteilen sich auf diese 16 Werte, so dass zu einer Vorlage eindeutig feststeht, welche Daten geladen und welche Prüfungen durchgeführt werden. Details siehe Abschnitt 6.2.
 4. Erzeugt mit `createHtmlBuilders()` bzw. `createHtmlResponse()` die `ReportBuilderHtml`-Instanzen und liefert das HTML als Response. Ein ZIP entsteht ausschließlich im PDF-Pfad; die HTML-Ausgabe liefert stets genau eine Datei.
+
+Die Factory wird ausschließlich über die statische Methode `HtmlFactory.erzeuge(reportingContext)` erzeugt; der Konstruktor ist privat. Damit ist jede erreichbare `HtmlFactory` vollständig initialisiert — ein Objekt mit geprüfter Vorlage, aber ohne aufgebaute Contexts, ist strukturell unerreichbar.
 
 Die `HtmlFactory` unterstützt zwei Modi:
 
 - **Aggregierte Ausgabe** — alle Datensätze landen in einem einzigen HTML-Dokument.
-- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt; der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren.
+- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt; der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren. Unter welchem Schlüssel der Haupt-Context dabei ersetzt wird, liefert der Initializer über `einzelContextBezeichnung()`; Datenaufbauten ohne Einzelausgabe erben die Standard-Implementierung, die einen `BAD_REQUEST` wirft.
 
-### 6.2 `HtmlContext<T>`
+### 6.2 Der Aufbau der Daten-Contexts (`html/contexts/initializer/`)
+
+Welche Daten ein Report lädt und welche Prüfungen dabei laufen, hängt nicht an der Reportvorlage, sondern an ihrem **Datenaufbau** (`ReportingReportvorlageDatenContext`, 16 Werte). Die 28 Vorlagen verteilen sich auf diese 16 Abläufe, die sich wiederum auf **fünf Ablaufmuster** zurückführen lassen. Neue Vorlagen mit bekanntem Datenaufbau brauchen deshalb kein Java.
+
+Das Paket trennt konsequent zwischen der request-unabhängigen **Konfiguration** und dem **Initializer**, der sie für einen konkreten Request ausführt:
+
+| Typ | Rolle |
+|-----|-------|
+| `HtmlContextInitializerRegistry` | Unveränderliche Zuordnung Datenaufbau → Konfiguration; eine Zeile je Datenaufbau. Nachschlagen über `aufbau(reportingContext, datenContext)`. |
+| `HtmlContextAufbau` | Schnittstelle der Konfigurationen: `contextSchluessel()`, `unterstuetztEinzelausgabe()`, `initializer(...)`. Die Metadaten sind **ohne Reporting-Context lesbar** — genau darauf setzen die Registry-Tests auf. |
+| `HtmlContextInitializer` | `init()` baut die Contexts auf, `einzelContextBezeichnung()` benennt den Haupt-Context. |
+| `HtmlContextInitializerBasis` | Gemeinsame Felder plus die Standard-Einzelausgabe für Datenaufbauten, die sie nicht unterstützen. |
+| `HtmlContextSchluessel` | Die Schlüssel der Context-Map als Konstanten. |
+| `HtmlContextValidierung` | Alle Prüfungen der Eingabeparameter (siehe Abschnitt 4.5). |
+
+Die fünf Ablaufmuster mit ihren Konfigurationstypen:
+
+| Muster | Datenaufbauten | Worin sich die Zeilen unterscheiden |
+|--------|----------------|-------------------------------------|
+| `HtmlContextInitializerListe` | 6 (Schüler ×3, Klassen, Kurse, Lehrer) | Beschriftungen, Lader, ID-Extraktor, Context-Erzeuger, Zusatzprüfung — über den Typparameter aneinander gebunden und damit compile-geprüft |
+| `HtmlContextInitializerStundenplan` | 5 (Fach, Klassen, Lehrer, Raum, Schüler) | Context-Erzeuger und Prüfung; das Laden des Stundenplans steht einmal im Initializer |
+| `HtmlContextInitializerGostKursplanung` | 2 (Kurs-, Schüler-Sicht) | nur der Context-Typ |
+| `HtmlContextInitializerGostKlausurplanung` | 2 (Schüler-, Termin-Sicht) | nur der Context-Typ |
+| `HtmlContextInitializerGostLaufbahnplanung` | 1 | Einzelfall ohne Konfiguration; einziger Datenaufbau ohne Einzelausgabe |
+
+Nach außen sichtbar sind nur `HtmlContextInitializerRegistry`, `HtmlContextAufbau`, `HtmlContextInitializer` und `HtmlContextSchluessel` — alles Musterspezifische ist paketprivat.
+
+**Ein neuer Datenaufbau** bedeutet einen neuen Enum-Wert plus eine Registry-Zeile; eine neue Klasse braucht es nur bei einem neuen Ablaufmuster. Die Tests in `TestHtmlContextInitializerRegistry` prüfen ohne Datenbank, dass jeder Enum-Wert einen Eintrag hat und dass Zuordnung, Map-Schlüssel und Einzelausgabe-Metadaten den Sollwerten entsprechen.
+
+### 6.3 `HtmlContext<T>`
 
 Pfad: `module.reporting.html.contexts.HtmlContext`
 
@@ -435,7 +466,7 @@ Die Sortierung der Context-Daten erfolgt über die zustandslose Utility `HtmlCon
 
 **Filterung wird nicht im HtmlContext angewandt.** Alle Reporting-Typen werden zentral in den Repositories gefiltert (FILTER-Companion, siehe Abschnitt 4.3); die List-Contexts übernehmen die bereits gefilterten Listen unverändert.
 
-### 6.3 Builder und Renderer für HTML
+### 6.4 Builder und Renderer für HTML
 
 - **`ReportBuilderContextHtml`** (Paket `module.reporting.builders`) — Builder-Pattern-Container für Template-Code, HTML-Kontexte, IDs, Dateiname-Vorlage, Logger.
 - **`ReportBuilderHtml`** — kapselt einen einzelnen HTML-Reportlauf: Dateiname, Content-Type, Inhalt. Delegiert die eigentliche Renderung an den Renderer.
@@ -443,7 +474,7 @@ Die Sortierung der Context-Daten erfolgt über die zustandslose Utility `HtmlCon
 
 Das Ergebnis ist der gerenderte HTML-String, den die `HtmlFactory` entweder direkt als Response liefert oder an die `PdfFactory` weiterreicht.
 
-### 6.4 Eigene Thymeleaf-Dialekte (`html/dialects/`)
+### 6.5 Eigene Thymeleaf-Dialekte (`html/dialects/`)
 
 Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUtils` beim Aufbau der `TemplateEngine` drei SVWS-eigene Expression-Dialekte aus dem Paket `module.reporting.html.dialects`. Jeder Dialekt stellt ein Expression-Objekt bereit, das im Template über `#<name>` aufgerufen wird:
 

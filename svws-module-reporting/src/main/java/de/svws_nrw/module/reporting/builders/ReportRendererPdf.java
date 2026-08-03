@@ -20,6 +20,7 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
  * Diese Klasse ist verantwortlich für das Rendern von PDF-Dokumenten aus HTML-Inhalten.
  * Die Klasse konfiguriert den PDF-Renderer, registriert Schriftarten und erstellt das finale PDF-Dokument.
  */
+// Der Calendar ist von PDFBox vorgegeben: PDDocumentInformation.setCreationDate(...) und setModificationDate(...) erwarten diesen Typ.
 public final class ReportRendererPdf {
 
 	private final Logger logger;

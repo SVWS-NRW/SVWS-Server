@@ -98,7 +98,7 @@ Füge einen neuen Enum-Eintrag hinzu. Orientiere dich an einem vorhandenen Eintr
 KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
         "Klassenliste mit Kontaktdaten",                          // uiTitel: Titel im Client
         "Eine Liste mit den Kontaktdaten ... erzeugen.",          // uiBeschreibung: Text im Client
-        ReportingReportvorlageDatenContext.KLASSEN,               // welcher Datenbereich? -> bestimmt die Contexts
+        ReportingReportvorlageDatenContext.KLASSEN,               // welcher Datenaufbau? -> bestimmt die Contexts
         "klassen/KlasseListeSchuelerKontaktdatenErzieher.html",   // Pfad zur HTML-Datei (relativ zum resources-Ordner)
         "Klasse-Liste-Schueler-Kontaktdaten-Erzieher",            // statischer Dateiname (Fallback ohne .name.tpl)
         List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), // wer darf das? (mind. eine dieser Kompetenzen)
@@ -114,13 +114,19 @@ Die Parameter im Einzelnen:
 | **bezeichnung** (1. String) | Eindeutige technische Bezeichnung. **Keine Leerzeichen**, nur Buchstaben/Ziffern/`-`/`_`. |
 | **uiTitel** | Wird dem Nutzer im Client als Titel angezeigt. |
 | **uiBeschreibung** | Erklärtext im Client. |
-| **datenContext** | **Wichtig:** Wählt den Datenbereich aus `ReportingReportvorlageDatenContext` und entscheidet, **welche Contexts gefüllt werden** (siehe [Abschnitt 13](#13-referenz-verfügbare-daten-contexts)). |
+| **datenContext** | **Wichtig:** Wählt den Datenaufbau aus `ReportingReportvorlageDatenContext` und entscheidet, **welche Contexts gefüllt und welche Prüfungen durchgeführt werden** (siehe [Abschnitt 13](#13-referenz-verfügbare-daten-contexts)). |
 | **pfadHtmlTemplate** | Pfad zur HTML-Datei relativ zu `…/module/reporting/`. |
 | **dateiname** | Statischer Dateiname (ohne Endung) als Rückfallebene, falls keine `.name.tpl` greift. |
 | **benutzerKompetenzen** | Liste von `BenutzerKompetenz`. Der Nutzer braucht **mindestens eine** davon (ODER-Verknüpfung). |
 | **reportingParameter / Konfiguration** | Verweist auf die Methode, die die Nutzer-Optionen (VorlageParameter) definiert – siehe Schritt 5. |
 
-> **Mögliche Werte für `datenContext`:** `SCHUELER`, `LEHRER`, `KLASSEN`, `KURSE`, `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG`, `GOST_KURSPLANUNG`, `GOST_KLAUSURPLANUNG`, `STUNDENPLANUNG`.
+> **Mögliche Werte für `datenContext`:** `SCHUELER`, `SCHUELER_GOST_LAUFBAHNPLANUNG`, `SCHUELER_GOST_ABITUR`, `LEHRER`, `KLASSEN`, `KURSE`,
+> `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG`, `GOST_KURSPLANUNG_KURSE`, `GOST_KURSPLANUNG_SCHUELER`, `GOST_KLAUSURPLANUNG_SCHUELER`,
+> `GOST_KLAUSURPLANUNG_TERMINE`, `STUNDENPLANUNG_FACH`, `STUNDENPLANUNG_KLASSEN`, `STUNDENPLANUNG_LEHRER`, `STUNDENPLANUNG_RAUM`,
+> `STUNDENPLANUNG_SCHUELER`.
+>
+> Jeder Wert benennt genau einen Ablauf des Datenaufbaus — welche Daten geladen und welche Prüfungen dabei durchgeführt werden. Wähle den Wert,
+> der zu den Daten deiner Vorlage passt; einen neuen Wert brauchst du nur, wenn keiner der bestehenden Abläufe deine Daten liefert.
 
 ---
 
@@ -586,13 +592,21 @@ Fehler in der Vorlage – ein Absturz bei der Ausgabe ist nie ein „normaler Da
 | `datenContext` | gefüllter Context | Inhalt (Reporting-Typ) |
 |----------------|-------------------|------------------------|
 | `SCHUELER` | `Schueler` | Liste von `ReportingSchueler` |
+| `SCHUELER_GOST_LAUFBAHNPLANUNG` | `Schueler` | Liste von `ReportingSchueler`; zusätzlich geprüft: GOSt vorhanden, Beratungs- und Abiturdaten der Laufbahnplanung |
+| `SCHUELER_GOST_ABITUR` | `Schueler` | Liste von `ReportingSchueler`; zusätzlich geprüft: GOSt vorhanden, Abiturdaten |
 | `KLASSEN` | `Klassen` | Liste von `ReportingKlasse` |
 | `KURSE` | `Kurse` | Liste von `ReportingKurs` |
 | `LEHRER` | `Lehrer` | Liste von `ReportingLehrer` |
 | `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG` | `GostLaufbahnplanungAbiturjahrgangFachwahlStatistiken` | Fachwahlstatistiken |
-| `GOST_KURSPLANUNG` | `GostBlockungsergebnis` | Blockungsergebnis der Kursplanung |
-| `GOST_KLAUSURPLANUNG` | `GostKlausurplan` | Klausurplan |
-| `STUNDENPLANUNG` | `FaecherStundenplaene`, `KlassenStundenplaene`, `LehrerStundenplaene`, `RaeumeStundenplaene`, `SchuelerStundenplaene` | Stundenpläne je Sichtweise |
+| `GOST_KURSPLANUNG_KURSE` | `GostBlockungsergebnis` | Blockungsergebnis der Kursplanung aus Sicht der Kurse |
+| `GOST_KURSPLANUNG_SCHUELER` | `GostBlockungsergebnis` | Blockungsergebnis der Kursplanung aus Sicht der Schüler |
+| `GOST_KLAUSURPLANUNG_SCHUELER` | `GostKlausurplan` | Klausurplan aus Sicht der Schüler |
+| `GOST_KLAUSURPLANUNG_TERMINE` | `GostKlausurplan` | Klausurplan aus Sicht der Klausurtermine |
+| `STUNDENPLANUNG_FACH` | `FaecherStundenplaene` | Stundenpläne aus Sicht der Fächer |
+| `STUNDENPLANUNG_KLASSEN` | `KlassenStundenplaene` | Stundenpläne aus Sicht der Klassen |
+| `STUNDENPLANUNG_LEHRER` | `LehrerStundenplaene` | Stundenpläne aus Sicht der Lehrkräfte |
+| `STUNDENPLANUNG_RAUM` | `RaeumeStundenplaene` | Stundenpläne aus Sicht der Räume |
+| `STUNDENPLANUNG_SCHUELER` | `SchuelerStundenplaene` | Stundenpläne aus Sicht der Schüler |
 
 > Jeder dieser Contexts ist ein **Java-Objekt bzw. eine Liste davon**. Welche Werte du abrufen kannst, steht in der jeweiligen `Reporting…`-Klasse unter `…/module/reporting/types/`.
 

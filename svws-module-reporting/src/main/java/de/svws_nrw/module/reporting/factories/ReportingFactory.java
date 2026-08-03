@@ -231,7 +231,7 @@ public final class ReportingFactory {
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
 	private HtmlFactory erzeugeHtmlFactory() throws ApiOperationException {
-		return new HtmlFactory(reportingContext);
+		return HtmlFactory.erzeuge(reportingContext);
 	}
 
 	/**

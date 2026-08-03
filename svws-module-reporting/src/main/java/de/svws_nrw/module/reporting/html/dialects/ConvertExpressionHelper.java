@@ -20,6 +20,7 @@ import java.util.Date;
  * Die Klasse stellt Hilfsmethoden zur Datumsverarbeitung zur Verfügung, die über einen Thymeleaf-Dialect
  * und dessen ExpressionFactory in HTML-Templates verwendet werden können.
  */
+// toDateObject(...) ist ein bewusster Adapter an die Thymeleaf-Template-API, die für ihre Datums-Hilfsmethoden ein Date erwartet.
 public class ConvertExpressionHelper {
 
 	/**

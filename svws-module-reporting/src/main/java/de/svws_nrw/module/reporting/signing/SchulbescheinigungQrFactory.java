@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.signing;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.utils.ReportingBarcodeUtils;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.module.reporting.utils.ReportingUhr;
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
@@ -39,24 +41,31 @@ public final class SchulbescheinigungQrFactory {
 	 * Konfiguration des Dienstes nicht zum Absturz, sondern zu einer Fehlermeldung je Schüler führt. */
 	private final Supplier<SignatureService> signatureServiceSupplier;
 
+	/** Die Uhr, aus der das Ausstellungsdatum der Bescheinigung bezogen wird. */
+	private final Clock clock;
+
 	/**
-	 * Erstellt eine neue Factory, die den Signier-Service über die Standard-Factories bezieht.
+	 * Erstellt eine neue Factory, die den Signier-Service über die Standard-Factories und das Ausstellungsdatum über die Standard-Uhr des Reportings
+	 * bezieht.
 	 *
 	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf Schüler-Repository, Logger und Datenbankverbindung.
 	 */
 	public SchulbescheinigungQrFactory(final ReportingContext reportingContext) {
-		this(reportingContext, SchulbescheinigungQrFactory::erzeugeSignatureService);
+		this(reportingContext, SchulbescheinigungQrFactory::erzeugeSignatureService, ReportingUhr.standard());
 	}
 
 	/**
-	 * Erstellt eine neue Factory mit einem injizierten Signier-Service. Dient primär der Testbarkeit.
+	 * Erstellt eine neue Factory mit einem injizierten Signier-Service und einer injizierten Uhr. Dient primär der Testbarkeit: Nur mit einer festen Uhr
+	 * ist der signierte Inhalt reproduzierbar.
 	 *
 	 * @param reportingContext         Der zentrale Reporting-Context.
 	 * @param signatureServiceSupplier Lieferant für den zu verwendenden Signier-Service.
+	 * @param clock                    Die Uhr, aus der das Ausstellungsdatum bezogen wird.
 	 */
-	SchulbescheinigungQrFactory(final ReportingContext reportingContext, final Supplier<SignatureService> signatureServiceSupplier) {
+	SchulbescheinigungQrFactory(final ReportingContext reportingContext, final Supplier<SignatureService> signatureServiceSupplier, final Clock clock) {
 		this.reportingContext = reportingContext;
 		this.signatureServiceSupplier = signatureServiceSupplier;
+		this.clock = clock;
 	}
 
 	/**
@@ -102,7 +111,7 @@ public final class SchulbescheinigungQrFactory {
 		try {
 			final ReportingSchule schule = this.reportingContext.repositorySchule().schule();
 			final String bildungsgangEnddatum = (schule.aktuellerSchuljahresabschnitt().schuljahr() + 1) + "-07-31";
-			return new SchulbescheinigungAusstellungsdaten(schule, schule.ort(), LocalDate.now().toString(), bildungsgangEnddatum);
+			return new SchulbescheinigungAusstellungsdaten(schule, schule.ort(), LocalDate.now(this.clock).toString(), bildungsgangEnddatum);
 		} catch (final Exception e) {
 			ReportingExceptionUtils.logException(
 					"INFO: Schul- bzw. Abschnittsdaten für die Schulbescheinigung konnten nicht ermittelt werden.", e,

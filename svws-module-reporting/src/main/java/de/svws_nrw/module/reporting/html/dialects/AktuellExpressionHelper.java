@@ -11,10 +11,12 @@ import java.util.Date;
  * Die Klasse stellt Hilfsmethoden für aktuelles Datum und aktuelle Uhrzeit zur Verfügung, die über
  * einen Thymeleaf-Dialect und dessen ExpressionFactory in HTML-Templates verwendet werden können.
  *
- * <p>Die zugrunde liegende {@link Clock} wird beim Erzeugen des Helpers gesetzt. In Produktion ist dies
- * {@link Clock#systemDefaultZone()}; in Test-Szenarien kann eine feste Uhr eingespielt werden, sodass
- * Snapshot-Vergleiche deterministisch sind.</p>
+ * <p>Die zugrunde liegende {@link Clock} wird beim Erzeugen des Helpers gesetzt. Standardmäßig stammt sie aus
+ * {@code ReportingUhr.standard()} und läuft in der Zeitzone {@code Europe/Berlin}; in Test-Szenarien kann eine feste Uhr eingespielt werden,
+ * sodass Snapshot-Vergleiche deterministisch sind.</p>
  */
+// Intern arbeitet der Helper durchgängig mit java.time; die Date-Rückgabe ist ein bewusster Adapter an die Thymeleaf-Template-API, weil zahlreiche
+// Vorlagen das Ergebnis an #dates.format(...) übergeben.
 public class AktuellExpressionHelper {
 
 	private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;

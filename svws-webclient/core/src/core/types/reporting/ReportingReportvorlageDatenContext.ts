@@ -12,44 +12,84 @@ export class ReportingReportvorlageDatenContext extends JavaEnum<ReportingReport
 	static readonly all_values_by_name: Map<string, ReportingReportvorlageDatenContext> = new Map<string, ReportingReportvorlageDatenContext>();
 
 	/**
-	 * Daten-Context ist SCHUELER
+	 * Daten-Context ist SCHUELER - Schülerdaten ohne weitere Zusatzprüfungen
 	 */
 	public static readonly SCHUELER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("SCHUELER", 0, "SCHUELER");
 
 	/**
-	 * Daten-Context ist LEHRER
+	 * Daten-Context ist SCHUELER_GOST_LAUFBAHNPLANUNG - Schülerdaten mit den Beratungs- und Abiturdaten der GOSt-Laufbahnplanung
 	 */
-	public static readonly LEHRER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("LEHRER", 1, "LEHRER");
+	public static readonly SCHUELER_GOST_LAUFBAHNPLANUNG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("SCHUELER_GOST_LAUFBAHNPLANUNG", 1, "SCHUELER_GOST_LAUFBAHNPLANUNG");
 
 	/**
-	 * Daten-Context ist KLASSEN
+	 * Daten-Context ist SCHUELER_GOST_ABITUR - Schülerdaten mit den Abiturdaten der GOSt
 	 */
-	public static readonly KLASSEN: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("KLASSEN", 2, "KLASSEN");
+	public static readonly SCHUELER_GOST_ABITUR: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("SCHUELER_GOST_ABITUR", 2, "SCHUELER_GOST_ABITUR");
 
 	/**
-	 * Daten-Context ist KURSE
+	 * Daten-Context ist LEHRER - Daten der Lehrkräfte
 	 */
-	public static readonly KURSE: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("KURSE", 3, "KURSE");
+	public static readonly LEHRER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("LEHRER", 3, "LEHRER");
 
 	/**
-	 * Daten-Context ist GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG
+	 * Daten-Context ist KLASSEN - Daten der Klassen
 	 */
-	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG", 4, "GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG");
+	public static readonly KLASSEN: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("KLASSEN", 4, "KLASSEN");
 
 	/**
-	 * Daten-Context ist GOST_KURSPLANUNG
+	 * Daten-Context ist KURSE - Daten der Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KURSPLANUNG", 5, "GOST_KURSPLANUNG");
+	public static readonly KURSE: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("KURSE", 5, "KURSE");
 
 	/**
-	 * Daten-Context ist GOST_KLAUSURPLANUNG
+	 * Daten-Context ist GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG - Fachwahlstatistiken der GOSt-Laufbahnplanung eines Abiturjahrgangs
 	 */
-	public static readonly GOST_KLAUSURPLANUNG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KLAUSURPLANUNG", 6, "GOST_KLAUSURPLANUNG");
+	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG", 6, "GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG");
 
 	/**
-	 * Daten-Context ist STUNDENPLANUNG
+	 * Daten-Context ist GOST_KURSPLANUNG_KURSE - Blockungsergebnis der GOSt-Kursplanung aus Sicht der Kurse
 	 */
-	public static readonly STUNDENPLANUNG: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG", 7, "STUNDENPLANUNG");
+	public static readonly GOST_KURSPLANUNG_KURSE: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KURSPLANUNG_KURSE", 7, "GOST_KURSPLANUNG_KURSE");
+
+	/**
+	 * Daten-Context ist GOST_KURSPLANUNG_SCHUELER - Blockungsergebnis der GOSt-Kursplanung aus Sicht der Schüler
+	 */
+	public static readonly GOST_KURSPLANUNG_SCHUELER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KURSPLANUNG_SCHUELER", 8, "GOST_KURSPLANUNG_SCHUELER");
+
+	/**
+	 * Daten-Context ist GOST_KLAUSURPLANUNG_SCHUELER - Klausurplan der GOSt aus Sicht der Schüler
+	 */
+	public static readonly GOST_KLAUSURPLANUNG_SCHUELER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KLAUSURPLANUNG_SCHUELER", 9, "GOST_KLAUSURPLANUNG_SCHUELER");
+
+	/**
+	 * Daten-Context ist GOST_KLAUSURPLANUNG_TERMINE - Klausurplan der GOSt aus Sicht der Klausurtermine
+	 */
+	public static readonly GOST_KLAUSURPLANUNG_TERMINE: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("GOST_KLAUSURPLANUNG_TERMINE", 10, "GOST_KLAUSURPLANUNG_TERMINE");
+
+	/**
+	 * Daten-Context ist STUNDENPLANUNG_FACH - Stundenplan aus Sicht der Fächer
+	 */
+	public static readonly STUNDENPLANUNG_FACH: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG_FACH", 11, "STUNDENPLANUNG_FACH");
+
+	/**
+	 * Daten-Context ist STUNDENPLANUNG_KLASSEN - Stundenplan aus Sicht der Klassen
+	 */
+	public static readonly STUNDENPLANUNG_KLASSEN: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG_KLASSEN", 12, "STUNDENPLANUNG_KLASSEN");
+
+	/**
+	 * Daten-Context ist STUNDENPLANUNG_LEHRER - Stundenplan aus Sicht der Lehrkräfte
+	 */
+	public static readonly STUNDENPLANUNG_LEHRER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG_LEHRER", 13, "STUNDENPLANUNG_LEHRER");
+
+	/**
+	 * Daten-Context ist STUNDENPLANUNG_RAUM - Stundenplan aus Sicht der Räume
+	 */
+	public static readonly STUNDENPLANUNG_RAUM: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG_RAUM", 14, "STUNDENPLANUNG_RAUM");
+
+	/**
+	 * Daten-Context ist STUNDENPLANUNG_SCHUELER - Stundenplan aus Sicht der Schüler
+	 */
+	public static readonly STUNDENPLANUNG_SCHUELER: ReportingReportvorlageDatenContext = new ReportingReportvorlageDatenContext("STUNDENPLANUNG_SCHUELER", 15, "STUNDENPLANUNG_SCHUELER");
 
 	/**
 	 * Die Bezeichnung des Daten-Kontexts
