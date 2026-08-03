@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "ID_310",
 		"idStatistik": "1",
@@ -166,6 +166,19 @@
 			"text": "SV-Verbindungslehrer/-in, Beratungslehrer/-in",
 			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
 			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	},{
+		"bezeichner": "ID_535",
+		"idStatistik": "87",
+		"historie": [ {
+			"id": 535000,
+			"schluessel": "535",
+			"kuerzel": "535",
+			"text": "Startchancen-Programm - Entlastungsstunden",
+			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0
 		} ]
