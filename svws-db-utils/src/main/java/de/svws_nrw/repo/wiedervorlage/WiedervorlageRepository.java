@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.wiedervorlage;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -57,4 +58,14 @@ public interface WiedervorlageRepository extends Repository<DTOWiedervorlage> {
 	 * @return Anzahl offener Wiedervorlagen als Int
 	 */
 	long getAnzahlOffeneWiedervorlagen(long idBenutzer);
+
+	/**
+	 * Löscht alle erledigten Wiedervorlagen, deren Wiedervorlage-Zeitpunkt vor dem
+	 * übergebenen delete Datum liegt und die nicht explizit von der automatischen Löschung
+	 * ausgenommen sind.
+	 *
+	 * @param deleteDate Date, ab dem Wiedervorlagen gelöscht werden
+	 *
+	 */
+	void deleteAbgelaufeneWiedervorlagen(LocalDate deleteDate);
 }

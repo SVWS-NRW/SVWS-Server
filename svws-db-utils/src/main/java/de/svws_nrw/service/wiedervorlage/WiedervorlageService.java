@@ -15,13 +15,14 @@ import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.WiedervorlageMapper;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.benutzer.ViewBenutzerDetailsRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppeRepository;
 import de.svws_nrw.repo.benutzer.BenutzergruppenMitgliedRepository;
+import de.svws_nrw.repo.benutzer.ViewBenutzerDetailsRepository;
 import de.svws_nrw.repo.erzieher.ErzieherRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepository;
+import de.svws_nrw.service.wiedervorlage.cleanup.WiedervorlageCleanupService;
 import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -36,6 +37,9 @@ public final class WiedervorlageService {
 	private static final String LOG_MESSAGE_SUCCESS = "Wiedervorlage mit id: %d Bemerkung: %s erfolgreich gelöscht";
 	private static final String LOG_MESSAGE_NOT_FOUND = "Wiedervorlage mit id: %d konnte nicht gefunden werden";
 
+	private static final ZoneId ZONE_BERLIN = ZoneId.of("Europe/Berlin");
+
+	private final WiedervorlageCleanupService cleanupService;
 	private final WiedervorlageRepository wiedervorlageRepository;
 	private final BenutzergruppenMitgliedRepository benutzergruppenMitgliedRepository;
 	private final BenutzergruppeRepository benutzergruppeRepository;
@@ -59,6 +63,7 @@ public final class WiedervorlageService {
 	 * @param schuelerRepository Repository für Schüler Zugriff
 	 * @param erzieherRepository Repository für Erzieher Zugriff
 	 * @param wiedervorlageMapper Mapper für Wiedervorlage
+	 * @param cleanupService Service zur Löschung veralteter Wiedervorlagen
 	 */
 	@SuppressWarnings("java:S107")
 	public WiedervorlageService(final WiedervorlageRepository wiedervorlageRepository,
@@ -69,7 +74,8 @@ public final class WiedervorlageService {
 			final LehrerRepository lehrerRepository,
 			final SchuelerRepository schuelerRepository,
 			final ErzieherRepository erzieherRepository,
-			final WiedervorlageMapper wiedervorlageMapper) {
+			final WiedervorlageMapper wiedervorlageMapper,
+			final WiedervorlageCleanupService cleanupService) {
 		this.wiedervorlageRepository = wiedervorlageRepository;
 		this.benutzergruppenMitgliedRepository = benutzergruppenMitgliedRepository;
 		this.benutzergruppeRepository = benutzergruppeRepository;
@@ -79,6 +85,7 @@ public final class WiedervorlageService {
 		this.schuelerRepository = schuelerRepository;
 		this.erzieherRepository = erzieherRepository;
 		this.wiedervorlageMapper = wiedervorlageMapper;
+		this.cleanupService = cleanupService;
 	}
 
 	/**
@@ -97,11 +104,14 @@ public final class WiedervorlageService {
 
 	/**
 	 * Gibt alle Wiedervorlage-Einträge zurück, auf die der aktuelle Benutzer Zugriff hat.
+	 * Abgelaufene Wiedervorlagen die zur automatischen Löschung markiert sind, werden zusätzlich synchron durch diesen Prozess gelöscht.
 	 *
 	 * @return Liste aller zugänglichen {@link WiedervorlageEintrag}-Objekte
 	 */
 	public List<WiedervorlageEintrag> getAll() {
 		final long idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
+
+		cleanupService.deleteAllExpired();
 
 		return wiedervorlageRepository.findAllByBenutzerId(idBenutzer)
 				.stream()
@@ -253,7 +263,7 @@ public final class WiedervorlageService {
 			final DTOWiedervorlage wiedervorlage = getPersistedEntityByUser(id, idUser);
 
 			wiedervorlage.idBenutzerErledigt = idUser;
-			wiedervorlage.tsErledigt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZoneId.of("Europe/Berlin")));
+			wiedervorlage.tsErledigt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZONE_BERLIN));
 
 			return toApi(wiedervorlage);
 		});
@@ -266,6 +276,7 @@ public final class WiedervorlageService {
 	 */
 	public long getAnzahlOffeneWiedervorlagen() {
 		final var idBenutzer = benutzerAllgemeinRepository.getAktuellerBenutzerId();
+
 		return wiedervorlageRepository.getAnzahlOffeneWiedervorlagen(idBenutzer);
 	}
 

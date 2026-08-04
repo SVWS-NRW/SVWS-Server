@@ -1,5 +1,6 @@
 package de.svws_nrw.service.wiedervorlage;
 
+import de.svws_nrw.oauth.SchemaServiceFactory;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.erzieher.ErzieherRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
@@ -26,6 +27,8 @@ class WiedervorlageServiceFactoryTest {
 	private SchuelerRepositoryFactory schuelerRepositoryFactory;
 	@Mock
 	private ErzieherRepositoryFactory erzieherRepositoryFactory;
+	@Mock
+	private SchemaServiceFactory schemaServiceFactory;
 
 	private WiedervorlageServiceFactory cut;
 
@@ -36,7 +39,8 @@ class WiedervorlageServiceFactoryTest {
 				benutzerRepositoryFactory,
 				lehrerRepositoryFactory,
 				schuelerRepositoryFactory,
-				erzieherRepositoryFactory
+				erzieherRepositoryFactory,
+				schemaServiceFactory
 		);
 	}
 

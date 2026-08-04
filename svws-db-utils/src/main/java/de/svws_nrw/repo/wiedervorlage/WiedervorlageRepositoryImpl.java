@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.wiedervorlage;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -78,6 +79,18 @@ public final class WiedervorlageRepositoryImpl extends RepositoryImpl<DTOWiederv
 	static final String DELETE_BY_IDS = "DELETE FROM DTOWiedervorlage w WHERE w.id IN ?1";
 
 	/**
+	 * Löscht alle Wiedervorlagen, anhand des Fälligkeitsdatums die nicht
+	 * explizit von der automatischen Löschung ausgenommen sind.
+	 */
+	static final String DELETE_ABGELAUFENE_WIEDERVORLAGEN =
+			"""
+			DELETE FROM DTOWiedervorlage w \
+			WHERE w.tsWiedervorlage <= ?1 \
+			 AND w.automatischErledigt = true \
+			 AND w.idBenutzerErledigt != null \
+			""";
+
+	/**
 	 * Erstellt eine neue Instanz des WiedervorlageRepositoryImpl.
 	 *
 	 * @param conn der Datenbankzugriff
@@ -112,5 +125,10 @@ public final class WiedervorlageRepositoryImpl extends RepositoryImpl<DTOWiederv
 	public long getAnzahlOffeneWiedervorlagen(final long idBenutzer) {
 		return conn.queryList(QUERY_COUNT_FAELLIG_FOR_BENUTZER, Long.class, idBenutzer)
 				.getFirst();
+	}
+
+	@Override
+	public void deleteAbgelaufeneWiedervorlagen(final LocalDate deleteDate) {
+		conn.executeDelete(DELETE_ABGELAUFENE_WIEDERVORLAGEN, deleteDate.toString());
 	}
 }

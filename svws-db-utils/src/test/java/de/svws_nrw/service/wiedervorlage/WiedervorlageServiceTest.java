@@ -23,6 +23,7 @@ import de.svws_nrw.repo.erzieher.ErzieherRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.wiedervorlage.WiedervorlageRepository;
+import de.svws_nrw.service.wiedervorlage.cleanup.WiedervorlageCleanupService;
 import jakarta.persistence.PersistenceException;
 import jakarta.ws.rs.core.Response.Status;
 import org.assertj.core.api.Assertions;
@@ -64,6 +65,8 @@ class WiedervorlageServiceTest {
 	private SchuelerRepository schuelerRepository;
 	@Mock
 	private ErzieherRepository erzieherRepository;
+	@Mock
+	private WiedervorlageCleanupService cleanupService;
 
 	private final WiedervorlageMapper wiedervorlageMapper = Mappers.getMapper(WiedervorlageMapper.class);
 
@@ -82,7 +85,9 @@ class WiedervorlageServiceTest {
 				lehrerRepository,
 				schuelerRepository,
 				erzieherRepository,
-				wiedervorlageMapper
+				wiedervorlageMapper,
+				cleanupService
+
 		);
 		transactionSupportMock = mockStatic(TransactionSupport.class);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
