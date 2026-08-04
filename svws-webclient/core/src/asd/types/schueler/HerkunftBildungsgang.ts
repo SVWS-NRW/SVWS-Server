@@ -234,6 +234,21 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> impleme
 	 */
 	public static readonly E13: HerkunftBildungsgang = new HerkunftBildungsgang("E13", 43, );
 
+	/**
+	 * Weiterbildungskolleg - Abendymnasium
+	 */
+	public static readonly G02: HerkunftBildungsgang = new HerkunftBildungsgang("G02", 44, );
+
+	/**
+	 * Weiterbildungskolleg - Abendrealschule
+	 */
+	public static readonly R02: HerkunftBildungsgang = new HerkunftBildungsgang("R02", 45, );
+
+	/**
+	 * Weiterbildungskolleg - Kolleg
+	 */
+	public static readonly K02: HerkunftBildungsgang = new HerkunftBildungsgang("K02", 46, );
+
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
 		HerkunftBildungsgang.all_values_by_ordinal.push(this);

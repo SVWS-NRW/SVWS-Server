@@ -10,7 +10,7 @@
 			"text": "Berufsschule, Fachklassen (Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -25,7 +25,7 @@
 			"text": "Berufsschule, Fachklassen/Fachhochschulreife (Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -40,7 +40,7 @@
 			"text": "Berufsschule, Fachklassen/erweiterte Zusatzqualifikation (Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -55,7 +55,7 @@
 			"text": "Berufsschule, Fachklassen mit erweitertem Stützunterricht (Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -70,7 +70,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Mittlerer Schulabschluss (nach BKAZVO, BBiG/HwO/ in Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -85,7 +85,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -100,7 +100,7 @@
 			"text": "Berufsschule, Ausbildungsvorbereitung (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -115,7 +115,7 @@
 			"text": "Berufsschule, Ausbildungsvorbereitung (1-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -130,7 +130,7 @@
 			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -145,7 +145,7 @@
 			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -160,7 +160,7 @@
 			"text": "Fachklassen (nach §2 BKAZVO)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -175,7 +175,7 @@
 			"text": "Internationale Förderklasse",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -190,7 +190,7 @@
 			"text": "Fit für Mehr",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -205,7 +205,7 @@
 			"text": "Förderzentrum",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -220,7 +220,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachoberschulreife (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -235,7 +235,7 @@
 			"text": "Berufsfachschule, Berufsgrundbildung/Fachoberschulreife (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -250,7 +250,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachoberschulreife (nach BKAZVO, BBiG/HwO, in Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -265,7 +265,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -280,7 +280,7 @@
 			"text": "Berufsfachschule, Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -291,7 +291,7 @@
 			"text": "Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -306,7 +306,7 @@
 			"text": "Berufsfachschule, Berufliche Kenntnisse/Mittlerer Schulabschluss (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -321,7 +321,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -332,7 +332,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -347,7 +347,7 @@
 			"text": "Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -358,7 +358,7 @@
 			"text": "Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -373,7 +373,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -384,7 +384,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -399,7 +399,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum, 3-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -414,7 +414,7 @@
 			"text": "Berufsfachschule, Berufsabschluss (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -429,7 +429,7 @@
 			"text": "Berufsfachschule, Berufliche Kenntnisse/FHR (HBFS) (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -444,7 +444,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 11 (1-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -459,7 +459,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 12S (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -474,7 +474,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 12B (2-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -489,7 +489,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 12B (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -504,7 +504,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 12B (3-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -519,7 +519,7 @@
 			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (mit Berufspraktikum; 3,5 -jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -534,7 +534,7 @@
 			"text": "Berufsabschluss/FHR (gestuft), (3jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -549,7 +549,7 @@
 			"text": "Berufliches Gymnasium, Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum; 4-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -564,7 +564,7 @@
 			"text": "Berufliches Gymnasium, Berufliche Kenntnisse/Allg. Hochschulreife",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -579,7 +579,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 13 (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -594,7 +594,7 @@
 			"text": "Fachoberschule, Fachoberschule Kl. 13 (2-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -609,7 +609,7 @@
 			"text": "Fachschule (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -624,7 +624,7 @@
 			"text": "Fachschule (4-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -639,7 +639,7 @@
 			"text": "Fachschule (verkürzt/1-jährig, Vollzeit/Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -654,7 +654,7 @@
 			"text": "Fachschule (verkürzt/2-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -669,7 +669,7 @@
 			"text": "Fachschule für Sozialwesen (mit Berufspraktikum/3-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -684,7 +684,7 @@
 			"text": "Fachschule für Sozialwesen (mit Berufspraktikum/6-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -699,7 +699,49 @@
 			"text": "Fachschule (3-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
-				{"schulform": "SB", "gliederung": null} ], 
+				{"schulform": "SB", "gliederung": null} ],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "G02",
+		"idStatistik": "45",
+		"historie": [ {
+			"id": 87000,
+			"schluessel": "G02",
+			"kuerzel": "G02",
+			"text": "Weiterbildungskolleg: Abendgymnasium",
+			"zulaessig": [
+				{"schulform": "WB", "gliederung": null} ],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "R02",
+		"idStatistik": "46",
+		"historie": [ {
+			"id": 88000,
+			"schluessel": "R02",
+			"kuerzel": "R02",
+			"text": "Weiterbildungskolleg: Abendrealschule",
+			"zulaessig": [
+				{"schulform": "WB", "gliederung": null} ],
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "K02",
+		"idStatistik": "47",
+		"historie": [ {
+			"id": 89000,
+			"schluessel": "K02",
+			"kuerzel": "K02",
+			"text": "Weiterbildungskolleg: Kolleg",
+			"zulaessig": [
+				{"schulform": "WB", "gliederung": null} ],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0

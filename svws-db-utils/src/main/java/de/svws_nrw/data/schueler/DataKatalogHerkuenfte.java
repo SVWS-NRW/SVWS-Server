@@ -4,12 +4,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
-import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
@@ -52,23 +50,6 @@ public final class DataKatalogHerkuenfte extends DataManager<Long> {
 			for (final HerkunftBildungsgangKatalogEintrag ke : eintrag.historie()) {
 				final HerkunftKatalogEintrag hke = new HerkunftKatalogEintrag();
 				hke.id = ke.id + 2000000000L;
-				hke.kuerzel = ke.kuerzel;
-				hke.schluessel = ke.schluessel;
-				for (final @NotNull SchulformSchulgliederung sfsgl : ke.zulaessig) {
-					if (!hke.schulformen.contains(sfsgl.schulform)) {
-						hke.schulformen.add(sfsgl.schulform);
-					}
-				}
-				hke.beschreibung = ke.text;
-				hke.gueltigVon = ke.gueltigVon;
-				hke.gueltigBis = ke.gueltigBis;
-				daten.add(hke);
-			}
-		}
-		for (final HerkunftBildungsgangTyp eintrag : HerkunftBildungsgangTyp.values()) {
-			for (final HerkunftBildungsgangTypKatalogEintrag ke : eintrag.historie()) {
-				final HerkunftKatalogEintrag hke = new HerkunftKatalogEintrag();
-				hke.id = ke.id + 3000000000L;
 				hke.kuerzel = ke.kuerzel;
 				hke.schluessel = ke.schluessel;
 				for (final @NotNull SchulformSchulgliederung sfsgl : ke.zulaessig) {

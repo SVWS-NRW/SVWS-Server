@@ -5,12 +5,12 @@ import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 
 /**
- * Diese Klasse enthält die SQL-Befehle für Revisions-Updates auf Revision 70.
+ * Diese Klasse enthält die SQL-Befehle für Revisions-Updates auf Revision 71.
  */
 public final class Revision71Updates extends SchemaRevisionUpdateSQL {
 
 	/**
-	 * Erzeugt eine Instanz für die Revisions-Updates für Revision 70.
+	 * Erzeugt eine Instanz für die Revisions-Updates für Revision 71.
 	 */
 	public Revision71Updates() {
 		super(SchemaRevisionen.REV_71);

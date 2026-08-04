@@ -34,7 +34,6 @@ public final class ResourceCoreTypeJson {
 			Map.entry("SchulabschlussBerufsbildend", "de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json"),
 			Map.entry("Einschulungsart", "de/svws_nrw/asd/types/schueler/Einschulungsart.json"),
 			Map.entry("HerkunftBildungsgang", "de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json"),
-			Map.entry("HerkunftBildungsgangTyp", "de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json"),
 			Map.entry("Jahrgaenge", "de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json"),
 			Map.entry("PrimarstufeSchuleingangsphaseBesuchsjahre", "de/svws_nrw/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json"),
 			Map.entry("Religion", "de/svws_nrw/asd/types/schule/Religion.json"),

@@ -164,7 +164,6 @@ export { AnrechnungsantragBKAZVOKatalogEintrag } from './asd/data/schueler/Anrec
 export { BetreuungsartKatalogEintrag } from './asd/data/schueler/BetreuungsartKatalogEintrag';
 export { EinschulungsartKatalogEintrag } from './asd/data/schueler/EinschulungsartKatalogEintrag';
 export { HerkunftBildungsgangKatalogEintrag } from './asd/data/schueler/HerkunftBildungsgangKatalogEintrag';
-export { HerkunftBildungsgangTypKatalogEintrag } from './asd/data/schueler/HerkunftBildungsgangTypKatalogEintrag';
 export { HerkunftSchulformKatalogEintrag } from './asd/data/schueler/HerkunftSchulformKatalogEintrag';
 export { HerkunftSonstigeKatalogEintrag } from './asd/data/schueler/HerkunftSonstigeKatalogEintrag';
 export { HerkunftsartenKatalogEintrag } from './asd/data/schueler/HerkunftsartenKatalogEintrag';
@@ -278,7 +277,6 @@ export { AnrechnungsantragBKAZVO } from './asd/types/schueler/AnrechnungsantragB
 export { Betreuungsart } from './asd/types/schueler/Betreuungsart';
 export { Einschulungsart } from './asd/types/schueler/Einschulungsart';
 export { HerkunftBildungsgang } from './asd/types/schueler/HerkunftBildungsgang';
-export { HerkunftBildungsgangTyp } from './asd/types/schueler/HerkunftBildungsgangTyp';
 export { HerkunftSchulform } from './asd/types/schueler/HerkunftSchulform';
 export { HerkunftSonstige } from './asd/types/schueler/HerkunftSonstige';
 export { Herkunftsarten } from './asd/types/schueler/Herkunftsarten';

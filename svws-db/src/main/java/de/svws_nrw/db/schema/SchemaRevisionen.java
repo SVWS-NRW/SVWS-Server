@@ -52,6 +52,7 @@ import de.svws_nrw.db.schema.revisionen.Revision67Updates;
 import de.svws_nrw.db.schema.revisionen.Revision69Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.Revision71Updates;
+import de.svws_nrw.db.schema.revisionen.Revision72Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -347,21 +348,25 @@ public enum SchemaRevisionen {
 	REV_70(70, "2026-06-24"),
 
 	/** Ergänzen des Fremdschlüssels auf K_Lehrer in der Tabelle Schueler_AllgAdr für das Feld Betreuungslehrer_ID */
-	REV_71(71, "2026-06-24");
+	REV_71(71, "2026-06-24"),
+
+	/** Herkunftbildungsgang ersetzt HerkunftbildungsgangTyp - daher: Umschlüsseln der WBK-Schlüssel AG, AR, KL aus HerkunftbildungsgangTyp auf G02, R02, K02
+	 * in Herkunftbildungsgang und nullen der BK-Schlüssel BF, BS, BY, F0, FS */
+	REV_72(72, "2026-08-04");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_71;
+	public static final SchemaRevisionen maxRevision = REV_72;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_71;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_72;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -471,6 +476,7 @@ public enum SchemaRevisionen {
 				case REV_67 -> new Revision67Updates();
 				case REV_69 -> new Revision69Updates();
 				case REV_71 -> new Revision71Updates();
+				case REV_72 -> new Revision72Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

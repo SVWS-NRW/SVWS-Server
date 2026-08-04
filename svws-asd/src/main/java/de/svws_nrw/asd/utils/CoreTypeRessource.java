@@ -46,7 +46,6 @@ import de.svws_nrw.asd.data.schueler.AnrechnungsantragBKAZVOKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
@@ -118,7 +117,6 @@ import de.svws_nrw.asd.types.schueler.AnrechnungsantragBKAZVO;
 import de.svws_nrw.asd.types.schueler.Betreuungsart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
-import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Herkunftsarten;
@@ -443,8 +441,6 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json");
 		add(HerkunftBildungsgang.class, HerkunftBildungsgangKatalogEintrag.class, HerkunftBildungsgang.values(),
 				"de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json");
-		add(HerkunftBildungsgangTyp.class, HerkunftBildungsgangTypKatalogEintrag.class, HerkunftBildungsgangTyp.values(),
-				"de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json");
 		add(Jahrgaenge.class, JahrgaengeKatalogEintrag.class, Jahrgaenge.values(),
 				"de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json");
 		add(PrimarstufeSchuleingangsphaseBesuchsjahre.class, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag.class,

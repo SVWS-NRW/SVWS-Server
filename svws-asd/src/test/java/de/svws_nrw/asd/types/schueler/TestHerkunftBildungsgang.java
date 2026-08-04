@@ -36,7 +36,7 @@ class TestHerkunftBildungsgang {
 	@Test
 	@DisplayName("Teste CoreType HerkunftBildungsgang: Anzahl der vorhandenen Werte.")
 	void testHerkunftBildungsgang_AnzahlEintraege() {
-		assertEquals(44, HerkunftBildungsgang.data().getWerte().size());
+		assertEquals(47, HerkunftBildungsgang.data().getWerte().size());
 	}
 
 	/**

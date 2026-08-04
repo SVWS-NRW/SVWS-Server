@@ -31,7 +31,6 @@ import { LehrerRechtsverhaeltnisKatalogEintrag } from "../data/lehrer/LehrerRech
 import { LehrerZugangsgrundKatalogEintrag } from "../data/lehrer/LehrerZugangsgrundKatalogEintrag";
 import { NoteKatalogEintrag } from "../data/NoteKatalogEintrag";
 import { HerkunftBildungsgangKatalogEintrag } from "../data/schueler/HerkunftBildungsgangKatalogEintrag";
-import { HerkunftBildungsgangTypKatalogEintrag } from "../data/schueler/HerkunftBildungsgangTypKatalogEintrag";
 import { SchuelerStatusKatalogEintrag } from "../data/schueler/SchuelerStatusKatalogEintrag";
 import { UebergangsempfehlungKatalogEintrag } from "../data/schueler/UebergangsempfehlungKatalogEintrag";
 import { BerufskollegAnlageKatalogEintrag } from "../data/schule/BerufskollegAnlageKatalogEintrag";
@@ -78,7 +77,6 @@ import { LehrerZugangsgrund } from "../types/lehrer/LehrerZugangsgrund";
 import { Note } from "../types/Note";
 import { Einschulungsart } from "../types/schueler/Einschulungsart";
 import { HerkunftBildungsgang } from "../types/schueler/HerkunftBildungsgang";
-import { HerkunftBildungsgangTyp } from "../types/schueler/HerkunftBildungsgangTyp";
 import { SchuelerStatus } from "../types/schueler/SchuelerStatus";
 import { Uebergangsempfehlung } from "../types/schueler/Uebergangsempfehlung";
 import { AllgemeinbildendOrganisationsformen } from "../types/schule/AllgemeinbildendOrganisationsformen";
@@ -169,7 +167,6 @@ export class JsonCoreTypeReader {
 		{ key: "SchulabschlussBerufsbildend", entry: SchulabschlussBerufsbildendKatalogEintrag, type: SchulabschlussBerufsbildend },
 		{ key: "Einschulungsart", entry: EinschulungsartKatalogEintrag, type: Einschulungsart, simple: true },
 		{ key: "HerkunftBildungsgang", entry: HerkunftBildungsgangKatalogEintrag, type: HerkunftBildungsgang },
-		{ key: "HerkunftBildungsgangTyp", entry: HerkunftBildungsgangTypKatalogEintrag, type: HerkunftBildungsgangTyp },
 		{ key: "Jahrgaenge", entry: JahrgaengeKatalogEintrag, type: Jahrgaenge },
 		{ key: "PrimarstufeSchuleingangsphaseBesuchsjahre", entry: PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, type: PrimarstufeSchuleingangsphaseBesuchsjahre },
 		{ key: "Religion", entry: CoreTypeData, type: Religion },

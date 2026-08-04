@@ -141,7 +141,16 @@ public enum HerkunftBildungsgang implements CoreType<HerkunftBildungsgangKatalog
 	E07,
 
 	/** Fachschule (3-jährig, Teilzeit) */
-	E13;
+	E13,
+
+	/** Weiterbildungskolleg - Abendymnasium */
+	G02,
+
+	/** Weiterbildungskolleg - Abendrealschule */
+	R02,
+
+	/** Weiterbildungskolleg - Kolleg */
+	K02;
 
 
 	/**
