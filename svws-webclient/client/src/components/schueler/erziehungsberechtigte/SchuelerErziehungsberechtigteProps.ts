@@ -1,4 +1,4 @@
-import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+import type { List, ErzieherStammdaten, Erzieherart } from "@core";
 
 export interface SchuelerErziehungsberechtigteProps {
 	data: () => List<ErzieherStammdaten>;
@@ -7,6 +7,4 @@ export interface SchuelerErziehungsberechtigteProps {
 	addErzieher: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
 	deleteErzieher: (idsEintraege: List<number>) => Promise<void>;
 	erzieherartenById: Map<number, Erzieherart>;
-	orteById: Map<number, OrtKatalogEintrag>;
-	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 }

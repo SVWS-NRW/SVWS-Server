@@ -9,6 +9,7 @@ import { routeStatistikSchueler } from "./RouteStatistikSchueler";
 import { routeStatistikLehrer } from "./RouteStatistikLehrer";
 import { RouteManager } from "~/router/RouteManager";
 import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 const StatistikApp = () => import("~/components/statistik/StatistikApp.vue");
 
@@ -31,7 +32,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await this.data.ladeDaten();
+			await Promise.all([orteStateImpl.init(), this.data.ladeDaten()]);
 		}
 		if (to === this) {
 			return this.getRouteDefaultChild();

@@ -32,6 +32,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BetriebeListeManager>>> {
+		// TODO refactor katalog to work with orteState, ...
 		const [betriebe, betriebsarten, orte] = await Promise.all([
 			api.server.getBetriebe(api.schema),
 			api.server.getBetriebsarten(api.schema),

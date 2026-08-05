@@ -58,7 +58,7 @@
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<schueler-individualdaten v-if="tabManager.tab.name === 'Stammdaten'" :zeige-alles="false" :add-schueler-telefoneintrag
 					:delete-schueler-telefoneintrage :fahrschuelerarten-by-id
-					:foerderschwerpunkte-by-id :get-list-schueler-telefoneintraege :haltestellen-by-id :map-schulen :map-telefon-arten :orte-by-id :ortsteile-by-id
+					:foerderschwerpunkte-by-id :get-list-schueler-telefoneintraege :haltestellen-by-id :map-schulen :map-telefon-arten
 					:patch-schueler-telefoneintrag :religionen-by-id :schueler-liste-manager autofocus :patch />
 			</svws-ui-tab-bar>
 		</div>

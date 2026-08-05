@@ -62,13 +62,12 @@
 </template>
 
 <script setup lang="ts">
-
-	import type { SchuelerSchnelleingabeManager } from "@ui";
+	import { computed } from "vue";
 	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { AdressenUtils, Nationalitaeten, ErzieherStammdaten } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
+	import type { SchuelerSchnelleingabeManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useOrteState } from "@ui";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { computed } from "vue";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<{
@@ -77,13 +76,13 @@
 		patchErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
 		readonly: boolean;
 	}>();
+
 	const abschnittState = useAbschnittState();
+	const orteState = useOrteState();
 
 	const manager = () => props.manager();
 	const data = computed<ErzieherStammdaten>(() => props.data ?? new ErzieherStammdaten());
 	const erzieherarten = computed(() => manager().erzieherartenById.values());
-	const orte = computed(() => manager().orteById.values());
-	const ortsteile = computed(() => Array.from(manager().ortsteileById.values()));
 
 	const erzieherart = computed({
 		get: () => manager().erzieherartenById.get(data.value.idErzieherArt ?? -1) ?? null,
@@ -95,7 +94,7 @@
 	});
 
 	const wohnort = computed({
-		get: () => manager().orteById.get(data.value.wohnortID ?? -1) ?? null,
+		get: () => orteState.orte.byId.get(data.value.wohnortID ?? -1) ?? null,
 		set: (value) => {
 			data.value.wohnortID = value?.id ?? null;
 			void props.patchErzieher({ wohnortID: data.value.wohnortID }, data.value.id);
@@ -108,16 +107,8 @@
 		data.value.hausnummerZusatz ?? ""
 	);
 
-	const ortsteileFiltered = computed(() => {
-		const idWohnort = data.value.wohnortID;
-		if (idWohnort === null) {
-			return ortsteile.value;
-		}
-		return ortsteile.value.filter(o => o.idOrt === idWohnort);
-	});
-
 	const ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => manager().ortsteileById.get(data.value.ortsteilID ?? -1) ?? null,
+		get: () => orteState.ortsteile.byId.get(data.value.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			data.value.ortsteilID = value?.id ?? null;
 			void props.patchErzieher({ ortsteilID: data.value.ortsteilID ?? null }, data.value.id);
@@ -141,7 +132,7 @@
 	});
 
 	const wohnortManager = new SelectManager({
-		options: orte,
+		options: computed(() => orteState.orte.list),
 		optionDisplayText: i => `${i.plz} ${i.ortsname}`,
 		sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}`,
 	});
@@ -154,7 +145,7 @@
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: ortsteileFiltered,
+		options: computed(() => orteState.ortsteile.listByOrtId(data.value.wohnortID)),
 		sort: ortsteilSort, optionDisplayText: i => i.ortsteil ?? '',
 		selectionDisplayText: i => i.ortsteil ?? '' });
 

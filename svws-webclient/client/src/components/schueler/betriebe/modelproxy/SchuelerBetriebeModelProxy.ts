@@ -1,8 +1,9 @@
+import { computed } from "vue";
 import type { SchuelerBetriebeManager } from "@ui";
 import { ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetrieb } from "@core";
-import { computed } from "vue";
 import { StringPattern } from "../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
@@ -49,6 +50,6 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 		set: (v: BetriebeAnsprechpartner | null) => this.proxy.idAnsprechpartner = v?.id ?? null,
 	});
 
-	ort = computed<OrtKatalogEintrag | null>(() => this.manager().orteById.get(this.betrieb.value?.idOrt ?? -1) ?? null);
+	ort = computed<OrtKatalogEintrag | null>(() => orteStateImpl.orte.byId.get(this.betrieb.value?.idOrt ?? -1) ?? null);
 
 }

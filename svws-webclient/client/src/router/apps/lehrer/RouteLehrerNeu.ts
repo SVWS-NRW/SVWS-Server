@@ -1,12 +1,11 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { ViewType } from "@ui";
 import type { LehrerNeuProps } from "~/components/lehrer/LehrerNeuProps";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeApp } from "~/router/apps/RouteApp";
 
 const LehrerNeu = () => import("~/components/lehrer/LehrerNeu.vue");
 
@@ -32,8 +31,6 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 			gotoDefaultView: routeLehrer.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 		};
 	}
 

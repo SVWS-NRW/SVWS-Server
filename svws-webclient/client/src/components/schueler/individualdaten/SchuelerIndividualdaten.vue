@@ -263,10 +263,10 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
-	import type { JavaSet, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ArrayList, ReportingReportvorlage, HashSet } from "@core";
+	import type { JavaSet, NationalitaetenKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ReportingReportvorlage, HashSet } from "@core";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useReportingState, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useOrteState, useReportingState, useSchuleState, useServerState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
@@ -287,8 +287,6 @@
 		() => props.religionenById,
 		() => props.fahrschuelerartenById,
 		() => props.haltestellenById,
-		() => props.orteById,
-		() => props.ortsteileById,
 		props.patch
 	);
 	const benutzerState = useBenutzerState();
@@ -403,28 +401,19 @@
 
 	// --- Karte "Wohnort und Kontaktdaten" ---
 
-	const ortsteile = computed(() => {
-		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
-		for (const ortsteil of props.ortsteileById.values()) {
-			if (((ortsteil.idOrt === null) && (ortsteil.id === model.proxy.ortsteilID))
-				|| (ortsteil.idOrt === model.proxy.wohnortID)) {
-				filtered.add(ortsteil);
-			}
-		}
-		return filtered;
-	});
+	const orteState = useOrteState();
 
 	const istOrtsteilDisabled = computed(() => (model.selectedOrt.value === null) && (model.selectedOrtsteil.value === null));
 
 	const orteManager = new SelectManager({
-		options: computed(() => props.orteById.values()),
+		options: computed(() => orteState.orte.list),
 		sort: orte_sort,
 		optionDisplayText: v => `${v.plz ?? ''} ${v.ortsname ?? ''}`.trim(),
 		selectionDisplayText: v => `${v.plz ?? ''} ${v.ortsname ?? ''}`.trim(),
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: ortsteile,
+		options: computed(() => orteState.ortsteile.listByOrtId(model.proxy.wohnortID)),
 		sort: ortsteilSort,
 		optionDisplayText: v => v.ortsteil ?? '',
 		selectionDisplayText: v => v.ortsteil ?? '',

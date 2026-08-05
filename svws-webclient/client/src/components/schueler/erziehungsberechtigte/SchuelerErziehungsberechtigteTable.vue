@@ -46,13 +46,13 @@
 <script setup lang="ts">
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { Erzieherart, ErzieherStammdaten, List, OrtKatalogEintrag } from "@core";
+	import { useOrteState } from "@ui";
+	import type { Erzieherart, ErzieherStammdaten, List } from "@core";
 	import { AdressenUtils } from "@core";
 
 	const props = defineProps<{
 		data: () => List<ErzieherStammdaten>;
 		erzieherartenById: Map<number, Erzieherart>;
-		orteById: Map<number, OrtKatalogEintrag>;
 		hatKompetenzUpdate: boolean;
 		erzieher: ErzieherStammdaten | undefined;
 		selectedErz: ErzieherStammdaten[];
@@ -66,6 +66,9 @@
 		'addModal': [];
 	}>();
 
+	const orteState = useOrteState();
+
+	const orteById = computed(() => orteState.orte.byId);
 	const erzieherList = computed(() => Array.from(props.data()));
 	const suffix2Ids = computed(() => new Set(erzieherList.value.map(e => e.id)));
 

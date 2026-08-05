@@ -1,5 +1,6 @@
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { LehrerListeManager } from "@ui";
-import { AppMenuGroup } from "@ui";
+import { AppMenuGroup, ConfigElement } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
@@ -10,8 +11,6 @@ import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import { api } from "~/router/Api";
-import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
 import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
 import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
@@ -19,9 +18,9 @@ import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allg
 import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
 import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
 import type { RouteNode } from "~/router/RouteNode";
-import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { Katalog } from "~/cache/Katalog";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
 const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");
@@ -64,7 +63,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE, Katalog.LEITUNGSFUNKTIONEN);
+			await Promise.all([orteStateImpl.init(), routeApp.cache.refreshKataloge(Katalog.LEITUNGSFUNKTIONEN)]);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

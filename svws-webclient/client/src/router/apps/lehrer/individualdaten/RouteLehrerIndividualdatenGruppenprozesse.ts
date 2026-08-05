@@ -2,7 +2,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
@@ -29,8 +28,6 @@ export class RouteLehrerIndividualdatenGruppenprozesse extends RouteNode<any, Ro
 	public getProps(_: RouteLocationNormalized): LehrerIndividualdatenGruppenprozesseProps {
 		return {
 			lehrerListeManager: () => routeLehrer.data.manager,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			autofocus: routeLehrer.data.autofocus,
 			patchMultiple: () => routeLehrer.data.patchMultiple(this.data.pendingStateManager),
 			pendingStateManager: () => routeLehrer.data.pendingStateManager,

@@ -18,16 +18,16 @@ export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
 
 	public getProps(to: RouteLocationNormalized): StatistikLehrerProps {
 		return {
+			// statistik
 			zeigeAlles: false,
 			statistikGesamt: routeStatistik.data.statistikGesamt,
 			mapLehrer: routeStatistik.data.mapLehrer,
 			lehrerListeManager: () => routeStatistik.data.managerLehrer,
 			setAuswahl: routeStatistik.data.updateDatenLehrer,
 			gotoLehrer: routeStatistik.data.gotoLehrer,
-
+			// lehrer
 			patch: routeLehrer.data.patch,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
+			// lehrer: leitungsfunktionen
 			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
 			getListLeitungsfunktionen: () => routeLehrer.data.getListLeitungsfunktionen,
 			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,

@@ -128,12 +128,10 @@
 </template>
 
 <script setup lang="ts">
-
-
+	import { computed } from "vue";
 	import type { NationalitaetenKatalogEintrag, SchuelerLernabschnittsdaten, OrtsteilKatalogEintrag, SchuelerStammdaten, VerkehrsspracheKatalogEintrag } from "@core";
 	import { AdressenUtils, DateUtils, Geschlecht, Nationalitaeten, Verkehrssprache } from "@core";
-	import { computed } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useOrteState } from "@ui";
 	import type { SchuelerSchnelleingabeManager } from "@ui";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
@@ -144,22 +142,15 @@
 		patchLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
 		readonly: boolean;
 	}>();
+
 	const abschnittState = useAbschnittState();
+	const orteState = useOrteState();
 
 	const manager = () => props.manager();
 	const religionen = computed(() => props.manager().religionenById.values());
 	const externeSchulnummern = computed(() => props.manager().schulenById.values());
 	const haltestellen = computed(() => props.manager().haltestellenById.values());
 	const fahrschuelerarten = computed(() => props.manager().fahrschuelerartenById.values());
-	const orte = computed(() => props.manager().orteById.values());
-	const ortsteile = computed(() => {
-		const ortsteile = Array.from(props.manager().ortsteileById.values());
-		const idWohnort = props.manager().stammdaten.wohnortID;
-		if (idWohnort === null) {
-			return ortsteile;
-		}
-		return ortsteile.filter(o => o.idOrt === idWohnort);
-	});
 
 	const geschlecht = computed<Geschlecht | null>({
 		get: () => Geschlecht.fromValue(manager().stammdaten.geschlecht),
@@ -173,7 +164,7 @@
 		manager().stammdaten.hausnummer ?? "", manager().stammdaten.hausnummerZusatz ?? ""));
 
 	const wohnort = computed({
-		get: () => props.manager().orteById.get(props.manager().stammdaten.wohnortID ?? -1) ?? null,
+		get: () => orteState.orte.byId.get(props.manager().stammdaten.wohnortID ?? -1) ?? null,
 		set: (value) => {
 			props.manager().stammdaten.wohnortID = value?.id ?? -1;
 			void props.patchSchueler({ wohnortID: value?.id ?? null }, manager().stammdaten.id);
@@ -181,7 +172,7 @@
 	});
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => props.manager().ortsteileById.get(props.manager().stammdaten.ortsteilID ?? -1) ?? null,
+		get: () => orteState.ortsteile.byId.get(props.manager().stammdaten.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			props.manager().stammdaten.ortsteilID = value?.id ?? null;
 			void props.patchSchueler({ ortsteilID: value?.id ?? null }, manager().stammdaten.id);
@@ -296,14 +287,14 @@
 	});
 
 	const wohnortManager = new SelectManager({
-		options: orte,
+		options: computed(() => orteState.orte.list),
 		optionDisplayText: i => `${i.plz} ${i.ortsname}`,
 		sort: orte_sort,
 		selectionDisplayText: i => `${i.plz} ${i.ortsname}`,
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: ortsteile,
+		options: computed(() => orteState.ortsteile.listByOrtId(props.manager().stammdaten.wohnortID)),
 		sort: ortsteilSort,
 		optionDisplayText: i => i.ortsteil ?? '',
 		selectionDisplayText: i => i.ortsteil ?? '',

@@ -22,7 +22,7 @@ export class AuskunftStateImpl extends StateManager<AuskunftReactiveState> imple
 	}
 
 
-	public get datentschutz(): string | null {
+	public get datenschutz(): string | null {
 		return this._state.value.datenschutz;
 	}
 

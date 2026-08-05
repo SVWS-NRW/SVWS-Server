@@ -24,7 +24,7 @@ interface WiedervorlageReactiveState {
 }
 
 /**
- * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Wiedervorlages
+ * Die Schnittstelle die Anzeige der Wiedervorlagenliste und ihrer API-Methoden
  */
 export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveState> implements WiedervorlageState {
 
@@ -64,14 +64,12 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 
 	/** Erstelle ine Wiedervorlage */
 	public async addWiedervorlage(data: Partial<WiedervorlageEintrag>) {
-		const response = await api.server.addWiedervorlageEintrag(
+		return await api.server.addWiedervorlageEintrag(
 			data,
 			api.schema);
-
-		return response;
 	};
 
-	/** Patche eine Wiedervorlage */
+	/** Patched eine Wiedervorlage */
 	public async patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number) {
 		await api.server.patchWiedervorlageEintrag(data, api.schema, id);
 		await this.ladeWiedervorlagen();

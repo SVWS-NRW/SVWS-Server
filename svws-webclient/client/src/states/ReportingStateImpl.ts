@@ -10,6 +10,9 @@ import { configStateImpl } from "./ConfigStateImpl";
 interface ReportingReactiveState {
 }
 
+/**
+ * Die Schnittstelle für den Zustand des Reportings
+ */
 export class ReportingStateImpl extends StateManager<ReportingReactiveState> implements ReportingState {
 
 	public constructor() {

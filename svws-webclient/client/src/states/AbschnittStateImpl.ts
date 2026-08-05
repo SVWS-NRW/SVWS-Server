@@ -18,7 +18,7 @@ interface AbschnittReactiveState {
 }
 
 /**
- * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
+ * Die Schnittstelle für den Zustand des aktuell ausgewählten Abschnitts und der Liste der möglichen Schuljahresabschnitte
  */
 export class AbschnittStateImpl extends StateManager<AbschnittReactiveState> implements AbschnittState {
 

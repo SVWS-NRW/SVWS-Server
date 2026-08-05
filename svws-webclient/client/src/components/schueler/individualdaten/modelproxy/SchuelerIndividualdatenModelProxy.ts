@@ -1,19 +1,24 @@
 import { computed } from "vue";
-import { ValidatorStrasse, ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange,
-	ValidatorSchuelerGeburtsdatum, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { Fahrschuelerart, Haltestelle, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerStammdaten, SchuelerStatusKatalogEintrag, ValidatorKontext, VerkehrsspracheKatalogEintrag } from "@core";
+import type { OrteState } from "@ui";
+import {
+	ValidatorStrasse, ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange,
+	ValidatorSchuelerGeburtsdatum, ValidatorStringLength, ValidatorStringMatchesPattern,
+} from "@ui";
+import type { Fahrschuelerart, Haltestelle, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerStammdaten,
+	SchuelerStatusKatalogEintrag, ValidatorKontext, VerkehrsspracheKatalogEintrag } from "@core";
 import { AdressenUtils,	Geschlecht,	Nationalitaeten,	SchuelerStatus,	Verkehrssprache,
 	ValidatorSsdSchuelerStammdatenGeburtsdatum,	ValidatorSsgSchuelerStammdatenGeschlecht,
 	ValidatorSsnSchuelerStammdatenNachname,	ValidatorSsvSchuelerStammdatenVorname } from "@core";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {
+
+	private readonly orteState: OrteState = orteStateImpl;
 
 	private readonly schuljahr: () => number;
 	private readonly religionenById: () => Map<number, ReligionEintrag>;
 	private readonly fahrschuelerartenById: () => Map<number, Fahrschuelerart>;
 	private readonly haltestellenById: () => Map<number, Haltestelle>;
-	private readonly orteById: () => Map<number, OrtKatalogEintrag>;
-	private readonly ortsteileById: () => Map<number, OrtsteilKatalogEintrag>;
 
 	constructor(
 		data: () => SchuelerStammdaten,
@@ -22,8 +27,6 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		religionenById: () => Map<number, ReligionEintrag>,
 		fahrschuelerartenById: () => Map<number, Fahrschuelerart>,
 		haltestellenById: () => Map<number, Haltestelle>,
-		orteById: () => Map<number, OrtKatalogEintrag>,
-		ortsteileById: () => Map<number, OrtsteilKatalogEintrag>,
 		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerStammdaten> = ["geschlecht", "status", "fahrschuelerArtID",
@@ -33,12 +36,11 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 			"erhaeltSchuelerBAFOEG", "druckeKonfessionAufZeugnisse", "hatMigrationshintergrund", "externeSchulNr",
 		];
 		super({ data, patch, listOfAutopatchProps });
+
 		this.schuljahr = schuljahr;
 		this.religionenById = religionenById;
 		this.fahrschuelerartenById = fahrschuelerartenById;
 		this.haltestellenById = haltestellenById;
-		this.orteById = orteById;
-		this.ortsteileById = ortsteileById;
 		this.addAsdValidatoren(validatorKontext());
 		this.addUiValidatoren();
 		this.validate();
@@ -179,15 +181,15 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	});
 
 	selectedOrt = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteById().get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (value: OrtKatalogEintrag | null) => this.setAndPatchOrtAndOrtsteil(value?.id ?? null, null),
 	});
 
 	selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this.ortsteileById().get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			const v = value;
-			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteById().get(v.idOrt ?? -1)?.id ?? null);
+			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteState.orte.byId.get(v.idOrt ?? -1)?.id ?? null);
 			const ortsteilId = (v === null || wohnortId === null) ? null : v.id;
 			this.setAndPatchOrtAndOrtsteil(wohnortId, ortsteilId);
 		},

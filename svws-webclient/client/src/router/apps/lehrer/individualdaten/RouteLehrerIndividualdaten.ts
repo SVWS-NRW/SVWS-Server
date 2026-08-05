@@ -30,8 +30,6 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,
 			patchLeitungsfunktion: routeLehrer.data.patchLeitungsfunktion,
 			deleteLeitungsfunktionen: routeLehrer.data.deleteLeitungsfunktionen,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
 			zeigeAlles: true,
 		};

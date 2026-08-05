@@ -5,7 +5,7 @@ import type { List } from "../../../core/src/java/util/List";
 import { AppContext } from "../AppContext";
 
 /**
- * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
+ * Die Schnittstelle für den Zustand des aktuell ausgewählten Abschnitts und der Liste der möglichen Schuljahresabschnitte
  */
 export interface AbschnittState {
 

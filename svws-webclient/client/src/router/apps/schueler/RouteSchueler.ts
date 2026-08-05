@@ -28,6 +28,7 @@ import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSch
 import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import { Katalog } from "~/cache/Katalog";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");
@@ -72,9 +73,9 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await routeApp.cache.refreshKataloge(Katalog.BETRIEBE, Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ENTLASSGRUENDE,
+			await Promise.all([orteStateImpl.init(), routeApp.cache.refreshKataloge(Katalog.BETRIEBE, Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ENTLASSGRUENDE,
 				Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
-				Katalog.MERKMALE, Katalog.ORTE, Katalog.ORTSTEILE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
+				Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

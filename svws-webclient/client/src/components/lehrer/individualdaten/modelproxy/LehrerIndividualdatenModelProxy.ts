@@ -1,22 +1,23 @@
 import type { LehrerStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ValidatorKontext } from "@core";
-import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname, ValidatorLsvLehrerStammdatenVorname } from "@core";
-import type { LehrerListeManager } from "@ui";
+import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname,
+	ValidatorLsvLehrerStammdatenVorname } from "@core";
+import type { LehrerListeManager, OrteState } from "@ui";
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStrasse, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import { computed } from "vue";
 import { ValidatorLehrerIndividualdatenKuerzel } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenKuerzel";
 import { ValidatorLehrerIndividualdatenNachname } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenNachname";
 import { ValidatorLehrerIndividualdatenVorname } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenVorname";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten
  */
 export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten> {
 
+	private readonly orteState: OrteState = orteStateImpl;
+
 	protected readonly schuljahr: number;
 	protected readonly manager: () => LehrerListeManager;
-
-	protected readonly orteById: Map<number, OrtKatalogEintrag>;
-	protected readonly ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 
 	/**
 	 * Erstellt einen ModelProxy für das Core-DTO LehrerStammdaten.
@@ -24,16 +25,12 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	 * @param data               ein Lambda für den Zugriff auf die "Original"-Daten
 	 * @param validatorKontext   der Validator-Kontext für die Nutzung in den ASD-Validatoren
 	 * @param manager
-	 * @param orteById
-	 * @param ortsteileById
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
 	constructor(data: () => LehrerStammdaten,
 		validatorKontext: () => ValidatorKontext,
 		manager: () => LehrerListeManager,
-		orteById: Map<number, OrtKatalogEintrag>,
-		ortsteileById: Map<number, OrtsteilKatalogEintrag>,
 		patch?: (data: Partial<LehrerStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof LehrerStammdaten> =
@@ -41,8 +38,6 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 		super({ data, patch, listOfAutopatchProps });
 		this.schuljahr = validatorKontext().getSchuljahr();
 		this.manager = manager;
-		this.orteById = orteById;
-		this.ortsteileById = ortsteileById;
 
 		// Kürzel
 		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
@@ -116,12 +111,12 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteById.get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (val) => this.proxy.wohnortID = val?.id ?? null,
 	});
 
 	ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this.ortsteileById.get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (val) => this.proxy.ortsteilID = val?.id ?? null,
 	});
 

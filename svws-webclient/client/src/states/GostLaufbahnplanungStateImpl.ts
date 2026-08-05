@@ -30,7 +30,7 @@ interface GostLaufbahnplanungReactiveState {
 	listeLehrer: List<LehrerListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: GostLaufbahnplanungExportV2 | undefined;
-};
+}
 
 /**
  * Der Zustand der Laufbahnplanung der Gymnasialen Oberstufe
@@ -411,7 +411,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 	public async removeBeratungslehrer(eintraege: GostBeratungslehrer[]) {
 		if (this.mode !== 'abiturjahrgang') {
-			throw new DeveloperNotificationException("Das Erntfernen eines Beratungslehrers ist nur in der Ansicht der Laufbahnplanung für den Abiturjahrgang möglich.");
+			throw new DeveloperNotificationException("Das Entfernen eines Beratungslehrers ist nur in der Ansicht der Laufbahnplanung für den Abiturjahrgang möglich.");
 		}
 		api.status.start();
 		for (const eintrag of eintraege) {

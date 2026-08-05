@@ -121,33 +121,20 @@
 
 	import type { LehrerNeuProps } from './LehrerNeuProps';
 	import { computed, ref, watch } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
-	import type { OrtKatalogEintrag, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { ArrayList, BenutzerKompetenz, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@core";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useOrteState, useSchuleState } from "@ui";
+	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@core";
 	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerNeuProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const orteState = useOrteState();
 
 	const isLoading = ref<boolean>(false);
 
 	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
-	const orte = computed<Iterable<OrtKatalogEintrag>>(() => props.orteById.values());
-	const ortsteile = computed<Iterable<OrtsteilKatalogEintrag>>(() => {
-		const result = new ArrayList<OrtsteilKatalogEintrag>();
-		if (model.proxy.wohnortID === null) {
-			return result;
-		}
-
-		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.idOrt === model.proxy.wohnortID) {
-				result.add(ortsteil);
-			}
-		}
-		return result;
-	});
 
 	const model = new LehrerIndividualdatenModelProxy(
 		() => Object.assign(new LehrerStammdaten(),
@@ -158,9 +145,7 @@
 			} as Partial<LehrerStammdaten>
 		),
 		() => schuleState.validatorKontext,
-		props.lehrerListeManager,
-		props.orteById,
-		props.ortsteileById
+		props.lehrerListeManager
 	);
 
 	const personaltypManger = new SelectManager({
@@ -196,13 +181,13 @@
 	}
 
 	const wohnortManager = new SelectManager({
-		options: orte,
+		options: computed(() => orteState.orte.list),
 		optionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
 		selectionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: ortsteile,
+		options: computed(() => orteState.ortsteile.listByOrtId(model.proxy.wohnortID)),
 		optionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
 		selectionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
 		sort: ortsteilSort,

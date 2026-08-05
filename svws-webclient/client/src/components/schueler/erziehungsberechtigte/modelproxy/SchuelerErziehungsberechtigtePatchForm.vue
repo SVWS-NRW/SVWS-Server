@@ -74,27 +74,26 @@
 
 <script setup lang="ts">
 	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
-	import type { Erzieherart, ErzieherStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import type { Erzieherart, ErzieherStammdaten } from "@core";
 	import { Nationalitaeten } from "@core";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useOrteState } from "@ui";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;
 		erzieherartenById: Map<number, Erzieherart>;
-		orteById: Map<number, OrtKatalogEintrag>;
-		ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 		schuljahr: number;
 		hatKompetenzUpdate: boolean;
 		patch: (data: Partial<ErzieherStammdaten>, id: number) => Promise<void>;
 	}>();
+
+	const orteState = useOrteState();
+
 	const readonly = computed(() => !props.hatKompetenzUpdate);
 	const model = new ErzieherStammdatenModelProxy(
 		() => props.erzieher,
 		() => props.erzieherartenById,
-		() => props.orteById,
-		() => props.ortsteileById,
 		() => props.schuljahr,
 		async (data) => {
 			await props.patch(data, props.erzieher.id); return true;
@@ -116,14 +115,14 @@
 	});
 
 	const wohnortManager = new SelectManager({
-		options: computed(() => props.orteById.values()),
+		options: computed(() => orteState.orte.list),
 		sort: orte_sort,
 		optionDisplayText: i => `${i.plz} ${i.ortsname}`,
 		selectionDisplayText: i => `${i.plz} ${i.ortsname}`,
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: computed(() => model.ortsteileFiltered.value),
+		options: computed(() => orteState.ortsteile.listByOrtId(model.proxy.wohnortID)),
 		sort: ortsteilSort,
 		optionDisplayText: i => i.ortsteil ?? '',
 		selectionDisplayText: i => i.ortsteil ?? '',

@@ -1,4 +1,4 @@
-import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+import type { LehrerStammdaten } from "@core";
 import type { Checkpoint, LehrerListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -8,6 +8,4 @@ export interface LehrerNeuProps {
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
-	orteById: Map<number, OrtKatalogEintrag>;
-	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 }

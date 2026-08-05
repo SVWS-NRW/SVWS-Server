@@ -101,16 +101,19 @@ export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
 export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
 
 // States
-export { useAbschnittState, type AbschnittState } from "./states/AbschnittState";
-export { useAuskunftState, type AuskunftState } from "./states/AuskunftState";
-export { useGostLaufbahnplanungState, type GostLaufbahnplanungState, type GostBelegpruefungsModus } from "./states/GostLaufbahnplanungState";
-export { useReportingState, type ReportingState, type ElementMitAnforderung } from "./states/ReportingState";
-export { useSchuleState, type SchuleState } from "./states/SchuleState";
-export { useServerState, type ServerState } from "./states/ServerState";
-export { useWiedervorlageState, type WiedervorlageState } from "./states/WiedervorlageState";
-export { useNotenmodulState, type NotenmodulState } from "./states/NotenmodulState";
-export { useConfigState, type ConfigState } from "./states/ConfigState";
-export { useBenutzerState, type BenutzerState } from "./states/BenutzerState";
+export { useAbschnittState, AbschnittStateKey, type AbschnittState } from "./states/AbschnittState";
+export { useAuskunftState, AuskunftStateKey, type AuskunftState } from "./states/AuskunftState";
+export { useGostLaufbahnplanungState, GostLaufbahnplanungStateKey, type GostLaufbahnplanungState, type GostBelegpruefungsModus }
+	from "./states/GostLaufbahnplanungState";
+export { useReportingState, ReportingStateKey, type ReportingState, type ElementMitAnforderung } from "./states/ReportingState";
+export { useSchuleState, SchuleStateKey, type SchuleState } from "./states/SchuleState";
+export { useServerState, ServerStateKey, type ServerState } from "./states/ServerState";
+export { useWiedervorlageState, WiedervorlageStateKey, type WiedervorlageState } from "./states/WiedervorlageState";
+export { useNotenmodulState, NotenmodulStateKey, type NotenmodulState } from "./states/NotenmodulState";
+export { useConfigState, ConfigStateKey, type ConfigState } from "./states/ConfigState";
+export { useBenutzerState, BenutzerStateKey, type BenutzerState } from "./states/BenutzerState";
+export { type KatalogState } from "./states/kataloge/KatalogState";
+export { useOrteState, OrteStateKey, type OrteState, type OrtsteileKatalogState } from "./states/kataloge/OrteState";
 
 // Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";

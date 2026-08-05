@@ -1,4 +1,4 @@
-import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, List, OrtKatalogEintrag, SchuelerBetrieb } from "../../../../../core/src";
+import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, List, SchuelerBetrieb } from "../../../../../core/src";
 import { SchuelerListeEintrag } from "../../../../../core/src";
 import { StateManager } from "../../StateManager";
 
@@ -20,8 +20,6 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 	private readonly _lehrerById: Map<number, LehrerListeEintrag>;
 	private readonly _betriebeById: Map<number, Betrieb>;
 	private readonly _beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
-	private readonly _orteById: Map<number, OrtKatalogEintrag>;
-
 
 	constructor(
 		idSchueler: number,
@@ -29,8 +27,7 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 		ansprechpartner: List<BetriebeAnsprechpartner>,
 		lehrer: List<LehrerListeEintrag>,
 		betriebeById: Map<number, Betrieb>,
-		beschaeftigungsartenById: Map<number, Beschaeftigungsart>,
-		orteById: Map<number, OrtKatalogEintrag>) {
+		beschaeftigungsartenById: Map<number, Beschaeftigungsart>) {
 		super(createDefaultState());
 		this._idSchueler = idSchueler;
 		this._state.value.schuelerBetriebeById = this.mapSchuelerBetriebe(schuelerBetriebe);
@@ -38,7 +35,6 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 		this._lehrerById = this.mapLehrer(lehrer);
 		this._betriebeById = betriebeById;
 		this._beschaeftigungsartenById = beschaeftigungsartenById;
-		this._orteById = orteById;
 	}
 
 	private mapAnsprechpartner(ansprechpartnerList: List<BetriebeAnsprechpartner>): Map<number, BetriebeAnsprechpartner> {
@@ -87,9 +83,5 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 
 	get idSchueler(): number {
 		return this._idSchueler;
-	}
-
-	get orteById(): Map<number, OrtKatalogEintrag> {
-		return this._orteById;
 	}
 }

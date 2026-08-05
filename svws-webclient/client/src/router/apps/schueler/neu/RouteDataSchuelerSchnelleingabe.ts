@@ -1,6 +1,6 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, List,
-	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchulEintrag,
+	ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchulEintrag,
 	Telefonart, VermerkartEintrag, ErzieherStammdaten, SchuelerStammdaten, SchuelerVermerke } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
@@ -58,15 +58,13 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const haltestellenById: Map<number, Haltestelle> = routeApp.cache.kataloge.haltestellenById;
 		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
 		const kindergaertenById: Map<number, Kindergarten> = routeApp.cache.kataloge.kindergaertenById;
-		const orteById: Map<number, OrtKatalogEintrag> = routeApp.cache.kataloge.orteById;
-		const ortsteileById: Map<number, OrtsteilKatalogEintrag> = routeApp.cache.kataloge.ortsteileById;
 		const religionenById: Map<number, ReligionEintrag> = routeApp.cache.kataloge.religionenById;
 		const schulenById: Map<number, SchulEintrag> = routeApp.cache.kataloge.schulenById;
 		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
 		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
 
 		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte, einschulungsartenById,
-			erzieherartenById, faecherById, fahrschuelerartenById, haltestellenById, jahrgaengeById, kindergaertenById, orteById, ortsteileById, religionenById,
+			erzieherartenById, faecherById, fahrschuelerartenById, haltestellenById, jahrgaengeById, kindergaertenById, religionenById,
 			schulenById, telefonartenById, vermerkartenById);
 	}
 

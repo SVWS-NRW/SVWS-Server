@@ -9,7 +9,7 @@ interface AuskunftReactiveState {
 }
 
 /**
- * Die Schnittstelle für den Zustand des der Auskunftdaten
+ * Die Schnittstelle für den Zustand der Auskunftinfos "Datenschutz" und "Impressum"
  */
 export class AuskunftStateImpl extends StateManager<AuskunftReactiveState> implements AuskunftState {
 
@@ -21,7 +21,7 @@ export class AuskunftStateImpl extends StateManager<AuskunftReactiveState> imple
 	}
 
 
-	public get datentschutz(): string | null {
+	public get datenschutz(): string | null {
 		return this._state.value.datenschutz;
 	}
 

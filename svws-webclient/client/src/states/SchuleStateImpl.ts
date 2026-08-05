@@ -13,7 +13,7 @@ interface SchuleReactiveState {
 }
 
 /**
- * Die Schnittstelle für den Zustand der Schule
+ * Die Schnittstelle für die Daten der Schule und des aktuellen Abschnitts der Schule
  */
 export class SchuleStateImpl extends StateManager<SchuleReactiveState> implements SchuleState {
 
@@ -26,7 +26,7 @@ export class SchuleStateImpl extends StateManager<SchuleReactiveState> implement
 	}
 
 	/**
-	 * Initialialisiert die Daten, die beim Login geladen werden sollen
+	 * Initialisiert die Daten, die beim Login geladen werden sollen
 	 *
 	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
 	 */

@@ -57,7 +57,7 @@
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(lehrerListeManager().auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ lehrerListeManager().auswahl().nachname }}, {{ lehrerListeManager().auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<lehrer-individualdaten v-if="tabManager.tab.name === 'Stammdaten'" :zeige-alles="false" :add-leitungsfunktion :delete-leitungsfunktionen
-					:get-list-leitungsfunktionen :map-leitungsfunktionen :patch-leitungsfunktion :lehrer-liste-manager :patch :orte-by-id :ortsteile-by-id />
+					:get-list-leitungsfunktionen :map-leitungsfunktionen :patch-leitungsfunktion :lehrer-liste-manager :patch />
 				<lehrer-personaldaten v-if="tabManager.tab.name === 'Personaldaten'" :add-anrechnung :add-fachrichtung :add-lehramt :add-lehrbefaehigung :add-lehrer-unterrichtsfach
 					:add-mehrleistung :add-minderleistung :lehrer-liste-manager :lehrer-unterrichtsfaecher :map-faecher
 					:map-schulen :patch-abschnittsdaten :patch-anrechnungen :patch-fachrichtung :patch-lehramt :patch-lehrbefaehigung :patch-lehrer-unterrichtsfach :patch-mehrleistung :patch-minderleistung :patch-personaldaten

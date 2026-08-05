@@ -62,8 +62,8 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		for (const katalogOrt of this.manager().orteById.values()) {
 			const ortsteilWithOrtIsUnique = ![...this.manager().liste.list()].some(e =>
 				(e.idOrt === katalogOrt.id)
-				&& (e.id !== this.proxy.id)
-				&& (e.ortsteil?.trim().toLowerCase() === currentOrtsteil));
+					&& (e.id !== this.proxy.id)
+					&& (e.ortsteil?.trim().toLowerCase() === currentOrtsteil));
 			if (ortsteilWithOrtIsUnique) {
 				filteredOrte.add(katalogOrt);
 			}

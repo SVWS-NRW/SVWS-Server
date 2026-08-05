@@ -15,7 +15,7 @@ interface BenutzerReactiveState {
 	// Gibt an, ob der Benutzer Administrator-Rechte hat oder nicht (direkt oder indirekt über eine Gruppen-Zugehörigkeit)
 	istAdmin: boolean;
 
-	// Gibt die Kompetenzen des Benutzer zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
+	// Gibt die Kompetenzen des Benutzers zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
 	kompetenzen: Set<BenutzerKompetenz>;
 
 	// Enthält die Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
@@ -142,7 +142,7 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 	 */
 	protected getKompetenzen(daten: BenutzerDaten): Set<BenutzerKompetenz> {
 		const result: Set<BenutzerKompetenz> = new Set();
-		// Jeder Benutzer hat die Kompetenz auf Teile Der Applikation zuzugreifen, die keine Kompetenz benötigen
+		// Jeder Benutzer hat die Kompetenz auf Teile der Applikation zuzugreifen, die keine Kompetenz benötigen
 		result.add(BenutzerKompetenz.KEINE);
 		// Ein Admin-Benutzer hat alle Kompetenzen...
 		const istAdmin = this.getIstAdmin(daten);
@@ -244,7 +244,7 @@ export class BenutzerStateImpl extends StateManager<BenutzerReactiveState> imple
 	}
 
 	public async patchBenutzerdaten(data: Partial<BenutzerDaten>) {
-		console.log("TODO: Benutzerdaten patchen");
+		// console.log("TODO: Benutzerdaten patchen");
 	}
 
 	public async patchBenutzerpasswort(eins: string, zwei: string): Promise<boolean> {

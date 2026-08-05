@@ -1,8 +1,8 @@
 import { ref } from "vue";
-import { Config } from "@ui";
-import type { ConfigState } from "../../../ui/src/states/ConfigState";
-import { api } from "~/router/Api";
 import { DeveloperNotificationException } from "@core";
+import { Config } from "@ui";
+import type { ConfigState } from "@ui";
+import { api } from "~/router/Api";
 
 /**
  * Die Schnittstelle für den Zustand der Konfiguration

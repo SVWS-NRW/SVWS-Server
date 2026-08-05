@@ -3,8 +3,8 @@
 	<svws-ui-modal v-model:show="show" size="medium">
 		<template #modalTitle>Information zum Datenschutz</template>
 		<template #modalDescription>
-			<div v-if="auskunftState.datentschutz !== null" class="text-left">
-				<mark-down :text="auskunftState.datentschutz" />
+			<div v-if="auskunftState.datenschutz !== null" class="text-left">
+				<mark-down :text="auskunftState.datenschutz" />
 			</div>
 			<div v-else class="space-y-2 text-left">
 				<p>

@@ -52,8 +52,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
 			pendingStateManager: () => this.data.pendingStateManager,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,

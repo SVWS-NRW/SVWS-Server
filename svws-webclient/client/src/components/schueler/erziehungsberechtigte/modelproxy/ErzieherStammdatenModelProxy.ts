@@ -1,28 +1,30 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern, ValidatorStrasse } from "@ui";
+import { computed } from "vue";
+import type { OrteState } from "@ui";
+import {
+	ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern, ValidatorStrasse,
+} from "@ui";
 import type { Erzieherart, ErzieherStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import { AdressenUtils, Nationalitaeten } from "@core";
-import { computed } from "vue";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten> {
 
+	private readonly orteState: OrteState = orteStateImpl;
+
 	private readonly _erzieherartenById: () => Map<number, Erzieherart>;
-	private readonly _orteById: () => Map<number, OrtKatalogEintrag>;
-	private readonly _ortsteileById: () => Map<number, OrtsteilKatalogEintrag>;
 	private readonly _schuljahr: () => number;
+
 	constructor(
 		data: () => ErzieherStammdaten,
 		erzieherartenById: () => Map<number, Erzieherart>,
-		orteById: () => Map<number, OrtKatalogEintrag>,
-		ortsteileById: () => Map<number, OrtsteilKatalogEintrag>,
 		schuljahr: () => number,
 		patch?: (data: Partial<ErzieherStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof ErzieherStammdaten> = [
 			'idErzieherArt', 'staatsangehoerigkeitID', 'wohnortID', 'ortsteilID', 'erhaeltAnschreiben'];
 		super({	data, patch, listOfAutopatchProps });
+
 		this._erzieherartenById = erzieherartenById;
-		this._orteById = orteById;
-		this._ortsteileById = ortsteileById;
 		this._schuljahr = schuljahr;
 		this.addValidatoren();
 		this.validate();
@@ -75,7 +77,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this._orteById().get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (v: OrtKatalogEintrag | null) => {
 			this.proxy.wohnortID = v?.id ?? null;
 			this.proxy.ortsteilID = null;
@@ -83,14 +85,9 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	});
 
 	ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this._ortsteileById().get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (v: OrtsteilKatalogEintrag | null) => this.proxy.ortsteilID = v?.id ?? null,
 	});
-
-	ortsteileFiltered = computed<OrtsteilKatalogEintrag[]>(
-		() => Array.from(this._ortsteileById().values())
-			.filter(o => o.idOrt === this.proxy.wohnortID)
-	);
 
 	adresse = computed({
 		get: () => AdressenUtils.combineStrasse(this.proxy.strassenname, this.proxy.hausnummer, this.proxy.hausnummerZusatz),

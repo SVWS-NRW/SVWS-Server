@@ -19,16 +19,15 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 
 	public getProps(to: RouteLocationNormalized): StatistikSchuelerProps {
 		return {
+			// statistik
 			statistikGesamt: routeStatistik.data.statistikGesamt,
 			mapSchueler: routeStatistik.data.mapSchueler,
 			schuelerListeManager: () => routeStatistik.data.managerSchueler,
 			setAuswahl: routeStatistik.data.updateDatenSchueler,
 			gotoSchueler: routeStatistik.data.gotoSchueler,
 			zeigeAlles: false,
-
+			// schueler
 			patch: routeSchueler.data.patch,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,

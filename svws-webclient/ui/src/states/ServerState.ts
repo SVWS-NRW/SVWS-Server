@@ -4,7 +4,7 @@ import type { ServerMode } from "../../../core/src/core/types/ServerMode";
 import { AppContext } from "../AppContext";
 
 /**
- * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
+ * Die Schnittstelle für den Zustand des Servers
  */
 export interface ServerState {
 

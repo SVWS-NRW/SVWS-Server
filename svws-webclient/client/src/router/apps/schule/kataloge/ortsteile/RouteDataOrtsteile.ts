@@ -33,6 +33,7 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<OrtsteileListeManager>>> {
+		// TODO refactor katalog to work with orteState
 		const [ortsteile, orte] = await Promise.all([
 			api.server.getOrtsteile(api.schema),
 			api.server.getOrte(api.schema),

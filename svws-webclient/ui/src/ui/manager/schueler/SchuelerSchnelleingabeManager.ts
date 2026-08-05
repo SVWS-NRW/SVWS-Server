@@ -1,5 +1,5 @@
 import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, KlassenDaten, List,
-	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerListe, SchuelerSchulbesuchsdaten, SchuelerStammdaten,
+	ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerListe, SchuelerSchulbesuchsdaten, SchuelerStammdaten,
 	SchulEintrag, Schuljahresabschnitt, Telefonart, VermerkartEintrag } from "../../../../../core/src";
 import { ArrayList } from "../../../../../core/src";
 
@@ -17,8 +17,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _haltestellenById: Map<number, Haltestelle>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
-	private readonly _orteById: Map<number, OrtKatalogEintrag>;
-	private readonly _ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 	private readonly _religionenById: Map<number, ReligionEintrag>;
 	private readonly _schulenById: Map<number, SchulEintrag>;
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
@@ -40,8 +38,6 @@ export class SchuelerSchnelleingabeManager {
 		haltestellenById: Map<number, Haltestelle>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		kindergaertenById: Map<number, Kindergarten>,
-		orteById: Map<number, OrtKatalogEintrag>,
-		ortsteileById: Map<number, OrtsteilKatalogEintrag>,
 		religionenById: Map<number, ReligionEintrag>,
 		schulenById: Map<number, SchulEintrag>,
 		telefonartenById: Map<number, Telefonart>,
@@ -59,8 +55,6 @@ export class SchuelerSchnelleingabeManager {
 		this._haltestellenById = haltestellenById;
 		this._jahrgaengeById = jahrgaengeById;
 		this._kindergaertenById = kindergaertenById;
-		this._orteById = orteById;
-		this._ortsteileById = ortsteileById;
 		this._religionenById = religionenById;
 		this._schulenById = schulenById;
 		this._telefonartenById = telefonartenById;
@@ -131,14 +125,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get kindergaertenById(): Map<number, Kindergarten> {
 		return this._kindergaertenById;
-	}
-
-	get orteById(): Map<number, OrtKatalogEintrag> {
-		return this._orteById;
-	}
-
-	get ortsteileById(): Map<number, OrtsteilKatalogEintrag> {
-		return this._ortsteileById;
 	}
 
 	get religionenById(): Map<number, ReligionEintrag> {

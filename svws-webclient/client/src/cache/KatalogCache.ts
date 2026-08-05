@@ -30,8 +30,6 @@ export class KatalogCache {
 	private _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 	private _merkmaleById: Map<number, Merkmal> = new Map();
-	private _ortsteileById: Map<number, OrtsteilKatalogEintrag> = new Map();
-	private _orteById: Map<number, OrtKatalogEintrag> = new Map();
 	private _religionenById: Map<number, ReligionEintrag> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 	private _telefonartenById: Map<number, Telefonart> = new Map();
@@ -126,16 +124,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.LERNPLATTFORMEN, async () => {
 			const result = await api.server.getLernplattformen(api.schema);
 			return { lernplattformenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.ORTE, async () => {
-			const result = await api.server.getOrte(api.schema);
-			return { orteById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.ORTSTEILE, async () => {
-			const result = await api.server.getOrtsteile(api.schema);
-			return { ortsteileById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.RELIGIONEN, async () => {
@@ -320,22 +308,6 @@ export class KatalogCache {
 
 	set lernplattformenById(value: Map<number, Lernplattform>) {
 		this._lernplattformenById = value;
-	}
-
-	get ortsteileById(): Map<number, OrtsteilKatalogEintrag> {
-		return this._ortsteileById;
-	}
-
-	set ortsteileById(value: Map<number, OrtsteilKatalogEintrag>) {
-		this._ortsteileById = value;
-	}
-
-	get orteById(): Map<number, OrtKatalogEintrag> {
-		return this._orteById;
-	}
-
-	set orteById(value: Map<number, OrtKatalogEintrag>) {
-		this._orteById = value;
 	}
 
 	get religionenById(): Map<number, ReligionEintrag> {

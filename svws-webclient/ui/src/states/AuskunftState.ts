@@ -3,7 +3,7 @@ import { DeveloperNotificationException } from "../../../core/src/core/exception
 import { AppContext } from "../AppContext";
 
 /**
- * Die Schnittstelle für den Zustand der Auskunftinfos Datenschutz und Impressum
+ * Die Schnittstelle für den Zustand der Auskunftinfos "Datenschutz" und "Impressum"
  */
 export interface AuskunftState {
 
@@ -12,7 +12,7 @@ export interface AuskunftState {
 	 *
 	 * @returns den Markdown-String der Datenschutzauskunft oder null, wenn nicht vorhanden
 	 */
-	get datentschutz(): string | null;
+	get datenschutz(): string | null;
 
 	/**
 	 * Wenn vorhanden, gibt es den Markdown-String des Impressums zurück.

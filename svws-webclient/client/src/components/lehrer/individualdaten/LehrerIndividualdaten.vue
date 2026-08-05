@@ -200,7 +200,7 @@
 	import type { Leitungsfunktion, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, Nationalitaeten, PersonalTyp, Schulleitung, ArrayList, ServerMode } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState, useOrteState } from "@ui";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
@@ -209,10 +209,11 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
+	const orteState = useOrteState();
 
 	const manager = () => props.lehrerListeManager();
 	const dataNotPatched = () => props.lehrerListeManager().daten();
-	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.orteById, props.ortsteileById, props.patch);
+	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.patch);
 
 	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const selectedLeitungsfunktionen = ref<Schulleitung[]>([]);
@@ -381,27 +382,14 @@
 	}
 
 
-	const orte = computed(() => props.orteById.values());
 	const wohnortManager = new SelectManager({
-		options: orte,
+		options: computed(() => orteState.orte.list),
 		optionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
 		selectionDisplayText: ort => `${ort.plz ?? '—'} ${ort.ortsname ?? '—'}`,
 	});
 
-	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
-		const result: Array<OrtsteilKatalogEintrag> = [];
-		if (modelProxy.proxy.wohnortID === null) {
-			return result;
-		}
-		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.idOrt === modelProxy.proxy.wohnortID) {
-				result.push(ortsteil);
-			}
-		}
-		return result;
-	});
 	const ortsteilManager = new SelectManager({
-		options: ortsteile,
+		options: computed(() => orteState.ortsteile.listByOrtId(modelProxy.proxy.wohnortID)),
 		optionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
 		selectionDisplayText: ortsteil => ortsteil.ortsteil ?? '—',
 		sort: ortsteilSort,

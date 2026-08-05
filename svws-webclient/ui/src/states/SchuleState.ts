@@ -9,7 +9,7 @@ import type { Schuljahresabschnitt } from "../../../core/src/asd/data/schule/Sch
 import { AppContext } from "../AppContext";
 
 /**
- * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts
+ * Die Schnittstelle für die Daten der Schule inkl. des aktuellen Abschnitts der Schule
  */
 export interface SchuleState {
 

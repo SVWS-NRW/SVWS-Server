@@ -28,7 +28,7 @@ interface NotenmodulReactiveState {
 }
 
 /**
- * Die Schnittstelle für den Zustand des Servers
+ * Die Schnittstelle für den Zustand des Notenmoduls
  */
 export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> implements NotenmodulState {
 

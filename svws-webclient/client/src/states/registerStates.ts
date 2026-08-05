@@ -1,17 +1,11 @@
-import { AppContext } from "../../../ui/src/AppContext";
-import { AbschnittStateKey } from "../../../ui/src/states/AbschnittState";
-import { AuskunftStateKey } from "../../../ui/src/states/AuskunftState";
-import { ConfigStateKey } from "../../../ui/src/states/ConfigState";
-import { GostLaufbahnplanungStateKey } from "../../../ui/src/states/GostLaufbahnplanungState";
-import { ReportingStateKey } from "../../../ui/src/states/ReportingState";
-import { SchuleStateKey } from "../../../ui/src/states/SchuleState";
-import { ServerStateKey } from "../../../ui/src/states/ServerState";
-import { WiedervorlageStateKey } from "../../../ui/src/states/WiedervorlageState";
-import { NotenmodulStateKey } from "../../../ui/src/states/NotenmodulState";
-import { BenutzerStateKey } from "../../../ui/src/states/BenutzerState";
-import { configStateImpl } from "./ConfigStateImpl";
+import {
+	AppContext, BenutzerStateKey, AbschnittStateKey, AuskunftStateKey, ConfigStateKey, GostLaufbahnplanungStateKey, ReportingStateKey,
+	SchuleStateKey, ServerStateKey, WiedervorlageStateKey, NotenmodulStateKey, OrteStateKey,
+} from "@ui";
+
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
+import { configStateImpl } from "./ConfigStateImpl";
 import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
 import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
@@ -19,6 +13,7 @@ import { serverStateImpl } from "./ServerStateImpl";
 import { wiedervorlageStateImpl } from "./WiedervorlageStateImpl";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
+import { orteStateImpl } from "./kataloge/OrteStateImpl";
 
 
 export function registerStates(): void {
@@ -34,4 +29,5 @@ export function registerStates(): void {
 	context.provide(AuskunftStateKey, auskunftStateImpl);
 	context.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
 	context.provide(NotenmodulStateKey, notenmodulStateImpl);
+	context.provide(OrteStateKey, orteStateImpl);
 }

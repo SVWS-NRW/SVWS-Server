@@ -67,11 +67,11 @@
 
 
 <script setup lang="ts">
-	import type { Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { ErzieherStammdaten, Nationalitaeten } from "@core";
 	import { computed, ref, shallowRef } from "vue";
+	import type { Erzieherart } from "@core";
+	import { ErzieherStammdaten, Nationalitaeten } from "@core";
+	import { CoreTypeSelectManager, SelectManager, useOrteState } from "@ui";
 	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import SchuelerErziehungsberechtigteZweiterErzFelder from "./SchuelerErziehungsberechtigteZweiterErzFelder.vue";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 
@@ -79,8 +79,6 @@
 		addErzieher: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
 		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
 		erzieherartenById: Map<number, Erzieherart>;
-		orteById: Map<number, OrtKatalogEintrag>;
-		ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 		schuljahr: number;
 		createModalIsOpen: boolean;
 	}>();
@@ -88,6 +86,8 @@
 	const emit = defineEmits<{
 		'closeModal': [];
 	}>();
+
+	const orteState = useOrteState();
 
 	const model = shallowRef(createModel());
 	const formIsValid = computed(() => model.value.getAlleFehler().isEmpty());
@@ -102,14 +102,14 @@
 	});
 
 	const wohnortManager = new SelectManager({
-		options: computed(() => props.orteById.values()),
+		options: computed(() => orteState.orte.list),
 		sort: orte_sort,
 		optionDisplayText: i => `${i.plz} ${i.ortsname}`,
 		selectionDisplayText: i => `${i.plz} ${i.ortsname}`,
 	});
 
 	const ortsteilManager = new SelectManager({
-		options: computed(() => model.value.ortsteileFiltered.value),
+		options: computed(() => orteState.ortsteile.list),
 		sort: ortsteilSort,
 		optionDisplayText: i => i.ortsteil ?? '',
 		selectionDisplayText: i => i.ortsteil ?? '',
@@ -130,8 +130,6 @@
 		return new ErzieherStammdatenModelProxy(
 			() => defaultErz,
 			() => props.erzieherartenById,
-			() => props.orteById,
-			() => props.ortsteileById,
 			() => props.schuljahr
 		);
 	}
@@ -143,8 +141,6 @@
 		return new ErzieherStammdatenModelProxy(
 			() => defaultZweiterErz,
 			() => props.erzieherartenById,
-			() => props.orteById,
-			() => props.ortsteileById,
 			() => props.schuljahr
 		);
 	}
