@@ -118,7 +118,7 @@ export class FachklassenModelProxy extends ModelProxy<FachklasseEintrag> {
 		if (eintrag === null) {
 			return "-";
 		}
-		return `${eintrag.kuerzel} - ${eintrag.text}`;
+		return eintrag.kuerzel;
 	});
 
 	fachklassen = computed<Iterable<FachklasseKatalogEintrag>>(() => {
