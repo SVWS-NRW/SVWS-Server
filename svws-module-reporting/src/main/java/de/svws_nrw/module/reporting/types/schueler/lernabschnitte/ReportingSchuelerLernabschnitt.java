@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
@@ -277,7 +278,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param tutor Der Lehrer, der den Schüler als Tutor betreut, oder null, falls keiner zugewiesen ist
 	 * @param uebergangsempfehlungText  Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I.
 	 * @param versetzungsentscheidungText Der Text zur Versetzungsentscheidung auf dem Zeugnis.
-	 * @param versetzungsvermerkKuerzel Das Kürzel des Versetzungsvermerks
+	 * @param idVersetzungsvermerk Die ID des Versetzungsvermerks
 	 * @param wechselNr Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, 0=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 * @param zeugnisart Die Art des Zeugnisses.
 	 * @param zeugnisASVText Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten.
@@ -302,7 +303,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 			final Integer noteLernbereichNW, final Long idOrganisationsform, final String pruefungsOrdnung, final ReportingSchueler schueler,
 			final Long idSchulgliederung, final ReportingSchuljahresabschnitt schuljahresabschnitt, final ReportingLehrer sonderpaedagoge,
 			final String textErgebnisPruefungsalgorithmus, final ReportingLehrer tutor, final String uebergangsempfehlungText,
-			final String versetzungsentscheidungText, final String versetzungsvermerkKuerzel, final int wechselNr, final String zeugnisart,
+			final String versetzungsentscheidungText, final Long idVersetzungsvermerk, final int wechselNr, final String zeugnisart,
 			final String zeugnisASVText, final String zeugnisAUEText, final String zeugnisBemerkungText, final String zeugnisLELSText,
 			final List<ReportingSchuelerZuweisung> zuweisungen) {
 		this.abschluss = ersetzeNullBlankTrim(abschluss);
@@ -360,7 +361,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.tutor = tutor;
 		this.uebergangsempfehlungText = ersetzeNullBlankTrim(uebergangsempfehlungText);
 		this.versetzungsentscheidungText = ersetzeNullBlankTrim(versetzungsentscheidungText);
-		this.versetzungsvermerkKuerzel = ersetzeNullBlankTrim(versetzungsvermerkKuerzel);
+		this.versetzungsvermerkKuerzel = Versetzungsvermerk.data().getEintragByID(idVersetzungsvermerk).kuerzel;
 		this.wechselNr = wechselNr;
 		this.zeugnisart = ersetzeNullBlankTrim(zeugnisart);
 		this.zeugnisASVText = ersetzeNullBlankTrim(zeugnisASVText);

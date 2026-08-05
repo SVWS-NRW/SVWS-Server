@@ -152,9 +152,9 @@ public class SchuelerLernabschnittsdaten {
 			example = "true")
 	public boolean istFachpraktischerAnteilAusreichend = true;
 
-	/** Das Kürzel des Versetzungsvermerks */
-	@Schema(description = "das Kürzel des Versetzungsvermerks", example = "null")
-	public String versetzungsvermerk = null;
+	/** Die ID des Versetzungsvermerks */
+	@Schema(description = "die ID des Versetzungsvermerks", example = "null")
+	public Long idVersetzungsvermerk = null;
 
 	/** Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden */
 	@Schema(description = "die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden",

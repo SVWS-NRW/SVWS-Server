@@ -65,9 +65,9 @@ public class SchuelerLernabschnittStatistikGesamt {
 	@Schema(description = "die ID des weiteren Förderschwerpunktes des Schülers", example = "null")
 	public Long idFoerderschwerpunkt2 = null;
 
-	/** Das Kürzel des Versetzungsvermerks */
-	@Schema(description = "das Kürzel des Versetzungsvermerks", example = "null")
-	public String versetzungsvermerk = null;
+	/** Die ID des Kürzels des Versetzungsvermerks */
+	@Schema(description = "die ID des Kürzels des Versetzungsvermerks", example = "null")
+	public Long idVersetzungsvermerk = null;
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdatenStatistikGesamt.class,

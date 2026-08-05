@@ -87,7 +87,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				null,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.uebergangESF),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.versetzungsentscheidung),
-				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.versetzungsvermerk),
+				schuelerLernabschnittsdaten.idVersetzungsvermerk,
 				schuelerLernabschnittsdaten.wechselNr,
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.zeugnisart),
 				ersetzeNullBlankTrim(schuelerLernabschnittsdaten.bemerkungen.zeugnisASV),

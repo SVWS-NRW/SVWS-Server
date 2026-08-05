@@ -19,6 +19,7 @@ import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
@@ -151,8 +152,7 @@ public final class SchuelerStatistikService {
 		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
 		daten.idFoerderschwerpunkt1 = dto.Foerderschwerpunkt_ID;
 		daten.idFoerderschwerpunkt2 = dto.Foerderschwerpunkt2_ID;
-		// TODO Katalog Versetzungsvermerk einbauen - muss noch erstellt werden
-		daten.versetzungsvermerk = dto.VersetzungKrz;
+		daten.idVersetzungsvermerk = (Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz) == null) ? -1L : Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz).id(schuljahr);
 		daten.leistungsdaten.addAll(dtosLeistungen.stream().map(SchuelerStatistikService::mapLeistungsdaten).toList());
 		return daten;
 	}

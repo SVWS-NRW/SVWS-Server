@@ -24,6 +24,7 @@ import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.fach.BilingualeSprache;
 import de.svws_nrw.asd.types.klassen.Klassenart;
+import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Fachklasse;
@@ -451,7 +452,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		daten.sonderpaedagogeID = dto.Sonderpaedagoge_ID;
 		daten.bilingualerZweig = dto.BilingualerZweig;
 		daten.istFachpraktischerAnteilAusreichend = dto.FachPraktAnteilAusr;
-		daten.versetzungsvermerk = dto.VersetzungKrz;
+		daten.idVersetzungsvermerk = (Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz) == null) ? -1L : Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz).id(abschnitt.schuljahr);
 		daten.noteDurchschnitt = dto.DSNote;
 		final Note noteLernbereichGSbzwAL = (dto.Gesamtnote_GS == null) ? null : Note.fromNoteSekI(dto.Gesamtnote_GS);
 		daten.noteLernbereichGSbzwAL = (noteLernbereichGSbzwAL == null) ? null : dto.Gesamtnote_GS;

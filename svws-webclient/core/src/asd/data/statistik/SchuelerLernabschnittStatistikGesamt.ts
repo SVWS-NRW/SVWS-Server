@@ -67,9 +67,9 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	public idFoerderschwerpunkt2: number | null = null;
 
 	/**
-	 * Das Kürzel des Versetzungsvermerks
+	 * Die ID des Kürzels des Versetzungsvermerks
 	 */
-	public versetzungsvermerk: string | null = null;
+	public idVersetzungsvermerk: number | null = null;
 
 	/**
 	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
@@ -115,7 +115,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result.hatSchwerbehinderungsNachweis = obj.hatSchwerbehinderungsNachweis;
 		result.idFoerderschwerpunkt1 = (obj.idFoerderschwerpunkt1 === undefined) ? null : obj.idFoerderschwerpunkt1 === null ? null : obj.idFoerderschwerpunkt1;
 		result.idFoerderschwerpunkt2 = (obj.idFoerderschwerpunkt2 === undefined) ? null : obj.idFoerderschwerpunkt2 === null ? null : obj.idFoerderschwerpunkt2;
-		result.versetzungsvermerk = (obj.versetzungsvermerk === undefined) ? null : obj.versetzungsvermerk === null ? null : obj.versetzungsvermerk;
+		result.idVersetzungsvermerk = (obj.idVersetzungsvermerk === undefined) ? null : obj.idVersetzungsvermerk === null ? null : obj.idVersetzungsvermerk;
 		if (obj.leistungsdaten !== undefined) {
 			for (const elem of obj.leistungsdaten) {
 				result.leistungsdaten.add(SchuelerLeistungsdatenStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
@@ -138,7 +138,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';
 		result += '"idFoerderschwerpunkt1" : ' + ((obj.idFoerderschwerpunkt1 === null) ? 'null' : obj.idFoerderschwerpunkt1.toString()) + ',';
 		result += '"idFoerderschwerpunkt2" : ' + ((obj.idFoerderschwerpunkt2 === null) ? 'null' : obj.idFoerderschwerpunkt2.toString()) + ',';
-		result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		result += '"idVersetzungsvermerk" : ' + ((obj.idVersetzungsvermerk === null) ? 'null' : obj.idVersetzungsvermerk.toString()) + ',';
 		result += '"leistungsdaten" : [ ';
 		for (let i = 0; i < obj.leistungsdaten.size(); i++) {
 			const elem = obj.leistungsdaten.get(i);
@@ -190,8 +190,8 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		if (obj.idFoerderschwerpunkt2 !== undefined) {
 			result += '"idFoerderschwerpunkt2" : ' + ((obj.idFoerderschwerpunkt2 === null) ? 'null' : obj.idFoerderschwerpunkt2.toString()) + ',';
 		}
-		if (obj.versetzungsvermerk !== undefined) {
-			result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		if (obj.idVersetzungsvermerk !== undefined) {
+			result += '"idVersetzungsvermerk" : ' + ((obj.idVersetzungsvermerk === null) ? 'null' : obj.idVersetzungsvermerk.toString()) + ',';
 		}
 		if (obj.leistungsdaten !== undefined) {
 			result += '"leistungsdaten" : [ ';

@@ -174,9 +174,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public istFachpraktischerAnteilAusreichend: boolean = true;
 
 	/**
-	 * Das Kürzel des Versetzungsvermerks
+	 * Die ID des Versetzungsvermerks
 	 */
-	public versetzungsvermerk: string | null = null;
+	public idVersetzungsvermerk: number | null = null;
 
 	/**
 	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden
@@ -320,7 +320,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (obj.istFachpraktischerAnteilAusreichend === undefined)
 			throw new Error('invalid json format, missing attribute istFachpraktischerAnteilAusreichend');
 		result.istFachpraktischerAnteilAusreichend = obj.istFachpraktischerAnteilAusreichend;
-		result.versetzungsvermerk = (obj.versetzungsvermerk === undefined) ? null : obj.versetzungsvermerk === null ? null : obj.versetzungsvermerk;
+		result.idVersetzungsvermerk = (obj.idVersetzungsvermerk === undefined) ? null : obj.idVersetzungsvermerk === null ? null : obj.idVersetzungsvermerk;
 		result.noteDurchschnitt = (obj.noteDurchschnitt === undefined) ? null : obj.noteDurchschnitt === null ? null : obj.noteDurchschnitt;
 		result.noteLernbereichGSbzwAL = (obj.noteLernbereichGSbzwAL === undefined) ? null : obj.noteLernbereichGSbzwAL === null ? null : obj.noteLernbereichGSbzwAL;
 		result.noteLernbereichNW = (obj.noteLernbereichNW === undefined) ? null : obj.noteLernbereichNW === null ? null : obj.noteLernbereichNW;
@@ -379,7 +379,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"sonderpaedagogeID" : ' + ((obj.sonderpaedagogeID === null) ? 'null' : obj.sonderpaedagogeID.toString()) + ',';
 		result += '"bilingualerZweig" : ' + ((obj.bilingualerZweig === null) ? 'null' : JSON.stringify(obj.bilingualerZweig)) + ',';
 		result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend.toString() + ',';
-		result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		result += '"idVersetzungsvermerk" : ' + ((obj.idVersetzungsvermerk === null) ? 'null' : obj.idVersetzungsvermerk.toString()) + ',';
 		result += '"noteDurchschnitt" : ' + ((obj.noteDurchschnitt === null) ? 'null' : JSON.stringify(obj.noteDurchschnitt)) + ',';
 		result += '"noteLernbereichGSbzwAL" : ' + ((obj.noteLernbereichGSbzwAL === null) ? 'null' : obj.noteLernbereichGSbzwAL.toString()) + ',';
 		result += '"noteLernbereichNW" : ' + ((obj.noteLernbereichNW === null) ? 'null' : obj.noteLernbereichNW.toString()) + ',';
@@ -505,8 +505,8 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (obj.istFachpraktischerAnteilAusreichend !== undefined) {
 			result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend.toString() + ',';
 		}
-		if (obj.versetzungsvermerk !== undefined) {
-			result += '"versetzungsvermerk" : ' + ((obj.versetzungsvermerk === null) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
+		if (obj.idVersetzungsvermerk !== undefined) {
+			result += '"idVersetzungsvermerk" : ' + ((obj.idVersetzungsvermerk === null) ? 'null' : obj.idVersetzungsvermerk.toString()) + ',';
 		}
 		if (obj.noteDurchschnitt !== undefined) {
 			result += '"noteDurchschnitt" : ' + ((obj.noteDurchschnitt === null) ? 'null' : JSON.stringify(obj.noteDurchschnitt)) + ',';
