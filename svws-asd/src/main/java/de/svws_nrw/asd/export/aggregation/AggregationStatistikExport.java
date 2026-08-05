@@ -12,6 +12,7 @@ import de.svws_nrw.asd.data.statistik.FachStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KursStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.OrteStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.export.data.StatistikExport;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -103,6 +104,11 @@ public class AggregationStatistikExport {
 	private final Map<Long, KursStatistikGesamt> kurseIdMap;
 
 	/**
+	 * Zuordnung der ID eines Ortes zum zugehörigen {@link kursStatistikGesamt}-Objekt.
+	 */
+	private final Map<Long, OrteStatistikGesamt> orteIdMap;
+
+	/**
 	 * Die für den Export vorgesehenen Statistikdaten mit den Aggregaten.
 	 */
 	private StatistikExport statistikExport;
@@ -127,6 +133,7 @@ public class AggregationStatistikExport {
 		klasseIdMap = statistikGesamt.klassen.stream().collect(Collectors.toMap(e -> e.id, e -> e));
 		lehrerIdMap = statistikGesamt.lehrer.stream().collect(Collectors.toMap(e -> e.id, e -> e));
 		kurseIdMap = statistikGesamt.kurse.stream().collect(Collectors.toMap(e -> e.id, e -> e));
+		orteIdMap = statistikGesamt.orte.stream().collect(Collectors.toMap(e -> e.id, e -> e));
 		final Optional<Schuljahresabschnitt> optional =
 				statistikGesamt.schule.abschnitte.stream().filter(e -> e.id == statistikGesamt.schule.idSchuljahresabschnitt).findFirst();
 		aktuellesSchuljahr = optional.isPresent() ? optional.get().schuljahr : 0;
@@ -245,7 +252,9 @@ public class AggregationStatistikExport {
 
 		// Klassendaten
 		final AggregationKlassenStatistikExport aggregationKlassenStatistikExport =
-				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap,
+				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, foerderschwerpunktIdMap, fachIdMap,
+						klasseIdMap, lehrerIdMap,
+						orteIdMap,
 						aktuellesSchuljahr);
 		erfolg &= aggregationKlassenStatistikExport.run();
 
@@ -254,6 +263,11 @@ public class AggregationStatistikExport {
 				new AggregationUvdStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, fachIdMap, klasseIdMap, lehrerIdMap,
 						kurseIdMap, aktuellesSchuljahr);
 		erfolg &= aggregationUvdStatistikExport.run();
+
+		//K84
+		final AggregationSchuelerZahlenStatistikExport aggregationSchuelerZahlenStatistikExport =
+				new AggregationSchuelerZahlenStatistikExport(statistikGesamt, statistikExport, aktuellesSchuljahr, fehlermeldungen);
+		erfolg = aggregationSchuelerZahlenStatistikExport.run();
 
 		return erfolg;
 	}

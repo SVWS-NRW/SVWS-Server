@@ -19,9 +19,9 @@ export class OrteStatistikGesamt extends JavaObject {
 	public ortsname: string | null = null;
 
 	/**
-	 * Der Name des Landes.
+	 * Die ID des Landes.
 	 */
-	public land: string | null = null;
+	public idLand: number | null = null;
 
 
 	public constructor() {
@@ -46,7 +46,7 @@ export class OrteStatistikGesamt extends JavaObject {
 		result.id = obj.id;
 		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
 		result.ortsname = (obj.ortsname === undefined) ? null : obj.ortsname === null ? null : obj.ortsname;
-		result.land = (obj.land === undefined) ? null : obj.land === null ? null : obj.land;
+		result.idLand = (obj.idLand === undefined) ? null : obj.idLand === null ? null : obj.idLand;
 		return result;
 	}
 
@@ -55,7 +55,7 @@ export class OrteStatistikGesamt extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		result += '"ortsname" : ' + ((obj.ortsname === null) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
-		result += '"land" : ' + ((obj.land === null) ? 'null' : JSON.stringify(obj.land)) + ',';
+		result += '"idLand" : ' + ((obj.idLand === null) ? 'null' : obj.idLand.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,8 +72,8 @@ export class OrteStatistikGesamt extends JavaObject {
 		if (obj.ortsname !== undefined) {
 			result += '"ortsname" : ' + ((obj.ortsname === null) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
 		}
-		if (obj.land !== undefined) {
-			result += '"land" : ' + ((obj.land === null) ? 'null' : JSON.stringify(obj.land)) + ',';
+		if (obj.idLand !== undefined) {
+			result += '"idLand" : ' + ((obj.idLand === null) ? 'null' : obj.idLand.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

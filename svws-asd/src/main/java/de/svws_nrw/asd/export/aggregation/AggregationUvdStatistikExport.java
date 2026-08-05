@@ -27,6 +27,7 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 
@@ -245,9 +246,9 @@ public class AggregationUvdStatistikExport {
 				}
 			}
 
-			final Schulgliederung sgl = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
-			final String sglName = (sgl != null) ? sgl.name() : "";
-			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(sglName);
+			final String sgl = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung) == null ? ""
+					: Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
+			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(sgl);
 
 			for (final SchuelerLeistungsdatenStatistikGesamt l : lernabschnitt.leistungsdaten) {
 				//Sätze ohne LehrerID oder Wochenstunden können ignoriert werden
@@ -277,9 +278,9 @@ public class AggregationUvdStatistikExport {
 							// KursID-Eintrag schon vorhanden
 							if (kurseOhneKlassenverband.containsKey(l.kursID)) {
 								schuelerzahlenProKursId.put(l.kursID, schuelerzahlenProKursId.get(l.kursID) + 1);
-								//TODO: ExterneSchulNr ist in SchuelerStatistikGesamt noch nicht vorhanden; Soll NULL sein, wenn nicht von externer Schule!?
-//							schuelerVonAndererSchuleProKursId.put(l.kursID, schuelerVonAndererSchuleProKursId.get(l.kursID) + 1);
-
+								if (schueler.status == SchuelerStatus.data().getIDByWertAndSchuljahr(SchuelerStatus.EXTERN, aktuellesSchuljahr).intValue()) {
+									schuelerVonAndererSchuleProKursId.put(l.kursID, true);
+								}
 								// Hochzählen weibliche Schüler pro KursID
 								if (Geschlecht.W.id == schueler.geschlecht) {
 
@@ -317,8 +318,9 @@ public class AggregationUvdStatistikExport {
 
 							} else { // Initialisieren der Einträge zu einer neuen KursId
 								schuelerzahlenProKursId.put(l.kursID, 1L);
-								//TODO: ExterneSchulNr ist in SchuelerStatistikGesamt noch nicht vorhanden; siehe Oben.
-								//schuelerVonAndererSchuleProKursId.put(l.kursID, schueler.);
+								if (schueler.status == SchuelerStatus.data().getIDByWertAndSchuljahr(SchuelerStatus.EXTERN, aktuellesSchuljahr).intValue()) {
+									schuelerVonAndererSchuleProKursId.put(l.kursID, true);
+								}
 
 								// schuelerzahlenWeiblich müssen immer mit 0 initialisiert werden, da sie nicht bei jeder KursId vorhanden sind
 								schuelerzahlenWeiblichProKursId.put(l.kursID, 0L);
@@ -405,7 +407,7 @@ public class AggregationUvdStatistikExport {
 			uvdExport.folgezeilenmerkmal = "1";
 			uvdExport.kopplungsnummer = "000";
 			uvdExport.jahrgang = stammEntry.getKey().substring(0, 2);
-			uvdExport.schulgliederung = stammEntry.getKey().substring(2, 5);
+			uvdExport.schulgliederung = stammEntry.getKey().substring(2, 5).equals("***") ? "" : stammEntry.getKey().substring(2, 5);
 			uvdExport.artDerGruppe = stammEntry.getKey().substring(5);
 
 			final KursStatistikGesamt kursStatistikGesamt = kurseIdMap.get(kursMap.getKey());
@@ -422,8 +424,7 @@ public class AggregationUvdStatistikExport {
 			uvdExport.fach = (fach != null) ? fach.kuerzelStatistik : "";
 			uvdExport.bilingualSprache = ermittelnBilingualeSprache(firstStammItem.fachID);
 			uvdExport.schuelerInsgesamt = stammEntry.getValue().size();
-			//TODO: ExterneSchulNr ist in SchuelerStatistikGesamt noch nicht vorhanden; Soll NULL sein, wenn nicht von externer Schule!?
-			//uvdExport.fremdschueler = schuelerVonAndererSchuleProKursId.get()
+			uvdExport.fremdschueler = schuelerVonAndererSchuleProKursId.get(kursMap.getKey()) != null;
 
 			if (jahrgaengeSek2.contains(uvdExport.jahrgang)) {
 				final HashMap<String, Long> countMap = schuelerzahlenWeiblichProKursIdUndKey.get(kursMap.getKey());
@@ -459,7 +460,7 @@ public class AggregationUvdStatistikExport {
 					}
 
 					uvdexportKursSchueler.jahrgang = entry.getKey().substring(0, 2);
-					uvdexportKursSchueler.schulgliederung = entry.getKey().substring(2, 5);
+					uvdexportKursSchueler.schulgliederung = entry.getKey().substring(2, 5).equals("***") ? "" : entry.getKey().substring(2, 5);
 					uvdexportKursSchueler.artDerGruppe = entry.getKey().substring(5);
 
 					// Fach bei den Schülerfolgezeilen nur füllen wenn es sich um eine Fremdsprache mit Sprachenbeginn handelt.
@@ -521,7 +522,7 @@ public class AggregationUvdStatistikExport {
 		final LehrerStatistikGesamt lehrerObj = lehrerIdMap.get(schuelerLeistungsdaten.lehrerID);
 		final String lehrerkuerzel = (lehrerObj != null) ? auffuellenStellengerecht(lehrerObj.kuerzel, 4) : "    ";
 
-		final String parallelitaetStr = (klasse != null && klasse.parallelitaet != null) ? auffuellenStellengerecht(klasse.parallelitaet, 2) : "  ";
+		final String parallelitaetStr = ((klasse != null) && (klasse.parallelitaet != null)) ? auffuellenStellengerecht(klasse.parallelitaet, 2) : "  ";
 
 		final String key = jahrgangKurseImKlassenverband.concat(parallelitaetStr)
 				.concat(lehrerkuerzel).concat(fach);

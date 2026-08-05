@@ -174,7 +174,8 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Orten
 	 */
 	public OrteStatistikService getOrteStatistikService() {
-		return new OrteStatistikService(katalogeRepositoryFactory.getOrteRepository());
+		return new OrteStatistikService(schuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+				katalogeRepositoryFactory.getOrteRepository());
 	}
 
 

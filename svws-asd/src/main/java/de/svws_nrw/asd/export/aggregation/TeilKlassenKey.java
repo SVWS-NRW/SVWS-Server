@@ -85,16 +85,17 @@ public class TeilKlassenKey {
 	 * @param idSchuljahresabschnitt
 	 * @param jahrgangIds
 	 * @param schulform
+	 * @param foerderschwerpunktIdMap
 	 * @param fehlermeldungen
 	 */
 	public TeilKlassenKey(final SchuelerStatistikGesamt schueler, final Map<Long, KlassenStatistikGesamt> klassenStatistikGesamt,
 			final Map<Long, LehrerStatistikGesamt> lehrerStatistikGesamt, final long idSchuljahresabschnitt, final Map<Long, Long> jahrgangIds,
-			final Schulform schulform, final List<String> fehlermeldungen) {
+			final Schulform schulform, final Map<Long, Long> foerderschwerpunktIdMap, final List<String> fehlermeldungen) {
 		final SchuelerLernabschnittStatistikGesamt lernabschnitt = AggregationUtils.ermittelnLernabschnitt(schueler, idSchuljahresabschnitt);
-		this.aktJahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIds.get(lernabschnitt.idJahrgang));
+		aktJahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIds.get(lernabschnitt.idJahrgang));
 
-		if (this.aktJahrgang == null) {
-			this.aktJahrgang = "";
+		if (aktJahrgang == null) {
+			aktJahrgang = "";
 			fehlermeldungen.add("Bei folgendem Schüler konnte kein Jahrgang ermittelt werden: " + schueler.id + " JahrgangsID: " + lernabschnitt.idJahrgang);
 		}
 
@@ -102,9 +103,9 @@ public class TeilKlassenKey {
 
 		if ((Schulform.BK.equals(schulform)) || (Schulform.SB.equals(schulform))) {
 			if ((klasse != null) && (klasse.kuerzel != null)) {
-				this.klassenKuerzel = klasse.kuerzel;
+				klassenKuerzel = klasse.kuerzel;
 			} else {
-				this.klassenKuerzel = "";
+				klassenKuerzel = "";
 				fehlermeldungen
 						.add("Beim Schüler mit der ID: " + schueler.id + " konnte zu folgender Klasse kein Kürzel ermittelt werden: " + lernabschnitt.idKlasse);
 			}
@@ -112,63 +113,63 @@ public class TeilKlassenKey {
 			final String parallelitaet = ((klasse != null) && (klasse.parallelitaet != null))
 					? klasse.parallelitaet
 					: "";
-			this.klassenKuerzel = this.aktJahrgang.concat(parallelitaet);
+			klassenKuerzel = aktJahrgang.concat(parallelitaet);
 		}
 
 		final Schulgliederung schulgliederung = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
 
 		if (schulgliederung != null) {
-			this.gliederung = schulgliederung.name();
+			gliederung = schulgliederung.name();
 		} else {
-			this.gliederung = "";
+			gliederung = "";
 			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " ist die Schulgliederung NULL.");
 		}
-		this.klassenart = Klassenart.data().getSchluesselByIDOrNull(lernabschnitt.idKlassenart) == null ? ""
+		klassenart = Klassenart.data().getSchluesselByIDOrNull(lernabschnitt.idKlassenart) == null ? ""
 				: Klassenart.data().getSchluesselByIDOrNull(lernabschnitt.idKlassenart);
 		if (Schulform.WB == schulform) {
-			this.orgForm = WeiterbildungskollegOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
+			orgForm = WeiterbildungskollegOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
 		} else if (Schulform.BK == schulform) {
-			this.orgForm = BerufskollegOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
+			orgForm = BerufskollegOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
 		} else {
-			this.orgForm = AllgemeinbildendOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
+			orgForm = AllgemeinbildendOrganisationsformen.data().getSchluesselByIDOrNull(lernabschnitt.idOrganisationsform);
 		}
 
-		if (this.orgForm == null) {
-			this.orgForm = "";
+		if (orgForm == null) {
+			orgForm = "";
 			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " konnte für die Organisationsform mit der ID: " + lernabschnitt.idOrganisationsform
 					+ " kein passender Schlüssel gefunden werden.");
 		}
 
-		this.foerderschwerp = Foerderschwerpunkt.data().getSchluesselByIDOrNull(lernabschnitt.idFoerderschwerpunkt1) == null ? ""
-				: Foerderschwerpunkt.data().getSchluesselByIDOrNull(lernabschnitt.idFoerderschwerpunkt1);
-		this.schwerstbeh = lernabschnitt.hatSchwerbehinderungsNachweis;
-		this.labk = lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst()).kuerzel == null ? ""
+		foerderschwerp = Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt1)) == null ? ""
+				: Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt1));
+		schwerstbeh = lernabschnitt.hatSchwerbehinderungsNachweis;
+		labk = lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst()).kuerzel == null ? ""
 				: lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst()).kuerzel;
 		//TODO reformpdg auf Klassenebene in svws-server implementieren
-		this.reformpdg = AggregationStatistikExport.EIN_LEERZEICHEN;
-		this.foerderschwerp2 = Foerderschwerpunkt.data().getSchluesselByIDOrNull(lernabschnitt.idFoerderschwerpunkt2) == null ? ""
-				: Foerderschwerpunkt.data().getSchluesselByIDOrNull(lernabschnitt.idFoerderschwerpunkt2);
-		this.adressmerkmal =
+		reformpdg = AggregationStatistikExport.EIN_LEERZEICHEN;
+		foerderschwerp2 = Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt2)) == null ? ""
+				: Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt2));
+		adressmerkmal =
 				klassenStatistikGesamt.get(lernabschnitt.idKlasse).teilstandort;
 
-		if (this.adressmerkmal == null) {
-			this.adressmerkmal = "";
+		if (adressmerkmal == null) {
+			adressmerkmal = "";
 			fehlermeldungen.add(
 					"Beim Schüler mit der ID: " + schueler.id + " konnte zu folgender Klasse kein Adressmerkmal ermittelt werden: " + lernabschnitt.idKlasse);
 		}
 
-		this.istJva = schueler.istJvaSchueler;
+		istJva = schueler.istJvaSchueler;
 		// TODO: Muss noch über einen CoreType in den Schlüssel umgesetzt werden
-		this.fachklasse = String.valueOf(lernabschnitt.idFachklasse);
+		fachklasse = String.valueOf(lernabschnitt.idFachklasse);
 	}
 
 
 
 	@Override
 	public final int hashCode() {
-		return Objects.hash(this.adressmerkmal, this.aktJahrgang, this.fachklasse, this.foerderschwerp, this.foerderschwerp2, this.gliederung, this.istJva,
-				this.klassenKuerzel, this.klassenart, this.labk,
-				this.orgForm, this.reformpdg, this.schwerstbeh);
+		return Objects.hash(adressmerkmal, aktJahrgang, fachklasse, foerderschwerp, foerderschwerp2, gliederung, istJva,
+				klassenKuerzel, klassenart, labk,
+				orgForm, reformpdg, schwerstbeh);
 	}
 
 
@@ -185,25 +186,25 @@ public class TeilKlassenKey {
 			return false;
 		}
 		final TeilKlassenKey other = (TeilKlassenKey) obj;
-		return Objects.equals(this.adressmerkmal, other.adressmerkmal) && Objects.equals(this.aktJahrgang, other.aktJahrgang)
-				&& Objects.equals(this.fachklasse, other.fachklasse) && Objects.equals(this.foerderschwerp, other.foerderschwerp)
-				&& Objects.equals(this.foerderschwerp2, other.foerderschwerp2) && Objects.equals(this.gliederung, other.gliederung)
-				&& (this.istJva == other.istJva)
-				&& Objects.equals(this.klassenKuerzel, other.klassenKuerzel) && Objects.equals(this.klassenart, other.klassenart)
-				&& Objects.equals(this.labk, other.labk)
-				&& Objects.equals(this.orgForm, other.orgForm) && Objects.equals(this.reformpdg, other.reformpdg) && (this.schwerstbeh == other.schwerstbeh);
+		return Objects.equals(adressmerkmal, other.adressmerkmal) && Objects.equals(aktJahrgang, other.aktJahrgang)
+				&& Objects.equals(fachklasse, other.fachklasse) && Objects.equals(foerderschwerp, other.foerderschwerp)
+				&& Objects.equals(foerderschwerp2, other.foerderschwerp2) && Objects.equals(gliederung, other.gliederung)
+				&& (istJva == other.istJva)
+				&& Objects.equals(klassenKuerzel, other.klassenKuerzel) && Objects.equals(klassenart, other.klassenart)
+				&& Objects.equals(labk, other.labk)
+				&& Objects.equals(orgForm, other.orgForm) && Objects.equals(reformpdg, other.reformpdg) && (schwerstbeh == other.schwerstbeh);
 	}
 
 
 
 	@Override
 	public final String toString() {
-		return "TeilKlassenKey [klassenKuerzel=" + this.klassenKuerzel + ", gliederung=" + this.gliederung + ", klassenart=" + this.klassenart + ", orgForm="
-				+ this.orgForm
-				+ ", aktJahrgang=" + this.aktJahrgang + ", foerderschwerp=" + this.foerderschwerp + ", schwerstbeh=" + this.schwerstbeh + ", labk=" + this.labk
+		return "TeilKlassenKey [klassenKuerzel=" + klassenKuerzel + ", gliederung=" + gliederung + ", klassenart=" + klassenart + ", orgForm="
+				+ orgForm
+				+ ", aktJahrgang=" + aktJahrgang + ", foerderschwerp=" + foerderschwerp + ", schwerstbeh=" + schwerstbeh + ", labk=" + labk
 				+ ", reformpdg="
-				+ this.reformpdg + ", foerderschwerp2=" + this.foerderschwerp2 + ", adressmerkmal=" + this.adressmerkmal + ", istJva=" + this.istJva
-				+ ", fachklasse=" + this.fachklasse
+				+ reformpdg + ", foerderschwerp2=" + foerderschwerp2 + ", adressmerkmal=" + adressmerkmal + ", istJva=" + istJva
+				+ ", fachklasse=" + fachklasse
 				+ "]";
 	}
 
