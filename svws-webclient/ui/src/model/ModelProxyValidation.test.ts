@@ -59,8 +59,8 @@ describe("ModelProxyValidation Testsuite", () => {
 			modelValidation.addValidator(validatorFirstName, false, "firstName");
 			modelValidation.addValidator(validatorLastName, false, "lastName", "firstName");
 
-			// eslint-disable-next-line @typescript-eslint/dot-notation
-			const isValidatorForProp = modelValidation['isValidatorForProp'] as (prop: keyof TestModel, validator: BasicValidator) => boolean;
+			// eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/unbound-method
+			const isValidatorForProp = modelValidation['isValidatorForProp'];
 			expect(isValidatorForProp.call(modelValidation, "id", validatorFirstName)).toBe(false);
 			expect(isValidatorForProp.call(modelValidation, "id", validatorLastName)).toBe(false);
 			expect(isValidatorForProp.call(modelValidation, "firstName", validatorFirstName)).toBe(true);
@@ -68,13 +68,13 @@ describe("ModelProxyValidation Testsuite", () => {
 			expect(isValidatorForProp.call(modelValidation, "lastName", validatorFirstName)).toBe(false);
 			expect(isValidatorForProp.call(modelValidation, "lastName", validatorLastName)).toBe(true);
 
-			// eslint-disable-next-line @typescript-eslint/dot-notation
-			const getPropsForValidator = modelValidation['getPropsForValidator'] as (validator: BasicValidator) => ReadonlySet<keyof TestModel>;
+			// eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/unbound-method
+			const getPropsForValidator = modelValidation['getPropsForValidator'];
 			expect(getPropsForValidator.call(modelValidation, validatorFirstName)).toEqual(new Set(["firstName"]));
 			expect(getPropsForValidator.call(modelValidation, validatorLastName)).toEqual(new Set(["lastName", "firstName"]));
 
-			// eslint-disable-next-line @typescript-eslint/dot-notation
-			const getPropForValidatorResults = modelValidation['getPropForValidatorResults'] as (validator: BasicValidator) => keyof TestModel | null;
+			// eslint-disable-next-line @typescript-eslint/dot-notation, @typescript-eslint/unbound-method
+			const getPropForValidatorResults = modelValidation['getPropForValidatorResults'];
 			expect(getPropForValidatorResults.call(modelValidation, validatorFirstName)).toBe("firstName");
 			expect(getPropForValidatorResults.call(modelValidation, validatorLastName)).toBe("lastName");
 		});

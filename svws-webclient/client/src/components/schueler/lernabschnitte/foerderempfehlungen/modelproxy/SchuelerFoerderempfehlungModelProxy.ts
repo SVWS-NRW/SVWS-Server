@@ -1,6 +1,10 @@
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import type { SchuelerFoerderempfehlung } from "@core";
 
+type StringNullableProps<T> = {
+	[K in keyof T]: T[K] extends string | null ? K : never
+}[keyof T];
+
 export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoerderempfehlung> {
 
 
@@ -44,9 +48,9 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 	 * @param pattern   das zu prüfende String-Muster
 	 * @param props     die Attribute, für die der Validator registriert werden soll
 	 */
-	private addPatternValidatoren(pattern: StringPattern, ...props: Array<keyof SchuelerFoerderempfehlung>): void {
+	private addPatternValidatoren(pattern: StringPattern, ...props: Array<StringNullableProps<SchuelerFoerderempfehlung>>): void {
 		for (const prop of props) {
-			this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy[prop] as string | null, pattern), prop);
+			this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy[prop], pattern), prop);
 		}
 	}
 
