@@ -15,10 +15,10 @@
 						v-model="model.proxy.kreis"
 						:validation="() => model.getFehler('kreis')"
 						:max-len="3" :disabled />
-					<svws-ui-text-input placeholder="Land"
-						v-model="model.proxy.kuerzelBundesland"
-						:validation="() => model.getFehler('kuerzelBundesland')"
-						:max-len="2" :disabled />
+					<ui-select label="Land"
+						:manager="laenderManager"
+						v-model="model.bundesland.value"
+						:disabled />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -53,20 +53,29 @@
 
 	import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, OrtKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, Laender, OrtKatalogEintrag } from "@core";
 	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<OrteNeuProps>();
 	const benutzerState = useBenutzerState();
+	const schuleState = useSchuleState();
 
 	const initialData = ref<OrtKatalogEintrag>(Object.assign(new OrtKatalogEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const model = new OrtModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
+	const schuljahr = schuleState.schuljahr;
 
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
+
+	const laenderManager = new CoreTypeSelectManager({
+		clazz: Laender.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
 
 	// --- util ---
 	async function addOrt() {

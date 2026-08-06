@@ -18,11 +18,10 @@
 						:validation="() => model.getFehler('kreis')"
 						@change="model.patch"
 						:max-len="3" :disabled="!hatKompetenzUpdate" />
-					<svws-ui-text-input placeholder="Land"
-						v-model="model.proxy.kuerzelBundesland"
-						:validation="() => model.getFehler('kuerzelBundesland')"
-						@change="model.patch"
-						:max-len="2" :disabled="!hatKompetenzUpdate" />
+					<ui-select label="Land"
+						:manager="laenderManager"
+						v-model="model.bundesland.value"
+						:disabled="!hatKompetenzUpdate" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -49,17 +48,26 @@
 
 	import type { OrteDatenProps } from "~/components/schule/kataloge/orte/daten/OrteDatenProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz, Laender } from "@core";
 	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 
 	const props = defineProps<OrteDatenProps>();
 	const benutzerState = useBenutzerState();
+	const schuleState = useSchuleState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 
 	const model = new OrtModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.patch);
+	const schuljahr = schuleState.schuljahr;
+
+	const laenderManager = new CoreTypeSelectManager({
+		clazz: Laender.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
 
 </script>
 

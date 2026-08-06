@@ -8,6 +8,7 @@ import java.util.Map;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -15,6 +16,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -48,6 +51,12 @@ class DataOrteTest {
 	@BeforeAll
 	static void setup() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		lenient().when(conn.getUser()).thenReturn(mock(Benutzer.class));
+		lenient().when(conn.getUser().schuleGetSchuljahr()).thenReturn(2022);
 	}
 
 	@Test
@@ -169,7 +178,6 @@ class DataOrteTest {
 		dto.Sichtbar = true;
 		dto.Aenderbar = true;
 		dto.Kreis = "kreis";
-		dto.Land = "land";
 		dto.Sortierung = 42;
 
 		assertThat(this.data.map(dto))
@@ -178,7 +186,6 @@ class DataOrteTest {
 				.hasFieldOrPropertyWithValue("plz", dto.PLZ)
 				.hasFieldOrPropertyWithValue("ortsname", dto.Bezeichnung)
 				.hasFieldOrPropertyWithValue("kreis", dto.Kreis)
-				.hasFieldOrPropertyWithValue("kuerzelBundesland", dto.Land)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
 				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
 				.hasFieldOrPropertyWithValue("istAenderbar", dto.Aenderbar);
@@ -449,19 +456,6 @@ class DataOrteTest {
 	}
 
 	@Test
-	@DisplayName("patch | kuerzelBundesland > 50 Zeichen")
-	void patchKuerzelBundeslandIsTooLong() {
-		final var dto = new DTOOrt(1L, "12345", "ort");
-		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzelBundesland", RandomStringUtils.insecure().nextAscii(3))))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut kuerzelBundesland: Die Länge des Strings ist auf 2 Zeichen limitiert.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("patch | kuerzelBundesland")
 	void patchKuerzelBundesland() throws ApiOperationException {
 		final var dto = new DTOOrt(1L, "12345", "ort");
@@ -469,9 +463,9 @@ class DataOrteTest {
 		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("kuerzelBundesland", "45"));
+		this.data.patch(1L, Map.of("idBundesland", 1090));
 
-		assertThat(dto.Land).isEqualTo("45");
+		assertThat(dto.Land).isEqualTo("BY");
 	}
 
 	@Test
@@ -580,6 +574,84 @@ class DataOrteTest {
 		assertThat(response)
 				.hasFieldOrPropertyWithValue("success", true)
 				.satisfies(r -> assertThat(r.log).isEmpty());
+	}
+
+	@Test
+	@DisplayName("updateBundesland | idBundesland null -> Land wird auf null gesetzt")
+	void patchIdBundeslandNull() throws ApiOperationException {
+		final var dto = new DTOOrt(1L, "12345", "ort");
+		dto.Land = "NW";
+		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("idBundesland", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.Land).isNull();
+	}
+
+	@Test
+	@DisplayName("updateBundesland | ungueltige idBundesland -> BAD_REQUEST")
+	void patchIdBundeslandInvalid() {
+		final var dto = new DTOOrt(1L, "12345", "ort");
+		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("idBundesland", 999999L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Kein Bundesland für die ID 999999 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("map | aenderbar false")
+	void mapAenderbarIsFalse() {
+		final var dto = new DTOOrt(1L, "plz1", "bez1");
+		dto.Aenderbar = false;
+
+		assertThat(this.data.map(dto))
+				.hasFieldOrPropertyWithValue("istAenderbar", false);
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | leere Liste -> keine Aenderung")
+	void checkBeforeDeletionWithSimpleOperationResponseEmptyList() {
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(Collections.emptyList(), responses);
+
+		assertThat(response)
+				.hasFieldOrPropertyWithValue("success", true)
+				.satisfies(r -> assertThat(r.log).isEmpty());
+		verify(this.conn, never()).query(anyString(), eq(Long.class));
+	}
+
+	@Test
+	@DisplayName("getById | dto gefunden -> idBundesland wird gesetzt")
+	void getByIdWithBundesland() throws ApiOperationException {
+		final var dto = new DTOOrt(1L, "12345", "ort");
+		dto.Land = "BY";
+		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
+
+		final var result = this.data.getById(1L);
+
+		assertThat(result.idBundesland).isNotNull();
+	}
+
+	@Test
+	@DisplayName("getById | Land null -> idBundesland ist null")
+	void getByIdLandIsNull() throws ApiOperationException {
+		final var dto = new DTOOrt(1L, "12345", "ort");
+		dto.Land = null;
+		when(this.conn.queryByKey(DTOOrt.class, 1L)).thenReturn(dto);
+
+		final var result = this.data.getById(1L);
+
+		assertThat(result.idBundesland).isNull();
 	}
 
 }

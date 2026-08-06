@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.types.schule.Laender;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.data.DataManagerRevised;
@@ -16,7 +17,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
-import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.Strings;
@@ -67,21 +67,38 @@ public final class DataOrte extends DataManagerRevised<Long, DTOOrt, OrtKatalogE
 		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde kein Ort mit der ID %d gefunden.".formatted(id));
 		}
-
-		return map(dto);
+		final var schuljahr = conn.getUser().schuleGetSchuljahr();
+		return mapInternal(dto, schuljahr);
 	}
 
 	@Override
 	public List<OrtKatalogEintrag> getAll() {
 		final List<DTOOrt> orte = conn.queryAll(DTOOrt.class);
+		final var schuljahr = conn.getUser().schuleGetSchuljahr();
 		final Set<Long> idsOfReferencedOrte = this.getIdsOfReferencedOrte(mapToIds(orte));
 
-		return orte
-				.stream()
-				.map(this::map)
+		return orte.stream()
+				.map(o -> mapInternal(o, schuljahr))
 				.map(o -> setReferenceFlag(o, idsOfReferencedOrte))
 				.sorted(Comparator.comparing(o -> o.id))
 				.toList();
+	}
+
+	private OrtKatalogEintrag mapInternal(final DTOOrt dto, final int schuljahr) {
+		final var result = this.map(dto);
+		result.idBundesland = getIdBundesland(dto.Land, schuljahr);
+		return result;
+	}
+
+	private Long getIdBundesland(final String schluesselBundesland, final int schuljahr) {
+		if (schluesselBundesland == null) {
+			return null;
+		}
+		final var bundesland = Laender.data().getEintragBySchuljahrUndSchluessel(schuljahr, schluesselBundesland);
+		if (bundesland == null) {
+			return null;
+		}
+		return bundesland.id;
 	}
 
 	@Override
@@ -91,7 +108,6 @@ public final class DataOrte extends DataManagerRevised<Long, DTOOrt, OrtKatalogE
 		daten.plz = dto.PLZ;
 		daten.ortsname = dto.Bezeichnung;
 		daten.kreis = dto.Kreis;
-		daten.kuerzelBundesland = dto.Land;
 		daten.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		daten.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		daten.istAenderbar = Boolean.TRUE.equals(dto.Aenderbar);
@@ -105,13 +121,26 @@ public final class DataOrte extends DataManagerRevised<Long, DTOOrt, OrtKatalogE
 			case PLZ -> dto.PLZ = JSONMapper.convertToString(value, false, false, tab_K_Ort.col_PLZ.datenlaenge(), name);
 			case ORTSNAME -> updateOrtsname(dto, name, value, map);
 			case "kreis" -> dto.Kreis = JSONMapper.convertToString(value, true, true, tab_K_Ort.col_Kreis.datenlaenge(), name);
-			case "kuerzelBundesland" -> dto.Land = JSONMapper.convertToString(value, true, true, tab_K_Ort.col_Land.datenlaenge(), name);
+			case "idBundesland" -> updateBundesland(dto, name, value);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "istAenderbar" -> dto.Aenderbar = JSONMapper.convertToBoolean(value, true, name);
 			default ->
 					throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private void updateBundesland(final DTOOrt dto, final String name, final Object value) {
+		final var idBundesland = JSONMapper.convertToLong(value, true, name);
+		if (idBundesland == null) {
+			dto.Land = null;
+			return;
+		}
+		final var land = Laender.data().getEintragByID(idBundesland);
+		if (land == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Bundesland für die ID %d gefunden.".formatted(idBundesland));
+		}
+		dto.Land = land.schluessel;
 	}
 
 	@Override
@@ -125,7 +154,7 @@ public final class DataOrte extends DataManagerRevised<Long, DTOOrt, OrtKatalogE
 	private void validateOrtsnameisUniqueForThisPlzOnCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final String plz = JSONMapper.convertToString(initAttributes.get(PLZ), false, false, tab_K_Ort.col_PLZ.datenlaenge(), PLZ);
 		final String ortsname =
-				JSONMapper.convertToString(initAttributes.get(ORTSNAME), false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), ORTSNAME);
+				JSONMapper.convertToString(initAttributes.get(ORTSNAME), false, false, tab_K_Ort.col_Bezeichnung.datenlaenge(), ORTSNAME);
 		validateNameIsUniqueForPlz(newID, plz, ortsname);
 	}
 

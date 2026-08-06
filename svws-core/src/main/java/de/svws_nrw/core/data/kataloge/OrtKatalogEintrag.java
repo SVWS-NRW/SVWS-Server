@@ -29,9 +29,9 @@ public class OrtKatalogEintrag {
 	@Schema(description = "der Name des Kreises", example = "RSK")
 	public String kreis;
 
-	/** Das Kürzel des Bundeslandes.  */
-	@Schema(description = "das Kürzel des Bundeslandes", example = "NW")
-	public String kuerzelBundesland;
+	/** Die ID des Bundeslandes. (CoreType: Laender) */
+	@Schema(description = "Die ID des Bundeslandes. (CoreType: Laender)", example = "1090")
+	public Long idBundesland;
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")

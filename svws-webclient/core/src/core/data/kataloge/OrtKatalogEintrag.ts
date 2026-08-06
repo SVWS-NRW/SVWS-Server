@@ -24,9 +24,9 @@ export class OrtKatalogEintrag extends JavaObject {
 	public kreis: string | null = null;
 
 	/**
-	 * Das Kürzel des Bundeslandes.
+	 * Die ID des Bundeslandes. (CoreType: Laender)
 	 */
-	public kuerzelBundesland: string | null = null;
+	public idBundesland: number | null = null;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
@@ -72,7 +72,7 @@ export class OrtKatalogEintrag extends JavaObject {
 		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
 		result.ortsname = (obj.ortsname === undefined) ? null : obj.ortsname === null ? null : obj.ortsname;
 		result.kreis = (obj.kreis === undefined) ? null : obj.kreis === null ? null : obj.kreis;
-		result.kuerzelBundesland = (obj.kuerzelBundesland === undefined) ? null : obj.kuerzelBundesland === null ? null : obj.kuerzelBundesland;
+		result.idBundesland = (obj.idBundesland === undefined) ? null : obj.idBundesland === null ? null : obj.idBundesland;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -94,7 +94,7 @@ export class OrtKatalogEintrag extends JavaObject {
 		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		result += '"ortsname" : ' + ((obj.ortsname === null) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
 		result += '"kreis" : ' + ((obj.kreis === null) ? 'null' : JSON.stringify(obj.kreis)) + ',';
-		result += '"kuerzelBundesland" : ' + ((obj.kuerzelBundesland === null) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
+		result += '"idBundesland" : ' + ((obj.idBundesland === null) ? 'null' : obj.idBundesland.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
@@ -118,8 +118,8 @@ export class OrtKatalogEintrag extends JavaObject {
 		if (obj.kreis !== undefined) {
 			result += '"kreis" : ' + ((obj.kreis === null) ? 'null' : JSON.stringify(obj.kreis)) + ',';
 		}
-		if (obj.kuerzelBundesland !== undefined) {
-			result += '"kuerzelBundesland" : ' + ((obj.kuerzelBundesland === null) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
+		if (obj.idBundesland !== undefined) {
+			result += '"idBundesland" : ' + ((obj.idBundesland === null) ? 'null' : obj.idBundesland.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
