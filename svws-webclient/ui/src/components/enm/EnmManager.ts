@@ -1,4 +1,5 @@
 import type { ENMv2Ankreuzkompetenz } from "../../../../core/src/core/data/enm/v2/ENMv2Ankreuzkompetenz";
+import type { ENMv2Abteilung } from "../../../../core/src/core/data/enm/v2/ENMv2Abteilung";
 import type { ENMv2Daten } from "../../../../core/src/core/data/enm/v2/ENMv2Daten";
 import type { ENMv2Fach } from "../../../../core/src/core/data/enm/v2/ENMv2Fach";
 import type { ENMv2Floskelgruppe } from "../../../../core/src/core/data/enm/v2/ENMv2Floskelgruppe";
@@ -24,7 +25,6 @@ import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
 import { Note } from "../../../../core/src/asd/types/Note";
 import { EnmSperrManager } from "./EnmSperrManager";
 import { EnmSpaltenManager } from "./EnmSpaltenManager";
-import type { ENMv2Abteilung } from "../../../../core/src";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen

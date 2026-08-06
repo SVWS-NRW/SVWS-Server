@@ -1,4 +1,4 @@
-import { RGBFarbe } from "../../../core/src";
+import { RGBFarbe } from "../../../core/src/asd/data/RGBFarbe";
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Umgang mit RGB-Farben zur Verfügung.
@@ -6,13 +6,13 @@ import { RGBFarbe } from "../../../core/src";
 export class Color {
 
 	/** Die Rot-Komponente mit einem Wert im Bereich von 0 bis 255 */
-	private red: number;
+	private readonly red: number;
 
 	/** Die Grün-Komponente mit einem Wert im Bereich von 0 bis 255 */
-	private green: number;
+	private readonly green: number;
 
 	/** Die Blau-Komponente mit einem Wert im Bereich von 0 bis 255 */
-	private blue: number;
+	private readonly blue: number;
 
 	/** Die Luminant, sofern sie schon berechnet wurde */
 	private _luminance: number | null = null;

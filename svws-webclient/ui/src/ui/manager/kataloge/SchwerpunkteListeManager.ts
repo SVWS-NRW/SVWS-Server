@@ -1,5 +1,12 @@
-import type { Comparator, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt } from "../../../../../core/src";
-import { JavaInteger, HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { SchuelerSchwerpunkt } from '../../../../../core/src/core/data/kataloge/SchuelerSchwerpunkt';
+import type { Comparator } from '../../../../../core/src/java/util/Comparator';
+import type { List } from '../../../../../core/src/java/util/List';
+import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
+import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
+import { JavaString } from '../../../../../core/src/java/lang/JavaString';
+import { HashSet } from '../../../../../core/src/java/util/HashSet';
 import { AuswahlManager } from "../AuswahlManager";
 
 export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSchwerpunkt, SchuelerSchwerpunkt> {

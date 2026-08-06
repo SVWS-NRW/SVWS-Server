@@ -1,7 +1,9 @@
-import { type InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, List } from "../../../../core/src";
+import type { InjectionKey } from "vue";
 import type { KatalogState } from "./KatalogState";
+import type { OrtsteilKatalogEintrag } from "../../../../core/src/core/data/kataloge/OrtsteilKatalogEintrag";
+import type { List } from "../../../../core/src/java/util/List";
+import type { OrtKatalogEintrag } from "../../../../core/src/core/data/kataloge/OrtKatalogEintrag";
+import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "../../AppContext";
 
 /** Erweiterter KatalogState für Ortsteile mit Filtermethoden nach Ort */

@@ -1,4 +1,4 @@
-import type { BenutzerListeEintrag } from "../../../core/src";
+import type { BenutzerListeEintrag } from "../../../core/src/core/data/benutzer/BenutzerListeEintrag";
 import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
 

@@ -1,7 +1,7 @@
-import { DeveloperNotificationException } from "../../../../core/src";
-import { AppMenuGroup } from "./AppMenuGroup";
+import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 import type { TabData } from "./TabData";
 import type { TabManager } from "./TabManager";
+import { AppMenuGroup } from "./AppMenuGroup";
 
 /**
  * Diese Klasse dient der Verwaltung der Menu-Struktur einer Client-Applikation.
@@ -11,16 +11,16 @@ import type { TabManager } from "./TabManager";
 export class AppMenuManager {
 
 	/** Der Manager für das Hauptmenü */
-	private _menu: TabManager;
+	private readonly _menu: TabManager;
 
 	/** Die Manager für die Untermenüs */
-	private _submenus: Map<string, TabManager>;
+	private readonly _submenus: Map<string, TabManager>;
 
 	/** Der aktuell ausgeweählte Menü- bzw. Untermenü-Eintrag */
-	private _current: TabData;
+	private readonly _current: TabData;
 
 	/** Eine Map, von dem vollständigen Namen eines Menü- bzw. Untermenü-Eintrages zu dem zugehörigen Hauptmenü-Eintrag */
-	private _mapMainmenu: Map<string, TabData>;
+	private readonly _mapMainmenu: Map<string, TabData>;
 
 	/**
 	 * Erstellt einen neuen Menu-Manager mit den übergebenen Apps für das Hauptmenu

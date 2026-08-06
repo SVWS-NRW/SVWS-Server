@@ -1,7 +1,22 @@
-import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, KlassenDaten, List,
-	ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerListe, SchuelerSchulbesuchsdaten, SchuelerStammdaten,
-	SchulEintrag, Schuljahresabschnitt, Telefonart, VermerkartEintrag } from "../../../../../core/src";
-import { ArrayList } from "../../../../../core/src";
+import type { KlassenDaten } from "../../../../../core/src/asd/data/klassen/KlassenDaten";
+import type { EinschulungsartKatalogEintrag } from "../../../../../core/src/asd/data/schueler/EinschulungsartKatalogEintrag";
+import type { SchuelerLernabschnittsdaten } from "../../../../../core/src/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { SchuelerSchulbesuchsdaten } from "../../../../../core/src/asd/data/schueler/SchuelerSchulbesuchsdaten";
+import type { SchuelerStammdaten } from "../../../../../core/src/asd/data/schueler/SchuelerStammdaten";
+import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
+import type { Erzieherart } from "../../../../../core/src/core/data/erzieher/Erzieherart";
+import type { FachDaten } from "../../../../../core/src/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "../../../../../core/src/core/data/jahrgang/JahrgangsDaten";
+import type { SchulEintrag } from "../../../../../core/src/core/data/kataloge/SchulEintrag";
+import type { SchuelerListe } from "../../../../../core/src/core/data/schueler/SchuelerListe";
+import type { Fahrschuelerart } from "../../../../../core/src/core/data/schule/Fahrschuelerart";
+import type { Haltestelle } from "../../../../../core/src/core/data/schule/Haltestelle";
+import type { Kindergarten } from "../../../../../core/src/core/data/schule/Kindergarten";
+import type { ReligionEintrag } from "../../../../../core/src/core/data/schule/ReligionEintrag";
+import type { Telefonart } from "../../../../../core/src/core/data/schule/Telefonart";
+import type { VermerkartEintrag } from "../../../../../core/src/core/data/schule/VermerkartEintrag";
+import type { List } from "../../../../../core/src/java/util/List";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 export class SchuelerSchnelleingabeManager {
 

@@ -1,12 +1,13 @@
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { FoerderschwerpunktEintrag } from '../../../../../core/src/core/data/schule/FoerderschwerpunktEintrag';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { HashSet, type JavaSet } from "../../../../../core/src";
+import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
+import { HashSet } from '../../../../../core/src/java/util/HashSet';
+import { JavaString } from '../../../../../core/src/java/lang/JavaString';
+import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
+import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { AuswahlManager } from '../AuswahlManager';
 
 export class FoerderschwerpunkteListeManager extends AuswahlManager<number, FoerderschwerpunktEintrag, FoerderschwerpunktEintrag> {

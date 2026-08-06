@@ -1,6 +1,11 @@
+import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { Betriebsart } from "../../../../../core/src/core/data/schule/Betriebsart";
-import type { Comparator, List, Schulform, Schuljahresabschnitt } from "../../../../../core/src";
-import { HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import type { List } from "../../../../../core/src/java/util/List";
+import type { Comparator } from "../../../../../core/src/java/util/Comparator";
+import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
+import { JavaLong } from "../../../../../core/src/java/lang/JavaLong";
+import { JavaString } from "../../../../../core/src/java/lang/JavaString";
+import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import { AuswahlManager } from "../AuswahlManager";
 
 export class BetriebsartenListeManager extends AuswahlManager<number, Betriebsart, Betriebsart> {

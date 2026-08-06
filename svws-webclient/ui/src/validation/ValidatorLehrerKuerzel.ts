@@ -1,4 +1,4 @@
-import type { LehrerListeEintrag } from "../../../core/src";
+import type { LehrerListeEintrag } from "../../../core/src/core/data/lehrer/LehrerListeEintrag";
 import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
 import { JavaString } from "../../../core/src/java/lang/JavaString";

@@ -1,15 +1,15 @@
 import { toRaw } from "vue";
 import type { List } from "../../../../core/src/java/util/List";
 import type { CoreTypeDataManager } from "../../../../core/src/asd/utils/CoreTypeDataManager";
+import type { BaseSelectManager } from "../../ui/controls/select/manager/BaseSelectManager";
 import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 import { CoreTypeData } from "../../../../core/src/asd/data/CoreTypeData";
 import { CoreTypeDataNurSchulformen } from "../../../../core/src/asd/data/CoreTypeDataNurSchulformen";
 import { CoreTypeDataNurSchulformenUndSchulgliederungen } from "../../../../core/src/asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen";
 import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
-import type { BaseSelectManager } from "../../ui/controls/select/manager/BaseSelectManager";
 import { CoreTypeSelectManager } from "../../ui/controls/select/manager/CoreTypeSelectManager";
-import { JavaObject } from "../../../../core/src";
+import { JavaObject } from "../../../../core/src/java/lang/JavaObject";
 
 /**
  * Ein Validator, welcher prüft, ob die Selektion eine Selects noch gültig ist.

@@ -1,5 +1,10 @@
-import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, List, SchuelerBetrieb } from "../../../../../core/src";
-import { SchuelerListeEintrag } from "../../../../../core/src";
+import type { SchuelerBetrieb } from "../../../../../core/src/asd/data/schueler/SchuelerBetrieb";
+import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
+import type { Beschaeftigungsart } from "../../../../../core/src/core/data/schule/Beschaeftigungsart";
+import type { Betrieb } from "../../../../../core/src/core/data/schule/Betrieb";
+import type { BetriebeAnsprechpartner } from "../../../../../core/src/core/data/schule/BetriebeAnsprechpartner";
+import type { List } from "../../../../../core/src/java/util/List";
+import { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
 import { StateManager } from "../../StateManager";
 
 interface SchuelerBetriebeState {

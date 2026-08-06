@@ -22,11 +22,12 @@ import { Note } from "../../../../../core/src/asd/types/Note";
 import { RGBFarbe } from "../../../../../core/src/asd/data/RGBFarbe";
 import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 import type { Config } from "../../../utils/Config";
-import { DeveloperNotificationException, GostSchriftlichkeit } from "../../../../../core/src";
 import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 import type { LaufbahnplanungUiStepper, LaufbahnplanungUiStepperMode } from "./LaufbahnplanungUiStepper";
 import { LaufbahnplanungUiStepperAbi2030 } from "./LaufbahnplanungUiStepperAbi2030";
 import { LaufbahnplanungUiStepperAbi2013 } from "./LaufbahnplanungUiStepperAbi2013";
+import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import { GostSchriftlichkeit } from "../../../../../core/src/core/types/gost/GostSchriftlichkeit";
 
 
 export type LaufbahnplanungUiFaecherAnzeigen = 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';

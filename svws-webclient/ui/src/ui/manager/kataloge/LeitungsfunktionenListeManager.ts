@@ -1,12 +1,13 @@
 import type { Leitungsfunktion } from "../../../../../core/src/core/data/schule/Leitungsfunktion";
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import { type JavaSet, HashSet } from "../../../../../core/src";
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
+import { HashSet } from '../../../../../core/src/java/util/HashSet';
+import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
+import { JavaString } from '../../../../../core/src/java/lang/JavaString';
+import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import { AuswahlManager } from "../AuswahlManager";
 
 export class LeitungsfunktionenListeManager extends AuswahlManager<number, Leitungsfunktion, Leitungsfunktion> {
