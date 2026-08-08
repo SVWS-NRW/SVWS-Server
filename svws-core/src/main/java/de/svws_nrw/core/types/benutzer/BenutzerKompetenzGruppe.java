@@ -72,12 +72,15 @@ public enum BenutzerKompetenzGruppe {
 	EXTRAS(new BenutzerKompetenzGruppenKatalogEintrag(700, "Extras", 3, 4)),
 
 	/** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichtverletzung. */
-	SCHULPFLICHTVERLETZUNG(new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
+	SCHULPFLICHTVERLETZUNG(new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3)),
+
+	/** Gruppe für Rechte bezüglich des Zugriffs von Drittsystemen über die External API. */
+	EXTERNAL_API(new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4));
 
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 2;
+	public static final long VERSION = 3;
 
 	/** Die Daten der Benutzerkompetenz-Gruppe */
 	public final @NotNull BenutzerKompetenzGruppenKatalogEintrag daten;

@@ -117,9 +117,14 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	public static readonly SCHULPFLICHTVERLETZUNG: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULPFLICHTVERLETZUNG", 20, new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
 
 	/**
+	 * Gruppe für Rechte bezüglich des Zugriffs von Drittsystemen über die External API.
+	 */
+	public static readonly EXTERNAL_API: BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("EXTERNAL_API", 21, new BenutzerKompetenzGruppenKatalogEintrag(6000, "External API", 4, 4));
+
+	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 2;
+	public static readonly VERSION: number = 3;
 
 	/**
 	 * Die Daten der Benutzerkompetenz-Gruppe

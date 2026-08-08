@@ -489,9 +489,24 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	public static readonly ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN: BenutzerKompetenz = new BenutzerKompetenz("ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 93, new BenutzerKompetenzKatalogEintrag(506, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (funktionsbezogen)", Arrays.asList(Schulform.BK, Schulform.SB), "Ermöglicht das Eingeben der Prüfungsergebnisse eines Schülers an berufsbildenden Schulen nur für Abteilungs- oder Stufenleitungen."));
 
 	/**
+	 * Es werden Rechte zum Exportieren von ENM-Daten über die External API benötigt.
+	 */
+	public static readonly EXTERNAL_API_ENM_EXPORTIEREN: BenutzerKompetenz = new BenutzerKompetenz("EXTERNAL_API_ENM_EXPORTIEREN", 94, new BenutzerKompetenzKatalogEintrag(507, BenutzerKompetenzGruppe.EXTERNAL_API, "ENM-Daten exportieren", null, "Ermöglicht externen Notenmanagement-/Konferenzsystemen den lesenden Abruf von Noten-, Leistungs- und Bemerkungsdaten über die External API."));
+
+	/**
+	 * Es werden Rechte zum Importieren von ENM-Daten über die External API benötigt.
+	 */
+	public static readonly EXTERNAL_API_ENM_IMPORTIEREN: BenutzerKompetenz = new BenutzerKompetenz("EXTERNAL_API_ENM_IMPORTIEREN", 95, new BenutzerKompetenzKatalogEintrag(508, BenutzerKompetenzGruppe.EXTERNAL_API, "ENM-Daten importieren", null, "Ermöglicht externen Notenmanagement-/Konferenzsystemen die Rückführung von Noten-, Leistungs- und Bemerkungsdaten über die External API."));
+
+	/**
+	 * Es werden Rechte zum Exportieren von Lernplattform-Daten über die External API benötigt.
+	 */
+	public static readonly EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN: BenutzerKompetenz = new BenutzerKompetenz("EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN", 96, new BenutzerKompetenzKatalogEintrag(509, BenutzerKompetenzGruppe.EXTERNAL_API, "Lernplattform-Daten exportieren", null, "Ermöglicht Lernplattformen den lesenden Abruf von Stammdaten über die External API."));
+
+	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION: number = 3;
+	public static readonly VERSION: number = 4;
 
 	/**
 	 * Die Daten der Benutzerkompetenz
