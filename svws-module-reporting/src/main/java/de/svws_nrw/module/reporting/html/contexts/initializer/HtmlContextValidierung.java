@@ -9,6 +9,7 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -19,11 +20,13 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Hilfsklasse mit den Prüfungen der Eingabeparameter für den Aufbau der Daten-Contexts.
- * <p>Die Methoden sind statisch und nehmen den {@link ReportingContext} als Parameter. Nur so lassen sie sich sowohl aus den Initializern als auch als
- * Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwenden.</p>
+ * <p>Die Methoden sind statisch. Alle Prüfungen, die Daten nachladen, nehmen den {@link ReportingContext} als Parameter. Nur so lassen sie sich sowohl aus
+ * den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwenden.</p>
+ * <p>Die Parameter der übrigen Methoden zeigen bewusst an, dass diese <b>nichts nachladen</b>: Die ID-Prüfungen erhalten allein den {@link Logger}, den sie
+ * für ihre Fehlermeldungen benötigen, und die reinen Wertprüfungen für Abiturjahr und Halbjahr kommen ganz ohne Infrastruktur aus. Beide Gruppen sind
+ * dadurch ohne Context testbar.</p>
  * <p>Die Prüfungen werfen im Fehlerfall eine {@link ApiOperationException} und behalten dabei ihr bisheriges Logging-Verhalten: Die ID-Prüfungen und die
- * Prüfung auf gymnasiale Oberstufe protokollieren zuvor über {@code reportingContext.logger()}, die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne
- * eigenen Log-Eintrag.</p>
+ * Prüfung auf gymnasiale Oberstufe protokollieren zuvor, die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne eigenen Log-Eintrag.</p>
  */
 final class HtmlContextValidierung {
 
@@ -41,7 +44,7 @@ final class HtmlContextValidierung {
 	 * Im Fehlerfall wird die zugehörige Meldung geloggt und eine {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
 	 *
 	 * @param <T>                         Typ der geladenen Objekte.
-	 * @param reportingContext            Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
 	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
 	 * @param geladeneObjekte             Die zu den IDs geladenen Objekte.
 	 * @param idExtractor                 Funktion zur Bestimmung der ID eines geladenen Objekts.
@@ -50,18 +53,18 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
 	 */
-	static <T> void validiereIds(final ReportingContext reportingContext, final List<Long> idsUebergeben, final Collection<T> geladeneObjekte,
+	static <T> void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Collection<T> geladeneObjekte,
 			final ToLongFunction<T> idExtractor, final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
 		final Set<Long> idsVorhanden = geladeneObjekte.stream().mapToLong(idExtractor).boxed().collect(Collectors.toSet());
-		validiereIds(reportingContext, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
+		validiereIds(logger, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
 	}
 
 	/**
-	 * Wie {@link #validiereIds(ReportingContext, List, Collection, ToLongFunction, String, String)}, jedoch für Map-basierte Lade-Ergebnisse: eine ID gilt als
+	 * Wie {@link #validiereIds(Logger, List, Collection, ToLongFunction, String, String)}, jedoch für Map-basierte Lade-Ergebnisse: eine ID gilt als
 	 * vorhanden, wenn der zugehörige Map-Eintrag einen Wert ungleich {@code null} besitzt.
 	 *
 	 * @param <V>                         Typ der Map-Werte.
-	 * @param reportingContext            Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
 	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
 	 * @param geladeneObjekte             Map mit ID als Schlüssel und dem geladenen Objekt als Wert (Wert {@code null} bedeutet "nicht vorhanden").
 	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
@@ -69,11 +72,11 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
 	 */
-	static <V> void validiereIds(final ReportingContext reportingContext, final List<Long> idsUebergeben, final Map<Long, V> geladeneObjekte,
+	static <V> void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Map<Long, V> geladeneObjekte,
 			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
 		final Set<Long> idsVorhanden = geladeneObjekte.entrySet().stream()
 				.filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toSet());
-		validiereIds(reportingContext, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
+		validiereIds(logger, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
 	}
 
 	/**
@@ -81,7 +84,7 @@ final class HtmlContextValidierung {
 	 * und jede enthaltene ID in {@code idsVorhanden} existiert. Im Fehlerfall wird die zugehörige Meldung geloggt und eine
 	 * {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
 	 *
-	 * @param reportingContext            Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
 	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
 	 * @param idsVorhanden                Menge der tatsächlich vorhandenen IDs.
 	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
@@ -89,16 +92,16 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
 	 */
-	private static void validiereIds(final ReportingContext reportingContext, final List<Long> idsUebergeben, final Set<Long> idsVorhanden,
+	private static void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Set<Long> idsVorhanden,
 			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
 		final List<Long> idsBereinigt = idsUebergeben.stream().filter(Objects::nonNull).distinct().toList();
 		if (idsBereinigt.isEmpty()) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
+			logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
 			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
 		}
 		for (final Long id : idsBereinigt) {
 			if (!idsVorhanden.contains(id)) {
-				reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldungUnvollstaendig);
+				logger.logLn(LogLevel.ERROR, 4, fehlermeldungUnvollstaendig);
 				throw new ApiOperationException(Status.BAD_REQUEST, fehlermeldungUnvollstaendig);
 			}
 		}
@@ -128,7 +131,7 @@ final class HtmlContextValidierung {
 	 */
 	static void pruefungenStundenplanKlassen(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext, ids, reportingContext.repositoryLerngruppen().klassen(ids, false), ReportingKlasse::id,
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryLerngruppen().klassen(ids, false), ReportingKlasse::id,
 				"Klassen-IDs", "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
 	}
 
@@ -142,7 +145,7 @@ final class HtmlContextValidierung {
 	 */
 	static void pruefungenStundenplanLehrer(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext, ids, reportingContext.repositoryLehrer().lehrer(ids, false), ReportingLehrer::id,
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryLehrer().lehrer(ids, false), ReportingLehrer::id,
 				"Lehrer-IDs", "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
 	}
 
@@ -156,7 +159,7 @@ final class HtmlContextValidierung {
 	 */
 	static void pruefungenStundenplanSchueler(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext, ids, reportingContext.repositorySchueler().schueler(ids, false), ReportingSchueler::id,
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositorySchueler().schueler(ids, false), ReportingSchueler::id,
 				SCHUELER_IDS, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 	}
 
@@ -171,9 +174,9 @@ final class HtmlContextValidierung {
 	 */
 	static void pruefungenGostLaufbahnplanung(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
 		validiereSchuleMitGost(reportingContext);
-		validiereIds(reportingContext, ids, reportingContext.repositoryGost().beratungsdaten(ids),
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().beratungsdaten(ids),
 				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-		validiereIds(reportingContext, ids, reportingContext.repositoryGost().beratungsdatenAbiturdaten(ids),
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().beratungsdatenAbiturdaten(ids),
 				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
 	}
 
@@ -187,7 +190,7 @@ final class HtmlContextValidierung {
 	 */
 	static void pruefungenGostAbitur(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
 		validiereSchuleMitGost(reportingContext);
-		validiereIds(reportingContext, ids, reportingContext.repositoryGost().schuelerAbiturdaten(ids),
+		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().schuelerAbiturdaten(ids),
 				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
 	}
 
@@ -231,7 +234,7 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls die Parameter ungültig sind.
 	 */
-	private static void validiereParameterPaarweise(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
+	static void validiereParameterPaarweise(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
 			throws ApiOperationException {
 		for (final Long kombinierteId : parameterDaten) {
 			if (kombinierteId != null) {
@@ -245,13 +248,15 @@ final class HtmlContextValidierung {
 
 	/**
 	 * Validiert die Parameter für Gost-Daten einzeln (ein Abiturjahrgang gefolgt von beliebigen Halbjahren).
+	 * <p>Die Liste muss mindestens den Abiturjahrgang enthalten; auf eine leere Liste prüft der Aufrufer
+	 * {@link #validiereParameterFuerAbiturjahrgangUndHalbjahre(ReportingContext, boolean)}.</p>
 	 *
 	 * @param parameterDaten             Liste der Parameter
 	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
 	 *
 	 * @throws ApiOperationException Falls die Parameter ungültig sind.
 	 */
-	private static void validiereParameterEinzeln(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
+	static void validiereParameterEinzeln(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
 			throws ApiOperationException {
 		validiereAbiturjahr(Math.toIntExact(parameterDaten.getFirst()), vorhandeneAbiturjahrgaenge);
 		for (int i = 1; i < parameterDaten.size(); i++) {
@@ -267,7 +272,7 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls das Abiturjahr ungültig ist.
 	 */
-	private static void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
+	static void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
 		if ((abiturjahr < 1900) || !vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
 		}
@@ -280,7 +285,7 @@ final class HtmlContextValidierung {
 	 *
 	 * @throws ApiOperationException Falls das GOSt-Halbjahr ungültig ist.
 	 */
-	private static void validiereHalbjahr(final int halbjahrId) throws ApiOperationException {
+	static void validiereHalbjahr(final int halbjahrId) throws ApiOperationException {
 		if (GostHalbjahr.fromID(halbjahrId) == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
 		}

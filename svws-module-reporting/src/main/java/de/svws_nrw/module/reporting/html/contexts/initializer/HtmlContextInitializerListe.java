@@ -47,7 +47,7 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 				"Validiere die Daten für %s für die HTML-Generierung.".formatted(bezeichnungen.nominativ()));
 
 		final List<Long> ids = reportingParameter.idsHauptdaten();
-		HtmlContextValidierung.validiereIds(reportingContext, ids, aufbau.lader().apply(reportingContext, ids), aufbau.idExtractor(),
+		HtmlContextValidierung.validiereIds(reportingContext.logger(), ids, aufbau.lader().apply(reportingContext, ids), aufbau.idExtractor(),
 				bezeichnungen.idTyp(), "FEHLER: Es wurden ungültige %s übergeben.".formatted(bezeichnungen.idTyp()));
 		aufbau.zusatzpruefung().accept(reportingContext, ids);
 
