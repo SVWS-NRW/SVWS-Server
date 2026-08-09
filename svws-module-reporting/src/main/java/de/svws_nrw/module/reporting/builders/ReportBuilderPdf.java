@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.builders;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Collections;
+import java.util.Set;
 
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -29,6 +31,15 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	public ReportBuilderPdf(final ReportBuilderContextPdf builderContext) throws ApiOperationException {
 		super(builderContext.validiert(), "application/pdf", builderContext.getDateiname());
 		this.builderContext = builderContext;
+	}
+
+	/**
+	 * Gibt die Menge der IDs der Hauptdaten zurück, für die dieser Builder die PDF-Datei erzeugt. Die zurückgegebene Menge ist unveränderlich.
+	 *
+	 * @return eine unveränderliche Menge von IDs (Long-Werten)
+	 */
+	public Set<Long> getIds() {
+		return Collections.unmodifiableSet(builderContext.getIds());
 	}
 
 	/**

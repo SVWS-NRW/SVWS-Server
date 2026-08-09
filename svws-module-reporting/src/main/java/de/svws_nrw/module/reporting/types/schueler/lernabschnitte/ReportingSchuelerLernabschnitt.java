@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
+import de.svws_nrw.asd.data.schueler.VersetzungsvermerkKatalogEintrag;
 import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
@@ -361,7 +362,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		this.tutor = tutor;
 		this.uebergangsempfehlungText = ersetzeNullBlankTrim(uebergangsempfehlungText);
 		this.versetzungsentscheidungText = ersetzeNullBlankTrim(versetzungsentscheidungText);
-		this.versetzungsvermerkKuerzel = Versetzungsvermerk.data().getEintragByID(idVersetzungsvermerk).kuerzel;
+		this.versetzungsvermerkKuerzel = versetzungsvermerkKuerzel(idVersetzungsvermerk);
 		this.wechselNr = wechselNr;
 		this.zeugnisart = ersetzeNullBlankTrim(zeugnisart);
 		this.zeugnisASVText = ersetzeNullBlankTrim(zeugnisASVText);
@@ -1064,6 +1065,24 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	public String versetzungsentscheidungText() {
 		return this.versetzungsentscheidungText;
+	}
+
+	/**
+	 * Ermittelt das Kürzel zum Versetzungsvermerk mit der angegebenen ID.
+	 * <p>Der Katalogeintrag fehlt in zwei Fällen: Der Lernabschnitt trägt gar keinen Versetzungsvermerk — der Normalfall außerhalb des Schuljahresendes,
+	 * die ID ist dann {@code null} — oder die ID stammt aus Daten, zu denen der Core-Type keinen Eintrag mehr kennt. In beiden Fällen liefert
+	 * {@code getEintragByID} {@code null}, und ein direkter Feldzugriff darauf würde die gesamte Reportausgabe mit einer
+	 * {@link NullPointerException} abbrechen.</p>
+	 * <p>Fachlich fehlende Daten gehören als saubere Lücke in den Report, deshalb der leere String — passend zur Zusicherung von
+	 * {@link #versetzungsvermerkKuerzel()}.</p>
+	 *
+	 * @param idVersetzungsvermerk Die ID des Versetzungsvermerks, ggf. {@code null}.
+	 *
+	 * @return Das Kürzel des Versetzungsvermerks oder ein leerer String.
+	 */
+	static String versetzungsvermerkKuerzel(final Long idVersetzungsvermerk) {
+		final VersetzungsvermerkKatalogEintrag eintrag = Versetzungsvermerk.data().getEintragByID(idVersetzungsvermerk);
+		return (eintrag == null) ? "" : ersetzeNullBlankTrim(eintrag.kuerzel);
 	}
 
 	/**

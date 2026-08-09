@@ -175,6 +175,10 @@ final class ReportingRepositoryUtils {
 	/**
 	 * Erstellt für alle IDs mit vorhandenen Stammdaten ein Reporting-Objekt und cached es in der übergebenen Map.
 	 * Nutzt `putIfAbsent` um Fehler bei zirkulären Abhängigkeiten (z.B. Klasse -> Schüler -> Klasse) zu vermeiden.
+	 * <p>Maßgeblich ist der tatsächlich vorhandene Wert, nicht der Schlüssel: {@link #ladeFehlendeWerteInRepositoryMap} hinterlegt für eine technisch nicht
+	 * ladbare ID den Fehler-Marker {@code put(id, null)}. Dieser erfüllt zwar {@code containsKey}, steht aber für "keine Stammdaten". Würde er als Datensatz
+	 * gewertet, erhielte der Ersteller {@code null}-Stammdaten und liefe in eine {@link NullPointerException}. Der betroffene Datensatz wird stattdessen
+	 * ausgelassen.</p>
 	 *
 	 * @param <S> Der Typ der Stammdaten (z. B. LehrerStammdaten, SchuelerStammdaten)
 	 * @param <R> Der Typ des Reporting-Objektes (z. B. LehrerReporting, SchuelerReporting)
@@ -189,7 +193,7 @@ final class ReportingRepositoryUtils {
 			final Map<Long, R> mapReportingObjekte, final LongFunction<R> reportingObjektErsteller) {
 
 		final List<R> result = new ArrayList<>();
-		idsNonNull.stream().filter(mapStammdaten::containsKey).forEach(id -> {
+		idsNonNull.stream().filter(id -> mapStammdaten.get(id) != null).forEach(id -> {
 			if (!mapReportingObjekte.containsKey(id)) {
 				mapReportingObjekte.putIfAbsent(id, reportingObjektErsteller.apply(id));
 			}

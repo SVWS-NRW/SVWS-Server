@@ -1,5 +1,10 @@
 package de.svws_nrw.module.reporting.builders;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
@@ -17,6 +22,9 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 
 	/** Der Renderer, der zur Generierung des PDF-Dokumentes verwendet wird. */
 	private ReportRendererPdf renderer;
+
+	/** Die IDs der Hauptdaten, für die der Builder die PDF-Datei erzeugt. Sie dienen der Auflösung gleicher Dateinamen in der ZIP-Sammelausgabe. */
+	private final Set<Long> ids = new LinkedHashSet<>();
 
 
 	/**
@@ -50,6 +58,20 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der HTML-Input des Report-Builders darf nicht leer sein");
 		}
 		this.htmlInput = htmlInput;
+		return this;
+	}
+
+	/**
+	 * Fügt der Builder-Instanz eine Sammlung von IDs hinzu. Null-Werte innerhalb der Sammlung werden ignoriert.
+	 *
+	 * @param ids Eine Sammlung von IDs vom Typ Long, die hinzugefügt werden sollen.
+	 *
+	 * @return Die Instanz dieses Kontexts für die Weiterverwendung.
+	 */
+	public ReportBuilderContextPdf addIds(final Collection<Long> ids) {
+		if (ids != null) {
+			this.ids.addAll(ids.stream().filter(Objects::nonNull).toList());
+		}
 		return this;
 	}
 
@@ -105,6 +127,15 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	String getHtmlInput() {
 		return htmlInput;
+	}
+
+	/**
+	 * Gibt die Menge der IDs zurück, die in diesem Kontext definiert sind.
+	 *
+	 * @return Eine Menge von Long-Werten, die die IDs darstellen.
+	 */
+	Set<Long> getIds() {
+		return ids;
 	}
 
 	/**
