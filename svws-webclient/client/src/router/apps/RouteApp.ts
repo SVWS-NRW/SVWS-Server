@@ -58,6 +58,8 @@ import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFlosk
 import { routeNotenmodulAdministration } from "./notenmodul/RouteNotenmodulAdministration";
 import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangsdaten";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
+import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
+import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
 import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteEmailServer";
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
@@ -203,6 +205,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKonfessionen,
 			routeLeitungsfunktionen,
 			routeLernplattformen,
+			routeOrte,
+			routeOrtsteile,
 			routeSchulen,
 			routeSchwerpunkte,
 			routeTeilleistungsarten,
