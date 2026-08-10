@@ -256,6 +256,12 @@ public final class EmailFactory {
 		for (final ReportBuilderPdf pdfBuilder : pdfBuilders) {
 			try {
 				attachments.add(new EmailJobAttachment(pdfBuilder.getDateinameMitEndung(), pdfBuilder.generate(), "application/pdf"));
+			} catch (final ApiOperationException e) {
+				// Der Builder klassifiziert den Fehler bereits nach seiner Quelle; ohne diesen Zweig macht der Anhangaufbau daraus einen Serverfehler.
+				// Protokolliert werden allein Dateiname und ID als Zuordnung zum Empfänger; die Meldung selbst reist mit der Exception.
+				reportingContext.logger().logLn(LogLevel.ERROR, 4,
+						"### FEHLER: Die PDF-Datei '%s' für die ID %d konnte nicht erzeugt werden.".formatted(pdfBuilder.getDateiname(), id));
+				throw e;
 			} catch (final Exception e) {
 				reportingContext.logger().logLn(LogLevel.ERROR, 4,
 						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));

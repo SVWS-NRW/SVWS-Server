@@ -92,25 +92,30 @@ public final class ReportingExceptionUtils {
 			final String templateReplaceString) {
 		if (exception instanceof final ApiOperationException aoe) {
 			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
-			logger.modifyIndent(4);
-			String message = aoe.getMessage();
-			if (message != null) {
-				if (!templateOriginalString.isEmpty()) {
-					message = message.replace(templateOriginalString, templateReplaceString);
-				}
-				logger.logLn(LogLevel.ERROR, message);
-			}
 		} else {
 			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler vom Typ %s".formatted(exception.getClass().getSimpleName()));
-			logger.modifyIndent(4);
+		}
+		logger.modifyIndent(4);
+		// Die Meldung wird für jeden Exception-Typ ausgegeben. Sie ist die eigentliche Fehlerbeschreibung und steht sonst nur in der Kopfzeile des Stacktrace.
+		String message = exception.getMessage();
+		if (message != null) {
+			if (!templateOriginalString.isEmpty()) {
+				message = message.replace(templateOriginalString, templateReplaceString);
+			}
+			logger.logLn(LogLevel.ERROR, message);
 		}
 	}
 
 	private static void logErrorCauses(final Exception exception, final Logger logger, final String templateOriginalString,
 			final String templateReplaceString) {
+		// Der Abschnitt zeigt die Ursachenkette und beginnt deshalb erst bei der ersten Ursache: Die Meldung der Exception selbst steht bereits im
+		// Abschnitt darüber. Ohne Ursache entfällt der Abschnitt, statt eine Überschrift über eine Kopie zu setzen.
+		if (exception.getCause() == null) {
+			return;
+		}
 		logger.logLn(LogLevel.ERROR, 0, "### FEHLERGRÜNDE:");
 		logger.modifyIndent(4);
-		for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
+		for (Throwable cause = exception.getCause(); cause != null; cause = cause.getCause()) {
 			String message = cause.getMessage();
 			if ((message != null) && !message.isEmpty()) {
 				if (!templateOriginalString.isEmpty()) {

@@ -70,16 +70,21 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	 * @return Ein Objekt der Klasse ReportingVorlageParameterTypisiert mit dem entsprechenden Typ
 	 *         basierend auf dem Typ des übergebenen Parameters
 	 *
-	 * @throws ApiOperationException Im Falle eines Konvertierungsfehlers.
+	 * @throws ApiOperationException Im Falle eines Konvertierungsfehlers. Der Typ eines Vorlage-Parameters stammt aus der SOLL-Struktur der Reportvorlage;
+	 *                               der Request liefert allein die Werte. Ein nicht auflösbarer Typ ist damit ein Katalogfehler und
+	 *                               {@code INTERNAL_SERVER_ERROR}.
 	 */
 	private ReportingVorlageParameterTypisiert<?> erstelleTypisiertenParameter(final ReportingReportvorlageParameter reportingReportVorlageParameter)
 			throws ApiOperationException {
 		try {
 			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
 				case BOOLEAN, INTEGER, LONG, DECIMAL, STRING -> new ReportingVorlageParameterTypisiert<>(reportingReportVorlageParameter);
-				default -> throw new ApiOperationException(Response.Status.BAD_REQUEST,
-						"Ungültiger Typ für den Reporting-Vorlage-Parameter " + reportingReportVorlageParameter.name + " übergeben.");
+				default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+						"Der Reporting-Vorlage-Parameter " + reportingReportVorlageParameter.name + " besitzt keinen auflösbaren Typ.");
 			};
+		} catch (final ApiOperationException e) {
+			// Die Meldung oben benennt den betroffenen Parameter; der allgemeine Catch ersetzt sie sonst durch eine Angabe ohne Namen.
+			throw e;
 		} catch (final Exception e) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "Fehler bei der Typisierung der Vorlage-Parameter aufgetreten.");
 		}

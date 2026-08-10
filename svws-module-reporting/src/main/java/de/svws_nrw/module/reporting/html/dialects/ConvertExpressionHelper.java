@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
 import de.svws_nrw.base.compression.GZip;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.encoding.Base32;
 import de.svws_nrw.core.utils.encoding.Base45;
@@ -23,11 +25,23 @@ import java.util.Date;
 // toDateObject(...) ist ein bewusster Adapter an die Thymeleaf-Template-API, die für ihre Datums-Hilfsmethoden ein Date erwartet.
 public class ConvertExpressionHelper {
 
+	/** Der Logger des Reports, für den die Vorlage gerade gerendert wird. Er ist {@code null}, wenn der Context keinen Logger mitführt. */
+	private final Logger logger;
+
 	/**
-	 * Erstellt einen neuen ConvertExpressionHelper
+	 * Erstellt einen neuen ConvertExpressionHelper ohne Logger. Hinweise auf Lücken in der Ausgabe erreichen dann nur den globalen Log.
 	 */
 	public ConvertExpressionHelper() {
-		// Standardkonstruktor
+		this(null);
+	}
+
+	/**
+	 * Erstellt einen neuen ConvertExpressionHelper mit dem Logger des laufenden Reports.
+	 *
+	 * @param logger Der Logger des Reports oder {@code null}, wenn der Context keinen mitführt.
+	 */
+	public ConvertExpressionHelper(final Logger logger) {
+		this.logger = logger;
 	}
 
 	/**
@@ -169,14 +183,18 @@ public class ConvertExpressionHelper {
 	 * @param breiteInMM		Die gewünschte Breite des Barcodes in Millimetern.
 	 * @param hoeheInMM			Die gewünschte Höhe des Barcodes in Millimetern.
 	 *
-	 * @return					Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt
-	 *                          wird ein leeres, transparentes SVG zurückgegeben (nie null).
+	 * @return					Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt sowie
+	 *                          bei einem Inhalt, der sich nicht als Barcode darstellen lässt, wird ein leeres, transparentes SVG zurückgegeben (nie null).
 	 *                          Eine Einbettung könnte dabei mittels Thymeleaf erfolgen:
 	 *                          {@code <img th:src="${#convert.toBarcodeCode128AsSvgHtmlImageSource(schueler.id(), 50, 30)}"
 	 *                                      th:alt="${'Barcode zur ID ' + schueler.id()}" />}
 	 */
 	public String toBarcodeCode128AsSvgHtmlImageSource(final String barcodeInhalt, final double breiteInMM, final double hoeheInMM) {
-		return ReportingBarcodeUtils.erzeugeBarcodeCode128(barcodeInhalt, breiteInMM, hoeheInMM);
+		try {
+			return ReportingBarcodeUtils.erzeugeBarcodeCode128(barcodeInhalt, breiteInMM, hoeheInMM);
+		} catch (final Exception e) {
+			return leereFlaeche("Barcode", barcodeInhalt, breiteInMM, hoeheInMM, ReportingBarcodeUtils.STANDARD_HOEHE_BARCODE_MM, e);
+		}
 	}
 
 	/**
@@ -187,14 +205,48 @@ public class ConvertExpressionHelper {
 	 * @param breiteInMM	Die gewünschte Breite des QR-Codes in Millimetern.
 	 * @param hoeheInMM		Die gewünschte Höhe des QR-Codes in Millimetern.
 	 *
-	 * @return				Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt
-	 *                      wird ein leeres, transparentes SVG zurückgegeben (nie null).
+	 * @return				Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI). Bei leerem oder null-Inhalt sowie bei
+	 *                      einem Inhalt, der sich nicht als QR-Code darstellen lässt, wird ein leeres, transparentes SVG zurückgegeben (nie null).
 	 *                      Eine Einbettung könnte dabei mittels Thymeleaf erfolgen:
 	 *                      {@code <img th:src="${#convert.to2DCodeQRCodeAsSvgHtmlImageSource('Hello World', 50, 50)}"
 	 *                                  th:alt="'QR-Code'" />}
 	 */
 	public String to2DCodeQRCodeAsSvgHtmlImageSource(final String qrInhalt, final double breiteInMM, final double hoeheInMM) {
-		return ReportingBarcodeUtils.erzeuge2DCodeQRCode(qrInhalt, breiteInMM, hoeheInMM);
+		try {
+			return ReportingBarcodeUtils.erzeuge2DCodeQRCode(qrInhalt, breiteInMM, hoeheInMM);
+		} catch (final Exception e) {
+			return leereFlaeche("QR-Code", qrInhalt, breiteInMM, hoeheInMM, ReportingBarcodeUtils.STANDARD_HOEHE_QRCODE_MM, e);
+		}
+	}
+
+	/**
+	 * Protokolliert einen fehlgeschlagenen Code und gibt an seiner Stelle eine leere, transparente Fläche zurück.
+	 * <p>Ein Code, der sich aus den Daten nicht erzeugen lässt — etwa weil der Inhalt Zeichen enthält, die der Zeichensatz des Codes nicht kennt —,
+	 * darf die Druckausgabe nicht abbrechen. Nach den Reporting-Konventionen wird ein solcher Wert als saubere Lücke dargestellt; der Log hält fest,
+	 * warum die Fläche leer geblieben ist.</p>
+	 * <p>Die Fläche übernimmt die Maße, die der erfolgreiche Code hätte — einschließlich der Standardwerte, die je Codeart verschieden sind. Nur so
+	 * bleibt das Layout der Vorlage unverändert.</p>
+	 * <p>Dies gilt für die Verwendung in Vorlagen. Aufrufer, für die ein Code fachlich tragend ist — etwa die Signatur-QR-Codes der
+	 * Schulbescheinigung —, rufen {@link ReportingBarcodeUtils} unmittelbar auf und werten den Fehler selbst aus, statt ein Dokument mit leerer
+	 * Fläche entstehen zu lassen.</p>
+	 *
+	 * @param art             Die Bezeichnung des Codes für den Logeintrag.
+	 * @param inhalt          Der Inhalt, der nicht dargestellt werden konnte.
+	 * @param breiteInMM      Die gewünschte Breite in Millimetern.
+	 * @param hoeheInMM       Die gewünschte Höhe in Millimetern.
+	 * @param standardHoeheMM Die Höhe, die die Codeart ohne eigene Angabe verwendet.
+	 * @param e               Der aufgetretene Fehler.
+	 *
+	 * @return Ein leeres, transparentes SVG in den angeforderten Maßen.
+	 */
+	private String leereFlaeche(final String art, final String inhalt, final double breiteInMM, final double hoeheInMM, final double standardHoeheMM,
+			final Exception e) {
+		final String meldung = "WARNUNG: Der %s zum Inhalt '%s' konnte nicht erzeugt werden und bleibt leer: %s".formatted(art, inhalt, e.getMessage());
+		// Ohne Logger im Context - etwa beim Erzeugen eines Dateinamens - bleibt nur der globale Log.
+		((logger != null) ? logger : Logger.global()).logLn(LogLevel.WARNING, meldung);
+		return ReportingBarcodeUtils.leeresTransparentesSVG(
+				(breiteInMM <= 0) ? ReportingBarcodeUtils.STANDARD_BREITE_MM : breiteInMM,
+				(hoeheInMM <= 0) ? standardHoeheMM : hoeheInMM);
 	}
 
 	/**

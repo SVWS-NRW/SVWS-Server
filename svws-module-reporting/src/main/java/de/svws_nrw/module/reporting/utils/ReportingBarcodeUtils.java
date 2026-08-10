@@ -34,6 +34,15 @@ public final class ReportingBarcodeUtils {
 	 */
 	private static final String SVG_DATA_URI_PREFIX = "data:image/svg+xml;base64,";
 
+	/** Die Breite in Millimetern, die für Barcodes und QR-Codes ohne eigene Angabe verwendet wird. */
+	public static final double STANDARD_BREITE_MM = 50.0;
+
+	/** Die Höhe in Millimetern, die für einen Code128-Barcode ohne eigene Angabe verwendet wird. */
+	public static final double STANDARD_HOEHE_BARCODE_MM = 30.0;
+
+	/** Die Höhe in Millimetern, die für einen QR-Code ohne eigene Angabe verwendet wird - er ist quadratisch. */
+	public static final double STANDARD_HOEHE_QRCODE_MM = STANDARD_BREITE_MM;
+
 	private ReportingBarcodeUtils() {
 		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zum Fehler-Logging. Initialisierung nicht möglich.");
 	}
@@ -50,8 +59,8 @@ public final class ReportingBarcodeUtils {
 	 */
 	public static @NotNull String erzeugeBarcodeCode128(final String barcodeInhalt, final double breiteInMM, final double hoeheInMM) {
 		// Dimensionen des Barcodes in mm festlegen.
-		final double breiteMM = (breiteInMM <= 0) ? 50.0 : breiteInMM;
-		final double hoeheMM = (hoeheInMM <= 0) ? 30.0 : hoeheInMM;
+		final double breiteMM = (breiteInMM <= 0) ? STANDARD_BREITE_MM : breiteInMM;
+		final double hoeheMM = (hoeheInMM <= 0) ? STANDARD_HOEHE_BARCODE_MM : hoeheInMM;
 
 		// Inhalt des Barcodes normalisieren. Dabei wird die Länge des normalisierten Barcodes auf max. 64 Zeichen begrenzt, um noch lesbare Barcodes zu erzeugen.
 		String barcodeInhaltNormalisiert = ((barcodeInhalt == null) || barcodeInhalt.trim().isBlank()) ? "" : barcodeInhalt.trim();
@@ -117,8 +126,8 @@ public final class ReportingBarcodeUtils {
 	public static @NotNull String erzeuge2DCodeQRCode(final String qrInhalt, final double breiteInMM, final double hoeheInMM,
 			final QRCodeErrorCorrection ecLevel) {
 		// Dimensionen des QR-Codes in mm festlegen.
-		final double breiteMM = (breiteInMM <= 0) ? 50.0 : breiteInMM;
-		final double hoeheMM = (hoeheInMM <= 0) ? 50.0 : hoeheInMM;
+		final double breiteMM = (breiteInMM <= 0) ? STANDARD_BREITE_MM : breiteInMM;
+		final double hoeheMM = (hoeheInMM <= 0) ? STANDARD_HOEHE_QRCODE_MM : hoeheInMM;
 
 		// Inhalt des QR-Codes normalisieren (kein Längen-Cap: ein Abschneiden würde z. B. eine Signatur zerstören).
 		final String qrInhaltNormalisiert = ((qrInhalt == null) || qrInhalt.trim().isBlank()) ? "" : qrInhalt.trim();
@@ -142,7 +151,8 @@ public final class ReportingBarcodeUtils {
 			if (tdc.canEncode()) {
 				symbol = tdc.buildSymbol();
 			} else {
-				throw new ApiOperationException(Response.Status.BAD_REQUEST,
+				// Der Inhalt stammt aus den Reportdaten und nicht aus dem Request: Ein nicht darstellbarer Wert ist ein serverseitiges Problem.
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 						"Der Inhalt kann nicht als QR-Code enkodiert werden: '" + qrInhaltNormalisiert + "'");
 			}
 
@@ -151,6 +161,9 @@ public final class ReportingBarcodeUtils {
 			exporter.setTitle("QR Code");
 
 			return exportToSVGBase64(exporter, g2d -> symbol.draw(g2d, 0.0, 0.0, breiteMM, hoeheMM));
+		} catch (final ApiOperationException ex) {
+			// Die Meldung oben nennt den nicht kodierbaren Inhalt; der allgemeine Catch verpackt sie sonst ein zweites Mal.
+			throw ex;
 		} catch (final Exception ex) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, ex,
 					"Fehler: Beim Erzeugen des QR-Codes aus dem String '" + qrInhaltNormalisiert + "' ist folgender Fehler aufgetreten: " + ex.getMessage());
@@ -159,13 +172,15 @@ public final class ReportingBarcodeUtils {
 
 	/**
 	 * Erzeugt ein leeres, transparentes SVG mit den angegebenen Maßen und gibt diesen als Base64-String zurück.
+	 * <p>Das leere SVG ist die Darstellung einer Lücke: Es hält den Platz im Layout frei, ohne einen Inhalt vorzutäuschen. Die Erzeugungsmethoden
+	 * verwenden es bei leerem Inhalt; Aufrufer, die einen Fehler nicht bis in die Ausgabe durchschlagen lassen dürfen, verwenden es als Ersatz.</p>
 	 *
 	 * @param breiteMM  Die Breite des SVG in Millimetern.
 	 * @param hoeheMM   Die Höhe des SVG in Millimetern.
 	 *
 	 * @return Der Base64-String des leeren, transparenten SVGs.
 	 */
-	private static @NotNull String leeresTransparentesSVG(final double breiteMM, final double hoeheMM) {
+	public static @NotNull String leeresTransparentesSVG(final double breiteMM, final double hoeheMM) {
 		final String leeresSvg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%fmm\" height=\"%fmm\" viewBox=\"0 0 %f %f\"></svg>"
 				.formatted(breiteMM, hoeheMM, breiteMM, hoeheMM);
 		return SVG_DATA_URI_PREFIX + Base64.getEncoder().encodeToString(leeresSvg.getBytes(StandardCharsets.UTF_8));

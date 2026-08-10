@@ -457,13 +457,20 @@ public class PdfFactory {
 	 *                     unterscheiden.
 	 * @param zos Der {@code ZipOutputStream}, zu dem die PDF-Datei hinzugefügt wird
 	 *
-	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler bei der Generierung der PDF-Datei auftritt
+	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler bei der Generierung der PDF-Datei auftritt. Ein bereits klassifizierter Fehler des
+	 *                               Builders behält seinen Status.
 	 */
 	private void addPdfToZip(final ReportBuilderPdf pdfBuilder, final String eintragsname, final ZipOutputStream zos) throws ApiOperationException {
 		try {
 			zos.putNextEntry(new ZipEntry(eintragsname));
 			zos.write(pdfBuilder.generate());
 			zos.closeEntry();
+		} catch (final ApiOperationException e) {
+			// Der Builder klassifiziert den Fehler bereits nach seiner Quelle; ohne diesen Zweig macht die Sammelausgabe daraus einen Serverfehler.
+			// Protokolliert wird allein der Dateiname: Er ist bei einer Sammelausgabe die einzige Angabe, welches Dokument betroffen ist. Die Meldung
+			// selbst steht bereits im Eintrag der Fehlerquelle und wird mit der Exception weitergereicht.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte nicht erzeugt werden.");
+			throw e;
 		} catch (final Exception e) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4,
 					"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());

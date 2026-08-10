@@ -3,6 +3,9 @@ package de.svws_nrw.module.reporting.html.dialects;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 
+import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.module.reporting.builders.ReportBuilderUtils;
+
 import java.util.Set;
 
 /**
@@ -48,7 +51,9 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 	@Override
 	public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
 		if (EXPRESSION_NAME.equals(expressionObjectName)) {
-			return new ConvertExpressionHelper();
+			// Der Logger des laufenden Reports reist im Context mit. So schreiben die Hilfsmethoden in den Log genau der Ausgabe, die sie gerade
+			// erzeugen - der Dialekt selbst ist an der geteilten TemplateEngine registriert und kennt keinen Report.
+			return new ConvertExpressionHelper((context.getVariable(ReportBuilderUtils.VARIABLE_LOGGER) instanceof final Logger logger) ? logger : null);
 		}
 		return null;
 	}

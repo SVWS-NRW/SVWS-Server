@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.Set;
 
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -72,22 +70,17 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	 *
 	 * @return Ein Byte-Array, das den generierten PDF-Report repräsentiert
 	 *
-	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler während der Generierung des PDF-Reports auftritt
+	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler während der Generierung des PDF-Reports auftritt. Der Fehler des Renderers wird
+	 *                               unverändert weitergegeben - mit seinem Status, seiner Meldung und ohne einen zusätzlichen Logeintrag: Der Builder
+	 *                               kennt keinen Zusammenhang, den nicht der Renderer selbst, der Stacktrace oder die Sammelausgabe genauer benennen.
 	 */
 	@Override
 	protected byte[] generateInternalByteArray() throws ApiOperationException {
-		try {
-			final int htmlLength = this.builderContext.getHtmlInput().length() * 2;
-			final int initialSize = Math.clamp(htmlLength, 8 * 1024, 1024 * 1024);
-			final ByteArrayOutputStream baoStream = new ByteArrayOutputStream(initialSize);
-			this.builderContext.getRenderer().renderPdf(this.builderContext.getHtmlInput(), this.reportBuilderContext.getRootPfad(), baoStream);
-			return baoStream.toByteArray();
-		} catch (final ApiOperationException e) {
-			this.reportBuilderContext.getLogger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Das Rendern der PDF-Datei aus dem HTML-Inhalt hat einen Fehler verursacht: " + e.getMessage());
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
-					"### FEHLER: Das Rendern der PDF-Datei aus dem HTML-Inhalt hat einen Fehler verursacht: " + e.getMessage());
-		}
+		final int htmlLength = this.builderContext.getHtmlInput().length() * 2;
+		final int initialSize = Math.clamp(htmlLength, 8 * 1024, 1024 * 1024);
+		final ByteArrayOutputStream baoStream = new ByteArrayOutputStream(initialSize);
+		this.builderContext.getRenderer().renderPdf(this.builderContext.getHtmlInput(), this.reportBuilderContext.getRootPfad(), baoStream);
+		return baoStream.toByteArray();
 	}
 
 }

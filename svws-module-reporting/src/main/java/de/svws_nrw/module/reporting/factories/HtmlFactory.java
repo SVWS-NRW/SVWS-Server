@@ -199,12 +199,14 @@ public final class HtmlFactory {
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der HTML-Builder.");
 
-		// Lade den Inhalt des HTML-Codes aus dem Template.
+		// Lade den Inhalt des HTML-Codes aus dem Template. Eine leere Datei wird hier mitgeprüft: Sie ist als Vorlage ebenso unbrauchbar wie eine nicht
+		// lesbare und ist als interne Ressource ein Serverfehler. Ohne die Prüfung lehnte sie erst der Builder-Kontext ab - mit falschem Status.
 		final String htmlTemplateCode = ResourceUtils.text(reportingReportvorlage.getRootPfadHtmlTemplate());
-		if (htmlTemplateCode == null) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
+		if ((htmlTemplateCode == null) || htmlTemplateCode.isBlank()) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden "
+					+ "oder ist leer.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden.");
+					"### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden oder ist leer.");
 		}
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
@@ -230,6 +232,16 @@ public final class HtmlFactory {
 		final String contextBezeichnung = htmlContextInitializer.einzelContextBezeichnung();
 		final HtmlContext<?> baseContext = mapHtmlContexts.get(contextBezeichnung);
 
+		// Ein fehlender Context und ein Context ohne Aufteilungsfähigkeit sind verschiedene Fehler und brauchen verschiedene Meldungen: Die Typprüfung unten
+		// kann beides nicht unterscheiden und würde einen fehlenden Context als fehlende Fähigkeit ausweisen. Beide Fälle setzen eine fehlkonfigurierte
+		// Registry voraus.
+		if (baseContext == null) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
+					"FEHLER: Der Kontext " + contextBezeichnung + " für die Aufteilung in Einzeldokumente wurde nicht aufgebaut.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"FEHLER: Der Kontext " + contextBezeichnung + " für die Aufteilung in Einzeldokumente wurde nicht aufgebaut.");
+		}
+
 		if (baseContext instanceof final HtmlContextAufteilbar<?> aufteilbarerContext) {
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 					"Erzeuge einzelne Kontexte für " + contextBezeichnung + " für Template " + reportingReportvorlage.name());
@@ -241,6 +253,8 @@ public final class HtmlFactory {
 				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
 			}
 		} else {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
+					"FEHLER: Der Kontext " + contextBezeichnung + " unterstützt das Aufteilen in Einzeldokumente nicht.");
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"FEHLER: Der Kontext " + contextBezeichnung + " unterstützt das Aufteilen in Einzeldokumente nicht.");
 		}

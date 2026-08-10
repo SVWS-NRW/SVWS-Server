@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.factories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,16 +22,19 @@ import java.util.zip.ZipInputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Tests der {@link PdfFactory}: die Erzeugung der PDF-Builder aus den HTML-Buildern und die Sammelausgabe mehrerer PDF-Dateien als ZIP.
  * <p>Anlass für die Namensvergabe im ZIP ist, dass {@code putNextEntry} bei einem bereits vergebenen Eintragsnamen eine {@code ZipException} wirft. Zwei
- * Personen mit gleichem namensbasiertem Dateinamen genügten, um die gesamte Sammelausgabe abzubrechen.</p>
+ * Personen mit gleichem namensbasiertem Dateinamen genügen, um die gesamte Sammelausgabe abzubrechen.</p>
  * <p>Geprüft wird über die tatsächlich erzeugten ZIP-Bytes, nicht über eine interne Hilfsmethode: Nur so ist belegt, dass der Eintrag auch wirklich
  * geschrieben werden kann. Die PDF-Builder sind dabei gemockt, weil das Rendern echter PDF-Dateien Schriftarten und Renderer-Ressourcen erfordern würde und
  * für die Namensvergabe ohne Belang ist. Dass die IDs auf dem produktiven Weg überhaupt bis zum PDF-Builder gelangen, sichert dafür der eigene Abschnitt
@@ -46,13 +51,29 @@ class TestPdfFactory {
 	/** Die Factory, deren Sammelausgabe geprüft wird. */
 	private PdfFactory pdfFactory;
 
+	/** Die Liste, die die Einträge des Loggers sammelt. */
+	private LogConsumerList log;
+
 
 	@BeforeEach
 	void setUp() throws ApiOperationException {
 		reportingContext = mock(ReportingContext.class);
-		when(reportingContext.logger()).thenReturn(new Logger());
+		final Logger logger = new Logger();
+		log = new LogConsumerList();
+		logger.addConsumer(log);
+		when(reportingContext.logger()).thenReturn(logger);
 		// Die Factory verlangt mindestens einen HTML-Builder. Für die Sammelausgabe werden die PDF-Builder direkt übergeben.
 		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
+	}
+
+	/**
+	 * Gibt die Texte aller Logeinträge mit dem Level ERROR zurück. Die Einrückung, die der Logger dem Text voranstellt, wird dabei entfernt: Geprüft wird
+	 * die Meldung, nicht ihre Formatierung.
+	 *
+	 * @return Die Texte der ERROR-Logeinträge in der Reihenfolge ihres Auftretens.
+	 */
+	private List<String> fehlermeldungenImLog() {
+		return log.getLogData().stream().filter(eintrag -> eintrag.getLevel() == LogLevel.ERROR).map(eintrag -> eintrag.getText().strip()).toList();
 	}
 
 
@@ -316,6 +337,27 @@ class TestPdfFactory {
 
 		assertEquals(List.of("Bescheinigung_Meier-4711.pdf", "Bescheinigung_Meier-4712.pdf", "Bescheinigung_Meier-4713.pdf"),
 				eintragsnamen(pdfFactory.createZIP(pdfBuilders)));
+	}
+
+
+	// ##### Fehlerweitergabe der Sammelausgabe #####
+
+	@Test
+	void testDerStatusEinesBuildersUeberlebtDieSammelausgabe() throws Exception {
+		// Die Sammelausgabe darf den Status des Builders nicht verschärfen - sonst erreicht die Klassifikation der Renderer den API-Rand auf dem Weg
+		// über das ZIP nicht.
+		final ApiOperationException ursprung = new ApiOperationException(Status.NOT_FOUND, "FEHLER: Der Stundenplan zur ID 4711 wurde nicht gefunden.");
+		final ReportBuilderPdf pdfBuilder = pdfBuilder("Bescheinigung_Meier", Set.of(4711L));
+		when(pdfBuilder.generate()).thenThrow(ursprung);
+
+		final List<ReportBuilderPdf> pdfBuilders = List.of(pdfBuilder);
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> pdfFactory.createZIP(pdfBuilders));
+		assertSame(ursprung, aoe, "Die ursprüngliche Exception muss unverändert durchgereicht werden.");
+		assertEquals(Status.NOT_FOUND, aoe.getStatus());
+		// Der Dateiname ist bei einer Sammelausgabe die einzige Angabe, welches Dokument betroffen ist - und damit das Einzige, was diese Ebene beiträgt.
+		// Die Meldung der Fehlerquelle gehört nicht hinein: Sie steht bereits in deren eigenem Eintrag und reist mit der Exception weiter.
+		assertEquals(List.of("### FEHLER: Die PDF-Datei 'Bescheinigung_Meier' konnte nicht erzeugt werden."), fehlermeldungenImLog(),
+				"Die Sammelausgabe muss genau ihren eigenen Zusammenhang protokollieren.");
 	}
 
 }

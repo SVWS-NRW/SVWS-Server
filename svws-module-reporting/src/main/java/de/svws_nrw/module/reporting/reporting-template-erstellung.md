@@ -408,6 +408,18 @@ Die wichtigsten Funktionen:
 
 Die vollständige Liste steht in der Java-Klasse [`html/dialects/ConvertExpressionHelper.java`](html/dialects/ConvertExpressionHelper.java) – jede öffentliche Methode dort ist als `#convert.methodenName(...)` aufrufbar. Siehe auch [Abschnitt 14](#14-referenz-der-dialekt-convert).
 
+**Barcodes und QR-Codes immer über `#convert` einbinden.** Die beiden Funktionen liefern **immer** eine
+Bildquelle – auch dann, wenn der Inhalt leer ist oder sich nicht darstellen lässt. Letzteres kommt vor:
+Ein Code128-Barcode und ein QR-Code kennen ohne festen Zeichensatz nur den Zeichenvorrat bis
+ISO-8859-1; ein Name in kyrillischer oder chinesischer Schrift lässt sich damit nicht kodieren. In
+diesen Fällen erscheint an der Stelle eine leere Fläche in den angeforderten Maßen, der Report wird
+aber fertig gedruckt, und der Grund steht als Warnung im Log.
+
+Das gilt nur für den Weg über `#convert`. Die zugrunde liegende Klasse `ReportingBarcodeUtils` direkt
+aufzurufen ist **nicht vorgesehen**: Sie meldet einen nicht darstellbaren Inhalt als Fehler, weil
+Aufrufer außerhalb der Vorlagen – etwa die Signatur-QR-Codes der Schulbescheinigung – darauf angewiesen
+sind. In einer Vorlage würde derselbe Fehler die gesamte Ausgabe abbrechen.
+
 ### Icons einbinden – der Dialekt #icon
 
 Für kleine Symbole (z. B. die Kennzeichnung externer Schüler) gibt es den Dialekt **`#icon`**. Er liefert ein fertiges `<img>`-Element mit dem Icon als eingebettetem SVG – deshalb immer mit `th:utext` ausgeben (nicht `th:text`):
@@ -622,6 +634,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
   `toCheckboxSVG(boolean)`, `toCheckboxSVG(boolean, groesse)`,
   `to2DCodeQRCodeAsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)`,
   `toBarcodeCode128AsSvgHtmlImageSource(inhalt, breiteMM, hoeheMM)`.
+  Die beiden Code-Funktionen liefern immer eine Bildquelle; bei leerem oder nicht darstellbarem Inhalt
+  eine leere Fläche statt eines Abbruchs (siehe [Abschnitt 9](#9-schritt-6--datum-qr-codes--co-dialekt-convert)).
 - **Kompression & Codierung** (für QR-/Barcode-Inhalte): `compressGZipString`, `decompressGZipString`,
   `encodeBase64`/`decodeBase64`, `encodeBase45`/`decodeBase45`, `encodeBase32`/`decodeBase32`.
 

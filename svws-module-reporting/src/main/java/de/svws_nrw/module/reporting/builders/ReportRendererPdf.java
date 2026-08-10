@@ -45,7 +45,9 @@ public final class ReportRendererPdf {
 	 * @param rootPfad Der Wurzelpfad, der zur Auflösung von Ressourcen wie Fonts dient.
 	 * @param outputStream Der OutputStream, in den das generierte PDF-Dokument geschrieben wird.
 	 *
-	 * @throws ApiOperationException Wird geworfen, wenn ein I/O-Fehler während des Renderings auftritt.
+	 * @throws ApiOperationException Wird geworfen, wenn ein I/O-Fehler während des Renderings auftritt. Der Root-Pfad und die Schriftarten sind interne
+	 *                               Ressourcen des Servers, ihr Fehlen wird daher mit {@code INTERNAL_SERVER_ERROR} gemeldet. Eine bereits klassifizierte
+	 *                               {@link ApiOperationException} behält ihren Status.
 	 */
 	public void renderPdf(final String html, final String rootPfad, final OutputStream outputStream)
 			throws ApiOperationException {
@@ -71,7 +73,7 @@ public final class ReportRendererPdf {
 				if (logger != null) {
 					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
 				}
-				throw new ApiOperationException(Response.Status.NOT_FOUND,
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
 						"### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
 			}
 			final String baseURI = baseRes.toString();
@@ -87,6 +89,9 @@ public final class ReportRendererPdf {
 
 			// PDF generieren
 			builder.run();
+		} catch (final ApiOperationException e) {
+			// Bereits klassifizierte Fehler behalten ihren Status - sonst würde der allgemeine Catch die Meldung überschreiben und erneut protokollieren.
+			throw e;
 		} catch (final Exception e) {
 			if (logger != null) {
 				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Das PDF konnte aufgrund des folgenden Fehlers nicht gerendert werden: " + e.getMessage());
@@ -125,6 +130,7 @@ public final class ReportRendererPdf {
 	 * @param embed Gibt an, ob die Schriftart in das PDF eingebettet werden soll (true für Einbettung, false für Referenzierung).
 	 *
 	 * @throws ApiOperationException Wird ausgelöst, wenn die Schriftartendatei nicht gefunden wird oder ein I/O-Fehler beim Laden der Schriftart auftritt.
+	 *                               Die Schriftarten liegen im Ressourcenverzeichnis des Servers, ihr Fehlen ist daher {@code INTERNAL_SERVER_ERROR}.
 	 */
 	private void registerFont(final PdfRendererBuilder builder, final String path, final String family, final int weight,
 			final BaseRendererBuilder.FontStyle style, final boolean embed) throws ApiOperationException {
@@ -134,13 +140,16 @@ public final class ReportRendererPdf {
 				if (logger != null) {
 					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
 				}
-				throw new ApiOperationException(Response.Status.NOT_FOUND, "### FEHLER: Schriftart nicht gefunden: " + path);
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Schriftart nicht gefunden: " + path);
 			}
+		} catch (final ApiOperationException e) {
+			// Die eigene Meldung oben liegt innerhalb des try-Blocks und würde sonst vom allgemeinen Catch ein zweites Mal protokolliert.
+			throw e;
 		} catch (final Exception e) {
 			if (logger != null) {
 				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
 			}
-			throw new ApiOperationException(Response.Status.NOT_FOUND, e, "### FEHLER: Schriftart nicht gefunden: " + path);
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Schriftart nicht gefunden: " + path);
 		}
 		builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream(path), family, weight, style, embed);
 	}

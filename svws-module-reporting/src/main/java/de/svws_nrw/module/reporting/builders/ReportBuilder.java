@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.Response;
  * Abstrakte Klasse für den Aufbau von Reports.
  * Diese Klasse dient als Basis für spezielle Implementierungen von Report-Builder. Sie bietet grundlegende Funktionalitäten wie das Festlegen des Dateinamens,
  * die Generierung des Reports als Byte-Array und die Erstellung einer HTTP-Response mit dem Reportinhalt.
+ * <p>Der Content-Type legt die Implementierung selbst fest; wie die Werte des {@link ReportBuilderContext} ist er interner Zustand und ein fehlender Wert
+ * damit {@code INTERNAL_SERVER_ERROR}.</p>
  *
  * @param <T> Der Rückgabetyp des generierten Outputs (String, byte[])
  */
@@ -35,7 +37,7 @@ public abstract class ReportBuilder<T> {
 			throws ApiOperationException {
 		this.reportBuilderContext = reportBuilderContext.validiert();
 		if ((contentType == null) || contentType.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Content-Type (MIME-Type) des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Content-Type (MIME-Type) des Report-Builders darf nicht leer sein");
 		}
 		this.contentType = contentType;
 		this.dateiname = (dateiname != null) ? dateiname : "";

@@ -22,6 +22,14 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 public final class ReportBuilderUtils {
 
 	/**
+	 * Der Name der Thymeleaf-Variablen, unter der der Logger des laufenden Reports im Context bereitsteht.
+	 * <p>Die Dialekte werden einmalig an der geteilten TemplateEngine registriert und können deshalb keinen Logger als Feld halten. Über diese Variable
+	 * erhält jede Dialekt-Ausführung den Logger genau des Reports, den sie gerade rendert. Der doppelte Unterstrich hält den Namen von den fachlichen
+	 * Context-Variablen der Vorlagen getrennt.</p>
+	 */
+	public static final String VARIABLE_LOGGER = "__logger";
+
+	/**
 	 * Die geteilte TemplateEngine für HTML-Report-Templates. Thymeleaf-TemplateEngines sind thread-sicher und als
 	 * langlebige Singletons konzipiert; die Instanz wird lazy bei erstem Klassenzugriff erzeugt (JVM-garantiert
 	 * thread-sicher) und über alle Builder-Aufrufe hinweg geteilt, damit der Template-Cache der Engine wirkt.

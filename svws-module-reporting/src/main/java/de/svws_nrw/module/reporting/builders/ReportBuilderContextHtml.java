@@ -113,7 +113,7 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	 */
 	public ReportBuilderContextHtml withHtmlTemplate(final String htmlTemplate) throws ApiOperationException {
 		if ((htmlTemplate == null) || htmlTemplate.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Bei der HTML-Erzeugung darf die HTML-Vorlage nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Bei der HTML-Erzeugung darf die HTML-Vorlage nicht leer sein");
 		}
 		this.htmlTemplate = htmlTemplate;
 		return this;
@@ -155,7 +155,7 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	public ReportBuilderContextHtml validiert() throws ApiOperationException {
 		super.validiert();
 		if ((htmlTemplate == null) || htmlTemplate.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die HTML-Vorlage des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Die HTML-Vorlage des Report-Builders darf nicht leer sein");
 		}
 		return this;
 	}

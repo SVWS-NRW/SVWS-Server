@@ -38,7 +38,7 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	public ReportBuilderContextPdf withDateiname(final String dateiname) throws ApiOperationException {
 		if ((dateiname == null) || dateiname.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Dateiname des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Dateiname des Report-Builders darf nicht leer sein");
 		}
 		this.dateiname = dateiname;
 		return this;
@@ -55,7 +55,7 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	public ReportBuilderContextPdf withHtmlInput(final String htmlInput) throws ApiOperationException {
 		if ((htmlInput == null) || htmlInput.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der HTML-Input des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der HTML-Input des Report-Builders darf nicht leer sein");
 		}
 		this.htmlInput = htmlInput;
 		return this;
@@ -102,10 +102,10 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	public ReportBuilderContextPdf validiert() throws ApiOperationException {
 		super.validiert();
 		if ((dateiname == null) || dateiname.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Dateiname des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Dateiname des Report-Builders darf nicht leer sein");
 		}
 		if ((htmlInput == null) || htmlInput.isBlank()) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der HTML-Input des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der HTML-Input des Report-Builders darf nicht leer sein");
 		}
 		return this;
 	}
