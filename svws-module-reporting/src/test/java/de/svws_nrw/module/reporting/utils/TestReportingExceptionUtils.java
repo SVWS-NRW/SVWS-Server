@@ -113,4 +113,73 @@ class TestReportingExceptionUtils {
 		assertTrue(eintraege.stream().anyMatch(eintrag -> eintrag.startsWith("at ")), "Der Stacktrace muss seine Aufrufkette enthalten.");
 	}
 
+	@Test
+	void testMitInfoEntstehenNurInfoEintraege() {
+		// Ein Aufrufer, der den Fehler mit einem Rückfallwert auffängt, darf keinen ERROR-Eintrag hinterlassen: Die Prüfung des Logs in der
+		// ReportingFactory bricht die Ausgabe allein wegen des Eintrags ab, auch ohne Wurf.
+		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.INFO, 0);
+
+		assertAlleEintraegeAufLevel(LogLevel.INFO);
+	}
+
+	@Test
+	void testMitWarningEntstehenNurWarningEintraege() {
+		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.WARNING, 0);
+
+		assertAlleEintraegeAufLevel(LogLevel.WARNING);
+	}
+
+	@Test
+	void testMitErrorBleibenAlleEintraegeAufError() {
+		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.ERROR, 0);
+
+		assertAlleEintraegeAufLevel(LogLevel.ERROR);
+	}
+
+	@Test
+	void testOhneExceptionGiltDasUebergebeneLevelEbenfalls() {
+		ReportingExceptionUtils.logException(BESCHREIBUNG, null, logger, LogLevel.WARNING, 0);
+
+		assertAlleEintraegeAufLevel(LogLevel.WARNING);
+	}
+
+	@Test
+	void testDerEinzugDesLoggersBleibtUnveraendert() {
+		// Ohne Wiederherstellung summiert sich der Einzug über jeden weiteren Log-Eintrag des Reports auf, sobald ein Aufruf nicht mit einem Wurf endet.
+		final int einzugVorher = 8;
+		logger.setIndent(einzugVorher);
+
+		for (final LogLevel loglevel : List.of(LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR)) {
+			ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, loglevel, 4);
+			assertEquals(einzugVorher, logger.getIndent(), "Der Einzug muss nach dem Aufruf mit " + loglevel + " derselbe sein wie davor.");
+		}
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, null, logger, LogLevel.WARNING, 4);
+		assertEquals(einzugVorher, logger.getIndent(), "Auch ohne Exception muss der Einzug wiederhergestellt werden.");
+	}
+
+
+	/**
+	 * Erzeugt eine Exception mit Ursache, damit der Log-Block alle vier Teile enthält - Beschreibung, Fehlertyp mit Meldung, Ursachenkette und Stacktrace.
+	 *
+	 * @return Die Exception mit Ursache.
+	 */
+	private static ApiOperationException exceptionMitUrsache() {
+		final IllegalStateException ursache = new IllegalStateException("Die Schriftart konnte nicht geladen werden.");
+		return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, ursache, MELDUNG);
+	}
+
+
+	/**
+	 * Prüft, dass sämtliche Einträge des Logs auf dem erwarteten Level stehen.
+	 *
+	 * @param erwartet Das Level, das für den gesamten Block gilt.
+	 */
+	private void assertAlleEintraegeAufLevel(final LogLevel erwartet) {
+		final List<String> abweichende = log.getLogData().stream().filter(eintrag -> eintrag.getLevel() != erwartet)
+				.map(eintrag -> eintrag.getLevel() + ": " + eintrag.getText().strip()).toList();
+		assertTrue(abweichende.isEmpty(), "Das übergebene Level gilt für den gesamten Block, abweichend sind: " + abweichende);
+		assertFalse(log.getLogData().isEmpty(), "Der Block darf nicht leer sein, sonst prüft der Test nichts.");
+	}
+
 }

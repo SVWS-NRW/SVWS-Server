@@ -43,6 +43,11 @@ public final class ReportingExceptionUtils {
 
 	/**
 	 * Erzeugt Log-Einträge für die Inhalte der übergebenen Exception, inklusive Causes und StackTrace.
+	 * <p>Das übergebene Log-Level gilt für den gesamten Block. Ein Aufrufer, der einen Fehler abfängt und mit einem Rückfallwert weiterarbeitet, protokolliert
+	 * damit unterhalb von {@link LogLevel#ERROR} und bricht den Report nicht ab: Die Prüfung des Logs in der ReportingFactory beendet die Ausgabe, sobald ein
+	 * Eintrag mit {@code ERROR} vorliegt.</p>
+	 * <p>Der Einzug des Loggers ist nach dem Aufruf derselbe wie davor. Andernfalls summierte sich der Einzug aller Aufrufe über die weiteren Log-Einträge des
+	 * Reports auf.</p>
 	 *
 	 * @param beschreibung		Optionale Beschreibung, die im Log vorangestellt wird.
 	 * @param exception 		Die Exception, die geworfen wurde.
@@ -52,24 +57,26 @@ public final class ReportingExceptionUtils {
 	 */
 	public static void logException(final String beschreibung, final Exception exception, final Logger logger, final LogLevel loglevel,
 			final int relativeIndent) {
-		logInfo(beschreibung, logger, loglevel, relativeIndent);
+		final int indentVorAufruf = logger.getIndent();
+		try {
+			logInfo(beschreibung, logger, loglevel, relativeIndent);
 
-		logger.modifyIndent(4);
-
-		if (exception != null) {
-			final String htmlTemplate = (exception instanceof final TemplateProcessingException tpe) ? tpe.getTemplateName() : "";
-			final String templateOriginalString = htmlTemplate.isEmpty() ? "" : ("(template: \"" + htmlTemplate + "\"");
-			final String templateReplaceString = htmlTemplate.isEmpty() ? "" : "(REMOVED TEMPLATE FROM LOG";
-
-			logExceptionTypeAndMessage(exception, logger, templateOriginalString, templateReplaceString);
-			logErrorCauses(exception, logger, templateOriginalString, templateReplaceString);
-			logStackTrace(exception, logger, loglevel, templateOriginalString, templateReplaceString);
-		} else {
-			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler ohne Exception - Es werden im Folgenden nur Log-Daten ausgegeben.");
 			logger.modifyIndent(4);
-		}
 
-		logger.modifyIndent(-4);
+			if (exception != null) {
+				final String htmlTemplate = (exception instanceof final TemplateProcessingException tpe) ? tpe.getTemplateName() : "";
+				final String templateOriginalString = htmlTemplate.isEmpty() ? "" : ("(template: \"" + htmlTemplate + "\"");
+				final String templateReplaceString = htmlTemplate.isEmpty() ? "" : "(REMOVED TEMPLATE FROM LOG";
+
+				logExceptionTypeAndMessage(exception, logger, loglevel, templateOriginalString, templateReplaceString);
+				logErrorCauses(exception, logger, loglevel, templateOriginalString, templateReplaceString);
+				logStackTrace(exception, logger, loglevel, templateOriginalString, templateReplaceString);
+			} else {
+				logger.logLn(loglevel, 0, "### FEHLER: Fehler ohne Exception - Es werden im Folgenden nur Log-Daten ausgegeben.");
+			}
+		} finally {
+			logger.setIndent(indentVorAufruf);
+		}
 	}
 
 	/**
@@ -88,12 +95,12 @@ public final class ReportingExceptionUtils {
 		}
 	}
 
-	private static void logExceptionTypeAndMessage(final Exception exception, final Logger logger, final String templateOriginalString,
-			final String templateReplaceString) {
+	private static void logExceptionTypeAndMessage(final Exception exception, final Logger logger, final LogLevel loglevel,
+			final String templateOriginalString, final String templateReplaceString) {
 		if (exception instanceof final ApiOperationException aoe) {
-			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
+			logger.logLn(loglevel, 0, "### FEHLER: Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
 		} else {
-			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler vom Typ %s".formatted(exception.getClass().getSimpleName()));
+			logger.logLn(loglevel, 0, "### FEHLER: Fehler vom Typ %s".formatted(exception.getClass().getSimpleName()));
 		}
 		logger.modifyIndent(4);
 		// Die Meldung wird für jeden Exception-Typ ausgegeben. Sie ist die eigentliche Fehlerbeschreibung und steht sonst nur in der Kopfzeile des Stacktrace.
@@ -102,18 +109,18 @@ public final class ReportingExceptionUtils {
 			if (!templateOriginalString.isEmpty()) {
 				message = message.replace(templateOriginalString, templateReplaceString);
 			}
-			logger.logLn(LogLevel.ERROR, message);
+			logger.logLn(loglevel, message);
 		}
 	}
 
-	private static void logErrorCauses(final Exception exception, final Logger logger, final String templateOriginalString,
+	private static void logErrorCauses(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString,
 			final String templateReplaceString) {
 		// Der Abschnitt zeigt die Ursachenkette und beginnt deshalb erst bei der ersten Ursache: Die Meldung der Exception selbst steht bereits im
 		// Abschnitt darüber. Ohne Ursache entfällt der Abschnitt, statt eine Überschrift über eine Kopie zu setzen.
 		if (exception.getCause() == null) {
 			return;
 		}
-		logger.logLn(LogLevel.ERROR, 0, "### FEHLERGRÜNDE:");
+		logger.logLn(loglevel, 0, "### FEHLERGRÜNDE:");
 		logger.modifyIndent(4);
 		for (Throwable cause = exception.getCause(); cause != null; cause = cause.getCause()) {
 			String message = cause.getMessage();
@@ -121,7 +128,7 @@ public final class ReportingExceptionUtils {
 				if (!templateOriginalString.isEmpty()) {
 					message = message.replace(templateOriginalString, templateReplaceString);
 				}
-				logger.logLn(LogLevel.ERROR, message);
+				logger.logLn(loglevel, message);
 			}
 		}
 		logger.modifyIndent(-4);
@@ -129,7 +136,7 @@ public final class ReportingExceptionUtils {
 
 	private static void logStackTrace(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString,
 			final String templateReplaceString) {
-		logger.logLn(LogLevel.ERROR, 0, "### STACKTRACE:");
+		logger.logLn(loglevel, 0, "### STACKTRACE:");
 		logger.modifyIndent(4);
 
 		final Writer stringWriter = new StringWriter();

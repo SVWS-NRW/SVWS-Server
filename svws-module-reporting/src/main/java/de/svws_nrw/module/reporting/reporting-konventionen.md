@@ -75,6 +75,20 @@ Datei; Regel-Änderungen werden hier gepflegt.
 - **Reports melden Datenfehler nicht sichtbar**; eine NPE in der Druckausgabe ist immer ein Bug,
   kein „sichtbarer Datenfehler“. Fehlende Daten führen zu einer sauberen Lücke (leer oder
   neutraler Platzhalter).
+- **Ein `ERROR`-Logeintrag bedeutet „diesen Report abbrechen“.** `ReportingFactory.pruefeLogAufFehler()`
+  beendet die Ausgabe, sobald das gesammelte Log **irgendeinen** Eintrag mit `LogLevel.ERROR` enthält
+  — auch ohne Wurf. Wer eine Lücke darstellen und weiterlaufen will, protokolliert deshalb höchstens
+  `WARNING`; `ERROR` steht nur dort, wo auch geworfen wird. Ein Catch, der einen Rückfallwert liefert
+  und dabei `ERROR` protokolliert, hebt seinen eigenen Rückfall wieder auf.
+- **Das Log-Level gilt für den gesamten Fehlerblock.** `ReportingExceptionUtils.logException()`
+  schreibt Beschreibung, Fehlertyp, Meldung, Ursachenkette und Stacktrace auf dem übergebenen Level.
+  Ein Aufruf mit `WARNING` hinterlässt damit keinen ERROR-Eintrag und bricht die Ausgabe nicht ab.
+- **Ein Ladefehler wird dort bewertet, wo die Daten gebraucht werden.** Repositories, die der
+  `ReportingContext` für jeden Report aufbaut, protokollieren einen Ladefehler nicht bei der
+  Initialisierung, sondern halten ihn als `ApiOperationException` fest — ein `boolean` verlöre die
+  Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptdatum, folgen
+  `ERROR` und Wurf; sind sie Beiwerk, folgt höchstens eine `WARNING` je Repository-Instanz und die
+  Ausgabe läuft mit einer Lücke weiter (Muster: `ReportingRepositoryStundenplan`).
 - **Nicht darstellbare Werte sind ebenfalls eine Lücke.** Ein vorhandener Wert, der sich nicht
   ausgeben lässt — etwa ein Barcode-Inhalt mit Zeichen, die der Zeichensatz des Codes nicht kennt —,
   darf die Ausgabe nicht abbrechen. Die Vorlagen-Hilfsmethoden fangen das ab, geben eine leere
