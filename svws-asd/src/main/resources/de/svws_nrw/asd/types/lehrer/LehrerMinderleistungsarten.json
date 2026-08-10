@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "ID_200",
 		"idStatistik": "1",
@@ -8,7 +8,7 @@
 			"schluessel": "200",
 			"kuerzel": "200",
 			"text": "Pflichtstundenermäßigung aus Altersgründen",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -21,7 +21,7 @@
 			"schluessel": "210",
 			"kuerzel": "210",
 			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -34,7 +34,7 @@
 			"schluessel": "220",
 			"kuerzel": "220",
 			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -47,7 +47,7 @@
 			"schluessel": "230",
 			"kuerzel": "230",
 			"text": "Beurlaubung (auch Elternzeit), Rückkehr im Laufe des Schuljahres",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -60,7 +60,7 @@
 			"schluessel": "240",
 			"kuerzel": "240",
 			"text": "Langfristige Erkrankung",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -73,7 +73,7 @@
 			"schluessel": "250",
 			"kuerzel": "250",
 			"text": "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -86,7 +86,7 @@
 			"schluessel": "255",
 			"kuerzel": "255",
 			"text": "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -99,7 +99,7 @@
 			"schluessel": "260",
 			"kuerzel": "260",
 			"text": "Wiedereingliederungsmaßnahme",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -112,7 +112,7 @@
 			"schluessel": "270",
 			"kuerzel": "270",
 			"text": "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -125,7 +125,7 @@
 			"schluessel": "275",
 			"kuerzel": "275",
 			"text": "Rückgabe der Vorgriffsstunden",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -138,7 +138,7 @@
 			"schluessel": "280",
 			"kuerzel": "280",
 			"text": "Seiteneinsteigerentlastung",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2009,
 			"auslaufdauer": 0
@@ -151,7 +151,7 @@
 			"schluessel": "290",
 			"kuerzel": "290",
 			"text": "Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -164,7 +164,7 @@
 			"schluessel": "300",
 			"kuerzel": "300",
 			"text": "Sonstige Ermäßigungen aus besonderen persönlichen Gründen",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -177,7 +177,7 @@
 			"schluessel": "350",
 			"kuerzel": "350",
 			"text": "Abrundung der Pflichtstundenzahl aufgrund von § 2 Abs. 1 AVO-RL",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -190,7 +190,7 @@
 			"schluessel": "360",
 			"kuerzel": "360",
 			"text": "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -203,7 +203,7 @@
 			"schluessel": "365",
 			"kuerzel": "365",
 			"text": "Unterschreitung der Pflichtstundenzahl wegen COVID-19",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -216,7 +216,7 @@
 			"schluessel": "370",
 			"kuerzel": "370",
 			"text": "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -229,7 +229,7 @@
 			"schluessel": "380",
 			"kuerzel": "380",
 			"text": "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0

@@ -1,5 +1,5 @@
 {
-	"version": 6,
+	"version": 7,
 	"daten": [ {
 		"bezeichner": "ID_310",
 		"idStatistik": "1",
@@ -8,7 +8,7 @@
 			"schluessel": "310",
 			"kuerzel": "310",
 			"text": "Seiteneinstieg: Entlastung für berufsbegleitende Ausbildung für Universitätsabsolventen/-innen OBAS",
-			"schulformen": ["BK","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB"],
+			"schulformen": ["BK","G","GY","H","KS","PS","R","S","SB","SG","SK","SR","V","WB"],
 			"gueltigVon": 2010,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -21,7 +21,7 @@
 			"schluessel": "315",
 			"kuerzel": "315",
 			"text": "Seiteneinstieg: Entlastung für berufsbegleitende Ausbildung für FH - Absolventen/-innen",
-			"schulformen": ["BK","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","G","GY","H","KS","PS","R","S","SB","SG","SK","SR","V","WB"],
 			"gueltigVon": 2010,
 			"gueltigBis": 2024,
 			"auslaufdauer": 0
@@ -34,7 +34,7 @@
 			"schluessel": "320",
 			"kuerzel": "320",
 			"text": "Seiteneinstieg: Entlastung für Pädagogische Einführung in den Schuldienst",
-			"schulformen": ["BK","G","GE","GY","H","PS","R","SB","SK","V","WB" ],
+			"schulformen": ["BK","G","GE","GY","H","PS","R","SB","SK","V","WB"],
 			"gueltigVon": 2010,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -47,7 +47,7 @@
 			"schluessel": "321",
 			"kuerzel": "321",
 			"text": "Werkstattlehrer/-in: Praktisch-pädagogische Einführung",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2021,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -60,7 +60,7 @@
 			"schluessel": "325",
 			"kuerzel": "325",
 			"text": "Teilnahme an Qualifizierungsmaßnahme: Einführung in die Grundschuldidaktik",
-			"schulformen": ["G","PS","V" ],
+			"schulformen": ["G","PS","V"],
 			"gueltigVon": 2019,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -73,7 +73,7 @@
 			"schluessel": "326",
 			"kuerzel": "326",
 			"text": "Teilnahme am Landesprogramm Internationale Lehrkräfte fördern (ILF): Entlastung für Qualifizierung",
-			"schulformen": ["BK","FW","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2021,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -86,7 +86,7 @@
 			"schluessel": "330",
 			"kuerzel": "330",
 			"text": "Schulische Ausbildungstätigkeit OBAS (§ 11 Abs. 5 i. V. mit § 9 Abs. 2)",
-			"schulformen": ["BK","G","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","G","GY","H","KS","PS","R","S","SB","SG","SK","SR","V","WB"],
 			"gueltigVon": 2012,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -99,7 +99,7 @@
 			"schluessel": "340",
 			"kuerzel": "340",
 			"text": "Erfahrene Lehrkraft: Entlastung für Pädagogische Einführung in den Schuldienst",
-			"schulformen": ["BK","G","GE","GY","H","PS","R","SB","SK","V","WB" ],
+			"schulformen": ["BK","G","GE","GY","H","PS","R","SB","SK","V","WB"],
 			"gueltigVon": 2012,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -112,7 +112,7 @@
 			"schluessel": "500",
 			"kuerzel": "500",
 			"text": "Wahrnehmung besonderer schulischer Aufgaben und zum Ausgleich besonderer unterrichtlicher Belastungen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -125,7 +125,7 @@
 			"schluessel": "510",
 			"kuerzel": "510",
 			"text": "Schulleitungspauschale",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -138,7 +138,7 @@
 			"schluessel": "520",
 			"kuerzel": "520",
 			"text": "Schulübergreifende Aufgaben kleineren Umfangs",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -151,7 +151,7 @@
 			"schluessel": "525",
 			"kuerzel": "525",
 			"text": "Zukunftsschulen NRW - Anrechnungsstunden für Koordination und Dokumentation der Netzwerkarbeit",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2022,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -164,7 +164,7 @@
 			"schluessel": "530",
 			"kuerzel": "530",
 			"text": "SV-Verbindungslehrer/-in, Beratungslehrer/-in",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -177,7 +177,7 @@
 			"schluessel": "535",
 			"kuerzel": "535",
 			"text": "Startchancen-Programm - Entlastungsstunden",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -190,7 +190,7 @@
 			"schluessel": "540",
 			"kuerzel": "540",
 			"text": "Beratungsaufgaben in der Sek. I",
-			"schulformen": ["FW","GE","GY","H","PS","R","S","SG","SK","SR","V" ],
+			"schulformen": ["FW","GE","GY","H","HI","KS","PS","R","S","SG","SK","SR","V","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -203,7 +203,7 @@
 			"schluessel": "550",
 			"kuerzel": "550",
 			"text": "Laufbahnberatung und -kontrolle in der gymnasialen Oberstufe",
-			"schulformen": ["BK","FW","GE","GY","PS","SB","SG","WB" ],
+			"schulformen": ["BK","FW","GE","GY","HI","PS","SB","SG","WB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -216,7 +216,7 @@
 			"schluessel": "590",
 			"kuerzel": "590",
 			"text": "Koordinations- und Beratungsaufgaben im Landesvorhaben KAoA einschl. STAR",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -229,7 +229,7 @@
 			"schluessel": "600",
 			"kuerzel": "600",
 			"text": "Teamabsprachen, Unterrichtsvorbereitung für Gemeinsames Lernen",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2021,
 			"auslaufdauer": 0
@@ -238,7 +238,7 @@
 		"schluessel": "600",
 		"kuerzel": "600",
 		"text": "Beratung, Teamabsprachen, Unterrichtsvorbereitung für Gemeinsames Lernen",
-		"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V" ],
+		"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WF"],
 		"gueltigVon": 2022,
 		"gueltigBis": null,
 		"auslaufdauer": 0
@@ -251,7 +251,7 @@
 			"schluessel": "605",
 			"kuerzel": "605",
 			"text": "Fachleitung am Zentrum für schulpraktische Lehrerausbildung (Vorbereitungsdienst, OBAS, VOBASOF, Pädagogische Einführung in den Schuldienst)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -264,7 +264,7 @@
 			"schluessel": "610",
 			"kuerzel": "610",
 			"text": "Personalratstätigkeit",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -277,7 +277,7 @@
 			"schluessel": "615",
 			"kuerzel": "615",
 			"text": "Schwerbehindertenvertretung",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -290,7 +290,7 @@
 			"schluessel": "620",
 			"kuerzel": "620",
 			"text": "Schulische Ausbildundstätigkeit VOBASOF (qualifizierte Fachkraft, § 11 VOBASOF)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -303,7 +303,7 @@
 			"schluessel": "625",
 			"kuerzel": "625",
 			"text": "Fortbildungslehrgänge für technische Lehrer aus Entwicklungsländern (LIB)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2007,
 			"auslaufdauer": 0
@@ -312,7 +312,7 @@
 			"schluessel": "625",
 			"kuerzel": "625",
 			"text": "Fachleitung am Zentrum für schulpraktische Lehrerausbildung (Eignungs- und Orientierungspraktikum)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -325,7 +325,7 @@
 			"schluessel": "630",
 			"kuerzel": "630",
 			"text": "Lehrkraft in Ausbildung: Schulpraktische Ausbildung am Zentrum für schulpraktische Ausbildung (§ 7 VOBASOF)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -338,7 +338,7 @@
 			"schluessel": "635",
 			"kuerzel": "635",
 			"text": "Fortbildung und Qualifikation, Medien und Datenschutz",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -351,7 +351,7 @@
 			"schluessel": "640",
 			"kuerzel": "640",
 			"text": "Fachberatung Schulaufsicht",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -364,7 +364,7 @@
 			"schluessel": "645",
 			"kuerzel": "645",
 			"text": "Sport sowie für Beratung und Koordination im Verbundsystem Schule und Leistungssport",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -377,7 +377,7 @@
 			"schluessel": "650",
 			"kuerzel": "650",
 			"text": "Mitarbeit in Kommunalen Integrationszentren",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -390,7 +390,7 @@
 			"schluessel": "655",
 			"kuerzel": "655",
 			"text": "Auslandstätigkeit (Landesprogramm Lehrkraft im Ausland)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -403,7 +403,7 @@
 			"schluessel": "665",
 			"kuerzel": "665",
 			"text": "Laborschule Bielefeld / Bildungspol. Sonderaufgaben",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -412,7 +412,7 @@
 			"schluessel": "665",
 			"kuerzel": "665",
 			"text": "Fachleitung am Zentrum für schulpraktische Lehrerausbildung (Praxissemester)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -425,7 +425,7 @@
 			"schluessel": "670",
 			"kuerzel": "670",
 			"text": "Richtlinien und Lehrpläne / learn:line",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -438,7 +438,7 @@
 			"schluessel": "675",
 			"kuerzel": "675",
 			"text": "GÖS (GanzTag und Öffnung von Schule)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -451,7 +451,7 @@
 			"schluessel": "680",
 			"kuerzel": "680",
 			"text": "Archivpädagogen Schülertheater Pusteblume / Koordination GU",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -464,7 +464,7 @@
 			"schluessel": "685",
 			"kuerzel": "685",
 			"text": "Modellversuche / BLK",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -477,7 +477,7 @@
 			"schluessel": "690",
 			"kuerzel": "690",
 			"text": "Musik / Tanz / Theater",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -490,7 +490,7 @@
 			"schluessel": "695",
 			"kuerzel": "695",
 			"text": "Andere Lernorte",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -503,7 +503,7 @@
 			"schluessel": "700",
 			"kuerzel": "700",
 			"text": "Schaustellerkinder",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -516,7 +516,7 @@
 			"schluessel": "705",
 			"kuerzel": "705",
 			"text": "Gesundheitserziehung",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -529,7 +529,7 @@
 			"schluessel": "710",
 			"kuerzel": "710",
 			"text": "Landerschülervertretungsverbindungslehrer / Go to School",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -542,7 +542,7 @@
 			"schluessel": "715",
 			"kuerzel": "715",
 			"text": "Stiftung (Wirtschaft und Schule / Pra WiS, Selbstständige Schule)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -551,7 +551,7 @@
 			"schluessel": "715",
 			"kuerzel": "715",
 			"text": "Eignungspraktikum Mentor Schule",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": 2017,
 			"auslaufdauer": 0
@@ -564,7 +564,7 @@
 			"schluessel": "720",
 			"kuerzel": "720",
 			"text": "Pädaudiologische Zentren und Frühförderzentren für Sehgeschädigte",
-			"schulformen": ["S","SB" ],
+			"schulformen": ["KS","S","SB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -577,7 +577,7 @@
 			"schluessel": "725",
 			"kuerzel": "725",
 			"text": "Tätigkeit bei EU-Geschäftsstellen",
-			"schulformen": ["BK" ],
+			"schulformen": ["BK"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -590,7 +590,7 @@
 			"schluessel": "730",
 			"kuerzel": "730",
 			"text": "Curriculumentwicklung / Zentrale Prüfungen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -603,7 +603,7 @@
 			"schluessel": "735",
 			"kuerzel": "735",
 			"text": "Förderung des Theatertreffens für behinderte Kinder und Jugendliche",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -616,7 +616,7 @@
 			"schluessel": "740",
 			"kuerzel": "740",
 			"text": "Archivpädagogik",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -629,7 +629,7 @@
 			"schluessel": "745",
 			"kuerzel": "745",
 			"text": "Bildungspolitische Sonderaufgaben",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -642,7 +642,7 @@
 			"schluessel": "750",
 			"kuerzel": "750",
 			"text": "Sonstiger Ausgleichsbedarf, der aus wechselnden Ausgleichs- und Mehrbedarfen finanziert ist.",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null, 
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -655,7 +655,7 @@
 			"schluessel": "765",
 			"kuerzel": "765",
 			"text": "Schulische/-r Mentor/-in: Praxissemester",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2013,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -668,7 +668,7 @@
 			"schluessel": "766",
 			"kuerzel": "766",
 			"text": "Programm Lehrkräfte Plus: Entlastung für die Betreuung von Teilnehmer/-innen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2021,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -681,7 +681,7 @@
 			"schluessel": "770",
 			"kuerzel": "770",
 			"text": "Individuelle Beratung der Schülerinnen und Schüler im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["GE","GY","H","R","SK" ],
+			"schulformen": ["GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -694,7 +694,7 @@
 			"schluessel": "771",
 			"kuerzel": "771",
 			"text": "Innerschulischer Transfer der Maßnahmen im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["GE","GY","H","R","SK" ],
+			"schulformen": ["GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -707,7 +707,7 @@
 			"schluessel": "772",
 			"kuerzel": "772",
 			"text": "Durchführung soziales Training im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["GE","GY","H","R","SK" ],
+			"schulformen": ["GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -720,7 +720,7 @@
 			"schluessel": "773",
 			"kuerzel": "773",
 			"text": "Berufsfeld- oder fachbereichsübergreifende Berufsorientierung im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK" ],
+			"schulformen": ["BK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -733,7 +733,7 @@
 			"schluessel": "774",
 			"kuerzel": "774",
 			"text": "Erweiterte Blockpraktika/Praxismodul „Berufliche Orientierung“ im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK" ],
+			"schulformen": ["BK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -746,7 +746,7 @@
 			"schluessel": "775",
 			"kuerzel": "775",
 			"text": "Sprachförderung im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK" ],
+			"schulformen": ["BK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -759,7 +759,7 @@
 			"schluessel": "776",
 			"kuerzel": "776",
 			"text": "Übergangssicherung/Datenmonitoring im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK" ],
+			"schulformen": ["BK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -772,7 +772,7 @@
 			"schluessel": "777",
 			"kuerzel": "777",
 			"text": "Kooperation mit externen Partnern im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK","GE","GY","H","R","SK" ],
+			"schulformen": ["BK","GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -785,7 +785,7 @@
 			"schluessel": "778",
 			"kuerzel": "778",
 			"text": "Verwaltungstätigkeiten zur Unterstützung der Schulleitung bei den Landesaufgaben im Schulversuch Talentschule",
-			"schulformen": ["BK","GE","GY","H","R","SK" ],
+			"schulformen": ["BK","GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -798,7 +798,7 @@
 			"schluessel": "779",
 			"kuerzel": "779",
 			"text": "Sonstige Tätigkeiten im Rahmen des Schulversuchs Talentschule",
-			"schulformen": ["BK","GE","GY","H","R","SK" ],
+			"schulformen": ["BK","GE","GY","H","R","SK"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -811,7 +811,7 @@
 			"schluessel": "800",
 			"kuerzel": "800",
 			"text": "Zeitbudget, Steigerung der Berufsfähigkeit (Förderschulen)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null, 
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -824,7 +824,7 @@
 			"schluessel": "805",
 			"kuerzel": "805",
 			"text": "Zeitbudget, Modellvorhaben \"Selbstständige Schule\"",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null, 
 			"gueltigBis": 2007,
 			"auslaufdauer": 0
@@ -837,7 +837,7 @@
 			"schluessel": "815",
 			"kuerzel": "815",
 			"text": "Projekt: Abitur-Online",
-			"schulformen": ["BK","FW","GE","GY","PS","SG","WB" ],
+			"schulformen": ["BK","FW","GE","GY","HI","PS","SG","WB"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -850,7 +850,7 @@
 			"schluessel": "820",
 			"kuerzel": "820",
 			"text": "Sonstiger Ausgleichsbedarf, der aus Zeitbudget finanziert ist.",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null, 
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -863,7 +863,7 @@
 			"schluessel": "850",
 			"kuerzel": "850",
 			"text": "Förderung lernschwacher und begabter Schülerinnen und Schüler",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -876,7 +876,7 @@
 			"schluessel": "855",
 			"kuerzel": "855",
 			"text": "sonderpädagogischer Förderbedarf, z.B. Lese- und Rechtschreibschwächen, Lernbehinderungen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2020,
 			"auslaufdauer": 0
@@ -889,7 +889,7 @@
 			"schluessel": "860",
 			"kuerzel": "860",
 			"text": "Einstiegshilfen in Beruf/Ausbildung",
-			"schulformen": ["BK","FW","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -902,7 +902,7 @@
 			"schluessel": "875",
 			"kuerzel": "875",
 			"text": "Landes- und Bundeswettbewerbe, Landesschultheater",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -915,7 +915,7 @@
 			"schluessel": "880",
 			"kuerzel": "880",
 			"text": "Externen-, Änderungs- und Feststellungsprüfungen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -928,7 +928,7 @@
 			"schluessel": "885",
 			"kuerzel": "885",
 			"text": "Sonstiger Ausgleichsbedarf, der aus Rundungsgewinnen finanziert ist.",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -941,7 +941,7 @@
 			"schluessel": "900",
 			"kuerzel": "900",
 			"text": "Schulische/-r Ausbildungsbeauftragte/-r OVP",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -954,7 +954,7 @@
 			"schluessel": "910",
 			"kuerzel": "910",
 			"text": "Außerunterrichtliche Tätigkeit in der offenen Ganztagsschule",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -967,7 +967,7 @@
 			"schluessel": "915",
 			"kuerzel": "915",
 			"text": "Unterrichtsausfallstatistik",
-			"schulformen": ["G","GE","GY","H","PS","R","S","SK" ],
+			"schulformen": ["G","GE","GY","H","KS","PS","R","S","SK"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -980,7 +980,7 @@
 			"schluessel": "920",
 			"kuerzel": "920",
 			"text": "Einsatz als sozialpädagogische Fachkraft in der Schuleingangsphase",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2019,
 			"auslaufdauer": 0
@@ -993,7 +993,7 @@
 			"schluessel": "930",
 			"kuerzel": "930",
 			"text": "Einsatz als sozialpädagogische Fachkraft",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1006,7 +1006,7 @@
 			"schluessel": "932",
 			"kuerzel": "932",
 			"text": "Alltagshelfer/-in",
-			"schulformen": ["FW","G","H","PS","R","S","SB","SG","SR" ],
+			"schulformen": ["FW","G","H","HI","KS","PS","R","S","SB","SG","SR","WF"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1019,7 +1019,7 @@
 			"schluessel": "935",
 			"kuerzel": "935",
 			"text": "Schulverwaltungsassistenz",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2008,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1032,7 +1032,7 @@
 			"schluessel": "936",
 			"kuerzel": "936",
 			"text": "LOGINEO: Anrechnungsstunde zur Betreuung und Pflege",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2020,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1045,7 +1045,7 @@
 			"schluessel": "937",
 			"kuerzel": "937",
 			"text": "Digitalisierungsbeauftragte/-r",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2023,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1058,7 +1058,7 @@
 			"schluessel": "940",
 			"kuerzel": "940",
 			"text": "Betreung und Aufsicht im Ganztagsbereich der Ganztagsschulen",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": 2011,
 			"auslaufdauer": 0
@@ -1071,7 +1071,7 @@
 			"schluessel": "945",
 			"kuerzel": "945",
 			"text": "Wochenstunden von Lehrkräften, die nicht verplant sind",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2008,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1084,7 +1084,7 @@
 			"schluessel": "950",
 			"kuerzel": "950",
 			"text": "Ausgleichsbedarf, der aus Flexiblen Mitteln finanziert wird",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1097,7 +1097,7 @@
 			"schluessel": "955",
 			"kuerzel": "955",
 			"text": "Schulpsychologischer Dienst",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2010,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1110,7 +1110,7 @@
 			"schluessel": "960",
 			"kuerzel": "960",
 			"text": "Pädagogische Tätigkeiten im Bereich Ganztag und Übermittagsbetreuung",
-			"schulformen": ["FW","G","GE","GY","H","PS","R","S","SG","SK","SR","V" ],
+			"schulformen": ["FW","G","GE","GY","H","HI","KS","PS","R","S","SG","SK","SR","V","WF"],
 			"gueltigVon": 2011,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1123,7 +1123,7 @@
 			"schluessel": "965",
 			"kuerzel": "965",
 			"text": "Aufsicht im Bereich Ganztag und Übermittagsbetreuung (halbe Anrechnung)",
-			"schulformen": ["FW","G","GE","GY","H","PS","R","S","SG","SK","SR","V" ],
+			"schulformen": ["FW","G","GE","GY","H","HI","KS","PS","R","S","SG","SK","SR","V","WF"],
 			"gueltigVon": 2011,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1136,7 +1136,7 @@
 			"schluessel": "970",
 			"kuerzel": "970",
 			"text": "sonstige nichtunterrichtliche Tätigkeiten (Nur mit Genehmigung durch die Schulaufsicht.; auch Beratungstätigkeiten für sonderpäd. Förderung)",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": null,
 			"gueltigBis": null,
 			"auslaufdauer": 0
@@ -1149,7 +1149,7 @@
 			"schluessel": "975",
 			"kuerzel": "975",
 			"text": "Begleitung Schulversuch Gemeinschaftsschule",
-			"schulformen": ["BK","FW","G","GE","GY","H","PS","R","S","SB","SG","SK","SR","V","WB" ],
+			"schulformen": ["BK","FW","G","GE","GY","H","HI","KS","PS","R","S","SB","SG","SK","SR","V","WB","WF"],
 			"gueltigVon": 2011,
 			"gueltigBis": 2022,
 			"auslaufdauer": 0
@@ -1162,7 +1162,7 @@
 			"schluessel": "985",
 			"kuerzel": "985",
 			"text": "Übergangsbegleitung im Rahmen des Langzeitpraktikums im Ausbildungskonsens KAoA einschl. STAR",
-			"schulformen": ["FW","GE","GY","H","PS","R","S","SG","SK","SR","V" ],
+			"schulformen": ["FW","GE","GY","H","HI","KS","PS","R","S","SG","SK","SR","V","WF"],
 			"gueltigVon": 2015,
 			"gueltigBis": null,
 			"auslaufdauer": 0
