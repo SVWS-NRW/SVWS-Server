@@ -13,8 +13,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -47,7 +47,7 @@ class LehrerMinderleistungServiceTest {
 	private SchuljahresabschnitteRepository schuljahresabschnitteRepository;
 
 	@Mock
-	private LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository;
+	private LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository;
 
 	private MockedStatic<TransactionSupport> transactionSupportMock;
 

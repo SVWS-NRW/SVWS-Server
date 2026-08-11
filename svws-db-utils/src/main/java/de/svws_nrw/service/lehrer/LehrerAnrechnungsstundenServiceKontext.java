@@ -11,8 +11,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerAnrechnungRepository;
+import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class LehrerAnrechnungsstundenServiceKontext {
 
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
-	private final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository;
+	private final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository;
 	private final LehrerAnrechnungRepository lehrerAnrechnungRepository;
 
 	private Map<Long, DTOLehrerAnrechnungsstunde> mapAnrechnungsstunden = new HashMap<>();
@@ -32,7 +32,7 @@ public final class LehrerAnrechnungsstundenServiceKontext {
 
 	private LehrerAnrechnungsstundenServiceKontext(
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerAnrechnungRepository lehrerAnrechnungRepository) {
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerAbschnittsdatenRepository = lehrerAbschnittsdatenRepository;
@@ -49,7 +49,7 @@ public final class LehrerAnrechnungsstundenServiceKontext {
 	 * @return der neue Service-Kontext.
 	 */
 	public static LehrerAnrechnungsstundenServiceKontext of(final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerAnrechnungRepository lehrerAnrechnungRepository) {
 		return new LehrerAnrechnungsstundenServiceKontext(schuljahresabschnitteRepository, lehrerAbschnittsdatenRepository, lehrerAnrechnungRepository);
 	}

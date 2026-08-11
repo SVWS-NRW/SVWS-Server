@@ -14,8 +14,8 @@ import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.service.lehrer.LehrerLehramtService;
@@ -37,7 +37,7 @@ public final class LehrerStatistikService {
 	private final LehrerRepository lehrerRepository;
 
 	/** Das Repository für den Zugriff auf Abschnittsspezifische Lehrer-Daten */
-	private final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository;
+	private final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository;
 
 	/** Der Service für den Zugriff auf die Lehrämter */
 	private final LehrerLehramtService lehrerLehramtService;
@@ -59,7 +59,7 @@ public final class LehrerStatistikService {
 	public LehrerStatistikService(final SchuleRepository schuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerLehramtService lehrerLehramtService,
 			final LehrerPersonalabschnittsdatenAnrechnungsstundenService lehrerPersonalabschnittsdatenAnrechnungsstundenService) {
 		this.schuleRepository = schuleRepository;

@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.lehrer;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
@@ -10,6 +11,26 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung;
 import de.svws_nrw.repo.RepositoryFactory;
+import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
+import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
+import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepositoryImpl;
+import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
+import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepositoryImpl;
+import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
+import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepository;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepositoryImpl;
+import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepositoryImpl;
+import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
+import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepositoryImpl;
+import de.svws_nrw.repo.lehrer.unterrichtsfach.LehrerUnterrichtsfachRepository;
+import de.svws_nrw.repo.lehrer.unterrichtsfach.LehrerUnterrichtsfachRepositoryImpl;
 
 /**
  * Eine Factory zum Erstellen von Repositories für Datenbank-Entitäten und ggf. auch komplexere Abfragen.
@@ -41,8 +62,8 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public LehrerAbschnittsdatenRepository getLehrerAbschnittsdatenRepository() {
-		return getOrCreate(LehrerAbschnittsdatenRepository.class, () -> new LehrerAbschnittsdatenRepositoryImpl(conn));
+	public LehrerPersonalabschnittsdatenRepository getLehrerPersonalabschnittsdatenRepository() {
+		return getOrCreate(LehrerPersonalabschnittsdatenRepository.class, () -> new LehrerPersonalabschnittsdatenRepositoryImpl(conn));
 	}
 
 
@@ -91,8 +112,8 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public LehrerPersonaldatenLehramtRepository getLehrerPersonaldatenLehramtRepository() {
-		return getOrCreate(LehrerPersonaldatenLehramtRepository.class, () -> new LehrerPersonaldatenLehramtRepositoryImpl(conn));
+	public LehrerLehramtRepository getLehrerPersonaldatenLehramtRepository() {
+		return getOrCreate(LehrerLehramtRepository.class, () -> new LehrerLehramtRepositoryImpl(conn));
 	}
 
 
@@ -101,8 +122,8 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public LehrerPersonaldatenLehramtFachrichtungRepository getLehrerPersonaldatenLehramtFachrichtungRepository() {
-		return getOrCreate(LehrerPersonaldatenLehramtFachrichtungRepository.class, () -> new LehrerPersonaldatenLehramtFachrichtungRepositoryImpl(conn));
+	public LehrerLehramtFachrichtungRepository getLehrerPersonaldatenLehramtFachrichtungRepository() {
+		return getOrCreate(LehrerLehramtFachrichtungRepository.class, () -> new LehrerLehramtFachrichtungRepositoryImpl(conn));
 	}
 
 
@@ -111,8 +132,24 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public LehrerPersonaldatenLehramtLehrbefaehigungenRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
-		return getOrCreate(LehrerPersonaldatenLehramtLehrbefaehigungenRepository.class, () -> new LehrerPersonaldatenLehramtLehrbefaehigungenRepositoryImpl(conn));
+	public LehrerLehramtLehrbefaehigungenRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
+		return getOrCreate(LehrerLehramtLehrbefaehigungenRepository.class, () -> new LehrerLehramtLehrbefaehigungenRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOLeitungsfunktion}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public LehrerLeitungsfunktionRepository getLeitungsfunktionRepository() {
+		return this.getOrCreate(LehrerLeitungsfunktionRepository.class, () -> new LehrerLeitungsfunktionRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * @return {@link LehrerFunktionRepository}
+	 */
+	public LehrerFunktionRepository getLehrerFunktionRepository() {
+		return this.getOrCreate(LehrerFunktionRepository.class, () -> new LehrerFunktionRepositoryImpl(this.conn));
 	}
 
 }

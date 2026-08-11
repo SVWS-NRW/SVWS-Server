@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtFachrichtungRepository;
+import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public final class LehrerFachrichtungService {
 
 	/** Das Repository für den Zugriff auf die Fachrichtung zu den Lehrämtern */
-	private final LehrerPersonaldatenLehramtFachrichtungRepository fachrichtungenRepository;
+	private final LehrerLehramtFachrichtungRepository fachrichtungenRepository;
 
 
 	/**
@@ -24,7 +24,7 @@ public final class LehrerFachrichtungService {
 	 *
 	 * @param fachrichtungenRepository   das Repository für den Datenbank-Zugriff auf die DB-DTOs der Fachrichtungen
 	 */
-	public LehrerFachrichtungService(final LehrerPersonaldatenLehramtFachrichtungRepository fachrichtungenRepository) {
+	public LehrerFachrichtungService(final LehrerLehramtFachrichtungRepository fachrichtungenRepository) {
 		this.fachrichtungenRepository = fachrichtungenRepository;
 	}
 

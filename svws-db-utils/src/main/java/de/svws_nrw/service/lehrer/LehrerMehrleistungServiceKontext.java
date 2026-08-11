@@ -11,8 +11,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerMehrleistungRepository;
+import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response;
 
@@ -21,7 +21,7 @@ import jakarta.ws.rs.core.Response;
  */
 public final class LehrerMehrleistungServiceKontext {
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
-	private final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository;
+	private final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository;
 	private final LehrerMehrleistungRepository lehrerMehrleistungRepository;
 
 	private Map<Long, DTOLehrerMehrleistung> mapMehrleistungen = new HashMap<>();
@@ -30,7 +30,7 @@ public final class LehrerMehrleistungServiceKontext {
 
 	private LehrerMehrleistungServiceKontext(
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerMehrleistungRepository lehrerMehrleistungRepository) {
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerAbschnittsdatenRepository = lehrerAbschnittsdatenRepository;
@@ -48,7 +48,7 @@ public final class LehrerMehrleistungServiceKontext {
 	 */
 	public static LehrerMehrleistungServiceKontext of(
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerMehrleistungRepository lehrerMehrleistungRepository) {
 		return new LehrerMehrleistungServiceKontext(schuljahresabschnitteRepository, lehrerAbschnittsdatenRepository, lehrerMehrleistungRepository);
 	}

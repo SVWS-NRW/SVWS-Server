@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerAnrechnungRepository;
+import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +36,7 @@ class LehrerAnrechnungsstundenServiceKontextTest {
 	@Mock
 	private SchuljahresabschnitteRepository repoSchuljahr;
 	@Mock
-	private LehrerAbschnittsdatenRepository repoAbschnitt;
+	private LehrerPersonalabschnittsdatenRepository repoAbschnitt;
 	@Mock
 	private LehrerAnrechnungRepository repoAnrechnung;
 

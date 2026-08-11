@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtFachrichtungRepository;
+import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
 
 /**
  * Tests für den Service zu Fachrichtungen bei Lehrern.
@@ -30,7 +30,7 @@ import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtFachrichtungRepository;
 class LehrerFachrichtungServiceTest {
 
 	@Mock
-	private LehrerPersonaldatenLehramtFachrichtungRepository repoMock;
+	private LehrerLehramtFachrichtungRepository repoMock;
 
 	@InjectMocks
 	private LehrerFachrichtungService service;

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtLehrbefaehigungenRepository;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public final class LehrerLehrbefaehigungService {
 
 	/** Das Repository für den Zugriff auf die Lehrbefähigungen zu den Lehrämtern */
-	private final LehrerPersonaldatenLehramtLehrbefaehigungenRepository lehrbefaehigungenRepository;
+	private final LehrerLehramtLehrbefaehigungenRepository lehrbefaehigungenRepository;
 
 
 	/**
@@ -24,7 +24,7 @@ public final class LehrerLehrbefaehigungService {
 	 *
 	 * @param lehrbefaehigungenRepository   das Repository für den Datenbank-Zugriff auf die DB-DTOs der Lehrbefähigungen
 	 */
-	public LehrerLehrbefaehigungService(final LehrerPersonaldatenLehramtLehrbefaehigungenRepository lehrbefaehigungenRepository) {
+	public LehrerLehrbefaehigungService(final LehrerLehramtLehrbefaehigungenRepository lehrbefaehigungenRepository) {
 		this.lehrbefaehigungenRepository = lehrbefaehigungenRepository;
 	}
 

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtLehrbefaehigungenRepository;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepository;
 
 /**
  * Tests für den Service zu Lehrbefähigungen.
@@ -25,7 +25,7 @@ import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtLehrbefaehigungenReposi
 class LehrerLehrbefaehigungServiceTest {
 
 	@Mock
-	private LehrerPersonaldatenLehramtLehrbefaehigungenRepository repo;
+	private LehrerLehramtLehrbefaehigungenRepository repo;
 
 	@InjectMocks
 	private LehrerLehrbefaehigungService service;

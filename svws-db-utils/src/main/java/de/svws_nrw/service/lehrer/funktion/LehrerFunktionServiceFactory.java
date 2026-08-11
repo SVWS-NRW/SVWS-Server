@@ -1,28 +1,18 @@
 package de.svws_nrw.service.lehrer.funktion;
 
 import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
-import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepositoryFactory;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepository;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepositoryFactory;
 
 public final class LehrerFunktionServiceFactory {
 
-	private final LehrerFunktionRepositoryFactory repoFactory;
-	private final LehrerAbschnittsdatenRepositoryFactory abschnittsdatenRepoFactory;
-	private final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory;
+	private final LehrerRepositoryFactory repoFactory;
 	private final LehrerFunktionMapper mapper;
 
 	private LehrerFunktionServiceFactory(
-			final LehrerFunktionRepositoryFactory repoFactory,
-			final LehrerAbschnittsdatenRepositoryFactory abschnittsdatenRepoFactory,
-			final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory,
+			final LehrerRepositoryFactory repoFactory,
 			final LehrerFunktionMapper mapper) {
 		this.repoFactory = repoFactory;
-		this.abschnittsdatenRepoFactory = abschnittsdatenRepoFactory;
-		this.leitungsfunktionRepoFactory = leitungsfunktionRepoFactory;
 		this.mapper = mapper;
 	}
 
@@ -30,17 +20,13 @@ public final class LehrerFunktionServiceFactory {
 	 * Erstellt eine neue Instanz der {@code LehrerFunktionServiceFactory} mit den angegebenen Abhängigkeiten.
 	 *
 	 * @param repoFactory                  die Factory für das {@link LehrerFunktionRepository}
-	 * @param abschnittsdatenRepoFactory   die Factory für das {@link LehrerAbschnittsdatenRepository}
-	 * @param leitungsfunktionRepoFactory  die Factory für das {@link LehrerLeitungsfunktionRepository}
 	 * @param mapper                       der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 * @return eine neue {@code LehrerFunktionServiceFactory}
 	 */
 	public static LehrerFunktionServiceFactory getNewInstance(
-			final LehrerFunktionRepositoryFactory repoFactory,
-			final LehrerAbschnittsdatenRepositoryFactory abschnittsdatenRepoFactory,
-			final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory,
+			final LehrerRepositoryFactory repoFactory,
 			final LehrerFunktionMapper mapper) {
-		return new LehrerFunktionServiceFactory(repoFactory, abschnittsdatenRepoFactory, leitungsfunktionRepoFactory, mapper);
+		return new LehrerFunktionServiceFactory(repoFactory, mapper);
 	}
 
 	/**
@@ -50,9 +36,7 @@ public final class LehrerFunktionServiceFactory {
 	 */
 	public static LehrerFunktionServiceFactory getNewInstance() {
 		return new LehrerFunktionServiceFactory(
-				LehrerFunktionRepositoryFactory.getNewInstance(),
-				LehrerAbschnittsdatenRepositoryFactory.getNewInstance(),
-				LehrerLeitungsfunktionRepositoryFactory.getNewInstance(),
+				LehrerRepositoryFactory.getNewInstance(),
 				LehrerFunktionMapper.INSTANCE
 		);
 	}
@@ -64,9 +48,9 @@ public final class LehrerFunktionServiceFactory {
 	 */
 	public LehrerFunktionService getLehrerFunktionService() {
 		return new LehrerFunktionService(
-				repoFactory.getRepository(),
-				abschnittsdatenRepoFactory.getRepository(),
-				leitungsfunktionRepoFactory.getLeitungsfunktionRepository(),
+				repoFactory.getLehrerFunktionRepository(),
+				repoFactory.getLehrerPersonalabschnittsdatenRepository(),
+				repoFactory.getLeitungsfunktionRepository(),
 				mapper
 		);
 	}

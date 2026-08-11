@@ -1,5 +1,24 @@
 package de.svws_nrw.service.lehrer;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -9,26 +28,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerMehrleistungRepository;
-import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-
-import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Tests für LehrerMehrleistungServiceKontext")
 class LehrerMehrleistungServiceKontextTest {
@@ -36,7 +35,7 @@ class LehrerMehrleistungServiceKontextTest {
 	@Mock
 	private SchuljahresabschnitteRepository repoSchuljahr;
 	@Mock
-	private LehrerAbschnittsdatenRepository repoAbschnitt;
+	private LehrerPersonalabschnittsdatenRepository repoAbschnitt;
 	@Mock
 	private LehrerMehrleistungRepository repoMehrleistung;
 

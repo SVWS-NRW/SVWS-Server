@@ -7,7 +7,6 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
@@ -44,7 +43,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@InjectMocks
 	private LehrerPersonalabschnittsdatenControllerFactory controllerFactory;
 
-	private MockedStatic<LehrerPersonalabschnittsdatenRepositoryFactory> personalAbschnittsdatenRepoFactoryMock;
 	private MockedStatic<LehrerRepositoryFactory> lehrerRepoFactoryMock;
 	private MockedStatic<SchulenRepositoryFactory> schulenRepoFactoryMock;
 	private MockedStatic<SchuleRepositoryFactory> schuleRepoFactoryMock;
@@ -55,7 +53,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		personalAbschnittsdatenRepoFactoryMock = mockStatic(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		lehrerRepoFactoryMock = mockStatic(LehrerRepositoryFactory.class);
 		schulenRepoFactoryMock = mockStatic(SchulenRepositoryFactory.class);
 		schuleRepoFactoryMock = mockStatic(SchuleRepositoryFactory.class);
@@ -67,7 +64,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 
 	@AfterEach
 	void tearDown() {
-		personalAbschnittsdatenRepoFactoryMock.close();
 		lehrerRepoFactoryMock.close();
 		schulenRepoFactoryMock.close();
 		schuleRepoFactoryMock.close();
@@ -84,7 +80,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@Test
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
-		final var personalAbschnittsdatenRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var lehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var schulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
@@ -92,7 +87,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 		final var lehrerFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 		final var mockedServiceFactory = mock(LehrerPersonalabschnittsdatenServiceFactory.class);
 
-		personalAbschnittsdatenRepoFactoryMock.when(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance).thenReturn(personalAbschnittsdatenRepoFactory);
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(lehrerRepoFactory);
 		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(schulenRepoFactory);
 		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
@@ -102,7 +96,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 						request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN))
 				.thenAnswer(invocation -> null);
 		serviceFactoryStaticMock.when(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-						personalAbschnittsdatenRepoFactory,
 						lehrerRepoFactory,
 						schulenRepoFactory,
 						schuleRepoFactory,
@@ -114,14 +107,12 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 		final var factory = LehrerPersonalabschnittsdatenControllerFactory.withWriteAccess(request);
 
 		assertThat(factory).isNotNull().isInstanceOf(LehrerPersonalabschnittsdatenControllerFactory.class);
-		personalAbschnittsdatenRepoFactoryMock.verify(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance, times(1));
 		lehrerRepoFactoryMock.verify(LehrerRepositoryFactory::getNewInstance, times(1));
 		schulenRepoFactoryMock.verify(SchulenRepositoryFactory::getNewInstance, times(1));
 		schuleRepoFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
 		lehrerServiceFactoryMock.verify(LehrerServiceFactory::getNewInstance, times(1));
 		lehrerFunktionServiceFactoryMock.verify(LehrerFunktionServiceFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				personalAbschnittsdatenRepoFactory,
 				lehrerRepoFactory,
 				schulenRepoFactory,
 				schuleRepoFactory,
@@ -137,7 +128,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@Test
 	@DisplayName("withReadAccess | Erfolg")
 	void withReadAccess_success() {
-		final var personalAbschnittsdatenRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var lehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var schulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
@@ -145,7 +135,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 		final var lehrerFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 		final var mockedServiceFactory = mock(LehrerPersonalabschnittsdatenServiceFactory.class);
 
-		personalAbschnittsdatenRepoFactoryMock.when(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance).thenReturn(personalAbschnittsdatenRepoFactory);
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(lehrerRepoFactory);
 		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(schulenRepoFactory);
 		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
@@ -155,7 +144,6 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 						request, ServerMode.STABLE, BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN))
 				.thenAnswer(invocation -> null);
 		serviceFactoryStaticMock.when(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-						personalAbschnittsdatenRepoFactory,
 						lehrerRepoFactory,
 						schulenRepoFactory,
 						schuleRepoFactory,
@@ -167,14 +155,12 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 		final var factory = LehrerPersonalabschnittsdatenControllerFactory.withReadAccess(request);
 
 		assertThat(factory).isNotNull().isInstanceOf(LehrerPersonalabschnittsdatenControllerFactory.class);
-		personalAbschnittsdatenRepoFactoryMock.verify(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance, times(1));
 		lehrerRepoFactoryMock.verify(LehrerRepositoryFactory::getNewInstance, times(1));
 		schulenRepoFactoryMock.verify(SchulenRepositoryFactory::getNewInstance, times(1));
 		schuleRepoFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
 		lehrerServiceFactoryMock.verify(LehrerServiceFactory::getNewInstance, times(1));
 		lehrerFunktionServiceFactoryMock.verify(LehrerFunktionServiceFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				personalAbschnittsdatenRepoFactory,
 				lehrerRepoFactory,
 				schulenRepoFactory,
 				schuleRepoFactory,

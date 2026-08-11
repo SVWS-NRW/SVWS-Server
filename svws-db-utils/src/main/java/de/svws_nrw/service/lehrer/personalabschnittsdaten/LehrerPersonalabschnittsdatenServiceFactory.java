@@ -3,8 +3,6 @@ package de.svws_nrw.service.lehrer.personalabschnittsdaten;
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepositoryFactory;
-import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepository;
 import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
@@ -17,7 +15,6 @@ import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
  */
 public final class LehrerPersonalabschnittsdatenServiceFactory {
 
-	private final LehrerPersonalabschnittsdatenRepositoryFactory repoFactory;
 	private final LehrerRepositoryFactory lehrerRepoFactory;
 	private final SchulenRepositoryFactory schulenRepoFactory;
 	private final SchuleRepositoryFactory schuleRepositoryFactory;
@@ -26,14 +23,12 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	private final LehrerPersonalabschnittsdatenMapper mapper;
 
 	private LehrerPersonalabschnittsdatenServiceFactory(
-			final LehrerPersonalabschnittsdatenRepositoryFactory repoFactory,
 			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulenRepositoryFactory schulenRepoFactory,
 			final SchuleRepositoryFactory schuleRepositoryFactory,
 			final LehrerServiceFactory lehrerServiceFactory,
 			final LehrerFunktionServiceFactory lehrerFunktionServiceFactory,
 			final LehrerPersonalabschnittsdatenMapper mapper) {
-		this.repoFactory = repoFactory;
 		this.lehrerRepoFactory = lehrerRepoFactory;
 		this.schulenRepoFactory = schulenRepoFactory;
 		this.schuleRepositoryFactory = schuleRepositoryFactory;
@@ -45,7 +40,6 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	/**
 	 * Erstellt eine neue Instanz der {@code LehrerPersonalabschnittsdatenServiceFactory} mit den angegebenen Abhängigkeiten.
 	 *
-	 * @param repoFactory              die Factory für das {@link LehrerPersonalabschnittsdatenRepository}
 	 * @param lehrerRepoFactory        die Factory für das {@link LehrerRepository}
 	 * @param schulenRepoFactory       die Factory für das {@link SchulenRepository}
 	 * @param schuleRepositoryFactory  die Factory für das Schule-Repositories (inkl. Schuljahresabschnitte)
@@ -55,7 +49,6 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	 * @return eine neue {@code LehrerPersonalabschnittsdatenServiceFactory}
 	 */
 	public static LehrerPersonalabschnittsdatenServiceFactory getNewInstance(
-			final LehrerPersonalabschnittsdatenRepositoryFactory repoFactory,
 			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulenRepositoryFactory schulenRepoFactory,
 			final SchuleRepositoryFactory schuleRepositoryFactory,
@@ -63,7 +56,7 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 			final LehrerFunktionServiceFactory funktionServiceFactory,
 			final LehrerPersonalabschnittsdatenMapper mapper) {
 		return new LehrerPersonalabschnittsdatenServiceFactory(
-				repoFactory, lehrerRepoFactory, schulenRepoFactory,
+				lehrerRepoFactory, schulenRepoFactory,
 				schuleRepositoryFactory, lehrerServiceFactory,
 				funktionServiceFactory, mapper);
 	}
@@ -77,7 +70,6 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 		final var lehrerRepoFactory = LehrerRepositoryFactory.getNewInstance();
 		final var schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
 		return new LehrerPersonalabschnittsdatenServiceFactory(
-				LehrerPersonalabschnittsdatenRepositoryFactory.getNewInstance(),
 				lehrerRepoFactory,
 				SchulenRepositoryFactory.getNewInstance(),
 				schuleRepositoryFactory,
@@ -94,7 +86,7 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	 */
 	public LehrerPersonalabschnittsdatenService getLehrerPersonalabschnittsdatenService() {
 		final var subRepos = new LehrerPersonalabschnittsdatenRepos(
-				repoFactory.getRepo(),
+				lehrerRepoFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepoFactory.getLehrerRepository(),
 				schulenRepoFactory.getRepo(),
 				schuleRepositoryFactory.getSchuljahresabschnitteRepository()

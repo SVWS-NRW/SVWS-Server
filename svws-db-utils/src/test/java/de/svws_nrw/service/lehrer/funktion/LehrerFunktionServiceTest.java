@@ -14,9 +14,9 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
 import de.svws_nrw.repo.RepositoryException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class LehrerFunktionServiceTest {
 	private LehrerFunktionRepository repo;
 
 	@Mock
-	private LehrerAbschnittsdatenRepository abschnittsdatenRepo;
+	private LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo;
 
 	@Mock
 	private LehrerLeitungsfunktionRepository leitungsfunktionRepo;

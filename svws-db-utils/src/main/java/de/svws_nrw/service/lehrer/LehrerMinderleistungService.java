@@ -16,8 +16,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
-import de.svws_nrw.repo.lehrer.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response;
 
@@ -32,7 +32,7 @@ public final class LehrerMinderleistungService {
 
 	private final LehrerMinderleistungRepository lehrerMinderleistungRepository;
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
-	private final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository;
+	private final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository;
 
 	private final LehrerMinderleistungMapper minderleistungMapper;
 
@@ -43,14 +43,14 @@ public final class LehrerMinderleistungService {
 	 *
 	 * @param lehrerMinderleistungRepository {@link LehrerMinderleistungRepository}
 	 * @param schuljahresabschnitteRepository {@link SchuljahresabschnitteRepository}
-	 * @param lehrerAbschnittsdatenRepository {@link LehrerAbschnittsdatenRepository}
+	 * @param lehrerAbschnittsdatenRepository {@link LehrerPersonalabschnittsdatenRepository}
 	 * @param minderleistungMapper {@link LehrerMinderleistungMapper}
 	 * @param minderLeistungsartenCoreTypeManager {@link CoreTypeDataManager}
 	 */
 	public LehrerMinderleistungService(
 			final LehrerMinderleistungRepository lehrerMinderleistungRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
-			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
+			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerMinderleistungMapper minderleistungMapper,
 			final CoreTypeDataManager<LehrerMinderleistungsartKatalogEintrag, LehrerMinderleistungsarten> minderLeistungsartenCoreTypeManager) {
 		this.lehrerMinderleistungRepository = lehrerMinderleistungRepository;

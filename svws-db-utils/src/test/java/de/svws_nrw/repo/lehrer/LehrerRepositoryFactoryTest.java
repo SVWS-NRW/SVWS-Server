@@ -44,13 +44,16 @@ class LehrerRepositoryFactoryTest {
 		assertNotNull(factory);
 
 		assertNotNull(factory.getLehrerRepository());
-		assertNotNull(factory.getLehrerAbschnittsdatenRepository());
+		assertNotNull(factory.getLehrerPersonalabschnittsdatenRepository());
+		assertNotNull(factory.getLehrerUnterrichtsfachRepository());
 		assertNotNull(factory.getLehrerAnrechnungRepository());
 		assertNotNull(factory.getLehrerMehrleistungRepository());
 		assertNotNull(factory.getLehrerMinderleistungRepository());
 		assertNotNull(factory.getLehrerPersonaldatenLehramtRepository());
 		assertNotNull(factory.getLehrerPersonaldatenLehramtFachrichtungRepository());
 		assertNotNull(factory.getLehrerPersonaldatenLehramtLehrbefaehigungenRepository());
+		assertNotNull(factory.getLeitungsfunktionRepository());
+		assertNotNull(factory.getLehrerFunktionRepository());
 	}
 
 }

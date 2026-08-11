@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.lehrer.personalabschnittsdaten;
 
+import java.util.Collection;
 import java.util.List;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
@@ -15,5 +16,15 @@ public interface LehrerPersonalabschnittsdatenRepository extends Repository<DTOL
 	 * @return {@link LehrerPersonalabschnittsdaten}
 	 */
 	List<DTOLehrerAbschnittsdaten> findByIdLehrer(long idLehrer);
+
+	/**
+	 * Bestimmt die Lehrer-Abschnittsdaten-Datenbank-Objekte für einen Schuljahresabschnitt für die übergebenen Lehrer-IDs
+	 *
+	 * @param idsLehrer                die IDs der Lehrer für welche die Abschnittsdaten bestimmt werden sollen
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes für welchen die Abschnittsdaten bestimmt werden sollen
+	 *
+	 * @return die Liste mit den Abschnittsdaten-DB-DTOs
+	 */
+	List<DTOLehrerAbschnittsdaten> getListByLehrerIdsAndSchuljahresabschnitt(Collection<Long> idsLehrer, long idSchuljahresabschnitt);
 
 }

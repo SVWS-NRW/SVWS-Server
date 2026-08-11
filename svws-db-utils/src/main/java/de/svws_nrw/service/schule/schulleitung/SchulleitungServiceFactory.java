@@ -1,40 +1,40 @@
 package de.svws_nrw.service.schule.schulleitung;
 
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepositoryFactory;
-import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 
 /**
  * Factory für {@link SchulleitungService}
  */
 public final class SchulleitungServiceFactory {
 
-	private final SchulleitungRepositoryFactory repoFactory;
-	private final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory;
+	private final SchuleRepositoryFactory schuleRepoFactory;
+	private final LehrerRepositoryFactory lehrerRepoFactory;
 	private final SchulleitungMapper mapper;
 
 	private SchulleitungServiceFactory(
-			final SchulleitungRepositoryFactory repoFactory,
-			final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory,
+			final SchuleRepositoryFactory schuleRepoFactory,
+			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulleitungMapper mapper) {
-		this.repoFactory = repoFactory;
-		this.leitungsfunktionRepoFactory = leitungsfunktionRepoFactory;
+		this.schuleRepoFactory = schuleRepoFactory;
+		this.lehrerRepoFactory = lehrerRepoFactory;
 		this.mapper = mapper;
 	}
 
 	/**
 	 * Erstellt eine neue Instanz der {@code SchulleitungServiceFactory}.
 	 *
-	 * @param repoFactory                  das Repository-Factory für Schulleitung-Instanzen
-	 * @param leitungsfunktionRepoFactory  das Repository-Factory für Leitungsfunktions-Instanzen
+	 * @param schuleRepoFactory das Repository-Factory für Schulleitung-Instanzen
+	 * @param lehrerRepoFactory das Repository-Factory für Leitungsfunktions-Instanzen
 	 * @param mapper                       der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 * @return eine neue {@code SchulleitungServiceFactory}
 	 */
 	public static SchulleitungServiceFactory getNewInstance(
-			final SchulleitungRepositoryFactory repoFactory,
-			final LehrerLeitungsfunktionRepositoryFactory leitungsfunktionRepoFactory,
+			final SchuleRepositoryFactory schuleRepoFactory,
+			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulleitungMapper mapper) {
-		return new SchulleitungServiceFactory(repoFactory, leitungsfunktionRepoFactory, mapper);
+		return new SchulleitungServiceFactory(schuleRepoFactory, lehrerRepoFactory, mapper);
 	}
 
 	/**
@@ -44,8 +44,8 @@ public final class SchulleitungServiceFactory {
 	 */
 	public SchulleitungService getSchulleitungService() {
 		return new SchulleitungService(
-				repoFactory.getSchulleitungRepository(),
-				leitungsfunktionRepoFactory.getLeitungsfunktionRepository(),
+				schuleRepoFactory.getSchulleitungRepository(),
+				lehrerRepoFactory.getLeitungsfunktionRepository(),
 				mapper
 		);
 	}

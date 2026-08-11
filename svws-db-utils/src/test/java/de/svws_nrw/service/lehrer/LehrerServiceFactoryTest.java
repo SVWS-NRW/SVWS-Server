@@ -100,7 +100,7 @@ class LehrerServiceFactoryTest {
 	    assertNotNull(service);
 
 	    verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
-	    verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+	    verify(repoLehrerFactory).getLehrerPersonalabschnittsdatenRepository();
 	    verify(repoLehrerFactory).getLehrerAnrechnungRepository();
 	}
 
@@ -112,7 +112,7 @@ class LehrerServiceFactoryTest {
 			assertNotNull(service);
 
 			verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
-			verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+			verify(repoLehrerFactory).getLehrerPersonalabschnittsdatenRepository();
 			verify(repoLehrerFactory).getLehrerMinderleistungRepository();
 		}
 	}

@@ -115,7 +115,7 @@ public final class LehrerServiceFactory {
 	public LehrerAnrechnungsstundenService getLehrerAnrechnungsstundenService() {
 		return new LehrerAnrechnungsstundenService(LehrerAnrechnungsstundenServiceKontext.of(
 				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
-				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepositoryFactory.getLehrerAnrechnungRepository()));
 	}
 
@@ -127,7 +127,7 @@ public final class LehrerServiceFactory {
 	public LehrerMehrleistungService getLehrerMehrleistungService() {
 		return new LehrerMehrleistungService(LehrerMehrleistungServiceKontext.of(
 				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
-				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepositoryFactory.getLehrerMehrleistungRepository()),
 				LehrerMehrleistungMapper.INSTANCE);
 	}
@@ -141,7 +141,7 @@ public final class LehrerServiceFactory {
 		return new LehrerMinderleistungService(
 				lehrerRepositoryFactory.getLehrerMinderleistungRepository(),
 				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
-				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				LehrerMinderleistungMapper.INSTANCE,
 				CoreTypeDataManager.getManager(LehrerMinderleistungsarten.class)
 		);

@@ -2,7 +2,6 @@ package de.svws_nrw.service.lehrer.personalabschnittsdaten;
 
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
@@ -23,7 +22,6 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class LehrerPersonalabschnittsdatenServiceFactoryTest {
 
-	private MockedStatic<LehrerPersonalabschnittsdatenRepositoryFactory> repoFactoryMock;
 	private MockedStatic<LehrerRepositoryFactory> lehrerRepoFactoryMock;
 	private MockedStatic<SchulenRepositoryFactory> schulenRepoFactoryMock;
 	private MockedStatic<SchuleRepositoryFactory> schuleRepoFactoryMock;
@@ -32,7 +30,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		repoFactoryMock = mockStatic(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		lehrerRepoFactoryMock = mockStatic(LehrerRepositoryFactory.class);
 		schulenRepoFactoryMock = mockStatic(SchulenRepositoryFactory.class);
 		schuleRepoFactoryMock = mockStatic(SchuleRepositoryFactory.class);
@@ -42,7 +39,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 
 	@AfterEach
 	void tearDown() {
-		repoFactoryMock.close();
 		lehrerRepoFactoryMock.close();
 		schulenRepoFactoryMock.close();
 		schuleRepoFactoryMock.close();
@@ -53,14 +49,12 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 	@Test
 	@DisplayName("getNewInstance (no-arg) | Erfolg")
 	void getNewInstance_success() {
-		final var mockedRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var mockedLehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var mockedSchulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var mockedSchuleRepoFactory = mock(SchuleRepositoryFactory.class);
 		final var mockedLehrerServiceFactory = mock(LehrerServiceFactory.class);
 		final var mockedFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 
-		repoFactoryMock.when(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance).thenReturn(mockedRepoFactory);
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(mockedLehrerRepoFactory);
 		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(mockedSchulenRepoFactory);
 		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(mockedSchuleRepoFactory);
@@ -71,7 +65,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 		final var factory = LehrerPersonalabschnittsdatenServiceFactory.getNewInstance();
 
 		assertThat(factory).isNotNull().isInstanceOf(LehrerPersonalabschnittsdatenServiceFactory.class);
-		repoFactoryMock.verify(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance, times(1));
 		lehrerRepoFactoryMock.verify(LehrerRepositoryFactory::getNewInstance, times(1));
 		schulenRepoFactoryMock.verify(SchulenRepositoryFactory::getNewInstance, times(1));
 		schuleRepoFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
@@ -82,14 +75,12 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 	@Test
 	@DisplayName("getNewInstance (no-arg) | Erstellt neue Instanz")
 	void getNewInstance_createsNewInstance() {
-		final var mockedRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var mockedLehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var mockedSchulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var mockedSchuleRepoFactory = mock(SchuleRepositoryFactory.class);
 		final var mockedLehrerServiceFactory = mock(LehrerServiceFactory.class);
 		final var mockedFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 
-		repoFactoryMock.when(LehrerPersonalabschnittsdatenRepositoryFactory::getNewInstance).thenReturn(mockedRepoFactory);
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(mockedLehrerRepoFactory);
 		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(mockedSchulenRepoFactory);
 		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(mockedSchuleRepoFactory);
@@ -106,7 +97,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 	@Test
 	@DisplayName("getNewInstance (with args) | Erfolg")
 	void getNewInstance_withArgs_success() {
-		final var mockedRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var mockedLehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var mockedSchulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var mockedSchuleRepoFactory = mock(SchuleRepositoryFactory.class);
@@ -114,7 +104,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 		final var mockedFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 
 		final var factory = LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				mockedRepoFactory,
 				mockedLehrerRepoFactory,
 				mockedSchulenRepoFactory,
 				mockedSchuleRepoFactory,
@@ -129,7 +118,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 	@Test
 	@DisplayName("getLehrerPersonalabschnittsdatenService | Erfolg")
 	void getLehrerPersonalabschnittsdatenService_success() {
-		final var mockedRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var mockedLehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var mockedSchulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var mockedSchuleRepoFactory = mock(SchuleRepositoryFactory.class);
@@ -137,7 +125,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 		final var mockedFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 
 		final var factory = LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				mockedRepoFactory,
 				mockedLehrerRepoFactory,
 				mockedSchulenRepoFactory,
 				mockedSchuleRepoFactory,
@@ -154,7 +141,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 	@Test
 	@DisplayName("getLehrerPersonalabschnittsdatenService | Erstellt neue Instanz bei jedem Aufruf")
 	void getLehrerPersonalabschnittsdatenService_createsNewInstance() {
-		final var mockedRepoFactory = mock(LehrerPersonalabschnittsdatenRepositoryFactory.class);
 		final var mockedLehrerRepoFactory = mock(LehrerRepositoryFactory.class);
 		final var mockedSchulenRepoFactory = mock(SchulenRepositoryFactory.class);
 		final var mockedSchuleRepoFactory = mock(SchuleRepositoryFactory.class);
@@ -162,7 +148,6 @@ class LehrerPersonalabschnittsdatenServiceFactoryTest {
 		final var mockedFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 
 		final var factory = LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				mockedRepoFactory,
 				mockedLehrerRepoFactory,
 				mockedSchulenRepoFactory,
 				mockedSchuleRepoFactory,

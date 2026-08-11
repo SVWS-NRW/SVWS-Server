@@ -10,7 +10,7 @@ import java.util.Map;
 import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerUnterrichtsfach;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.lehrer.LehrerUnterrichtsfachRepository;
+import de.svws_nrw.repo.lehrer.unterrichtsfach.LehrerUnterrichtsfachRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 

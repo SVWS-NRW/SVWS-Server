@@ -73,7 +73,7 @@ class StatistikServiceFactoryTest {
 		assertNotNull(service);
 		verify(repoSchuleFactory, atLeastOnce()).getSchuleRepository();
 		verify(repoLehrerFactory).getLehrerRepository();
-		verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+		verify(repoLehrerFactory).getLehrerPersonalabschnittsdatenRepository();
 		verify(serviceFactoryLehrer).getLehrerLehramtService();
 		verify(serviceFactoryLehrer).getLehrerPersonalabschnittsdatenAnrechnungsstundenService();
 	}

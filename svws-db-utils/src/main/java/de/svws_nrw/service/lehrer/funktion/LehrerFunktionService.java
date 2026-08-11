@@ -15,16 +15,16 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
 import de.svws_nrw.repo.RepositoryException;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import jakarta.ws.rs.core.Response;
 
 public final class LehrerFunktionService {
 
 	private static final String LEHRERFUNKTION_NOT_FOUND_BY_ID = "Keine Lehrerfunktion mit der ID %d gefunden.";
 	private final LehrerFunktionRepository repo;
-	private final LehrerAbschnittsdatenRepository abschnittsdatenRepo;
+	private final LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo;
 	private final LehrerLeitungsfunktionRepository leitungsfunktionRepo;
 	private final LehrerFunktionMapper mapper;
 
@@ -37,7 +37,7 @@ public final class LehrerFunktionService {
 	 * @param mapper                der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 */
 	public LehrerFunktionService(final LehrerFunktionRepository repo,
-			final LehrerAbschnittsdatenRepository abschnittsdatenRepo,
+			final LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo,
 			final LehrerLeitungsfunktionRepository leitungsfunktionRepo,
 			final LehrerFunktionMapper mapper) {
 		this.repo = repo;

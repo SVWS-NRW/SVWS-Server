@@ -4,9 +4,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
-import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepositoryFactory;
-import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepositoryFactory;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -28,12 +26,10 @@ public class LehrerFunktionControllerFactory {
 	 */
 	public static LehrerFunktionControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz kompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
-		final var repoFactory = LehrerFunktionRepositoryFactory.getNewInstance();
-		final var abschnittsdatenRepoFactory = LehrerAbschnittsdatenRepositoryFactory.getNewInstance();
-		final var leitungsfunktionRepoFactory = LehrerLeitungsfunktionRepositoryFactory.getNewInstance();
+		final var repoFactory = LehrerRepositoryFactory.getNewInstance();
 		final var mapper = LehrerFunktionMapper.INSTANCE;
 		final var serviceFactory = LehrerFunktionServiceFactory.getNewInstance(
-				repoFactory, abschnittsdatenRepoFactory, leitungsfunktionRepoFactory, mapper);
+				repoFactory, mapper);
 		return new LehrerFunktionControllerFactory(serviceFactory);
 	}
 

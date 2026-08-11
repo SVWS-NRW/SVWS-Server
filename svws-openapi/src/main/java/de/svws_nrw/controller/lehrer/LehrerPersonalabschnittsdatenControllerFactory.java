@@ -5,7 +5,6 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
@@ -33,7 +32,6 @@ public class LehrerPersonalabschnittsdatenControllerFactory {
 	public static LehrerPersonalabschnittsdatenControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz kompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var serviceFactory = LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
-				LehrerPersonalabschnittsdatenRepositoryFactory.getNewInstance(),
 				LehrerRepositoryFactory.getNewInstance(),
 				SchulenRepositoryFactory.getNewInstance(),
 				SchuleRepositoryFactory.getNewInstance(),

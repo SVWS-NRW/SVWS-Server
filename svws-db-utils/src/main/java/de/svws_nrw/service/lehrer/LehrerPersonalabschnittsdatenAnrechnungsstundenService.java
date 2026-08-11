@@ -15,9 +15,9 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.repo.lehrer.LehrerAnrechnungRepository;
-import de.svws_nrw.repo.lehrer.LehrerMehrleistungRepository;
-import de.svws_nrw.repo.lehrer.LehrerMinderleistungRepository;
+import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
+import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
+import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.validation.constraints.NotNull;
 

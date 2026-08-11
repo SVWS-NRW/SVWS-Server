@@ -22,7 +22,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtRepository;
+import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
 
 /**
  * Tests für den Service zu den Lehrämtern bei Lehrern.
@@ -31,7 +31,7 @@ import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtRepository;
 class LehrerLehramtServiceTest {
 
 	@Mock
-	private LehrerPersonaldatenLehramtRepository repoLehramt;
+	private LehrerLehramtRepository repoLehramt;
 
 	@Mock
 	private LehrerFachrichtungService serviceFachrichtungen;

@@ -10,7 +10,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
-import de.svws_nrw.repo.lehrer.LehrerPersonaldatenLehramtRepository;
+import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public final class LehrerLehramtService {
 
 	/** Das Repository für die Lehrämter von Lehrern */
-	private final LehrerPersonaldatenLehramtRepository lehramtRepository;
+	private final LehrerLehramtRepository lehramtRepository;
 
 	/** Der Service für die Fachrichtungen von Lehrern */
 	private final LehrerFachrichtungService lehrerFachrichtungenService;
@@ -35,7 +35,7 @@ public final class LehrerLehramtService {
 	 * @param lehrerFachrichtungenService      der Service für die Fachrichtungen
 	 * @param lehrerLehrbefaehigungenService   der Service für die Lehrbefähigungen
 	 */
-	public LehrerLehramtService(final LehrerPersonaldatenLehramtRepository lehramtRepository,
+	public LehrerLehramtService(final LehrerLehramtRepository lehramtRepository,
 			final LehrerFachrichtungService lehrerFachrichtungenService,
 			final LehrerLehrbefaehigungService lehrerLehrbefaehigungenService) {
 		this.lehramtRepository = lehramtRepository;

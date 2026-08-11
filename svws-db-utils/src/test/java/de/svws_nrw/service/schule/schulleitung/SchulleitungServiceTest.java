@@ -10,7 +10,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
-import de.svws_nrw.repo.schule.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
