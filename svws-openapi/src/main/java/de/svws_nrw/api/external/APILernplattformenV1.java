@@ -64,7 +64,7 @@ public class APILernplattformenV1 {
 	public Response getLernplattformenExport(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsResponse(idLernplattform),
-				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM, BenutzerKompetenz.EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class APILernplattformenV1 {
 	public Response getLernplattformenExportAsGzip(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsGzipResponse(idLernplattform),
-				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM, BenutzerKompetenz.EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "404", description = "Keine Lernplattformen gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, -1, new DataLernplattformen(conn)).getAllAsResponse(),
-				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM, BenutzerKompetenz.EXTERNAL_API_LERNPLATTFORM_EXPORTIEREN);
 	}
 
 }
