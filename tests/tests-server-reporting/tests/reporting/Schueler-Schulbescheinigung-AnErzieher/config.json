@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Schüler - Schulbescheinigung an Erzieher",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

@@ -1,0 +1,200 @@
+{
+	"idSchuljahresabschnitt": 1,
+	"ausgabeformatOptionen": [
+		1,
+		2
+	],
+	"ausgabeformat": 1,
+	"reportvorlage": "GostKlausurplanung-SchuelerMitKlausuren",
+	"idHauptdatenObjekt": 1,
+	"idsHauptdaten": [
+		20195,
+		20203,
+		20211
+	],
+	"idsDetaildaten": [
+		0
+	],
+	"reportvorlageParameterGruppen": [
+		{
+			"name": "Benutzerweite Einstellungen",
+			"beschreibung": "Benutzerweite Parameter, für Testdeterminismus explizit gesetzt (überlagern die gespeicherte Benutzer-Config).",
+			"uiIstSichtbar": false,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "mitExternerSchuleKuerzel",
+					"bezeichnung": "mit Schulkürzel bei externen Schülern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "dateinameMitZeitstempel",
+					"bezeichnung": "Datum und Uhrzeit an Dateinamen anhängen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Ausgabeoptionen",
+			"beschreibung": "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "einzelausgabeDaten",
+					"bezeichnung": "Daten in einzelne Dateien ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "duplexdruck",
+					"bezeichnung": "Duplexdruck",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		}
+	],
+	"sortierungDefinitionenGruppen": [
+		{
+			"bezeichnung": "Schülersortierung",
+			"typ": "ReportingSchueler",
+			"uiIstSichtbar": true,
+			"uiErforderlicherServerMode": "",
+			"sortierungDefinitionenOptionen": [
+				{
+					"bezeichnung": "Sortierung nach Name und Vorname (Standard)",
+					"typ": "ReportingSchueler",
+					"verwendeStandardsortierung": true,
+					"attribute": []
+				},
+				{
+					"bezeichnung": "Sortierung nach Klasse, Name, Vorname",
+					"typ": "ReportingSchueler",
+					"verwendeStandardsortierung": false,
+					"attribute": [
+						"auswahlLernabschnitt.klasse.sortierungEintrag",
+						"auswahlLernabschnitt.klasse.kuerzel",
+						"nachname",
+						"vorname",
+						"vornamen"
+					]
+				}
+			],
+			"sortierungDefinitionen": [
+				{
+					"bezeichnung": "Sortierung nach Klasse, Name, Vorname",
+					"typ": "ReportingSchueler",
+					"verwendeStandardsortierung": false,
+					"attribute": [
+						"auswahlLernabschnitt.klasse.sortierungEintrag",
+						"auswahlLernabschnitt.klasse.kuerzel",
+						"nachname",
+						"vorname",
+						"vornamen"
+					]
+				}
+			]
+		}
+	],
+	"filterDefinitionenGruppen": [
+		{
+			"bezeichnung": "Quartalsfilter",
+			"typ": "ReportingGostKlausurplanungSchuelerklausur",
+			"uiIstSichtbar": true,
+			"uiIstFilterMultiselect": true,
+			"uiFilterMultiselectVerknuepfung": 2,
+			"uiErforderlicherServerMode": "",
+			"filterDefinitionenOptionen": [
+				{
+					"bezeichnung": "1. Quartal",
+					"typ": "ReportingGostKlausurplanungSchuelerklausur",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "klausurtermin.quartal",
+									"operation": 1,
+									"werte": [
+										"1"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				},
+				{
+					"bezeichnung": "2. Quartal",
+					"typ": "ReportingGostKlausurplanungSchuelerklausur",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "klausurtermin.quartal",
+									"operation": 1,
+									"werte": [
+										"2"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				}
+			],
+			"filterDefinitionen": [
+				{
+					"bezeichnung": "1. Quartal",
+					"typ": "ReportingGostKlausurplanungSchuelerklausur",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "klausurtermin.quartal",
+									"operation": 1,
+									"werte": [
+										"1"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				}
+			]
+		}
+	],
+	"eMailDaten": {
+		"empfaengerTyp": 0,
+		"istPrivateEmailAlternative": false,
+		"betreff": "",
+		"text": ""
+	}
+}

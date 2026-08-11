@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Schüler - GOSt-Laufbahnplanung Wahlbogen (alle Fächer)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

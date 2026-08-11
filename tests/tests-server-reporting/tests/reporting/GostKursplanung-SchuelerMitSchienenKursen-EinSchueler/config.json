@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Kursplanung - Schüler mit Schienen und Kursen (ein Schüler)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

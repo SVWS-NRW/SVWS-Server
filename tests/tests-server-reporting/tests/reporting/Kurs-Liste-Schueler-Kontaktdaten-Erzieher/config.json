@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Kursliste mit Kontaktdaten der Schüler und Erziehern",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

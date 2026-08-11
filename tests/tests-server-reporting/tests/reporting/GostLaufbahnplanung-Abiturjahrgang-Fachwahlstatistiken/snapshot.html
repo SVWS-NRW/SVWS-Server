@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="de">
+    
+	<head>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>Fachwahlstatistiken</title>
+
+		<!-- ##### CSS für PDF-Ausgabe: Beginn ############################################################################################################# -->
+		<style>/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear.
+There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables.
+It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself.
+For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint.
+This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits).
+Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines.
+This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot.
+This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius.
+Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect.
+The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres.
+These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+	-fs-page-break-min-height: 4mm;
+}
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}
+</style>
+		<!-- ##### CSS für PDF-Ausgabe: Ende ############################################################################################################### -->
+
+		<!-- ##### CSS für Globale Styles: Beginn ########################################################################################################## -->
+		<style>/*
+##########################################################################################################################
+Schriftart definieren
+##########################################################################################################################
+ */
+@font-face {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	src: local('Liberation Sans');
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Farben
+##########################################################################################################################
+ */
+.c-red {
+	color: #ff0000;
+}
+.c-green {
+	color: #00ff00;
+}
+.c-blue {
+	color: #0000ff;
+}
+.c-grey {
+	color: #808080;
+}
+.c-lightgrey {
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
+}
+.c-lightyellow {
+	color: #FFFDAF;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+##########################################################################################################################
+*/
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation', sans-serif;
+	font-weight: normal;
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Text-Elemente
+##########################################################################################################################
+*/
+h1 {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+}
+
+h2 {
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+}
+
+h3 {
+	font-size: 12pt;
+	font-weight: bold;
+	margin-top: 0.6em;
+	margin-bottom: 0.1em;
+}
+
+h4 {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.1em;
+}
+
+p	{
+	font-size: 10pt;
+	margin: 0.25em 0 0;
+	padding: 0;
+}
+
+ul 	{
+	font-size: 10pt;
+	margin: 0.25em 0 0 1em;
+	padding: 0;
+}
+
+sup {
+	vertical-align: 0.6em;
+	font-size: 0.75em;
+}
+
+.f-bold {
+	font-weight: bold;
+}
+.f-ital {
+	font-style: italic;
+}
+.f-small {
+	font-size: 0.9em;
+}
+.f-tiny {
+	font-size: 0.8em;
+}
+.f-very-tiny {
+	font-size: 0.7em;
+}
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
+
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
+	text-align: left;
+}
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
+	text-align: center;
+}
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
+	text-align: right;
+}
+.ta-lt, .ta-ct, .ta-rt {
+	vertical-align: top;
+}
+.ta-lm, .ta-cm, .ta-rm {
+	vertical-align: middle;
+}
+.ta-lb, .ta-cb, .ta-rb {
+	vertical-align: bottom;
+}
+.icon {
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
+
+
+/*
+##########################################################################################################################
+Definitionen für Spacing, Padding, Margin
+##########################################################################################################################
+*/
+.displayblock {
+	display: block;
+}
+
+.zero-height {
+	height: 0;
+}
+
+
+.p-0 {
+	padding: 0;
+}
+.p-05 {
+	padding: 0.5mm;
+}
+.p-1 {
+	padding: 1mm;
+}
+.p-2 {
+	padding: 2mm;
+}
+.p-3 {
+	padding: 3mm;
+}
+.p-4 {
+	padding: 4mm;
+}
+
+.p-t-0 {
+	padding-top: 0;
+}
+.p-b-0 {
+	padding-bottom: 0;
+}
+.p-l-0 {
+	padding-left: 0;
+}
+.p-r-0 {
+	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
+}
+
+.p-t-1 {
+	padding-top: 1mm;
+}
+.p-b-1 {
+	padding-bottom: 1mm;
+}
+.p-l-1 {
+	padding-left: 1mm;
+}
+.p-r-1 {
+	padding-right: 1mm;
+}
+
+.p-t-2 {
+	padding-top: 2mm;
+}
+.p-b-2 {
+	padding-bottom: 2mm;
+}
+.p-l-2 {
+	padding-left: 2mm;
+}
+.p-r-2 {
+	padding-right: 2mm;
+}
+
+.p-t-3 {
+	padding-top: 3mm;
+}
+.p-b-3 {
+	padding-bottom: 3mm;
+}
+.p-l-3 {
+	padding-left: 3mm;
+}
+.p-r-3 {
+	padding-right: 3mm;
+}
+
+.p-t-4 {
+	padding-top: 4mm;
+}
+.p-b-4 {
+	padding-bottom: 4mm;
+}
+.p-l-4 {
+	padding-left: 4mm;
+}
+.p-r-4 {
+	padding-right: 4mm;
+}
+
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
+}
+
+.p-t-25of100 {
+	padding-top: 1.25em;
+}
+.p-b-25of100 {
+	padding-bottom: 1.25em;
+}
+
+
+.mp-0 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.m-0 {
+	margin: 0;
+}
+.m-1 {
+	margin: 1mm;
+}
+.m-2 {
+	margin: 2mm;
+}
+
+.m-t-0 {
+	margin-top: 0
+}
+.m-b-0 {
+	margin-bottom: 0
+}
+.m-l-0 {
+	margin-left: 0
+}
+.m-r-0 {
+	margin-right: 0
+}
+
+.m-t-1 {
+	margin-top: 1mm
+}
+.m-b-1 {
+	margin-bottom: 1mm
+}
+.m-l-1 {
+	margin-left: 1mm
+}
+.m-r-1 {
+	margin-right: 1mm
+}
+
+.m-t-2 {
+	margin-top: 2mm
+}
+.m-b-2 {
+	margin-bottom: 2mm
+}
+.m-l-2 {
+	margin-left: 2mm
+}
+.m-r-2 {
+	margin-right: 2mm
+}
+
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
+}
+
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
+
+/*
+##########################################################################################################################
+Definitionen für Tabellen
+##########################################################################################################################
+*/
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.fixed-100 {
+	width: 100%;
+	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
+}
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	display: table-footer-group;
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-before: auto;
+}
+
+th {
+	font-weight: normal;
+}
+
+th.head-small-grey, td.head-small-grey {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #757575;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
+}
+
+th.head-black-lines, td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all, td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.cell-small-grey {
+	font-size: 0.8em;
+	color: #808080;
+	vertical-align: top;
+	border-top: 0.5px solid #808080;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Border and Background
+##########################################################################################################################
+*/
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
+.bo-grey {
+	border: 0.5px solid #808080;
+}
+.bo-t-grey {
+	border-top: 0.5px solid #808080;
+}
+.bo-b-grey {
+	border-bottom: 0.5px solid #808080;
+}
+.bo-tb-grey {
+	border-top: 0.5px solid #808080;
+	border-bottom: 0.5px solid #808080;
+}
+.bo-l-grey {
+	border-left: 0.5px solid #808080;
+}
+.bo-r-grey {
+	border-right: 0.5px solid #808080;
+}
+.bo-lr-grey {
+	border-left: 0.5px solid #808080;
+	border-right: 0.5px solid #808080;
+}
+
+.bo-black {
+	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
+}
+.bo-t-black {
+	border-top: 0.5px solid #000000;
+}
+.bo-t-black-strong {
+	border-top: 1px solid #000000;
+}
+.bo-b-black {
+	border-bottom: 0.5px solid #000000;
+}
+.bo-b-black-strong {
+	border-bottom: 1px solid #000000;
+}
+.bo-tb-black {
+	border-top: 0.5px solid #000000;
+	border-bottom: 0.5px solid #000000;
+}
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.bo-l-black {
+	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
+}
+.bo-r-black {
+	border-right: 0.5px solid #000000;
+}
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
+.bo-lr-black {
+	border-left: 0.5px solid #000000;
+	border-right: 0.5px solid #000000;
+}
+.bo-lr-black-strong {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
+}
+.bg-lightyellow {
+	background-color: #FFFDAF;
+}
+
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}
+
+/* Grau hinterlegtes Formularfeld für einzutragende bzw. bescheinigte Werte (z. B. Schulbescheinigung, Zeugnisse).
+   Schmale Box (~5.5mm): geringer vertikaler Innenabstand (0.75mm), line-height = min-height (4mm) zentriert
+   die einzelne Textzeile vertikal in der Inhaltsbox; min-height hält leere Felder so hoch wie gefüllte.
+   Feste mm-line-height macht die Feldhöhe zudem unabhängig vom umgebenden Zeilenkontext.
+   position: relative verankert die Streichung leerer Felder (siehe .formularfeld:empty). */
+.formularfeld {
+	position: relative;
+	display: inline-block;
+	min-width: 30mm;
+	min-height: 4mm;
+	padding: 0.75mm 1.5mm;
+	line-height: 4mm;
+	background-color: #d9d9d9;
+	vertical-align: middle;
+}
+
+/* Leeres Formularfeld wird mit einem durchgehenden Strich entwertet (kein einzutragender Wert).
+   Statt CSS-Pseudoelementen (:empty/::before werden von openhtmltopdf nicht zuverlässig gerendert)
+   wird hierfür im Template ein echtes <span class="formularfeld-strich"></span> als einziges Kind
+   des leeren Feldes ausgegeben. Der Strich liegt vertikal mittig und ist links/rechts um den
+   horizontalen Textabstand (1.5mm) eingerückt, sitzt also auf derselben Flucht wie ein eingetragener
+   Wert. left + right (kein bottom) wegen der zuverlässigeren Absolutpositionierung in openhtmltopdf. */
+.formularfeld-strich {
+	display: block;
+	position: absolute;
+	left: 1.5mm;
+	right: 1.5mm;
+	/* Fester top-Wert statt 50%: openhtmltopdf löst Prozent-top nicht auf, wenn das (leere) Feld keine
+	   definite Höhe hat. 0.75mm padding-top + halbe Textzeile (line-height 4mm / 2 = 2mm) = 2.75mm Textmitte;
+	   abzüglich halber Strichstärke (0.1mm) liegt der Strich auf der Flucht eines eingetragenen Wertes. */
+	top: 2.65mm;
+	border-top: 0.2mm solid #000000;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
+}
+</style>
+		<!-- ##### CSS für Globale Styles: Ende ############################################################################################################ -->
+
+		<!-- ##### CSS für Seitenformat: Beginn ############################################################################################################ -->
+		<style>@Page {
+	size: A4 portrait;
+	margin: 18mm 10mm 12mm 18mm;
+
+	/* Boxen im Seitenrand. Die Inhalte werden über `position: running(...)` aus dem Body in diese Bereiche
+	   verschoben (siehe reporting-styles.css). */
+	@top-left {
+		content: element(pageTopLeft);
+		padding-top: 1mm;
+		padding-left: 0;
+	}
+
+	@top-right {
+		content: element(pageTopRight);
+		padding-top: 1mm;
+		padding-right: 0;
+	}
+
+	@bottom-center {
+		content: element(pageBottomCenter);
+		padding-bottom: 1mm;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	@bottom-left {
+		content: element(pageBottomLeft);
+		padding-bottom: 1mm;
+		padding-left: 0;
+	}
+
+	@bottom-right {
+		content: element(pageBottomRight);
+		padding-bottom: 1mm;
+		padding-right: 0;
+	}
+}
+
+
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis (html-Hintergrund, body-Defaults,
+   .start-new-page::before-Gradient, hidden Running-Header etc.) steht in reporting-styles.css. */
+@media screen {
+	body {
+		width: 210mm;
+		min-height: 297mm;
+		padding: 9mm 10mm 12mm 18mm;
+	}
+	.start-new-page {
+		margin-top: 26mm;
+	}
+	.start-new-page::before {
+		top: -14mm;
+		left: -23mm;
+		right: -15mm;
+		background-size: 210mm 100%;
+	}
+}
+</style>
+		<!-- ##### CSS für Seitenformat: Ende ############################################################################################################## -->
+
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Beginn ########################################################## -->
+		<style>/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+</style>
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Ende ############################################################ -->
+	</head>
+
+	<body>
+		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+		<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+		
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+		<table class="fixed-100 p-0">
+			<thead>
+				<tr>
+					<th class="bo-b-grey"><h2>Laufbahnplanung Abitur 2019 - Übersicht der Fachwahlen</h2></th>
+				</tr>
+			</thead>
+		</table>
+
+		<table class="fixed-100" style="margin-top: 20px; margin-bottom: 20px; border-collapse: collapse;">
+			<colgroup>
+				<col style="width: 15%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+				<col style="width: 5%;" />
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="ta-l f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0"></th>
+					<th colspan="2" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">EF.1</th>
+					<th colspan="2" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">EF.2</th>
+					<th colspan="2" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Q1.1</th>
+					<th colspan="2" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Q1.2</th>
+					<th colspan="3" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Q2.1</th>
+					<th colspan="3" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Q2.2</th>
+					<th colspan="3" class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</th>
+				</tr>
+				<tr>
+					<td class="ta-l f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Fach</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Z</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">G</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Z</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">L</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">4</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr style="background-color: rgb(253,233,217);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">D</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">101</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">101</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">103</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">103</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">72</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">29</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">33</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">29</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">16</td>
+				</tr>
+				<tr style="background-color: rgb(253,221,195);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">E</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">100</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">100</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">102</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">102</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">65</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">37</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">12</td>
+				</tr>
+				<tr style="background-color: rgb(253,221,195);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">F</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">21</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">21</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(253,221,195);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">L</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(253,221,195);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">S0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">26</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">26</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">25</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">25</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">4</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">4</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">3</td>
+				</tr>
+				<tr style="background-color: rgb(253,221,195);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">S</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">15</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">15</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">14</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">14</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">4</td>
+				</tr>
+				<tr style="background-color: rgb(252,204,165);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">KU</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">84</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">86</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">82</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">82</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">41</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">41</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(252,204,165);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">MU</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">4</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">18</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">18</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(252,204,165);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">VP</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">GEEBI</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">14</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">8</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">3</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">GE</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">62</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">28</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">63</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">28</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">44</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">44</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">3</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">SW</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">53</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">54</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">25</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">23</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">8</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">23</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">75</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">75</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">EK</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">44</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">24</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">45</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">25</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">13</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">8</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">PA</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">79</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">55</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">78</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">53</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">22</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">35</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">18</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">27</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">27</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">29</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">11</td>
+				</tr>
+				<tr style="background-color: rgb(234,241,222);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">PL</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">35</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">33</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">31</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">6</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">32</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(215,228,188);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">ER</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">37</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">40</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">34</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">23</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">23</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(215,228,188);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">KR</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">39</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">40</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">34</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">33</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(197,217,241);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">M</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">101</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">101</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">103</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">103</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">76</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">34</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">29</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">34</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">18</td>
+				</tr>
+				<tr style="background-color: rgb(141,180,227);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">BI</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">77</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">67</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">78</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">67</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">60</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">41</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">60</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">39</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">61</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">36</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">61</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">15</td>
+				</tr>
+				<tr style="background-color: rgb(141,180,227);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">BIEBI</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">15</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">17</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">15</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">14</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">14</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">6</td>
+				</tr>
+				<tr style="background-color: rgb(141,180,227);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">CH</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">37</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">12</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">34</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">8</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(141,180,227);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">PH</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">52</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">53</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">23</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">41</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">41</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">8</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">39</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">8</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">39</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">1</td>
+				</tr>
+				<tr style="background-color: rgb(141,180,227);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">IF</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">26</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">11</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">20</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">10</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">1</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">10</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">10</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">9</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">3</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(224,211,229);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">SP</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">101</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">103</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">91</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">91</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">91</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">91</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">13</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(216,216,216);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">VFD</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">5</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(216,216,216);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">VFE</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">16</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">7</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(216,216,216);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">VFM</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">21</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">25</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(191,191,191);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">PK-Sp</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">19</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+				<tr style="background-color: rgb(191,191,191);">
+					<td class="ta-l bo-b-grey p-tb-0 p-lr-1 m-0">PK-MPI</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">2</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0">0</td>
+					<td class="ta-c bo-b-grey p-tb-0 p-lr-1 m-0" style="border-right: 1px grey solid;">0</td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>

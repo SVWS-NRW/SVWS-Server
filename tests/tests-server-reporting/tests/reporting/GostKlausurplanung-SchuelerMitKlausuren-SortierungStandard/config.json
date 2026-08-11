@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Klausurplanung - Schüler mit Klausuren, 1. Quartal (Standardsortierung)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

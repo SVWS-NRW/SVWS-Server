@@ -23,13 +23,6 @@
 		"dbms" : "MARIA_DB",
 		"location" : "GRADLE_PLACEHOLDER_DB_CONTAINER_NAME",
 		"defaultschema" : "GRADLE_PLACEHOLDER_DEFAULT_SCHEMA",
-		"SchemaKonfiguration" : [
-		{
-			"name" : "GRADLE_PLACEHOLDER_DEFAULT_SCHEMA",
-			"svwslogin" : false,
-			"username" : "svwsadmin",
-			"password" : "svwsadmin"
-		}
-		]
+		"SchemaKonfiguration" : "GRADLE_PLACEHOLDER_SCHEMA_KONFIGURATION"
 	}
 }

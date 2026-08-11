@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Stundenplanung - Lehrer-Stundenplan (kombiniert)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

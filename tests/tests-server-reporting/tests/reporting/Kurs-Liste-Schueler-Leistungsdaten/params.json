@@ -1,0 +1,124 @@
+{
+	"idSchuljahresabschnitt": 1,
+	"ausgabeformatOptionen": [
+		1,
+		2
+	],
+	"ausgabeformat": 1,
+	"reportvorlage": "Kurs-Liste-Schueler-Leistungsdaten",
+	"idHauptdatenObjekt": -1,
+	"idsHauptdaten": [
+		18040,
+		18043,
+		18041,
+		18052,
+		8672,
+		8674,
+		8682,
+		8690,
+		8695,
+		8721,
+		8710,
+		8726,
+		8822,
+		8827
+	],
+	"idsDetaildaten": [],
+	"reportvorlageParameterGruppen": [
+		{
+			"name": "Benutzerweite Einstellungen",
+			"beschreibung": "Benutzerweite Parameter, für Testdeterminismus explizit gesetzt (überlagern die gespeicherte Benutzer-Config).",
+			"uiIstSichtbar": false,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "mitExternerSchuleKuerzel",
+					"bezeichnung": "mit Schulkürzel bei externen Schülern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "dateinameMitZeitstempel",
+					"bezeichnung": "Datum und Uhrzeit an Dateinamen anhängen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Inhaltsoptionen",
+			"beschreibung": "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "mitPunktenStattNoten",
+					"bezeichnung": "Punkte statt Noten ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitBemerkungen",
+					"bezeichnung": "mit fachbezogenen Bemerkungen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Ausgabeoptionen",
+			"beschreibung": "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "einzelausgabeDaten",
+					"bezeichnung": "Daten in einzelne Dateien ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "duplexdruck",
+					"bezeichnung": "Duplexdruck",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		}
+	],
+	"sortierungDefinitionenGruppen": [],
+	"filterDefinitionenGruppen": [],
+	"eMailDaten": {
+		"empfaengerTyp": 0,
+		"istPrivateEmailAlternative": false,
+		"betreff": "",
+		"text": ""
+	}
+}

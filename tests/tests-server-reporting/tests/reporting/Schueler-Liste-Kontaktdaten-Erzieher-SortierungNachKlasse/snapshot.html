@@ -1,0 +1,2967 @@
+<!DOCTYPE html>
+<html lang="de">
+	               <!-- querformat verwenden, wenn Erzieher plus eine weitere Datenart (Telefon, EMail, Kontakte) dargestellt werden sollen. -->
+	
+	
+	<head>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>Schülerliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler</title>
+
+		<!-- ##### CSS für PDF-Ausgabe: Beginn ############################################################################################################# -->
+		<style>/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear.
+There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables.
+It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself.
+For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint.
+This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits).
+Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines.
+This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot.
+This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius.
+Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect.
+The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres.
+These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+	-fs-page-break-min-height: 4mm;
+}
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}
+</style>
+		<!-- ##### CSS für PDF-Ausgabe: Ende ############################################################################################################### -->
+
+		<!-- ##### CSS für Globale Styles: Beginn ########################################################################################################## -->
+		<style>/*
+##########################################################################################################################
+Schriftart definieren
+##########################################################################################################################
+ */
+@font-face {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	src: local('Liberation Sans');
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Farben
+##########################################################################################################################
+ */
+.c-red {
+	color: #ff0000;
+}
+.c-green {
+	color: #00ff00;
+}
+.c-blue {
+	color: #0000ff;
+}
+.c-grey {
+	color: #808080;
+}
+.c-lightgrey {
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
+}
+.c-lightyellow {
+	color: #FFFDAF;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+##########################################################################################################################
+*/
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation', sans-serif;
+	font-weight: normal;
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Text-Elemente
+##########################################################################################################################
+*/
+h1 {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+}
+
+h2 {
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+}
+
+h3 {
+	font-size: 12pt;
+	font-weight: bold;
+	margin-top: 0.6em;
+	margin-bottom: 0.1em;
+}
+
+h4 {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.1em;
+}
+
+p	{
+	font-size: 10pt;
+	margin: 0.25em 0 0;
+	padding: 0;
+}
+
+ul 	{
+	font-size: 10pt;
+	margin: 0.25em 0 0 1em;
+	padding: 0;
+}
+
+sup {
+	vertical-align: 0.6em;
+	font-size: 0.75em;
+}
+
+.f-bold {
+	font-weight: bold;
+}
+.f-ital {
+	font-style: italic;
+}
+.f-small {
+	font-size: 0.9em;
+}
+.f-tiny {
+	font-size: 0.8em;
+}
+.f-very-tiny {
+	font-size: 0.7em;
+}
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
+
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
+	text-align: left;
+}
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
+	text-align: center;
+}
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
+	text-align: right;
+}
+.ta-lt, .ta-ct, .ta-rt {
+	vertical-align: top;
+}
+.ta-lm, .ta-cm, .ta-rm {
+	vertical-align: middle;
+}
+.ta-lb, .ta-cb, .ta-rb {
+	vertical-align: bottom;
+}
+.icon {
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
+
+
+/*
+##########################################################################################################################
+Definitionen für Spacing, Padding, Margin
+##########################################################################################################################
+*/
+.displayblock {
+	display: block;
+}
+
+.zero-height {
+	height: 0;
+}
+
+
+.p-0 {
+	padding: 0;
+}
+.p-05 {
+	padding: 0.5mm;
+}
+.p-1 {
+	padding: 1mm;
+}
+.p-2 {
+	padding: 2mm;
+}
+.p-3 {
+	padding: 3mm;
+}
+.p-4 {
+	padding: 4mm;
+}
+
+.p-t-0 {
+	padding-top: 0;
+}
+.p-b-0 {
+	padding-bottom: 0;
+}
+.p-l-0 {
+	padding-left: 0;
+}
+.p-r-0 {
+	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
+}
+
+.p-t-1 {
+	padding-top: 1mm;
+}
+.p-b-1 {
+	padding-bottom: 1mm;
+}
+.p-l-1 {
+	padding-left: 1mm;
+}
+.p-r-1 {
+	padding-right: 1mm;
+}
+
+.p-t-2 {
+	padding-top: 2mm;
+}
+.p-b-2 {
+	padding-bottom: 2mm;
+}
+.p-l-2 {
+	padding-left: 2mm;
+}
+.p-r-2 {
+	padding-right: 2mm;
+}
+
+.p-t-3 {
+	padding-top: 3mm;
+}
+.p-b-3 {
+	padding-bottom: 3mm;
+}
+.p-l-3 {
+	padding-left: 3mm;
+}
+.p-r-3 {
+	padding-right: 3mm;
+}
+
+.p-t-4 {
+	padding-top: 4mm;
+}
+.p-b-4 {
+	padding-bottom: 4mm;
+}
+.p-l-4 {
+	padding-left: 4mm;
+}
+.p-r-4 {
+	padding-right: 4mm;
+}
+
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
+}
+
+.p-t-25of100 {
+	padding-top: 1.25em;
+}
+.p-b-25of100 {
+	padding-bottom: 1.25em;
+}
+
+
+.mp-0 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.m-0 {
+	margin: 0;
+}
+.m-1 {
+	margin: 1mm;
+}
+.m-2 {
+	margin: 2mm;
+}
+
+.m-t-0 {
+	margin-top: 0
+}
+.m-b-0 {
+	margin-bottom: 0
+}
+.m-l-0 {
+	margin-left: 0
+}
+.m-r-0 {
+	margin-right: 0
+}
+
+.m-t-1 {
+	margin-top: 1mm
+}
+.m-b-1 {
+	margin-bottom: 1mm
+}
+.m-l-1 {
+	margin-left: 1mm
+}
+.m-r-1 {
+	margin-right: 1mm
+}
+
+.m-t-2 {
+	margin-top: 2mm
+}
+.m-b-2 {
+	margin-bottom: 2mm
+}
+.m-l-2 {
+	margin-left: 2mm
+}
+.m-r-2 {
+	margin-right: 2mm
+}
+
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
+}
+
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
+
+/*
+##########################################################################################################################
+Definitionen für Tabellen
+##########################################################################################################################
+*/
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.fixed-100 {
+	width: 100%;
+	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
+}
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	display: table-footer-group;
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-before: auto;
+}
+
+th {
+	font-weight: normal;
+}
+
+th.head-small-grey, td.head-small-grey {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #757575;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
+}
+
+th.head-black-lines, td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all, td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.cell-small-grey {
+	font-size: 0.8em;
+	color: #808080;
+	vertical-align: top;
+	border-top: 0.5px solid #808080;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Border and Background
+##########################################################################################################################
+*/
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
+.bo-grey {
+	border: 0.5px solid #808080;
+}
+.bo-t-grey {
+	border-top: 0.5px solid #808080;
+}
+.bo-b-grey {
+	border-bottom: 0.5px solid #808080;
+}
+.bo-tb-grey {
+	border-top: 0.5px solid #808080;
+	border-bottom: 0.5px solid #808080;
+}
+.bo-l-grey {
+	border-left: 0.5px solid #808080;
+}
+.bo-r-grey {
+	border-right: 0.5px solid #808080;
+}
+.bo-lr-grey {
+	border-left: 0.5px solid #808080;
+	border-right: 0.5px solid #808080;
+}
+
+.bo-black {
+	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
+}
+.bo-t-black {
+	border-top: 0.5px solid #000000;
+}
+.bo-t-black-strong {
+	border-top: 1px solid #000000;
+}
+.bo-b-black {
+	border-bottom: 0.5px solid #000000;
+}
+.bo-b-black-strong {
+	border-bottom: 1px solid #000000;
+}
+.bo-tb-black {
+	border-top: 0.5px solid #000000;
+	border-bottom: 0.5px solid #000000;
+}
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.bo-l-black {
+	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
+}
+.bo-r-black {
+	border-right: 0.5px solid #000000;
+}
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
+.bo-lr-black {
+	border-left: 0.5px solid #000000;
+	border-right: 0.5px solid #000000;
+}
+.bo-lr-black-strong {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
+}
+.bg-lightyellow {
+	background-color: #FFFDAF;
+}
+
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}
+
+/* Grau hinterlegtes Formularfeld für einzutragende bzw. bescheinigte Werte (z. B. Schulbescheinigung, Zeugnisse).
+   Schmale Box (~5.5mm): geringer vertikaler Innenabstand (0.75mm), line-height = min-height (4mm) zentriert
+   die einzelne Textzeile vertikal in der Inhaltsbox; min-height hält leere Felder so hoch wie gefüllte.
+   Feste mm-line-height macht die Feldhöhe zudem unabhängig vom umgebenden Zeilenkontext.
+   position: relative verankert die Streichung leerer Felder (siehe .formularfeld:empty). */
+.formularfeld {
+	position: relative;
+	display: inline-block;
+	min-width: 30mm;
+	min-height: 4mm;
+	padding: 0.75mm 1.5mm;
+	line-height: 4mm;
+	background-color: #d9d9d9;
+	vertical-align: middle;
+}
+
+/* Leeres Formularfeld wird mit einem durchgehenden Strich entwertet (kein einzutragender Wert).
+   Statt CSS-Pseudoelementen (:empty/::before werden von openhtmltopdf nicht zuverlässig gerendert)
+   wird hierfür im Template ein echtes <span class="formularfeld-strich"></span> als einziges Kind
+   des leeren Feldes ausgegeben. Der Strich liegt vertikal mittig und ist links/rechts um den
+   horizontalen Textabstand (1.5mm) eingerückt, sitzt also auf derselben Flucht wie ein eingetragener
+   Wert. left + right (kein bottom) wegen der zuverlässigeren Absolutpositionierung in openhtmltopdf. */
+.formularfeld-strich {
+	display: block;
+	position: absolute;
+	left: 1.5mm;
+	right: 1.5mm;
+	/* Fester top-Wert statt 50%: openhtmltopdf löst Prozent-top nicht auf, wenn das (leere) Feld keine
+	   definite Höhe hat. 0.75mm padding-top + halbe Textzeile (line-height 4mm / 2 = 2mm) = 2.75mm Textmitte;
+	   abzüglich halber Strichstärke (0.1mm) liegt der Strich auf der Flucht eines eingetragenen Wertes. */
+	top: 2.65mm;
+	border-top: 0.2mm solid #000000;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
+}
+</style>
+		<!-- ##### CSS für Globale Styles: Ende ############################################################################################################ -->
+
+		<!-- ##### CSS für Seitenformat: Beginn ############################################################################################################ -->
+		<style>@Page {
+	size: A4 landscape;
+	margin: 18mm 10mm 12mm;
+
+	/* Boxen im Seitenrand. Die Inhalte werden über `position: running(...)` aus dem Body in diese Bereiche
+	   verschoben (siehe reporting-styles.css). */
+	@top-left {
+		content: element(pageTopLeft);
+		padding-top: 1mm;
+		padding-left: 0;
+	}
+
+	@top-right {
+		content: element(pageTopRight);
+		padding-top: 1mm;
+		padding-right: 0;
+	}
+
+	@bottom-left {
+		content: element(pageBottomLeft);
+		padding-bottom: 1mm;
+		padding-left: 0;
+	}
+
+	@bottom-center {
+		content: element(pageBottomCenter);
+		padding-bottom: 1mm;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	@bottom-right {
+		content: element(pageBottomRight);
+		padding-bottom: 1mm;
+		padding-right: 0;
+	}
+}
+
+
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
+@media screen {
+	body {
+		width: 297mm;
+		min-height: 210mm;
+		padding: 9mm 10mm 12mm 10mm;
+	}
+	.start-new-page {
+		margin-top: 26mm;
+	}
+	.start-new-page::before {
+		top: -14mm;
+		left: -15mm;
+		right: -15mm;
+		background-size: 297mm 100%;
+	}
+}
+</style>
+		<!-- ##### CSS für Seitenformat: Ende ############################################################################################################## -->
+
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Beginn ########################################################## -->
+		<style>/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+td {
+	text-align: left;
+	vertical-align: top;
+	font-size: 0.9em;
+}
+
+/* Foto-Zelle: kein Innenabstand, Inhalt oben ausgerichtet */
+td.foto-zelle {
+	padding: 0;
+	vertical-align: top;
+}
+
+/* Foto-Container: beschneidet überstehende Bildbereiche und zentriert die Box */
+.foto-container {
+	overflow: hidden;
+	margin: 3px auto;
+}
+
+/* Kleine Foto-Variante für die Kontaktlisten */
+.foto-container-klein {
+	width: 10mm;
+	height: 12mm;
+}
+
+/* Foto-Bild: füllt die Breite des Containers, Höhe skaliert proportional */
+.foto-bild {
+	width: 100%;
+	display: block;
+}
+
+/* Platzhalter-Farbe für fehlende Fotos */
+.foto-placeholder {
+	background-color: #d3d3d3;
+}
+
+/* Platzhalter in der kleinen Foto-Variante */
+.foto-placeholder-klein {
+	width: 10mm;
+	height: 12mm;
+}
+
+</style>
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Ende ############################################################ -->
+	</head>
+
+	<body>
+
+	<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+	<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+	
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+	<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+	<table class="fixed-100 mp-0">
+		<colgroup>
+			<col style="width: 7mm;" />    <!-- Lfd Nr -->
+			<col style="width: 12mm;" />  <!-- Schüler: Foto -->
+			<col style="width: 46mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
+			<col style="width: 58mm;" />    <!-- Schüler: E-Mail und Telefon -->
+			<col style="width: 58mm;" />    <!-- Telefonkontakte -->
+			<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
+		</colgroup>
+		<thead>
+		<tr>
+			<th colspan="6">
+				<table class="fixed-100 mp-0">
+					<tr>
+						<th class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;">Schülerliste</th>
+						<th class="f-bold ta-rb" style="width: 65%;"></th>
+					</tr>
+					<tr>
+						<td colspan="2" class="ta-lb bo-t-grey" style="height: 2mm"></td>
+					</tr>
+					
+				</table>
+			</th>
+		</tr>
+		<tr>
+			<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
+			<td class="head-small-grey"></td>
+			<td class="head-small-grey ta-c">Foto</td>
+			<td class="head-small-grey">Name, ggf. weitere Angaben</td>
+			
+			
+				<!-- Regelfall: Negierung des Falles zuvor. -->
+				<td class="head-small-grey">Telefon und E-Mail</td>
+				<td class="head-small-grey">Telefonische Kontakte</td>
+			
+			<td class="head-small-grey">Erzieher</td>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">1. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,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"
+						 alt="Foto von Istesta Testschueler"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Testschueler, Dummy Daten</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">08c</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">01.01.2005, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Teststraße 1999<br/>44139 Dortmund</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0"></td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0"></td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">0177999999999</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Lena und Alexander Pfau</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Teststraße 1999<br/>44139 Dortmund</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0"></td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">2. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Ankel, Matthias Sam Thomas</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">09a</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Spinnpfad 483<br/>42781 Haan</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-352004<br/>0189-842965</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">M.Ankel@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">01234-352004</td>
+							</tr>
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">0189-842965</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">3. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Delfes, Michael</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">09a</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">04.01.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Schendelgasse 34<br/>53343 Wachtberg</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-377813<br/>0189-292667</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">M.Delfes@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">4. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Gieben, Jens</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">09a</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">11.06.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Große Spreestraße 315<br/>40223 Düsseldorf</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-222744<br/>0189-384291</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">J.Gieben@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">5. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Lüddesen, Erik</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">09b</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">17.10.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Alt-Köpenick 128<br/>45468 Mülheim</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-906350<br/>0189-316076</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">E.Lüddesen@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">6. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/4RtYRXhpZgAASUkqAAgAAAAIABIBAwABAAAAAQAAABoBBQABAAAAbgAAABsBBQABAAAAdgAAACgBAwABAAAAAgAAADEBAgANAAAAfgAAADIBAgAUAAAAjAAAABMCAwABAAAA//8AAGmHBAABAAAAoAAAAH4aAAAsAQAAAQAAACwBAAABAAAAR0lNUCAyLjEwLjE4AAAyMDIwOjA0OjAzIDE0OjU2OjA4AAIAAJACAAAAAAAAAAAAAaADAAEAAAABAAAAAAAAACwBAAABAAAALAEAAAEAAAAIAAgACAD/2P/gABBKRklGAAEBAQEsASwAAP/bAEMABgQFBgUEBgYFBgcHBggKEAoKCQkKFA4PDBAXFBgYFxQWFhodJR8aGyMcFhYgLCAjJicpKikZHy0wLSgwJSgpKP/bAEMBBwcHCggKEwoKEygaFhooKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKP/AABEIAQABAAMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAAAAQIDBAUGBwgJCgv/xAC1EAACAQMDAgQDBQUEBAAAAX0BAgMABBEFEiExQQYTUWEHInEUMoGRoQgjQrHBFVLR8CQzYnKCCQoWFxgZGiUmJygpKjQ1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4eLj5OXm5+jp6vHy8/T19vf4+fr/xAAfAQADAQEBAQEBAQEBAAAAAAAAAQIDBAUGBwgJCgv/xAC1EQACAQIEBAMEBwUEBAABAncAAQIDEQQFITEGEkFRB2FxEyIygQgUQpGhscEJIzNS8BVictEKFiQ04SXxFxgZGiYnKCkqNTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8/T19vf4+fr/2gAMAwEAAhEDEQA/APqmiiigAooooAKKKKACiiigAooqOaVIY2klYKijJJ7UAP4xWPNrcIcpao05UkFgcKCO2e/4ZrLvbn+0iC0W232kBJEG8qeufQHA4/P0DAMDA4FeDjc3UHyUdfM7KWF5tZDp5bi4ZjNcybe0afu1HUduT17kjPNVvstv5hl8iLzD1baMn6mp6K8GrialX45NnbGlGGyGOiyLh1DD0IrlPGHw98N+K7KWLUtNt0uHXCXcMYSaM9iGHXHoeK64UEVnCtOlK8HYqUVLRnI+D/h94a8KWcUWm6ZbvcKuGu5ow00nqSx9fQcV1iRrGMIoA9AKUUGirWnVfNN3HGKjoiv9lt/M8wQReYOjBRkfjViC4ureTfBdTEE5Mcp8xTwB35HTsQM5Pc0UmauliatL4JNEypxnujYtdYidwlynkMThTnKn8e34+1bPauNYZGGGQak0+7/suMJHGWs0GBCijKD/AGfb2/L0PvYLOVN+zr6PucVXCcusTr6Kitp47iFJYW3RsMg1LXvnEFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAhNcndXb6hMGDAWgwY0H8R/vE9/b8+vS94huA0i2gaM7k3yKRkqvI/XkfQNWdXgZvjuX9xT+f+R24Wjf3mGaKKK+aPRCikopAFFFVr6YQWsrnsOPrTBK+hZozVWxmE9rE/qOfrVmpBq2gUUUZpDCjNNooAlsL06dO0jt/ojZMq/3T/fH9R+Pbnrh0rjK1PD1yBmxYqCi74to5KDAx+HA+hFfS5NjnP9xU+X+R52Lo299HQUUUV9EcIUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAVHI6RRl5GCqoySTgAU81k+IpAtiIunnOI+nbqf0BH41lVqKnBzfQcVd2MQymeSSdwyvKd+D1A6AflilozRXwtao6k3J7s9qEVFWQuaSiisSwopKrXd3FbLmVuewHU0Ak3oiwSFGScAVzWsX32qQRxf6oH8zTL/UJbr5R8sX90d/rUEEZzuI+lawgdtKjye9ItaTffZJTHKf3RP5GukBDAEHINcfcx4O4DjvU2n6jLafKfmi/unt9KKlPUKtHn96B1VFVrS8iuVzE3PcHqKsmuc5LNaMKKKKAA00P5MsNwAWeFt4A6njBH4gmndaSro1HSmpx3RM4KaszsUdXQMpBUjIIPBFSGsnw/KXsQhIJiYp+HUfoR+VatfoFGoqkFNdTwpKzsxaKKK1EFFFFABRRRQAUUUUAFFFFABRRRQAlc3rsofUkiBGYo9x/wCBH6f7Hr3+ldJXKak4bU7zrlGVef8AdB49uf515ebVOTDvz0N8MrzRFRSUV8aeuFRyyLGpaQgAdzTbqZIIjJIeBXNXd5Jdy852dlFVCFzWlScy9e6wTlbYYH941kEtK2SS7nuamS3zy/5VYRQowBiumNI7IctP4SvFb45f8qnxT6bWqVhN3EYZqpLB3T8quUjUmrlJ2M4MyNkEq47jitex1orhboZH94f1qrLGrdRVSSAryORWEqZTjGorM7GKRZUDRkFT0Ip1chY3slo+UOVPVT0NdTazpcQiSM5B/SuecLHFVpOmTUUZpKzMzQ8PShNSlhOMyxZH/AT/APZ/pXS1yOlOE1azHOXdl4/3WPP5V11fa5PU58Ml20PHxStUYtFFFeqcwUUUUAFFFFABRRRQAUUUUAFFFFAAa5C6dnup2fG7zWHHoDgfoBXXmuPug6XU6uMN5jHHsSSP0rxc8/3dev6M68H8Y2im0V8keoYGrzNcXfkp9xP51DFGIxx+dKnJdj1Y5NSV3U4WR3L3VZCUUtFbEjaKc1NqRjaSntTWpFjWptPamUhleeHPKdasaFdGG78on93Lx+NJVSUeTcpIPUH8awqRuimudNM7KikHSlriPOH2rFb22ZPveag/AnB/QmuxNcdagteW4HXzoz+RFdia+vyD/d36/ojycd/E+Q6iiivcOQKKKKACiiigAooooAKKKKACiiigBDXJamhXU7slidzA8jGPkT/Cut71zniGPbqET/8APSLHX+6f/s68rN6fPhm+2p0YV2qIz6KKK+MPYOfddkjr6HFFWNSXZcE+ozVevSg7q51Rd1cKKKKsYUjUtNqQGtRTmprUFCNTKe1MqSwao2i85o19WAp7Va0yPfdA/wB0ZrOo7RbFJ2VzcpabmivNOEn0wbtWsvmK4kJxjOf3b8V2Fcz4dTdqEj4/1ceM5/vH/wCw/wA8101fb5LT5MKn31PHxbvUYtFFFescwUUUUAFFFFABRRRQAUUUUAFFFFACdax/EkZNgJRj9y4kOTjjofrwTx7VsCisqtNVIOD2Y4vld0cZRmlu7N9NkSBubcgCF/Xj7vXrx+I/Gm18FisPLD1HCR7dOoqiujN1Yf6tvqKo1o6t/q1+tZtdFF+6dtPYdmjNNorUsWkoptAwpGpaSkUJTaKKQxK0tGX/AFrfQVm1qaN/qpPrXPX+Air8Jo0UmafZ2LanM0C5EA4nlHb/AGR7n9B+GefC4aeIqKEDgqVFTV2bnhyFo7AyONrTuZAM9ug/QA4962aKO1foVGmqUFBbI8KUnJ3YtFFFaiCiiigAooooAKKKKACiiigAooooAbjpWNqWtWum3HlXEhaeRd6QxoSQB3J6DJ9cVsk4BryqHc5knnVRd3B82cqMZkIH8sAD2ArxM6zb+zaSaV5PY68JhfrErPZG1qmu3F/AIxbQQrjncfNIOOo6AEHvzTbKffGFc7mHUnvWbUkD7ZlPvXwNXNq+KqJ1ndHtxwsKcbRRLqzf6tfxrPpuoXYbVHXPyAbKWvawlWNSGnQ2grRQ/NGabmjNdRYUUlGaQBSUU2kMKRqWkpDBqvaNKDJLF3ABrNkcRoWbtUei3Hl6kC5/1nymvPxmIULQ7k1FeLOivZ9kbKhwxHUdqXS9cn02Fo1toZgRxtYxEkDqeoJJ6niqM775mPvUea8qlm9fC1XKg7IwlhIVY2mjt9K1u31ObyoJCk8a7pIZEILZ7qe4B7jNbdeTzZV47iGONrm2PmwFhnDAH+eSOOxNerryK/Qskzb+0qTclaS3PCxmG+rySWzH0UUV7ZyBRRRQAUUUUAFFFFABRRRQAUUUUANboa8ymjKSlT616aelcNNCsn3x+NfIcVUPaxp23V/0PTyyfJKRk1HPKIYy57dPrVm7tbhB/o4V/qcGsK7S5Vs3KsPcjivhHh5x3R7kJqRXYliSxyScmr9rNvXB++Kzs0qOVfKnmurCYh0J36dS2rmxmjNQwyiVAeh7ipK+njNSV0TYdmm0UVQBRSUUhhSNRVS7n4Kp+JrOpPki2NIiupvMfAPyD9agBIYEHBByKSivlqtWVWXMxm9byiaIOO/X61JWLZJdM2bZWP0HFb1pa3Dj/SQi/Q5NYfV5zeiIc0txsUZd1UV6egAAArgoYVjA2D8a74dq+74So+yjUvvp+p4maT5nH5jqKKK+xPKCiiigAooooAKKKKACiiigAooooAR+hria7ZuhrhY5FliSROUcAg+xr5riLaHz/Q78BuyWmkAjBGRRRXyp6Rh6xpaeU09uNpHJUdDXP13TjKkHvXDdq8/F01FprqddCbasyeEkICKtRTBuDwaqx/6taK92g7U0dNrl+iqSyMv3TT/Pb0Fb86J5CzTWIUZNVmnY9MCoixY5JzScylAkmnJ4Tp61WbpTmpj9K567vBlWshua3tH0tPKWe4XeW5VT0Arn67xAAoA6CvCw8E3dnLWk0rIAABgDAoooruOYO9d0vQVwU0ixRvI5wiAk/QV3q9B9K+q4b2qfL9TzMw3iOooor6k84KKKKACiiigAooooAKKKKACiiigBK8+vpE0rULexuZPNe53PG0SMwQDnDddo9CeO2SRkv1jXLi/aWK2lVLEn5XhY5lGOu7sM+np15xWNbQRW0KQ20McECDCxxqFAHsBXxOe59hmnh4R5muvRP9T1sHgp/G3Y3t1LWOkrL91iKsJeMPvAGvmaeOhLfQ9J0Wti+eRWf4d8KS3e241EGKDqIujN9fQVcgmWQfL+VdwOgr6TJsvo46bqVNVHp6/8Mefi686K5Y9TyrX4kg1i6iiUJGrYAA4AxWdWx4tXy/EN37kH9BWPSxEeSpKPmz2cO70ovyQNSNStSNWJ0CU2nU2kAjVf0CJZtZtIpFDxu2CCOCMVQatXwmm7xBaexJ/Q1tho89aMfNGGJdqUn5MueIvC72u6404GWDqY+rL/AIitPoK6yuQmmWI/Ofwoz3L6OCmqlPRSvp6f8OeNhK8665Za2JKbuxVF7xj9wACq7uz/AH2Jr5meMjHbU9FUn1NHRWh1jV5rKKSSNbMq8+UKGToQiZHK+pGcdOpyPQc8V5S8auAHAODkZ7GtfS9furGeNbqZJLEsTLJO53RDHUH0zjOegJOe1fVZFnmFilh5Llb67pv9PyPLxmCqN86dz0GigUV9seSFFFFABRRRQAUUUUAFFFFABQehooPQ0pbAeWyxeS3l4wBwB7U2ta4hWUc9fWqElrIvQbh7V+N4nDSjOTSuj6ynVTjqQUZoYEcEEfWmOyomXIA9Sa4uV7GspxirsmhcrKjL616Sv3RXlmm6taw6va+Yu6AONzHoPf8APmvVBjHHSv0HhCi6dKcm92tD5vH4uniJ2pu9jgfHcPl6rHKOksY/Mf5FcxXf+O7TztNjuAPmhbn6Hj+eK4CrzOl7PEPz1Pcy2pz0F5aA1I1K1I1ecegJTadTaQCNXReA4d+qyS9o4j+ZP/6651q7vwNa+Tpkk5HMzcfQcfzzXo5VS9piV5anBmVT2eHfnodGTxXn8zFpXY+td/njNeX3mv2c2sXYA8u38wiOTqD7/wBaOL6EqlKEo9G9Dw8vxVLDyaqO1y/RTI3WRAyMHB7g5p6gnhRmvzvlex9HGSkroKVYxMfLIyDwR7VKlu7deB71bhhWLp971rqw+HlKpFvYznUSjoeiDoKKB0FFftEdkfJBRRRTAKKKKACiiigAooooATrVDV9Qh0uwlurjPloOg6kk4AHuSav1518R9QEt7BYxkFYP3rj/AGiMAfgM/wDfQrkxuIWGouo+hFSapxci5SUtNNfnTlc+mjsDAEYIB+tZl9pNtc8/NG/Yg1p9KOtTpuRVpQqx5Zq6OJ1HTprF/wB5zGejDoa9C8B6x9v077LK2bm3AHPdex/pWXewLc2kkLjhhx7HtXHaPqM2lahFdQdVPzL/AHh3FellmMeFrKT2e58ri8OsBXTj8LPZryBbq1lhk+5IpU15PeW72t1LBKMNGxBr1WwvIb60iubdt0UgyP8ACuZ8b6X5iC/gX51GJAPTsa+ozOh7ekqtPW35Hu5XiVTnyvZnFtSNStSNXzB9MJTadTaQElrbvd3UUEQy8jYFeqWkK2ttFBH9yNQormvBel+VGb+dfnYYiB7D1rodQvIbGzlubhtkUQyf8K+pynD/AFek6tTS/wCR8zmuLVSfKtkc98Qda/s3Svs0LYubobRjqq9z/SvNtI0m41KQ+ThIh96Q9B/jTdb1KbV9Rlu5+rnCr/dXsK9A061WzsYoEGNq8+57181m2PeIq8y26HiYPDrHVm5fCihpmhW1jyrSSSdyTgfkK1lUKOBTuBR1rw3q7n1VKnGlHlgrIWim0UKVmaPY6/RdQt9V023vbNt0My5U9x6g+4OQfcVodq8q+DuqlZ7zS5X4b9/CD2PRhn/vnj2NerV+n4Suq9KNRdT5aE+dXCiiiuksKKKKACiiigAooooAaeleL67cfatd1G4wPmnYAj+IL8oP5AV7Q33T9K8HjkaWJHkADuATj1r5ziOpajGHd/l/w55+YS5YpHb2k4uLaOVTwRz7HvU/BFcbYahNZN+7wUPVT0Nb1trNpMB5jGJ/Run518ge5gc1pVoKM3aRqZopiOsibo2R19Qc0+kevGSlqgrzfNekZrzaqgfOcQfY+f6HS+DfEB0i68i4J+xSnn/pmfX/ABr1L5ZU7NGw+oIrwdq6zwd4qOnbLO/YvaHhW6mL/wCtX0uU5oqf7itt08jy8HieT3ZFrxNojadMZoATaueP9k+hrBavW28m7tv4ZYHH1BFcP4g8Ny2peezDS2/Ur1K/4iujMMta/e0dj7TAZippU6r17nOVt+GtEbUZhNOCLWM8/wC0fQVP4f8ADct2UnvgYrfqF6F/8BXa/ubS2/gigjH0CijL8tcn7WtoicfmSgnTpPXuOYrEmThY1H0AAryfxx4jOr3X2e1Y/YIjx/00Pr/hVnxp4rOo77LTmIsx9+ToZf8A61cbWea5kqn7mjt1fc+NxWJ5/diFesV5K1esV8vieh63D/2/l+oCgmio5pY4U3TOkY9XOBXMfRyko6sk4FVNTu1srCe4c4CKce57Csy+8T6dagiFjcSeidPzrjNa1i51SQecQkS/diXoP8TW9OjJvU8vGZnSpQai7sm8HXp0/wAU6ZOCQPPWNucDa3ykn2wc/hX0VXy4s7WrC4jAMkR8xQ3Qkc819RqeBX22RzvSlHszwsHLmixaKKK9w7AooooAKKKKACiiigBj/cP0rwhcGMbPuY4r3gjIrxfxBYLpmqz28Rj8kM3l7T0AP3D6EAjj0IPevneIKM504zWy3+Z5+PpuUVJdDNpGpWptfInkipJJE26NnQ+qnFaFtrt1AQJCJk9G6/nWW1MY0WOiliatJ3hKx3Om6jBfKTGcSDrGeorhGqzZXLWt3FMhxtPPuO9Vs1SVjrxmOeKhHm3V/wBBtNalamNVnnm54e8S3ujPsQ+dak8wsf5elej6P4l0zVABFOI5z/yyl4P4ev4V43TGr1cHmtbDLl3XY6aWKlT03R7LrXiXTNLBE04lnH/LKLk/j6fjXmviTxNe60WRz5NqDxCp/me9YdMaqxeaVsSuXZdh1cTKppshGpGoprV5hziNXpGsatbaZHmY5kP3Y16n/CvNmqxqd215fTzuc7m49h2qZU+dq56GDxrwsJcu7t+po3/ia/uCRCwt4/SPr+dYk00sz7ppHkf1Y5NNprVcYJbHPVxFWq7zdxGplDUjVoYiPjYd/THNfUajgH2r5/8AA/h+TX9ajjaMGyhIkuCw4Iz9zp1Pp6Zr6C7Yr6fJaUoQlOXU9PBwcYt9xaKKK9s7AooooAKKKKACiiigArP1bTrfVLY294ivEfUcqexB7GtCiplFSVmB5ZrPgi/tCX09vtsHYHAlH9D9Rj6Vys8TwTGGeN4pQMmOQYIH0Ne+CqmoWNrfwmG9t4p4m/hkXP8A+qvDxWRUar5qb5X+Bw1MDCesdDwlqa1eq33gLSLggwG6tDuLHypcg+3zZwPpisO5+HdwGYwahGy/wq8ZGOPUE559hXlVcixMPgs/68zkngai21OEam11E3gbXI1bENvIQpP7ub7x9PmA5/T3rPfwvrisqvpsytjPBVv1BIrill2JhvBmTw9VdDFamVbfT79U3yafexrnGZLeRR+orNa7txIYzPEHGMjzBkZrJ0Zx3i/uI9nJdCZqY1M8+FuksZ+jCnZBGQcj2qLNbk2BqY1BIAyTge9RPPEOssY+rCmk3sUSNTGpIZFnfbAySv6Kcmrg0rU2TfFpt/IvqltIw/QVsqM5bRf3FKEuxRpGrfXwf4gkYrHpc2QM8sq/qSBV23+HviGcLut4IDt3ZmnGM+ny7uf0963jgMRLaDNFh6r6HJNUbV6Zb/CyXIe61NcDPyRw9f8AgRPH5V0Gm/DnQrRi00c9427cDcSfd9sKACPrmu2nk2Il8Vkawwc3ueLWtvNdXC29tDJNM3REXcT+Art/Dfw3v711l1ZhZ23eIcyt/QD35+leuWFjaWEAisrWG2iH8EMYQfkKt16mHyelT1nq/wADrp4SMNXqZ2i6Va6PYpaWEQjgTtjknuSe5PrWlRRXrpKOiOsKKKKoAooooA//2QARAP4ABAABAAAAAAAAAAABBAABAAAAAAEAAAEBBAABAAAAAAEAAAIBAwADAAAAzgAAAAMBAwABAAAABgAAAAYBAwABAAAABgAAABEBBAABAAAANQMAABUBAwABAAAAAwAAABYBBAABAAAAAAEAABcBBAABAAAASBcAABoBBQABAAAAvgAAABsBBQABAAAAxgAAACgBAwABAAAAAgAAAAACAwABAAAAAQAAAAECBAABAAAA1AAAAAICBAABAAAAqRkAABICAwACAAAAAgACAAAAAAD/4gKwSUNDX1BST0ZJTEUAAQEAAAKgbGNtcwQwAABtbnRyUkdCIFhZWiAH5AAEAAMADAA1AB5hY3NwTVNGVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWxjbXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1kZXNjAAABIAAAAEBjcHJ0AAABYAAAADZ3dHB0AAABmAAAABRjaGFkAAABrAAAACxyWFlaAAAB2AAAABRiWFlaAAAB7AAAABRnWFlaAAACAAAAABRyVFJDAAACFAAAACBnVFJDAAACFAAAACBiVFJDAAACFAAAACBjaHJtAAACNAAAACRkbW5kAAACWAAAACRkbWRkAAACfAAAACRtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACQAAAAcAEcASQBNAFAAIABiAHUAaQBsAHQALQBpAG4AIABzAFIARwBCbWx1YwAAAAAAAAABAAAADGVuVVMAAAAaAAAAHABQAHUAYgBsAGkAYwAgAEQAbwBtAGEAaQBuAABYWVogAAAAAAAA9tYAAQAAAADTLXNmMzIAAAAAAAEMQgAABd7///MlAAAHkwAA/ZD///uh///9ogAAA9wAAMBuWFlaIAAAAAAAAG+gAAA49QAAA5BYWVogAAAAAAAAJJ8AAA+EAAC2xFhZWiAAAAAAAABilwAAt4cAABjZcGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltjaHJtAAAAAAADAAAAAKPXAABUfAAATM0AAJmaAAAmZwAAD1xtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAEcASQBNAFBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEL/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wgARCACgAKADASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAQFAQIDBgf/xAAaAQACAwEBAAAAAAAAAAAAAAAABQIDBAEG/9oADAMBAAIQAxAAAAH6oAABGiZg6ZVatY8plsjd8uG86u11V3bh3b5Q6AAAAKidAXXjC3RmNpDlZYd6ebwlCMNrilsmeaQGNAAAAEGJ34Jtelf10p089tsWTxy644a2Vb0q5YTYUy7JPDvIAAABAiWFen1Q+ffhXrGJdxjOOdx05yayVMhWV2OUHOQAAADWnzXpdfeNvzq1ZYWSYY4JUTeksLvy1nox24dZAAAAKiruYnmWFL36Q6NEvGmzEzhy53HPWctM2seboz2Q9OuAAAR4kLhC28yx7V9nJ0Hngasa7ane1lJjRybyqvFHfUuPb1C0OgAjSayiVZzm6+WZcLrzd+4W+aSotLjGu0oL2ksqK5RM37bJWVx3q7T1isLuADynq/DLqbtSyk+yVVWNJLN7HzvP0DS+jv8An5o5zvvL+jWVycVNdDTZe2+c/RnmINtoA8h6/FMPA6+rq1OWp5z4FENWMRi0zrLuNszLJ1uvobi+dD7fGWekLZf/xAAoEAACAQIFBAICAwAAAAAAAAACAwEABBAREiAwEyExMyMyBSIkJTT/2gAIAQEAAQUC3MZooiI4yin26nglC0hlFCRDSmQfI5mmN8xSj1jxTOosXFkKi1DiM6T4bifjxNuVd5nuMg6J2InNfBc+aItMEUnURjI0ByFDOqKteG49tN7ltmkTkVW324LnzR/bcqPkq14bn103enC29fBPeCjQTfG5PgI6jOG8MupTC77knXmrIi1cF3HyFOVTOcjOe05qJymJzqzj9uC4+8xE01WURUTjJYKVExERFW324Lns2meuVEIbOkUrD61ady3vOQWX7FqmlFmd/Hw7LL0GWRTM0MyFJLWvdceqRnBBD17gdSdiY0qYYdaoGkerddNyOpjOnK0xat6yrlfTbhbL1svHdJVuiCGIyirN2stzT/mYN9du2UsMRuFGMiQDJlGi2TcNlzF+vC0b/Y7mdmC0hobijKCVVvcEmc1XQySrUbl5OKuoIKO8pjzOrP8A17rxUrbhE5Y55VPfEy1Th+Lt5Y7dMZ02xWdHYNiitHxTM1lsUJNkbK4Kg/Ftmkfjkrrxs//EACIRAAIBAgYDAQAAAAAAAAAAAAECAAMRBBASICExIjJBE//aAAgBAwEBPwHIcxaYHctLRqQPU620V+5Kn0xk+jKsv3bS9YotzLwRhfmVvXbRPjB1m3UrHx20KTe0UcZsOJXpN7baTWUQcy0tCbSs10OwC/ESkQtjNZVwuYcuxWVKbMthOs1NmE1mPVf9POK2oXEZtIuZTqv+nhNUbs51m02IiY2m3fExreSkTC4u3BmKxergTAtyxMfGU165lNtVzm6axaGiwhDfcwGgpMYq6RbL/8QAJREAAgEDAwQDAQEAAAAAAAAAAQIDAAQRECExBRIgURMjQSIy/9oACAECAQE/AdGIUZNTXTP/AJ2FZPNZPNQ3bJs24oEMMjxvpOE0AojSwkyCnjeH7TSrq61ZH7fG+XEmaXjV+KsFzJnx6heR5+PG4qIgrtrMwArp15GT8WMHxvIe6ZjUJMb40zUuXerGLtnU+DMFHcanu0eQsoq3gWVTL61uYFhUS+6trqOOQM1Ahhka3JAibNGAfldN7Qpi90ylTg0ilz2iup9hUR+qEI/atyDEuNeon+ANEYqcisrdDI2agVtR7apSW3NCMmrE/XjWeETL2mnspV43oxOvI1ETtwKS0kbnaoohEuBp/8QAKxAAAQIEBAYCAgMAAAAAAAAAAQACEBEgIRIwMUEDIlFhcZGBoTIzE1Jy/9oACAEBAAY/AqupXMfS0RZxmNcD1QbwmNaB0Wisfa6HpmSH5ZHdd98suo7rvQD7yvNqOW6mVMK9qB6yWwmV2p7KYg4ZIHaEthXhg/4yW5bsmfSArMJ9cmRWElDIwe8rCJhsvcAK3Qc0mY1yfhXU6pQsj4yrhTbXNysj4yb6HSDkHutOnGLhCBI/HSeQSNVidcwE181GHIZIONZi0EpwpaE4A7xbW3hje5hdYmIHfddto9gj/Y6LE/dWg/hnVlbiesou8LFtupg+CpHVSarouPwm+IzGjrVv8larmCdI7QtdvRWN/ta3+1fTYQbiOy5W+1c2XC/0KyZcpNqrUXiOIbMbfzXdcvIeysWuX6yg3iDCToDSf4gXS1lsv1y8rnc1v2pu5z3p/8QAJhABAAIBAwQDAAIDAAAAAAAAAQARIRAxUSAwQWFxgaGRscHR8P/aAAgBAQABPyHqPALPFygYuMIE2AficTFk2s7AizaL5htXHGUF297ubEq29e4FW+XK89dlOwyPE3zB2dpwZnvzb46LYN0rOG/Rxzt8O0gw1Fh4ZOdE3sWYnNqx72U7LY3jLoHgI9xwgm+vBFqc8IIbGic21idludjOvvRzAdIsjKtnT8n+XZ3fzoafvpdLA8Gm7jg7I8G40O7rGFoKK8r7JEqyTd5jDzP2de78zAGsWoVsVjx2aRhWagw2bw31r6mbT7InlHMqqLueuzeEgfdxGgpe+nwpVMOVbu/Zf0w3Awk8W5MWW6LPERhnNexBMA7WJJxIE85xp+SBxRUDvpbGMKfoaa8T8ZosdQYHzx2CbvYRLK+6AeZVx5lgeOgw0PayoHMV5j9vndGz9RTlLv1iwgNsxnKRKu3q+m/9wm6aaEfUw+LrqNts0I0BIGaKgqOOBLAN+dVXfOzFnxQIvdwQahRpjMJj2PXx8fhjowSM7ByQv7XBER0IIK1gQvBleWbJXhwT8rRaMys729c0Lv8A3TY7HDB4fiL92jzMbxsp/VKaj18pbsT9EYJSMIHN7jF08Cf8bnr8umWr3ryU6MErSPJEq1V96MQnwKI6W5Jo8usBgMzV/wCB/E2avmpuKfCMKov0avVjBVWpTf2m2L5AjOG9ZShBPzt/iACgo6P/2gAMAwEAAgADAAAAEPPP/Ob8dfPPPCok6/NfPPPEI1izO/PPPNWLPLnPPPPLhSh2EvPPPGT3cLlvPPO1fO9HoPfPPER6FTiVfPLnekY2vHfPPGHq1NMvvP/EACIRAQACAgICAgMBAAAAAAAAAAEAESExECBBUWGxcZHB8P/aAAgBAwEBPxDgKoht5MpqU1CbwYiqeux8N8EQ9HFSHqcIQ9pZ3EmoYpuC+uynqOxCEVKVU99VGVDKMpUJZBjKw6uJiDjgWhbxwdEQNsLJmNU74JSfTFCZiKp5JD7JQai6kEyVqoQ6mE+omLArluXSO2+X75Xzg3+oTnb5hXfj+wz4/r8Q/T/24A34JjM0YJ5fvkrE1mYIoNEpJuKKBpm8xDqcf//EACQRAQACAAUEAwEBAAAAAAAAAAEAERAhMUFRIGGx0XGhwYGR/9oACAECAQE/EMFDUEXpQCaOcWbOcTs8kMNY9KAHy/mDrHGXFR2zP3pRDivEuLYARLlBZKicj0p3Qeo7ODHTjLxOkCNtzSvczUlxYKHeALE31v10kA03Bj0YNxBLc4gWF5/nQjWgLY2AHmWf7T3gy43ed+0Elo4hhrHPHZBSf7lGNqpyvm+dvqM9YgnUYN1/TaAc1xA4HjFQu74lMJPSRFSnU5iRW36jmos1LKZjg46MOGK5Kdpnjn8gJC2Zwr/I5kp3xhf/xAAnEAEAAgECBQQDAQEAAAAAAAABABEhMVEQQWFxgTCRocEgsdHw4f/aAAgBAQABPxD8nB+mAK77EvhtrcO275jZU1QCwNJUg2dR1HqQPhUGe7qvVgFk6IyeYOQOjIqtL1IoFhqgvc3PUctEwvudIayL2NVu8Li7y9uJMlTT1W5D0OGG+50fSQigDVZsE67Wn98y+IuMdAa94N5KKH3L4ufRbJu/mvpWL2yw1Q6/F8QBXBLcD2B/YW2Vc5iEyukQDN3kwRLMnCiIlksG2UpV1z9q9FreAuOSlH2y41Wh8x/V8nk8zKZMqJCc4sP2c1fUem18S5ToU8gV9ejlLl2bpmXEFaHusoKNJUYxg1M03CzucG0XgSts+iIYgoLrLp/3he+h4vExB9EvhZWkDZWrl18no0aq09BwvzfjgF9wgy4xjGeYBGKIRYiVjQ+AfPonghinnEe/AtqOvU5xfgFjGL/baAKRYHI2OrcZ02inL0W28DipvFmQKzvfSYWAc5anLZ3ly4sWMVHSBd3I/RCSi1EvvFuG62lgp1TJW1PT0VJ2gE95bir3IpTnl0naWsvhcWankji8tTch+du3OObpYG2T0dHt+5RCepL+wy6HSNtNagYOGXAC1omD5Y8ywHU5NdZUhehU/wB3U9FwKBFHWc3Fy58zN0iiMXdcKNFPMS6q8Ci2g6qc+2Z/vbRj3piAlUvuM36FbWQOQrVuTEeiUbWCrqjQ1dJp9jZhFlpxqM6Db8JwY8FqTVfX1DJii7GZqtDYl8Dk1C7zob95XZ+HKxSzpi/zJ7RT9zTVOksa4jTouNZL5EYBeEdTP1wYxigKDfdyxQ9QZxbzp7wt0zFyynWECaC/b+aGDYjkGgd39cFqRySa4DaXp1IMBPvt/MUs6t028RjL8fk9iCwwa+d83xLcHUaxuwoQCgJcrqEx5K77jfx+Yqxd7QfYXzBs14fPfqXqpg/4uAKRKHNsxNSaRifFe3VhtQN3tEuhFi3tEw/1YJcJFABasO2qXqJh9w/PIimZb5oQFT1CWwTqV/ENERXWpiLObyz6PU2ZTY0s5eHmRvaS0Z/j+pai9h0/pil2FqObg0Iexuoo9iArk1xn/ZnSpsdn52rDMVBW6c73VxYsy1QxbjHSLMKleiUkcKGqrWPA9CgFsBUUWGaSoaOgdDVfH5pARKRLs2l5ee5+X1UV8YT9nHzGcDV3+oYbKkwiVaDrVnvFxHrMuB1jhyDdYaXT7RtpjnvO7fKFm55yo7YN+cabqxMPDHvcMiAoAoPw/9k="
+						 alt="Foto von Sophie Addens"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Addens, Sophie Sarah</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">EF</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">21.04.2003, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Kreuzstraße 302<br/>47169 Duisburg</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-971763<br/>0189-143122</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">S.Addens@example.org<br/>S.Addens@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">01234-971763</td>
+							</tr>
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">0189-143122</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Mutter</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey">Christine Addens</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Kreuzstraße 302<br/>47169 Duisburg</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Addens@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">7. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,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"
+						 alt="Foto von Annett Aits"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Aits, Annett</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTAuMzgxOTM3MiwtMC4wODM2OTU3KSI+PHBhdGggZD0iTSA5Ljg0MTk3MzQsMTYuNjQxMTY1IEMgNi43MjExODE4LDE2LjIzMDg5MiA0LjMxMzcyMiwxMy41OTQyODQgNC4zMTM3MjIsMTAuNDAyODE0IGMgMCwtMy40NzU5ODQ4IDIuODU1ODYwNiwtNi4yOTM4MjEzIDYuMzc4NzUyLC02LjI5MzgyMTMgMy41MjI4NTcsMCA2LjM3ODc1MiwyLjgxNzgzNjUgNi4zNzg3NTIsNi4yOTM4MjEzIDAsMy4xOTE0NyAtMi40MDc0MjcsNS44MjgwNzggLTUuNTI4MjUyLDYuMjM4MzUxIHYgMS43MzM4MjIgaCA0LjI1MjUgdiAxLjY3ODM1MiBoIC00LjI1MjUgdiAzLjM1NjcwNSBIIDkuODQxOTczNCBWIDIwLjA1MzMzOSBIIDUuNTg5NDcyMyB2IC0xLjY3ODM1MiBoIDQuMjUyNTAxMSB6IG0gMC44NTA1MDA2LC0xLjYyMjg4MiBjIDIuNTgzNDc5LDAgNC42Nzc3NSwtMi4wNjYzODkgNC42Nzc3NSwtNC42MTU0NjkgMCwtMi41NDkwNTYzIC0yLjA5NDI3MSwtNC42MTU0Njg5IC00LjY3Nzc1LC00LjYxNTQ2ODkgLTIuNTgzNDU0NCwwIC00LjY3Nzc1MTYsMi4wNjY0MTI2IC00LjY3Nzc1MTYsNC42MTU0Njg5IDAsMi41NDkwOCAyLjA5NDI5NzIsNC42MTU0NjkgNC42Nzc3NTE2LDQuNjE1NDY5IHogTSAxNC41NDk5NDgsNS40MDM1ODAxIDE3LjU1NzkxMSwyLjQzNTY5OTcgSCAxMy42NTc2ODcgViAwLjc1NzM0NzQgaCA2LjgwNDAwMiB2IDYuNzEzNDA5IEggMTguNzYwNjg4IFYgMy42MjI0NzA5IGwgLTMuMDA3OTY0LDIuOTY3ODg4OSBjIDAuODE5OTY4LDEuMDU4ODg5NiAxLjMwNjk2NSwyLjM4MjEwMTUgMS4zMDY5NjUsMy44MTc1MTIyIDAsMy40NzU5NTEgLTIuODU1ODk2LDYuMjkzODIxIC02LjM3ODc1Miw2LjI5MzgyMSAtMy41MjI4OTA5LDAgLTYuMzc4NzUxNiwtMi44MTc4NyAtNi4zNzg3NTE2LC02LjI5MzgyMSAwLC0zLjQ3NTk1MDggMi44NTU4NjA3LC02LjI5MzgyMDMgNi4zNzg3NTE2LC02LjI5MzgyMDMgMS40NTQ3OCwwIDIuNzk1ODQ5LDAuNDgwNTQ1OSAzLjg2OTAxMSwxLjI4OTUyODQgeiBtIC0zLjg2OTAxMSw5LjYxOTc2MDkgYyAyLjU4MzQ3OSwwIDQuNjc3NzUxLC0yLjA2NjM4NyA0LjY3Nzc1MSwtNC42MTU0NjkgMCwtMi41NDkwOCAtMi4wOTQyNzIsLTQuNjE1NDY4IC00LjY3Nzc1MSwtNC42MTU0NjggLTIuNTgzNDUzOCwwIC00LjY3Nzc1MTIsMi4wNjYzODggLTQuNjc3NzUxMiw0LjYxNTQ2OCAwLDIuNTQ5MDgyIDIuMDk0Mjk3NCw0LjYxNTQ2OSA0LjY3Nzc1MTIsNC42MTU0NjkgeiIvPjwvZz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">EF</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">01.01.2004, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Fritschestraße 464<br/>48712 Gescher</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-121338<br/>0189-387894</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">A.Aits@example.com<br/>A.Aits@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">01234-121338</td>
+							</tr>
+							<tr>
+								<td class="p-tb-0 p-l-0 p-r-1" style="width: 55%">Mobilnummer:</td>
+								<td class="p-tb-0 p-l-1 p-r-0" style="width: 45%">0189-387894</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Karen und Christian Aits</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Fritschestraße 464<br/>48712 Gescher</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Aits@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">8. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Dorin, Antje</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">EF</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">08.09.2003, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Becherbacher Straße 173<br/>32429 Minden</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-788315<br/>0189-701941</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">A.Dorin@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Dunja und Thomas Dorin</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Becherbacher Straße 173<br/>32429 Minden</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Dorin@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">9. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Fingerhut, Lena</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">EF</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">08.12.2003, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Annweilerweg 265<br/>41462 Neuss</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-392838<br/>0189-579288</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">L.Fingerhut@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Cornelia und Burhan Fingerhut</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Annweilerweg 265<br/>41462 Neuss</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Fingerhut@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">10. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Geissler, Anna</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">EF</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">10.03.2003, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Stallschreibergasse 188<br/>48612 Horstmar</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-705287<br/>0189-630090</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">A.Geissler@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Ana Maria und Carlos A. Geissler</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Stallschreibergasse 188<br/>48612 Horstmar</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Geissler@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">11. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,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"
+						 alt="Foto von Ulrike-Mariana-Theodora Ahlenstiel"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Ahlenstiel, Ulrike-Mariana-Theodora</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q1</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">26.04.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Krausnickstraße 150<br/>59872 Meschede</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-222312<br/>0189-590130</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">U.Ahlenstiel@example.org<br/>U.Ahlenstiel@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Jaspal Kaur und Mohan Singh Ahlenstiel</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Krausnickstraße 150<br/>59872 Meschede</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Ahlenstiel@email.de<br/></td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">12. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,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"
+						 alt="Foto von Erik-Tobias-Henry-Sebastian Aits"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Aits, Erik-Tobias-Henry-Sebastian</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q1</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">17.12.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Scharnweberstraße 91<br/>33739 Bielefeld</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-251962<br/>0189-374486</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">E.Aits@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Dagmar und Hans-Christian Aits</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Scharnweberstraße 91<br/>33739 Bielefeld</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Aits@email.de<br/></td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">13. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					<img src="data:image/jpeg;base64,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"
+						 alt="Foto von Uwe Benner"
+						 class="foto-bild" />
+					
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Benner, Uwe</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q1</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">28.02.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Große Allee 449<br/>48565 Steinfurt</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-248586<br/>0189-341472</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">U.Benner@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Gabriele und Tobias Benner</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Große Allee 449<br/>48565 Steinfurt</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Benner@email.de<br/></td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">14. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Braun, Jennifer</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q1</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">27.10.2000, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Baldurstraße 473<br/>50969 Köln</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-886025<br/>0189-336477</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">J.Braun@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Vater</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey">Shpejtim Braun</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Baldurstraße 473<br/>50969 Köln</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Braun@email.de</td>
+								</tr>
+								<tr ><td colspan="2" class="p-tb-0 p-lr-0" style="height: 1mm;"></td></tr>
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Mutter</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey">Sandra Braun</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Baldurstraße 473<br/>50969 Köln</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Braun@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">15. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Plaßmann, Christin</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q2</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">17.06.2002, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Schröderdamm 409<br/>45768 Marl</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-472855<br/>0189-908931</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">C.Plaßmann@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Birthe und Dierk Plaßmann</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Schröderdamm 409<br/>45768 Marl</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Plaßmann@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">16. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Schoever, Dirk</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q2</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">30.10.2001, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Droysenstraße 483<br/>32479 Hille</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-829081<br/>0189-846146</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">D.Schoever@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Andrea und Oliver Schoever</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Droysenstraße 483<br/>32479 Hille</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Schoever@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">17. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Steggemann, Doreen</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q2</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">13.12.2000, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Tegernseestraße 213<br/>47441 Moers</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-870588<br/>0189-408160</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">D.Steggemann@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Eltern</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey"> Swetlana und Sergej Steggemann</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Tegernseestraße 213<br/>47441 Moers</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Steggemann@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr class="bg-lightgrey">
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">18. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Thömmes, Dominik</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTE1LjA0OTEgOC41MzY2NkwxOC41ODU4IDVIMTRWM0gyMlYxMUgyMFY2LjQxNDIxTDE2LjQ2MzMgOS45NTA4OEMxNy40Mjc0IDExLjIxMjcgMTggMTIuNzg5NSAxOCAxNC41QzE4IDE4LjY0MjEgMTQuNjQyMSAyMiAxMC41IDIyQzYuMzU3ODYgMjIgMyAxOC42NDIxIDMgMTQuNUMzIDEwLjM1NzkgNi4zNTc4NiA3IDEwLjUgN0MxMi4yMTA1IDcgMTMuNzg3MyA3LjU3MjY0IDE1LjA0OTEgOC41MzY2NlpNMTAuNSAyMEMxMy41Mzc2IDIwIDE2IDE3LjUzNzYgMTYgMTQuNUMxNiAxMS40NjI0IDEzLjUzNzYgOSAxMC41IDlDNy40NjI0MyA5IDUgMTEuNDYyNCA1IDE0LjVDNSAxNy41Mzc2IDcuNDYyNDMgMjAgMTAuNSAyMFoiLz48L3N2Zz4=" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;">Q2</td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">20.01.2001, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey">Karl-Liebknecht-Straße 234<br/>44339 Dortmund</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0">01234-161610<br/>0189-700132</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0">D.Thömmes@smail.de</td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Vater</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey">Helmut Thömmes</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Karl-Liebknecht-Straße 234<br/>44339 Dortmund</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Thömmes@email.de</td>
+								</tr>
+								<tr ><td colspan="2" class="p-tb-0 p-lr-0" style="height: 1mm;"></td></tr>
+							
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1 bo-b-grey" style="width: 30mm;">Mutter</td>
+									<td class="p-tb-0 p-l-1 p-r-0 bo-b-grey">Dorothee Thömmes</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Karl-Liebknecht-Straße 234<br/>44339 Dortmund</td>
+								</tr>
+								<tr>
+									<td class="p-tb-0 p-l-0 p-r-1" style="width: 30mm;"></td>
+									<td class="p-tb-0 p-l-1 p-r-0">Thömmes@email.de</td>
+								</tr>
+								
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		<tr>
+			<!-- Spalte für laufende Nummer -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">19. </td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+				<div class="foto-container foto-container-klein">
+					
+					<div class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			
+				<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							
+							<tr>
+								<td class="mp-0 ta-lt">Externa, Eleonora Emma</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTSAxLDE2LjUgViA5IEggNS41IDEwIHYgMSAxIEggNi41IDMgViAxNi41IDIyIEggOC41IDE0IFYgMTguNSAxNSBoIDEgMSBWIDE5LjUgMjQgSCA4LjUgMSBaIE0gMTgsMTcgdiAtMSBoIDIgMiBWIDkuNSAzIEggMTUuNSA5IFYgNSA3IEggOCA3IFYgNCAxIEggMTUuNSAyNCBWIDkuNSAxOCBIIDIxIDE4IFogTSA4LjY2NjY2NjcsMTYuMzMzMzMzIDcuOTU5MzE5NCwxNS42MjU5ODYgMTEuNjgyNjA3LDExLjgxMjk5MyAxNS40MDU4OTYsOCBIIDEzLjcwMjk0OCAxMiBWIDcgNiBIIDE1LjUgMTkgViA5LjUgMTMgSCAxOCAxNyBWIDExLjI5NzA1MiA5LjU5NDEwNDUgbCAtMy44MTI5OTMsMy43MjMyODg1IC0zLjgxMjk5MywzLjcyMzI4OCB6Ii8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;"></td>
+							</tr>
+							<tr >
+								<td class="mp-0 bo-t-grey">13.10.2023, deutsch</td>
+								<td colspan="3" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="mp-0 bo-t-grey"><br/></td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							<tr>
+								<td class="mp-0"></td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr>
+								<td class="mp-0"></td>
+							</tr>
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+				
+
+				<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+				
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+
+				<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+				
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+					<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							
+							
+						</table>
+					</td>
+				
+			
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			
+		</tr>
+		</tbody>
+	</table>
+	</body>
+</html>

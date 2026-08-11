@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Lehrer - Liste der Schüler mit Leistungsdaten",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

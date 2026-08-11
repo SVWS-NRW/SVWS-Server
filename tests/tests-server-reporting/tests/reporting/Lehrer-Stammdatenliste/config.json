@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Lehrer - Stammdatenliste",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

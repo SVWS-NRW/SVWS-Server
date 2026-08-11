@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Kursliste mit Fotos und Namen der Schüler",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

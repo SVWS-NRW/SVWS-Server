@@ -21,8 +21,8 @@ ext {
 	FORWARDED_DB_PORT = 3319
 	FORWARDED_APP_PORT = 5019
 
-	// Liste der Datenbanken die für die Tests genutzt / geseedet werden sollen
-	TARGET_TEST_DATABASES = ['GymAbiDav01']
+	// Liste der Schemata die für die Tests genutzt / geseedet werden sollen
+	TARGET_TEST_SCHEMATA = ['GymAbiDav01']
 }
 
 /**

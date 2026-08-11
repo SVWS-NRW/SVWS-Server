@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="de">
+    
+    
+	<head>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>Klassenliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler</title>
+
+		<!-- ##### CSS für PDF-Ausgabe: Beginn ############################################################################################################# -->
+		<style>/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear.
+There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables.
+It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself.
+For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint.
+This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits).
+Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines.
+This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot.
+This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius.
+Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect.
+The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres.
+These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+	-fs-page-break-min-height: 4mm;
+}
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}
+</style>
+		<!-- ##### CSS für PDF-Ausgabe: Ende ############################################################################################################### -->
+
+		<!-- ##### CSS für Globale Styles: Beginn ########################################################################################################## -->
+		<style>/*
+##########################################################################################################################
+Schriftart definieren
+##########################################################################################################################
+ */
+@font-face {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	src: local('Liberation Sans');
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Farben
+##########################################################################################################################
+ */
+.c-red {
+	color: #ff0000;
+}
+.c-green {
+	color: #00ff00;
+}
+.c-blue {
+	color: #0000ff;
+}
+.c-grey {
+	color: #808080;
+}
+.c-lightgrey {
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
+}
+.c-lightyellow {
+	color: #FFFDAF;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+##########################################################################################################################
+*/
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation', sans-serif;
+	font-weight: normal;
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Text-Elemente
+##########################################################################################################################
+*/
+h1 {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+}
+
+h2 {
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+}
+
+h3 {
+	font-size: 12pt;
+	font-weight: bold;
+	margin-top: 0.6em;
+	margin-bottom: 0.1em;
+}
+
+h4 {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.1em;
+}
+
+p	{
+	font-size: 10pt;
+	margin: 0.25em 0 0;
+	padding: 0;
+}
+
+ul 	{
+	font-size: 10pt;
+	margin: 0.25em 0 0 1em;
+	padding: 0;
+}
+
+sup {
+	vertical-align: 0.6em;
+	font-size: 0.75em;
+}
+
+.f-bold {
+	font-weight: bold;
+}
+.f-ital {
+	font-style: italic;
+}
+.f-small {
+	font-size: 0.9em;
+}
+.f-tiny {
+	font-size: 0.8em;
+}
+.f-very-tiny {
+	font-size: 0.7em;
+}
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
+
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
+	text-align: left;
+}
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
+	text-align: center;
+}
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
+	text-align: right;
+}
+.ta-lt, .ta-ct, .ta-rt {
+	vertical-align: top;
+}
+.ta-lm, .ta-cm, .ta-rm {
+	vertical-align: middle;
+}
+.ta-lb, .ta-cb, .ta-rb {
+	vertical-align: bottom;
+}
+.icon {
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
+
+
+/*
+##########################################################################################################################
+Definitionen für Spacing, Padding, Margin
+##########################################################################################################################
+*/
+.displayblock {
+	display: block;
+}
+
+.zero-height {
+	height: 0;
+}
+
+
+.p-0 {
+	padding: 0;
+}
+.p-05 {
+	padding: 0.5mm;
+}
+.p-1 {
+	padding: 1mm;
+}
+.p-2 {
+	padding: 2mm;
+}
+.p-3 {
+	padding: 3mm;
+}
+.p-4 {
+	padding: 4mm;
+}
+
+.p-t-0 {
+	padding-top: 0;
+}
+.p-b-0 {
+	padding-bottom: 0;
+}
+.p-l-0 {
+	padding-left: 0;
+}
+.p-r-0 {
+	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
+}
+
+.p-t-1 {
+	padding-top: 1mm;
+}
+.p-b-1 {
+	padding-bottom: 1mm;
+}
+.p-l-1 {
+	padding-left: 1mm;
+}
+.p-r-1 {
+	padding-right: 1mm;
+}
+
+.p-t-2 {
+	padding-top: 2mm;
+}
+.p-b-2 {
+	padding-bottom: 2mm;
+}
+.p-l-2 {
+	padding-left: 2mm;
+}
+.p-r-2 {
+	padding-right: 2mm;
+}
+
+.p-t-3 {
+	padding-top: 3mm;
+}
+.p-b-3 {
+	padding-bottom: 3mm;
+}
+.p-l-3 {
+	padding-left: 3mm;
+}
+.p-r-3 {
+	padding-right: 3mm;
+}
+
+.p-t-4 {
+	padding-top: 4mm;
+}
+.p-b-4 {
+	padding-bottom: 4mm;
+}
+.p-l-4 {
+	padding-left: 4mm;
+}
+.p-r-4 {
+	padding-right: 4mm;
+}
+
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
+}
+
+.p-t-25of100 {
+	padding-top: 1.25em;
+}
+.p-b-25of100 {
+	padding-bottom: 1.25em;
+}
+
+
+.mp-0 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.m-0 {
+	margin: 0;
+}
+.m-1 {
+	margin: 1mm;
+}
+.m-2 {
+	margin: 2mm;
+}
+
+.m-t-0 {
+	margin-top: 0
+}
+.m-b-0 {
+	margin-bottom: 0
+}
+.m-l-0 {
+	margin-left: 0
+}
+.m-r-0 {
+	margin-right: 0
+}
+
+.m-t-1 {
+	margin-top: 1mm
+}
+.m-b-1 {
+	margin-bottom: 1mm
+}
+.m-l-1 {
+	margin-left: 1mm
+}
+.m-r-1 {
+	margin-right: 1mm
+}
+
+.m-t-2 {
+	margin-top: 2mm
+}
+.m-b-2 {
+	margin-bottom: 2mm
+}
+.m-l-2 {
+	margin-left: 2mm
+}
+.m-r-2 {
+	margin-right: 2mm
+}
+
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
+}
+
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
+
+/*
+##########################################################################################################################
+Definitionen für Tabellen
+##########################################################################################################################
+*/
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.fixed-100 {
+	width: 100%;
+	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
+}
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	display: table-footer-group;
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-before: auto;
+}
+
+th {
+	font-weight: normal;
+}
+
+th.head-small-grey, td.head-small-grey {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #757575;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
+}
+
+th.head-black-lines, td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all, td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.cell-small-grey {
+	font-size: 0.8em;
+	color: #808080;
+	vertical-align: top;
+	border-top: 0.5px solid #808080;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Border and Background
+##########################################################################################################################
+*/
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
+.bo-grey {
+	border: 0.5px solid #808080;
+}
+.bo-t-grey {
+	border-top: 0.5px solid #808080;
+}
+.bo-b-grey {
+	border-bottom: 0.5px solid #808080;
+}
+.bo-tb-grey {
+	border-top: 0.5px solid #808080;
+	border-bottom: 0.5px solid #808080;
+}
+.bo-l-grey {
+	border-left: 0.5px solid #808080;
+}
+.bo-r-grey {
+	border-right: 0.5px solid #808080;
+}
+.bo-lr-grey {
+	border-left: 0.5px solid #808080;
+	border-right: 0.5px solid #808080;
+}
+
+.bo-black {
+	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
+}
+.bo-t-black {
+	border-top: 0.5px solid #000000;
+}
+.bo-t-black-strong {
+	border-top: 1px solid #000000;
+}
+.bo-b-black {
+	border-bottom: 0.5px solid #000000;
+}
+.bo-b-black-strong {
+	border-bottom: 1px solid #000000;
+}
+.bo-tb-black {
+	border-top: 0.5px solid #000000;
+	border-bottom: 0.5px solid #000000;
+}
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.bo-l-black {
+	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
+}
+.bo-r-black {
+	border-right: 0.5px solid #000000;
+}
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
+.bo-lr-black {
+	border-left: 0.5px solid #000000;
+	border-right: 0.5px solid #000000;
+}
+.bo-lr-black-strong {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
+}
+.bg-lightyellow {
+	background-color: #FFFDAF;
+}
+
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}
+
+/* Grau hinterlegtes Formularfeld für einzutragende bzw. bescheinigte Werte (z. B. Schulbescheinigung, Zeugnisse).
+   Schmale Box (~5.5mm): geringer vertikaler Innenabstand (0.75mm), line-height = min-height (4mm) zentriert
+   die einzelne Textzeile vertikal in der Inhaltsbox; min-height hält leere Felder so hoch wie gefüllte.
+   Feste mm-line-height macht die Feldhöhe zudem unabhängig vom umgebenden Zeilenkontext.
+   position: relative verankert die Streichung leerer Felder (siehe .formularfeld:empty). */
+.formularfeld {
+	position: relative;
+	display: inline-block;
+	min-width: 30mm;
+	min-height: 4mm;
+	padding: 0.75mm 1.5mm;
+	line-height: 4mm;
+	background-color: #d9d9d9;
+	vertical-align: middle;
+}
+
+/* Leeres Formularfeld wird mit einem durchgehenden Strich entwertet (kein einzutragender Wert).
+   Statt CSS-Pseudoelementen (:empty/::before werden von openhtmltopdf nicht zuverlässig gerendert)
+   wird hierfür im Template ein echtes <span class="formularfeld-strich"></span> als einziges Kind
+   des leeren Feldes ausgegeben. Der Strich liegt vertikal mittig und ist links/rechts um den
+   horizontalen Textabstand (1.5mm) eingerückt, sitzt also auf derselben Flucht wie ein eingetragener
+   Wert. left + right (kein bottom) wegen der zuverlässigeren Absolutpositionierung in openhtmltopdf. */
+.formularfeld-strich {
+	display: block;
+	position: absolute;
+	left: 1.5mm;
+	right: 1.5mm;
+	/* Fester top-Wert statt 50%: openhtmltopdf löst Prozent-top nicht auf, wenn das (leere) Feld keine
+	   definite Höhe hat. 0.75mm padding-top + halbe Textzeile (line-height 4mm / 2 = 2mm) = 2.75mm Textmitte;
+	   abzüglich halber Strichstärke (0.1mm) liegt der Strich auf der Flucht eines eingetragenen Wertes. */
+	top: 2.65mm;
+	border-top: 0.2mm solid #000000;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
+}
+</style>
+		<!-- ##### CSS für Globale Styles: Ende ############################################################################################################ -->
+
+		<!-- ##### CSS für Seitenformat: Beginn ############################################################################################################ -->
+		<style>@Page {
+	size: A4 landscape;
+	margin: 18mm 10mm 12mm;
+
+	/* Boxen im Seitenrand. Die Inhalte werden über `position: running(...)` aus dem Body in diese Bereiche
+	   verschoben (siehe reporting-styles.css). */
+	@top-left {
+		content: element(pageTopLeft);
+		padding-top: 1mm;
+		padding-left: 0;
+	}
+
+	@top-right {
+		content: element(pageTopRight);
+		padding-top: 1mm;
+		padding-right: 0;
+	}
+
+	@bottom-left {
+		content: element(pageBottomLeft);
+		padding-bottom: 1mm;
+		padding-left: 0;
+	}
+
+	@bottom-center {
+		content: element(pageBottomCenter);
+		padding-bottom: 1mm;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	@bottom-right {
+		content: element(pageBottomRight);
+		padding-bottom: 1mm;
+		padding-right: 0;
+	}
+}
+
+
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
+@media screen {
+	body {
+		width: 297mm;
+		min-height: 210mm;
+		padding: 9mm 10mm 12mm 10mm;
+	}
+	.start-new-page {
+		margin-top: 26mm;
+	}
+	.start-new-page::before {
+		top: -14mm;
+		left: -15mm;
+		right: -15mm;
+		background-size: 297mm 100%;
+	}
+}
+</style>
+		<!-- ##### CSS für Seitenformat: Ende ############################################################################################################## -->
+
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Beginn ########################################################## -->
+		<style>/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+td {
+	text-align: left;
+	vertical-align: top;
+	font-size: 0.9em;
+}
+
+/* Foto-Zelle: kein Innenabstand, Inhalt oben ausgerichtet */
+td.foto-zelle {
+	padding: 0;
+	vertical-align: top;
+}
+
+/* Foto-Container: beschneidet überstehende Bildbereiche und zentriert die Box */
+.foto-container {
+	overflow: hidden;
+	margin: 3px auto;
+}
+
+/* Kleine Foto-Variante für die Kontaktlisten */
+.foto-container-klein {
+	width: 10mm;
+	height: 12mm;
+}
+
+/* Foto-Bild: füllt die Breite des Containers, Höhe skaliert proportional */
+.foto-bild {
+	width: 100%;
+	display: block;
+}
+
+/* Platzhalter-Farbe für fehlende Fotos */
+.foto-placeholder {
+	background-color: #d3d3d3;
+}
+
+/* Platzhalter in der kleinen Foto-Variante */
+.foto-placeholder-klein {
+	width: 10mm;
+	height: 12mm;
+}
+</style>
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Ende ############################################################ -->
+	</head>
+
+	<body>
+
+		<div class="reset-page-counter start-new-page">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: 7mm;" />     <!-- Lfd Nr -->
+					<col style="width: 12mm;" />  <!-- Schüler: Foto -->
+					<col style="width: 46mm;" />    <!-- Schüler: Name, Angaben, Anschrift -->
+					<col style="width: 58mm;" />    <!-- Schüler: E-Mail und Telefon -->
+ 					<col style="width: 58mm;" />    <!-- Telefonkontakte -->
+					<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt Erzieher, Anschrift, E-Mail auf. -->
+				</colgroup>
+				<thead>
+					<tr>
+						<th colspan="6">
+							<table class="fixed-100 mp-0">
+								<tr>
+									<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;">Klassenliste EF</th>
+									<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt">Leitung: </th>
+								</tr>
+								<tr>
+									<td class="ta-lt" style="width: 35%; font-size: 9pt;">2 Personen (0/2/0)</td>
+									<td class="ta-rt" style="width: 65%; font-size: 9pt;">Jahrgangsstufe: EF</td>
+								</tr>
+								
+								<tr>
+									<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+								</tr>
+							</table>
+						</th>
+					</tr>
+
+					<tr>
+						<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
+						<td class="head-small-grey"></td>
+						<td class="head-small-grey ta-c">Foto</td>
+						<td class="head-small-grey">Name, ggf. weitere Angaben</td>
+						
+						
+							<!-- Regelfall: Negierung des Falles zuvor. -->
+							<td class="head-small-grey">Telefon und E-Mail</td>
+							<td class="head-small-grey">Telefonische Kontakte</td>
+						
+						<td class="head-small-grey">Erzieher</td>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr>
+						<!-- Spalte für laufende Nummer -->
+						<td class="p-tb-05 p-lr-1 bo-b-grey">1. </td>
+						<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+							<div class="foto-container foto-container-klein">
+								
+								<div class="foto-placeholder foto-placeholder-klein"></div>
+							</div>
+						</td>
+
+						<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+						<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+						
+
+						<!-- ###### Regelfall wird bearbeitet ####### -->
+						
+							<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+							
+
+							<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="auto-100 mp-0">
+										
+										<tr>
+											<td class="mp-0 ta-lt" style="width: 100%;">Aalles, Leer-Lena Maria</td>
+											<td class="mp-0 ta-rt p-l-1"></td><td class="mp-0 ta-rt p-l-1"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+										</tr>
+										<tr >
+											<td class="mp-0 bo-t-grey">01.06.2003, </td>
+											<td colspan="2" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+										</tr>
+										<tr>
+											<td colspan="3" class="mp-0 bo-t-grey"><br/></td>
+										</tr>
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										<tr>
+											<td class="mp-0"></td>
+										</tr>
+										<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+										<tr>
+											<td class="mp-0"></td>
+										</tr>
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+							
+
+							<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+							
+								<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+								<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										
+									</table>
+								</td>
+							
+						
+
+						<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+						
+					</tr>
+					<tr class="bg-lightgrey">
+						<!-- Spalte für laufende Nummer -->
+						<td class="p-tb-05 p-lr-1 bo-b-grey">2. </td>
+						<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle">
+							<div class="foto-container foto-container-klein">
+								<img src="data:image/jpeg;base64,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"
+									 alt="Foto von Frida Schmitz"
+									 class="foto-bild" />
+								
+							</div>
+						</td>
+
+						<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+						<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Schüler und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+						
+
+						<!-- ###### Regelfall wird bearbeitet ####### -->
+						
+							<!-- ### Es werden nur Daten des Schüler gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+							
+
+							<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Schülerdaten für alle folgenden Fälle an.  -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="auto-100 mp-0">
+										
+										<tr>
+											<td class="mp-0 ta-lt" style="width: 100%;">Schmitz, Frida</td>
+											<td class="mp-0 ta-rt p-l-1"></td><td class="mp-0 ta-rt p-l-1"><img class="icon" width="10" height="10" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayI+PHBhdGggZD0iTTExIDE1LjkzMzlDNy4zMzA2NCAxNS40NDUgNC41IDEyLjMwMzEgNC41IDguNUM0LjUgNC4zNTc4NiA3Ljg1Nzg2IDEgMTIgMUMxNi4xNDIxIDEgMTkuNSA0LjM1Nzg2IDE5LjUgOC41QzE5LjUgMTIuMzAzMSAxNi42Njk0IDE1LjQ0NSAxMyAxNS45MzM5VjE4SDE4VjIwSDEzVjI0SDExVjIwSDZWMThIMTFWMTUuOTMzOVpNMTIgMTRDMTUuMDM3NiAxNCAxNy41IDExLjUzNzYgMTcuNSA4LjVDMTcuNSA1LjQ2MjQzIDE1LjAzNzYgMyAxMiAzQzguOTYyNDMgMyA2LjUgNS40NjI0MyA2LjUgOC41QzYuNSAxMS41Mzc2IDguOTYyNDMgMTQgMTIgMTRaIi8+PC9zdmc+" alt="" /></td>
+										</tr>
+										<tr >
+											<td class="mp-0 bo-t-grey">01.02.2005, deutsch</td>
+											<td colspan="2" class="mp-0 bo-t-grey ta-rt p-l-1"></td>
+										</tr>
+										<tr>
+											<td colspan="3" class="mp-0 bo-t-grey">Zum alten Tor 79<br/>44388 Dortmund</td>
+										</tr>
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden Telefon und E-Mail des Schülers gefordert -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										<tr>
+											<td class="mp-0"></td>
+										</tr>
+										<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+										<tr>
+											<td class="mp-0"></td>
+										</tr>
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden Telefon und E-Mail des Schülers gefordert, ohne das noch weitere Daten gefordert werden. -->
+							
+
+							<!-- ### Es werden die Telefonkontakte des Schülers gefordert.  -->
+							
+								<td class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										
+									</table>
+								</td>
+							
+
+							<!-- ### Es werden die Daten der Erzieher des Schülers gefordert.  -->
+							
+								<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Erzieher und man kann im Hochformat bleiben. -->
+								<td colspan="1" class="p-tb-05 p-lr-1 bo-b-grey">
+									<table class="fixed-100 mp-0">
+										
+										
+									</table>
+								</td>
+							
+						
+
+						<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

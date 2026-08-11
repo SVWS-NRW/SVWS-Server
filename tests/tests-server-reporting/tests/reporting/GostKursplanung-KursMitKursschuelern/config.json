@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Kursplanung - Kurs mit Kursschülern (Auswahl von 25 Kursen)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

@@ -1,0 +1,2591 @@
+<!DOCTYPE html>
+<html lang="de">
+    
+	<head>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>NRW - Anlage 12 - Zeugnis der allgemeinen Hochschulreife</title>
+
+		<!-- ##### CSS für PDF-Ausgabe: Beginn ############################################################################################################# -->
+		<style>/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear.
+There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables.
+It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself.
+For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint.
+This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits).
+Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines.
+This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot.
+This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius.
+Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect.
+The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres.
+These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+	-fs-page-break-min-height: 4mm;
+}
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}
+</style>
+		<!-- ##### CSS für PDF-Ausgabe: Ende ############################################################################################################### -->
+
+		<!-- ##### CSS für Globale Styles: Beginn ########################################################################################################## -->
+		<style>/*
+##########################################################################################################################
+Schriftart definieren
+##########################################################################################################################
+ */
+@font-face {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	src: local('Liberation Sans');
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Farben
+##########################################################################################################################
+ */
+.c-red {
+	color: #ff0000;
+}
+.c-green {
+	color: #00ff00;
+}
+.c-blue {
+	color: #0000ff;
+}
+.c-grey {
+	color: #808080;
+}
+.c-lightgrey {
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
+}
+.c-lightyellow {
+	color: #FFFDAF;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+##########################################################################################################################
+*/
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation', sans-serif;
+	font-weight: normal;
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Text-Elemente
+##########################################################################################################################
+*/
+h1 {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+}
+
+h2 {
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+}
+
+h3 {
+	font-size: 12pt;
+	font-weight: bold;
+	margin-top: 0.6em;
+	margin-bottom: 0.1em;
+}
+
+h4 {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.1em;
+}
+
+p	{
+	font-size: 10pt;
+	margin: 0.25em 0 0;
+	padding: 0;
+}
+
+ul 	{
+	font-size: 10pt;
+	margin: 0.25em 0 0 1em;
+	padding: 0;
+}
+
+sup {
+	vertical-align: 0.6em;
+	font-size: 0.75em;
+}
+
+.f-bold {
+	font-weight: bold;
+}
+.f-ital {
+	font-style: italic;
+}
+.f-small {
+	font-size: 0.9em;
+}
+.f-tiny {
+	font-size: 0.8em;
+}
+.f-very-tiny {
+	font-size: 0.7em;
+}
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
+
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
+	text-align: left;
+}
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
+	text-align: center;
+}
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
+	text-align: right;
+}
+.ta-lt, .ta-ct, .ta-rt {
+	vertical-align: top;
+}
+.ta-lm, .ta-cm, .ta-rm {
+	vertical-align: middle;
+}
+.ta-lb, .ta-cb, .ta-rb {
+	vertical-align: bottom;
+}
+.icon {
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
+
+
+/*
+##########################################################################################################################
+Definitionen für Spacing, Padding, Margin
+##########################################################################################################################
+*/
+.displayblock {
+	display: block;
+}
+
+.zero-height {
+	height: 0;
+}
+
+
+.p-0 {
+	padding: 0;
+}
+.p-05 {
+	padding: 0.5mm;
+}
+.p-1 {
+	padding: 1mm;
+}
+.p-2 {
+	padding: 2mm;
+}
+.p-3 {
+	padding: 3mm;
+}
+.p-4 {
+	padding: 4mm;
+}
+
+.p-t-0 {
+	padding-top: 0;
+}
+.p-b-0 {
+	padding-bottom: 0;
+}
+.p-l-0 {
+	padding-left: 0;
+}
+.p-r-0 {
+	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
+}
+
+.p-t-1 {
+	padding-top: 1mm;
+}
+.p-b-1 {
+	padding-bottom: 1mm;
+}
+.p-l-1 {
+	padding-left: 1mm;
+}
+.p-r-1 {
+	padding-right: 1mm;
+}
+
+.p-t-2 {
+	padding-top: 2mm;
+}
+.p-b-2 {
+	padding-bottom: 2mm;
+}
+.p-l-2 {
+	padding-left: 2mm;
+}
+.p-r-2 {
+	padding-right: 2mm;
+}
+
+.p-t-3 {
+	padding-top: 3mm;
+}
+.p-b-3 {
+	padding-bottom: 3mm;
+}
+.p-l-3 {
+	padding-left: 3mm;
+}
+.p-r-3 {
+	padding-right: 3mm;
+}
+
+.p-t-4 {
+	padding-top: 4mm;
+}
+.p-b-4 {
+	padding-bottom: 4mm;
+}
+.p-l-4 {
+	padding-left: 4mm;
+}
+.p-r-4 {
+	padding-right: 4mm;
+}
+
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
+}
+
+.p-t-25of100 {
+	padding-top: 1.25em;
+}
+.p-b-25of100 {
+	padding-bottom: 1.25em;
+}
+
+
+.mp-0 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.m-0 {
+	margin: 0;
+}
+.m-1 {
+	margin: 1mm;
+}
+.m-2 {
+	margin: 2mm;
+}
+
+.m-t-0 {
+	margin-top: 0
+}
+.m-b-0 {
+	margin-bottom: 0
+}
+.m-l-0 {
+	margin-left: 0
+}
+.m-r-0 {
+	margin-right: 0
+}
+
+.m-t-1 {
+	margin-top: 1mm
+}
+.m-b-1 {
+	margin-bottom: 1mm
+}
+.m-l-1 {
+	margin-left: 1mm
+}
+.m-r-1 {
+	margin-right: 1mm
+}
+
+.m-t-2 {
+	margin-top: 2mm
+}
+.m-b-2 {
+	margin-bottom: 2mm
+}
+.m-l-2 {
+	margin-left: 2mm
+}
+.m-r-2 {
+	margin-right: 2mm
+}
+
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
+}
+
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
+
+/*
+##########################################################################################################################
+Definitionen für Tabellen
+##########################################################################################################################
+*/
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.fixed-100 {
+	width: 100%;
+	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
+}
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	display: table-footer-group;
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-before: auto;
+}
+
+th {
+	font-weight: normal;
+}
+
+th.head-small-grey, td.head-small-grey {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #757575;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
+}
+
+th.head-black-lines, td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all, td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.cell-small-grey {
+	font-size: 0.8em;
+	color: #808080;
+	vertical-align: top;
+	border-top: 0.5px solid #808080;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Border and Background
+##########################################################################################################################
+*/
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
+.bo-grey {
+	border: 0.5px solid #808080;
+}
+.bo-t-grey {
+	border-top: 0.5px solid #808080;
+}
+.bo-b-grey {
+	border-bottom: 0.5px solid #808080;
+}
+.bo-tb-grey {
+	border-top: 0.5px solid #808080;
+	border-bottom: 0.5px solid #808080;
+}
+.bo-l-grey {
+	border-left: 0.5px solid #808080;
+}
+.bo-r-grey {
+	border-right: 0.5px solid #808080;
+}
+.bo-lr-grey {
+	border-left: 0.5px solid #808080;
+	border-right: 0.5px solid #808080;
+}
+
+.bo-black {
+	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
+}
+.bo-t-black {
+	border-top: 0.5px solid #000000;
+}
+.bo-t-black-strong {
+	border-top: 1px solid #000000;
+}
+.bo-b-black {
+	border-bottom: 0.5px solid #000000;
+}
+.bo-b-black-strong {
+	border-bottom: 1px solid #000000;
+}
+.bo-tb-black {
+	border-top: 0.5px solid #000000;
+	border-bottom: 0.5px solid #000000;
+}
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.bo-l-black {
+	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
+}
+.bo-r-black {
+	border-right: 0.5px solid #000000;
+}
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
+.bo-lr-black {
+	border-left: 0.5px solid #000000;
+	border-right: 0.5px solid #000000;
+}
+.bo-lr-black-strong {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
+}
+.bg-lightyellow {
+	background-color: #FFFDAF;
+}
+
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}
+
+/* Grau hinterlegtes Formularfeld für einzutragende bzw. bescheinigte Werte (z. B. Schulbescheinigung, Zeugnisse).
+   Schmale Box (~5.5mm): geringer vertikaler Innenabstand (0.75mm), line-height = min-height (4mm) zentriert
+   die einzelne Textzeile vertikal in der Inhaltsbox; min-height hält leere Felder so hoch wie gefüllte.
+   Feste mm-line-height macht die Feldhöhe zudem unabhängig vom umgebenden Zeilenkontext.
+   position: relative verankert die Streichung leerer Felder (siehe .formularfeld:empty). */
+.formularfeld {
+	position: relative;
+	display: inline-block;
+	min-width: 30mm;
+	min-height: 4mm;
+	padding: 0.75mm 1.5mm;
+	line-height: 4mm;
+	background-color: #d9d9d9;
+	vertical-align: middle;
+}
+
+/* Leeres Formularfeld wird mit einem durchgehenden Strich entwertet (kein einzutragender Wert).
+   Statt CSS-Pseudoelementen (:empty/::before werden von openhtmltopdf nicht zuverlässig gerendert)
+   wird hierfür im Template ein echtes <span class="formularfeld-strich"></span> als einziges Kind
+   des leeren Feldes ausgegeben. Der Strich liegt vertikal mittig und ist links/rechts um den
+   horizontalen Textabstand (1.5mm) eingerückt, sitzt also auf derselben Flucht wie ein eingetragener
+   Wert. left + right (kein bottom) wegen der zuverlässigeren Absolutpositionierung in openhtmltopdf. */
+.formularfeld-strich {
+	display: block;
+	position: absolute;
+	left: 1.5mm;
+	right: 1.5mm;
+	/* Fester top-Wert statt 50%: openhtmltopdf löst Prozent-top nicht auf, wenn das (leere) Feld keine
+	   definite Höhe hat. 0.75mm padding-top + halbe Textzeile (line-height 4mm / 2 = 2mm) = 2.75mm Textmitte;
+	   abzüglich halber Strichstärke (0.1mm) liegt der Strich auf der Flucht eines eingetragenen Wertes. */
+	top: 2.65mm;
+	border-top: 0.2mm solid #000000;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
+}
+</style>
+		<!-- ##### CSS für Globale Styles: Ende ############################################################################################################ -->
+
+		<!-- ##### CSS für Seitenformat: Beginn ############################################################################################################ -->
+		<style>@Page {
+	size: A3 landscape;
+	margin: 5mm;
+}
+
+
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
+@media screen {
+	body {
+		width: 420mm;
+		min-height: 297mm;
+		padding: 5mm;
+	}
+	.start-new-page {
+		margin-top: 15mm;
+	}
+	.start-new-page::before {
+		top: -10mm;
+		left: -10mm;
+		right: -10mm;
+		background-size: 420mm 100%;
+	}
+}
+</style>
+		<!-- ##### CSS für Seitenformat: Ende ############################################################################################################## -->
+
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Beginn ########################################################## -->
+		<style>/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+@media print {
+	body {
+		font-family: 'liberation', sans-serif;
+		font-weight: normal;
+		font-size: 10pt;
+		margin: 0;
+		padding: 0;
+	}
+}
+@media screen {
+	body {
+		font-family: 'liberation', sans-serif;
+		font-weight: normal;
+		font-size: 10pt;
+	}
+}
+sup {
+	font-size: 6pt;
+}
+p	{
+	margin: 0;
+	padding: 0;
+}
+ul 	{
+	margin: 0 0 0 1em;
+	padding: 0;
+}
+</style>
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Ende ############################################################ -->
+	</head>
+
+	<body>
+		
+
+		<!-- Seiten 4 und 1 #################################################################################################################################### -->
+			<div class="start-new-page">
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: calc(50% - 5mm);" />
+					<col style="width: 10mm;" />
+					<col style="width: calc(50% - 5mm);" />
+				</colgroup>
+				<tr>
+					<th class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 4 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">4. Seite des Zeugnisses der allgemeinen Hochschulreife für Jessika Aderhold</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm"  class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 137mm;" class="ta-lt">
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%; height: 5mm" class="ta-lm">
+															<span class="f-bold">Fremdsprachen</span> <sup>8)</sup>
+														</th>
+													</tr>
+													<tr>
+														<td>
+															<table class="fixed-100 mp-0">
+																<colgroup>
+																	<col style="width: 44%" />
+																	<col style="width: 19%" />
+																	<col style="width: 19%" />
+																	<col style="width: 18%" />
+																</colgroup>
+																<tr>
+																	<th style="height: 7mm" class="p-tb-1 p-lr-2 f-bold ta-lm bo-black-strong">Fach</th>
+																	<th style="height: 7mm" colspan="2" class="p-tb-1 p-lr-2 f-bold ta-cm bo-black-strong">Jahrgangsstufe</th>
+																	<th style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm f-bold bo-black-strong">GER</th>
+																</tr>
+																
+																	<tr>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Englisch</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">von 05.1</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">bis Q2.2</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">B2/C1</td>
+																	</tr>
+																
+																	<tr>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Französisch</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">von 06.1</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">bis 09.2</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">B1</td>
+																	</tr>
+																
+																	<tr>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Spanisch</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">von 08.1</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">bis Q2.2</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">B2</td>
+																	</tr>
+																
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<p style="margin-bottom: 0.5em">Für die modernen Fremdsprachen schließt dieses Zeugnis Kompetenzen des Gemeinsamen europäischen Referenzrahmens für Sprachen (GeR) ein. <sup class="tiny">9)</sup></p>
+														</td>
+													</tr>
+													
+													
+												</table>
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%; height: 7mm" class="ta-lb">
+															<p><span class="f-bold">Bemerkungen</span> <sup> 10)</sup></p>
+														</th>
+													</tr>
+													<tr>
+														<td style="width: 100%;" class="ta-lt">- keine -</td>
+													</tr>
+												</table>
+											</th>
+										</tr>
+									</table>
+
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th style="height: 27mm;" class="ta-lt">
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%;" class="ta-lt">
+															<p>Frau Jessika Aderhold hat die Abiturprüfung bestanden und damit die Berechtigung zum Studium an einer Hochschule in der Bundesrepublik Deutschland erworben.</p>
+														</th>
+													</tr>
+													<tr>
+														<td style="width: 100%;" class="ta-lt">
+															<p>Die allgemeine Hochschulreife ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau 4 zugeordnet.</p>
+														</td>
+													</tr>
+													<tr>
+														<td style="width: 100%; height: 14mm;" class="ta-lm">
+															<p>Wuppertal, den </p>
+														</td>
+													</tr>
+												</table>
+											</th>
+										</tr>
+										<tr>
+											<td style="height: 40mm;" >
+												<table class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 39%" />
+														<col style="width: 22%" />
+														<col style="width: 39%" />
+													</colgroup>
+													<tr style="height: 16mm">
+														<th class="ta-cb f-very-tiny"></th>
+														<th class="ta-cb f-very-tiny">(Siegel)</th>
+														<th class="ta-cb f-very-tiny"></th>
+													</tr>
+													<tr>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Vorsitzende/r des Zentralen Abiturausschusses</td>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Schulleiter/in</td>
+													</tr>
+													<tr>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+													</tr>
+													<tr style="height: 20mm;">
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+													</tr>
+													<tr>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Vertreter/in des Schulträgers</td>
+														<td class="ta-tm f-very-tiny"></td>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Beratungslehrer/in</td>
+													</tr>
+													<tr>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-tm f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+													</tr>
+													<tr style="height: 3mm">
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 18mm;" class="ta-lt">
+												<p class="f-very-tiny"><span class="f-bold">Rechtsbehelfsbelehrung: </span><span>Gegen die Leistungen in der Abiturprüfung und die Berechnung der Gesamtqualifikation einschließlich der Durchschnittsnote kann innerhalb eines Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule Albert Zweistein Dreistein Vierstein Gymnasium, Viehofstraße 4, 42103 Wuppertal schriftlich oder zur Niederschrift zu erheben.</span>
+												</p>
+												<p class="f-very-tiny ta-r">Schulnummer: 100012</p>
+											</td>
+										</tr>
+									</table>
+
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 25mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>8) </sup></th>
+														<th class="ta-lt f-very-tiny">Außer Arbeitsgemeinschaften</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>9) </sup></td>
+														<td class="ta-lt f-very-tiny">Sind für eine Sprache zwei Referenzniveaus ausgewiesen, ist das niedrigere in vollem Umfang, das höhere in Anteilen erreicht. Das ausgewiesene Niveau kann auch in einem vorangegangenen Schuljahr erreicht worden sein.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>10) </sup></td>
+														<td class="ta-lt f-very-tiny">Auf Wunsch der Schülerin/des Schülers kann hier die Teilnahme an Arbeitsgemeinschaften in der Qualifikationsphase oder die erfolgreiche Teilnahme an Landes- oder Bundeswettbewerben vermerkt werden. Auch können hier gemäß § 49 Abs. 3 SchulG Aussagen zum außerunterrichtlichen Engagement aufgenommen werden.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 4 Ende ###################################################################################################################################### -->
+					</th>
+					<td style="width: 10mm;"></td>
+					<td class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 1 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny c-white">1</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 55mm"></th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 32mm" class="ta-cm p-l-4 p-r-4">
+												<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgo8c3ZnCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmVyc2lvbj0iMS4wIgogICB3aWR0aD0iNDA2cHQiCiAgIGhlaWdodD0iNDI2cHQiCiAgIHZpZXdCb3g9IjAgMCA0MDYgNDI2IgogICBpZD0ic3ZnMiI+CiAgPGRlZnMKICAgICBpZD0iZGVmczQiPgogICAgPGNsaXBQYXRoCiAgICAgICBpZD0iY2xpcDAiPgogICAgICA8cmVjdAogICAgICAgICB3aWR0aD0iNDA2IgogICAgICAgICBoZWlnaHQ9IjQyNiIKICAgICAgICAgeD0iMCIKICAgICAgICAgeT0iMCIKICAgICAgICAgaWQ9InJlY3Q3IiAvPgogICAgPC9jbGlwUGF0aD4KICA8L2RlZnM+CiAgPGcKICAgICBjbGlwLXBhdGg9InVybCgjY2xpcDApIgogICAgIGlkPSJzdXJmYWNlMCI+CiAgICA8cGF0aAogICAgICAgZD0iTSA1Ljk5NDA5NSw2Ljg5MzYxNiBDIDEzNy4wMzEyNSw2Ljg5MjQyNiAyNjguMDY4MjEsNi44OTA2MSAzOTkuMTA1NDQsNi44OTQ1MzEgQyAzOTkuMDUyOTksODMuMjcyMTI1IDM5OS4yMjA5LDE1OS42NTA4MiAzOTkuMDIwMDIsMjM2LjAyNzY4IEMgMzk4LjQ4NjA4LDI0Mi44Njg0OCAzOTcuNjUyMTgsMjQ5LjY4NTI5IDM5Ni44MTY3NywyNTYuNTAyNjMgQyAzOTAuNDYxOTUsMjk0LjQ5NDE3IDM3My4xOTIyOSwzMzAuNzI3OTQgMzQ2Ljg1NjcyLDM1OC45Mjk5IEMgMzI0Ljk5Njg5LDM4Mi44ODI4MyAyOTcuMDA4NjgsNDAxLjAyNDMxIDI2Ni40MzQwNSw0MTEuNzQzNjQgQyAyNTIuMjE1Nyw0MTYuNDE0IDIzNy41NTE3Myw0MTkuOTY4NTIgMjIyLjYxNDg3LDQyMS4yMTE3OCBDIDIxMi40OTUyOSw0MjIuNzU4NDcgMjAyLjE5ODI0LDQyMS45MDg1MSAxOTEuOTk3NjIsNDIyLjA0Njk3IEMgMTQ5LjkyODEyLDQxOS45MTk3NyAxMDguNjc1MTcsNDAzLjYzMTk5IDc2LjUwMzg0NSwzNzYuNDAwNTEgQyAzOS40OTk0NjYsMzQ1LjUyNDQxIDE0LjQ0NTYzMywzMDAuNjU4OCA3LjkxNTYwNCwyNTIuODc5NDcgQyA2Ljg5ODg4LDI0Ni45NzUxMyA2Ljc0NDYyOSwyNDAuOTc5ODQgNS45OTM2OTgsMjM1LjA0NjQzIEMgNS45ODkzMDQsMTU4Ljk5NTgyIDUuOTg4OTA3LDgyLjk0NDUxOSA1Ljk5NDA5NSw2Ljg5MzYxNiB6ICIKICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMjExYzFlO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgaWQ9InNjaHdhcnoiIC8+CiAgICA8cGF0aAogICAgICAgZD0iTSAxMy4xNjYxNTMsMTQuMTY2MjQ1IEMgMTM5LjQ0MzM0LDE0LjE2MzcyNyAyNjUuNzIwMzQsMTQuMTY4MzY1IDM5MS45OTc2LDE0LjE2MzkyNSBDIDM5Mi4wMDMwNCw2OC43Njg5MDYgMzkxLjk5ODI1LDEyMy4zNzM3IDM5MiwxNzcuOTc4NzggQyAzOTEuOTE1NzQsMTk2LjM0NTA2IDM5Mi4xOTc4LDIxNC43MTUxIDM5MS43OTYzNCwyMzMuMDc4NTUgQyAzOTAuNTIyNzUsMjYyLjkzMDM0IDM4Mi4xMTAxOCwyOTIuNDU3OTkgMzY3LjM5MDQsMzE4LjQ2Nzk2IEMgMzQyLjA3MDM5LDM2My42ODYwNCAyOTcuNTQ1MDEsMzk3Ljc1NjAzIDI0Ny4wNjg2LDQwOS43NjI3NyBDIDIxOC43MzM0NCw0MTYuNjM1NjcgMTg4Ljc4MTgzLDQxNi44MjU5NiAxNjAuMzYyODksNDEwLjMxNTIyIEMgMTI2LjUwOTgsNDAyLjU1Nzk4IDk0Ljg3NTM2NiwzODUuMjM1MzUgNzAuMjI2MzM0LDM2MC43NTYxOCBDIDMyLjk4NzAxNSwzMjQuNjk0MTQgMTEuOTE5MzEyLDI3Mi43ODUxNiAxMy4xNjU4NDgsMjIwLjk4OTIxIEMgMTMuMTY1NzI2LDE1Mi4wNDgxMSAxMy4xNjUxMzEsODMuMTA3MjY5IDEzLjE2NjE1MywxNC4xNjYyNDUgeiAiCiAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2ZmZmZmZjtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgIGlkPSJ3ZWlzcyIgLz4KICAgIDxnCiAgICAgICBpZD0iZ3J1ZW4iPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDIyLjgzNTAzNywyMy44MzUwMjIgQyA3Mi40MjM2MTUsMjMuODE5NTk1IDEyMi4wMTIxLDIzLjg1OTkyNCAxNzEuNjAwNjksMjMuODE0ODE5IEMgMTYyLjc1MzY1LDMzLjc0NjYxMyAxNTMuNDQ3OTEsNDMuNjg4NjE0IDE0Ny44OTM2OSw1NS45NDIzMDcgQyAxMzkuNDgzMjgsNzMuNzk5NTE1IDEzNi45MjIyNyw5My43Mjk3MzYgMTI4Ljg4ODE3LDExMS43MzI1IEMgMTI0LjQ0Nzk1LDEyMS44NTcxOSAxMTcuODQ3MTUsMTMxLjE3MTU0IDEwOS4wOTAzMiwxMzguMDA3IEMgOTYuMDAyNDI2LDE0OC43MTYxMyA3OS44OTAwOTEsMTU1LjAyNjE3IDY3LjEyOTI3MiwxNjYuMTc2OTEgQyA1OS40NDU0NSwxNzIuODEwMzUgNTMuOTgzMTA5LDE4MS42MTE2NSA0OS43ODA1OTQsMTkwLjc1OTYxIEMgNDAuOTI2MywyMTAuMjgxOTEgMzcuMzE2MjM4LDIzMi4yNTkxNyAyNC42MzIxNTYsMjQ5Ljk1NDE2IEMgMjMuMjQ1OTI2LDI0MC4zNzI3NyAyMi42NDE2NjMsMjMwLjY3NzkzIDIyLjgzMzUyNywyMjAuOTk3ODggQyAyMi44MzUwNTIsMTU1LjI3NjgxIDIyLjgzMjAxNiw4OS41NTYwMTUgMjIuODM1MDM3LDIzLjgzNTAyMiB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiMwMGEzNGM7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJncnVlbl9vYmVuIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDE2NS4yNjcwMywxNjAuMjY3ODUgQyAxODAuODEzNzEsMTQwLjYyMjU5IDE4NS4zODI3NywxMTUuMTk4MDMgMTk3LjYyNzA1LDkzLjcxNzMzMSBDIDE5Ny41Mzk0MywxMzYuODA4MjMgMTk3LjYxMDI5LDE3OS44OTk3MiAxOTcuNTkxNDIsMjIyLjk5MTA2IEMgMTk4LjE1MzAyLDI1NS45NzMwNyAxODkuMjA5MTcsMjg5LjAyNDc4IDE3Mi4yODg4NiwzMTcuMzI3MTUgQyAxNTcuMTQ3MzcsMzQyLjgxMzI4IDEzNS42NDQ1MiwzNjQuNTE4MTcgMTEwLjIwODQyLDM3OS43NjEzNCBDIDgzLjYxNjk0MywzNjMuNjI2MzcgNjEuMTg4NDkyLDM0MC42NTg3NSA0Ni4wMjM1MTQsMzEzLjQ3ODIxIEMgNTYuNTA2MDU4LDMwMi42ODQxNCA2Ni44MTMyNjMsMjkxLjQ0NjM1IDc0LjIxODAzMywyNzguMjUwNjMgQyA4My41NjExODgsMjYxLjI4ODIyIDg3LjU1MDgyNywyNDIuMTExMzEgOTUuMzM1MzQyLDIyNC40ODIxNSBDIDk5LjM4MzMwMSwyMTUuNDMzMzggMTA0LjQzOTgyLDIwNi42NDYyMSAxMTEuNTcxOTUsMTk5LjY2MjYzIEMgMTI3LjUzOTk2LDE4My45MzkgMTUwLjc0MDIsMTc3LjY3OTE1IDE2NS4yNjcwMywxNjAuMjY3ODUgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iZ3J1ZW5fdW50ZW4iIC8+CiAgICA8L2c+CiAgICA8cGF0aAogICAgICAgZD0iTSAyMDcuNDE0NzMsMjI2LjA0MTExIEMgMjA3LjM5MTc3LDE1OC42MzU1NiAyMDcuNDA5MDksOTEuMjI5ODEzIDIwNy40MDYyNCwyMy44MjQxNzMgQyAyNjUuNjU4ODksMjMuODQ4NjAyIDMyMy45MTE0OCwyMy44MjU4NTEgMzgyLjE2NDM3LDIzLjgzNTU1NiBDIDM4Mi4xNzE1Niw5Mi45MDE5MzIgMzgyLjE1NjIzLDE2MS45NjgxNyAzODIuMTcyMTcsMjMxLjAzNDU4IEMgMzgxLjE3MSwyNTkuNzM0NDQgMzczLjM0NTg0LDI4OC4yMjMxMSAzNTkuMjE0OTcsMzEzLjI0OTMzIEMgMzQ0LjAyMjExLDM0MC40ODYwMSAzMjEuNTkwMDEsMzYzLjYxODIgMjk0LjkwMjQ1LDM3OS43NDI3OCBDIDI2OC4xMjIwNywzNjMuNzU3OSAyNDUuNzQzNjQsMzQwLjU1MjUxIDIzMC41MDU2MywzMTMuMzU3MyBDIDIxNS41Njk5OCwyODYuODI5NzEgMjA3LjU4NTUxLDI1Ni40NzY1IDIwNy40MTQ3MywyMjYuMDQxMTEgeiAiCiAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2VlMTkyMTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgIGlkPSJyb3QiIC8+CiAgICA8ZwogICAgICAgaWQ9InBmZXJkIj4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAzNjAuNDY4NzUsNDYuMjE4NzUgQyAzNTkuNTg3MSw1Mi4zNDYyMjMgMzU4LjczOTY0LDU4LjQ1MzY3OCAzNTguMjE4NzUsNjQuNjI1IEMgMzQ1Ljg3NzU0LDcwLjI0MTk1IDMzNi4wMjE0MSw3OS43MjYyIDMyNS4zNzUsODcuODc1IEMgMzIxLjM0NjI0LDkxLjIxODk2NCAzMTYuMzczMTgsOTQuMDA2MTUzIDMxNC4zNzUsOTkuMTI1IEMgMzE4LjgxNzgxLDEwMC41NzM1OSAzMTcuOTI1NTcsMTA1LjcwMTM4IDMxNC4xODc1LDEwNy4yODEyNSBDIDMxNS4zNTM0OCwxMDguOTA1IDMxNi4yNTU2MywxMTEuNTUwMDYgMzE4Ljc1LDExMS4yMTg3NSBDIDMyMi45MjA4OSwxMTEuNDE0ODQgMzIzLjExNTIsMTA0Ljc4MTQgMzI3LjUzMTI1LDEwNS40Njg3NSBDIDMzMC4xNzI3NCwxMDUuMDM2MDcgMzM0LjMxNzU4LDEwNi41NTgyNCAzMzIuOTY4NzUsMTA5LjkwNjI1IEMgMzMxLjQwNTc3LDExMS44NDY4MSAzMjguODAxMDIsMTExLjc0NjQ5IDMyNi41OTM3NSwxMTIuMjE4NzUgQyAzMjUuNjQ1MDcsMTEzLjAzMjI1IDMyNC43MTU1NywxMTMuODMyOTYgMzIzLjc4MTI1LDExNC42NTYyNSBDIDMyOC4zMTM3LDExNi4wNzU4MSAzMzMuNDU2MjMsMTE3LjY2OTIzIDMzOCwxMTUuNDA2MjUgQyAzNDEuNzIyNTEsMTEzLjYxMjE4IDM0MS4yNjQ5NiwxMDcuNjg4MjggMzQ1LjY4NzUsMTA2LjgxMjUgQyAzNTUuMTY2NTEsMTA0LjY5MDk4IDM2NS4wMjA3MiwxMDcuNDA5NzMgMzc0LjU2MjUsMTA1Ljc4MTI1IEMgMzc4LjkyMDczLDEwNC4zNDA2MyAzODAuODE5MzQsOTkuODIwMzM5IDM4Mi41MzEyNSw5NS45Njg3NSBDIDM4NS4xOTIwNiw5Ni4zMjQwMTMgMzg4LjUzMDM4LDk4LjE5NzQwNiAzODcuNDM3NSwxMDEuNDA2MjUgQyAzODUuMDM4NTEsMTA5LjE4MTIzIDM3Ny4wNTg2NCwxMTMuNjk2OTMgMzY5LjE1NjI1LDExMy4zNDM3NSBDIDM2My4wODExNCwxMzIuOTQ1MzYgMzQyLjIyNzAyLDE0MS4yODExMiAzMzAuNzUsMTU3IEMgMzI1LjI5OTM1LDE2My45ODk4MiAzMjIuMzYxNjMsMTcyLjY1NTkzIDMyMS44NDM3NSwxODEuNDY4NzUgQyAzMTMuMjMzMTgsMTg0LjI5NTMzIDMwNC43MzIzMSwxODcuMzg2NzYgMjk2LjA5Mzc1LDE5MC4xMjUgQyAyOTAuNDYzMTIsMTkxLjQwNjk3IDI4OC4xMDQzNiwxOTcuMzE4ODYgMjg0LjQzNzUsMjAxLjE1NjI1IEMgMjg3LjM1MzY2LDIwNS44MjUxOSAyOTAuMDE3MzgsMjEwLjcwMjYgMjkxLjc4MTI1LDIxNS45Mzc1IEMgMjk0LjM4MjUxLDIyMi44NjI1MSAyOTUuMjM4NzksMjMwLjI5NDAyIDI5OC4xMjUsMjM3LjEyNSBDIDMwMC43NDI5OSwyMzcuMjgzNzEgMzAzLjc5MjA1LDIzNy4yNTUxNSAzMDUuNTYyNSwyMzkuNTYyNSBDIDMwNy42MTEwMSwyNDEuNTA5MDEgMzA3LjUyMzksMjQ0LjUxOTkyIDMwNy42MjUsMjQ3LjEyNSBDIDMxMS42ODI0MywyNTEuMDIxNyAzMTYuNDAzNjQsMjU0LjczMDYxIDMyMi4yMTg3NSwyNTUuMjgxMjUgQyAzMjUuNDQ2NjcsMjQ3LjI2NjI1IDMyNC4xMTE5OSwyMzguNTAyMyAzMjEuNzE4NzUsMjMwLjQ2ODc1IEMgMzE4LjgwOTk1LDIzMC40NiAzMTUuOTAyNCwyMzAuNDUxNTEgMzEzLDIzMC40Njg3NSBDIDMxMi45OTA5NCwyMjguNzY3MDMgMzEyLjk3NTQ4LDIyNy4wNzA1NCAzMTIuOTY4NzUsMjI1LjM3NSBDIDMwOC4xNjI4MiwyMjIuOTIyNDQgMzAyLjg3Mjg5LDIxOS40NTE2NCAzMDEuOTM3NSwyMTMuNjg3NSBDIDMwMC45MjQxNCwyMDkuMzI0MSAzMDMuMTQ5MjYsMjA1LjIyMDQgMzA1Ljg0Mzc1LDIwMS45Njg3NSBDIDMxOC41MjYzMiwyMDIuNDc3MDYgMzMxLjE3MjA0LDIwMy44MTA2NSAzNDMuODc1LDIwMy43NSBDIDM0OC43OTU3MSwyMDMuODg3MzEgMzUyLjA5MDg5LDE5OS41NjMwNSAzNTQuMjgxMjUsMTk1LjcxODc1IEMgMzU1LjA5MDE3LDE5NS43ODk1MSAzNTYuNjkxMDksMTk1LjkyOTIyIDM1Ny41LDE5NiBDIDM2MC43MTQ0NSwyMDAuNTQ1NzEgMzU2LjcxODE5LDIwNS4zOTQ5MiAzNTIuODc1LDIwNy44NDM3NSBDIDM0NS40MzIxMSwyMTMuMDA1MDIgMzM2LjA1NzY1LDIwOS42MzMwNyAzMjcuNzE4NzUsMjEwLjA5Mzc1IEMgMzI5Ljc5ODg3LDIxNC4wNDkwNiAzMzIuMDYwOTQsMjE3Ljk2NDA3IDMzNS4wOTM3NSwyMjEuMjgxMjUgQyAzNDcuNzcyNzksMjM1LjIwMDQxIDM2OC4xMjg3NCwyMzguOTU1NzMgMzgwLjEyNSwyNTMuNjU2MjUgQyAzODMuMTA0MzIsMjU3LjcxNjc5IDM4Ni45MTA5NSwyNjIuMDU1OTcgMzg2LjUsMjY3LjQzNzUgQyAzODYuNTQyMTksMjc2LjgxMDk1IDM4Ny40NTQ1NiwyODYuMjMyOCAzODkuNzE4NzUsMjk1LjM0Mzc1IEMgMzkxLjI4NjQ4LDMwMC45NTUwOSAzOTMuMzMyODgsMzA2LjkwNDI3IDM5OC4wMzEyNSwzMTAuNjg3NSBDIDQwNS45NDI1OSwzMTcuMzI4OTEgNDE0LjM3ODkzLDMyMy41NzE3NSA0MjAuODQzNzUsMzMxLjcxODc1IEMgNDI0Ljg5Mzk3LDMzNi43NDIyNSA0MjcuMDc4OCwzNDMuNTMwNTcgNDI1LjY4NzUsMzQ5LjkzNzUgQyA0MjMuOTA4MjUsMzU5Ljc3ODM5IDQxOC44MTI4NiwzNjguNTU4NDggNDE0LjE4NzUsMzc3LjI4MTI1IEMgNDE1LjY3ODYxLDM4MS4wNjM1NiA0MTQuMTIyNjUsMzg2LjIxNDMxIDQwOS44NDM3NSwzODcuMjE4NzUgQyA0MDIuNTM4MjYsMzg4LjA0NDMzIDM5OS4yNTM0OSwzOTYuMDg1MTEgMzk3LjcxODc1LDQwMi4zNDM3NSBDIDQwNi4xMTkyOSw0MDUuNjU4MzggNDE1LjMyOTc2LDQwNC41MTc2OSA0MjMuNzgxMjUsNDAyLjA2MjUgQyA0MjMuNzg4NSwzOTguNTg1NDIgNDIzLjUzMDg1LDM5NS4wODU0MSA0MjMuODc1LDM5MS42MjUgQyA0MjQuMzk5MTQsMzg4Ljk0NDE1IDQyNy4wODM1MiwzODguMDExMjUgNDI5LjIxODc1LDM4Ni45Mzc1IEMgNDI5LjY0NjcyLDM2OS4wODMzMSA0MzYuNjEyMTEsMzUyLjI5NTc0IDQ0My41NjI1LDMzNi4xMjUgQyA0MzYuODgzMjcsMzIzLjk4MjE5IDQzMS40ODcxNywzMTAuNjI4NzQgNDMyLjI1LDI5Ni41IEMgNDQwLjU2MTg4LDI4NS41OTMyMyA0NDguOTc3NTcsMjcyLjUyNTkzIDQ0Ni43NSwyNTguMTU2MjUgQyA0NDMuNTMzMDEsMjQyLjIwNzIzIDQyOS44MjE2NSwyMzEuNzIxMTkgNDE3Ljg3NSwyMjIuMDYyNSBDIDQwOC41MzA2MSwyMTIuNjY5NDIgNDAwLjk2MTI4LDIwMS4wNDczOSAzOTcuOTA2MjUsMTg4LjAzMTI1IEMgMzk2LjM3MjU3LDE4MS4zMzMzNyAzOTYuNjU0MDQsMTc0LjM5NzgyIDM5Ny4wOTM3NSwxNjcuNTkzNzUgQyA0MDIuODExODEsMTY1LjMwODczIDQwOC44MTE1NywxNjMuODM2NjMgNDE0Ljk2ODc1LDE2My40Mzc1IEMgNDEwLjg0NTcxLDE2MC4wNDkwNCA0MDcuNzAxNDcsMTU1LjY4NzA4IDQwNC45MDYyNSwxNTEuMTg3NSBDIDQxNC40MjU1OCwxNDkuMDEzNzcgNDIzLjk0NDk3LDE0Ni41MDU1IDQzMi44NDM3NSwxNDIuNDA2MjUgQyA0MjUuMjQ0NzIsMTM3LjgxMjUyIDQyMC4zOTMyMiwxMzAuMTg5NTYgNDE2LjIxODc1LDEyMi41OTM3NSBDIDQyNS40MjYwNywxMjUuNTIxNzggNDM1LjIyMTM4LDEyNS4yMzkwNyA0NDQuNTMxMjUsMTIyLjk2ODc1IEMgNDM0Ljg0MjE3LDExNS4zNzI5MyA0MzAuODgwMSwxMDIuOTE1MzMgNDIxLjU2MjUsOTQuOTM3NSBDIDQyNy4yNDg4LDkzLjcwODI5IDQzMi44NTQ3OSw5MS45OTkyOTggNDM4LjA5Mzc1LDg5LjQzNzUgQyA0MzEuMzI5MzgsNzguODc5NDEgNDE5LjE2OTg5LDczLjM1MTQ2OCA0MDcuMzEyNSw3MC43NSBDIDQxMy4xMzIxNCw2Ny45NTgxNzUgNDE4LjgwNTA2LDY0LjUzODQ0OCA0MjMuMDMxMjUsNTkuNTYyNSBDIDQwNy45ODUwNyw2MS4wMzgxMiAzOTIuODkwOTgsNTkuMzQ3MTQ1IDM3OC4wMzEyNSw1NyBDIDM3OC42MzMyMSw2MC42OTA2MDUgMzc5LjczMzQ1LDY1LjIwMzc3IDM3Nyw2OC4zMTI1IEMgMzc1LjI2OTczLDcwLjEzNjgwMyAzNzIuNTk1NzgsNjkuMjg5Mjk1IDM3MC40Njg3NSw2OC45Njg3NSBDIDM3MS4yNjc1Nyw2NS44MTA4ODYgMzcyLjc4MzIzLDYyLjUyNzM1OSAzNzEuNjI1LDU5LjI1IEMgMzcwLjE2NTQ0LDUzLjQwNDI0NCAzNjUuMzgwODIsNDkuMjc3ODg5IDM2MC40Njg3NSw0Ni4yMTg3NSB6IE0gMzQ3Ljg3NSw3OC45Mzc1IEMgMzUwLjkzOTI3LDc5LjA0OTgwMSAzNTMuODUwODcsODEuNzE5MDQ5IDM1Ni4yNSw4My40Njg3NSBDIDM1My42MzA0OSw4NC44MTUzMDQgMzUwLjg0Njk1LDg1Ljc1MTg3NCAzNDgsODYuNDY4NzUgQyAzNDYuNDUzMTQsODUuNTQ3NTA1IDM0NC45MTA1Myw4NC42NDE3NzQgMzQzLjM3NSw4My43MTg3NSBDIDM0My44NDcsODIuNDE5MjkyIDM0NC4zMTc1NSw4MS4xMTU5MDUgMzQ0Ljc4MTI1LDc5LjgxMjUgQyAzNDUuODIxMiw3OS4xNTY2NDkgMzQ2Ljg1MzU4LDc4LjkwMDA2NiAzNDcuODc1LDc4LjkzNzUgeiAiCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC44LDAuOCkiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojZmZmZmZmO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0ia29lcnBlciIgLz4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAyMjguNTU4MzgsMTAwLjM0MTI4IEMgMjMxLjg3MTYsMTAwLjM2MDM4IDIzNS4xODYzMywxMDAuMzU5NiAyMzguNTAyNjksMTAwLjM0NDk0IEMgMjQ2LjU2MDg0LDEwNi41OTA5IDI1NC41NDYyMywxMTIuOTI5NzIgMjYyLjU3MDc0LDExOS4yMTk4MyBDIDI1OC4xNjUwOCwxMjQuMjc3NjUgMjU0LjcwNDgyLDEzMC4yMjQ2NiAyNTMuMTc3ODcsMTM2Ljc5OTIxIEMgMjQ5LjA4ODQ3LDEyOS4yMjM3MiAyNDUuMDgxNiwxMjEuNjAxNjIgMjQwLjk2MDA0LDExNC4wNDYzMSBDIDI0MC40MTY4MSwxMTIuNTM0NDQgMjM4LjY1NTg1LDExMi45NjI3NSAyMzcuNTAwNDQsMTEzLjMwMjU3IEMgMjM0LjYwMDU2LDExNC4wMDc0OCAyMzEuODc3MzgsMTE1LjgyOTMgMjMwLjY2NjI1LDExOC42MzQxNCBDIDIyOC45MTgzNSwxMjIuMzA1MDggMjMwLjEwODQ4LDEyNi40NDc1MSAyMzEuMTA0MzQsMTMwLjE1MDg5IEMgMjMwLjEzNTc2LDEzMS4xMjcyNiAyMjkuMTY1MywxMzIuMTAxNzggMjI4LjIwMjI0LDEzMy4wODA5NiBDIDIyOS43NzA1NCwxMzQuODM2NjYgMjMxLjM2NzQ1LDEzNi41Njk1MyAyMzMuMDA5ODMsMTM4LjI2MTM3IEMgMjI5Ljg5Mzk1LDE0NC4wNjA4OCAyMjUuNTk5MzcsMTQ5Ljg0MDg1IDIxOS4yMDc1NCwxNTIuMjA0OTkgQyAyMTYuNzIyNTcsMTQ4LjQ3MDEyIDIxNS43MDQxLDE0NC4wMDMwMiAyMTUuOTk1NDQsMTM5LjU0OTQyIEMgMjE3LjQ4MDI5LDEzOC4wNzQzMSAyMTkuMTYxNDcsMTM2LjM3MTQ5IDIxOS4wMzc5NSwxMzQuMDk1NjMgQyAyMTkuMTQ4NzMsMTMxLjkwNDY4IDIxNy40NDU3OSwxMzAuMzM2NjYgMjE2LjE4MzQxLDEyOC43ODg2NSBDIDIyMC4xMDM5OSwxMTkuMjAzNTUgMjI3LjA2MzU3LDExMC44NjYyNCAyMjguNTU4MzgsMTAwLjM0MTI4IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2ZmZmZmZjtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9Imh1Zl9vYmVuIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDM1Ny42OTU0LDExOC4wNDc4NSBDIDM2My4zNzA1MywxMjAuNjYzMTggMzY5LjA3OCwxMjQuMDUwNTQgMzcyLjI5MDczLDEyOS42MjI3MyBDIDM3NS45Mjc3LDEzNS43NzQ1NyAzNzUuODE1MzEsMTQzLjkzNjY1IDM3Mi4wMzQ3NiwxNTAuMDAxMDUgQyAzNjkuMTc2LDE1NS4xMzQ5OCAzNjQuMDg4NDIsMTU5LjY0NzI1IDM2NC40MDgzMSwxNjUuOTk0MjggQyAzNjQuNTM0MTMsMTcyLjc2MTA1IDM2OS42NjI0MiwxNzcuNjg5MTkgMzcyLjY1OTY1LDE4My4zMTY2NyBDIDM3NS4xNTI0MiwxODcuODYzMTYgMzc1LjY0Mzg2LDE5NC4wMTA5NCAzNzIuMzIyNzQsMTk4LjI3NTMxIEMgMzY5Ljg0ODQ4LDIwMS40NzA2NyAzNjUuNDA3ODQsMjAyLjE1NzkzIDM2MS42NjQxNSwyMDEuMjcyNzEgQyAzNjIuMjg4MSwyMDAuNzAwODcgMzYzLjUzNjAzLDE5OS41NTcxOSAzNjQuMTU5OTksMTk4Ljk4NTM3IEMgMzY1LjExOTk4LDE5NS42MTkxMyAzNjQuMTk1NjgsMTkxLjc5NTc2IDM2MS4zNzM3MywxODkuNjA2NTggQyAzNTQuNzc4MjgsMTg0LjEzNjg0IDM0NS41NDk1LDE4MS43NzQ0NiAzNDAuNzYzNTUsMTc0LjIwODA3IEMgMzM2Ljk5MDg4LDE2OC4yOTkzNiAzMzguMTU0MjgsMTYwLjgwNzA3IDM0MC43NjYyMywxNTQuNjkwNTEgQyAzNDIuNDY0ODMsMTQ5Ljg2MTA4IDM0NS45NzQ5MiwxNDUuMzMzODggMzQ1LjMyMTg3LDEzOS45Njc1IEMgMzQ0Ljk0NTE5LDEzNi42MDk0MSAzNDIuMTU0ODksMTM0LjM3MjMxIDMzOS43MDkwNSwxMzIuNDAxMjkgQyAzNDUuMzYwODYsMTI5LjQxMDU4IDM1My4xMzI5MywxMzEuMjk2MTEgMzU2LjE5MDQxLDEzNy4xMDA5MiBDIDM1OC40MjQ4LDEzMS4wMTg5NCAzNTkuMDA4ODgsMTI0LjQwNzUzIDM1Ny42OTU0LDExOC4wNDc4NSB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNmZmZmZmY7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJzY2h3ZWlmIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDI4Mi41MjUzOSwyMTMuMzQyOCBDIDI4NC42Nzc5MywyMDcuMzc0OTkgMjkwLjU3NTcxLDIwNC4wMjU4NiAyOTYuMzA4MTIsMjAyLjIwNDYyIEMgMjk5LjMyMzY1LDIwNS4zNjkwMyAzMDIuNDYwNzQsMjA4LjgzMTE1IDMwMy43NTI2OSwyMTMuMDc0MTEgQyAzMDMuODA4MTUsMjIzLjUyMzIyIDMwNS4xMjI2NiwyMzQuMTg4MSAzMDkuNTE0OTgsMjQzLjc3NjI0IEMgMzAyLjk4NjA4LDI1MS4zNjQ5NyAzMDIuMTM3OTksMjYxLjkxNDIgMzAxLjgwMjMyLDI3MS40ODk3OSBDIDI5My4yMjI1NSwyNzEuNDExNzQgMjg0LjYyMjQ1LDI3MS4xNDU3NyAyNzYuMDU5MjUsMjcxLjc5ODEgQyAyNzEuNDQwNDEsMjcxLjg1OTY3IDI2Ny4zMDkxLDI3NC41NzE5OSAyNjIuNjMwNDMsMjc0LjA4MzY5IEMgMjYyLjYzOTI0LDI3Ni4zODAzNyAyNjIuNjUxNTUsMjc4LjY3OTQ3IDI2Mi42ODgxNiwyODAuOTgxMjMgQyAyNTYuMzQ0NjMsMjgzLjIxNjk4IDI0OS4xODUyLDI4My44NTE3NiAyNDIuODEwNDUsMjgxLjM4OTc3IEMgMjQzLjM1MDAxLDI3Ni43MjI4NyAyNDYuMTM4OTUsMjcyLjczMzM0IDI0OS41NTE1MSwyNjkuNjU4ODYgQyAyNTEuNDk3NDgsMjY5LjUzNzU0IDI1My43NDkwNSwyNjkuNzc4ODcgMjU1LjMwMzMzLDI2OC4zMzA0OSBDIDI1Ny4wODg5OSwyNjYuOTcxMDIgMjU3LjIyMDM4LDI2NC41ODg2NyAyNTcuNTM5NzIsMjYyLjU1ODQ2IEMgMjY4Ljg1NjQsMjYyLjYzNzU3IDI4MC4xNzQwNiwyNjIuNTgwOCAyOTEuNDkyMDcsMjYyLjU4OTQ5IEMgMjkxLjI3NiwyNTQuMTM3NzcgMjg3LjE4NDg3LDI0Ni42MDA0OCAyODQuMTcwMjMsMjM4LjkxNzE1IEMgMjgxLjA0MDcxLDIzMC44NzkxNyAyNzkuNTc5MzMsMjIxLjY0MjYxIDI4Mi41MjUzOSwyMTMuMzQyOCB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNmZmZmZmY7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJodWZfdW50ZW4iIC8+CiAgICA8L2c+CiAgICA8ZwogICAgICAgaWQ9ImJsdW1lIj4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAxNzMuNzU3MzQsMzM1Ljc0NzE1IEMgMTczLjYzMjExLDMzMi4xODQxIDE3NC4yMjUzLDMyOC42NjY2OSAxNzUuNDc1NDUsMzI1LjMzNTU3IEMgMTc5LjA1NzMsMzI1LjI1NjY4IDE4Mi42MzU3NywzMjUuNzA3OTggMTg2LjAxNDkyLDMyNi45MzgwOSBDIDE4NC4wODU2NiwzMjkuMDUxMzggMTgyLjY3NTQ5LDMzMS41NjA2NCAxODIuMDkxMjgsMzM0LjM4MTA3IEMgMTc5LjIyMzcyLDMzNC4xMjA0NCAxNzYuNDE4NjQsMzM0LjcxMjk3IDE3My43NTczNCwzMzUuNzQ3MTUgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iYmx1bWVfbnciIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGQ9Ik0gMjE5LjE5NDU1LDMyNi45MDg0OSBDIDIyMi41ODQ1NiwzMjUuNjQ1NzcgMjI2LjE5MzgsMzI1LjE5ODMyIDIyOS43OTgzMywzMjUuNDQzMTkgQyAyMzAuOTQ3MzcsMzI4LjcxNzY0IDIzMS4zNTE5NiwzMzIuMTYwNDMgMjMxLjIzNDg2LDMzNS42MjI4OSBDIDIyOC41OTc5NSwzMzQuNTgwNDMgMjI1Ljc5MzY0LDMzNC4xODg3OCAyMjIuOTcxNzEsMzM0LjMxNTQ3IEMgMjIyLjI4ODAxLDMzMS41Nzg2OSAyMjAuOTAxNzIsMzI5LjEyNDY2IDIxOS4xOTQ1NSwzMjYuOTA4NDkgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iYmx1bWVfbm8iIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGQ9Ik0gMTk4LjQ2NzA0LDM1MS4wNjc1OCBDIDIwNS43ODQ2MiwzNDguMjA4NjUgMjE0LjgwMDcsMzU0LjA5MzkzIDIxNC42MjM4NywzNjIuMDY0NjIgQyAyMTUuMjUzMjUsMzY4LjkwNTc4IDIwOC44MjMwMywzNzUuMjUzMSAyMDIuMDAwNzUsMzc0LjYxMzg5IEMgMTk2LjIyMjAzLDM3NC42Mjc3MyAxOTAuOTc2MDYsMzY5LjcyMjM0IDE5MC40OTM0NCwzNjMuOTg1NzIgQyAxODkuNjczOTIsMzU4LjQ4ODUxIDE5My4yMjgxLDM1Mi44MzU4NiAxOTguNDY3MDQsMzUxLjA2NzU4IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX21pdHRlIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDI1MS44MTI1LDQwNi45MDYyNSBDIDI0Ni4yNDQzNyw0MDcuMTU4NTUgMjQwLjgxMjc1LDQwOS4xNzI5NyAyMzYuODQzNzUsNDEzLjA5Mzc1IEMgMjMzLjUxMTE2LDQxNi4yMzI0NSAyMzMuOTEwMjQsNDIxLjA3ODE0IDIzNS4yMTg3NSw0MjUuMDYyNSBDIDIzNC4zMjAwMSw0MjUuOTM2MTYgMjMzLjQxNjEsNDI2LjgyNzQyIDIzMi41LDQyNy42ODc1IEMgMjI5LjA4NjI1LDQyNS4xMjkyMyAyMjQuNjQ2NjcsNDIzLjAwODczIDIyMC40Mzc1LDQyNS4wNjI1IEMgMjEwLjAwNjA0LDQzMC4xNDA5NSAyMDUuNjg5NjIsNDQzLjgyMjIxIDIwOS4wOTM3NSw0NTQuNSBDIDIxMC43MTMwNyw0NTkuNTgyOTcgMjE1Ljk4MjA2LDQ2Mi4yMDUwMiAyMjEuMDkzNzUsNDYxLjU2MjUgQyAyMjEuNDc0NTksNDYyLjgyMjg4IDIyMS44ODI1OCw0NjQuMDg0MjYgMjIyLjMxMjUsNDY1LjM0Mzc1IEMgMjE4LjU4MjY2LDQ2Ny41NjE0MSAyMTUuMzI3MjMsNDcxLjYyMjY1IDIxNi4zNzUsNDc2LjIxODc1IEMgMjE4LjYyMTMyLDQ4Ny43NjUgMjMwLjgxNjgzLDQ5Ni41ODUxNyAyNDIuNDY4NzUsNDk1LjMxMjUgQyAyNDcuMjY3MTYsNDk0Ljg1MTA0IDI1MC4xMjMxNCw0OTAuNjUwNzEgMjUxLjIxODc1LDQ4Ni4zNDM3NSBDIDI1Mi41NjA4Niw0ODYuMzM2NDggMjUzLjkwMTM0LDQ4Ni4zNDA1NyAyNTUuMjUsNDg2LjM3NSBDIDI1Ni4xOTk4Niw0OTAuMjM5OSAyNTguNDM0OTgsNDk0LjE4MTQ5IDI2Mi42NTYyNSw0OTUuMDYyNSBDIDI3NC43MzMwNyw0OTcuNDQwOTQgMjg3LjcyOSw0ODguMDgzOTIgMjkwLjAzMTI1LDQ3Ni4xMjUgQyAyOTAuOTAyNyw0NzEuNDQzMDUgMjg3LjczNTMzLDQ2Ny40MDMxOSAyODMuOTA2MjUsNDY1LjE4NzUgQyAyODQuMjIyMjYsNDY0LjI5MTkgMjg0Ljg3MTUxLDQ2Mi41MjA2MyAyODUuMTg3NSw0NjEuNjI1IEMgMjg4Ljg5Njc4LDQ2MS43MDcxNSAyOTMuMDQyNTEsNDYxLjE1NjM4IDI5NS40MDYyNSw0NTcuOTM3NSBDIDMwMC4xMzM0OCw0NTEuMDY0NzEgMjk4Ljk0OTg0LDQ0MS43NTgxNSAyOTUuNDM3NSw0MzQuNjI1IEMgMjkyLjY4NjYxLDQyOS4zNDIxNCAyODcuNzY0NzksNDI0LjAyNzQ0IDI4MS4zMTI1LDQyNC4zMTI1IEMgMjc4LjQ1NDMsNDI0LjI2MjE1IDI3Ni40MDcxOCw0MjYuNTQ1NjcgMjczLjgxMjUsNDI3LjMxMjUgQyAyNzIuODY4MSw0MjYuNjYzMiAyNzEuOTUwNTEsNDI1Ljk4NzU1IDI3MS4wNjI1LDQyNS4yODEyNSBDIDI3My40NTEzMiw0MjAuNDIwMDkgMjcyLjE3Mjc4LDQxNC4zMjA3MiAyNjcuNTkzNzUsNDExLjI1IEMgMjYzLjEwNTQ2LDQwOC4xNjU4MiAyNTcuMzgwNjMsNDA2LjY1Mzk1IDI1MS44MTI1LDQwNi45MDYyNSB6IE0gMjUyLjkzNzUsNDI5LjQzNzUgQyAyNjMuODg1MjEsNDI5LjQxMzc3IDI3NC41NzU4Niw0MzcuNTUyMjggMjc2LjQwNjI1LDQ0OC42ODc1IEMgMjc5LjgyNTc0LDQ2My4yMzk0OSAyNjYuNDY0MDEsNDc4LjI1NTkzIDI1MS42NTYyNSw0NzYuODQzNzUgQyAyMzkuMzIxMiw0NzYuMjU2MjUgMjI4Ljk0Njg5LDQ2NC44MyAyMjkuNSw0NTIuNSBDIDIyOS42OTkzNyw0NDIuODgwOTkgMjM2LjM4NjA1LDQzMy45NzUwOSAyNDUuNDA2MjUsNDMwLjgxMjUgQyAyNDcuODUwOSw0MjkuODcyMDcgMjUwLjQxMTExLDQyOS40NDI5OCAyNTIuOTM3NSw0MjkuNDM3NSB6ICIKICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjgsMC44KSIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNlZTE5MjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJibHVtZV9yaW5nIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDE1OC43NzUyMiwzNzYuNzk0MjggQyAxNTkuNjg4NTIsMzczLjM1MzU5IDE2MS4zMTU4MSwzNzAuMTc5MTggMTYzLjQ0OTU1LDM2Ny4zNDE5MiBDIDE2NS4wODM0NywzNjkuNzIxNzcgMTY3LjA5Nzg3LDM3MS44MTcyNSAxNjkuNTM1NTQsMzczLjM4NjI5IEMgMTY4LjI0MzE5LDM3NS45MTUyNSAxNjguMDA3NiwzNzguNzI5NDMgMTY4LjA3OTA2LDM4MS41Mjc1IEMgMTY0LjY4NzksMzgwLjU4MTk4IDE2MS41MjcwMiwzNzguOTg3MTcgMTU4Ljc3NTIyLDM3Ni43OTQyOCB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiMwMGEzNGM7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJibHVtZV9zdyIgLz4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAyMzUuNTA4NTEsMzczLjM0OTU5IEMgMjM3LjkyNjQxLDM3MS43NTMyIDIzOS45NDY1OCwzNjkuNjY2OTYgMjQxLjYzNjIzLDM2Ny4zMjU1MyBDIDI0My43NDU5NiwzNzAuMTIwMSAyNDUuMjk3NTYsMzczLjI2NjM5IDI0Ni40MzIwMiwzNzYuNTc1MDYgQyAyNDMuNzExMTQsMzc4Ljk2NjM1IDI0MC40NDUyOCwzODAuNjA1NDUgMjM2Ljk2NzA5LDM4MS41NzYyOSBDIDIzNy4wOTU4OSwzNzguNzQ3NzQgMjM2Ljg4NDA4LDM3NS44ODA2NiAyMzUuNTA4NTEsMzczLjM0OTU5IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX3NvIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDIwMi40ODY1MSwzOTcuMTA1MTUgQyAyMDQuNjM0MzQsMzk5LjA1NDYgMjA3LjIxMTk0LDQwMC40MDE2MyAyMTAuMDEyMzEsNDAxLjE2MjQyIEMgMjA4LjA5Njc2LDQwNC4xMjc5IDIwNS41NTMyMiw0MDYuNTk5MjMgMjAyLjY0MTc0LDQwOC41ODE3IEMgMTk5LjU1ODY3LDQwNi43MjczMyAxOTcuMDI3OTUsNDA0LjE1MjkyIDE5NS4xMDExOCw0MDEuMTI3ODQgQyAxOTcuOTA0OTgsNDAwLjQ5OTYgMjAwLjUwMTE0LDM5OS4yMDkxOCAyMDIuNDg2NTEsMzk3LjEwNTE1IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX3MiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K" alt="Schullogo"/>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 21mm; font-size: 24pt; " class="f-bold ta-cb">Z E U G N I S</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 20pt; " class="f-bold ta-cb">DER ALLGEMEINEN HOCHSCHULREIFE</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 17mm; font-size: 17pt; " class="f-bold ta-cb">Jessika Aderhold</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4"></td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb">geboren am 12. November 2000 in Wuppertal</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb">wohnhaft in Dortmund</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb">hat sich nach dem Besuch der gymnasialen Oberstufe der Abiturprüfung unterzogen.</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 87mm" class="p-4 ta-cb">
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Dem Zeugnis liegen zugrunde:</p>
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Vereinbarung zur Gestaltung der gymnasialen Oberstufe und der Abiturprüfung<br/>
+													(Beschluss der Kultusministerkonferenz vom 7. Juli 1972 in der jeweils geltenden Fassung)</p>
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Bildungsstandards für die Allgemeine Hochschulreife und Vereinbarungen über die Einheitlichen Prüfungsanforderungen in der
+													Abiturprüfung</p>
+												<p style="font-size: 8pt; margin-bottom: 1em">Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe - APO-GOSt - vom 5. Oktober 1998 in der jeweils
+													geltenden Fassung (BASS 13-32 Nr. 3.1)</p>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 1 Ende ###################################################################################################################################### -->
+					</td>
+				</tr>
+			</table>
+			</div>
+
+			<!-- Seiten 2 und 3 #################################################################################################################################### -->
+			<div class="start-new-page">
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: calc(50% - 5mm);" />
+					<col style="width: 10mm;" />
+					<col style="width: calc(50% - 5mm);" />
+				</colgroup>
+				<tr>
+					<th class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 2 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">2. Seite des Zeugnisses der allgemeinen Hochschulreife für Jessika Aderhold</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 6mm" class="ta-lt f-bold">
+												Block I: Ergebnisse in der Qualifikationsphase
+											</th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 226mm" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 50%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+													</colgroup>
+													<tr>
+														<th rowspan="3" class="p-lr-2 ta-lm bo-black-strong">Fach <sup>1)</sup></th>
+														<th colspan="4" style="height: 16mm;" class="p-lr-2 ta-cm bo-black-strong">Bewertung <sup>2)</sup><br/>Halbjahresergebnisse in einfacher Wertung</th>
+													</tr>
+													<tr style="height: 12mm;">
+														<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>1. Jahr der Qualifikationsphase (Q1)</p></td>
+														<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>2. Jahr der Qualifikationsphase (Q2)</p></td>
+													</tr>
+													<tr style="height: 7mm;">
+														<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+													</tr>
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Sprachlich-literarisch-künstlerisches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Deutsch (LK/eA)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">07</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">05</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">05</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Englisch</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(07)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(05)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">05</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Spanisch</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">06</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">06</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">06</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Kunsterziehung</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">11</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(05)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(07)</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Gesellschaftswissenschaftliches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Geschichte</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(06)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Sozialwissenschaften</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">05</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">06</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Erziehungswissenschaft (LK/eA)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Philosophie</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">05</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Mathematik</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">07</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">06</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Biologie</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">07</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 6mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"></td>
+													</tr>
+													
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Sport</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(07)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold"></td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td  class="p-tb-1 p-lr-2 ta-lm bo-t-black-strong bo-lr-black-strong"><b>Projektkurs</b> <sup class="tiny">3)</sup></td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 7.25mm" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black-strong f-ital">Thema: </td>
+													</tr>
+													
+													
+													<tr style="height: 10mm">
+														<td colspan="5" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"><b>Vertiefungsfächer</b></td>
+													</tr>
+													
+													<tr style="height: 7.25mm">
+														<td colspan="5" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">- keine -</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>1) </sup></th>
+														<th class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Grundkurse bleiben ohne besondere Kennzeichnung.</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>2) </sup></td>
+														<td class="ta-lt f-very-tiny">Für die Umsetzung der Noten in Punkte gilt:</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"></td>
+														<td style="padding-left: 0.5mm; padding-top: 1mm; padding-bottom: 1mm" class="ta-cm f-very-tiny">
+															<table class="fixed-100 m-0">
+																<colgroup>
+																	<col style="width: 14.5%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																</colgroup>
+																<tr>
+																	<th rowspan="2" class="bo-black">Noten</th>
+																	<th colspan="3" class="bo-black">sehr gut</th>
+																	<th colspan="3" class="bo-black">gut</th>
+																	<th colspan="3" class="bo-black">befriedigend</th>
+																	<th colspan="3" class="bo-black">ausreichend</th>
+																	<th colspan="3" class="bo-black">mangelhaft</th>
+																	<th colspan="3" class="bo-black">ungenügend</th>
+																</tr>
+																<tr>
+																	<td class="bo-b-black">+</td>
+																	<td class="bo-b-black">1</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">2</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">3</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">4</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">5</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black"></td>
+																	<td class="bo-b-black">6</td>
+																	<td class="bo-r-black bo-b-black"></td>
+																</tr>
+																<tr>
+																	<td class="bo-black">Punkte</td>
+																	<td class="bo-b-black">15</td>
+																	<td class="bo-b-black">14</td>
+																	<td class="bo-r-black bo-b-black">13</td>
+																	<td class="bo-l-black bo-b-black">12</td>
+																	<td class="bo-b-black">11</td>
+																	<td class="bo-r-black bo-b-black">10</td>
+																	<td class="bo-l-black bo-b-black">09</td>
+																	<td class="bo-b-black">08</td>
+																	<td class="bo-r-black bo-b-black">07</td>
+																	<td class="bo-l-black bo-b-black">06</td>
+																	<td class="bo-b-black">05</td>
+																	<td class="bo-r-black bo-b-black">04</td>
+																	<td class="bo-l-black bo-b-black">03</td>
+																	<td class="bo-b-black">02</td>
+																	<td class="bo-r-black bo-b-black">01</td>
+																	<td class="bo-l-black bo-b-black"></td>
+																	<td class="bo-b-black">00</td>
+																	<td class="bo-r-black bo-b-black"></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"></td>
+														<td class="ta-lt f-very-tiny">Die Punktzahlen in Klammern sind nicht in die Gesamtqualifikation einbezogen worden. Punktzahlen werden in einfacher Wertung und stets zweistellig angegeben.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>3) </sup></td>
+														<td class="ta-lt f-very-tiny">Wird der Projektkurs als besondere Lernleistung eingebracht, wird hier nur die Belegung ausgewiesen.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 2 Ende ###################################################################################################################################### -->
+					</th>
+					<td style="width: 10mm;"></td>
+					<td class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 3 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">3. Seite des Zeugnisses der allgemeinen Hochschulreife für Jessika Aderhold</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 6mm" class="ta-lt f-bold">
+												Block II: Ergebnisse der Abiturprüfung
+											</th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 57mm" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 62%" />
+														<col style="width: 19%" />
+														<col style="width: 19%" />
+													</colgroup>
+													<tr style="height: 5.5mm">
+														<th class="p-lr-2 ta-cm bo-l-black-strong bo-t-black-strong"></th>
+														<th colspan="2" class="p-lr-2 ta-cm bo-black-strong">Prüfungsergebnis in einfacher Wertung</th>
+													</tr>
+													<tr style="height: 5.5mm">
+														<td class="p-lr-2 ta-lm bo-l-black-strong bo-b-black-strong">Prüfungsfach <sup class="tiny">4)</sup></td>
+														<td class="p-lr-2 ta-cm bo-black-strong">schriftlich</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">mündlich</td>
+													</tr>
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">1. Deutsch (LK/eA)</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">02</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">08</td>
+														</tr>
+													
+														
+													
+														
+													
+														
+													
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">2. Erziehungswissenschaft (LK/eA)</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">02</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">09</td>
+														</tr>
+													
+														
+													
+														
+													
+													
+														
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">3. Mathematik</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">03</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">04</td>
+														</tr>
+													
+														
+													
+													
+														
+													
+														
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">4. Spanisch</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">08</td>
+														</tr>
+													
+												</table>
+											</td>
+										</tr>
+										<tr style="height: 31mm">
+											<td style="width: 100%" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 28%" />
+														<col style="width: 59%" />
+														<col style="width: 13%" />
+													</colgroup>
+													<tr>
+														<th colspan="3" style="height: 11mm" class="ta-lb"><span class="f-bold">Besondere Lernleistung </span><sup>5)</sup></th>
+													</tr>
+													<tr style="height: 6.5mm" >
+														<td class="p-lr-2 ta-cm bo-black-strong">Zugeordnet zu Fach/Fächer</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">Thema</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">Punktzahl</td>
+													</tr>
+													<tr style="height: 6.5mm">
+														<td class="p-lr-2 ta-cm bo-black-strong">---</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">- entfällt -</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">--</td>
+													</tr>
+													
+													<tr>
+														<td colspan="3"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 137mm" class="ta-ct">
+												<table class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 104mm" />
+														<col style="width: 13mm" />
+														<col style="width: 5mm" />
+														<col />
+													</colgroup>
+													<tr style="height: 4mm">
+														<th colspan="4" class="ta-lt f-bold">Berechnung der Gesamtqualifikation und der Durchschnittsnote</th>
+													</tr>
+													<tr style="height: 7mm">
+														<td colspan="4" class="ta-lb"><span class="f-bold">Block I: </span><sup>6)</sup></td>
+													</tr>
+													<tr>
+														<td colspan="4" class="ta-lt">Punktsumme aus den Halbjahresergebnissen</td>
+													</tr>
+													<tr style="height: 17mm" >
+														<td class="ta-lm">
+															<table style="table-layout: fixed; width: 72mm" class="mp-0">
+																<tr>
+																	<th rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-rm">E =</th>
+																	<th style="width: 4%" class="f-ital ta-cm bo-b-black-strong">P</th>
+																	<th rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-lm">&#183; 40</th>
+																</tr>
+																<tr>
+																	<td class="f-ital ta-cm">S</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm"><p style="margin-bottom: -0.5mm">P: erzielte Punkte in den eingebrachten Fächern</p><p style="margin-bottom: -0.5mm">S: Anzahl der Schulhalbjahresergebnisse</p><p>(doppelt gewichtete Fächer zählen auch hier doppelt)</p></td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">308</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 200,<br/>höchstens 600 Punkte</td>
+													</tr>
+													<tr style="height: 12mm" >
+														<td colspan="4" class="ta-lb"><span class="f-bold">Block II: </span><sup>7)</sup></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm">Punktsumme aus den Gesamtergebnissen in den<br/>Prüfungsfächern in fünffacher Wertung</td>
+														<td style="background-color: silver;" class="ta-cm bo-black-strong">99</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 100,<br/>höchstens 300 Punkte</td>
+													</tr>
+													<tr>
+														<td colspan="4" style="height: 8.5mm"></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm f-bold">Gesamtpunktzahl:</td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">407</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 300,<br/>höchstens 900 Punkte</td>
+													</tr>
+													<tr>
+														<td colspan="4" style="height: 8.5mm"></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm f-bold">Durchschnittsnote:</td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">3,4</td>
+														<td class="ta-lm"></td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">Drei Komma Vier</td>
+													</tr>
+													<tr>
+														<td colspan="4"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>4) </sup></th>
+														<th class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Die Ergebnisse der Leistungskursfächer werden in Block I doppelt gewichtet.</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>5) </sup></td>
+														<td class="ta-lt f-very-tiny">Eine besondere Lernleistung kann als 5. Prüfungselement angerechnet werden (Nummer 9.3.5 der „Vereinbarung zur Gestaltung der gymnasialen	Oberstufe und der Abiturprüfung“, Beschluss der Kultusministerkonferenz vom 07.07.1972 in der jeweils geltenden Fassung).</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>6) </sup></td>
+														<td class="ta-lt f-very-tiny">Bei der Bildung des Gesamtergebnisses wird auf eine ganzzahlige Punktzahl gerundet; dabei wird ab der Dezimalen 5 aufgerundet.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>7) </sup></td>
+														<td class="ta-lt f-very-tiny">Wird zusätzlich eine besondere Lernleistung eingebracht, werden die Prüfungsfächer nur 4-fach gewertet.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 3 Ende ###################################################################################################################################### -->
+					</td>
+				</tr>
+			</table>
+			</div>
+		
+
+		<!-- Seiten 4 und 1 #################################################################################################################################### -->
+			<div class="start-new-page">
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: calc(50% - 5mm);" />
+					<col style="width: 10mm;" />
+					<col style="width: calc(50% - 5mm);" />
+				</colgroup>
+				<tr>
+					<th class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 4 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">4. Seite des Zeugnisses der allgemeinen Hochschulreife für Dirk Schoever</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm"  class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 137mm;" class="ta-lt">
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%; height: 5mm" class="ta-lm">
+															<span class="f-bold">Fremdsprachen</span> <sup>8)</sup>
+														</th>
+													</tr>
+													<tr>
+														<td>
+															<table class="fixed-100 mp-0">
+																<colgroup>
+																	<col style="width: 44%" />
+																	<col style="width: 19%" />
+																	<col style="width: 19%" />
+																	<col style="width: 18%" />
+																</colgroup>
+																<tr>
+																	<th style="height: 7mm" class="p-tb-1 p-lr-2 f-bold ta-lm bo-black-strong">Fach</th>
+																	<th style="height: 7mm" colspan="2" class="p-tb-1 p-lr-2 f-bold ta-cm bo-black-strong">Jahrgangsstufe</th>
+																	<th style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm f-bold bo-black-strong">GER</th>
+																</tr>
+																
+																	<tr>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Englisch</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">von 05.1</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">bis Q2.2</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">B2/C1</td>
+																	</tr>
+																
+																	<tr>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Französisch</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">von 06.1</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">bis 09.2</td>
+																		<td style="height: 7mm" class="p-tb-1 p-lr-2 ta-cm bo-black-strong">B1</td>
+																	</tr>
+																
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td>
+															<p style="margin-bottom: 0.5em">Für die modernen Fremdsprachen schließt dieses Zeugnis Kompetenzen des Gemeinsamen europäischen Referenzrahmens für Sprachen (GeR) ein. <sup class="tiny">9)</sup></p>
+														</td>
+													</tr>
+													
+													
+												</table>
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%; height: 7mm" class="ta-lb">
+															<p><span class="f-bold">Bemerkungen</span> <sup> 10)</sup></p>
+														</th>
+													</tr>
+													<tr>
+														<td style="width: 100%;" class="ta-lt">- keine -</td>
+													</tr>
+												</table>
+											</th>
+										</tr>
+									</table>
+
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th style="height: 27mm;" class="ta-lt">
+												<table class="fixed-100 mp-0">
+													<tr>
+														<th style="width: 100%;" class="ta-lt">
+															<p>Herr Dirk Schoever hat die Abiturprüfung bestanden und damit die Berechtigung zum Studium an einer Hochschule in der Bundesrepublik Deutschland erworben.</p>
+														</th>
+													</tr>
+													<tr>
+														<td style="width: 100%;" class="ta-lt">
+															<p>Die allgemeine Hochschulreife ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau 4 zugeordnet.</p>
+														</td>
+													</tr>
+													<tr>
+														<td style="width: 100%; height: 14mm;" class="ta-lm">
+															<p>Wuppertal, den </p>
+														</td>
+													</tr>
+												</table>
+											</th>
+										</tr>
+										<tr>
+											<td style="height: 40mm;" >
+												<table class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 39%" />
+														<col style="width: 22%" />
+														<col style="width: 39%" />
+													</colgroup>
+													<tr style="height: 16mm">
+														<th class="ta-cb f-very-tiny"></th>
+														<th class="ta-cb f-very-tiny">(Siegel)</th>
+														<th class="ta-cb f-very-tiny"></th>
+													</tr>
+													<tr>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Vorsitzende/r des Zentralen Abiturausschusses</td>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Schulleiter/in</td>
+													</tr>
+													<tr>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+													</tr>
+													<tr style="height: 20mm;">
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+													</tr>
+													<tr>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Vertreter/in des Schulträgers</td>
+														<td class="ta-tm f-very-tiny"></td>
+														<td class="bo-t-black-strong ta-ct f-very-tiny">Beratungslehrer/in</td>
+													</tr>
+													<tr>
+														<td class="ta-ct f-very-tiny"></td>
+														<td class="ta-tm f-very-tiny"></td>
+														<td class="ta-ct f-very-tiny"></td>
+													</tr>
+													<tr style="height: 3mm">
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+														<td class="ta-cb f-very-tiny"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 18mm;" class="ta-lt">
+												<p class="f-very-tiny"><span class="f-bold">Rechtsbehelfsbelehrung: </span><span>Gegen die Leistungen in der Abiturprüfung und die Berechnung der Gesamtqualifikation einschließlich der Durchschnittsnote kann innerhalb eines Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule Albert Zweistein Dreistein Vierstein Gymnasium, Viehofstraße 4, 42103 Wuppertal schriftlich oder zur Niederschrift zu erheben.</span>
+												</p>
+												<p class="f-very-tiny ta-r">Schulnummer: 100012</p>
+											</td>
+										</tr>
+									</table>
+
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 25mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>8) </sup></th>
+														<th class="ta-lt f-very-tiny">Außer Arbeitsgemeinschaften</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>9) </sup></td>
+														<td class="ta-lt f-very-tiny">Sind für eine Sprache zwei Referenzniveaus ausgewiesen, ist das niedrigere in vollem Umfang, das höhere in Anteilen erreicht. Das ausgewiesene Niveau kann auch in einem vorangegangenen Schuljahr erreicht worden sein.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>10) </sup></td>
+														<td class="ta-lt f-very-tiny">Auf Wunsch der Schülerin/des Schülers kann hier die Teilnahme an Arbeitsgemeinschaften in der Qualifikationsphase oder die erfolgreiche Teilnahme an Landes- oder Bundeswettbewerben vermerkt werden. Auch können hier gemäß § 49 Abs. 3 SchulG Aussagen zum außerunterrichtlichen Engagement aufgenommen werden.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 4 Ende ###################################################################################################################################### -->
+					</th>
+					<td style="width: 10mm;"></td>
+					<td class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 1 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny c-white">1</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 55mm"></th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 32mm" class="ta-cm p-l-4 p-r-4">
+												<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhLS0gQ3JlYXRlZCB3aXRoIElua3NjYXBlIChodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy8pIC0tPgo8c3ZnCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgdmVyc2lvbj0iMS4wIgogICB3aWR0aD0iNDA2cHQiCiAgIGhlaWdodD0iNDI2cHQiCiAgIHZpZXdCb3g9IjAgMCA0MDYgNDI2IgogICBpZD0ic3ZnMiI+CiAgPGRlZnMKICAgICBpZD0iZGVmczQiPgogICAgPGNsaXBQYXRoCiAgICAgICBpZD0iY2xpcDAiPgogICAgICA8cmVjdAogICAgICAgICB3aWR0aD0iNDA2IgogICAgICAgICBoZWlnaHQ9IjQyNiIKICAgICAgICAgeD0iMCIKICAgICAgICAgeT0iMCIKICAgICAgICAgaWQ9InJlY3Q3IiAvPgogICAgPC9jbGlwUGF0aD4KICA8L2RlZnM+CiAgPGcKICAgICBjbGlwLXBhdGg9InVybCgjY2xpcDApIgogICAgIGlkPSJzdXJmYWNlMCI+CiAgICA8cGF0aAogICAgICAgZD0iTSA1Ljk5NDA5NSw2Ljg5MzYxNiBDIDEzNy4wMzEyNSw2Ljg5MjQyNiAyNjguMDY4MjEsNi44OTA2MSAzOTkuMTA1NDQsNi44OTQ1MzEgQyAzOTkuMDUyOTksODMuMjcyMTI1IDM5OS4yMjA5LDE1OS42NTA4MiAzOTkuMDIwMDIsMjM2LjAyNzY4IEMgMzk4LjQ4NjA4LDI0Mi44Njg0OCAzOTcuNjUyMTgsMjQ5LjY4NTI5IDM5Ni44MTY3NywyNTYuNTAyNjMgQyAzOTAuNDYxOTUsMjk0LjQ5NDE3IDM3My4xOTIyOSwzMzAuNzI3OTQgMzQ2Ljg1NjcyLDM1OC45Mjk5IEMgMzI0Ljk5Njg5LDM4Mi44ODI4MyAyOTcuMDA4NjgsNDAxLjAyNDMxIDI2Ni40MzQwNSw0MTEuNzQzNjQgQyAyNTIuMjE1Nyw0MTYuNDE0IDIzNy41NTE3Myw0MTkuOTY4NTIgMjIyLjYxNDg3LDQyMS4yMTE3OCBDIDIxMi40OTUyOSw0MjIuNzU4NDcgMjAyLjE5ODI0LDQyMS45MDg1MSAxOTEuOTk3NjIsNDIyLjA0Njk3IEMgMTQ5LjkyODEyLDQxOS45MTk3NyAxMDguNjc1MTcsNDAzLjYzMTk5IDc2LjUwMzg0NSwzNzYuNDAwNTEgQyAzOS40OTk0NjYsMzQ1LjUyNDQxIDE0LjQ0NTYzMywzMDAuNjU4OCA3LjkxNTYwNCwyNTIuODc5NDcgQyA2Ljg5ODg4LDI0Ni45NzUxMyA2Ljc0NDYyOSwyNDAuOTc5ODQgNS45OTM2OTgsMjM1LjA0NjQzIEMgNS45ODkzMDQsMTU4Ljk5NTgyIDUuOTg4OTA3LDgyLjk0NDUxOSA1Ljk5NDA5NSw2Ljg5MzYxNiB6ICIKICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMjExYzFlO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgaWQ9InNjaHdhcnoiIC8+CiAgICA8cGF0aAogICAgICAgZD0iTSAxMy4xNjYxNTMsMTQuMTY2MjQ1IEMgMTM5LjQ0MzM0LDE0LjE2MzcyNyAyNjUuNzIwMzQsMTQuMTY4MzY1IDM5MS45OTc2LDE0LjE2MzkyNSBDIDM5Mi4wMDMwNCw2OC43Njg5MDYgMzkxLjk5ODI1LDEyMy4zNzM3IDM5MiwxNzcuOTc4NzggQyAzOTEuOTE1NzQsMTk2LjM0NTA2IDM5Mi4xOTc4LDIxNC43MTUxIDM5MS43OTYzNCwyMzMuMDc4NTUgQyAzOTAuNTIyNzUsMjYyLjkzMDM0IDM4Mi4xMTAxOCwyOTIuNDU3OTkgMzY3LjM5MDQsMzE4LjQ2Nzk2IEMgMzQyLjA3MDM5LDM2My42ODYwNCAyOTcuNTQ1MDEsMzk3Ljc1NjAzIDI0Ny4wNjg2LDQwOS43NjI3NyBDIDIxOC43MzM0NCw0MTYuNjM1NjcgMTg4Ljc4MTgzLDQxNi44MjU5NiAxNjAuMzYyODksNDEwLjMxNTIyIEMgMTI2LjUwOTgsNDAyLjU1Nzk4IDk0Ljg3NTM2NiwzODUuMjM1MzUgNzAuMjI2MzM0LDM2MC43NTYxOCBDIDMyLjk4NzAxNSwzMjQuNjk0MTQgMTEuOTE5MzEyLDI3Mi43ODUxNiAxMy4xNjU4NDgsMjIwLjk4OTIxIEMgMTMuMTY1NzI2LDE1Mi4wNDgxMSAxMy4xNjUxMzEsODMuMTA3MjY5IDEzLjE2NjE1MywxNC4xNjYyNDUgeiAiCiAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2ZmZmZmZjtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgIGlkPSJ3ZWlzcyIgLz4KICAgIDxnCiAgICAgICBpZD0iZ3J1ZW4iPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDIyLjgzNTAzNywyMy44MzUwMjIgQyA3Mi40MjM2MTUsMjMuODE5NTk1IDEyMi4wMTIxLDIzLjg1OTkyNCAxNzEuNjAwNjksMjMuODE0ODE5IEMgMTYyLjc1MzY1LDMzLjc0NjYxMyAxNTMuNDQ3OTEsNDMuNjg4NjE0IDE0Ny44OTM2OSw1NS45NDIzMDcgQyAxMzkuNDgzMjgsNzMuNzk5NTE1IDEzNi45MjIyNyw5My43Mjk3MzYgMTI4Ljg4ODE3LDExMS43MzI1IEMgMTI0LjQ0Nzk1LDEyMS44NTcxOSAxMTcuODQ3MTUsMTMxLjE3MTU0IDEwOS4wOTAzMiwxMzguMDA3IEMgOTYuMDAyNDI2LDE0OC43MTYxMyA3OS44OTAwOTEsMTU1LjAyNjE3IDY3LjEyOTI3MiwxNjYuMTc2OTEgQyA1OS40NDU0NSwxNzIuODEwMzUgNTMuOTgzMTA5LDE4MS42MTE2NSA0OS43ODA1OTQsMTkwLjc1OTYxIEMgNDAuOTI2MywyMTAuMjgxOTEgMzcuMzE2MjM4LDIzMi4yNTkxNyAyNC42MzIxNTYsMjQ5Ljk1NDE2IEMgMjMuMjQ1OTI2LDI0MC4zNzI3NyAyMi42NDE2NjMsMjMwLjY3NzkzIDIyLjgzMzUyNywyMjAuOTk3ODggQyAyMi44MzUwNTIsMTU1LjI3NjgxIDIyLjgzMjAxNiw4OS41NTYwMTUgMjIuODM1MDM3LDIzLjgzNTAyMiB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiMwMGEzNGM7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJncnVlbl9vYmVuIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDE2NS4yNjcwMywxNjAuMjY3ODUgQyAxODAuODEzNzEsMTQwLjYyMjU5IDE4NS4zODI3NywxMTUuMTk4MDMgMTk3LjYyNzA1LDkzLjcxNzMzMSBDIDE5Ny41Mzk0MywxMzYuODA4MjMgMTk3LjYxMDI5LDE3OS44OTk3MiAxOTcuNTkxNDIsMjIyLjk5MTA2IEMgMTk4LjE1MzAyLDI1NS45NzMwNyAxODkuMjA5MTcsMjg5LjAyNDc4IDE3Mi4yODg4NiwzMTcuMzI3MTUgQyAxNTcuMTQ3MzcsMzQyLjgxMzI4IDEzNS42NDQ1MiwzNjQuNTE4MTcgMTEwLjIwODQyLDM3OS43NjEzNCBDIDgzLjYxNjk0MywzNjMuNjI2MzcgNjEuMTg4NDkyLDM0MC42NTg3NSA0Ni4wMjM1MTQsMzEzLjQ3ODIxIEMgNTYuNTA2MDU4LDMwMi42ODQxNCA2Ni44MTMyNjMsMjkxLjQ0NjM1IDc0LjIxODAzMywyNzguMjUwNjMgQyA4My41NjExODgsMjYxLjI4ODIyIDg3LjU1MDgyNywyNDIuMTExMzEgOTUuMzM1MzQyLDIyNC40ODIxNSBDIDk5LjM4MzMwMSwyMTUuNDMzMzggMTA0LjQzOTgyLDIwNi42NDYyMSAxMTEuNTcxOTUsMTk5LjY2MjYzIEMgMTI3LjUzOTk2LDE4My45MzkgMTUwLjc0MDIsMTc3LjY3OTE1IDE2NS4yNjcwMywxNjAuMjY3ODUgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iZ3J1ZW5fdW50ZW4iIC8+CiAgICA8L2c+CiAgICA8cGF0aAogICAgICAgZD0iTSAyMDcuNDE0NzMsMjI2LjA0MTExIEMgMjA3LjM5MTc3LDE1OC42MzU1NiAyMDcuNDA5MDksOTEuMjI5ODEzIDIwNy40MDYyNCwyMy44MjQxNzMgQyAyNjUuNjU4ODksMjMuODQ4NjAyIDMyMy45MTE0OCwyMy44MjU4NTEgMzgyLjE2NDM3LDIzLjgzNTU1NiBDIDM4Mi4xNzE1Niw5Mi45MDE5MzIgMzgyLjE1NjIzLDE2MS45NjgxNyAzODIuMTcyMTcsMjMxLjAzNDU4IEMgMzgxLjE3MSwyNTkuNzM0NDQgMzczLjM0NTg0LDI4OC4yMjMxMSAzNTkuMjE0OTcsMzEzLjI0OTMzIEMgMzQ0LjAyMjExLDM0MC40ODYwMSAzMjEuNTkwMDEsMzYzLjYxODIgMjk0LjkwMjQ1LDM3OS43NDI3OCBDIDI2OC4xMjIwNywzNjMuNzU3OSAyNDUuNzQzNjQsMzQwLjU1MjUxIDIzMC41MDU2MywzMTMuMzU3MyBDIDIxNS41Njk5OCwyODYuODI5NzEgMjA3LjU4NTUxLDI1Ni40NzY1IDIwNy40MTQ3MywyMjYuMDQxMTEgeiAiCiAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2VlMTkyMTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgIGlkPSJyb3QiIC8+CiAgICA8ZwogICAgICAgaWQ9InBmZXJkIj4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAzNjAuNDY4NzUsNDYuMjE4NzUgQyAzNTkuNTg3MSw1Mi4zNDYyMjMgMzU4LjczOTY0LDU4LjQ1MzY3OCAzNTguMjE4NzUsNjQuNjI1IEMgMzQ1Ljg3NzU0LDcwLjI0MTk1IDMzNi4wMjE0MSw3OS43MjYyIDMyNS4zNzUsODcuODc1IEMgMzIxLjM0NjI0LDkxLjIxODk2NCAzMTYuMzczMTgsOTQuMDA2MTUzIDMxNC4zNzUsOTkuMTI1IEMgMzE4LjgxNzgxLDEwMC41NzM1OSAzMTcuOTI1NTcsMTA1LjcwMTM4IDMxNC4xODc1LDEwNy4yODEyNSBDIDMxNS4zNTM0OCwxMDguOTA1IDMxNi4yNTU2MywxMTEuNTUwMDYgMzE4Ljc1LDExMS4yMTg3NSBDIDMyMi45MjA4OSwxMTEuNDE0ODQgMzIzLjExNTIsMTA0Ljc4MTQgMzI3LjUzMTI1LDEwNS40Njg3NSBDIDMzMC4xNzI3NCwxMDUuMDM2MDcgMzM0LjMxNzU4LDEwNi41NTgyNCAzMzIuOTY4NzUsMTA5LjkwNjI1IEMgMzMxLjQwNTc3LDExMS44NDY4MSAzMjguODAxMDIsMTExLjc0NjQ5IDMyNi41OTM3NSwxMTIuMjE4NzUgQyAzMjUuNjQ1MDcsMTEzLjAzMjI1IDMyNC43MTU1NywxMTMuODMyOTYgMzIzLjc4MTI1LDExNC42NTYyNSBDIDMyOC4zMTM3LDExNi4wNzU4MSAzMzMuNDU2MjMsMTE3LjY2OTIzIDMzOCwxMTUuNDA2MjUgQyAzNDEuNzIyNTEsMTEzLjYxMjE4IDM0MS4yNjQ5NiwxMDcuNjg4MjggMzQ1LjY4NzUsMTA2LjgxMjUgQyAzNTUuMTY2NTEsMTA0LjY5MDk4IDM2NS4wMjA3MiwxMDcuNDA5NzMgMzc0LjU2MjUsMTA1Ljc4MTI1IEMgMzc4LjkyMDczLDEwNC4zNDA2MyAzODAuODE5MzQsOTkuODIwMzM5IDM4Mi41MzEyNSw5NS45Njg3NSBDIDM4NS4xOTIwNiw5Ni4zMjQwMTMgMzg4LjUzMDM4LDk4LjE5NzQwNiAzODcuNDM3NSwxMDEuNDA2MjUgQyAzODUuMDM4NTEsMTA5LjE4MTIzIDM3Ny4wNTg2NCwxMTMuNjk2OTMgMzY5LjE1NjI1LDExMy4zNDM3NSBDIDM2My4wODExNCwxMzIuOTQ1MzYgMzQyLjIyNzAyLDE0MS4yODExMiAzMzAuNzUsMTU3IEMgMzI1LjI5OTM1LDE2My45ODk4MiAzMjIuMzYxNjMsMTcyLjY1NTkzIDMyMS44NDM3NSwxODEuNDY4NzUgQyAzMTMuMjMzMTgsMTg0LjI5NTMzIDMwNC43MzIzMSwxODcuMzg2NzYgMjk2LjA5Mzc1LDE5MC4xMjUgQyAyOTAuNDYzMTIsMTkxLjQwNjk3IDI4OC4xMDQzNiwxOTcuMzE4ODYgMjg0LjQzNzUsMjAxLjE1NjI1IEMgMjg3LjM1MzY2LDIwNS44MjUxOSAyOTAuMDE3MzgsMjEwLjcwMjYgMjkxLjc4MTI1LDIxNS45Mzc1IEMgMjk0LjM4MjUxLDIyMi44NjI1MSAyOTUuMjM4NzksMjMwLjI5NDAyIDI5OC4xMjUsMjM3LjEyNSBDIDMwMC43NDI5OSwyMzcuMjgzNzEgMzAzLjc5MjA1LDIzNy4yNTUxNSAzMDUuNTYyNSwyMzkuNTYyNSBDIDMwNy42MTEwMSwyNDEuNTA5MDEgMzA3LjUyMzksMjQ0LjUxOTkyIDMwNy42MjUsMjQ3LjEyNSBDIDMxMS42ODI0MywyNTEuMDIxNyAzMTYuNDAzNjQsMjU0LjczMDYxIDMyMi4yMTg3NSwyNTUuMjgxMjUgQyAzMjUuNDQ2NjcsMjQ3LjI2NjI1IDMyNC4xMTE5OSwyMzguNTAyMyAzMjEuNzE4NzUsMjMwLjQ2ODc1IEMgMzE4LjgwOTk1LDIzMC40NiAzMTUuOTAyNCwyMzAuNDUxNTEgMzEzLDIzMC40Njg3NSBDIDMxMi45OTA5NCwyMjguNzY3MDMgMzEyLjk3NTQ4LDIyNy4wNzA1NCAzMTIuOTY4NzUsMjI1LjM3NSBDIDMwOC4xNjI4MiwyMjIuOTIyNDQgMzAyLjg3Mjg5LDIxOS40NTE2NCAzMDEuOTM3NSwyMTMuNjg3NSBDIDMwMC45MjQxNCwyMDkuMzI0MSAzMDMuMTQ5MjYsMjA1LjIyMDQgMzA1Ljg0Mzc1LDIwMS45Njg3NSBDIDMxOC41MjYzMiwyMDIuNDc3MDYgMzMxLjE3MjA0LDIwMy44MTA2NSAzNDMuODc1LDIwMy43NSBDIDM0OC43OTU3MSwyMDMuODg3MzEgMzUyLjA5MDg5LDE5OS41NjMwNSAzNTQuMjgxMjUsMTk1LjcxODc1IEMgMzU1LjA5MDE3LDE5NS43ODk1MSAzNTYuNjkxMDksMTk1LjkyOTIyIDM1Ny41LDE5NiBDIDM2MC43MTQ0NSwyMDAuNTQ1NzEgMzU2LjcxODE5LDIwNS4zOTQ5MiAzNTIuODc1LDIwNy44NDM3NSBDIDM0NS40MzIxMSwyMTMuMDA1MDIgMzM2LjA1NzY1LDIwOS42MzMwNyAzMjcuNzE4NzUsMjEwLjA5Mzc1IEMgMzI5Ljc5ODg3LDIxNC4wNDkwNiAzMzIuMDYwOTQsMjE3Ljk2NDA3IDMzNS4wOTM3NSwyMjEuMjgxMjUgQyAzNDcuNzcyNzksMjM1LjIwMDQxIDM2OC4xMjg3NCwyMzguOTU1NzMgMzgwLjEyNSwyNTMuNjU2MjUgQyAzODMuMTA0MzIsMjU3LjcxNjc5IDM4Ni45MTA5NSwyNjIuMDU1OTcgMzg2LjUsMjY3LjQzNzUgQyAzODYuNTQyMTksMjc2LjgxMDk1IDM4Ny40NTQ1NiwyODYuMjMyOCAzODkuNzE4NzUsMjk1LjM0Mzc1IEMgMzkxLjI4NjQ4LDMwMC45NTUwOSAzOTMuMzMyODgsMzA2LjkwNDI3IDM5OC4wMzEyNSwzMTAuNjg3NSBDIDQwNS45NDI1OSwzMTcuMzI4OTEgNDE0LjM3ODkzLDMyMy41NzE3NSA0MjAuODQzNzUsMzMxLjcxODc1IEMgNDI0Ljg5Mzk3LDMzNi43NDIyNSA0MjcuMDc4OCwzNDMuNTMwNTcgNDI1LjY4NzUsMzQ5LjkzNzUgQyA0MjMuOTA4MjUsMzU5Ljc3ODM5IDQxOC44MTI4NiwzNjguNTU4NDggNDE0LjE4NzUsMzc3LjI4MTI1IEMgNDE1LjY3ODYxLDM4MS4wNjM1NiA0MTQuMTIyNjUsMzg2LjIxNDMxIDQwOS44NDM3NSwzODcuMjE4NzUgQyA0MDIuNTM4MjYsMzg4LjA0NDMzIDM5OS4yNTM0OSwzOTYuMDg1MTEgMzk3LjcxODc1LDQwMi4zNDM3NSBDIDQwNi4xMTkyOSw0MDUuNjU4MzggNDE1LjMyOTc2LDQwNC41MTc2OSA0MjMuNzgxMjUsNDAyLjA2MjUgQyA0MjMuNzg4NSwzOTguNTg1NDIgNDIzLjUzMDg1LDM5NS4wODU0MSA0MjMuODc1LDM5MS42MjUgQyA0MjQuMzk5MTQsMzg4Ljk0NDE1IDQyNy4wODM1MiwzODguMDExMjUgNDI5LjIxODc1LDM4Ni45Mzc1IEMgNDI5LjY0NjcyLDM2OS4wODMzMSA0MzYuNjEyMTEsMzUyLjI5NTc0IDQ0My41NjI1LDMzNi4xMjUgQyA0MzYuODgzMjcsMzIzLjk4MjE5IDQzMS40ODcxNywzMTAuNjI4NzQgNDMyLjI1LDI5Ni41IEMgNDQwLjU2MTg4LDI4NS41OTMyMyA0NDguOTc3NTcsMjcyLjUyNTkzIDQ0Ni43NSwyNTguMTU2MjUgQyA0NDMuNTMzMDEsMjQyLjIwNzIzIDQyOS44MjE2NSwyMzEuNzIxMTkgNDE3Ljg3NSwyMjIuMDYyNSBDIDQwOC41MzA2MSwyMTIuNjY5NDIgNDAwLjk2MTI4LDIwMS4wNDczOSAzOTcuOTA2MjUsMTg4LjAzMTI1IEMgMzk2LjM3MjU3LDE4MS4zMzMzNyAzOTYuNjU0MDQsMTc0LjM5NzgyIDM5Ny4wOTM3NSwxNjcuNTkzNzUgQyA0MDIuODExODEsMTY1LjMwODczIDQwOC44MTE1NywxNjMuODM2NjMgNDE0Ljk2ODc1LDE2My40Mzc1IEMgNDEwLjg0NTcxLDE2MC4wNDkwNCA0MDcuNzAxNDcsMTU1LjY4NzA4IDQwNC45MDYyNSwxNTEuMTg3NSBDIDQxNC40MjU1OCwxNDkuMDEzNzcgNDIzLjk0NDk3LDE0Ni41MDU1IDQzMi44NDM3NSwxNDIuNDA2MjUgQyA0MjUuMjQ0NzIsMTM3LjgxMjUyIDQyMC4zOTMyMiwxMzAuMTg5NTYgNDE2LjIxODc1LDEyMi41OTM3NSBDIDQyNS40MjYwNywxMjUuNTIxNzggNDM1LjIyMTM4LDEyNS4yMzkwNyA0NDQuNTMxMjUsMTIyLjk2ODc1IEMgNDM0Ljg0MjE3LDExNS4zNzI5MyA0MzAuODgwMSwxMDIuOTE1MzMgNDIxLjU2MjUsOTQuOTM3NSBDIDQyNy4yNDg4LDkzLjcwODI5IDQzMi44NTQ3OSw5MS45OTkyOTggNDM4LjA5Mzc1LDg5LjQzNzUgQyA0MzEuMzI5MzgsNzguODc5NDEgNDE5LjE2OTg5LDczLjM1MTQ2OCA0MDcuMzEyNSw3MC43NSBDIDQxMy4xMzIxNCw2Ny45NTgxNzUgNDE4LjgwNTA2LDY0LjUzODQ0OCA0MjMuMDMxMjUsNTkuNTYyNSBDIDQwNy45ODUwNyw2MS4wMzgxMiAzOTIuODkwOTgsNTkuMzQ3MTQ1IDM3OC4wMzEyNSw1NyBDIDM3OC42MzMyMSw2MC42OTA2MDUgMzc5LjczMzQ1LDY1LjIwMzc3IDM3Nyw2OC4zMTI1IEMgMzc1LjI2OTczLDcwLjEzNjgwMyAzNzIuNTk1NzgsNjkuMjg5Mjk1IDM3MC40Njg3NSw2OC45Njg3NSBDIDM3MS4yNjc1Nyw2NS44MTA4ODYgMzcyLjc4MzIzLDYyLjUyNzM1OSAzNzEuNjI1LDU5LjI1IEMgMzcwLjE2NTQ0LDUzLjQwNDI0NCAzNjUuMzgwODIsNDkuMjc3ODg5IDM2MC40Njg3NSw0Ni4yMTg3NSB6IE0gMzQ3Ljg3NSw3OC45Mzc1IEMgMzUwLjkzOTI3LDc5LjA0OTgwMSAzNTMuODUwODcsODEuNzE5MDQ5IDM1Ni4yNSw4My40Njg3NSBDIDM1My42MzA0OSw4NC44MTUzMDQgMzUwLjg0Njk1LDg1Ljc1MTg3NCAzNDgsODYuNDY4NzUgQyAzNDYuNDUzMTQsODUuNTQ3NTA1IDM0NC45MTA1Myw4NC42NDE3NzQgMzQzLjM3NSw4My43MTg3NSBDIDM0My44NDcsODIuNDE5MjkyIDM0NC4zMTc1NSw4MS4xMTU5MDUgMzQ0Ljc4MTI1LDc5LjgxMjUgQyAzNDUuODIxMiw3OS4xNTY2NDkgMzQ2Ljg1MzU4LDc4LjkwMDA2NiAzNDcuODc1LDc4LjkzNzUgeiAiCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC44LDAuOCkiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojZmZmZmZmO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0ia29lcnBlciIgLz4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAyMjguNTU4MzgsMTAwLjM0MTI4IEMgMjMxLjg3MTYsMTAwLjM2MDM4IDIzNS4xODYzMywxMDAuMzU5NiAyMzguNTAyNjksMTAwLjM0NDk0IEMgMjQ2LjU2MDg0LDEwNi41OTA5IDI1NC41NDYyMywxMTIuOTI5NzIgMjYyLjU3MDc0LDExOS4yMTk4MyBDIDI1OC4xNjUwOCwxMjQuMjc3NjUgMjU0LjcwNDgyLDEzMC4yMjQ2NiAyNTMuMTc3ODcsMTM2Ljc5OTIxIEMgMjQ5LjA4ODQ3LDEyOS4yMjM3MiAyNDUuMDgxNiwxMjEuNjAxNjIgMjQwLjk2MDA0LDExNC4wNDYzMSBDIDI0MC40MTY4MSwxMTIuNTM0NDQgMjM4LjY1NTg1LDExMi45NjI3NSAyMzcuNTAwNDQsMTEzLjMwMjU3IEMgMjM0LjYwMDU2LDExNC4wMDc0OCAyMzEuODc3MzgsMTE1LjgyOTMgMjMwLjY2NjI1LDExOC42MzQxNCBDIDIyOC45MTgzNSwxMjIuMzA1MDggMjMwLjEwODQ4LDEyNi40NDc1MSAyMzEuMTA0MzQsMTMwLjE1MDg5IEMgMjMwLjEzNTc2LDEzMS4xMjcyNiAyMjkuMTY1MywxMzIuMTAxNzggMjI4LjIwMjI0LDEzMy4wODA5NiBDIDIyOS43NzA1NCwxMzQuODM2NjYgMjMxLjM2NzQ1LDEzNi41Njk1MyAyMzMuMDA5ODMsMTM4LjI2MTM3IEMgMjI5Ljg5Mzk1LDE0NC4wNjA4OCAyMjUuNTk5MzcsMTQ5Ljg0MDg1IDIxOS4yMDc1NCwxNTIuMjA0OTkgQyAyMTYuNzIyNTcsMTQ4LjQ3MDEyIDIxNS43MDQxLDE0NC4wMDMwMiAyMTUuOTk1NDQsMTM5LjU0OTQyIEMgMjE3LjQ4MDI5LDEzOC4wNzQzMSAyMTkuMTYxNDcsMTM2LjM3MTQ5IDIxOS4wMzc5NSwxMzQuMDk1NjMgQyAyMTkuMTQ4NzMsMTMxLjkwNDY4IDIxNy40NDU3OSwxMzAuMzM2NjYgMjE2LjE4MzQxLDEyOC43ODg2NSBDIDIyMC4xMDM5OSwxMTkuMjAzNTUgMjI3LjA2MzU3LDExMC44NjYyNCAyMjguNTU4MzgsMTAwLjM0MTI4IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6I2ZmZmZmZjtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9Imh1Zl9vYmVuIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDM1Ny42OTU0LDExOC4wNDc4NSBDIDM2My4zNzA1MywxMjAuNjYzMTggMzY5LjA3OCwxMjQuMDUwNTQgMzcyLjI5MDczLDEyOS42MjI3MyBDIDM3NS45Mjc3LDEzNS43NzQ1NyAzNzUuODE1MzEsMTQzLjkzNjY1IDM3Mi4wMzQ3NiwxNTAuMDAxMDUgQyAzNjkuMTc2LDE1NS4xMzQ5OCAzNjQuMDg4NDIsMTU5LjY0NzI1IDM2NC40MDgzMSwxNjUuOTk0MjggQyAzNjQuNTM0MTMsMTcyLjc2MTA1IDM2OS42NjI0MiwxNzcuNjg5MTkgMzcyLjY1OTY1LDE4My4zMTY2NyBDIDM3NS4xNTI0MiwxODcuODYzMTYgMzc1LjY0Mzg2LDE5NC4wMTA5NCAzNzIuMzIyNzQsMTk4LjI3NTMxIEMgMzY5Ljg0ODQ4LDIwMS40NzA2NyAzNjUuNDA3ODQsMjAyLjE1NzkzIDM2MS42NjQxNSwyMDEuMjcyNzEgQyAzNjIuMjg4MSwyMDAuNzAwODcgMzYzLjUzNjAzLDE5OS41NTcxOSAzNjQuMTU5OTksMTk4Ljk4NTM3IEMgMzY1LjExOTk4LDE5NS42MTkxMyAzNjQuMTk1NjgsMTkxLjc5NTc2IDM2MS4zNzM3MywxODkuNjA2NTggQyAzNTQuNzc4MjgsMTg0LjEzNjg0IDM0NS41NDk1LDE4MS43NzQ0NiAzNDAuNzYzNTUsMTc0LjIwODA3IEMgMzM2Ljk5MDg4LDE2OC4yOTkzNiAzMzguMTU0MjgsMTYwLjgwNzA3IDM0MC43NjYyMywxNTQuNjkwNTEgQyAzNDIuNDY0ODMsMTQ5Ljg2MTA4IDM0NS45NzQ5MiwxNDUuMzMzODggMzQ1LjMyMTg3LDEzOS45Njc1IEMgMzQ0Ljk0NTE5LDEzNi42MDk0MSAzNDIuMTU0ODksMTM0LjM3MjMxIDMzOS43MDkwNSwxMzIuNDAxMjkgQyAzNDUuMzYwODYsMTI5LjQxMDU4IDM1My4xMzI5MywxMzEuMjk2MTEgMzU2LjE5MDQxLDEzNy4xMDA5MiBDIDM1OC40MjQ4LDEzMS4wMTg5NCAzNTkuMDA4ODgsMTI0LjQwNzUzIDM1Ny42OTU0LDExOC4wNDc4NSB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNmZmZmZmY7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJzY2h3ZWlmIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDI4Mi41MjUzOSwyMTMuMzQyOCBDIDI4NC42Nzc5MywyMDcuMzc0OTkgMjkwLjU3NTcxLDIwNC4wMjU4NiAyOTYuMzA4MTIsMjAyLjIwNDYyIEMgMjk5LjMyMzY1LDIwNS4zNjkwMyAzMDIuNDYwNzQsMjA4LjgzMTE1IDMwMy43NTI2OSwyMTMuMDc0MTEgQyAzMDMuODA4MTUsMjIzLjUyMzIyIDMwNS4xMjI2NiwyMzQuMTg4MSAzMDkuNTE0OTgsMjQzLjc3NjI0IEMgMzAyLjk4NjA4LDI1MS4zNjQ5NyAzMDIuMTM3OTksMjYxLjkxNDIgMzAxLjgwMjMyLDI3MS40ODk3OSBDIDI5My4yMjI1NSwyNzEuNDExNzQgMjg0LjYyMjQ1LDI3MS4xNDU3NyAyNzYuMDU5MjUsMjcxLjc5ODEgQyAyNzEuNDQwNDEsMjcxLjg1OTY3IDI2Ny4zMDkxLDI3NC41NzE5OSAyNjIuNjMwNDMsMjc0LjA4MzY5IEMgMjYyLjYzOTI0LDI3Ni4zODAzNyAyNjIuNjUxNTUsMjc4LjY3OTQ3IDI2Mi42ODgxNiwyODAuOTgxMjMgQyAyNTYuMzQ0NjMsMjgzLjIxNjk4IDI0OS4xODUyLDI4My44NTE3NiAyNDIuODEwNDUsMjgxLjM4OTc3IEMgMjQzLjM1MDAxLDI3Ni43MjI4NyAyNDYuMTM4OTUsMjcyLjczMzM0IDI0OS41NTE1MSwyNjkuNjU4ODYgQyAyNTEuNDk3NDgsMjY5LjUzNzU0IDI1My43NDkwNSwyNjkuNzc4ODcgMjU1LjMwMzMzLDI2OC4zMzA0OSBDIDI1Ny4wODg5OSwyNjYuOTcxMDIgMjU3LjIyMDM4LDI2NC41ODg2NyAyNTcuNTM5NzIsMjYyLjU1ODQ2IEMgMjY4Ljg1NjQsMjYyLjYzNzU3IDI4MC4xNzQwNiwyNjIuNTgwOCAyOTEuNDkyMDcsMjYyLjU4OTQ5IEMgMjkxLjI3NiwyNTQuMTM3NzcgMjg3LjE4NDg3LDI0Ni42MDA0OCAyODQuMTcwMjMsMjM4LjkxNzE1IEMgMjgxLjA0MDcxLDIzMC44NzkxNyAyNzkuNTc5MzMsMjIxLjY0MjYxIDI4Mi41MjUzOSwyMTMuMzQyOCB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNmZmZmZmY7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJodWZfdW50ZW4iIC8+CiAgICA8L2c+CiAgICA8ZwogICAgICAgaWQ9ImJsdW1lIj4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAxNzMuNzU3MzQsMzM1Ljc0NzE1IEMgMTczLjYzMjExLDMzMi4xODQxIDE3NC4yMjUzLDMyOC42NjY2OSAxNzUuNDc1NDUsMzI1LjMzNTU3IEMgMTc5LjA1NzMsMzI1LjI1NjY4IDE4Mi42MzU3NywzMjUuNzA3OTggMTg2LjAxNDkyLDMyNi45MzgwOSBDIDE4NC4wODU2NiwzMjkuMDUxMzggMTgyLjY3NTQ5LDMzMS41NjA2NCAxODIuMDkxMjgsMzM0LjM4MTA3IEMgMTc5LjIyMzcyLDMzNC4xMjA0NCAxNzYuNDE4NjQsMzM0LjcxMjk3IDE3My43NTczNCwzMzUuNzQ3MTUgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iYmx1bWVfbnciIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGQ9Ik0gMjE5LjE5NDU1LDMyNi45MDg0OSBDIDIyMi41ODQ1NiwzMjUuNjQ1NzcgMjI2LjE5MzgsMzI1LjE5ODMyIDIyOS43OTgzMywzMjUuNDQzMTkgQyAyMzAuOTQ3MzcsMzI4LjcxNzY0IDIzMS4zNTE5NiwzMzIuMTYwNDMgMjMxLjIzNDg2LDMzNS42MjI4OSBDIDIyOC41OTc5NSwzMzQuNTgwNDMgMjI1Ljc5MzY0LDMzNC4xODg3OCAyMjIuOTcxNzEsMzM0LjMxNTQ3IEMgMjIyLjI4ODAxLDMzMS41Nzg2OSAyMjAuOTAxNzIsMzI5LjEyNDY2IDIxOS4xOTQ1NSwzMjYuOTA4NDkgeiAiCiAgICAgICAgIHN0eWxlPSJvcGFjaXR5OjE7ZmlsbDojMDBhMzRjO2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iYmx1bWVfbm8iIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGQ9Ik0gMTk4LjQ2NzA0LDM1MS4wNjc1OCBDIDIwNS43ODQ2MiwzNDguMjA4NjUgMjE0LjgwMDcsMzU0LjA5MzkzIDIxNC42MjM4NywzNjIuMDY0NjIgQyAyMTUuMjUzMjUsMzY4LjkwNTc4IDIwOC44MjMwMywzNzUuMjUzMSAyMDIuMDAwNzUsMzc0LjYxMzg5IEMgMTk2LjIyMjAzLDM3NC42Mjc3MyAxOTAuOTc2MDYsMzY5LjcyMjM0IDE5MC40OTM0NCwzNjMuOTg1NzIgQyAxODkuNjczOTIsMzU4LjQ4ODUxIDE5My4yMjgxLDM1Mi44MzU4NiAxOTguNDY3MDQsMzUxLjA2NzU4IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX21pdHRlIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDI1MS44MTI1LDQwNi45MDYyNSBDIDI0Ni4yNDQzNyw0MDcuMTU4NTUgMjQwLjgxMjc1LDQwOS4xNzI5NyAyMzYuODQzNzUsNDEzLjA5Mzc1IEMgMjMzLjUxMTE2LDQxNi4yMzI0NSAyMzMuOTEwMjQsNDIxLjA3ODE0IDIzNS4yMTg3NSw0MjUuMDYyNSBDIDIzNC4zMjAwMSw0MjUuOTM2MTYgMjMzLjQxNjEsNDI2LjgyNzQyIDIzMi41LDQyNy42ODc1IEMgMjI5LjA4NjI1LDQyNS4xMjkyMyAyMjQuNjQ2NjcsNDIzLjAwODczIDIyMC40Mzc1LDQyNS4wNjI1IEMgMjEwLjAwNjA0LDQzMC4xNDA5NSAyMDUuNjg5NjIsNDQzLjgyMjIxIDIwOS4wOTM3NSw0NTQuNSBDIDIxMC43MTMwNyw0NTkuNTgyOTcgMjE1Ljk4MjA2LDQ2Mi4yMDUwMiAyMjEuMDkzNzUsNDYxLjU2MjUgQyAyMjEuNDc0NTksNDYyLjgyMjg4IDIyMS44ODI1OCw0NjQuMDg0MjYgMjIyLjMxMjUsNDY1LjM0Mzc1IEMgMjE4LjU4MjY2LDQ2Ny41NjE0MSAyMTUuMzI3MjMsNDcxLjYyMjY1IDIxNi4zNzUsNDc2LjIxODc1IEMgMjE4LjYyMTMyLDQ4Ny43NjUgMjMwLjgxNjgzLDQ5Ni41ODUxNyAyNDIuNDY4NzUsNDk1LjMxMjUgQyAyNDcuMjY3MTYsNDk0Ljg1MTA0IDI1MC4xMjMxNCw0OTAuNjUwNzEgMjUxLjIxODc1LDQ4Ni4zNDM3NSBDIDI1Mi41NjA4Niw0ODYuMzM2NDggMjUzLjkwMTM0LDQ4Ni4zNDA1NyAyNTUuMjUsNDg2LjM3NSBDIDI1Ni4xOTk4Niw0OTAuMjM5OSAyNTguNDM0OTgsNDk0LjE4MTQ5IDI2Mi42NTYyNSw0OTUuMDYyNSBDIDI3NC43MzMwNyw0OTcuNDQwOTQgMjg3LjcyOSw0ODguMDgzOTIgMjkwLjAzMTI1LDQ3Ni4xMjUgQyAyOTAuOTAyNyw0NzEuNDQzMDUgMjg3LjczNTMzLDQ2Ny40MDMxOSAyODMuOTA2MjUsNDY1LjE4NzUgQyAyODQuMjIyMjYsNDY0LjI5MTkgMjg0Ljg3MTUxLDQ2Mi41MjA2MyAyODUuMTg3NSw0NjEuNjI1IEMgMjg4Ljg5Njc4LDQ2MS43MDcxNSAyOTMuMDQyNTEsNDYxLjE1NjM4IDI5NS40MDYyNSw0NTcuOTM3NSBDIDMwMC4xMzM0OCw0NTEuMDY0NzEgMjk4Ljk0OTg0LDQ0MS43NTgxNSAyOTUuNDM3NSw0MzQuNjI1IEMgMjkyLjY4NjYxLDQyOS4zNDIxNCAyODcuNzY0NzksNDI0LjAyNzQ0IDI4MS4zMTI1LDQyNC4zMTI1IEMgMjc4LjQ1NDMsNDI0LjI2MjE1IDI3Ni40MDcxOCw0MjYuNTQ1NjcgMjczLjgxMjUsNDI3LjMxMjUgQyAyNzIuODY4MSw0MjYuNjYzMiAyNzEuOTUwNTEsNDI1Ljk4NzU1IDI3MS4wNjI1LDQyNS4yODEyNSBDIDI3My40NTEzMiw0MjAuNDIwMDkgMjcyLjE3Mjc4LDQxNC4zMjA3MiAyNjcuNTkzNzUsNDExLjI1IEMgMjYzLjEwNTQ2LDQwOC4xNjU4MiAyNTcuMzgwNjMsNDA2LjY1Mzk1IDI1MS44MTI1LDQwNi45MDYyNSB6IE0gMjUyLjkzNzUsNDI5LjQzNzUgQyAyNjMuODg1MjEsNDI5LjQxMzc3IDI3NC41NzU4Niw0MzcuNTUyMjggMjc2LjQwNjI1LDQ0OC42ODc1IEMgMjc5LjgyNTc0LDQ2My4yMzk0OSAyNjYuNDY0MDEsNDc4LjI1NTkzIDI1MS42NTYyNSw0NzYuODQzNzUgQyAyMzkuMzIxMiw0NzYuMjU2MjUgMjI4Ljk0Njg5LDQ2NC44MyAyMjkuNSw0NTIuNSBDIDIyOS42OTkzNyw0NDIuODgwOTkgMjM2LjM4NjA1LDQzMy45NzUwOSAyNDUuNDA2MjUsNDMwLjgxMjUgQyAyNDcuODUwOSw0MjkuODcyMDcgMjUwLjQxMTExLDQyOS40NDI5OCAyNTIuOTM3NSw0MjkuNDM3NSB6ICIKICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjgsMC44KSIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiNlZTE5MjE7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJibHVtZV9yaW5nIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDE1OC43NzUyMiwzNzYuNzk0MjggQyAxNTkuNjg4NTIsMzczLjM1MzU5IDE2MS4zMTU4MSwzNzAuMTc5MTggMTYzLjQ0OTU1LDM2Ny4zNDE5MiBDIDE2NS4wODM0NywzNjkuNzIxNzcgMTY3LjA5Nzg3LDM3MS44MTcyNSAxNjkuNTM1NTQsMzczLjM4NjI5IEMgMTY4LjI0MzE5LDM3NS45MTUyNSAxNjguMDA3NiwzNzguNzI5NDMgMTY4LjA3OTA2LDM4MS41Mjc1IEMgMTY0LjY4NzksMzgwLjU4MTk4IDE2MS41MjcwMiwzNzguOTg3MTcgMTU4Ljc3NTIyLDM3Ni43OTQyOCB6ICIKICAgICAgICAgc3R5bGU9Im9wYWNpdHk6MTtmaWxsOiMwMGEzNGM7ZmlsbC1ydWxlOm5vbnplcm87c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJibHVtZV9zdyIgLz4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAyMzUuNTA4NTEsMzczLjM0OTU5IEMgMjM3LjkyNjQxLDM3MS43NTMyIDIzOS45NDY1OCwzNjkuNjY2OTYgMjQxLjYzNjIzLDM2Ny4zMjU1MyBDIDI0My43NDU5NiwzNzAuMTIwMSAyNDUuMjk3NTYsMzczLjI2NjM5IDI0Ni40MzIwMiwzNzYuNTc1MDYgQyAyNDMuNzExMTQsMzc4Ljk2NjM1IDI0MC40NDUyOCwzODAuNjA1NDUgMjM2Ljk2NzA5LDM4MS41NzYyOSBDIDIzNy4wOTU4OSwzNzguNzQ3NzQgMjM2Ljg4NDA4LDM3NS44ODA2NiAyMzUuNTA4NTEsMzczLjM0OTU5IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX3NvIiAvPgogICAgICA8cGF0aAogICAgICAgICBkPSJNIDIwMi40ODY1MSwzOTcuMTA1MTUgQyAyMDQuNjM0MzQsMzk5LjA1NDYgMjA3LjIxMTk0LDQwMC40MDE2MyAyMTAuMDEyMzEsNDAxLjE2MjQyIEMgMjA4LjA5Njc2LDQwNC4xMjc5IDIwNS41NTMyMiw0MDYuNTk5MjMgMjAyLjY0MTc0LDQwOC41ODE3IEMgMTk5LjU1ODY3LDQwNi43MjczMyAxOTcuMDI3OTUsNDA0LjE1MjkyIDE5NS4xMDExOCw0MDEuMTI3ODQgQyAxOTcuOTA0OTgsNDAwLjQ5OTYgMjAwLjUwMTE0LDM5OS4yMDkxOCAyMDIuNDg2NTEsMzk3LjEwNTE1IHogIgogICAgICAgICBzdHlsZT0ib3BhY2l0eToxO2ZpbGw6IzAwYTM0YztmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIKICAgICAgICAgaWQ9ImJsdW1lX3MiIC8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K" alt="Schullogo"/>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 21mm; font-size: 24pt; " class="f-bold ta-cb">Z E U G N I S</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 20pt; " class="f-bold ta-cb">DER ALLGEMEINEN HOCHSCHULREIFE</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 17mm; font-size: 17pt; " class="f-bold ta-cb">Dirk Schoever</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 4mm; font-size: 9pt;" class="ta-ct p-tb-0 p-lr-4-4"></td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 16mm; font-size: 13pt; " class="ta-cb">geboren am 30. Oktober 2001 in Hille</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb">wohnhaft in Bottrop</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 12mm; font-size: 13pt; " class="ta-cb">hat sich nach dem Besuch der gymnasialen Oberstufe der Abiturprüfung unterzogen.</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 87mm" class="p-4 ta-cb">
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Dem Zeugnis liegen zugrunde:</p>
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Vereinbarung zur Gestaltung der gymnasialen Oberstufe und der Abiturprüfung<br/>
+													(Beschluss der Kultusministerkonferenz vom 7. Juli 1972 in der jeweils geltenden Fassung)</p>
+												<p style="font-size: 8pt; margin-bottom: 1.5em" class="f-small">Bildungsstandards für die Allgemeine Hochschulreife und Vereinbarungen über die Einheitlichen Prüfungsanforderungen in der
+													Abiturprüfung</p>
+												<p style="font-size: 8pt; margin-bottom: 1em">Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe - APO-GOSt - vom 5. Oktober 1998 in der jeweils
+													geltenden Fassung (BASS 13-32 Nr. 3.1)</p>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 1 Ende ###################################################################################################################################### -->
+					</td>
+				</tr>
+			</table>
+			</div>
+
+			<!-- Seiten 2 und 3 #################################################################################################################################### -->
+			<div class="start-new-page">
+			<table class="fixed-100 mp-0">
+				<colgroup>
+					<col style="width: calc(50% - 5mm);" />
+					<col style="width: 10mm;" />
+					<col style="width: calc(50% - 5mm);" />
+				</colgroup>
+				<tr>
+					<th class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 2 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">2. Seite des Zeugnisses der allgemeinen Hochschulreife für Dirk Schoever</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 6mm" class="ta-lt f-bold">
+												Block I: Ergebnisse in der Qualifikationsphase
+											</th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 226mm" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 50%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+														<col style="width: 12.5%" />
+													</colgroup>
+													<tr>
+														<th rowspan="3" class="p-lr-2 ta-lm bo-black-strong">Fach <sup>1)</sup></th>
+														<th colspan="4" style="height: 16mm;" class="p-lr-2 ta-cm bo-black-strong">Bewertung <sup>2)</sup><br/>Halbjahresergebnisse in einfacher Wertung</th>
+													</tr>
+													<tr style="height: 12mm;">
+														<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>1. Jahr der Qualifikationsphase (Q1)</p></td>
+														<td colspan="2" class="p-lr-2 ta-cm bo-black-strong"><p>2. Jahr der Qualifikationsphase (Q2)</p></td>
+													</tr>
+													<tr style="height: 7mm;">
+														<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">1. Halbjahr</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">2. Halbjahr</td>
+													</tr>
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Sprachlich-literarisch-künstlerisches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Deutsch</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Englisch</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">12</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">12</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Kunsterziehung</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Gesellschaftswissenschaftliches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Geschichte (LK/eA)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">15</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">15</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">15</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Sozialwissenschaften</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Erziehungswissenschaft</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">12</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">12</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 10mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold">Mathematisch-naturwissenschaftlich-technisches Aufgabenfeld</td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Mathematik (LK/eA)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Biologie</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">09</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+														</tr>
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Physik</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">14</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(12)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">10</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">15</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 6mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"></td>
+													</tr>
+													
+														
+															<tr style="height: 7.25mm">
+																<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Kath. Religionslehre</td>
+																<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">12</td>
+																<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">15</td>
+																<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+																<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(12)</td>
+															</tr>
+														
+														<tr>
+															<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"></td>
+														</tr>
+													
+													
+														<tr style="height: 7.25mm">
+															<td class="p-tb-1 p-lr-2 ta-lm bo-black-strong">Sport</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(10)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(10)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(10)</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 4mm" class="p-tb-1 p-lr-2 ta-lb bo-black-strong f-bold"></td>
+													</tr>
+													
+														<tr style="height: 7.25mm">
+															<td  class="p-tb-1 p-lr-2 ta-lm bo-t-black-strong bo-lr-black-strong"><b>Projektkurs</b> <sup class="tiny">3)</sup></td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(10)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">(10)</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-1 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+													<tr>
+														<td colspan="5" style="height: 7.25mm" class="p-tb-1 p-lr-2 ta-lm bo-b-black bo-lr-black-strong f-ital">Thema: </td>
+													</tr>
+													
+													
+													<tr style="height: 10mm">
+														<td colspan="5" class="p-tb-1 p-lr-2 ta-lb bo-black-strong"><b>Vertiefungsfächer</b></td>
+													</tr>
+													
+													<tr style="height: 7.25mm">
+														<td colspan="5" class="p-tb-1 p-lr-2 ta-lm bo-black-strong">- keine -</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>1) </sup></th>
+														<th class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Grundkurse bleiben ohne besondere Kennzeichnung.</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>2) </sup></td>
+														<td class="ta-lt f-very-tiny">Für die Umsetzung der Noten in Punkte gilt:</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"></td>
+														<td style="padding-left: 0.5mm; padding-top: 1mm; padding-bottom: 1mm" class="ta-cm f-very-tiny">
+															<table class="fixed-100 m-0">
+																<colgroup>
+																	<col style="width: 14.5%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																	<col style="width: 4.75%" />
+																</colgroup>
+																<tr>
+																	<th rowspan="2" class="bo-black">Noten</th>
+																	<th colspan="3" class="bo-black">sehr gut</th>
+																	<th colspan="3" class="bo-black">gut</th>
+																	<th colspan="3" class="bo-black">befriedigend</th>
+																	<th colspan="3" class="bo-black">ausreichend</th>
+																	<th colspan="3" class="bo-black">mangelhaft</th>
+																	<th colspan="3" class="bo-black">ungenügend</th>
+																</tr>
+																<tr>
+																	<td class="bo-b-black">+</td>
+																	<td class="bo-b-black">1</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">2</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">3</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">4</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black">+</td>
+																	<td class="bo-b-black">5</td>
+																	<td class="bo-r-black bo-b-black">-</td>
+																	<td class="bo-l-black bo-b-black"></td>
+																	<td class="bo-b-black">6</td>
+																	<td class="bo-r-black bo-b-black"></td>
+																</tr>
+																<tr>
+																	<td class="bo-black">Punkte</td>
+																	<td class="bo-b-black">15</td>
+																	<td class="bo-b-black">14</td>
+																	<td class="bo-r-black bo-b-black">13</td>
+																	<td class="bo-l-black bo-b-black">12</td>
+																	<td class="bo-b-black">11</td>
+																	<td class="bo-r-black bo-b-black">10</td>
+																	<td class="bo-l-black bo-b-black">09</td>
+																	<td class="bo-b-black">08</td>
+																	<td class="bo-r-black bo-b-black">07</td>
+																	<td class="bo-l-black bo-b-black">06</td>
+																	<td class="bo-b-black">05</td>
+																	<td class="bo-r-black bo-b-black">04</td>
+																	<td class="bo-l-black bo-b-black">03</td>
+																	<td class="bo-b-black">02</td>
+																	<td class="bo-r-black bo-b-black">01</td>
+																	<td class="bo-l-black bo-b-black"></td>
+																	<td class="bo-b-black">00</td>
+																	<td class="bo-r-black bo-b-black"></td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"></td>
+														<td class="ta-lt f-very-tiny">Die Punktzahlen in Klammern sind nicht in die Gesamtqualifikation einbezogen worden. Punktzahlen werden in einfacher Wertung und stets zweistellig angegeben.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>3) </sup></td>
+														<td class="ta-lt f-very-tiny">Wird der Projektkurs als besondere Lernleistung eingebracht, wird hier nur die Belegung ausgewiesen.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 2 Ende ###################################################################################################################################### -->
+					</th>
+					<td style="width: 10mm;"></td>
+					<td class="mp-0 ta-ct" style="padding-left: 6mm; padding-right: 4mm">
+						<!-- Seite 3 Beginn #################################################################################################################################### -->
+						<table class="fixed-100 m-tb-0 p-0">
+							<tr>
+								<th style="width: 100%; height: 5mm" class="ta-lt">
+									<span class="f-tiny">3. Seite des Zeugnisses der allgemeinen Hochschulreife für Dirk Schoever</span>
+								</th>
+							</tr>
+							<tr>
+								<td style="height: 277mm" class="bo-black-strong p-t-2 p-lr-4 ta-ct">
+									<table  class="fixed-100 mp-0">
+										<tr>
+											<th style="width: 100%; height: 6mm" class="ta-lt f-bold">
+												Block II: Ergebnisse der Abiturprüfung
+											</th>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 57mm" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 62%" />
+														<col style="width: 19%" />
+														<col style="width: 19%" />
+													</colgroup>
+													<tr style="height: 5.5mm">
+														<th class="p-lr-2 ta-cm bo-l-black-strong bo-t-black-strong"></th>
+														<th colspan="2" class="p-lr-2 ta-cm bo-black-strong">Prüfungsergebnis in einfacher Wertung</th>
+													</tr>
+													<tr style="height: 5.5mm">
+														<td class="p-lr-2 ta-lm bo-l-black-strong bo-b-black-strong">Prüfungsfach <sup class="tiny">4)</sup></td>
+														<td class="p-lr-2 ta-cm bo-black-strong">schriftlich</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">mündlich</td>
+													</tr>
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">1. Mathematik (LK/eA)</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">12</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+														
+													
+														
+													
+														
+													
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">2. Geschichte (LK/eA)</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">13</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
+														</tr>
+													
+														
+													
+														
+													
+													
+														
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">3. Biologie</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">08</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">14</td>
+														</tr>
+													
+														
+													
+													
+														
+													
+														
+													
+														
+													
+														<tr style="height: 11.5mm">
+															<td class="p-tb-3 p-lr-2 ta-lm bo-black-strong">4. Englisch</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">--</td>
+															<td class="p-tb-3 p-lr-2 ta-cm bo-black-strong">12</td>
+														</tr>
+													
+												</table>
+											</td>
+										</tr>
+										<tr style="height: 31mm">
+											<td style="width: 100%" class="ta-ct">
+												<table  class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 28%" />
+														<col style="width: 59%" />
+														<col style="width: 13%" />
+													</colgroup>
+													<tr>
+														<th colspan="3" style="height: 11mm" class="ta-lb"><span class="f-bold">Besondere Lernleistung </span><sup>5)</sup></th>
+													</tr>
+													<tr style="height: 6.5mm" >
+														<td class="p-lr-2 ta-cm bo-black-strong">Zugeordnet zu Fach/Fächer</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">Thema</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">Punktzahl</td>
+													</tr>
+													<tr style="height: 6.5mm">
+														<td class="p-lr-2 ta-cm bo-black-strong">---</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">- entfällt -</td>
+														<td class="p-lr-2 ta-cm bo-black-strong">--</td>
+													</tr>
+													
+													<tr>
+														<td colspan="3"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td style="width: 100%; height: 137mm" class="ta-ct">
+												<table class="fixed-100 mp-0">
+													<colgroup>
+														<col style="width: 104mm" />
+														<col style="width: 13mm" />
+														<col style="width: 5mm" />
+														<col />
+													</colgroup>
+													<tr style="height: 4mm">
+														<th colspan="4" class="ta-lt f-bold">Berechnung der Gesamtqualifikation und der Durchschnittsnote</th>
+													</tr>
+													<tr style="height: 7mm">
+														<td colspan="4" class="ta-lb"><span class="f-bold">Block I: </span><sup>6)</sup></td>
+													</tr>
+													<tr>
+														<td colspan="4" class="ta-lt">Punktsumme aus den Halbjahresergebnissen</td>
+													</tr>
+													<tr style="height: 17mm" >
+														<td class="ta-lm">
+															<table style="table-layout: fixed; width: 72mm" class="mp-0">
+																<tr>
+																	<th rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-rm">E =</th>
+																	<th style="width: 4%" class="f-ital ta-cm bo-b-black-strong">P</th>
+																	<th rowspan="2" style="width: 48%" class="p-lr-1 f-ital ta-lm">&#183; 40</th>
+																</tr>
+																<tr>
+																	<td class="f-ital ta-cm">S</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm"><p style="margin-bottom: -0.5mm">P: erzielte Punkte in den eingebrachten Fächern</p><p style="margin-bottom: -0.5mm">S: Anzahl der Schulhalbjahresergebnisse</p><p>(doppelt gewichtete Fächer zählen auch hier doppelt)</p></td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">481</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 200,<br/>höchstens 600 Punkte</td>
+													</tr>
+													<tr style="height: 12mm" >
+														<td colspan="4" class="ta-lb"><span class="f-bold">Block II: </span><sup>7)</sup></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm">Punktsumme aus den Gesamtergebnissen in den<br/>Prüfungsfächern in fünffacher Wertung</td>
+														<td style="background-color: silver;" class="ta-cm bo-black-strong">235</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 100,<br/>höchstens 300 Punkte</td>
+													</tr>
+													<tr>
+														<td colspan="4" style="height: 8.5mm"></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm f-bold">Gesamtpunktzahl:</td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">716</td>
+														<td class="ta-lm"></td>
+														<td class="ta-lm">mindestens 300,<br/>höchstens 900 Punkte</td>
+													</tr>
+													<tr>
+														<td colspan="4" style="height: 8.5mm"></td>
+													</tr>
+													<tr style="height: 13mm">
+														<td class="ta-lm f-bold">Durchschnittsnote:</td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">1,6</td>
+														<td class="ta-lm"></td>
+														<td style="background-color: silver" class="ta-cm bo-black-strong">Eins Komma Sechs</td>
+													</tr>
+													<tr>
+														<td colspan="4"></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+									<table>
+										<tr>
+											<th style="width: 20%; height: 1mm;" class="bo-t-black-strong"></th>
+											<th colspan="4" style="width: 80%; height: 1mm;"></th>
+										</tr>
+										<tr>
+											<td colspan="5" style="width: 100%; height: 35mm" class="ta-lt fixed-100">
+												<table>
+													<colgroup>
+														<col style="width: 2%" />
+														<col style="width: 98%" />
+													</colgroup>
+													<tr>
+														<th class="ta-lt"><sup>4) </sup></th>
+														<th class="ta-lt f-very-tiny">Leistungskursfächer werden mit dem Klammerzusatz „LK/eA“ (Leistungskurs/erhöhtes Anforderungsniveau) gekennzeichnet. Die Ergebnisse der Leistungskursfächer werden in Block I doppelt gewichtet.</th>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>5) </sup></td>
+														<td class="ta-lt f-very-tiny">Eine besondere Lernleistung kann als 5. Prüfungselement angerechnet werden (Nummer 9.3.5 der „Vereinbarung zur Gestaltung der gymnasialen	Oberstufe und der Abiturprüfung“, Beschluss der Kultusministerkonferenz vom 07.07.1972 in der jeweils geltenden Fassung).</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>6) </sup></td>
+														<td class="ta-lt f-very-tiny">Bei der Bildung des Gesamtergebnisses wird auf eine ganzzahlige Punktzahl gerundet; dabei wird ab der Dezimalen 5 aufgerundet.</td>
+													</tr>
+													<tr>
+														<td class="ta-lt"><sup>7) </sup></td>
+														<td class="ta-lt f-very-tiny">Wird zusätzlich eine besondere Lernleistung eingebracht, werden die Prüfungsfächer nur 4-fach gewertet.</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<!-- Seite 3 Ende ###################################################################################################################################### -->
+					</td>
+				</tr>
+			</table>
+			</div>
+		
+	</body>
+</html>

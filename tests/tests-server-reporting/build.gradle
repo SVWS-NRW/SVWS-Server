@@ -1,0 +1,90 @@
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+apply from: ('../subproject-plugin.gradle')
+
+/**
+ * Konfiguration für das Subpackage bzw. die Tests
+ */
+ext {
+	SVWS_SERVERMODE = "dev"
+
+	// Docker Konfiguration
+	APP_CONTAINER_NAME = "svws-server-reporting-tests${rootProject.ext.CONTAINER_NAME_SUFFIX}"
+	DB_CONTAINER_NAME = "db-reporting-tests${rootProject.ext.CONTAINER_NAME_SUFFIX}"
+
+	APP_IMAGE_NAME = "svws-server-reporting-tests${rootProject.ext.CONTAINER_NAME_SUFFIX}"
+	DB_SERVICE_NAME = "db-reporting-tests${rootProject.ext.CONTAINER_NAME_SUFFIX}"
+
+	// Auch für Docker. Forwarded Ports, werden nur bei lokal genutzten Container verwendet
+	FORWARDED_DB_PORT = 3317
+	FORWARDED_APP_PORT = 5017
+
+	// Liste der Schemata die für die Tests genutzt / geseedet werden sollen. Alle Testfälle laufen gegen
+	// dieses Schema; daraus leitet sich auch der Name des Datenbank-Images ab. Soll das Image anders
+	// heißen als das Schema, ist dafür die optionale Variable DB_IMAGE_NAME vorgesehen.
+	TARGET_TEST_SCHEMATA = ['ReportingGymAbi']
+
+	// Die Snapshots enthalten gerenderte Zeitstempel. Der Container startet den Server daher mit dem fest
+	// hinterlegten Datum, sonst wäre jeder Lauf gegen einen anderen Tag und die Snapshots schlügen fehl.
+	REPORTING_FIXED_DATE = true
+}
+
+/**
+ * Die Testfälle bestehen aus erzeugten Snapshots und ihren Eingabedaten. Sie sind Prüfdaten und kein zu
+ * analysierender Quelltext – insbesondere folgt das gerenderte HTML nicht den Regeln, die für handgeschriebene
+ * Vorlagen gelten. Der Pfad ist relativ zu diesem Unterprojekt; das übergeordnete Projekt schließt dieselben
+ * Dateien noch einmal über seinen eigenen Pfad aus, da die Zuordnung zum Sonar-Modul nicht festgelegt ist.
+ */
+sonar {
+	properties {
+		property "sonar.exclusions", "tests/reporting/**"
+	}
+}
+
+
+/**
+ * Starten der Integrationstests gegen die Docker Umgebung
+ */
+tasks.register('testAgainstDockerEnv', NpmRun) {
+	description = 'Startet die Integrationstests gegen die Docker Umgebung'
+	group = 'testing'
+
+	dependsOn ':svws-webclient:core:assemble'
+	dependsOn ':svws-webclient:client:assemble'
+	dependsOn 'starteDockerContainerMitTestUmgebung'
+
+	if (!rootProject.ext.CONFIG.keepContainerAfterTestRun) {
+		finalizedBy 'removeTestEnvironmentEntryPoint'
+	}
+
+	ignoreExitValue = true
+	outputs.upToDateWhen { false }
+
+	// Vite darf gegen Server laufen mit selbst signierten Zertifikaten
+	environment NODE_TLS_REJECT_UNAUTHORIZED: 0
+
+	// Die Ziel-url vom Container mit der Application
+	if (System.getenv('CI_SERVER')) {
+		environment VITE_targetHost: "https://$project.ext.APP_CONTAINER_NAME:8443"
+	} else {
+		environment VITE_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
+	}
+
+	args = ['test:tempDockerEnv']
+}
+
+/**
+ * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
+ */
+tasks.register('no_auto_docker_test_APIServerReporting', NpmRun) {
+	group = 'testing'
+	dependsOn ':tests:checkIfLocalAppIsRunning'
+	dependsOn ':tests:checkIfLocalDatabaseIsRunning'
+
+	inputs.files fileTree("$projectDir/tests"),
+			fileTree("$rootDir").matching { exclude 'build', 'dist' }
+
+	args = ['test']
+}

@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Stundenplanung - Schüler-Stundenplan",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

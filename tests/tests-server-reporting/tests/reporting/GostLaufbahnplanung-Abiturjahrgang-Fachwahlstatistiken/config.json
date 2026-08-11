@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Laufbahnplanung: Fachwahlstatistiken eines Abiturjahrgangs",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

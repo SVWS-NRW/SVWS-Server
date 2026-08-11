@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="de">
+    
+	
+	<head>
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title>Schüler mit Kursen</title>
+
+		<!-- ##### CSS für PDF-Ausgabe: Beginn ############################################################################################################# -->
+		<style>/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear.
+There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables.
+It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself.
+For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint.
+This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits).
+Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines.
+This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot.
+This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius.
+Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect.
+The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres.
+These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+	-fs-page-break-min-height: 4mm;
+}
+
+.reset-page-counter {
+	-fs-page-sequence: start;
+}
+</style>
+		<!-- ##### CSS für PDF-Ausgabe: Ende ############################################################################################################### -->
+
+		<!-- ##### CSS für Globale Styles: Beginn ########################################################################################################## -->
+		<style>/*
+##########################################################################################################################
+Schriftart definieren
+##########################################################################################################################
+ */
+@font-face {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	src: local('Liberation Sans');
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Farben
+##########################################################################################################################
+ */
+.c-red {
+	color: #ff0000;
+}
+.c-green {
+	color: #00ff00;
+}
+.c-blue {
+	color: #0000ff;
+}
+.c-grey {
+	color: #808080;
+}
+.c-lightgrey {
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
+}
+.c-lightyellow {
+	color: #FFFDAF;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+##########################################################################################################################
+*/
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation', sans-serif;
+	font-weight: normal;
+	font-size: 9pt;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Text-Elemente
+##########################################################################################################################
+*/
+h1 {
+	font-size: 14pt;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom: 0.1em;
+}
+
+h2 {
+	font-size: 13pt;
+	font-weight: bold;
+	margin-top: 0.8em;
+	margin-bottom: 0.1em;
+}
+
+h3 {
+	font-size: 12pt;
+	font-weight: bold;
+	margin-top: 0.6em;
+	margin-bottom: 0.1em;
+}
+
+h4 {
+	font-size: 11pt;
+	font-weight: bold;
+	margin-top: 0.5em;
+	margin-bottom: 0.1em;
+}
+
+p	{
+	font-size: 10pt;
+	margin: 0.25em 0 0;
+	padding: 0;
+}
+
+ul 	{
+	font-size: 10pt;
+	margin: 0.25em 0 0 1em;
+	padding: 0;
+}
+
+sup {
+	vertical-align: 0.6em;
+	font-size: 0.75em;
+}
+
+.f-bold {
+	font-weight: bold;
+}
+.f-ital {
+	font-style: italic;
+}
+.f-small {
+	font-size: 0.9em;
+}
+.f-tiny {
+	font-size: 0.8em;
+}
+.f-very-tiny {
+	font-size: 0.7em;
+}
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
+
+.ta-l, .ta-lt, .ta-lm, .ta-lb {
+	text-align: left;
+}
+.ta-c, .ta-ct, .ta-cm, .ta-cb {
+	text-align: center;
+}
+.ta-r, .ta-rt, .ta-rm, .ta-rb {
+	text-align: right;
+}
+.ta-lt, .ta-ct, .ta-rt {
+	vertical-align: top;
+}
+.ta-lm, .ta-cm, .ta-rm {
+	vertical-align: middle;
+}
+.ta-lb, .ta-cb, .ta-rb {
+	vertical-align: bottom;
+}
+.icon {
+	vertical-align: baseline;
+}
+.icon-block .icon {
+	display: block;
+	margin: 0 auto;
+}
+.icon-extern {
+	white-space: nowrap;
+}
+.icon-extern .icon {
+	vertical-align: baseline;
+}
+.icon-extern-kuerzel {
+	font-size: 6pt;
+	margin-left: 0.1em;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Running Header und Footer
+Die divs mit diesen Klassen werden über `position: running(...)` aus dem normalen Fluss in die entsprechende
+@page-Margin-Box (siehe Format-CSS) verschoben und dort beim Druck wiederholt eingeblendet.
+##########################################################################################################################
+*/
+.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+.pageBottomLeft, .pageBottomCenter, .pageBottomRight {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: #808080;
+}
+.pageTopLeft      { position: running(pageTopLeft);      text-align: left; }
+.pageTopRight     { position: running(pageTopRight);     text-align: right; }
+.pageLeftMiddle   { position: running(pageLeftMiddle);   text-align: left; }
+.pageBottomLeft   { position: running(pageBottomLeft);   text-align: left; }
+.pageBottomCenter { position: running(pageBottomCenter); text-align: center; }
+.pageBottomRight  { position: running(pageBottomRight);  text-align: right; }
+
+/* Zähler-Spans für die Seitennummerierung innerhalb der Running Header/Footer.
+   `counter(page)` wirkt nur in paginierten Medien (PDF); im Browser sind die Spans über
+   den @media-screen-Block unten ohnehin per `display: none` ausgeblendet. */
+span.page-num-print:after  { content: counter(page); }
+span.page-nums-print:after { content: counter(page) " von " counter(pages); }
+
+
+/*
+##########################################################################################################################
+Definitionen für Spacing, Padding, Margin
+##########################################################################################################################
+*/
+.displayblock {
+	display: block;
+}
+
+.zero-height {
+	height: 0;
+}
+
+
+.p-0 {
+	padding: 0;
+}
+.p-05 {
+	padding: 0.5mm;
+}
+.p-1 {
+	padding: 1mm;
+}
+.p-2 {
+	padding: 2mm;
+}
+.p-3 {
+	padding: 3mm;
+}
+.p-4 {
+	padding: 4mm;
+}
+
+.p-t-0 {
+	padding-top: 0;
+}
+.p-b-0 {
+	padding-bottom: 0;
+}
+.p-l-0 {
+	padding-left: 0;
+}
+.p-r-0 {
+	padding-right: 0;
+}
+
+.p-t-05 {
+	padding-top: 0.5mm;
+}
+.p-b-05 {
+	padding-bottom: 0.5mm;
+}
+.p-l-05 {
+	padding-left: 0.5mm;
+}
+.p-r-05 {
+	padding-right: 0.5mm;
+}
+
+.p-t-1 {
+	padding-top: 1mm;
+}
+.p-b-1 {
+	padding-bottom: 1mm;
+}
+.p-l-1 {
+	padding-left: 1mm;
+}
+.p-r-1 {
+	padding-right: 1mm;
+}
+
+.p-t-2 {
+	padding-top: 2mm;
+}
+.p-b-2 {
+	padding-bottom: 2mm;
+}
+.p-l-2 {
+	padding-left: 2mm;
+}
+.p-r-2 {
+	padding-right: 2mm;
+}
+
+.p-t-3 {
+	padding-top: 3mm;
+}
+.p-b-3 {
+	padding-bottom: 3mm;
+}
+.p-l-3 {
+	padding-left: 3mm;
+}
+.p-r-3 {
+	padding-right: 3mm;
+}
+
+.p-t-4 {
+	padding-top: 4mm;
+}
+.p-b-4 {
+	padding-bottom: 4mm;
+}
+.p-l-4 {
+	padding-left: 4mm;
+}
+.p-r-4 {
+	padding-right: 4mm;
+}
+
+.p-t-6 {
+	padding-top: 6mm;
+}
+.p-b-6 {
+	padding-bottom: 6mm;
+}
+.p-l-6 {
+	padding-left: 6mm;
+}
+.p-r-6 {
+	padding-right: 6mm;
+}
+
+.p-tb-0 {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.p-tb-05 {
+	padding-top: 0.5mm;
+	padding-bottom: 0.5mm;
+}
+.p-tb-1 {
+	padding-top: 1mm;
+	padding-bottom: 1mm;
+}
+.p-tb-2 {
+	padding-top: 2mm;
+	padding-bottom: 2mm;
+}
+.p-tb-3 {
+	padding-top: 3mm;
+	padding-bottom: 3mm;
+}
+.p-tb-4 {
+	padding-top: 4mm;
+	padding-bottom: 4mm;
+}
+
+.p-lr-0 {
+	padding-left: 0;
+	padding-right: 0;
+}
+.p-lr-05 {
+	padding-left: 0.5mm;
+	padding-right: 0.5mm;
+}
+.p-lr-1 {
+	padding-left: 1mm;
+	padding-right: 1mm;
+}
+.p-lr-2 {
+	padding-left: 2mm;
+	padding-right: 2mm;
+}
+.p-lr-3 {
+	padding-left: 3mm;
+	padding-right: 3mm;
+}
+.p-lr-4 {
+	padding-left: 4mm;
+	padding-right: 4mm;
+}
+
+.p-t-25of100 {
+	padding-top: 1.25em;
+}
+.p-b-25of100 {
+	padding-bottom: 1.25em;
+}
+
+
+.mp-0 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.m-0 {
+	margin: 0;
+}
+.m-1 {
+	margin: 1mm;
+}
+.m-2 {
+	margin: 2mm;
+}
+
+.m-t-0 {
+	margin-top: 0
+}
+.m-b-0 {
+	margin-bottom: 0
+}
+.m-l-0 {
+	margin-left: 0
+}
+.m-r-0 {
+	margin-right: 0
+}
+
+.m-t-1 {
+	margin-top: 1mm
+}
+.m-b-1 {
+	margin-bottom: 1mm
+}
+.m-l-1 {
+	margin-left: 1mm
+}
+.m-r-1 {
+	margin-right: 1mm
+}
+
+.m-t-2 {
+	margin-top: 2mm
+}
+.m-b-2 {
+	margin-bottom: 2mm
+}
+.m-l-2 {
+	margin-left: 2mm
+}
+.m-r-2 {
+	margin-right: 2mm
+}
+
+.m-t-3 {
+	margin-top: 3mm
+}
+.m-b-3 {
+	margin-bottom: 3mm
+}
+.m-l-3 {
+	margin-left: 3mm
+}
+.m-r-3 {
+	margin-right: 3mm
+}
+
+.m-t-4 {
+	margin-top: 4mm
+}
+.m-b-4 {
+	margin-bottom: 4mm
+}
+.m-l-4 {
+	margin-left: 4mm
+}
+.m-r-4 {
+	margin-right: 4mm
+}
+
+.m-t-5 {
+	margin-top: 5mm
+}
+.m-b-5 {
+	margin-bottom: 5mm
+}
+.m-l-5 {
+	margin-left: 5mm
+}
+.m-r-5 {
+	margin-right: 5mm
+}
+
+.m-t-6 {
+	margin-top: 6mm
+}
+.m-b-6 {
+	margin-bottom: 6mm
+}
+.m-l-6 {
+	margin-left: 6mm
+}
+.m-r-6 {
+	margin-right: 6mm
+}
+
+.m-t-1em {
+	margin-top: 1em;
+}
+
+.m-t-2em {
+	margin-top: 2em;
+}
+
+.m-b-1em {
+	margin-bottom: 1em;
+}
+
+.m-b-2em {
+	margin-bottom: 2em;
+}
+
+.m-l-1em {
+	margin-left: 1em;
+}
+
+.m-l-2em {
+	margin-left: 2em;
+}
+
+.m-r-1em {
+	margin-right: 1em;
+}
+
+.m-r-2em {
+	margin-right: 2em;
+}
+
+.m-tb-0 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.m-lr-0 {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.m-tb-1 {
+	margin-top: 1mm;
+	margin-bottom: 1mm;
+}
+.m-lr-1 {
+	margin-left: 1mm;
+	margin-right: 1mm;
+}
+
+.m-tb-2 {
+	margin-top: 2mm;
+	margin-bottom: 2mm;
+}
+.m-lr-2 {
+	margin-left: 2mm;
+	margin-right: 2mm;
+}
+
+.m-tb-3 {
+	margin-top: 3mm;
+	margin-bottom: 3mm;
+}
+.m-lr-3 {
+	margin-left: 3mm;
+	margin-right: 3mm;
+}
+
+.m-tb-4 {
+	margin-top: 4mm;
+	margin-bottom: 4mm;
+}
+.m-lr-4 {
+	margin-left: 4mm;
+	margin-right: 4mm;
+}
+
+.m-tb-5 {
+	margin-top: 5mm;
+	margin-bottom: 5mm;
+}
+.m-lr-5 {
+	margin-left: 5mm;
+	margin-right: 5mm;
+}
+
+.m-tb-6 {
+	margin-top: 6mm;
+	margin-bottom: 6mm;
+}
+.m-lr-6 {
+	margin-left: 6mm;
+	margin-right: 6mm;
+}
+
+/*
+##########################################################################################################################
+Definitionen für Tabellen
+##########################################################################################################################
+*/
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.fixed-100 {
+	width: 100%;
+	table-layout: fixed;
+}
+table.auto-100 {
+	width: 100%;
+	table-layout: auto;
+}
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	display: table-footer-group;
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+	page-break-before: auto;
+}
+
+th {
+	font-weight: normal;
+}
+
+th.head-small-grey, td.head-small-grey {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #757575;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
+}
+
+th.head-black-lines, td.head-black-lines {
+	color: black;
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+th.head-black-lines-small-all, td.head-black-lines-small-all {
+	padding-left: 1mm;
+	padding-right: 1mm;
+	border: 0.5px solid #000000;
+}
+
+td.cell-small-grey {
+	font-size: 0.8em;
+	color: #808080;
+	vertical-align: top;
+	border-top: 0.5px solid #808080;
+}
+
+
+/*
+##########################################################################################################################
+Definitionen für Border and Background
+##########################################################################################################################
+*/
+/* Hinweis: Diese Klassen sind bewusst seitenweise zusammenstellbar (z. B. class="bo-b-grey bo-l-grey").
+   Deshalb werden hier konsequent seitenspezifische Shorthands (border-top/-right/-bottom/-left) bzw.
+   das vier-seitige `border`-Shorthand verwendet, damit unterschiedliche Klassen nicht miteinander kollidieren. */
+.bo-grey {
+	border: 0.5px solid #808080;
+}
+.bo-t-grey {
+	border-top: 0.5px solid #808080;
+}
+.bo-b-grey {
+	border-bottom: 0.5px solid #808080;
+}
+.bo-tb-grey {
+	border-top: 0.5px solid #808080;
+	border-bottom: 0.5px solid #808080;
+}
+.bo-l-grey {
+	border-left: 0.5px solid #808080;
+}
+.bo-r-grey {
+	border-right: 0.5px solid #808080;
+}
+.bo-lr-grey {
+	border-left: 0.5px solid #808080;
+	border-right: 0.5px solid #808080;
+}
+
+.bo-black {
+	border: 0.5px solid #000000;
+}
+.bo-black-strong {
+	border: 1px solid #000000;
+}
+.bo-black-very-strong {
+	border: 2px solid #000000;
+}
+.bo-t-black {
+	border-top: 0.5px solid #000000;
+}
+.bo-t-black-strong {
+	border-top: 1px solid #000000;
+}
+.bo-b-black {
+	border-bottom: 0.5px solid #000000;
+}
+.bo-b-black-strong {
+	border-bottom: 1px solid #000000;
+}
+.bo-tb-black {
+	border-top: 0.5px solid #000000;
+	border-bottom: 0.5px solid #000000;
+}
+.bo-tb-black-strong {
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.bo-l-black {
+	border-left: 0.5px solid #000000;
+}
+.bo-l-black-strong {
+	border-left: 1px solid #000000;
+}
+.bo-r-black {
+	border-right: 0.5px solid #000000;
+}
+.bo-r-black-strong {
+	border-right: 1px solid #000000;
+}
+.bo-lr-black {
+	border-left: 0.5px solid #000000;
+	border-right: 0.5px solid #000000;
+}
+.bo-lr-black-strong {
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
+.bg-lightblue {
+	background-color: #44aaff;
+}
+.bg-lightgreen {
+	background-color: #aaff44;
+}
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
+}
+.bg-lightorange {
+	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
+}
+.bg-lightyellow {
+	background-color: #FFFDAF;
+}
+
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}
+
+/* Grau hinterlegtes Formularfeld für einzutragende bzw. bescheinigte Werte (z. B. Schulbescheinigung, Zeugnisse).
+   Schmale Box (~5.5mm): geringer vertikaler Innenabstand (0.75mm), line-height = min-height (4mm) zentriert
+   die einzelne Textzeile vertikal in der Inhaltsbox; min-height hält leere Felder so hoch wie gefüllte.
+   Feste mm-line-height macht die Feldhöhe zudem unabhängig vom umgebenden Zeilenkontext.
+   position: relative verankert die Streichung leerer Felder (siehe .formularfeld:empty). */
+.formularfeld {
+	position: relative;
+	display: inline-block;
+	min-width: 30mm;
+	min-height: 4mm;
+	padding: 0.75mm 1.5mm;
+	line-height: 4mm;
+	background-color: #d9d9d9;
+	vertical-align: middle;
+}
+
+/* Leeres Formularfeld wird mit einem durchgehenden Strich entwertet (kein einzutragender Wert).
+   Statt CSS-Pseudoelementen (:empty/::before werden von openhtmltopdf nicht zuverlässig gerendert)
+   wird hierfür im Template ein echtes <span class="formularfeld-strich"></span> als einziges Kind
+   des leeren Feldes ausgegeben. Der Strich liegt vertikal mittig und ist links/rechts um den
+   horizontalen Textabstand (1.5mm) eingerückt, sitzt also auf derselben Flucht wie ein eingetragener
+   Wert. left + right (kein bottom) wegen der zuverlässigeren Absolutpositionierung in openhtmltopdf. */
+.formularfeld-strich {
+	display: block;
+	position: absolute;
+	left: 1.5mm;
+	right: 1.5mm;
+	/* Fester top-Wert statt 50%: openhtmltopdf löst Prozent-top nicht auf, wenn das (leere) Feld keine
+	   definite Höhe hat. 0.75mm padding-top + halbe Textzeile (line-height 4mm / 2 = 2mm) = 2.75mm Textmitte;
+	   abzüglich halber Strichstärke (0.1mm) liegt der Strich auf der Flucht eines eingetragenen Wertes. */
+	top: 2.65mm;
+	border-top: 0.2mm solid #000000;
+}
+
+
+/*
+##########################################################################################################################
+@media screen: Simulation der Druckvorschau im Browser. OpenHtmlToPDF ignoriert @media screen vollständig.
+
+Hier stehen nur die formatübergreifenden Regeln. Format-spezifische Werte (body-Breite/Padding, .start-new-page
+margin-top sowie die background-size, top, left, right der Seitenumbruch-Lücke) werden in den jeweiligen
+Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
+##########################################################################################################################
+*/
+@media screen {
+	html {
+		background: #c8c8c8;
+		padding: 12mm;
+		box-sizing: border-box;
+		min-width: 100%;
+		min-height: 100%;
+	}
+	body {
+		margin: 0 auto;
+		background: #ffffff;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+		box-sizing: border-box;
+		overflow: visible;
+	}
+	.pageTopLeft, .pageTopRight, .pageLeftMiddle,
+	.pageBottomLeft, .pageBottomCenter, .pageBottomRight,
+	span.page-num-print, span.page-nums-print {
+		display: none;
+	}
+	.start-new-page {
+		position: relative;
+	}
+	/* Die Lücke, die den Seitenumbruch als durchscheinenden Hintergrund darstellt.
+	   background-size + top/left/right werden pro Format überschrieben. */
+	.start-new-page::before {
+		content: "";
+		position: absolute;
+		height: 5mm;
+		background-color: #c8c8c8;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0px, transparent 3px, transparent calc(100% - 3px), rgba(0, 0, 0, 0.15) 100%);
+		background-position: center;
+		background-repeat: no-repeat;
+		z-index: 10;
+	}
+	.start-new-page::after {
+		content: none;
+	}
+	.start-new-page:first-child {
+		margin-top: 0;
+	}
+	.start-new-page:first-child::before {
+		content: none;
+	}
+}
+</style>
+		<!-- ##### CSS für Globale Styles: Ende ############################################################################################################ -->
+
+		<!-- ##### CSS für Seitenformat: Beginn ############################################################################################################ -->
+		<style>@Page {
+	size: A4 landscape;
+	margin: 18mm 10mm 12mm;
+
+	/* Boxen im Seitenrand. Die Inhalte werden über `position: running(...)` aus dem Body in diese Bereiche
+	   verschoben (siehe reporting-styles.css). */
+	@top-left {
+		content: element(pageTopLeft);
+		padding-top: 1mm;
+		padding-left: 0;
+	}
+
+	@top-right {
+		content: element(pageTopRight);
+		padding-top: 1mm;
+		padding-right: 0;
+	}
+
+	@bottom-left {
+		content: element(pageBottomLeft);
+		padding-bottom: 1mm;
+		padding-left: 0;
+	}
+
+	@bottom-center {
+		content: element(pageBottomCenter);
+		padding-bottom: 1mm;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	@bottom-right {
+		content: element(pageBottomRight);
+		padding-bottom: 1mm;
+		padding-right: 0;
+	}
+}
+
+
+/* Seitenumbrüche: Wenn die Klasse angewendet wird, wird beim Druck ein Seitenumbruch eingefügt, evtl. mit Ausnahme. */
+.start-new-page {
+	page-break-before: always;
+}
+.start-new-page:first-child {
+	page-break-before: avoid;
+}
+
+
+/* Format-spezifische Werte für die Browser-Vorschau. Gemeinsame Basis steht in reporting-styles.css. */
+@media screen {
+	body {
+		width: 297mm;
+		min-height: 210mm;
+		padding: 9mm 10mm 12mm 10mm;
+	}
+	.start-new-page {
+		margin-top: 26mm;
+	}
+	.start-new-page::before {
+		top: -14mm;
+		left: -15mm;
+		right: -15mm;
+		background-size: 297mm 100%;
+	}
+}
+</style>
+		<!-- ##### CSS für Seitenformat: Ende ############################################################################################################## -->
+
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Beginn ########################################################## -->
+		<style>/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+</style>
+		<!-- ##### CSS für reportspezifische Einstellungen (abgeleitet vom Template-Pfad): Ende ############################################################ -->
+	</head>
+
+	<body>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table class="fixed-100 p-0">
+				<tr>
+					<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3>Kursbelegungen - Abitur 2020 - Q12</h3></th>
+				</tr>
+			</table>
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">001. <b>Ahlenstiel, Ulrike-Mariana-Theodora</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>HEMM</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>OLDI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">LI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MEY</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>LAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>STÄH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BIEBI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>SCH2</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>DIED</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Tanz-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>FONC</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">002. <b>Auer, Melanie</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>WILU</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>FLET</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>BALD</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">LI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MEY</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>STÄH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>DIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">CH-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SCHÖ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>DIED</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">003. <b>Braun, Jennifer</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HOLT</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MATS</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>LAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BERK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">004. <b>Brockmann, Jessica</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MATS</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">ER-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>GRAF</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>FLET</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">005. <b>Emmerich, Patrick</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>GERO</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">MU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>USED</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>LAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>SCHU</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>FLET</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Sp-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>SPLI</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">006. <b>Fußler, Ursula</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>WILU</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>THEI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>BALD</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">LI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MEY</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>COOK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BERK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">007. <b>Jansen, Eric</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>SIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">MU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>USED</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">008. <b>Lindner, Mike</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>SIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BISZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">ER-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>GRAF</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">009. <b>Raupach, Alexander</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HOLT</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">MU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>USED</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BERK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">010. <b>Reick, Ulrich</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>SPEC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">IF-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HOLT</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>OLDI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>STÄH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>DIED</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">011. <b>Schnach, Andreas</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-LK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HOLT</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">MU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>USED</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>COOK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BERK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>DIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>FLET</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Tanz-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>FONC</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">012. <b>SchulzeBlasum, Gabriele</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>SIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BISZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">CH-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SCHÖ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Tanz-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>FONC</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">013. <b>Schwidrik, Mandy</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>HEMM</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>GERO</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>OLDI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>BISZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>STÄH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">ER-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>DIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>FLET</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Tanz-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>FONC</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">014. <b>Solterbeck, Susanne</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>HEMM</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>BALD</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MATS</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SW-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>LAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>BERK</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Sp-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>SPLI</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">015. <b>Speer, Katharina</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>SIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KU-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MATS</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HAHN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">ER-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">016. <b>Splaning, Uta</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>KNIP</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">EK-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>SIEB</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-GK3</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>GÖRG</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">LI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MEY</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GE-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUN</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(215,228,188);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">KR-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>WELL</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>SPLI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>ORTH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(191,191,191);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PK-Tanz-PJK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">PJK-m<br/>FONC</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<div style="page-break-inside: avoid;">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			
+			
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+		
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			
+			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
+				Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" /><col style="width: 8%;" />
+					<col style="width: 4%" />
+				</colgroup>
+				<tr style="height: 5px;">
+					<th></th>
+				</tr>
+				<tr>
+					<td colspan="12"> <p class="icon-text">017. <b>Szelezinska, Anja</b></p></td>
+				</tr>
+				<tr style="height: 1px;">
+					<td></td>
+				</tr>
+				<tr>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">E-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 1<br/>HEMM</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PA-LK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">LK-s Abifach 2<br/>HINZ</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,233,217);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">D-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>OLDI</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(253,221,195);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">S0-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s<br/>FONC</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(252,204,165);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">LI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>MEY</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">GEEBI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>HEMM</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(234,241,222);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">PL-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>STÄH</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(197,217,241);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">M-GK2</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 3<br/>MAUR</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(141,180,227);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">BIEBI-GK1</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-s Abifach 4<br/>SCH2</p>
+					</td>
+					<td class="bo-grey" style=" background-color: rgb(224,211,229);">
+						<p class="m-t-0 f-bold" style="font-size: 7.5pt;">SP-GK4</p>
+						<p class="m-t-0" style="font-size: 6pt;">GK-m<br/>DIED</p>
+					</td>
+				</tr>
+				<tr style="height: 3px;">
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Stundenplanung - Fach-Stundenplan",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

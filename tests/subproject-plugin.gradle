@@ -23,6 +23,40 @@ if (!rootProject.ext.has('CONTAINER_NAME_SUFFIX')) {
 
 
 /**
+ * Liefert die Schemata, gegen die die Tests des Unterprojekts laufen. Das erste Schema der Liste ist das
+ * Default-Schema des Servers und der Datenbank. Die Unterprojekte binden dieses Skript ein, bevor sie ihr
+ * ext füllen, weshalb der Aufruf erst in der Konfiguration der einzelnen Tasks erfolgen darf.
+ */
+def ermittleSchemata = {
+	if (!project.ext.has('TARGET_TEST_SCHEMATA')) {
+		throw new GradleException("Das Testprojekt '${project.name}' muss TARGET_TEST_SCHEMATA setzen, z.B. TARGET_TEST_SCHEMATA = ['GymAbi01'].")
+	}
+	def schemata = project.ext.TARGET_TEST_SCHEMATA
+	// Ein einzelner String wäre in Groovy iterierbar und ergäbe stillschweigend ein Schema aus seinem
+	// ersten Zeichen. Die Prüfung auf eine Liste fängt eine vergessene Klammerung daher hier ab.
+	if (!(schemata instanceof List) || schemata.isEmpty()) {
+		throw new GradleException("TARGET_TEST_SCHEMATA in '${project.name}' muss eine nicht leere Liste sein, z.B. TARGET_TEST_SCHEMATA = ['GymAbi01'].")
+	}
+	// Ein leerer Eintrag ergäbe ein leeres Default-Schema und einen Image-Pfad ohne Namen.
+	if (schemata.any { !(it instanceof CharSequence) || it.toString().isBlank() }) {
+		throw new GradleException("TARGET_TEST_SCHEMATA in '${project.name}' darf nur nicht leere Schemanamen enthalten, z.B. TARGET_TEST_SCHEMATA = ['GymAbi01'].")
+	}
+	// Die Namen werden als String geliefert, damit auch als GString formulierte Einträge beim Bilden des
+	// Image-Namens und in den erzeugten Dateien wie einfache Zeichenketten wirken.
+	return schemata.collect { it.toString() }
+}
+
+/**
+ * Liefert den Namen des Datenbank-Images, das die übergebenen Schemata enthält. Die Images sind nach den
+ * Schemata benannt, die sie mitbringen, mehrere davon mit '_' verkettet. Images mit einem eigenständigen
+ * Namen - etwa ein Image für einen bestimmten Einsatzzweck - geben ihren Namen über DB_IMAGE_NAME vor.
+ */
+def ermittleImageName = { schemata ->
+	return (project.ext.has('DB_IMAGE_NAME') ? project.ext.DB_IMAGE_NAME : schemata.join('_')).toString()
+}
+
+
+/**
  * Dieser Task generiert die Docker-Compose-Datei für die Testumgebung. Dabei wird ein Template geladen und entsprechende Platzhalter durch Variablen in Gradle ersetzt.
  */
 tasks.register('generateDockerComposeFile') {
@@ -31,22 +65,25 @@ tasks.register('generateDockerComposeFile') {
 
 	def DB_CONTAINER_NAME = project.ext.DB_CONTAINER_NAME
 	def APP_CONTAINER_NAME = project.ext.APP_CONTAINER_NAME
-	def TARGET_TEST_DATABASES = project.ext.TARGET_TEST_DATABASES
+	def TARGET_TEST_SCHEMATA = ermittleSchemata()
 	def DB_SERVICE_NAME = project.ext.DB_SERVICE_NAME
 	def APP_IMAGE_NAME = project.ext.APP_IMAGE_NAME
 	def FORWARDED_DB_PORT = project.ext.FORWARDED_DB_PORT
 	def FORWARDED_APP_PORT = project.ext.FORWARDED_APP_PORT
 
+	def DB_IMAGE_NAME = ermittleImageName(TARGET_TEST_SCHEMATA)
+	def DEFAULT_SCHEMA = TARGET_TEST_SCHEMATA.first()
+
 	def inputFile = file('../templates/docker/compose.yml.template')
 	def outputFile = file("$buildDirPath/tempdocker/compose.yml")
-	def dbImageName = "${rootProject.ext.CONFIG.dockerRegistry}/svws-datenbank/${TARGET_TEST_DATABASES.first().toLowerCase()}:latest"
+	def dbImageName = "${rootProject.ext.CONFIG.dockerRegistry}/svws-datenbank/${DB_IMAGE_NAME.toLowerCase()}:latest"
 
 	doLast {
 
 		def replacements = [
 				'#GRADLE_PLACEHOLDER_DB_CONTAINER_NAME' : "container_name: ${DB_CONTAINER_NAME}",
 				'#GRADLE_PLACEHOLDER_APP_CONTAINER_NAME': "container_name: ${APP_CONTAINER_NAME}",
-				'#GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'    : "${TARGET_TEST_DATABASES.first()}",
+				'#GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'    : "${DEFAULT_SCHEMA}",
 				'#GRADLE_PLACEHOLDER_DB_SERVICE_NAME'   : "${DB_SERVICE_NAME}",
 				'#GRADLE_PLACEHOLDER_DB_IMAGE_NAME'     : "${dbImageName}",
 				'#GRADLE_PLACEHOLDER_APP_IMAGE_NAME'    : "${APP_IMAGE_NAME}",
@@ -116,8 +153,11 @@ tasks.register('generateSvwsConfigFile') {
 	dependsOn 'erzeugeOrdnerFuerTestumgebung'
 
 	def DB_CONTAINER_NAME = project.ext.DB_CONTAINER_NAME
-	def TARGET_TEST_DATABASES = project.ext.TARGET_TEST_DATABASES
+	def TARGET_TEST_SCHEMATA = ermittleSchemata()
 	def SERVERMODE = project.ext.SVWS_SERVERMODE
+
+	def DEFAULT_SCHEMA = TARGET_TEST_SCHEMATA.first()
+
 	doFirst {
 		delete(fileTree("$buildDirPath/tempdocker/appConf/svws_config.json.template"))
 	}
@@ -126,10 +166,25 @@ tasks.register('generateSvwsConfigFile') {
 		def inputFile = file('../templates/config/svws_config.json.template')
 		def outputFile = file("$buildDirPath/tempdocker/appConf/svws_config.json.template")
 
+		// Erzeugt für jedes Schema aus TARGET_TEST_SCHEMATA einen SchemaKonfiguration-Eintrag.
+		// Bei einelementiger Liste entsteht genau ein Eintrag.
+		def schemaEintraege = TARGET_TEST_SCHEMATA.collect { schema ->
+			"""\t\t{
+\t\t\t"name" : "${schema}",
+\t\t\t"svwslogin" : false,
+\t\t\t"username" : "svwsadmin",
+\t\t\t"password" : "svwsadmin"
+\t\t}""" }.join(",\n")
+		def schemaKonfiguration = "[\n${schemaEintraege}\n\t\t]"
+
+		// Der Platzhalter für die SchemaKonfiguration wird samt der ihn umgebenden Anführungszeichen ersetzt, da an
+		// seine Stelle ein JSON-Array tritt. Nur so bleibt das Template selbst gültiges JSON – es wird von
+		// ':tests:checkIfConfigFilesAreConsistent' gegen die Beispielkonfiguration des Servers geparst.
 		def replacements = [
-				'GRADLE_PLACEHOLDER_SERVER_MODE'      : "${SERVERMODE}",
-				'GRADLE_PLACEHOLDER_DB_CONTAINER_NAME': "${DB_CONTAINER_NAME}",
-				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'   : "${TARGET_TEST_DATABASES.first()}"
+				'GRADLE_PLACEHOLDER_SERVER_MODE'           : "${SERVERMODE}",
+				'GRADLE_PLACEHOLDER_DB_CONTAINER_NAME'     : "${DB_CONTAINER_NAME}",
+				'"GRADLE_PLACEHOLDER_SCHEMA_KONFIGURATION"': "${schemaKonfiguration}",
+				'GRADLE_PLACEHOLDER_DEFAULT_SCHEMA'        : "${DEFAULT_SCHEMA}"
 		]
 
 		FileUtils.replaceFilePlaceholderWithValues(inputFile, outputFile, replacements)
@@ -144,8 +199,19 @@ tasks.register('generateStartupScript') {
 	description = 'Generiert das Start-Skript für den SVWS-Server'
 	dependsOn 'erzeugeOrdnerFuerTestumgebung'
 
+	// Opt-in: Nur Testprojekte, die das feste Reporting-Datum anfordern, erhalten es im Startskript ihres Containers.
+	def REPORTING_FIXED_DATE = project.ext.has('REPORTING_FIXED_DATE') && project.ext.REPORTING_FIXED_DATE
+
 	doLast {
 		def outputFile = file("$buildDirPath/tempdocker/init-scripts/startup.sh")
+
+		// Das feste Datum wirkt nur im DEV-Modus und ausschließlich im #aktuell-Dialect des Reporting. Für alle
+		// übrigen Testcontainer bleibt es ungesetzt, damit dort die Systemzeit gilt.
+		def exportFestesDatum = REPORTING_FIXED_DATE ? """
+			# Festes Datum für die Reporting-Snapshot-Tests, damit die gerenderten Zeitstempel reproduzierbar sind.
+			export SVWS_REPORTING_FIXED_DATE=true
+""" : ""
+
 		def content =
 				"""
 			#!/bin/bash
@@ -156,7 +222,7 @@ tasks.register('generateStartupScript') {
 			envsubst < /etc/app/svws/conf/svws_config.json.template > /opt/app/svws/svwsconfig.json
 
 			/bin/bash "/etc/app/svws/init-scripts/create-keystore.sh"
-
+${exportFestesDatum}
 			echo "Starte SVWS-Server ..."
 			java -cp "svws-server-app-*.jar:./*:./lib/*" de.svws_nrw.server.jetty.Main
 			"""
@@ -176,7 +242,7 @@ tasks.register('erzeugeOrdnerFuerTestumgebung') {
 	def dirDockerInitScripts = file("$buildDirPath/tempdocker/init-scripts")
 	def dirDockerAppConf = file("$buildDirPath/tempdocker/appConf")
 	doFirst {
-		dirDocker.mkdirs() 
+		dirDocker.mkdirs()
 		dirDockerInitScripts.mkdirs()
 		dirDockerAppConf.mkdirs()
 	}

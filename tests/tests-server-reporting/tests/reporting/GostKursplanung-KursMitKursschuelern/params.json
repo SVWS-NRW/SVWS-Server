@@ -1,0 +1,137 @@
+{
+	"idSchuljahresabschnitt": 1,
+	"ausgabeformatOptionen": [
+		1,
+		2,
+		3
+	],
+	"ausgabeformat": 1,
+	"reportvorlage": "GostKursplanung-KursMitKursschuelern",
+	"idHauptdatenObjekt": 2,
+	"idsHauptdaten": [],
+	"idsDetaildaten": [],
+	"reportvorlageParameterGruppen": [
+		{
+			"name": "Benutzerweite Einstellungen",
+			"beschreibung": "Benutzerweite Parameter, für Testdeterminismus explizit gesetzt (überlagern die gespeicherte Benutzer-Config).",
+			"uiIstSichtbar": false,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "mitExternerSchuleKuerzel",
+					"bezeichnung": "mit Schulkürzel bei externen Schülern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "dateinameMitZeitstempel",
+					"bezeichnung": "Datum und Uhrzeit an Dateinamen anhängen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Ausgabeoptionen",
+			"beschreibung": "Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "einzelausgabeDaten",
+					"bezeichnung": "Daten in einzelne Dateien ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": false,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "duplexdruck",
+					"bezeichnung": "Duplexdruck",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		}
+	],
+	"sortierungDefinitionenGruppen": [],
+	"filterDefinitionenGruppen": [
+		{
+			"bezeichnung": "Kursauswahl",
+			"typ": "ReportingGostKursplanungKurs",
+			"uiIstSichtbar": false,
+			"uiIstFilterMultiselect": false,
+			"uiFilterMultiselectVerknuepfung": 1,
+			"uiErforderlicherServerMode": "",
+			"filterDefinitionenOptionen": [],
+			"filterDefinitionen": [
+				{
+					"bezeichnung": "Kursauswahl",
+					"typ": "ReportingGostKursplanungKurs",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "id",
+									"operation": 10,
+									"werte": [
+										"69",
+										"72",
+										"77",
+										"80",
+										"82",
+										"86",
+										"87",
+										"90",
+										"98",
+										"100",
+										"107",
+										"110",
+										"106",
+										"112",
+										"115",
+										"116",
+										"118",
+										"120",
+										"122",
+										"125",
+										"127",
+										"128",
+										"133",
+										"135",
+										"67"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				}
+			]
+		}
+	],
+	"eMailDaten": {
+		"empfaengerTyp": 5,
+		"istPrivateEmailAlternative": false,
+		"betreff": "Kurslisten zur Kursplanung",
+		"text": "Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."
+	}
+}

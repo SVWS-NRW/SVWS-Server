@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Klausurplanung - Klausurtermine mit Kursen, 2. Quartal",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

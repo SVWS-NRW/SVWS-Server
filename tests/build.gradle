@@ -20,7 +20,13 @@ sonar {
 				./tests-e2e-devmode/build/test-results,\
 				./tests-e2e-stablemode/build/test-results,\
 				./tests-server-dav/build/test-results,\
-				./tests-server-enm/build/test-results"
+				./tests-server-enm/build/test-results,\
+				./tests-server-reporting/build/test-results"
+
+		// Die Testfälle des Reportings bestehen aus erzeugten Snapshots und ihren Eingabedaten. Sie sind Prüfdaten
+		// und kein zu analysierender Quelltext – insbesondere folgt das gerenderte HTML nicht den Regeln, die für
+		// handgeschriebene Vorlagen gelten.
+		property "sonar.exclusions", "tests-server-reporting/tests/reporting/**"
 	}
 }
 
@@ -180,17 +186,21 @@ tasks.register('startTestDockerNetwork') {
 }
 
 /**
- * Führe alle verfügbaren Integrations standardisiert gegen Docker Container aus.
+ * Führe die Integrationstest standardisiert gegen Docker Container aus, die bei jedem Commit laufen sollen.
  * Dieser Task macht sowohl die Vor- als auch die Nachbereitung der Tests.
  * Einstiegspunkt sowohl für die CI als auch die lokale Ausführung.
  */
 tasks.register('integrationTest') {
 	group = 'testing'
-	description = 'Ausführung aller Integrationstests welche jeweils gegen eine temporäre standardisierte Testumgebung laufen.'
+	description = 'Ausführung aller Integrationstests, die mit jedem Commit und gegen eine temporäre standardisierte Testumgebung laufen sollen.'
 
 	dependsOn 'startTestDockerNetwork'
 	dependsOn 'checkIfConfigFilesAreConsistent'
-	dependsOn subprojects.collect { "${it.path}:testAgainstDockerEnv" }
+	dependsOn "tests-server-api:testAgainstDockerEnv"
+	dependsOn "tests-e2e-devmode:testAgainstDockerEnv"
+	dependsOn "tests-e2e-stablemode:testAgainstDockerEnv"
+	dependsOn "tests-server-dav:testAgainstDockerEnv"
+	dependsOn "tests-server-enm:testAgainstDockerEnv"
 
 	// Serielle Ausführung sicherstellen
 	project('tests-e2e-devmode').tasks.named('testAgainstDockerEnv').configure {
@@ -209,6 +219,21 @@ tasks.register('integrationTest') {
 	finalizedBy 'checkJUnitResults'
 }
 
+/**
+ * Führe die Integrationstest standardisiert gegen Docker Container aus, die zusätzlich auf dem Release Branch laufen sollen.
+ * Dieser Task macht sowohl die Vor- als auch die Nachbereitung der Tests.
+ * Einstiegspunkt sowohl für die CI als auch die lokale Ausführung.
+ */
+tasks.register('integrationTestsForRelease') {
+	group = 'testing'
+	description = 'Ausführung aller Integrationstests die zusätzlich beim Release gegen eine temporäre standardisierte Testumgebung laufen sollen.'
+
+	dependsOn 'startTestDockerNetwork'
+	dependsOn 'checkIfConfigFilesAreConsistent'
+	dependsOn "tests-server-reporting:testAgainstDockerEnv"
+
+	finalizedBy 'checkJUnitResultsForRelease'
+}
 
 /**
  * Überprüft, ob die lokale SVWS-Anwendung läuft, indem sie eine HTTP-Anfrage an den lokalen Server sendet.
@@ -282,7 +307,47 @@ tasks.register('no_auto_docker_integrationTest') {
 
 
 /**
- * Untersucht die JUnit-Ergebnisse nach dem Ausführen der Tests. Iteriert durch alle JUnits Reports.
+ * Wertet eine Liste von JUnit-Report-Dateien aus: zählt Testfälle und wirft einen Fehler, wenn eine
+ * Datei fehlt oder mindestens ein Testfall fehlgeschlagen ist. Wird von den Auswerte-Tasks geteilt.
+ */
+def auswertenJUnitReports = { List<String> junitReportFiles ->
+	int totalTests = 0
+	int totalErroredTests = 0
+	int totalSkippedTests = 0
+
+	junitReportFiles.each { filePath ->
+		def junitReportFile = file(filePath)
+		if (!junitReportFile.exists()) {
+			throw new GradleException("JUnit Result nicht gefunden! ${junitReportFile}")
+		}
+
+		// Zähle für jeden JUnit Report file die entsprechenden Einträge
+		def report = new XmlSlurper().parse(junitReportFile)
+		def testCases = report.'**'.findAll { it.name() == 'testcase' }
+		def erroredTests = testCases.findAll { it.error.size() > 0 }
+		def failedTests = testCases.findAll { it.failure.size() > 0 }
+		def skippedTests = testCases.findAll { it.skipped.size() > 0 }
+
+		totalTests += testCases.size()
+		totalErroredTests += erroredTests.size() + failedTests.size()
+		totalSkippedTests += skippedTests.size()
+	}
+
+	// Print Debug Info für die Auswertung der Integrationstests. Fall es Test fehlgeschlagen ist wirf einen Fehler (damit die Pipeline fehlschlägt)
+	if (totalErroredTests > 0) {
+		throw new GradleException("Integrationstests insgesamt: ${totalTests} | Skipped: ${totalSkippedTests} | Error: ${totalErroredTests}")
+	} else {
+		// Log in grüner Schrift anzeigen
+		def highlightGreen = { text -> "\033[32m${text}\033[0m" }
+
+		println("${highlightGreen('\n****************************************************************')}")
+		println("Alle ${totalTests} Integrationstests waren fehlerfrei. (Skipped: ${totalSkippedTests})")
+		println("${highlightGreen('****************************************************************\n')}")
+	}
+}
+
+/**
+ * Untersucht die JUnit-Ergebnisse der Commit-Integrationstests. Iteriert durch alle JUnits Reports.
  *
  * @throws GradleException falls ein beliebiger Integrationstest fehlgeschlagen ist.
  */
@@ -300,38 +365,23 @@ tasks.register('checkJUnitResults') {
 			'tests-server-enm/build/test-results/sync-test-results.xml'
 	]
 	doLast {
-		int totalTests = 0
-		int totalErroredTests = 0
-		int totalSkippedTests = 0
+		auswertenJUnitReports(junitReportFiles)
+	}
+}
 
-		junitReportFiles.each { filePath ->
-			def junitReportFile = file(filePath)
-			if (!junitReportFile.exists()) {
-				throw new GradleException("JUnit Result nicht gefunden! ${junitReportFile}")
-			}
+/**
+ * Untersucht die JUnit-Ergebnisse der nur in der Release-Pipeline laufenden Integrationstests (z.B. Reporting).
+ * Bewusst vom Commit-Task getrennt, damit checkJUnitResults nicht an den dort nicht erzeugten Release-Dateien scheitert.
+ *
+ * @throws GradleException falls ein beliebiger Release-Integrationstest fehlgeschlagen ist.
+ */
+tasks.register('checkJUnitResultsForRelease') {
+	mustRunAfter subprojects.collect { "${it.path}:removeTestEnvironmentEntryPoint" }
 
-			// Zähle für jeden JUnit Report file die entsprechenden Einträge
-			def report = new XmlSlurper().parse(junitReportFile)
-			def testCases = report.'**'.findAll { it.name() == 'testcase' }
-			def erroredTests = testCases.findAll { it.error.size() > 0 }
-			def failedTests = testCases.findAll { it.failure.size() > 0 }
-			def skippedTests = testCases.findAll { it.skipped.size() > 0 }
-
-			totalTests += testCases.size()
-			totalErroredTests += erroredTests.size() + failedTests.size()
-			totalSkippedTests += skippedTests.size()
-		}
-
-		// Print Debug Info für die Auswertung der Integrationstests. Fall es Test fehlgeschlagen ist wirf einen Fehler (damit die Pipeline fehlschlägt)
-		if (totalErroredTests > 0) {
-			throw new GradleException("Integrationstests insgesamt: ${totalTests} | Skipped: ${totalSkippedTests} | Error: ${totalErroredTests}")
-		} else {
-			// Log in grüner Schrift anzeigen
-			def highlightGreen = { text -> "\033[32m${text}\033[0m" }
-
-			println("${highlightGreen('\n****************************************************************')}")
-			println("Alle ${totalTests} Integrationstests waren fehlerfrei. (Skipped: ${totalSkippedTests})")
-			println("${highlightGreen('****************************************************************\n')}")
-		}
+	def junitReportFiles = [
+			'tests-server-reporting/build/test-results/api-test-results.xml'
+	]
+	doLast {
+		auswertenJUnitReports(junitReportFiles)
 	}
 }

@@ -1,0 +1,245 @@
+{
+	"idSchuljahresabschnitt": 1,
+	"ausgabeformatOptionen": [
+		1,
+		2,
+		3
+	],
+	"ausgabeformat": 1,
+	"reportvorlage": "Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
+	"idHauptdatenObjekt": -1,
+	"idsHauptdaten": [
+		31,
+		33
+	],
+	"idsDetaildaten": [
+		0
+	],
+	"reportvorlageParameterGruppen": [
+		{
+			"name": "Benutzerweite Einstellungen",
+			"beschreibung": "Benutzerweite Parameter, für Testdeterminismus explizit gesetzt (überlagern die gespeicherte Benutzer-Config).",
+			"uiIstSichtbar": false,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "mitExternerSchuleKuerzel",
+					"bezeichnung": "mit Schulkürzel bei externen Schülern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "dateinameMitZeitstempel",
+					"bezeichnung": "Datum und Uhrzeit an Dateinamen anhängen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Inhaltsoptionen",
+			"beschreibung": "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "ueberschrift",
+					"bezeichnung": "Überschrift (Standard: Klassenliste <Kürzel>)",
+					"typ": 2,
+					"wert": "Klassenliste <Kürzel>",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 2,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "bemerkung",
+					"bezeichnung": "Bemerkung",
+					"typ": 2,
+					"wert": "",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 2,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitFoto",
+					"bezeichnung": "mit Foto",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerAlleVornamen",
+					"bezeichnung": "mit allen Vornamen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerGeschlecht",
+					"bezeichnung": "mit Geschlecht",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerGebDat",
+					"bezeichnung": "mit Geburtsdatum",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerStaat",
+					"bezeichnung": "mit Staatsangehörigkeit",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerAnschrift",
+					"bezeichnung": "mit Anschrift",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerTelefonPrivat",
+					"bezeichnung": "mit Telefon (privat)",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerEmailSchule",
+					"bezeichnung": "mit E-Mail (Schule)",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSchuelerEmailPrivat",
+					"bezeichnung": "mit E-Mail (privat)",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitSpalteSchuelerTelefonKontakte",
+					"bezeichnung": "mit Telefonkontakten",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitErzieher",
+					"bezeichnung": "mit Erziehern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitErzieherAnschrift",
+					"bezeichnung": "mit Erzieher-Anschrift",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "mitErzieherEmailPrivat",
+					"bezeichnung": "mit Erzieher-E-Mail",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		},
+		{
+			"name": "Ausgabeoptionen",
+			"beschreibung": "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"reportvorlageParameter": [
+				{
+					"name": "einzelausgabeDaten",
+					"bezeichnung": "Daten in einzelne Dateien ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				},
+				{
+					"name": "duplexdruck",
+					"bezeichnung": "Duplexdruck",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": ""
+				}
+			]
+		}
+	],
+	"sortierungDefinitionenGruppen": [],
+	"filterDefinitionenGruppen": [],
+	"eMailDaten": {
+		"empfaengerTyp": 3,
+		"istPrivateEmailAlternative": false,
+		"betreff": "",
+		"text": ""
+	}
+}

@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Kursplanung - Kurse mit Statistikwerten (Auswahl von 20 Kursen)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Stundenplanung - Raum-Stundenplan",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

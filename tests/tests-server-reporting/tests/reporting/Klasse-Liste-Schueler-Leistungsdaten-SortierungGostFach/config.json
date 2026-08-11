@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Klassenliste - Schüler mit Leistungsdaten (GOSt-Fach-Sortierung)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

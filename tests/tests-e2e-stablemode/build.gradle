@@ -21,8 +21,8 @@ ext {
 	FORWARDED_DB_PORT = 3323
 	FORWARDED_APP_PORT = 5023
 
-	// Liste der Datenbanken die für die Tests genutzt / geseedet werden sollen
-	TARGET_TEST_DATABASES = ['GymAbi01']
+	// Liste der Schemata die für die Tests genutzt / geseedet werden sollen
+	TARGET_TEST_SCHEMATA = ['GymAbi01']
 }
 
 tasks.register('npmInstallPlaywright', NpmRun) {

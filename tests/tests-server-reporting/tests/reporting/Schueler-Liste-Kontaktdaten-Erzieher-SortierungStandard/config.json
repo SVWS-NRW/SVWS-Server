@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Schülerliste mit Kontaktdaten und Erziehern (Sortierung Standard)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

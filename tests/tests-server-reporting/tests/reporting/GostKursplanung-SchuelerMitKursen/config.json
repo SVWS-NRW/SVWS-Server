@@ -1,0 +1,6 @@
+{
+	"beschreibung": "GOSt-Kursplanung - Schüler mit Kursen (Auswahl von 17 Schülern)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}
