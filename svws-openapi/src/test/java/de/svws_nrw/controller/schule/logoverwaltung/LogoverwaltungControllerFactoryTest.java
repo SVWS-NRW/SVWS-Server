@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungService;
@@ -40,7 +40,7 @@ class LogoverwaltungControllerFactoryTest {
 	private MockedStatic<LogoverwaltungRepositoryFactory> repositoryFactoryMock;
 	private MockedStatic<LogoverwaltungServiceFactory> serviceFactoryMock;
 	private MockedStatic<SchuleServiceFactory> schuleServiceFactoryMock;
-	private MockedStatic<SchuleRepositoryFactory> schuleRepositoryFactoryMock;
+	private MockedStatic<EigeneSchuleRepositoryFactory> schuleRepositoryFactoryMock;
 
 	@BeforeEach
 	void setUp() {
@@ -48,7 +48,7 @@ class LogoverwaltungControllerFactoryTest {
 		repositoryFactoryMock = mockStatic(LogoverwaltungRepositoryFactory.class);
 		serviceFactoryMock = mockStatic(LogoverwaltungServiceFactory.class);
 		schuleServiceFactoryMock = mockStatic(SchuleServiceFactory.class);
-		schuleRepositoryFactoryMock = mockStatic(SchuleRepositoryFactory.class);
+		schuleRepositoryFactoryMock = mockStatic(EigeneSchuleRepositoryFactory.class);
 	}
 
 	@AfterEach
@@ -66,14 +66,14 @@ class LogoverwaltungControllerFactoryTest {
 		final var dbConnection = mock(DBEntityManager.class);
 		final var repositoryFactory = mock(LogoverwaltungRepositoryFactory.class);
 		final var serviceFactory = mock(LogoverwaltungServiceFactory.class);
-		final var schuleRepositoryFactory = mock(SchuleRepositoryFactory.class);
+		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
-		schuleRepositoryFactoryMock.when(SchuleRepositoryFactory::getNewInstance)
+		schuleRepositoryFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance)
 				.thenReturn(schuleRepositoryFactory);
 		schuleServiceFactoryMock.when(() -> SchuleServiceFactory.getNewInstance(schuleRepositoryFactory))
 				.thenReturn(schuleServiceFactory);
@@ -98,14 +98,14 @@ class LogoverwaltungControllerFactoryTest {
 		final var dbConnection = mock(DBEntityManager.class);
 		final var repositoryFactory = mock(LogoverwaltungRepositoryFactory.class);
 		final var serviceFactory = mock(LogoverwaltungServiceFactory.class);
-		final var schuleRepositoryFactory = mock(SchuleRepositoryFactory.class);
+		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
-		schuleRepositoryFactoryMock.when(SchuleRepositoryFactory::getNewInstance)
+		schuleRepositoryFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance)
 				.thenReturn(schuleRepositoryFactory);
 		schuleServiceFactoryMock.when(() -> SchuleServiceFactory.getNewInstance(schuleRepositoryFactory))
 				.thenReturn(schuleServiceFactory);
@@ -130,14 +130,14 @@ class LogoverwaltungControllerFactoryTest {
 		final var dbConnection = mock(DBEntityManager.class);
 		final var repositoryFactory = mock(LogoverwaltungRepositoryFactory.class);
 		final var serviceFactory = mock(LogoverwaltungServiceFactory.class);
-		final var schuleRepositoryFactory = mock(SchuleRepositoryFactory.class);
+		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN))
 				.thenReturn(dbConnection);
 		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
-		schuleRepositoryFactoryMock.when(SchuleRepositoryFactory::getNewInstance)
+		schuleRepositoryFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance)
 				.thenReturn(schuleRepositoryFactory);
 		schuleServiceFactoryMock.when(() -> SchuleServiceFactory.getNewInstance(schuleRepositoryFactory))
 				.thenReturn(schuleServiceFactory);

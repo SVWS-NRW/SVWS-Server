@@ -4,7 +4,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.Schild3FachklasseDQRNiveauZuordnungMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.schild3.Schild3FachklasseDQRNiveauZuordnungServiceFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public final class Schild3FachklasseDQRNiveauZuordnungControllerFactory {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, kompetenz);
 
 		final var mapper = Schild3FachklasseDQRNiveauZuordnungMapper.INSTANCE;
-		final var schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		final var schuleServiceFactory = SchuleServiceFactory.getNewInstance(schuleRepositoryFactory);
 		final var serviceFactory = Schild3FachklasseDQRNiveauZuordnungServiceFactory.getNewInstance(mapper, schuleRepositoryFactory, schuleServiceFactory);
 

@@ -31,11 +31,11 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.repo.faecher.FachRepository;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
 import de.svws_nrw.service.schueler.SchuelerSprachenfolgeService;
@@ -50,7 +50,7 @@ import jakarta.validation.constraints.NotNull;
 public final class BKGymLeistungsdatenServiceKontext {
 
 	/** Das Repository für den Zugriff auf die Schuldaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
@@ -65,7 +65,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 
 	/** Das Repository für den Zugriff auf die Jahrgänge */
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 
 	/** Der Schuljahresabschnitt, in welchem die Leistungsdaten benötigt werden */
 	private DTOSchuljahresabschnitte schuljahresabschnitt;
@@ -103,20 +103,20 @@ public final class BKGymLeistungsdatenServiceKontext {
 
 
 	private BKGymLeistungsdatenServiceKontext(
-			final SchuleRepository schuleRepository,
+			final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final FachRepository fachRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerSprachenfolgeService schuelerSprachenfolgeService,
 			final SchuelerSprachpruefungenService schuelerSprachpruefungenService,
-			final JahrgaengeRepository jahrgaengeRepository) {
-		this.schuleRepository = schuleRepository;
+			final JahrgangRepository jahrgangRepository) {
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.fachRepository = fachRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
-		this.jahrgaengeRepository = jahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
 		this.schuelerSprachenfolgeService = schuelerSprachenfolgeService;
 		this.schuelerSprachpruefungenService = schuelerSprachpruefungenService;
 	}
@@ -125,29 +125,29 @@ public final class BKGymLeistungsdatenServiceKontext {
 	/**
 	 * Erstellt einen neuen Service-Kontext.
 	 *
-	 * @param schuleRepository                     das Repository für die Schule
+	 * @param eigeneSchuleRepository                     das Repository für die Schule
 	 * @param schuljahresabschnitteRepository      das Repository für die Schuljahresabschnitte
 	 * @param fachRepository                       das Repository für die Fächer
 	 * @param schuelerLernabschnittRepository      das Repository für die Schüler-Lernabschnitte
 	 * @param schuelerLeistungsdatenRepository     das Repository für die Schüler-Leistungs
 	 * @param schuelerSprachenfolgeService         der Service für die Schüler-Sprachenfolge
 	 * @param schuelerSprachpruefungenService      der Service für die Schüler-Sprachprüfungen
-	 * @param jahrgaengeRepository                 das Repository für die Jahrgänge
+	 * @param jahrgangRepository                 das Repository für die Jahrgänge
 	 *
 	 * @return der neue Service-Kontext.
 	 */
-	public static BKGymLeistungsdatenServiceKontext of(final SchuleRepository schuleRepository,
+	public static BKGymLeistungsdatenServiceKontext of(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final FachRepository fachRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerSprachenfolgeService schuelerSprachenfolgeService,
 			final SchuelerSprachpruefungenService schuelerSprachpruefungenService,
-			final JahrgaengeRepository jahrgaengeRepository) {
-		return new BKGymLeistungsdatenServiceKontext(schuleRepository, schuljahresabschnitteRepository, fachRepository,
+			final JahrgangRepository jahrgangRepository) {
+		return new BKGymLeistungsdatenServiceKontext(eigeneSchuleRepository, schuljahresabschnitteRepository, fachRepository,
 				schuelerLernabschnittRepository, schuelerLeistungsdatenRepository, schuelerSprachenfolgeService,
 				schuelerSprachpruefungenService,
-				jahrgaengeRepository);
+				jahrgangRepository);
 	}
 
 
@@ -158,9 +158,9 @@ public final class BKGymLeistungsdatenServiceKontext {
 	 * @param idsSchueler   die Schueler-IDs
 	 */
 	public void fetchData(final Collection<Long> idsSchueler) {
-		mapJahrgaenge = jahrgaengeRepository.getAll().stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+		mapJahrgaenge = jahrgangRepository.getAll().stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
-		final long idSchuljahresabschnitt = schuleRepository.getFirst().Schuljahresabschnitts_ID;
+		final long idSchuljahresabschnitt = eigeneSchuleRepository.getFirst().Schuljahresabschnitts_ID;
 		schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 		final Schuljahresabschnitt schuljahresabschnittApi = SchuljahresabschnittService.toApi(schuljahresabschnitt);
 
@@ -242,7 +242,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 		}
 		final var idAbschnitt = lernabschnittIDs.getLast();
 		final var dtoAbschnitt = schuelerLernabschnittRepository.getById(idAbschnitt);
-		final DTOJahrgang dtoAktJahrgang = jahrgaengeRepository.getById(dtoAbschnitt.Jahrgang_ID);
+		final DTOJahrgang dtoAktJahrgang = jahrgangRepository.getById(dtoAbschnitt.Jahrgang_ID);
 		final Jahrgaenge aktJahrgang = (dtoAktJahrgang.ASDJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(dtoAktJahrgang.ASDJahrgang);
 		return (aktJahrgang == null) ? null : aktJahrgang.daten(schuljahresabschnitt.Jahr).kuerzel;
 	}

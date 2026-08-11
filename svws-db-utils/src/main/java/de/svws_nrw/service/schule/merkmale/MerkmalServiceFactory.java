@@ -1,17 +1,17 @@
 package de.svws_nrw.service.schule.merkmale;
 
 import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 /**
  * Factory für {@link MerkmalService}
  */
 public final class MerkmalServiceFactory {
 
-	private final MerkmalRepositoryFactory repositoryFactory;
+	private final KatalogRepositoryFactory repositoryFactory;
 	private final MerkmalMapper mapper;
 
-	private MerkmalServiceFactory(final MerkmalRepositoryFactory repositoryFactory, final MerkmalMapper mapper) {
+	private MerkmalServiceFactory(final KatalogRepositoryFactory repositoryFactory, final MerkmalMapper mapper) {
 		this.repositoryFactory = repositoryFactory;
 		this.mapper = mapper;
 	}
@@ -23,7 +23,7 @@ public final class MerkmalServiceFactory {
 	 * @param mapper     der Mapper zur Konvertierung zwischen Domain- und API-Modellen
 	 * @return eine neue Instanz der MerkmalServiceFactory
 	 */
-	public static MerkmalServiceFactory getNewInstance(final MerkmalRepositoryFactory repositoryFactory, final MerkmalMapper mapper) {
+	public static MerkmalServiceFactory getNewInstance(final KatalogRepositoryFactory repositoryFactory, final MerkmalMapper mapper) {
 		return new MerkmalServiceFactory(repositoryFactory, mapper);
 	}
 

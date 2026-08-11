@@ -10,7 +10,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.kurse.KurslehrerRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public final class KurseStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schul-Daten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Kurse-Daten */
 	private final KurseRepository kurseRepository;
@@ -31,14 +31,14 @@ public final class KurseStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository               das Repository für die Schuldaten
+	 * @param eigeneSchuleRepository               das Repository für die Schuldaten
 	 * @param kurseRepository                das Repository für die Kursdaten
 	 * @param kurslehrerRepository           das Repository für die Zusatzkräfte im Kurs
 	 */
-	public KurseStatistikService(final SchuleRepository schuleRepository,
+	public KurseStatistikService(final EigeneSchuleRepository eigeneSchuleRepository,
 			final KurseRepository kurseRepository,
 			final KurslehrerRepository kurslehrerRepository) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.kurseRepository = kurseRepository;
 		this.kurslehrerRepository = kurslehrerRepository;
 	}
@@ -89,7 +89,7 @@ public final class KurseStatistikService {
 	 */
 	public @NotNull List<KursStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs
 		final List<DTOKurs> listKurse = kurseRepository.getListBySchuljahresabschnitt(idSchuljahresabschnitt);

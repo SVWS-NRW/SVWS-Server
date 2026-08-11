@@ -1,12 +1,12 @@
 package de.svws_nrw.service.enm;
 
 import de.svws_nrw.repo.enm.NotenmodulRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 
 /**
  * Eine Factory zum Erstellen von Services für das Notenmodul
@@ -16,10 +16,10 @@ public final class NotenmodulServiceFactory {
 	private final NotenmodulRepositoryFactory notenmodulRepositoryFactory;
 	private final LehrerRepositoryFactory lehrerRepositoryFactory;
 	private final SchuelerRepositoryFactory schuelerRepositoryFactory;
-	private final KatalogeRepositoryFactory katalogeRepositoryFactory;
+	private final KatalogRepositoryFactory katalogRepositoryFactory;
 	private final KlassenRepositoryFactory klassenRepositoryFactory;
 	private final KurseRepositoryFactory kurseRepositoryFactory;
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 
 	/**
 	 * Erstellt eine neue Service-Factory
@@ -27,22 +27,22 @@ public final class NotenmodulServiceFactory {
 	 * @param notenmodulRepositoryFactory   die Factory für Notenmodul-Repositories
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
-	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
+	 * @param katalogRepositoryFactory     die Factory für Katalog-Repositories
 	 * @param klassenRepositoryFactory      die Factory für Klassen-Repositories
 	 * @param kurseRepositoryFactory        die Factory für Kurse-Repositories
-	 * @param schuleRepositoryFactory       die Factory für Schul-Repositories
+	 * @param eigeneSchuleRepositoryFactory       die Factory für Schul-Repositories
 	 */
 	private NotenmodulServiceFactory(final NotenmodulRepositoryFactory notenmodulRepositoryFactory,
 			final LehrerRepositoryFactory lehrerRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory,
-			final KatalogeRepositoryFactory katalogeRepositoryFactory, final KlassenRepositoryFactory klassenRepositoryFactory,
-			final KurseRepositoryFactory kurseRepositoryFactory, final SchuleRepositoryFactory schuleRepositoryFactory) {
+			final KatalogRepositoryFactory katalogRepositoryFactory, final KlassenRepositoryFactory klassenRepositoryFactory,
+			final KurseRepositoryFactory kurseRepositoryFactory, final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
 		this.notenmodulRepositoryFactory = notenmodulRepositoryFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
-		this.katalogeRepositoryFactory = katalogeRepositoryFactory;
+		this.katalogRepositoryFactory = katalogRepositoryFactory;
 		this.klassenRepositoryFactory = klassenRepositoryFactory;
 		this.kurseRepositoryFactory = kurseRepositoryFactory;
-		this.schuleRepositoryFactory = schuleRepositoryFactory;
+		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 	}
 
 
@@ -52,19 +52,19 @@ public final class NotenmodulServiceFactory {
 	 * @param notenmodulRepositoryFactory   die Factory für Notenmodul-Repositories
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
-	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
+	 * @param katalogRepositoryFactory     die Factory für Katalog-Repositories
 	 * @param klassenRepositoryFactory      die Factory für Klassen-Repositories
 	 * @param kurseRepositoryFactory        die Factory für Kurse-Repositories
-	 * @param schuleRepositoryFactory       die Factory für Schul-Repositories
+	 * @param eigeneSchuleRepositoryFactory       die Factory für Schul-Repositories
 	 *
 	 * @return die neue Factory-Instanz
 	 */
 	public static NotenmodulServiceFactory getNewInstance(final NotenmodulRepositoryFactory notenmodulRepositoryFactory,
 			final LehrerRepositoryFactory lehrerRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory,
-			final KatalogeRepositoryFactory katalogeRepositoryFactory, final KlassenRepositoryFactory klassenRepositoryFactory,
-			final KurseRepositoryFactory kurseRepositoryFactory, final SchuleRepositoryFactory schuleRepositoryFactory) {
+			final KatalogRepositoryFactory katalogRepositoryFactory, final KlassenRepositoryFactory klassenRepositoryFactory,
+			final KurseRepositoryFactory kurseRepositoryFactory, final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
 		return new NotenmodulServiceFactory(notenmodulRepositoryFactory, lehrerRepositoryFactory, schuelerRepositoryFactory,
-				katalogeRepositoryFactory, klassenRepositoryFactory, kurseRepositoryFactory, schuleRepositoryFactory);
+				katalogRepositoryFactory, klassenRepositoryFactory, kurseRepositoryFactory, eigeneSchuleRepositoryFactory);
 	}
 
 
@@ -130,7 +130,7 @@ public final class NotenmodulServiceFactory {
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository(),
 				schuelerRepositoryFactory.getSchuelerAnkreuzkompetenzenRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenRepository()
+				katalogRepositoryFactory.getAnkreuzkompetenzRepository()
 		);
 	}
 
@@ -142,10 +142,10 @@ public final class NotenmodulServiceFactory {
 	 */
 	public EnmV1GetService getEnmV1GetService() {
 		return new EnmV1GetService(EnmV1GetServiceKontext.of(
-				schuleRepositoryFactory.getSchuleRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
-				katalogeRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getFachRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittTimestampsRepository(),
@@ -159,15 +159,15 @@ public final class NotenmodulServiceFactory {
 				kurseRepositoryFactory.getKurseRepository(),
 				klassenRepositoryFactory.getKlassenRepository(),
 				klassenRepositoryFactory.getKlassenleitungenRepository(),
-				katalogeRepositoryFactory.getJahrgaengeRepository(),
-				katalogeRepositoryFactory.getFoerderschwerpunkteRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenKonfigurationRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenJahrgaengeRepository(),
-				katalogeRepositoryFactory.getFloskelRepository(),
-				katalogeRepositoryFactory.getFloskelgruppenRepository(),
-				katalogeRepositoryFactory.getFloskelJahrgaengeRepository(),
-				katalogeRepositoryFactory.getTeilleistungsartRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
+				katalogRepositoryFactory.getFoerderschwerpunktRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzKonfigurationRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzJahrgangRepository(),
+				katalogRepositoryFactory.getFloskelRepository(),
+				katalogRepositoryFactory.getFloskelgruppeRepository(),
+				katalogRepositoryFactory.getFloskelJahrgangRepository(),
+				katalogRepositoryFactory.getTeilleistungsartRepository(),
 				notenmodulRepositoryFactory.getNotenmodulCredentialsRepository(),
 				notenmodulRepositoryFactory.getNotenmodulCredentialsTimestampsRepository()));
 	}
@@ -202,13 +202,13 @@ public final class NotenmodulServiceFactory {
 	 */
 	public EnmV2GetService getEnmV2GetService() {
 		return new EnmV2GetService(EnmV2GetServiceKontext.of(
-				schuleRepositoryFactory.getSchuleRepository(),
-				schuleRepositoryFactory.getSchulleitungRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
-				schuleRepositoryFactory.getAbteilungenRepository(),
-				schuleRepositoryFactory.getAbteilungenKlassenRepository(),
+				eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				eigeneSchuleRepositoryFactory.getSchulleitungRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getAbteilungenRepository(),
+				eigeneSchuleRepositoryFactory.getAbteilungenKlassenRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
-				katalogeRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getFachRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittTimestampsRepository(),
@@ -224,15 +224,15 @@ public final class NotenmodulServiceFactory {
 				kurseRepositoryFactory.getKurseRepository(),
 				klassenRepositoryFactory.getKlassenRepository(),
 				klassenRepositoryFactory.getKlassenleitungenRepository(),
-				katalogeRepositoryFactory.getJahrgaengeRepository(),
-				katalogeRepositoryFactory.getFoerderschwerpunkteRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenKonfigurationRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenRepository(),
-				katalogeRepositoryFactory.getAnkreuzkompetenzenJahrgaengeRepository(),
-				katalogeRepositoryFactory.getFloskelRepository(),
-				katalogeRepositoryFactory.getFloskelgruppenRepository(),
-				katalogeRepositoryFactory.getFloskelJahrgaengeRepository(),
-				katalogeRepositoryFactory.getTeilleistungsartRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
+				katalogRepositoryFactory.getFoerderschwerpunktRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzKonfigurationRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzRepository(),
+				katalogRepositoryFactory.getAnkreuzkompetenzJahrgangRepository(),
+				katalogRepositoryFactory.getFloskelRepository(),
+				katalogRepositoryFactory.getFloskelgruppeRepository(),
+				katalogRepositoryFactory.getFloskelJahrgangRepository(),
+				katalogRepositoryFactory.getTeilleistungsartRepository(),
 				this.getNotenmodulCredentialGeneratorService(),
 				notenmodulRepositoryFactory.getNotenmodulCredentialsTimestampsRepository()));
 	}

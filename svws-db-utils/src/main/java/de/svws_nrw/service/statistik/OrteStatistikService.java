@@ -5,8 +5,8 @@ import java.util.List;
 import de.svws_nrw.asd.data.statistik.OrteStatistikGesamt;
 import de.svws_nrw.asd.types.schule.Laender;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
-import de.svws_nrw.repo.kataloge.OrteRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,26 +16,26 @@ import jakarta.validation.constraints.NotNull;
 public final class OrteStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schul-Statistikdaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Der Service für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnittService schuljahresabschnitteService;
 
 	/** Das Repository für den Zugriff auf die Orts-Daten */
-	private final OrteRepository orteRepository;
+	private final OrtRepository ortRepository;
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository               das Repository für die Schule
+	 * @param eigeneSchuleRepository               das Repository für die Schule
 	 * @param schuljahresabschnitteService   der Service für den Zugriff auf die Schuljahresabschnitte
-	 * @param orteRepository                 das Repository für die Orte
+	 * @param ortRepository                 das Repository für die Orte
 	 */
-	public OrteStatistikService(final SchuleRepository schuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
-			final OrteRepository orteRepository) {
-		this.schuleRepository = schuleRepository;
+	public OrteStatistikService(final EigeneSchuleRepository eigeneSchuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
+			final OrtRepository ortRepository) {
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteService = schuljahresabschnitteService;
-		this.orteRepository = orteRepository;
+		this.ortRepository = ortRepository;
 	}
 
 
@@ -55,9 +55,9 @@ public final class OrteStatistikService {
 	 * @return die Liste aller Orte
 	 */
 	public @NotNull List<OrteStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
-		return orteRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
+		return ortRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}
 
 }

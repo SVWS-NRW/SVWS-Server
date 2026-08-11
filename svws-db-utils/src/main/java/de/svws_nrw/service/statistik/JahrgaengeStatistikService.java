@@ -6,8 +6,8 @@ import java.util.Objects;
 import de.svws_nrw.asd.data.statistik.JahrgaengeStatistikGesamt;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,26 +17,26 @@ import jakarta.validation.constraints.NotNull;
 public final class JahrgaengeStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schul-Statistikdaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Der Service für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnittService schuljahresabschnitteService;
 
 	/** Das Repository für den Zugriff auf die Jahrgangs-Daten */
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
+	 * @param eigeneSchuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
 	 * @param schuljahresabschnitteService   der Service für den Zugriff auf die Schuljahresabschnitte
-	 * @param jahrgaengeRepository   das Repository für die Jahrgänge
+	 * @param jahrgangRepository   das Repository für die Jahrgänge
 	 */
-	public JahrgaengeStatistikService(final SchuleRepository schuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
-			final JahrgaengeRepository jahrgaengeRepository) {
-		this.schuleRepository = schuleRepository;
+	public JahrgaengeStatistikService(final EigeneSchuleRepository eigeneSchuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
+			final JahrgangRepository jahrgangRepository) {
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteService = schuljahresabschnitteService;
-		this.jahrgaengeRepository = jahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
 	}
 
 
@@ -56,9 +56,9 @@ public final class JahrgaengeStatistikService {
 	 * @return die Liste aller Jahrgänge
 	 */
 	public @NotNull List<JahrgaengeStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
-		return jahrgaengeRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
+		return jahrgangRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}
 
 }

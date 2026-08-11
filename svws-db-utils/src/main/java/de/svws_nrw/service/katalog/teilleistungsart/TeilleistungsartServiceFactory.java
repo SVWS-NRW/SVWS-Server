@@ -1,26 +1,26 @@
 package de.svws_nrw.service.katalog.teilleistungsart;
 
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 /**
  * Factory für {@link TeilleistungsartService}
  */
 public final class TeilleistungsartServiceFactory {
 
-	private final KatalogeRepositoryFactory repositoryFactory;
+	private final KatalogRepositoryFactory repositoryFactory;
 
-	private TeilleistungsartServiceFactory(final KatalogeRepositoryFactory repositoryFactory) {
+	private TeilleistungsartServiceFactory(final KatalogRepositoryFactory repositoryFactory) {
 		this.repositoryFactory = repositoryFactory;
 	}
 
 	/**
 	 * Erzeugt eine neue Instanz der Service-Factory
 	 *
-	 * @param katalogeRepositoryFactory   die Factory für Kataloge
+	 * @param katalogRepositoryFactory   die Factory für Kataloge
 	 * @return {@link TeilleistungsartServiceFactory} - neu erzeugte Factory
 	 */
-	public static TeilleistungsartServiceFactory getNewInstance(final KatalogeRepositoryFactory katalogeRepositoryFactory) {
-		return new TeilleistungsartServiceFactory(katalogeRepositoryFactory);
+	public static TeilleistungsartServiceFactory getNewInstance(final KatalogRepositoryFactory katalogRepositoryFactory) {
+		return new TeilleistungsartServiceFactory(katalogRepositoryFactory);
 	}
 
 	/**

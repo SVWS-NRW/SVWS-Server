@@ -5,7 +5,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 
 /**
  * Eine Factory zum Erstellen der Lehrer-spezifischen Services
@@ -16,19 +16,19 @@ public final class LehrerServiceFactory {
 	private final LehrerRepositoryFactory lehrerRepositoryFactory;
 
 	/** die Factory für die Schule-Repositories */
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 
 
 	/**
 	 * Erstellt eine neue Service-Factory
 	 *
 	 * @param lehrerRepositoryFactory   die Factory für Lehrer-Repositories
-	 * @param schuleRepositoryFactory   die Factory für Schule-Repositories
+	 * @param eigeneSchuleRepositoryFactory   die Factory für Schule-Repositories
 	 */
 	private LehrerServiceFactory(final LehrerRepositoryFactory lehrerRepositoryFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory) {
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
-		this.schuleRepositoryFactory = schuleRepositoryFactory;
+		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 	}
 
 
@@ -36,13 +36,13 @@ public final class LehrerServiceFactory {
 	 * Erzeugt eine neue Instanz der Service-Factory
 	 *
 	 * @param lehrerRepositoryFactory   die Factory für Lehrer-Repositories
-	 * @param schuleRepositoryFactory   die Factory für Schule-Repositories
+	 * @param eigeneSchuleRepositoryFactory   die Factory für Schule-Repositories
 	 *
 	 * @return die neue Factory-Instanz
 	 */
 	public static LehrerServiceFactory getNewInstance(final LehrerRepositoryFactory lehrerRepositoryFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory) {
-		return new LehrerServiceFactory(lehrerRepositoryFactory, schuleRepositoryFactory);
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
+		return new LehrerServiceFactory(lehrerRepositoryFactory, eigeneSchuleRepositoryFactory);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public final class LehrerServiceFactory {
 	public static LehrerServiceFactory getNewInstance() {
 		return new LehrerServiceFactory(
 				LehrerRepositoryFactory.getNewInstance(),
-				SchuleRepositoryFactory.getNewInstance());
+				EigeneSchuleRepositoryFactory.getNewInstance());
 	}
 
 
@@ -92,7 +92,7 @@ public final class LehrerServiceFactory {
 	 * @return der Service für die Anrechnungsstunden bei Lehrern
 	 */
 	public LehrerPersonalabschnittsdatenAnrechnungsstundenService getLehrerPersonalabschnittsdatenAnrechnungsstundenService() {
-		return new LehrerPersonalabschnittsdatenAnrechnungsstundenService(schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+		return new LehrerPersonalabschnittsdatenAnrechnungsstundenService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerMehrleistungRepository(),
 				lehrerRepositoryFactory.getLehrerMinderleistungRepository(),
 				lehrerRepositoryFactory.getLehrerAnrechnungRepository());
@@ -114,7 +114,7 @@ public final class LehrerServiceFactory {
 	 */
 	public LehrerAnrechnungsstundenService getLehrerAnrechnungsstundenService() {
 		return new LehrerAnrechnungsstundenService(LehrerAnrechnungsstundenServiceKontext.of(
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepositoryFactory.getLehrerAnrechnungRepository()));
 	}
@@ -126,7 +126,7 @@ public final class LehrerServiceFactory {
 	 */
 	public LehrerMehrleistungService getLehrerMehrleistungService() {
 		return new LehrerMehrleistungService(LehrerMehrleistungServiceKontext.of(
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepositoryFactory.getLehrerMehrleistungRepository()),
 				LehrerMehrleistungMapper.INSTANCE);
@@ -140,7 +140,7 @@ public final class LehrerServiceFactory {
 	public LehrerMinderleistungService getLehrerMinderleistungService() {
 		return new LehrerMinderleistungService(
 				lehrerRepositoryFactory.getLehrerMinderleistungRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				LehrerMinderleistungMapper.INSTANCE,
 				CoreTypeDataManager.getManager(LehrerMinderleistungsarten.class)

@@ -22,7 +22,7 @@ import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepository;
+import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerMinderleistungService;
@@ -36,7 +36,7 @@ public final class LehrerPersonalabschnittsdatenService {
 
 	private final LehrerPersonalabschnittsdatenRepository repo;
 	private final LehrerRepository lehrerRepo;
-	private final SchulenRepository schulenRepo;
+	private final SchuleRepository schulenRepo;
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepo;
 
 	private final LehrerAnrechnungsstundenService anrechnungsService;

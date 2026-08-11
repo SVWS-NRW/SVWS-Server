@@ -1,6 +1,6 @@
 package de.svws_nrw.service.schule;
 
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 
 /**
  * Eine Factory zum Erstellen der Statistik-spezifischen Services
@@ -8,29 +8,29 @@ import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 public final class SchuleServiceFactory {
 
 	/** die Factory für die Schule-Repositories */
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 
 
 
 	/**
 	 * Erstellt eine neue Service-Factory
 	 *
-	 * @param schuleRepositoryFactory   die Factory für Schule-Repositories
+	 * @param eigeneSchuleRepositoryFactory   die Factory für Schule-Repositories
 	 */
-	private SchuleServiceFactory(final SchuleRepositoryFactory schuleRepositoryFactory) {
-		this.schuleRepositoryFactory = schuleRepositoryFactory;
+	private SchuleServiceFactory(final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
+		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 	}
 
 
 	/**
 	 * Erzeugt eine neue Instanz der Service-Factory
 	 *
-	 * @param schuleRepositoryFactory   die Factory für Schule-Repositories
+	 * @param eigeneSchuleRepositoryFactory   die Factory für Schule-Repositories
 	 *
 	 * @return die neue Factory-Instanz
 	 */
-	public static SchuleServiceFactory getNewInstance(final SchuleRepositoryFactory schuleRepositoryFactory) {
-		return new SchuleServiceFactory(schuleRepositoryFactory);
+	public static SchuleServiceFactory getNewInstance(final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory) {
+		return new SchuleServiceFactory(eigeneSchuleRepositoryFactory);
 	}
 
 
@@ -41,8 +41,8 @@ public final class SchuleServiceFactory {
 	 */
 	public SchuleService getSchuleService() {
 		return new SchuleService(
-				schuleRepositoryFactory.getSchuleRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository()
+				eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository()
 		);
 	}
 
@@ -52,7 +52,7 @@ public final class SchuleServiceFactory {
 	 * @return der Service für die Schuljahresabschnitte
 	 */
 	public SchuljahresabschnittService getSchuljahresabschnittService() {
-		return new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository());
+		return new SchuljahresabschnittService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository());
 	}
 
 

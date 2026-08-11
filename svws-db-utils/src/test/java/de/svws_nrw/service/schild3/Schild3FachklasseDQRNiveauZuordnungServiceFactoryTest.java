@@ -1,7 +1,7 @@
 package de.svws_nrw.service.schild3;
 
 import de.svws_nrw.mapper.Schild3FachklasseDQRNiveauZuordnungMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceFactoryTest {
 	private Schild3FachklasseDQRNiveauZuordnungMapper mapperMock;
 
 	@Mock
-	private SchuleRepositoryFactory schuleRepositoryFactoryMock;
+	private EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactoryMock;
 
 	@Mock
 	private SchuleServiceFactory schuleServiceFactoryMock;
@@ -32,7 +32,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceFactoryTest {
 	@Test
 	@DisplayName("Test: Prüfe, ob die Factory korrekt initialisiert wird")
 	void getNewInstance() {
-		final var factory = Schild3FachklasseDQRNiveauZuordnungServiceFactory.getNewInstance(mapperMock, schuleRepositoryFactoryMock, schuleServiceFactoryMock);
+		final var factory = Schild3FachklasseDQRNiveauZuordnungServiceFactory.getNewInstance(mapperMock, eigeneSchuleRepositoryFactoryMock, schuleServiceFactoryMock);
 		assertNotNull(factory);
 	}
 
@@ -42,7 +42,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceFactoryTest {
 		final var service = cut.getSchild3FachklasseDQRNiveauZuordnungService();
 		assertNotNull(service);
 
-		verify(schuleRepositoryFactoryMock, times(1)).getSchuleRepository();
+		verify(eigeneSchuleRepositoryFactoryMock, times(1)).getSchuleRepository();
 		verify(schuleServiceFactoryMock, times(1)).getSchuljahresabschnittService();
 	}
 

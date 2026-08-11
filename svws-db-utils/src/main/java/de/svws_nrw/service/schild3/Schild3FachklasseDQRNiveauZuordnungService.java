@@ -10,14 +10,14 @@ import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung;
 import de.svws_nrw.mapper.Schild3FachklasseDQRNiveauZuordnungMapper;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 
 public final class Schild3FachklasseDQRNiveauZuordnungService {
 
 	private final Schild3FachklasseDQRNiveauZuordnungMapper mapper;
 
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	private final SchuljahresabschnittService schuljahresabschnittService;
 
@@ -25,13 +25,13 @@ public final class Schild3FachklasseDQRNiveauZuordnungService {
 	 * Initialisierung eines neuen Services
 	 *
 	 * @param mapper {@link Schild3FachklasseDQRNiveauZuordnungMapper}
-	 * @param schuleRepository {@link SchuleRepository}
+	 * @param eigeneSchuleRepository {@link EigeneSchuleRepository}
 	 * @param schuljahresabschnittService {@link SchuljahresabschnittService}
 	 */
-	public Schild3FachklasseDQRNiveauZuordnungService(final Schild3FachklasseDQRNiveauZuordnungMapper mapper, final SchuleRepository schuleRepository,
+	public Schild3FachklasseDQRNiveauZuordnungService(final Schild3FachklasseDQRNiveauZuordnungMapper mapper, final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnittService schuljahresabschnittService) {
 		this.mapper = mapper;
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnittService = schuljahresabschnittService;
 	}
 
@@ -41,7 +41,7 @@ public final class Schild3FachklasseDQRNiveauZuordnungService {
 	 * @return Liste von DTO's
 	 */
 	public List<Schild3FachklasseDQRNiveauZuordnung> getAll() {
-		final var aktuellerSchuljahresabschnitt = schuljahresabschnittService.getById(schuleRepository.getIdSchuljahresabschnitt());
+		final var aktuellerSchuljahresabschnitt = schuljahresabschnittService.getById(eigeneSchuleRepository.getIdSchuljahresabschnitt());
 		final var fachklassenWerte = Fachklasse.data().getWerte();
 		return fachklassenWerte.stream()
 				.map(e -> e.daten(aktuellerSchuljahresabschnitt.schuljahr))

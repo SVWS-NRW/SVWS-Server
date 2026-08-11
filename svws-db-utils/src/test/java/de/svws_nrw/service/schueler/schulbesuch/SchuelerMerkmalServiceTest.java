@@ -11,13 +11,14 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
+import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,7 +26,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
@@ -165,7 +165,7 @@ class SchuelerMerkmalServiceTest {
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.create(dto);
@@ -193,7 +193,7 @@ class SchuelerMerkmalServiceTest {
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThat(service.create(dto)).isEqualTo(apiModel);
@@ -209,7 +209,7 @@ class SchuelerMerkmalServiceTest {
 		when(merkmalRepository.getById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "999"));
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
@@ -228,7 +228,7 @@ class SchuelerMerkmalServiceTest {
 		dto.datumVon = "2023-06-01";
 		dto.datumBis = "2022-01-01";
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
@@ -257,7 +257,7 @@ class SchuelerMerkmalServiceTest {
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThat(service.create(dto)).isEqualTo(apiModel);
@@ -285,7 +285,7 @@ class SchuelerMerkmalServiceTest {
 		when(merkmalRepository.getById(merkmal.id)).thenReturn(merkmal);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.patch(id, dto);
@@ -314,7 +314,7 @@ class SchuelerMerkmalServiceTest {
 		when(merkmalRepository.getByKuerzel(merkmal.kuerzel)).thenReturn(Optional.ofNullable(merkmal));
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThat(service.patch(id, dto)).isEqualTo(apiModel);
@@ -334,7 +334,7 @@ class SchuelerMerkmalServiceTest {
 		when(merkmalRepository.getById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "999"));
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
@@ -356,7 +356,7 @@ class SchuelerMerkmalServiceTest {
 
 		when(repository.getById(id)).thenReturn(entity);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
@@ -379,7 +379,7 @@ class SchuelerMerkmalServiceTest {
 
 		when(repository.getById(id)).thenReturn(entity);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
@@ -405,7 +405,7 @@ class SchuelerMerkmalServiceTest {
 		when(repository.findListByIds(ids)).thenReturn(entities);
 		when(repository.delete(entities)).thenReturn(entities);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
@@ -428,7 +428,7 @@ class SchuelerMerkmalServiceTest {
 
 		when(repository.findListByIds(ids)).thenReturn(List.of());
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
@@ -449,7 +449,7 @@ class SchuelerMerkmalServiceTest {
 		when(repository.findListByIds(ids)).thenReturn(entities);
 		when(repository.delete(entities)).thenReturn(entities);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);

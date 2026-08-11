@@ -13,7 +13,7 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.kataloge.TeilleistungsartRepository;
+import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import jakarta.ws.rs.core.Response;
 
 public final class TeilleistungsartService {

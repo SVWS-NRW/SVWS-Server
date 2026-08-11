@@ -4,9 +4,9 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.bk.BKGymAbiturdatenService;
 import de.svws_nrw.service.bk.BKGymLeistungsdatenService;
 import de.svws_nrw.service.bk.BKGymServiceFactory;
@@ -29,8 +29,8 @@ public final class BKGymControllerFactory {
 	private BKGymControllerFactory() {
 		this.serviceFactory = BKGymServiceFactory.getNewInstance(
 				SchuelerRepositoryFactory.getNewInstance(),
-				SchuleRepositoryFactory.getNewInstance(),
-				KatalogeRepositoryFactory.getNewInstance());
+				EigeneSchuleRepositoryFactory.getNewInstance(),
+				KatalogRepositoryFactory.getNewInstance());
 	}
 
 

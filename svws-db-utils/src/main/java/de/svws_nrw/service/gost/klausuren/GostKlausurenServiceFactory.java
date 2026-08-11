@@ -2,7 +2,7 @@ package de.svws_nrw.service.gost.klausuren;
 
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.gost.GostServiceFactory;
 
 /**
@@ -13,14 +13,14 @@ public final class GostKlausurenServiceFactory {
 	private final GostKlausurenRepositoryFactory klausurenRepositoryFactory;
 	private final GostServiceFactory gostServiceFactory;
 	private final KurseRepositoryFactory kurseRepositoryFactory;
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 
 	private GostKlausurenServiceFactory(final GostKlausurenRepositoryFactory klausurenRepositoryFactory,
 			final GostServiceFactory gostServiceFactory) {
 		this.klausurenRepositoryFactory = klausurenRepositoryFactory;
 		this.gostServiceFactory = gostServiceFactory;
 		this.kurseRepositoryFactory = KurseRepositoryFactory.getNewInstance();
-		this.schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		this.eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class GostKlausurenServiceFactory {
 	 */
 	public GostKlausurenKlausurdatenIssuesService getGostKlausurenKlausurdatenIssuesService() {
 		return new GostKlausurenKlausurdatenIssuesService(getGostKlausurenKlausurdatenService(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				kurseRepositoryFactory.getKurseRepository(),
 				gostServiceFactory.getGostKursBelegungService());
 	}
@@ -166,7 +166,7 @@ public final class GostKlausurenServiceFactory {
 				klausurenRepositoryFactory.getGostKlausurenKursklausurRepository(),
 				klausurenRepositoryFactory.getGostKlausurenSchuelerklausurRepository(),
 				klausurenRepositoryFactory.getGostKlausurenSchuelerklausurterminRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				kurseRepositoryFactory.getKurseRepository(),
 				gostServiceFactory.getGostKursBelegungService());
 	}
@@ -266,7 +266,7 @@ public final class GostKlausurenServiceFactory {
 				klausurenRepositoryFactory.getGostKlausurenTerminRepository(),
 				klausurenRepositoryFactory.getGostKlausurenKursklausurRepository(),
 				getGostKlausurenSchuelerklausurService(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				kurseRepositoryFactory.getKurseRepository());
 	}
 
@@ -282,7 +282,7 @@ public final class GostKlausurenServiceFactory {
 				getGostKlausurenSchuelerklausurService(),
 				getGostKlausurenSchuelerklausurterminService(),
 				klausurenRepositoryFactory.getGostKlausurenSchuelerklausurterminRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository());
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository());
 	}
 
 }

@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.kataloge.Teilleistungsart;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.kataloge.TeilleistungsartRepository;
+import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -78,7 +78,7 @@ class TeilleistungsartServiceTest {
 	@Test
 	@DisplayName("create | Failed - Bezeichnung exists")
 	void testCreateFailedBezeichnungExists() {
-		final var restInput = createRestRequest("bezeichnung");
+		final var restInput = createRestRequest();
 		when(teilleistungsartRepository.existsBy(anyString())).thenReturn(true);
 
 		final var throwable = catchThrowable(() -> teilleistungsartService.create(restInput));
@@ -120,7 +120,7 @@ class TeilleistungsartServiceTest {
 	@Test
 	@DisplayName("patch | Failed Bean Validation")
 	void testPatchFailedUnchanged() {
-		final Teilleistungsart restInput = createResponse("bezeichnung");
+		final Teilleistungsart restInput = createResponse();
 		final DTOTeilleistungsarten entity = createEntity(restInput.id, restInput.bezeichnung, restInput.istSichtbar, restInput.sortierung);
 		when(teilleistungsartRepository.getById(1L)).thenReturn(entity);
 		final var patch = createPatch();
@@ -186,10 +186,6 @@ class TeilleistungsartServiceTest {
 				);
 	}
 
-	private TeilleistungsartCreateRequest createRestRequest() {
-		return createRestRequest("bezeichnung");
-	}
-
 	private DTOTeilleistungsarten createEntity(final long id, final String bezeichnung, final boolean sichtbar, final int sortierung) {
 		final var entity = new DTOTeilleistungsarten(id);
 		entity.Bezeichnung = bezeichnung;
@@ -199,18 +195,18 @@ class TeilleistungsartServiceTest {
 		return entity;
 	}
 
-	private TeilleistungsartCreateRequest createRestRequest(final String bezeichnung) {
+	private TeilleistungsartCreateRequest createRestRequest() {
 		final var restInput = new TeilleistungsartCreateRequest();
-		restInput.bezeichnung = bezeichnung;
+		restInput.bezeichnung = "bezeichnung";
 		restInput.istSichtbar = true;
 		restInput.sortierung = 42;
 
 		return restInput;
 	}
 
-	private Teilleistungsart createResponse(final String bezeichnung) {
+	private Teilleistungsart createResponse() {
 		final var restInput = new Teilleistungsart();
-		restInput.bezeichnung = bezeichnung;
+		restInput.bezeichnung = "bezeichnung";
 		restInput.istSichtbar = true;
 		restInput.sortierung = 42;
 

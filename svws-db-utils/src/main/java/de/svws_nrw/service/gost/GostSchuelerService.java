@@ -14,7 +14,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 public class GostSchuelerService {
 
 	private final BenutzerAllgemeinRepository benutzerRepository;
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 
@@ -33,16 +33,16 @@ public class GostSchuelerService {
 	 * Erstellt einen neuen Service.
 	 *
 	 * @param benutzerRepository                     das Repository für den Zugriff auf Benutzerdaten und den angemeldeten Benutzer
-	 * @param jahrgaengeRepository                   das Repository für den Zugriff auf Jahrgänge
+	 * @param jahrgangRepository                   das Repository für den Zugriff auf Jahrgänge
 	 * @param schuelerRepository                     das Repository für den Zugriff auf Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 */
 	public GostSchuelerService(final BenutzerAllgemeinRepository benutzerRepository,
-			final JahrgaengeRepository jahrgaengeRepository,
+			final JahrgangRepository jahrgangRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository) {
 		this.benutzerRepository = benutzerRepository;
-		this.jahrgaengeRepository = jahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 	}
@@ -82,7 +82,7 @@ public class GostSchuelerService {
 		final Benutzer benutzer = benutzerRepository.getAktuellerBenutzer();
 		final Schuljahresabschnitt schuleSchuljahresabschnitt = benutzer.schuleGetSchuljahresabschnitt();
 		final Schulform schulform = benutzer.schuleGetSchulform();
-		final Map<Long, DTOJahrgang> mapJahrgaenge = jahrgaengeRepository.getMap();
+		final Map<Long, DTOJahrgang> mapJahrgaenge = jahrgangRepository.getMap();
 
 		// Bestimme Schüler, welche in den Abiturjahrgängen sein können - auch in zukünftigen.
 		final List<DTOSchueler> listSchueler = this.getPotentielleGostSchueler(mapJahrgaenge);

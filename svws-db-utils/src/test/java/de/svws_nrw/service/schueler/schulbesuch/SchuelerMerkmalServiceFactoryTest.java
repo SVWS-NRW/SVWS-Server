@@ -4,8 +4,8 @@ import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ class SchuelerMerkmalServiceFactoryTest {
 	private SchuelerMerkmaleRepositoryFactory repoFactory;
 
 	@Mock
-	private MerkmalRepositoryFactory merkmalRepoFactory;
+	private KatalogRepositoryFactory katalogRepositoryFactory;
 
 	@Mock
 	private SchuelerMerkmalMapper mapper;
@@ -33,7 +33,7 @@ class SchuelerMerkmalServiceFactoryTest {
 	@Test
 	@DisplayName("getNewInstance | Erfolg")
 	void getNewInstance_success() {
-		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, merkmalRepoFactory, mapper);
+		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, mapper);
 
 		assertThat(factory)
 				.isNotNull()
@@ -45,10 +45,10 @@ class SchuelerMerkmalServiceFactoryTest {
 	void getSchuelerMerkmalService_success() {
 		final var schuelerMerkmaleRepository = mock(SchuelerMerkmalRepository.class);
 		final var merkmalRepository = mock(MerkmalRepository.class);
-		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, merkmalRepoFactory, mapper);
+		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, mapper);
 
 		when(repoFactory.getSchuelerMerkmaleRepository()).thenReturn(schuelerMerkmaleRepository);
-		when(merkmalRepoFactory.getMerkmalRepository()).thenReturn(merkmalRepository);
+		when(katalogRepositoryFactory.getMerkmalRepository()).thenReturn(merkmalRepository);
 
 		final var service = factory.getSchuelerMerkmalService();
 
@@ -57,7 +57,7 @@ class SchuelerMerkmalServiceFactoryTest {
 				.isInstanceOf(SchuelerMerkmalService.class);
 
 		verify(repoFactory, times(1)).getSchuelerMerkmaleRepository();
-		verify(merkmalRepoFactory, times(1)).getMerkmalRepository();
+		verify(katalogRepositoryFactory, times(1)).getMerkmalRepository();
 	}
 
 	@Test
@@ -65,10 +65,10 @@ class SchuelerMerkmalServiceFactoryTest {
 	void getSchuelerMerkmalService_multipleCallsCreateNewInstances() {
 		final var schuelerMerkmaleRepository = mock(SchuelerMerkmalRepository.class);
 		final var merkmalRepository = mock(MerkmalRepository.class);
-		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, merkmalRepoFactory, mapper);
+		final var factory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, mapper);
 
 		when(repoFactory.getSchuelerMerkmaleRepository()).thenReturn(schuelerMerkmaleRepository);
-		when(merkmalRepoFactory.getMerkmalRepository()).thenReturn(merkmalRepository);
+		when(katalogRepositoryFactory.getMerkmalRepository()).thenReturn(merkmalRepository);
 
 		final var service1 = factory.getSchuelerMerkmalService();
 		final var service2 = factory.getSchuelerMerkmalService();
@@ -80,6 +80,6 @@ class SchuelerMerkmalServiceFactoryTest {
 		assertThat(service2).isNotNull();
 
 		verify(repoFactory, times(2)).getSchuelerMerkmaleRepository();
-		verify(merkmalRepoFactory, times(2)).getMerkmalRepository();
+		verify(katalogRepositoryFactory, times(2)).getMerkmalRepository();
 	}
 }

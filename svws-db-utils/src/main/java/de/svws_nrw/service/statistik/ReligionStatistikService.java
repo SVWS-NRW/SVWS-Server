@@ -5,8 +5,8 @@ import java.util.List;
 import de.svws_nrw.asd.data.statistik.ReligionStatistikGesamt;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
-import de.svws_nrw.repo.kataloge.ReligionRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ReligionStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schul-Statistikdaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Der Service für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnittService schuljahresabschnitteService;
@@ -27,13 +27,13 @@ public final class ReligionStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
+	 * @param eigeneSchuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
 	 * @param schuljahresabschnitteService   der Service für den Zugriff auf die Schuljahresabschnitte
 	 * @param religionRepository   das Repository für die Religionseinträge
 	 */
-	public ReligionStatistikService(final SchuleRepository schuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
+	public ReligionStatistikService(final EigeneSchuleRepository eigeneSchuleRepository, final SchuljahresabschnittService schuljahresabschnitteService,
 			final ReligionRepository religionRepository) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteService = schuljahresabschnitteService;
 		this.religionRepository = religionRepository;
 	}
@@ -54,7 +54,7 @@ public final class ReligionStatistikService {
 	 * @return die Liste zu allen statistik-Relevanten Daten der Religionen
 	 */
 	public @NotNull List<ReligionStatistikGesamt> getList() {
-		final var idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final var idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteService.getById(idSchuljahresabschnitt);
 		return religionRepository.getAll().stream().map(f -> map(f, schuljahresabschnitt.schuljahr)).toList();
 	}

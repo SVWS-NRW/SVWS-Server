@@ -3,7 +3,7 @@ package de.svws_nrw.controller.katalog.teilleistungsart;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -32,7 +32,7 @@ public final class TeilleistungsartControllerFactory {
 			final BenutzerKompetenz kompetenz) {
 
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
-		final var katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
+		final var katalogeRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
 		final var serviceFactory = TeilleistungsartServiceFactory.getNewInstance(katalogeRepositoryFactory);
 
 		return new TeilleistungsartControllerFactory(serviceFactory);

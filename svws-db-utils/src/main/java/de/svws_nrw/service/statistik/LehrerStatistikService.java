@@ -16,7 +16,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.service.lehrer.LehrerLehramtService;
 import de.svws_nrw.service.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstundenService;
@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
 public final class LehrerStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schuldaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
@@ -49,20 +49,20 @@ public final class LehrerStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository                                         das Repository für die Schuldaten
+	 * @param eigeneSchuleRepository                                         das Repository für die Schuldaten
 	 * @param schuljahresabschnitteRepository                          das Repository für die Schuljahresabschnitte
 	 * @param lehrerRepository                                         das Repository für die Lehrerdaten
 	 * @param lehrerAbschnittsdatenRepository                          das Repository für den die Lehrerabschnittsdaten
 	 * @param lehrerLehramtService                                     der Service für die Lehrämter
 	 * @param lehrerPersonalabschnittsdatenAnrechnungsstundenService   der Service für die Lehrer-Anrechnungsstunden
 	 */
-	public LehrerStatistikService(final SchuleRepository schuleRepository,
+	public LehrerStatistikService(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
 			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerLehramtService lehrerLehramtService,
 			final LehrerPersonalabschnittsdatenAnrechnungsstundenService lehrerPersonalabschnittsdatenAnrechnungsstundenService) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.lehrerAbschnittsdatenRepository = lehrerAbschnittsdatenRepository;
@@ -109,7 +109,7 @@ public final class LehrerStatistikService {
 	 */
 	public @NotNull List<LehrerStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 		final var schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs

@@ -1,6 +1,6 @@
 package de.svws_nrw.service.katalog.teilleistungsart;
 
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 class TeilleistungsartServiceFactoryTest {
 
 	@Mock
-	private KatalogeRepositoryFactory teilleistungsartRepository;
+	private KatalogRepositoryFactory teilleistungsartRepository;
 	@InjectMocks
 	private TeilleistungsartServiceFactory teilLeistungsartServiceFactory;
 

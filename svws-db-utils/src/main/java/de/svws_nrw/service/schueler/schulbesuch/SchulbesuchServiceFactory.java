@@ -9,7 +9,7 @@ import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 public final class SchulbesuchServiceFactory {
 
@@ -57,11 +57,11 @@ public final class SchulbesuchServiceFactory {
 	public static SchulbesuchServiceFactory getNewInstance() {
 		final var schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
 		final var schuelerMerkmaleRepositoryFactory = SchuelerMerkmaleRepositoryFactory.getNewInstance();
-		final var merkmalRepositoryFactory = MerkmalRepositoryFactory.getNewInstance();
+		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
 		final var bisherigeSchuleRepositoryFactory = BisherigeSchuleRepositoryFactory.getNewInstance();
 		final var schuelerMerkmalServiceFactory = SchuelerMerkmalServiceFactory.getNewInstance(
 				schuelerMerkmaleRepositoryFactory,
-				merkmalRepositoryFactory,
+				katalogRepositoryFactory,
 				SchuelerMerkmalMapper.INSTANCE
 		);
 		final var bisherigeSchuleServiceFactory = BisherigeSchuleServiceFactory.getNewInstance(

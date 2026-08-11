@@ -37,16 +37,16 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleist
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
-import de.svws_nrw.repo.faecher.FachRepository;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
-import de.svws_nrw.repo.kataloge.AnkreuzkompetenzenJahrgaengeRepository;
-import de.svws_nrw.repo.kataloge.AnkreuzkompetenzenKonfigurationRepository;
-import de.svws_nrw.repo.kataloge.AnkreuzkompetenzenRepository;
-import de.svws_nrw.repo.kataloge.FloskelJahrgaengeRepository;
-import de.svws_nrw.repo.kataloge.FloskelRepository;
-import de.svws_nrw.repo.kataloge.FloskelgruppenRepository;
-import de.svws_nrw.repo.kataloge.FoerderschwerpunkteRepository;
-import de.svws_nrw.repo.kataloge.TeilleistungsartRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzJahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzKonfigurationRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schule.kataloge.floskel.FloskelJahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.floskel.FloskelRepository;
+import de.svws_nrw.repo.schule.kataloge.floskelgruppe.FloskelgruppeRepository;
+import de.svws_nrw.repo.schule.kataloge.foerderschwerpunkt.FoerderschwerpunktRepository;
+import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
 import de.svws_nrw.repo.kurse.KurseRepository;
@@ -61,7 +61,7 @@ import de.svws_nrw.repo.schueler.SchuelerLernabschnittTimestampsRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerTeilleistungenRepository;
 import de.svws_nrw.repo.schueler.SchuelerTeilleistungenTimestampsRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -74,7 +74,7 @@ public final class EnmV1GetServiceKontext {
 	public EnmV1DatenManager manager;
 
 	/** Das Repository für den Zugriff auf die Schuldaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
@@ -125,28 +125,28 @@ public final class EnmV1GetServiceKontext {
 	private final KlassenleitungenRepository klassenleitungenRepository;
 
 	/** Das Repository für den Zugriff auf die Jahrgänge */
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 
 	/** Das Repository für den Zugriff auf die Förderschwerpunkte */
-	private final FoerderschwerpunkteRepository foerderschwerpunkteRepository;
+	private final FoerderschwerpunktRepository foerderschwerpunktRepository;
 
 	/** Das Repository für den Zugriff auf die Konfiguration für die Ankreuzkompetenzen */
-	private final AnkreuzkompetenzenKonfigurationRepository ankreuzkompetenzenKonfigurationRepository;
+	private final AnkreuzkompetenzKonfigurationRepository ankreuzkompetenzKonfigurationRepository;
 
 	/** Das Repository für den Zugriff auf den Katalog der Ankreuzkompetenzen */
-	private final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository;
+	private final AnkreuzkompetenzRepository ankreuzkompetenzRepository;
 
 	/** Das Repository für den Zugriff auf die Jahrgangszuordnung für den Katalog der Ankreuzkompetenzen */
-	private final AnkreuzkompetenzenJahrgaengeRepository ankreuzkompetenzenJahrgaengeRepository;
+	private final AnkreuzkompetenzJahrgangRepository ankreuzkompetenzJahrgangRepository;
 
 	/** Das Repository für den Zugriff auf den Katalog der Floskeln */
 	private final FloskelRepository floskelRepository;
 
 	/** Das Repository für den Zugriff auf den Katalog der Floskelgruppen */
-	private final FloskelgruppenRepository floskelgruppenRepository;
+	private final FloskelgruppeRepository floskelgruppeRepository;
 
 	/** Das Repository für den Zugriff auf die Jahrgangszuordnungen der Floskeln */
-	private final FloskelJahrgaengeRepository floskelJahrgaengeRepository;
+	private final FloskelJahrgangRepository floskelJahrgangRepository;
 
 	/** Das Repository für den Zugriff auf den Katalog der Teilleistungsarten */
 	private final TeilleistungsartRepository TeilleistungsartRepository;
@@ -246,7 +246,7 @@ public final class EnmV1GetServiceKontext {
 	private List<DTOFloskeln> listFloskeln;
 
 
-	private EnmV1GetServiceKontext(final SchuleRepository schuleRepository,
+	private EnmV1GetServiceKontext(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
 			final FachRepository fachRepository,
@@ -263,18 +263,18 @@ public final class EnmV1GetServiceKontext {
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
-			final JahrgaengeRepository jahrgaengeRepository,
-			final FoerderschwerpunkteRepository foerderschwerpunkteRepository,
-			final AnkreuzkompetenzenKonfigurationRepository ankreuzkompetenzenKonfigurationRepository,
-			final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository,
-			final AnkreuzkompetenzenJahrgaengeRepository ankreuzkompetenzenJahrgaengeRepository,
+			final JahrgangRepository jahrgangRepository,
+			final FoerderschwerpunktRepository foerderschwerpunktRepository,
+			final AnkreuzkompetenzKonfigurationRepository ankreuzkompetenzKonfigurationRepository,
+			final AnkreuzkompetenzRepository ankreuzkompetenzRepository,
+			final AnkreuzkompetenzJahrgangRepository ankreuzkompetenzJahrgangRepository,
 			final FloskelRepository floskelRepository,
-			final FloskelgruppenRepository floskelgruppenRepository,
-			final FloskelJahrgaengeRepository floskelJahrgaengeRepository,
+			final FloskelgruppeRepository floskelgruppeRepository,
+			final FloskelJahrgangRepository floskelJahrgangRepository,
 			final TeilleistungsartRepository TeilleistungsartRepository,
 			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.fachRepository = fachRepository;
@@ -291,14 +291,14 @@ public final class EnmV1GetServiceKontext {
 		this.kurseRepository = kurseRepository;
 		this.klassenRepository = klassenRepository;
 		this.klassenleitungenRepository = klassenleitungenRepository;
-		this.jahrgaengeRepository = jahrgaengeRepository;
-		this.foerderschwerpunkteRepository = foerderschwerpunkteRepository;
-		this.ankreuzkompetenzenKonfigurationRepository = ankreuzkompetenzenKonfigurationRepository;
-		this.ankreuzkompetenzenRepository = ankreuzkompetenzenRepository;
-		this.ankreuzkompetenzenJahrgaengeRepository = ankreuzkompetenzenJahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
+		this.foerderschwerpunktRepository = foerderschwerpunktRepository;
+		this.ankreuzkompetenzKonfigurationRepository = ankreuzkompetenzKonfigurationRepository;
+		this.ankreuzkompetenzRepository = ankreuzkompetenzRepository;
+		this.ankreuzkompetenzJahrgangRepository = ankreuzkompetenzJahrgangRepository;
 		this.floskelRepository = floskelRepository;
-		this.floskelgruppenRepository = floskelgruppenRepository;
-		this.floskelJahrgaengeRepository = floskelJahrgaengeRepository;
+		this.floskelgruppeRepository = floskelgruppeRepository;
+		this.floskelJahrgangRepository = floskelJahrgangRepository;
 		this.TeilleistungsartRepository = TeilleistungsartRepository;
 		this.notenmodulCredentialsRepository = notenmodulCredentialsRepository;
 		this.notenmodulCredentialsTimestampsRepository = notenmodulCredentialsTimestampsRepository;
@@ -307,7 +307,7 @@ public final class EnmV1GetServiceKontext {
 	/**
 	 * Erstellt einen neuen Service-Kontext.
 	 *
-	 * @param schuleRepository                                 das Repository für den Zugriff auf die Schuldaten
+	 * @param eigeneSchuleRepository                                 das Repository für den Zugriff auf die Schuldaten
 	 * @param schuljahresabschnitteRepository                  das Repository für den Zugriff auf die Schuljahresabschnitte
 	 * @param lehrerRepository                                 das Repository für den Zugriff auf die Lehrerdaten
 	 * @param fachRepository                                   das Repository für den Zugriff auf die Fachdaten
@@ -324,14 +324,14 @@ public final class EnmV1GetServiceKontext {
 	 * @param kurseRepository                                  das Repository für den Zugriff auf die Kurse
 	 * @param klassenRepository                                das Repository für den Zugriff auf die Klassen
 	 * @param klassenleitungenRepository                       das Repository für den Zugriff auf die Klassenleitungen
-	 * @param jahrgaengeRepository                             das Repository für den Zugriff auf die Jahrgänge
-	 * @param foerderschwerpunkteRepository                    das Repository für den Zugriff auf die Förderschwerpunkte
-	 * @param ankreuzkompetenzenKonfigurationRepository        das Repository für den Zugriff auf die Konfiguration für die Ankreuzkompetenzen
-	 * @param ankreuzkompetenzenRepository                     das Repository für den Zugriff auf den Katalog der Ankreuzkompetenzen
-	 * @param ankreuzkompetenzenJahrgaengeRepository           das Repository für den Zugriff auf die Jahrgangszuordnung für den Katalog der Ankreuzkompetenzen
+	 * @param jahrgangRepository                             das Repository für den Zugriff auf die Jahrgänge
+	 * @param foerderschwerpunktRepository                    das Repository für den Zugriff auf die Förderschwerpunkte
+	 * @param ankreuzkompetenzKonfigurationRepository        das Repository für den Zugriff auf die Konfiguration für die Ankreuzkompetenzen
+	 * @param ankreuzkompetenzRepository                     das Repository für den Zugriff auf den Katalog der Ankreuzkompetenzen
+	 * @param ankreuzkompetenzJahrgangRepository           das Repository für den Zugriff auf die Jahrgangszuordnung für den Katalog der Ankreuzkompetenzen
 	 * @param floskelRepository                                das Repository für den Zugriff auf den Katalog der Floskeln
-	 * @param floskelgruppenRepository                         das Repository für den Zugriff auf den Katalog der Floskelgruppen
-	 * @param floskelJahrgaengeRepository                      das Repository für den Zugriff auf die Jahrgangszuordnungen der Floskeln
+	 * @param floskelgruppeRepository                         das Repository für den Zugriff auf den Katalog der Floskelgruppen
+	 * @param floskelJahrgangRepository                      das Repository für den Zugriff auf die Jahrgangszuordnungen der Floskeln
 	 * @param TeilleistungsartRepository                     das Repository für den Zugriff auf den Katalog der Teilleistungsarten
 	 * @param notenmodulCredentialsRepository                  das Repository für den Zugriff auf die Credentials der Lehrer für das Notenmodul
 	 * @param notenmodulCredentialsTimestampsRepository        das Repository für den Zugriff auf die Zeitstempel für die Credentials
@@ -339,7 +339,7 @@ public final class EnmV1GetServiceKontext {
 	 *
 	 * @return der Kontext
 	 */
-	public static EnmV1GetServiceKontext of(final SchuleRepository schuleRepository,
+	public static EnmV1GetServiceKontext of(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
 			final FachRepository fachRepository,
@@ -356,25 +356,25 @@ public final class EnmV1GetServiceKontext {
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
-			final JahrgaengeRepository jahrgaengeRepository,
-			final FoerderschwerpunkteRepository foerderschwerpunkteRepository,
-			final AnkreuzkompetenzenKonfigurationRepository ankreuzkompetenzenKonfigurationRepository,
-			final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository,
-			final AnkreuzkompetenzenJahrgaengeRepository ankreuzkompetenzenJahrgaengeRepository,
+			final JahrgangRepository jahrgangRepository,
+			final FoerderschwerpunktRepository foerderschwerpunktRepository,
+			final AnkreuzkompetenzKonfigurationRepository ankreuzkompetenzKonfigurationRepository,
+			final AnkreuzkompetenzRepository ankreuzkompetenzRepository,
+			final AnkreuzkompetenzJahrgangRepository ankreuzkompetenzJahrgangRepository,
 			final FloskelRepository floskelRepository,
-			final FloskelgruppenRepository floskelgruppenRepository,
-			final FloskelJahrgaengeRepository floskelJahrgaengeRepository,
+			final FloskelgruppeRepository floskelgruppeRepository,
+			final FloskelJahrgangRepository floskelJahrgangRepository,
 			final TeilleistungsartRepository TeilleistungsartRepository,
 			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
-		return new EnmV1GetServiceKontext(schuleRepository, schuljahresabschnitteRepository, lehrerRepository, fachRepository, schuelerRepository,
+		return new EnmV1GetServiceKontext(eigeneSchuleRepository, schuljahresabschnitteRepository, lehrerRepository, fachRepository, schuelerRepository,
 				schuelerLernabschnittRepository, schuelerLernabschnittTimestampsRepository, schuelerLernabschnittBemerkungenRepository,
 				schuelerLeistungsdatenRepository, schuelerLeistungsdatenTimestampsRepository,
 				schuelerTeilleistungenRepository, schuelerTeilleistungenTimestampsRepository,
 				schuelerAnkreuzkompetenzenRepository, schuelerAnkreuzkompetenzenTimestampsRepository,
-				kurseRepository, klassenRepository, klassenleitungenRepository, jahrgaengeRepository, foerderschwerpunkteRepository,
-				ankreuzkompetenzenKonfigurationRepository, ankreuzkompetenzenRepository, ankreuzkompetenzenJahrgaengeRepository,
-				floskelRepository, floskelgruppenRepository, floskelJahrgaengeRepository, TeilleistungsartRepository,
+				kurseRepository, klassenRepository, klassenleitungenRepository, jahrgangRepository, foerderschwerpunktRepository,
+				ankreuzkompetenzKonfigurationRepository, ankreuzkompetenzRepository, ankreuzkompetenzJahrgangRepository,
+				floskelRepository, floskelgruppeRepository, floskelJahrgangRepository, TeilleistungsartRepository,
 				notenmodulCredentialsRepository, notenmodulCredentialsTimestampsRepository);
 	}
 
@@ -438,7 +438,7 @@ public final class EnmV1GetServiceKontext {
 		this.manager = new EnmV1DatenManager(idLehrer);
 
 		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
-		final DTOEigeneSchule schuleDto = schuleRepository.getFirst();
+		final DTOEigeneSchule schuleDto = eigeneSchuleRepository.getFirst();
 		final long idSchuljahresabschnitt = schuleDto.Schuljahresabschnitts_ID;
 		this.schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 
@@ -480,15 +480,15 @@ public final class EnmV1GetServiceKontext {
 				schuelerAnkreuzkompetenzenRepository.findListByLernabschnitt(mapLernabschnitte.keySet());
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
-		this.schule = schuleRepository.getFirst();
+		this.schule = eigeneSchuleRepository.getFirst();
 		this.mapLehrerPWHash = notenmodulCredentialsRepository.getMap();
 		this.mapLehrerPWHashTimestamps = notenmodulCredentialsTimestampsRepository.getMap();
-		this.ankreuzkompetenzenKonfiguration = ankreuzkompetenzenKonfigurationRepository.findFirst();
-		this.mapKatalogAnkreuzkompetenzen = ankreuzkompetenzenRepository.getMap();
-		this.kompetenzZuordnungenByJahrgang = ankreuzkompetenzenJahrgaengeRepository.getAll().stream().collect(Collectors.groupingBy(e -> e.idJahrgang));
-		this.mapFoerderschwerpunkte = foerderschwerpunkteRepository.getMap();
+		this.ankreuzkompetenzenKonfiguration = ankreuzkompetenzKonfigurationRepository.findFirst();
+		this.mapKatalogAnkreuzkompetenzen = ankreuzkompetenzRepository.getMap();
+		this.kompetenzZuordnungenByJahrgang = ankreuzkompetenzJahrgangRepository.getAll().stream().collect(Collectors.groupingBy(e -> e.idJahrgang));
+		this.mapFoerderschwerpunkte = foerderschwerpunktRepository.getMap();
 		this.mapFaecher = fachRepository.getMap();
-		this.mapJahrgaenge = jahrgaengeRepository.getMap();
+		this.mapJahrgaenge = jahrgangRepository.getMap();
 		this.mapKurse = kurseRepository.getMapBySchuljahresabschnitt(idSchuljahresabschnitt);
 		this.mapTeilleistungsarten = TeilleistungsartRepository.getMap();
 		this.mapBemerkungen = schuelerLernabschnittBemerkungenRepository.findMapByLernabschnittID(mapLernabschnitte.keySet());
@@ -500,8 +500,8 @@ public final class EnmV1GetServiceKontext {
 		this.mapAnkreuzkompetenzenTimestamps =
 				schuelerAnkreuzkompetenzenTimestampsRepository.findMapByIds(listAnkreuzkompetenzen.stream().map(t -> t.ID).toList());
 
-		this.listFloskelgruppen = floskelgruppenRepository.getAll();
-		this.mapJahrgangIdsByFloskelIds = floskelJahrgaengeRepository.getAll().stream()
+		this.listFloskelgruppen = floskelgruppeRepository.getAll();
+		this.mapJahrgangIdsByFloskelIds = floskelJahrgangRepository.getAll().stream()
 				.collect(Collectors.groupingBy(fj -> fj.Floskel_ID, Collectors.mapping(f -> f.Jahrgang_ID, Collectors.toList())));
 		this.listFloskeln = floskelRepository.getAll();
 	}

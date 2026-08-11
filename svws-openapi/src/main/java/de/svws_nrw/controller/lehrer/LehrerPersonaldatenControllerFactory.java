@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
 import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachService;
@@ -28,7 +28,7 @@ public final class LehrerPersonaldatenControllerFactory {
 	 */
 	private LehrerPersonaldatenControllerFactory() {
 		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
-		final var schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		this.serviceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory);
 	}
 

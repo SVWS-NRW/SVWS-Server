@@ -2,19 +2,19 @@ package de.svws_nrw.service.schule.schulleitung;
 
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 
 /**
  * Factory für {@link SchulleitungService}
  */
 public final class SchulleitungServiceFactory {
 
-	private final SchuleRepositoryFactory schuleRepoFactory;
+	private final EigeneSchuleRepositoryFactory schuleRepoFactory;
 	private final LehrerRepositoryFactory lehrerRepoFactory;
 	private final SchulleitungMapper mapper;
 
 	private SchulleitungServiceFactory(
-			final SchuleRepositoryFactory schuleRepoFactory,
+			final EigeneSchuleRepositoryFactory schuleRepoFactory,
 			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulleitungMapper mapper) {
 		this.schuleRepoFactory = schuleRepoFactory;
@@ -31,7 +31,7 @@ public final class SchulleitungServiceFactory {
 	 * @return eine neue {@code SchulleitungServiceFactory}
 	 */
 	public static SchulleitungServiceFactory getNewInstance(
-			final SchuleRepositoryFactory schuleRepoFactory,
+			final EigeneSchuleRepositoryFactory schuleRepoFactory,
 			final LehrerRepositoryFactory lehrerRepoFactory,
 			final SchulleitungMapper mapper) {
 		return new SchulleitungServiceFactory(schuleRepoFactory, lehrerRepoFactory, mapper);

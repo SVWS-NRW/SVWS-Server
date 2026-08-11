@@ -18,7 +18,7 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.utils.ReportingUhr;
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.signature.Signature;
@@ -242,7 +242,7 @@ public final class SchulbescheinigungQrFactory {
 	private static SignatureService erzeugeSignatureService() {
 		return SignatureServiceFactory.getNewInstance(
 				OAuthHttpClientFactory.getNewInstance(),
-				SchuleServiceFactory.getNewInstance(SchuleRepositoryFactory.getNewInstance()),
+				SchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance()),
 				BenutzerServiceFactory.getNewInstance(BenutzerRepositoryFactory.getNewInstance()))
 				.getSignatureService();
 	}

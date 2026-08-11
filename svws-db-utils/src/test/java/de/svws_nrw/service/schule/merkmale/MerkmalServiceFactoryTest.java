@@ -1,8 +1,8 @@
 package de.svws_nrw.service.schule.merkmale;
 
 import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 class MerkmalServiceFactoryTest {
 
 	@Mock
-	private MerkmalRepositoryFactory repositoryFactory;
+	private KatalogRepositoryFactory repositoryFactory;
 
 	@Mock
 	private MerkmalMapper mapper;

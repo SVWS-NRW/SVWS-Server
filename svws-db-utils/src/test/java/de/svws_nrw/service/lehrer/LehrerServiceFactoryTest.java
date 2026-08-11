@@ -2,7 +2,7 @@ package de.svws_nrw.service.lehrer;
 
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class LehrerServiceFactoryTest {
 	private LehrerRepositoryFactory repoLehrerFactory;
 
 	@Mock
-	private SchuleRepositoryFactory repoSchuleFactory;
+	private EigeneSchuleRepositoryFactory repoSchuleFactory;
 
 	@InjectMocks
 	private LehrerServiceFactory serviceFactory;

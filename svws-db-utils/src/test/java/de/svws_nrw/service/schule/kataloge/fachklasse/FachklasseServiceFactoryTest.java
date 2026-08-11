@@ -1,8 +1,8 @@
 package de.svws_nrw.service.schule.kataloge.fachklasse;
 
 import de.svws_nrw.mapper.schule.kataloge.fachklasse.FachklasseMapper;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
-import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleService;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class FachklasseServiceFactoryTest {
 
 	@Mock
-	private FachklasseRepositoryFactory repoFactory;
+	private KatalogRepositoryFactory repoFactory;
 
 	@Mock
 	private FachklasseMapper mapper;
@@ -46,7 +46,7 @@ class FachklasseServiceFactoryTest {
 		final var schuleService = mock(SchuleService.class);
 		final var factory = FachklasseServiceFactory.getNewInstance(repoFactory, mapper, schuleServiceFactory);
 
-		when(repoFactory.getRepository()).thenReturn(repository);
+		when(repoFactory.getFachklasseRepository()).thenReturn(repository);
 		when(schuleServiceFactory.getSchuleService()).thenReturn(schuleService);
 
 		final var service = factory.getService();
@@ -55,7 +55,7 @@ class FachklasseServiceFactoryTest {
 				.isNotNull()
 				.isInstanceOf(FachklasseService.class);
 
-		verify(repoFactory, times(1)).getRepository();
+		verify(repoFactory, times(1)).getFachklasseRepository();
 		verify(schuleServiceFactory, times(1)).getSchuleService();
 	}
 
@@ -66,7 +66,7 @@ class FachklasseServiceFactoryTest {
 		final var schuleService = mock(SchuleService.class);
 		final var factory = FachklasseServiceFactory.getNewInstance(repoFactory, mapper, schuleServiceFactory);
 
-		when(repoFactory.getRepository()).thenReturn(repository);
+		when(repoFactory.getFachklasseRepository()).thenReturn(repository);
 		when(schuleServiceFactory.getSchuleService()).thenReturn(schuleService);
 
 		final var service1 = factory.getService();
@@ -79,7 +79,7 @@ class FachklasseServiceFactoryTest {
 		assertThat(service2)
 				.isNotNull();
 
-		verify(repoFactory, times(2)).getRepository();
+		verify(repoFactory, times(2)).getFachklasseRepository();
 		verify(schuleServiceFactory, times(2)).getSchuleService();
 	}
 

@@ -7,8 +7,8 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
@@ -44,8 +44,8 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	private LehrerPersonalabschnittsdatenControllerFactory controllerFactory;
 
 	private MockedStatic<LehrerRepositoryFactory> lehrerRepoFactoryMock;
-	private MockedStatic<SchulenRepositoryFactory> schulenRepoFactoryMock;
-	private MockedStatic<SchuleRepositoryFactory> schuleRepoFactoryMock;
+	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
+	private MockedStatic<EigeneSchuleRepositoryFactory> schuleRepoFactoryMock;
 	private MockedStatic<LehrerServiceFactory> lehrerServiceFactoryMock;
 	private MockedStatic<LehrerFunktionServiceFactory> lehrerFunktionServiceFactoryMock;
 	private MockedStatic<LehrerPersonalabschnittsdatenServiceFactory> serviceFactoryStaticMock;
@@ -54,8 +54,8 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@BeforeEach
 	void setUp() {
 		lehrerRepoFactoryMock = mockStatic(LehrerRepositoryFactory.class);
-		schulenRepoFactoryMock = mockStatic(SchulenRepositoryFactory.class);
-		schuleRepoFactoryMock = mockStatic(SchuleRepositoryFactory.class);
+		katalogRepositoryFactoryMockedStatic = mockStatic(KatalogRepositoryFactory.class);
+		schuleRepoFactoryMock = mockStatic(EigeneSchuleRepositoryFactory.class);
 		lehrerServiceFactoryMock = mockStatic(LehrerServiceFactory.class);
 		lehrerFunktionServiceFactoryMock = mockStatic(LehrerFunktionServiceFactory.class);
 		serviceFactoryStaticMock = mockStatic(LehrerPersonalabschnittsdatenServiceFactory.class);
@@ -65,7 +65,7 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@AfterEach
 	void tearDown() {
 		lehrerRepoFactoryMock.close();
-		schulenRepoFactoryMock.close();
+		katalogRepositoryFactoryMockedStatic.close();
 		schuleRepoFactoryMock.close();
 		lehrerServiceFactoryMock.close();
 		lehrerFunktionServiceFactoryMock.close();
@@ -81,15 +81,15 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
 		final var lehrerRepoFactory = mock(LehrerRepositoryFactory.class);
-		final var schulenRepoFactory = mock(SchulenRepositoryFactory.class);
-		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		final var schuleRepoFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var lehrerServiceFactory = mock(LehrerServiceFactory.class);
 		final var lehrerFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 		final var mockedServiceFactory = mock(LehrerPersonalabschnittsdatenServiceFactory.class);
 
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(lehrerRepoFactory);
-		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(schulenRepoFactory);
-		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance).thenReturn(katalogRepositoryFactory);
+		schuleRepoFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
 		lehrerServiceFactoryMock.when(LehrerServiceFactory::getNewInstance).thenReturn(lehrerServiceFactory);
 		lehrerFunktionServiceFactoryMock.when(LehrerFunktionServiceFactory::getNewInstance).thenReturn(lehrerFunktionServiceFactory);
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(
@@ -97,7 +97,7 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 				.thenAnswer(invocation -> null);
 		serviceFactoryStaticMock.when(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
 						lehrerRepoFactory,
-						schulenRepoFactory,
+						katalogRepositoryFactory,
 						schuleRepoFactory,
 						lehrerServiceFactory,
 						lehrerFunktionServiceFactory,
@@ -108,13 +108,13 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 
 		assertThat(factory).isNotNull().isInstanceOf(LehrerPersonalabschnittsdatenControllerFactory.class);
 		lehrerRepoFactoryMock.verify(LehrerRepositoryFactory::getNewInstance, times(1));
-		schulenRepoFactoryMock.verify(SchulenRepositoryFactory::getNewInstance, times(1));
-		schuleRepoFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		schuleRepoFactoryMock.verify(EigeneSchuleRepositoryFactory::getNewInstance, times(1));
 		lehrerServiceFactoryMock.verify(LehrerServiceFactory::getNewInstance, times(1));
 		lehrerFunktionServiceFactoryMock.verify(LehrerFunktionServiceFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
 				lehrerRepoFactory,
-				schulenRepoFactory,
+				katalogRepositoryFactory,
 				schuleRepoFactory,
 				lehrerServiceFactory,
 				lehrerFunktionServiceFactory,
@@ -129,15 +129,15 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 	@DisplayName("withReadAccess | Erfolg")
 	void withReadAccess_success() {
 		final var lehrerRepoFactory = mock(LehrerRepositoryFactory.class);
-		final var schulenRepoFactory = mock(SchulenRepositoryFactory.class);
-		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		final var schuleRepoFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var lehrerServiceFactory = mock(LehrerServiceFactory.class);
 		final var lehrerFunktionServiceFactory = mock(LehrerFunktionServiceFactory.class);
 		final var mockedServiceFactory = mock(LehrerPersonalabschnittsdatenServiceFactory.class);
 
 		lehrerRepoFactoryMock.when(LehrerRepositoryFactory::getNewInstance).thenReturn(lehrerRepoFactory);
-		schulenRepoFactoryMock.when(SchulenRepositoryFactory::getNewInstance).thenReturn(schulenRepoFactory);
-		schuleRepoFactoryMock.when(SchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance).thenReturn(katalogRepositoryFactory);
+		schuleRepoFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance).thenReturn(schuleRepoFactory);
 		lehrerServiceFactoryMock.when(LehrerServiceFactory::getNewInstance).thenReturn(lehrerServiceFactory);
 		lehrerFunktionServiceFactoryMock.when(LehrerFunktionServiceFactory::getNewInstance).thenReturn(lehrerFunktionServiceFactory);
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(
@@ -145,7 +145,7 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 				.thenAnswer(invocation -> null);
 		serviceFactoryStaticMock.when(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
 						lehrerRepoFactory,
-						schulenRepoFactory,
+						katalogRepositoryFactory,
 						schuleRepoFactory,
 						lehrerServiceFactory,
 						lehrerFunktionServiceFactory,
@@ -156,13 +156,13 @@ class LehrerPersonalabschnittsdatenControllerFactoryTest {
 
 		assertThat(factory).isNotNull().isInstanceOf(LehrerPersonalabschnittsdatenControllerFactory.class);
 		lehrerRepoFactoryMock.verify(LehrerRepositoryFactory::getNewInstance, times(1));
-		schulenRepoFactoryMock.verify(SchulenRepositoryFactory::getNewInstance, times(1));
-		schuleRepoFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		schuleRepoFactoryMock.verify(EigeneSchuleRepositoryFactory::getNewInstance, times(1));
 		lehrerServiceFactoryMock.verify(LehrerServiceFactory::getNewInstance, times(1));
 		lehrerFunktionServiceFactoryMock.verify(LehrerFunktionServiceFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> LehrerPersonalabschnittsdatenServiceFactory.getNewInstance(
 				lehrerRepoFactory,
-				schulenRepoFactory,
+				katalogRepositoryFactory,
 				schuleRepoFactory,
 				lehrerServiceFactory,
 				lehrerFunktionServiceFactory,

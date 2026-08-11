@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -26,9 +26,9 @@ public class SchuelerMerkmalControllerFactory {
 	private static SchuelerMerkmalControllerFactory getNewInstance(final HttpServletRequest request) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 		final var repoFactory = SchuelerMerkmaleRepositoryFactory.getNewInstance();
-		final var merkmalRepoFactory = MerkmalRepositoryFactory.getNewInstance();
+		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
 		final var mapper = SchuelerMerkmalMapper.INSTANCE;
-		final var serviceFactory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, merkmalRepoFactory, mapper);
+		final var serviceFactory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, mapper);
 
 		return new SchuelerMerkmalControllerFactory(serviceFactory);
 	}

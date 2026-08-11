@@ -5,7 +5,7 @@ import java.util.List;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.statistik.SchuleStatistikGesamt;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 public final class SchuleStatistikService {
 
 	/** Das Repository für den Zugriff auf die Schul-Statistikdaten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Der Service für den Zugriff auf die Schuljahresabschnitte */
 	private final SchuljahresabschnittService schuljahresabschnitteService;
@@ -23,12 +23,12 @@ public final class SchuleStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
+	 * @param eigeneSchuleRepository               das Repository für den Zugriff auf die Schuldaten der Schule
 	 * @param schuljahresabschnitteService   der Service für den Zugriff auf die Schuljahresabschnitte
 	 */
-	public SchuleStatistikService(final SchuleRepository schuleRepository,
+	public SchuleStatistikService(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnittService schuljahresabschnitteService) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteService = schuljahresabschnitteService;
 	}
 
@@ -62,7 +62,7 @@ public final class SchuleStatistikService {
 	 * @return die Liste aller Statistik-relevanten Lehrer
 	 */
 	public @NotNull SchuleStatistikGesamt get() {
-		final var dtoSchule = schuleRepository.getFirst();
+		final var dtoSchule = eigeneSchuleRepository.getFirst();
 		final var dtosSchuljahresabschnitte = schuljahresabschnitteService.getList();
 		return map(dtoSchule, dtosSchuljahresabschnitte);
 	}

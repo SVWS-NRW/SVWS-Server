@@ -33,7 +33,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.faecher.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturFachRepository;
 import de.svws_nrw.repo.schueler.SchuelerAbiturRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;

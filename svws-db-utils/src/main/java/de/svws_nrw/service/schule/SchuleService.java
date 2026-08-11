@@ -1,7 +1,7 @@
 package de.svws_nrw.service.schule;
 
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 
 /**
@@ -10,16 +10,16 @@ import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 public final class SchuleService {
 
 	/** Das Repository für die Schuljahresabschnitte */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	private final SchuljahresabschnitteRepository schulejahresabschnitteRepository;
 
 	/**
-	 * @param schuleRepository {@link SchuleRepository}
+	 * @param eigeneSchuleRepository {@link EigeneSchuleRepository}
 	 * @param schulejahresabschnitteRepository {@link SchuljahresabschnitteRepository}
 	 */
-	public SchuleService(final SchuleRepository schuleRepository, final SchuljahresabschnitteRepository schulejahresabschnitteRepository) {
-		this.schuleRepository = schuleRepository;
+	public SchuleService(final EigeneSchuleRepository eigeneSchuleRepository, final SchuljahresabschnitteRepository schulejahresabschnitteRepository) {
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schulejahresabschnitteRepository = schulejahresabschnitteRepository;
 	}
 
@@ -29,7 +29,7 @@ public final class SchuleService {
 	 * @return die Schulnummer der Schule
 	 */
 	public int getSchulnummer() {
-		return schuleRepository.getSchulnummer();
+		return eigeneSchuleRepository.getSchulnummer();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public final class SchuleService {
 	 * @return das Schuljahr der Schule
 	 */
 	public int getSchuljahr() {
-		return schulejahresabschnitteRepository.getById(schuleRepository.getIdSchuljahresabschnitt()).Jahr;
+		return schulejahresabschnitteRepository.getById(eigeneSchuleRepository.getIdSchuljahresabschnitt()).Jahr;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public final class SchuleService {
 	 * @return die Schulform der Schule
 	 */
 	public Schulform getSchulform() {
-		return schuleRepository.getSchulform();
+		return eigeneSchuleRepository.getSchulform();
 	}
 
 }

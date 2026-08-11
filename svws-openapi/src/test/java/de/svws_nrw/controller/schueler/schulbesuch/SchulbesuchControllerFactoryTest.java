@@ -10,7 +10,7 @@ import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
@@ -31,9 +31,6 @@ import static org.mockito.Mockito.times;
 class SchulbesuchControllerFactoryTest {
 
 	@Mock
-	private SchulbesuchServiceFactory serviceFactory;
-
-	@Mock
 	private HttpServletRequest request;
 
 	@Mock
@@ -46,7 +43,7 @@ class SchulbesuchControllerFactoryTest {
 	private MockedStatic<SchuelerMerkmaleRepositoryFactory> schuelerMerkmaleRepositoryFactoryMock;
 
 	@Mock
-	private MockedStatic<MerkmalRepositoryFactory> merkmalRepositoryFactoryMock;
+	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
 
 	@Mock
 	private MockedStatic<BisherigeSchuleRepositoryFactory> bisherigeSchuleRepositoryFactoryMock;
@@ -65,7 +62,7 @@ class SchulbesuchControllerFactoryTest {
 		dbBenutzerUtilsMock.close();
 		schuelerRepositoryFactoryMock.close();
 		schuelerMerkmaleRepositoryFactoryMock.close();
-		merkmalRepositoryFactoryMock.close();
+		katalogRepositoryFactoryMockedStatic.close();
 		bisherigeSchuleRepositoryFactoryMock.close();
 		schuelerMerkmalServiceFactoryMock.close();
 		bisherigeSchuleServiceFactoryMock.close();
@@ -76,7 +73,7 @@ class SchulbesuchControllerFactoryTest {
 		final var dbConnection = mock(DBEntityManager.class);
 		final var schuelerRepoFactory = mock(SchuelerRepositoryFactory.class);
 		final var schuelerMerkmaleRepoFactory = mock(SchuelerMerkmaleRepositoryFactory.class);
-		final var merkmalRepoFactory = mock(MerkmalRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var bisherigeSchuleRepoFactory = mock(BisherigeSchuleRepositoryFactory.class);
 		final var schuelerMerkmalServiceFactory = mock(SchuelerMerkmalServiceFactory.class);
 		final var bisherigeSchuleServiceFactory = mock(BisherigeSchuleServiceFactory.class);
@@ -88,12 +85,12 @@ class SchulbesuchControllerFactoryTest {
 				.thenReturn(schuelerRepoFactory);
 		schuelerMerkmaleRepositoryFactoryMock.when(SchuelerMerkmaleRepositoryFactory::getNewInstance)
 				.thenReturn(schuelerMerkmaleRepoFactory);
-		merkmalRepositoryFactoryMock.when(MerkmalRepositoryFactory::getNewInstance)
-				.thenReturn(merkmalRepoFactory);
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
+				.thenReturn(katalogRepositoryFactory);
 		bisherigeSchuleRepositoryFactoryMock.when(BisherigeSchuleRepositoryFactory::getNewInstance)
 				.thenReturn(bisherigeSchuleRepoFactory);
 		schuelerMerkmalServiceFactoryMock.when(() -> SchuelerMerkmalServiceFactory.getNewInstance(
-						schuelerMerkmaleRepoFactory, merkmalRepoFactory, SchuelerMerkmalMapper.INSTANCE))
+						schuelerMerkmaleRepoFactory, katalogRepositoryFactory, SchuelerMerkmalMapper.INSTANCE))
 				.thenReturn(schuelerMerkmalServiceFactory);
 		bisherigeSchuleServiceFactoryMock.when(() -> BisherigeSchuleServiceFactory.getNewInstance(
 						bisherigeSchuleRepoFactory, BisherigeSchuleMapper.INSTANCE))

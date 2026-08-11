@@ -2,7 +2,7 @@ package de.svws_nrw.service.schule;
 
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class SchuleServiceTest {
 
 	@Mock
-	private SchuleRepository schuleRepository;
+	private EigeneSchuleRepository eigeneSchuleRepository;
 
 	@Mock
 	private SchuljahresabschnitteRepository schulejahresabschnitteRepository;
@@ -48,20 +48,20 @@ class SchuleServiceTest {
 		@Test
 		@DisplayName("gibt die Schulnummer aus dem Repository zurück")
 		void getSchulnummer_returnsSchulnummerFromRepository() {
-			when(schuleRepository.getSchulnummer()).thenReturn(123456);
+			when(eigeneSchuleRepository.getSchulnummer()).thenReturn(123456);
 
 			assertThat(service.getSchulnummer()).isEqualTo(123456);
-			verify(schuleRepository).getSchulnummer();
+			verify(eigeneSchuleRepository).getSchulnummer();
 		}
 
 		@Test
 		@DisplayName("delegiert den Aufruf korrekt an das Repository")
 		void getSchulnummer_delegatesToRepository() {
-			when(schuleRepository.getSchulnummer()).thenReturn(654321);
+			when(eigeneSchuleRepository.getSchulnummer()).thenReturn(654321);
 
 			service.getSchulnummer();
 
-			verify(schuleRepository).getSchulnummer();
+			verify(eigeneSchuleRepository).getSchulnummer();
 		}
 	}
 
@@ -79,7 +79,7 @@ class SchuleServiceTest {
 			final long abschnittId = 1L;
 			final var abschnitt = schuljahresabschnitt(abschnittId, 2024, 1);
 
-			when(schuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
+			when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
 			when(schulejahresabschnitteRepository.getById(abschnittId)).thenReturn(abschnitt);
 
 			assertThat(service.getSchuljahr()).isEqualTo(2024);
@@ -91,12 +91,12 @@ class SchuleServiceTest {
 			final long abschnittId = 42L;
 			final var abschnitt = schuljahresabschnitt(abschnittId, 2025, 2);
 
-			when(schuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
+			when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
 			when(schulejahresabschnitteRepository.getById(abschnittId)).thenReturn(abschnitt);
 
 			service.getSchuljahr();
 
-			verify(schuleRepository).getIdSchuljahresabschnitt();
+			verify(eigeneSchuleRepository).getIdSchuljahresabschnitt();
 			verify(schulejahresabschnitteRepository).getById(abschnittId);
 		}
 
@@ -106,7 +106,7 @@ class SchuleServiceTest {
 			final long abschnittId = 7L;
 			final var abschnitt = schuljahresabschnitt(abschnittId, 2023, 2);
 
-			when(schuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
+			when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(abschnittId);
 			when(schulejahresabschnitteRepository.getById(abschnittId)).thenReturn(abschnitt);
 
 			assertThat(service.getSchuljahr()).isEqualTo(2023);
@@ -124,16 +124,16 @@ class SchuleServiceTest {
 		@Test
 		@DisplayName("gibt die Schulform aus dem Repository zurück")
 		void getSchulform_returnsSchulformFromRepository() {
-			when(schuleRepository.getSchulform()).thenReturn(Schulform.GY);
+			when(eigeneSchuleRepository.getSchulform()).thenReturn(Schulform.GY);
 
 			assertThat(service.getSchulform()).isEqualTo(Schulform.GY);
-			verify(schuleRepository).getSchulform();
+			verify(eigeneSchuleRepository).getSchulform();
 		}
 
 		@Test
 		@DisplayName("gibt auch andere Schulformen korrekt zurück")
 		void getSchulform_returnsOtherSchulformen() {
-			when(schuleRepository.getSchulform()).thenReturn(Schulform.GE);
+			when(eigeneSchuleRepository.getSchulform()).thenReturn(Schulform.GE);
 
 			assertThat(service.getSchulform()).isEqualTo(Schulform.GE);
 		}
@@ -141,11 +141,11 @@ class SchuleServiceTest {
 		@Test
 		@DisplayName("delegiert den Aufruf korrekt an das Repository")
 		void getSchulform_delegatesToRepository() {
-			when(schuleRepository.getSchulform()).thenReturn(Schulform.GY);
+			when(eigeneSchuleRepository.getSchulform()).thenReturn(Schulform.GY);
 
 			service.getSchulform();
 
-			verify(schuleRepository).getSchulform();
+			verify(eigeneSchuleRepository).getSchulform();
 		}
 	}
 }

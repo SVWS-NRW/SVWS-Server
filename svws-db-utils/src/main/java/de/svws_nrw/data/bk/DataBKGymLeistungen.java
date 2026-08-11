@@ -38,7 +38,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
@@ -188,10 +188,10 @@ public final class DataBKGymLeistungen {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static BKGymLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
-		final SchuleRepositoryFactory schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
 		final SchuelerRepository schuelerRepository = schuelerRepositoryFactory.getSchuelerRepository();
-		final SchuljahresabschnitteRepository schuljahresabschnitteRepository = schuleRepositoryFactory.getSchuljahresabschnitteRepository();
+		final SchuljahresabschnitteRepository schuljahresabschnitteRepository = eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository();
 
 		// Prüfe die Schulform
 		final Schulform schulform = conn.getUser().schuleGetSchulform();

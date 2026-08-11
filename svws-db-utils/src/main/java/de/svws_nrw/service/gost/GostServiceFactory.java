@@ -3,9 +3,9 @@ package de.svws_nrw.service.gost;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
@@ -29,10 +29,10 @@ public final class GostServiceFactory {
 	private final BenutzerRepositoryFactory benutzerRepositoryFactory;
 
 	/** die Factory für die Katalog-Repositories */
-	private final KatalogeRepositoryFactory katalogeRepositoryFactory;
+	private final KatalogRepositoryFactory katalogRepositoryFactory;
 
 	/** die Factory für die Schul-Repositories */
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 
 	/** die Factory für die Benutzer-Services */
 	private final BenutzerServiceFactory benutzerServiceFactory;
@@ -54,8 +54,8 @@ public final class GostServiceFactory {
 	 * @param schuelerRepositoryFactory        die Factory für Schüler-Repositories
 	 * @param lehrerRepositoryFactory          die Factory für Lehrer-Repositories
 	 * @param benutzerRepositoryFactory        die Factory für Benutzer-Repositories
-	 * @param katalogeRepositoryFactory        die Factory für die Katalog-Repositories
-	 * @param schuleRepositoryFactory          die Factory für Schul-Repositories
+	 * @param katalogRepositoryFactory        die Factory für die Katalog-Repositories
+	 * @param eigeneSchuleRepositoryFactory          die Factory für Schul-Repositories
 	 * @param benutzerServiceFactory           die Factory für die Benutzer-Services
 	 * @param cryptoServiceFactory             die Factory für die kryptographischen Services
 	 * @param schuelerServiceFactory           die Factory für die Schüler-Services
@@ -65,8 +65,8 @@ public final class GostServiceFactory {
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
 			final LehrerRepositoryFactory lehrerRepositoryFactory,
 			final BenutzerRepositoryFactory benutzerRepositoryFactory,
-			final KatalogeRepositoryFactory katalogeRepositoryFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory,
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final BenutzerServiceFactory benutzerServiceFactory,
 			final CryptoServiceFactory cryptoServiceFactory,
 			final SchuelerServiceFactory schuelerServiceFactory,
@@ -75,8 +75,8 @@ public final class GostServiceFactory {
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
 		this.benutzerRepositoryFactory = benutzerRepositoryFactory;
-		this.katalogeRepositoryFactory = katalogeRepositoryFactory;
-		this.schuleRepositoryFactory = schuleRepositoryFactory;
+		this.katalogRepositoryFactory = katalogRepositoryFactory;
+		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 		this.benutzerServiceFactory = benutzerServiceFactory;
 		this.cryptoServiceFactory = cryptoServiceFactory;
 		this.schuelerServiceFactory = schuelerServiceFactory;
@@ -91,8 +91,8 @@ public final class GostServiceFactory {
 	 * @param schuelerRepositoryFactory   die Factory für Schüler-Repositories
 	 * @param lehrerRepositoryFactory     die Factory für Lehrer-Repositories
 	 * @param benutzerRepositoryFactory   die Factory für Benutzer-Repositories
-	 * @param katalogeRepositoryFactory   die Factory für die Katalog-Repositories
-	 * @param schuleRepositoryFactory     die Factory für Schul-Repositories
+	 * @param katalogRepositoryFactory   die Factory für die Katalog-Repositories
+	 * @param eigeneSchuleRepositoryFactory     die Factory für Schul-Repositories
 	 * @param benutzerServiceFactory      die Factory für die Benutzer-Services
 	 * @param cryptoServiceFactory        die Factory für die kryptographischen Services
 	 * @param schuelerServiceFactory      die Factory für die Schüler-Services
@@ -104,14 +104,14 @@ public final class GostServiceFactory {
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
 			final LehrerRepositoryFactory lehrerRepositoryFactory,
 			final BenutzerRepositoryFactory benutzerRepositoryFactory,
-			final KatalogeRepositoryFactory katalogeRepositoryFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory,
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final BenutzerServiceFactory benutzerServiceFactory,
 			final CryptoServiceFactory cryptoServiceFactory,
 			final SchuelerServiceFactory schuelerServiceFactory,
 			final GostKlausurenRepositoryFactory gostKlausurenRepositoryFactory) {
 		return new GostServiceFactory(gostRepositoryFactory, schuelerRepositoryFactory, lehrerRepositoryFactory, benutzerRepositoryFactory,
-				katalogeRepositoryFactory, schuleRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory,
+				katalogRepositoryFactory, eigeneSchuleRepositoryFactory, benutzerServiceFactory, cryptoServiceFactory, schuelerServiceFactory,
 				gostKlausurenRepositoryFactory);
 	}
 
@@ -123,7 +123,7 @@ public final class GostServiceFactory {
 	 */
 	public GostFaecherService getGostFaecherService() {
 		return new GostFaecherService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
-				katalogeRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getFachRepository(),
 				gostRepositoryFactory.getGostJahrgangFaecherRepository());
 	}
 
@@ -146,7 +146,7 @@ public final class GostServiceFactory {
 	 */
 	public GostSchuelerService getGostSchuelerService() {
 		return new GostSchuelerService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
-				katalogeRepositoryFactory.getJahrgaengeRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository());
 	}
@@ -161,7 +161,7 @@ public final class GostServiceFactory {
 		return new GostKursBelegungService(schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository());
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository());
 	}
 
 
@@ -172,7 +172,7 @@ public final class GostServiceFactory {
 	 */
 	public GostAbiturdatenService getGostAbiturdatenService() {
 		return new GostAbiturdatenService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
-				katalogeRepositoryFactory.getJahrgaengeRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
@@ -194,8 +194,8 @@ public final class GostServiceFactory {
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
-				katalogeRepositoryFactory.getJahrgaengeRepository(),
-				katalogeRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getJahrgangRepository(),
+				katalogRepositoryFactory.getFachRepository(),
 				gostRepositoryFactory.getGostSchuelerRepository(),
 				gostRepositoryFactory.getGostSchuelerFachbelegungenRepository(),
 				gostRepositoryFactory.getGostJahrgangsdatenRepository(),
@@ -214,7 +214,7 @@ public final class GostServiceFactory {
 	public GostJahrgangFachwahlService getGostJahrgangFachwahlService() {
 		return new GostJahrgangFachwahlService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
-				katalogeRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getFachRepository(),
 				this.getGostAbiturdatenService());
 	}
 

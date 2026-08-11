@@ -4,8 +4,8 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.schule.kataloge.fachklasse.FachklasseMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,9 +24,9 @@ public final class FachklasseControllerFactory {
 	private static FachklasseControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, benutzerKompetenz);
 		final var serviceFactory = FachklasseServiceFactory.getNewInstance(
-				FachklasseRepositoryFactory.getNewInstance(),
+				KatalogRepositoryFactory.getNewInstance(),
 				FachklasseMapper.INSTANCE,
-				SchuleServiceFactory.getNewInstance(SchuleRepositoryFactory.getNewInstance())
+				SchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
 		);
 		return new FachklasseControllerFactory(serviceFactory);
 	}

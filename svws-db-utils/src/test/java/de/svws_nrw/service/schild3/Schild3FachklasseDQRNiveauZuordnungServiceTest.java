@@ -3,7 +3,7 @@ package de.svws_nrw.service.schild3;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.mapper.Schild3FachklasseDQRNiveauZuordnungMapper;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceTest {
 	private Schild3FachklasseDQRNiveauZuordnungMapper mapper = Schild3FachklasseDQRNiveauZuordnungMapper.INSTANCE;
 
 	@Mock
-	private SchuleRepository schuleRepository;
+	private EigeneSchuleRepository eigeneSchuleRepository;
 
 	@Mock
 	private SchuljahresabschnittService schuljahresabschnittService;
@@ -42,7 +42,7 @@ class Schild3FachklasseDQRNiveauZuordnungServiceTest {
 		schuljahresabschnitt.id = 1L;
 		schuljahresabschnitt.schuljahr = 2025;
 
-		when(schuleRepository.getIdSchuljahresabschnitt()).thenReturn(1L);
+		when(eigeneSchuleRepository.getIdSchuljahresabschnitt()).thenReturn(1L);
 		when(schuljahresabschnittService.getById(1L)).thenReturn(schuljahresabschnitt);
 
 		final var result = cut.getAll();

@@ -9,7 +9,7 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
+import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import jakarta.ws.rs.core.Response;
 
 /**

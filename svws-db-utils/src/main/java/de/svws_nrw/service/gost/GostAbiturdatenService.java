@@ -40,7 +40,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -57,7 +57,7 @@ import jakarta.ws.rs.core.Response.Status;
 public class GostAbiturdatenService {
 
 	private final BenutzerAllgemeinRepository benutzerRepository;
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
@@ -72,7 +72,7 @@ public class GostAbiturdatenService {
 	 * Erstellt einen neuen Service.
 	 *
 	 * @param benutzerRepository                     das Repository für den Zugriff auf Benutzerdaten und den angemeldeten Benutzer
-	 * @param jahrgaengeRepository                   das Repository für den Zugriff auf die Jahrgänge
+	 * @param jahrgangRepository                   das Repository für den Zugriff auf die Jahrgänge
 	 * @param schuelerRepository                     das Repository für den Zugriff auf die Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 * @param schuelerLeistungsdatenRepository       das Repository für den Zugriff auf die Schüler-Leistungsdaten
@@ -83,7 +83,7 @@ public class GostAbiturdatenService {
 	 * @param gostFaecherService                     der Service für den Zugriff auf die Fächer der Oberstufe
 	 * @param gostSchuelerService                    der Service für den Zugriff auf die Schüler der Oberstufe
 	 */
-	public GostAbiturdatenService(final BenutzerAllgemeinRepository benutzerRepository, final JahrgaengeRepository jahrgaengeRepository,
+	public GostAbiturdatenService(final BenutzerAllgemeinRepository benutzerRepository, final JahrgangRepository jahrgangRepository,
 			final SchuelerRepository schuelerRepository, final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
@@ -92,7 +92,7 @@ public class GostAbiturdatenService {
 			final GostFaecherService gostFaecherService,
 			final GostSchuelerService gostSchuelerService) {
 		this.benutzerRepository = benutzerRepository;
-		this.jahrgaengeRepository = jahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
@@ -242,7 +242,7 @@ public class GostAbiturdatenService {
 					schuelerLeistungsdatenRepository.getMapListByLernabschnittsIds(idsSchuelerLernabschnitte);
 
 			// Bestimme die Abiturjahrgänge für die Schüler und die zugehörigen Fächer-Manager
-			final Map<Long, DTOJahrgang> mapJahrgaenge = this.jahrgaengeRepository.getMap();
+			final Map<Long, DTOJahrgang> mapJahrgaenge = this.jahrgangRepository.getMap();
 			final Map<Long, Integer> mapAbiturjahrgaenge = this.getSchuelerAbiturjahrgaenge(mapSchuelerAktuellerLernabschnitt.values(), mapJahrgaenge);
 			final List<Integer> abiturjahrgaenge = mapAbiturjahrgaenge.values().stream().distinct().toList();
 			for (final int abiturjahrgang : abiturjahrgaenge) {

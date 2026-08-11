@@ -5,8 +5,8 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.mapper.schule.kataloge.fachklasse.FachklasseMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseServiceFactory;
@@ -37,16 +37,16 @@ class FachklasseControllerFactoryTest {
 	private HttpServletRequest request;
 
 	private MockedStatic<DBBenutzerUtils> dbBenutzerUtilsMock;
-	private MockedStatic<FachklasseRepositoryFactory> fachklasseRepositoryFactoryMock;
-	private MockedStatic<SchuleRepositoryFactory> schuleRepositoryFactoryMock;
+	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
+	private MockedStatic<EigeneSchuleRepositoryFactory> schuleRepositoryFactoryMock;
 	private MockedStatic<SchuleServiceFactory> schuleServiceFactoryMock;
 	private MockedStatic<FachklasseServiceFactory> fachklasseServiceFactoryStaticMock;
 
 	@BeforeEach
 	void setUp() {
 		dbBenutzerUtilsMock = mockStatic(DBBenutzerUtils.class);
-		fachklasseRepositoryFactoryMock = mockStatic(FachklasseRepositoryFactory.class);
-		schuleRepositoryFactoryMock = mockStatic(SchuleRepositoryFactory.class);
+		katalogRepositoryFactoryMockedStatic = mockStatic(KatalogRepositoryFactory.class);
+		schuleRepositoryFactoryMock = mockStatic(EigeneSchuleRepositoryFactory.class);
 		schuleServiceFactoryMock = mockStatic(SchuleServiceFactory.class);
 		fachklasseServiceFactoryStaticMock = mockStatic(FachklasseServiceFactory.class);
 	}
@@ -54,27 +54,27 @@ class FachklasseControllerFactoryTest {
 	@AfterEach
 	void tearDown() {
 		dbBenutzerUtilsMock.close();
-		fachklasseRepositoryFactoryMock.close();
+		katalogRepositoryFactoryMockedStatic.close();
 		schuleRepositoryFactoryMock.close();
 		schuleServiceFactoryMock.close();
 		fachklasseServiceFactoryStaticMock.close();
 	}
 
 	private void setupStaticMocks(final BenutzerKompetenz kompetenz,
-			final FachklasseRepositoryFactory fachklasseRepoFactory,
-			final SchuleRepositoryFactory schuleRepoFactory,
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final EigeneSchuleRepositoryFactory schuleRepoFactory,
 			final SchuleServiceFactory schuleServiceFactory,
 			final FachklasseServiceFactory serviceFactory) {
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, kompetenz))
 				.thenReturn(mock(DBEntityManager.class));
-		fachklasseRepositoryFactoryMock.when(FachklasseRepositoryFactory::getNewInstance)
-				.thenReturn(fachklasseRepoFactory);
-		schuleRepositoryFactoryMock.when(SchuleRepositoryFactory::getNewInstance)
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
+				.thenReturn(katalogRepositoryFactory);
+		schuleRepositoryFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance)
 				.thenReturn(schuleRepoFactory);
 		schuleServiceFactoryMock.when(() -> SchuleServiceFactory.getNewInstance(schuleRepoFactory))
 				.thenReturn(schuleServiceFactory);
 		fachklasseServiceFactoryStaticMock.when(() -> FachklasseServiceFactory.getNewInstance(
-				fachklasseRepoFactory,
+				katalogRepositoryFactory,
 				FachklasseMapper.INSTANCE,
 				schuleServiceFactory)
 		).thenReturn(serviceFactory);
@@ -83,12 +83,12 @@ class FachklasseControllerFactoryTest {
 	@Test
 	@DisplayName("withReadAccess | Erfolg")
 	void withReadAccess_success() {
-		final var fachklasseRepoFactory = mock(FachklasseRepositoryFactory.class);
-		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		final var schuleRepoFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 		final var serviceFactory = mock(FachklasseServiceFactory.class);
 
-		setupStaticMocks(BenutzerKompetenz.KEINE, fachklasseRepoFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
+		setupStaticMocks(BenutzerKompetenz.KEINE, katalogRepositoryFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
 
 		final var factory = FachklasseControllerFactory.withReadAccess(request);
 
@@ -97,22 +97,22 @@ class FachklasseControllerFactoryTest {
 				.isInstanceOf(FachklasseControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.KEINE), times(1));
-		fachklasseRepositoryFactoryMock.verify(FachklasseRepositoryFactory::getNewInstance, times(1));
-		schuleRepositoryFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		schuleRepositoryFactoryMock.verify(EigeneSchuleRepositoryFactory::getNewInstance, times(1));
 		schuleServiceFactoryMock.verify(() -> SchuleServiceFactory.getNewInstance(schuleRepoFactory), times(1));
 		fachklasseServiceFactoryStaticMock.verify(() -> FachklasseServiceFactory.getNewInstance(
-				fachklasseRepoFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
+				katalogRepositoryFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
 	}
 
 	@Test
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
-		final var fachklasseRepoFactory = mock(FachklasseRepositoryFactory.class);
-		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		final var schuleRepoFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 		final var serviceFactory = mock(FachklasseServiceFactory.class);
 
-		setupStaticMocks(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, fachklasseRepoFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
+		setupStaticMocks(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, katalogRepositoryFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
 
 		final var factory = FachklasseControllerFactory.withWriteAccess(request);
 
@@ -121,22 +121,22 @@ class FachklasseControllerFactoryTest {
 				.isInstanceOf(FachklasseControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN), times(1));
-		fachklasseRepositoryFactoryMock.verify(FachklasseRepositoryFactory::getNewInstance, times(1));
-		schuleRepositoryFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		schuleRepositoryFactoryMock.verify(EigeneSchuleRepositoryFactory::getNewInstance, times(1));
 		schuleServiceFactoryMock.verify(() -> SchuleServiceFactory.getNewInstance(schuleRepoFactory), times(1));
 		fachklasseServiceFactoryStaticMock.verify(() -> FachklasseServiceFactory.getNewInstance(
-				fachklasseRepoFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
+				katalogRepositoryFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
 	}
 
 	@Test
 	@DisplayName("withDeleteAccess | Erfolg")
 	void withDeleteAccess_success() {
-		final var fachklasseRepoFactory = mock(FachklasseRepositoryFactory.class);
-		final var schuleRepoFactory = mock(SchuleRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
+		final var schuleRepoFactory = mock(EigeneSchuleRepositoryFactory.class);
 		final var schuleServiceFactory = mock(SchuleServiceFactory.class);
 		final var serviceFactory = mock(FachklasseServiceFactory.class);
 
-		setupStaticMocks(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN, fachklasseRepoFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
+		setupStaticMocks(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN, katalogRepositoryFactory, schuleRepoFactory, schuleServiceFactory, serviceFactory);
 
 		final var factory = FachklasseControllerFactory.withDeleteAccess(request);
 
@@ -145,11 +145,11 @@ class FachklasseControllerFactoryTest {
 				.isInstanceOf(FachklasseControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN), times(1));
-		fachklasseRepositoryFactoryMock.verify(FachklasseRepositoryFactory::getNewInstance, times(1));
-		schuleRepositoryFactoryMock.verify(SchuleRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		schuleRepositoryFactoryMock.verify(EigeneSchuleRepositoryFactory::getNewInstance, times(1));
 		schuleServiceFactoryMock.verify(() -> SchuleServiceFactory.getNewInstance(schuleRepoFactory), times(1));
 		fachklasseServiceFactoryStaticMock.verify(() -> FachklasseServiceFactory.getNewInstance(
-				fachklasseRepoFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
+				katalogRepositoryFactory, FachklasseMapper.INSTANCE, schuleServiceFactory), times(1));
 	}
 
 	@Test

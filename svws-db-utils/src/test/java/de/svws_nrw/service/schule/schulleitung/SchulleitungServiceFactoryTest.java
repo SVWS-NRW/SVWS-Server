@@ -3,7 +3,7 @@ package de.svws_nrw.service.schule.schulleitung;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 class SchulleitungServiceFactoryTest {
 
 	@Mock
-	private SchuleRepositoryFactory schuleRepoFactory;
+	private EigeneSchuleRepositoryFactory schuleRepoFactory;
 
 	@Mock
 	private LehrerRepositoryFactory lehrerRepoFactory;

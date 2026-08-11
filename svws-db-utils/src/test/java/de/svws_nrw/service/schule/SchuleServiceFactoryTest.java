@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 
 /**
@@ -22,7 +22,7 @@ import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 class SchuleServiceFactoryTest {
 
 	@Mock
-	private SchuleRepositoryFactory repoFactoryMock;
+	private EigeneSchuleRepositoryFactory repoFactoryMock;
 
 	@Mock
 	private SchuljahresabschnitteRepository abschnitteRepoMock;

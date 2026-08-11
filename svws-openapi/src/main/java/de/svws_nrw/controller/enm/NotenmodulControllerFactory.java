@@ -6,12 +6,12 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.enm.NotenmodulLocalService;
 import de.svws_nrw.service.enm.NotenmodulServiceFactory;
 import de.svws_nrw.service.enm.NotenmodulSynchronisationService;
@@ -43,10 +43,10 @@ public final class NotenmodulControllerFactory {
 				NotenmodulRepositoryFactory.getNewInstance(),
 				LehrerRepositoryFactory.getNewInstance(),
 				SchuelerRepositoryFactory.getNewInstance(),
-				KatalogeRepositoryFactory.getNewInstance(),
+				KatalogRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
-				SchuleRepositoryFactory.getNewInstance());
+				EigeneSchuleRepositoryFactory.getNewInstance());
 	}
 
 	/**

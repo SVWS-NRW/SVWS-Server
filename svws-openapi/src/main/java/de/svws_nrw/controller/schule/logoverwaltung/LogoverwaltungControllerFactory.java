@@ -4,7 +4,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseServiceFactory;
@@ -28,7 +28,7 @@ public final class LogoverwaltungControllerFactory {
 		final var serviceFactory = LogoverwaltungServiceFactory.getNewInstance(
 				LogoverwaltungRepositoryFactory.getNewInstance(),
 				LogoverwaltungMapper.INSTANCE,
-				SchuleServiceFactory.getNewInstance(SchuleRepositoryFactory.getNewInstance())
+				SchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
 		);
 		return new LogoverwaltungControllerFactory(serviceFactory);
 	}

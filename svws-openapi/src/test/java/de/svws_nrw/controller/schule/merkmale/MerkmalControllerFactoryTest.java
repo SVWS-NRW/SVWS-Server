@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.merkmale.MerkmalService;
 import de.svws_nrw.service.schule.merkmale.MerkmalServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,20 +35,20 @@ class MerkmalControllerFactoryTest {
 	private HttpServletRequest request;
 
 	private MockedStatic<DBBenutzerUtils> dbBenutzerUtilsMock;
-	private MockedStatic<MerkmalRepositoryFactory> merkmalRepositoryFactoryMock;
+	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
 	private MockedStatic<MerkmalServiceFactory> merkmalServiceFactoryStaticMock;
 
 	@BeforeEach
 	void setUp() {
 		dbBenutzerUtilsMock = mockStatic(DBBenutzerUtils.class);
-		merkmalRepositoryFactoryMock = mockStatic(MerkmalRepositoryFactory.class);
+		katalogRepositoryFactoryMockedStatic = mockStatic(KatalogRepositoryFactory.class);
 		merkmalServiceFactoryStaticMock = mockStatic(MerkmalServiceFactory.class);
 	}
 
 	@AfterEach
 	void tearDown() {
 		dbBenutzerUtilsMock.close();
-		merkmalRepositoryFactoryMock.close();
+		katalogRepositoryFactoryMockedStatic.close();
 		merkmalServiceFactoryStaticMock.close();
 	}
 
@@ -56,14 +56,14 @@ class MerkmalControllerFactoryTest {
 	@DisplayName("withReadAccess | Erfolg")
 	void withReadAccess_success() {
 		final var dbConnection = mock(DBEntityManager.class);
-		final var repositoryFactory = mock(MerkmalRepositoryFactory.class);
+		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var serviceFactory = mock(MerkmalServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE))
 				.thenReturn(dbConnection);
-		merkmalRepositoryFactoryMock.when(MerkmalRepositoryFactory::getNewInstance)
-				.thenReturn(repositoryFactory);
-		merkmalServiceFactoryStaticMock.when(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE))
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
+				.thenReturn(katalogRepositoryFactory);
+		merkmalServiceFactoryStaticMock.when(() -> MerkmalServiceFactory.getNewInstance(katalogRepositoryFactory, MerkmalMapper.INSTANCE))
 				.thenReturn(serviceFactory);
 
 		final var factory = MerkmalControllerFactory.withReadAccess(request);
@@ -73,20 +73,20 @@ class MerkmalControllerFactoryTest {
 				.isInstanceOf(MerkmalControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE), times(1));
-		merkmalRepositoryFactoryMock.verify(MerkmalRepositoryFactory::getNewInstance, times(1));
-		merkmalServiceFactoryStaticMock.verify(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE), times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
+		merkmalServiceFactoryStaticMock.verify(() -> MerkmalServiceFactory.getNewInstance(katalogRepositoryFactory, MerkmalMapper.INSTANCE), times(1));
 	}
 
 	@Test
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
 		final var dbConnection = mock(DBEntityManager.class);
-		final var repositoryFactory = mock(MerkmalRepositoryFactory.class);
+		final var repositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var serviceFactory = mock(MerkmalServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN))
 				.thenReturn(dbConnection);
-		merkmalRepositoryFactoryMock.when(MerkmalRepositoryFactory::getNewInstance)
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
 		merkmalServiceFactoryStaticMock.when(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE))
 				.thenReturn(serviceFactory);
@@ -98,7 +98,7 @@ class MerkmalControllerFactoryTest {
 				.isInstanceOf(MerkmalControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN), times(1));
-		merkmalRepositoryFactoryMock.verify(MerkmalRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
 		merkmalServiceFactoryStaticMock.verify(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE), times(1));
 	}
 
@@ -106,12 +106,12 @@ class MerkmalControllerFactoryTest {
 	@DisplayName("withDeleteAccess | Erfolg")
 	void withDeleteAccess_success() {
 		final var dbConnection = mock(DBEntityManager.class);
-		final var repositoryFactory = mock(MerkmalRepositoryFactory.class);
+		final var repositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var serviceFactory = mock(MerkmalServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN))
 				.thenReturn(dbConnection);
-		merkmalRepositoryFactoryMock.when(MerkmalRepositoryFactory::getNewInstance)
+		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
 				.thenReturn(repositoryFactory);
 		merkmalServiceFactoryStaticMock.when(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE))
 				.thenReturn(serviceFactory);
@@ -123,7 +123,7 @@ class MerkmalControllerFactoryTest {
 				.isInstanceOf(MerkmalControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN), times(1));
-		merkmalRepositoryFactoryMock.verify(MerkmalRepositoryFactory::getNewInstance, times(1));
+		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
 		merkmalServiceFactoryStaticMock.verify(() -> MerkmalServiceFactory.getNewInstance(repositoryFactory, MerkmalMapper.INSTANCE), times(1));
 	}
 

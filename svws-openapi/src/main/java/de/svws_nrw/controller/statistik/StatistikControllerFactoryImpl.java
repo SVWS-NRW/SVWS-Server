@@ -2,12 +2,12 @@ package de.svws_nrw.controller.statistik;
 
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 import de.svws_nrw.service.statistik.StatistikService;
@@ -29,12 +29,12 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 	 */
 	StatistikControllerFactoryImpl() {
 		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
-		final var schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory);
 		final var schuleServiceFactory = SchuleServiceFactory.getNewInstance(schuleRepositoryFactory);
 		this.serviceFactory = StatistikServiceFactory.getNewInstance(
 				BenutzerRepositoryFactory.getNewInstance(),
-				KatalogeRepositoryFactory.getNewInstance(),
+				KatalogRepositoryFactory.getNewInstance(),
 				KlassenRepositoryFactory.getNewInstance(),
 				KurseRepositoryFactory.getNewInstance(),
 				lehrerRepositoryFactory,

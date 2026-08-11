@@ -3,9 +3,9 @@ package de.svws_nrw.service.lehrer.personalabschnittsdaten;
 import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepository;
-import de.svws_nrw.repo.schule.kataloge.schulen.SchulenRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
@@ -16,22 +16,22 @@ import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
 public final class LehrerPersonalabschnittsdatenServiceFactory {
 
 	private final LehrerRepositoryFactory lehrerRepoFactory;
-	private final SchulenRepositoryFactory schulenRepoFactory;
-	private final SchuleRepositoryFactory schuleRepositoryFactory;
+	private final KatalogRepositoryFactory katalogRepositoryFactory;
+	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
 	private final LehrerServiceFactory lehrerServiceFactory;
 	private final LehrerFunktionServiceFactory lehrerFunktionServiceFactory;
 	private final LehrerPersonalabschnittsdatenMapper mapper;
 
 	private LehrerPersonalabschnittsdatenServiceFactory(
 			final LehrerRepositoryFactory lehrerRepoFactory,
-			final SchulenRepositoryFactory schulenRepoFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory,
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final LehrerServiceFactory lehrerServiceFactory,
 			final LehrerFunktionServiceFactory lehrerFunktionServiceFactory,
 			final LehrerPersonalabschnittsdatenMapper mapper) {
 		this.lehrerRepoFactory = lehrerRepoFactory;
-		this.schulenRepoFactory = schulenRepoFactory;
-		this.schuleRepositoryFactory = schuleRepositoryFactory;
+		this.katalogRepositoryFactory = katalogRepositoryFactory;
+		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 		this.lehrerServiceFactory = lehrerServiceFactory;
 		this.lehrerFunktionServiceFactory = lehrerFunktionServiceFactory;
 		this.mapper = mapper;
@@ -41,8 +41,8 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	 * Erstellt eine neue Instanz der {@code LehrerPersonalabschnittsdatenServiceFactory} mit den angegebenen Abhängigkeiten.
 	 *
 	 * @param lehrerRepoFactory        die Factory für das {@link LehrerRepository}
-	 * @param schulenRepoFactory       die Factory für das {@link SchulenRepository}
-	 * @param schuleRepositoryFactory  die Factory für das Schule-Repositories (inkl. Schuljahresabschnitte)
+	 * @param katalogRepositoryFactory       die Factory für das {@link SchuleRepository}
+	 * @param eigeneSchuleRepositoryFactory  die Factory für das Schule-Repositories (inkl. Schuljahresabschnitte)
 	 * @param lehrerServiceFactory     die Factory für die Lehrer-Services
 	 * @param funktionServiceFactory   die Factory für den {@link LehrerFunktionService}
 	 * @param mapper                   der Mapper zur Konvertierung zwischen Entity und API-Modell
@@ -50,14 +50,14 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	 */
 	public static LehrerPersonalabschnittsdatenServiceFactory getNewInstance(
 			final LehrerRepositoryFactory lehrerRepoFactory,
-			final SchulenRepositoryFactory schulenRepoFactory,
-			final SchuleRepositoryFactory schuleRepositoryFactory,
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final LehrerServiceFactory lehrerServiceFactory,
 			final LehrerFunktionServiceFactory funktionServiceFactory,
 			final LehrerPersonalabschnittsdatenMapper mapper) {
 		return new LehrerPersonalabschnittsdatenServiceFactory(
-				lehrerRepoFactory, schulenRepoFactory,
-				schuleRepositoryFactory, lehrerServiceFactory,
+				lehrerRepoFactory, katalogRepositoryFactory,
+				eigeneSchuleRepositoryFactory, lehrerServiceFactory,
 				funktionServiceFactory, mapper);
 	}
 
@@ -68,10 +68,10 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 	 */
 	public static LehrerPersonalabschnittsdatenServiceFactory getNewInstance() {
 		final var lehrerRepoFactory = LehrerRepositoryFactory.getNewInstance();
-		final var schuleRepositoryFactory = SchuleRepositoryFactory.getNewInstance();
+		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		return new LehrerPersonalabschnittsdatenServiceFactory(
 				lehrerRepoFactory,
-				SchulenRepositoryFactory.getNewInstance(),
+				KatalogRepositoryFactory.getNewInstance(),
 				schuleRepositoryFactory,
 				LehrerServiceFactory.getNewInstance(lehrerRepoFactory, schuleRepositoryFactory),
 				LehrerFunktionServiceFactory.getNewInstance(),
@@ -88,8 +88,8 @@ public final class LehrerPersonalabschnittsdatenServiceFactory {
 		final var subRepos = new LehrerPersonalabschnittsdatenRepos(
 				lehrerRepoFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepoFactory.getLehrerRepository(),
-				schulenRepoFactory.getRepo(),
-				schuleRepositoryFactory.getSchuljahresabschnitteRepository()
+				katalogRepositoryFactory.getSchulenRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository()
 		);
 
 		final var subServices = new LehrerPersonalabschnittsdatenSubServices(

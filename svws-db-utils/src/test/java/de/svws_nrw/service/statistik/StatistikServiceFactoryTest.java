@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,13 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.schule.SchuleServiceFactory;
 
@@ -27,11 +27,12 @@ import de.svws_nrw.service.schule.SchuleServiceFactory;
 @ExtendWith(MockitoExtension.class)
 class StatistikServiceFactoryTest {
 
+
 	@Mock
 	private BenutzerRepositoryFactory repoBenutzerFactory;
 
 	@Mock
-	private KatalogeRepositoryFactory repoKatalogeFactory;
+	private KatalogRepositoryFactory repoKatalogeFactory;
 
 	@Mock
 	private KlassenRepositoryFactory repoKlassenFactory;
@@ -46,7 +47,7 @@ class StatistikServiceFactoryTest {
 	private SchuelerRepositoryFactory repoSchuelerFactory;
 
 	@Mock
-	private SchuleRepositoryFactory repoSchuleFactory;
+	private EigeneSchuleRepositoryFactory repoSchuleFactory;
 
 	@Mock
 	private LehrerServiceFactory serviceFactoryLehrer;
@@ -112,21 +113,21 @@ class StatistikServiceFactoryTest {
 	@DisplayName("Test: getOrteStatistikService nutzt das Repository zu Orten")
 	void testGetOrteStatistikService() {
 		assertNotNull(factory.getOrteStatistikService());
-		verify(repoKatalogeFactory).getOrteRepository();
+		verify(repoKatalogeFactory).getOrtRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getJahrgaengeStatistikService nutzt das Repository zu Jahrgängen")
 	void testGetJahrgaengeStatistikService() {
 		assertNotNull(factory.getJahrgaengeStatistikService());
-		verify(repoKatalogeFactory).getJahrgaengeRepository();
+		verify(repoKatalogeFactory).getJahrgangRepository();
 	}
 
 	@Test
 	@DisplayName("Test: getFoerderschwerpunkteStatistikService nutzt das Repository zu Förderschwerpunkten")
 	void testGetFoerderschwerpunkteStatistikService() {
 		assertNotNull(factory.getFoerderschwerpunkteStatistikService());
-		verify(repoKatalogeFactory).getFoerderschwerpunkteRepository();
+		verify(repoKatalogeFactory).getFoerderschwerpunktRepository();
 	}
 
 	@Test

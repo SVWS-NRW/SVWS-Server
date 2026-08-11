@@ -9,7 +9,7 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
-import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
 public final class KlassenStatistikService {
 
 	/** Das Repository für den Zugriff auf die Klassen-Daten */
-	private final SchuleRepository schuleRepository;
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Klassen-Daten */
 	private final KlassenRepository klassenRepository;
@@ -33,16 +33,16 @@ public final class KlassenStatistikService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param schuleRepository             das Repository für die Schuldaten
+	 * @param eigeneSchuleRepository             das Repository für die Schuldaten
 	 * @param klassenRepository            das Repository für die Klassendaten
 	 * @param klassenleitungenRepository   das Repository für die Klassenleitungen
 	 * @param lernabschnitteRepository     das Repository für die Lernabschnitte
 	 */
-	public KlassenStatistikService(final SchuleRepository schuleRepository,
+	public KlassenStatistikService(final EigeneSchuleRepository eigeneSchuleRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
 			final SchuelerLernabschnittRepository lernabschnitteRepository) {
-		this.schuleRepository = schuleRepository;
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.klassenRepository = klassenRepository;
 		this.klassenleitungenRepository = klassenleitungenRepository;
 		this.lernabschnitteRepository = lernabschnitteRepository;
@@ -73,7 +73,7 @@ public final class KlassenStatistikService {
 	 */
 	public @NotNull List<KlassenStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final long idSchuljahresabschnitt = schuleRepository.getIdSchuljahresabschnitt();
+		final long idSchuljahresabschnitt = eigeneSchuleRepository.getIdSchuljahresabschnitt();
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs
 		final List<DTOKlassen> listKlassen = klassenRepository.getListBySchuljahresabschnitt(idSchuljahresabschnitt);

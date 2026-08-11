@@ -35,7 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationClientRepository;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationServerRepository;
-import de.svws_nrw.repo.kataloge.AnkreuzkompetenzenRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittBemerkungenRepository;
@@ -62,7 +62,7 @@ public class NotenmodulLocalService {
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 	private final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository;
 	private final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository;
-	private final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository;
+	private final AnkreuzkompetenzRepository ankreuzkompetenzRepository;
 
 	/**
 	 * Erstellt einen neuen Service für die Notenmodul-Credentials
@@ -75,7 +75,7 @@ public class NotenmodulLocalService {
 	 * @param schuelerLeistungsdatenRepository             das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param schuelerTeilleistungenRepository             das Repository für den Zugriff auf die Schüler-Teilleistungen
 	 * @param schuelerAnkreuzkompetenzenRepository         das Repository für den Zugriff auf die Schüler-Ankreuzkompetenten
-	 * @param ankreuzkompetenzenRepository                 das Repository für den Zugriff auf die Ankreuzkompetenzen
+	 * @param ankreuzkompetenzRepository                 das Repository für den Zugriff auf die Ankreuzkompetenzen
 	 */
 	public NotenmodulLocalService(final NotenmodulKonfigurationClientRepository notenmodulKonfigurationClientRepository,
 			final NotenmodulKonfigurationServerRepository notenmodulKonfigurationServerRepository,
@@ -85,7 +85,7 @@ public class NotenmodulLocalService {
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository,
 			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
-			final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository) {
+			final AnkreuzkompetenzRepository ankreuzkompetenzRepository) {
 		this.notenmodulKonfigurationClientRepository = notenmodulKonfigurationClientRepository;
 		this.notenmodulKonfigurationServerRepository = notenmodulKonfigurationServerRepository;
 		this.schuelerRepository = schuelerRepository;
@@ -94,7 +94,7 @@ public class NotenmodulLocalService {
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerTeilleistungenRepository = schuelerTeilleistungenRepository;
 		this.schuelerAnkreuzkompetenzenRepository = schuelerAnkreuzkompetenzenRepository;
-		this.ankreuzkompetenzenRepository = ankreuzkompetenzenRepository;
+		this.ankreuzkompetenzRepository = ankreuzkompetenzRepository;
 	}
 
 
@@ -690,7 +690,7 @@ public class NotenmodulLocalService {
 			final DTOSchuelerAnkreuzfloskeln schuelerankreuzkompetenz = schuelerAnkreuzkompetenzenRepository.findById(patch.id)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Die Schüler-Ankreuzkompetenz-ID %d existiert nicht.".formatted(patch.id)));
 
-			final DTOAnkreuzfloskeln ankreuzkompetenz = ankreuzkompetenzenRepository.findById(schuelerankreuzkompetenz.Floskel_ID)
+			final DTOAnkreuzfloskeln ankreuzkompetenz = ankreuzkompetenzRepository.findById(schuelerankreuzkompetenz.Floskel_ID)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
 							"Die Ankreuzkompetenz-ID %d existiert nicht.".formatted(schuelerankreuzkompetenz.Floskel_ID)));
 

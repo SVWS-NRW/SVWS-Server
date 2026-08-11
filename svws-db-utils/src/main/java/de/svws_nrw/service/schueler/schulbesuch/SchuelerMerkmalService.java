@@ -15,7 +15,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
-import de.svws_nrw.repo.schule.merkmale.MerkmalRepository;
+import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import jakarta.ws.rs.core.Response;
 
 public class SchuelerMerkmalService {

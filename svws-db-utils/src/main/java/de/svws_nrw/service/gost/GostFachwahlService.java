@@ -38,13 +38,13 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.faecher.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.gost.GostJahrgangFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostJahrgangsdatenRepository;
 import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostSchuelerRepository;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenVorgabeRepository;
-import de.svws_nrw.repo.jahrgaenge.JahrgaengeRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
@@ -59,7 +59,7 @@ public class GostFachwahlService {
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
-	private final JahrgaengeRepository jahrgaengeRepository;
+	private final JahrgangRepository jahrgangRepository;
 	private final FachRepository fachRepository;
 	private final GostSchuelerRepository gostSchuelerRepository;
 	private final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository;
@@ -76,7 +76,7 @@ public class GostFachwahlService {
 	 * @param schuelerRepository                     das Repository für den Zugriff auf Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 * @param schuelerLeistungsdatenRepository       das Repository für den Zugriff auf die Schüler-Leistungsdaten
-	 * @param jahrgaengeRepository                   das Repository für den Zugriff auf Jahrgänge
+	 * @param jahrgangRepository                   das Repository für den Zugriff auf Jahrgänge
 	 * @param fachRepository                         das Repository für den Zugriff auf Fächerdaten
 	 * @param gostSchuelerRepository                 das Repository für den Zugriff auf die Schüler-Informationen zur Gymnasialen Oberstufe
 	 * @param gostSchuelerFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen
@@ -90,7 +90,7 @@ public class GostFachwahlService {
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
-			final JahrgaengeRepository jahrgaengeRepository,
+			final JahrgangRepository jahrgangRepository,
 			final FachRepository fachRepository,
 			final GostSchuelerRepository gostSchuelerRepository,
 			final GostSchuelerFachbelegungenRepository gostSchuelerFachbelegungenRepository,
@@ -103,7 +103,7 @@ public class GostFachwahlService {
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
-		this.jahrgaengeRepository = jahrgaengeRepository;
+		this.jahrgangRepository = jahrgangRepository;
 		this.fachRepository = fachRepository;
 		this.gostSchuelerRepository = gostSchuelerRepository;
 		this.gostSchuelerFachbelegungenRepository = gostSchuelerFachbelegungenRepository;
@@ -403,7 +403,7 @@ public class GostFachwahlService {
 			// Ermittle den aktuellen Schüler-Lernabschnitt
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findAktuellBySchuelerID(idSchueler)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Es konnte kein aktueller Lernabschnitt für den schüler bestimmt werden."));
-			final DTOJahrgang dtoJahrgang = jahrgaengeRepository.findById(lernabschnitt.Jahrgang_ID)
+			final DTOJahrgang dtoJahrgang = jahrgangRepository.findById(lernabschnitt.Jahrgang_ID)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang des aktuellen Lernabschnittes des Schülers ist ungültig."));
 			if (dtoJahrgang.ASDJahrgang == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang des aktuellen Lernabschnittes des Schülers ist nicht korrekt gesetzt.");
