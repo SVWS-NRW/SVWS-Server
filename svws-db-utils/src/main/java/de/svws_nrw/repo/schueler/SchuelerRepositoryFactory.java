@@ -2,8 +2,10 @@ package de.svws_nrw.repo.schueler;
 
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
@@ -17,6 +19,40 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabsch
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.repo.RepositoryFactory;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepository;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepositoryImpl;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturRepository;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturRepositoryImpl;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepositoryImpl;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepositoryImpl;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepositoryImpl;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepository;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepositoryImpl;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepositoryImpl;
+import de.svws_nrw.repo.schueler.sprachenfolge.SchuelerSprachenfolgeRepository;
+import de.svws_nrw.repo.schueler.sprachenfolge.SchuelerSprachenfolgeRepositoryImpl;
+import de.svws_nrw.repo.schueler.sprachpruefung.SchuelerSprachpruefungRepository;
+import de.svws_nrw.repo.schueler.sprachpruefung.SchuelerSprachpruefungRepositoryImpl;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepositoryImpl;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepository;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepositoryImpl;
+import de.svws_nrw.repo.schueler.zp10.SchuelerZP10Repository;
+import de.svws_nrw.repo.schueler.zp10.SchuelerZP10RepositoryImpl;
+import de.svws_nrw.repo.schueler.zp10.SchuelerZP10TimestampsRepository;
+import de.svws_nrw.repo.schueler.zp10.SchuelerZP10TimestampsRepositoryImpl;
 
 /**
  * Eine Factory zum Erstellen von Repositories für den Schüler-Bereich.
@@ -48,8 +84,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerAnkreuzkompetenzenRepository getSchuelerAnkreuzkompetenzenRepository() {
-		return getOrCreate(SchuelerAnkreuzkompetenzenRepository.class, () -> new SchuelerAnkreuzkompetenzenRepositoryImpl(conn));
+	public SchuelerAnkreuzkompetenzRepository getSchuelerAnkreuzkompetenzenRepository() {
+		return getOrCreate(SchuelerAnkreuzkompetenzRepository.class, () -> new SchuelerAnkreuzkompetenzRepositoryImpl(conn));
 	}
 
 
@@ -58,8 +94,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerAnkreuzkompetenzenTimestampsRepository getSchuelerAnkreuzkompetenzenTimestampsRepository() {
-		return getOrCreate(SchuelerAnkreuzkompetenzenTimestampsRepository.class, () -> new SchuelerAnkreuzkompetenzenTimestampsRepositoryImpl(conn));
+	public SchuelerAnkreuzkompetenzTimestampRepository getSchuelerAnkreuzkompetenzenTimestampsRepository() {
+		return getOrCreate(SchuelerAnkreuzkompetenzTimestampRepository.class, () -> new SchuelerAnkreuzkompetenzTimestampRepositoryImpl(conn));
 	}
 
 
@@ -108,8 +144,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerSprachpruefungenRepository getSchuelerSprachpruefungenRepository() {
-		return getOrCreate(SchuelerSprachpruefungenRepository.class, () -> new SchuelerSprachpruefungenRepositoryImpl(conn));
+	public SchuelerSprachpruefungRepository getSchuelerSprachpruefungenRepository() {
+		return getOrCreate(SchuelerSprachpruefungRepository.class, () -> new SchuelerSprachpruefungRepositoryImpl(conn));
 	}
 
 
@@ -118,8 +154,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerLernabschnittTimestampsRepository getSchuelerLernabschnittTimestampsRepository() {
-		return getOrCreate(SchuelerLernabschnittTimestampsRepository.class, () -> new SchuelerLernabschnittTimestampsRepositoryImpl(conn));
+	public SchuelerLernabschnittTimestampRepository getSchuelerLernabschnittTimestampsRepository() {
+		return getOrCreate(SchuelerLernabschnittTimestampRepository.class, () -> new SchuelerLernabschnittTimestampRepositoryImpl(conn));
 	}
 
 
@@ -128,8 +164,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerLernabschnittBemerkungenRepository getSchuelerLernabschnittBemerkungenRepository() {
-		return getOrCreate(SchuelerLernabschnittBemerkungenRepository.class, () -> new SchuelerLernabschnittBemerkungenRepositoryImpl(conn));
+	public SchuelerLernabschnittBemerkungRepository getSchuelerLernabschnittBemerkungenRepository() {
+		return getOrCreate(SchuelerLernabschnittBemerkungRepository.class, () -> new SchuelerLernabschnittBemerkungRepositoryImpl(conn));
 	}
 
 
@@ -138,8 +174,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerTeilleistungenRepository getSchuelerTeilleistungenRepository() {
-		return getOrCreate(SchuelerTeilleistungenRepository.class, () -> new SchuelerTeilleistungenRepositoryImpl(conn));
+	public SchuelerTeilleistungRepository getSchuelerTeilleistungenRepository() {
+		return getOrCreate(SchuelerTeilleistungRepository.class, () -> new SchuelerTeilleistungRepositoryImpl(conn));
 	}
 
 
@@ -148,8 +184,8 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public SchuelerTeilleistungenTimestampsRepository getSchuelerTeilleistungenTimestampsRepository() {
-		return getOrCreate(SchuelerTeilleistungenTimestampsRepository.class, () -> new SchuelerTeilleistungenTimestampsRepositoryImpl(conn));
+	public SchuelerTeilleistungTimestampRepository getSchuelerTeilleistungenTimestampsRepository() {
+		return getOrCreate(SchuelerTeilleistungTimestampRepository.class, () -> new SchuelerTeilleistungTimestampRepositoryImpl(conn));
 	}
 
 
@@ -189,6 +225,24 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerZP10TimestampsRepository getSchuelerZP10TimestampsRepository() {
 		return getOrCreate(SchuelerZP10TimestampsRepository.class, () -> new SchuelerZP10TimestampsRepositoryImpl(conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerAbgaenge}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerBisherigeSchuleRepository getSchuelerBisherigeSchuleRepository() {
+		return this.getOrCreate(SchuelerBisherigeSchuleRepository.class, () -> new SchuelerBisherigeSchuleRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerMerkmale}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerMerkmalRepository getSchuelerMerkmaleRepository() {
+		return this.getOrCreate(SchuelerMerkmalRepository.class, () -> new SchuelerMerkmalRepositoryImpl(this.conn));
 	}
 
 }

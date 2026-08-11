@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleService;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,13 +35,13 @@ class BisherigeSchuleControllerFactoryTest {
 	private HttpServletRequest request;
 
 	private MockedStatic<DBBenutzerUtils> dbBenutzerUtilsMock;
-	private MockedStatic<BisherigeSchuleRepositoryFactory> repositoryFactoryMock;
+	private MockedStatic<SchuelerRepositoryFactory> repositoryFactoryMock;
 	private MockedStatic<BisherigeSchuleServiceFactory> serviceFactoryStaticMock;
 
 	@BeforeEach
 	void setUp() {
 		dbBenutzerUtilsMock = mockStatic(DBBenutzerUtils.class);
-		repositoryFactoryMock = mockStatic(BisherigeSchuleRepositoryFactory.class);
+		repositoryFactoryMock = mockStatic(SchuelerRepositoryFactory.class);
 		serviceFactoryStaticMock = mockStatic(BisherigeSchuleServiceFactory.class);
 	}
 
@@ -56,12 +56,12 @@ class BisherigeSchuleControllerFactoryTest {
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
 		final var dbConnection = mock(DBEntityManager.class);
-		final var repoFactory = mock(BisherigeSchuleRepositoryFactory.class);
+		final var repoFactory = mock(SchuelerRepositoryFactory.class);
 		final var mockedServiceFactory = mock(BisherigeSchuleServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
 				.thenReturn(dbConnection);
-		repositoryFactoryMock.when(BisherigeSchuleRepositoryFactory::getNewInstance)
+		repositoryFactoryMock.when(SchuelerRepositoryFactory::getNewInstance)
 				.thenReturn(repoFactory);
 		serviceFactoryStaticMock.when(() -> BisherigeSchuleServiceFactory.getNewInstance(repoFactory, BisherigeSchuleMapper.INSTANCE))
 				.thenReturn(mockedServiceFactory);
@@ -73,7 +73,7 @@ class BisherigeSchuleControllerFactoryTest {
 				.isInstanceOf(BisherigeSchuleControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN), times(1));
-		repositoryFactoryMock.verify(BisherigeSchuleRepositoryFactory::getNewInstance, times(1));
+		repositoryFactoryMock.verify(SchuelerRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> BisherigeSchuleServiceFactory.getNewInstance(repoFactory, BisherigeSchuleMapper.INSTANCE), times(1));
 	}
 
@@ -81,12 +81,12 @@ class BisherigeSchuleControllerFactoryTest {
 	@DisplayName("withDeleteAccess | Erfolg")
 	void withDeleteAccess_success() {
 		final var dbConnection = mock(DBEntityManager.class);
-		final var repoFactory = mock(BisherigeSchuleRepositoryFactory.class);
+		final var repoFactory = mock(SchuelerRepositoryFactory.class);
 		final var mockedServiceFactory = mock(BisherigeSchuleServiceFactory.class);
 
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
 				.thenReturn(dbConnection);
-		repositoryFactoryMock.when(BisherigeSchuleRepositoryFactory::getNewInstance)
+		repositoryFactoryMock.when(SchuelerRepositoryFactory::getNewInstance)
 				.thenReturn(repoFactory);
 		serviceFactoryStaticMock.when(() -> BisherigeSchuleServiceFactory.getNewInstance(repoFactory, BisherigeSchuleMapper.INSTANCE))
 				.thenReturn(mockedServiceFactory);
@@ -98,7 +98,7 @@ class BisherigeSchuleControllerFactoryTest {
 				.isInstanceOf(BisherigeSchuleControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN), times(1));
-		repositoryFactoryMock.verify(BisherigeSchuleRepositoryFactory::getNewInstance, times(1));
+		repositoryFactoryMock.verify(SchuelerRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> BisherigeSchuleServiceFactory.getNewInstance(repoFactory, BisherigeSchuleMapper.INSTANCE), times(1));
 	}
 

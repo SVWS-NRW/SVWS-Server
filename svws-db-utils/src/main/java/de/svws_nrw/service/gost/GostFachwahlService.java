@@ -45,8 +45,8 @@ import de.svws_nrw.repo.gost.GostSchuelerFachbelegungenRepository;
 import de.svws_nrw.repo.gost.GostSchuelerRepository;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenVorgabeRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
-import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
 

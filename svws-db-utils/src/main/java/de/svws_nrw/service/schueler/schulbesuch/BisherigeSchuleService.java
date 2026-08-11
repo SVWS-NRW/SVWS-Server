@@ -17,12 +17,12 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepository;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepository;
 import jakarta.ws.rs.core.Response;
 
 public final class BisherigeSchuleService {
 
-	private final BisherigeSchuleRepository repository;
+	private final SchuelerBisherigeSchuleRepository repository;
 	private final BisherigeSchuleMapper mapper;
 
 	private final DataSchulen dataSchulen;
@@ -41,7 +41,7 @@ public final class BisherigeSchuleService {
 	 * @param dataKatalogEntlassgruende   Datenquelle für den Entlassgrundkatalog (Lookup via Bezeichnung)
 	 */
 	public BisherigeSchuleService(
-			final BisherigeSchuleRepository repository,
+			final SchuelerBisherigeSchuleRepository repository,
 			final BisherigeSchuleMapper mapper,
 			final DataSchulen dataSchulen,
 			final DataKatalogEntlassgruende dataKatalogEntlassgruende) {

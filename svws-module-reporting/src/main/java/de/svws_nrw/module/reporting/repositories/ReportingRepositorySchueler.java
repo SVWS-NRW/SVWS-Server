@@ -31,7 +31,7 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
-import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepositoryImpl;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrFactory;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
@@ -428,7 +428,7 @@ public class ReportingRepositorySchueler {
 		}
 		try {
 			final List<DTOSchuelerAnkreuzfloskeln> dtos =
-					new SchuelerAnkreuzkompetenzenRepositoryImpl(this.reportingContext.conn()).findListByLernabschnitt(idsLernabschnitte);
+					new SchuelerAnkreuzkompetenzRepositoryImpl(this.reportingContext.conn()).findListByLernabschnitt(idsLernabschnitte);
 			for (final DTOSchuelerAnkreuzfloskeln dto : dtos) {
 				mapSchuelerAnkreuzkompetenzen.computeIfAbsent(dto.Abschnitt_ID, k -> new ArrayList<>()).add(dto);
 			}

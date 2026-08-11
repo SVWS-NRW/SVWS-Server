@@ -8,7 +8,7 @@ import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import jakarta.validation.constraints.NotNull;
 

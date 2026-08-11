@@ -1,17 +1,17 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 
 public final class SchuelerMerkmalServiceFactory {
 
-	private final SchuelerMerkmaleRepositoryFactory repoFactory;
+	private final SchuelerRepositoryFactory repoFactory;
 	private final KatalogRepositoryFactory merkmalRepoFactory;
 	private final SchuelerMerkmalMapper mapper;
 
 	private SchuelerMerkmalServiceFactory(
-			final SchuelerMerkmaleRepositoryFactory repoFactory,
+			final SchuelerRepositoryFactory repoFactory,
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final SchuelerMerkmalMapper mapper) {
 		this.repoFactory = repoFactory;
@@ -28,7 +28,7 @@ public final class SchuelerMerkmalServiceFactory {
 	 * @return eine neue {@code SchuelerMerkmalServiceFactory}
 	 */
 	public static SchuelerMerkmalServiceFactory getNewInstance(
-			final SchuelerMerkmaleRepositoryFactory repoFactory,
+			final SchuelerRepositoryFactory repoFactory,
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final SchuelerMerkmalMapper mapper) {
 		return new SchuelerMerkmalServiceFactory(repoFactory, katalogRepositoryFactory, mapper);

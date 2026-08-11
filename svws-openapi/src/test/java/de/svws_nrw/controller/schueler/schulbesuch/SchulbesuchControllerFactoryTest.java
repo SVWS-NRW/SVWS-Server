@@ -8,8 +8,6 @@ import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
-import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
@@ -40,13 +38,7 @@ class SchulbesuchControllerFactoryTest {
 	private MockedStatic<SchuelerRepositoryFactory> schuelerRepositoryFactoryMock;
 
 	@Mock
-	private MockedStatic<SchuelerMerkmaleRepositoryFactory> schuelerMerkmaleRepositoryFactoryMock;
-
-	@Mock
 	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
-
-	@Mock
-	private MockedStatic<BisherigeSchuleRepositoryFactory> bisherigeSchuleRepositoryFactoryMock;
 
 	@Mock
 	private MockedStatic<SchuelerMerkmalServiceFactory> schuelerMerkmalServiceFactoryMock;
@@ -61,9 +53,7 @@ class SchulbesuchControllerFactoryTest {
 	void tearDown() {
 		dbBenutzerUtilsMock.close();
 		schuelerRepositoryFactoryMock.close();
-		schuelerMerkmaleRepositoryFactoryMock.close();
 		katalogRepositoryFactoryMockedStatic.close();
-		bisherigeSchuleRepositoryFactoryMock.close();
 		schuelerMerkmalServiceFactoryMock.close();
 		bisherigeSchuleServiceFactoryMock.close();
 		schulbesuchServiceFactoryMock.close();
@@ -72,9 +62,7 @@ class SchulbesuchControllerFactoryTest {
 	private void setupFactoryChain(final BenutzerKompetenz kompetenz) {
 		final var dbConnection = mock(DBEntityManager.class);
 		final var schuelerRepoFactory = mock(SchuelerRepositoryFactory.class);
-		final var schuelerMerkmaleRepoFactory = mock(SchuelerMerkmaleRepositoryFactory.class);
 		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
-		final var bisherigeSchuleRepoFactory = mock(BisherigeSchuleRepositoryFactory.class);
 		final var schuelerMerkmalServiceFactory = mock(SchuelerMerkmalServiceFactory.class);
 		final var bisherigeSchuleServiceFactory = mock(BisherigeSchuleServiceFactory.class);
 		final var mockedServiceFactory = mock(SchulbesuchServiceFactory.class);
@@ -83,17 +71,13 @@ class SchulbesuchControllerFactoryTest {
 				.thenReturn(dbConnection);
 		schuelerRepositoryFactoryMock.when(SchuelerRepositoryFactory::getNewInstance)
 				.thenReturn(schuelerRepoFactory);
-		schuelerMerkmaleRepositoryFactoryMock.when(SchuelerMerkmaleRepositoryFactory::getNewInstance)
-				.thenReturn(schuelerMerkmaleRepoFactory);
 		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
 				.thenReturn(katalogRepositoryFactory);
-		bisherigeSchuleRepositoryFactoryMock.when(BisherigeSchuleRepositoryFactory::getNewInstance)
-				.thenReturn(bisherigeSchuleRepoFactory);
 		schuelerMerkmalServiceFactoryMock.when(() -> SchuelerMerkmalServiceFactory.getNewInstance(
-						schuelerMerkmaleRepoFactory, katalogRepositoryFactory, SchuelerMerkmalMapper.INSTANCE))
+						schuelerRepoFactory, katalogRepositoryFactory, SchuelerMerkmalMapper.INSTANCE))
 				.thenReturn(schuelerMerkmalServiceFactory);
 		bisherigeSchuleServiceFactoryMock.when(() -> BisherigeSchuleServiceFactory.getNewInstance(
-						bisherigeSchuleRepoFactory, BisherigeSchuleMapper.INSTANCE))
+						schuelerRepoFactory, BisherigeSchuleMapper.INSTANCE))
 				.thenReturn(bisherigeSchuleServiceFactory);
 		schulbesuchServiceFactoryMock.when(() -> SchulbesuchServiceFactory.getNewInstance(
 						schuelerRepoFactory, schuelerMerkmalServiceFactory, bisherigeSchuleServiceFactory, SchulbesuchMapper.INSTANCE))

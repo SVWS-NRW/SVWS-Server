@@ -15,7 +15,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.validation.constraints.NotNull;
 

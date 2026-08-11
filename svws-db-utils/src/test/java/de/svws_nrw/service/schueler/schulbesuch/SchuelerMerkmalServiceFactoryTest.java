@@ -2,8 +2,8 @@ package de.svws_nrw.service.schueler.schulbesuch;
 
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
-import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 class SchuelerMerkmalServiceFactoryTest {
 
 	@Mock
-	private SchuelerMerkmaleRepositoryFactory repoFactory;
+	private SchuelerRepositoryFactory repoFactory;
 
 	@Mock
 	private KatalogRepositoryFactory katalogRepositoryFactory;

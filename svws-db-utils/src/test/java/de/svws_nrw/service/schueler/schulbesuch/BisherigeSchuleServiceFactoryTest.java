@@ -4,8 +4,8 @@ import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
 import de.svws_nrw.repo.DbConnectionProvider;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepository;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 class BisherigeSchuleServiceFactoryTest {
 
 	@Mock
-	private BisherigeSchuleRepositoryFactory repoFactory;
+	private SchuelerRepositoryFactory repoFactory;
 
 	@Mock
 	private BisherigeSchuleMapper mapper;
@@ -59,11 +59,11 @@ class BisherigeSchuleServiceFactoryTest {
 	@DisplayName("getBisherigeSchulenService | Erfolg")
 	void getBisherigeSchuleService_success() {
 		final var conn = mock(de.svws_nrw.db.DBEntityManager.class);
-		final var repository = mock(BisherigeSchuleRepository.class);
+		final var repository = mock(SchuelerBisherigeSchuleRepository.class);
 		final var factory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
 
 		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
-		when(repoFactory.getBisherigeSchuleRepository()).thenReturn(repository);
+		when(repoFactory.getSchuelerBisherigeSchuleRepository()).thenReturn(repository);
 
 		try (MockedConstruction<DataSchulen> ignored = mockConstruction(DataSchulen.class);
 				MockedConstruction<DataKatalogEntlassgruende> ignored1 = mockConstruction(DataKatalogEntlassgruende.class)) {
@@ -74,7 +74,7 @@ class BisherigeSchuleServiceFactoryTest {
 					.isNotNull()
 					.isInstanceOf(BisherigeSchuleService.class);
 
-			verify(repoFactory, times(1)).getBisherigeSchuleRepository();
+			verify(repoFactory, times(1)).getSchuelerBisherigeSchuleRepository();
 			dbConnectionProviderMock.verify(DbConnectionProvider::getConnection, times(2));
 		}
 	}
@@ -83,11 +83,11 @@ class BisherigeSchuleServiceFactoryTest {
 	@DisplayName("getBisherigeSchulenService | Mehrfache Aufrufe erstellen neue Instanzen")
 	void getBisherigeSchuleService_multipleCallsCreateNewInstances() {
 		final var conn = mock(de.svws_nrw.db.DBEntityManager.class);
-		final var repository = mock(BisherigeSchuleRepository.class);
+		final var repository = mock(SchuelerBisherigeSchuleRepository.class);
 		final var factory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
 
 		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(conn);
-		when(repoFactory.getBisherigeSchuleRepository()).thenReturn(repository);
+		when(repoFactory.getSchuelerBisherigeSchuleRepository()).thenReturn(repository);
 
 		try (MockedConstruction<DataSchulen> ignored = mockConstruction(DataSchulen.class);
 				MockedConstruction<DataKatalogEntlassgruende> ignored1 = mockConstruction(DataKatalogEntlassgruende.class)) {
@@ -101,7 +101,7 @@ class BisherigeSchuleServiceFactoryTest {
 
 			assertThat(service2).isNotNull();
 
-			verify(repoFactory, times(2)).getBisherigeSchuleRepository();
+			verify(repoFactory, times(2)).getSchuelerBisherigeSchuleRepository();
 			dbConnectionProviderMock.verify(DbConnectionProvider::getConnection, times(4));
 		}
 	}

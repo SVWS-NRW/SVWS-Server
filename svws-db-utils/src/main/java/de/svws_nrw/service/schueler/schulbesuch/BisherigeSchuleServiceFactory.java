@@ -4,15 +4,15 @@ import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
 import de.svws_nrw.repo.DbConnectionProvider;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepository;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepository;
 
 public final class BisherigeSchuleServiceFactory {
 
-	private final BisherigeSchuleRepositoryFactory repoFactory;
+	private final SchuelerRepositoryFactory repoFactory;
 	private final BisherigeSchuleMapper mapper;
 
-	private BisherigeSchuleServiceFactory(final BisherigeSchuleRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
+	private BisherigeSchuleServiceFactory(final SchuelerRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
 		this.repoFactory = repoFactory;
 		this.mapper = mapper;
 	}
@@ -20,11 +20,11 @@ public final class BisherigeSchuleServiceFactory {
 	/**
 	 * Erstellt eine neue Instanz der {@code BisherigeSchulenServiceFactory}.
 	 *
-	 * @param repoFactory das Repository-Factory für {@link BisherigeSchuleRepository}-Instanzen
+	 * @param repoFactory das Repository-Factory für {@link SchuelerBisherigeSchuleRepository}-Instanzen
 	 * @param mapper      der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 * @return eine neue {@code BisherigeSchulenServiceFactory}
 	 */
-	public static BisherigeSchuleServiceFactory getNewInstance(final BisherigeSchuleRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
+	public static BisherigeSchuleServiceFactory getNewInstance(final SchuelerRepositoryFactory repoFactory, final BisherigeSchuleMapper mapper) {
 		return new BisherigeSchuleServiceFactory(repoFactory, mapper);
 	}
 
@@ -39,7 +39,7 @@ public final class BisherigeSchuleServiceFactory {
 	public BisherigeSchuleService getBisherigeSchuleService() {
 		final var dataSchulen = new DataSchulen(DbConnectionProvider.getConnection());
 		final var dataEntlassgruende = new DataKatalogEntlassgruende(DbConnectionProvider.getConnection());
-		return new BisherigeSchuleService(repoFactory.getBisherigeSchuleRepository(), mapper, dataSchulen, dataEntlassgruende);
+		return new BisherigeSchuleService(repoFactory.getSchuelerBisherigeSchuleRepository(), mapper, dataSchulen, dataEntlassgruende);
 	}
 
 }

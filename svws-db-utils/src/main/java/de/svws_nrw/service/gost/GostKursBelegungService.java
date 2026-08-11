@@ -14,8 +14,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 

@@ -34,10 +34,10 @@ import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
-import de.svws_nrw.repo.schueler.SchuelerAbiturFachRepository;
-import de.svws_nrw.repo.schueler.SchuelerAbiturRepository;
-import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepository;
+import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
 

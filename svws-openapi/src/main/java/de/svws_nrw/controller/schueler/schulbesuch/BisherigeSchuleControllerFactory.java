@@ -4,7 +4,7 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -23,7 +23,7 @@ public class BisherigeSchuleControllerFactory {
 
 	private static BisherigeSchuleControllerFactory getNewInstance(final HttpServletRequest requst) {
 		DBBenutzerUtils.getDBConnection(requst, ServerMode.STABLE,  BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
-		final var repoFactory = BisherigeSchuleRepositoryFactory.getNewInstance();
+		final var repoFactory = SchuelerRepositoryFactory.getNewInstance();
 		final var mapper = BisherigeSchuleMapper.INSTANCE;
 		final var serviceFactory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
 

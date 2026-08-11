@@ -5,7 +5,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmaleRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
@@ -36,14 +36,14 @@ class SchuelerMerkmalControllerFactoryTest {
 	private HttpServletRequest request;
 
 	private MockedStatic<DBBenutzerUtils> dbBenutzerUtilsMock;
-	private MockedStatic<SchuelerMerkmaleRepositoryFactory> repoFactoryStaticMock;
+	private MockedStatic<SchuelerRepositoryFactory> repoFactoryStaticMock;
 	private MockedStatic<KatalogRepositoryFactory> katalogRepositoryFactoryMockedStatic;
 	private MockedStatic<SchuelerMerkmalServiceFactory> serviceFactoryStaticMock;
 
 	@BeforeEach
 	void setUp() {
 		dbBenutzerUtilsMock = mockStatic(DBBenutzerUtils.class);
-		repoFactoryStaticMock = mockStatic(SchuelerMerkmaleRepositoryFactory.class);
+		repoFactoryStaticMock = mockStatic(SchuelerRepositoryFactory.class);
 		katalogRepositoryFactoryMockedStatic = mockStatic(KatalogRepositoryFactory.class);
 		serviceFactoryStaticMock = mockStatic(SchuelerMerkmalServiceFactory.class);
 	}
@@ -56,12 +56,12 @@ class SchuelerMerkmalControllerFactoryTest {
 		serviceFactoryStaticMock.close();
 	}
 
-	private void mockInfrastruktur(final SchuelerMerkmaleRepositoryFactory repoFactory,
+	private void mockInfrastruktur(final SchuelerRepositoryFactory repoFactory,
 			final KatalogRepositoryFactory katalogRepositoryFactory,
 			final SchuelerMerkmalServiceFactory mockedServiceFactory) {
 		dbBenutzerUtilsMock.when(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
 				.thenReturn(mock(DBEntityManager.class));
-		repoFactoryStaticMock.when(SchuelerMerkmaleRepositoryFactory::getNewInstance)
+		repoFactoryStaticMock.when(SchuelerRepositoryFactory::getNewInstance)
 				.thenReturn(repoFactory);
 		katalogRepositoryFactoryMockedStatic.when(KatalogRepositoryFactory::getNewInstance)
 				.thenReturn(katalogRepositoryFactory);
@@ -72,7 +72,7 @@ class SchuelerMerkmalControllerFactoryTest {
 	@Test
 	@DisplayName("withWriteAccess | Erfolg")
 	void withWriteAccess_success() {
-		final var repoFactory = mock(SchuelerMerkmaleRepositoryFactory.class);
+		final var repoFactory = mock(SchuelerRepositoryFactory.class);
 		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var mockedServiceFactory = mock(SchuelerMerkmalServiceFactory.class);
 
@@ -85,7 +85,7 @@ class SchuelerMerkmalControllerFactoryTest {
 				.isInstanceOf(SchuelerMerkmalControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN), times(1));
-		repoFactoryStaticMock.verify(SchuelerMerkmaleRepositoryFactory::getNewInstance, times(1));
+		repoFactoryStaticMock.verify(SchuelerRepositoryFactory::getNewInstance, times(1));
 		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, SchuelerMerkmalMapper.INSTANCE), times(1));
 	}
@@ -93,7 +93,7 @@ class SchuelerMerkmalControllerFactoryTest {
 	@Test
 	@DisplayName("withDeleteAccess | Erfolg")
 	void withDeleteAccess_success() {
-		final var repoFactory = mock(SchuelerMerkmaleRepositoryFactory.class);
+		final var repoFactory = mock(SchuelerRepositoryFactory.class);
 		final var katalogRepositoryFactory = mock(KatalogRepositoryFactory.class);
 		final var mockedServiceFactory = mock(SchuelerMerkmalServiceFactory.class);
 
@@ -106,7 +106,7 @@ class SchuelerMerkmalControllerFactoryTest {
 				.isInstanceOf(SchuelerMerkmalControllerFactory.class);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN), times(1));
-		repoFactoryStaticMock.verify(SchuelerMerkmaleRepositoryFactory::getNewInstance, times(1));
+		repoFactoryStaticMock.verify(SchuelerRepositoryFactory::getNewInstance, times(1));
 		katalogRepositoryFactoryMockedStatic.verify(KatalogRepositoryFactory::getNewInstance, times(1));
 		serviceFactoryStaticMock.verify(() -> SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, SchuelerMerkmalMapper.INSTANCE), times(1));
 	}

@@ -2,6 +2,7 @@ package de.svws_nrw.repo.schueler.schulbesuch;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.repo.DbConnectionProvider;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,16 +37,16 @@ class SchuelerMerkmalRepositoryFactoryTest {
 	@Test
 	@DisplayName("getNewInstance | Erfolg")
 	void getNewInstance_success() {
-		assertThat(SchuelerMerkmaleRepositoryFactory.getNewInstance())
+		assertThat(SchuelerRepositoryFactory.getNewInstance())
 				.isNotNull()
-				.isInstanceOf(SchuelerMerkmaleRepositoryFactory.class);
+				.isInstanceOf(SchuelerRepositoryFactory.class);
 	}
 
 	@Test
 	@DisplayName("getNewInstance | Jeder Aufruf erstellt neue Instanz")
 	void getNewInstance_createsNewInstance() {
-		final var factory1 = SchuelerMerkmaleRepositoryFactory.getNewInstance();
-		final var factory2 = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var factory1 = SchuelerRepositoryFactory.getNewInstance();
+		final var factory2 = SchuelerRepositoryFactory.getNewInstance();
 
 		assertThat(factory1).isNotSameAs(factory2);
 	}
@@ -53,7 +54,7 @@ class SchuelerMerkmalRepositoryFactoryTest {
 	@Test
 	@DisplayName("getSchuelerMerkmaleRepository | Gibt SchuelerMerkmaleRepositoryFactory zurück")
 	void getSchuelerMerkmaleRepository_returnsSchuelerMerkmaleRepository() {
-		final var factory = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var factory = SchuelerRepositoryFactory.getNewInstance();
 
 		final var repository = factory.getSchuelerMerkmaleRepository();
 
@@ -66,7 +67,7 @@ class SchuelerMerkmalRepositoryFactoryTest {
 	@Test
 	@DisplayName("getSchuelerMerkmaleRepository | Mehrfache Aufrufe geben gleiche Instanz zurück")
 	void getSchuelerMerkmaleRepository_cachesInstance() {
-		final var factory = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var factory = SchuelerRepositoryFactory.getNewInstance();
 
 		final var repository1 = factory.getSchuelerMerkmaleRepository();
 		final var repository2 = factory.getSchuelerMerkmaleRepository();
@@ -77,8 +78,8 @@ class SchuelerMerkmalRepositoryFactoryTest {
 	@Test
 	@DisplayName("getSchuelerMerkmaleRepository | Verschiedene Factories erstellen verschiedene Repositories")
 	void getSchuelerMerkmaleRepository_differentFactoriesCreateDifferentRepositories() {
-		final var factory1 = SchuelerMerkmaleRepositoryFactory.getNewInstance();
-		final var factory2 = SchuelerMerkmaleRepositoryFactory.getNewInstance();
+		final var factory1 = SchuelerRepositoryFactory.getNewInstance();
+		final var factory2 = SchuelerRepositoryFactory.getNewInstance();
 
 		final var repository1 = factory1.getSchuelerMerkmaleRepository();
 		final var repository2 = factory2.getSchuelerMerkmaleRepository();

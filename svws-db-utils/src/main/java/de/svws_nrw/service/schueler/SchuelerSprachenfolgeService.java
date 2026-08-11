@@ -7,7 +7,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
-import de.svws_nrw.repo.schueler.SchuelerSprachenfolgeRepository;
+import de.svws_nrw.repo.schueler.sprachenfolge.SchuelerSprachenfolgeRepository;
 
 
 /**

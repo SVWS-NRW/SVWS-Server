@@ -51,16 +51,16 @@ import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
 import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
-import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepository;
-import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenTimestampsRepository;
-import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenTimestampsRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittBemerkungenRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
-import de.svws_nrw.repo.schueler.SchuelerLernabschnittTimestampsRepository;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
+import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
-import de.svws_nrw.repo.schueler.SchuelerTeilleistungenRepository;
-import de.svws_nrw.repo.schueler.SchuelerTeilleistungenTimestampsRepository;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
+import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,10 +92,10 @@ public final class EnmV1GetServiceKontext {
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 
 	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte */
-	private final SchuelerLernabschnittTimestampsRepository schuelerLernabschnittTimestampsRepository;
+	private final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository;
 
 	/** Das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern */
-	private final SchuelerLernabschnittBemerkungenRepository schuelerLernabschnittBemerkungenRepository;
+	private final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository;
 
 	/** Das Repository für den Zugriff auf die Schüler-Leistungsdaten */
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
@@ -104,16 +104,16 @@ public final class EnmV1GetServiceKontext {
 	private final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository;
 
 	/** Das Repository für den Zugriff auf die Schüler-Teilleistungen */
-	private final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository;
+	private final SchuelerTeilleistungRepository schuelerTeilleistungRepository;
 
 	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-Teilleistungen */
-	private final SchuelerTeilleistungenTimestampsRepository schuelerTeilleistungenTimestampsRepository;
+	private final SchuelerTeilleistungTimestampRepository schuelerTeilleistungTimestampRepository;
 
 	/** Das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen */
-	private final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository;
+	private final SchuelerAnkreuzkompetenzRepository schuelerAnkreuzkompetenzRepository;
 
 	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen */
-	private final SchuelerAnkreuzkompetenzenTimestampsRepository schuelerAnkreuzkompetenzenTimestampsRepository;
+	private final SchuelerAnkreuzkompetenzTimestampRepository schuelerAnkreuzkompetenzTimestampRepository;
 
 	/** Das Repository für den Zugriff auf die Kurse */
 	private final KurseRepository kurseRepository;
@@ -252,14 +252,14 @@ public final class EnmV1GetServiceKontext {
 			final FachRepository fachRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
-			final SchuelerLernabschnittTimestampsRepository schuelerLernabschnittTimestampsRepository,
-			final SchuelerLernabschnittBemerkungenRepository schuelerLernabschnittBemerkungenRepository,
+			final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository,
+			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository,
-			final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository,
-			final SchuelerTeilleistungenTimestampsRepository schuelerTeilleistungenTimestampsRepository,
-			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
-			final SchuelerAnkreuzkompetenzenTimestampsRepository schuelerAnkreuzkompetenzenTimestampsRepository,
+			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
+			final SchuelerTeilleistungTimestampRepository schuelerTeilleistungTimestampRepository,
+			final SchuelerAnkreuzkompetenzRepository schuelerAnkreuzkompetenzRepository,
+			final SchuelerAnkreuzkompetenzTimestampRepository schuelerAnkreuzkompetenzTimestampRepository,
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
@@ -280,14 +280,14 @@ public final class EnmV1GetServiceKontext {
 		this.fachRepository = fachRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
-		this.schuelerLernabschnittTimestampsRepository = schuelerLernabschnittTimestampsRepository;
-		this.schuelerLernabschnittBemerkungenRepository = schuelerLernabschnittBemerkungenRepository;
+		this.schuelerLernabschnittTimestampRepository = schuelerLernabschnittTimestampRepository;
+		this.schuelerLernabschnittBemerkungRepository = schuelerLernabschnittBemerkungRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerLeistungsdatenTimestampsRepository = schuelerLeistungsdatenTimestampsRepository;
-		this.schuelerTeilleistungenRepository = schuelerTeilleistungenRepository;
-		this.schuelerTeilleistungenTimestampsRepository = schuelerTeilleistungenTimestampsRepository;
-		this.schuelerAnkreuzkompetenzenRepository = schuelerAnkreuzkompetenzenRepository;
-		this.schuelerAnkreuzkompetenzenTimestampsRepository = schuelerAnkreuzkompetenzenTimestampsRepository;
+		this.schuelerTeilleistungRepository = schuelerTeilleistungRepository;
+		this.schuelerTeilleistungTimestampRepository = schuelerTeilleistungTimestampRepository;
+		this.schuelerAnkreuzkompetenzRepository = schuelerAnkreuzkompetenzRepository;
+		this.schuelerAnkreuzkompetenzTimestampRepository = schuelerAnkreuzkompetenzTimestampRepository;
 		this.kurseRepository = kurseRepository;
 		this.klassenRepository = klassenRepository;
 		this.klassenleitungenRepository = klassenleitungenRepository;
@@ -313,14 +313,14 @@ public final class EnmV1GetServiceKontext {
 	 * @param fachRepository                                   das Repository für den Zugriff auf die Fachdaten
 	 * @param schuelerRepository                               das Repository für den Zugriff auf die Schüler
 	 * @param schuelerLernabschnittRepository                  das Repository für den Zugriff auf die Schüler-Lernabschnitte
-	 * @param schuelerLernabschnittTimestampsRepository        das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte
-	 * @param schuelerLernabschnittBemerkungenRepository       das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern
+	 * @param schuelerLernabschnittTimestampRepository        das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte
+	 * @param schuelerLernabschnittBemerkungRepository       das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern
 	 * @param schuelerLeistungsdatenRepository                 das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param schuelerLeistungsdatenTimestampsRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Leistungsdaten
-	 * @param schuelerTeilleistungenRepository                 das Repository für den Zugriff auf die Schüler-Teilleistungen
-	 * @param schuelerTeilleistungenTimestampsRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Teilleistungen
-	 * @param schuelerAnkreuzkompetenzenRepository             das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen
-	 * @param schuelerAnkreuzkompetenzenTimestampsRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen
+	 * @param schuelerTeilleistungRepository                 das Repository für den Zugriff auf die Schüler-Teilleistungen
+	 * @param schuelerTeilleistungTimestampRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Teilleistungen
+	 * @param schuelerAnkreuzkompetenzRepository             das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen
+	 * @param schuelerAnkreuzkompetenzTimestampRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen
 	 * @param kurseRepository                                  das Repository für den Zugriff auf die Kurse
 	 * @param klassenRepository                                das Repository für den Zugriff auf die Klassen
 	 * @param klassenleitungenRepository                       das Repository für den Zugriff auf die Klassenleitungen
@@ -345,14 +345,14 @@ public final class EnmV1GetServiceKontext {
 			final FachRepository fachRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
-			final SchuelerLernabschnittTimestampsRepository schuelerLernabschnittTimestampsRepository,
-			final SchuelerLernabschnittBemerkungenRepository schuelerLernabschnittBemerkungenRepository,
+			final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository,
+			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository,
-			final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository,
-			final SchuelerTeilleistungenTimestampsRepository schuelerTeilleistungenTimestampsRepository,
-			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
-			final SchuelerAnkreuzkompetenzenTimestampsRepository schuelerAnkreuzkompetenzenTimestampsRepository,
+			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
+			final SchuelerTeilleistungTimestampRepository schuelerTeilleistungTimestampRepository,
+			final SchuelerAnkreuzkompetenzRepository schuelerAnkreuzkompetenzRepository,
+			final SchuelerAnkreuzkompetenzTimestampRepository schuelerAnkreuzkompetenzTimestampRepository,
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
@@ -368,10 +368,10 @@ public final class EnmV1GetServiceKontext {
 			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
 		return new EnmV1GetServiceKontext(eigeneSchuleRepository, schuljahresabschnitteRepository, lehrerRepository, fachRepository, schuelerRepository,
-				schuelerLernabschnittRepository, schuelerLernabschnittTimestampsRepository, schuelerLernabschnittBemerkungenRepository,
+				schuelerLernabschnittRepository, schuelerLernabschnittTimestampRepository, schuelerLernabschnittBemerkungRepository,
 				schuelerLeistungsdatenRepository, schuelerLeistungsdatenTimestampsRepository,
-				schuelerTeilleistungenRepository, schuelerTeilleistungenTimestampsRepository,
-				schuelerAnkreuzkompetenzenRepository, schuelerAnkreuzkompetenzenTimestampsRepository,
+				schuelerTeilleistungRepository, schuelerTeilleistungTimestampRepository,
+				schuelerAnkreuzkompetenzRepository, schuelerAnkreuzkompetenzTimestampRepository,
 				kurseRepository, klassenRepository, klassenleitungenRepository, jahrgangRepository, foerderschwerpunktRepository,
 				ankreuzkompetenzKonfigurationRepository, ankreuzkompetenzRepository, ankreuzkompetenzJahrgangRepository,
 				floskelRepository, floskelgruppeRepository, floskelJahrgangRepository, TeilleistungsartRepository,
@@ -475,9 +475,9 @@ public final class EnmV1GetServiceKontext {
 
 		// Bestimme nun die Teilleistungen und die Ankreuzkompetenzen des Schülers
 		final List<DTOSchuelerTeilleistung> listTeilleistungen =
-				schuelerTeilleistungenRepository.findListByLeistungsdaten(idsLeistungsdaten);
+				schuelerTeilleistungRepository.findListByLeistungsdaten(idsLeistungsdaten);
 		final List<DTOSchuelerAnkreuzfloskeln> listAnkreuzkompetenzen =
-				schuelerAnkreuzkompetenzenRepository.findListByLernabschnitt(mapLernabschnitte.keySet());
+				schuelerAnkreuzkompetenzRepository.findListByLernabschnitt(mapLernabschnitte.keySet());
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
 		this.schule = eigeneSchuleRepository.getFirst();
@@ -491,14 +491,14 @@ public final class EnmV1GetServiceKontext {
 		this.mapJahrgaenge = jahrgangRepository.getMap();
 		this.mapKurse = kurseRepository.getMapBySchuljahresabschnitt(idSchuljahresabschnitt);
 		this.mapTeilleistungsarten = TeilleistungsartRepository.getMap();
-		this.mapBemerkungen = schuelerLernabschnittBemerkungenRepository.findMapByLernabschnittID(mapLernabschnitte.keySet());
-		this.mapTimestampsLernabschnitte = schuelerLernabschnittTimestampsRepository.findMapByIds(mapLernabschnitte.keySet());
+		this.mapBemerkungen = schuelerLernabschnittBemerkungRepository.findMapByLernabschnittID(mapLernabschnitte.keySet());
+		this.mapTimestampsLernabschnitte = schuelerLernabschnittTimestampRepository.findMapByIds(mapLernabschnitte.keySet());
 		this.mapTimestampsLeistungsdaten = schuelerLeistungsdatenTimestampsRepository.findMapByIds(idsLeistungsdaten);
 		this.mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
-		this.mapTeilleistungenTimestamps = schuelerTeilleistungenTimestampsRepository.findMapByIds(listTeilleistungen.stream().map(t -> t.ID).toList());
+		this.mapTeilleistungenTimestamps = schuelerTeilleistungTimestampRepository.findMapByIds(listTeilleistungen.stream().map(t -> t.ID).toList());
 		this.mapAnkreuzkompetenzen = listAnkreuzkompetenzen.stream().collect(Collectors.groupingBy(a -> a.Abschnitt_ID));
 		this.mapAnkreuzkompetenzenTimestamps =
-				schuelerAnkreuzkompetenzenTimestampsRepository.findMapByIds(listAnkreuzkompetenzen.stream().map(t -> t.ID).toList());
+				schuelerAnkreuzkompetenzTimestampRepository.findMapByIds(listAnkreuzkompetenzen.stream().map(t -> t.ID).toList());
 
 		this.listFloskelgruppen = floskelgruppeRepository.getAll();
 		this.mapJahrgangIdsByFloskelIds = floskelJahrgangRepository.getAll().stream()

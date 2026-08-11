@@ -14,7 +14,7 @@ import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
-import de.svws_nrw.repo.schueler.SchuelerSprachpruefungenRepository;
+import de.svws_nrw.repo.schueler.sprachpruefung.SchuelerSprachpruefungRepository;
 
 
 /**
@@ -23,16 +23,16 @@ import de.svws_nrw.repo.schueler.SchuelerSprachpruefungenRepository;
 public final class SchuelerSprachpruefungenService {
 
 	/** Das Repository für die Sprachprüfungen der Schüler. */
-	private final SchuelerSprachpruefungenRepository schuelerSprachpruefungenRepository;
+	private final SchuelerSprachpruefungRepository schuelerSprachpruefungRepository;
 
 
 	/**
 	 * Erstellt einen neuen Service mit Repository-Anbindung.
 	 *
-	 * @param schuelerSprachpruefungenRepository   das Repository für die Sprachprüfungen
+	 * @param schuelerSprachpruefungRepository   das Repository für die Sprachprüfungen
 	 */
-	public SchuelerSprachpruefungenService(final SchuelerSprachpruefungenRepository schuelerSprachpruefungenRepository) {
-		this.schuelerSprachpruefungenRepository = schuelerSprachpruefungenRepository;
+	public SchuelerSprachpruefungenService(final SchuelerSprachpruefungRepository schuelerSprachpruefungRepository) {
+		this.schuelerSprachpruefungRepository = schuelerSprachpruefungRepository;
 	}
 
 
@@ -45,7 +45,7 @@ public final class SchuelerSprachpruefungenService {
 	 * @return eine Map mit den Sprachprüfungen der Schüler zugeordnet zu deren IDs
 	 */
 	public Map<Long, List<Sprachpruefung>> getMapSprachenfolgen(final Collection<Long> idsSchueler, final Schuljahresabschnitt abschnitt) {
-		final Map<Long, List<DTOSchuelerSprachpruefungen>> map = schuelerSprachpruefungenRepository.getMapBySchuelerIDs(idsSchueler);
+		final Map<Long, List<DTOSchuelerSprachpruefungen>> map = schuelerSprachpruefungRepository.getMapBySchuelerIDs(idsSchueler);
 		final Map<Long, List<Sprachpruefung>> result = new HashMap<>();
 		for (final var entry : map.entrySet()) {
 			result.put(entry.getKey(), entry.getValue().stream().map(dto -> toApi(dto, abschnitt)).toList());

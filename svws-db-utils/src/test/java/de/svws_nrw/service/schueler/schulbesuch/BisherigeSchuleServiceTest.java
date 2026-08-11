@@ -12,13 +12,14 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
-import de.svws_nrw.repo.schueler.schulbesuch.BisherigeSchuleRepository;
+import de.svws_nrw.repo.schueler.schulbesuch.SchuelerBisherigeSchuleRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,7 +27,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 class BisherigeSchuleServiceTest {
 
 	@Mock
-	private BisherigeSchuleRepository repository;
+	private SchuelerBisherigeSchuleRepository repository;
 
 	@Mock
 	private BisherigeSchuleMapper mapper;
@@ -63,6 +63,8 @@ class BisherigeSchuleServiceTest {
 
 		service = new BisherigeSchuleService(repository, mapper, dataSchulen, dataKatalogEntlassgruende);
 		transactionSupportMock = mockStatic(TransactionSupport.class);
+		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
+				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 	}
 
 	@AfterEach
@@ -181,9 +183,6 @@ class BisherigeSchuleServiceTest {
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		final var result = service.create(dto);
 
 		assertThat(result).isNotNull().isEqualTo(apiModel);
@@ -210,9 +209,6 @@ class BisherigeSchuleServiceTest {
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, null, schule.ID)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		final var result = service.create(dto);
 
 		assertThat(result).isEqualTo(apiModel);
@@ -224,9 +220,6 @@ class BisherigeSchuleServiceTest {
 		final var dto = new BisherigeSchuleCreateRequest();
 		dto.idSchule = null;
 		dto.idEntlassgrund = null;
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -245,9 +238,6 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.NOT_FOUND, "999"));
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessageContaining("999")
@@ -264,9 +254,6 @@ class BisherigeSchuleServiceTest {
 
 		when(dataKatalogEntlassgruende.getEntityById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.NOT_FOUND, "999"));
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -285,9 +272,6 @@ class BisherigeSchuleServiceTest {
 		dto.datumBis = "2022-01-01";
 
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -314,9 +298,6 @@ class BisherigeSchuleServiceTest {
 		when(mapper.toDomain(dto, null, schule.SchulNr)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, null, schule.ID)).thenReturn(apiModel);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThat(service.create(dto)).isEqualTo(apiModel);
 	}
@@ -345,9 +326,6 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(schule.ID)).thenReturn(schule);
 		when(dataKatalogEntlassgruende.getEntityById(entlassgrund.ID)).thenReturn(entlassgrund);
 		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.patch(id, dto);
 
@@ -379,9 +357,6 @@ class BisherigeSchuleServiceTest {
 		when(dataKatalogEntlassgruende.getEntityByBezeichnung(entlassgrund.Bezeichnung)).thenReturn(entlassgrund);
 		when(mapper.toApi(entity, entlassgrund.ID, schule.ID)).thenReturn(apiModel);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		final var result = service.patch(id, dto);
 
 		assertThat(result).isEqualTo(apiModel);
@@ -403,9 +378,6 @@ class BisherigeSchuleServiceTest {
 		when(dataSchulen.getEntityById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.NOT_FOUND, "999"));
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessageContaining("999")
@@ -426,9 +398,6 @@ class BisherigeSchuleServiceTest {
 		final var entity = new DTOSchuelerAbgaenge(id, 42L);
 
 		when(repository.getById(id)).thenReturn(entity);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -454,9 +423,6 @@ class BisherigeSchuleServiceTest {
 		when(dataKatalogEntlassgruende.getEntityById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.NOT_FOUND, "999"));
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
-
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessageContaining("999")
@@ -473,14 +439,9 @@ class BisherigeSchuleServiceTest {
 		dto.idEntlassgrund = JsonNullable.undefined();
 		dto.datumVon = JsonNullable.of("2023-06-01");
 		dto.datumBis = JsonNullable.of("2022-01-01");
-
 		final var entity = new DTOSchuelerAbgaenge(id, 42L);
 		entity.schulnummer = schule.SchulNr;
-
 		when(repository.getById(id)).thenReturn(entity);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -498,16 +459,13 @@ class BisherigeSchuleServiceTest {
 		dto.idEntlassgrund = JsonNullable.undefined();
 		dto.datumVon = JsonNullable.undefined();
 		dto.datumBis = JsonNullable.of("2019-01-01"); // vor entity.datumVon
-
 		final var entity = new DTOSchuelerAbgaenge(id, 42L);
 		entity.schulnummer = schule.SchulNr;
 		entity.datumVon = "2020-09-01";
 		entity.datumBis = null;
-
 		when(repository.getById(id)).thenReturn(entity);
 
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
+
 
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -528,12 +486,8 @@ class BisherigeSchuleServiceTest {
 		final var entity2 = new DTOSchuelerAbgaenge(2L, 42L);
 		final var entity3 = new DTOSchuelerAbgaenge(3L, 42L);
 		final var entities = List.of(entity1, entity2, entity3);
-
 		when(repository.findListByIds(ids)).thenReturn(entities);
 		when(repository.delete(entities)).thenReturn(entities);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
 
@@ -552,11 +506,7 @@ class BisherigeSchuleServiceTest {
 	@DisplayName("delete | Leere Liste")
 	void delete_emptyList() {
 		final var ids = List.<Long>of();
-
 		when(repository.findListByIds(ids)).thenReturn(List.of());
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
 
@@ -572,12 +522,8 @@ class BisherigeSchuleServiceTest {
 		final var entity2 = new DTOSchuelerAbgaenge(1L, 42L);
 		final var entity3 = new DTOSchuelerAbgaenge(2L, 42L);
 		final var entities = List.of(entity1, entity2, entity3);
-
 		when(repository.findListByIds(ids)).thenReturn(entities);
 		when(repository.delete(entities)).thenReturn(entities);
-
-		transactionSupportMock.when(() -> TransactionSupport.transactional(any(Supplier.class)))
-				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 
 		final var result = service.delete(ids);
 
