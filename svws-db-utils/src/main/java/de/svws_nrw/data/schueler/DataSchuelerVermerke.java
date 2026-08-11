@@ -38,7 +38,6 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 	@Override
 	protected void initDTO(final DTOSchuelerVermerke dtoSchuelerVermerke, final Long idVermerk, final Map<String, Object> initAttributes) {
 		dtoSchuelerVermerke.ID = idVermerk;
-		dtoSchuelerVermerke.Bemerkung = "";
 		dtoSchuelerVermerke.AngelegtVon = conn.getUser().getUsername();
 		dtoSchuelerVermerke.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
 	}
@@ -146,7 +145,7 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 			}
 			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false);
 			case "bemerkung" -> {
-				dto.Bemerkung = JSONMapper.convertToString(value, false, true, Schema.tab_SchuelerVermerke.col_Bemerkung.datenlaenge());
+				dto.Bemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerVermerke.col_Bemerkung.datenlaenge());
 				dto.GeaendertVon = conn.getUser().getUsername();
 				dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));
 			}

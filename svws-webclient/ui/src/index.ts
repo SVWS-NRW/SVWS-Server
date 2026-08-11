@@ -153,6 +153,7 @@ export { ViewType } from "./ui/nav/ViewType";
 
 // Validierung
 export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
+export { useModelProxyList } from "./model/useModelProxyList";
 export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
 export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";

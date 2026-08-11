@@ -17,7 +17,7 @@
 					<svws-ui-input-wrapper class="px-6">
 						<svws-ui-textarea-input placeholder="Bemerkung"
 							v-model="vermerkModel.proxy.bemerkung"
-							@change="v => patchBemerkung(v, vermerkModel)"
+							@change="vermerkModel.patch"
 							:validation="() => vermerkModel.getFehler('bemerkung')"
 							:readonly :rows="4" autoresize />
 						<ui-select label="Vermerkart"
@@ -54,9 +54,8 @@
 </template>
 
 <script setup lang="ts">
-
 	import { computed, ref } from "vue";
-	import { SelectManager, useBenutzerState } from "@ui";
+	import { SelectManager, useBenutzerState, useModelProxyList } from "@ui";
 	import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
 	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
 	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
@@ -69,6 +68,7 @@
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzAendern.value);
+
 	const filteredVermerke = computed<List<SchuelerVermerke>>(() => {
 		if (!props.filterNurSichtbare) {
 			return props.schuelerVermerke();
@@ -88,20 +88,18 @@
 		return filtered;
 	});
 
-	const vermerkeModels = computed<List<SchuelerVermerkeModelProxy>>(() => {
-		const models = new ArrayList<SchuelerVermerkeModelProxy>();
-		for (const vermerk of filteredVermerke.value) {
-			models.add(new SchuelerVermerkeModelProxy(
-				() => vermerk,
-				() => props.mapVermerkArten,
-				(data: Partial<SchuelerVermerke>) => props.patch(data, vermerk.id)
-			));
-		}
-		return models;
-	});
-
-
 	const vermerkarten = computed<Iterable<VermerkartEintrag>>(() => props.mapVermerkArten.values());
+
+	const vermerkeModels = useModelProxyList(
+		filteredVermerke,
+		(vermerk) => vermerk.id,
+		(vermerk) => new SchuelerVermerkeModelProxy(
+			() => vermerk,
+			() => props.mapVermerkArten,
+			(data) => props.patch(data, vermerk.id)
+		)
+	);
+
 	const vermerkartenManager = new SelectManager({
 		options: vermerkarten,
 		optionDisplayText: i => getItemText(i),
@@ -113,7 +111,7 @@
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {
-		const title = `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung}`;
+		const title = `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung ?? ""}`;
 		return title.length > 50 ? title.substring(0, 50) + "..." : title;
 	}
 
@@ -129,11 +127,6 @@
 	async function addVermerk() {
 		await props.add();
 		lastAddedVermerk.value = props.schuelerVermerke().getFirst();
-	}
-
-	async function patchBemerkung(bemerkung: string | null, modelProxy: SchuelerVermerkeModelProxy) {
-		modelProxy.proxy.bemerkung = bemerkung ?? '';
-		void modelProxy.patch();
 	}
 
 </script>

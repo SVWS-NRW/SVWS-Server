@@ -26,7 +26,7 @@ export class SchuelerVermerke extends JavaObject {
 	/**
 	 * Der Vermerk als Text.
 	 */
-	public bemerkung: string = "";
+	public bemerkung: string | null = null;
 
 	/**
 	 * Name des Benutzers welcher den Vermerk angelegt hat.
@@ -67,9 +67,7 @@ export class SchuelerVermerke extends JavaObject {
 		result.idSchueler = obj.idSchueler;
 		result.idVermerkart = (obj.idVermerkart === undefined) ? null : obj.idVermerkart === null ? null : obj.idVermerkart;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
-		if (obj.bemerkung === undefined)
-			throw new Error('invalid json format, missing attribute bemerkung');
-		result.bemerkung = obj.bemerkung;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		result.angelegtVon = (obj.angelegtVon === undefined) ? null : obj.angelegtVon === null ? null : obj.angelegtVon;
 		result.geaendertVon = (obj.geaendertVon === undefined) ? null : obj.geaendertVon === null ? null : obj.geaendertVon;
 		return result;
@@ -81,7 +79,7 @@ export class SchuelerVermerke extends JavaObject {
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		result += '"idVermerkart" : ' + ((obj.idVermerkart === null) ? 'null' : obj.idVermerkart.toString()) + ',';
 		result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
-		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result += '"angelegtVon" : ' + ((obj.angelegtVon === null) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
 		result += '"geaendertVon" : ' + ((obj.geaendertVon === null) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		result = result.slice(0, -1);
@@ -104,7 +102,7 @@ export class SchuelerVermerke extends JavaObject {
 			result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (obj.angelegtVon !== undefined) {
 			result += '"angelegtVon" : ' + ((obj.angelegtVon === null) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
