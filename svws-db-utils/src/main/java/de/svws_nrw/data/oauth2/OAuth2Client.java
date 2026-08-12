@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import de.svws_nrw.base.crypto.KeyStoreUtils;
 import de.svws_nrw.base.crypto.TLSUtils;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
+import de.svws_nrw.core.types.oauth2.OAuthServiceDomain;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -67,7 +67,7 @@ public final class OAuth2Client {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public OAuth2Client(final DBEntityManager conn, final Logger logger, final OAuth2ServerTyp serverTyp, final boolean updateToken)
+	public OAuth2Client(final DBEntityManager conn, final Logger logger, final OAuthServiceDomain serverTyp, final boolean updateToken)
 			throws ApiOperationException {
 		this.conn = conn;
 		this.logger = logger;

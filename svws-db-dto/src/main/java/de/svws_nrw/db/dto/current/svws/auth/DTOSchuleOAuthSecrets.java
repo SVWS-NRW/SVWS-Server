@@ -2,6 +2,9 @@ package de.svws_nrw.db.dto.current.svws.auth;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
+import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
+
+import de.svws_nrw.core.types.oauth2.OAuthServiceDomain;
 
 
 import jakarta.persistence.Cacheable;
@@ -17,6 +20,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
+import de.svws_nrw.csv.converter.current.OAuthServiceDomainConverterSerializer;
+import de.svws_nrw.csv.converter.current.OAuthServiceDomainConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuleOAuthSecrets.
@@ -26,7 +31,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuleOAuthSecrets")
-@JsonPropertyOrder({"ID", "AuthServer", "ClientID", "ClientSecret", "TokenType", "TokenTimestamp", "TokenExpiresIn", "TokenScope", "Token", "TLSCert", "TLSCertIsKnown", "TLSCertIsTrusted"})
+@JsonPropertyOrder({"ID", "AuthServer", "ClientID", "ClientSecret", "TokenType", "TokenTimestamp", "TokenExpiresIn", "TokenScope", "Token", "TLSCert", "TLSCertIsKnown", "TLSCertIsTrusted", "serviceDomain", "requestedScope"})
 public final class DTOSchuleOAuthSecrets {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -113,6 +118,18 @@ public final class DTOSchuleOAuthSecrets {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes TLSCertIsTrusted */
 	public static final String QUERY_LIST_BY_TLSCERTISTRUSTED = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.TLSCertIsTrusted IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes serviceDomain */
+	public static final String QUERY_BY_SERVICEDOMAIN = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.serviceDomain = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes serviceDomain */
+	public static final String QUERY_LIST_BY_SERVICEDOMAIN = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.serviceDomain IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes requestedScope */
+	public static final String QUERY_BY_REQUESTEDSCOPE = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.requestedScope = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes requestedScope */
+	public static final String QUERY_LIST_BY_REQUESTEDSCOPE = "SELECT e FROM DTOSchuleOAuthSecrets e WHERE e.requestedScope IN ?1";
+
 	/** ID des OAuth-Datensatzes */
 	@Id
 	@Column(name = "ID")
@@ -180,6 +197,19 @@ public final class DTOSchuleOAuthSecrets {
 	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean TLSCertIsTrusted;
 
+	/** Die zugehörige fachliche/technische Service Domäne */
+	@Column(name = "ServiceDomain")
+	@JsonProperty
+	@Convert(converter = OAuthServiceDomainConverter.class)
+	@JsonSerialize(using = OAuthServiceDomainConverterSerializer.class)
+	@JsonDeserialize(using = OAuthServiceDomainConverterDeserializer.class)
+	public OAuthServiceDomain serviceDomain;
+
+	/** Das angeforderte Scope */
+	@Column(name = "RequestedScope")
+	@JsonProperty
+	public String requestedScope;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuleOAuthSecrets ohne eine Initialisierung der Attribute.
 	 */
@@ -242,7 +272,7 @@ public final class DTOSchuleOAuthSecrets {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuleOAuthSecrets(ID=" + this.ID + ", AuthServer=" + this.AuthServer + ", ClientID=" + this.ClientID + ", ClientSecret=" + this.ClientSecret + ", TokenType=" + this.TokenType + ", TokenTimestamp=" + this.TokenTimestamp + ", TokenExpiresIn=" + this.TokenExpiresIn + ", TokenScope=" + this.TokenScope + ", Token=" + this.Token + ", TLSCert=" + this.TLSCert + ", TLSCertIsKnown=" + this.TLSCertIsKnown + ", TLSCertIsTrusted=" + this.TLSCertIsTrusted + ")";
+		return "DTOSchuleOAuthSecrets(ID=" + this.ID + ", AuthServer=" + this.AuthServer + ", ClientID=" + this.ClientID + ", ClientSecret=" + this.ClientSecret + ", TokenType=" + this.TokenType + ", TokenTimestamp=" + this.TokenTimestamp + ", TokenExpiresIn=" + this.TokenExpiresIn + ", TokenScope=" + this.TokenScope + ", Token=" + this.Token + ", TLSCert=" + this.TLSCert + ", TLSCertIsKnown=" + this.TLSCertIsKnown + ", TLSCertIsTrusted=" + this.TLSCertIsTrusted + ", serviceDomain=" + this.serviceDomain + ", requestedScope=" + this.requestedScope + ")";
 	}
 
 }

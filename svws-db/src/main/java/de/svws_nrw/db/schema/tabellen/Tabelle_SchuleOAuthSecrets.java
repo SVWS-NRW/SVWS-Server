@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.db.converter.current.Boolean01Converter;
+import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -74,6 +75,20 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 			.setConverter(Boolean01Converter.class)
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Gibt an, ob dem TLS-Zertifikat vertraut werden darf, entweder weil es bekannt ist oder weil der Benutzer zugestimmt hat.");
+
+	/** Die Definition der Tabellenspalte Token */
+	public final SchemaTabelleSpalte col_ServerTyp = add("ServiceDomain", SchemaDatentypen.VARCHAR, false).setDatenlaenge(32)
+			.setJavaName("serviceDomain")
+			.setRevision(SchemaRevisionen.REV_73)
+			.setConverter(OAuthServiceDomainConverter.class)
+			.setConverterRevision(SchemaRevisionen.REV_73)
+			.setJavaComment("Die zugehörige fachliche/technische Service Domäne");
+
+	/** Die Definition der Tabellenspalte Token */
+	public final SchemaTabelleSpalte col_Scope = add("RequestedScope", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("requestedScope")
+			.setRevision(SchemaRevisionen.REV_73)
+			.setJavaComment("Das angeforderte Scope");
 
 
 	/**

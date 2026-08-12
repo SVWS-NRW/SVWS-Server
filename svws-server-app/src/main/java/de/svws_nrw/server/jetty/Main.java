@@ -11,6 +11,7 @@ import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
@@ -170,6 +171,7 @@ public class Main {
 					logger.logLn("Die Automatische Schema-Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
 				}
 			} catch (@SuppressWarnings("unused") final Exception e) {
+				logger.logLn(LogLevel.ERROR, "Es ist ein Fehler bei der Schema-Aktualisierung aufgetreten:: " + e.getMessage());
 				schemaOK = false;
 			}
 		}

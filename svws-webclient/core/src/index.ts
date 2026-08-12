@@ -1053,7 +1053,7 @@ export { KlausurterminblockungModusKursarten } from './core/types/gost/klausuren
 export { KlausurterminblockungModusQuartale } from './core/types/gost/klausuren/KlausurterminblockungModusQuartale';
 export { GostKursblockungRegelParameterTyp } from './core/types/kursblockung/GostKursblockungRegelParameterTyp';
 export { GostKursblockungRegelTyp } from './core/types/kursblockung/GostKursblockungRegelTyp';
-export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
+export { OAuthServiceDomain } from './core/types/oauth2/OAuthServiceDomain';
 export { ReportingAusgabeformat } from './core/types/reporting/ReportingAusgabeformat';
 export { ReportingBildDefinition } from './core/types/reporting/ReportingBildDefinition';
 export { ReportingEMailEmpfaengerTyp } from './core/types/reporting/ReportingEMailEmpfaengerTyp';

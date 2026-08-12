@@ -450,6 +450,7 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverterString</class>
                           <class>de.svws_nrw.db.converter.current.VerkehrssprachenConverter</class>
+                          <class>de.svws_nrw.db.converter.current.OAuthServiceDomainConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.AbiturBelegungsartConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.AbiturKursMarkierungConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.GOStAbiturFachConverter</class>

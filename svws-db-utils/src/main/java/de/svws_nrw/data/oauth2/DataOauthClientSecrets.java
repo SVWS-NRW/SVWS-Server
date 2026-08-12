@@ -19,7 +19,7 @@ import java.util.Map;
 import de.svws_nrw.base.crypto.TLSUtils;
 import de.svws_nrw.core.data.TLSCertificate;
 import de.svws_nrw.core.data.oauth2.OAuth2ClientConnection;
-import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
+import de.svws_nrw.core.types.oauth2.OAuthServiceDomain;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -120,7 +120,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		// Bestimme den Typ des OAuth2-Servers, dessen Secrets aus der Darenbank ermittelt werden sollen
-		final OAuth2ServerTyp typ = OAuth2ServerTyp.getByID(id);
+		final OAuthServiceDomain typ = OAuthServiceDomain.getByID(id);
 		final DTOSchuleOAuthSecrets daten = getDto(typ);
 		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -136,7 +136,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 *
 	 * @return das DB-DTO zu den OAuth2-Secrets
 	 */
-	public DTOSchuleOAuthSecrets getDto(final OAuth2ServerTyp typ) {
+	public DTOSchuleOAuthSecrets getDto(final OAuthServiceDomain typ) {
 		return conn.queryByKey(DTOSchuleOAuthSecrets.class, typ.getId());
 	}
 
@@ -144,7 +144,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOSchuleOAuthSecrets>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID) || (OAuth2ServerTyp.getByID(patch_id.longValue()) == null)) {
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID) || (OAuthServiceDomain.getByID(patch_id.longValue()) == null)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID bzw. der Servertyp darf für das OAuth2-Secret nicht angepasst werden.");
 				}
 			}),
@@ -203,7 +203,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	public Response add(final InputStream is) throws ApiOperationException {
 		try {
 			final OAuth2ClientConnection data = JSONMapper.mapper.readValue(is, OAuth2ClientConnection.class);
-			final OAuth2ServerTyp serverTyp = OAuth2ServerTyp.getByID(data.id);
+			final OAuthServiceDomain serverTyp = OAuthServiceDomain.getByID(data.id);
 			if (serverTyp == null) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein OAuth2-Servertyp mit der ID %d.".formatted(data.id));
 			}
