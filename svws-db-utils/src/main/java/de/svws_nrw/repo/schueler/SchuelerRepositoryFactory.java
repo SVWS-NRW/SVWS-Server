@@ -27,6 +27,8 @@ import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzReposi
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepositoryImpl;
+import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepository;
+import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
@@ -243,6 +245,13 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerMerkmalRepository getSchuelerMerkmaleRepository() {
 		return this.getOrCreate(SchuelerMerkmalRepository.class, () -> new SchuelerMerkmalRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * @return {@link SchuelerFotoRepository}
+	 */
+	public SchuelerFotoRepository getSchuelerFotoRepository() {
+		return this.getOrCreate(SchuelerFotoRepository.class, () -> new SchuelerFotoRepositoryImpl(this.conn));
 	}
 
 }

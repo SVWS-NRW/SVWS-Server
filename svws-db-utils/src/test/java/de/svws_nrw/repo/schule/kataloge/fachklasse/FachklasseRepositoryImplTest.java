@@ -32,10 +32,6 @@ class FachklasseRepositoryImplTest {
 			"SELECT m FROM DTOFachklassen m WHERE LOWER(m.kuerzel) = LOWER(?1)";
 	private static final String QUERY_KUERZEL_PATCH =
 			"SELECT m FROM DTOFachklassen m WHERE LOWER(m.kuerzel) = LOWER(?1) AND m.id != ?2";
-	private static final String QUERY_BEZEICHNUNG_CREATE =
-			"SELECT m FROM DTOFachklassen m WHERE LOWER(m.bezeichnung) = LOWER(?1)";
-	private static final String QUERY_BEZEICHNUNG_PATCH =
-			"SELECT m FROM DTOFachklassen m WHERE LOWER(m.bezeichnung) = LOWER(?1) AND m.id != ?2";
 
 	// -------------------------------------------------------------------------
 	// kuerzelIsAlreadyUsedCreate

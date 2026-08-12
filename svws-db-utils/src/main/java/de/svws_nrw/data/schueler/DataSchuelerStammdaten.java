@@ -8,10 +8,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.service.schueler.foto.SchuelerFoto;
+import de.svws_nrw.service.schueler.foto.SchuelerFotoServiceFactory;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
@@ -29,7 +29,6 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.annotation.Nonnull;
@@ -60,9 +59,12 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	@Override
 	public SchuelerStammdaten getById(final Long id) {
 		final DTOSchueler dto = getDTO(id);
-		final DTOSchuelerFoto dtoSchuelerFoto = this.conn.queryByKey(DTOSchuelerFoto.class, id);
 		final SchuelerStammdaten schuelerStammdaten = map(dto);
-		schuelerStammdaten.foto = Optional.ofNullable(dtoSchuelerFoto).map(sf -> sf.FotoBase64).orElse(null);
+		schuelerStammdaten.foto = SchuelerFotoServiceFactory.getNewInstance()
+				.getSchuelerFotoService()
+				.findByIdSchueler(id)
+				.map(SchuelerFoto::fotoBase64)
+				.orElse(null);
 		return schuelerStammdaten;
 	}
 
@@ -108,15 +110,18 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	public List<SchuelerStammdaten> getListByIds(final List<Long> ids) {
 		final List<DTOSchueler> schuelerDtos = getDTOList(ids);
-		final Map<Long, DTOSchuelerFoto> fotoDtosBySchuelerId = this.conn.queryByKeyList(DTOSchuelerFoto.class, ids).stream()
-				.collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
+		final Map<Long, SchuelerFoto> fotoDtosBySchuelerId = SchuelerFotoServiceFactory.getNewInstance()
+				.getSchuelerFotoService()
+				.getBySchuelerIds(ids)
+				.stream()
+				.collect(Collectors.toMap(SchuelerFoto::idSchueler, sf -> sf));
 
 		return schuelerDtos.stream()
 				.map(schueler -> {
 					final var schuelerStammdaten = map(schueler);
 					schuelerStammdaten.foto = Optional.of(fotoDtosBySchuelerId)
 							.map(sf -> sf.get(schuelerStammdaten.id))
-							.map(foto -> foto.FotoBase64)
+							.map(SchuelerFoto::fotoBase64)
 							.orElse(null);
 					return schuelerStammdaten;
 				})
@@ -486,41 +491,14 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 * - Das bestehende Schüler-Foto wird geändert, wenn der übergebene Parameter {@code value} ungleich dem aktuellen Wert ist.<br>
 	 * - Es wird ein neues Schüler-Foto erstellt, wenn kein Schüler-Foto existiert und der Parameter {@code value} nicht {@code null} ist.
 	 *
-	 * @param schuelerDto     das DB-DTO des Schülers
-	 * @param value   das Schüler-Foto in Base64-Kodierung
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param schuelerDto das DB-DTO des Schülers
+	 * @param value       das Schüler-Foto in Base64-Kodierung
 	 */
 	void mapSchuelerFoto(final DTOSchueler schuelerDto, final Object value) {
 		final String newSchuelerFotoBase64 = JSONMapper.convertToString(value, true, true, null);
-		final DTOSchuelerFoto schuelerFotoDto = this.conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
-
-		if (isDeleteSchuelerFoto(schuelerFotoDto, newSchuelerFotoBase64)) {
-			deleteSchuelerFoto(schuelerFotoDto);
-		} else if (isCreateOrUpdateSchuelerFoto(schuelerFotoDto, newSchuelerFotoBase64)) {
-			createOrUpdateSchuelerFoto(schuelerDto.ID, schuelerFotoDto, newSchuelerFotoBase64);
-		}
-	}
-
-	private static boolean isDeleteSchuelerFoto(final DTOSchuelerFoto schuelerFotoDto, final String newSchuelerFotoBase64) {
-		return (schuelerFotoDto != null) && (newSchuelerFotoBase64 == null);
-	}
-
-	private static boolean isCreateOrUpdateSchuelerFoto(final DTOSchuelerFoto schuelerFotoDto, final String newSchuelerFotoBase64) {
-		if ((schuelerFotoDto == null) && (newSchuelerFotoBase64 == null)) {
-			return false;
-		}
-		return (schuelerFotoDto == null) || !Strings.CS.equals(schuelerFotoDto.FotoBase64, newSchuelerFotoBase64);
-	}
-
-	private void deleteSchuelerFoto(final DTOSchuelerFoto schuelerFotoDto) {
-		this.conn.transactionRemove(schuelerFotoDto);
-	}
-
-	private void createOrUpdateSchuelerFoto(final Long idSchueler, final DTOSchuelerFoto existingDto, final String newFotoBase64) {
-		final var schuelerFotoDto = ObjectUtils.getIfNull(existingDto, new DTOSchuelerFoto(idSchueler));
-		schuelerFotoDto.FotoBase64 = newFotoBase64;
-		this.conn.transactionPersist(schuelerFotoDto);
+		SchuelerFotoServiceFactory.getNewInstance()
+				.getSchuelerFotoService()
+				.upsertOrDelete(schuelerDto.ID, newSchuelerFotoBase64);
 	}
 
 	private void updateWohnortAndOrtsteil(final DTOSchueler schueler, final Long wohnortID, final Long ortsteilID) {

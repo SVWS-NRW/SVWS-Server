@@ -2585,7 +2585,7 @@ public final class DBMigrationManager {
 					if (sf.Foto == null) {
 						return false;
 					}
-					sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
+					sf.fotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
 					return true;
 				}).toList();
 		tgtManager.getConnection().persistAll(sf_out);

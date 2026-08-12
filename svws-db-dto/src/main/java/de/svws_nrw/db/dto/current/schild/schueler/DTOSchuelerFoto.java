@@ -18,43 +18,43 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFotos")
-@JsonPropertyOrder({"Schueler_ID", "FotoBase64"})
+@JsonPropertyOrder({"idSchueler", "fotoBase64"})
 public final class DTOSchuelerFoto {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerFoto e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.idSchueler = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerFoto e WHERE e.idSchueler IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerFoto e WHERE e.idSchueler IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Schueler_ID */
-	public static final String QUERY_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idSchueler */
+	public static final String QUERY_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerFoto e WHERE e.idSchueler = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Schueler_ID */
-	public static final String QUERY_LIST_BY_SCHUELER_ID = "SELECT e FROM DTOSchuelerFoto e WHERE e.Schueler_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idSchueler */
+	public static final String QUERY_LIST_BY_IDSCHUELER = "SELECT e FROM DTOSchuelerFoto e WHERE e.idSchueler IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes FotoBase64 */
-	public static final String QUERY_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes fotoBase64 */
+	public static final String QUERY_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.fotoBase64 = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FotoBase64 */
-	public static final String QUERY_LIST_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.FotoBase64 IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes fotoBase64 */
+	public static final String QUERY_LIST_BY_FOTOBASE64 = "SELECT e FROM DTOSchuelerFoto e WHERE e.fotoBase64 IN ?1";
 
 	/** SchülerID zum Foto */
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public long Schueler_ID;
+	public long idSchueler;
 
 	/** Schülerfoto im Base64-Format */
 	@Column(name = "FotoBase64")
 	@JsonProperty
-	public String FotoBase64;
+	public String fotoBase64;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerFoto ohne eine Initialisierung der Attribute.
@@ -65,10 +65,10 @@ public final class DTOSchuelerFoto {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerFoto ohne eine Initialisierung der Attribute.
-	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param idSchueler   der Wert für das Attribut idSchueler
 	 */
-	public DTOSchuelerFoto(final long Schueler_ID) {
-		this.Schueler_ID = Schueler_ID;
+	public DTOSchuelerFoto(final long idSchueler) {
+		this.idSchueler = idSchueler;
 	}
 
 
@@ -84,14 +84,14 @@ public final class DTOSchuelerFoto {
 			return false;
 		}
 		DTOSchuelerFoto other = (DTOSchuelerFoto) obj;
-		return Schueler_ID == other.Schueler_ID;
+		return idSchueler == other.idSchueler;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(Schueler_ID);
+		result = prime * result + Long.hashCode(idSchueler);
 		return result;
 	}
 
@@ -103,7 +103,7 @@ public final class DTOSchuelerFoto {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerFoto(Schueler_ID=" + this.Schueler_ID + ", FotoBase64=" + this.FotoBase64 + ")";
+		return "DTOSchuelerFoto(idSchueler=" + this.idSchueler + ", fotoBase64=" + this.fotoBase64 + ")";
 	}
 
 }
