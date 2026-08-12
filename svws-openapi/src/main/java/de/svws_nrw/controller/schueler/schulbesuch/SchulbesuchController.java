@@ -1,23 +1,23 @@
 package de.svws_nrw.controller.schueler.schulbesuch;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchService;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
 
 public final class SchulbesuchController {
 
-	private final SchulbesuchService schulbesuchService;
+	private final SchuelerSchulbesuchService schuelerSchulbesuchService;
 
 	/**
 	 * Constructor
 	 *
-	 * @param schulbesuchService schulbesuchService
+	 * @param schuelerSchulbesuchService schulbesuchService
 	 */
-	public SchulbesuchController(final SchulbesuchService schulbesuchService) {
-		this.schulbesuchService = schulbesuchService;
+	public SchulbesuchController(final SchuelerSchulbesuchService schuelerSchulbesuchService) {
+		this.schuelerSchulbesuchService = schuelerSchulbesuchService;
 	}
 
 	/**
@@ -27,7 +27,7 @@ public final class SchulbesuchController {
 	 * @return eine Response mit der Liste aller Schulbesuch-Entitäten
 	 */
 	public Response getByIdSchueler(final long idSchueler) {
-		return Response.ok(schulbesuchService.getById(idSchueler)).build();
+		return Response.ok(schuelerSchulbesuchService.getById(idSchueler)).build();
 	}
 
 	/**
@@ -41,17 +41,10 @@ public final class SchulbesuchController {
 	 * @return eine Response mit der aktualisierten Schulbesuch-Entität
 	 * @throws ValidationException wenn die DTO-Validierung fehlschlägt
 	 */
-	public Response patch(final long id, final SchulbesuchPatchRequest dto) {
+	public Response patch(final long id, final SchuelerSchulbesuchPatchRequest dto) {
 		BeanValidator.validate(dto);
-		final var patched = schulbesuchService.patch(id, dto);
+		final var patched = schuelerSchulbesuchService.patch(id, dto);
 		return Responses.ok(patched);
 	}
 
-	/**
-	 * Getter
-	 * @return SchulbesuchService
-	 */
-	public SchulbesuchService getSchulbesuchService() {
-		return schulbesuchService;
-	}
 }

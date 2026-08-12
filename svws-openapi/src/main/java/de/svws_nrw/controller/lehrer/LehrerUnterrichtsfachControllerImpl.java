@@ -3,9 +3,9 @@ package de.svws_nrw.controller.lehrer;
 import java.util.Collection;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachService;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachCreateRequest;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachPatchRequest;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
 import jakarta.ws.rs.core.Response;
 
 /**

@@ -3,29 +3,31 @@ package de.svws_nrw.controller.schueler.schulbesuch;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.mapper.schueler.schulbesuch.BisherigeSchuleMapper;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleServiceFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class BisherigeSchuleControllerFactory {
 
-	private final BisherigeSchuleServiceFactory serviceFactory;
+	private final SchuelerServiceFactory serviceFactory;
 
 	/**
 	 * Erstellt eine neue BisherigeSchulenControllerFactory mit der angegebenen Service-Factory.
 	 *
 	 * @param serviceFactory die Factory zur Erstellung von BisherigeSchulenService-Instanzen
 	 */
-	public BisherigeSchuleControllerFactory(final BisherigeSchuleServiceFactory serviceFactory) {
+	public BisherigeSchuleControllerFactory(final SchuelerServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
 	}
 
 	private static BisherigeSchuleControllerFactory getNewInstance(final HttpServletRequest requst) {
 		DBBenutzerUtils.getDBConnection(requst, ServerMode.STABLE,  BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
-		final var repoFactory = SchuelerRepositoryFactory.getNewInstance();
-		final var mapper = BisherigeSchuleMapper.INSTANCE;
-		final var serviceFactory = BisherigeSchuleServiceFactory.getNewInstance(repoFactory, mapper);
+		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		final var serviceFactory = SchuelerServiceFactory.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory);
 
 		return new BisherigeSchuleControllerFactory(serviceFactory);
 	}

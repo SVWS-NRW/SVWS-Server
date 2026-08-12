@@ -65,15 +65,15 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungBatchPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungCreateRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungPatchRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungBatchPatchRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungCreateRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungPatchRequest;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachCreateRequest;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionCreateRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionPatchRequest;
@@ -1395,7 +1395,7 @@ public class APILehrer {
 					required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(
-									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundenCreateRequest patch,
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundeCreateRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
 				.getLehrerAnrechnungsstundenController()
@@ -1457,7 +1457,7 @@ public class APILehrer {
 			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(
-									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundenPatchRequest patch,
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundePatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
 				.getLehrerAnrechnungsstundenController()
@@ -1491,7 +1491,7 @@ public class APILehrer {
 			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerAnrechnungsstundenPatchRequest> patches,
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerAnrechnungsstundePatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
 				.getLehrerAnrechnungsstundenController()

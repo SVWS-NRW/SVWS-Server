@@ -4,9 +4,9 @@ import java.util.List;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.FachklasseEintrag;
-import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseEintragCreateRequest;
-import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseEintragPatchRequest;
-import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
+import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
+import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;

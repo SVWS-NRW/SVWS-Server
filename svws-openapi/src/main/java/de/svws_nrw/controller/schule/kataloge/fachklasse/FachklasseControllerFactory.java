@@ -3,30 +3,28 @@ package de.svws_nrw.controller.schule.kataloge.fachklasse;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.mapper.schule.kataloge.fachklasse.FachklasseMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
-import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public final class FachklasseControllerFactory {
 
-	private final FachklasseServiceFactory serviceFactory;
+	private final KatalogServiceFactory serviceFactory;
 
 	/**
-	 * @param serviceFactory {@link FachklasseServiceFactory}
+	 * @param serviceFactory {@link KatalogServiceFactory}
 	 */
-	public FachklasseControllerFactory(final FachklasseServiceFactory serviceFactory) {
+	public FachklasseControllerFactory(final KatalogServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
 	}
 
 	private static FachklasseControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, benutzerKompetenz);
-		final var serviceFactory = FachklasseServiceFactory.getNewInstance(
+		final var serviceFactory = KatalogServiceFactory.getNewInstance(
 				KatalogRepositoryFactory.getNewInstance(),
-				FachklasseMapper.INSTANCE,
-				SchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
+				EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
 		);
 		return new FachklasseControllerFactory(serviceFactory);
 	}
@@ -74,7 +72,7 @@ public final class FachklasseControllerFactory {
 	 * @return ein neuer FachklasseController mit dem konfigurierten FachklasseSerice
 	 */
 	public FachklasseController getController() {
-		return new FachklasseController(serviceFactory.getService());
+		return new FachklasseController(serviceFactory.getFachklasseService());
 	}
 
 }

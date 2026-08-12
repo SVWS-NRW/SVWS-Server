@@ -15,9 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
 class LehrerAnrechnungsstundenControllerImplTest {
 
 	@Mock
-	private LehrerAnrechnungsstundenService service;
+	private LehrerAnrechnungsstundeService service;
 
 	@InjectMocks
 	private LehrerAnrechnungsstundenControllerImpl controller;
@@ -66,7 +66,7 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@Test
 		@DisplayName("patch: Liefert 200 OK nach Einzel-Update")
 		void patch_returnsOk() {
-			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			final var patch = new LehrerAnrechnungsstundePatchRequest();
 			patch.id = 1L;
 			final var daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 			when(service.patch(patch)).thenReturn(daten);
@@ -80,7 +80,7 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@Test
 		@DisplayName("patchMultiple: Liefert 200 OK nach Batch-Update")
 		void patchMultiple_returnsOk() {
-			final var patch = new LehrerAnrechnungsstundenPatchRequest();
+			final var patch = new LehrerAnrechnungsstundePatchRequest();
 			patch.id = 1L;
 			final var patches = List.of(patch);
 			final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> list = List.of(new LehrerPersonalabschnittsdatenAnrechnungsstunden());
@@ -99,7 +99,7 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@Test
 		@DisplayName("create: Liefert 201 CREATED nach Neuanlage")
 		void create_returnsCreated() {
-			final var patch = new LehrerAnrechnungsstundenCreateRequest();
+			final var patch = new LehrerAnrechnungsstundeCreateRequest();
 			final var daten = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 			when(service.create(patch)).thenReturn(daten);
 
@@ -112,7 +112,7 @@ class LehrerAnrechnungsstundenControllerImplTest {
 		@Test
 		@DisplayName("createMultiple: Liefert 201 CREATED nach Neuanlage")
 		void createMultiple_returnsCreated() {
-			final Collection<LehrerAnrechnungsstundenCreateRequest> patches = List.of(new LehrerAnrechnungsstundenCreateRequest());
+			final Collection<LehrerAnrechnungsstundeCreateRequest> patches = List.of(new LehrerAnrechnungsstundeCreateRequest());
 			final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> list = List.of(new LehrerPersonalabschnittsdatenAnrechnungsstunden());
 			when(service.createMultiple(patches)).thenReturn(list);
 

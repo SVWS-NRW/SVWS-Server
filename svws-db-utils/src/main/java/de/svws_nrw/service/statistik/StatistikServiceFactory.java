@@ -8,7 +8,7 @@ import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 /**
  * Eine Factory zum Erstellen der Statistik-spezifischen Services
@@ -40,7 +40,7 @@ public final class StatistikServiceFactory {
 	private final LehrerServiceFactory lehrerServiceFactory;
 
 	/** die Factory für Schul-Services */
-	private final SchuleServiceFactory schuleServiceFactory;
+	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 
 	/**
@@ -54,7 +54,7 @@ public final class StatistikServiceFactory {
 	 * @param schuelerRepositoryFactory    die Factory für Schüler-Repositories
 	 * @param eigeneSchuleRepositoryFactory      die Factory für Schule-Repositories
 	 * @param lehrerServiceFactory         die Factory für Lehrer-Services
-	 * @param schuleServiceFactory         die Factory für Schul-Services
+	 * @param eigeneSchuleServiceFactory         die Factory für Schul-Services
 	 */
 	private StatistikServiceFactory(final BenutzerRepositoryFactory benutzerRepositoryFactory, final KatalogRepositoryFactory katalogRepositoryFactory,
 			final KlassenRepositoryFactory klassenRepositoryFactory,
@@ -63,7 +63,7 @@ public final class StatistikServiceFactory {
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
 			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final LehrerServiceFactory lehrerServiceFactory,
-			final SchuleServiceFactory schuleServiceFactory) {
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
 		this.benutzerRepositoryFactory = benutzerRepositoryFactory;
 		this.katalogRepositoryFactory = katalogRepositoryFactory;
 		this.klassenRepositoryFactory = klassenRepositoryFactory;
@@ -72,7 +72,7 @@ public final class StatistikServiceFactory {
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.eigeneSchuleRepositoryFactory = eigeneSchuleRepositoryFactory;
 		this.lehrerServiceFactory = lehrerServiceFactory;
-		this.schuleServiceFactory = schuleServiceFactory;
+		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
 	}
 
 
@@ -87,7 +87,7 @@ public final class StatistikServiceFactory {
 	 * @param schuelerRepositoryFactory    die Factory für Schüler-Repositories
 	 * @param eigeneSchuleRepositoryFactory      die Factory für Schule-Repositories
 	 * @param lehrerServiceFactory         die Factory für Lehrer-Services
-	 * @param schuleServiceFactory         die Factory für Schul-Services
+	 * @param eigeneSchuleServiceFactory         die Factory für Schul-Services
 	 *
 	 * @return die neue Factory-Instanz
 	 */
@@ -99,10 +99,10 @@ public final class StatistikServiceFactory {
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
 			final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory,
 			final LehrerServiceFactory lehrerServiceFactory,
-			final SchuleServiceFactory schuleServiceFactory) {
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
 		return new StatistikServiceFactory(benutzerRepositoryFactory, katalogRepositoryFactory, klassenRepositoryFactory, kurseRepositoryFactory,
 				lehrerRepositoryFactory,
-				schuelerRepositoryFactory, eigeneSchuleRepositoryFactory, lehrerServiceFactory, schuleServiceFactory);
+				schuelerRepositoryFactory, eigeneSchuleRepositoryFactory, lehrerServiceFactory, eigeneSchuleServiceFactory);
 	}
 
 
@@ -113,7 +113,7 @@ public final class StatistikServiceFactory {
 	 */
 	public FoerderschwerpunkteStatistikService getFoerderschwerpunkteStatistikService() {
 		return new FoerderschwerpunkteStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(),
-				schuleServiceFactory.getSchuljahresabschnittService(),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				katalogRepositoryFactory.getFoerderschwerpunktRepository());
 	}
 
@@ -124,7 +124,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Jahrgängen
 	 */
 	public JahrgaengeStatistikService getJahrgaengeStatistikService() {
-		return new JahrgaengeStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+		return new JahrgaengeStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				katalogRepositoryFactory.getJahrgangRepository());
 	}
 
@@ -174,7 +174,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Orten
 	 */
 	public OrteStatistikService getOrteStatistikService() {
-		return new OrteStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+		return new OrteStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				katalogRepositoryFactory.getOrtRepository());
 	}
 
@@ -185,7 +185,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Religionen
 	 */
 	public ReligionStatistikService getReligionStatistikService() {
-		return new ReligionStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+		return new ReligionStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				katalogRepositoryFactory.getReligionRepository());
 	}
 
@@ -196,7 +196,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Fächern
 	 */
 	public FachStatistikService getFachStatistikService() {
-		return new FachStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+		return new FachStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleServiceFactory.getSchuljahresabschnittService(),
 				katalogRepositoryFactory.getFachRepository());
 	}
 
@@ -223,7 +223,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Schuldaten
 	 */
 	public SchuleStatistikService getSchuleStatistikService() {
-		return new SchuleStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService());
+		return new SchuleStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleServiceFactory.getSchuljahresabschnittService());
 	}
 
 

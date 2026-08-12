@@ -273,6 +273,7 @@ public class GenerateTestdatenLaufbahn {
 			ResteasyContext.pushContext(HttpServletRequest.class, mockedRequest);
 			final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
 			final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+			final KatalogRepositoryFactory katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
 			final GostServiceFactory gostServiceFactory = GostServiceFactory.getNewInstance(
 					GostRepositoryFactory.getNewInstance(),
 					schuelerRepositoryFactory,
@@ -282,7 +283,7 @@ public class GenerateTestdatenLaufbahn {
 					EigeneSchuleRepositoryFactory.getNewInstance(),
 					BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory),
 					CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-					SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+					SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
 					GostKlausurenRepositoryFactory.getNewInstance()
 			);
 			return gostServiceFactory.getGostAbiturdatenService();

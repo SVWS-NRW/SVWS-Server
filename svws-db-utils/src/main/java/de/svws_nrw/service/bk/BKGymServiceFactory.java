@@ -3,6 +3,9 @@ package de.svws_nrw.service.bk;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.service.schueler.sprachpruefung.SchuelerSprachpruefungService;
+import de.svws_nrw.service.schueler.sprachenfolge.SchuelerSprachenfolgeService;
+
 /**
  * Eine Factory zum Erstellen der Services für das Berufliche Gymnasium
  */
@@ -66,9 +69,9 @@ public final class BKGymServiceFactory {
 				katalogRepositoryFactory.getFachRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
-				new de.svws_nrw.service.schueler.SchuelerSprachenfolgeService(
+				new SchuelerSprachenfolgeService(
 						schuelerRepositoryFactory.getSchuelerSprachenfolgeRepository()),
-				new de.svws_nrw.service.schueler.SchuelerSprachpruefungenService(
+				new SchuelerSprachpruefungService(
 						schuelerRepositoryFactory.getSchuelerSprachpruefungenRepository()),
 				katalogRepositoryFactory.getJahrgangRepository()));
 	}

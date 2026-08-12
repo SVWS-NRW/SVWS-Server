@@ -17,7 +17,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
-import de.svws_nrw.service.schule.SchuleService;
+import de.svws_nrw.service.schule.EigeneSchuleService;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.AfterEach;
@@ -55,7 +55,7 @@ class LogoverwaltungServiceTest {
 	private LogoverwaltungMapper mapper;
 
 	@Mock
-	private SchuleService schuleService;
+	private EigeneSchuleService eigeneSchuleService;
 
 	@Mock
 	private Clock clock;
@@ -222,7 +222,7 @@ class LogoverwaltungServiceTest {
 			final DTOLogo savedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, request.logoBase64, "2024-01-01");
 			final Logo expected = buildLogo(1L, VALID_BASE64_PNG);
 
-			when(schuleService.getSchulform()).thenReturn(null);
+			when(eigeneSchuleService.getSchulform()).thenReturn(null);
 			when(mapper.toDomain(request)).thenReturn(mappedEntity);
 			when(repository.create(mappedEntity)).thenReturn(savedEntity);
 			when(mapper.toApi(savedEntity)).thenReturn(expected);
@@ -244,7 +244,7 @@ class LogoverwaltungServiceTest {
 			final DTOLogo savedEntity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
 			final Logo expected = buildLogo(1L, VALID_BASE64_JPEG);
 
-			when(schuleService.getSchulform()).thenReturn(null);
+			when(eigeneSchuleService.getSchulform()).thenReturn(null);
 			when(mapper.toDomain(request)).thenReturn(mappedEntity);
 			when(repository.create(mappedEntity)).thenReturn(savedEntity);
 			when(mapper.toApi(savedEntity)).thenReturn(expected);
@@ -271,7 +271,7 @@ class LogoverwaltungServiceTest {
 			final DTOLogo savedEntity = buildDtoLogo(1L, bildDefinition, request.logoBase64, "2024-01-01");
 			final Logo expected = buildLogo(1L, VALID_BASE64_PNG);
 
-			when(schuleService.getSchulform()).thenReturn(null);
+			when(eigeneSchuleService.getSchulform()).thenReturn(null);
 			when(mapper.toDomain(request)).thenReturn(mappedEntity);
 			when(repository.create(mappedEntity)).thenReturn(savedEntity);
 			when(mapper.toApi(savedEntity)).thenReturn(expected);
@@ -285,7 +285,7 @@ class LogoverwaltungServiceTest {
 			request.kennung = "KENNUNG_EXISTIERT_NICHT";
 			request.logoBase64 = VALID_BASE64_PNG;
 
-			when(schuleService.getSchulform()).thenReturn(null);
+			when(eigeneSchuleService.getSchulform()).thenReturn(null);
 
 
 			assertThatThrownBy(() -> service.create(request))
@@ -303,7 +303,7 @@ class LogoverwaltungServiceTest {
 			request.kennung = "UNGUELTIG";
 			request.logoBase64 = VALID_BASE64_PNG;
 
-			when(schuleService.getSchulform()).thenReturn(Schulform.GY);
+			when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
 
 
 			assertThatThrownBy(() -> service.create(request))
@@ -319,7 +319,7 @@ class LogoverwaltungServiceTest {
 			request.logoBase64 = "validBase64";
 
 			when(repository.existsByKennung(ReportingBildDefinition.DIN5008_BRIEFKOPF)).thenReturn(true);
-			when(schuleService.getSchulform()).thenReturn(Schulform.GY);
+			when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
 
 			assertThatThrownBy(() -> service.create(request))
 					.isInstanceOf(ApiOperationException.class)

@@ -3,9 +3,9 @@ package de.svws_nrw.controller.lehrer;
 import java.util.Collection;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response;
 public final class LehrerAnrechnungsstundenControllerImpl implements LehrerAnrechnungsstundenController {
 
 	/** Der zugehörige Get-Service */
-	private final LehrerAnrechnungsstundenService service;
+	private final LehrerAnrechnungsstundeService service;
 
 
 	/**
@@ -22,7 +22,7 @@ public final class LehrerAnrechnungsstundenControllerImpl implements LehrerAnrec
 	 *
 	 * @param service         der zugehörige Get-Service
 	 */
-	public LehrerAnrechnungsstundenControllerImpl(final LehrerAnrechnungsstundenService service) {
+	public LehrerAnrechnungsstundenControllerImpl(final LehrerAnrechnungsstundeService service) {
 		this.service = service;
 	}
 
@@ -39,25 +39,25 @@ public final class LehrerAnrechnungsstundenControllerImpl implements LehrerAnrec
 	}
 
 	@Override
-	public Response patch(final LehrerAnrechnungsstundenPatchRequest patch) {
+	public Response patch(final LehrerAnrechnungsstundePatchRequest patch) {
 		final var daten = service.patch(patch);
 		return Responses.ok(daten);
 	}
 
 	@Override
-	public Response patchMultiple(final Collection<LehrerAnrechnungsstundenPatchRequest> patches) {
+	public Response patchMultiple(final Collection<LehrerAnrechnungsstundePatchRequest> patches) {
 		final var daten = service.patchMultiple(patches);
 		return Responses.ok(daten);
 	}
 
 	@Override
-	public Response create(final LehrerAnrechnungsstundenCreateRequest patch) {
+	public Response create(final LehrerAnrechnungsstundeCreateRequest patch) {
 		final var daten = service.create(patch);
 		return Responses.created(daten);
 	}
 
 	@Override
-	public Response createMultiple(final Collection<LehrerAnrechnungsstundenCreateRequest> patches) {
+	public Response createMultiple(final Collection<LehrerAnrechnungsstundeCreateRequest> patches) {
 		final var daten = service.createMultiple(patches);
 		return Responses.created(daten);
 	}

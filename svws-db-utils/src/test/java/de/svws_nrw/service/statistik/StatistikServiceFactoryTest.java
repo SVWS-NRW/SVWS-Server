@@ -19,7 +19,7 @@ import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 /**
  * Testklasse für die {@link StatistikServiceFactory} zur Prüfung der Instanziierung der Services
@@ -53,7 +53,7 @@ class StatistikServiceFactoryTest {
 	private LehrerServiceFactory serviceFactoryLehrer;
 
 	@Mock
-	private SchuleServiceFactory serviceFactorySchule;
+	private EigeneSchuleServiceFactory serviceFactorySchule;
 
 	@InjectMocks
 	private StatistikServiceFactory factory;

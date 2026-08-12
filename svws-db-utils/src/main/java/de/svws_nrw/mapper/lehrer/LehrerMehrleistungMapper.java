@@ -3,7 +3,7 @@ package de.svws_nrw.mapper.lehrer;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.mapper.JsonNullableMapper;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungPatchRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungPatchRequest;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

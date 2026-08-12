@@ -1,8 +1,8 @@
 package de.svws_nrw.controller.schueler.schulbesuch;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchService;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 class SchulbesuchControllerTest {
 
 	@Mock
-	private SchulbesuchService service;
+	private SchuelerSchulbesuchService service;
 
 	@InjectMocks
 	private SchulbesuchController controller;
@@ -72,7 +72,7 @@ class SchulbesuchControllerTest {
 	@DisplayName("patch | Erfolg")
 	void patch_success() {
 		final var id = 1L;
-		final var dto = mock(SchulbesuchPatchRequest.class);
+		final var dto = mock(SchuelerSchulbesuchPatchRequest.class);
 		final var patched = mock(SchuelerSchulbesuchsdaten.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto)).thenAnswer(invocation -> null);
@@ -93,7 +93,7 @@ class SchulbesuchControllerTest {
 	@DisplayName("patch | Validierungsfehler")
 	void patch_validationError() {
 		final var id = 1L;
-		final var dto = mock(SchulbesuchPatchRequest.class);
+		final var dto = mock(SchuelerSchulbesuchPatchRequest.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto))
 				.thenThrow(new ValidationException("Validation failed"));

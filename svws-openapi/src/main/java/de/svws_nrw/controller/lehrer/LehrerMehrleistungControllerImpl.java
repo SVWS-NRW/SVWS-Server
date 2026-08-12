@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungCreateRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungPatchRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import jakarta.ws.rs.core.Response;
 
 /**

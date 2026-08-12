@@ -15,7 +15,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
-import de.svws_nrw.service.schule.SchuleService;
+import de.svws_nrw.service.schule.EigeneSchuleService;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.Strings;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -31,7 +31,7 @@ public class LogoverwaltungService {
 	private final LogoverwaltungRepository repository;
 	private final LogoverwaltungMapper mapper;
 
-	private final SchuleService schuleService;
+	private final EigeneSchuleService eigeneSchuleService;
 	private final Clock clock;
 
 	/**
@@ -39,16 +39,16 @@ public class LogoverwaltungService {
 	 *
 	 * @param repository das Repository für die Logoverwaltung
 	 * @param mapper    der Mapper für die Logoverwaltung
-	 * @param schuleService der Service für die Schule
+	 * @param eigeneSchuleService der Service für die Schule
 	 * @param clock die Clock für die Zeitangaben
 	 */
 	public LogoverwaltungService(final LogoverwaltungRepository repository,
 			final LogoverwaltungMapper mapper,
-			final SchuleService schuleService,
+			final EigeneSchuleService eigeneSchuleService,
 			final Clock clock) {
 		this.repository = repository;
 		this.mapper = mapper;
-		this.schuleService = schuleService;
+		this.eigeneSchuleService = eigeneSchuleService;
 		this.clock = clock;
 	}
 
@@ -205,7 +205,7 @@ public class LogoverwaltungService {
 	}
 
 	private ReportingBildDefinition resolveReportingBildDefinition(final String kennung) {
-		return ReportingBildDefinition.getByKennungAndSchulform(kennung, schuleService.getSchulform());
+		return ReportingBildDefinition.getByKennungAndSchulform(kennung, eigeneSchuleService.getSchulform());
 	}
 
 	private static void validateLogoBase64(final String logoBase64) {

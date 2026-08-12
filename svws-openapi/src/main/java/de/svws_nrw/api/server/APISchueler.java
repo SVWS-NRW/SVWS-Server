@@ -58,12 +58,15 @@ import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -270,7 +273,11 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> {
-					final var schulbesuchService = SchulbesuchServiceFactory.getNewInstance().getSchulbesuchService();
+					final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
+					final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
+					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+					final var schulbesuchService = SchuelerServiceFactory.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory)
+							.getSchulbesuchService();
 					return new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
 							new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
 							new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is);
@@ -385,7 +392,7 @@ public class APISchueler {
 	public Response addBisherigeSchule(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Schule ohne die ID, da diese automatisch generiert wird.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final BisherigeSchuleCreateRequest input,
+							schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final SchuelerBisherigeSchuleCreateRequest input,
 			@Context final HttpServletRequest request) {
 		return BisherigeSchuleControllerFactory
 				.withWriteAccess(request)
@@ -398,7 +405,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der bisher besuchten Schule
-	 * @param patch     das partielle Update als {@link BisherigeSchulePatchRequest}
+	 * @param patch     das partielle Update als {@link SchuelerBisherigeSchulePatchRequest}
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -416,7 +423,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchBisherigeSchule(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die bisher besuchte Schule", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final BisherigeSchulePatchRequest patch,
+					schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final SchuelerBisherigeSchulePatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return BisherigeSchuleControllerFactory
 				.withWriteAccess(request)
@@ -594,7 +601,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long idSchulbesuch,
 			@RequestBody(description = "Der Patch für die Schulbesuchsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final SchulbesuchPatchRequest patch,
+					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final SchuelerSchulbesuchPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return SchulbesuchControllerFactory
 				.withWriteAccess(request)

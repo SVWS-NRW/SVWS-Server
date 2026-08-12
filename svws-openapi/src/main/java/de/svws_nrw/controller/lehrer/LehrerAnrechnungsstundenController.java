@@ -2,8 +2,8 @@ package de.svws_nrw.controller.lehrer;
 
 import java.util.Collection;
 
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -37,7 +37,7 @@ public interface LehrerAnrechnungsstundenController {
 	 *
 	 * @return die Response
 	 */
-	Response patch(LehrerAnrechnungsstundenPatchRequest patch);
+	Response patch(LehrerAnrechnungsstundePatchRequest patch);
 
 	/**
 	 * Führt einen Patch für die Einträge für allgemeine Anrechnungsstunden von Lehrern aus.
@@ -47,7 +47,7 @@ public interface LehrerAnrechnungsstundenController {
 	 *
 	 * @return die Response
 	 */
-	Response patchMultiple(Collection<LehrerAnrechnungsstundenPatchRequest> patches);
+	Response patchMultiple(Collection<LehrerAnrechnungsstundePatchRequest> patches);
 
 	/**
 	 * Erstellt einen neuen Eintrag für allgemeine Anrechnungsstunden eines Lehrers mithilfe des Patches
@@ -57,7 +57,7 @@ public interface LehrerAnrechnungsstundenController {
 	 *
 	 * @return die Response
 	 */
-	Response create(LehrerAnrechnungsstundenCreateRequest patch);
+	Response create(LehrerAnrechnungsstundeCreateRequest patch);
 
 	/**
 	 * Erstellt neue Einträge für allgemeine Anrechnungsstunden eines Lehrers mithilfe der Patches
@@ -67,7 +67,7 @@ public interface LehrerAnrechnungsstundenController {
 	 *
 	 * @return die Response
 	 */
-	Response createMultiple(Collection<LehrerAnrechnungsstundenCreateRequest> patches);
+	Response createMultiple(Collection<LehrerAnrechnungsstundeCreateRequest> patches);
 
 	/**
 	 * Löscht den Eintrag für allgemeine Anrechnungsstunden eines Lehrers mit der

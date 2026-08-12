@@ -5,7 +5,7 @@ import java.net.URI;
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
 import de.svws_nrw.oauth.OAuthHttpClientImpl;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +30,7 @@ class SignatureServiceFactoryTest {
 	private OAuthHttpClientFactory authHttpClientFactory;
 
 	@Mock
-	private SchuleServiceFactory schuleServiceFactory;
+	private EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	@Mock
 	private BenutzerServiceFactory benutzerServiceFactory;
@@ -51,7 +51,7 @@ class SignatureServiceFactoryTest {
 		@Test
 		@DisplayName("gibt eine nicht-null Instanz zurück")
 		void getNewInstance_shouldReturnNonNullInstance() {
-			final SignatureServiceFactory factory = SignatureServiceFactory.getNewInstance(authHttpClientFactory, schuleServiceFactory, benutzerServiceFactory);
+			final SignatureServiceFactory factory = SignatureServiceFactory.getNewInstance(authHttpClientFactory, eigeneSchuleServiceFactory, benutzerServiceFactory);
 
 			assertThat(factory).isNotNull();
 		}
@@ -59,8 +59,8 @@ class SignatureServiceFactoryTest {
 		@Test
 		@DisplayName("gibt bei jedem Aufruf eine neue Instanz zurück")
 		void getNewInstance_shouldReturnNewInstanceOnEachCall() {
-			final SignatureServiceFactory factory1 = SignatureServiceFactory.getNewInstance(authHttpClientFactory, schuleServiceFactory, benutzerServiceFactory);
-			final SignatureServiceFactory factory2 = SignatureServiceFactory.getNewInstance(authHttpClientFactory, schuleServiceFactory, benutzerServiceFactory);
+			final SignatureServiceFactory factory1 = SignatureServiceFactory.getNewInstance(authHttpClientFactory, eigeneSchuleServiceFactory, benutzerServiceFactory);
+			final SignatureServiceFactory factory2 = SignatureServiceFactory.getNewInstance(authHttpClientFactory, eigeneSchuleServiceFactory, benutzerServiceFactory);
 
 			assertThat(factory1).isNotSameAs(factory2);
 		}
@@ -68,7 +68,7 @@ class SignatureServiceFactoryTest {
 		@Test
 		@DisplayName("wirft NullPointerException wenn httpClientFactory null ist")
 		void getNewInstance_shouldThrow_whenHttpClientFactoryIsNull() {
-			final SignatureServiceFactory factoryInstance = SignatureServiceFactory.getNewInstance(null, schuleServiceFactory, benutzerServiceFactory);
+			final SignatureServiceFactory factoryInstance = SignatureServiceFactory.getNewInstance(null, eigeneSchuleServiceFactory, benutzerServiceFactory);
 			assertThatThrownBy(factoryInstance::getSignatureService)
 					.isInstanceOf(NullPointerException.class);
 		}
@@ -84,7 +84,7 @@ class SignatureServiceFactoryTest {
 		@Test
 		@DisplayName("wirft NullPointerException wenn benutzerServiceFactory null ist")
 		void getNewInstance_shouldThrow_whenBenutzerServiceFactoryIsNull() {
-			final SignatureServiceFactory factoryInstance = SignatureServiceFactory.getNewInstance(authHttpClientFactory, schuleServiceFactory, null);
+			final SignatureServiceFactory factoryInstance = SignatureServiceFactory.getNewInstance(authHttpClientFactory, eigeneSchuleServiceFactory, null);
 			assertThatThrownBy(factoryInstance::getSignatureService)
 					.isInstanceOf(NullPointerException.class);
 		}
@@ -104,7 +104,7 @@ class SignatureServiceFactoryTest {
 		void setUp() {
 			cut = SignatureServiceFactory.getNewInstance(
 					SignatureServiceFactoryTest.this.authHttpClientFactory,
-					SignatureServiceFactoryTest.this.schuleServiceFactory,
+					SignatureServiceFactoryTest.this.eigeneSchuleServiceFactory,
 					SignatureServiceFactoryTest.this.benutzerServiceFactory
 			);
 		}

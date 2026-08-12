@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -17,15 +17,15 @@ public final class SignatureServiceFactory {
 	private static final String ENV_PROPERTY_SIGNATURE_SERVICE_URL = "svws.itnrw.signature.url";
 
 	private final OAuthHttpClientFactory httpClientFactory;
-	private final SchuleServiceFactory schuleServiceFactory;
+	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 	private final BenutzerServiceFactory benutzerServiceFactory;
 
 	private SignatureServiceFactory(
 			final OAuthHttpClientFactory httpClientFactory,
-			final SchuleServiceFactory schuleServiceFactory,
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
 			final BenutzerServiceFactory benutzerServiceFactory) {
 		this.httpClientFactory = httpClientFactory;
-		this.schuleServiceFactory = schuleServiceFactory;
+		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
 		this.benutzerServiceFactory = benutzerServiceFactory;
 	}
 
@@ -33,14 +33,14 @@ public final class SignatureServiceFactory {
 	 * Erzeugt eine neue Instanz der Service-Factory
 	 *
 	 * @param httpClientFactory   die Factory für HTTP-Clients
-	 * @param schuleServiceFactory   die Factory für Schule-Services
+	 * @param eigeneSchuleServiceFactory   die Factory für Schule-Services
 	 * @param benutzerServiceFactory   die Factory für Benutzer-Services
 	 *
 	 * @return die neue Factory-Instanz
 	 */
-	public static SignatureServiceFactory getNewInstance(final OAuthHttpClientFactory httpClientFactory, final SchuleServiceFactory schuleServiceFactory,
+	public static SignatureServiceFactory getNewInstance(final OAuthHttpClientFactory httpClientFactory, final EigeneSchuleServiceFactory eigeneSchuleServiceFactory,
 			final BenutzerServiceFactory benutzerServiceFactory) {
-		return new SignatureServiceFactory(httpClientFactory, schuleServiceFactory, benutzerServiceFactory);
+		return new SignatureServiceFactory(httpClientFactory, eigeneSchuleServiceFactory, benutzerServiceFactory);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public final class SignatureServiceFactory {
 	public SignatureService getSignatureService() {
 		return new SignatureServiceImpl(
 				httpClientFactory.getClient(),
-				schuleServiceFactory.getSchuleService(),
+				eigeneSchuleServiceFactory.getSchuleService(),
 				benutzerServiceFactory.getBenutzerKompetenzService(),
 				new ObjectMapper(),
 				getSignatureServiceURI()

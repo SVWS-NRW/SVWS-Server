@@ -2,9 +2,9 @@ package de.svws_nrw.controller.lehrer;
 
 import java.util.List;
 
-import de.svws_nrw.service.lehrer.LehrerMinderleistungBatchPatchRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungPatchRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungBatchPatchRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungCreateRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungPatchRequest;
 import jakarta.ws.rs.core.Response;
 
 public interface LehrerMinderleistungController {

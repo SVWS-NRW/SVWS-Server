@@ -15,7 +15,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.oauth.OAuthHttpClient;
 import de.svws_nrw.oauth.OAuthScope;
 import de.svws_nrw.service.benutzer.BenutzerKompetenzService;
-import de.svws_nrw.service.schule.SchuleService;
+import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.utils.HashUtils;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -31,7 +31,7 @@ public final class SignatureServiceImpl implements SignatureService {
 	private static final String API_ERROR_MESSAGE = "API request failed with status %d: %s";
 
 	private final OAuthHttpClient httpClient;
-	private final SchuleService schuleService;
+	private final EigeneSchuleService eigeneSchuleService;
 	private final BenutzerKompetenzService benutzerKompetenzService;
 	private final URI signatureServiceURI;
 	private final ObjectMapper objectMapper;
@@ -40,18 +40,18 @@ public final class SignatureServiceImpl implements SignatureService {
 	 * Konstruktor.
 	 *
 	 * @param httpClient der HTTP-Client
-	 * @param schuleService der Schule-Service
+	 * @param eigeneSchuleService der Schule-Service
 	 * @param benutzerKompetenzService der BenutzerKompetenz-Service
 	 * @param signatureServiceURI die URI des Signatur-Services
 	 * @param objectMapper der ObjectMapper
 	 */
 	public SignatureServiceImpl(final OAuthHttpClient httpClient,
-			final SchuleService schuleService,
+			final EigeneSchuleService eigeneSchuleService,
 			final BenutzerKompetenzService benutzerKompetenzService,
 			final ObjectMapper objectMapper,
 			final URI signatureServiceURI) {
 		this.httpClient = httpClient;
-		this.schuleService = schuleService;
+		this.eigeneSchuleService = eigeneSchuleService;
 		this.benutzerKompetenzService = benutzerKompetenzService;
 		this.signatureServiceURI = signatureServiceURI;
 		this.objectMapper = objectMapper;
@@ -148,7 +148,7 @@ public final class SignatureServiceImpl implements SignatureService {
 	}
 
 	private HttpRequest createRequest(final Map<Long, byte[]> payloadById) {
-		final var schulnummer = schuleService.getSchulnummer();
+		final var schulnummer = eigeneSchuleService.getSchulnummer();
 		final List<SignRequestPayload> requestPayloads = payloadById.entrySet().stream()
 				.map(e -> new SignRequestPayload(e.getKey(), HashUtils.sha256AsHex(e.getValue())))
 				.toList();

@@ -3,6 +3,7 @@ package de.svws_nrw.service.lehrer;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class LehrerServiceFactoryTest {
 	@Mock
 	private EigeneSchuleRepositoryFactory repoSchuleFactory;
 
+	@Mock
+	private KatalogRepositoryFactory katalogRepositoryFactory;
+
 	@InjectMocks
 	private LehrerServiceFactory serviceFactory;
 
@@ -36,7 +40,7 @@ class LehrerServiceFactoryTest {
 	@DisplayName("Test: Prüfe, ob getNewInstance die Factory korrekt initialisiert")
 	void testGetNewInstance() {
 	    // Da der Konstruktor private ist, testen wir über die statische Methode
-	    final var factory = LehrerServiceFactory.getNewInstance(repoLehrerFactory, repoSchuleFactory);
+	    final var factory = LehrerServiceFactory.getNewInstance(repoLehrerFactory, repoSchuleFactory, katalogRepositoryFactory);
 
 	    assertNotNull(factory);
 

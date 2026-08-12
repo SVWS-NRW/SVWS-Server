@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.benutzer.BenutzerKompetenzService;
-import de.svws_nrw.service.schule.SchuleService;
+import de.svws_nrw.service.schule.EigeneSchuleService;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class SignatureServiceImplTest {
 	private OAuthHttpClientImplMock httpClient;
 
 	@Mock
-	private SchuleService schuleService;
+	private EigeneSchuleService eigeneSchuleService;
 
 	@Mock
 	private BenutzerKompetenzService benutzerKompetenzService;
@@ -53,7 +53,7 @@ class SignatureServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		httpClient = new OAuthHttpClientImplMock();
-		cut = new SignatureServiceImpl(httpClient, schuleService, benutzerKompetenzService, new ObjectMapper(), SIGNATURE_SERVICE_URI);
+		cut = new SignatureServiceImpl(httpClient, eigeneSchuleService, benutzerKompetenzService, new ObjectMapper(), SIGNATURE_SERVICE_URI);
 		when(benutzerKompetenzService.hatBenutzerKompetenz(BenutzerKompetenz.EXTRAS_DIGITALE_SIGNATUREN_AUSSTELLEN)).thenReturn(true);
 	}
 
@@ -278,7 +278,7 @@ class SignatureServiceImplTest {
 			when(brokenMapper.writeValueAsString(any())).thenThrow(new JsonProcessingException("Serialization failed") {
 			});
 
-			final SignatureServiceImpl serviceWithBrokenMapper = new SignatureServiceImpl(httpClient, schuleService, benutzerKompetenzService, brokenMapper,
+			final SignatureServiceImpl serviceWithBrokenMapper = new SignatureServiceImpl(httpClient, eigeneSchuleService, benutzerKompetenzService, brokenMapper,
 					SIGNATURE_SERVICE_URI);
 
 			final Map<Object, byte[]> payloadMap = Map.of(1L, "payload".getBytes());

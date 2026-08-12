@@ -37,15 +37,15 @@ import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
-import de.svws_nrw.service.schueler.SchuelerSprachenfolgeService;
-import de.svws_nrw.service.schueler.SchuelerSprachpruefungenService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
+import de.svws_nrw.service.schueler.sprachenfolge.SchuelerSprachenfolgeService;
+import de.svws_nrw.service.schueler.sprachpruefung.SchuelerSprachpruefungService;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
 
 /**
- * Diese Klasse stellt einen Daten-Kontext für den Service {@link LehrerAnrechnungsstundenService} bereit.
+ * Diese Klasse stellt einen Daten-Kontext für den Service {@link LehrerAnrechnungsstundeService} bereit.
  */
 public final class BKGymLeistungsdatenServiceKontext {
 
@@ -99,7 +99,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 	private final SchuelerSprachenfolgeService schuelerSprachenfolgeService;
 
 	/** Service zur Konvertierung der Schueler-Sprachpruefungen in API-Objekte */
-	private final SchuelerSprachpruefungenService schuelerSprachpruefungenService;
+	private final SchuelerSprachpruefungService schuelerSprachpruefungService;
 
 
 	private BKGymLeistungsdatenServiceKontext(
@@ -109,7 +109,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerSprachenfolgeService schuelerSprachenfolgeService,
-			final SchuelerSprachpruefungenService schuelerSprachpruefungenService,
+			final SchuelerSprachpruefungService schuelerSprachpruefungService,
 			final JahrgangRepository jahrgangRepository) {
 		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
@@ -118,7 +118,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.jahrgangRepository = jahrgangRepository;
 		this.schuelerSprachenfolgeService = schuelerSprachenfolgeService;
-		this.schuelerSprachpruefungenService = schuelerSprachpruefungenService;
+		this.schuelerSprachpruefungService = schuelerSprachpruefungService;
 	}
 
 
@@ -131,7 +131,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 	 * @param schuelerLernabschnittRepository      das Repository für die Schüler-Lernabschnitte
 	 * @param schuelerLeistungsdatenRepository     das Repository für die Schüler-Leistungs
 	 * @param schuelerSprachenfolgeService         der Service für die Schüler-Sprachenfolge
-	 * @param schuelerSprachpruefungenService      der Service für die Schüler-Sprachprüfungen
+	 * @param schuelerSprachpruefungService      der Service für die Schüler-Sprachprüfungen
 	 * @param jahrgangRepository                 das Repository für die Jahrgänge
 	 *
 	 * @return der neue Service-Kontext.
@@ -142,11 +142,11 @@ public final class BKGymLeistungsdatenServiceKontext {
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerSprachenfolgeService schuelerSprachenfolgeService,
-			final SchuelerSprachpruefungenService schuelerSprachpruefungenService,
+			final SchuelerSprachpruefungService schuelerSprachpruefungService,
 			final JahrgangRepository jahrgangRepository) {
 		return new BKGymLeistungsdatenServiceKontext(eigeneSchuleRepository, schuljahresabschnitteRepository, fachRepository,
 				schuelerLernabschnittRepository, schuelerLeistungsdatenRepository, schuelerSprachenfolgeService,
-				schuelerSprachpruefungenService,
+				schuelerSprachpruefungService,
 				jahrgangRepository);
 	}
 
@@ -177,7 +177,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 		mapSprachenfolgen = schuelerSprachenfolgeService.getMapSprachenfolgen(idsSchueler);
 
 		// Lade die SchuelerSprachpruefungen in den Cache des zugehörigen Services
-		mapSprachenpruefungen = schuelerSprachpruefungenService.getMapSprachenfolgen(idsSchueler, schuljahresabschnittApi);
+		mapSprachenpruefungen = schuelerSprachpruefungService.getMapSprachenfolgen(idsSchueler, schuljahresabschnittApi);
 
 		final var alleLernabschnittIDs = mapLernabschnittIDs.values().stream().flatMap(List::stream).toList();
 		mapLeistungsdaten = schuelerLeistungsdatenRepository.getMapByLernabschnittsIds(alleLernabschnittIDs);

@@ -12,7 +12,7 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchService;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +49,7 @@ class DataSchuelerNeuTest {
 	private DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
 
 	@Mock
-	private SchulbesuchService schulbesuchService;
+	private SchuelerSchulbesuchService schuelerSchulbesuchService;
 
 	@Mock
 	private DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
@@ -99,7 +99,7 @@ class DataSchuelerNeuTest {
 						&& (((Number) map.get("schuljahresabschnitt")).longValue() == 8L)
 						&& (((Number) map.get("jahrgangID")).longValue() == 5L)
 		));
-		verify(schulbesuchService, times(1)).patch(anyLong(), any());
+		verify(schuelerSchulbesuchService, times(1)).patch(anyLong(), any());
 		verify(dataSchuelerLernplattformen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
 		verify(dataSchuelerEinwilligungen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
 	}
@@ -161,7 +161,7 @@ class DataSchuelerNeuTest {
 
 		data.add(TestUtils.fromObject(schuelerNeu));
 
-		verify(schulbesuchService, never()).patch(anyLong(), any());
+		verify(schuelerSchulbesuchService, never()).patch(anyLong(), any());
 	}
 
 	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";

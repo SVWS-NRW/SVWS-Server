@@ -50,7 +50,7 @@ public final class GostLaufbahnplanungControllerFactory {
 				EigeneSchuleRepositoryFactory.getNewInstance(),
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
 				GostKlausurenRepositoryFactory.getNewInstance());
 	}
 

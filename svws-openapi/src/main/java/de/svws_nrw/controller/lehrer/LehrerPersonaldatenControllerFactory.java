@@ -6,9 +6,10 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
-import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachService;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -29,7 +30,8 @@ public final class LehrerPersonaldatenControllerFactory {
 	private LehrerPersonaldatenControllerFactory() {
 		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
 		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-		this.serviceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory);
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		this.serviceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory, katalogRepoFactory);
 	}
 
 
@@ -87,7 +89,7 @@ public final class LehrerPersonaldatenControllerFactory {
 	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
 	 */
 	public LehrerAnrechnungsstundenController getLehrerAnrechnungsstundenController() throws ApiOperationException {
-		final LehrerAnrechnungsstundenService getService = serviceFactory.getLehrerAnrechnungsstundenService();
+		final LehrerAnrechnungsstundeService getService = serviceFactory.getLehrerAnrechnungsstundenService();
 		return new LehrerAnrechnungsstundenControllerImpl(getService);
 	}
 

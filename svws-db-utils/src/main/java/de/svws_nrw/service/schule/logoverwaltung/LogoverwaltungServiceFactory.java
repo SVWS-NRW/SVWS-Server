@@ -5,45 +5,45 @@ import java.time.ZoneId;
 
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
 public final class LogoverwaltungServiceFactory {
 
 	private final LogoverwaltungRepositoryFactory repoFactory;
 	private final LogoverwaltungMapper mapper;
-	private final SchuleServiceFactory schuleServiceFactory;
+	private final EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	/**
 	 * @param repoFactory {@link LogoverwaltungRepositoryFactory}
 	 * @param mapper {@link LogoverwaltungMapper}
-	 * @param schuleServiceFactory {@link SchuleServiceFactory}
+	 * @param eigeneSchuleServiceFactory {@link EigeneSchuleServiceFactory}
 	 */
 	private LogoverwaltungServiceFactory(final LogoverwaltungRepositoryFactory repoFactory,
 			final LogoverwaltungMapper mapper,
-			final SchuleServiceFactory schuleServiceFactory) {
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
 		this.repoFactory = repoFactory;
 		this.mapper = mapper;
-		this.schuleServiceFactory = schuleServiceFactory;
+		this.eigeneSchuleServiceFactory = eigeneSchuleServiceFactory;
 	}
 
 	/**
 	 * @param repoFactory {@link LogoverwaltungRepositoryFactory}
 	 * @param mapper {@link LogoverwaltungMapper}
-	 * @param schuleServiceFactory {@link SchuleServiceFactory}
+	 * @param eigeneSchuleServiceFactory {@link EigeneSchuleServiceFactory}
 	 *
 	 * @return eine neue Instanz der LogoverwaltungServiceFactory
 	 */
 	public static LogoverwaltungServiceFactory getNewInstance(final LogoverwaltungRepositoryFactory repoFactory,
 			final LogoverwaltungMapper mapper,
-			final SchuleServiceFactory schuleServiceFactory) {
-		return new LogoverwaltungServiceFactory(repoFactory, mapper, schuleServiceFactory);
+			final EigeneSchuleServiceFactory eigeneSchuleServiceFactory) {
+		return new LogoverwaltungServiceFactory(repoFactory, mapper, eigeneSchuleServiceFactory);
 	}
 
 	/**
 	 * @return eine neue Instanz des LogoverwaltungService
 	 */
 	public LogoverwaltungService getService() {
-		return new LogoverwaltungService(repoFactory.getRepository(), mapper, schuleServiceFactory.getSchuleService(),
+		return new LogoverwaltungService(repoFactory.getRepository(), mapper, eigeneSchuleServiceFactory.getSchuleService(),
 				Clock.system(ZoneId.of("Europe/Berlin")));
 	}
 }

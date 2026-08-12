@@ -4,9 +4,9 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleService;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 class BisherigeSchuleControllerTest {
 
 	@Mock
-	private BisherigeSchuleService service;
+	private SchuelerBisherigeSchuleService service;
 
 	private BisherigeSchuleController controller;
 
@@ -55,7 +55,7 @@ class BisherigeSchuleControllerTest {
 	@Test
 	@DisplayName("create | Erfolg")
 	void create_success() {
-		final var dto = mock(BisherigeSchuleCreateRequest.class);
+		final var dto = mock(SchuelerBisherigeSchuleCreateRequest.class);
 		final var created = mock(SchuelerSchulbesuchSchule.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto)).thenAnswer(invocation -> null);
@@ -75,7 +75,7 @@ class BisherigeSchuleControllerTest {
 	@Test
 	@DisplayName("create | Validierungsfehler")
 	void create_validationError() {
-		final var dto = mock(BisherigeSchuleCreateRequest.class);
+		final var dto = mock(SchuelerBisherigeSchuleCreateRequest.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto))
 				.thenThrow(new ValidationException("Validation failed"));
@@ -91,7 +91,7 @@ class BisherigeSchuleControllerTest {
 	@DisplayName("patch | Erfolg")
 	void patch_success() {
 		final var id = 1L;
-		final var dto = mock(BisherigeSchulePatchRequest.class);
+		final var dto = mock(SchuelerBisherigeSchulePatchRequest.class);
 		final var patched = mock(SchuelerSchulbesuchSchule.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto)).thenAnswer(invocation -> null);
@@ -112,7 +112,7 @@ class BisherigeSchuleControllerTest {
 	@DisplayName("patch | Validierungsfehler")
 	void patch_validationError() {
 		final var id = 1L;
-		final var dto = mock(BisherigeSchulePatchRequest.class);
+		final var dto = mock(SchuelerBisherigeSchulePatchRequest.class);
 
 		beanValidatorMock.when(() -> BeanValidator.validate(dto))
 				.thenThrow(new ValidationException("Invalid patch data"));

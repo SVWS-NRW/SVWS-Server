@@ -3,9 +3,9 @@ package de.svws_nrw.controller.schule.merkmale;
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
-import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
-import de.svws_nrw.service.schule.merkmale.MerkmalService;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalCreateRequest;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalPatchRequest;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;

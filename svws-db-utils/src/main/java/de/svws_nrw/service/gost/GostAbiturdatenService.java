@@ -45,7 +45,7 @@ import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.service.benutzer.BenutzerKompetenzService;
-import de.svws_nrw.service.schueler.SchuelerSprachdatenService;
+import de.svws_nrw.service.schueler.sprachdaten.SchuelerSprachdatenService;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 

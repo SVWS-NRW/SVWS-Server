@@ -3,8 +3,8 @@ package de.svws_nrw.mapper.lehrer;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
 import de.svws_nrw.mapper.JsonNullableMapper;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungCreateRequest;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -28,7 +28,7 @@ public interface LehrerMinderleistungMapper {
 	LehrerPersonalabschnittsdatenAnrechnungsstunden toApi(DTOLehrerEntlastungsstunde entity, Long idGrund);
 
 	/**
-	 * Mappt {@link LehrerAnrechnungsstundenCreateRequest}
+	 * Mappt {@link LehrerAnrechnungsstundeCreateRequest}
 	 *
 	 * @param request {@link LehrerMinderleistungCreateRequest}
 	 * @param id der PK

@@ -4,23 +4,23 @@ import java.util.List;
 
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleCreateRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchulePatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.BisherigeSchuleService;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
 
 public final class BisherigeSchuleController {
 
-	private final BisherigeSchuleService service;
+	private final SchuelerBisherigeSchuleService service;
 
 	/**
 	 * Erstellt einen neuen BisherigeSchulenController mit dem angegebenen Service.
 	 *
 	 * @param service der BisherigeSchulenService
 	 */
-	public BisherigeSchuleController(final BisherigeSchuleService service) {
+	public BisherigeSchuleController(final SchuelerBisherigeSchuleService service) {
 		this.service = service;
 	}
 
@@ -34,7 +34,7 @@ public final class BisherigeSchuleController {
 	 * @return eine Response mit der erstellten BisherigeSchule-Entität
 	 * @throws ApiOperationException wenn die Validierung fehlschlägt
 	 */
-	public Response create(final BisherigeSchuleCreateRequest dto) {
+	public Response create(final SchuelerBisherigeSchuleCreateRequest dto) {
 		BeanValidator.validate(dto);
 		final var created = this.service.create(dto);
 		return Responses.created(created);
@@ -51,7 +51,7 @@ public final class BisherigeSchuleController {
 	 * @return eine Response mit der aktualisierten BisherigeSchule-Entität
 	 * @throws ValidationException wenn die DTO-Validierung fehlschlägt
 	 */
-	public Response patch(final long id, final BisherigeSchulePatchRequest dto) {
+	public Response patch(final long id, final SchuelerBisherigeSchulePatchRequest dto) {
 		BeanValidator.validate(dto);
 		final var patched = this.service.patch(id, dto);
 		return Responses.ok(patched);

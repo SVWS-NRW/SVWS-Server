@@ -3,15 +3,15 @@ package de.svws_nrw.controller.schueler.schulbesuch;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalServiceFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class SchuelerMerkmalControllerFactory {
 
-	private final SchuelerMerkmalServiceFactory factory;
+	private final SchuelerServiceFactory factory;
 
 
 	/**
@@ -19,16 +19,16 @@ public class SchuelerMerkmalControllerFactory {
 	 *
 	 * @param factory die Factory zur Erstellung von SchuelerMerkmalService-Instanzen
 	 */
-	public SchuelerMerkmalControllerFactory(final SchuelerMerkmalServiceFactory factory) {
+	public SchuelerMerkmalControllerFactory(final SchuelerServiceFactory factory) {
 		this.factory = factory;
 	}
 
 	private static SchuelerMerkmalControllerFactory getNewInstance(final HttpServletRequest request) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
-		final var repoFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
 		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-		final var mapper = SchuelerMerkmalMapper.INSTANCE;
-		final var serviceFactory = SchuelerMerkmalServiceFactory.getNewInstance(repoFactory, katalogRepositoryFactory, mapper);
+		final var benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
+		final var serviceFactory = SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepoFactory, katalogRepositoryFactory);
 
 		return new SchuelerMerkmalControllerFactory(serviceFactory);
 	}

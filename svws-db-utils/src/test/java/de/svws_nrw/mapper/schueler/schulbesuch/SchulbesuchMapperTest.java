@@ -9,7 +9,7 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -419,7 +419,7 @@ class SchulbesuchMapperTest {
 		@Test
 		@DisplayName("Aktualisiert alle definierten Felder")
 		void patch_aktualisiertAlleDefiniertenFelder() {
-			final var request = new SchulbesuchPatchRequest();
+			final var request = new SchuelerSchulbesuchPatchRequest();
 			request.entlassdatumVorherigeSchule = JsonNullable.of("2021-07-01");
 			request.kuerzelEntlassjahrgangVorherigeSchule = JsonNullable.of("10");
 			request.idHerkunftsartVersetzungVorherigeSchule = JsonNullable.of("V");
@@ -462,7 +462,7 @@ class SchulbesuchMapperTest {
 		@Test
 		@DisplayName("Lässt undefined Felder unverändert")
 		void patch_laesst_undefinedFelder_unveraendert() {
-			final var request = new SchulbesuchPatchRequest();
+			final var request = new SchuelerSchulbesuchPatchRequest();
 			// alle Felder bleiben JsonNullable.undefined()
 
 			final var entity = createEntity(1L);
@@ -483,7 +483,7 @@ class SchulbesuchMapperTest {
 		@Test
 		@DisplayName("Setzt Felder auf null wenn JsonNullable.of(null)")
 		void patch_setztNullWerte() {
-			final var request = new SchulbesuchPatchRequest();
+			final var request = new SchuelerSchulbesuchPatchRequest();
 			request.entlassdatumVorherigeSchule = JsonNullable.of(null);
 			request.kuerzelEntlassjahrgangVorherigeSchule = JsonNullable.of(null);
 			request.bemerkungVorherigeSchule = JsonNullable.of(null);
@@ -505,7 +505,7 @@ class SchulbesuchMapperTest {
 		@Test
 		@DisplayName("Mischt definierte und undefined Felder korrekt")
 		void patch_mischtDefinierteUndUndefinierteFelder() {
-			final var request = new SchulbesuchPatchRequest();
+			final var request = new SchuelerSchulbesuchPatchRequest();
 			request.entlassdatumVorherigeSchule = JsonNullable.of("2025-01-01");
 			// vorigeEntlassjahrgang bleibt undefined
 			final var entity = createEntity(1L);

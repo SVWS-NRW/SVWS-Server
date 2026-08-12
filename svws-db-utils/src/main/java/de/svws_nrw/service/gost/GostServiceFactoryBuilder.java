@@ -30,6 +30,7 @@ public final class GostServiceFactoryBuilder {
 	public static GostServiceFactory getGostServiceFactory() {
 		final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
 		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final KatalogRepositoryFactory katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
 		final BenutzerServiceFactory benutzerServiceFactory = BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory);
 		return GostServiceFactory.getNewInstance(
 				GostRepositoryFactory.getNewInstance(),
@@ -40,7 +41,7 @@ public final class GostServiceFactoryBuilder {
 				EigeneSchuleRepositoryFactory.getNewInstance(),
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
+				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
 				GostKlausurenRepositoryFactory.getNewInstance());
 	}
 

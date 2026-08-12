@@ -10,8 +10,8 @@ import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.mapper.JsonNullableMapper;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchResolver;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchResolver;
 import org.apache.poi.util.StringUtil;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
@@ -110,7 +110,7 @@ public interface SchulbesuchMapper {
 			final DTOSchueler entity,
 			@Context final SchulbesuchMappingContext ctx,
 			@MappingTarget final SchuelerSchulbesuchsdaten target) {
-		SchulbesuchResolver.mapHerkunftSonstige(entity, target, ctx.jahrEntlassungVorherigeSchule());
+		SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, ctx.jahrEntlassungVorherigeSchule());
 	}
 
 	/**
@@ -126,7 +126,7 @@ public interface SchulbesuchMapper {
 			final DTOSchueler entity,
 			@Context final SchulbesuchMappingContext ctx,
 			@MappingTarget final SchuelerSchulbesuchsdaten target) {
-		SchulbesuchResolver.mapSchulgliederung(entity, target, ctx.jahrEntlassungVorherigeSchule());
+		SchuelerSchulbesuchResolver.mapSchulgliederung(entity, target, ctx.jahrEntlassungVorherigeSchule());
 	}
 
 
@@ -267,7 +267,7 @@ public interface SchulbesuchMapper {
 	}
 
 	/**
-	 * Wendet die Änderungen eines {@link SchulbesuchPatchRequest} auf eine bestehende
+	 * Wendet die Änderungen eines {@link SchuelerSchulbesuchPatchRequest} auf eine bestehende
 	 * {@link DTOSchueler}-Entity an. Felder mit {@code null}-Wert werden nicht überschrieben.
 	 *
 	 * @param input                  der Patch-Request mit den zu ändernden Feldern
@@ -290,6 +290,6 @@ public interface SchulbesuchMapper {
 	@Mapping(source = "verpflichtungSprachfoerderkurs", target = "VerpflichtungSprachfoerderkurs")
 	@Mapping(source = "teilnahmeSprachfoerderkurs", target = "TeilnahmeSprachfoerderkurs")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	void patch(SchulbesuchPatchRequest input, @MappingTarget DTOSchueler toPatch);
+	void patch(SchuelerSchulbesuchPatchRequest input, @MappingTarget DTOSchueler toPatch);
 
 }

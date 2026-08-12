@@ -18,9 +18,9 @@ import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -61,7 +61,7 @@ class LehrerPersonalabschnittsdatenServiceTest {
 	private SchuljahresabschnitteRepository schuljahresabschnitteRepo;
 
 	@Mock
-	private LehrerAnrechnungsstundenService anrechnungsService;
+	private LehrerAnrechnungsstundeService anrechnungsService;
 
 	@Mock
 	private LehrerMehrleistungService mehrleistungService;

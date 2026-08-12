@@ -14,7 +14,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenServiceFactory;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 
@@ -62,7 +62,7 @@ public final class DataLehrerPersonaldaten extends DataManagerRevised<Long, DTOL
 		daten.zugangsgrund = dto.GrundZugang;
 		daten.abgangsdatum = dto.DatumAbgang;
 		daten.abgangsgrund = dto.GrundAbgang;
-		daten.abschnittsdaten.addAll(LehrerPersonalabschnittsdatenServiceFactory.getNewInstance().getLehrerPersonalabschnittsdatenService().getByIdLehrer(dto.ID));
+		daten.abschnittsdaten.addAll(LehrerServiceFactory.getNewInstance().getLehrerPersonalabschnittsdatenService().getByIdLehrer(dto.ID));
 		daten.lehraemter.addAll(DataLehrerLehramt.getListByLehrerId(conn, dto.ID));
 		return daten;
 	}

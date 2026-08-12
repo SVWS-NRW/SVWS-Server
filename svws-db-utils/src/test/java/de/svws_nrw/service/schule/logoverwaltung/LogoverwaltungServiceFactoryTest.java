@@ -3,7 +3,7 @@ package de.svws_nrw.service.schule.logoverwaltung;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,12 +26,12 @@ class LogoverwaltungServiceFactoryTest {
 	private LogoverwaltungMapper mapper;
 
 	@Mock
-	private SchuleServiceFactory schuleServiceFactory;
+	private EigeneSchuleServiceFactory eigeneSchuleServiceFactory;
 
 	@Test
 	@DisplayName("getNewInstance | Erfolg")
 	void getNewInstance_success() {
-		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, schuleServiceFactory);
+		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, eigeneSchuleServiceFactory);
 
 		assertThat(factory)
 				.isNotNull()
@@ -42,7 +42,7 @@ class LogoverwaltungServiceFactoryTest {
 	@DisplayName("getMerkmalService | Erfolg")
 	void getService_success() {
 		final var repository = mock(LogoverwaltungRepository.class);
-		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, schuleServiceFactory);
+		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, eigeneSchuleServiceFactory);
 
 		when(repositoryFactory.getRepository()).thenReturn(repository);
 
@@ -59,7 +59,7 @@ class LogoverwaltungServiceFactoryTest {
 	@DisplayName("getMerkmalService | Mehrfache Aufrufe erstellen neue Instanzen")
 	void getService_multipleCallsCreateNewInstances() {
 		final var repository = mock(LogoverwaltungRepository.class);
-		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, schuleServiceFactory);
+		final var factory = LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, mapper, eigeneSchuleServiceFactory);
 
 		when(repositoryFactory.getRepository()).thenReturn(repository);
 

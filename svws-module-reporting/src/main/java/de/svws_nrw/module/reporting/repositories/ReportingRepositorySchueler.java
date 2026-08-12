@@ -31,6 +31,8 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrFactory;
@@ -45,7 +47,8 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
 import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
  * Domänen-Repository für Schülerdaten (Stammdaten, Lernabschnitte, Leistungsdaten und Reporting-Objekte).
@@ -254,8 +257,11 @@ public class ReportingRepositorySchueler {
 	}
 
 	private Map<Long, SchuelerSchulbesuchsdaten> ladeSchulbesuchsdaten(final List<Long> idsSchueler) {
-		return SchulbesuchServiceFactory
-				.getNewInstance()
+		final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
+		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		return SchuelerServiceFactory
+				.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory)
 				.getSchulbesuchService()
 				.getByIds(idsSchueler)
 				.stream()

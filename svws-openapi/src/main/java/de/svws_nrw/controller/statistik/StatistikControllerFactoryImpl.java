@@ -9,7 +9,7 @@ import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.statistik.StatistikService;
 import de.svws_nrw.service.statistik.StatistikServiceFactory;
 
@@ -30,8 +30,9 @@ public final class StatistikControllerFactoryImpl implements StatistikController
 	StatistikControllerFactoryImpl() {
 		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
 		final var schuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-		final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory);
-		final var schuleServiceFactory = SchuleServiceFactory.getNewInstance(schuleRepositoryFactory);
+		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
+		final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance(lehrerRepositoryFactory, schuleRepositoryFactory, katalogRepositoryFactory);
+		final var schuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(schuleRepositoryFactory);
 		this.serviceFactory = StatistikServiceFactory.getNewInstance(
 				BenutzerRepositoryFactory.getNewInstance(),
 				KatalogRepositoryFactory.getNewInstance(),

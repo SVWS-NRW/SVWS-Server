@@ -3,8 +3,10 @@ package de.svws_nrw.controller.katalog.teilleistungsart;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -12,10 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public final class TeilleistungsartControllerFactory {
 
-	private final TeilleistungsartServiceFactory teilLeistungsartServiceFactory;
+	private final KatalogServiceFactory katalogServiceFactory;
 
-	private TeilleistungsartControllerFactory(final TeilleistungsartServiceFactory teilLeistungsartServiceFactory) {
-		this.teilLeistungsartServiceFactory = teilLeistungsartServiceFactory;
+	private TeilleistungsartControllerFactory(final KatalogServiceFactory katalogServiceFactory) {
+		this.katalogServiceFactory = katalogServiceFactory;
 
 	}
 
@@ -33,7 +35,9 @@ public final class TeilleistungsartControllerFactory {
 
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var katalogeRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-		final var serviceFactory = TeilleistungsartServiceFactory.getNewInstance(katalogeRepositoryFactory);
+		final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+		final var serviceFactory = KatalogServiceFactory.getNewInstance(katalogeRepositoryFactory, eigeneSchuleServiceFactory);
 
 		return new TeilleistungsartControllerFactory(serviceFactory);
 	}
@@ -74,6 +78,6 @@ public final class TeilleistungsartControllerFactory {
 	 * @return {@link TeilleistungsartController} - neu erzeugter Controller
 	 */
 	public TeilleistungsartController getTeilLeistungsartenController() {
-		return new TeilleistungsartController(teilLeistungsartServiceFactory.getTeilLeistungsartenService());
+		return new TeilleistungsartController(katalogServiceFactory.getTeilLeistungsartenService());
 	}
 }

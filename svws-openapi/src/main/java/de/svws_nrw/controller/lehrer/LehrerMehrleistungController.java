@@ -3,8 +3,8 @@ package de.svws_nrw.controller.lehrer;
 import java.util.Collection;
 import java.util.List;
 
-import de.svws_nrw.service.lehrer.LehrerMehrleistungCreateRequest;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungPatchRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungCreateRequest;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungPatchRequest;
 import jakarta.ws.rs.core.Response;
 
 /**

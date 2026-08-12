@@ -1,8 +1,9 @@
 package de.svws_nrw.mapper.schule.merkmale;
 
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
-import de.svws_nrw.service.schule.merkmale.MerkmalCreateRequest;
-import de.svws_nrw.service.schule.merkmale.MerkmalPatchRequest;
+import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalCreateRequest;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalPatchRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;

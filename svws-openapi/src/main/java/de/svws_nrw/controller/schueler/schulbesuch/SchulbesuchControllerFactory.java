@@ -3,20 +3,26 @@ package de.svws_nrw.controller.schueler.schulbesuch;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.service.schueler.schulbesuch.SchulbesuchServiceFactory;
+import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public final class SchulbesuchControllerFactory {
 
-	private final SchulbesuchServiceFactory schulbesuchServiceFactory;
+	private final SchuelerServiceFactory schuelerServiceFactory;
 
-	private SchulbesuchControllerFactory(final SchulbesuchServiceFactory schulbesuchServiceFactory) {
-		this.schulbesuchServiceFactory = schulbesuchServiceFactory;
+	private SchulbesuchControllerFactory(final SchuelerServiceFactory schuelerServiceFactory) {
+		this.schuelerServiceFactory = schuelerServiceFactory;
 	}
 
 	private static SchulbesuchControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
-		return new SchulbesuchControllerFactory(SchulbesuchServiceFactory.getNewInstance());
+		final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
+		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		return new SchulbesuchControllerFactory(SchuelerServiceFactory.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory));
 	}
 
 	/**
@@ -51,7 +57,7 @@ public final class SchulbesuchControllerFactory {
 	 * @return ein neuer SchulbesuchController mit dem konfigurierten SchulbesuchService
 	 */
 	public SchulbesuchController getSchulbesuchController() {
-		return new SchulbesuchController(schulbesuchServiceFactory.getSchulbesuchService());
+		return new SchulbesuchController(schuelerServiceFactory.getSchulbesuchService());
 	}
 
 }

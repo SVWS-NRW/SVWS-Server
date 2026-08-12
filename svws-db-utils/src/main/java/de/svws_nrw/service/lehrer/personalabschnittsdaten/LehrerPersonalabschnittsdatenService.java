@@ -23,9 +23,9 @@ import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
-import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
-import de.svws_nrw.service.lehrer.LehrerMehrleistungService;
-import de.svws_nrw.service.lehrer.LehrerMinderleistungService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
+import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
+import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -39,7 +39,7 @@ public final class LehrerPersonalabschnittsdatenService {
 	private final SchuleRepository schulenRepo;
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepo;
 
-	private final LehrerAnrechnungsstundenService anrechnungsService;
+	private final LehrerAnrechnungsstundeService anrechnungsService;
 	private final LehrerMehrleistungService mehrleistungService;
 	private final LehrerMinderleistungService minderleistungService;
 	private final LehrerFunktionService funktionService;
@@ -361,7 +361,7 @@ public final class LehrerPersonalabschnittsdatenService {
 
 		static Map<Long, LehrerPersonalabschnittsdatenMappingContext> load(
 				final List<DTOLehrerAbschnittsdaten> entities,
-				final LehrerAnrechnungsstundenService anrechnungsService,
+				final LehrerAnrechnungsstundeService anrechnungsService,
 				final LehrerMehrleistungService mehrleistungService,
 				final LehrerMinderleistungService minderleistungService,
 				final LehrerFunktionService funktionService) {

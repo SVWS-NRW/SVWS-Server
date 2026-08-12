@@ -3,19 +3,20 @@ package de.svws_nrw.controller.lehrer;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.service.lehrer.funktion.LehrerFunktionServiceFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class LehrerFunktionControllerFactory {
 
-	private final LehrerFunktionServiceFactory serviceFactory;
+	private final LehrerServiceFactory serviceFactory;
 
 	/**
-	 * @param serviceFactory {@link LehrerFunktionServiceFactory}
+	 * @param serviceFactory {@link LehrerServiceFactory}
 	 */
-	public LehrerFunktionControllerFactory(final LehrerFunktionServiceFactory serviceFactory) {
+	public LehrerFunktionControllerFactory(final LehrerServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
 	}
 
@@ -27,9 +28,10 @@ public class LehrerFunktionControllerFactory {
 	public static LehrerFunktionControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz kompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var repoFactory = LehrerRepositoryFactory.getNewInstance();
-		final var mapper = LehrerFunktionMapper.INSTANCE;
-		final var serviceFactory = LehrerFunktionServiceFactory.getNewInstance(
-				repoFactory, mapper);
+		final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		final var serviceFactory = LehrerServiceFactory.getNewInstance(
+				repoFactory, eigeneSchuleRepoFactory, katalogRepoFactory);
 		return new LehrerFunktionControllerFactory(serviceFactory);
 	}
 

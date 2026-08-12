@@ -6,8 +6,7 @@ import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
-import de.svws_nrw.service.schule.SchuleServiceFactory;
-import de.svws_nrw.service.schule.kataloge.fachklasse.FachklasseServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungService;
 import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ public final class LogoverwaltungControllerFactory {
 	private final LogoverwaltungServiceFactory serviceFactory;
 
 	/**
-	 * @param serviceFactory {@link FachklasseServiceFactory}
+	 * @param serviceFactory {@link LogoverwaltungServiceFactory}
 	 */
 	public LogoverwaltungControllerFactory(final LogoverwaltungServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
@@ -28,7 +27,7 @@ public final class LogoverwaltungControllerFactory {
 		final var serviceFactory = LogoverwaltungServiceFactory.getNewInstance(
 				LogoverwaltungRepositoryFactory.getNewInstance(),
 				LogoverwaltungMapper.INSTANCE,
-				SchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
+				EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
 		);
 		return new LogoverwaltungControllerFactory(serviceFactory);
 	}

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.Teilleistungsart;
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartCreateRequest;
-import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartPatchRequest;
-import de.svws_nrw.service.katalog.teilleistungsart.TeilleistungsartService;
+import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartCreateRequest;
+import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartPatchRequest;
+import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartService;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.ws.rs.core.Response;
 

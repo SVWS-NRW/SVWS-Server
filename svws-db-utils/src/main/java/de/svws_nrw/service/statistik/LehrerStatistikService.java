@@ -18,8 +18,8 @@ import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
-import de.svws_nrw.service.lehrer.LehrerLehramtService;
-import de.svws_nrw.service.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
+import de.svws_nrw.service.lehrer.anrechnung.LehrerPersonalabschnittsdatenAnrechnungsstundeService;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -43,7 +43,7 @@ public final class LehrerStatistikService {
 	private final LehrerLehramtService lehrerLehramtService;
 
 	/** Der Service für den Zugriff auf die Anrechnungsstunden, Mehr- und Minderleistungen */
-	private final LehrerPersonalabschnittsdatenAnrechnungsstundenService lehrerPersonalabschnittsdatenAnrechnungsstundenService;
+	private final LehrerPersonalabschnittsdatenAnrechnungsstundeService lehrerPersonalabschnittsdatenAnrechnungsstundeService;
 
 
 	/**
@@ -54,20 +54,20 @@ public final class LehrerStatistikService {
 	 * @param lehrerRepository                                         das Repository für die Lehrerdaten
 	 * @param lehrerAbschnittsdatenRepository                          das Repository für den die Lehrerabschnittsdaten
 	 * @param lehrerLehramtService                                     der Service für die Lehrämter
-	 * @param lehrerPersonalabschnittsdatenAnrechnungsstundenService   der Service für die Lehrer-Anrechnungsstunden
+	 * @param lehrerPersonalabschnittsdatenAnrechnungsstundeService   der Service für die Lehrer-Anrechnungsstunden
 	 */
 	public LehrerStatistikService(final EigeneSchuleRepository eigeneSchuleRepository,
 			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
 			final LehrerPersonalabschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerLehramtService lehrerLehramtService,
-			final LehrerPersonalabschnittsdatenAnrechnungsstundenService lehrerPersonalabschnittsdatenAnrechnungsstundenService) {
+			final LehrerPersonalabschnittsdatenAnrechnungsstundeService lehrerPersonalabschnittsdatenAnrechnungsstundeService) {
 		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.lehrerAbschnittsdatenRepository = lehrerAbschnittsdatenRepository;
 		this.lehrerLehramtService = lehrerLehramtService;
-		this.lehrerPersonalabschnittsdatenAnrechnungsstundenService = lehrerPersonalabschnittsdatenAnrechnungsstundenService;
+		this.lehrerPersonalabschnittsdatenAnrechnungsstundeService = lehrerPersonalabschnittsdatenAnrechnungsstundeService;
 	}
 
 
@@ -125,9 +125,9 @@ public final class LehrerStatistikService {
 		final var mapLehraemter = lehrerLehramtService.getMapByLehrer(listLehrerIDs);
 
 		// Bestimme die Anrechnungsstunden, Mehr- und Minderleistungen
-		final var mapAnrechnungen = lehrerPersonalabschnittsdatenAnrechnungsstundenService.getMapAnrechungen(mapAbschnittsdaten.values());
-		final var mapMehrleistungen = lehrerPersonalabschnittsdatenAnrechnungsstundenService.getMapMehrleistungen(mapAbschnittsdaten.values());
-		final var mapMinderleistungen = lehrerPersonalabschnittsdatenAnrechnungsstundenService.getMapMinderleistungen(mapAbschnittsdaten.values());
+		final var mapAnrechnungen = lehrerPersonalabschnittsdatenAnrechnungsstundeService.getMapAnrechungen(mapAbschnittsdaten.values());
+		final var mapMehrleistungen = lehrerPersonalabschnittsdatenAnrechnungsstundeService.getMapMehrleistungen(mapAbschnittsdaten.values());
+		final var mapMinderleistungen = lehrerPersonalabschnittsdatenAnrechnungsstundeService.getMapMinderleistungen(mapAbschnittsdaten.values());
 
 		// Erstelle die Liste der Core-DTOs anhand der zuvor geladenen Daten
 		return listLehrer.stream().map(dtoLehrer -> {

@@ -3,29 +3,31 @@ package de.svws_nrw.controller.schule.merkmale;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.mapper.schule.merkmale.MerkmalMapper;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.schule.merkmale.MerkmalServiceFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 public final class MerkmalControllerFactory {
 
-	private final MerkmalServiceFactory merkmalServiceFactory;
+	private final KatalogServiceFactory katalogServiceFactory;
 
 	/**
 	 * Erstellt eine neue MerkmalControllerFactory mit der angegebenen Service-Factory.
 	 *
-	 * @param merkmalServiceFactory die Factory zur Erstellung von MerkmalService-Instanzen
+	 * @param katalogServiceFactory die Factory zur Erstellung von MerkmalService-Instanzen
 	 */
-	public MerkmalControllerFactory(final MerkmalServiceFactory merkmalServiceFactory) {
-		this.merkmalServiceFactory = merkmalServiceFactory;
+	public MerkmalControllerFactory(final KatalogServiceFactory katalogServiceFactory) {
+		this.katalogServiceFactory = katalogServiceFactory;
 	}
 
 	private static MerkmalControllerFactory getNewInstance(final HttpServletRequest requst, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(requst, ServerMode.STABLE, benutzerKompetenz);
 		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-		final var mapper = MerkmalMapper.INSTANCE;
-		final var merkmalServiceFactory = MerkmalServiceFactory.getNewInstance(katalogRepositoryFactory, mapper);
+		final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+		final var merkmalServiceFactory = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory);
 
 		return new MerkmalControllerFactory(merkmalServiceFactory);
 	}
@@ -75,7 +77,7 @@ public final class MerkmalControllerFactory {
 	 * @return ein neuer MerkmalController mit dem konfigurierten MerkmalService
 	 */
 	public MerkmalController getMerkmalController() {
-		return new MerkmalController(merkmalServiceFactory.getMerkmalService());
+		return new MerkmalController(katalogServiceFactory.getMerkmalService());
 	}
 
 }
