@@ -33,7 +33,7 @@ export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValida
 		}
 
 		const klasseJahrgang = manager.jahrgangGetByIdOrNull(klasse.idJahrgang ?? -1);
-		if (klasseJahrgang?.idJahrgang !== jahrgang.id) {
+		if (klasseJahrgang?.idJahrgang !== jahrgang.idJahrgang) {
 			this.addFehler(1, "Die Kombination aus Klasse und Jahrgang ist nicht gültig.");
 		}
 
