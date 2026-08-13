@@ -15,10 +15,7 @@ public final class LogoverwaltungControllerFactory {
 
 	private final LogoverwaltungServiceFactory serviceFactory;
 
-	/**
-	 * @param serviceFactory {@link LogoverwaltungServiceFactory}
-	 */
-	public LogoverwaltungControllerFactory(final LogoverwaltungServiceFactory serviceFactory) {
+	private LogoverwaltungControllerFactory(final LogoverwaltungServiceFactory serviceFactory) {
 		this.serviceFactory = serviceFactory;
 	}
 

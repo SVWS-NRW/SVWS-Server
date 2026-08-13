@@ -103,7 +103,7 @@ public final class SchuelerServiceFactory {
 	 *
 	 * @return ein neuer {@code BisherigeSchulenService} mit allen erforderlichen Abhängigkeiten
 	 */
-	public SchuelerBisherigeSchuleService getBisherigeSchuleService() {
+	public SchuelerBisherigeSchuleService getSchuelerBisherigeSchuleService() {
 		final var dataSchulen = new DataSchulen(DbConnectionProvider.getConnection());
 		final var dataEntlassgruende = new DataKatalogEntlassgruende(DbConnectionProvider.getConnection());
 		return new SchuelerBisherigeSchuleService(
@@ -137,7 +137,7 @@ public final class SchuelerServiceFactory {
 		return new SchuelerSchulbesuchService(
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				this.getSchuelerMerkmalService(),
-				this.getBisherigeSchuleService(),
+				this.getSchuelerBisherigeSchuleService(),
 				new DataKatalogEntlassgruende(DbConnectionProvider.getConnection()),
 				new DataSchulen(DbConnectionProvider.getConnection()),
 				SchulbesuchMapper.INSTANCE

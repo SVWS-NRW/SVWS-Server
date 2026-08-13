@@ -2,7 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.util.List;
 
-import de.svws_nrw.controller.kataloge.Schild3FachklasseDQRNiveauZuordnungControllerFactory;
+import de.svws_nrw.controller.schild3.Schild3FachklasseDQRNiveauZuordnungControllerFactory;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragAbiturInfos;
 import de.svws_nrw.core.data.schild3.Schild3FachklasseDQRNiveauZuordnung;
 import de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart;

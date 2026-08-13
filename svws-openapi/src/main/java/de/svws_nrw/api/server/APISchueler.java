@@ -17,9 +17,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
-import de.svws_nrw.controller.schueler.schulbesuch.BisherigeSchuleControllerFactory;
-import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalControllerFactory;
-import de.svws_nrw.controller.schueler.schulbesuch.SchulbesuchControllerFactory;
+import de.svws_nrw.controller.schueler.SchuelerControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerEinwilligung;
@@ -394,9 +392,9 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final SchuelerBisherigeSchuleCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return BisherigeSchuleControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchuleController()
+				.getSchuelerBisherigeSchuleController()
 				.create(input);
 	}
 
@@ -425,9 +423,9 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die bisher besuchte Schule", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerSchulbesuchSchule.class))) final SchuelerBisherigeSchulePatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return BisherigeSchuleControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchuleController()
+				.getSchuelerBisherigeSchuleController()
 				.patch(id, patch);
 	}
 
@@ -455,9 +453,9 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return BisherigeSchuleControllerFactory
+		return SchuelerControllerFactory
 				.withDeleteAccess(request)
-				.getBisherigeSchuleController()
+				.getSchuelerBisherigeSchuleController()
 				.delete(ids);
 	}
 
@@ -483,9 +481,9 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final SchuelerMerkmalCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return SchuelerMerkmalControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchulenController()
+				.getSchuelerMerkmalController()
 				.create(input);
 	}
 
@@ -514,9 +512,9 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für das SchuelerMerkmal", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final SchuelerMerkmalPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return SchuelerMerkmalControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchulenController()
+				.getSchuelerMerkmalController()
 				.patch(id, patch);
 	}
 
@@ -543,9 +541,9 @@ public class APISchueler {
 					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return SchuelerMerkmalControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getBisherigeSchulenController()
+				.getSchuelerMerkmalController()
 				.delete(ids);
 	}
 
@@ -570,9 +568,9 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden.")
 	public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return SchulbesuchControllerFactory
+		return SchuelerControllerFactory
 				.withReadAccess(request)
-				.getSchulbesuchController()
+				.getSchuelerSchulbesuchController()
 				.getByIdSchueler(idSchueler);
 	}
 
@@ -603,9 +601,9 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Schulbesuchsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final SchuelerSchulbesuchPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return SchulbesuchControllerFactory
+		return SchuelerControllerFactory
 				.withWriteAccess(request)
-				.getSchulbesuchController()
+				.getSchuelerSchulbesuchController()
 				.patch(idSchulbesuch, patch);
 	}
 

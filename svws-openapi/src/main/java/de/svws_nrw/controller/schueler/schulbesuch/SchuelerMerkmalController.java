@@ -2,69 +2,34 @@ package de.svws_nrw.controller.schueler.schulbesuch;
 
 import java.util.List;
 
-import de.svws_nrw.data.Responses;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
-import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalService;
-import de.svws_nrw.validation.BeanValidator;
-import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
 
-public class SchuelerMerkmalController {
-
-	private final SchuelerMerkmalService service;
+public interface SchuelerMerkmalController {
 
 	/**
-	 * Erstellt einen neuen SchuelerMerkmalController mit dem angegebenen Service.
+	 * Erstellt ein neues SchuelerMerkmal und gibt den erstellten Eintrag zurück.
 	 *
-	 * @param service der SchuelerMerkmalService
+	 * @param request   das Request-Objekt mit den Daten für den neuen Eintrag
+	 * @return die Response
 	 */
-	public SchuelerMerkmalController(final SchuelerMerkmalService service) {
-		this.service = service;
-	}
+	Response create(SchuelerMerkmalCreateRequest request);
 
 	/**
-	 * Erstellt eine neue SchülerMerkmal-Entität.
-	 * <p>
-	 * Das Request-DTO wird vor der Verarbeitung validiert.
-	 * </p>
+	 * Führt einen Patch für ein SchuelerMerkmal aus.
 	 *
-	 * @param dto das Request-Objekt mit den Daten für das neue Merkmal
-	 * @return eine Response mit der erstellten SchülerMerkmal-Entität
-	 * @throws ApiOperationException wenn die Validierung fehlschlägt
+	 * @param id      die ID des Eintrags
+	 * @param patch   der Patch
+	 * @return die Response
 	 */
-	public Response create(final SchuelerMerkmalCreateRequest dto) {
-		BeanValidator.validate(dto);
-		final var created = this.service.create(dto);
-		return Responses.created(created);
-	}
+	Response patch(long id, SchuelerMerkmalPatchRequest patch);
 
 	/**
-	 * Aktualisiert eine bestehende SchülerMerkmal-Entität teilweise.
-	 * <p>
-	 * Das Request-DTO wird vor der Verarbeitung validiert.
-	 * </p>
+	 * Löscht mehrere SchuelerMerkmal-Einträge anhand der IDs und gibt die gelöschten Einträge zurück.
 	 *
-	 * @param id die ID der zu aktualisierenden SchülerMerkmal-Entität
-	 * @param dto das Request-Objekt mit den zu aktualisierenden Feldern
-	 * @return eine Response mit der aktualisierten SchülerMerkmal-Entität
-	 * @throws ValidationException wenn die DTO-Validierung fehlschlägt
+	 * @param ids   die IDs der Einträge
+	 * @return die Response
 	 */
-	public Response patch(final long id, final SchuelerMerkmalPatchRequest dto) {
-		BeanValidator.validate(dto);
-		final var patched = this.service.patch(id, dto);
-		return Responses.ok(patched);
-	}
-
-	/**
-	 * Löscht mehrere SchülerMerkmal-Einträge anhand ihrer IDs.
-	 *
-	 * @param ids die Liste der IDs der zu löschenden SchülerMerkmal-Einträge
-	 * @return eine Response mit den Löschergebnissen
-	 */
-	public Response delete(final List<Long> ids) {
-		final var responses = this.service.delete(ids);
-		return Responses.ok(responses);
-	}
+	Response delete(List<Long> ids);
 }

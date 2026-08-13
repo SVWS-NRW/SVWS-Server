@@ -19,9 +19,6 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 */
 	public static readonly SCHUELER_ONLINE: OAuthServiceDomain = new OAuthServiceDomain("SCHUELER_ONLINE", 1, 2, "SCHUELER_ONLINE");
 
-	/**
-	 * Die ID des Server-Typs
-	 */
 	private readonly id: number;
 
 	private readonly dbValue: string | null;
@@ -30,7 +27,7 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 * Erstellt eine neue OAuth Service Domäne
 	 *
 	 * @param id   die ID des OAuth-Domäne
-	 * @param dbValue das Kuerzel des OAuth-Domäne
+	 * @param dbValue der DB-Wert der OAuth-Domäne
 	 */
 	private constructor(name: string, ordinal: number, id: number, dbValue: string | null) {
 		super(name, ordinal);
@@ -50,8 +47,8 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	}
 
 	/**
-	 * Gibt die Bezeichnung des Enums zurück
-	 * @return die Bezeichnung
+	 * Gibt den DB-Wert des Enums zurück
+	 * @return den DB-Wert
 	 */
 	public getDbValue(): string | null {
 		return this.dbValue;
@@ -62,7 +59,7 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 *
 	 * @param id   die ID des OAuth-Domäne
 	 *
-	 * @return der OAuth2-Servertyp
+	 * @return die OAuth Domaine
 	 */
 	public static getByID(id: number): OAuthServiceDomain | null {
 		for (const s of OAuthServiceDomain.values()) {
@@ -74,9 +71,9 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	}
 
 	/**
-	 * Diese Methode ermittelt die OAuth Domäne anhand der übergebenen Bezeichnung.
+	 * Diese Methode ermittelt die OAuth Domäne anhand des übergebenen Database Wertes.
 	 *
-	 * @param dbValue   die Bezeichnung der OAuth Domaine
+	 * @param dbValue   DB Wert der OAuth Domaine
 	 *
 	 * @return die OAuth Domaine
 	 */

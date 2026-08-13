@@ -157,29 +157,32 @@ class LogoverwaltungControllerFactoryTest {
 	}
 
 	@Test
-	@DisplayName("getController | Erfolg")
-	void getController_success() {
+	@DisplayName("getController | gibt einen LogoverwaltungController zurück")
+	void getController() {
+		final var repositoryFactory = mock(LogoverwaltungRepositoryFactory.class);
+		final var serviceFactory = mock(LogoverwaltungServiceFactory.class);
+		final var schuleRepositoryFactory = mock(EigeneSchuleRepositoryFactory.class);
+		final var schuleServiceFactory = mock(EigeneSchuleServiceFactory.class);
 		final var service = mock(LogoverwaltungService.class);
-		final var factory = new LogoverwaltungControllerFactory(cut);
 
-		when(cut.getService()).thenReturn(service);
+		repositoryFactoryMock.when(LogoverwaltungRepositoryFactory::getNewInstance)
+				.thenReturn(repositoryFactory);
+		schuleRepositoryFactoryMock.when(EigeneSchuleRepositoryFactory::getNewInstance)
+				.thenReturn(schuleRepositoryFactory);
+		schuleServiceFactoryMock.when(() -> EigeneSchuleServiceFactory.getNewInstance(schuleRepositoryFactory))
+				.thenReturn(schuleServiceFactory);
+		serviceFactoryMock.when(() -> LogoverwaltungServiceFactory.getNewInstance(repositoryFactory, LogoverwaltungMapper.INSTANCE, schuleServiceFactory))
+				.thenReturn(serviceFactory);
+		when(serviceFactory.getService()).thenReturn(service);
 
-		final var controller = factory.getController();
+		final var controller = LogoverwaltungControllerFactory
+				.withReadAccess(request)
+				.getController();
 
 		assertThat(controller)
 				.isNotNull()
 				.isInstanceOf(LogoverwaltungController.class);
-
-		verify(cut, times(1)).getService();
+		verify(serviceFactory, times(1)).getService();
 	}
 
-	@Test
-	@DisplayName("Konstruktor | Erfolg")
-	void constructor_success() {
-		final var factory = new LogoverwaltungControllerFactory(cut);
-
-		assertThat(factory)
-				.isNotNull()
-				.isInstanceOf(LogoverwaltungControllerFactory.class);
-	}
 }

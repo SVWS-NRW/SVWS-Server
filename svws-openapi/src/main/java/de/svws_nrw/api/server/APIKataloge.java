@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.svws_nrw.controller.schule.kataloge.fachklasse.FachklasseControllerFactory;
+import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
@@ -28,13 +28,11 @@ import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
-import de.svws_nrw.controller.katalog.teilleistungsart.TeilleistungsartControllerFactory;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartCreateRequest;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartPatchRequest;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
-import de.svws_nrw.controller.schule.merkmale.MerkmalControllerFactory;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalCreateRequest;
@@ -431,8 +429,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Merkmale gefunden")
 	public Response getMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return MerkmalControllerFactory
-				.withReadAccess(request)
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
 				.getMerkmalController()
 				.getAll();
 	}
@@ -462,8 +460,8 @@ public class APIKataloge {
 			@RequestBody(description = "Der Patch eines Merkmals", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Merkmal.class))) final MerkmalPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return MerkmalControllerFactory
-				.withWriteAccess(request)
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
 				.getMerkmalController()
 				.patch(id, patch);
 	}
@@ -489,8 +487,8 @@ public class APIKataloge {
 			@RequestBody(description = "Die Daten des zu erstellenden Merkmals ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Merkmal.class))) final MerkmalCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return MerkmalControllerFactory
-				.withWriteAccess(request)
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
 				.getMerkmalController()
 				.create(input);
 	}
@@ -516,8 +514,8 @@ public class APIKataloge {
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return MerkmalControllerFactory
-				.withDeleteAccess(request)
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
 				.getMerkmalController()
 				.delete(ids);
 	}
@@ -1118,8 +1116,9 @@ public class APIKataloge {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Teilleistungsart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigte Berechtigung.")
 	public Response getTeilleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return TeilleistungsartControllerFactory.withReadAccess(request)
-				.getTeilLeistungsartenController()
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getTeilLeistungsartController()
 				.getAll();
 	}
 
@@ -1145,8 +1144,9 @@ public class APIKataloge {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Teilleistungsart.class))) final TeilleistungsartCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return TeilleistungsartControllerFactory.withWriteAccess(request)
-				.getTeilLeistungsartenController()
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getTeilLeistungsartController()
 				.create(input);
 	}
 
@@ -1173,8 +1173,9 @@ public class APIKataloge {
 							schema = @Schema(
 									implementation = Teilleistungsart.class))) final TeilleistungsartPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return TeilleistungsartControllerFactory.withWriteAccess(request)
-				.getTeilLeistungsartenController()
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getTeilLeistungsartController()
 				.patch(id, patch);
 	}
 
@@ -1201,8 +1202,9 @@ public class APIKataloge {
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return TeilleistungsartControllerFactory.withDeleteAccess(request)
-				.getTeilLeistungsartenController()
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getTeilLeistungsartController()
 				.delete(ids);
 	}
 
@@ -1223,9 +1225,9 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Fachklassen gefunden")
 	public Response getFachklassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return FachklasseControllerFactory
-				.withReadAccess(request)
-				.getController()
+		return KatalogControllerFactory
+				.withReadAccessDev(request)
+				.getFachklasseController()
 				.getAll();
 	}
 
@@ -1254,9 +1256,9 @@ public class APIKataloge {
 			@RequestBody(description = "Der Patch einer Fachklasse", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachklasseEintrag.class))) final FachklasseEintragPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return FachklasseControllerFactory
-				.withWriteAccess(request)
-				.getController()
+		return KatalogControllerFactory
+				.withWriteAccessDev(request)
+				.getFachklasseController()
 				.patch(id, patch);
 	}
 
@@ -1281,9 +1283,9 @@ public class APIKataloge {
 			@RequestBody(description = "Die Daten der zu erstellenden Fachklasse ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FachklasseEintrag.class))) final FachklasseEintragCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return FachklasseControllerFactory
-				.withWriteAccess(request)
-				.getController()
+		return KatalogControllerFactory
+				.withWriteAccessDev(request)
+				.getFachklasseController()
 				.create(input);
 	}
 
@@ -1309,9 +1311,9 @@ public class APIKataloge {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return FachklasseControllerFactory
-				.withDeleteAccess(request)
-				.getController()
+		return KatalogControllerFactory
+				.withDeleteAccessDev(request)
+				.getFachklasseController()
 				.delete(ids);
 	}
 }
