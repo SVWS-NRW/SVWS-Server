@@ -12,7 +12,7 @@
 					<template v-for="col of gridManager.cols.values()" :key="col.kuerzel">
 						<template v-if="col.kuerzel === 'auswahl'">
 							<th scope="col" class="flex items-start justify-center" aria-label="Alle auswählen">
-								<svws-ui-checkbox :model-value="(leistungen.size() === selectedLeistungen.size) && !leistungen.isEmpty()"
+								<svws-ui-checkbox :model-value="(leistungen.size() === selectedLeistungenIds.size) && !leistungen.isEmpty()"
 									@update:model-value="updateAuswahl"
 									:indeterminate="someSelected"
 									headless :autofocus="!leistungen.isEmpty()" />
@@ -37,107 +37,119 @@
 				</template>
 			</template>
 
-			<template #default="{ row: leistung }">
+			<template #default="{ row: leistungModel }">
 				<td class="cursor-pointer flex items-center justify-center"
-					:style="getCellStyle(leistung)">
-					<svws-ui-checkbox :model-value="selectedLeistungen.has(leistung)"
-						@update:model-value="selectedLeistungen.has(leistung) ? selectedLeistungen.delete(leistung) : selectedLeistungen.add(leistung)"
+					:style="getCellStyle(leistungModel.proxy)">
+					<svws-ui-checkbox :model-value="selectedLeistungenIds.has(leistungModel.proxy.id)"
+						@update:model-value="selectedLeistungenIds.has(leistungModel.proxy.id) ? selectedLeistungenIds.delete(leistungModel.proxy.id) : selectedLeistungenIds.add(leistungModel.proxy.id)"
 						headless />
 				</td>
-				<td :style="getCellStyle(leistung)">
+				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Fach"
 						:manager="fachSelectManager"
-						:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-						@update:model-value="(value : FachDaten | null) => void patchFach(value, leistung)"
-						headless :removable="false" :readonly="!hatUpdateKompetenz" />
+						v-model="leistungModel.fach.value"
+						:validation="() => leistungModel.getFehler('fachID')"
+						headless :removable="false"
+						:readonly="!hatUpdateKompetenz" />
 				</td>
-				<td :style="getCellStyle(leistung)">
+				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Kurs"
-						:manager="getKursSelectManagerByIdLeistung(leistung.id)"
-						:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-						@update:model-value="(value : KursDaten | undefined) => void patchKurs(value, leistung)"
-						headless :readonly="!hatUpdateKompetenz" />
+						:manager="getKursSelectManagerByIdLeistung(leistungModel.proxy.id)"
+						v-model="leistungModel.kurs.value"
+						:validation="() => leistungModel.getFehler('kursID')"
+						headless :removable="leistungModel.kurs.value !== undefined"
+						:readonly="!hatUpdateKompetenz" />
 				</td>
-				<td :style="getCellStyle(leistung)">
+				<td :style="getCellStyle(leistungModel.proxy)">
 					<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
-					<span v-if="(manager().kursGetByLeistungIdOrNull(leistung.id) === null)
-						|| ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg).size() === 1">
-						{{ leistung.kursart }}
+					<span v-if="(manager().kursGetByLeistungIdOrNull(leistungModel.proxy.id) === null)
+						|| ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistungModel.proxy.id)!.kursartAllg).size() === 1">
+						{{ leistungModel.proxy.kursart }}
 					</span>
 					<ui-select v-else title="Kursart"
-						:manager="getKursartSelectManagerByIdLeistung(leistung.id)"
-						:model-value="(leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)"
-						@update:model-value="value => patchLeistung({ kursart: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-						headless :removable="false" :readonly="!hatUpdateKompetenz" />
+						:manager="getKursartSelectManagerByIdLeistung(leistungModel.proxy.id)"
+						v-model="leistungModel.kursart.value"
+						:validation="() => leistungModel.getFehler('kursart')"
+						headless :removable="false"
+						:readonly="!hatUpdateKompetenz" />
 				</td>
 				<template v-if="istGymOb">
-					<td :style="getCellStyle(leistung)">
-						{{ leistung.abifach ?? "" }}
+					<td :style="getCellStyle(leistungModel.proxy)">
+						{{ leistungModel.proxy.abifach ?? "" }}
 					</td>
 				</template>
-				<td :style="getCellStyle(leistung)">
-					{{ leistung.wochenstunden ?? "" }}
+				<td :style="getCellStyle(leistungModel.proxy)">
+					{{ leistungModel.proxy.wochenstunden ?? "" }}
 				</td>
-				<td :style="getCellStyle(leistung)">
+				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Lehrer"
 						:manager="lehrerSelectManager"
-						:items="manager().lehrerGetMengeAktiv()"
-						:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
-						@update:model-value="value => patchLeistung({ lehrerID: value?.id ?? null }, leistung.id)"
-						headless :removable="false" :readonly="!hatUpdateKompetenz" />
+						v-model="leistungModel.lehrer.value"
+						:validation="() => leistungModel.getFehler('lehrerID')"
+						headless :removable="leistungModel.lehrer.value !== undefined"
+						:readonly="!hatUpdateKompetenz" />
 				</td>
-				<td class="border-s" :style="getCellStyle(leistung)">
+				<td class="border-s" :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Quartalsnote"
 						:manager="notenSelectManager"
-						:model-value="Note.fromKuerzel(leistung.noteQuartal)"
-						@update:model-value="value => patchLeistung({ noteQuartal: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-						headless :removable="false" :readonly="!hatFachlehrerKompetenz(leistung.lehrerID)" />
+						v-model="leistungModel.noteQuartal.value"
+						:validation="() => leistungModel.getFehler('noteQuartal')"
+						headless :removable="leistungModel.noteQuartal.value !== undefined"
+						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)" />
 				</td>
-				<td class="border-s" :style="getCellStyle(leistung)">
+				<td class="border-s" :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Halbjahresnote"
 						:manager="notenSelectManager"
-						:model-value="Note.fromKuerzel(leistung.note)"
-						@update:model-value="value => patchLeistung({ note: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-						headless :removable="false" :readonly="!hatFachlehrerKompetenz(leistung.lehrerID)" />
+						v-model="leistungModel.noteHalbjahr.value"
+						:validation="() => leistungModel.getFehler('note')"
+						headless :removable="leistungModel.noteHalbjahr.value !== undefined"
+						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)" />
 				</td>
 			</template>
 
 			<template #footer>
 				<div class="col-span-full flex justify-between items-center my-1 px-1 py-2 border-b">
-					<div>{{ (selectedLeistungen.size > 0) ? (selectedLeistungen.size + " ausgewählt") : " " }}</div>
-					<ui-table-actions v-if="hatUpdateKompetenz" :actions="tableBulkActions" :items="selectedLeistungen" always-visible />
+					<div>{{ (selectedLeistungenIds.size > 0) ? (selectedLeistungenIds.size + " ausgewählt") : " " }}</div>
+					<ui-table-actions v-if="hatUpdateKompetenz" :actions="tableBulkActions" :items="selectedLeistungenIds" always-visible />
 				</div>
 			</template>
 		</ui-table-grid>
 
 		<svws-ui-content-card class="min-h-fit grow">
-			<svws-ui-input-wrapper :grid="2" v-if="false">
+			<svws-ui-input-wrapper :grid="2" v-if="hatLernbereichsnote">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
 				<ui-select title="Gesellschaftswissenschaft"
-					v-model="lernbereichsnoteGSbzwAL"
+					v-model="allgemeinModel.lernbereichsnoteGSbzwAL.value"
 					:manager="lernbereichsnotenSelectManager"
+					:validation="() => allgemeinModel.getFehler('noteLernbereichGSbzwAL')"
+					:removable="allgemeinModel.lernbereichsnoteGSbzwAL.value !== undefined"
 					:readonly="!hatUpdateKompetenz" />
 				<ui-select title="Naturwissenschaft"
-					v-model="lernbereichsnoteNW"
+					v-model="allgemeinModel.lernbereichsnoteNW.value"
 					:manager="lernbereichsnotenSelectManager"
+					:validation="() => allgemeinModel.getFehler('noteLernbereichNW')"
+					:removable="allgemeinModel.lernbereichsnoteNW.value !== undefined"
 					:readonly="!hatUpdateKompetenz" />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" v-if="hatLernbereichsnote" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden (Summe)</span>
 				<svws-ui-input-number placeholder="Maximal"
-					:model-value="manager().lernabschnittGet().fehlstundenGrenzwert"
-					@change="fehlstundenGrenzwert => patch({ fehlstundenGrenzwert })"
+					v-model="allgemeinModel.proxy.fehlstundenGrenzwert"
+					@change="allgemeinModel.patch"
+					:validation="() => allgemeinModel.getFehler('fehlstundenGrenzwert')"
 					:disabled="!hatUpdateKompetenz"
 					:min="0" />
 				<svws-ui-input-number placeholder="Gesamt"
-					:model-value="manager().lernabschnittGet().fehlstundenGesamt"
-					@change="fehlstundenGesamt => patch({ fehlstundenGesamt: fehlstundenGesamt ?? undefined })"
+					v-model="allgemeinModel.proxy.fehlstundenGesamt"
+					@change="allgemeinModel.patch"
+					:validation="() => allgemeinModel.getFehler('fehlstundenGesamt')"
 					:disabled="!hatUpdateKompetenz"
 					:min="0" />
 				<svws-ui-input-number placeholder="Unentschuldigt"
-					:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt"
-					@change="fehlstundenUnentschuldigt => patch({ fehlstundenUnentschuldigt: fehlstundenUnentschuldigt ?? undefined })"
+					v-model="allgemeinModel.proxy.fehlstundenUnentschuldigt"
+					@change="allgemeinModel.patch"
+					:validation="() => allgemeinModel.getFehler('fehlstundenUnentschuldigt')"
 					:disabled="!hatUpdateKompetenz"
 					:min="0" />
 			</svws-ui-input-wrapper>
@@ -149,32 +161,35 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
-	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag } from "@core";
-	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
-	import { GridManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import type { SchuelerLeistungsdaten, List, FachDaten, LehrerListeEintrag, SchuelerLernabschnittsdaten, Schulform } from "@core";
+	import { Note, ZulaessigeKursart, ArrayList, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
+	import { GridManager, SelectManager, useBenutzerState, useSchuleState, useModelProxyList } from "@ui";
+	import { SchuelerLeistungsdatenModelProxy } from "~/components/schueler/lernabschnitte/leistungen/modelproxy/SchuelerLeistungsdatenModelProxy";
+	import { SchuelerLernabschnittAllgemeinModelProxy } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 
-	const selectedLeistungen = ref<Set<SchuelerLeistungsdaten>>(new Set());
-
+	const selectedLeistungenIds = ref<Set<number>>(new Set());
+	const lernabschnittsdaten = computed<SchuelerLernabschnittsdaten>(() => props.manager().lernabschnittGet());
 	/// Das Schuljahr der ausgewählten Lernabschnittsdaten
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
+	const schulform = computed<Schulform>(() => schuleState.schulform);
 	const leistungen = computed<List<SchuelerLeistungsdaten>>(() => props.manager().leistungGetMengeAsListSortedByFach());
 	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(props.schuelerListeManager().auswahl().jahrgang)?.istGymOb() ?? false);
 	const lernbereichsnote1Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote1Bezeichnung());
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || (lernbereichsnote2Bezeichnung.value !== null));
 	const hatLernabschnittFaecher = computed<boolean>(() => props.manager().fachGetMenge().size() > 0);
-	const someSelected = computed<boolean>(() => (selectedLeistungen.value.size > 0) && (selectedLeistungen.value.size < leistungen.value.size()));
+	const someSelected = computed<boolean>(() => (selectedLeistungenIds.value.size > 0) && (selectedLeistungenIds.value.size < leistungen.value.size()));
 
 	const tableBulkActions = computed(() => {
 		return [
 			{
 				label: "Selektierte Leistungsdaten entfernen",
-				action: () => deleteAuswahl(),
-				disabled: selectedLeistungen.value.size === 0,
+				action: deleteAuswahl,
+				disabled: selectedLeistungenIds.value.size === 0,
 				iconClasses: "i-ri-delete-bin-line icon-ui-danger",
 			},
 			{
@@ -198,20 +213,45 @@
 
 	const headerCount = computed<number>(() => istGymOb.value ? 2 : 1);
 
-	const gridManager = new GridManager<string, SchuelerLeistungsdaten, List<SchuelerLeistungsdaten>>({
-		daten: leistungen,
-		getRowKey: row => `${row.id}`,
-		columns: [
-			{ kuerzel: "auswahl", name: "Auswahl", width: "1.5rem" },
-			{ kuerzel: "fachID", name: "Fach", width: "minmax(10rem, 2.5fr)" },
-			{ kuerzel: "kursID", name: "Kurs", width: "minmax(10rem, 1fr)" },
-			{ kuerzel: "kursart", name: "Kursart", width: "5rem" },
-			{ kuerzel: "abifach", name: "Abitur", width: "5rem" },
-			{ kuerzel: "wochenstunden", name: "WStd", width: "5rem" },
-			{ kuerzel: "lehrerID", name: "Lehrer", width: "minmax(10rem, 2fr)" },
-			{ kuerzel: "noteQuartal", name: "Quartal", width: "5rem" },
-			{ kuerzel: "note", name: "Halbjahr", width: "5rem" },
-		],
+	const allgemeinModel = new SchuelerLernabschnittAllgemeinModelProxy(() => lernabschnittsdaten.value,
+		props.manager,
+		() => schulform.value,
+		() => schuljahr.value,
+		async (data: Partial<SchuelerLernabschnittsdaten>) => {
+			await props.patch(data);
+			return true;
+		}
+	);
+
+	const leistungenModels = useModelProxyList<SchuelerLeistungsdaten, SchuelerLeistungsdatenModelProxy>(
+		leistungen,
+		leistung => leistung.id,
+		leistung => new SchuelerLeistungsdatenModelProxy(
+			() => leistung,
+			props.manager,
+			() => schuljahr.value,
+			async (data: Partial<SchuelerLeistungsdaten>) => {
+				await props.patchLeistung(data, leistung.id);
+				return true;
+			})
+	);
+
+	const columns = [
+		{ kuerzel: "auswahl", name: "Auswahl", width: "1.5rem" },
+		{ kuerzel: "fachID", name: "Fach", width: "minmax(10rem, 2.5fr)" },
+		{ kuerzel: "kursID", name: "Kurs", width: "minmax(10rem, 1fr)" },
+		{ kuerzel: "kursart", name: "Kursart", width: "5rem" },
+		{ kuerzel: "abifach", name: "Abitur", width: "5rem" },
+		{ kuerzel: "wochenstunden", name: "WStd", width: "5rem" },
+		{ kuerzel: "lehrerID", name: "Lehrer", width: "minmax(10rem, 2fr)" },
+		{ kuerzel: "noteQuartal", name: "Quartal", width: "5rem" },
+		{ kuerzel: "note", name: "Halbjahr", width: "5rem" },
+	];
+
+	const gridManager = new GridManager<string, SchuelerLeistungsdatenModelProxy, Array<SchuelerLeistungsdatenModelProxy>>({
+		daten: leistungenModels,
+		getRowKey: row => `${row.proxy.id}`,
+		columns,
 		colsVisible,
 	});
 
@@ -245,23 +285,9 @@
 				&& (schuleSchuljahresabschnitt.abschnitt <= leistungSchuljahresabschnitt.abschnitt));
 	});
 
-	const lernbereichsnoteGSbzwAL = computed<Note | null>({
-		get: () => Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichGSbzwAL),
-		set: (value: Note | null) => {
-			const noteLernbereichGSbzwAL = ((value === null) || (value === Note.KEINE)) ? null : value.getNoteSekI(schuljahr.value);
-			void props.patch({ noteLernbereichGSbzwAL });
-		},
-	});
 
-	const lernbereichsnoteNW = computed<Note | null>({
-		get: () => Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichNW),
-		set: (value: Note | null) => {
-			const noteLernbereichNW = ((value === null) || (value === Note.KEINE)) ? null : value.getNoteSekI(schuljahr.value);
-			void props.patch({ noteLernbereichNW });
-		},
-	});
 
-	const lernbereichsnoten = computed<Note[]>(() => [Note.KEINE, Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND]);
+	const lernbereichsnoten = computed<Note[]>(() => [Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND]);
 	const lehrer = computed<Iterable<LehrerListeEintrag>>(() => props.manager().lehrerGetMengeAktiv());
 	const faecher = computed<Iterable<FachDaten>>(() => props.manager().fachGetMenge());
 
@@ -272,7 +298,7 @@
 	});
 
 	const notenSelectManager = new SelectManager({
-		options: Note.values(),
+		options: Note.values().filter(n => n !== Note.KEINE),
 		optionDisplayText: note => (note === Note.KEINE) ? '—' : note.daten(schuljahr.value)?.kuerzel ?? '-',
 		selectionDisplayText: note => (note === Note.KEINE) ? '' : note.daten(schuljahr.value)?.kuerzel ?? '-',
 	});
@@ -325,106 +351,28 @@
 	}
 
 	function updateAuswahl() {
-		const allSelected = (leistungen.value.size() === selectedLeistungen.value.size);
+		const allSelected = (leistungen.value.size() === selectedLeistungenIds.value.size);
 		if (allSelected) {
-			selectedLeistungen.value.clear();
+			selectedLeistungenIds.value.clear();
 		} else {
 			for (const leistung of leistungen.value) {
-				selectedLeistungen.value.add(leistung);
+				selectedLeistungenIds.value.add(leistung.id);
 			}
 		}
 	}
 
 	const deleteAuswahl = async () => {
-		if (selectedLeistungen.value.size === 0) {
+		if (selectedLeistungenIds.value.size === 0) {
 			return;
 		}
+
 		const leistungenIDs = new ArrayList<number>();
-		for (const leistung of selectedLeistungen.value) {
-			leistungenIDs.add(leistung.id);
+		for (const idLeistung of selectedLeistungenIds.value) {
+			leistungenIDs.add(idLeistung);
 		}
+
 		await props.deleteLeistungen(leistungenIDs);
 	};
-
-	async function patchFach(fach: FachDaten | null, leistung: SchuelerLeistungsdaten) {
-		// Fach-Eintrag bei den Leistungsdaten wird entfernt
-		if (fach === null) {
-			await props.patchLeistung({ fachID: -1, kursID: null }, leistung.id);
-			return;
-		}
-		// Spezialfälle
-		const f: Fach = Fach.getBySchluesselOrDefault(fach.kuerzelStatistik);
-		let kursart;
-		if (f === Fach.VX) { // Speziallfall Gymnasiale Oberstufe - Vertiefungsfach
-			kursart = ZulaessigeKursart.VTF;
-		} else if (f === Fach.PX) { // Speziallfall Gymnasiale Oberstufe - Projektkursfach
-			kursart = ZulaessigeKursart.PJK;
-		} else { // Allgemeiner Fall: Entfernen des Kurses und setzen einer speziellen Kursart, wenn die kursart der Leistung null ist
-			kursart = (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
-			if (kursart === null) {
-				kursart = ZulaessigeKursart.PUK;
-			}
-		}
-
-		await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten(schuljahr.value)?.kuerzel }, leistung.id);
-	}
-
-	async function patchKurs(kurs: KursDaten | undefined, leistung: SchuelerLeistungsdaten) {
-		if (kurs === undefined) {
-			await props.patchLeistung({ kursID: null, kursart: ZulaessigeKursart.PUK.daten(schuljahr.value)?.kuerzel, abifach: null }, leistung.id);
-			return;
-		}
-
-		const kursart = (leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
-		if (kurs.kursartAllg !== kursart?.daten(schuljahr.value)?.kuerzelAllg) {
-			const { kursart, abifach } = bestimmeKursartUndAbifach(kurs, leistung);
-			await props.patchLeistung({
-				kursID: kurs.id,
-				lehrerID: kurs.lehrer,
-				kursart: kursart?.daten(schuljahr.value)?.kuerzel ?? null,
-				abifach: abifach,
-				wochenstunden: kurs.wochenstunden,
-			}, leistung.id);
-		} else {
-			await props.patchLeistung({ kursID: kurs.id, lehrerID: kurs.lehrer, wochenstunden: kurs.wochenstunden }, leistung.id);
-		}
-	}
-
-	function bestimmeKursartUndAbifach(kurs: KursDaten, leistung: SchuelerLeistungsdaten) {
-		const kursarten: List<ZulaessigeKursart> = ZulaessigeKursart.getByAllgemeinerKursart(schuljahr.value, kurs.kursartAllg);
-		let kursart: ZulaessigeKursart | null;
-		let abifach: number | null = leistung.abifach;
-
-		if (kurs.kursartAllg === ZulaessigeKursart.E.daten(schuljahr.value)?.kuerzel) { // Speziallfall Gesamtschule E-Kurs
-			kursart = ZulaessigeKursart.E;
-		} else if (kurs.kursartAllg === ZulaessigeKursart.G.daten(schuljahr.value)?.kuerzel) { // Speziallfall Gesamtschule G-Kurs
-			kursart = ZulaessigeKursart.G;
-		} else if (kurs.kursartAllg === ZulaessigeKursart.E.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
-			kursart = ZulaessigeKursart.G;
-		} else if (kurs.kursartAllg === ZulaessigeKursart.GKM.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
-			kursart = ZulaessigeKursart.GKM;
-			if ((leistung.abifach === 1) || (leistung.abifach === 2)) {
-				abifach = null;
-			}
-			if (leistung.abifach === 3) {
-				kursart = ZulaessigeKursart.AB3;
-			} else if (leistung.abifach === 4) {
-				kursart = ZulaessigeKursart.AB4;
-			}
-		} else if (kurs.kursartAllg === ZulaessigeKursart.LK1.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
-			// TODO Prüfen, ob das Fach für LK1 zulässig ist -> wenn nicht immer LK2, ansonsten prüfen, ob LK1 bereits bei den Lernabschnittsdaten zugeordnet ist und LK2 nicht. Ist dies der Fall -> LK2, sonst LK1
-			kursart = ZulaessigeKursart.LK1;
-			if (leistung.abifach === 2) {
-				kursart = ZulaessigeKursart.LK2;
-			}
-			if (leistung.abifach === null) {
-				abifach = 1;
-			}
-		} else {
-			kursart = kursarten.isEmpty() ? null : kursarten.get(0);
-		}
-		return { kursart, abifach };
-	}
 
 	watch(leistungen, (newLeistungen, oldLeistungen) => {
 		if (newLeistungen.size() === oldLeistungen.size()) {
@@ -443,15 +391,7 @@
 				return;
 			}
 		}
-		selectedLeistungen.value.clear();
+		selectedLeistungenIds.value.clear();
 	});
 
 </script>
-
-<!--<style scoped>-->
-
-<!--	.svws-ui-tr {-->
-<!--		grid-template-columns: v-bind(gridcolumns);-->
-<!--	}-->
-
-<!--</style>-->

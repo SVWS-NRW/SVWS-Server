@@ -1,8 +1,5 @@
-import type { List, FachDaten, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag,
-	SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen,
-	GostSchuelerklausurtermin, GostSchuelerklausur } from "@core";
+import type { List, FachDaten, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen, GostSchuelerklausurtermin, GostSchuelerklausur, Collection } from "@core";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -247,8 +244,8 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		this.commit();
 	};
 
-	deleteLeistungen = async (leistungenIDs: List<number>) => {
-		const leistungen = await api.server.deleteSchuelerLeistungsdatenMultiple(leistungenIDs, api.schema);
+	deleteLeistungen = async (leistungenIDs: Collection<number>) => {
+		const leistungen = await api.server.deleteSchuelerLeistungsdatenMultiple(new ArrayList(leistungenIDs), api.schema);
 		for (const l of leistungen) {
 			this.manager.leistungRemoveByID(l.id);
 		}

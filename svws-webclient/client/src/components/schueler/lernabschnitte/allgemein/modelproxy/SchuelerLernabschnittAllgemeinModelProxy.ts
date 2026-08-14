@@ -1,7 +1,7 @@
 import { computed } from "vue";
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import type { BilingualeSpracheKatalogEintrag, FoerderschwerpunktEintrag, JahrgangsDaten, KlassenartKatalogEintrag, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerLernabschnittsdaten, SchulgliederungKatalogEintrag } from "@core";
-import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, BilingualeSprache, Klassenart, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, WeiterbildungskollegOrganisationsformen } from "@core";
+import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, BilingualeSprache, Klassenart, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Schulgliederung, WeiterbildungskollegOrganisationsformen, Note } from "@core";
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 import { ValidatorSchuelerLernabschnittKlasseUndJahrgang } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/validation/ValidatorSchuelerLernabschnittKlasseUndJahrgang";
 
@@ -24,12 +24,19 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			"bilingualerZweig", "foerderschwerpunkt1ID", "foerderschwerpunkt2ID",
 			"hatAOSF", "hatAutismus", "hatSchwerbehinderungsNachweis",
 			"hatZieldifferentenUnterricht", "datumAnfang", "datumEnde", "idEpJahre",
+			"noteLernbereichNW", "noteLernbereichGSbzwAL",
 		];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.schulform = schulform;
 		this.schuljahr = schuljahr;
 
+		this.addValidatoren();
+
+		this.validate();
+	}
+
+	private addValidatoren() {
 		this.addBlockingValidator(new ValidatorSchuelerLernabschnittKlasseUndJahrgang(
 			() => this.proxy.klassenID,
 			() => this.proxy.jahrgangID,
@@ -47,8 +54,11 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.pruefungsOrdnung, null, 20), "pruefungsOrdnung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idOrganisationsform), "idOrganisationsform");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idKlassenart), "idKlassenart");
-
-		this.validate();
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.noteLernbereichNW, 0, null), "noteLernbereichNW");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.noteLernbereichGSbzwAL, 0, null), "noteLernbereichGSbzwAL");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.fehlstundenGrenzwert, 0, null), "fehlstundenGrenzwert");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.fehlstundenGesamt, 0, null), "fehlstundenGesamt");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.fehlstundenUnentschuldigt, 0, null), "fehlstundenUnentschuldigt");
 	}
 
 	klasse = computed<KlassenDaten | null>({
@@ -152,6 +162,22 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 		return [...AllgemeinbildendOrganisationsformen.data().getWerteBySchulform(this.schulform())]
 			.map(e => e.daten(this.schuljahr()))
 			.filter(e => e !== null);
+	});
+
+	lernbereichsnoteGSbzwAL = computed<Note | undefined>({
+		get: () => {
+			const note = Note.fromNoteSekI(this.proxy.noteLernbereichGSbzwAL);
+			return ((note === null) || (note === Note.KEINE)) ? undefined : note;
+		},
+		set: (value: Note | undefined) => this.proxy.noteLernbereichGSbzwAL = value?.getNoteSekI(this.schuljahr()) ?? null,
+	});
+
+	lernbereichsnoteNW = computed<Note | undefined>({
+		get: () => {
+			const note = Note.fromNoteSekI(this.proxy.noteLernbereichNW);
+			return ((note === null) || (note === Note.KEINE)) ? undefined : note;
+		},
+		set: (value: Note | undefined) => this.proxy.noteLernbereichNW = value?.getNoteSekI(this.schuljahr()) ?? null,
 	});
 
 }
