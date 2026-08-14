@@ -10,6 +10,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.Strings;
 
@@ -29,17 +30,17 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 
 	private static final String ORT_ID = "idOrt";
 	private static final String ORTSTEIL = "ortsteil";
-	private final DataOrte dataOrte;
+	private final OrtService ortService;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link OrtsteilKatalogEintrag}.
 	 *
 	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param dataOrte    DataOrte
+	 * @param ortService    DataOrte
 	 */
-	public DataOrtsteile(final DBEntityManager conn, final DataOrte dataOrte) {
+	public DataOrtsteile(final DBEntityManager conn, final OrtService ortService) {
 		super(conn);
-		this.dataOrte = dataOrte;
+		this.ortService = ortService;
 		setAttributesNotPatchable("id", "referenziertInAnderenTabellen");
 		setAttributesRequiredOnCreation(ORT_ID, ORTSTEIL);
 	}
@@ -86,7 +87,7 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 		final List<DTOOrtsteil> ortsteile = this.conn.queryAll(DTOOrtsteil.class);
 		final Set<Long> idsOrtsteile = mapToIds(ortsteile);
 		final Set<Long> idsOfReferencedOrtsteile = this.getIdsOfReferencedOrtsteile(idsOrtsteile);
-		final Map<Long, OrtKatalogEintrag> orteById = this.dataOrte
+		final Map<Long, OrtKatalogEintrag> orteById = this.ortService
 				.getAll()
 				.stream()
 				.collect(Collectors.toMap(ort -> ort.id, ort -> ort));

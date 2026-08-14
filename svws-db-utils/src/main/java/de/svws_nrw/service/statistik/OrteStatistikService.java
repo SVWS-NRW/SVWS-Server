@@ -41,10 +41,10 @@ public final class OrteStatistikService {
 
 	private static OrteStatistikGesamt map(final DTOOrt dto, final int schuljahr) {
 		final var daten = new OrteStatistikGesamt();
-		daten.id = dto.ID;
-		daten.plz = dto.PLZ;
-		daten.ortsname = dto.Bezeichnung;
-		daten.idLand = Laender.data().getIDByWertAndSchuljahr(Laender.data().getWertBySchluessel(dto.Land), schuljahr);
+		daten.id = dto.id;
+		daten.plz = dto.plz;
+		daten.ortsname = dto.ortsname;
+		daten.idLand = Laender.data().getIDByWertAndSchuljahr(Laender.data().getWertBySchluessel(dto.schluesselBundesland), schuljahr);
 		return daten;
 	}
 

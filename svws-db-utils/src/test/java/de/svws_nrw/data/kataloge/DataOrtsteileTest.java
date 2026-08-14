@@ -12,6 +12,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -44,7 +45,7 @@ class DataOrtsteileTest {
 	private DBEntityManager conn;
 
 	@Mock
-	private DataOrte dataOrte;
+	private OrtService ortService;
 
 	@InjectMocks
 	private DataOrtsteile data;
@@ -159,7 +160,7 @@ class DataOrtsteileTest {
 		ort.id = 1L;
 		ort.ortsname = "ortsname";
 		ort.plz = "12345";
-		when(this.dataOrte.getAll()).thenReturn(List.of(ort));
+		when(this.ortService.getAll()).thenReturn(List.of(ort));
 		final var dto1 = new DTOOrtsteil(1L, "bez1");
 		dto1.Ort_ID = 1L;
 		final var dto2 = new DTOOrtsteil(2L, "bez2");
@@ -193,7 +194,7 @@ class DataOrtsteileTest {
 	@Test
 	@DisplayName("getAll | referenced in other tabled")
 	void getAllReferencedInOtherTables() {
-		when(this.dataOrte.getAll()).thenReturn(Collections.emptyList());
+		when(this.ortService.getAll()).thenReturn(Collections.emptyList());
 		final var dto1 = new DTOOrtsteil(1L, "bez1");
 		final var dto2 = new DTOOrtsteil(2L, "bez2");
 		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(List.of(dto1, dto2));
@@ -220,7 +221,7 @@ class DataOrtsteileTest {
 	@Test
 	@DisplayName("getAll | Database empty")
 	void getAllEmpty() {
-		when(this.dataOrte.getAll()).thenReturn(Collections.emptyList());
+		when(this.ortService.getAll()).thenReturn(Collections.emptyList());
 		when(this.conn.queryAll(DTOOrtsteil.class)).thenReturn(Collections.emptyList());
 
 		verify(this.conn, never()).query(anyString(), eq(Long.class));

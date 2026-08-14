@@ -4,6 +4,8 @@ import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalControllerImpl;
+import de.svws_nrw.controller.schule.katalog.ort.OrtController;
+import de.svws_nrw.controller.schule.katalog.ort.OrtControllerImpl;
 import de.svws_nrw.controller.schule.katalog.teilleistungsart.TeilleistungsartController;
 import de.svws_nrw.controller.schule.katalog.teilleistungsart.TeilleistungsartControllerImpl;
 import de.svws_nrw.core.types.ServerMode;
@@ -119,6 +121,15 @@ public final class KatalogControllerFactory {
 	 */
 	public TeilleistungsartController getTeilLeistungsartController() {
 		return new TeilleistungsartControllerImpl(serviceFactory.getTeilLeistungsartenService());
+	}
+
+	/**
+	 * Erstellt einen neuen OrtController.
+	 *
+	 * @return {@link OrtController} - neu erzeugter Controller
+	 */
+	public OrtController getOrtController() {
+		return new OrtControllerImpl(serviceFactory.getOrtService());
 	}
 
 }

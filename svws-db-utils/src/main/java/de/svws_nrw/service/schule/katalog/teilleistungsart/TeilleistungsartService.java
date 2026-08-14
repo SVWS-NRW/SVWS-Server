@@ -40,9 +40,12 @@ public final class TeilleistungsartService {
 	 * @return Liste von DTO's
 	 */
 	public List<Teilleistungsart> getAll() {
-		return repository.getAll()
-				.stream()
-				.map(this::toApi)
+		final var entities = repository.getAll();
+		final var ids = entities.stream().map(e -> e.ID).toList();
+		final var referencedIds = repository.getReferencedIds(ids);
+
+		return entities.stream()
+				.map(e -> toApi(e, referencedIds))
 				.toList();
 	}
 
@@ -157,15 +160,16 @@ public final class TeilleistungsartService {
 	}
 
 	private Teilleistungsart toApi(final DTOTeilleistungsarten input) {
-		final var dto = new Teilleistungsart();
+		return toApi(input, repository.getReferencedIds(List.of(input.ID)));
+	}
 
+	private Teilleistungsart toApi(final DTOTeilleistungsarten input, final Set<Long> referencedIds) {
+		final var dto = new Teilleistungsart();
 		dto.id = input.ID;
 		dto.bezeichnung = input.Bezeichnung;
 		dto.istSichtbar = Boolean.TRUE.equals(input.Sichtbar);
 		dto.sortierung = Objects.requireNonNullElse(input.Sortierung, 32000);
-		dto.referenziertInAnderenTabellen = !repository.getReferencedIds(List.of(input.ID))
-				.isEmpty();
-
+		dto.referenziertInAnderenTabellen = referencedIds.contains(input.ID);
 		return dto;
 	}
 

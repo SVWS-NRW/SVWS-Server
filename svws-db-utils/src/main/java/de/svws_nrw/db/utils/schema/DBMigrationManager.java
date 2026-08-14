@@ -598,16 +598,14 @@ public final class DBMigrationManager {
 
 	/**
 	 * Liest alle Daten aus der Tabelle aus. Die Daten werden anhand
-	 * der Schulnummer aus dem Attribut {@link DBMigrationManager.schulNr}
+	 * der Schulnummer aus dem Attribut {@link DBMigrationManager}
 	 * eingeschränkt, sofern dieses nicht null ist.
 	 *
 	 * @param tab   die einzulesende Tabelle
 	 *
 	 * @return eine Liste mit allen Entitäten der Tabelle
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private List<?> readAllData(final SchemaTabelle tab) throws DBException {
+	private List<?> readAllData(final SchemaTabelle tab) {
 		final Class<?> dtoClass = MigrationDTOs.getFromTableName(tab.name());
 		lastError = null;
 
@@ -2196,8 +2194,8 @@ public final class DBMigrationManager {
 	private boolean checkKatalogOrt(final List<MigrationDTOOrt> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOOrt daten = entities.get(i);
-			if ((daten.Bezeichnung == null) || ("".equals(daten.Bezeichnung.trim()))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Eine Bezeichnung fehlt.".formatted(daten.ID));
+			if ((daten.ortsname == null) || ("".equals(daten.ortsname.trim()))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Eine Bezeichnung fehlt.".formatted(daten.id));
 				entities.remove(i);
 			}
 		}

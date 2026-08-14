@@ -35,9 +35,8 @@ public abstract class DataManagerCardDav {
 	 * @param conn                      die Verbindung für den Datenbank-Zugriff
 	 * @param idSchuljahresabschnitt    die ID des Schuljahresabschnittes, auf welchen sich die Anfrage bezieht
 	 *
-	 * @throws ApiOperationException
 	 */
-	protected DataManagerCardDav(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
+	protected DataManagerCardDav(final DBEntityManager conn, final long idSchuljahresabschnitt) {
 		this.conn = conn;
 		this.schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (this.schuljahresabschnitt == null) {
@@ -92,7 +91,7 @@ public abstract class DataManagerCardDav {
 	 * @return die Map
 	 */
 	protected Map<Long, DTOOrt> queryMapOrte(final Set<Long> ortIds) {
-		return conn.queryByKeyList(DTOOrt.class, ortIds).stream().collect(Collectors.toMap(o -> o.ID, Function.identity()));
+		return conn.queryByKeyList(DTOOrt.class, ortIds).stream().collect(Collectors.toMap(o -> o.id, Function.identity()));
 	}
 
 

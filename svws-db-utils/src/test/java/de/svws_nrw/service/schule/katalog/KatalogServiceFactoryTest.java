@@ -3,11 +3,13 @@ package de.svws_nrw.service.schule.katalog;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
+import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
+import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +44,9 @@ class KatalogServiceFactoryTest {
 
 	@Mock
 	private EigeneSchuleService eigeneSchuleService;
+
+	@Mock
+	private OrtRepository ortRepository;
 
 	private KatalogServiceFactory underTest;
 
@@ -235,4 +240,63 @@ class KatalogServiceFactoryTest {
 			assertThat(service).isInstanceOf(FachklasseService.class);
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// getOrtService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getOrtService()")
+	class GetOrtService {
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getOrtRepository())
+					.thenReturn(ortRepository);
+			when(eigeneSchuleServiceFactory.getSchuleService())
+					.thenReturn(eigeneSchuleService);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null OrtService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final OrtService service = underTest.getOrtService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			final OrtService service1 = underTest.getOrtService();
+			final OrtService service2 = underTest.getOrtService();
+
+			assertThat(service1).isNotSameAs(service2);
+		}
+
+		@Test
+		@DisplayName("ruft getOrtRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToKatalogRepositoryFactory() {
+			underTest.getOrtService();
+
+			verify(katalogRepositoryFactory).getOrtRepository();
+		}
+
+		@Test
+		@DisplayName("ruft getSchuleService() auf der EigeneSchuleServiceFactory auf")
+		void shouldDelegateToEigeneSchuleServiceFactory() {
+			underTest.getOrtService();
+
+			verify(eigeneSchuleServiceFactory).getSchuleService();
+		}
+
+		@Test
+		@DisplayName("verwendet OrtMapper.INSTANCE")
+		void shouldUseOrtMapperInstance() {
+			final OrtService service = underTest.getOrtService();
+
+			assertThat(service).isInstanceOf(OrtService.class);
+		}
+	}
+
 }

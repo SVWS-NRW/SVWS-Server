@@ -20,7 +20,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.jackson.nullable.JsonNullable;
 
@@ -30,6 +29,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,14 +66,15 @@ class TeilleistungsartServiceTest {
 		final DTOTeilleistungsarten entity = createEntity(0, restInput.bezeichnung, restInput.istSichtbar, restInput.sortierung);
 		when(teilleistungsartRepository.existsBy(anyString())).thenReturn(false);
 		when(teilleistungsartRepository.create(any(DTOTeilleistungsarten.class))).thenReturn(entity);
+		when(teilleistungsartRepository.getReferencedIds(List.of(0L))).thenReturn(Set.of());
 
 		final var created = teilleistungsartService.create(restInput);
 
 		Assertions.assertThat(created)
 				.hasFieldOrPropertyWithValue("bezeichnung", restInput.bezeichnung)
 				.hasFieldOrPropertyWithValue("istSichtbar", restInput.istSichtbar)
-				.hasFieldOrPropertyWithValue("sortierung", restInput.sortierung);
-
+				.hasFieldOrPropertyWithValue("sortierung", restInput.sortierung)
+				.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false);
 	}
 
 	@Test
@@ -96,17 +98,16 @@ class TeilleistungsartServiceTest {
 		final DTOTeilleistungsarten entity = createEntity(1, "old", true, 1);
 		when(teilleistungsartRepository.getById(1L)).thenReturn(entity);
 		when(teilleistungsartRepository.existsBy(anyString())).thenReturn(false);
-		final var bezeichnung = "bezeichnung";
-		final var sortierung = 32000;
+		when(teilleistungsartRepository.getReferencedIds(List.of(1L))).thenReturn(Set.of());
 		final var patch = createPatch();
 
 		final var created = teilleistungsartService.patch(1, patch);
 
 		Assertions.assertThat(created)
-				.hasFieldOrPropertyWithValue("bezeichnung", bezeichnung)
+				.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung")
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
-				.hasFieldOrPropertyWithValue("sortierung", sortierung);
-
+				.hasFieldOrPropertyWithValue("sortierung", 32000)
+				.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false);
 	}
 
 	private static TeilleistungsartPatchRequest createPatch() {
@@ -123,12 +124,12 @@ class TeilleistungsartServiceTest {
 		final Teilleistungsart restInput = createResponse();
 		final DTOTeilleistungsarten entity = createEntity(restInput.id, restInput.bezeichnung, restInput.istSichtbar, restInput.sortierung);
 		when(teilleistungsartRepository.getById(1L)).thenReturn(entity);
+		when(teilleistungsartRepository.getReferencedIds(List.of(restInput.id))).thenReturn(Set.of());
 		final var patch = createPatch();
 
 		teilleistungsartService.patch(1, patch);
 
-		Mockito.verify(teilleistungsartRepository, Mockito.times(0)).existsBy(anyString());
-
+		verify(teilleistungsartRepository, times(0)).existsBy(anyString());
 	}
 
 	@Test
@@ -139,8 +140,7 @@ class TeilleistungsartServiceTest {
 		final DTOTeilleistungsarten first = createEntity(firstId, "1", true, 1);
 		final DTOTeilleistungsarten second = createEntity(secondId, "2", true, 2);
 		when(teilleistungsartRepository.getAll()).thenReturn(List.of(first, second));
-		when(teilleistungsartRepository.getReferencedIds(List.of(firstId))).thenReturn(Set.of(firstId));
-		when(teilleistungsartRepository.getReferencedIds(List.of(secondId))).thenReturn(Set.of());
+		when(teilleistungsartRepository.getReferencedIds(List.of(firstId, secondId))).thenReturn(Set.of(firstId));
 
 		final var results = teilleistungsartService.getAll();
 
@@ -157,7 +157,6 @@ class TeilleistungsartServiceTest {
 						tuple(firstId, "1", true, 1, true),
 						tuple(2L, "2", true, 2, false)
 				);
-
 	}
 
 	@Test

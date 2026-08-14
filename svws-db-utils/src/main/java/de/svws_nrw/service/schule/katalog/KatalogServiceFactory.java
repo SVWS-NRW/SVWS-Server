@@ -2,10 +2,12 @@ package de.svws_nrw.service.schule.katalog;
 
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
+import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
+import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartService;
 
 public final class KatalogServiceFactory {
@@ -59,6 +61,18 @@ public final class KatalogServiceFactory {
 		return new FachklasseService(
 				katalogRepositoryFactory.getFachklasseRepository(),
 				FachklasseMapper.INSTANCE,
+				eigeneSchuleServiceFactory.getSchuleService());
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des OrtService.
+	 *
+	 * @return eine neue Instanz des OrtService.
+	 */
+	public OrtService getOrtService() {
+		return new OrtService(
+				katalogRepositoryFactory.getOrtRepository(),
+				OrtMapper.INSTANCE,
 				eigeneSchuleServiceFactory.getSchuleService());
 	}
 

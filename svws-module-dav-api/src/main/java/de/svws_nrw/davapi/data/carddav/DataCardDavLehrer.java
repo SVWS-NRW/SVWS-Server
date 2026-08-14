@@ -67,8 +67,8 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 		k.hausnummerZusatz = l.HausNrZusatz;
 		k.nachname = l.Nachname;
 		if (ort != null) {
-			k.plz = ort.PLZ;
-			k.ort = ort.Bezeichnung;
+			k.plz = ort.plz;
+			k.ort = ort.ortsname;
 		}
 		if (categories != null) {
 			k.kategorien.addAll(categories);

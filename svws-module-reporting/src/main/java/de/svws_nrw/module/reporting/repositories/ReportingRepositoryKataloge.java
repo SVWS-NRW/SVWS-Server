@@ -22,7 +22,6 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
-import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataAnkreuzkompetenzJahrgangszuordnungen;
@@ -35,6 +34,11 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.ort.OrtService;
 
 /**
  * Domänen-Repository für Kataloge, Fächer, Jahrgänge und Erzieherarten.
@@ -131,7 +135,7 @@ public class ReportingRepositoryKataloge {
 		if (katalogOrte == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Orte.");
-				katalogOrte = new DataOrte(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+				katalogOrte = createOrtService().getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Orte", e);
 			}
@@ -154,14 +158,20 @@ public class ReportingRepositoryKataloge {
 		if (katalogOrtsteile == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Ortsteile.");
-				final DataOrte dataOrte = new DataOrte(this.reportingContext.conn());
-				katalogOrtsteile = new DataOrtsteile(this.reportingContext.conn(), dataOrte).getAll().stream()
+				katalogOrtsteile = new DataOrtsteile(this.reportingContext.conn(), createOrtService()).getAll().stream()
 						.collect(Collectors.toMap(o -> o.id, o -> o));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Ortsteile", e);
 			}
 		}
 		return katalogOrtsteile;
+	}
+
+	private static OrtService createOrtService() {
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
+		return KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
 	}
 
 	/**

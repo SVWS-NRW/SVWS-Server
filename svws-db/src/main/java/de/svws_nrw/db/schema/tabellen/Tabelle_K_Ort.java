@@ -15,42 +15,50 @@ public class Tabelle_K_Ort extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID des Ortes");
 
 	/** Die Definition der Tabellenspalte PLZ */
 	public final SchemaTabelleSpalte col_PLZ = add("PLZ", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+			.setJavaName("plz")
 			.setNotNull()
 			.setJavaComment("PLZ des Ortes");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
+			.setJavaName("ortsname")
 			.setNotNull()
 			.setJavaComment("Bezeichnung des Ortes");
 
 	/** Die Definition der Tabellenspalte Kreis */
 	public final SchemaTabelleSpalte col_Kreis = add("Kreis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+			.setJavaName("kreis")
 			.setJavaComment("Kreis des Ortes");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setDefault("32000")
 			.setJavaComment("Sortierung des Ortes");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istSichtbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichbarkeit des Ortes");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istAenderbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Änderbarkeit des Ortes");
 
 	/** Die Definition der Tabellenspalte Land */
 	public final SchemaTabelleSpalte col_Land = add("Land", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+			.setJavaName("schluesselBundesland")
 			.setJavaComment("Land des Ortes");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

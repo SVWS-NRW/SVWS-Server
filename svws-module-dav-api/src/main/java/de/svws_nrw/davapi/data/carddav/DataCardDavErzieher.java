@@ -60,8 +60,8 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 		k.hausnummerZusatz = e.ErzHausNrZusatz;
 		k.nachname = e.Name1;
 		if (ort != null) {
-			k.ort = ort.Bezeichnung;
-			k.plz = ort.PLZ;
+			k.ort = ort.ortsname;
+			k.plz = ort.plz;
 		}
 		k.kategorien.addAll(categories);
 		k.strassenname = e.ErzStrassenname;

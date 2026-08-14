@@ -26,68 +26,68 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ort")
-@JsonPropertyOrder({"ID", "PLZ", "Bezeichnung", "Kreis", "Sortierung", "Sichtbar", "Aenderbar", "Land", "SchulnrEigner"})
+@JsonPropertyOrder({"id", "plz", "ortsname", "kreis", "sortierung", "istSichtbar", "istAenderbar", "schluesselBundesland", "SchulnrEigner"})
 public final class MigrationDTOOrt {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOOrt e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOOrt e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOOrt e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOOrt e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOOrt e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOOrt e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOOrt e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOOrt e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
-	public static final String QUERY_BY_PLZ = "SELECT e FROM MigrationDTOOrt e WHERE e.PLZ = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes plz */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM MigrationDTOOrt e WHERE e.plz = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
-	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM MigrationDTOOrt e WHERE e.PLZ IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes plz */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM MigrationDTOOrt e WHERE e.plz IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ortsname */
+	public static final String QUERY_BY_ORTSNAME = "SELECT e FROM MigrationDTOOrt e WHERE e.ortsname = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ortsname */
+	public static final String QUERY_LIST_BY_ORTSNAME = "SELECT e FROM MigrationDTOOrt e WHERE e.ortsname IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kreis */
-	public static final String QUERY_BY_KREIS = "SELECT e FROM MigrationDTOOrt e WHERE e.Kreis = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kreis */
+	public static final String QUERY_BY_KREIS = "SELECT e FROM MigrationDTOOrt e WHERE e.kreis = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kreis */
-	public static final String QUERY_LIST_BY_KREIS = "SELECT e FROM MigrationDTOOrt e WHERE e.Kreis IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kreis */
+	public static final String QUERY_LIST_BY_KREIS = "SELECT e FROM MigrationDTOOrt e WHERE e.kreis IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOOrt e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.istSichtbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istAenderbar */
+	public static final String QUERY_BY_ISTAENDERBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.istAenderbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istAenderbar */
+	public static final String QUERY_LIST_BY_ISTAENDERBAR = "SELECT e FROM MigrationDTOOrt e WHERE e.istAenderbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Land */
-	public static final String QUERY_BY_LAND = "SELECT e FROM MigrationDTOOrt e WHERE e.Land = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes schluesselBundesland */
+	public static final String QUERY_BY_SCHLUESSELBUNDESLAND = "SELECT e FROM MigrationDTOOrt e WHERE e.schluesselBundesland = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Land */
-	public static final String QUERY_LIST_BY_LAND = "SELECT e FROM MigrationDTOOrt e WHERE e.Land IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes schluesselBundesland */
+	public static final String QUERY_LIST_BY_SCHLUESSELBUNDESLAND = "SELECT e FROM MigrationDTOOrt e WHERE e.schluesselBundesland IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
 	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner = ?1";
@@ -99,27 +99,27 @@ public final class MigrationDTOOrt {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public Long id;
 
 	/** PLZ des Ortes */
 	@Column(name = "PLZ")
 	@JsonProperty
-	public String PLZ;
+	public String plz;
 
 	/** Bezeichnung des Ortes */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String ortsname;
 
 	/** Kreis des Ortes */
 	@Column(name = "Kreis")
 	@JsonProperty
-	public String Kreis;
+	public String kreis;
 
 	/** Sortierung des Ortes */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** Sichbarkeit des Ortes */
 	@Column(name = "Sichtbar")
@@ -127,7 +127,7 @@ public final class MigrationDTOOrt {
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Änderbarkeit des Ortes */
 	@Column(name = "Aenderbar")
@@ -135,12 +135,12 @@ public final class MigrationDTOOrt {
 	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Aenderbar;
+	public Boolean istAenderbar;
 
 	/** Land des Ortes */
 	@Column(name = "Land")
 	@JsonProperty
-	public String Land;
+	public String schluesselBundesland;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")
@@ -156,23 +156,23 @@ public final class MigrationDTOOrt {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOOrt ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param PLZ   der Wert für das Attribut PLZ
-	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
+	 * @param id   der Wert für das Attribut id
+	 * @param plz   der Wert für das Attribut plz
+	 * @param ortsname   der Wert für das Attribut ortsname
 	 */
-	public MigrationDTOOrt(final Long ID, final String PLZ, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
+	public MigrationDTOOrt(final Long id, final String plz, final String ortsname) {
+		if (id == null) {
+			throw new NullPointerException("id must not be null");
 		}
-		this.ID = ID;
-		if (PLZ == null) {
-			throw new NullPointerException("PLZ must not be null");
+		this.id = id;
+		if (plz == null) {
+			throw new NullPointerException("plz must not be null");
 		}
-		this.PLZ = PLZ;
-		if (Bezeichnung == null) {
-			throw new NullPointerException("Bezeichnung must not be null");
+		this.plz = plz;
+		if (ortsname == null) {
+			throw new NullPointerException("ortsname must not be null");
 		}
-		this.Bezeichnung = Bezeichnung;
+		this.ortsname = ortsname;
 	}
 
 
@@ -188,11 +188,11 @@ public final class MigrationDTOOrt {
 			return false;
 		}
 		MigrationDTOOrt other = (MigrationDTOOrt) obj;
-		if (ID == null) {
-			if (other.ID != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ID.equals(other.ID)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		return true;
@@ -202,7 +202,7 @@ public final class MigrationDTOOrt {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -214,7 +214,7 @@ public final class MigrationDTOOrt {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOOrt(ID=" + this.ID + ", PLZ=" + this.PLZ + ", Bezeichnung=" + this.Bezeichnung + ", Kreis=" + this.Kreis + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Land=" + this.Land + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOOrt(id=" + this.id + ", plz=" + this.plz + ", ortsname=" + this.ortsname + ", kreis=" + this.kreis + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", istAenderbar=" + this.istAenderbar + ", schluesselBundesland=" + this.schluesselBundesland + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

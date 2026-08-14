@@ -26,94 +26,94 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ort")
-@JsonPropertyOrder({"ID", "PLZ", "Bezeichnung", "Kreis", "Sortierung", "Sichtbar", "Aenderbar", "Land"})
+@JsonPropertyOrder({"id", "plz", "ortsname", "kreis", "sortierung", "istSichtbar", "istAenderbar", "schluesselBundesland"})
 public final class DTOOrt {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOOrt e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOOrt e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOOrt e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOOrt e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOOrt e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOOrt e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOOrt e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOOrt e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOOrt e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOOrt e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOOrt e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes PLZ */
-	public static final String QUERY_BY_PLZ = "SELECT e FROM DTOOrt e WHERE e.PLZ = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes plz */
+	public static final String QUERY_BY_PLZ = "SELECT e FROM DTOOrt e WHERE e.plz = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes PLZ */
-	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM DTOOrt e WHERE e.PLZ IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes plz */
+	public static final String QUERY_LIST_BY_PLZ = "SELECT e FROM DTOOrt e WHERE e.plz IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOOrt e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ortsname */
+	public static final String QUERY_BY_ORTSNAME = "SELECT e FROM DTOOrt e WHERE e.ortsname = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOOrt e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ortsname */
+	public static final String QUERY_LIST_BY_ORTSNAME = "SELECT e FROM DTOOrt e WHERE e.ortsname IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Kreis */
-	public static final String QUERY_BY_KREIS = "SELECT e FROM DTOOrt e WHERE e.Kreis = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes kreis */
+	public static final String QUERY_BY_KREIS = "SELECT e FROM DTOOrt e WHERE e.kreis = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kreis */
-	public static final String QUERY_LIST_BY_KREIS = "SELECT e FROM DTOOrt e WHERE e.Kreis IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes kreis */
+	public static final String QUERY_LIST_BY_KREIS = "SELECT e FROM DTOOrt e WHERE e.kreis IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOOrt e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOOrt e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOOrt e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOOrt e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOOrt e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM DTOOrt e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOOrt e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM DTOOrt e WHERE e.istSichtbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOOrt e WHERE e.Aenderbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istAenderbar */
+	public static final String QUERY_BY_ISTAENDERBAR = "SELECT e FROM DTOOrt e WHERE e.istAenderbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOOrt e WHERE e.Aenderbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istAenderbar */
+	public static final String QUERY_LIST_BY_ISTAENDERBAR = "SELECT e FROM DTOOrt e WHERE e.istAenderbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Land */
-	public static final String QUERY_BY_LAND = "SELECT e FROM DTOOrt e WHERE e.Land = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes schluesselBundesland */
+	public static final String QUERY_BY_SCHLUESSELBUNDESLAND = "SELECT e FROM DTOOrt e WHERE e.schluesselBundesland = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Land */
-	public static final String QUERY_LIST_BY_LAND = "SELECT e FROM DTOOrt e WHERE e.Land IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes schluesselBundesland */
+	public static final String QUERY_LIST_BY_SCHLUESSELBUNDESLAND = "SELECT e FROM DTOOrt e WHERE e.schluesselBundesland IN ?1";
 
 	/** ID des Ortes */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** PLZ des Ortes */
 	@Column(name = "PLZ")
 	@JsonProperty
-	public String PLZ;
+	public String plz;
 
 	/** Bezeichnung des Ortes */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String ortsname;
 
 	/** Kreis des Ortes */
 	@Column(name = "Kreis")
 	@JsonProperty
-	public String Kreis;
+	public String kreis;
 
 	/** Sortierung des Ortes */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** Sichbarkeit des Ortes */
 	@Column(name = "Sichtbar")
@@ -121,7 +121,7 @@ public final class DTOOrt {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Änderbarkeit des Ortes */
 	@Column(name = "Aenderbar")
@@ -129,12 +129,12 @@ public final class DTOOrt {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Aenderbar;
+	public Boolean istAenderbar;
 
 	/** Land des Ortes */
 	@Column(name = "Land")
 	@JsonProperty
-	public String Land;
+	public String schluesselBundesland;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOOrt ohne eine Initialisierung der Attribute.
@@ -145,20 +145,20 @@ public final class DTOOrt {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOOrt ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param PLZ   der Wert für das Attribut PLZ
-	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
+	 * @param id   der Wert für das Attribut id
+	 * @param plz   der Wert für das Attribut plz
+	 * @param ortsname   der Wert für das Attribut ortsname
 	 */
-	public DTOOrt(final long ID, final String PLZ, final String Bezeichnung) {
-		this.ID = ID;
-		if (PLZ == null) {
-			throw new NullPointerException("PLZ must not be null");
+	public DTOOrt(final long id, final String plz, final String ortsname) {
+		this.id = id;
+		if (plz == null) {
+			throw new NullPointerException("plz must not be null");
 		}
-		this.PLZ = PLZ;
-		if (Bezeichnung == null) {
-			throw new NullPointerException("Bezeichnung must not be null");
+		this.plz = plz;
+		if (ortsname == null) {
+			throw new NullPointerException("ortsname must not be null");
 		}
-		this.Bezeichnung = Bezeichnung;
+		this.ortsname = ortsname;
 	}
 
 
@@ -174,14 +174,14 @@ public final class DTOOrt {
 			return false;
 		}
 		DTOOrt other = (DTOOrt) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -193,7 +193,7 @@ public final class DTOOrt {
 	 */
 	@Override
 	public String toString() {
-		return "DTOOrt(ID=" + this.ID + ", PLZ=" + this.PLZ + ", Bezeichnung=" + this.Bezeichnung + ", Kreis=" + this.Kreis + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Land=" + this.Land + ")";
+		return "DTOOrt(id=" + this.id + ", plz=" + this.plz + ", ortsname=" + this.ortsname + ", kreis=" + this.kreis + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", istAenderbar=" + this.istAenderbar + ", schluesselBundesland=" + this.schluesselBundesland + ")";
 	}
 
 }

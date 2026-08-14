@@ -74,8 +74,8 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 		k.hausnummerZusatz = schueler.HausNrZusatz;
 		k.nachname = schueler.Nachname;
 		if (ort != null) {
-			k.plz = ort.PLZ;
-			k.ort = ort.Bezeichnung;
+			k.plz = ort.plz;
+			k.ort = ort.ortsname;
 		}
 		k.strassenname = schueler.Strassenname;
 		k.vorname = schueler.Vorname;
