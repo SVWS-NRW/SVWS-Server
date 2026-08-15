@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.util.List;
+
 import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
@@ -14,9 +16,15 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSammler;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierungService;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
 import de.svws_nrw.module.reporting.utils.ReportingServerUtils;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Zentraler Kontext-Container des Reporting-Moduls, der Infrastruktur (Datenbankverbindung, Logger, Services) bereitstellt
@@ -44,6 +52,9 @@ public class ReportingContext {
 
 	/** Service für die Erstellung von Filtern. */
 	private final ReportingFilterService filterService;
+
+	/** Sammler der hingenommenen Ausgabeprobleme dieses Aufrufs. */
+	private final ReportingProblemSammler problemSammler;
 
 	/** Objekt zum aktuell angemeldeten Benutzer. */
 	private final ProxyReportingBenutzer benutzer;
@@ -75,8 +86,9 @@ public class ReportingContext {
 	@SuppressWarnings("java:S3366") // Die Warnung "'this' should not be exposed from constructors" kann aus folgendem Grund hier unterdrückt werden.
 	// Die Weitergabe von 'this innerhalb des Konstruktors birgt normalerweise die Gefahr, dass die Sub-Klassen eine Referenz auf ein noch nicht vollständig
 	// initialisiertes Objekt erhalten. Dennoch ist der Ansatz hier gewünscht und sicher, da in diesem synchronen Setup-Prozess die Sub-Repositories während
-	// ihrer Erstellung keine Methoden aus diesem Kontext aufrufen, sondern die Referenz lediglich in einem final-Feld abspeichern. Dies vermeidet
-	// zustandsbehaftete (und damit fehleranfällige) init()-Methoden und ermöglicht komplett unveränderliche Kontext-Objekte.
+	// ihrer Erstellung ausschließlich Methoden aufrufen, deren Felder zu diesem Zeitpunkt bereits gesetzt sind - die Infrastruktur-Getter und
+	// meldeAusgabeproblem(); im Übrigen speichern sie die Referenz lediglich in einem final-Feld ab. Dies vermeidet zustandsbehaftete (und damit
+	// fehleranfällige) init()-Methoden und ermöglicht komplett unveränderliche Kontext-Objekte.
 	public ReportingContext(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
 			throws ApiOperationException {
 
@@ -105,9 +117,12 @@ public class ReportingContext {
 		this.sortierungService = new ReportingSortierungService(this.reportingParameterTypisiert, this.logger);
 		this.filterService = new ReportingFilterService(this.reportingParameterTypisiert, this.logger);
 		this.logger.logLn(LogLevel.DEBUG, 8, "Services für Sortierung und Filterung erfolgreich erzeugt.");
+		// Der Sammler entsteht vor den Domänen-Repositories: Bereits deren Initialisierung kann ein Ausgabeproblem melden.
+		this.problemSammler = new ReportingProblemSammler(this.logger);
 		// WICHTIG: Während ihrer folgenden Initialisierung dürfen die Domänen-Repositories nur auf die
-		// Infrastruktur-Getter (conn(), logger(), sortierungService(), filterService()) zugreifen,
-		// da die Domänen-Repository-Felder zu diesem Zeitpunkt noch nicht gesetzt sind.
+		// Infrastruktur-Getter (conn(), logger(), sortierungService(), filterService()) und auf
+		// meldeAusgabeproblem() zugreifen, da die Domänen-Repository-Felder zu diesem Zeitpunkt noch
+		// nicht gesetzt sind. Der Problemsammler steht dafür bereits oben bereit.
 		this.repositorySchule = new ReportingRepositorySchule(this, reportingParameter.idSchuljahresabschnitt);
 		this.logger.logLn(LogLevel.DEBUG, 8, "Schul-Repository erfolgreich erzeugt.");
 		this.repositoryKataloge = new ReportingRepositoryKataloge(this);
@@ -231,6 +246,52 @@ public class ReportingContext {
 	 */
 	public ServerMode serverMode() {
 		return serverMode;
+	}
+
+
+	// ##### Ausgabeprobleme #####
+
+	/**
+	 * Meldet ein Ausgabeproblem und ist der einzige Weg dorthin: Der Befund wird registriert und einmal je Ursache, Auswirkung und Schlüssel protokolliert,
+	 * höchstens mit {@code WARNING} - ein {@code ERROR} ist dem Abbruch vorbehalten. Eine abbrechende Ursache wird dagegen nicht gesammelt, sondern
+	 * als Serverfehler geworfen; den Logeintrag dazu schreibt die Abschlussgrenze.
+	 *
+	 * @param ursache      Woran es liegt; eine abbrechende Ursache führt zum Wurf.
+	 * @param auswirkung   Was daraus in der Ausgabe folgt.
+	 * @param schluessel   Welches Objekt betroffen ist, aus Objektart und ID.
+	 * @param beschreibung Der Sachverhalt für das Log.
+	 * @param fehler       Der auslösende Fehler oder {@code null}. Ein {@link Error} gehört nicht hierher: Ein nicht mehr arbeitsfähiges Laufzeitsystem wird
+	 *                     nicht hingenommen.
+	 *
+	 * @throws ApiOperationException Mit dem Status 500, wenn die Ursache die Ausgabe abbricht.
+	 */
+	public void meldeAusgabeproblem(final ReportingProblemursache ursache, final ReportingProblemauswirkung auswirkung,
+			final ReportingProblemSchluessel schluessel, final String beschreibung, final Exception fehler) {
+		if (ursache.istAbbruch()) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehler,
+					"Die Ausgabe wird abgebrochen: %s [%s]".formatted((beschreibung == null) ? "" : beschreibung, schluessel.beschreibung()));
+		}
+		this.problemSammler.melde(ursache, auswirkung, schluessel, beschreibung, fehler);
+	}
+
+	/**
+	 * Gibt die Anzahl der bislang gemeldeten Ausgabeprobleme zurück. Mehrfach gemeldete Probleme zählen einmal. Die Zahl ist eine interne Angabe über die
+	 * Kombinationen aus Ursache, Auswirkung und Schlüssel; die Zählung im öffentlichen Hinweisvertrag folgt dessen Kategorien.
+	 *
+	 * @return Die Anzahl.
+	 */
+	public int anzahlAusgabeprobleme() {
+		return this.problemSammler.anzahl();
+	}
+
+	/**
+	 * Gibt die bislang gemeldeten Ausgabeprobleme in der Reihenfolge ihres ersten Auftretens zurück. Die Rückgabe ist unveränderlich, denn gemeldet wird
+	 * ausschließlich über {@link #meldeAusgabeproblem}.
+	 *
+	 * @return Die unveränderliche Liste der Probleme.
+	 */
+	public List<ReportingProblem> ausgabeprobleme() {
+		return this.problemSammler.probleme();
 	}
 
 

@@ -139,47 +139,40 @@ public class ReportingRepositoryGostKursplanung {
 	// ##### Blockungsergebnis #####
 
 	/**
-	 * Lädt das GOSt-Blockungsergebnis zur übergebenen ID aus der Datenbank. Schlägt das Laden fehl, wird ein
-	 * Fehler protokolliert und eine {@link ApiOperationException} mit Status {@link Response.Status#NOT_FOUND}
-	 * geworfen.
+	 * Lädt das GOSt-Blockungsergebnis zur übergebenen ID aus der Datenbank. Schlägt das Laden fehl, wird der Status der Datenschicht durchgereicht: Ein
+	 * pauschales {@code NOT_FOUND} machte aus einem Serverfehler die Auskunft, das Ergebnis gebe es nicht.
 	 *
 	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses.
 	 *
 	 * @return Das geladene Blockungsergebnis.
 	 *
-	 * @throws ApiOperationException Falls das Ergebnis nicht ermittelt werden konnte.
+	 * @throws ApiOperationException Mit dem Status der Datenschicht, falls das Ergebnis nicht ermittelt werden konnte.
 	 */
 	private GostBlockungsergebnis ladeBlockungsergebnis(final long idBlockungsergebnis) throws ApiOperationException {
 		try {
 			return DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis);
 		} catch (final ApiOperationException aoe) {
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Zur angegebenen Blockungsergebnis-ID %d konnte kein Blockungsergebnis ermittelt werden."
-							.formatted(idBlockungsergebnis));
-			throw new ApiOperationException(Response.Status.NOT_FOUND, aoe,
+			throw new ApiOperationException(aoe.getStatus(), aoe,
 					"FEHLER: Zur angegebenen Blockungsergebnis-ID %d konnte kein Blockungsergebnis ermittelt werden."
 							.formatted(idBlockungsergebnis));
 		}
 	}
 
 	/**
-	 * Lädt den Blockungsdaten-Manager zur angegebenen Blockungs-ID aus der Datenbank. Schlägt das Laden fehl,
-	 * wird ein Fehler protokolliert und eine {@link ApiOperationException} mit Status
-	 * {@link Response.Status#NOT_FOUND} geworfen.
+	 * Lädt den Blockungsdaten-Manager zur angegebenen Blockungs-ID aus der Datenbank. Schlägt das Laden fehl, wird der Status der Datenschicht durchgereicht;
+	 * die Begründung ist dieselbe wie bei {@link #ladeBlockungsergebnis}.
 	 *
 	 * @param idBlockung Die ID der Blockung.
 	 *
 	 * @return Der Blockungsdaten-Manager zur Blockung.
 	 *
-	 * @throws ApiOperationException Falls die Daten nicht ermittelt werden konnten.
+	 * @throws ApiOperationException Mit dem Status der Datenschicht, falls die Daten nicht ermittelt werden konnten.
 	 */
 	private GostBlockungsdatenManager blockungsdatenManager(final long idBlockung) throws ApiOperationException {
 		try {
 			return DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(), idBlockung);
 		} catch (final ApiOperationException aoe) {
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Zur Blockungs-ID %d konnte kein Blockungsdaten-Manager ermittelt werden.".formatted(idBlockung));
-			throw new ApiOperationException(Response.Status.NOT_FOUND, aoe,
+			throw new ApiOperationException(aoe.getStatus(), aoe,
 					"FEHLER: Zur Blockungs-ID %d konnte kein Blockungsdaten-Manager ermittelt werden.".formatted(idBlockung));
 		}
 	}

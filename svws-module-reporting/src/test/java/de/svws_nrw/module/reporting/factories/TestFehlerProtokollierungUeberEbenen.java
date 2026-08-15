@@ -86,7 +86,7 @@ class TestFehlerProtokollierungUeberEbenen {
 	 * @return Die Exception, die am Ende der Kette ankommt.
 	 */
 	private ApiOperationException fehlerDurchDieKette() {
-		final PdfFactory pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
+		final PdfFactory pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), false, reportingContext);
 		final ReportBuilderPdf pdfBuilder = new ReportBuilderPdf(new ReportBuilderContextPdf()
 				.withHtmlInput("<html><body><p>Testinhalt</p></body></html>")
 				.withDateiname("Bescheinigung_Meier")

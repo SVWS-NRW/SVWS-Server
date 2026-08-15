@@ -185,21 +185,18 @@ public final class ReportingFactory {
 				case ReportingAusgabeformat.HTML -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML als Ausgabeformat für die Report-Generierung gewählt.");
 					final HtmlFactory htmlFactory = erzeugeHtmlFactory();
-					reportResponse = erzeugeResponse(htmlFactory::createHtmlResponse,
-							"### FEHLER: Während der Erzeugung einer HTML-Response zur Report-Generierung ist ein Fehler geloggt worden.");
+					reportResponse = erzeugeResponse(htmlFactory::createHtmlResponse);
 				}
 				case ReportingAusgabeformat.PDF -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "PDF als Ausgabeformat für die Report-Generierung gewählt.");
-					final PdfFactory pdfFactory = new PdfFactory(erzeugeHtmlBuilders(), reportingContext);
-					reportResponse = erzeugeResponse(pdfFactory::createPdfResponse,
-							"### FEHLER: Während der Erzeugung einer PDF-Response zur Report-Generierung ist ein Fehler geloggt worden.");
+					final PdfFactory pdfFactory = erzeugePdfFactory();
+					reportResponse = erzeugeResponse(pdfFactory::createPdfResponse);
 				}
 				case ReportingAusgabeformat.EMAIL -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "EMAIL als Ausgabeformat für die Report-Generierung gewählt.");
-					final PdfFactory pdfFactory = new PdfFactory(erzeugeHtmlBuilders(), reportingContext);
+					final PdfFactory pdfFactory = erzeugePdfFactory();
 					final EmailFactory emailFactory = new EmailFactory(reportingContext);
-					reportResponse = erzeugeResponse(() -> emailFactory.sendEmails(pdfFactory),
-							"### FEHLER: Während des E-Mail-Versands (Response) wurde ein Fehler geloggt.");
+					reportResponse = erzeugeResponse(() -> emailFactory.sendEmails(pdfFactory));
 				}
 				case null, default -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
@@ -207,10 +204,6 @@ public final class ReportingFactory {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 				}
 			}
-			// Prüfe nun, ob während der Report-Generierung ein Fehler aufgetreten ist, der als Error ins Log geschrieben wurde, aber nicht als Fehler
-			// geworfen wurde.
-			pruefeLogAufFehler("### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-			// Wenn kein Fehler vermerkt wurde, kann der Report zurückgegeben werden.
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;
 		} catch (final ApiOperationException aoe) {
@@ -235,53 +228,36 @@ public final class ReportingFactory {
 	}
 
 	/**
-	 * Erzeugt die HTML-Builder, aus denen die PDF- und die E-Mail-Ausgabe ihre Dokumente erstellen.
+	 * Erzeugt die PDF-Factory, aus der die PDF- und die E-Mail-Ausgabe ihre Dokumente erstellen. Die HTML-Factory wird dabei festgehalten, bis beide Angaben
+	 * entnommen sind: die HTML-Builder und die Auskunft, ob die Auswahl bewusst keinen Datensatz enthält. Ohne die zweite wüsste die PDF-Ausgabe nicht, ob eine
+	 * leere Builder-Liste zulässig oder ein Programmierfehler ist.
 	 *
-	 * @return Die Liste der HTML-Builder.
+	 * @return Die einsatzbereite PDF-Factory.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall.
 	 */
-	private List<ReportBuilderHtml> erzeugeHtmlBuilders() throws ApiOperationException {
-		final List<ReportBuilderHtml> htmlBuilders = erzeugeHtmlFactory().createHtmlBuilders();
+	private PdfFactory erzeugePdfFactory() throws ApiOperationException {
+		final HtmlFactory htmlFactory = erzeugeHtmlFactory();
+		final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
 		this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-		return htmlBuilders;
+		return new PdfFactory(htmlBuilders, htmlFactory.bewusstLeer(), reportingContext);
 	}
 
 	/**
-	 * Erzeugt die Response eines Ausgabeformats und prüft anschließend, ob während der Erzeugung ein Fehler ins Log geschrieben wurde.
-	 * Die Response entsteht innerhalb eines try-with-resources, damit sie im Fehlerfall automatisch geschlossen wird (SonarQube-Vorgabe);
-	 * zurückgegeben wird ein Klon, damit die Antwort nicht auf der bereits geschlossenen Ressource sitzt.
+	 * Erzeugt die Response eines Ausgabeformats. Sie entsteht innerhalb eines try-with-resources, damit sie im Fehlerfall automatisch geschlossen wird
+	 * (SonarQube-Vorgabe); zurückgegeben wird ein Klon, damit die Antwort nicht auf der bereits geschlossenen Ressource sitzt.
 	 *
-	 * @param erzeuger      Die Methode des jeweiligen Ausgabeformats, die die Response erzeugt. Sie darf eine
-	 *                      {@link ApiOperationException} werfen; diese ist ungeprüft und wird unverändert weitergereicht.
-	 * @param fehlermeldung Die Meldung, die bei einem im Log vermerkten Fehler protokolliert und geworfen wird.
+	 * @param erzeuger Die Methode des jeweiligen Ausgabeformats, die die Response erzeugt. Sie darf eine {@link ApiOperationException} werfen; diese ist
+	 *                 ungeprüft und wird unverändert weitergereicht.
 	 *
 	 * @return Die geklonte Response des Ausgabeformats.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall oder wenn während der Erzeugung ein Fehler geloggt wurde.
+	 * @throws ApiOperationException Im Fehlerfall der Erzeugung.
 	 */
-	private Response erzeugeResponse(final Supplier<Response> erzeuger, final String fehlermeldung) throws ApiOperationException {
+	private static Response erzeugeResponse(final Supplier<Response> erzeuger) throws ApiOperationException {
 		try (Response autocloseResponse = erzeuger.get()) {
-			pruefeLogAufFehler(fehlermeldung);
 			return Response.fromResponse(autocloseResponse).build();
 		}
-	}
-
-	/**
-	 * Prüft, ob im Log ein Fehler vermerkt ist, und bricht die Report-Generierung in diesem Fall mit dem gesammelten Log als Body ab.
-	 * Damit werden auch Fehler nach außen sichtbar, die zwar geloggt, aber nicht geworfen wurden.
-	 *
-	 * @param fehlermeldung Die Meldung, die vor dem Abbruch protokolliert wird.
-	 *
-	 * @throws ApiOperationException Wenn das Log mindestens einen Eintrag mit {@link LogLevel#ERROR} enthält.
-	 */
-	private void pruefeLogAufFehler(final String fehlermeldung) throws ApiOperationException {
-		if (log.getText(LogLevel.ERROR).isEmpty()) {
-			return;
-		}
-		logger.logLn(LogLevel.ERROR, 0, fehlermeldung);
-		final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 	}
 
 	/**

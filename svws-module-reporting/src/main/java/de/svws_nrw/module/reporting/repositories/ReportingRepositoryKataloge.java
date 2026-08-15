@@ -31,9 +31,11 @@ import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
@@ -350,6 +352,8 @@ public class ReportingRepositoryKataloge {
 	/**
 	 * Gibt die Jahrgangsdaten zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank nachgeladen.
 	 * Schlägt das Nachladen fehl, wird {@code null} zurückgegeben und im Cache als Negativ-Eintrag vermerkt.
+	 * <p>Der Jahrgang ist untergeordnetes Datum einer Klasse oder eines Kurses: Sein Fehlen wird als Ausgabeproblem gemeldet, die Klasse selbst erscheint
+	 * weiterhin. Gemeldet wird über die Fassade und nicht mit einem eigenen {@code ERROR}-Eintrag, der den Negativ-Eintrag dieser Stelle wirkungslos machte.</p>
 	 *
 	 * @param idJahrgang Die ID des Jahrgangs.
 	 *
@@ -368,9 +372,8 @@ public class ReportingRepositoryKataloge {
 			map.put(idJahrgang, jahrgangsDaten);
 			return jahrgangsDaten;
 		} catch (final ApiOperationException e) {
-			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung der Jahrgangsdaten zur ID %d aus der Datenbank im ReportingContext.".formatted(idJahrgang),
-					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingJahrgang.class, idJahrgang),
+					"Die Jahrgangsdaten zur ID %d".formatted(idJahrgang), e);
 			map.put(idJahrgang, null);
 			return null;
 		}
@@ -426,21 +429,16 @@ public class ReportingRepositoryKataloge {
 	}
 
 	/**
-	 * Loggt einen Fehler beim Nachladen von Katalogdaten über {@link ReportingExceptionUtils} und gibt eine
-	 * {@link IllegalStateException} zurück, die vom Aufrufer geworfen werden soll, um den laufenden Report-Aufruf abzubrechen.
+	 * Gibt den Abbruch zurück, den der Aufrufer wirft, wenn ein Katalog nicht geladen werden kann. Ein nicht ladbarer Katalog ist ein Serverproblem und ergibt
+	 * deshalb den Status 500; protokolliert wird hier nicht, damit der eine {@code ERROR}-Eintrag an der Abschlussgrenze entsteht.
 	 *
-	 * <p>Die Exception ist bewusst unchecked, damit die Getter-Signaturen der Katalog-Methoden frei von {@code throws}-Klauseln
-	 * bleiben können. Sie wird vom äußeren {@code try/catch} in {@link de.svws_nrw.module.reporting.factories.ReportingFactory}
-	 * gefangen.</p>
+	 * @param datentyp      Kurze Beschreibung des nicht ladbaren Katalogs für die Meldung.
+	 * @param fehlerursache Die ursprüngliche Exception aus dem DB-Zugriff; sie wird als {@code cause} mitgegeben.
 	 *
-	 * @param datentyp     Kurze Beschreibung des nicht ladbaren Katalogs wird in die Log- und Exception-Meldung übernommen.
-	 * @param fehlerursache Die ursprüngliche Exception aus dem DB-Zugriff; wird sowohl geloggt als auch als {@code cause} mitgegeben.
-	 *
-	 * @return Die zu werfende {@link IllegalStateException} mit aufbereiteter Meldung und Ursache.
+	 * @return Die zu werfende {@link ApiOperationException} mit Status 500, Meldung und Ursache.
 	 */
-	private IllegalStateException fehlerKatalogdatenLaden(final String datentyp, final Exception fehlerursache) {
-		final String meldung = "FEHLER: Katalogdaten vom Typ '%s' konnte nicht aus der Datenbank ermittelt werden.".formatted(datentyp);
-		ReportingExceptionUtils.logException(meldung, fehlerursache, this.reportingContext.logger(), LogLevel.ERROR, 0);
-		return new IllegalStateException(meldung, fehlerursache);
+	private static ApiOperationException fehlerKatalogdatenLaden(final String datentyp, final Exception fehlerursache) {
+		return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlerursache,
+				"FEHLER: Katalogdaten vom Typ '%s' konnte nicht aus der Datenbank ermittelt werden.".formatted(datentyp));
 	}
 }

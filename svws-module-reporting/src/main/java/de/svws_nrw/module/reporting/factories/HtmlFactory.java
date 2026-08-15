@@ -167,7 +167,11 @@ public final class HtmlFactory {
 				if (htmlBuilders.size() == 1) {
 					final String html = firstHtmlBuilder.generate();
 					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-					return Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store").build();
+					// HTML bildet keinen Sonderpfad: Es trägt denselben Hinweis-Header wie PDF und ZIP. Dass der heutige generierte Client die
+					// Response-Metadaten verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
+					return ReportingHinweiseHeader
+							.ergaenze(Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store"), reportingContext, bewusstLeer())
+							.build();
 				} else {
 					// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die
 					// HTML-Ausgabe auf dem fertig kombinierten Parametersatz auf false festlegt - ohne Aufteilung entsteht genau ein Builder.
@@ -299,6 +303,17 @@ public final class HtmlFactory {
 						.withRootPfad(ReportingReportvorlage.getRootPfad())
 						.withLogger(reportingContext.logger());
 		return new ReportBuilderHtml(reportBuilderContext);
+	}
+
+	/**
+	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Die Angabe stammt vom Initializer des Datenaufbaus und reicht damit von der
+	 * Auswahl bis zur Ausgabe. Das vollständige Auswahlergebnis bleibt im Initializer, denn die Ausgabe braucht nur die Antwort auf die Frage, ob sie ohne
+	 * Dokument zulässig ist.
+	 *
+	 * @return true, wenn Datensätze angefordert waren und keiner übrig blieb, sonst false.
+	 */
+	boolean bewusstLeer() {
+		return (htmlContextInitializer != null) && htmlContextInitializer.bewusstLeer();
 	}
 
 	/**

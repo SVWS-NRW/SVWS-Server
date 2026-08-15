@@ -26,16 +26,6 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 	}
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Kurs-IDs.
-	 *
-	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
-	 */
-	public HtmlContextKurse(final ReportingContext reportingContext) {
-		super(reportingContext);
-		erzeugeContext("Kurse", reportingContext.repositoryLerngruppen().kurse(reportingContext.reportingParameter().idsHauptdaten()));
-	}
-
-	/**
 	 * Teile diesen Context mit allen Kursen in eine Liste von Contexts auf, die jeweils einen Kurs enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.

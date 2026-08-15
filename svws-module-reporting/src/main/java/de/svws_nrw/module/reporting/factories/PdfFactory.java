@@ -5,6 +5,8 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -38,26 +40,42 @@ public class PdfFactory {
 	/** Map mit den Dateinamen und HTML-Dateiinhalten, die in PDF-Dateien gewandelt werden sollen. */
 	private final List<ReportBuilderHtml> htmlBuilders;
 
+	/**
+	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Nur dieses Kennzeichen macht eine Ausgabe ohne PDF-Datei gültig; ohne es
+	 * bleibt eine leere Builder-Liste ein Programmierfehler, und ein Ausfall der Dokumenterzeugung ginge als leere Ausgabe durch.
+	 */
+	private final boolean bewusstLeer;
+
 
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen HTML-Inhalten zu erzeugen.
 	 *
 	 * @param htmlBuilders 				Eine Map mit den Dateinamen und HTML-Dateiinhalten.
+	 * @param bewusstLeer				Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Nur dann darf die Liste leer sein.
 	 * @param reportingContext		Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final ReportingContext reportingContext)
+	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final boolean bewusstLeer, final ReportingContext reportingContext)
 			throws ApiOperationException {
 
 		this.reportingContext = reportingContext;
+		this.bewusstLeer = bewusstLeer;
 
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 
-		// Validiere die HTML-Builder
-		if ((htmlBuilders == null) || htmlBuilders.isEmpty()) {
+		// Validiere die HTML-Builder. Ohne Liste liegt immer ein Programmierfehler vor; eine leere Liste ist allein bei einer bewusst leeren Auswahl zulässig.
+		if (htmlBuilders == null) {
 			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+		}
+		if (htmlBuilders.isEmpty() && !bewusstLeer) {
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+		}
+		if (htmlBuilders.isEmpty()) {
+			this.reportingContext.logger().logLn(LogLevel.DEBUG, 4,
+					"Die Auswahl enthält keinen Datensatz. Die Ausgabe entsteht als ZIP-Datei ohne PDF-Dateien.");
 		}
 		this.htmlBuilders = htmlBuilders;
 
@@ -77,31 +95,73 @@ public class PdfFactory {
 		try {
 			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 			final List<ReportBuilderPdf> pdfBuilders = getPdfBuilders();
-			if (!pdfBuilders.isEmpty()) {
-				final ReportBuilderPdf firstPdfBuilder = pdfBuilders.getFirst();
-				if (pdfBuilders.size() == 1) {
-					final byte[] data = firstPdfBuilder.generate();
-					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(firstPdfBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
-					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
-					return Response.ok(data, firstPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename).build();
-				} else {
-					final byte[] data = createZIP(pdfBuilders);
-					final String encodedFilename =
-							"filename*=UTF-8''" + URLEncoder.encode(firstPdfBuilder.getStatischerDateiname() + ".zip", StandardCharsets.UTF_8);
-					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
-					return Response.ok(data, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename).build();
+			// Die Reihenfolge ist verbindlich: Zuerst zählt, wie viele Dokumente entstanden sind, erst danach, ob eine leere Menge zulässig ist. Eine bewusst
+			// leere Auswahl in der Sammelausgabe ergibt einen Builder mit leerem fachlichem Inhalt - dort entsteht ein Dokument und kein leeres Archiv.
+			if (pdfBuilders.isEmpty()) {
+				if (!bewusstLeer) {
+					reportingContext.logger().logLn(LogLevel.ERROR, 0,
+							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
 				}
+				return erzeugeZipResponse(pdfBuilders);
 			}
-			reportingContext.logger().logLn(LogLevel.ERROR, 0,
-					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
+			if (pdfBuilders.size() == 1) {
+				final ReportBuilderPdf einzigerPdfBuilder = pdfBuilders.getFirst();
+				final byte[] data = einzigerPdfBuilder.generate();
+				final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(einzigerPdfBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
+				reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+				return ReportingHinweiseHeader.ergaenze(
+						Response.ok(data, einzigerPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
+						reportingContext, bewusstLeer).build();
+			}
+			return erzeugeZipResponse(pdfBuilders);
 		} catch (final Exception e) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 			throw e;
 		}
 	}
 
+
+	/**
+	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält und deshalb kein Dokument entsteht. Die PDF-Ausgabe antwortet dann mit einem
+	 * Archiv ohne PDF-Dateien; der E-Mail-Versand reiht keinen Job ein, weil ein Job ohne Anhänge erfolgreich aussähe, ohne etwas zu versenden.
+	 *
+	 * @return true, wenn Datensätze angefordert waren und keiner übrig blieb, sonst false.
+	 */
+	protected boolean bewusstLeer() {
+		return this.bewusstLeer;
+	}
+
+	/**
+	 * Erzeugt die Response einer ZIP-Ausgabe aus den übergebenen PDF-Buildern. Die Liste darf leer sein; dann entsteht ein Archiv ohne PDF-Dateien. Der
+	 * Dateiname stammt deshalb aus der Reportvorlage und nicht aus dem ersten Builder: Beide liefern denselben Wert, aber ohne Dokument gibt es keinen ersten
+	 * Builder.
+	 *
+	 * @param pdfBuilders Die PDF-Builder, deren Dokumente in das Archiv gelangen; darf leer sein.
+	 *
+	 * @return Die Response mit der ZIP-Datei.
+	 *
+	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 */
+	private Response erzeugeZipResponse(final List<ReportBuilderPdf> pdfBuilders) throws ApiOperationException {
+		final byte[] data = createZIP(pdfBuilders);
+		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(zipDateiname(), StandardCharsets.UTF_8);
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+		return ReportingHinweiseHeader.ergaenze(
+				Response.ok(data, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename),
+				reportingContext, bewusstLeer).build();
+	}
+
+	/**
+	 * Der Dateiname der ZIP-Ausgabe, abgeleitet aus der Reportvorlage. Die Vorlage liegt hier zwingend vor, weil die {@code HtmlFactory} sie beim Aufbau prüft
+	 * und diese Factory ohne deren HTML-Builder nicht entsteht.
+	 *
+	 * @return Der Dateiname des Archivs mit Endung.
+	 */
+	private String zipDateiname() {
+		return reportingContext.reportingParameter().reportVorlage().getDateiname() + ".zip";
+	}
 
 	/**
 	 * Erzeugt auf Basis der übergebenen HTML-Builder die PDF-Builder zur Erzeugung der PDF-Dateien.
@@ -203,6 +263,7 @@ public class PdfFactory {
 					for (int i = 0; i < pdfBuilders.size(); i++) {
 						addPdfToZip(pdfBuilders.get(i), eintragsnamen.get(i), zos);
 					}
+					ergaenzeHinweisdatei(zos);
 					byteArrayOutputStream.flush();
 				}
 				zipData = byteArrayOutputStream.toByteArray();
@@ -447,6 +508,32 @@ public class PdfFactory {
 			return dateinameMitEndung + "-" + suffix;
 		}
 		return dateinameMitEndung.substring(0, trennstelle) + "-" + suffix + dateinameMitEndung.substring(trennstelle);
+	}
+
+	/**
+	 * Ergänzt das Archiv um die Hinweisdatei, sofern es etwas zu erklären gibt. Sie ist die einzige Stelle, an der die Hinweise den Anwender ohne
+	 * Clientanpassung erreichen; besonders ein Archiv ohne PDF-Datei braucht sie, sonst stünde der Anwender vor einem leeren Download. Anders als der Header
+	 * hängt sie nicht an der Diagnoseabdeckung: Sie erklärt, was bekannt ist, und behauptet keine Vollständigkeit.
+	 *
+	 * @param zos Der {@code ZipOutputStream}, zu dem die Hinweisdatei hinzugefügt wird.
+	 *
+	 * @throws ApiOperationException Falls der Eintrag nicht geschrieben werden kann.
+	 */
+	private void ergaenzeHinweisdatei(final ZipOutputStream zos) throws ApiOperationException {
+		final List<ReportingProblem> probleme = reportingContext.ausgabeprobleme();
+		if (!ReportingHinweisSerializer.brauchtHinweisdatei(probleme, bewusstLeer)) {
+			return;
+		}
+		try {
+			zos.putNextEntry(new ZipEntry(ReportingHinweisSerializer.DATEINAME_HINWEISE));
+			zos.write(ReportingHinweisSerializer.hinweisdatei(probleme, bewusstLeer).getBytes(StandardCharsets.UTF_8));
+			zos.closeEntry();
+		} catch (final Exception e) {
+			reportingContext.logger().logLn(LogLevel.ERROR, 4,
+					"### FEHLER: Die Hinweisdatei der ZIP-Ausgabe konnte nicht geschrieben werden: " + e.getMessage());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"### FEHLER: Die Hinweisdatei der ZIP-Ausgabe konnte nicht geschrieben werden.");
+		}
 	}
 
 	/**

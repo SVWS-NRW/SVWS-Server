@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungFachStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import org.thymeleaf.context.Context;
@@ -37,8 +38,12 @@ public final class HtmlContextStundenplanungFachStundenplan extends HtmlContext<
 	private void erzeugeContext(final ReportingStundenplanungStundenplan stundenplan, final List<Long> idsAusgabe) {
 
 		final List<ReportingStundenplanungFachStundenplan> stundenplaene = new ArrayList<>();
-		stundenplan.schuljahresabschnitt().faecher(idsAusgabe)
-				.forEach(fach -> stundenplaene.add(new ReportingStundenplanungFachStundenplan(fach, stundenplan)));
+		// Ohne aufgelösten Schuljahresabschnitt gibt es keine Fächer zum Stundenplan; die Ausgabe bleibt dann leer, statt mit einer NPE abzubrechen.
+		final ReportingSchuljahresabschnitt schuljahresabschnitt = stundenplan.schuljahresabschnitt();
+		if (schuljahresabschnitt != null) {
+			schuljahresabschnitt.faecher(idsAusgabe)
+					.forEach(fach -> stundenplaene.add(new ReportingStundenplanungFachStundenplan(fach, stundenplan)));
+		}
 
 		setContextDataSortiert(stundenplaene, ReportingStundenplanungFachStundenplan.SORTIERUNG, ReportingStundenplanungFachStundenplan.class);
 

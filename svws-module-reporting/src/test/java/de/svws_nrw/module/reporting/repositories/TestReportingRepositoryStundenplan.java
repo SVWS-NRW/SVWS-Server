@@ -1,13 +1,22 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -16,20 +25,29 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
+import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Prüft, dass ein Ladefehler der Stundenplandefinitionen nur dort zum Fehler wird, wo der Stundenplan das angeforderte Hauptdatum ist.
  * <p>Der {@link ReportingContext} erzeugt das Repository für jeden Report, auch für Ausgaben ohne Stundenplanbezug. Ein Wurf im Konstruktor reißt diese
- * Ausgaben mit; ein Log-Eintrag mit {@link LogLevel#ERROR} tut dasselbe, da die ReportingFactory das gesammelte Log darauf prüft und die Ausgabe auch ohne
- * Wurf abbricht. Der Nachweis über das fehlende ERROR ist deshalb Gegenstand mehrerer Tests.</p>
+ * Ausgaben mit; ein Log-Eintrag mit {@link LogLevel#ERROR} wäre dort ebenso falsch, denn dieses Level ist dem Abbruch vorbehalten. Der Nachweis über das
+ * fehlende ERROR ist deshalb Gegenstand mehrerer Tests.</p>
  * <p>Das Laden der Definitionen erfolgt über den statischen Aufruf {@link DataStundenplanListe#getStundenplaeneAktiv}; er ist die einzige Naht, an der sich
  * ein Ladefehler ohne Datenbank herstellen lässt.</p>
  */
@@ -40,6 +58,9 @@ class TestReportingRepositoryStundenplan {
 
 	/** Die Überschrift des Abschnitts mit dem Stacktrace. Sie markiert einen vollständigen Fehlerblock im Log. */
 	private static final String UEBERSCHRIFT_STACKTRACE = "### STACKTRACE:";
+
+	/** Die ID des Stundenplans, dessen Daten die Tests anfordern. */
+	private static final long ID_STUNDENPLAN = 7L;
 
 	/** Der Logger, in den das Repository protokolliert. */
 	private Logger logger;
@@ -92,6 +113,23 @@ class TestReportingRepositoryStundenplan {
 	}
 
 	/**
+	 * Erzeugt ein Repository, dessen Definitionen genau einen Stundenplan zur übergebenen ID führen. Nur für eine ID mit Definition erreicht der Zugriff
+	 * überhaupt die Datenbank.
+	 *
+	 * @param idStundenplan Die ID des definierten Stundenplans.
+	 *
+	 * @return Das Repository mit dieser einen Definition.
+	 */
+	private ReportingRepositoryStundenplan repositoryMitDefinitionZu(final long idStundenplan) {
+		final StundenplanListeEintrag definition = new StundenplanListeEintrag();
+		definition.id = idStundenplan;
+		definition.gueltigAb = "2026-08-01";
+		definition.gueltigBis = "2027-07-31";
+		dataStundenplanListe.when(() -> DataStundenplanListe.getStundenplaeneAktiv(any(), any())).thenReturn(new ArrayList<>(List.of(definition)));
+		return new ReportingRepositoryStundenplan(reportingContext);
+	}
+
+	/**
 	 * Gibt die Texte der Log-Einträge des übergebenen Levels zurück.
 	 *
 	 * @param level Das Level, dessen Einträge gesucht sind.
@@ -123,7 +161,7 @@ class TestReportingRepositoryStundenplan {
 		final ReportingRepositoryStundenplan repository = repositoryMitLadefehler();
 
 		assertTrue(eintraege(LogLevel.ERROR).isEmpty(),
-				"Beim Initialisieren ist die Bedeutung des Fehlers unbekannt; ein ERROR-Eintrag bräche auch fachfremde Reports ab.");
+				"Beim Initialisieren ist die Bedeutung des Fehlers unbekannt; ein ERROR-Eintrag behauptete einen Abbruch, den es nicht gibt.");
 		assertTrue(eintraege(LogLevel.WARNING).isEmpty(), "Auch eine Warnung ist beim Initialisieren zu früh: Erst der Zugriff kennt die Bedeutung.");
 		assertNull(repository.stundenplan("2026-08-10"), "Der optionale Zugriff liefert nach einem Ladefehler null.");
 		assertTrue(eintraege(LogLevel.ERROR).isEmpty(), "Der optionale Zugriff stellt eine Lücke dar und protokolliert deshalb höchstens WARNING.");
@@ -165,6 +203,113 @@ class TestReportingRepositoryStundenplan {
 		assertEquals(1, eintraege(LogLevel.ERROR).size(),
 				"Das Repository trägt allein die Angabe bei, welcher Zugriff scheitert; den Block aus Typ, Ursachen und Stacktrace gibt die oberste Ebene "
 						+ "aus: " + eintraege(LogLevel.ERROR));
+	}
+
+	@Test
+	void testEinGescheiterterZugriffAufDenStundenplanWirdGemeldet() {
+		// Ohne die Meldung liefert der Zugriff dasselbe null wie für einen Stundenplan, den es nicht gibt - der gescheiterte Zugriff bliebe damit spurlos.
+		final ReportingRepositoryStundenplan repository = repositoryOhneDefinitionen();
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class,
+				(dataMock, ctx) -> when(dataMock.getById(ID_STUNDENPLAN)).thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehlerinjektion")))) {
+			assertNull(repository.manager(ID_STUNDENPLAN), "Der Stundenplan bleibt leer, die übrige Ausgabe entsteht.");
+		}
+
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, ID_STUNDENPLAN)), anyString(), any());
+		assertTrue(eintraege(LogLevel.ERROR).isEmpty(), "Der Zugriff liefert einen Rückfallwert und darf die Ausgabe nicht über das Log beenden.");
+	}
+
+	@Test
+	void testEinNichtVorhandenerStundenplanWirdNichtGemeldet() {
+		// Gegenprobe: Der Datenzugriff meldet einen Stundenplan, den es nicht gibt, mit NOT_FOUND. Der Zugriff hat einwandfrei gearbeitet - das ist eine
+		// fachliche Auskunft und kein Ausgabeproblem.
+		final ReportingRepositoryStundenplan repository = repositoryOhneDefinitionen();
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class, (dataMock, ctx) -> when(
+				dataMock.getById(ID_STUNDENPLAN)).thenThrow(new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan zur ID gefunden.")))) {
+			assertNull(repository.manager(ID_STUNDENPLAN));
+		}
+
+		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
+	}
+
+	@Test
+	void testFehlendeTeildatenEinesVorhandenenStundenplansWerdenGemeldet() {
+		// Den Stundenplan gibt es; erst das Nachladen seiner Teildaten scheitert. Würde der Status NOT_FOUND auch hier als "gibt es nicht" gelesen, verschwände
+		// diese Störung spurlos - deshalb gilt diese Lesart allein für den Zugriff auf den Stundenplan selbst.
+		final ReportingRepositoryStundenplan repository = repositoryOhneDefinitionen();
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class,
+				(dataMock, ctx) -> when(dataMock.getById(ID_STUNDENPLAN)).thenReturn(new Stundenplan()));
+				MockedStatic<DataStundenplanUnterricht> dataStundenplanUnterricht = mockStatic(DataStundenplanUnterricht.class)) {
+			dataStundenplanUnterricht.when(() -> DataStundenplanUnterricht.getUnterrichte(any(), anyLong()))
+					.thenThrow(new ApiOperationException(Status.NOT_FOUND, "Keine Unterrichte zum Stundenplan gefunden."));
+
+			assertNull(repository.manager(ID_STUNDENPLAN));
+		}
+
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, ID_STUNDENPLAN)), anyString(), any());
+	}
+
+	@Test
+	void testEinUnvollstaendigerStundenplanWirdGemeldet() {
+		// Der Datenzugriff liefert null, wenn es den Stundenplan zwar gibt, sein Schuljahresabschnitt aber fehlt. Diese Inkonsistenz ist ein Datenproblem und
+		// darf nicht wie ein nicht vorhandener Stundenplan durchgehen.
+		final ReportingRepositoryStundenplan repository = repositoryOhneDefinitionen();
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class,
+				(dataMock, ctx) -> when(dataMock.getById(ID_STUNDENPLAN)).thenReturn(null))) {
+			assertNull(repository.manager(ID_STUNDENPLAN));
+		}
+
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, ID_STUNDENPLAN)), anyString(), any());
+	}
+
+	@Test
+	void testEinVorhandenerAberNichtLadbarerStundenplanErgibtEinenServerfehler() {
+		// Der strikte Zugriff darf einen vorhandenen Stundenplan, dessen Daten fehlen, nicht wie eine unbekannte ID beantworten: Der Anwender suchte sonst
+		// nach einem Datensatz, den es gibt.
+		final ReportingRepositoryStundenplan repository = repositoryMitDefinitionZu(ID_STUNDENPLAN);
+		final ApiOperationException ursache = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Unterrichtsdaten sind nicht lesbar.");
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class,
+				(dataMock, ctx) -> when(dataMock.getById(ID_STUNDENPLAN)).thenThrow(ursache))) {
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.stundenplan(ID_STUNDENPLAN));
+
+			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+			assertSame(ursache, aoe.getCause(), "Die Ursache gehört in den Abbruch; die Abschlussgrenze protokolliert sie mit Stacktrace.");
+		}
+	}
+
+	@Test
+	void testEinWaehrendDesAufrufsGeloeschterStundenplanErgibtEinenServerfehler() {
+		// Die Definitionsliste dieses Aufrufs führt den Stundenplan, der Einzelzugriff findet ihn nicht mehr - etwa nach einem parallelen Löschen. Für den
+		// strikten Zugriff zählt das Weltbild des Aufrufs: Die Schule führt den Plan, sein Fehlen ist ein Serverproblem und kein "gibt es nicht".
+		final ReportingRepositoryStundenplan repository = repositoryMitDefinitionZu(ID_STUNDENPLAN);
+		final ApiOperationException ursache = new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan zur ID gefunden.");
+
+		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class,
+				(dataMock, ctx) -> when(dataMock.getById(ID_STUNDENPLAN)).thenThrow(ursache))) {
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.stundenplan(ID_STUNDENPLAN));
+
+			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+			assertSame(ursache, aoe.getCause(), "Die Ursache gehört in den Abbruch; die Abschlussgrenze protokolliert sie mit Stacktrace.");
+		}
+		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
+	}
+
+	@Test
+	void testEineIdOhneDefinitionBleibtOhneStundenplan() {
+		// Gegenprobe: Zu dieser ID gibt es keinen aktiven Stundenplan. Der strikte Zugriff liefert null, und der Aufrufer macht daraus sein NOT_FOUND.
+		final ReportingRepositoryStundenplan repository = repositoryMitDefinitionZu(ID_STUNDENPLAN);
+
+		assertNull(assertDoesNotThrow(() -> repository.stundenplan(ID_STUNDENPLAN + 1)));
 	}
 
 	@Test

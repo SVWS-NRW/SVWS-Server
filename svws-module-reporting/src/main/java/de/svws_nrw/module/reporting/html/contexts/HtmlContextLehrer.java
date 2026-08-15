@@ -24,16 +24,6 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	}
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Lehrer-IDs.
-	 *
-	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
-	 */
-	public HtmlContextLehrer(final ReportingContext reportingContext) {
-		super(reportingContext);
-		erzeugeContext("Lehrer", reportingContext.repositoryLehrer().lehrer(reportingContext.reportingParameter().idsHauptdaten()));
-	}
-
-	/**
 	 * Teile diesen Context mit allen Lehrern in eine Liste von Contexts auf, die jeweils einen Lehrer enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.

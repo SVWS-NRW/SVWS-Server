@@ -10,14 +10,12 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.email.DataEmailJobs;
-import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -47,12 +45,15 @@ public class ReportingRepositorySchule {
 	private Boolean istSchuleMitGost = null;
 
 	/**
-	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte.
+	 * Erstellt ein neues ReportingSchuleRepository und initialisiert Schulstammdaten und Schuljahresabschnitte. Der übergebene Schuljahresabschnitt wird hier
+	 * geprüft, weil ein unbekannter erst beim Auflösen als {@code null} auffiele und den Report dann mit einem Serverfehler beendete - obwohl der Aufrufer ihn
+	 * benannt hat.
 	 *
 	 * @param reportingContext           Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
 	 * @param idAuswahlSchuljahresabschnitt Die ID des ausgewählten Schuljahresabschnitts.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall.
+	 * @throws ApiOperationException Mit Status 500, wenn die Schuldaten nicht ermittelt werden können; mit Status 400, wenn der übergebene
+	 *                               Schuljahresabschnitt nicht zu dieser Schule gehört.
 	 */
 	public ReportingRepositorySchule(final ReportingContext reportingContext, final long idAuswahlSchuljahresabschnitt) throws ApiOperationException {
 		this.reportingContext = reportingContext;
@@ -69,14 +70,17 @@ public class ReportingRepositorySchule {
 			}
 
 			this.idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
-			this.idAuswahlSchuljahresabschnitt = idAuswahlSchuljahresabschnitt;
 		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
-					e, this.reportingContext.logger(), LogLevel.ERROR, 8);
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
+			// Protokolliert wird hier nicht, damit der eine ERROR-Eintrag an der Abschlussgrenze entsteht.
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden.");
 		}
+
+		if (!mapSchuljahresabschnitte.containsKey(idAuswahlSchuljahresabschnitt)) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"FEHLER: Der übergebene Schuljahresabschnitt %d gehört nicht zu dieser Schule.".formatted(idAuswahlSchuljahresabschnitt));
+		}
+		this.idAuswahlSchuljahresabschnitt = idAuswahlSchuljahresabschnitt;
 	}
 
 
@@ -216,18 +220,14 @@ public class ReportingRepositorySchule {
 	}
 
 	/**
-	 * Gibt an, ob die Schule eine gymnasiale Oberstufe (GOSt) besitzt.
+	 * Gibt an, ob die Schule eine gymnasiale Oberstufe (GOSt) besitzt. Gefragt wird direkt die Schulform: Die GOSt-Prüfung von {@code DBUtilsGost} meldet auch
+	 * ein Schema ohne Schule mit derselben Ausnahme, und deren Deutung machte aus diesem Serverfehler die fachliche Aussage "keine gymnasiale Oberstufe".
 	 *
 	 * @return true, wenn die Schule über eine gymnasiale Oberstufe verfügt; false, wenn nicht.
 	 */
 	public boolean istSchuleMitGost() {
 		if (istSchuleMitGost == null) {
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(this.reportingContext.conn());
-				istSchuleMitGost = Boolean.TRUE;
-			} catch (final ApiOperationException aoe) {
-				istSchuleMitGost = Boolean.FALSE;
-			}
+			istSchuleMitGost = this.reportingContext.conn().getUser().schuleHatGymOb();
 		}
 		return istSchuleMitGost;
 	}

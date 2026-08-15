@@ -5,19 +5,26 @@ import java.util.Map;
 
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
- * Initializer für alle Datenaufbauten, die einer Liste von Hauptdaten-IDs folgen: IDs prüfen, gegebenenfalls zusätzlich prüfen, Haupt-Context erzeugen.
+ * Initializer für alle Datenaufbauten, die einer Liste von Hauptdaten-IDs folgen: Hauptdaten auswählen, Auswahl prüfen und einschränken, Haupt-Context aus den
+ * ausgewählten Objekten erzeugen.
  * <p>Der Ablauf ist für alle diese Datenaufbauten derselbe; sie unterscheiden sich allein in ihrer {@link HtmlContextAufbauListe}-Konfiguration.</p>
+ * <p>Die Auswahl bleibt nach dem Aufbau abrufbar. Die Ausgabefactory braucht sie, um eine Ausgabe ohne Datensätze von einem Programmierfehler zu
+ * unterscheiden: Ohne diese Angabe wäre beides eine leere Builder-Liste.</p>
  *
- * @param <T> Der Reporting-Typ der geladenen Hauptdaten.
+ * @param <T> Der Reporting-Typ der ausgewählten Hauptdaten.
  */
 final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 
 	/** Die Konfiguration des Datenaufbaus, den dieser Initializer ausführt. */
 	private final HtmlContextAufbauListe<T> aufbau;
+
+	/** Das Ergebnis der Auswahl oder null, solange {@link #init()} nicht gelaufen ist. */
+	private ReportingAuswahlergebnis<T> auswahlergebnis;
 
 
 	/**
@@ -35,7 +42,8 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 
 
 	/**
-	 * Prüft die übergebenen Hauptdaten-IDs, führt die Zusatzprüfungen des Datenaufbaus aus und legt den erzeugten Haupt-Context in der Context-Map ab.
+	 * Wählt die Hauptdaten zu den übergebenen IDs aus, meldet die dabei ausgelassenen, schränkt die Auswahl fachlich ein und legt den daraus erzeugten
+	 * Haupt-Context in der Context-Map ab.
 	 *
 	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
@@ -43,18 +51,21 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 	public void init() throws ApiOperationException {
 		final HtmlContextDatenbezeichnungen bezeichnungen = aufbau.bezeichnungen();
 
-		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
-				"Validiere die Daten für %s für die HTML-Generierung.".formatted(bezeichnungen.nominativ()));
+		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Wähle die Daten für %s für die HTML-Generierung aus.".formatted(bezeichnungen.nominativ()));
 
 		final List<Long> ids = reportingParameter.idsHauptdaten();
-		HtmlContextValidierung.validiereIds(reportingContext.logger(), ids, aufbau.lader().apply(reportingContext, ids), aufbau.idExtractor(),
-				bezeichnungen.idTyp(), "FEHLER: Es wurden ungültige %s übergeben.".formatted(bezeichnungen.idTyp()));
-		aufbau.zusatzpruefung().accept(reportingContext, ids);
+		ReportingAuswahlergebnis<T> auswahl = aufbau.auswahl().apply(reportingContext, ids);
+		HtmlContextValidierung.pruefeUndMeldeAuswahl(reportingContext, auswahl, aufbau.objektart(), bezeichnungen);
+		auswahl = aufbau.einschraenkung().schraenkeEin(reportingContext, auswahl);
+		// Die Einschränkung lässt weitere Datensätze aus; sie werden erst danach gemeldet, damit kein Datensatz zweimal in der Meldung erscheint.
+		HtmlContextValidierung.pruefeUndMeldeAuswahl(reportingContext, auswahl, aufbau.objektart(), bezeichnungen);
+		this.auswahlergebnis = auswahl;
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
-				"Erzeuge Datenkontext %s für die HTML-Generierung - %d IDs von %s wurden übergeben für Template %s."
-						.formatted(bezeichnungen.nominativ(), ids.size(), bezeichnungen.dativ(), reportingReportvorlage.name()));
-		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().apply(reportingContext));
+				"Erzeuge Datenkontext %s für die HTML-Generierung - %d von %d IDs aus %s stehen für Template %s zur Verfügung."
+						.formatted(bezeichnungen.nominativ(), auswahl.objekte().size(), auswahl.idsAngefordert().size(), bezeichnungen.dativ(),
+								reportingReportvorlage.name()));
+		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().apply(reportingContext, auswahl.objekte()));
 	}
 
 
@@ -66,6 +77,17 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 	@Override
 	public String einzelContextBezeichnung() {
 		return aufbau.contextSchluessel();
+	}
+
+
+	/**
+	 * Gibt an, ob die Auswahl dieses Datenaufbaus bewusst keinen Datensatz enthält.
+	 *
+	 * @return true, wenn die Auswahl gelaufen ist und keinen Datensatz enthält, sonst false.
+	 */
+	@Override
+	public boolean bewusstLeer() {
+		return (this.auswahlergebnis != null) && this.auswahlergebnis.bewusstLeer();
 	}
 
 }

@@ -13,10 +13,15 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Domänen-Repository für Lehrkräfte (Stammdaten und Reporting-Objekte).
@@ -61,6 +66,12 @@ public class ReportingRepositoryLehrer {
 	private final ReportingContext reportingContext;
 
 	private final Map<Long, LehrerStammdaten> mapLehrerStammdaten = new HashMap<>();
+
+	/**
+	 * Die Fehler gescheiterter Ladevorgänge je Lehrer-ID. Sie leben so lange wie der Stammdaten-Cache, weil dessen Fehler-Marker jeden weiteren Ladeversuch
+	 * verhindert.
+	 */
+	private final Map<Long, Exception> ladefehlerLehrerStammdaten = new HashMap<>();
 	private final Map<Long, ReportingLehrer> mapLehrer = new HashMap<>();
 
 	/** Markiert, ob die Stammdaten aller Lehrkräfte bereits einmal vollständig aus der Datenbank geladen wurden. */
@@ -115,7 +126,8 @@ public class ReportingRepositoryLehrer {
 	}
 
 	/**
-	 * Gibt eine Liste von ReportingLehrer-Objekten zu den übergebenen IDs zurück, optional sortiert.
+	 * Gibt eine Liste von ReportingLehrer-Objekten zu den übergebenen IDs zurück, optional sortiert. Eine Lehrkraft, deren Laden endgültig scheitert, fehlt
+	 * in der Liste; der Befund wird als Ausgabeproblem gemeldet, weil diese Methode anders als {@link #waehleAus(List)} nur die Objekte herausgibt.
 	 *
 	 * @param idsLehrer     Liste der Lehrer-IDs.
 	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
@@ -123,19 +135,46 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste von ReportingLehrer-Objekten.
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
+		final ReportingAuswahlergebnis<ReportingLehrer> auswahl = waehleAus(idsLehrer, sortiereListe);
+		ReportingRepositoryUtils.meldeFehlgeschlageneAuslassungen(this.reportingContext, auswahl, ReportingLehrer.class, "der Lehrkraft");
+		return auswahl.objekte();
+	}
+
+	/**
+	 * Wählt die Lehrkräfte zu den übergebenen IDs aus und gibt zusätzlich an, welche IDs nicht in die Ausgabe gelangen.
+	 * <p>Die Auswahl ist sortiert und gefiltert wie {@link #lehrer(List)}; anders als dort überlebt hier die Angabe, welche IDs fehlen und warum.
+	 * Ausgelassene und ausgefilterte IDs bleiben getrennt, damit eine ausgefilterte Lehrkraft nicht als Ausgabeproblem gemeldet wird.</p>
+	 *
+	 * @param idsLehrer Liste der Lehrer-IDs.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	public ReportingAuswahlergebnis<ReportingLehrer> waehleAus(final List<Long> idsLehrer) {
+		return waehleAus(idsLehrer, true);
+	}
+
+	/**
+	 * Wählt die Lehrkräfte zu den übergebenen IDs aus, optional sortiert.
+	 *
+	 * @param idsLehrer     Liste der Lehrer-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	private ReportingAuswahlergebnis<ReportingLehrer> waehleAus(final List<Long> idsLehrer, final boolean sortiereListe) {
 		final Comparator<ReportingLehrer> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingLehrer.class.getSimpleName(),
 				ReportingLehrer.SORTIERUNG, sortiereListe);
 		final Predicate<ReportingLehrer> filter = ReportingLehrer.FILTER.bedingung(
 				this.reportingContext.filterService().getFilter(ReportingLehrer.class.getSimpleName()), null);
 
-		return ReportingRepositoryUtils.erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
+		return ReportingRepositoryUtils.waehleAus(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
 						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
-				"Lehrer", this.reportingContext.logger());
+				"Lehrer", this.reportingContext.logger(), ladefehlerLehrerStammdaten);
 	}
 
 	/**
@@ -178,9 +217,9 @@ public class ReportingRepositoryLehrer {
 			}
 			alleLehrerStammdatenGeladen = true;
 		} catch (final Exception e) {
-			final String meldung = "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.";
-			ReportingExceptionUtils.logException(meldung, e, this.reportingContext.logger(), LogLevel.ERROR, 0);
-			throw new IllegalStateException(meldung, e);
+			// Ohne den Vollbestand der Lehrerstammdaten fehlt eine Grundlage des Reports; das ist ein Serverproblem. Protokolliert wird hier nicht, damit der
+			// eine ERROR-Eintrag an der Abschlussgrenze entsteht.
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 		}
 	}
 
@@ -213,7 +252,8 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
 	 */
 	public List<Object[]> leistungsdatenAlsFachlehrerKlassenunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
-		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer,
+				ReportingKlassenunterricht.class, "Die Klassenunterrichte");
 	}
 
 	/**
@@ -226,7 +266,8 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
 	 */
 	public List<Object[]> leistungsdatenAlsZusatzlehrerKlassenunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
-		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KLASSENUNTERRICHT, idSchuljahresabschnitt, idLehrer,
+				ReportingKlassenunterricht.class, "Die Klassenunterrichte");
 	}
 
 	/**
@@ -239,7 +280,8 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
 	 */
 	public List<Object[]> leistungsdatenAlsFachlehrerKursunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
-		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_FACHLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer,
+				ReportingKursunterricht.class, "Die Kursunterrichte");
 	}
 
 	/**
@@ -252,17 +294,30 @@ public class ReportingRepositoryLehrer {
 	 * @return Liste der Leistungsdaten als {@link Object} {@code []} mit {@link DTOSchuelerLeistungsdaten} und Schüler-ID.
 	 */
 	public List<Object[]> leistungsdatenAlsZusatzlehrerKursunterricht(final long idSchuljahresabschnitt, final long idLehrer) {
-		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer);
+		return queryLeistungsdaten(QUERY_LEISTUNGSDATEN_ZUSATZLEHRER_KURSUNTERRICHT, idSchuljahresabschnitt, idLehrer,
+				ReportingKursunterricht.class, "Die Kursunterrichte");
 	}
 
-	private List<Object[]> queryLeistungsdaten(final String query, final long idSchuljahresabschnitt, final long idLehrer) {
+	/**
+	 * Führt die übergebene Abfrage der Leistungsdaten aus und gibt bei einem Fehler die leere Liste zurück. Der Unterricht der Lehrkraft ist untergeordnetes
+	 * Datum: Die Lehrkraft erscheint weiterhin in der Ausgabe, ihr fehlt allein dieser Unterricht. Gemeldet wird über die Fassade und nicht mit einem eigenen
+	 * {@code ERROR}-Eintrag, der den Rückfallwert dieser Stelle wirkungslos machte.
+	 *
+	 * @param query                  Die auszuführende Abfrage.
+	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
+	 * @param idLehrer               Die ID des Lehrers.
+	 * @param objektart              Die Objektart des betroffenen Unterrichts für den Schlüssel eines Ausgabeproblems.
+	 * @param bezeichnung            Die Benennung des betroffenen Unterrichts für den Logeintrag.
+	 *
+	 * @return Die Leistungsdaten oder die leere Liste, falls die Abfrage gescheitert ist.
+	 */
+	private List<Object[]> queryLeistungsdaten(final String query, final long idSchuljahresabschnitt, final long idLehrer, final Class<?> objektart,
+			final String bezeichnung) {
 		try {
 			return this.reportingContext.conn().queryList(query, Object[].class, idSchuljahresabschnitt, idLehrer);
 		} catch (final Exception e) {
-			ReportingExceptionUtils.logException(
-					"FEHLER: Fehler bei der Ermittlung von Leistungsdaten für Lehrer-ID %d im Schuljahresabschnitt %d.".formatted(idLehrer,
-							idSchuljahresabschnitt),
-					e, this.reportingContext.logger(), LogLevel.ERROR, 0);
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(objektart, idLehrer),
+					"%s der Lehrkraft %d im Schuljahresabschnitt %d".formatted(bezeichnung, idLehrer, idSchuljahresabschnitt), e);
 			return new ArrayList<>();
 		}
 	}

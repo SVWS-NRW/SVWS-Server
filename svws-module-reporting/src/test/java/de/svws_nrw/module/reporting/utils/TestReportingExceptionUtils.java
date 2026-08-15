@@ -115,8 +115,7 @@ class TestReportingExceptionUtils {
 
 	@Test
 	void testMitInfoEntstehenNurInfoEintraege() {
-		// Ein Aufrufer, der den Fehler mit einem Rückfallwert auffängt, darf keinen ERROR-Eintrag hinterlassen: Die Prüfung des Logs in der
-		// ReportingFactory bricht die Ausgabe allein wegen des Eintrags ab, auch ohne Wurf.
+		// Ein Aufrufer, der den Fehler mit einem Rückfallwert auffängt, darf keinen ERROR-Eintrag hinterlassen: Dieses Level ist dem Abbruch vorbehalten.
 		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.INFO, 0);
 
 		assertAlleEintraegeAufLevel(LogLevel.INFO);

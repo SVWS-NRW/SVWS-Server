@@ -44,8 +44,7 @@ public final class ReportingExceptionUtils {
 	/**
 	 * Erzeugt Log-Einträge für die Inhalte der übergebenen Exception, inklusive Causes und StackTrace.
 	 * <p>Das übergebene Log-Level gilt für den gesamten Block. Ein Aufrufer, der einen Fehler abfängt und mit einem Rückfallwert weiterarbeitet, protokolliert
-	 * damit unterhalb von {@link LogLevel#ERROR} und bricht den Report nicht ab: Die Prüfung des Logs in der ReportingFactory beendet die Ausgabe, sobald ein
-	 * Eintrag mit {@code ERROR} vorliegt.</p>
+	 * damit unterhalb von {@link LogLevel#ERROR}: Dieses Level ist dem Abbruch vorbehalten, und ein erfolgreicher Report hinterlässt keinen solchen Eintrag.</p>
 	 * <p>Der Einzug des Loggers ist nach dem Aufruf derselbe wie davor. Andernfalls summierte sich der Einzug aller Aufrufe über die weiteren Log-Einträge des
 	 * Reports auf.</p>
 	 *

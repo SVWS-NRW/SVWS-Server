@@ -1,109 +1,62 @@
 package de.svws_nrw.module.reporting.html.contexts.initializer;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
+import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Hilfsklasse mit den Prüfungen der Eingabeparameter für den Aufbau der Daten-Contexts.
  * <p>Die Methoden sind statisch. Alle Prüfungen, die Daten nachladen, nehmen den {@link ReportingContext} als Parameter. Nur so lassen sie sich sowohl aus
- * den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwenden.</p>
- * <p>Die Parameter der übrigen Methoden zeigen bewusst an, dass diese <b>nichts nachladen</b>: Die ID-Prüfungen erhalten allein den {@link Logger}, den sie
- * für ihre Fehlermeldungen benötigen, und die reinen Wertprüfungen für Abiturjahr und Halbjahr kommen ganz ohne Infrastruktur aus. Beide Gruppen sind
- * dadurch ohne Context testbar.</p>
- * <p>Die Prüfungen werfen im Fehlerfall eine {@link ApiOperationException} und behalten dabei ihr bisheriges Logging-Verhalten: Die ID-Prüfungen und die
- * Prüfung auf gymnasiale Oberstufe protokollieren zuvor, die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne eigenen Log-Eintrag.</p>
+ * den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwenden. Die reinen Wertprüfungen für
+ * Abiturjahr und Halbjahr kommen ganz ohne Infrastruktur aus und sind dadurch ohne Context testbar.</p>
+ * <p>Nicht jeder Befund beendet die Ausgabe: Ein einzelner Datensatz, der sich nicht auflösen lässt oder fachlich nicht dazugehört, wird ausgelassen.
+ * Geworfen wird allein bei einer verletzten Voraussetzung des gesamten Reports - eine im Request leere ID-Liste, ein unzulässiger Parameterwert, eine Schule
+ * ohne gymnasiale Oberstufe. Die werfenden Prüfungen behalten ihr Logging-Verhalten: Die Prüfung der leeren ID-Liste und die Prüfung auf gymnasiale
+ * Oberstufe protokollieren zuvor, die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne eigenen Log-Eintrag.</p>
  */
 final class HtmlContextValidierung {
 
-	/** Die Bezeichnung des ID-Typs in den Fehlermeldungen der Schüler-Prüfungen. */
-	private static final String SCHUELER_IDS = "Schüler-IDs";
+	/** Die Meldung für eine im Request leere ID-Liste; der Platzhalter nimmt den ID-Typ des jeweiligen Datenaufbaus auf. */
+	private static final String FEHLER_KEINE_IDS = "FEHLER: Es wurden keine %s übergeben.";
 
 	private HtmlContextValidierung() {
 		throw new IllegalStateException("Hilfsklasse - Initialisierung nicht möglich.");
 	}
 
 	/**
-	 * Bereinigt die übergebene Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
-	 * und zu jeder enthaltenen ID ein passendes Objekt in {@code geladeneObjekte} existiert.
-	 * Die IDs der geladenen Objekte werden mittels des übergebenen {@code idExtractor} bestimmt.
-	 * Im Fehlerfall wird die zugehörige Meldung geloggt und eine {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
+	 * Prüft, dass die Anfrage überhaupt Hauptdaten benennt, und meldet je ausgelassener ID ein Ausgabeproblem mit der Ursache aus ihrem Ladezustand. Eine ID,
+	 * die sich nicht auflösen lässt, beendet den Report nicht mehr; geworfen wird allein bei einer im Request leeren Liste, denn dort hat der Aufrufer nichts
+	 * angefordert. Die vom Benutzerfilter ausgeschlossenen IDs bleiben ungemeldet: Sie fehlen, weil der Anwender es so wollte.
 	 *
-	 * @param <T>                         Typ der geladenen Objekte.
-	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
-	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
-	 * @param geladeneObjekte             Die zu den IDs geladenen Objekte.
-	 * @param idExtractor                 Funktion zur Bestimmung der ID eines geladenen Objekts.
-	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
-	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls eine bereinigte ID nicht in {@code geladeneObjekte} enthalten ist.
+	 * @param <T>              Typ der ausgewählten Objekte.
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param auswahl          Das Ergebnis der Auswahl.
+	 * @param objektart        Die Objektart für den Schlüssel des Ausgabeproblems.
+	 * @param bezeichnungen    Die Beschriftungen des Datenaufbaus für Meldungen.
 	 *
-	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
+	 * @throws ApiOperationException Falls die Anfrage keine Hauptdaten benennt.
 	 */
-	static <T> void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Collection<T> geladeneObjekte,
-			final ToLongFunction<T> idExtractor, final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
-		final Set<Long> idsVorhanden = geladeneObjekte.stream().mapToLong(idExtractor).boxed().collect(Collectors.toSet());
-		validiereIds(logger, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
-	}
-
-	/**
-	 * Wie {@link #validiereIds(Logger, List, Collection, ToLongFunction, String, String)}, jedoch für Map-basierte Lade-Ergebnisse: eine ID gilt als
-	 * vorhanden, wenn der zugehörige Map-Eintrag einen Wert ungleich {@code null} besitzt.
-	 *
-	 * @param <V>                         Typ der Map-Werte.
-	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
-	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
-	 * @param geladeneObjekte             Map mit ID als Schlüssel und dem geladenen Objekt als Wert (Wert {@code null} bedeutet "nicht vorhanden").
-	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
-	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls für eine bereinigte ID kein Eintrag mit Wert ungleich {@code null} existiert.
-	 *
-	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
-	 */
-	static <V> void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Map<Long, V> geladeneObjekte,
-			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
-		final Set<Long> idsVorhanden = geladeneObjekte.entrySet().stream()
-				.filter(e -> e.getValue() != null).map(Map.Entry::getKey).collect(Collectors.toSet());
-		validiereIds(logger, idsUebergeben, idsVorhanden, fehlermeldungIdTyp, fehlermeldungUnvollstaendig);
-	}
-
-	/**
-	 * Bereinigt die übergebene Roh-Liste von IDs (null-Einträge und Duplikate entfernen) und prüft anschließend, dass die bereinigte Liste nicht leer ist
-	 * und jede enthaltene ID in {@code idsVorhanden} existiert. Im Fehlerfall wird die zugehörige Meldung geloggt und eine
-	 * {@link ApiOperationException} mit Status {@link Status#BAD_REQUEST} geworfen.
-	 *
-	 * @param logger                      Logger, über den die Fehlermeldung protokolliert wird.
-	 * @param idsUebergeben               Liste der übergebenen IDs (kann null-Einträge und Duplikate enthalten).
-	 * @param idsVorhanden                Menge der tatsächlich vorhandenen IDs.
-	 * @param fehlermeldungIdTyp          Fehlermeldung, falls die bereinigte ID-Liste leer ist.
-	 * @param fehlermeldungUnvollstaendig Fehlermeldung, falls eine bereinigte ID nicht in {@code idsVorhanden} enthalten ist.
-	 *
-	 * @throws ApiOperationException Falls die bereinigte Liste leer oder unvollständig ist.
-	 */
-	private static void validiereIds(final Logger logger, final List<Long> idsUebergeben, final Set<Long> idsVorhanden,
-			final String fehlermeldungIdTyp, final String fehlermeldungUnvollstaendig) throws ApiOperationException {
-		final List<Long> idsBereinigt = idsUebergeben.stream().filter(Objects::nonNull).distinct().toList();
-		if (idsBereinigt.isEmpty()) {
-			logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
-			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurden keine %s übergeben.".formatted(fehlermeldungIdTyp));
+	static <T> void pruefeUndMeldeAuswahl(final ReportingContext reportingContext, final ReportingAuswahlergebnis<T> auswahl, final Class<?> objektart,
+			final HtmlContextDatenbezeichnungen bezeichnungen) throws ApiOperationException {
+		if (auswahl.idsAngefordert().isEmpty()) {
+			final String fehlermeldung = FEHLER_KEINE_IDS.formatted(bezeichnungen.idTyp());
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, fehlermeldung);
 		}
-		for (final Long id : idsBereinigt) {
-			if (!idsVorhanden.contains(id)) {
-				logger.logLn(LogLevel.ERROR, 4, fehlermeldungUnvollstaendig);
-				throw new ApiOperationException(Status.BAD_REQUEST, fehlermeldungUnvollstaendig);
-			}
+
+		for (final Map.Entry<Long, ReportingLadezustand<T>> ausgelassen : auswahl.ausgelassen().entrySet()) {
+			reportingContext.meldeAusgabeproblem(ausgelassen.getValue().ursache(), ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN,
+					ReportingProblemSchluessel.fuer(objektart, ausgelassen.getKey()),
+					"Der Datensatz aus %s wird in der Ausgabe ausgelassen.".formatted(bezeichnungen.dativ()), ausgelassen.getValue().fehler());
 		}
 	}
 
@@ -122,76 +75,44 @@ final class HtmlContextValidierung {
 	}
 
 	/**
-	 * Prüft die übergebenen Klassen-IDs eines Klassen-Stundenplans.
+	 * Schränkt die Auswahl der GOSt-Laufbahnplanung auf die Schüler ein, zu denen Beratungsdaten und darin Abiturdaten vorliegen.
+	 * <p>Eine Schule ohne gymnasiale Oberstufe bleibt ein Wurf, denn das ist eine verletzte Voraussetzung des gesamten Reports. Ein einzelner Schüler ohne die
+	 * geforderten Daten wird dagegen ausgelassen.</p>
 	 *
+	 * @param <T>              Typ der ausgewählten Objekte.
 	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param ids              Die übergebenen Klassen-IDs.
+	 * @param auswahl          Die bisherige Auswahl.
 	 *
-	 * @throws ApiOperationException Falls die Liste leer ist oder eine ID nicht vorhanden ist.
+	 * @return Die eingeschränkte Auswahl.
+	 *
+	 * @throws ApiOperationException Falls die Schule keine gymnasiale Oberstufe besitzt.
 	 */
-	static void pruefungenStundenplanKlassen(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
-		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryLerngruppen().klassen(ids, false), ReportingKlasse::id,
-				"Klassen-IDs", "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
-	}
-
-	/**
-	 * Prüft die übergebenen Lehrer-IDs eines Lehrer-Stundenplans.
-	 *
-	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param ids              Die übergebenen Lehrer-IDs.
-	 *
-	 * @throws ApiOperationException Falls die Liste leer ist oder eine ID nicht vorhanden ist.
-	 */
-	static void pruefungenStundenplanLehrer(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
-		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryLehrer().lehrer(ids, false), ReportingLehrer::id,
-				"Lehrer-IDs", "FEHLER: Es wurden ungültige Lehrer-IDs übergeben.");
-	}
-
-	/**
-	 * Prüft die übergebenen Schüler-IDs eines Schüler-Stundenplans.
-	 *
-	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param ids              Die übergebenen Schüler-IDs.
-	 *
-	 * @throws ApiOperationException Falls die Liste leer ist oder eine ID nicht vorhanden ist.
-	 */
-	static void pruefungenStundenplanSchueler(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
-		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositorySchueler().schueler(ids, false), ReportingSchueler::id,
-				SCHUELER_IDS, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
-	}
-
-	/**
-	 * Prüft die Schülerdaten der GOSt-Laufbahnplanung: Die Schule besitzt eine gymnasiale Oberstufe, zu allen übergebenen Schülern liegen Beratungsdaten
-	 * vor und zu allen Beratungsdaten gehören Abiturdaten der Laufbahnplanung.
-	 *
-	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param ids              Die übergebenen Schüler-IDs.
-	 *
-	 * @throws ApiOperationException Falls die Schule keine gymnasiale Oberstufe besitzt oder zu einer ID die geforderten Daten fehlen.
-	 */
-	static void pruefungenGostLaufbahnplanung(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
+	static <T> ReportingAuswahlergebnis<T> pruefungenGostLaufbahnplanung(final ReportingContext reportingContext,
+			final ReportingAuswahlergebnis<T> auswahl) throws ApiOperationException {
 		validiereSchuleMitGost(reportingContext);
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().beratungsdaten(ids),
-				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().beratungsdatenAbiturdaten(ids),
-				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+		// Schrittweise: Die zweite Prüfung fragt nur noch die Schüler ab, die die erste übrig gelassen hat. Ein Schüler, der nicht zur GOSt gehört, würde
+		// sonst erneut geladen und könnte einen zweiten, irreführenden Befund erzeugen.
+		final ReportingAuswahlergebnis<T> mitBeratungsdaten =
+				auswahl.nurMitGeladenen(reportingContext.repositoryGost().zustaendeBeratungsdaten(auswahl.idsAusgewaehlt()));
+		return mitBeratungsdaten
+				.nurMitGeladenen(reportingContext.repositoryGost().zustaendeBeratungsdatenAbiturdaten(mitBeratungsdaten.idsAusgewaehlt()));
 	}
 
 	/**
-	 * Prüft die Schülerdaten des GOSt-Abiturs: Die Schule besitzt eine gymnasiale Oberstufe und zu allen übergebenen Schülern liegen Abiturdaten vor.
+	 * Schränkt die Auswahl des GOSt-Abiturs auf die Schüler ein, zu denen Abiturdaten vorliegen.
 	 *
+	 * @param <T>              Typ der ausgewählten Objekte.
 	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param ids              Die übergebenen Schüler-IDs.
+	 * @param auswahl          Die bisherige Auswahl.
 	 *
-	 * @throws ApiOperationException Falls die Schule keine gymnasiale Oberstufe besitzt oder zu einer ID die Abiturdaten fehlen.
+	 * @return Die eingeschränkte Auswahl.
+	 *
+	 * @throws ApiOperationException Falls die Schule keine gymnasiale Oberstufe besitzt.
 	 */
-	static void pruefungenGostAbitur(final ReportingContext reportingContext, final List<Long> ids) throws ApiOperationException {
+	static <T> ReportingAuswahlergebnis<T> pruefungenGostAbitur(final ReportingContext reportingContext, final ReportingAuswahlergebnis<T> auswahl)
+			throws ApiOperationException {
 		validiereSchuleMitGost(reportingContext);
-		validiereIds(reportingContext.logger(), ids, reportingContext.repositoryGost().schuelerAbiturdaten(ids),
-				SCHUELER_IDS, "FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+		return auswahl.nurMitGeladenen(reportingContext.repositoryGost().zustaendeSchuelerAbiturdaten(auswahl.idsAusgewaehlt()));
 	}
 
 	/**

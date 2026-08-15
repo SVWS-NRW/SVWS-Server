@@ -22,6 +22,8 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
@@ -43,6 +45,16 @@ public class ReportingRepositoryGost {
 	private final Map<Integer, List<GostStatistikFachwahl>> mapFachwahlen = new HashMap<>();
 	private final Map<Long, GostSchuelerGKLWahl> mapGklWahlen = new HashMap<>();
 	private final Map<Long, GostKlausurvorgabe> mapKlausurvorgaben = new HashMap<>();
+
+	/**
+	 * Die Fehler gescheiterter Ladevorgänge je Cache und Schüler-ID. Sie leben so lange wie die Caches selbst, weil deren Fehler-Marker jeden weiteren
+	 * Ladeversuch verhindert; ohne sie wüsste der Zustand nur noch, dass das Laden scheiterte, nicht mehr woran.
+	 */
+	private final Map<Long, Exception> ladefehlerBeratungsdaten = new HashMap<>();
+	private final Map<Long, Exception> ladefehlerBeratungsdatenAbiturdaten = new HashMap<>();
+	private final Map<Long, Exception> ladefehlerSchuelerAbiturdaten = new HashMap<>();
+	private final Map<Long, Exception> ladefehlerGklWahlen = new HashMap<>();
+	private final Map<Long, Exception> ladefehlerKlausurvorgaben = new HashMap<>();
 
 	/** Zwischenspeicher für die Liste der vorhandenen Abiturjahrgänge. */
 	private List<Integer> abiturjahrgaenge = null;
@@ -137,14 +149,37 @@ public class ReportingRepositoryGost {
 	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen Beratungsdaten als Wert.
 	 */
 	public Map<Long, GostLaufbahnplanungBeratungsdaten> beratungsdaten(final List<Long> idsSchueler) {
+		ladeBeratungsdaten(idsSchueler);
+		return filtereMap(idsSchueler, mapBeratungsdaten);
+	}
+
+	/**
+	 * Liefert den Ladezustand der GOSt-Laufbahnberatungsdaten je übergebener Schüler-ID.
+	 * <p>Anders als {@link #beratungsdaten(List)} unterscheidet der Zustand, warum keine Daten vorliegen: Ein Schüler ohne Beratungsdaten gehört nicht zur
+	 * gymnasialen Oberstufe, ein gescheiterter Zugriff ist eine Störung. Die gefilterte Map verwirft beide Fälle gleichermaßen.</p>
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren Beratungsdaten geprüft werden sollen.
+	 *
+	 * @return Der Ladezustand je Schüler-ID.
+	 */
+	public Map<Long, ReportingLadezustand<GostLaufbahnplanungBeratungsdaten>> zustaendeBeratungsdaten(final List<Long> idsSchueler) {
+		ladeBeratungsdaten(idsSchueler);
+		return ReportingRepositoryUtils.zustaendeAus(idsSchueler, mapBeratungsdaten, ladefehlerBeratungsdaten);
+	}
+
+	/**
+	 * Lädt die fehlenden GOSt-Laufbahnberatungsdaten in den Cache.
+	 *
+	 * @param idsSchueler Die IDs der Schüler.
+	 */
+	private void ladeBeratungsdaten(final List<Long> idsSchueler) {
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
 				idsSchueler,
 				mapBeratungsdaten,
 				ids -> new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingContext.conn()).getMapFromIDs(ids),
 				"GOSt-Beratungsdaten",
-				this.reportingContext.logger());
-
-		return filtereMap(idsSchueler, mapBeratungsdaten);
+				this.reportingContext.logger(),
+				ladefehlerBeratungsdaten);
 	}
 
 	/**
@@ -171,15 +206,38 @@ public class ReportingRepositoryGost {
 	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen Abiturdaten als Wert.
 	 */
 	public Map<Long, Abiturdaten> beratungsdatenAbiturdaten(final List<Long> idsSchueler) {
+		ladeBeratungsdatenAbiturdaten(idsSchueler);
+		return filtereMap(idsSchueler, mapBeratungsdatenAbiturdaten);
+	}
+
+	/**
+	 * Liefert den Ladezustand der Beratungs-Abiturdaten je übergebener Schüler-ID.
+	 * <p>Anders als {@link #beratungsdatenAbiturdaten(List)} unterscheidet der Zustand, warum keine Daten vorliegen: eine fachlich nicht angelegte Laufbahn
+	 * oder ein gescheiterter Zugriff.</p>
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren Beratungs-Abiturdaten geprüft werden sollen.
+	 *
+	 * @return Der Ladezustand je Schüler-ID.
+	 */
+	public Map<Long, ReportingLadezustand<Abiturdaten>> zustaendeBeratungsdatenAbiturdaten(final List<Long> idsSchueler) {
+		ladeBeratungsdatenAbiturdaten(idsSchueler);
+		return ReportingRepositoryUtils.zustaendeAus(idsSchueler, mapBeratungsdatenAbiturdaten, ladefehlerBeratungsdatenAbiturdaten);
+	}
+
+	/**
+	 * Lädt die fehlenden Beratungs-Abiturdaten in den Cache.
+	 *
+	 * @param idsSchueler Die IDs der Schüler.
+	 */
+	private void ladeBeratungsdatenAbiturdaten(final List<Long> idsSchueler) {
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
 				idsSchueler,
 				mapBeratungsdatenAbiturdaten,
 				ids -> GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService().getList(ids)
 						.stream().collect(Collectors.toMap(a -> a.schuelerID, a -> a)),
 				"GOSt-Beratungsdaten-Abiturdaten",
-				this.reportingContext.logger());
-
-		return filtereMap(idsSchueler, mapBeratungsdatenAbiturdaten);
+				this.reportingContext.logger(),
+				ladefehlerBeratungsdatenAbiturdaten);
 	}
 
 	// ##### Abiturdaten der Schüler #####
@@ -209,14 +267,37 @@ public class ReportingRepositoryGost {
 	 * @return Map mit Schüler-ID als Schlüssel und den zugehörigen Abiturdaten als Wert.
 	 */
 	public Map<Long, Abiturdaten> schuelerAbiturdaten(final List<Long> idsSchueler) {
+		ladeSchuelerAbiturdaten(idsSchueler);
+		return filtereMap(idsSchueler, mapSchuelerAbiturdaten);
+	}
+
+	/**
+	 * Liefert den Ladezustand der GOSt-Abiturdaten je übergebener Schüler-ID.
+	 * <p>Anders als {@link #schuelerAbiturdaten(List)} unterscheidet der Zustand, warum keine Daten vorliegen: eine fachlich nicht vorhandene Abiturakte oder
+	 * ein gescheiterter Zugriff.</p>
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren Abiturdaten geprüft werden sollen.
+	 *
+	 * @return Der Ladezustand je Schüler-ID.
+	 */
+	public Map<Long, ReportingLadezustand<Abiturdaten>> zustaendeSchuelerAbiturdaten(final List<Long> idsSchueler) {
+		ladeSchuelerAbiturdaten(idsSchueler);
+		return ReportingRepositoryUtils.zustaendeAus(idsSchueler, mapSchuelerAbiturdaten, ladefehlerSchuelerAbiturdaten);
+	}
+
+	/**
+	 * Lädt die fehlenden GOSt-Abiturdaten in den Cache.
+	 *
+	 * @param idsSchueler Die IDs der Schüler.
+	 */
+	private void ladeSchuelerAbiturdaten(final List<Long> idsSchueler) {
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
 				idsSchueler,
 				mapSchuelerAbiturdaten,
 				ids -> new DataGostAbiturdaten(this.reportingContext.conn(), null).getMapAbiturdatenFromIDs(ids),
 				"GOSt-Abiturdaten",
-				this.reportingContext.logger());
-
-		return filtereMap(idsSchueler, mapSchuelerAbiturdaten);
+				this.reportingContext.logger(),
+				ladefehlerSchuelerAbiturdaten);
 	}
 
 
@@ -253,7 +334,7 @@ public class ReportingRepositoryGost {
 	 * @param idSchueler Die ID des Schülers.
 	 *
 	 * @return Die GKL-Wahlen des Schülers. Enthält ausschließlich {@code null}-Werte, falls für den Schüler keine Wahlen
-	 *         hinterlegt sind oder das Laden fehlgeschlagen ist.
+	 *         hinterlegt sind oder das Laden fehlgeschlagen ist; der Fehlschlag wird zusätzlich als Ausgabeproblem gemeldet.
 	 */
 	public GostSchuelerGKLWahl gklWahl(final long idSchueler) {
 		final List<Long> ids = new ArrayList<>(this.reportingContext.repositorySchueler().idsGeladenerSchueler());
@@ -263,7 +344,13 @@ public class ReportingRepositoryGost {
 				mapGklWahlen,
 				this::ladeGklWahlen,
 				"GOSt-GKL-Wahlen",
-				this.reportingContext.logger());
+				this.reportingContext.logger(),
+				ladefehlerGklWahlen);
+		if (ladefehlerGklWahlen.containsKey(idSchueler)) {
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
+					ReportingProblemSchluessel.fuer(GostSchuelerGKLWahl.class, idSchueler),
+					"Die GKL-Wahlen des Schülers %d".formatted(idSchueler), ladefehlerGklWahlen.get(idSchueler));
+		}
 		final GostSchuelerGKLWahl wahl = mapGklWahlen.get(idSchueler);
 		return (wahl != null) ? wahl : new GostSchuelerGKLWahl();
 	}
@@ -305,7 +392,8 @@ public class ReportingRepositoryGost {
 	 * @param idsKlausurvorgaben Die IDs der Klausurvorgaben.
 	 *
 	 * @return Map mit der ID der Klausurvorgabe als Schlüssel und der zugehörigen Klausurvorgabe als Wert. IDs, zu denen
-	 *         keine Klausurvorgabe gefunden werden konnte, fehlen in der Map.
+	 *         keine Klausurvorgabe gefunden werden konnte, fehlen in der Map; ein gescheiterter Zugriff wird zusätzlich
+	 *         als Ausgabeproblem gemeldet.
 	 */
 	public Map<Long, GostKlausurvorgabe> klausurvorgaben(final List<Long> idsKlausurvorgaben) {
 		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
@@ -314,7 +402,17 @@ public class ReportingRepositoryGost {
 				ids -> gostKlausurenVorgabeService().getListByIds(ids).stream()
 						.collect(Collectors.toMap(vorgabe -> vorgabe.id, vorgabe -> vorgabe)),
 				"GOSt-Klausurvorgaben",
-				this.reportingContext.logger());
+				this.reportingContext.logger(),
+				ladefehlerKlausurvorgaben);
+		if (idsKlausurvorgaben != null) {
+			for (final Long id : idsKlausurvorgaben) {
+				if ((id != null) && ladefehlerKlausurvorgaben.containsKey(id)) {
+					ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
+							ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class, id),
+							"Die GOSt-Klausurvorgabe %d".formatted(id), ladefehlerKlausurvorgaben.get(id));
+				}
+			}
+		}
 		return filtereMap(idsKlausurvorgaben, mapKlausurvorgaben);
 	}
 

@@ -57,6 +57,9 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 			// Setze den Wochentag, wenn es passt.
 			super.wochentag = Wochentag.fromIDorException(pausenzeit.wochentag);
 		} catch (final Exception e) {
+			// Beide Prüfungen arbeiten allein auf den bereits geladenen Daten; ein Datenzugriff findet hier nicht statt. Passen Pausenzeit und Stundenplan
+			// nicht zusammen oder ist der Wochentag unbekannt, sind Klassen und Aufsichten dieser Pausenzeit nicht bestimmbar: Der Konstruktor bricht ab und
+			// die Pausenzeit erscheint ohne diese Angaben statt mit falschen.
 			this.stundenplanManager = null;
 			return;
 		}

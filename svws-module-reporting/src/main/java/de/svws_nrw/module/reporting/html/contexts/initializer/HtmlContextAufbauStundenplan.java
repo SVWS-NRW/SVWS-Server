@@ -1,27 +1,29 @@
 package de.svws_nrw.module.reporting.html.contexts.initializer;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 
 /**
- * Die Konfiguration eines Datenaufbaus der Stundenplanung: Stundenplan laden, die Hauptdaten-IDs je nach Sichtweise prüfen, Context erzeugen.
- * <p>Das Laden des Stundenplans samt Fehlerbehandlung steht einmal im Initializer; die fünf Sichtweisen unterscheiden sich allein in ihrer Prüfung und im
- * erzeugten Context.</p>
+ * Die Konfiguration eines Datenaufbaus der Stundenplanung: Stundenplan laden, die Hauptdaten der Sichtweise auswählen, Context erzeugen.
+ * <p>Das Laden des Stundenplans samt Fehlerbehandlung steht einmal im Initializer; die fünf Sichtweisen unterscheiden sich allein in ihrer Auswahl und im
+ * erzeugten Context. Eine ID, die die Auswahl nicht auflösen kann, wird ausgelassen und gemeldet - sie bricht den Report nicht mehr ab.</p>
  *
  * @param <T>               Der Reporting-Typ der Context-Daten dieser Sichtweise.
+ * @param <H>               Der Reporting-Typ der ausgewählten Hauptdaten dieser Sichtweise.
+ * @param bezeichnungen     Die Beschriftungen für Log-Ausgaben und Fehlermeldungen.
  * @param contextSchluessel Der Schlüssel des Haupt-Contexts in der Context-Map (siehe {@link HtmlContextSchluessel}).
- * @param contextErzeuger   Erzeugt den Haupt-Context aus Stundenplan und Hauptdaten-IDs.
- * @param pruefung          Die Prüfung der Hauptdaten-IDs dieser Sichtweise. Wo die Sichtweise keine Prüfung kennt, ist das eine leere Aktion, nie
- *                          {@code null}.
+ * @param objektart         Die Objektart der Hauptdaten für den Schlüssel eines Ausgabeproblems.
+ * @param auswahl           Wählt die Hauptdaten zu den übergebenen IDs aus, ohne bei fehlenden IDs abzubrechen.
+ * @param contextErzeuger   Erzeugt den Haupt-Context aus Stundenplan und den ausgewählten Hauptdaten-IDs.
  */
-record HtmlContextAufbauStundenplan<T>(
+record HtmlContextAufbauStundenplan<T, H>(
+		HtmlContextDatenbezeichnungen bezeichnungen,
 		String contextSchluessel,
-		HtmlContextStundenplanErzeuger<T> contextErzeuger,
-		BiConsumer<ReportingContext, List<Long>> pruefung) implements HtmlContextAufbau {
+		Class<H> objektart,
+		HtmlContextStundenplanAuswahl<H> auswahl,
+		HtmlContextStundenplanErzeuger<T> contextErzeuger) implements HtmlContextAufbau {
 
 	/**
 	 * Alle Sichtweisen der Stundenplanung unterstützen die Einzelausgabe; ihre Contexts sind aufteilbar.

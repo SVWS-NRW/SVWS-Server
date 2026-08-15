@@ -10,9 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,15 +24,13 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
+import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGost;
-import de.svws_nrw.module.reporting.repositories.ReportingRepositoryLehrer;
-import de.svws_nrw.module.reporting.repositories.ReportingRepositoryLerngruppen;
-import de.svws_nrw.module.reporting.repositories.ReportingRepositorySchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositorySchule;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -108,32 +107,6 @@ class TestHtmlContextValidierungMitContext {
 		final ReportingRepositoryGost repositoryGost = mock(ReportingRepositoryGost.class);
 		when(reportingContext.repositoryGost()).thenReturn(repositoryGost);
 		return repositoryGost;
-	}
-
-	/**
-	 * Erzeugt eine Klasse mit der angegebenen ID.
-	 *
-	 * @param id Die ID der Klasse.
-	 *
-	 * @return Die Klasse als Mock, der allein seine ID kennt.
-	 */
-	private static ReportingKlasse klasseMitId(final long id) {
-		final ReportingKlasse klasse = mock(ReportingKlasse.class);
-		when(klasse.id()).thenReturn(id);
-		return klasse;
-	}
-
-	/**
-	 * Erzeugt eine Lehrkraft mit der angegebenen ID.
-	 *
-	 * @param id Die ID der Lehrkraft.
-	 *
-	 * @return Die Lehrkraft als Mock, der allein seine ID kennt.
-	 */
-	private static ReportingLehrer lehrerMitId(final long id) {
-		final ReportingLehrer lehrer = mock(ReportingLehrer.class);
-		when(lehrer.id()).thenReturn(id);
-		return lehrer;
 	}
 
 	/**
@@ -247,111 +220,64 @@ class TestHtmlContextValidierungMitContext {
 	}
 
 
-	// ##### Stundenplan-Prüfungen #####
-
-	@Test
-	void testVollstaendigeKlassenIdsBestehenDieStundenplanpruefung() {
-		final ReportingKlasse klasse = klasseMitId(1L);
-		final ReportingRepositoryLerngruppen repositoryLerngruppen = mock(ReportingRepositoryLerngruppen.class);
-		when(repositoryLerngruppen.klassen(List.of(1L), false)).thenReturn(List.of(klasse));
-		when(reportingContext.repositoryLerngruppen()).thenReturn(repositoryLerngruppen);
-
-		assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenStundenplanKlassen(reportingContext, List.of(1L)));
-		assertEquals(List.of(), fehlermeldungenImLog());
-	}
-
-	@Test
-	void testEineNichtGeladeneKlassenIdWirdAbgewiesen() {
-		// Die Meldung nennt die betroffene ID nicht. Das ist Bestandsverhalten und wird mit Block 5.3 des Stabilisierungsplans ergänzt.
-		final List<Long> ids = List.of(1L, 2L);
-		final ReportingKlasse klasse = klasseMitId(1L);
-		final ReportingRepositoryLerngruppen repositoryLerngruppen = mock(ReportingRepositoryLerngruppen.class);
-		when(repositoryLerngruppen.klassen(ids, false)).thenReturn(List.of(klasse));
-		when(reportingContext.repositoryLerngruppen()).thenReturn(repositoryLerngruppen);
-
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenStundenplanKlassen(reportingContext, ids));
-
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden ungültige Klassen-IDs übergeben.", aoe.getBody());
-		assertEquals(List.of("FEHLER: Es wurden ungültige Klassen-IDs übergeben."), fehlermeldungenImLog());
-	}
-
-	@Test
-	void testVollstaendigeLehrerIdsBestehenDieStundenplanpruefung() {
-		final ReportingLehrer lehrer = lehrerMitId(1L);
-		final ReportingRepositoryLehrer repositoryLehrer = mock(ReportingRepositoryLehrer.class);
-		when(repositoryLehrer.lehrer(List.of(1L), false)).thenReturn(List.of(lehrer));
-		when(reportingContext.repositoryLehrer()).thenReturn(repositoryLehrer);
-
-		assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenStundenplanLehrer(reportingContext, List.of(1L)));
-		assertEquals(List.of(), fehlermeldungenImLog());
-	}
-
-	@Test
-	void testEineNichtGeladeneLehrerIdWirdAbgewiesen() {
-		final List<Long> ids = List.of(1L, 2L);
-		final ReportingLehrer lehrer = lehrerMitId(1L);
-		final ReportingRepositoryLehrer repositoryLehrer = mock(ReportingRepositoryLehrer.class);
-		when(repositoryLehrer.lehrer(ids, false)).thenReturn(List.of(lehrer));
-		when(reportingContext.repositoryLehrer()).thenReturn(repositoryLehrer);
-
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenStundenplanLehrer(reportingContext, ids));
-
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden ungültige Lehrer-IDs übergeben.", aoe.getBody());
-		assertEquals(List.of("FEHLER: Es wurden ungültige Lehrer-IDs übergeben."), fehlermeldungenImLog());
-	}
-
-	@Test
-	void testVollstaendigeSchuelerIdsBestehenDieStundenplanpruefung() {
-		final ReportingSchueler schueler = schuelerMitId(1L);
-		final ReportingRepositorySchueler repositorySchueler = mock(ReportingRepositorySchueler.class);
-		when(repositorySchueler.schueler(List.of(1L), false)).thenReturn(List.of(schueler));
-		when(reportingContext.repositorySchueler()).thenReturn(repositorySchueler);
-
-		assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenStundenplanSchueler(reportingContext, List.of(1L)));
-		assertEquals(List.of(), fehlermeldungenImLog());
-	}
-
-	@Test
-	void testEineNichtGeladeneSchuelerIdWirdAbgewiesen() {
-		final List<Long> ids = List.of(1L, 2L);
-		final ReportingSchueler schueler = schuelerMitId(1L);
-		final ReportingRepositorySchueler repositorySchueler = mock(ReportingRepositorySchueler.class);
-		when(repositorySchueler.schueler(ids, false)).thenReturn(List.of(schueler));
-		when(reportingContext.repositorySchueler()).thenReturn(repositorySchueler);
-
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenStundenplanSchueler(reportingContext, ids));
-
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden ungültige Schüler-IDs übergeben.", aoe.getBody());
-		assertEquals(List.of("FEHLER: Es wurden ungültige Schüler-IDs übergeben."), fehlermeldungenImLog());
-	}
-
-
 	// ##### GOSt-Laufbahnplanung #####
 
+	/**
+	 * Erzeugt eine Auswahl, in der zu jeder übergebenen ID ein Schüler steht.
+	 *
+	 * @param ids Die IDs der ausgewählten Schüler.
+	 *
+	 * @return Die Auswahl ohne ausgelassene und ohne ausgefilterte Datensätze.
+	 */
+	private static ReportingAuswahlergebnis<ReportingSchueler> auswahlMit(final List<Long> ids) {
+		final Map<Long, ReportingSchueler> objekte = new LinkedHashMap<>();
+		for (final Long id : ids) {
+			objekte.put(id, schuelerMitId(id));
+		}
+		return ReportingAuswahlergebnis.aus(ids, objekte, Map.of(), List.of());
+	}
+
+
+	/**
+	 * Bildet die übergebenen IDs auf den Zustand "geladen" ab.
+	 *
+	 * @param <V>  Der Typ des geladenen Wertes.
+	 * @param ids  Die IDs, zu denen Daten vorliegen.
+	 * @param wert Der Wert, der für jede ID als geladen gilt.
+	 *
+	 * @return Die Zustände je ID.
+	 */
+	private static <V> Map<Long, ReportingLadezustand<V>> zustaendeGeladen(final List<Long> ids, final V wert) {
+		final Map<Long, ReportingLadezustand<V>> zustaende = new LinkedHashMap<>();
+		for (final Long id : ids) {
+			zustaende.put(id, ReportingLadezustand.geladen(wert));
+		}
+		return zustaende;
+	}
+
+
 	@Test
-	void testDieLaufbahnplanungPruefungBestehtBeiVollstaendigenDaten() {
+	void testDieLaufbahnplanungPruefungLaesstVollstaendigeDatenUnveraendert() {
 		gebeSchuleVor(true);
 		final ReportingRepositoryGost repositoryGost = gebeRepositoryGostVor();
-		when(repositoryGost.beratungsdaten(List.of(1L))).thenReturn(Map.of(1L, new GostLaufbahnplanungBeratungsdaten()));
-		when(repositoryGost.beratungsdatenAbiturdaten(List.of(1L))).thenReturn(Map.of(1L, new Abiturdaten()));
+		when(repositoryGost.zustaendeBeratungsdaten(List.of(1L))).thenReturn(zustaendeGeladen(List.of(1L), new GostLaufbahnplanungBeratungsdaten()));
+		when(repositoryGost.zustaendeBeratungsdatenAbiturdaten(List.of(1L))).thenReturn(zustaendeGeladen(List.of(1L), new Abiturdaten()));
 
-		assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, List.of(1L)));
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(List.of(1L))));
+
+		assertEquals(List.of(1L), auswahl.idsAusgewaehlt());
 		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test
 	void testDieLaufbahnplanungPruefungBrichtOhneGostVorDenBeratungsdatenAb() {
+		// Eine Schule ohne gymnasiale Oberstufe ist eine verletzte Voraussetzung des gesamten Reports und kein Befund an einem einzelnen Datensatz.
 		gebeSchuleVor(false);
-		final List<Long> ids = List.of(1L);
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl = auswahlMit(List.of(1L));
 
 		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, ids));
+				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahl));
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		assertEquals(MELDUNG_KEINE_GOST, aoe.getBody());
@@ -359,55 +285,95 @@ class TestHtmlContextValidierungMitContext {
 	}
 
 	@Test
-	void testFehlendeBeratungsdatenWerdenAlsNichtZurGostGehoerendGemeldet() {
+	void testEinSchuelerOhneBeratungsdatenWirdAusgelassen() {
 		gebeSchuleVor(true);
 		final List<Long> ids = List.of(1L);
 		final ReportingRepositoryGost repositoryGost = gebeRepositoryGostVor();
-		final Map<Long, GostLaufbahnplanungBeratungsdaten> beratungsdaten = new HashMap<>();
-		beratungsdaten.put(1L, null);
-		when(repositoryGost.beratungsdaten(ids)).thenReturn(beratungsdaten);
+		when(repositoryGost.zustaendeBeratungsdaten(ids)).thenReturn(Map.of(1L, ReportingLadezustand.nichtVorhanden()));
 
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, ids));
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(ids)));
 
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.", aoe.getBody());
+		assertEquals(List.of(), auswahl.idsAusgewaehlt(), "Ein Schüler ohne Beratungsdaten gehört nicht zur GOSt und entfällt.");
+		assertEquals(Set.of(1L), auswahl.ausgelassen().keySet());
+		assertEquals(ReportingProblemursache.NICHT_VORHANDEN, auswahl.ausgelassen().get(1L).ursache());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Ein ausgelassener Datensatz bricht die Ausgabe nicht ab.");
 	}
 
 	@Test
-	void testFehlendeAbiturdatenDerLaufbahnplanungWerdenGesondertGemeldet() {
+	void testEinGescheiterterZugriffAufBeratungsdatenBleibtEinLadefehler() {
+		// Eine fehlende GOSt-Akte und ein gescheiterter Datenbankzugriff lassen den Schüler beide entfallen. Würde die Störung als "nicht vorhanden"
+		// ausgewiesen, liefe sie unbemerkt als gewöhnliche Auslassung durch.
 		gebeSchuleVor(true);
 		final List<Long> ids = List.of(1L);
+		final IllegalStateException fehler = new IllegalStateException("Der Dienst antwortet nicht.");
 		final ReportingRepositoryGost repositoryGost = gebeRepositoryGostVor();
-		when(repositoryGost.beratungsdaten(ids)).thenReturn(Map.of(1L, new GostLaufbahnplanungBeratungsdaten()));
-		when(repositoryGost.beratungsdatenAbiturdaten(ids)).thenReturn(Map.of());
+		when(repositoryGost.zustaendeBeratungsdaten(ids))
+				.thenReturn(Map.of(1L, ReportingLadezustand.fehlgeschlagen(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, fehler)));
 
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, ids));
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(ids)));
 
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.", aoe.getBody());
+		assertEquals(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, auswahl.ausgelassen().get(1L).ursache());
+		assertEquals(fehler, auswahl.ausgelassen().get(1L).fehler(), "Der auslösende Fehler gehört in die spätere Meldung.");
+	}
+
+	@Test
+	void testEinSchuelerOhneAbiturdatenDerLaufbahnplanungWirdAusgelassen() {
+		gebeSchuleVor(true);
+		final List<Long> ids = List.of(1L, 2L);
+		final ReportingRepositoryGost repositoryGost = gebeRepositoryGostVor();
+		when(repositoryGost.zustaendeBeratungsdaten(ids)).thenReturn(zustaendeGeladen(ids, new GostLaufbahnplanungBeratungsdaten()));
+		when(repositoryGost.zustaendeBeratungsdatenAbiturdaten(ids)).thenReturn(Map.of(1L, ReportingLadezustand.geladen(new Abiturdaten()),
+				2L, ReportingLadezustand.nichtVorhanden()));
+
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(ids)));
+
+		assertEquals(List.of(1L), auswahl.idsAusgewaehlt(), "Der Schüler mit Abiturdaten bleibt in der Ausgabe.");
+		assertEquals(Set.of(2L), auswahl.ausgelassen().keySet());
+	}
+
+	@Test
+	void testDieZweitePruefungFragtNurNochDieVerbliebenenSchuelerAb() {
+		// Ein Schüler, der mangels Beratungsdaten bereits entfallen ist, wird nicht erneut geladen - sonst entstünde für ihn ein zweiter Befund.
+		gebeSchuleVor(true);
+		final List<Long> ids = List.of(1L, 2L);
+		final ReportingRepositoryGost repositoryGost = gebeRepositoryGostVor();
+		when(repositoryGost.zustaendeBeratungsdaten(ids)).thenReturn(Map.of(1L, ReportingLadezustand.geladen(new GostLaufbahnplanungBeratungsdaten()),
+				2L, ReportingLadezustand.nichtVorhanden()));
+		when(repositoryGost.zustaendeBeratungsdatenAbiturdaten(List.of(1L))).thenReturn(zustaendeGeladen(List.of(1L), new Abiturdaten()));
+
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(ids)));
+
+		assertEquals(List.of(1L), auswahl.idsAusgewaehlt());
+		verify(repositoryGost).zustaendeBeratungsdatenAbiturdaten(List.of(1L));
+		verify(repositoryGost, never()).zustaendeBeratungsdatenAbiturdaten(ids);
 	}
 
 
 	// ##### GOSt-Abitur #####
 
 	@Test
-	void testDieAbiturpruefungBestehtBeiVollstaendigenDaten() {
+	void testDieAbiturpruefungLaesstVollstaendigeDatenUnveraendert() {
 		gebeSchuleVor(true);
-		when(gebeRepositoryGostVor().schuelerAbiturdaten(List.of(1L))).thenReturn(Map.of(1L, new Abiturdaten()));
+		when(gebeRepositoryGostVor().zustaendeSchuelerAbiturdaten(List.of(1L))).thenReturn(zustaendeGeladen(List.of(1L), new Abiturdaten()));
 
-		assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, List.of(1L)));
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, auswahlMit(List.of(1L))));
+
+		assertEquals(List.of(1L), auswahl.idsAusgewaehlt());
 		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test
 	void testDieAbiturpruefungBrichtOhneGostVorDenAbiturdatenAb() {
 		gebeSchuleVor(false);
-		final List<Long> ids = List.of(1L);
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl = auswahlMit(List.of(1L));
 
 		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, ids));
+				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, auswahl));
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		assertEquals(MELDUNG_KEINE_GOST, aoe.getBody());
@@ -415,16 +381,17 @@ class TestHtmlContextValidierungMitContext {
 	}
 
 	@Test
-	void testFehlendeAbiturdatenWerdenGemeldet() {
+	void testEinSchuelerOhneAbiturdatenWirdAusgelassen() {
 		gebeSchuleVor(true);
 		final List<Long> ids = List.of(1L, 2L);
-		when(gebeRepositoryGostVor().schuelerAbiturdaten(ids)).thenReturn(Map.of(1L, new Abiturdaten()));
+		when(gebeRepositoryGostVor().zustaendeSchuelerAbiturdaten(ids))
+				.thenReturn(Map.of(1L, ReportingLadezustand.geladen(new Abiturdaten()), 2L, ReportingLadezustand.nichtVorhanden()));
 
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, ids));
+		final ReportingAuswahlergebnis<ReportingSchueler> auswahl =
+				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, auswahlMit(ids)));
 
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.", aoe.getBody());
+		assertEquals(List.of(1L), auswahl.idsAusgewaehlt(), "Eine einzelne fehlende Abiturakte lässt die übrige Ausgabe nicht scheitern.");
+		assertEquals(Set.of(2L), auswahl.ausgelassen().keySet());
 	}
 
 }

@@ -3,11 +3,13 @@ package de.svws_nrw.module.reporting.factories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +27,19 @@ import org.junit.jupiter.api.Test;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -63,7 +74,7 @@ class TestPdfFactory {
 		logger.addConsumer(log);
 		when(reportingContext.logger()).thenReturn(logger);
 		// Die Factory verlangt mindestens einen HTML-Builder. Für die Sammelausgabe werden die PDF-Builder direkt übergeben.
-		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
+		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), false, reportingContext);
 	}
 
 	/**
@@ -165,7 +176,7 @@ class TestPdfFactory {
 		// PDF-Builder und würden ein versehentliches Entfernen der Durchreichung nicht bemerken.
 		final PdfFactory factory = new PdfFactory(
 				List.of(htmlBuilder("Bescheinigung_Meier", Set.of(4711L)), htmlBuilder("Bescheinigung_Schulz", Set.of(4712L, 4713L))),
-				reportingContext);
+				false, reportingContext);
 
 		final List<ReportBuilderPdf> pdfBuilders = factory.getPdfBuilders();
 
@@ -175,7 +186,7 @@ class TestPdfFactory {
 
 	@Test
 	void testEinHtmlBuilderOhneIdsErgibtEinenPdfBuilderOhneIds() throws Exception {
-		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Sammelliste", Set.of())), reportingContext);
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Sammelliste", Set.of())), false, reportingContext);
 
 		assertEquals(Set.of(), factory.getPdfBuilders().getFirst().getIds());
 	}
@@ -358,6 +369,183 @@ class TestPdfFactory {
 		// Die Meldung der Fehlerquelle gehört nicht hinein: Sie steht bereits in deren eigenem Eintrag und reist mit der Exception weiter.
 		assertEquals(List.of("### FEHLER: Die PDF-Datei 'Bescheinigung_Meier' konnte nicht erzeugt werden."), fehlermeldungenImLog(),
 				"Die Sammelausgabe muss genau ihren eigenen Zusammenhang protokollieren.");
+	}
+
+
+	// ##### Ausgabe ohne verbleibende Ausgabeeinheit #####
+
+	/**
+	 * Verdrahtet die Reportvorlage, aus der der Dateiname der ZIP-Ausgabe entsteht.
+	 *
+	 * @param reportvorlage Die Reportvorlage des Aufrufs.
+	 */
+	private void gebeReportvorlageVor(final ReportingReportvorlage reportvorlage) {
+		final ReportingParameterTypisiert reportingParameter = mock(ReportingParameterTypisiert.class);
+		when(reportingParameter.reportVorlage()).thenReturn(reportvorlage);
+		when(reportingContext.reportingParameter()).thenReturn(reportingParameter);
+		when(reportingContext.ausgabeprobleme()).thenReturn(List.of());
+	}
+
+	@Test
+	void testEineBewusstLeereAuswahlErzeugtEinZipOhnePdfDatei() throws Exception {
+		// Eine Einzelausgabe ohne verbleibenden Datensatz ist eine gültige Antwort und kein Serverfehler. Das Archiv entsteht, damit die Antwort einen Träger
+		// für die Hinweisdatei hat und der Client eine Datei erhält statt einer Fehlermeldung.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertEquals("application/zip", response.getMediaType().toString());
+		final List<String> eintraege = eintragsnamen((byte[]) response.getEntity());
+		assertTrue(eintraege.stream().noneMatch(name -> name.endsWith(".pdf")), "Ohne Datensatz enthält das Archiv keine PDF-Datei: " + eintraege);
+	}
+
+	@Test
+	void testDerDateinameDerLeerenZipAusgabeStammtAusDerReportvorlage() throws Exception {
+		// Der Name darf nicht am ersten Builder hängen: Bei einer leeren Auswahl gibt es keinen. Er ist deshalb derselbe wie bei einer gefüllten Ausgabe.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+
+		final String dateiname = dateinameAusResponse(factory.createPdfResponse());
+
+		assertEquals(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getDateiname() + ".zip", dateiname);
+	}
+
+	@Test
+	void testOhneBewusstLeereAuswahlBleibtEineLeereAusgabeEinServerfehler() {
+		// Null Builder ohne dieses Kennzeichen sind ein Programmierfehler. Fiele die Unterscheidung, ginge ein Ausfall der Dokumenterzeugung als leere Ausgabe
+		// durch - der Anwender erhielte ein leeres Archiv statt einer Fehlermeldung.
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> new PdfFactory(List.of(), false, reportingContext));
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+	}
+
+	@Test
+	void testEineBewusstLeereSammelausgabeErzeugtWeiterhinEinDokument() throws Exception {
+		// Bei der Sammelausgabe entsteht auch ohne Datensatz genau ein Builder mit leerem fachlichem Inhalt. Maßgeblich ist die Anzahl der Dokumente und nicht
+		// das Kennzeichen: Ein leeres Archiv wäre hier falsch, denn das Dokument existiert.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER);
+		final ReportBuilderHtml htmlBuilder = htmlBuilder("Schueler-Liste-Kontaktdaten-Erzieher", Set.of());
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder), true, reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("application/pdf", response.getMediaType().toString(), "Eine Sammelausgabe liefert ein Dokument und kein Archiv.");
+		assertEquals("Schueler-Liste-Kontaktdaten-Erzieher.pdf", dateinameAusResponse(response));
+		// Der Header meldet trotzdem leer=?1: Er folgt der Auswahl und nicht der Zahl der Dokumente. Genau diese Unterscheidung braucht der Client, um ein
+		// Dokument mit leerem Inhalt zu erklären - andernfalls stünde der Anwender vor einer leeren Liste ohne Grund.
+		assertEquals("v=0, gesamt=0, leer=?1", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
+	}
+
+	@Test
+	void testDieZipAusgabeTraegtDenHinweisHeader() throws Exception {
+		// Der Nachweis am produktiven Weg: Der Helfer ist eigens getestet, aber nur hier ist belegt, dass die ZIP-Ausgabe ihn auch aufruft.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("v=0, gesamt=0, leer=?1", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME),
+				"Eine Ausgabe ohne Dokument muss den Leerstand melden.");
+	}
+
+	@Test
+	void testDieEinzelnePdfDateiTraegtDenHinweisHeader() throws Exception {
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER);
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Schueler-Liste-Kontaktdaten-Erzieher", Set.of())), false, reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals("v=0, gesamt=0, leer=?0", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
+	}
+
+	@Test
+	void testDasLeereArchivEnthaeltGenauEineHinweisdatei() throws Exception {
+		// Ohne diese Beilage stünde der Anwender vor einem leeren Download ohne Erklärung. Sie ist zugleich der einzige Weg, auf dem die Hinweise ihn ohne
+		// Clientanpassung erreichen: Den Response-Header wertet der heutige Client nicht aus.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+
+		final Response response = factory.createPdfResponse();
+
+		assertEquals(List.of(ReportingHinweisSerializer.DATEINAME_HINWEISE), eintragsnamen((byte[]) response.getEntity()));
+	}
+
+	@Test
+	void testDieHinweisdateiImArchivIstLesbarUndErklaertDenLeerstand() throws Exception {
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+
+		final String inhalt = eintragsinhalt((byte[]) factory.createPdfResponse().getEntity(), ReportingHinweisSerializer.DATEINAME_HINWEISE);
+
+		assertTrue(inhalt.contains("blieb nach der Auswahl kein Datensatz übrig"), inhalt);
+		assertTrue(inhalt.contains("keine PDF-Datei erzeugt"), inhalt);
+	}
+
+	@Test
+	void testEineVollstaendigeSammelausgabeErhaeltKeineHinweisdatei() throws Exception {
+		// Ohne Befund und ohne Leerstand gibt es nichts zu erklären; eine leere Beilage stellte jede vollständige Ausgabe unter einen Vorbehalt.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		final List<ReportBuilderPdf> pdfBuilders = List.of(
+				pdfBuilder("Bescheinigung_Meier", Set.of(4711L)),
+				pdfBuilder("Bescheinigung_Schulz", Set.of(4712L)));
+
+		assertEquals(List.of("Bescheinigung_Meier.pdf", "Bescheinigung_Schulz.pdf"), eintragsnamen(pdfFactory.createZIP(pdfBuilders)));
+	}
+
+	@Test
+	void testEinArchivMitBefundTraegtDieHinweisdateiNebenDenDokumenten() throws Exception {
+		// Der Fall der unvollständigen Sammelausgabe: Ein Datensatz von dreien wurde ausgelassen, zwei Dokumente entstehen. Die Beilage erklärt das Archiv
+		// und verdrängt keines der Dokumente.
+		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
+		when(reportingContext.ausgabeprobleme()).thenReturn(List.of(new ReportingProblem(ReportingProblemursache.NICHT_VORHANDEN,
+				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, ReportingProblemSchluessel.fuer(ReportingSchueler.class, 4713L))));
+		final List<ReportBuilderPdf> pdfBuilders = List.of(
+				pdfBuilder("Bescheinigung_Meier", Set.of(4711L)),
+				pdfBuilder("Bescheinigung_Schulz", Set.of(4712L)));
+
+		final byte[] zip = pdfFactory.createZIP(pdfBuilders);
+
+		assertEquals(List.of("Bescheinigung_Meier.pdf", "Bescheinigung_Schulz.pdf", ReportingHinweisSerializer.DATEINAME_HINWEISE), eintragsnamen(zip));
+		final String inhalt = eintragsinhalt(zip, ReportingHinweisSerializer.DATEINAME_HINWEISE);
+		assertTrue(inhalt.contains("Die Ausgabe wurde erstellt, ist aber unvollständig."), inhalt);
+		assertTrue(inhalt.contains("Hinweise insgesamt: 1"), inhalt);
+	}
+
+	/**
+	 * Liest den Inhalt eines Eintrags aus den übergebenen ZIP-Daten.
+	 *
+	 * @param zipData      Die ZIP-Datei als Byte-Array.
+	 * @param eintragsname Der Name des gesuchten Eintrags.
+	 *
+	 * @return Der Inhalt des Eintrags als Text.
+	 *
+	 * @throws IOException Falls die ZIP-Daten nicht gelesen werden können.
+	 */
+	private static String eintragsinhalt(final byte[] zipData, final String eintragsname) throws IOException {
+		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipData))) {
+			ZipEntry eintrag = zis.getNextEntry();
+			while (eintrag != null) {
+				if (eintragsname.equals(eintrag.getName())) {
+					return new String(zis.readAllBytes(), StandardCharsets.UTF_8);
+				}
+				eintrag = zis.getNextEntry();
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * Liest den Dateinamen aus dem {@code Content-Disposition}-Header einer Response.
+	 *
+	 * @param response Die Response der Ausgabe.
+	 *
+	 * @return Der dekodierte Dateiname.
+	 */
+	private static String dateinameAusResponse(final Response response) {
+		final String disposition = response.getHeaderString("Content-Disposition");
+		return URLDecoder.decode(disposition.substring(disposition.indexOf("UTF-8''") + "UTF-8''".length()), StandardCharsets.UTF_8);
 	}
 
 }

@@ -64,6 +64,54 @@ Datei; Regel-Änderungen werden hier gepflegt.
 
 ## 4. Fehlerbehandlung & Logging
 
+### 4.1 Verbindliche Grundsätze (G-1 bis G-6)
+
+Die sechs Grundsätze sind das Fundament der Regeln und der Fehlercode-Matrix in diesem Abschnitt.
+Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente referenzieren.
+
+- **G-1 — Der Status folgt der Verantwortung.** `4xx` bezeichnet einen Fehler des Aufrufers, `5xx`
+  einen des Servers. `404` gilt allein der adressierten Hauptressource des Reports; welche das
+  ist, bestimmt ihre fachliche Rolle und nicht das technische Parameterfeld. In der
+  GOSt-Laufbahnplanung ist der Abiturjahrgang die Hauptressource, obwohl er in `idsHauptdaten`
+  transportiert wird; in der GOSt-Klausurplanung ist derselbe Abiturjahrgang ein optionaler
+  Filter. Ein Listenreport über Schüler, Klassen oder Lehrkräfte hat kein einzelnes
+  Hauptdatenobjekt — seine IDs sind die Nutzlast.
+- **G-2 — Fehlende untergeordnete Daten führen zu einer unvollständigen Ausgabe.** Untergeordnete
+  Daten, die fachlich nicht vorhanden oder datensatzbezogen nicht ladbar sind, werden auf genau
+  der betroffenen Ebene ausgelassen: Fehlt ein Schüler, entfällt dieser Schüler; fehlen Teildaten
+  eines geladenen Schülers, entfallen nur diese Teildaten. Der Report bleibt erfolgreich, auch
+  wenn dadurch kein angeforderter Datensatz übrig bleibt.
+- **G-2a — Die Ursache entscheidet, nicht die Anzahl.** Ein datensatzbezogener Fehler bleibt auch
+  dann tolerierbar, wenn er sämtliche angeforderten Datensätze betrifft; eine
+  Infrastrukturstörung bricht auch dann ab, wenn nur ein Datensatz betroffen ist. Eine nicht
+  zuverlässig klassifizierbare Ursache gilt bei untergeordneten Daten als datensatzbezogen; beim
+  Hauptdatenobjekt bleibt ein nicht sicher tolerierbarer technischer Fehler ein Abbruch.
+- **G-3 — Das Hauptdatenobjekt ist die Ausnahme.** Existiert das fachlich adressierte
+  Hauptdatenobjekt nicht, endet die Ausgabe mit `404`; existiert es, ist aber technisch nicht
+  ladbar, mit `500`. Ein leeres Dokument wäre in beiden Fällen irreführend.
+- **G-4 — Nicht darstellbare Werte werden sichtbar ersetzt.** Ein vorhandener Wert, der sich
+  nicht darstellen lässt, bricht die Ausgabe nicht ab; an seiner Stelle entsteht ein erkennbares
+  Fehlerbild in den Standardmaßen der Ausgabeart (ausgestaltet in der Regel „Nicht darstellbare
+  Werte“, Abschnitt 4.2).
+- **G-5 — Der Ladezustand wird explizit geführt.** Ein Datenzugriff unterscheidet
+  `Geladen(wert)`, `NichtVorhanden` und `Fehlgeschlagen(ursache, exception)` — im Code
+  `ReportingLadezustand`. Eine leere Collection ist ein geladener Wert; `Geladen(null)` ist
+  unzulässig; ein fehlender Cache-Eintrag bedeutet „noch nicht geladen“ und ist kein eigener
+  Ladezustand; ein technischer Fehler wird nie allein durch `null` oder eine leere Collection
+  dargestellt, und die auslösende Exception lebt so lange wie der zugehörige Cache-Eintrag — ein
+  neuer `ReportingContext` darf den Zugriff erneut versuchen. Der Ladezustand kennt weder
+  fachlichen Schlüssel noch HTTP-Status, und der Benutzerfilter gehört ausschließlich in die
+  Auswahl, nie in den Ladezustand. **Reichweite:** Verbindlich für jeden neu angefassten und jeden
+  inventarisierten Ladezustand. Einen modulweiten Vollständigkeitsnachweis verlangt der Grundsatz
+  nicht: Der Architekturtest sichert das Map-Cache-Muster; Einzelfelder, Listen-Caches außerhalb
+  des Musters und stille Rückfallwerte in Proxys bleiben ungeprüft.
+- **G-6 — Ein erfolgreicher Report enthält keinen `ERROR`-Eintrag.** `ERROR` ist dem endgültigen
+  Abbruch vorbehalten. Tolerierte Ausgabeprobleme erzeugen höchstens `WARNING`, ein erfolgreicher
+  Einzel-Fallback nach gescheitertem Bulk-Zugriff `INFO`, eine Auswahlentscheidung höchstens ein
+  zusammenfassendes `DEBUG`.
+
+### 4.2 Melde- und Logging-Regeln
+
 - Logging nur über `reportingContext.logger()` / `reportingContext.log()`. **Thymeleaf-Dialekte**
   sind einmalig an der geteilten `TemplateEngine` registriert und können keinen Logger als Feld
   halten; sie erhalten ihn über die Context-Variable `ReportBuilderUtils.VARIABLE_LOGGER`, die der
@@ -73,34 +121,81 @@ Datei; Regel-Änderungen werden hier gepflegt.
   `ReportingRepositoryUtils` **kein eigenes try/catch** — das würde den pro-ID-Fallback
   unterbinden.
 - **Reports melden Datenfehler nicht sichtbar**; eine NPE in der Druckausgabe ist immer ein Bug,
-  kein „sichtbarer Datenfehler“. Fehlende Daten führen zu einer sauberen Lücke (leer oder
-  neutraler Platzhalter).
-- **Ein `ERROR`-Logeintrag bedeutet „diesen Report abbrechen“.** `ReportingFactory.pruefeLogAufFehler()`
-  beendet die Ausgabe, sobald das gesammelte Log **irgendeinen** Eintrag mit `LogLevel.ERROR` enthält
-  — auch ohne Wurf. Wer eine Lücke darstellen und weiterlaufen will, protokolliert deshalb höchstens
-  `WARNING`; `ERROR` steht nur dort, wo auch geworfen wird. Ein Catch, der einen Rückfallwert liefert
-  und dabei `ERROR` protokolliert, hebt seinen eigenen Rückfall wieder auf.
+  kein „sichtbarer Datenfehler“. Fehlende Daten werden ausgelassen; die betroffene Stelle bleibt
+  leer oder zeigt einen neutralen Platzhalter.
+- **Ein `ERROR`-Logeintrag ist dem Abbruch vorbehalten** (Konkretisierung von G-6). Ein
+  erfolgreicher Report hinterlässt keinen einzigen; `ERROR` steht nur dort, wo auch geworfen wird.
+  Wer einen Befund hinnehmen und weiterlaufen will, protokolliert höchstens `WARNING` — ein `ERROR`
+  gäbe einem hingenommenen Ausgabeproblem die Dringlichkeit eines Abbruchs und machte das Log als
+  Abbruchspur unbrauchbar. Ein Architekturtest hält die Regel: Kein Catch-Block protokolliert
+  `ERROR`, ohne zu werfen.
 - **Das Log-Level gilt für den gesamten Fehlerblock.** `ReportingExceptionUtils.logException()`
   schreibt Beschreibung, Fehlertyp, Meldung, Ursachenkette und Stacktrace auf dem übergebenen Level.
-  Ein Aufruf mit `WARNING` hinterlässt damit keinen ERROR-Eintrag und bricht die Ausgabe nicht ab.
+  Ein Aufruf mit `WARNING` hinterlässt damit keinen ERROR-Eintrag.
 - **Ein Ladefehler wird dort bewertet, wo die Daten gebraucht werden.** Repositories, die der
   `ReportingContext` für jeden Report aufbaut, protokollieren einen Ladefehler nicht bei der
   Initialisierung, sondern halten ihn als `ApiOperationException` fest — ein `boolean` verlöre die
   Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptdatum, folgen
   `ERROR` und Wurf; sind sie Beiwerk, folgt höchstens eine `WARNING` je Repository-Instanz und die
-  Ausgabe läuft mit einer Lücke weiter (Muster: `ReportingRepositoryStundenplan`).
-- **Nicht darstellbare Werte sind ebenfalls eine Lücke.** Ein vorhandener Wert, der sich nicht
-  ausgeben lässt — etwa ein Barcode-Inhalt mit Zeichen, die der Zeichensatz des Codes nicht kennt —,
-  darf die Ausgabe nicht abbrechen. Die Vorlagen-Hilfsmethoden fangen das ab, geben eine leere
-  Fläche in den angeforderten Maßen aus und protokollieren mit `WARNING`. Die Ersatzfläche übernimmt
-  dabei auch die **Standardmaße der jeweiligen Ausgabeart** — sonst verschiebt der Fehlerfall das
-  Layout gegenüber dem Erfolgsfall.
-  **Ausnahme: fachlich tragende Elemente.** Wo das Element die Aussage des Dokuments trägt — etwa
-  die Signatur-QR-Codes der Schulbescheinigung —, wird weiterhin geworfen, und der Aufrufer wertet
-  den Fehler aus. Eine leere Fläche ergäbe dort ein Dokument, das ohne Prüfcode gültig aussieht.
-  Die Erzeugungsmethoden selbst werfen deshalb; die Lücke entsteht in der aufrufenden Schicht.
+  Ausgabe läuft ohne diese Daten weiter (Muster: `ReportingRepositoryStundenplan`).
+- **Der Hinweis-Header entsteht nur bei angebundenem Datenaufbau.** Eine erfolgreiche HTML-, PDF-
+  oder ZIP-Antwort trägt `SVWS-Reporting-Hinweise` ausschließlich dann, wenn die
+  `HtmlContextInitializerRegistry` den Datenaufbau als an die Diagnose angebunden führt.
+  Andernfalls **fehlt der Header ganz**: Ein `gesamt=0` an einem Pfad, dessen
+  Datenzugriffe noch nicht melden, bescheinigte eine Vollständigkeit, die niemand geprüft hat. Für
+  den Client bedeutet ein fehlender Header „unbekannt“, nie „nachweislich vollständig“. Gesetzt wird
+  er an genau einer Stelle (`ReportingHinweiseHeader`); ein zweiter Ort für dieselbe Entscheidung
+  ließe die Ausgabewege auseinanderlaufen.
+- **Ein Ladefehler von Teildaten wird gemeldet und nicht selbst protokolliert.** Scheitert das Laden
+  von Daten **unterhalb** eines Datensatzes — Erzieher, Sprachbelegungen, Lernabschnitte,
+  Leistungsdaten, Telefonkontakte —, bleibt der Datensatz in der Ausgabe und es fehlen allein diese
+  Teildaten. Das gilt für jeden Fehler außer einem Verbindungsabbruch; zu dessen Erkennung siehe
+  weiter unten. Der Befund läuft über `reportingContext.meldeAusgabeproblem(…)` mit der Auswirkung
+  `TEILDATEN_FEHLEN` und in aller Regel der Ursache `DATENSATZBEZOGENER_LADEFEHLER`; die Fassade
+  protokolliert ihn dann dedupliziert und auf dem Level, das die Ausgabe fortsetzen lässt. Die Repositories melden
+  einheitlich über `ReportingRepositoryUtils.meldeTeildatenLadefehler(…)`, damit die Wortwahl im Log
+  nicht je Repository abweicht. Ein eigener `logException`-Aufruf daneben führte denselben Fehler
+  zweimal im Log, und mit `ERROR` höbe er den eigenen Rückfallwert wieder auf. Der Schlüssel führt die Objektart der ausgelassenen Teildaten und die ID
+  des Datensatzes, zu dem sie gehören: So zählt jede Art von Teildaten je Datensatz genau einmal.
+  Betrifft der Zugriff keinen einzelnen Datensatz — etwa die Leistungsdaten aller Lernabschnitte
+  eines Schuljahresabschnitts —, bleibt der Schlüssel ohne ID und zählt einmal je Aufruf.
+  Ein solcher Pfad fängt `Exception` und nicht einen einzelnen Fehlertyp: Sonst hängt das Auslassen
+  davon ab, welche Art Fehler der Zugriff gerade erzeugt.
+  **Der try-Block umfasst dabei nur den Datenzugriff.** Cache-Einträge und der Aufbau von
+  Reporting-Objekten aus den geladenen Daten stehen außerhalb: Ein Fehler dort ist ein
+  Programmierfehler, kein Datenfehler, und beendet die Ausgabe. Im generischen Bulk-/Einzel-Fallback
+  der `ReportingRepositoryUtils` gehört die Aufbereitung des einzelnen Datensatzes im Loader-Lambda
+  dagegen zum Laden genau dieses Datensatzes: Scheitert sie an dessen Daten, isoliert der
+  Einzel-Fallback den Datensatz — genau das ist ein datensatzbezogener Fehler.
+  Die Ursache bestimmt die Meldestelle nicht selbst: Sie übergibt den Fehler, und
+  `ReportingProblemursache.fuerLadefehler(…)` klassifiziert ihn als einzige Stelle des Moduls.
+  Ein Verbindungsabbruch in der Ursachenkette ergibt `INFRASTRUKTURSTOERUNG`, und die Fassade wirft
+  dann einen Serverfehler, statt den Befund zu sammeln. Erkannt wird er an
+  `SQLNonTransientConnectionException`, `SQLTransientConnectionException` und `ConnectException`.
+  Diese drei genügen, weil der Server auf MariaDB läuft und dessen Treiber jeden Verbindungsfehler
+  darauf abbildet; die übrigen DBMS erscheinen allein in Sicherungen und Migrationen. Jeder andere
+  Fehler bleibt `DATENSATZBEZOGENER_LADEFEHLER`: Ein unsicherer Fall wird hingenommen, statt eine
+  ganze Ausgabe an einem einzelnen Datensatz scheitern zu lassen.
+  *Vollständig umgestellt sind `ReportingRepositorySchueler` (Pilot), `ReportingRepositoryLehrer`,
+  `ReportingRepositoryLerngruppen` und `ReportingRepositoryStundenplan`; bei den drei
+  erstgenannten melden auch die `xxx(List<Long>)`-Listen-Zugriffe eine ID, deren Laden endgültig
+  scheitert. Daneben melden die K-1-Rückfallstellen in `ReportingRepositoryKataloge` über dieselbe
+  Fassade; die übrigen GOSt-Zugriffe folgen.*
+- **Nicht darstellbare Werte sind ein gemeldetes Ausgabeproblem.** Ein vorhandener Wert, der sich
+  nicht ausgeben lässt — etwa ein Barcode-Inhalt mit Zeichen, die der Zeichensatz des Codes nicht
+  kennt, oder eine Schulbescheinigung, deren Signierung scheitert —, bricht die Ausgabe nicht ab.
+  Die verantwortliche Erzeugungsstelle meldet über die Fassade `NICHT_DARSTELLBAR` mit der
+  Auswirkung `TEILDATEN_FEHLEN` samt auslösender Exception; die übrige Ausgabe entsteht. Wie die
+  Vorlage die betroffene Stelle kennzeichnet, ist ihre Darstellungsentscheidung — ein Fehlertext
+  oder eine leere Fläche in den **Standardmaßen der jeweiligen Ausgabeart**, damit der Fehlerfall
+  das Layout nicht gegenüber dem Erfolgsfall verschiebt. Eine Ausnahme für fachlich tragende
+  Elemente gibt es nicht mehr: Auch die Signatur-QR-Codes der Schulbescheinigung werfen nicht —
+  die Vorlage zeigt an der Stelle des Codes den Fehlertext, und das Dokument sieht damit nicht
+  signiert aus (Muster: `SchulbescheinigungQrFactory`).
+  *Umgestellt ist die Schulbescheinigung; die Barcode-Hilfsmethoden der Vorlagen protokollieren
+  noch selbst mit `WARNING` und folgen.*
 
-### 4.1 Fehlercode-Matrix (HTTP-Status der `ApiOperationException`)
+### 4.3 Fehlercode-Matrix (HTTP-Status der `ApiOperationException`)
 
 Verbindliche Zuordnung von Fehlersituation zu HTTP-Status in allen Factories, Buildern und Renderern
 des Moduls:
@@ -108,18 +203,24 @@ des Moduls:
 | Situation | HTTP-Status |
 |---|---|
 | Client-Input fehlt (Pflichtfeld, leere ID-Liste, nicht übergebenes Parameter-Objekt) | `BAD_REQUEST` |
-| Client-Input ungültig (Wert außerhalb Wertebereich, ungültige Enum-Bezeichnung, Bulk-ID nicht vorhanden) | `BAD_REQUEST` |
+| Client-Input ungültig (Wert außerhalb Wertebereich, ungültige Enum-Bezeichnung) | `BAD_REQUEST` |
 | Geschäfts-Voraussetzung verletzt (Schule ohne GOSt, Vorlage passt nicht zu Daten) | `BAD_REQUEST` |
 | Berechtigung fehlt | `FORBIDDEN` |
 | Eine konkret per ID adressierte Einzel-Ressource existiert nicht (z. B. Stundenplan zur ID) | `NOT_FOUND` |
+| Eine adressierte Einzel-Ressource existiert, ihre Daten sind aber nicht ladbar | `INTERNAL_SERVER_ERROR` |
+| Der übergebene Schuljahresabschnitt gehört nicht zur Schule (auch der nicht gesetzte Wert `-1`) | `BAD_REQUEST` |
 | Server-internes Problem (DB-Verbindung `null`, Template-Datei nicht lesbar, nicht implementierter Pfad) | `INTERNAL_SERVER_ERROR` |
 | Interne Renderer-Ressource fehlt (Template-Engine, HTML-Template, Ressourcen-Root-Pfad, Schriftart) | `INTERNAL_SERVER_ERROR` |
 
 Ergänzende Regeln:
 
-- **Bulk-IDs:** Werden IDs im Request-Body übergeben und ein Eintrag liegt nicht vor, ist das
-  Client-Input-Validierung → `BAD_REQUEST`. `NOT_FOUND` bleibt der einzelnen, direkt
-  adressierten Ressource vorbehalten.
+- **Bulk-IDs** (Konkretisierung von G-2): Werden IDs im Request-Body übergeben und ein Eintrag
+  liegt nicht vor, wird dieser Datensatz **ausgelassen**; der Report entsteht aus den übrigen. Der
+  Befund wird als Ausgabeproblem gemeldet und höchstens mit `WARNING` protokolliert. Das gilt auch
+  dann, wenn dadurch kein Datensatz übrig bleibt — eine leere Ausgabe ist eine gültige Antwort.
+  `BAD_REQUEST` bleibt allein der **im Request leeren** ID-Liste vorbehalten: Dort hat der
+  Aufrufer nichts angefordert, was etwas anderes ist als eine Liste, die erst durch das Auslassen
+  leer wird. `NOT_FOUND` bleibt der einzelnen, direkt adressierten Ressource vorbehalten.
 - **Interne Ressourcen sind niemals Client-Input:** Template-Engine, HTML-Template, Root-Pfad und
   Schriftarten baut der Server selbst auf; der Client benennt sie nicht. Ihr Fehlen ist deshalb
   weder `BAD_REQUEST` noch `NOT_FOUND`, sondern `INTERNAL_SERVER_ERROR`. Dasselbe gilt für alle
@@ -146,6 +247,9 @@ Ergänzende Regeln:
   **allein diesen Zusammenhang** aus und hängt nicht `e.getMessage()` an: Die Meldung der Quelle
   steht bereits in deren Eintrag und reist mit der Exception weiter. Der Log-Block wird als
   `SimpleOperationResponse` an den Client ausgeliefert; jede Wiederholung steht dort ebenfalls.
+  Für tolerierte Ausgabeprobleme protokolliert der Problemsammler den Block aus Fehlertyp,
+  Ursachenkette und Stacktrace **einmal je Fehler-Instanz** — reist dieselbe Instanz mit einem
+  weiteren Befund, erhält dessen Meldung nur einen Verweis auf den ersten Eintrag.
 
 ## 5. Templates & OGNL-Grenzen
 

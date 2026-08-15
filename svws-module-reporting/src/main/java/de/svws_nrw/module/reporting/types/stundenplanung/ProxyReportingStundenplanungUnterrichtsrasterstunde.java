@@ -54,6 +54,9 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 			// Setze den Wochentag, wenn es passt.
 			super.wochentag = Wochentag.fromIDorException(zeitraster.wochentag);
 		} catch (final Exception e) {
+			// Beide Prüfungen arbeiten allein auf den bereits geladenen Daten; ein Datenzugriff findet hier nicht statt. Passen Zeitraster und Stundenplan
+			// nicht zusammen oder ist der Wochentag unbekannt, sind die Unterrichtsangaben dieser Stunde nicht bestimmbar: Der fehlende Manager lässt die
+			// Getter unten leere Listen liefern, und die Stunde erscheint ohne Unterricht statt mit falschem.
 			this.stundenplanManager = null;
 		}
 	}

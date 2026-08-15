@@ -40,8 +40,10 @@ public final class ReportingImageUtils {
 				final byte[] header = Base64.getDecoder().decode(base64Image.substring(0, Math.min(base64Image.length(), 24)));
 				type = ermittleMimeTypeAusBase64Daten(header);
 			} catch (final IllegalArgumentException e) {
+				// WARNING statt ERROR: Das Bild wird mit dem Typ "unknown" ausgeliefert, und ERROR ist dem Abbruch vorbehalten. Die
+				// statische Hilfsklasse hat keinen Zugang zum Reporting-Context; der Befund wird deshalb nicht gezählt - dokumentierte Ausnahme.
 				if (logger != null) {
-					logger.log(LogLevel.ERROR, 0, "### Fehler beim Dekodieren des Base64-Strings für die MimeType-Erkennung: " + e.getMessage());
+					logger.log(LogLevel.WARNING, 0, "### Fehler beim Dekodieren des Base64-Strings für die MimeType-Erkennung: " + e.getMessage());
 				}
 				type = UNKNOWN;
 			}

@@ -198,7 +198,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		if (idsNonNull.isEmpty()) {
 			return result;
 		}
-		idsNonNull.forEach(idRaum -> result.add(raum(idRaum)));
+		idsNonNull.stream().map(this::raum).filter(Objects::nonNull).forEach(result::add);
 		return result;
 	}
 

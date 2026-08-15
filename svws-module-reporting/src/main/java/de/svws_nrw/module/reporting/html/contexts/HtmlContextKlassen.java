@@ -24,17 +24,6 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> imple
 	}
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Klassen-IDs.
-	 *
-	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
-	 */
-	public HtmlContextKlassen(final ReportingContext reportingContext) {
-		super(reportingContext);
-		erzeugeContext("Klassen", reportingContext.repositoryLerngruppen().klassen(reportingContext.reportingParameter().idsHauptdaten()));
-	}
-
-
-	/**
 	 * Teile diesen Context mit allen Klassen in eine Liste von Contexts auf, die jeweils eine Klasse enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.

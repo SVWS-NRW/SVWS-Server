@@ -75,6 +75,12 @@ public final class EmailFactory {
 			final ReportingParameterTypisiert parameter = pruefeParameter();
 			reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Parameter wurden geprüft und erfolgreich ermittelt.");
 
+			// Ohne Datensatz gibt es nichts zu versenden. Die Prüfung steht nach der Parameterprüfung - eine fehlerhafte Anfrage bleibt eine fehlerhafte
+			// Anfrage - und vor jedem weiteren Schritt: Weder Absenderadresse noch SMTP-Sitzung werden für einen Versand benötigt, der nicht stattfindet.
+			if (pdfFactory.bewusstLeer()) {
+				return antwortOhneJob();
+			}
+
 			// Betreff und Text sind durch pruefeParameter() bereits als vorhanden und nicht leer bestätigt.
 			final String subject = parameter.eMailDaten().betreff;
 			final String body = buildEMailHTMLBody(parameter);
@@ -122,6 +128,23 @@ public final class EmailFactory {
 		}
 	}
 
+
+	/**
+	 * Erzeugt die Startantwort für eine Auswahl, die bewusst keinen Datensatz enthält: Es wird kein Job eingereiht, denn ein Job ohne Anhänge sähe erfolgreich
+	 * aus, ohne etwas zu versenden. Die Antwort meldet Erfolg ohne Job-ID - die Anfrage ist ordnungsgemäß bearbeitet, und ihr Ergebnis ist, dass es nichts zu
+	 * versenden gab. Ein Fehlerstatus wäre falsch, weil eine leere Auswahl eine gewollte Auswahlentscheidung ist.
+	 *
+	 * @return Die Startantwort ohne Job-ID.
+	 */
+	private Response antwortOhneJob() {
+		final String meldung = "Es wurde kein E-Mail-Versand-Job gestartet, da die Auswahl keinen Datensatz enthält und damit keine Anhänge entstehen.";
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< " + meldung);
+
+		final SimpleOperationResponse simple = new SimpleOperationResponse();
+		simple.success = true;
+		simple.log.add(meldung);
+		return Response.ok(simple, MediaType.APPLICATION_JSON).build();
+	}
 
 	/**
 	 * Prüft, ob die notwendigen Parameter und E-Mail-Daten für den E-Mail-Versand vorhanden und korrekt gesetzt sind, und liest diese aus. Sollte eine der

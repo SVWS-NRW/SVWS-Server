@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
+import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
 /**
  * Domänen-Repository für Klassen und Kurse.
@@ -40,6 +40,15 @@ public class ReportingRepositoryLerngruppen {
 	private final Map<Long, List<KlassenDaten>> mapKlassenDatenBySchuljahresabschnitt = new HashMap<>();
 	private final Map<Long, List<KursDaten>> mapKursDatenBySchuljahresabschnitt = new HashMap<>();
 	private final Map<Long, KursDaten> mapKursDaten = new HashMap<>();
+
+	/**
+	 * Die Fehler gescheiterter Ladevorgänge je Klassen-ID. Sie leben so lange wie der Stammdaten-Cache, weil dessen Fehler-Marker jeden weiteren Ladeversuch
+	 * verhindert.
+	 */
+	private final Map<Long, Exception> ladefehlerKlassenStammdaten = new HashMap<>();
+
+	/** Die Fehler gescheiterter Ladevorgänge je Kurs-ID, aus demselben Grund wie bei den Klassen. */
+	private final Map<Long, Exception> ladefehlerKursDaten = new HashMap<>();
 	private final Map<Long, List<Long>> mapKursSchuelerIds = new HashMap<>();
 
 	/**
@@ -83,7 +92,8 @@ public class ReportingRepositoryLerngruppen {
 
 	/**
 	 * Gibt eine Liste von ReportingKlasse-Objekten zu den übergebenen IDs zurück, optional sortiert.
-	 * Fehlende Klassenstammdaten werden im Bulk aus der Datenbank nachgeladen.
+	 * Fehlende Klassenstammdaten werden im Bulk aus der Datenbank nachgeladen. Eine Klasse, deren Laden endgültig scheitert, fehlt in der Liste; der Befund
+	 * wird als Ausgabeproblem gemeldet, weil diese Methode anders als {@link #waehleKlassenAus(List)} nur die Objekte herausgibt.
 	 *
 	 * @param idsKlassen    Liste der Klassen-IDs.
 	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
@@ -91,13 +101,40 @@ public class ReportingRepositoryLerngruppen {
 	 * @return Liste von ReportingKlasse-Objekten.
 	 */
 	public List<ReportingKlasse> klassen(final List<Long> idsKlassen, final boolean sortiereListe) {
+		final ReportingAuswahlergebnis<ReportingKlasse> auswahl = waehleKlassenAus(idsKlassen, sortiereListe);
+		ReportingRepositoryUtils.meldeFehlgeschlageneAuslassungen(this.reportingContext, auswahl, ReportingKlasse.class, "der Klasse");
+		return auswahl.objekte();
+	}
+
+	/**
+	 * Wählt die Klassen zu den übergebenen IDs aus und gibt zusätzlich an, welche IDs nicht in die Ausgabe gelangen.
+	 * <p>Die Auswahl ist sortiert und gefiltert wie {@link #klassen(List)}; anders als dort überlebt hier die Angabe, welche IDs fehlen und warum.
+	 * Ausgelassene und ausgefilterte IDs bleiben getrennt, damit eine ausgefilterte Klasse nicht als Ausgabeproblem gemeldet wird.</p>
+	 *
+	 * @param idsKlassen Liste der Klassen-IDs.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	public ReportingAuswahlergebnis<ReportingKlasse> waehleKlassenAus(final List<Long> idsKlassen) {
+		return waehleKlassenAus(idsKlassen, true);
+	}
+
+	/**
+	 * Wählt die Klassen zu den übergebenen IDs aus, optional sortiert.
+	 *
+	 * @param idsKlassen    Liste der Klassen-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	private ReportingAuswahlergebnis<ReportingKlasse> waehleKlassenAus(final List<Long> idsKlassen, final boolean sortiereListe) {
 		final Comparator<ReportingKlasse> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingKlasse.class.getSimpleName(),
 				ReportingKlasse.SORTIERUNG, sortiereListe);
 		final Predicate<ReportingKlasse> filter = ReportingKlasse.FILTER.bedingung(
 				this.reportingContext.filterService().getFilter(ReportingKlasse.class.getSimpleName()), null);
 
-		return ReportingRepositoryUtils.erstelleReportingListe(idsKlassen, mapKlassenStammdaten, mapKlassen,
+		return ReportingRepositoryUtils.waehleAus(idsKlassen, mapKlassenStammdaten, mapKlassen,
 				fehlendeIds -> {
 					final DataKlassendaten dataKlassendaten = new DataKlassendaten(this.reportingContext.conn());
 					final List<DTOKlassen> dtos = dataKlassendaten.getDTOsByIds(fehlendeIds);
@@ -123,7 +160,7 @@ public class ReportingRepositoryLerngruppen {
 				},
 				stammdaten -> stammdaten.id,
 				comparator, filter,
-				"Klassen", this.reportingContext.logger());
+				"Klassen", this.reportingContext.logger(), ladefehlerKlassenStammdaten);
 	}
 
 	/**
@@ -158,9 +195,9 @@ public class ReportingRepositoryLerngruppen {
 			try {
 				return new DataKlassendaten(this.reportingContext.conn()).getListBySchuljahresabschnittID(id, true);
 			} catch (final Exception e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %d.".formatted(id), e,
-						this.reportingContext.logger(), LogLevel.ERROR, 0);
+				// Der Zugriff gilt allen Klassen des Schuljahresabschnitts und nicht einem einzelnen Datensatz; der Schlüssel führt deshalb keine ID.
+				ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingKlasse.class),
+						"Die Klassen zum Schuljahresabschnitt %d".formatted(id), e);
 				return new ArrayList<>();
 			}
 		});
@@ -234,7 +271,8 @@ public class ReportingRepositoryLerngruppen {
 
 	/**
 	 * Gibt eine Liste von ReportingKurs-Objekten zu den übergebenen IDs zurück, optional sortiert.
-	 * Fehlende Kursstammdaten werden im Bulk aus der Datenbank nachgeladen.
+	 * Fehlende Kursstammdaten werden im Bulk aus der Datenbank nachgeladen. Ein Kurs, dessen Laden endgültig scheitert, fehlt in der Liste; der Befund wird
+	 * als Ausgabeproblem gemeldet, weil diese Methode anders als {@link #waehleKurseAus(List)} nur die Objekte herausgibt.
 	 *
 	 * @param idsKurse      Liste der Kurs-IDs.
 	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
@@ -242,13 +280,40 @@ public class ReportingRepositoryLerngruppen {
 	 * @return Liste von ReportingKurs-Objekten.
 	 */
 	public List<ReportingKurs> kurse(final List<Long> idsKurse, final boolean sortiereListe) {
+		final ReportingAuswahlergebnis<ReportingKurs> auswahl = waehleKurseAus(idsKurse, sortiereListe);
+		ReportingRepositoryUtils.meldeFehlgeschlageneAuslassungen(this.reportingContext, auswahl, ReportingKurs.class, "des Kurses");
+		return auswahl.objekte();
+	}
+
+	/**
+	 * Wählt die Kurse zu den übergebenen IDs aus und gibt zusätzlich an, welche IDs nicht in die Ausgabe gelangen.
+	 * <p>Die Auswahl ist sortiert und gefiltert wie {@link #kurse(List)}; anders als dort überlebt hier die Angabe, welche IDs fehlen und warum.
+	 * Ausgelassene und ausgefilterte IDs bleiben getrennt, damit ein ausgefilterter Kurs nicht als Ausgabeproblem gemeldet wird.</p>
+	 *
+	 * @param idsKurse Liste der Kurs-IDs.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	public ReportingAuswahlergebnis<ReportingKurs> waehleKurseAus(final List<Long> idsKurse) {
+		return waehleKurseAus(idsKurse, true);
+	}
+
+	/**
+	 * Wählt die Kurse zu den übergebenen IDs aus, optional sortiert.
+	 *
+	 * @param idsKurse      Liste der Kurs-IDs.
+	 * @param sortiereListe Gibt an, ob die definierte Sortierung angewendet werden soll.
+	 *
+	 * @return Das Auswahlergebnis.
+	 */
+	private ReportingAuswahlergebnis<ReportingKurs> waehleKurseAus(final List<Long> idsKurse, final boolean sortiereListe) {
 		final Comparator<ReportingKurs> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
 				this.reportingContext.logger(), ReportingKurs.class.getSimpleName(),
 				ReportingKurs.SORTIERUNG, sortiereListe);
 		final Predicate<ReportingKurs> filter = ReportingKurs.FILTER.bedingung(
 				this.reportingContext.filterService().getFilter(ReportingKurs.class.getSimpleName()), null);
 
-		return ReportingRepositoryUtils.erstelleReportingListe(idsKurse, mapKursDaten, mapKurse,
+		return ReportingRepositoryUtils.waehleAus(idsKurse, mapKursDaten, mapKurse,
 				fehlendeIds -> new DataKurse(this.reportingContext.conn()).getListByIDs(fehlendeIds, false),
 				key -> {
 					final KursDaten daten = mapKursDaten.get(key);
@@ -261,7 +326,7 @@ public class ReportingRepositoryLerngruppen {
 				},
 				stammdaten -> stammdaten.id,
 				comparator, filter,
-				"Kurse", this.reportingContext.logger());
+				"Kurse", this.reportingContext.logger(), ladefehlerKursDaten);
 	}
 
 	/**
@@ -296,9 +361,9 @@ public class ReportingRepositoryLerngruppen {
 			try {
 				return new DataKurse(this.reportingContext.conn()).getListBySchuljahresabschnittID(id, true);
 			} catch (final Exception e) {
-				ReportingExceptionUtils.logException(
-						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %d.".formatted(id), e,
-						this.reportingContext.logger(), LogLevel.ERROR, 0);
+				// Der Zugriff gilt allen Kursen des Schuljahresabschnitts und nicht einem einzelnen Datensatz; der Schlüssel führt deshalb keine ID.
+				ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingKurs.class),
+						"Die Kurse zum Schuljahresabschnitt %d".formatted(id), e);
 				return new ArrayList<>();
 			}
 		});

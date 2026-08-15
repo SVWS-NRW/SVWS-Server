@@ -3,6 +3,8 @@ package de.svws_nrw.module.reporting.builders;
 import java.io.File;
 import java.util.List;
 
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.dialects.AktuellExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
@@ -13,6 +15,8 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
+
+import jakarta.ws.rs.core.Response;
 
 /**
  * Hilfsklasse für wiederverwendbare Logik rund um Report-Builder:
@@ -123,13 +127,15 @@ public final class ReportBuilderUtils {
 	/**
 	 * Generiert einen Dateinamen basierend auf einer Vorlage unter Verwendung zusätzlicher Kontextinformationen.
 	 * Die Vorlage wird im TEXT-Mode verarbeitet und unterstützt die Textual Syntax von Thymeleaf.
-	 * Wenn die Vorlage leer ist, wird ein leerer String zurückgegeben. Tritt ein Fehler während der Dateinamensgenerierung auf,
-	 * wird ebenfalls ein leerer String zurückgegeben.
+	 * Wenn die Vorlage leer ist oder ihre Auswertung scheitert, wird ein leerer String zurückgegeben - außer bei einer Infrastrukturstörung, die die Ausgabe
+	 * beendet.
 	 *
-	 * @param dateinamensvorlage Die Vorlage für den zu generierenden Dateinamen. Darf nicht null oder leer sein.
+	 * @param dateinamensvorlage Die Vorlage für den zu generierenden Dateinamen. Kann null oder leer sein.
 	 * @param contexts           Eine Liste von HtmlContext-Objekten, die zusätzliche Variablen für die Vorlage enthalten. Darf null oder leer sein.
 	 *
-	 * @return Der generierte Dateiname. Ist die Vorlage leer oder tritt ein Fehler auf, wird ein leerer String zurückgegeben.
+	 * @return Der generierte Dateiname. Ist die Vorlage leer oder liefert sie keinen Namen, wird ein leerer String zurückgegeben.
+	 *
+	 * @throws ApiOperationException Mit dem Status 500, wenn die Auswertung an einer Infrastrukturstörung scheitert.
 	 */
 	public static String generiereDateinameAusVorlage(final String dateinamensvorlage, final List<HtmlContext<?>> contexts) {
 
@@ -160,6 +166,12 @@ public final class ReportBuilderUtils {
 
 			return "";
 		} catch (final Exception e) {
+			// Eine Infrastrukturstörung ist kein Grund für den Rückfall auf den statischen Namen: Sie beendet die Ausgabe. Entschieden wird über die
+			// Ursachenkette und nicht über den Fehlertyp, weil Thymeleaf den Fehler eines Datenzugriffs in der Vorlage verpackt.
+			if (ReportingProblemursache.fuerLadefehler(e).istAbbruch()) {
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
+						"### FEHLER: Der Dateiname konnte wegen einer Störung des Servers nicht ermittelt werden.");
+			}
 			// Bei Fehler leeren String zurückgeben (Fallback auf statischen Namen)
 			return "";
 		}

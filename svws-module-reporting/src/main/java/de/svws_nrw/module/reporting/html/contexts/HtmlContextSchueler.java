@@ -27,17 +27,6 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	}
 
 	/**
-	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schüler-IDs.
-	 *
-	 * @param reportingContext   Context mit Parametern, Logger und Daten zum Reporting.
-	 */
-	public HtmlContextSchueler(final ReportingContext reportingContext) {
-		super(reportingContext);
-		// Rufe die Schülerdaten ab oder erzeuge sie, falls sie noch nicht existieren. Weise sie dann dem Context zu.
-		erzeugeContext("Schueler", reportingContext.repositorySchueler().schueler(reportingContext.reportingParameter().idsHauptdaten()));
-	}
-
-	/**
 	 * Erstellt eine Leistungsdaten-Matrix für die Schüler in diesem Context basierend auf dem ausgewählten Schuljahresabschnitt.
 	 *
 	 * @return Die Leistungsdaten-Matrix für die Schüler dieses Contexts.

@@ -19,6 +19,7 @@ import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.types.stundenplanung.ProxyReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -50,6 +51,12 @@ public class ReportingRepositoryStundenplan {
 	private final Map<Long, ReportingStundenplanungStundenplan> mapStundenplaene = new HashMap<>();
 
 	/**
+	 * Die Fehler je Stundenplan, dessen Daten sich nicht laden ließen; der Wert ist {@code null}, wenn der Zugriff ohne Ausnahme unvollständig blieb. Der
+	 * strikte Zugriff gibt den festgehaltenen Fehler als Ursache seines Abbruchs mit.
+	 */
+	private final Map<Long, Exception> ladefehlerStundenplaene = new HashMap<>();
+
+	/**
 	 * Erstellt ein neues ReportingStundenplanRepository und initialisiert die Stundenplandefinition.
 	 *
 	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf die domänenspezifischen Repositories.
@@ -63,7 +70,7 @@ public class ReportingRepositoryStundenplan {
 	/**
 	 * Lädt die Stundenplandefinitionen und gibt einen dabei aufgetretenen Fehler zurück, statt ihn zu werfen oder zu protokollieren.
 	 * <p>Zum Zeitpunkt der Initialisierung ist die Bedeutung des Fehlers unbekannt: Ein Report ohne Stundenplanbezug berührt die Definitionen nie. Ein
-	 * Log-Eintrag mit {@link LogLevel#ERROR} bräche zudem jede Ausgabe ab, da die ReportingFactory das gesammelte Log darauf prüft.</p>
+	 * Log-Eintrag mit {@link LogLevel#ERROR} wäre hier zudem verfrüht, denn er ist dem Abbruch vorbehalten.</p>
 	 *
 	 * @return Der Fehler beim Laden der Definitionen oder null, wenn sie geladen werden konnten.
 	 */
@@ -137,15 +144,16 @@ public class ReportingRepositoryStundenplan {
 
 	/**
 	 * Gibt den Stundenplan zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank erzeugt.
-	 * <p><b>Strikter Zugriff:</b> Der Stundenplan ist hier das angeforderte Hauptdatum. Konnten die Definitionen nicht geladen werden, ist das ein
-	 * Serverfehler und wird als solcher gemeldet. Eine ID, die in den geladenen Definitionen nicht enthalten ist, ergibt dagegen unverändert null - der
-	 * Aufrufer macht daraus ein {@code NOT_FOUND}. Für den optionalen Zugriff auf einen Stundenplan als Beiwerk gilt {@link #stundenplan(String)}.</p>
+	 * <p><b>Strikter Zugriff:</b> Der Stundenplan ist hier das angeforderte Hauptdatum, und maßgeblich ist die Definitionsliste dieses Aufrufs: Führt sie die
+	 * ID und entsteht dennoch kein Stundenplan, ist das ein Serverfehler - auch dann, wenn der Einzelzugriff den Plan nicht mehr findet, etwa nach einem
+	 * parallelen Löschen. Eine ID, zu der es keine Definition gibt, ergibt dagegen null - der Aufrufer macht daraus ein {@code NOT_FOUND}. Für den optionalen
+	 * Zugriff auf einen Stundenplan als Beiwerk gilt {@link #stundenplan(String)}.</p>
 	 *
 	 * @param idStundenplan Die ID des Stundenplans.
 	 *
 	 * @return Der Stundenplan zur ID oder null, falls keiner existiert.
 	 *
-	 * @throws ApiOperationException Wenn die Stundenplandefinitionen nicht geladen werden konnten.
+	 * @throws ApiOperationException Mit Status 500, wenn die Stundenplandefinitionen oder die Daten des vorhandenen Stundenplans nicht geladen werden konnten.
 	 */
 	public ReportingStundenplanungStundenplan stundenplan(final long idStundenplan) throws ApiOperationException {
 		if (this.ladefehlerDefinitionen != null) {
@@ -156,7 +164,15 @@ public class ReportingRepositoryStundenplan {
 					"FEHLER: Der angeforderte Stundenplan ist nicht ermittelbar, da die Stundenplandefinitionen nicht geladen werden konnten.");
 		}
 
-		return ermittleStundenplan(idStundenplan);
+		final ReportingStundenplanungStundenplan stundenplan = ermittleStundenplan(idStundenplan);
+		if ((stundenplan == null) && stundenplandefinitionen.stream().anyMatch(d -> d.id == idStundenplan)) {
+			// Die Definitionsliste dieses Aufrufs führt den Stundenplan; dass er dennoch fehlt, ist ein Serverproblem. Als NOT_FOUND wäre das die falsche
+			// Auskunft, der Anwender suchte nach einem Datensatz, den die Schule führt.
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, this.ladefehlerStundenplaene.get(idStundenplan),
+					"FEHLER: Der Stundenplan %d ist in den Stundenplandefinitionen vorhanden, seine Daten konnten aber nicht geladen werden."
+							.formatted(idStundenplan));
+		}
+		return stundenplan;
 	}
 
 	/**
@@ -185,41 +201,90 @@ public class ReportingRepositoryStundenplan {
 
 		try {
 			final StundenplanManager manager = manager(idStundenplan);
-			if (manager != null) {
-				mapStundenplanManager.put(idStundenplan, manager);
-				mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this.reportingContext, manager));
-				return mapStundenplaene.get(idStundenplan);
+			if (manager == null) {
+				return null;
 			}
-		} catch (@SuppressWarnings("unused") final Exception ignore) {
-			// Stundenplan konnte nicht aus der Datenbank ermittelt werden.
+			mapStundenplanManager.put(idStundenplan, manager);
+			mapStundenplaene.put(idStundenplan, new ProxyReportingStundenplanungStundenplan(this.reportingContext, manager));
+			return mapStundenplaene.get(idStundenplan);
+		} catch (final Exception e) {
+			// Hier scheitert der Aufbau des Reporting-Objekts an Daten, die nicht zusammenpassen - etwa einer Aufsicht ohne ihren Aufsichtsbereich. Der
+			// Stundenplan entfällt dann, wird aber gemeldet statt still verschluckt; eine Infrastrukturstörung bricht in der Meldung ab.
+			meldeStundenplanLadefehler(idStundenplan, e);
+			return null;
 		}
-		return null;
 	}
 
 	/**
 	 * Gibt den StundenplanManager zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank erzeugt.
+	 * <p>Beide Fälle des Fehlens ergeben {@code null}, werden aber getrennt behandelt: Einen Stundenplan, den es nicht gibt, meldet der Zugriff nicht - er hat
+	 * einwandfrei gearbeitet. Ein gescheiterter oder unvollständiger Zugriff wird dagegen gemeldet, sonst bliebe er beim Aufrufer von "gibt es nicht"
+	 * ununterscheidbar.</p>
 	 *
 	 * @param idStundenplan Die ID des Stundenplans.
 	 *
-	 * @return Der StundenplanManager zur ID oder null, falls der Stundenplan nicht existiert.
+	 * @return Der StundenplanManager zur ID oder null, falls der Stundenplan nicht existiert oder nicht geladen werden konnte.
 	 */
 	public StundenplanManager manager(final long idStundenplan) {
-		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
-			try {
-				final Stundenplan stundenplan = new DataStundenplan(this.reportingContext.conn()).getById(key);
-				if (stundenplan == null) {
-					return null;
-				}
-				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.reportingContext.conn(), key);
-				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.reportingContext.conn(), key);
-				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.reportingContext.conn(), key);
-				return new StundenplanManager(stundenplan, unterrichte, aufsichten, unterrichtsverteilung);
-			} catch (final ApiOperationException e) {
-				return null;
-			}
-		});
+		mapStundenplanManager.computeIfAbsent(idStundenplan, this::erzeugeManager);
 
 		return this.mapStundenplanManager.get(idStundenplan);
+	}
+
+	/**
+	 * Erzeugt den StundenplanManager zur übergebenen ID aus der Datenbank.
+	 * <p>Allein der Zugriff auf den Stundenplan selbst darf {@code NOT_FOUND} als "gibt es nicht" lesen. Derselbe Status aus dem Nachladen von Unterricht,
+	 * Aufsichten oder Unterrichtsverteilung bezeichnet dagegen fehlende Teildaten eines vorhandenen Stundenplans und wird gemeldet.</p>
+	 *
+	 * @param idStundenplan Die ID des Stundenplans.
+	 *
+	 * @return Der Manager oder null, falls der Stundenplan nicht existiert oder nicht geladen werden konnte.
+	 */
+	private StundenplanManager erzeugeManager(final long idStundenplan) {
+		final Stundenplan stundenplan;
+		try {
+			stundenplan = new DataStundenplan(this.reportingContext.conn()).getById(idStundenplan);
+		} catch (final ApiOperationException e) {
+			if (e.getStatus() == Status.NOT_FOUND) {
+				// Für den direkten Zugriff bleibt das die fachliche Auskunft "gibt es nicht" und wird nicht gemeldet. Festgehalten wird der Fehler trotzdem:
+				// Führt die Definitionsliste die ID, gibt der strikte Zugriff ihn als Ursache seines Abbruchs mit.
+				this.ladefehlerStundenplaene.put(idStundenplan, e);
+				return null;
+			}
+			meldeStundenplanLadefehler(idStundenplan, e);
+			return null;
+		}
+
+		if (stundenplan == null) {
+			// Den Stundenplan gibt es, seine Daten sind aber unvollständig - etwa ohne den Schuljahresabschnitt, auf den er sich bezieht.
+			meldeStundenplanLadefehler(idStundenplan, null);
+			return null;
+		}
+
+		try {
+			final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.reportingContext.conn(), idStundenplan);
+			final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.reportingContext.conn(), idStundenplan);
+			final StundenplanUnterrichtsverteilung unterrichtsverteilung =
+					DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.reportingContext.conn(), idStundenplan);
+			return new StundenplanManager(stundenplan, unterrichte, aufsichten, unterrichtsverteilung);
+		} catch (final ApiOperationException e) {
+			meldeStundenplanLadefehler(idStundenplan, e);
+			return null;
+		}
+	}
+
+	/**
+	 * Hält den Ladefehler eines Stundenplans fest und meldet ihn als Ausgabeproblem. Festgehalten wird er, damit der strikte Zugriff ihn als Ursache seines
+	 * Abbruchs mitgeben kann.
+	 *
+	 * @param idStundenplan Die ID des betroffenen Stundenplans.
+	 * @param fehler        Der Fehler des Zugriffs oder {@code null}, wenn der Zugriff ohne Ausnahme unvollständig blieb.
+	 */
+	private void meldeStundenplanLadefehler(final long idStundenplan, final Exception fehler) {
+		this.ladefehlerStundenplaene.put(idStundenplan, fehler);
+		ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
+				ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, idStundenplan),
+				"Die Daten des Stundenplans %d".formatted(idStundenplan), fehler);
 	}
 
 }
