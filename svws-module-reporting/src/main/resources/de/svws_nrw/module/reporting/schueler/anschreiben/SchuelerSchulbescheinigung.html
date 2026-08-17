@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
-    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+    <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */--><!--/* @thymesVar id="#aktuell" type="de.svws_nrw.module.reporting.html.dialects.AktuellExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schulbescheinigung',
 		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
@@ -110,7 +110,7 @@
 
 				<!-- OrtUndDatum -->
 				<div class="ortunddatum">
-					<p th:text="${Schule.ort() + ', den ' + #dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy')}">Düsseldorf, den 15.03.2024</p>
+					<p th:text="${Schule.ort() + ', den ' + #aktuell.formatiert('dd.MM.yyyy')}">Düsseldorf, den 15.03.2024</p>
 				</div>
 
 				<!-- Optionales Ordnungsmerkmal: leeres, rechtsbündiges Feld zum Selbstausfüllen durch den Empfänger (siehe Hinweistext). Die Beschriftungen sitzen auf dem Rahmen und unterbrechen ihn. Wird immer gedruckt. -->
@@ -141,7 +141,7 @@
 								<tr>
 									<td></td>
 									<td class="label ta-l">aktuelles Datum</td>
-									<td class="ta-l" th:with="wert=${istAktuell ? #dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy') : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>,</td>
+									<td class="ta-l" th:with="wert=${istAktuell ? #aktuell.formatiert('dd.MM.yyyy') : ''}"><span class="formularfeld"><span th:if="${wert.isEmpty()}" class="formularfeld-strich"></span><span th:unless="${wert.isEmpty()}" th:text="${wert}"></span></span>,</td>
 								</tr>
 								<tr class="zeile-abstand-klein">
 									<td></td>

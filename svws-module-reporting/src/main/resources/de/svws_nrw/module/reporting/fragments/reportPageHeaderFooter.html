@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="de">
+	<!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#aktuell" type="de.svws_nrw.module.reporting.html.dialects.AktuellExpressionHelper" */-->
 	<head>
 		<title></title>
 	</head>
@@ -19,7 +21,7 @@
 				<div class="pageTopRight" th:utext="${headerRight} +
 					'<br/>Abschnitt: ' + ${Schule.auswahlSchuljahresabschnitt() != null ? Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz() : ''} +
 					'<br/>Schulnummer: ' + ${Schule.schulnummer()}">Inhalt oben rechts</div>
-				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
+				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#aktuell.formatiert('dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
 				<!--/*@thymesVar id="footerCenter" type="String"*/-->
 				<div class="pageBottomCenter" th:utext="${footerCenter}">Inhalt unten zentriert</div>
 				<!--/*@thymesVar id="footerRight" type="String"*/-->

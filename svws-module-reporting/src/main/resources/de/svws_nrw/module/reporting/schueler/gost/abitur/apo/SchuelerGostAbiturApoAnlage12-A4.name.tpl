@@ -9,4 +9,4 @@
         Abitur[(${ (schueler[0].gostAbitur() != null ? '' + schueler[0].gostAbitur().abiturjahr() : '') + '_APO-GOSt-Anlage12' })]
     [/]
 [/]
-[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })][/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #aktuell.formatiert('yyyyMMdd-HHmm') })][/]

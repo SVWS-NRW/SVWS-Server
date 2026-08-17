@@ -4,4 +4,4 @@
         _[(${ #strings.replace(#strings.replace(kurse[0].auflistungJahrgaenge(), ' ', '_'), ',', '-') })]-[(${ #strings.replace(kurse[0].kuerzel(), ' ', '_') })]
     [/]
 [/]
-[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })][/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #aktuell.formatiert('yyyyMMdd-HHmm') })][/]

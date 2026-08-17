@@ -5,18 +5,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  * Die Klasse stellt Hilfsmethoden für aktuelles Datum und aktuelle Uhrzeit zur Verfügung, die über
  * einen Thymeleaf-Dialect und dessen ExpressionFactory in HTML-Templates verwendet werden können.
  *
  * <p>Die zugrunde liegende {@link Clock} wird beim Erzeugen des Helpers gesetzt. Standardmäßig stammt sie aus
- * {@code ReportingUhr.standard()} und läuft in der Zeitzone {@code Europe/Berlin}; in Test-Szenarien kann eine feste Uhr eingespielt werden,
+ * {@code ReportingUhr.standard()} und läuft in der Zeitzone des Servers; in Test-Szenarien kann eine feste Uhr eingespielt werden,
  * sodass Snapshot-Vergleiche deterministisch sind.</p>
+ *
+ * <p>Alle Methoden lesen über {@code java.time} aus der Uhr und übernehmen dabei deren Zeitzone. Vorlagen formatieren einen Zeitpunkt deshalb
+ * über {@link #formatiert(String)} und nicht über {@code #dates.format(...)}: Letzteres arbeitet auf {@link java.util.Date}, das keine Zeitzone
+ * mitführt, und bände die Ausgabe damit an die Default-Zone der JVM statt an die der Uhr. Bei einer festen Uhr fiele das Ergebnis dadurch je nach
+ * Zeitzone des ausführenden Systems unterschiedlich aus.</p>
  */
-// Intern arbeitet der Helper durchgängig mit java.time; die Date-Rückgabe ist ein bewusster Adapter an die Thymeleaf-Template-API, weil zahlreiche
-// Vorlagen das Ergebnis an #dates.format(...) übergeben.
 public class AktuellExpressionHelper {
 
 	private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -35,12 +37,14 @@ public class AktuellExpressionHelper {
 	}
 
 	/**
-	 * Liefert den aktuellen Zeitpunkt als {@link Date} – ersetzt {@code #dates.createNow()}.
+	 * Formatiert den aktuellen Zeitpunkt nach dem angegebenen Muster, z. B. {@code dd.MM.yyyy HH:mm} – ersetzt {@code #dates.format(...)}.
 	 *
-	 * @return Der aktuelle Zeitpunkt gemäß der eingestellten {@link Clock}.
+	 * @param muster das Formatmuster gemäß {@link DateTimeFormatter#ofPattern(String)}.
+	 *
+	 * @return Der formatierte Zeitpunkt gemäß der eingestellten {@link Clock}.
 	 */
-	public Date jetztAlsDate() {
-		return Date.from(clock.instant());
+	public String formatiert(final String muster) {
+		return LocalDateTime.now(clock).format(DateTimeFormatter.ofPattern(muster));
 	}
 
 	/**

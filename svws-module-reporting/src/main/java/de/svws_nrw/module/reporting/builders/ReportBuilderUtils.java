@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.builders;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
@@ -42,6 +43,14 @@ public final class ReportBuilderUtils {
 
 	/** Die geteilte TemplateEngine für TEXT-Mode-Templates (Dateinamensvorlagen). Siehe {@link #HTML_TEMPLATE_ENGINE}. */
 	private static final TemplateEngine TEXT_TEMPLATE_ENGINE = createTemplateEngine(TemplateMode.TEXT);
+
+	/**
+	 * Die Locale, in der Thymeleaf die Werte einer Vorlage formatiert — etwa das Dezimaltrennzeichen von {@code #numbers.formatDecimal(...)}.
+	 * <p>Fest auf {@link Locale#GERMANY} und nicht die Standard-Locale der JVM: Ein Report ist ein deutschsprachiges Dokument und weist deshalb
+	 * ein Komma als Dezimaltrennzeichen aus, unabhängig davon, wie der Server konfiguriert ist. Ohne diese Festlegung hinge die Ausgabe an der
+	 * Umgebung — derselbe Report ergäbe auf einem Rechner {@code 36,0} und in einem Container {@code 36.0}.</p>
+	 */
+	private static final Locale LOCALE = Locale.GERMANY;
 
 	private ReportBuilderUtils() {
 		// Utility
@@ -105,7 +114,10 @@ public final class ReportBuilderUtils {
 	 * @return Ein kombinierter Thymeleaf-Context oder ein neuer, leerer Context, falls keine Contexts vorhanden sind.
 	 */
 	public static Context mergeHtmlContexts(final List<HtmlContext<?>> contexts) {
-		final Context finalContext = new Context();
+		// Über diesen Context laufen beide Renderpfade des Moduls - der HTML-Report und die Dateinamensvorlage. Die hier gesetzte Locale legt damit
+		// die Formatierung für die gesamte Ausgabe fest; die Locale der zusammengeführten Teil-Contexts spielt keine Rolle, da nur deren Variablen
+		// übernommen werden.
+		final Context finalContext = new Context(LOCALE);
 		if ((contexts == null) || contexts.isEmpty()) {
 			return finalContext;
 		}

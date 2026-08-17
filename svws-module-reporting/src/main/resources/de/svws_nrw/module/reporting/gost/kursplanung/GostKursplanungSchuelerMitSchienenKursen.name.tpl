@@ -4,4 +4,4 @@
         _[(${#strings.replace(schueler[0].nachname(), ' ', '_')})]__[(${#strings.replace(schueler[0].vorname(), ' ', '_')})]_([(${schueler[0].id()})])
     [/]
 [/]
-[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })][/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #aktuell.formatiert('yyyyMMdd-HHmm') })][/]
