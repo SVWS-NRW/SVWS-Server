@@ -19,8 +19,7 @@
 							<svws-ui-text-input placeholder="Vertragsbeginn" type="date"
 								v-model="model.proxy.vertragsbeginn" />
 							<svws-ui-text-input placeholder="Vertragsende" type="date"
-								v-model="model.proxy.vertragsende"
-								:min-date="model.proxy.vertragsbeginn ?? undefined" />
+								v-model="model.proxy.vertragsende" />
 						</div>
 						<svws-ui-spacing :size="2" />
 						<ui-select label="Betreuende Lehrkraft"
@@ -68,9 +67,9 @@
 
 <script setup lang="ts">
 
-	import { SchuelerBetrieb, Schulform } from "@core";
-	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 	import { computed, shallowRef } from 'vue';
+	import { SchuelerBetrieb, Schulform } from "@core";
+	import { SchuelerBetriebeModelProxy } from "./modelproxy/SchuelerBetriebeModelProxy";
 	import type { SchuelerBetriebeManager } from "@ui";
 	import { SelectManager, useSchuleState } from "@ui";
 

@@ -35,11 +35,9 @@
 					:removable="false" statistics />
 				<svws-ui-input-wrapper :grid="2" style="text-align: left">
 					<svws-ui-text-input placeholder="Von" type="date"
-						v-model="model.proxy.datumVon"
-						:max-date="model.proxy.datumBis ?? undefined" />
+						v-model="model.proxy.datumVon" />
 					<svws-ui-text-input placeholder="Bis" type="date"
-						v-model="model.proxy.datumBis"
-						:min-date="model.proxy.datumVon ?? undefined" />
+						v-model="model.proxy.datumBis" />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex flex-row gap-4 justify end">
 					<svws-ui-button type="secondary"
@@ -59,13 +57,13 @@
 <script setup lang="ts">
 
 
+	import { computed, ref } from "vue";
 	import type { Merkmal, List } from "@core";
 	import { ArrayList, SchuelerSchulbesuchMerkmal } from "@core";
-	import { computed, ref } from "vue";
 	import type { DataTableColumn, SchuelerSchulbesuchManager } from "@ui";
 	import { SelectManager } from "@ui";
 	import { formatToLocalDate } from "~/utils/date";
-	import { SchuelerSchulbesuchMerkmaleModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchMerkmaleModelProxy";
+	import { SchuelerSchulbesuchMerkmaleModelProxy } from "./modelProxy/SchuelerSchulbesuchMerkmaleModelProxy";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchulbesuchManager;

@@ -21,18 +21,15 @@
 					:manager="klassenManager"
 					:disabled="(model.proxy.idJahrgang === null)" />
 				<svws-ui-text-input placeholder="Anmeldedatum" type="date"
-					v-model="model.anmeldedatum.value"
-					:max-date="today" />
+					v-model="model.anmeldedatum.value" />
 				<svws-ui-text-input placeholder="Aufnahmedatum" type="date"
-					v-model="model.aufnahmedatum.value"
-					:min-date="model.proxy.anmeldedatum || today" />
+					v-model="model.aufnahmedatum.value" />
 				<ui-select label="Einschulungsart" v-if="schulenMitPrimaerstufe"
 					v-model="model.einschulungsart.value"
 					:manager="einschulungsartManager"
 					:removable="true" />
 				<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-if="schulenMitBKoderSK"
-					v-model="model.proxy.beginnBildungsgang"
-					:min-date="model.proxy.aufnahmedatum || today" />
+					v-model="model.proxy.beginnBildungsgang" />
 				<svws-ui-input-number placeholder="Dauer Bildungsgang" v-if="schulenMitBKoderSK"
 					v-model="model.proxy.dauerBildungsgang" />
 			</svws-ui-input-wrapper>
@@ -55,7 +52,6 @@
 				<svws-ui-text-input placeholder="Geburtsdatum" type="date"
 					v-model="model.proxy.geburtsdatum"
 					:validation="() => model.getFehler('geburtsdatum')"
-					:min-date="minGeburtsdatum" :max-date="maxGeburtsdatum"
 					required />
 				<ui-select label="Geschlecht"
 					v-model="model.geschlecht.value"
@@ -112,10 +108,6 @@
 
 	const initialData = ref<SchuelerNeu>(Object.assign(new SchuelerNeu(), { status: statusNeuaufnahme?.id ?? -1 }));
 	const model = new SchuelerNeuModelProxy(() => initialData.value, () => manager());
-
-	const today = new Date().toISOString().split("T")[0];
-	const minGeburtsdatum = new Date(new Date().setFullYear(new Date().getFullYear() - 50)).toISOString().split("T")[0];
-	const maxGeburtsdatum = new Date(new Date().setFullYear(new Date().getFullYear() - 4)).toISOString().split("T")[0];
 
 	const formIsValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
 

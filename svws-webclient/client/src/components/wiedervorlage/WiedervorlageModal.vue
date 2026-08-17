@@ -31,7 +31,6 @@
 							<svws-ui-text-input type="date"
 								placeholder="Wiedervorlage am"
 								v-model="modelProxy.proxy.tsWiedervorlage"
-								:min-date="dateToday()"
 								:validation="() => modelProxy.getFehler('tsWiedervorlage')"
 								removable />
 
@@ -59,9 +58,9 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watch } from 'vue';
+	import { computed, watch } from 'vue';
 	import type { WiedervorlageEintrag } from "@core";
-	import { dateToday, dateTodayPlus, formatDateToDateTime } from "~/utils/date";
+	import { dateTodayPlus, formatDateToDateTime } from "~/utils/date";
 	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
 	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
 	import { useWiedervorlageState } from "@ui";

@@ -61,11 +61,9 @@
 						readonly />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Start des Schulbesuchs" type="date"
-						v-model="model.proxy.datumVon"
-						:max-date="model.proxy.datumBis ?? undefined" />
+						v-model="model.proxy.datumVon" />
 					<svws-ui-text-input placeholder="Ende des Schulbesuchs" type="date"
-						v-model="model.proxy.datumBis"
-						:min-date="model.proxy.datumVon ?? undefined" />
+						v-model="model.proxy.datumBis" />
 					<ui-select label="Jahrgang von"
 						v-model="model.jahrgangVon.value"
 						:manager="jahrgangVonManager"
@@ -97,13 +95,13 @@
 <script setup lang="ts">
 
 
+	import { computed, ref, watch } from "vue";
 	import type { List, SchulEintrag, SchulgliederungKatalogEintrag } from "@core";
 	import { ArrayList, Jahrgaenge, SchuelerSchulbesuchSchule, Schulform, Schulgliederung } from "@core";
 	import type { DataTableColumn, SchuelerSchulbesuchManager } from "@ui";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
-	import { computed, ref, watch } from "vue";
 	import { formatToLocalDate } from "~/utils/date";
-	import { SchuelerSchulbesuchSchuleModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchSchuleModelProxy";
+	import { SchuelerSchulbesuchSchuleModelProxy } from "./modelProxy/SchuelerSchulbesuchSchuleModelProxy";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchulbesuchManager;

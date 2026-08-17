@@ -23,18 +23,15 @@
 			<svws-ui-text-input placeholder="Anmeldedatum" type="date"
 				:model-value="manager().stammdaten.anmeldedatum"
 				@change="patchAnmeldedatum"
-				:valid="anmeldedatumIsValid"
-				:readonly :max-date="today" />
+				:readonly />
 			<svws-ui-text-input placeholder="Aufnahmedatum" type="date"
 				:model-value="manager().stammdaten.aufnahmedatum"
 				@change="patchAufnahmedatum"
-				:valid="datumIsValid"
-				:readonly :min-date="manager().stammdaten.anmeldedatum || today" />
+				:readonly />
 			<svws-ui-text-input placeholder="Beginn Bildungsgang" type="date" v-if="schulenMitBKoderSK"
 				:model-value="manager().stammdaten.beginnBildungsgang"
 				@change="patchBeginnBildungsgang"
-				:valid="datumIsValid"
-				:readonly :min-date="manager().stammdaten.aufnahmedatum || today" />
+				:readonly />
 			<svws-ui-input-number placeholder="Dauer Bildungsgang" v-if="schulenMitBKoderSK"
 				:model-value="manager().stammdaten.dauerBildungsgang"
 				@change="dauerBildungsgang => patchSchueler({ dauerBildungsgang }, manager().stammdaten.id)"
@@ -130,38 +127,16 @@
 
 	// --- validation ---
 
-	const today = new Date().toISOString().split("T")[0];
-
 	async function patchAnmeldedatum(anmeldedatum: string | null) {
-		if (anmeldedatumIsValid(anmeldedatum)) {
-			await props.patchSchueler({ anmeldedatum }, manager().stammdaten.id);
-		}
+		await props.patchSchueler({ anmeldedatum }, manager().stammdaten.id);
 	}
 
 	async function patchAufnahmedatum(aufnahmedatum: string | null) {
-		if (datumIsValid(aufnahmedatum)) {
-			await props.patchSchueler({ aufnahmedatum }, manager().stammdaten.id);
-		}
+		await props.patchSchueler({ aufnahmedatum }, manager().stammdaten.id);
 	}
 
 	async function patchBeginnBildungsgang(beginnBildungsgang: string | null) {
-		if (datumIsValid(beginnBildungsgang)) {
-			await props.patchSchueler({ beginnBildungsgang }, manager().stammdaten.id);
-		}
-	}
-
-	function anmeldedatumIsValid(value: string | null) {
-		if (value === null) {
-			return true;
-		}
-		return value <= today;
-	}
-
-	function datumIsValid(value: string | null) {
-		if (value === null) {
-			return true;
-		}
-		return value >= (props.manager().stammdaten.aufnahmedatum ?? today);
+		await props.patchSchueler({ beginnBildungsgang }, manager().stammdaten.id);
 	}
 
 </script>

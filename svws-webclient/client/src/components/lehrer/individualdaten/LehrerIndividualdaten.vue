@@ -176,11 +176,9 @@
 							v-model="leitungsfunktionEntry.bezeichnung"
 							:max-len="255" required />
 						<svws-ui-text-input placeholder="Von" type="date"
-							v-model="leitungsfunktionEntry.datumBeginnLeitungsfunktion"
-							:max-date="optionalDate(leitungsfunktionEntry.datumEndeLeitungsfunktion)" />
+							v-model="leitungsfunktionEntry.datumBeginnLeitungsfunktion" />
 						<svws-ui-text-input placeholder="Bis" type="date"
-							v-model="leitungsfunktionEntry.datumEndeLeitungsfunktion"
-							:min-date="optionalDate(leitungsfunktionEntry.datumBeginnLeitungsfunktion)" />
+							v-model="leitungsfunktionEntry.datumEndeLeitungsfunktion" />
 					</svws-ui-input-wrapper>
 					<div class="mt-7 flex flex-row gap-4 justify-end">
 						<svws-ui-button type="secondary" @click="closeModalLeitungsfunktion">Abbrechen</svws-ui-button>
@@ -231,10 +229,6 @@
 
 	function formatDatum(value: string | null): string {
 		return (value === null) || JavaString.isBlank(value) ? '-' : DateUtils.gibDatumGermanFormat(value);
-	}
-
-	function optionalDate(value: string | null): string | undefined {
-		return ((value === null) || JavaString.isBlank(value)) ? undefined : value;
 	}
 
 	const leitungsfunktionenTableColumns: DataTableColumn[] = [
