@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import org.thymeleaf.context.Context;
 
 
 /**
@@ -20,7 +21,14 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implem
 	 */
 	public HtmlContextLehrer(final ReportingContext reportingContext, final List<ReportingLehrer> reportingLehrer) {
 		super(reportingContext);
-		erzeugeContext("Lehrer", reportingLehrer);
+		setContextData(reportingLehrer);
+
+		// Das Thymeleaf-Plugin von IntelliJ löst die Variablennamen in den Vorlagen nur auf, wenn es den Namen als String-Literal am setVariable-Aufruf
+		// findet und den Typ aus den dort übergebenen Daten ablesen kann. Deshalb steht der Aufruf hier und nicht generisch in der Basisklasse:
+		// So weiß die IDE, dass ${Lehrer} eine List<ReportingLehrer> ist.
+		final Context context = new Context();
+		context.setVariable("Lehrer", getContextData());
+		setContext(context);
 	}
 
 	/**

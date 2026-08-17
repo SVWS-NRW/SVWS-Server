@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
+import org.thymeleaf.context.Context;
 
 
 /**
@@ -22,7 +23,14 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implement
 		super(reportingContext);
 		// Die übergebene Liste wird gemäß der für ReportingKurs konfigurierten Sortierung (benutzerdefiniert oder Standard) sortiert,
 		// damit beide Konstruktor-Pfade dasselbe Ordnungsverhalten zeigen.
-		erzeugeContextSortiert("Kurse", reportingKurse, ReportingKurs.SORTIERUNG, ReportingKurs.class);
+		setContextDataSortiert(reportingKurse, ReportingKurs.SORTIERUNG, ReportingKurs.class);
+
+		// Das Thymeleaf-Plugin von IntelliJ löst die Variablennamen in den Vorlagen nur auf, wenn es den Namen als String-Literal am setVariable-Aufruf
+		// findet und den Typ aus den dort übergebenen Daten ablesen kann. Deshalb steht der Aufruf hier und nicht generisch in der Basisklasse:
+		// So weiß die IDE, dass ${Kurse} eine List<ReportingKurs> ist.
+		final Context context = new Context();
+		context.setVariable("Kurse", getContextData());
+		setContext(context);
 	}
 
 	/**

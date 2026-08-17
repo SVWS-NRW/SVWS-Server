@@ -5,6 +5,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
+import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,14 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> im
 	 */
 	public HtmlContextSchueler(final ReportingContext reportingContext, final List<ReportingSchueler> reportingSchueler) {
 		super(reportingContext);
-		erzeugeContext("Schueler", reportingSchueler);
+		setContextData(reportingSchueler);
+
+		// Das Thymeleaf-Plugin von IntelliJ löst die Variablennamen in den Vorlagen nur auf, wenn es den Namen als String-Literal am setVariable-Aufruf
+		// findet und den Typ aus den dort übergebenen Daten ablesen kann. Deshalb steht der Aufruf hier und nicht generisch in der Basisklasse:
+		// So weiß die IDE, dass ${Schueler} eine List<ReportingSchueler> ist.
+		final Context context = new Context();
+		context.setVariable("Schueler", getContextData());
+		setContext(context);
 	}
 
 	/**
