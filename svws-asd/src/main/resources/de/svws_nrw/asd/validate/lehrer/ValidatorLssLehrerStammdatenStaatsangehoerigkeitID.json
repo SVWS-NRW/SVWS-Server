@@ -10,7 +10,7 @@
     "anzeigebereich_ui" : "Feld 'Staatsangehörigkeit'",
     "zebras" : true,
     "svws" : true,
-    "muss" : [ ],
+    "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
     "gueltigVon" : null,
