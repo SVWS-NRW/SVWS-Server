@@ -196,6 +196,30 @@ describe("ModelProxy Testsuite", () => {
 			expect(modelProxy.hatFehler()).toBe(true);
 		});
 
+		test("ModelProxy-Validierung wird für FirstName deaktiviert, dieser fehlerhaft initialisiert, anschließend per enableValidation wieder aktiviert -> Es existieren erst keine Validierungsfehler, dann aber doch", async () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: '', lastName: 'Mustermann' });
+			const modelProxy = new ModelProxyMock({ data: () => initialModel.value, listOfDisabledPropValidations: ["firstName"] }, true);
+
+			expect(modelProxy.hatFehler()).toBe(false);
+
+			// Validierung wird wieder aktiviert
+			modelProxy.enableValidation("firstName");
+
+			expect(modelProxy.hatFehler()).toBe(true);
+		});
+
+		test("ModelProxy-Validierung wird für FirstName aktiviert, dieser fehlerhaft initialisiert, anschließend per disableValidation wieder deaktiviert -> Es existieren erst eine Validierungsfehler, dann aber doch nicht", async () => {
+			const initialModel = ref<TestModel>({ id: 1, firstName: '', lastName: 'Mustermann' });
+			const modelProxy = new ModelProxyMock({ data: () => initialModel.value }, true);
+
+			expect(modelProxy.hatFehler()).toBe(true);
+
+			// Validierung wird wieder aktiviert
+			modelProxy.disableValidation("firstName");
+
+			expect(modelProxy.hatFehler()).toBe(false);
+		});
+
 	});
 
 

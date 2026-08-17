@@ -358,6 +358,14 @@ export class ModelProxy<T extends object> {
 		this._validation.toggle(prop);
 	}
 
+	public enableValidation(prop: keyof T) {
+		this._validation.enable(prop);
+	}
+
+	public disableValidation(prop: keyof T) {
+		this._validation.disable(prop);
+	}
+
 	/**
 	 * Setzt das Proxy-Objekt zurück auf die Default Daten aus der Config
 	 */

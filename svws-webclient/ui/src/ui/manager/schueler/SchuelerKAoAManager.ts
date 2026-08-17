@@ -121,6 +121,10 @@ export class SchuelerKAoAManager extends StateManager<SchuelerKaoaState> {
 		}
 	}
 
+	get schuljahr(): number {
+		return this._schuljahr;
+	}
+
 	get schuljahresabschnitteById(): Map<number, Schuljahresabschnitt> {
 		return this._schuljahresabschnitteById;
 	}
