@@ -56,6 +56,13 @@ reporting/
 2. **Die in den `config.json` referenzierten Schemata** müssen auf dem Datenbankserver
    vorhanden sein (derzeit durchgehend `ReportingGymAbi`).
 
+   > **Achtung, nicht umkehrbar:** Der Server aktualisiert ein veraltetes Schema beim Start
+   > selbsttätig auf die aktuelle Revision. Steht das Testschema auf einem älteren Stand als der
+   > getestete Code, wird es dabei migriert — ohne Sicherung nicht rückgängig zu machen, und eine
+   > solche Migration kann die Reportinhalte verändern. Vor einem Lauf gegen einen deutlich neueren
+   > Codestand lohnt deshalb ein Blick in das schemabezogene Logfile unter `svws-server-app/logs/`;
+   > der Serverstart meldet zudem je Schema, ob migriert wurde.
+
 3. Backend-URL und Zugangsdaten kommen aus `config/tests/config.json`
    (Fallback: `config/tests/config_default.json`). Authentifizierung erfolgt als `Admin`
    mit leerem Passwort.
@@ -67,6 +74,31 @@ Aus dem Verzeichnis `tests/tests-server-reporting`:
 ```
 npx vitest run tests/APIReporting.test.ts
 ```
+
+### Vorher- und Nachher-Lauf
+
+Eine Änderung wird durch **zwei** Läufe abgesichert: einen vor dem ersten ausgabewirksamen
+Arbeitsschritt und einen nach dessen Abschluss, spätestens vor der Review. Der Vorher-Lauf ist die
+Vergleichsbasis; einen davon losgelösten Referenzlauf braucht es nicht.
+
+**Nur ein vollständiger Lauf zählt.** Wurde ein Fall übersprungen, weil sein Schema fehlt, ist der
+Lauf nicht aussagekräftig — der Test „Abschluss: kein Testfall wurde übersprungen" macht daraus
+einen sichtbaren Fehlschlag.
+
+### Einen roten Lauf bewerten
+
+Die Fehlermeldung unterscheidet die drei Fälle:
+
+| Befund | Bedeutung |
+|---|---|
+| `Fetch failed` oder ein HTTP-Fehler | Der Server hat nicht geantwortet oder abgebrochen. Kein Snapshot-Problem — zuerst Serverlog und Serverstart prüfen |
+| Snapshot-Diff, Änderung nicht beabsichtigt | Regression. Bis zur fachlichen Klärung ein Fehler; die Snapshots werden **nicht** aktualisiert |
+| Snapshot-Diff, Änderung beabsichtigt | Nach fachlicher Prüfung die betroffenen Snapshots bewusst neu erzeugen und die Abweichung in der Review benennen |
+
+**Ein roter Lauf ist zuerst gegen Datendrift zu prüfen, nicht gegen die eigene Änderung.** Das
+Testschema ist dauerhaft vorhanden; Reste aus manuellen Tests darin verändern die Ausgaben, ohne
+dass am Code etwas falsch wäre. Ein einzelner abweichender Wert lässt sich über die API
+nachrechnen.
 
 ## Snapshots neu erzeugen (Refresh)
 

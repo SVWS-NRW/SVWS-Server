@@ -330,3 +330,34 @@ Unit-Tests an genau diesen Fehlerfällen. Zweite, nicht verifizierte Notlösung:
   einen versteckten `<thead th:if="${false}">` mit je einem `<th scope="col">` pro Spalte
   (SonarQube). Details in `reporting-template-erstellung.md`, Abschnitt 10.
 - Auch einzeilige `if`/`else`-Bodys werden mit geschweiften Klammern geschrieben (Linter).
+
+## 7. Prüfung ausgabewirksamer Änderungen (Snapshot-Suite)
+
+Das Projekt `tests/tests-server-reporting` erzeugt die Ausgaben gegen einen laufenden Server und
+vergleicht sie mit hinterlegten Snapshots — die erzeugte HTML-Ausgabe, die Wirkung der
+Katalog-Defaults und den Dateinamen je Reportvorlage. Damit bemerkt es unbeabsichtigte Änderungen
+am Ausgabeinhalt, die Modultests nicht sehen. **Das gerenderte PDF prüft es nicht:** Seitenumbrüche,
+Ränder und alles, was erst OpenHtmlToPdf entscheidet, bleiben eine Sichtprüfung.
+
+**Wann die Suite läuft.** Bei jeder Änderung mit möglicher Auswirkung auf eine Ausgabe:
+
+- Vorlagen und ihr Umfeld: `.html`, CSS, `.name.tpl`, Vorlagenparameter und deren Defaults;
+- die Datenpipeline dahinter: Contexts und Initializer, Repositories, Reporting-Typen und Proxys,
+  Dialekte, Builder, Renderer und Factories.
+
+**Ein Lauf ist gültig, wenn er vollständig war und kein Fall übersprungen wurde.** Ein
+übersprungener Fall bedeutet ein fehlendes Schema; der Lauf zählt dann nicht als Absicherung. Die
+Suite prüft das selbst und meldet es als Fehlschlag — eine feste Testanzahl gehört deshalb nicht
+in diese Regel.
+
+**Gebraucht werden zwei Läufe:** einer vor dem ersten ausgabewirksamen Arbeitspaket als
+Vergleichsbasis und einer nach jedem abgeschlossenen Paket, spätestens vor der Review. Ein davon
+losgelöster Referenzlauf ist nicht nötig.
+
+**Eine unerwartete Abweichung gilt bis zur fachlichen Klärung als Fehler.** Sie wird nicht durch
+Aktualisieren der Snapshots beseitigt. Eine beabsichtigte Änderung der Ausgabe wird dagegen
+fachlich geprüft, die Snapshots werden bewusst neu erzeugt, und die Abweichung wird in der Review
+benannt.
+
+Ausführung, Voraussetzungen und der gezielte Refresh einzelner Snapshots stehen in der README des
+Testprojekts unter `tests/tests-server-reporting/tests/reporting/`.

@@ -570,6 +570,38 @@ Paket `module.reporting.diagnose`. Es bündelt die Typen, die beschreiben, **war
 
 Eine erfolgreiche HTML-, PDF- oder ZIP-Antwort eines an die Diagnose angebundenen Datenaufbaus trägt den Response-Header `SVWS-Reporting-Hinweise`. Er meldet, ob die Ausgabe vollständig ist, ohne den Download zu behindern: Wer ihn nicht kennt, arbeitet unverändert weiter.
 
+**Dieser Abschnitt ist die maßgebliche Spezifikation des Vertrags.** Ein Verbraucher — der Webclient oder ein anderer API-Nutzer — braucht keine weitere Quelle.
+
+#### Der Headerwert
+
+Der Wert ist ein Dictionary nach RFC 9651. Ein Boolean wird dort als `?0` oder `?1` geschrieben, nicht als `true` oder `false`:
+
+```http
+SVWS-Reporting-Hinweise: v=0, gesamt=5, leer=?0, datensaetze=3, angaben=2
+```
+
+| Feld | Bedeutung |
+|-----|-------|
+| `v` | Vertragsversion. `0` ist die ausdrücklich vorläufige Fassung |
+| `gesamt` | Zahl der deduplizierten Hinweise. Immer vorhanden, auch als `gesamt=0` |
+| `leer` | `?1`, wenn Datensätze angefordert waren und nach der Auswahl keiner übrig blieb |
+| `datensaetze` | angeforderte Datensätze erscheinen nicht in der Ausgabe |
+| `angaben` | die Datensätze erscheinen, ihnen fehlen einzelne Angaben |
+| `darstellung` | ein vorhandener Wert ließ sich nicht ausgeben, etwa eine Signatur |
+
+Für einen Parser gilt: **Jedes Feld kommt höchstens einmal vor.** `v`, `gesamt` und `leer` sind stets vorhanden — `v` als ganze Zahl, derzeit `0` oder `1`, `gesamt` als nicht negative ganze Zahl, `leer` als Boolean. Die drei Kategorien sind optional, ebenfalls nicht negative ganze Zahlen, und erscheinen nur mit einem Wert größer als null. Sie zerlegen dieselbe Menge, ihre Summe ergibt stets `gesamt`. Die Reihenfolge der Felder ist fest, damit derselbe Sachverhalt denselben Wert ergibt.
+
+#### Regeln für Verbraucher
+
+- **Ein fehlender Header bedeutet „unbekannt“**, niemals „nachweislich vollständig“. Der Download läuft ohne Meldung weiter.
+- **Eine unbekannte Version oder ein syntaktisch ungültiger Header wird ignoriert.** Der Download darf daran nicht scheitern.
+- **`gesamt` ist eine Diagnosegröße, keine Mengenangabe.** Die Zahl der Hinweise ist weder die Zahl fehlender Datensätze noch die fehlender Dokumente. Oberflächentexte sprechen deshalb allgemein von Hinweisen auf Unvollständigkeit und behaupten keine bestimmte Zahl ausgelassener Dateien.
+- **`gesamt=0, leer=?1` ist gültig** und bezeichnet den reinen Filterfall: Der Benutzerfilter hat alle Datensätze ausgeschlossen, ohne dass etwas fehlt oder fehlschlug. Dieser Fall verdient eine neutrale Information ohne Fehler- oder Unvollständigkeitsbehauptung. Bei `gesamt=0, leer=?0` gibt es nichts zu melden.
+- **Unbekannte Einträge werden ignoriert**, nicht als Fehler behandelt. Der Katalog darf additiv wachsen.
+- **Bei `v=0` wertet ein Verbraucher allein `gesamt` und `leer` aus** und ignoriert die Kategorien. Nur so bindet er sich nicht an einen Katalog, der sich noch ändern darf.
+- **Nach außen gelangen ausschließlich Kategorie und Anzahl.** Weder IDs, Namen und Freitexte noch Fehlermeldungen oder Stacktraces verlassen den Server.
+- **Ab `v=1` sind Kategorien nur noch additiv.** Eine Kategorie zu entfernen, umzubenennen oder anders zu deuten erfordert eine neue Vertragsversion. Die Schlüssel sind Vertrag, die Namen der Enum-Konstanten sind es nicht.
+
 | Baustein | Rolle |
 |-----|-------|
 | `ReportingHinweisKategorie` | der kleine öffentliche Kategorienkatalog samt Projektion vom internen Befund (Abschnitt 9.2) |

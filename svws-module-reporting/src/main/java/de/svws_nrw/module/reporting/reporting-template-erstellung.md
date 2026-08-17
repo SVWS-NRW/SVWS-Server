@@ -557,6 +557,29 @@ Es gibt zwei Wege, eine Vorlage zu prüfen:
 
 > Da Browser und OpenHtmlToPdf unterschiedlich rendern, ist für das **endgültige Aussehen immer das im Client erzeugte PDF maßgeblich** – nicht die Browser-Vorschau. Print-CSS-Effekte (Seitenränder, Kopf-/Fußzeilen) zeigt die Browser-Vorschau oft gar nicht oder fehlerhaft an.
 
+### Snapshot-Tests ausführen
+
+Zusätzlich zu diesen beiden Wegen gibt es die Snapshot-Suite unter `tests/tests-server-reporting`.
+Sie vergleicht die erzeugte HTML-Ausgabe mit einer hinterlegten Fassung und bemerkt damit
+Änderungen, die man beim Draufschauen übersieht.
+
+**Für jede neue und jede geänderte Vorlage ist ein Lauf verbindlich.** Das gilt nicht nur für die
+`.html`-Datei, sondern ebenso für Änderungen an CSS, an der `.name.tpl`, an den Vorlagenparametern
+und an deren Defaults im Katalog. Jede Vorlage braucht dabei mindestens einen Snapshot-Fall, einen
+Default-Fall und einen Dateinamen-Fall — die Suite prüft das selbst und meldet eine Vorlage, der
+einer davon fehlt.
+
+**Ein unerwarteter Unterschied ist ein Fehler**, kein Anlass zum Aktualisieren. Erst wenn geklärt
+ist, dass die Änderung fachlich gewollt ist, werden die betroffenen Snapshots bewusst neu erzeugt
+und die Abweichung in der Review benannt.
+
+**Der Snapshot ersetzt die Sichtprüfung des PDFs nicht.** Er vergleicht HTML; Seitenumbrüche,
+Ränder und alles, was erst OpenHtmlToPdf entscheidet, sieht er nicht. Ein grüner Lauf bei
+verändertem Layout ist deshalb kein Beleg für ein korrektes Dokument.
+
+Ausführung, Voraussetzungen und das gezielte Erneuern einzelner Snapshots stehen in der README des
+Testprojekts unter `tests/tests-server-reporting/tests/reporting/`.
+
 ### Null-Prüfung der Vorlage
 
 Ein Testlauf zeigt nur, was die verwendeten Daten hergeben. Fehlt ein Wert erst beim Echteinsatz,
@@ -675,6 +698,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
 - [ ] **Optionen** über `VorlageParameter.get('…')` eingebunden (falls vorhanden).
 - [ ] **Datum/Sonderelemente** über `#convert` formatiert.
 - [ ] **Im Client getestet** (HTML **und** PDF), mit und ohne gesetzte Optionen, auch mit leerer Datenmenge.
+- [ ] **Snapshot-Testfall angelegt** – je ein Fall für Snapshot, Katalog-Defaults und Dateiname; die Suite meldet eine Vorlage, der einer davon fehlt.
+- [ ] **Snapshot-Suite vollständig gelaufen** und grün, kein Fall übersprungen. Ein unerwarteter Unterschied ist ein Fehler, kein Anlass zum Aktualisieren.
 
 ---
 
@@ -683,5 +708,3 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
 - [`reporting-architektur.md`](reporting-architektur.md) – innerer Aufbau des Reporting-Moduls (für Entwickler, die das Modul selbst erweitern).
 - [Thymeleaf-Dokumentation](https://www.thymeleaf.org/documentation.html) – die zugrunde liegende Template-Sprache.
 - [Print-CSS (SELFHTML)](https://wiki.selfhtml.org/wiki/Print-CSS) – Hintergrund zu druckspezifischem CSS.
-</content>
-</invoke>
