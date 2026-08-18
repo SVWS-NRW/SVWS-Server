@@ -44,8 +44,19 @@ public final class FachklasseService {
 	 */
 	public List<FachklasseEintrag> getAll() {
 		final var schuljahr = eigeneSchuleService.getSchuljahr();
-		return this.repo.getAll().stream()
-				.map(f -> mapper.toApi(f, schuljahr))
+
+		final var entities = repo.getAll();
+		final var ids = entities.stream()
+				.map(e -> e.id)
+				.toList();
+		final var referencedIds = repo.getReferencedIds(ids);
+
+		return entities.stream()
+				.map(e -> {
+					final var eintrag = mapper.toApi(e, schuljahr);
+					eintrag.referenziertInAnderenTabellen = referencedIds.contains(e.id);
+					return eintrag;
+				})
 				.toList();
 	}
 
@@ -93,20 +104,39 @@ public final class FachklasseService {
 
 	/**
 	 * Löscht die Fachklassen mit den angegebenen IDs.
-	 * Nicht gefundene IDs werden stillschweigend ignoriert.
-	 * Jeder Eintrag in der Rückgabeliste enthält die ID und ob die Löschung erfolgreich war.
+	 * Referenzierte Fachklassen werden nicht gelöscht, sondern mit einer Fehlermeldung markiert.
+	 * Nicht gefundene IDs werden als Fehler zurückgegeben.
 	 *
 	 * @param idsToDelete Liste der zu löschenden Fachklassen-IDs
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
 		return TransactionSupport.transactional(() -> {
+			final var referencedIds = repo.getReferencedIds(idsToDelete);
 			final var entitiesToDelete = repo.findListByIds(idsToDelete);
 
-			return repo.delete(entitiesToDelete)
-					.stream()
-					.map(merkmal -> SimpleOperationResponse.ofSuccess(merkmal.id))
-					.sorted(Comparator.comparingLong(response -> response.id))
+			final var foundIds = entitiesToDelete.stream().map(e -> e.id).toList();
+
+			final var unreferenced = entitiesToDelete.stream()
+					.filter(e -> !referencedIds.contains(e.id))
+					.toList();
+
+			final var deletedIds = repo.delete(unreferenced).stream().map(e -> e.id).toList();
+
+			return idsToDelete.stream()
+					.map(id -> {
+						if (!foundIds.contains(id)) {
+							return SimpleOperationResponse.ofError(id, "Ort mit ID %d wurde nicht gefunden.".formatted(id));
+						}
+						if (referencedIds.contains(id)) {
+							return SimpleOperationResponse.ofError(id, "Ort mit ID %d ist referenziert und kann nicht gelöscht werden.".formatted(id));
+						}
+						if (!deletedIds.contains(id)) {
+							return SimpleOperationResponse.ofError(id, "Ort mit ID %d konnte nicht gelöscht werden.".formatted(id));
+						}
+						return SimpleOperationResponse.ofSuccess(id);
+					})
+					.sorted(Comparator.comparingLong(r -> r.id))
 					.toList();
 		});
 	}

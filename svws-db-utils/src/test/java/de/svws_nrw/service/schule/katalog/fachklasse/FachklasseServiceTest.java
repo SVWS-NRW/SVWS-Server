@@ -1,6 +1,7 @@
 package de.svws_nrw.service.schule.katalog.fachklasse;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -95,9 +96,9 @@ class FachklasseServiceTest {
 		return dto;
 	}
 
-	// -------------------------------------------------------------------------
-	// getAll
-	// -------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+// getAll
+// -------------------------------------------------------------------------
 
 	@Nested
 	@DisplayName("getAll")
@@ -107,23 +108,30 @@ class FachklasseServiceTest {
 		@DisplayName("Gibt leere Liste zurück wenn keine Fachklassen vorhanden")
 		void getAll_leer() {
 			when(repo.getAll()).thenReturn(List.of());
+			when(repo.getReferencedIds(List.of())).thenReturn(Set.of());
 
 			assertThat(service.getAll()).isEmpty();
 			verify(mapper, never()).toApi(any(), any(Integer.class));
 		}
 
 		@Test
-		@DisplayName("Gibt alle Fachklassen gemappt zurück")
+		@DisplayName("Gibt alle Fachklassen gemappt zurück und setzt referenziertInAnderenTabellen korrekt")
 		void getAll() {
 			final var entity2 = new DTOFachklassen(2L);
 			final var apiModel2 = new FachklasseEintrag();
 			apiModel2.id = 2L;
 
 			when(repo.getAll()).thenReturn(List.of(entity, entity2));
-			when(mapper.toApi(entity, 0)).thenReturn(apiModel);
-			when(mapper.toApi(entity2, 0)).thenReturn(apiModel2);
+			when(repo.getReferencedIds(List.of(1L, 2L))).thenReturn(Set.of(2L));
+			when(eigeneSchuleService.getSchuljahr()).thenReturn(2024);
+			when(mapper.toApi(entity, 2024)).thenReturn(apiModel);
+			when(mapper.toApi(entity2, 2024)).thenReturn(apiModel2);
 
-			assertThat(service.getAll()).containsExactly(apiModel, apiModel2);
+			final var result = service.getAll();
+
+			assertThat(result).containsExactly(apiModel, apiModel2);
+			assertThat(apiModel.referenziertInAnderenTabellen).isFalse();
+			assertThat(apiModel2.referenziertInAnderenTabellen).isTrue();
 		}
 	}
 
@@ -329,18 +337,19 @@ class FachklasseServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// delete
-	// -------------------------------------------------------------------------
+// delete
+// -------------------------------------------------------------------------
 
 	@Nested
 	@DisplayName("delete")
 	class Delete {
 
 		@Test
-		@DisplayName("Löscht gefundene Fachklassen und gibt sortierte Responses zurück")
+		@DisplayName("Löscht nicht referenzierte Fachklassen und gibt sortierte Responses zurück")
 		void delete() {
 			final var entity2 = new DTOFachklassen(2L);
 
+			when(repo.getReferencedIds(List.of(2L, 1L))).thenReturn(Set.of());
 			when(repo.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity2, entity));
 			when(repo.delete(anyList())).thenReturn(List.of(entity2, entity));
 
@@ -354,12 +363,49 @@ class FachklasseServiceTest {
 		}
 
 		@Test
-		@DisplayName("Gibt leere Liste zurück wenn keine IDs gefunden")
-		void delete_keineGefunden() {
+		@DisplayName("Markiert referenzierte Fachklassen als Fehler und löscht sie nicht")
+		void delete_referenziert() {
+			when(repo.getReferencedIds(List.of(1L))).thenReturn(Set.of(1L));
+			when(repo.findListByIds(List.of(1L))).thenReturn(List.of(entity));
+			when(repo.delete(List.of())).thenReturn(List.of());
+
+			final var result = service.delete(List.of(1L));
+
+			assertThat(result).hasSize(1);
+			assertThat(result.getFirst().success).isFalse();
+			assertThat(result.getFirst().id).isEqualTo(1L);
+			verify(repo).delete(List.of());
+		}
+
+		@Test
+		@DisplayName("Gibt Fehler zurück wenn ID nicht gefunden")
+		void delete_nichtGefunden() {
+			when(repo.getReferencedIds(List.of(99L))).thenReturn(Set.of());
 			when(repo.findListByIds(List.of(99L))).thenReturn(List.of());
 			when(repo.delete(List.of())).thenReturn(List.of());
 
-			assertThat(service.delete(List.of(99L))).isEmpty();
+			final var result = service.delete(List.of(99L));
+
+			assertThat(result).hasSize(1);
+			assertThat(result.getFirst().success).isFalse();
+			assertThat(result.getFirst().id).isEqualTo(99L);
+		}
+
+		@Test
+		@DisplayName("Mischt erfolgreiche und referenzierte Einträge korrekt — sortiert nach ID")
+		void delete_gemischt() {
+			final var entity2 = new DTOFachklassen(2L);
+
+			when(repo.getReferencedIds(List.of(1L, 2L))).thenReturn(Set.of(2L));
+			when(repo.findListByIds(List.of(1L, 2L))).thenReturn(List.of(entity, entity2));
+			when(repo.delete(List.of(entity))).thenReturn(List.of(entity));
+
+			final var result = service.delete(List.of(1L, 2L));
+
+			assertThat(result).hasSize(2);
+			assertThat(result.stream().map(r -> r.id).toList()).containsExactly(1L, 2L);
+			assertThat(result.stream().filter(r -> r.id == 1L).findFirst().orElseThrow().success).isTrue();
+			assertThat(result.stream().filter(r -> r.id == 2L).findFirst().orElseThrow().success).isFalse();
 		}
 	}
 }

@@ -1,5 +1,8 @@
 package de.svws_nrw.repo.schule.kataloge.fachklasse;
 
+import java.util.List;
+import java.util.Set;
+
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOFachklassen;
 import de.svws_nrw.repo.Repository;
 
@@ -28,5 +31,11 @@ public interface FachklasseRepository extends Repository<DTOFachklassen> {
 	 */
 	boolean kuerzelIsAlreadyUsedPatch(String kuerzel, long id);
 
+	/**
+	 *  Liefert Ids die in anderen Tabellen referenziert werden.
+	 * @param idsToCheck zu überprüfende Ids
+	 * @return Liste referenzierter ids
+	 */
+	Set<Long> getReferencedIds(List<Long> idsToCheck);
 
 }
