@@ -37,11 +37,11 @@ export class RouteDataBeschaeftigungsarten extends RouteDataAuswahl<Beschaeftigu
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<Beschaeftigungsart> {
+	public ladeDaten(auswahl: Promise<Beschaeftigungsart>): Promise<Beschaeftigungsart> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<Beschaeftigungsart>, id: number): Promise<boolean> {
 		await api.server.patchBeschaeftigungsart(data, api.schema, id);
 		return true;
 	}

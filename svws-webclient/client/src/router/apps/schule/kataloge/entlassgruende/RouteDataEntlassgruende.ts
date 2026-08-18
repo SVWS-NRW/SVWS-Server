@@ -37,11 +37,11 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<KatalogEntlassgrund> {
+	public ladeDaten(auswahl: Promise<KatalogEntlassgrund>): Promise<KatalogEntlassgrund> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<KatalogEntlassgrund>, id: number): Promise<boolean> {
 		await api.server.patchEntlassgrund(data, api.schema, id);
 		return true;
 	}

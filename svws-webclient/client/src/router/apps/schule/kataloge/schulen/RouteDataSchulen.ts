@@ -39,7 +39,7 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 		return { manager };
 	}
 
-	public ladeDaten(auswahl: any): Promise<any> {
+	public ladeDaten(auswahl: Promise<SchulEintrag>): Promise<SchulEintrag> {
 		return auswahl;
 	}
 

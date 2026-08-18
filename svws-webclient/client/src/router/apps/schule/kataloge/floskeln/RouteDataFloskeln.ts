@@ -41,11 +41,11 @@ export class RouteDataFloskeln extends RouteDataAuswahl<FloskelnListeManager, Ro
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<Floskel> {
+	public ladeDaten(auswahl: Promise<Floskel>): Promise<Floskel> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<Floskel>, id: number): Promise<boolean> {
 		await api.server.patchFloskeln(data, api.schema, id);
 		return true;
 	}

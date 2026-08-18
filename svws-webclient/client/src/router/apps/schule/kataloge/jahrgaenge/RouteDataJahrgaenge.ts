@@ -39,7 +39,7 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 		return { manager };
 	}
 
-	ladeDaten(auswahl: any): Promise<any> {
+	ladeDaten(auswahl: Promise<JahrgangsDaten>): Promise<JahrgangsDaten> {
 		return auswahl;
 	}
 

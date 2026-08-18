@@ -38,7 +38,7 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 		return { manager };
 	}
 
-	ladeDaten(auswahl: any): Promise<any> {
+	ladeDaten(auswahl: Promise<OrtKatalogEintrag>): Promise<OrtKatalogEintrag> {
 		return auswahl;
 	}
 

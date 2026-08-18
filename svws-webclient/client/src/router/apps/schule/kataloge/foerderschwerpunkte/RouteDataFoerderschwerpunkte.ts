@@ -37,11 +37,11 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<FoerderschwerpunktEintrag> {
+	public ladeDaten(auswahl: Promise<FoerderschwerpunktEintrag>): Promise<FoerderschwerpunktEintrag> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<FoerderschwerpunktEintrag>, id: number): Promise<boolean> {
 		await api.server.patchKatalogFoerderschwerpunkt(data, api.schema, id);
 		return true;
 	}

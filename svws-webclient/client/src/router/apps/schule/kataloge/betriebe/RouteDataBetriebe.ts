@@ -44,7 +44,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		return { manager };
 	}
 
-	ladeDaten(auswahl: any): Promise<any> {
+	ladeDaten(auswahl: Promise<Betrieb>): Promise<Betrieb> {
 		return auswahl;
 	}
 

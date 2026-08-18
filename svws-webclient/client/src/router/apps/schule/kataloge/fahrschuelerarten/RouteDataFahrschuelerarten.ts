@@ -37,11 +37,11 @@ export class RouteDataFahrschuelerarten extends RouteDataAuswahl<Fahrschuelerart
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<Fahrschuelerart> {
+	public ladeDaten(auswahl: Promise<Fahrschuelerart>): Promise<Fahrschuelerart> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<Fahrschuelerart>, id: number): Promise<boolean> {
 		await api.server.patchFahrschuelerart(data, api.schema, id);
 		return true;
 	}

@@ -43,7 +43,7 @@ export class RouteDataOrtsteile extends RouteDataAuswahl<OrtsteileListeManager, 
 		return { manager };
 	}
 
-	ladeDaten(auswahl: any): Promise<any> {
+	ladeDaten(auswahl: Promise<OrtsteilKatalogEintrag>): Promise<OrtsteilKatalogEintrag> {
 		return auswahl;
 	}
 

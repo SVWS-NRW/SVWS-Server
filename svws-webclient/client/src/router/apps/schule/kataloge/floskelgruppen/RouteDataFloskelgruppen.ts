@@ -37,11 +37,11 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 		return { manager };
 	}
 
-	public ladeDaten(auswahl: any): Promise<Floskelgruppe> {
+	public ladeDaten(auswahl: Promise<Floskelgruppe>): Promise<Floskelgruppe> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<Floskelgruppe>, id: number): Promise<boolean> {
 		await api.server.patchFloskelgruppe(data, api.schema, id);
 		return true;
 	}

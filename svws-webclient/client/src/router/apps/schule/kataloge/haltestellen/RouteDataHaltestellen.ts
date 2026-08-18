@@ -37,11 +37,11 @@ export class RouteDataHaltestellen extends RouteDataAuswahl<HaltestellenListeMan
 		param.id = id;
 	}
 
-	public ladeDaten(auswahl: any): Promise<Haltestelle> {
+	public ladeDaten(auswahl: Promise<Haltestelle>): Promise<Haltestelle> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<Haltestelle>, id: number): Promise<boolean> {
 		await api.server.patchHaltestelle(data, api.schema, id);
 		return true;
 	}
