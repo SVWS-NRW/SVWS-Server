@@ -1,8 +1,8 @@
-# Line-Ending: Nutze lf als Default 
+# Line-Ending: Nutze lf als Default
 * text eol=lf
 *.csv text
 
-# Line-Ending: *.bat als Ausnahme für Windows  
+# Line-Ending: *.bat als Ausnahme für Windows
 *.bat eol=crlf
 
 # Betrachte Bilder immer als Binärdateien, um eien fehlerhafte Anpassung zu vermeiden
@@ -12,3 +12,6 @@
 
 # Betrachte Zip-Files als Binarys
 *.zip binary
+
+# Betrachte TTF-Files(Fonts) als Binarys
+*.ttf binary
