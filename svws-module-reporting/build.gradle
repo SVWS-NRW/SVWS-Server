@@ -14,56 +14,6 @@ dependencies {
 	implementation project(':svws-module-xschule')
 }
 
-def fontDir = layout.projectDirectory.dir("src/main/resources/de/svws_nrw/module/reporting/fonts")
-
-def fontLiberationVersion = "2.1.5"
-def fontLiberationFileId = "7261482"
-def fontLiberationDestDir = "liberation"
-def fontLiberationFileBaseName = "liberation-fonts-ttf-${fontLiberationVersion}"
-def fontLiberationURL = "https://github.com/liberationfonts/liberation-fonts/files/${fontLiberationFileId}/${fontLiberationFileBaseName}.tar.gz"
-def fontLiberationDownloadDir = rootProject.layout.projectDirectory.dir("download")
-def fontLiberationDownloadLocation = fontLiberationDownloadDir.file("${fontLiberationFileBaseName}.tar.gz")
-
-task prepareDownloadDir {
-	outputs.dir(fontLiberationDownloadDir)
-	doLast {
-		mkdir(fontLiberationDownloadDir.asFile)
-	}
-}
-
-task fontDownload {
-	group = "svws"
-	dependsOn prepareDownloadDir
-	inputs.property("url", fontLiberationURL)
-	outputs.file(fontLiberationDownloadLocation)
-	doLast {
-		def downloadFile = fontLiberationDownloadLocation.asFile
-		downloadFile.withOutputStream { out ->
-			new URI(fontLiberationURL).toURL().withInputStream { it.transferTo(out) }
-		}
-	}
-}
-
-task fontExtract(type: Copy) {
-	group = "svws"
-	dependsOn fontDownload
-	from tarTree(resources.gzip(fontLiberationDownloadLocation))
-	into fontDir.dir(fontLiberationDestDir)
-	includeEmptyDirs = false
-	duplicatesStrategy = DuplicatesStrategy.INCLUDE
-	eachFile { f ->
-		f.relativePath = new RelativePath(!f.isDirectory(), f.relativePath.segments.drop(1) as String[])
-	}
-}
-
-clean {
-	delete fontDir.dir(fontLiberationDestDir)
-}
-
-processResources.dependsOn fontExtract
-sourcesJar.dependsOn fontExtract
-
-
 apply from: "$rootDir/publish-helper.gradle"
 publishing {
 	publications {
