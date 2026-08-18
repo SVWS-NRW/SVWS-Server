@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-grid-cards">
-		<div v-if="hatkeineErforderlicheKompetenz">
+		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
 		<div class="flex flex-col gap-4">
@@ -47,7 +47,7 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-	const hatkeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
+	const hatKeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
 	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
 	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));

@@ -1,20 +1,20 @@
 <template>
 	<div class="page page-grid-cards">
-		<div v-if="!hatIrgendwelcheKompetenzen">
+		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div class="flex flex-col">
-			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Ortsteile werden gelöscht." icon="i-ri-delete-bin-line">
+		<div class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Ortsteile werden gelöscht" icon="i-ri-delete-bin-line">
 				<div v-if="isPreConditionSectionVisible">
-					<span v-if="preConditionCheck.success">Alle ausgewählten Ortsteile sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck.logs" :key="message">
+					<span v-if="selectedAllowedToDelete">Alle ausgewählten Ortsteile sind bereit zum Löschen.</span>
+					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button title="Löschen" class="mt-4"
-						@click="toggleWarningModal"
-						:disabled="!props.manager().liste.auswahlExists()" :is-loading>
+						@click="deleteSelectedOrtsteile()"
+						:disabled="!selectedAllowedToDelete || !props.manager().liste.auswahlExists()" :is-loading>
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -29,25 +29,6 @@
 					</svws-ui-button>
 				</template>
 			</log-box>
-			<svws-ui-modal v-model:show="warningModalIsShown"
-				:auto-close="false" :close-in-title="false"
-				size="small" type="danger">
-				<template #modalTitle>
-					<slot name="title">Daten gehen verloren</slot>
-				</template>
-				<template #modalDescription>
-					<div class="text-left">
-						<slot name="description">
-							Durch das Löschen des Ortsteil werden auch alle referenzierten Ortsteile endgültig gelöscht.<br>
-							Wollen Sie das Löschen wirklich durchführen?
-						</slot>
-					</div>
-				</template>
-				<template #modalActions>
-					<svws-ui-button type="secondary" @click="cancel">Nein</svws-ui-button>
-					<svws-ui-button type="danger" @click="deleteSelectedOrtsteile">Ja</svws-ui-button>
-				</template>
-			</svws-ui-modal>
 		</div>
 	</div>
 </template>
@@ -63,17 +44,13 @@
 	const benutzerState = useBenutzerState();
 
 	const isLoading = ref<boolean>(false);
-	const warningModalIsShown = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
-	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
-	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
-	const preConditionCheck = computed(() => props.deleteCheck());
+	const hatKompetenzLoeschen = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
+	const hatKeineErforderlicheKompetenz = computed<boolean>(() => !hatKompetenzLoeschen.value);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
+	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const isPreConditionSectionVisible = computed<boolean>(() => (props.manager().liste.auswahlExists() || (status.value === undefined)));
-
-	function toggleWarningModal() {
-		warningModalIsShown.value = !warningModalIsShown.value;
-	}
 
 	async function deleteSelectedOrtsteile() {
 		isLoading.value = true;
@@ -81,17 +58,12 @@
 		logs.value = logMessages;
 		status.value = delStatus;
 		isLoading.value = false;
-		toggleWarningModal();
 	}
 
 	function clearLog() {
 		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
-	}
-
-	async function cancel(): Promise<void> {
-		await props.goToDefaultView(null);
 	}
 
 </script>
