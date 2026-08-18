@@ -1,6 +1,7 @@
 package de.svws_nrw.data.lernplattformen;
 
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,13 +20,13 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1;
+import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Fach;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Jahrgang;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Klasse;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Lehrer;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Lerngruppe;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Schueler;
-import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataLernplattformen;
@@ -44,6 +45,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -59,19 +61,24 @@ public class DataLernplattformenV1 {
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
 	private final int idSchuljahresabschnitt;
+	private final Clock clock;
 
 	/**
 	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
 	 *
 	 * @param conn                     die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param dataLernplattformen	   DataLernplattformen
+	 * @param dataLernplattformen       DataLernplattformen
+	 * @param clock                       die Clock, welche für die Zeitmessung verwendet werden soll
 	 */
-	public DataLernplattformenV1(final @NotNull DBEntityManager conn, final int idSchuljahresabschnitt,
-			final DataLernplattformen dataLernplattformen) {
+	public DataLernplattformenV1(final @NotNull DBEntityManager conn,
+			final int idSchuljahresabschnitt,
+			final DataLernplattformen dataLernplattformen,
+			final Clock clock) {
 		this.conn = conn;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this.dataLernplattformen = dataLernplattformen;
+		this.clock = clock;
 	}
 
 	/**
@@ -81,7 +88,7 @@ public class DataLernplattformenV1 {
 	 *
 	 * @return das GZIP-komprimierte JSON-Objekt.
 	 */
-	public Response getByIdAsResponse(final long idLernplattform) throws ApiOperationException {
+	public Response getByIdAsResponse(final long idLernplattform) {
 		return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(getById(idLernplattform)).build();
 	}
 
@@ -94,17 +101,17 @@ public class DataLernplattformenV1 {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getByIdAsGzipResponse(final long idLernplattform) throws ApiOperationException {
+	public Response getByIdAsGzipResponse(final long idLernplattform) {
 		return JSONMapper.gzipFileResponseFromObject(getById(idLernplattform), "lernplattform.json.gz");
 	}
 
 	/**
 	 * Gibt eine Liste der Lernplattformen als Response zurück
 	 *
-	 * @return	eine Liste der Lernplattformen als Response
+	 * @return    eine Liste der Lernplattformen als Response
 	 */
 	public Response getAllAsResponse() {
-		final List<LernplattformV1> lernplattformen = Optional.ofNullable(this.dataLernplattformen.getAll())
+		final List<LernplattformV1> lernplattformen = Optional.of(this.dataLernplattformen.getAll())
 				.orElse(Collections.emptyList())
 				.stream()
 				.map(this::map)
@@ -123,10 +130,10 @@ public class DataLernplattformenV1 {
 		return result;
 	}
 
-	private LernplattformV1Export getById(final long idLernplattform) throws ApiOperationException {
+	private LernplattformV1Export getById(final long idLernplattform) {
 		final LernplattformV1Export lernplattformExport = new LernplattformV1Export();
 		// Zeitpunkt der API Anfrage
-		lernplattformExport.anfrageZeitpunkt = LocalDateTime.now().toString();
+		lernplattformExport.anfrageZeitpunkt = LocalDateTime.now(clock).toString();
 
 		// Lese Daten zum angefragten Schuljahresabschnitt aus der Datenbank
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
@@ -205,7 +212,7 @@ public class DataLernplattformenV1 {
 		lernplattformExport.schueler.sort(Comparator.comparingLong(schueler -> schueler.id));
 
 		// Zeitpunkt der API Antwort
-		lernplattformExport.antwortZeitpunkt = LocalDateTime.now().toString();
+		lernplattformExport.antwortZeitpunkt = LocalDateTime.now(clock).toString();
 
 		return lernplattformExport;
 	}
@@ -229,7 +236,7 @@ public class DataLernplattformenV1 {
 	}
 
 	private void addExportHeaderdaten(final LernplattformV1Export lernplattformExport, final long idLernplattform,
-			final Schuljahresabschnitt schuljahresabschnitt) throws ApiOperationException {
+			final Schuljahresabschnitt schuljahresabschnitt) {
 		final DTOLernplattformen lernplattformDto = getLernplattform(idLernplattform);
 		final SchuleStammdaten schuleStammdaten = conn.getUser().schuleGetStammdaten(); // geht das wirklich über den Nutzer? Wie wird der Nutzer erstellt?
 		lernplattformExport.schulnummer = schuleStammdaten.schulNr;
@@ -242,10 +249,15 @@ public class DataLernplattformenV1 {
 	}
 
 	private void addFaecherAndLerngruppenToExport(final Map<String, LernplattformV1Lerngruppe> lerngruppenToExport,
-			final Map<Long, LernplattformV1Schueler> schuelerToExport, final Map<Long, LernplattformV1Fach> faecherToExport,
-			final DTOSchuelerLernabschnittsdaten schuelerLernabschnittsdaten, final Map<Long, List<DTOSchuelerLeistungsdaten>> mapSchuelerLeistungsdaten,
-			final Map<Long, DTOFach> mapFaecher, final Map<Long, DTOSchueler> mapSchueler, final Schuljahresabschnitt abschnitt,
-			final AtomicInteger lerngruppenIDZaehler, final Map<Long, DTOKurs> mapKurse) throws ApiOperationException {
+			final Map<Long, LernplattformV1Schueler> schuelerToExport,
+			final Map<Long, LernplattformV1Fach> faecherToExport,
+			final DTOSchuelerLernabschnittsdaten schuelerLernabschnittsdaten,
+			final Map<Long, List<DTOSchuelerLeistungsdaten>> mapSchuelerLeistungsdaten,
+			final Map<Long, DTOFach> mapFaecher,
+			final Map<Long, DTOSchueler> mapSchueler,
+			final Schuljahresabschnitt abschnitt,
+			final AtomicInteger lerngruppenIDZaehler,
+			final Map<Long, DTOKurs> mapKurse) {
 		final DTOSchueler schuelerDto = mapSchueler.get(schuelerLernabschnittsdaten.Schueler_ID);
 		if (schuelerDto == null) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
@@ -266,13 +278,19 @@ public class DataLernplattformenV1 {
 			}
 
 			addFachToExport(faecherToExport, fachDto);
-			final LernplattformV1Lerngruppe lernplattformLerngruppe = addLerngruppeToExport(lerngruppenToExport, abschnitt, lerngruppenIDZaehler, mapKurse,
-					schuelerLeistungsdaten, fachDto, schuelerLernabschnittsdaten.Klassen_ID);
+			final Optional<LernplattformV1Lerngruppe> lernplattformLerngruppe =
+					addLerngruppeToExport(lerngruppenToExport, abschnitt, lerngruppenIDZaehler, mapKurse,
+							schuelerLeistungsdaten, fachDto, schuelerLernabschnittsdaten.Klassen_ID);
 
-			final LernplattformV1Schueler lernplattformSchueler = schuelerToExport.get(schuelerDto.ID);
-			if (lernplattformSchueler != null) {
-				lernplattformSchueler.idsLerngruppen.add(lernplattformLerngruppe.id);
-			}
+			lernplattformLerngruppe.ifPresent(lerngruppe -> addLerngruppeToSchuelerExport(schuelerToExport, schuelerDto, lerngruppe));
+		}
+	}
+
+	private static void addLerngruppeToSchuelerExport(final Map<Long, LernplattformV1Schueler> schuelerToExport, final DTOSchueler schuelerDto,
+			final LernplattformV1Lerngruppe lernplattformLerngruppe) {
+		final LernplattformV1Schueler lernplattformSchueler = schuelerToExport.get(schuelerDto.ID);
+		if (lernplattformSchueler != null) {
+			lernplattformSchueler.idsLerngruppen.add(lernplattformLerngruppe.id);
 		}
 	}
 
@@ -291,18 +309,25 @@ public class DataLernplattformenV1 {
 		faecherToExport.put(lernplattformFach.id, lernplattformFach);
 	}
 
-	private LernplattformV1Lerngruppe addLerngruppeToExport(final Map<String, LernplattformV1Lerngruppe> lerngruppenToExport,
-			final Schuljahresabschnitt abschnitt, final AtomicInteger lerngruppenIDZaehler, final Map<Long, DTOKurs> mapKurse,
-			final DTOSchuelerLeistungsdaten schuelerLeistungsdaten, final DTOFach fachDto, final long klassenId) throws ApiOperationException {
+	private Optional<LernplattformV1Lerngruppe> addLerngruppeToExport(final Map<String, LernplattformV1Lerngruppe> lerngruppenToExport,
+			final Schuljahresabschnitt abschnitt,
+			final AtomicInteger lerngruppenIDZaehler,
+			final Map<Long, DTOKurs> mapKurse,
+			final DTOSchuelerLeistungsdaten schuelerLeistungsdaten,
+			final DTOFach fachDto,
+			final long klassenId) {
+		// Epochalfächer sollen nicht im zweiten Schuljahresabschnitt exportiert werden
+		if (istEpochalfach(schuelerLeistungsdaten) && (abschnitt.abschnitt == 2)) {
+			return Optional.empty();
+		}
+
 		// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse Lernplattformdaten gearbeitet wird.
 		// Es wird eine eindeutige ID benötigt, die Kurs- und Klassenübergreifend diese Lerngruppe identifiziert.
-		final String lerngruppenID = (schuelerLeistungsdaten.Kurs_ID == null)
-				? ("Klasse:" + klassenId + "/" + schuelerLeistungsdaten.Fach_ID)
-				: ("Kurs:" + schuelerLeistungsdaten.Kurs_ID);
+		final String lerngruppenID = buildLerngruppenID(schuelerLeistungsdaten, klassenId);
 
 		// Prüfen, ob Lerngruppe bereits im Export enthalten ist
 		if (lerngruppenToExport.containsKey(lerngruppenID)) {
-			return lerngruppenToExport.get(lerngruppenID);
+			return Optional.of(lerngruppenToExport.get(lerngruppenID));
 		}
 
 		final ZulaessigeKursart kursart = getKursart(schuelerLeistungsdaten);
@@ -339,7 +364,18 @@ public class DataLernplattformenV1 {
 
 		lerngruppenToExport.put(lerngruppenID, lernplattformLerngruppe);
 
-		return lernplattformLerngruppe;
+		return Optional.of(lernplattformLerngruppe);
+	}
+
+	@Nonnull
+	private static String buildLerngruppenID(final DTOSchuelerLeistungsdaten schuelerLeistungsdaten, final long klassenId) {
+		return (schuelerLeistungsdaten.Kurs_ID == null)
+				? ("Klasse:" + klassenId + "/" + schuelerLeistungsdaten.Fach_ID)
+				: ("Kurs:" + schuelerLeistungsdaten.Kurs_ID);
+	}
+
+	private static boolean istEpochalfach(final DTOSchuelerLeistungsdaten schuelerLeistungsdaten) {
+		return Boolean.TRUE.equals(schuelerLeistungsdaten.VorherAbgeschl);
 	}
 
 	private String getKursartAllg(final Schuljahresabschnitt abschnitt, final ZulaessigeKursart kursart) {
@@ -356,7 +392,8 @@ public class DataLernplattformenV1 {
 	}
 
 	private void addSchuelerToExport(final Map<Long, LernplattformV1Schueler> schuelerToExport,
-			final DTOSchuelerLernabschnittsdaten schuelerLernabschnittsdaten, final Map<Long, DTOSchueler> mapSchueler,
+			final DTOSchuelerLernabschnittsdaten schuelerLernabschnittsdaten,
+			final Map<Long, DTOSchueler> mapSchueler,
 			final Map<Long, DTOSchuelerLernplattform> mapSchuelerLernplattformen,
 			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials) {
 		final DTOSchueler schuelerDto = mapSchueler.get(schuelerLernabschnittsdaten.Schueler_ID);
@@ -382,8 +419,9 @@ public class DataLernplattformenV1 {
 		schuelerToExport.put(lernplattformSchueler.id, lernplattformSchueler);
 	}
 
-	private void addJahrgangToExport(final Map<Long, LernplattformV1Jahrgang> jahrgaengeToExport, final DTOSchuelerLernabschnittsdaten lernabschnittsdaten,
-			final Map<Long, DTOJahrgang> mapJahrgaenge) throws ApiOperationException {
+	private void addJahrgangToExport(final Map<Long, LernplattformV1Jahrgang> jahrgaengeToExport,
+			final DTOSchuelerLernabschnittsdaten lernabschnittsdaten,
+			final Map<Long, DTOJahrgang> mapJahrgaenge) {
 		// Prüfen, ob Jahrgang bereits im Export enthalten ist
 		if (jahrgaengeToExport.containsKey(lernabschnittsdaten.Jahrgang_ID)) {
 			return;
@@ -405,9 +443,9 @@ public class DataLernplattformenV1 {
 	}
 
 	private void addKlasseToExport(final Map<Long, LernplattformV1Klasse> klassenToExport,
-			final DTOSchuelerLernabschnittsdaten lernabschnittsdaten, final Map<Long, DTOKlassen> mapKlassen,
-			final Map<Long, List<DTOKlassenLeitung>> mapKlassenleitungen)
-			throws ApiOperationException {
+			final DTOSchuelerLernabschnittsdaten lernabschnittsdaten,
+			final Map<Long, DTOKlassen> mapKlassen,
+			final Map<Long, List<DTOKlassenLeitung>> mapKlassenleitungen) {
 		// Prüfen, ob Klasse bereits im Export enthalten ist
 		if (klassenToExport.containsKey(lernabschnittsdaten.Klassen_ID)) {
 			return;
@@ -436,7 +474,6 @@ public class DataLernplattformenV1 {
 	private void addLehrerToExport(final Map<Long, LernplattformV1Lehrer> lehrerToExport,
 			final Map<Long, DTOLehrerLernplattform> lernplattformByLehrerId,
 			final Map<Long, DTOCredentialsLernplattformen> mapLernplattformenCredentials) {
-
 		this.conn
 				.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true).stream()
 				.filter(zustimmungLehrerIstVorhanden(lernplattformByLehrerId))
@@ -485,7 +522,7 @@ public class DataLernplattformenV1 {
 	}
 
 
-	private DTOLernplattformen getLernplattform(final Long idLernplattform) throws ApiOperationException {
+	private DTOLernplattformen getLernplattform(final Long idLernplattform) {
 		final DTOLernplattformen dtoLernplattform = conn.queryByKey(DTOLernplattformen.class, idLernplattform);
 		if (dtoLernplattform == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Lernplattform mit ID %d nicht vorhanden.".formatted(idLernplattform));
