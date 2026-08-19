@@ -1,12 +1,10 @@
 package de.svws_nrw.repo.schule.kataloge.fachklasse;
 
-import java.util.List;
-import java.util.Set;
-
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOFachklassen;
+import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 import de.svws_nrw.repo.Repository;
 
-public interface FachklasseRepository extends Repository<DTOFachklassen> {
+public interface FachklasseRepository extends Repository<DTOFachklassen>, ReferencedBulkDeletionRepository<DTOFachklassen> {
 
 	/**
 	 * Prüft, ob eine Fachklasse mit dem angegebenen Kürzel bereits in der Datenbank existiert.
@@ -30,12 +28,5 @@ public interface FachklasseRepository extends Repository<DTOFachklassen> {
 	 * @return {@code true}, wenn ein andere Fachklasse mit diesem Kürzel existiert, sonst {@code false}
 	 */
 	boolean kuerzelIsAlreadyUsedPatch(String kuerzel, long id);
-
-	/**
-	 *  Liefert Ids die in anderen Tabellen referenziert werden.
-	 * @param idsToCheck zu überprüfende Ids
-	 * @return Liste referenzierter ids
-	 */
-	Set<Long> getReferencedIds(List<Long> idsToCheck);
 
 }

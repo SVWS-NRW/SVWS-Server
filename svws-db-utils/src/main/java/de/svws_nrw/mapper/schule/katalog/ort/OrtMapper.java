@@ -33,8 +33,8 @@ public interface OrtMapper {
 	@Mapping(target = "referenziertInAnderenTabellen", ignore = true)
 	@Mapping(source = "schluesselBundesland", target = "idBundesland", qualifiedByName = "mapBundesLand")
 	@Mapping(target = "sortierung", source = "sortierung", defaultValue = "32000")
-	@Mapping(target = "istSichtbar", source = "istSichtbar", defaultValue = "false")
-	@Mapping(target = "istAenderbar", source = "istAenderbar", defaultValue = "false")
+	@Mapping(target = "istSichtbar", source = "istSichtbar")
+	@Mapping(target = "istAenderbar", source = "istAenderbar")
 	OrtKatalogEintrag toApi(DTOOrt entity, @Context int schuljahr);
 
 	/**

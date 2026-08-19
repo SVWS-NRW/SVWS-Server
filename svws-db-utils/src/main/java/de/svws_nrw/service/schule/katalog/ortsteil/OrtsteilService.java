@@ -14,7 +14,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.katalog.ortsteil.OrtsteilMapper;
 import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
-import de.svws_nrw.service.utils.DeleteUtils;
+import de.svws_nrw.service.utils.ReferencedDeleteUtils;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 
@@ -116,11 +116,9 @@ public class OrtsteilService {
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
 		return TransactionSupport.transactional(() ->
-				DeleteUtils.delete(
+				ReferencedDeleteUtils.delete(
 						idsToDelete,
-						ortsteilRepository::getReferencedIds,
-						ortsteilRepository::findListByIds,
-						ortsteilRepository::delete,
+						ortsteilRepository,
 						e -> e.id,
 						"Ortsteil"
 				)

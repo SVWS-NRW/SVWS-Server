@@ -11,7 +11,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
-import de.svws_nrw.service.utils.DeleteUtils;
+import de.svws_nrw.service.utils.ReferencedDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -112,11 +112,9 @@ public final class FachklasseService {
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
 		return TransactionSupport.transactional(() ->
-				DeleteUtils.delete(
+				ReferencedDeleteUtils.delete(
 						idsToDelete,
-						repo::getReferencedIds,
-						repo::findListByIds,
-						repo::delete,
+						repo,
 						e -> e.id,
 						"Fachklasse"
 				)

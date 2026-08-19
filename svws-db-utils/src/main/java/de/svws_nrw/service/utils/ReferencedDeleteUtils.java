@@ -4,13 +4,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 
-public final class DeleteUtils {
+public final class ReferencedDeleteUtils {
 
-	private DeleteUtils() {
+	private ReferencedDeleteUtils() {
 	}
 
 	/**
@@ -20,30 +20,26 @@ public final class DeleteUtils {
 	 *
 	 * @param <T>                  der Typ der Datenbank-Entität
 	 * @param idsToDelete          die zu löschenden IDs
-	 * @param getReferencedIds     liefert die Menge der referenzierten IDs
-	 * @param findListByIds        liefert die gefundenen Entitäten anhand der IDs
-	 * @param deleteFunction       löscht eine Liste von Entitäten und gibt die gelöschten zurück
+	 * @param referencedBulkDeletionRepository BulkDeleteRepository
 	 * @param getId                extrahiert die ID aus einer Entität
 	 * @param entityLabel          fachlicher Name der Entität für Fehlermeldungen (z. B. "Ort")
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public static <T> List<SimpleOperationResponse> delete(
 			final List<Long> idsToDelete,
-			final Function<List<Long>, Set<Long>> getReferencedIds,
-			final Function<List<Long>, List<T>> findListByIds,
-			final UnaryOperator<List<T>> deleteFunction,
+			final ReferencedBulkDeletionRepository<T> referencedBulkDeletionRepository,
 			final Function<T, Long> getId,
 			final String entityLabel) {
 
-		final var referencedIds = getReferencedIds.apply(idsToDelete);
-		final var entitiesToDelete = findListByIds.apply(idsToDelete);
+		final var referencedIds = referencedBulkDeletionRepository.getReferencedIds(idsToDelete);
+		final var entitiesToDelete = referencedBulkDeletionRepository.findListByIds(idsToDelete);
 		final var foundIds = entitiesToDelete.stream().map(getId).toList();
 
 		final var unreferenced = entitiesToDelete.stream()
 				.filter(e -> !referencedIds.contains(getId.apply(e)))
 				.toList();
 
-		final var deletedIds = deleteFunction.apply(unreferenced).stream().map(getId).toList();
+		final var deletedIds = referencedBulkDeletionRepository.delete(unreferenced).stream().map(getId).toList();
 
 		return buildResponseLog(idsToDelete, foundIds, referencedIds, deletedIds, entityLabel);
 	}

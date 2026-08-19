@@ -1,19 +1,10 @@
 package de.svws_nrw.repo.schule.kataloge.ortsteil;
 
-import java.util.List;
-import java.util.Set;
-
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
+import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 import de.svws_nrw.repo.Repository;
 
-public interface OrtsteilRepository extends Repository<DTOOrtsteil> {
-
-	/**
-	 *  Liefert Ids die in anderen Tabellen referenziert werden.
-	 * @param idsToCheck zu überprüfende Ids
-	 * @return Liste referenzierter ids
-	 */
-	Set<Long> getReferencedIds(List<Long> idsToCheck);
+public interface OrtsteilRepository extends Repository<DTOOrtsteil>, ReferencedBulkDeletionRepository<DTOOrtsteil> {
 
 	/**
 	 * Gibt zurück, ob der Name des Ortsteils für den gegebenen Ort noch nicht vergeben ist.
