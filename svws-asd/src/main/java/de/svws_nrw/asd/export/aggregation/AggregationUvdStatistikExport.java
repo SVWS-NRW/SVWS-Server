@@ -234,8 +234,8 @@ public class AggregationUvdStatistikExport {
 					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
 
 				final Long epJahre =
-						((schueler.lernabschnitte != null) && (!schueler.lernabschnitte.isEmpty()) && (schueler.lernabschnitte.getFirst().epJahre != null))
-								? schueler.lernabschnitte.getFirst().epJahre.longValue()
+						((schueler.lernabschnitte != null) && (!schueler.lernabschnitte.isEmpty()) && (schueler.lernabschnitte.getFirst().idEpJahre != null))
+								? schueler.lernabschnitte.getFirst().idEpJahre
 								: null;
 
 				if (epJahre != null) {

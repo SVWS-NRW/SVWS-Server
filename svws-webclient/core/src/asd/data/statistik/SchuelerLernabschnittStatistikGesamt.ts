@@ -34,7 +34,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	/**
 	 * Die bisherige Anzahl der Jahre in der Schuleingangssphase
 	 */
-	public epJahre: number | null = null;
+	public idEpJahre: number | null = null;
 
 	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
@@ -106,7 +106,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result.idKlasse = (obj.idKlasse === undefined) ? null : obj.idKlasse === null ? null : obj.idKlasse;
 		result.idSchulgliederung = (obj.idSchulgliederung === undefined) ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
 		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
-		result.epJahre = (obj.epJahre === undefined) ? null : obj.epJahre === null ? null : obj.epJahre;
+		result.idEpJahre = (obj.idEpJahre === undefined) ? null : obj.idEpJahre === null ? null : obj.idEpJahre;
 		result.idFachklasse = (obj.idFachklasse === undefined) ? null : obj.idFachklasse === null ? null : obj.idFachklasse;
 		result.idOrganisationsform = (obj.idOrganisationsform === undefined) ? null : obj.idOrganisationsform === null ? null : obj.idOrganisationsform;
 		result.idKlassenart = (obj.idKlassenart === undefined) ? null : obj.idKlassenart === null ? null : obj.idKlassenart;
@@ -131,7 +131,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		result += '"idKlasse" : ' + ((obj.idKlasse === null) ? 'null' : obj.idKlasse.toString()) + ',';
 		result += '"idSchulgliederung" : ' + ((obj.idSchulgliederung === null) ? 'null' : obj.idSchulgliederung.toString()) + ',';
 		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
-		result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
+		result += '"idEpJahre" : ' + ((obj.idEpJahre === null) ? 'null' : obj.idEpJahre.toString()) + ',';
 		result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';
 		result += '"idOrganisationsform" : ' + ((obj.idOrganisationsform === null) ? 'null' : obj.idOrganisationsform.toString()) + ',';
 		result += '"idKlassenart" : ' + ((obj.idKlassenart === null) ? 'null' : obj.idKlassenart.toString()) + ',';
@@ -169,8 +169,8 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
-		if (obj.epJahre !== undefined) {
-			result += '"epJahre" : ' + ((obj.epJahre === null) ? 'null' : obj.epJahre.toString()) + ',';
+		if (obj.idEpJahre !== undefined) {
+			result += '"idEpJahre" : ' + ((obj.idEpJahre === null) ? 'null' : obj.idEpJahre.toString()) + ',';
 		}
 		if (obj.idFachklasse !== undefined) {
 			result += '"idFachklasse" : ' + ((obj.idFachklasse === null) ? 'null' : obj.idFachklasse.toString()) + ',';

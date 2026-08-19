@@ -38,8 +38,9 @@ public class SchuelerLernabschnittStatistikGesamt {
 	public Long idJahrgang = null;
 
 	/** Die bisherige Anzahl der Jahre in der Schuleingangssphase */
+	// auf Long umgestellt wg. ID
 	@Schema(description = "die bisherige Anzahl der Jahre in der Schuleingangssphase", example = "2")
-	public Integer epJahre = null;
+	public Long idEpJahre = null;
 
 	/** Die ID der Fachklasse des Schülers an einem Berufskolleg */
 	@Schema(description = "die ID der Fachklasse des Schülers an einem Berufskolleg", example = "null")

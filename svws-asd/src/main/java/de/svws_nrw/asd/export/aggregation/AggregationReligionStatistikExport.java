@@ -279,7 +279,7 @@ public class AggregationReligionStatistikExport {
 		// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
 		if (Set.of("01", "02").contains(jahrgang) && !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
 			jahrgang = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
-					.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().epJahre.longValue());
+					.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().idEpJahre);
 		}
 
 

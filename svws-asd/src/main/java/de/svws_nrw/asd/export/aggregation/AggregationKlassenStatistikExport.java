@@ -489,7 +489,7 @@ public class AggregationKlassenStatistikExport {
 			if (Set.of("01", "02").contains(e.getKey().aktJahrgang)
 					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
 				klassenStatistikExport.jahrgangTeilklasse = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
-						.getSchluesselByIDOrNull(e.getValue().getFirst().lernabschnitte.getFirst().epJahre.longValue());
+						.getSchluesselByIDOrNull(e.getValue().getFirst().lernabschnitte.getFirst().idEpJahre);
 			}
 			klassenStatistikExport.adresskennzeichen = e.getKey().adressmerkmal;
 			klassenStatistikExport.bildungsbereich = bauenBildungsbereich(e.getKey());

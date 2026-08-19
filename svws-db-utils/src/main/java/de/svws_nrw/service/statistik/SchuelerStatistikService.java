@@ -14,6 +14,7 @@ import de.svws_nrw.asd.data.statistik.AbiturStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLeistungsdatenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
+import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
@@ -33,12 +34,12 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerAllgemeinRepository;
-import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepository;
 import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
-import de.svws_nrw.repo.schueler.SchuelerRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -134,7 +135,8 @@ public final class SchuelerStatistikService {
 		daten.idSchulgliederung = Schulgliederung.data().getIDByWertAndSchuljahr(Schulgliederung.data().getWertBySchluessel(dto.Schulgliederung),
 				schuljahr);
 		daten.idJahrgang = dto.Jahrgang_ID;
-		daten.epJahre = dto.EPJahre;
+		final long epJahreIdAusInteger = dto.EPJahre == null ? 0L : Long.valueOf(dto.EPJahre);
+		daten.idEpJahre = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getIDByWertAndSchuljahr(PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(epJahreIdAusInteger), schuljahr);
 		daten.idFachklasse = dto.Fachklasse_ID;
 		final Schulform schulform = benutzerRepository.getAktuellerBenutzer().schuleGetSchulform();
 

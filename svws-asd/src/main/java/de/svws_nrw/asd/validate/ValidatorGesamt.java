@@ -106,7 +106,7 @@ public final class ValidatorGesamt extends Validator {
 			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
 				_validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten(
 						() -> lernabschnitt.idKlassenart,
-						() -> (long) lernabschnitt.epJahre,
+						() -> lernabschnitt.idEpJahre,
 						this.kontext()));
 			}
 		}

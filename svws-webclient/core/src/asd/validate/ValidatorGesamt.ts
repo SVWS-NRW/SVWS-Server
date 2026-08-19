@@ -60,7 +60,7 @@ export class ValidatorGesamt extends Validator {
 		for (const schueler of gesamt.schueler) {
 			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, this.kontext()));
 			for (const lernabschnitt of schueler.lernabschnitte) {
-				this._validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.epJahre as number }, this.kontext()));
+				this._validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
 			}
 		}
 		for (const klassen of gesamt.klassen) {
