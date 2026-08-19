@@ -357,6 +357,9 @@ export { ValidatorKs00KlassenSchulgliederung } from './asd/validate/klassen/Vali
 export { ValidatorKs01KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs01KlassenSchulgliederung';
 export { ValidatorKs02KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs02KlassenSchulgliederung';
 export { ValidatorKsKlassenSchulgliederung } from './asd/validate/klassen/ValidatorKsKlassenSchulgliederung';
+export { ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
+export { ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
+export { ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
 export { ValidatorLpLehrerPersonaldaten } from './asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 export { ValidatorLpl00LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl00LehrerPersonaldatenLehramt';
 export { ValidatorLpl10LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl10LehrerPersonaldatenLehramt';

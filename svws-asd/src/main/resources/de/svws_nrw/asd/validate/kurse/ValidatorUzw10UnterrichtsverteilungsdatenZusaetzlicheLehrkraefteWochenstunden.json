@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden",
+    "historie" : [ {
+      "praefix" : "UZW10",
+      "zweig" : "Unterrichtsverteilungsdaten-ZusaetzlicheLehrkraefte-Wochenstunden",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Zusätzliche Lehrkräfte'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["UZW00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Wochenstunden der zusätzlichen Lehrkraft: Der eingetragene Wert muss mindestens '0' betragen.",
+      "erlaeuterung" : "",
+      "bedingung" : "KursLehrer.wochenstundenLehrer < 0.0",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
