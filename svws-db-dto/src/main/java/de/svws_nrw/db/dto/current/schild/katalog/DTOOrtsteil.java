@@ -26,83 +26,83 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ortsteil")
-@JsonPropertyOrder({"ID", "Bezeichnung", "Ort_ID", "Sortierung", "Sichtbar", "Aenderbar", "OrtsteilSchluessel"})
+@JsonPropertyOrder({"id", "ortsteil", "idOrt", "sortierung", "istSichtbar", "istAenderbar", "schluesselOrtsteil"})
 public final class DTOOrtsteil {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOOrtsteil e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOOrtsteil e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOOrtsteil e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOOrtsteil e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOOrtsteil e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOOrtsteil e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOOrtsteil e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOOrtsteil e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOOrtsteil e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOOrtsteil e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOOrtsteil e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOOrtsteil e WHERE e.Bezeichnung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes ortsteil */
+	public static final String QUERY_BY_ORTSTEIL = "SELECT e FROM DTOOrtsteil e WHERE e.ortsteil = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOOrtsteil e WHERE e.Bezeichnung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ortsteil */
+	public static final String QUERY_LIST_BY_ORTSTEIL = "SELECT e FROM DTOOrtsteil e WHERE e.ortsteil IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Ort_ID */
-	public static final String QUERY_BY_ORT_ID = "SELECT e FROM DTOOrtsteil e WHERE e.Ort_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idOrt */
+	public static final String QUERY_BY_IDORT = "SELECT e FROM DTOOrtsteil e WHERE e.idOrt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Ort_ID */
-	public static final String QUERY_LIST_BY_ORT_ID = "SELECT e FROM DTOOrtsteil e WHERE e.Ort_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idOrt */
+	public static final String QUERY_LIST_BY_IDORT = "SELECT e FROM DTOOrtsteil e WHERE e.idOrt IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOOrtsteil e WHERE e.Sortierung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes sortierung */
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOOrtsteil e WHERE e.sortierung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOOrtsteil e WHERE e.Sortierung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes sortierung */
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOOrtsteil e WHERE e.sortierung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOOrtsteil e WHERE e.Sichtbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istSichtbar */
+	public static final String QUERY_BY_ISTSICHTBAR = "SELECT e FROM DTOOrtsteil e WHERE e.istSichtbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOOrtsteil e WHERE e.Sichtbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istSichtbar */
+	public static final String QUERY_LIST_BY_ISTSICHTBAR = "SELECT e FROM DTOOrtsteil e WHERE e.istSichtbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOOrtsteil e WHERE e.Aenderbar = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istAenderbar */
+	public static final String QUERY_BY_ISTAENDERBAR = "SELECT e FROM DTOOrtsteil e WHERE e.istAenderbar = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOOrtsteil e WHERE e.Aenderbar IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istAenderbar */
+	public static final String QUERY_LIST_BY_ISTAENDERBAR = "SELECT e FROM DTOOrtsteil e WHERE e.istAenderbar IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes OrtsteilSchluessel */
-	public static final String QUERY_BY_ORTSTEILSCHLUESSEL = "SELECT e FROM DTOOrtsteil e WHERE e.OrtsteilSchluessel = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes schluesselOrtsteil */
+	public static final String QUERY_BY_SCHLUESSELORTSTEIL = "SELECT e FROM DTOOrtsteil e WHERE e.schluesselOrtsteil = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes OrtsteilSchluessel */
-	public static final String QUERY_LIST_BY_ORTSTEILSCHLUESSEL = "SELECT e FROM DTOOrtsteil e WHERE e.OrtsteilSchluessel IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes schluesselOrtsteil */
+	public static final String QUERY_LIST_BY_SCHLUESSELORTSTEIL = "SELECT e FROM DTOOrtsteil e WHERE e.schluesselOrtsteil IN ?1";
 
 	/** ID des Ortsteils */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Bezeichnung des Ortsteils */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
-	public String Bezeichnung;
+	public String ortsteil;
 
 	/** Fremdschlüssel auf den Ort, dem der Ortsteil zugeordnet ist */
 	@Column(name = "Ort_ID")
 	@JsonProperty
-	public Long Ort_ID;
+	public Long idOrt;
 
 	/** Sortierung des Ortsteils */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public Integer sortierung;
 
 	/** Sichbarkeit des Ortsteils */
 	@Column(name = "Sichtbar")
@@ -110,7 +110,7 @@ public final class DTOOrtsteil {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Sichtbar;
+	public Boolean istSichtbar;
 
 	/** Änderbarkeit des Ortsteils */
 	@Column(name = "Aenderbar")
@@ -118,12 +118,12 @@ public final class DTOOrtsteil {
 	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
 	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
 	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean Aenderbar;
+	public Boolean istAenderbar;
 
 	/** Schlüssel des Ortsteils (Regional?) */
 	@Column(name = "OrtsteilSchluessel")
 	@JsonProperty
-	public String OrtsteilSchluessel;
+	public String schluesselOrtsteil;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOOrtsteil ohne eine Initialisierung der Attribute.
@@ -134,15 +134,15 @@ public final class DTOOrtsteil {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOOrtsteil ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
+	 * @param id   der Wert für das Attribut id
+	 * @param ortsteil   der Wert für das Attribut ortsteil
 	 */
-	public DTOOrtsteil(final long ID, final String Bezeichnung) {
-		this.ID = ID;
-		if (Bezeichnung == null) {
-			throw new NullPointerException("Bezeichnung must not be null");
+	public DTOOrtsteil(final long id, final String ortsteil) {
+		this.id = id;
+		if (ortsteil == null) {
+			throw new NullPointerException("ortsteil must not be null");
 		}
-		this.Bezeichnung = Bezeichnung;
+		this.ortsteil = ortsteil;
 	}
 
 
@@ -158,14 +158,14 @@ public final class DTOOrtsteil {
 			return false;
 		}
 		DTOOrtsteil other = (DTOOrtsteil) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -177,7 +177,7 @@ public final class DTOOrtsteil {
 	 */
 	@Override
 	public String toString() {
-		return "DTOOrtsteil(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Ort_ID=" + this.Ort_ID + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", OrtsteilSchluessel=" + this.OrtsteilSchluessel + ")";
+		return "DTOOrtsteil(id=" + this.id + ", ortsteil=" + this.ortsteil + ", idOrt=" + this.idOrt + ", sortierung=" + this.sortierung + ", istSichtbar=" + this.istSichtbar + ", istAenderbar=" + this.istAenderbar + ", schluesselOrtsteil=" + this.schluesselOrtsteil + ")";
 	}
 
 }

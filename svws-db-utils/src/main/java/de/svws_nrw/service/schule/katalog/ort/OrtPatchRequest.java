@@ -5,6 +5,7 @@ import de.svws_nrw.validation.constraints.NoWhitespaces;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.openapitools.jackson.nullable.JsonNullable;
 
@@ -28,14 +29,14 @@ public class OrtPatchRequest {
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
-	public JsonNullable<@Max(Integer.MAX_VALUE) Integer> sortierung = JsonNullable.undefined();
+	public JsonNullable<@NotNull @Max(Integer.MAX_VALUE) Integer> sortierung = JsonNullable.undefined();
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public JsonNullable<Boolean> istSichtbar = JsonNullable.undefined();
+	public JsonNullable<@NotNull Boolean> istSichtbar = JsonNullable.undefined();
 
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
-	public JsonNullable<Boolean> istAenderbar = JsonNullable.undefined();
+	public JsonNullable<@NotNull Boolean> istAenderbar = JsonNullable.undefined();
 
 }

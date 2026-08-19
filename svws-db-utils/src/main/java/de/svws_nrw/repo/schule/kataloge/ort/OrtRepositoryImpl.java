@@ -33,7 +33,7 @@ public final class OrtRepositoryImpl extends RepositoryImpl<DTOOrt> implements O
 		final String schueler = "SELECT DISTINCT b.Ort_ID FROM DTOSchueler b WHERE b.Ort_ID IN :ids";
 		final String erzieher = "SELECT DISTINCT c.ErzOrt_ID FROM DTOSchuelerErzieherAdresse c WHERE c.ErzOrt_ID IN :ids";
 		final String betriebe = "SELECT DISTINCT d.ort_id FROM DTOBetrieb d WHERE d.ort_id IN :ids";
-		final String ortsteile = "SELECT DISTINCT e.Ort_ID FROM DTOOrtsteil e WHERE e.Ort_ID IN :ids";
+		final String ortsteile = "SELECT DISTINCT e.idOrt FROM DTOOrtsteil e WHERE e.idOrt IN :ids";
 		final String query = String.join("\nUNION ALL\n", lehrer, schueler, erzieher, betriebe, ortsteile);
 
 		return new HashSet<>(conn.query(query, Long.class)

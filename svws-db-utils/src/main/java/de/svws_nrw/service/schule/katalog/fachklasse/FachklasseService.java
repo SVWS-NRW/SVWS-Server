@@ -1,6 +1,5 @@
 package de.svws_nrw.service.schule.katalog.fachklasse;
 
-import java.util.Comparator;
 import java.util.List;
 
 import de.svws_nrw.asd.types.schule.DQRNiveau;
@@ -12,6 +11,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
+import de.svws_nrw.service.utils.DeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -111,34 +111,16 @@ public final class FachklasseService {
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var referencedIds = repo.getReferencedIds(idsToDelete);
-			final var entitiesToDelete = repo.findListByIds(idsToDelete);
-
-			final var foundIds = entitiesToDelete.stream().map(e -> e.id).toList();
-
-			final var unreferenced = entitiesToDelete.stream()
-					.filter(e -> !referencedIds.contains(e.id))
-					.toList();
-
-			final var deletedIds = repo.delete(unreferenced).stream().map(e -> e.id).toList();
-
-			return idsToDelete.stream()
-					.map(id -> {
-						if (!foundIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d wurde nicht gefunden.".formatted(id));
-						}
-						if (referencedIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d ist referenziert und kann nicht gelöscht werden.".formatted(id));
-						}
-						if (!deletedIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d konnte nicht gelöscht werden.".formatted(id));
-						}
-						return SimpleOperationResponse.ofSuccess(id);
-					})
-					.sorted(Comparator.comparingLong(r -> r.id))
-					.toList();
-		});
+		return TransactionSupport.transactional(() ->
+				DeleteUtils.delete(
+						idsToDelete,
+						repo::getReferencedIds,
+						repo::findListByIds,
+						repo::delete,
+						e -> e.id,
+						"Fachklasse"
+				)
+		);
 	}
 
 	private void validateCreate(final FachklasseEintragCreateRequest dto) {

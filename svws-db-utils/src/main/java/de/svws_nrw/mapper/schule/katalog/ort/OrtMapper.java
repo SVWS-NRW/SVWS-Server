@@ -1,6 +1,5 @@
 package de.svws_nrw.mapper.schule.katalog.ort;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import de.svws_nrw.asd.types.schule.Laender;
@@ -33,43 +32,10 @@ public interface OrtMapper {
 	 */
 	@Mapping(target = "referenziertInAnderenTabellen", ignore = true)
 	@Mapping(source = "schluesselBundesland", target = "idBundesland", qualifiedByName = "mapBundesLand")
-	@Mapping(target = "sortierung", qualifiedByName = "mapSortierung")
-	@Mapping(target = "istSichtbar", qualifiedByName = "mapIstSichtbar")
-	@Mapping(target = "istAenderbar", qualifiedByName = "mapIstAenderbar")
+	@Mapping(target = "sortierung", source = "sortierung", defaultValue = "32000")
+	@Mapping(target = "istSichtbar", source = "istSichtbar", defaultValue = "false")
+	@Mapping(target = "istAenderbar", source = "istAenderbar", defaultValue = "false")
 	OrtKatalogEintrag toApi(DTOOrt entity, @Context int schuljahr);
-
-	/**
-	 * Mappt die Sortierung mit Defaultwert 32000 bei null.
-	 *
-	 * @param sortierung die Sortierung aus der Entity
-	 * @return die Sortierung oder 32000 als Defaultwert
-	 */
-	@Named("mapSortierung")
-	default int mapSortierung(final Integer sortierung) {
-		return Objects.requireNonNullElse(sortierung, 32000);
-	}
-
-	/**
-	 * Mappt istSichtbar mit Defaultwert false bei null.
-	 *
-	 * @param istSichtbar der Wert aus der Entity
-	 * @return true nur wenn explizit true gesetzt
-	 */
-	@Named("mapIstSichtbar")
-	default boolean mapIstSichtbar(final Boolean istSichtbar) {
-		return Boolean.TRUE.equals(istSichtbar);
-	}
-
-	/**
-	 * Mappt istAenderbar mit Defaultwert false bei null.
-	 *
-	 * @param istAenderbar der Wert aus der Entity
-	 * @return true nur wenn explizit true gesetzt
-	 */
-	@Named("mapIstAenderbar")
-	default boolean mapIstAenderbar(final Boolean istAenderbar) {
-		return Boolean.TRUE.equals(istAenderbar);
-	}
 
 	/**
 	 * Löst den Schlüssel des Bundeslandes auf die ID auf.

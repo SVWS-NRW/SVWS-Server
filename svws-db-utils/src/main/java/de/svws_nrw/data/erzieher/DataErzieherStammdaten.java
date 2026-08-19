@@ -470,7 +470,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			return false;
 		}
 		final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilID);
-		return (ortsteil != null) && Objects.equals(ortsteil.Ort_ID, wohnortID);
+		return (ortsteil != null) && Objects.equals(ortsteil.idOrt, wohnortID);
 	}
 
 }

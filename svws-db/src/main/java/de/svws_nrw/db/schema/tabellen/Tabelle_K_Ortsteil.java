@@ -18,16 +18,19 @@ public class Tabelle_K_Ortsteil extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID des Ortsteils");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
+			.setJavaName("ortsteil")
 			.setNotNull()
 			.setJavaComment("Bezeichnung des Ortsteils");
 
 	/** Die Definition der Tabellenspalte Ort_ID */
 	public final SchemaTabelleSpalte col_Ort_ID = add("Ort_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idOrt")
 			.setJavaComment("Fremdschlüssel auf den Ort, dem der Ortsteil zugeordnet ist");
 
 	/** Die Definition der Tabellenspalte PLZ */
@@ -37,17 +40,20 @@ public class Tabelle_K_Ortsteil extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setDefault("32000")
 			.setJavaComment("Sortierung des Ortsteils");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istSichtbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichbarkeit des Ortsteils");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istAenderbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Änderbarkeit des Ortsteils");
@@ -60,6 +66,7 @@ public class Tabelle_K_Ortsteil extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte OrtsteilSchluessel */
 	public final SchemaTabelleSpalte col_OrtsteilSchluessel = add("OrtsteilSchluessel", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
+			.setJavaName("schluesselOrtsteil")
 			.setJavaComment("Schlüssel des Ortsteils (Regional?)");
 
 

@@ -266,7 +266,7 @@ boolean                         hatFilter(String typ)
 
 Die *Definitions*-Datenklassen werden im Core-Modul gepflegt, damit der WebClient sie über die transpiliert verfügbar hat:
 
-- `ReportingSortierungDefinitionGruppe` — Gruppe pro Reporting-Typ, enthält `typ`, `bezeichnung`, Liste der ausgewählten `sortierungDefinitionen` und der zur Auswahl stehenden `sortierungDefinitionenOptionen`.
+- `ReportingSortierungDefinitionGruppe` — Gruppe pro Reporting-Typ, enthält `typ`, `ortsteil`, Liste der ausgewählten `sortierungDefinitionen` und der zur Auswahl stehenden `sortierungDefinitionenOptionen`.
 - `ReportingSortierungDefinition` — eine einzelne Sortierung mit `attribute: List<String>` und Flag `verwendeStandardsortierung`.
 - `ReportingFilterDefinitionGruppe` — analog für Filter; zusätzlich `uiIstMultiselect` und `multiselectVerknuepfung` (`AND`/`OR`).
 - `ReportingFilterDefinition` — eine einzelne Definition mit Liste von `ReportingFilterKriterium`.

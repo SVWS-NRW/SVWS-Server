@@ -1,7 +1,7 @@
 package de.svws_nrw.service.schule.katalog.ort;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.LaenderKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Laender;
@@ -13,6 +13,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
 import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
+import de.svws_nrw.service.utils.DeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 public class OrtService {
@@ -45,19 +46,23 @@ public class OrtService {
 	public List<OrtKatalogEintrag> getAll() {
 		final var schuljahr = eigeneSchuleService.getSchuljahr();
 		final var entities = ortRepository.getAll();
-		final var ids = entities.stream()
-				.map(e -> e.id)
-				.toList();
-		final var referencedIds = ortRepository.getReferencedIds(ids);
+		final var referencedIds = ortRepository.getReferencedIds(
+				entities.stream()
+						.map(e -> e.id)
+						.toList()
+		);
 
 		return entities.stream()
-				.map(e -> {
-					final var eintrag = mapper.toApi(e, schuljahr);
-					eintrag.referenziertInAnderenTabellen = referencedIds.contains(e.id);
-					return eintrag;
-				})
+				.map(e -> map(e, schuljahr, referencedIds))
 				.toList();
 	}
+
+	private OrtKatalogEintrag map(final DTOOrt e, final int schuljahr, final Set<Long> referencedIds) {
+		final var eintrag = mapper.toApi(e, schuljahr);
+		eintrag.referenziertInAnderenTabellen = referencedIds.contains(e.id);
+		return eintrag;
+	}
+
 
 	/**
 	 * Legt einen neuen Ort im schulinternen Katalog an.
@@ -108,34 +113,16 @@ public class OrtService {
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var referencedIds = ortRepository.getReferencedIds(idsToDelete);
-			final var entitiesToDelete = ortRepository.findListByIds(idsToDelete);
-
-			final var foundIds = entitiesToDelete.stream().map(e -> e.id).toList();
-
-			final var unreferenced = entitiesToDelete.stream()
-					.filter(e -> !referencedIds.contains(e.id))
-					.toList();
-
-			final var deletedIds = ortRepository.delete(unreferenced).stream().map(e -> e.id).toList();
-
-			return idsToDelete.stream()
-					.map(id -> {
-						if (!foundIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d wurde nicht gefunden.".formatted(id));
-						}
-						if (referencedIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d ist referenziert und kann nicht gelöscht werden.".formatted(id));
-						}
-						if (!deletedIds.contains(id)) {
-							return SimpleOperationResponse.ofError(id, "Ort mit ID %d konnte nicht gelöscht werden.".formatted(id));
-						}
-						return SimpleOperationResponse.ofSuccess(id);
-					})
-					.sorted(Comparator.comparingLong(r -> r.id))
-					.toList();
-		});
+		return TransactionSupport.transactional(() ->
+				DeleteUtils.delete(
+						idsToDelete,
+						ortRepository::getReferencedIds,
+						ortRepository::findListByIds,
+						ortRepository::delete,
+						e -> e.id,
+						"Ort"
+				)
+		);
 	}
 
 	private void validateAndResolvePatch(final OrtPatchRequest dto, final DTOOrt entity, final long id) {

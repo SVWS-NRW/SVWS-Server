@@ -47,6 +47,7 @@ class KatalogRepositoryFactoryTest {
 		assertNotNull(factory.getJahrgangRepository());
 		assertNotNull(factory.getFoerderschwerpunktRepository());
 		assertNotNull(factory.getOrtRepository());
+		assertNotNull(factory.getOrtsteilRepository());
 		assertNotNull(factory.getReligionRepository());
 		assertNotNull(factory.getAnkreuzkompetenzKonfigurationRepository());
 		assertNotNull(factory.getAnkreuzkompetenzRepository());

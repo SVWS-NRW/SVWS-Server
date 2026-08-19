@@ -268,7 +268,7 @@ Zwei Punkte, damit die Fälle nicht falsch gepflegt werden:
 
 - **Die übermittelte Filtergruppe braucht keine `filterDefinitionenOptionen`.** Der Server liest die
   Options-Kataloge ausschließlich auf der SOLL-Gruppe der Vorlage; von der übermittelten Gruppe
-  verwendet er nur `bezeichnung`, `typ` und die Auswahl in `filterDefinitionen`. Die Bezeichnung muss
+  verwendet er nur `ortsteil`, `typ` und die Auswahl in `filterDefinitionen`. Die Bezeichnung muss
   dafür **exakt** der SOLL-Gruppe entsprechen (hier: `Schülerstatus`).
 - **Der zweite Fall ist absichtlich ein Duplikat des Basis-Snapshots.** Weicht er eines Tages ab, ist
   das die Meldung: Dann wirkt der nicht übermittelte Parameter plötzlich doch auf die HTML-Ausgabe.

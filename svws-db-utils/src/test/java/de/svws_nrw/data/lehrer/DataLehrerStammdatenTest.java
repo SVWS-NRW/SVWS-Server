@@ -577,7 +577,7 @@ class DataLehrerStammdatenTest {
 	void mapAttributeTest_ortsteilID() throws ApiOperationException {
 		final var expectedDTO = getDtoLehrer();
 		final var dtoOrtsteil = new DTOOrtsteil(11L, "abc");
-		dtoOrtsteil.Ort_ID = 22L;
+		dtoOrtsteil.idOrt = 22L;
 		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
@@ -616,7 +616,7 @@ class DataLehrerStammdatenTest {
 		final var expectedDTO = getDtoLehrer();
 		when(this.conn.queryByKey(DTOOrt.class, 22L)).thenReturn(mock(DTOOrt.class));
 		final var dtoOrtsteil = new DTOOrtsteil(11L, "abc");
-		dtoOrtsteil.Ort_ID = 15L;
+		dtoOrtsteil.idOrt = 15L;
 		when(this.conn.queryByKey(DTOOrtsteil.class, 11L)).thenReturn(dtoOrtsteil);
 
 		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "ortsteilID", 11, Map.of("wohnortID", 22L));

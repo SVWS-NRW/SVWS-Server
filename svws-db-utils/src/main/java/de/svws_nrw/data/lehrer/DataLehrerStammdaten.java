@@ -327,7 +327,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		lehrer.Ortsteil_ID = Optional.ofNullable(ortsteilID)
 				.map(id -> {
 					final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, id);
-					if ((ortsteil == null) || (ortsteil.Ort_ID == null) || (!ortsteil.Ort_ID.equals(wohnortID))) {
+					if ((ortsteil == null) || (ortsteil.idOrt == null) || (!ortsteil.idOrt.equals(wohnortID))) {
 						return null;
 					}
 					return id;

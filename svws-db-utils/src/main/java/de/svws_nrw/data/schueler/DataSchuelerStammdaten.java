@@ -520,7 +520,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			return true;
 		}
 		final DTOOrtsteil ortsteilDto = this.conn.queryByKey(DTOOrtsteil.class, ortsteilID);
-		return (ortsteilDto != null) && Objects.equals(ortsteilDto.Ort_ID, wohnortID);
+		return (ortsteilDto != null) && Objects.equals(ortsteilDto.idOrt, wohnortID);
 	}
 
 	private boolean ortExists(final Long ortId) {

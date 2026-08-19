@@ -74,7 +74,7 @@
 		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, istAenderbar, ...partialData } = model.proxy;
+		const { id, bezeichnungOrt, plzOrt, referenziertInAnderenTabellen, istAenderbar, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}

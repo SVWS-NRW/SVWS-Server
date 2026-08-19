@@ -24,22 +24,19 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kataloge.DataHaltestellen;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
-import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
-import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalCreateRequest;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalPatchRequest;
 import de.svws_nrw.service.schule.katalog.ort.OrtCreateRequest;
 import de.svws_nrw.service.schule.katalog.ort.OrtPatchRequest;
+import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilCreateRequest;
+import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilPatchRequest;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartCreateRequest;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -233,14 +230,10 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
 	public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-					final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-					final var ortService = KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
-					return new DataOrtsteile(conn, ortService).getAllAsResponse();
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getOrtsteilController()
+				.getAll();
 	}
 
 	/**
@@ -248,7 +241,7 @@ public class APIKataloge {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Ortsteils
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     das Patchobjekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -267,23 +260,19 @@ public class APIKataloge {
 	public Response patchOrtsteil(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Ortsteils", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final OrtsteilPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-					final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-					final var ortService = KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
-					return new DataOrtsteile(conn, ortService).patchAsResponse(id, is);
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getOrtsteilController()
+				.patch(id, patch);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines Ortsteils.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des Ortsteils
+	 * @param create       das Createobjekt
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem erstellten Ortsteil
@@ -299,23 +288,19 @@ public class APIKataloge {
 	public Response addOrtsteil(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Ortsteils ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final OrtsteilCreateRequest create,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-					final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-					final var ortService = KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
-					return new DataOrtsteile(conn, ortService).addAsResponse(is);
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getOrtsteilController()
+				.create(create);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Ortsteile.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param ids       die Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -330,17 +315,12 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteOrtsteile(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Ortsteile",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> {
-					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-					final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-					final var ortService = KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
-					return new DataOrtsteile(conn, ortService).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is));
-				},
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getOrtsteilController()
+				.delete(ids);
 	}
 
 

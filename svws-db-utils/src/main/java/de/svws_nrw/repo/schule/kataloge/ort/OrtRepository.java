@@ -13,10 +13,10 @@ public interface OrtRepository extends Repository<DTOOrt> {
 
 	/**
 	 *  Liefert Ids die in anderen Tabellen referenziert werden.
-	 * @param idsToDelete zu überprüfende Ids
+	 * @param idsToCheck zu überprüfende Ids
 	 * @return Liste referenzierter ids
 	 */
-	Set<Long> getReferencedIds(List<Long> idsToDelete);
+	Set<Long> getReferencedIds(List<Long> idsToCheck);
 
 	/**
 	 * Gibt zurück, ob der Ortsname für die gegebene Postleitzahl noch nicht vergeben ist.

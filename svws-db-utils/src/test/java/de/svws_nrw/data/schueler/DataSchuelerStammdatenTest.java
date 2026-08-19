@@ -576,9 +576,9 @@ class DataSchuelerStammdatenTest {
 			final ApiOperationException expectedException) {
 		final var schuelerDto = createDTOSchuelerWithId(1L);
 		final var ortsteilDto1 = new DTOOrtsteil(11L, "Ortsteil1");
-		ortsteilDto1.Ort_ID = 10L;
+		ortsteilDto1.idOrt = 10L;
 		final var ortsteilDto2 = new DTOOrtsteil(21L, "Ortsteil2");
-		ortsteilDto2.Ort_ID = 20L;
+		ortsteilDto2.idOrt = 20L;
 
 
 		lenient().when(this.conn.queryByKey(DTOSchueler.class, schuelerDto.ID)).thenReturn(schuelerDto);
