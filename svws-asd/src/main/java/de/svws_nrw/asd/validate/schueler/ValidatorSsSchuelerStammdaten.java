@@ -19,19 +19,29 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 	 * @param geschlecht                das geschlecht des Schuelers
 	 * @param geburtsdatum              das geburtsdatum des Schuelers
 	 * @param idGeburtsland             die ID des Geburtslandes
+	 * @param idGeburtslandMutter       die ID des Geburtslandes der Mutter
+	 * @param idGeburtslandVater        die ID des Geburtslandes des Vaters
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
+	 * @param idStaatsangehoerigkeit    Staatsangehörigkeit
+	 * @param idStaatsangehoerigkeit2   Staatsangehörigkeit2
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsSchuelerStammdaten(
 			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@AllowNull Long> idGeburtsland,
+			final @NotNull Supplier<@AllowNull Long> idGeburtslandMutter,
+			final @NotNull Supplier<@AllowNull Long> idGeburtslandVater,
 			final @NotNull Supplier<@NotNull Boolean> hatMigrationshintergrund,
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit2,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
-		_validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, hatMigrationshintergrund, kontext));
+		_validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, kontext));
+		_validatoren.add(new ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit(idStaatsangehoerigkeit, kontext));
+		_validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override

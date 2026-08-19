@@ -36,7 +36,7 @@ export class ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland e
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = hatMigrationshintergrundZwisch === null ? false : hatMigrationshintergrundZwisch;
 		if (!hatMigrationshintergrund) {
-			if (idGeburtsland !== null) {
+			if (idGeburtsland !== -1) {
 				this.addFehler(0, ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland.FEHLERTEXT);
 				return false;
 			}

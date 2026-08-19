@@ -21,7 +21,7 @@ export class ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung extends Valid
 	public constructor(idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idFachrichtung = idFachrichtung;
-		this._validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(idFachrichtung, kontext));
+		this._validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(this.getNotNullSupplierLong(idFachrichtung), kontext));
 	}
 
 	protected pruefe(): boolean {

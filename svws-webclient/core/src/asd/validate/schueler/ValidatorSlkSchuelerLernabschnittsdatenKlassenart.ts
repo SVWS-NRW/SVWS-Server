@@ -15,7 +15,7 @@ export class ValidatorSlkSchuelerLernabschnittsdatenKlassenart extends Validator
 	 */
 	public constructor(idKlassenart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSlk00SchuelerLernabschnittsdatenKlassenart(this.getNotNullSupplierLong(idKlassenart), kontext));
+		this._validatoren.add(new ValidatorSlk00SchuelerLernabschnittsdatenKlassenart(idKlassenart, kontext));
 	}
 
 	protected pruefe(): boolean {

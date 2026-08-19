@@ -1,4 +1,3 @@
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { ValidatorKk02KlassenKlassenart } from '../../../asd/validate/klassen/ValidatorKk02KlassenKlassenart';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -8,32 +7,24 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorKk01KlassenKlassenart extends Validator {
 
-	private readonly _klassenDaten: Supplier<KlassenDaten>;
+	private readonly _idKlassenart: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idKlassenart  KlassenartID
+	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(klassenDaten: Supplier<KlassenDaten>, kontext: ValidatorKontext) {
+	public constructor(idKlassenart: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
-		this._validatoren.add(new ValidatorKk02KlassenKlassenart(klassenDaten, kontext));
+		this._idKlassenart = idKlassenart;
+		this._validatoren.add(new ValidatorKk02KlassenKlassenart(idKlassenart, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const daten: KlassenDaten | null = this._klassenDaten.get();
-		if ((daten === null) || (daten.idKlassenart === null)) {
-			return true;
-		}
-		const art: Klassenart | null = Klassenart.data().getWertByIDOrNull(daten.idKlassenart);
-		if (art === null) {
-			this.addFehler(0, "Art der Klasse: Das Feld 'Klassenart' muss zulässig sein.");
-			return false;
-		}
-		if (!art.hatSchulform(this.kontext().getSchuljahr(), this.kontext().getSchulform())) {
+		const idKlassenart: number | null = this._idKlassenart.get();
+		if (Klassenart.data().getSchluesselByIDOrNull(idKlassenart) === null) {
 			this.addFehler(0, "Art der Klasse: Das Feld 'Klassenart' muss zulässig sein.");
 			return false;
 		}

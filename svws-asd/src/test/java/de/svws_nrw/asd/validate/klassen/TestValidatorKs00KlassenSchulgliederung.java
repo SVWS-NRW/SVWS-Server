@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -22,11 +21,9 @@ class TestValidatorKs00KlassenSchulgliederung {
 
 	// Testfälle:
 	// null -> false (Wenn im Validator (daten == null) einen Fehler wirft bzw. false zurückgibt)
-	// -1   -> false (Mussfeld fehlt -> Fehler)
 	// 1000 -> true  (Ein Wert wurde eingetragen)
 	private static final String TESTDATEN = """
             null , false
-            -1   , false
             1000 , true
         """;
 
@@ -47,16 +44,11 @@ class TestValidatorKs00KlassenSchulgliederung {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		// Hier das Lambda für das KlassenDaten-DTO inline übergeben:
+
 		final ValidatorKs00KlassenSchulgliederung validator =
-				new ValidatorKs00KlassenSchulgliederung(() -> {
-					if (idSchulgliederung == null) {
-						return null;
-					}
-					final KlassenDaten daten = new KlassenDaten();
-					daten.idSchulgliederung = idSchulgliederung;
-					return daten;
-				}, kontext);
+				new ValidatorKs00KlassenSchulgliederung(
+					 () -> idSchulgliederung,
+				     kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

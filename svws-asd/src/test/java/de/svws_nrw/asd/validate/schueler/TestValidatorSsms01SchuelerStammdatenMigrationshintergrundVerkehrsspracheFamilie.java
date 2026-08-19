@@ -28,13 +28,10 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie {
 
 	private static final String TESTDATEN_VERKEHRSSPRACHE = """
-            ID     , hatMH , RESULT
-            null   , true  , true
-            null   , false , true
-            1      , true  , true
-            1000   , true  , true
-            -1     , true  , false
-            999999 , false , false
+            1      ,  true
+            1000   ,  true
+            -1     ,  false
+            999999 ,  false
         """;
 
 	/** Stammdaten der Schule */
@@ -55,14 +52,12 @@ class TestValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheF
 	 * Test von ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie
 	 *
 	 * @param idVerkehrsspracheFamilie  die ID der Verkehrssprache der Familie
-	 * @param hatMigrationshintergrund  hat Migrationshintergrund (für diesen 01-Validator irrelevant, aber im Konstruktor verlangt)
 	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie")
 	@ParameterizedTest
-	@CsvSource(useHeadersInDisplayName = true, textBlock = TESTDATEN_VERKEHRSSPRACHE, nullValues = { "null" })
+	@CsvSource(textBlock = TESTDATEN_VERKEHRSSPRACHE, nullValues = { "null" })
 	void testValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(final Long idVerkehrsspracheFamilie,
-			final boolean hatMigrationshintergrund,
 			final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
@@ -70,7 +65,7 @@ class TestValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheF
 
 		final ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie validator =
 				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
-						() -> idVerkehrsspracheFamilie, () -> hatMigrationshintergrund, kontext);
+						() -> idVerkehrsspracheFamilie, () -> null, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

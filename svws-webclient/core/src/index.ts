@@ -340,6 +340,7 @@ export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/Validator
 export { ValidatorKk01KlassenKlassenart } from './asd/validate/klassen/ValidatorKk01KlassenKlassenart';
 export { ValidatorKk02KlassenKlassenart } from './asd/validate/klassen/ValidatorKk02KlassenKlassenart';
 export { ValidatorKkKlassenKlassenart } from './asd/validate/klassen/ValidatorKkKlassenKlassenart';
+export { ValidatorKoKlassenOrganisationsform } from './asd/validate/klassen/ValidatorKoKlassenOrganisationsform';
 export { ValidatorKoa00KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa00KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa01KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa01KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa02KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa02KlassenOrganisationsformAllgemeinbildend';
@@ -367,7 +368,6 @@ export { ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/
 export { ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung';
-export { ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from './asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
 export { ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from './asd/validate/lehrer/ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
@@ -456,6 +456,7 @@ export { ValidatorLsv15LehrerStammdatenVorname } from './asd/validate/lehrer/Val
 export { ValidatorLsv16LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv16LehrerStammdatenVorname';
 export { ValidatorLsv17LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv17LehrerStammdatenVorname';
 export { ValidatorLsvLehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsvLehrerStammdatenVorname';
+export { ValidatorSlSchuelerLernabschnittsdaten } from './asd/validate/schueler/ValidatorSlSchuelerLernabschnittsdaten';
 export { ValidatorSle00SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle00SchuelerLernabschnittsdatenEpJahre';
 export { ValidatorSle01SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle01SchuelerLernabschnittsdatenEpJahre';
 export { ValidatorSle02SchuelerLernabschnittsdatenEpJahre } from './asd/validate/schueler/ValidatorSle02SchuelerLernabschnittsdatenEpJahre';

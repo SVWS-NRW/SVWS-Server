@@ -2,9 +2,9 @@ package de.svws_nrw.asd.validate.klassen;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -12,29 +12,28 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorKk00KlassenKlassenart extends Validator {
 
-	private final @NotNull Supplier<KlassenDaten> _klassenDaten;
+	private final @NotNull Supplier<@AllowNull Long> _idKlassenart;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idKlassenart  KlassenartID
+	 * @param kontext       der Kontext des Validators
 	 */
 	public ValidatorKk00KlassenKlassenart(
-			final @NotNull Supplier<KlassenDaten> klassenDaten,
+			final @NotNull Supplier<@AllowNull Long> idKlassenart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
+		this._idKlassenart = idKlassenart;
 
-		_validatoren.add(new ValidatorKk01KlassenKlassenart(klassenDaten, kontext));
+		_validatoren.add(new ValidatorKk01KlassenKlassenart(getNotNullSupplierLong(idKlassenart), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final KlassenDaten daten = _klassenDaten.get();
+		final Long idKlassenart = _idKlassenart.get();
 
-		// idKlassenart ist vom Typ Long, der Default ist null.
-		if ((daten == null) || (daten.idKlassenart == null)) {
+		if (idKlassenart == null) {
 			addFehler(0, "Art der Klasse: Kein Wert vorhanden.");
 			return false;
 		}

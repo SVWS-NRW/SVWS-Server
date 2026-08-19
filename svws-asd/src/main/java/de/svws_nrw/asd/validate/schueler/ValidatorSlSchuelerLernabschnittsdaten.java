@@ -10,21 +10,24 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Validator führt eine Statistikprüfung auf die Klassenart eines Schülers aus.
  */
-public final class ValidatorSlkSchuelerLernabschnittsdatenKlassenart extends Validator {
+public final class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idKlassenart  die Klassenart ID
+	 * @param idEpJahre     die EPJahre ID
 	 * @param kontext       der Kontext des Validators
 	 */
-	public ValidatorSlkSchuelerLernabschnittsdatenKlassenart(
+	public ValidatorSlSchuelerLernabschnittsdaten(
 			final @NotNull Supplier<@AllowNull Long> idKlassenart,
+			final @NotNull Supplier<@AllowNull Long> idEpJahre,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
 		_validatoren.add(
-				new ValidatorSlk00SchuelerLernabschnittsdatenKlassenart(idKlassenart, kontext));
+				new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idKlassenart, kontext));
+		_validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idEpJahre, kontext));
 	}
 
 

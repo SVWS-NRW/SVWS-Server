@@ -1,28 +1,28 @@
+import { ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter } from '../../../asd/validate/schueler/ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland';
 import { Class } from '../../../java/lang/Class';
+import { ValidatorSsmvSchuelerStammdatenMigrationshintergrundGeburtslandVater } from '../../../asd/validate/schueler/ValidatorSsmvSchuelerStammdatenMigrationshintergrundGeburtslandVater';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsmSchuelerStammdatenMigrationshintergrund extends Validator {
-
-	/**
-	 * Geburtsland
-	 */
-	private readonly _idGeburtsland: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idGeburtsland              die ID des Geburtslands
+	 * @param idGeburtslandMutter        die ID des Geburtslands der Mutter
+	 * @param idGeburtslandVater         die ID des Geburtslands des Vaters
 	 * @param hatMigrationshintergrund   Migrationshintergrund vorhanden
 	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(idGeburtsland: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
+	public constructor(idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._idGeburtsland = idGeburtsland;
 		this._validatoren.add(new ValidatorSsmlSchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, hatMigrationshintergrund, kontext));
+		this._validatoren.add(new ValidatorSsmmSchuelerStammdatenMigrationshintergrundGeburtslandMutter(idGeburtslandMutter, hatMigrationshintergrund, kontext));
+		this._validatoren.add(new ValidatorSsmvSchuelerStammdatenMigrationshintergrundGeburtslandVater(idGeburtslandVater, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

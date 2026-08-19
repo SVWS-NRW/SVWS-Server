@@ -2,9 +2,9 @@ package de.svws_nrw.asd.validate.klassen;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,15 +16,15 @@ public final class ValidatorKkKlassenKlassenart extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten, die geprüft werden sollen
+	 * @param idKlassenart   KlassenartID
 	 * @param kontext        der Kontext des Validators
 	 */
 	public ValidatorKkKlassenKlassenart(
-			final @NotNull Supplier<KlassenDaten> klassenDaten,
+			final @NotNull Supplier<@AllowNull Long> idKlassenart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
-		_validatoren.add(new ValidatorKk00KlassenKlassenart(klassenDaten, kontext));
+		_validatoren.add(new ValidatorKk00KlassenKlassenart(idKlassenart, kontext));
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -21,11 +20,11 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorKs01KlassenSchulgliederung {
 
 	// Testfälle:
-	// null    -> true  (Transpiler Prüfung)
+	// -1      -> false (Transpiler Prüfung)
 	// 9999999 -> false (Wert existiert nicht im Katalog)
 	// 0       -> true  (Gültiger Wert 'DEFAULT', passend für das Gymnasium in den Testdaten)
 	private static final String TESTDATEN = """
-            null    , true
+            -1      , false
             9999999 , false
             0       , true
         """;
@@ -47,15 +46,11 @@ class TestValidatorKs01KlassenSchulgliederung {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
+
 		final ValidatorKs01KlassenSchulgliederung validator =
-				new ValidatorKs01KlassenSchulgliederung(() -> {
-					if (idSchulgliederung == null) {
-						return null;
-					}
-					final KlassenDaten daten = new KlassenDaten();
-					daten.idSchulgliederung = idSchulgliederung;
-					return daten;
-				}, kontext);
+				new ValidatorKs01KlassenSchulgliederung(
+						() -> idSchulgliederung,
+				        kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

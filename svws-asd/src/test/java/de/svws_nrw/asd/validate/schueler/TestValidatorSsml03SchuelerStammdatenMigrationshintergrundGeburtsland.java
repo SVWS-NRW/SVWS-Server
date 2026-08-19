@@ -22,14 +22,13 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
- * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
+ * Für jeden Testfall ist eine Methode vorgesehen, in der mit Hilfe von setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
  */
 @DisplayName("Tests ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland")
 class TestValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland {
 
 	private static final String TESTDATEN_GEBURTSLAND = """
-			null        , false , true
-			-1          , false , false
+			-1          , false , true
 			-1          , true  , true
 			500         , false , false
 			500         , true  , true

@@ -17,7 +17,7 @@ export class ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung extends Vali
 	 */
 	public constructor(idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, { get: () => null }, kontext));
+		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	protected pruefe(): boolean {

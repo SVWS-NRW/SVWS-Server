@@ -1,8 +1,13 @@
 import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/ValidatorSsSchuelerStammdaten';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
+import { ValidatorSlSchuelerLernabschnittsdaten } from '../../asd/validate/schueler/ValidatorSlSchuelerLernabschnittsdaten';
+import { ValidatorKoKlassenOrganisationsform } from '../../asd/validate/klassen/ValidatorKoKlassenOrganisationsform';
+import { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from '../../asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
 import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
+import { ValidatorKkKlassenKlassenart } from '../../asd/validate/klassen/ValidatorKkKlassenKlassenart';
 import { ValidatorGsGesamtSchuelerdaten } from '../../asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
+import { LehrerLehramt } from '../../asd/types/lehrer/LehrerLehramt';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
@@ -46,9 +51,21 @@ export class ValidatorGesamt extends Validator {
 		for (const lehrer of gesamt.lehrer) {
 			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, this.kontext()));
 			this._validatoren.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
+			for (const lehraemter of lehrer.lehraemter) {
+				for (const lehrbefaehigungen of lehraemter.lehrbefaehigungen) {
+					this._validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => lehrbefaehigungen.idLehrbefaehigung }, { get: () => LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt) }, this.kontext()));
+				}
+			}
 		}
 		for (const schueler of gesamt.schueler) {
-			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.hatMigrationshintergrund }, this.kontext()));
+			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, this.kontext()));
+			for (const lernabschnitt of schueler.lernabschnitte) {
+				this._validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.epJahre as number }, this.kontext()));
+			}
+		}
+		for (const klassen of gesamt.klassen) {
+			this._validatoren.add(new ValidatorKkKlassenKlassenart({ get: () => null }, this.kontext()));
+			this._validatoren.add(new ValidatorKoKlassenOrganisationsform({ get: () => null }, { get: () => null }, { get: () => null }, this.kontext()));
 		}
 		return true;
 	}

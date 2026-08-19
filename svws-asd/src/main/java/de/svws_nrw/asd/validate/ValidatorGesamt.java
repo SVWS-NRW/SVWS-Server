@@ -4,13 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
+import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGsGesamtSchuelerdaten;
+import de.svws_nrw.asd.validate.klassen.ValidatorKkKlassenKlassenart;
+import de.svws_nrw.asd.validate.klassen.ValidatorKoKlassenOrganisationsform;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
+import de.svws_nrw.asd.validate.schueler.ValidatorSlSchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSsSchuelerStammdaten;
 import de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform;
 import jakarta.validation.constraints.NotNull;
@@ -49,6 +58,7 @@ public final class ValidatorGesamt extends Validator {
 		_validatoren.addAll(validatoren);
 
 		final @NotNull StatistikGesamt gesamt = daten.get();
+
 		for (final LehrerStatistikGesamt lehrer : gesamt.lehrer) {
 			_validatoren.add(new ValidatorLsLehrerStammdaten(() -> lehrer.nachname,
 					() -> lehrer.vorname,
@@ -71,6 +81,15 @@ public final class ValidatorGesamt extends Validator {
 					() -> lehrer.mehrleistung,
 					() -> lehrer.minderleistung,
 					this.kontext()));
+
+			for (final LehrerLehramtEintrag lehraemter : lehrer.lehraemter) {
+				for (final LehrerLehrbefaehigungEintrag lehrbefaehigungen : lehraemter.lehrbefaehigungen) {
+							_validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(
+									() -> lehrbefaehigungen.idLehrbefaehigung,
+									() -> LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt),
+									this.kontext()));
+				}
+			}
 		}
 
 		for (final SchuelerStatistikGesamt schueler : gesamt.schueler) {
@@ -78,9 +97,31 @@ public final class ValidatorGesamt extends Validator {
 					() -> schueler.geschlecht,
 					() -> schueler.geburtsdatum,
 					() -> schueler.idGeburtsland,
+					() -> schueler.idGeburtslandMutter,
+					() -> schueler.idGeburtslandVater,
 					() -> schueler.hatMigrationshintergrund,
+					() -> schueler.idStaatsangehoerigkeit,
+					() -> schueler.idStaatsangehoerigkeit2,
+					this.kontext()));
+			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
+				_validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten(
+						() -> lernabschnitt.idKlassenart,
+						() -> (long) lernabschnitt.epJahre,
+						this.kontext()));
+			}
+		}
+
+		for (final KlassenStatistikGesamt klassen : gesamt.klassen) {
+			_validatoren.add(new ValidatorKkKlassenKlassenart(
+					() -> null, //hier muss die idKlassenart hin -> gibt es in den daten noch nicht
+					this.kontext()));
+			_validatoren.add(new ValidatorKoKlassenOrganisationsform(
+					() -> null, //hier muss die idallgemeinbildungsorganisationsform hin -> gibt es in den daten noch nicht
+					() -> null, //hier muss die idweiterbildungsorganisationsform hin    -> gibt es in den daten noch nicht
+					() -> null, //hier muss die idberufsbildungsorganisationsform hin    -> gibt es in den daten noch nicht
 					this.kontext()));
 		}
+
 		return true;
 	}
 

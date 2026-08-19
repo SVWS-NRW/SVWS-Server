@@ -19,7 +19,7 @@ public final class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung exte
 	private final @NotNull Supplier<@NotNull LehrerLehrbefaehigung> _Lehrbefaehigung;
 
 	/** Lehramt */
-	private final @NotNull Supplier<@AllowNull LehrerLehramt> _lehrerLehramt;
+	private final @NotNull Supplier<@AllowNull LehrerLehramt> _LehrerLehramt;
 
 	private static final @NotNull Set<LehrerLehramt> zulaessigeLehraemter = Set.of(LehrerLehramt.ID_63, LehrerLehramt.ID_64, LehrerLehramt.ID_65);
 
@@ -27,7 +27,7 @@ public final class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung exte
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
 	 * @param lehrbefaehigung     eine Lehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(
@@ -36,20 +36,20 @@ public final class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung exte
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_Lehrbefaehigung = lehrbefaehigung;
-		_lehrerLehramt = lehrerLehramt;
+		_LehrerLehramt = lehrerLehramt;
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		if (zulaessigeLehraemter.contains(_lehrerLehramt.get())) {
+			if (zulaessigeLehraemter.contains(_LehrerLehramt.get())) {
 
-			if (!LehrerLehrbefaehigung.BE.equals(_Lehrbefaehigung.get())) {
-				addFehler(0,
-						"Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
-				return false;
+				if (!LehrerLehrbefaehigung.BE.equals(_Lehrbefaehigung.get())) {
+					addFehler(0,
+							"Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
+					return false;
+				}
 			}
-		}
 		return true;
 	}
 }

@@ -17,7 +17,7 @@ export class ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public constructor(idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {

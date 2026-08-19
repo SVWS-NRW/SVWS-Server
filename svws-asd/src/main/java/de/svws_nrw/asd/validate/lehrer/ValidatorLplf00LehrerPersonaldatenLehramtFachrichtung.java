@@ -25,7 +25,7 @@ public final class ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung extends
 		super(kontext);
 		this._idFachrichtung = idFachrichtung;
 
-		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(idFachrichtung, kontext));
+		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(getNotNullSupplierLong(idFachrichtung), kontext));
 
 	}
 

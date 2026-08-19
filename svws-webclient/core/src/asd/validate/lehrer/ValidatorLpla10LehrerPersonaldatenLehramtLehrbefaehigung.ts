@@ -23,7 +23,7 @@ export class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
 	 * @param _lehrbefaehigung    eine Lehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public constructor(_lehrbefaehigung: Supplier<LehrerLehrbefaehigung>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {

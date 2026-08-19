@@ -1,4 +1,3 @@
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { ValidatorKk01KlassenKlassenart } from '../../../asd/validate/klassen/ValidatorKk01KlassenKlassenart';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -7,24 +6,24 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorKk00KlassenKlassenart extends Validator {
 
-	private readonly _klassenDaten: Supplier<KlassenDaten>;
+	private readonly _idKlassenart: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idKlassenart  KlassenartID
+	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(klassenDaten: Supplier<KlassenDaten>, kontext: ValidatorKontext) {
+	public constructor(idKlassenart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
-		this._validatoren.add(new ValidatorKk01KlassenKlassenart(klassenDaten, kontext));
+		this._idKlassenart = idKlassenart;
+		this._validatoren.add(new ValidatorKk01KlassenKlassenart(this.getNotNullSupplierLong(idKlassenart), kontext));
 	}
 
 	protected pruefe(): boolean {
-		const daten: KlassenDaten | null = this._klassenDaten.get();
-		if ((daten === null) || (daten.idKlassenart === null)) {
+		const idKlassenart: number | null = this._idKlassenart.get();
+		if (idKlassenart === null) {
 			this.addFehler(0, "Art der Klasse: Kein Wert vorhanden.");
 			return false;
 		}

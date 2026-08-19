@@ -10,7 +10,7 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Prüft, ob die Lehrbefähigung im zeitlichen Raum der JSON-Datei liegt.
+ * Prüft, ob die Lehrbefähigung korrekt besetzt ist.
  */
 public final class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
@@ -24,7 +24,7 @@ public final class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung exte
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
 	 * @param _lehrbefaehigung    eine Lehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(
@@ -38,16 +38,12 @@ public final class ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung exte
 
 	@Override
 	protected boolean pruefe() {
-//TODO ===========================================================
-//		für übergeordnete Klasse ==> z.B. gesamtValidator.java, dann runterreichen
-//		LehrerLehramt lehrerLehramt = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag.idKatalogLehramt);
-//==============================================================
-		if (LehrerLehramt.ID_70.equals(_lehrerLehramt.get())) {
-			if (!LehrerLehrbefaehigung.OA.equals(_Lehrbefaehigung.get())) {
-				addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
-				return false;
+			if (LehrerLehramt.ID_70.equals(_lehrerLehramt.get())) {
+				if (!LehrerLehrbefaehigung.OA.equals(_Lehrbefaehigung.get())) {
+					addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' ist nur die Lehrbefähigung 'ohne Angabe' zulässig.");
+					return false;
+				}
 			}
-		}
 		return true;
 	}
 }

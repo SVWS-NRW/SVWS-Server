@@ -84,7 +84,7 @@
 			["Stammdaten", new ArrayList<readonly [SchuelerListeEintrag, SchuelerStatistikGesamt, List<ValidatorFehler>]>()],
 		]);
 		for (const schueler of props.statistikGesamt.schueler) {
-			const validator = new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.hatMigrationshintergrund }, schuleState.validatorKontext);
+			const validator = new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, schuleState.validatorKontext);
 			validator.run();
 			const listFehler = validator.getFehler();
 			const list = mapValidators.get("Stammdaten");

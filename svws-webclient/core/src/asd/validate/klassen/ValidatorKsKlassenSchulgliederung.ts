@@ -1,4 +1,3 @@
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { ValidatorKs00KlassenSchulgliederung } from '../../../asd/validate/klassen/ValidatorKs00KlassenSchulgliederung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -11,12 +10,12 @@ export class ValidatorKsKlassenSchulgliederung extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param klassenDaten   die Klassendaten, die geprüft werden sollen
-	 * @param kontext        der Kontext des Validators
+	 * @param idSchulgliederung   SchulgliederungID
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(klassenDaten: Supplier<KlassenDaten>, kontext: ValidatorKontext) {
+	public constructor(idSchulgliederung: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorKs00KlassenSchulgliederung(klassenDaten, kontext));
+		this._validatoren.add(new ValidatorKs00KlassenSchulgliederung(idSchulgliederung, kontext));
 	}
 
 	protected pruefe(): boolean {

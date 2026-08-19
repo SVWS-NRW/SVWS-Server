@@ -1,4 +1,3 @@
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -7,30 +6,22 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorKs02KlassenSchulgliederung extends Validator {
 
-	private readonly _klassenDaten: Supplier<KlassenDaten>;
+	private readonly _idSchulgliederung: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idSchulgliederung   SchulgliederungID
+	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(klassenDaten: Supplier<KlassenDaten>, kontext: ValidatorKontext) {
+	public constructor(idSchulgliederung: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
+		this._idSchulgliederung = idSchulgliederung;
 	}
 
 	protected pruefe(): boolean {
-		const daten: KlassenDaten | null = this._klassenDaten.get();
-		if (daten === null) {
-			return true;
-		}
-		const gliederung: Schulgliederung | null = Schulgliederung.data().getWertByIDOrNull(daten.idSchulgliederung);
-		if (gliederung === null) {
-			return true;
-		}
-		if (gliederung.daten(this.kontext().getSchuljahr()) === null) {
+		if (!Schulgliederung.data().isGueltig(this._idSchulgliederung.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, "Schulgliederung der Klasse: Der eingetragene Wert für das Feld 'Schulgliederung' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

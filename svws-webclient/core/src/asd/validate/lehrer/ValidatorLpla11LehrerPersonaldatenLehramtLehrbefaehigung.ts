@@ -18,7 +18,7 @@ export class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	/**
 	 * Lehramt
 	 */
-	private readonly _lehrerLehramt: Supplier<LehrerLehramt | null>;
+	private readonly _LehrerLehramt: Supplier<LehrerLehramt | null>;
 
 	private static readonly zulaessigeLehraemter: JavaSet<LehrerLehramt> = java_util_Set_of(LehrerLehramt.ID_63, LehrerLehramt.ID_64, LehrerLehramt.ID_65);
 
@@ -27,17 +27,17 @@ export class ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
 	 * @param lehrbefaehigung     eine Lehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
+	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public constructor(lehrbefaehigung: Supplier<LehrerLehrbefaehigung>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._Lehrbefaehigung = lehrbefaehigung;
-		this._lehrerLehramt = lehrerLehramt;
+		this._LehrerLehramt = lehrerLehramt;
 	}
 
 	protected pruefe(): boolean {
-		if (ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._lehrerLehramt.get())) {
+		if (ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._LehrerLehramt.get())) {
 			if (!JavaObject.equalsTranspiler(LehrerLehrbefaehigung.BE, (this._Lehrbefaehigung.get()))) {
 				this.addFehler(0, "Für die Lehrämter 'Alltagshelfer/-in', 'Handwerksmeister/-in' und 'Heilpädagoge/-in' ist nur die Lehrbefähigung 'Betreuung' zulässig.");
 				return false;

@@ -37,7 +37,6 @@ public final class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung exte
 
 		_validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
 		_validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
-		_validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
 		_validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(_lehrbefaehigung, lehrerLehramt, kontext));
 	}
 

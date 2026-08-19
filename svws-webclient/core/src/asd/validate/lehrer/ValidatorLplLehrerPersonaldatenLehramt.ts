@@ -5,7 +5,6 @@ import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLpl00LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl00LehrerPersonaldatenLehramt';
 
@@ -24,7 +23,6 @@ export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 		super(kontext);
 		this._validatoren.add(new ValidatorLpl00LehrerPersonaldatenLehramt(lehraemter, lehrerId, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLplkLehrerPersonaldatenLehramtKombination(lehraemter, kontext));
-		this._validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => null }, { get: () => null }, kontext));
 	}
 
 	protected pruefe(): boolean {

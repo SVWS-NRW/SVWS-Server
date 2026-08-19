@@ -5,7 +5,6 @@ import type { Supplier } from '../../../java/util/function/Supplier';
 import { LehrerLehrbefaehigung } from '../../../asd/types/lehrer/LehrerLehrbefaehigung';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung';
 
@@ -35,7 +34,6 @@ export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 		this._lehrbefaehigung = { get: () => LehrerLehrbefaehigung.data().getWertByID(idLehrbefaehigung.get()) };
 		this._validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
 		this._validatoren.add(new ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
-		this._validatoren.add(new ValidatorLpla12LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
 		this._validatoren.add(new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
 	}
 

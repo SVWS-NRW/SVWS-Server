@@ -2,9 +2,9 @@ package de.svws_nrw.asd.validate.klassen;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -12,28 +12,28 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorKs00KlassenSchulgliederung extends Validator {
 
-	private final @NotNull Supplier<KlassenDaten> _klassenDaten;
+	private final @NotNull Supplier<@AllowNull Long> _idSchulgliederung;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idSchulgliederung   SchulgliederungID
+	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorKs00KlassenSchulgliederung(
-			final @NotNull Supplier<KlassenDaten> klassenDaten,
+			final @NotNull Supplier<@AllowNull Long> idSchulgliederung,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
+		this._idSchulgliederung = idSchulgliederung;
 
-		_validatoren.add(new ValidatorKs01KlassenSchulgliederung(klassenDaten, kontext));
+		_validatoren.add(new ValidatorKs01KlassenSchulgliederung(getNotNullSupplierLong(idSchulgliederung), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final KlassenDaten daten = _klassenDaten.get();
+		final Long idSchulgliederung = _idSchulgliederung.get();
 
-		if ((daten == null) || (daten.idSchulgliederung == -1)) {
+		if (idSchulgliederung == null) {
 			addFehler(0, "Schulgliederung der Klasse: Kein Wert vorhanden.");
 			return false;
 		}

@@ -1,4 +1,3 @@
-import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { Klassenart } from '../../../asd/types/klassen/Klassenart';
@@ -7,30 +6,22 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorKk02KlassenKlassenart extends Validator {
 
-	private readonly _klassenDaten: Supplier<KlassenDaten>;
+	private readonly _idKlassenart: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten  ein Supplier für die Klassendaten
+	 * @param idKlassenart  KlassenartID
 	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(klassenDaten: Supplier<KlassenDaten>, kontext: ValidatorKontext) {
+	public constructor(idKlassenart: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
+		this._idKlassenart = idKlassenart;
 	}
 
 	protected pruefe(): boolean {
-		const daten: KlassenDaten | null = this._klassenDaten.get();
-		if ((daten === null) || (daten.idKlassenart === null)) {
-			return true;
-		}
-		const art: Klassenart | null = Klassenart.data().getWertByIDOrNull(daten.idKlassenart);
-		if (art === null) {
-			return true;
-		}
-		if (!Klassenart.data().isGueltig(daten.idKlassenart, this.kontext().getSchuljahr())) {
+		if (!Klassenart.data().isGueltig(this._idKlassenart.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, "Art der Klasse: Der eingetragene Wert für das Feld 'Klassenart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

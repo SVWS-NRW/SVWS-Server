@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -42,11 +41,9 @@ class TestValidatorKk00KlassenKlassenart {
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		final ValidatorKk00KlassenKlassenart validator =
-				new ValidatorKk00KlassenKlassenart(() -> {
-					final KlassenDaten daten = new KlassenDaten();
-					daten.idKlassenart = idKlassenart;
-					return daten;
-				}, kontext);
+				new ValidatorKk00KlassenKlassenart(
+					 () -> idKlassenart,
+				     kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

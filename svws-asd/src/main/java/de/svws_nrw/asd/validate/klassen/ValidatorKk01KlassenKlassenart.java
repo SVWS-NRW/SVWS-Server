@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.klassen;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -13,43 +12,34 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorKk01KlassenKlassenart extends Validator {
 
-	private final @NotNull Supplier<KlassenDaten> _klassenDaten;
+	private final @NotNull Supplier<@NotNull Long> _idKlassenart;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
-	 * @param klassenDaten   ein Supplier für die Klassendaten
-	 * @param kontext        der Kontext des Validators
+	 * @param idKlassenart  KlassenartID
+	 * @param kontext       der Kontext des Validators
 	 */
 	public ValidatorKk01KlassenKlassenart(
-			final @NotNull Supplier<KlassenDaten> klassenDaten,
+			final @NotNull Supplier<@NotNull Long> idKlassenart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._klassenDaten = klassenDaten;
+		this._idKlassenart = idKlassenart;
 
-		_validatoren.add(new ValidatorKk02KlassenKlassenart(klassenDaten, kontext));
+		_validatoren.add(new ValidatorKk02KlassenKlassenart(idKlassenart, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final KlassenDaten daten = _klassenDaten.get();
 
-		if ((daten == null) || (daten.idKlassenart == null)) {
-			return true;
-		}
+		final Long idKlassenart = _idKlassenart.get();
 
-		final Klassenart art = Klassenart.data().getWertByIDOrNull(daten.idKlassenart);
-
-		if (art == null) {
-			addFehler(0, "Art der Klasse: Das Feld 'Klassenart' muss zulässig sein.");
-			return false;
-		}
-
-		if (!art.hatSchulform(kontext().getSchuljahr(), kontext().getSchulform())) {
+		if (Klassenart.data().getSchluesselByIDOrNull(idKlassenart) == null) {
 			addFehler(0, "Art der Klasse: Das Feld 'Klassenart' muss zulässig sein.");
 			return false;
 		}
 
 		return true;
+
 	}
 }
