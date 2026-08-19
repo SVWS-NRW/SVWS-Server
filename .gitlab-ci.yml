@@ -89,7 +89,7 @@ build:
         - when: never # läuft sonst nicht
 
 test:integration-tests:
-    image: ${REGISTRY_HOST}/svws-ci/test-runner:jdk21-node24-playwright1.56
+    image: ${REGISTRY_HOST}/svws-ci/builder:jdk21-node24-playwright1.56
     stage: test
     dependencies:
         - build
