@@ -58,7 +58,7 @@ class LehrerLehramtServiceTest {
 		final LehrerFachrichtungEintrag fachrichtung = new LehrerFachrichtungEintrag();
 		fachrichtung.id = 200L;
 		fachrichtung.idLehramt = lehramtId;
-		when(serviceFachrichtungen.getMapByLehramt(List.of(lehramtId)))
+		when(serviceFachrichtungen.getLehrerFachrichtungenByIdLehramt(List.of(lehramtId)))
 				.thenReturn(Map.of(lehramtId, List.of(fachrichtung)));
 
 		// Die Daten zu den Lehrbefähigungen aus dem anderen Service
@@ -81,18 +81,18 @@ class LehrerLehramtServiceTest {
 		assertEquals(1, eintraege.size());
 
 		// Prüfe, ob der eine Lehramt-Eintrag korrekt erstellt wurde.
-		final LehrerLehramtEintrag eintrag = eintraege.get(0);
+		final LehrerLehramtEintrag eintrag = eintraege.getFirst();
 		assertEquals(lehramtId, eintrag.id);
 		assertEquals(10L, eintrag.idKatalogLehramt);
 
 		assertEquals(1, eintrag.fachrichtungen.size());
-		assertEquals(200L, eintrag.fachrichtungen.get(0).id);
+		assertEquals(200L, eintrag.fachrichtungen.getFirst().id);
 
 		assertEquals(1, eintrag.lehrbefaehigungen.size());
-		assertEquals(300L, eintrag.lehrbefaehigungen.get(0).id);
+		assertEquals(300L, eintrag.lehrbefaehigungen.getFirst().id);
 
 		// Prüfe, ob die beiden Services mit der korrekten Lehramt-ID aufgerufen wurden
-		verify(serviceFachrichtungen).getMapByLehramt(argThat(c -> c.contains(lehramtId)));
+		verify(serviceFachrichtungen).getLehrerFachrichtungenByIdLehramt(argThat(c -> c.contains(lehramtId)));
 		verify(serviceLehrbefaehigungen).getMapByLehramt(argThat(c -> c.contains(lehramtId)));
 	}
 }

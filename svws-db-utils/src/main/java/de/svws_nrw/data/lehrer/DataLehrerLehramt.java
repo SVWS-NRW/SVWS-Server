@@ -19,6 +19,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -32,15 +33,22 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	/** Die ID des Lehrers für die Daten zum Lehramt */
 	private final Long idLehrer;
 
+	private final LehrerFachrichtungService lehrerFachrichtungService;
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerLehramtEintrag}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idLehrer   die ID des Lehrers für den die Lehrämter verwaltet werden
+	 * @param lehrerFachrichtungService   {@link LehrerFachrichtungService}
 	 */
-	public DataLehrerLehramt(final DBEntityManager conn, final Long idLehrer) {
+	public DataLehrerLehramt(
+			final DBEntityManager conn,
+			final Long idLehrer,
+			final LehrerFachrichtungService lehrerFachrichtungService) {
 		super(conn);
 		this.idLehrer = idLehrer;
+		this.lehrerFachrichtungService = lehrerFachrichtungService;
 		setAttributesRequiredOnCreation("idLehrer");
 	}
 
@@ -54,8 +62,12 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 
 	@Override
 	protected LehrerLehramtEintrag map(final DTOLehrerPersonaldatenLehramt dto) throws ApiOperationException {
-		final List<LehrerLehrbefaehigungEintrag> lehrbefaehigungen = DataLehrerLehrbefaehigung.getListByLehramtId(conn, dto.ID);
-		final List<LehrerFachrichtungEintrag> fachrichtungen = DataLehrerFachrichtungen.getListByLehramtId(conn, dto.ID);
+		final List<LehrerLehrbefaehigungEintrag> lehrbefaehigungen =
+				DataLehrerLehrbefaehigung.getListByLehramtId(conn, dto.ID);
+
+		final List<LehrerFachrichtungEintrag> fachrichtungen =
+				lehrerFachrichtungService.getByIdLehramt(dto.ID);
+
 		return mapInternal(dto, lehrbefaehigungen, fachrichtungen);
 	}
 
@@ -162,22 +174,34 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	 *
 	 * @return die Liste mit den Lehrämtern
 	 */
-	public static List<LehrerLehramtEintrag> getListByLehrerId(final DBEntityManager conn, final Long idLehrer) {
+	public List<LehrerLehramtEintrag> getListByLehrerId(final DBEntityManager conn, final Long idLehrer) {
 		final List<LehrerLehramtEintrag> result = new ArrayList<>();
 		// Bestimme die Lehrämter des Lehrers
 		final List<DTOLehrerPersonaldatenLehramt> daten =
-				conn.queryList(DTOLehrerPersonaldatenLehramt.QUERY_BY_LEHRER_ID, DTOLehrerPersonaldatenLehramt.class, idLehrer);
+				conn.queryList(
+						DTOLehrerPersonaldatenLehramt.QUERY_BY_LEHRER_ID,
+						DTOLehrerPersonaldatenLehramt.class,
+						idLehrer);
 		if (daten == null) {
 			return result;
 		}
-		// Bestimme die Lehrbefähigungen und die Fachrichtungen zu den Lehrämtern
-		final List<Long> idsLehraemter = daten.stream().map(l -> l.ID).toList();
-		final Map<Long, List<LehrerLehrbefaehigungEintrag>> mapLehrbefaehigungen = DataLehrerLehrbefaehigung.getMapByLehramtIds(conn, idsLehraemter);
-		final Map<Long, List<LehrerFachrichtungEintrag>> mapFachrichtungen = DataLehrerFachrichtungen.getMapByLehramtIds(conn, idsLehraemter);
-		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOLehrerPersonaldatenLehramt l : daten) {
-			result.add(mapInternal(l, mapLehrbefaehigungen.get(l.ID), mapFachrichtungen.get(l.ID)));
+		final List<Long> idsLehraemter = daten.stream()
+				.map(lehramt -> lehramt.ID)
+				.toList();
+
+		final Map<Long, List<LehrerLehrbefaehigungEintrag>> mapLehrbefaehigungen =
+				DataLehrerLehrbefaehigung.getMapByLehramtIds(conn, idsLehraemter);
+
+		final Map<Long, List<LehrerFachrichtungEintrag>> mapFachrichtungen =
+				lehrerFachrichtungService.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
+
+		for (final DTOLehrerPersonaldatenLehramt lehramt : daten) {
+			result.add(mapInternal(
+					lehramt,
+					mapLehrbefaehigungen.getOrDefault(lehramt.ID, List.of()),
+					mapFachrichtungen.getOrDefault(lehramt.ID, List.of())));
 		}
+
 		return result;
 	}
 

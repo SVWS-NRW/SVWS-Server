@@ -2,6 +2,8 @@ package de.svws_nrw.controller.lehrer;
 
 import de.svws_nrw.controller.lehrer.anrechnung.LehrerAnrechnungsstundenController;
 import de.svws_nrw.controller.lehrer.anrechnung.LehrerAnrechnungsstundenControllerImpl;
+import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungController;
+import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungControllerImpl;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionController;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionControllerImpl;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
@@ -129,6 +131,13 @@ public final class LehrerControllerFactory {
 	 */
 	public LehrerFunktionController getLehrerFunktionController() {
 		return new LehrerFunktionControllerImpl(serviceFactory.getLehrerFunktionService());
+	}
+
+	/**
+	 * @return {@link LehrerFachrichtungController}
+	 */
+	public LehrerFachrichtungController getLehrerFachrichtungController() {
+		return new LehrerFachrichtungControllerImpl(serviceFactory.getLehrerFachrichtungService());
 	}
 
 }

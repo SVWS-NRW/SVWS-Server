@@ -1,4 +1,4 @@
-package de.svws_nrw.mapper.lehrer;
+package de.svws_nrw.mapper.lehrer.personalabschnittsdaten;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;

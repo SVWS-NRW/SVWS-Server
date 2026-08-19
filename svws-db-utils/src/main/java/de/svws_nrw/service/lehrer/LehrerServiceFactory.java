@@ -1,11 +1,12 @@
 package de.svws_nrw.service.lehrer;
 
-import de.svws_nrw.mapper.lehrer.LehrerFunktionMapper;
-import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
+import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
+import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
+import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
-import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
-import de.svws_nrw.mapper.lehrer.LehrerPersonalabschnittsdatenMapper;
+import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
+import de.svws_nrw.mapper.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
@@ -29,13 +30,8 @@ import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
  */
 public final class LehrerServiceFactory {
 
-	/** die Factory für die Lehrer-Repositories */
 	private final LehrerRepositoryFactory lehrerRepositoryFactory;
-
-	/** die Factory für die Schule-Repositories */
 	private final EigeneSchuleRepositoryFactory eigeneSchuleRepositoryFactory;
-
-	/** die Factory für die Katalog-Repositories */
 	private final KatalogRepositoryFactory katalogRepositoryFactory;
 
 
@@ -112,7 +108,11 @@ public final class LehrerServiceFactory {
 	 * @return der Service für die Fachrichtungen von Lehrern.
 	 */
 	public LehrerFachrichtungService getLehrerFachrichtungService() {
-		return new LehrerFachrichtungService(lehrerRepositoryFactory.getLehrerPersonaldatenLehramtFachrichtungRepository());
+		return new LehrerFachrichtungService(
+				lehrerRepositoryFactory.getLehrerPersonaldatenLehramtFachrichtungRepository(),
+				lehrerRepositoryFactory.getLehrerPersonaldatenLehramtRepository(),
+				LehrerFachrichtungMapper.INSTANCE
+		);
 	}
 
 	/**

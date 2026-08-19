@@ -11,7 +11,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
+import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

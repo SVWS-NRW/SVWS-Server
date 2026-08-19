@@ -1,4 +1,4 @@
-package de.svws_nrw.mapper.lehrer;
+package de.svws_nrw.mapper.lehrer.funktion;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;

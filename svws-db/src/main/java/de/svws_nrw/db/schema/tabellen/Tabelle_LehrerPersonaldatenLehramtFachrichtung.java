@@ -17,21 +17,25 @@ public class Tabelle_LehrerPersonaldatenLehramtFachrichtung extends SchemaTabell
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("Eine eindeutige ID für den Eintrag zu der Fachrichtung zu einem Lehramt eines Lehrers");
 
 	/** Die Definition der Tabellenspalte Lehreramt_ID */
 	public final SchemaTabelleSpalte col_Lehreramt_ID = add("Lehreramt_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idLehramt")
 			.setNotNull()
 			.setJavaComment("Die ID des Lehramtseintrags des Lehrers zu der die Fachrichtung gehört");
 
 	/** Die Definition der Tabellenspalte Fachrichtung_Katalog_ID */
 	public final SchemaTabelleSpalte col_Fachrichtung_Katalog_ID = add("Fachrichtung_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idFachrichtung")
 			.setNotNull()
 			.setJavaComment("Die ID der Fachrichtung aus dem zugehörigen Statistik-Katalog");
 
 	/** Die Definition der Tabellenspalte FachrichtungAnerkennung_Katalog_ID */
 	public final SchemaTabelleSpalte col_FachrichtungAnerkennung_Katalog_ID = add("FachrichtungAnerkennung_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idAnerkennungsgrund")
 			.setJavaComment("Die ID des Anerkennungsgrundes für die Fachrichtung des Lehrers aus dem zugehörigen Statistik-Katalog");
 
 

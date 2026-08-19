@@ -19,6 +19,13 @@ public interface LehrerLehramtFachrichtungRepository extends Repository<DTOLehre
 	 *
 	 * @return die Zuordnung
 	 */
-	Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> getMapByLehramt(Collection<Long> idsLehraemter);
+	Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> getLehrerFachrichtungenByIdLehramt(Collection<Long> idsLehraemter);
+
+	/**
+	 * Gibt die Liste der Fachrichtungen für die LehramtID zurück.
+	 * @param idLehramt idLehramt
+	 * @return die Liste der Fachrichtungen für die LehramtID.
+	 */
+	List<DTOLehrerPersonaldatenLehramtFachrichtung> getByLehramtId(long idLehramt);
 
 }

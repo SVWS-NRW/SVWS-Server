@@ -433,10 +433,11 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		}
-		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		const ids: List<number> = new ArrayList();
 		for (const eintrag of eintraege) {
-			await api.server.deleteLehrerFachrichtung(api.schema, eintrag.id);
+			ids.add(eintrag.id);
 		}
+		await api.server.deleteLehrerFachrichtungen(ids, api.schema);
 		for (const lehramt of this.manager.personalDaten().lehraemter) {
 			lehramt.fachrichtungen.removeAll(eintraege);
 		}

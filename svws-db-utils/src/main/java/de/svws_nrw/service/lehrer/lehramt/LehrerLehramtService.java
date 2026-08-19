@@ -70,7 +70,7 @@ public final class LehrerLehramtService {
 	public @NotNull Map<Long, List<LehrerLehramtEintrag>> getMapByLehrer(final Collection<Long> idsLehrer) {
 		final var listLehraemter = lehramtRepository.findListByIds(idsLehrer);
 		final var idsLehraemter = listLehraemter.stream().map(la -> la.ID).toList();
-		final var mapFachrichtungen = lehrerFachrichtungenService.getMapByLehramt(idsLehraemter);
+		final var mapFachrichtungen = lehrerFachrichtungenService.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
 		final var mapLehrbefaehigungen = lehrerLehrbefaehigungenService.getMapByLehramt(idsLehraemter);
 
 		// Erstelle die Liste der Core-DTOs anhand der zuvor geladenen Daten

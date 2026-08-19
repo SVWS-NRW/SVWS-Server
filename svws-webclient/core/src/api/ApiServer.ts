@@ -9641,38 +9641,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehramtFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/fachrichtungen
-	 *
-	 * Liest zugehörigen Daten zu den Fachrichtungen des Lehramtes mit der angegebenen ID eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die zugehörigen Daten zu den Fachrichtungen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerFachrichtungEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
-	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die zugehörigen Daten zu den Fachrichtungen
-	 */
-	public async getLehrerLehramtFachrichtungen(schema: string, id: number): Promise<List<LehrerFachrichtungEintrag>> {
-		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehramt/fachrichtungen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerFachrichtungEintrag>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(LehrerFachrichtungEintrag.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getLehrerLehramtLehrbefaehigungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehramt/lehrbefaehigungen
 	 *
 	 * Liest zugehörigen Daten zu den Lehrbefähigungen des Lehramtes mit der angegebenen ID eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
@@ -11168,28 +11136,23 @@ export class ApiServer extends BaseApi {
 	 * Liest die LehrerPersonalabschnittsdaten zu den angegebenen IDs aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der LehrerPersonalabschnittsdaten
+	 *   Code 200: Das Ergebnis der Löschoperation
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerPersonalabschnittsdaten>
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Liste der LehrerPersonalabschnittsdaten
+	 * @returns Das Ergebnis der Löschoperation
 	 */
-	public async getLehrerPersonalabschnittsdatenMultiple(data: List<number>, schema: string): Promise<List<LehrerPersonalabschnittsdaten>> {
+	public async getLehrerPersonalabschnittsdatenMultiple(data: List<number>, schema: string): Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result: string = await super.postJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerPersonalabschnittsdaten>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(text));
-		});
-		return ret;
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -11401,7 +11364,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung
+	 * Implementierung der POST-Methode addLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen
 	 *
 	 * Erstellt einen neuen Datensatz für eine Fachrichtung zu einem Lehramt in den Personaldaten eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen besitzt.
 	 *
@@ -11418,7 +11381,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Die Fachrichtung wurde erfolgreich hinzugefügt.
 	 */
 	public async addLehrerFachrichtung(data: Partial<LehrerFachrichtungEintrag>, schema: string): Promise<LehrerFachrichtungEintrag> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung"
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
 		const result: string = await super.postJSON(path, body);
@@ -11428,36 +11391,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
-	 *
-	 * Liest die Daten des Fachrichtungseintrags mit der angegebenen ID zu einem Lehramt eines Lehrers aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten zu dem Fachrichtungseintrag
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerFachrichtungEintrag
-	 *   Code 400: Die Anfrage ist fehlerhaft.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
-	 *   Code 404: Kein Fachrichtungseintrag mit der angegebenen ID gefunden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten zu dem Fachrichtungseintrag
-	 */
-	public async getLehrerFachrichtung(schema: string, id: number): Promise<LehrerFachrichtungEintrag> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.getJSON(path);
-		const text = result;
-		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
+	 * Implementierung der PATCH-Methode patchLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{id : \d+}
 	 *
 	 * Passt den Fachrichtungseintrags zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
 	 *
@@ -11474,7 +11408,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 */
 	public async patchLehrerFachrichtung(data: Partial<LehrerFachrichtungEintrag>, schema: string, id: number): Promise<void> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = LehrerFachrichtungEintrag.transpilerToJSONPatch(data);
@@ -11483,31 +11417,61 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteLehrerFachrichtung für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteLehrerFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{id : \d+}
 	 *
 	 * Entfernt den Fachrichtungseintrag eines Lehramtes eines Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *   Code 200: Das Ergebnis der Löschoperation
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerFachrichtungEintrag
-	 *   Code 400: Die Anfrage ist fehlerhaft.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
-	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Keine LehrerFachrichtungen mit der angegebenen ID gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Das Ergebnis der Löschoperation
+	 */
+	public async deleteLehrerFachrichtungen(data: List<number>, schema: string): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerLehramtFachrichtungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{idLehramt : \d+}
+	 *
+	 * Liest zugehörigen Daten zu den Fachrichtungen des Lehramtes mit der angegebenen ID eines Lehramtes aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die zugehörigen Daten zu den Fachrichtungen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
 	 *
-	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 * @returns Die zugehörigen Daten zu den Fachrichtungen
 	 */
-	public async deleteLehrerFachrichtung(schema: string, id: number): Promise<LehrerFachrichtungEintrag> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtung/{id : \\d+}"
+	public async getLehrerLehramtFachrichtungen(schema: string, idLehramt: number): Promise<List<LehrerFachrichtungEintrag>> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen/{idLehramt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.deleteJSON(path, null);
-		const text = result;
-		return LehrerFachrichtungEintrag.transpilerFromJSON(text);
+			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerFachrichtungEintrag>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerFachrichtungEintrag.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 

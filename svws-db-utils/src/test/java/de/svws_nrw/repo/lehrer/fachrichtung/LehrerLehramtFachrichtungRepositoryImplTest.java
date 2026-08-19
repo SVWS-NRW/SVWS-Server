@@ -1,17 +1,16 @@
 package de.svws_nrw.repo.lehrer.fachrichtung;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung;
-
 
 @ExtendWith(MockitoExtension.class)
 class LehrerLehramtFachrichtungRepositoryImplTest {
@@ -31,63 +29,184 @@ class LehrerLehramtFachrichtungRepositoryImplTest {
 	@InjectMocks
 	private LehrerLehramtFachrichtungRepositoryImpl repository;
 
+	// -------------------------------------------------------------------------
+	// Konstruktor
+	// -------------------------------------------------------------------------
+
 	@Test
-	@DisplayName("Test: Prüfe, ob getMapByLehramt die Fachrichtungen korrekt nach den IDs der Lehrämter gruppiert.")
-	void testGetMapByLehramt() {
-		// Szenario: drei Lehrämter, wobei bei dem ersten Lehramt zwei, bei dem zweiten Lehramt eine und beim dritten Lehramt keine Fachrichtung zugeordnet ist
-		final List<Long> idsLehraemter = Arrays.asList(500L, 600L, 700L);
-		final var f1 = new DTOLehrerPersonaldatenLehramtFachrichtung(1L, 500L, 03L);
-		final var f2 = new DTOLehrerPersonaldatenLehramtFachrichtung(2L, 500L, 04L);
-		final var f3 = new DTOLehrerPersonaldatenLehramtFachrichtung(3L, 600L, 05L);
+	@DisplayName("Konstruktor | Erfolg")
+	void constructor_success() {
+		final var newRepository = new LehrerLehramtFachrichtungRepositoryImpl(conn);
 
-		// Anfrage an das Repository
-		when(conn.queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_LEHRERAMT_ID, DTOLehrerPersonaldatenLehramtFachrichtung.class,
-				idsLehraemter)).thenReturn(Arrays.asList(f1, f2, f3));
-		final Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> result = repository.getMapByLehramt(idsLehraemter);
-
-		// Prüfe, ob die Anzahl der Einträge in der Map Korrekt ist
-		assertNotNull(result);
-		assertEquals(3, result.size(), "Die Map sollte drei Einträge beinhalten.");
-
-		// Prüfe, ob Lehramt 500 zwei Einträge hat
-		assertEquals(2, result.get(500L).size());
-		assertTrue(result.get(500L).contains(f1));
-		assertTrue(result.get(500L).contains(f2));
-
-		// Prüfe, ob Lehramt 600 einen Eintrag hat
-		assertEquals(1, result.get(600L).size());
-		assertEquals(f3, result.get(600L).get(0));
-
-		// Prüfe, ob Lehramt 700 keinen Eintrag hat
-		assertTrue(result.get(700L).isEmpty());
-
-		// Eine einzelne Datenbank-Abfrage soll an dieser Stelle genügen.
-		verify(conn).queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_LEHRERAMT_ID, DTOLehrerPersonaldatenLehramtFachrichtung.class,
-				idsLehraemter);
+		assertThat(newRepository)
+				.isNotNull()
+				.isInstanceOf(LehrerLehramtFachrichtungRepositoryImpl.class)
+				.isInstanceOf(LehrerLehramtFachrichtungRepository.class);
 	}
 
-	@Test
-	@DisplayName("Test: Prüfe, ob getMapByLehramt bei bei null oder leeren IDs eine leere Map liefert.")
-	void testGetMapByLehramtEmpty() {
-		assertTrue(repository.getMapByLehramt(null).isEmpty());
-		assertTrue(repository.getMapByLehramt(List.of()).isEmpty());
-		verifyNoInteractions(conn);
+	// -------------------------------------------------------------------------
+	// getLehrerFachrichtungByIdLehramt
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getLehrerFachrichtungByIdLehramt")
+	class GetLehrerFachrichtungByIdLehramt {
+
+		@Test
+		@DisplayName("Gibt leere Map bei null zurück")
+		void getLehrerFachrichtungByIdLehramt_null() {
+			final var result = repository.getLehrerFachrichtungenByIdLehramt(null);
+
+			assertThat(result).isEmpty();
+			verifyNoInteractions(conn);
+		}
+
+		@Test
+		@DisplayName("Gibt leere Map bei leerer Collection zurück")
+		void getLehrerFachrichtungByIdLehramt_empty() {
+			final var result = repository.getLehrerFachrichtungenByIdLehramt(List.of());
+
+			assertThat(result).isEmpty();
+			verifyNoInteractions(conn);
+		}
+
+		@Test
+		@DisplayName("Gruppiert Fachrichtungen nach Lehramts-ID")
+		void getLehrerFachrichtungByIdLehramt_groupedByLehramtId() {
+			final var idsLehraemter = List.of(500L, 600L, 700L);
+
+			final var fachrichtung1 =
+					new DTOLehrerPersonaldatenLehramtFachrichtung(1L, 500L, 3L);
+			final var fachrichtung2 =
+					new DTOLehrerPersonaldatenLehramtFachrichtung(2L, 500L, 4L);
+			final var fachrichtung3 =
+					new DTOLehrerPersonaldatenLehramtFachrichtung(3L, 600L, 5L);
+
+			when(conn.queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idsLehraemter))
+					.thenReturn(List.of(fachrichtung1, fachrichtung2, fachrichtung3));
+
+			final Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> result =
+					repository.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
+
+			assertThat(result)
+					.containsOnlyKeys(500L, 600L)
+					.containsEntry(500L, List.of(fachrichtung1, fachrichtung2))
+					.containsEntry(600L, List.of(fachrichtung3));
+
+			verify(conn, times(1)).queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idsLehraemter);
+		}
+
+		@Test
+		@DisplayName("Gibt leere Map zurück, wenn keine Fachrichtungen gefunden werden")
+		void getLehrerFachrichtungByIdLehramt_noResults() {
+			final var idsLehraemter = List.of(500L, 600L);
+
+			when(conn.queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idsLehraemter))
+					.thenReturn(List.of());
+
+			final var result = repository.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
+
+			assertThat(result).isEmpty();
+
+			verify(conn, times(1)).queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idsLehraemter);
+		}
 	}
 
+	// -------------------------------------------------------------------------
+	// getByLehramtId
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getByLehramtId")
+	class GetByLehramtId {
+
+		@Test
+		@DisplayName("Gibt Fachrichtungen für ein Lehramt zurück")
+		void getByLehramtId_found() {
+			final long idLehramt = 500L;
+
+			final var fachrichtung1 =
+					new DTOLehrerPersonaldatenLehramtFachrichtung(1L, idLehramt, 3L);
+			final var fachrichtung2 =
+					new DTOLehrerPersonaldatenLehramtFachrichtung(2L, idLehramt, 4L);
+
+			when(conn.queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idLehramt))
+					.thenReturn(List.of(fachrichtung1, fachrichtung2));
+
+			final var result = repository.getByLehramtId(idLehramt);
+
+			assertThat(result)
+					.containsExactly(fachrichtung1, fachrichtung2);
+
+			verify(conn, times(1)).queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idLehramt);
+		}
+
+		@Test
+		@DisplayName("Gibt leere Liste zurück, wenn keine Fachrichtungen gefunden werden")
+		void getByLehramtId_noResults() {
+			final long idLehramt = 700L;
+
+			when(conn.queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idLehramt))
+					.thenReturn(List.of());
+
+			final var result = repository.getByLehramtId(idLehramt);
+
+			assertThat(result).isEmpty();
+
+			verify(conn, times(1)).queryList(
+					DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_BY_IDLEHRAMT,
+					DTOLehrerPersonaldatenLehramtFachrichtung.class,
+					idLehramt);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// create
+	// -------------------------------------------------------------------------
+
 	@Test
-	@DisplayName("Test: Prüfe, ob die ID korrekt gesetzt wird.")
-	void testCreate() {
-		final DTOLehrerPersonaldatenLehramtFachrichtung neu = new DTOLehrerPersonaldatenLehramtFachrichtung(1L, 500L, 03L);
+	@DisplayName("create | Setzt die nächste ID und persistiert das DTO")
+	void create_success() {
+		final var neueFachrichtung =
+				new DTOLehrerPersonaldatenLehramtFachrichtung(1L, 500L, 3L);
 		final long neueId = 999L;
 
-		when(conn.transactionGetNextID(DTOLehrerPersonaldatenLehramtFachrichtung.class)).thenReturn(neueId);
-		when(conn.transactionPersist(neu)).thenReturn(true);
+		when(conn.transactionGetNextID(
+				DTOLehrerPersonaldatenLehramtFachrichtung.class))
+				.thenReturn(neueId);
+		when(conn.transactionPersist(neueFachrichtung))
+				.thenReturn(true);
 
-		final DTOLehrerPersonaldatenLehramtFachrichtung result = repository.create(neu);
+		final var result = repository.create(neueFachrichtung);
 
-		assertEquals(neueId, result.ID);
-		verify(conn).transactionGetNextID(DTOLehrerPersonaldatenLehramtFachrichtung.class);
-		verify(conn).transactionPersist(neu);
+		assertThat(result)
+				.isSameAs(neueFachrichtung)
+				.extracting(dto -> dto.id)
+				.isEqualTo(neueId);
+
+		verify(conn, times(1)).transactionGetNextID(
+				DTOLehrerPersonaldatenLehramtFachrichtung.class);
+		verify(conn, times(1)).transactionPersist(neueFachrichtung);
 	}
-
 }

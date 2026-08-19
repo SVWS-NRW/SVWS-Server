@@ -1,4 +1,4 @@
-package de.svws_nrw.mapper.lehrer;
+package de.svws_nrw.mapper.lehrer.personalabschnittsdaten;
 
 import java.util.List;
 

@@ -17,6 +17,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
+import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
@@ -60,6 +61,9 @@ class DataLehrerPersonaldatenTest {
 	private DBEntityManager conn;
 
 	@Mock
+	private LehrerFachrichtungService fachrichtungService;
+
+	@Mock
 	private LehrerAnrechnungsstundeService anrechnungsService;
 
 	@Mock
@@ -87,15 +91,19 @@ class DataLehrerPersonaldatenTest {
 	void setUp() {
 		mockedFactory = Mockito.mockStatic(LehrerServiceFactory.class);
 		mockedFactory.when(LehrerServiceFactory::getNewInstance).thenReturn(serviceFactory);
+
 		lenient().when(serviceFactory.getLehrerAnrechnungsstundenService()).thenReturn(anrechnungsService);
 		lenient().when(serviceFactory.getLehrerMehrleistungService()).thenReturn(mehrleistungService);
-
 		lenient().when(serviceFactory.getLehrerPersonalabschnittsdatenService())
 				.thenReturn(personalabschnittsdatenService);
+		lenient().when(serviceFactory.getLehrerFachrichtungService())
+				.thenReturn(fachrichtungService);
+
 		lenient().when(personalabschnittsdatenService.getByIdLehrer(anyLong())).thenReturn(List.of());
 
 		dbConnectionProviderMock = mockStatic(DbConnectionProvider.class);
-		dbConnectionProviderMock.when(DbConnectionProvider::getConnection).thenReturn(mock(DBEntityManager.class));
+		dbConnectionProviderMock.when(DbConnectionProvider::getConnection)
+				.thenReturn(mock(DBEntityManager.class));
 	}
 
 	@AfterEach
@@ -179,11 +187,13 @@ class DataLehrerPersonaldatenTest {
 		final var mockAbschnittsdaten = List.of(new LehrerPersonalabschnittsdaten());
 		final var mockLehraemter = List.of(new LehrerLehramtEintrag());
 
-		when(personalabschnittsdatenService.getByIdLehrer(dto.ID)).thenReturn(mockAbschnittsdaten);
+		when(personalabschnittsdatenService.getByIdLehrer(dto.ID))
+				.thenReturn(mockAbschnittsdaten);
 
-		try (var mockedLehraemter = mockStatic(DataLehrerLehramt.class)) {
-			mockedLehraemter.when(() -> DataLehrerLehramt.getListByLehrerId(conn, dto.ID))
-					.thenReturn(mockLehraemter);
+		try (var mockedDataLehrerLehramt = Mockito.mockConstruction(
+				DataLehrerLehramt.class,
+				(mock, context) -> when(mock.getListByLehrerId(conn, dto.ID))
+						.thenReturn(mockLehraemter))) {
 
 			final var result = this.data.map(dto);
 
@@ -201,6 +211,9 @@ class DataLehrerPersonaldatenTest {
 					.hasFieldOrPropertyWithValue("abgangsgrund", dto.GrundAbgang)
 					.extracting("abschnittsdaten", "lehraemter")
 					.containsExactly(mockAbschnittsdaten, mockLehraemter);
+
+			assertThat(mockedDataLehrerLehramt.constructed())
+					.hasSize(1);
 		}
 	}
 

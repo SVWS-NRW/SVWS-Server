@@ -21,4 +21,10 @@ public interface LehrerLehramtRepository extends Repository<DTOLehrerPersonaldat
 	 */
 	Map<Long, List<DTOLehrerPersonaldatenLehramt>> getMapByLehrerID(Collection<Long> idsLehrer);
 
+	/**
+	 * @param idLehramt {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idLehramt);
+
 }

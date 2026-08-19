@@ -1,6 +1,5 @@
 package de.svws_nrw.repo.lehrer.fachrichtung;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,21 +22,25 @@ public final class LehrerLehramtFachrichtungRepositoryImpl extends RepositoryImp
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerLehramtFachrichtungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerPersonaldatenLehramtFachrichtung.class, o -> o.ID, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerPersonaldatenLehramtFachrichtung.class, o -> o.id, (o, id) -> o.id = id);
 	}
 
 	@Override
-	public Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> getMapByLehramt(final Collection<Long> idsLehraemter) {
+	public Map<Long, List<DTOLehrerPersonaldatenLehramtFachrichtung>> getLehrerFachrichtungenByIdLehramt(final Collection<Long> idsLehraemter) {
 		if ((idsLehraemter == null) || (idsLehraemter.isEmpty())) {
 			return Collections.emptyMap();
 		}
-		final var list = conn.queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_LEHRERAMT_ID,
-				DTOLehrerPersonaldatenLehramtFachrichtung.class, idsLehraemter);
-		final var map = list.stream().collect(Collectors.groupingBy(f -> f.Lehreramt_ID));
-		for (final long idLehramt : idsLehraemter) {
-			map.computeIfAbsent(idLehramt, id -> new ArrayList<>());
-		}
-		return map;
+
+		return conn.queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_LIST_BY_IDLEHRAMT,
+						DTOLehrerPersonaldatenLehramtFachrichtung.class, idsLehraemter)
+				.stream()
+				.collect(Collectors.groupingBy(f -> f.idLehramt));
+	}
+
+	@Override
+	public List<DTOLehrerPersonaldatenLehramtFachrichtung> getByLehramtId(final long idLehramt) {
+		return conn.queryList(DTOLehrerPersonaldatenLehramtFachrichtung.QUERY_BY_IDLEHRAMT,
+				DTOLehrerPersonaldatenLehramtFachrichtung.class, idLehramt);
 	}
 
 }

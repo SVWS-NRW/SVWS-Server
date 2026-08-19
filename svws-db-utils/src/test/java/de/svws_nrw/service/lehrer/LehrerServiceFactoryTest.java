@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 
@@ -58,7 +59,7 @@ class LehrerServiceFactoryTest {
 		assertNotNull(service);
 
 		// Prüfe, ob die das Repository für die Lehramtsdaten genau einmal genutzt wird...
-		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtRepository();
+		verify(repoLehrerFactory, times(2)).getLehrerPersonaldatenLehramtRepository();
 
 		// ... und auch (indirekt) die beiden Repositories für die Fachrichtungen und die Lehrbefähigungen
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtFachrichtungRepository();
@@ -119,6 +120,16 @@ class LehrerServiceFactoryTest {
 			verify(repoLehrerFactory).getLehrerPersonalabschnittsdatenRepository();
 			verify(repoLehrerFactory).getLehrerMinderleistungRepository();
 		}
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerFachrichtungService den Service mit dem Kontext korrekt erstellt")
+	void getLehrerFachrichtungService() {
+		final var service = serviceFactory.getLehrerFachrichtungService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtFachrichtungRepository();
+		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtRepository();
 	}
 
 }

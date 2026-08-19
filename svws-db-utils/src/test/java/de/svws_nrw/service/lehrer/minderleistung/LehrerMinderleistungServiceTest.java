@@ -12,7 +12,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.mapper.lehrer.LehrerMinderleistungMapper;
+import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;

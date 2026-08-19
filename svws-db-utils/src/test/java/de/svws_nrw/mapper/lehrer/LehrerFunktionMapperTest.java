@@ -2,6 +2,7 @@ package de.svws_nrw.mapper.lehrer;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
+import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionCreateRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionPatchRequest;

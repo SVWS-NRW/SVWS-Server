@@ -1,4 +1,4 @@
-package de.svws_nrw.mapper.lehrer;
+package de.svws_nrw.mapper.lehrer.minderleistung;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;

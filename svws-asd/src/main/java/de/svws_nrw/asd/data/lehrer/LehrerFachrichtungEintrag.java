@@ -29,11 +29,4 @@ public class LehrerFachrichtungEintrag {
 	@Schema(description = "Die Katalog-ID des Anerkennungsgrund für die Fachrichtung.", example = "4713")
 	public Long idAnerkennungsgrund;
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public LehrerFachrichtungEintrag() {
-		// leer
-	}
-
 }

@@ -13,7 +13,7 @@ import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.mapper.lehrer.LehrerMehrleistungMapper;
+import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import jakarta.ws.rs.core.Response;
 
 /**
