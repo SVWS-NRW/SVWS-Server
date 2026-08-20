@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet",
+    "historie" : [ {
+      "praefix" : "KCKP10",
+      "zweig" : "Klassen-Kombination-Klassenjahrgang-Parallelitaet",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Parallelitaet'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Die Kombination von Klassenjahrgang und Parallelitaet existiert bereits",
+      "erlaeuterung" : "",
+      "bedingung" : "Anzahl(KlassenDaten.idJahrgang.text.concat(KlassenDaten.parallelitaet)) > 1 ",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+
+

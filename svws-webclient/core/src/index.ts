@@ -340,6 +340,8 @@ export { ValidatorIka00IntKatalogKonfessionenAsdKatalog } from './asd/validate/i
 export { ValidatorIka01IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka01IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIka02IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka02IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIkaIntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIkaIntKatalogKonfessionenAsdKatalog';
+export { ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet';
+export { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
 export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/ValidatorKk00KlassenKlassenart';
 export { ValidatorKk01KlassenKlassenart } from './asd/validate/klassen/ValidatorKk01KlassenKlassenart';
 export { ValidatorKk02KlassenKlassenart } from './asd/validate/klassen/ValidatorKk02KlassenKlassenart';
