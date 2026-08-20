@@ -3584,6 +3584,38 @@ public class APISchule {
 	}
 
 	/**
+	 * Eine OpenAPI-Methode für die Abfrage von Logos als ZIP-Archiv.
+	 *
+	 * @param schema das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param ids Liste der Logo IDs
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Logos als ZIP-Archiv
+	 */
+	@POST
+	@Path("/logoverwaltung/logos")
+	@Produces("application/zip")
+	@Operation(summary = "Liefert ein ZIP-Archiv mit Logos.",
+			description = "Liefert ein ZIP-Archiv mit Logos. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Alle verfügbaren Logos als ZIP-Archiv konnten erfolgreich abgerufen werden",
+			content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Logo-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Logo-Einträge gefunden")
+	public Response getLogosAsZip(
+			@PathParam("schema") final String schema,
+			@RequestBody(
+					description = "Die IDs der Logos",
+					required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))
+			) final List<Long> ids,
+			@Context final HttpServletRequest request
+	) {
+		return LogoverwaltungControllerFactory.withReadAccess(request)
+				.getController()
+				.getByIdsAsZip(ids);
+	}
+
+	/**
 	 * Die OpenAPI-Methode zum Hinzufügen eines Logos.
 	 *
 	 * @param schema das Datenbankschema, auf welches die Anfrage ausgeführt werden soll

@@ -80,6 +80,24 @@ public class LogoverwaltungService {
 	}
 
 	/**
+	 * Gibt eine Liste Logos zu den übergebenen IDs zurück.
+	 *
+	 * @param ids IDs der Logos
+	 *
+	 * @return Liste von Logos
+	 */
+	public List<Logo> getByIds(final List<Long> ids) {
+		final var logos = repository.findListByIds(ids);
+		if (logos.size() != ids.size()) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es konnten nicht zu allen IDs Logos gefunden werden.");
+		}
+
+		return logos.stream()
+				.map(this::toApi)
+				.toList();
+	}
+
+	/**
 	 * Erstellt ein neues Logo.
 	 *
 	 * @param createRequest das CreateRequest-Objekt

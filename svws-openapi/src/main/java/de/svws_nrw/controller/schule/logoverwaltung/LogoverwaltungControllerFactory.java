@@ -69,10 +69,10 @@ public final class LogoverwaltungControllerFactory {
 	}
 
 	/**
-	 * @return ein neuer {@link LogoverwaltungController} mit dem konfigurierten {@link LogoverwaltungService}
+	 * @return ein neuer {@link LogoverwaltungControllerImpl} mit dem konfigurierten {@link LogoverwaltungService}
 	 */
 	public LogoverwaltungController getController() {
-		return new LogoverwaltungController(serviceFactory.getService());
+		return new LogoverwaltungControllerImpl(serviceFactory.getService());
 	}
 
 }

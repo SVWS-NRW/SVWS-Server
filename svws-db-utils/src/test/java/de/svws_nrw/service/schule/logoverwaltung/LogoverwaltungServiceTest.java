@@ -3,6 +3,7 @@ package de.svws_nrw.service.schule.logoverwaltung;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -41,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -201,6 +203,37 @@ class LogoverwaltungServiceTest {
 		}
 	}
 
+	@Nested
+	class GetByIds {
+
+		@Test
+		void gibtListeMitEinemLogoZurueck_WennEineIdGeliefertWird() {
+			final DTOLogo dto1 = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final Logo logo1 = buildLogo(1L, VALID_BASE64_JPEG);
+			final var ids = List.of(1L);
+
+			when(repository.findListByIds(ids)).thenReturn(List.of(dto1));
+			when(mapper.toApi(dto1)).thenReturn(logo1);
+
+			final List<Logo> result = service.getByIds(ids);
+
+			assertThat(result).containsExactly(logo1);
+		}
+
+		@Test
+		void wirftApiOperationException_WennNichtAlleIdsGefundenWurden() {
+			final var ids = List.of(1L);
+
+			when(repository.findListByIds(ids)).thenReturn(Collections.emptyList());
+
+			assertThatThrownBy(() -> service.getByIds(ids))
+					.isInstanceOf(ApiOperationException.class)
+					.asInstanceOf(InstanceOfAssertFactories.type(ApiOperationException.class))
+					.extracting(ApiOperationException::getStatus, ApiOperationException::getMessage)
+					.containsExactly(Response.Status.NOT_FOUND, "Es konnten nicht zu allen IDs Logos gefunden werden.");
+		}
+	}
+
 	// ------------------------------------------------------------------
 	// create
 	// ------------------------------------------------------------------
@@ -328,6 +361,47 @@ class LogoverwaltungServiceTest {
 					.containsExactly(Response.Status.BAD_REQUEST,
 							"Es existiert bereits ein Logo mit der Kennung %s. Es kann kein weiteres Logo mit gleicher Kennung hinterlegt werden."
 									.formatted(ReportingBildDefinition.DIN5008_BRIEFKOPF));
+		}
+
+		@Test
+		void wirftApiOperationException_wennMimeTypeNichtErlaubt() {
+			final LogoCreateRequest request = new LogoCreateRequest();
+			request.kennung = ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung();
+			request.logoBase64 =
+					"data:image/bmp;base64,Qk1mAAAAAAAAADYAAAAoAAAABAAAAAQAAAABABgAAAAAADAAAADEDgAAxA4AAAAAAAAAAAAAMmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/MmT/";
+
+			when(repository.existsByKennung(ReportingBildDefinition.DIN5008_BRIEFKOPF)).thenReturn(false);
+			when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
+
+			assertThatThrownBy(() -> service.create(request))
+					.isInstanceOf(ApiOperationException.class)
+					.asInstanceOf(InstanceOfAssertFactories.type(ApiOperationException.class))
+					.extracting(ApiOperationException::getStatus, ApiOperationException::getMessage)
+					.containsExactly(Response.Status.BAD_REQUEST, "Der MIME-Type des Logos ist nicht zulässig.");
+		}
+	}
+
+	@Test
+	void wirftApiOperationException_wennMaxByteGroesseUeberschritten() {
+		try (MockedStatic<DataUrlResolver> mockedStatic = mockStatic(DataUrlResolver.class)) {
+			final LogoCreateRequest request = new LogoCreateRequest();
+			request.kennung = ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung();
+			request.logoBase64 = "base64";
+
+			final DataUrl dataUrlMock = mock(DataUrl.class);
+			when(dataUrlMock.hasAnyMimeTypeOf(any())).thenReturn(true);
+			when(dataUrlMock.sizeInKB()).thenReturn(3000d);
+
+			mockedStatic.when(() -> DataUrlResolver.resolve(request.logoBase64)).thenReturn(Optional.of(dataUrlMock));
+
+			when(repository.existsByKennung(ReportingBildDefinition.DIN5008_BRIEFKOPF)).thenReturn(false);
+			when(eigeneSchuleService.getSchulform()).thenReturn(Schulform.GY);
+
+			assertThatThrownBy(() -> service.create(request))
+					.isInstanceOf(ApiOperationException.class)
+					.asInstanceOf(InstanceOfAssertFactories.type(ApiOperationException.class))
+					.extracting(ApiOperationException::getStatus, ApiOperationException::getMessage)
+					.containsExactly(Response.Status.REQUEST_ENTITY_TOO_LARGE, "Das Logo überschreitet die maximale Größe von 2MB.");
 		}
 	}
 

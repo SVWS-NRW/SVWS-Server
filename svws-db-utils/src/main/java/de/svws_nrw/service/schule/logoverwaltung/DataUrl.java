@@ -37,6 +37,13 @@ public interface DataUrl {
 	double sizeInKB();
 
 	/**
+	 * Gibt die zugehörige Dateinamenendung zurück.
+	 *
+	 * @return die Dateinamenendung
+	 */
+	String fileExtension();
+
+	/**
 	 * Prüft, ob die DATA-URL eines der angegebenen MIME-Types enthält.
 	 *
 	 * @param mimeTypes Collection von erlaubten MIME-Types (z.B. image/png)

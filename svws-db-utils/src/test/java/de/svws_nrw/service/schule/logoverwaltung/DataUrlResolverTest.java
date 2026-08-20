@@ -49,13 +49,14 @@ class DataUrlResolverTest {
 	 */
 	private static final String NOT_BASE64 = "!!!kein_base64!!!";
 
+	private static final String NO_PAYLOAD = "data:image/jpeg;base64,";
+
 	// -------------------------------------------------------------------------
 	// get()
 	// -------------------------------------------------------------------------
 
 	@Nested
-	@DisplayName("get()")
-	class Get {
+	class Resolve {
 
 		@Test
 		@DisplayName("gibt Optional.empty() zurück wenn base64 null ist")
@@ -136,6 +137,12 @@ class DataUrlResolverTest {
 		@DisplayName("gibt Optional.empty() zurück wenn der String kein valides Base64 ist")
 		void get_notBase64String_returnsEmpty() {
 			assertThat(DataUrlResolver.resolve(NOT_BASE64)).isEmpty();
+		}
+
+		@Test
+		@DisplayName("gibt Optional.empty() zurück wenn der payload null ist")
+		void get_noBase64Payload_returnsEmpty() {
+			assertThat(DataUrlResolver.resolve(NO_PAYLOAD)).isEmpty();
 		}
 
 	}

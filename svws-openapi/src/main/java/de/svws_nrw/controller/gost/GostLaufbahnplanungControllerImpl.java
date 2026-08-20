@@ -1,17 +1,13 @@
 package de.svws_nrw.controller.gost;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -38,9 +34,12 @@ import de.svws_nrw.service.gost.GostLaufbahnplanungExportV2Service;
 import de.svws_nrw.service.gost.GostLaufbahnplanungImportV1Service;
 import de.svws_nrw.service.gost.GostLaufbahnplanungImportV2Service;
 import de.svws_nrw.service.gost.GostSchuelerGKLWahlService;
+import de.svws_nrw.base.compression.Zip;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 /**
  * In dieser Klasse werden die Methoden zur Behandlung der API-Zugriffe im Bereich Laufbahnplanung der Gymnasialen Oberstufe gebündelt
@@ -248,30 +247,29 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	@Override
 	public Response exportGZip(final Collection<Long> idsSchueler) {
 		// Bestimme die einzelnen Export-Dateien
-		final List<GostLaufbahnplanungExportV2> listDaten = gostLaufbahnplanungExportV2Service.getList(idsSchueler);
+		final List<GostLaufbahnplanungExportV2> gostLaufbahnplanungen = gostLaufbahnplanungExportV2Service.getList(idsSchueler);
 
-		final String zipname = "Laufbahnplanungen.zip";
-		final byte[] zipdata;
-		try {
-			try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				try (ZipOutputStream zos = new ZipOutputStream(baos)) {
-					for (final GostLaufbahnplanungExportV2 daten : listDaten) {
-						final GostLaufbahnplanungExportV2Schueler schueler = daten.schueler.getFirst();
-						final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, schueler.nachname,
-								schueler.vorname, schueler.id);
-						final byte[] filedata = JSONMapper.gzipByteArrayFromObject(daten);
-						zos.putNextEntry(new ZipEntry(filename));
-						zos.write(filedata);
-						zos.closeEntry();
-					}
-					baos.flush();
-				}
-				zipdata = baos.toByteArray();
+		final Map<String, byte[]> fileNameToBytes = new HashMap<>();
+		for (final GostLaufbahnplanungExportV2 gostLaufbahnplanung : gostLaufbahnplanungen) {
+			final GostLaufbahnplanungExportV2Schueler schueler = gostLaufbahnplanung.schueler.getFirst();
+
+			final String fileName = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(gostLaufbahnplanung.abiturjahr, gostLaufbahnplanung.jahrgang, schueler.nachname, schueler.vorname, schueler.id);
+
+			try {
+				final var fileData = JSONMapper.gzipByteArrayFromObject(gostLaufbahnplanung);
+
+				fileNameToBytes.put(fileName, fileData);
+			} catch (final CompressionException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim GZIP-Komprimieren der Daten.");
 			}
-		} catch (@SuppressWarnings("unused") final IOException | CompressionException e) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		}
-		return Response.ok(zipdata).header("Content-Disposition", "attachment; filename=\"" + zipname + "\"").build();
+
+		final var zipBytes = Zip.createArchive(fileNameToBytes);
+
+		return Response.ok(zipBytes)
+				.header("Content-Disposition", "attachment; filename=\"Laufbahnplanungen.zip\"")
+				.header("Content-Length", zipBytes.length)
+				.build();
 	}
 
 

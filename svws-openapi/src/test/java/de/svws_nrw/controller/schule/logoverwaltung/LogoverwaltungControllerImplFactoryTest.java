@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LogoverwaltungControllerFactoryTest {
+class LogoverwaltungControllerImplFactoryTest {
 
 	@Mock
 	private LogoverwaltungServiceFactory cut;
@@ -181,7 +181,7 @@ class LogoverwaltungControllerFactoryTest {
 
 		assertThat(controller)
 				.isNotNull()
-				.isInstanceOf(LogoverwaltungController.class);
+				.isInstanceOf(LogoverwaltungControllerImpl.class);
 		verify(serviceFactory, times(1)).getService();
 	}
 

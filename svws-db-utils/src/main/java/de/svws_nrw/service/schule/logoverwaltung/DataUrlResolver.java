@@ -7,6 +7,7 @@ import java.util.Optional;
 import jakarta.annotation.Nonnull;
 import org.apache.tika.Tika;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.mime.MimeTypes;
 
 public final class DataUrlResolver {
 
@@ -42,8 +43,9 @@ public final class DataUrlResolver {
 
 		final String dataUrl = DATA_URL_FORMAT.formatted(mimeType, payload);
 		final double sizeInKB = getSizeInKB(payload);
+		final String fileExtension = getFileExtensionByMimeType(mimeType.toString());
 
-		return Optional.of(new ResolvedDataUrl(dataUrl, mimeType.toString(), payload, sizeInKB));
+		return Optional.of(new ResolvedDataUrl(dataUrl, mimeType.toString(), payload, sizeInKB, fileExtension));
 	}
 
 	/**
@@ -93,6 +95,23 @@ public final class DataUrlResolver {
 		}
 	}
 
+	/**
+	 * Liefert zu einem MimeType, die passende Dateinamenendung (Bsp. <code>image/png</code> -> <code>.png</code>). Falls ein unbekannter MimeType übergeben
+	 * wird, liefert die Methode <code>null</code> zurück.
+	 *
+	 * @param mimeType MimeType
+	 *
+	 * @return Dateinamenendung
+	 */
+	private static String getFileExtensionByMimeType(final String mimeType) {
+		try {
+			return MimeTypes.getDefaultMimeTypes()
+					.forName(mimeType)
+					.getExtension();
+		} catch (final Exception e) {
+			return null;
+		}
+	}
 
 	/**
 	 * Dieses Objekt beinhaltet eine bereits validierte DATA-URL mit MIME-Type und Base64-Payload.
@@ -102,8 +121,10 @@ public final class DataUrlResolver {
 	 * @param mimeType MIME-Type des Base64-Payloads
 	 * @param payload Base64 ohne DATA-URL-Header
 	 * @param sizeInKB Größe des Base64 Payloads in KB
+	 * @param fileExtension die Dateinamenendung
 	 */
-	private record ResolvedDataUrl(@Nonnull String value, @Nonnull String mimeType, @Nonnull String payload, double sizeInKB) implements DataUrl {
+	private record ResolvedDataUrl(@Nonnull String value, @Nonnull String mimeType, @Nonnull String payload, double sizeInKB, String fileExtension)
+			implements DataUrl {
 
 		@Override
 		public boolean hasAnyMimeTypeOf(final Collection<String> mimeTypes) {

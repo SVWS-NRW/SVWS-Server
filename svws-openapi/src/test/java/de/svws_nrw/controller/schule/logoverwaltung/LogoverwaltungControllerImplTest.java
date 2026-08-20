@@ -1,10 +1,18 @@
 package de.svws_nrw.controller.schule.logoverwaltung;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import de.svws_nrw.base.compression.Zip;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Logo;
+import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.data.Responses;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.logoverwaltung.DataUrl;
+import de.svws_nrw.service.schule.logoverwaltung.DataUrlResolver;
 import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoPatchRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungService;
@@ -23,23 +31,26 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("LogoverwaltungController")
-class LogoverwaltungControllerTest {
+class LogoverwaltungControllerImplTest {
 
 	@Mock
 	private LogoverwaltungService service;
 
 	@InjectMocks
-	private LogoverwaltungController controller;
+	private LogoverwaltungControllerImpl controller;
 
 	// -------------------------------------------------------------------------
 	// Hilfsmethoden
@@ -48,14 +59,22 @@ class LogoverwaltungControllerTest {
 	private static Logo aLogo() {
 		final var logo = new Logo();
 		logo.id = 1L;
-		logo.kennung = "DIN5008_BRIEFKOPF";
+		logo.kennung = ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung();
+		logo.logoBase64 = "data:image/png;base64,iVBORw0KGgo=";
+		return logo;
+	}
+
+	private static Logo bLogo() {
+		final var logo = new Logo();
+		logo.id = 2L;
+		logo.kennung = ReportingBildDefinition.SCHULLOGO_QUADRATISCH.getKennung();
 		logo.logoBase64 = "data:image/png;base64,iVBORw0KGgo=";
 		return logo;
 	}
 
 	private static LogoCreateRequest validCreateRequest() {
 		final var request = new LogoCreateRequest();
-		request.kennung = "DIN5008_BRIEFKOPF";
+		request.kennung = ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung();
 		request.logoBase64 = "data:image/png;base64,iVBORw0KGgo=";
 		return request;
 	}
@@ -119,6 +138,157 @@ class LogoverwaltungControllerTest {
 
 				assertThat(result).isEqualTo(expectedResponse);
 				verify(service).getAll();
+			}
+		}
+	}
+
+	@Nested
+	@DisplayName("getByIdsAsZip()")
+	class GetByIdsAsZip {
+
+		@Test
+		void getByIdsAsZip_throwsBadRequest_whenIdsIsNull() {
+			assertThatThrownBy(() -> controller.getByIdsAsZip(null))
+					.isInstanceOf(ApiOperationException.class)
+					.satisfies(ex -> {
+						final var apiEx = (ApiOperationException) ex;
+						assertThat(apiEx.getStatus()).isEqualTo(Response.Status.BAD_REQUEST);
+						assertThat(apiEx.getMessage())
+								.contains("mindestens eine Logo ID");
+					});
+
+			verifyNoInteractions(service);
+		}
+
+		@Test
+		void getByIdsAsZip_throwsBadRequest_whenIdsIsEmpty() {
+			assertThatThrownBy(() -> controller.getByIdsAsZip(Collections.emptyList()))
+					.isInstanceOf(ApiOperationException.class)
+					.satisfies(ex -> {
+						final var apiEx = (ApiOperationException) ex;
+						assertThat(apiEx.getStatus()).isEqualTo(Response.Status.BAD_REQUEST);
+					});
+
+			verifyNoInteractions(service);
+		}
+
+		// -------------------------------------------------------------------------
+		// getByIdsAsZip – Happy Path
+		// -------------------------------------------------------------------------
+
+		@Test
+		void getByIdsAsZip_returnsZip_forSingleLogo() {
+			final var logo = aLogo();
+			when(service.getByIds(List.of(1L))).thenReturn(List.of(logo));
+
+			try (MockedStatic<Zip> zipMock = mockStatic(Zip.class)) {
+				final byte[] expectedZip = new byte[] { 0x50, 0x4B, 0x03, 0x04 }; // PK-Header
+				zipMock.when(() -> Zip.createArchive(anyMap())).thenReturn(expectedZip);
+
+				final Response response = controller.getByIdsAsZip(List.of(1L));
+
+				assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+				assertThat(response.getEntity()).isEqualTo(expectedZip);
+				assertThat(response.getHeaderString("Content-Disposition"))
+						.isEqualTo("attachment; filename=\"logos.zip\"");
+				assertThat(response.getHeaderString("Content-Length"))
+						.isEqualTo(String.valueOf(expectedZip.length));
+			}
+		}
+
+		@Test
+		void getByIdsAsZip_returnsZip_forMultipleLogos() {
+			final var logo = aLogo();
+			final var logo2 = bLogo();
+
+			when(service.getByIds(List.of(1L, 2L))).thenReturn(List.of(logo, logo2));
+
+			try (MockedStatic<Zip> zipMock = mockStatic(Zip.class)) {
+				final byte[] expectedZip = new byte[] { 0x50, 0x4B, 0x05, 0x06 };
+				zipMock.when(() -> Zip.createArchive(anyMap())).thenReturn(expectedZip);
+
+				final Response response = controller.getByIdsAsZip(List.of(1L, 2L));
+
+				zipMock.verify(() -> Zip.createArchive(argThat(map ->
+						map.containsKey(ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung() + ".png")
+								&& map.containsKey(ReportingBildDefinition.SCHULLOGO_QUADRATISCH.getKennung() + ".png")
+				)));
+
+				assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
+			}
+		}
+
+		@Test
+		void getByIdsAsZip_usesKennungWithoutExtension_whenFileExtensionIsNull() {
+			// Base64 ohne erkennbaren MIME-Type → kein fileExtension
+			final var logo = aLogo();
+			logo.logoBase64 = "data:application/octet-stream;base64,AAAA";
+
+			when(service.getByIds(List.of(1L))).thenReturn(List.of(logo));
+
+			try (MockedStatic<DataUrlResolver> resolverMock = mockStatic(DataUrlResolver.class);
+					MockedStatic<Zip> zipMock = mockStatic(Zip.class)) {
+
+				final var dataUrl = mock(DataUrl.class);
+				when(dataUrl.fileExtension()).thenReturn(null);
+				when(dataUrl.payload()).thenReturn("AAAA");
+
+				resolverMock.when(() -> DataUrlResolver.resolve(logo.logoBase64))
+						.thenReturn(Optional.of(dataUrl));
+
+				zipMock.when(() -> Zip.createArchive(anyMap())).thenReturn(new byte[0]);
+
+				controller.getByIdsAsZip(List.of(1L));
+
+				zipMock.verify(() -> Zip.createArchive(argThat(map ->
+						map.containsKey(ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung())
+								&& !map.containsKey(ReportingBildDefinition.DIN5008_BRIEFKOPF.getKennung() + ".") // kein Punkt
+				)));
+			}
+		}
+
+		// -------------------------------------------------------------------------
+		// getByIdsAsZip – Fehlerfall: Base64 nicht parsebar
+		// -------------------------------------------------------------------------
+
+		@Test
+		void getByIdsAsZip_throwsInternalServerError_whenBase64CannotBeResolved() {
+			final var logo = aLogo();
+			logo.logoBase64 = "kein-gueltiges-data-url";
+
+			final var ids = List.of(1L);
+			when(service.getByIds(ids)).thenReturn(List.of(logo));
+
+			try (MockedStatic<DataUrlResolver> resolverMock = mockStatic(DataUrlResolver.class)) {
+				resolverMock.when(() -> DataUrlResolver.resolve(logo.logoBase64))
+						.thenReturn(Optional.empty());
+
+				assertThatThrownBy(() -> controller.getByIdsAsZip(ids))
+						.isInstanceOf(ApiOperationException.class)
+						.satisfies(ex -> {
+							final var apiEx = (ApiOperationException) ex;
+							assertThat(apiEx.getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR);
+							assertThat(apiEx.getMessage()).contains("1"); // Logo-ID im Text
+						});
+			}
+		}
+
+		// -------------------------------------------------------------------------
+		// getByIdsAsZip – Service gibt leere Liste zurück
+		// -------------------------------------------------------------------------
+
+		@Test
+		void getByIdsAsZip_returnsEmptyZip_whenServiceReturnsNoLogos() {
+			when(service.getByIds(List.of(99L))).thenReturn(Collections.emptyList());
+
+			try (MockedStatic<Zip> zipMock = mockStatic(Zip.class)) {
+				final byte[] emptyZip = new byte[22]; // leeres ZIP-Archiv hat 22 Byte
+				zipMock.when(() -> Zip.createArchive(anyMap())).thenReturn(emptyZip);
+
+				final Response response = controller.getByIdsAsZip(List.of(99L));
+
+				zipMock.verify(() -> Zip.createArchive(argThat(Map::isEmpty)));
+				assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 			}
 		}
 	}
