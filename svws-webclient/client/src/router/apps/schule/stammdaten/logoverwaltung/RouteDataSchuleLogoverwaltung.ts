@@ -35,7 +35,8 @@ export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLog
 				break;
 			}
 		}
-		this.commit();
+
+		this.setPatchedDefaultState({ logos });
 		return true;
 	};
 
@@ -44,7 +45,7 @@ export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLog
 		const logo = await api.server.addLogo(partialData, api.schema);
 		const logos = this.logos;
 		logos.add(logo);
-		this.setPatchedState({ logos });
+		this.setPatchedDefaultState({ logos });
 		return logo;
 	};
 
@@ -60,7 +61,7 @@ export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLog
 			}
 		}
 
-		this.setPatchedState({ logos });
+		this.setPatchedDefaultState({ logos });
 	};
 
 }

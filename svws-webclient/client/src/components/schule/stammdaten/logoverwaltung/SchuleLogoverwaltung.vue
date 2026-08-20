@@ -11,77 +11,81 @@
 									:disabled="bulkSelectable.length === 0"
 									@update:model-value="toggleBulkAll" />
 							</th>
-							<th v-else-if="col.kuerzel === 'RowActions'" />
-							<th v-else-if="col.kuerzel === 'Bild'" class="flex items-center justify-center">
-								{{ col.kuerzel }}
-							</th>
-							<th v-else class="flex items-start justify-center">
+							<th v-else :class="['flex justify-center', (col.kuerzel === 'Bild') ? 'items-center' : 'items-start']">
 								{{ col.kuerzel }}
 							</th>
 						</template>
 					</template>
-					<template #default="{ row: logo }">
-						<td class="flex items-start justify-center">
-							<svws-ui-checkbox :model-value="bulkSelectedLogos.includes(logo)"
-								:disabled="logo.proxy.base64 === ''"
-								@update:model-value="(value) => toggleBulkSelection(logo, value)" />
+					<template #default="{ row: logoModel }">
+						<td class="flex items-start justify-center group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							<svws-ui-checkbox :model-value="bulkSelectedLogoModels.includes(logoModel)"
+								:disabled="logoModel.proxy.base64 === ''"
+								@update:model-value="(value) => toggleBulkSelection(logoModel, value)" />
 						</td>
-						<td class="flex justify-center text-left">
-							{{ logo.proxy.bezeichnung }}
+						<td class="flex justify-center text-left group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							{{ logoModel.proxy.bezeichnung }}
 						</td>
-						<td class="flex justify-center text-left">
-							{{ logo.proxy.beschreibung }}
+						<td class="flex justify-center text-left group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							{{ logoModel.proxy.beschreibung }}
 						</td>
-						<td class="flex items-center justify-center">
-							<div class="h-22 py-1">
+						<td class="flex items-center justify-center text-left max-w-full group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							<div class="relative p-1"
+								:style="{ height: `${LOGO_PREVIEW_HEIGHT_REM}rem`, aspectRatio: getCssAspectRatio(logoModel.proxy.kennung) }">
 								<logo-image mode="tooltip"
-									:logo-base64="logo.proxy.base64"
-									:alt="`Kleine Vorschau des Bildes für das Logo '${logo.proxy.bezeichnung}'`"
+									:logo-base64="logoModel.proxy.base64"
+									:alt="`Kleine Vorschau des Bildes für das Logo '${logoModel.proxy.bezeichnung}'`"
 									aria-label="Öffnet eine größere Vorschau des Bildes neben der Tabelle"
-									@click="selectPreviewLogo(logo)"
+									@click="selectPreviewLogo(logoModel)"
 									clickable />
+								<ui-validation-tooltip v-if="(logoModel.proxy.base64 !== '') && logoModel.hatFehler()"
+									:validation-result="getValidationResult(logoModel)"
+									class="absolute right-0 top-0" />
 							</div>
 						</td>
-						<td>
-							<ui-table-actions :actions="rowActions(logo)" :items="logo" />
+						<td class="group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							<ui-table-actions :actions="rowActions(logoModel)" :items="logoModel" />
 						</td>
 					</template>
 					<template #footer>
 						<td class="col-span-full my-1">
-							<ui-table-actions :actions="bulkActions" :items="bulkSelectedLogos" always-visible />
+							<ui-table-actions :actions="bulkActions" :items="bulkSelectedLogoModels" always-visible />
 						</td>
 					</template>
 				</ui-table-grid>
 			</svws-ui-content-card>
-			<svws-ui-content-card :title="previewLogo.proxy.bezeichnung" v-if="previewLogo !== null">
-				<logo-image mode="tooltip"
-					:logo-base64="previewLogo.proxy.base64"
-					:alt="`Kleine Vorschau des Bildes für das Logo '${previewLogo.proxy.bezeichnung}'`" />
+			<svws-ui-content-card title="Vorschau" v-if="previewLogoModel !== null" class="w-[50%]">
+				<div class="p-1"
+					:style="previewStyle">
+					<logo-image mode="tooltip"
+						:logo-base64="previewLogoModel.proxy.base64"
+						:alt="`Große Vorschau des Bildes für das Logo '${previewLogoModel.proxy.bezeichnung}'`" />
+				</div>
 			</svws-ui-content-card>
 		</div>
 		<logo-image-upload-modal v-if="uploadModalIsOpen"
 			:is-open="uploadModalIsOpen"
 			:add="addLogo"
-			:logo="() => logoForUpload"
+			:logo-model="() => logoModelForUpload"
 			@close-modal="closeUploadModal()" />
 		<logo-image-delete-modal :is-open="deleteModalIsOpen"
-			:logos="logoImagesToDelete"
+			:logo-models="logoModelToDeleteImage"
 			@cancel="closeDeleteModal"
-			@confirm="deleteLogoBilder" />
+			@confirm="deleteLogoImages" />
 	</div>
 </template>
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, type ShallowRef } from "vue";
-	import { ArrayList, DeveloperNotificationException, type List, type Logo, ReportingBildDefinition } from "@core";
-	import { GridManager, useSchuleState, type TableActions } from "@ui";
+	import { computed, onMounted, ref, shallowRef, type ShallowRef } from "vue";
+	import { DeveloperNotificationException, type Logo, ReportingBildDefinition } from "@core";
+	import { GridManager, type TableActions, useModelProxyList, useSchuleState, ValidationResult } from "@ui";
 	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
-	import { SUPPORTED_IMAGE_TYPES, type TableLogo } from "./LogoUtils";
-	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
+	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
 	import LogoImage from "./LogoImage.vue";
+	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
 	import LogoImageUploadModal from "./modals/LogoImageUploadModal.vue";
 	import LogoImageDeleteModal from "./modals/LogoImageDeleteModal.vue";
 
+	const LOGO_PREVIEW_HEIGHT_REM = 5.5;
 	const props = defineProps<SchuleLogoverwaltungProps>();
 	const schuleState = useSchuleState();
 
@@ -89,57 +93,99 @@
 	 * Tabellendaten
 	 */
 
-	const logoModels = computed(() => {
-		const definitions = ReportingBildDefinition.getBySchulform(schuleState.schulform);
+	const tableLogos = computed(() => {
 		const dbLogos = [...props.logos()];
-		const models = new ArrayList<LogoModelProxy>();
-		for (const definition of definitions) {
+		const tableLogos: TableLogo[] = [];
+		const bildDefinitions = ReportingBildDefinition.getBySchulform(schuleState.schulform);
+		for (const definition of bildDefinitions) {
 			const dbLogo = dbLogos.find(dbLogo => dbLogo.kennung === definition.getKennung());
-			models.add(createModel(definition, dbLogo));
+			tableLogos.push(getTableLogo(definition, dbLogo));
 		}
-		return models;
+		return tableLogos;
 	});
 
-	function createModel(definition: ReportingBildDefinition, dbLogo: Logo | undefined): LogoModelProxy {
+	const logoModels = useModelProxyList(
+		tableLogos,
+		(tableLogo) => tableLogo.kennung,
+		(tableLogo) => new LogoModelProxy(
+			() => tableLogo,
+			(data: Partial<TableLogo>) => patchTableLogo(data.base64 ?? '', tableLogo.id)
+		)
+	);
+
+	/**
+	 * Initiale Berechnung der Bilddimensionen zur Validierung.
+	 * Die Dateigröße kann aus base64 nicht konkret bestimmt werden, daher wird diese hier nicht validiert
+	 */
+	onMounted(async () => {
+		for (const logoModel of logoModels.value) {
+			const base64 = logoModel.proxy.base64;
+			if (base64 === '') {
+				continue;
+			}
+			const fileType = parseBase64(base64)?.mimeType ?? null;
+			await setModelImageInfo(logoModel, base64, fileType, null);
+			// Revalidierung nach dem Setzen der Werte wieder notwendig
+			logoModel.validate();
+		}
+	});
+
+	function getImageColumnWitdh(): string {
+		const bildDefinitions = [...ReportingBildDefinition.getBySchulform(schuleState.schulform)];
+		const maxRatio = Math.max(
+			1,
+			...bildDefinitions.map(definition => {
+				const hoehe = definition.getHoehe();
+				const breite = definition.getBreite();
+
+				return (hoehe > 0) ? breite / hoehe : 1;
+			})
+		);
+
+		return `${Math.ceil(LOGO_PREVIEW_HEIGHT_REM * maxRatio)}rem`;
+	}
+
+	function getTableLogo(definition: ReportingBildDefinition, dbLogo: Logo | undefined): TableLogo {
 		const id = dbLogo?.id ?? -1;
 		const kennung = definition.getKennung() ?? '';
 		const bezeichnung = definition.getBezeichnung() ?? '';
 		const beschreibung = definition.getBeschreibung() ?? '';
 		const base64 = dbLogo?.logoBase64 ?? '';
 		const hinzugefuegtAm = dbLogo?.hinzugefuegtAm ?? '';
-		return new LogoModelProxy(
-			(): TableLogo => ({ id, kennung, bezeichnung, beschreibung, base64, hinzugefuegtAm }),
-			(data: Partial<TableLogo>) => patchTableLogo(data.base64 ?? '', id)
-		);
+		return { id, kennung, bezeichnung, beschreibung, base64, hinzugefuegtAm };
 	}
 
-	async function patchTableLogo(base64: string, id: number): Promise<boolean> {
+	function patchTableLogo(base64: string, id: number): Promise<boolean> {
 		const patchData: Partial<Logo> = { logoBase64: base64 };
 		return props.patchLogo(patchData, id);
 	}
 
-	const gridManager = shallowRef(new GridManager<string, LogoModelProxy, List<LogoModelProxy>>({
+	function getValidationResult(logoModel: LogoModelProxy): ValidationResult {
+		return new ValidationResult(logoModel.getAlleFehler());
+	}
+
+	const gridManager = shallowRef(new GridManager<string, LogoModelProxy, LogoModelProxy[]>({
 		daten: logoModels,
 		getRowKey: row => row.proxy.kennung,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
 			{ kuerzel: "Bezeichnung", name: "Bezeichnung", width: "1fr" },
 			{ kuerzel: "Beschreibung", name: "Beschreibung", width: '1fr' },
-			{ kuerzel: "Bild", name: "Bild", width: "1fr" },
-			{ kuerzel: "RowActions", name: "Row-Actions", width: '8.5em' },
+			{ kuerzel: "Bild", name: "Bild", width: getImageColumnWitdh() },
+			{ kuerzel: "", name: "Row-Actions", width: '8.5em' },
 		],
 	}));
 
-	function rowActions(logo: LogoModelProxy): TableActions<LogoModelProxy>[] {
-		const hasImage = logo.proxy.base64 !== "";
+	function rowActions(logoModel: LogoModelProxy): TableActions<LogoModelProxy>[] {
+		const hasImage = logoModel.proxy.base64 !== "";
 		return [
 			{
 				label: hasImage ? "Bild aktualisieren" : "Bild hochladen",
-				action: () => openUploadModal(logo),
+				action: () => openUploadModal(logoModel),
 				iconClasses: hasImage ? "i-ri-edit-2-line" : "i-ri-add-line",
 			},
-			{ label: "Bild exportieren", action: () => exportImage(logo), iconClasses: "i-ri-download-2-line", disabled: !hasImage },
-			{ label: "Bild löschen", action: () => openDeleteModal([logo]), iconClasses: "i-ri-close-line icon-ui-danger", disabled: !hasImage },
+			{ label: "Bild exportieren", action: () => exportImage(logoModel), iconClasses: "i-ri-download-2-line", disabled: !hasImage },
+			{ label: "Bild löschen", action: () => openDeleteModal([logoModel]), iconClasses: "i-ri-close-line icon-ui-danger", disabled: !hasImage },
 		];
 	}
 
@@ -147,71 +193,69 @@
 	 * Große Bildvorschau
 	 */
 
-	const previewLogo = shallowRef<LogoModelProxy | null>(null);
+	const previewLogoModel = shallowRef<LogoModelProxy | null>(null);
 
-	function selectPreviewLogo(logo: LogoModelProxy): void {
-		if (previewLogo.value?.proxy.kennung === logo.proxy.kennung) {
+	function selectPreviewLogo(logoModel: LogoModelProxy): void {
+		if (previewLogoModel.value?.proxy.kennung === logoModel.proxy.kennung) {
 			// Zweiter Klick auf dasselbe Bild → schließt die Preview
-			previewLogo.value = null;
+			previewLogoModel.value = null;
 			return;
 		}
-		previewLogo.value = logo;
+		previewLogoModel.value = logoModel;
 	}
+
+	const previewStyle = computed((): { aspectRatio: string } | undefined => {
+		if (previewLogoModel.value === null) {
+			return undefined;
+		}
+		return (previewLogoModel.value.proxy.base64 !== '')
+			? { aspectRatio: getCssAspectRatio(previewLogoModel.value.proxy.kennung) }
+			: undefined;
+	});
 
 	/**
 	 * Bulk-Selektion
 	 */
 
-	const bulkSelectedLogos: ShallowRef<LogoModelProxy[]> = shallowRef([]);
+	const bulkSelectedLogoModels: ShallowRef<LogoModelProxy[]> = shallowRef([]);
 	const bulkSelectable = computed(() => [...gridManager.value.daten].filter(logo => logo.proxy.base64 !== ''));
-	const bulkAllChecked = computed(() => (bulkSelectedLogos.value.length === bulkSelectable.value.length) && (bulkSelectedLogos.value.length > 0));
-	const bulkIntermediate = computed(() => (bulkSelectedLogos.value.length < bulkSelectable.value.length) && (bulkSelectedLogos.value.length > 0));
+	const bulkAllChecked = computed(() => (bulkSelectedLogoModels.value.length === bulkSelectable.value.length) && (bulkSelectedLogoModels.value.length > 0));
+	const bulkIntermediate = computed(() => (bulkSelectedLogoModels.value.length < bulkSelectable.value.length) && (bulkSelectedLogoModels.value.length > 0));
 	const bulkActions = computed(() => {
 		return [
-			{ label: "Bilder exportieren", action: () => void exportImagesAsZip(), iconClasses: "i-ri-download-2-line", disabled: bulkSelectedLogos.value.length === 0 },
-			{ label: "Bilder entfernen", action: () => openDeleteModal(bulkSelectedLogos.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: bulkSelectedLogos.value.length === 0 },
+			{ label: "Bilder exportieren", action: () => void exportImagesAsZip(), iconClasses: "i-ri-download-2-line", disabled: bulkSelectedLogoModels.value.length === 0 },
+			{ label: "Bilder entfernen", action: () => openDeleteModal(bulkSelectedLogoModels.value), iconClasses: "i-ri-close-line icon-ui-danger", disabled: bulkSelectedLogoModels.value.length === 0 },
 		];
 	});
 
-	function toggleBulkSelection(logo: LogoModelProxy, value: boolean): void {
+	function toggleBulkSelection(logoModel: LogoModelProxy, value: boolean): void {
 		if (value) {
-			bulkSelectedLogos.value = [...bulkSelectedLogos.value, logo];
+			bulkSelectedLogoModels.value = [...bulkSelectedLogoModels.value, logoModel];
 		} else {
-			const idx = bulkSelectedLogos.value.indexOf(logo);
+			const idx = bulkSelectedLogoModels.value.indexOf(logoModel);
 			if (idx !== -1) {
-				bulkSelectedLogos.value = bulkSelectedLogos.value.filter((_, i) => i !== idx);
+				bulkSelectedLogoModels.value = bulkSelectedLogoModels.value.filter((_, i) => i !== idx);
 			}
 		}
 	}
 
 	function toggleBulkAll(value: boolean): void {
-		bulkSelectedLogos.value = value ? [...bulkSelectable.value] : [];
+		bulkSelectedLogoModels.value = value ? [...bulkSelectable.value] : [];
 	}
 
 	/**
 	 * Export
 	 */
 
-	function exportImage(logo: LogoModelProxy): void {
-		const extension = getExtension(logo.proxy.base64);
-		const filename = `${logo.proxy.kennung}${extension}`;
+	function exportImage(logoModel: LogoModelProxy): void {
+		const extension = getExtension(logoModel.proxy.base64);
+		const filename = `${logoModel.proxy.kennung}${extension}`;
 
-		triggerExport(logo.proxy.base64, filename);
+		triggerExport(logoModel.proxy.base64, filename);
 	}
 
 	async function exportImagesAsZip(): Promise<void> {
 		throw new DeveloperNotificationException("Zip-Export ist noch nicht implementiert. Bitte Bilder einzeln exportieren");
-	}
-
-	function base64ToBlob(base64: string): Blob {
-		const parsed = parseBase64(base64);
-		if (parsed === null) {
-			throw new Error("Ungültiger Base64 String. Es fehlt die DataUrl: data:[mimeType];base64;...");
-		}
-
-		const binary = atob(parsed.data);
-		const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-		return new Blob([bytes], { type: parsed.mimeType });
 	}
 
 	function triggerExport(base64: string, filename: string): void {
@@ -226,46 +270,23 @@
 		URL.revokeObjectURL(url);
 	}
 
-	function getExtension(base64: string): string {
-		const mimeType = parseBase64(base64)?.mimeType;
-		return SUPPORTED_IMAGE_TYPES.find(t => t.mimeType === mimeType)?.extensions[0] ?? '.bin';
-	}
-
-
-	/**
-	 * Ermittelt den MimeType und den Daten-String aus einem Base64-String
-	 *
-	 * @param base64   vollständiger Base64-String mit DataURL
-	 *
-	 * @returns ein Objekt mit dem berechneten MimeType und dem Datenstring
-	 */
-	function parseBase64(base64: string): { mimeType: string, data: string } | null {
-		const match = /^data:([^;]+);base64,(.+)$/.exec(base64);
-		if (match === null) {
-			return null;
-		}
-		return {
-			mimeType: match[1],
-			data: match[2],
-		};
-	}
-
 	/**
 	 * Upload - Modal
 	 */
 
 	const uploadModalIsOpen = ref(false);
-	const logoForUpload = shallowRef<LogoModelProxy>();
+	const logoModelForUpload = shallowRef<LogoModelProxy>();
 
 	function closeUploadModal() {
 		uploadModalIsOpen.value = false;
-		bulkSelectedLogos.value = [];
+		bulkSelectedLogoModels.value = [];
+		logoModelForUpload.value = undefined;
 	}
 
-	function openUploadModal(logo: LogoModelProxy) {
-		previewLogo.value = null;
+	function openUploadModal(logoModel: LogoModelProxy) {
+		previewLogoModel.value = null;
 		uploadModalIsOpen.value = true;
-		logoForUpload.value = logo;
+		logoModelForUpload.value = logoModel;
 	}
 
 	/**
@@ -273,24 +294,28 @@
 	 */
 
 	const deleteModalIsOpen = ref<boolean>(false);
-	const logoImagesToDelete: ShallowRef<LogoModelProxy[]> = shallowRef([]);
+	const logoModelToDeleteImage: ShallowRef<LogoModelProxy[]> = shallowRef([]);
 
 	function openDeleteModal(logos: LogoModelProxy[]): void {
 		deleteModalIsOpen.value = true;
-		logoImagesToDelete.value = logos;
+		logoModelToDeleteImage.value = logos;
 	}
 
 	function closeDeleteModal(): void {
 		deleteModalIsOpen.value = false;
-		logoImagesToDelete.value = [];
+		logoModelToDeleteImage.value = [];
 	}
 
-	async function deleteLogoBilder(logos: LogoModelProxy[]): Promise<void> {
+	async function deleteLogoImages(logos: LogoModelProxy[]): Promise<void> {
 		const kennungen = new Set<string>(logos.map(l => l.proxy.kennung));
 		const dbLogosToDelete = [...props.logos()].filter(dbLogo => kennungen.has(dbLogo.kennung));
+		for (const logo of dbLogosToDelete) {
+			const logoModel = logoModels.value.find(model => model.proxy.kennung === logo.kennung);
+			await setModelImageInfo(logoModel, "", null, null);
+		}
 		await props.deleteLogo(dbLogosToDelete);
-		bulkSelectedLogos.value = [];
-		previewLogo.value = null;
+		bulkSelectedLogoModels.value = [];
+		previewLogoModel.value = null;
 		closeDeleteModal();
 	}
 

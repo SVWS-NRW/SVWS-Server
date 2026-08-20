@@ -1,5 +1,5 @@
 <template>
-	<div v-if="logoBase64 === ''" class="flex flex-col items-center justify-center gap-1 h-full">
+	<div v-if="logoBase64 === ''" class="flex h-full w-full flex-col items-center justify-center gap-1">
 		<svws-ui-tooltip v-if="mode === 'tooltip'" position="top">
 			<span class="icon-xl i-ri-file-close-line icon-ui-caution" />
 			<template #content>
@@ -13,20 +13,20 @@
 	</div>
 	<button v-else-if="!imgError && clickable"
 		type="button"
-		class="h-full hover:ring-2 focus:ring-2 focus:outline-hidden rounded-md ring-ui p-0.5"
+		class="h-full w-full rounded-md p-0.5 hover:ring-2 focus:ring-2 focus:outline-hidden ring-ui"
 		:aria-label="ariaLabel ?? alt"
 		@click="emit('click')">
 		<img :src="logoBase64"
 			:alt
-			class="h-full max-w-full object-contain"
+			class="h-full w-full object-fill"
 			@error="onImgError">
 	</button>
 	<img v-else-if="!imgError"
 		:src="logoBase64"
 		:alt
-		class="h-full max-w-full object-contain"
+		class="h-full w-full object-fill"
 		@error="onImgError">
-	<div v-else class="flex flex-col items-center justify-center gap-1 h-full">
+	<div v-else class="flex h-full w-full flex-col items-center justify-center gap-1">
 		<svws-ui-tooltip v-if="mode === 'tooltip'" position="top">
 			<span class="icon-xl i-ri-eye-off-line icon-ui-warning" />
 			<template #content>

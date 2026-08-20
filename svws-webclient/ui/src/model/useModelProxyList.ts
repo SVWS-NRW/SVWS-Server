@@ -25,26 +25,26 @@ import type { ModelProxy } from "./ModelProxy";
  */
 export function useModelProxyList<T extends object, P extends ModelProxy<T>>(
 	source: Ref<Iterable<T>> | (() => Iterable<T>),
-	getId: (item: T) => number,
+	getId: (item: T) => number | string,
 	createProxy: (item: T) => P
 ) {
 	// persistiert die ModelProxy Instanzen über reaktiven Updates hinweg
-	const cache = new Map<number, P>();
+	const cache = new Map<number | string, P>();
 
 	// reaktive Liste der ModelProxies
 	const list = shallowRef<P[]>([]);
 
 	// initial, sowie nach Updates von `source` wird `list` neu erstellt
 	watch(source, (items) => {
-		const aktuelleIds = new Set<number>();
+		const aktuelleIds = new Set<number | string>();
 		const neueModels: P[] = [];
 
 		for (const item of items) {
 			const id = getId(item);
 			aktuelleIds.add(id);
 
-			// für neue Ids neuen ModelProxy erstellen
-			if (!cache.has(id)) {
+			// aktualisiert Cache bei neuen IDs oder neuen Objektreferenzen
+			if ((cache.get(id) === undefined) || cache.get(id)?.data !== item) {
 				cache.set(id, createProxy(item));
 			}
 
