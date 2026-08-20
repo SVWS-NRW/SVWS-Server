@@ -336,6 +336,10 @@ export { ValidatorGldGesamtLehrerdatenDuplikate } from './asd/validate/gesamt/Va
 export { ValidatorGsGesamtSchuelerdaten } from './asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 export { ValidatorGsd10GesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsd10GesamtSchuelerdatenDuplikate';
 export { ValidatorGsdGesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsdGesamtSchuelerdatenDuplikate';
+export { ValidatorIka00IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka00IntKatalogKonfessionenAsdKatalog';
+export { ValidatorIka01IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka01IntKatalogKonfessionenAsdKatalog';
+export { ValidatorIka02IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka02IntKatalogKonfessionenAsdKatalog';
+export { ValidatorIkaIntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIkaIntKatalogKonfessionenAsdKatalog';
 export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/ValidatorKk00KlassenKlassenart';
 export { ValidatorKk01KlassenKlassenart } from './asd/validate/klassen/ValidatorKk01KlassenKlassenart';
 export { ValidatorKk02KlassenKlassenart } from './asd/validate/klassen/ValidatorKk02KlassenKlassenart';

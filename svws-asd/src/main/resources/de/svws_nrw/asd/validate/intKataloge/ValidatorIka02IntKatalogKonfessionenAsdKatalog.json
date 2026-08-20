@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIka02IntKatalogKonfessionenAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IKA02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Konfessionen-AsdKatalog",
+      "dtos" : "ReligionStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Konfessionen",
+      "anzeigebereich_ui" : "Konfession ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IKA01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Konfession des Schülers: Der eingetragene Wert für das Feld 'Konfession ASD-Kürzel' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "ReligionStatistikGesamt.idKatalog ≠ einem zeitlich gültigen Historieneintrag in Religion.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

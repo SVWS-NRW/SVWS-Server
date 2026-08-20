@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIkaIntKatalogKonfessionenAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IKA",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Konfessionen-AsdKatalog",
+      "dtos" : "ReligionStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Konfessionen",
+      "anzeigebereich_ui" : "Konfession ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "",
+      "erlaeuterung" : "",
+      "bedingung" : "",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}  
