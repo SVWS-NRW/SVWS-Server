@@ -42,10 +42,10 @@ public class LehrerLernplattform {
 	public boolean einwilligungVideokonferenz;
 
 	/** Benutzername für die Lernplattform eines Lehrers */
-	@Schema(description = "Benutzername für die Lernplattform eines Lehrers.", example = "Mustermann")
+	@Schema(description = "Benutzername für die Lernplattform eines Lehrers.", example = "Mustermann", accessMode = Schema.AccessMode.READ_ONLY)
 	public String benutzername;
 
 	/** Initialkennwort für die Lernplattform eines Lehrers */
-	@Schema(description = "Initialkennwort für die Lernplattform eines Lehrers.", example = "InitialeKennwort123")
+	@Schema(description = "Initialkennwort für die Lernplattform eines Lehrers.", example = "InitialeKennwort123", accessMode = Schema.AccessMode.READ_ONLY)
 	public String initialKennwort;
 }
