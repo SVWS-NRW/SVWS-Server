@@ -1,6 +1,5 @@
 package de.svws_nrw.controller.lehrer.funktion;
 
-import java.util.Collection;
 import java.util.List;
 
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
@@ -82,5 +81,5 @@ public interface LehrerFunktionController {
 	 * @param ids   die IDs der Einträge
 	 * @return die Response
 	 */
-	Response deleteMultiple(Collection<Long> ids);
+	Response deleteMultiple(List<Long> ids);
 }

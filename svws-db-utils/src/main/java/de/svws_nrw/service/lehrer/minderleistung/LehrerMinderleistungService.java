@@ -19,6 +19,7 @@ import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 import static java.util.Optional.ofNullable;
@@ -210,16 +211,14 @@ public final class LehrerMinderleistungService {
 	 * @return Liste von {@link SimpleOperationResponse}
 	 */
 	public List<SimpleOperationResponse> deleteMultiple(final List<Long> ids) {
-		return TransactionSupport.transactional(() -> {
-			final var toDelete = lehrerMinderleistungRepository.findListByIds(ids);
-
-			lehrerMinderleistungRepository.delete(toDelete);
-
-			return toDelete.stream()
-					.map(d -> createResponseLog(d.id))
-					.toList();
-		});
-
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						ids,
+						lehrerMinderleistungRepository,
+						e -> e.id,
+						"LehrerMinderleistung"
+				)
+		);
 	}
 
 	private static SimpleOperationResponse createResponseLog(final long id) {

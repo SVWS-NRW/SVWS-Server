@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.service.lehrer.befaehigung.LehrerLehrbefaehigungService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class LehrerLehramtServiceTest {
 		final LehrerLehrbefaehigungEintrag befaehigung = new LehrerLehrbefaehigungEintrag();
 		befaehigung.id = 300L;
 		befaehigung.idLehramt = lehramtId;
-		when(serviceLehrbefaehigungen.getMapByLehramt(List.of(lehramtId)))
+		when(serviceLehrbefaehigungen.getLehrerLehrbefaehigungByIdLehramt(List.of(lehramtId)))
 				.thenReturn(Map.of(lehramtId, List.of(befaehigung)));
 
 		// Aufruf von getMapByLehrer
@@ -93,6 +93,6 @@ class LehrerLehramtServiceTest {
 
 		// Prüfe, ob die beiden Services mit der korrekten Lehramt-ID aufgerufen wurden
 		verify(serviceFachrichtungen).getLehrerFachrichtungenByIdLehramt(argThat(c -> c.contains(lehramtId)));
-		verify(serviceLehrbefaehigungen).getMapByLehramt(argThat(c -> c.contains(lehramtId)));
+		verify(serviceLehrbefaehigungen).getLehrerLehrbefaehigungByIdLehramt(argThat(c -> c.contains(lehramtId)));
 	}
 }

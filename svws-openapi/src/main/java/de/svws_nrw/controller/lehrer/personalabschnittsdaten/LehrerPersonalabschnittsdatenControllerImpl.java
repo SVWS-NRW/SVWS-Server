@@ -1,6 +1,5 @@
 package de.svws_nrw.controller.lehrer.personalabschnittsdaten;
 
-import java.util.Collection;
 import java.util.List;
 
 import de.svws_nrw.data.Responses;
@@ -64,7 +63,7 @@ public final class LehrerPersonalabschnittsdatenControllerImpl implements Lehrer
 	}
 
 	@Override
-	public Response deleteMultiple(final Collection<Long> ids) {
+	public Response deleteMultiple(final List<Long> ids) {
 		return Responses.ok(service.deleteMultiple(ids));
 	}
 }

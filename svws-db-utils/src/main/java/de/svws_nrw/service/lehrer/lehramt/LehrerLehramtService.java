@@ -11,7 +11,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
-import de.svws_nrw.service.lehrer.befaehigung.LehrerLehrbefaehigungService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import jakarta.validation.constraints.NotNull;
 
@@ -71,7 +71,7 @@ public final class LehrerLehramtService {
 		final var listLehraemter = lehramtRepository.findListByIds(idsLehrer);
 		final var idsLehraemter = listLehraemter.stream().map(la -> la.ID).toList();
 		final var mapFachrichtungen = lehrerFachrichtungenService.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
-		final var mapLehrbefaehigungen = lehrerLehrbefaehigungenService.getMapByLehramt(idsLehraemter);
+		final var mapLehrbefaehigungen = lehrerLehrbefaehigungenService.getLehrerLehrbefaehigungByIdLehramt(idsLehraemter);
 
 		// Erstelle die Liste der Core-DTOs anhand der zuvor geladenen Daten
 		return listLehraemter.stream().map(dtoLehramt -> {

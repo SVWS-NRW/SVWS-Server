@@ -2,12 +2,11 @@ package de.svws_nrw.repo.schule.kataloge.ort;
 
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
-import de.svws_nrw.repo.Repository;
 
 /**
  * Das Interface für ein Repository zum Zugriff auf die Orte-Tabelle der SVWS-Datenbank
  */
-public interface OrtRepository extends Repository<DTOOrt>, ReferencedBulkDeletionRepository<DTOOrt> {
+public interface OrtRepository extends ReferencedBulkDeletionRepository<DTOOrt> {
 
 	/**
 	 * Gibt zurück, ob der Ortsname für die gegebene Postleitzahl noch nicht vergeben ist.

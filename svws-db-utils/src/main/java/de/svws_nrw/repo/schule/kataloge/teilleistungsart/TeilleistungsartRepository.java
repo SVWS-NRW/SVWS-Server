@@ -1,15 +1,12 @@
 package de.svws_nrw.repo.schule.kataloge.teilleistungsart;
 
-import java.util.List;
-import java.util.Set;
-
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
-import de.svws_nrw.repo.Repository;
+import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 
 /**
  * Das Interface für ein Repository der SVWS-Datenbank zum Zugriff auf die Arten von Teilleistungen
  */
-public interface TeilleistungsartRepository extends Repository<DTOTeilleistungsarten> {
+public interface TeilleistungsartRepository extends ReferencedBulkDeletionRepository<DTOTeilleistungsarten> {
 
 
 	/**
@@ -18,12 +15,5 @@ public interface TeilleistungsartRepository extends Repository<DTOTeilleistungsa
 	 * @return true falls ein Entity existiert, ansonsten false
 	 */
 	boolean existsBy(String bezeichnung);
-
-	/**
-	 *  Liefert Ids die in anderen Tabellen referenziert werden.
-	 * @param idsToDelete zu überprüfende Ids
-	 * @return Liste referenzierter ids
-	 */
-	Set<Long> getReferencedIds(List<Long> idsToDelete);
 
 }

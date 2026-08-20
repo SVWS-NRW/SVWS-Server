@@ -19,8 +19,8 @@ import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
 import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepositoryImpl;
 import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
 import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepositoryImpl;
-import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepository;
-import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungenRepositoryImpl;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepository;
+import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepositoryImpl;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepositoryImpl;
 import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
@@ -132,8 +132,8 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public LehrerLehramtLehrbefaehigungenRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
-		return getOrCreate(LehrerLehramtLehrbefaehigungenRepository.class, () -> new LehrerLehramtLehrbefaehigungenRepositoryImpl(conn));
+	public LehrerLehramtLehrbefaehigungRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
+		return getOrCreate(LehrerLehramtLehrbefaehigungRepository.class, () -> new LehrerLehramtLehrbefaehigungRepositoryImpl(conn));
 	}
 
 	/**

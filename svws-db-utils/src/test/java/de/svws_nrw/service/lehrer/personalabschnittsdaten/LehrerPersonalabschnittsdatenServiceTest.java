@@ -569,9 +569,9 @@ class LehrerPersonalabschnittsdatenServiceTest {
 		assertThat(result).containsExactly(apiModel, apiModel2);
 	}
 
-	// -------------------------------------------------------------------------
-	// delete
-	// -------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+// delete
+// -------------------------------------------------------------------------
 
 	@Test
 	@DisplayName("delete - not found")
@@ -598,39 +598,15 @@ class LehrerPersonalabschnittsdatenServiceTest {
 		verify(repo).delete(entity);
 	}
 
-	// -------------------------------------------------------------------------
-	// deleteMultiple
-	// -------------------------------------------------------------------------
+// -------------------------------------------------------------------------
+// deleteMultiple
+// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("deleteMultiple - alle nicht gefunden")
-	void deleteMultiple_noneFound() {
-		when(repo.findListByIds(List.of(99L))).thenReturn(Collections.emptyList());
-
-		final var result = service.deleteMultiple(List.of(99L));
-
-		assertThat(result).hasSize(1);
-		assertThat(result.getFirst().success).isFalse();
-		assertThat(result.getFirst().id).isEqualTo(99L);
-		verify(repo).delete(Collections.emptyList());
-	}
-
-	@Test
-	@DisplayName("deleteMultiple - ein Eintrag nicht gefunden")
-	void deleteMultiple_partialNotFound() {
-		when(repo.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
-
-		final var result = service.deleteMultiple(List.of(1L, 99L));
-
-		assertThat(result).hasSize(2);
-		assertThat(result.stream().filter(r -> r.success).map(r -> r.id)).containsExactly(1L);
-		assertThat(result.stream().filter(r -> !r.success).map(r -> r.id)).containsExactly(99L);
-	}
-
-	@Test
-	@DisplayName("deleteMultiple")
+	@DisplayName("deleteMultiple - alle gefunden und gelöscht")
 	void deleteMultiple() {
 		when(repo.findListByIds(List.of(1L))).thenReturn(List.of(entity));
+		when(repo.delete(List.of(entity))).thenReturn(List.of(entity));
 
 		final var result = service.deleteMultiple(List.of(1L));
 
@@ -638,5 +614,46 @@ class LehrerPersonalabschnittsdatenServiceTest {
 		assertThat(result.getFirst().success).isTrue();
 		assertThat(result.getFirst().id).isEqualTo(1L);
 		verify(repo).delete(List.of(entity));
+	}
+
+	@Test
+	@DisplayName("deleteMultiple - ein Eintrag nicht gefunden")
+	void deleteMultiple_partialNotFound() {
+		when(repo.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
+		when(repo.delete(List.of(entity))).thenReturn(List.of(entity));
+
+		final var result = service.deleteMultiple(List.of(1L, 99L));
+
+		assertThat(result).hasSize(2);
+		assertThat(result).extracting(r -> r.id).containsExactly(1L, 99L);
+		assertThat(result.stream().filter(r -> r.id == 1L).findFirst().orElseThrow().success).isTrue();
+		final var notFound = result.stream().filter(r -> r.id == 99L).findFirst().orElseThrow();
+		assertThat(notFound.success).isFalse();
+		assertThat(notFound.log).anyMatch(m -> m.contains("nicht gefunden"));
+	}
+
+	@Test
+	@DisplayName("deleteMultiple - alle nicht gefunden")
+	void deleteMultiple_noneFound() {
+		when(repo.findListByIds(List.of(99L))).thenReturn(Collections.emptyList());
+		when(repo.delete(Collections.emptyList())).thenReturn(Collections.emptyList());
+
+		final var result = service.deleteMultiple(List.of(99L));
+
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().success).isFalse();
+		assertThat(result.getFirst().id).isEqualTo(99L);
+		assertThat(result.getFirst().log).anyMatch(m -> m.contains("nicht gefunden"));
+	}
+
+	@Test
+	@DisplayName("deleteMultiple - leere Eingabe")
+	void deleteMultiple_leereEingabe() {
+		when(repo.findListByIds(List.of())).thenReturn(List.of());
+		when(repo.delete(List.of())).thenReturn(List.of());
+
+		final var result = service.deleteMultiple(List.of());
+
+		assertThat(result).isEmpty();
 	}
 }

@@ -6,6 +6,8 @@ import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungController;
 import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungControllerImpl;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionController;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionControllerImpl;
+import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungController;
+import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungControllerImpl;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungControllerImpl;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
@@ -138,6 +140,13 @@ public final class LehrerControllerFactory {
 	 */
 	public LehrerFachrichtungController getLehrerFachrichtungController() {
 		return new LehrerFachrichtungControllerImpl(serviceFactory.getLehrerFachrichtungService());
+	}
+
+	/**
+	 * @return {@link LehrerLehrbefaehigungController}
+	 */
+	public LehrerLehrbefaehigungController getLehrerLehrbefaehigungController() {
+		return new LehrerLehrbefaehigungControllerImpl(serviceFactory.getLehrerLehrbefaehigungService());
 	}
 
 }

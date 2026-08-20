@@ -2,6 +2,7 @@ package de.svws_nrw.service.lehrer;
 
 import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
+import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -13,7 +14,7 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeServiceKontext;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerPersonalabschnittsdatenAnrechnungsstundeService;
-import de.svws_nrw.service.lehrer.befaehigung.LehrerLehrbefaehigungService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
@@ -99,7 +100,11 @@ public final class LehrerServiceFactory {
 	 * @return der Service für die Lehrbefähigungen von Lehrern
 	 */
 	public LehrerLehrbefaehigungService getLehrerLehrbefaehigungService() {
-		return new LehrerLehrbefaehigungService(lehrerRepositoryFactory.getLehrerPersonaldatenLehramtLehrbefaehigungenRepository());
+		return new LehrerLehrbefaehigungService(
+				lehrerRepositoryFactory.getLehrerPersonaldatenLehramtLehrbefaehigungenRepository(),
+				lehrerRepositoryFactory.getLehrerPersonaldatenLehramtRepository(),
+				LehrerLehrbefaehigungMapper.INSTANCE
+		);
 	}
 
 	/**

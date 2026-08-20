@@ -1,15 +1,15 @@
 package de.svws_nrw.service.schule.katalog.merkmal;
 
-import java.util.Comparator;
 import java.util.List;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -100,15 +100,14 @@ public final class MerkmalService {
 	 * @return eine Liste von Antworten mit dem Status jeder Löschoperation, sortiert nach ID
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var entitiesToDelete = repository.findListByIds(idsToDelete);
-
-			return repository.delete(entitiesToDelete)
-					.stream()
-					.map(merkmal -> createResponseLog(merkmal.id))
-					.sorted(Comparator.comparingLong(response -> response.id))
-					.toList();
-		});
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						idsToDelete,
+						repository,
+						e -> e.id,
+						"Merkmal"
+				)
+		);
 	}
 
 	private void validateCreate(final MerkmalCreateRequest dto) {
@@ -151,14 +150,5 @@ public final class MerkmalService {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, MINDESTENS_EIN_MERKMALTYP_NOTWENDIG);
 		}
 	}
-
-
-	private static SimpleOperationResponse createResponseLog(final long id) {
-		final var log = new SimpleOperationResponse();
-		log.id = id;
-		log.success = true;
-		return log;
-	}
-
 
 }

@@ -18,6 +18,7 @@ import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 public final class LehrerFunktionService {
@@ -259,22 +260,15 @@ public final class LehrerFunktionService {
 	 * @param ids die IDs der zu löschenden Einträge
 	 * @return Liste von {@link SimpleOperationResponse} mit dem Ergebnis je Eintrag
 	 */
-	public List<SimpleOperationResponse> deleteMultiple(final Collection<Long> ids) {
-		return TransactionSupport.transactional(() -> {
-			final var entities = this.repo.findListByIds(ids);
-			final var deletedEntities = repo.delete(entities);
-
-			final var deletedIds = deletedEntities.stream()
-					.map(e -> e.id)
-					.toList();
-
-			return ids.stream()
-					.map(id -> deletedIds.contains(id)
-							? SimpleOperationResponse.ofSuccess(id)
-							: SimpleOperationResponse.ofError(id,
-									LEHRERFUNKTION_NOT_FOUND_BY_ID.formatted(id)))
-					.toList();
-		});
+	public List<SimpleOperationResponse> deleteMultiple(final List<Long> ids) {
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						ids,
+						repo,
+						e -> e.id,
+						"LehrerFunktion"
+				)
+		);
 	}
 
 

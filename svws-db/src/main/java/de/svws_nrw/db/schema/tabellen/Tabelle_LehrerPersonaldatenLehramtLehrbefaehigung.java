@@ -17,21 +17,25 @@ public class Tabelle_LehrerPersonaldatenLehramtLehrbefaehigung extends SchemaTab
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("Eine eindeutige ID für den Eintrag zu der Lehrbefähigung zu einem Lehramt eines Lehrers");
 
 	/** Die Definition der Tabellenspalte Lehreramt_ID */
 	public final SchemaTabelleSpalte col_Lehreramt_ID = add("Lehreramt_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idLehramt")
 			.setNotNull()
 			.setJavaComment("Die ID des Lehramtseintrags des Lehrers zu der die Lehrbefähigung gehört");
 
 	/** Die Definition der Tabellenspalte Lehrbefaehigung_Katalog_ID */
 	public final SchemaTabelleSpalte col_Lehrbefaehigung_Katalog_ID = add("Lehrbefaehigung_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idLehrbefaehigung")
 			.setNotNull()
 			.setJavaComment("Die ID der Lehrbefähigung aus dem zugehörigen Statistik-Katalog");
 
 	/** Die Definition der Tabellenspalte LehrbefaehigungAnerkennung_Katalog_ID */
 	public final SchemaTabelleSpalte col_LehrbefaehigungAnerkennung_Katalog_ID = add("LehrbefaehigungAnerkennung_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idAnerkennungsgrund")
 			.setJavaComment("Die ID des Anerkennungsgrundes für die Lehrbefähigung des Lehrers aus dem zugehörigen Statistik-Katalog");
 
 

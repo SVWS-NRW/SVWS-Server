@@ -1,7 +1,6 @@
 package de.svws_nrw.service.lehrer.fachrichtung;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,6 +14,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
 import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
 import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response;
 
@@ -106,8 +106,7 @@ public final class LehrerFachrichtungService {
 	 * @param id  die ID
 	 * @param dto der {@link LehrerFachrichtungPatchRequest}
 	 * @return der aktualisierte {@link LehrerFachrichtungEintrag}
-	 * @throws ApiOperationException mit {@code 404 NOT_FOUND} wenn kein Ort zur {@code id} existiert,
-	 *                               mit {@code 400 BAD_REQUEST} wenn die Ids unbekannt sind
+	 * @throws ApiOperationException mit {@code 400 BAD_REQUEST} wenn die Ids unbekannt sind
 	 */
 	public LehrerFachrichtungEintrag patch(final long id, final LehrerFachrichtungPatchRequest dto) {
 		return TransactionSupport.transactional(() -> {
@@ -127,15 +126,14 @@ public final class LehrerFachrichtungService {
 	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var entitiesToDelete = repo.findListByIds(idsToDelete);
-
-			return repo.delete(entitiesToDelete)
-					.stream()
-					.map(merkmal -> SimpleOperationResponse.ofSuccess(merkmal.id))
-					.sorted(Comparator.comparingLong(response -> response.id))
-					.toList();
-		});
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						idsToDelete,
+						repo,
+						e -> e.id,
+						"LehrerFachrichtung"
+				)
+		);
 	}
 
 	private void validatePatch(final LehrerFachrichtungPatchRequest dto) {

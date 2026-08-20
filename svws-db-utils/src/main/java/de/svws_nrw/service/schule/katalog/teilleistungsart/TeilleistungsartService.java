@@ -1,8 +1,5 @@
 package de.svws_nrw.service.schule.katalog.teilleistungsart;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +11,7 @@ import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 public final class TeilleistungsartService {
@@ -92,56 +90,15 @@ public final class TeilleistungsartService {
 	 * @return Liste {@link SimpleOperationResponse} - Aktions-logs als Response
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var referencedIds = repository.getReferencedIds(idsToDelete);
-			final var entitiesToDelete = repository.findListByIds(idsToDelete);
-
-
-			final List<SimpleOperationResponse> referencedLogs = createReferencedLogs(entitiesToDelete, referencedIds);
-			final List<SimpleOperationResponse> unreferencedLogs =
-					deleteUnreferenced(entitiesToDelete, referencedIds).stream()
-							.map(del -> createResponseLog(del.ID, true, null))
-							.toList();
-
-			final List<SimpleOperationResponse> resultLogs = new ArrayList<>(referencedLogs);
-			resultLogs.addAll(unreferencedLogs);
-			resultLogs.sort(Comparator.comparingLong(o -> o.id));
-
-			return resultLogs;
-		});
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.deleteWithReferenceCheck(
+						idsToDelete,
+						repository,
+						e -> e.ID,
+						"Teilleistungsart"
+				)
+		);
 	}
-
-	private List<SimpleOperationResponse> createReferencedLogs(final List<DTOTeilleistungsarten> entitiesToDelete, final Set<Long> referencedIds) {
-
-		return entitiesToDelete.stream()
-				.filter(t -> referencedIds.contains(t.ID))
-				.map(t -> createResponseLog(t.ID, false, String.format("Teilleistungsart mit der Bezeichnung %s ist referenziert", t.Bezeichnung)))
-				.toList();
-	}
-
-	private static SimpleOperationResponse createResponseLog(final long id, final boolean success, final String message) {
-		final var log = new SimpleOperationResponse();
-		log.id = id;
-		log.success = success;
-		if (message != null) {
-			log.log = Collections.singletonList(message);
-		}
-
-		return log;
-	}
-
-	private List<DTOTeilleistungsarten> deleteUnreferenced(final List<DTOTeilleistungsarten> entitiesToCheck, final Set<Long> referencedIds) {
-		final var unreferencedEntities = entitiesToCheck.stream()
-				.filter(e -> !referencedIds.contains(e.ID))
-				.toList();
-
-		if (unreferencedEntities.isEmpty()) {
-			return List.of();
-		}
-
-		return repository.delete(unreferencedEntities);
-	}
-
 
 	private void validateCreate(final TeilleistungsartCreateRequest input) {
 		final String bezeichnung = input.bezeichnung;

@@ -168,14 +168,14 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 		// Kategorie der Fachschaften
 		final List<DTOLehrerPersonaldatenLehramt> dtoLehraemter = conn.queryAll(DTOLehrerPersonaldatenLehramt.class);
 		final Map<Long, List<DTOLehrerPersonaldatenLehramtBefaehigung>> mapLehraemterLehrbefaehigungen =
-				conn.queryAll(DTOLehrerPersonaldatenLehramtBefaehigung.class).stream().collect(Collectors.groupingBy(b -> b.Lehreramt_ID));
+				conn.queryAll(DTOLehrerPersonaldatenLehramtBefaehigung.class).stream().collect(Collectors.groupingBy(b -> b.idLehramt));
 		for (final DTOLehrerPersonaldatenLehramt lehramt : dtoLehraemter) {
 			final List<DTOLehrerPersonaldatenLehramtBefaehigung> befaehigungen = mapLehraemterLehrbefaehigungen.get(lehramt.ID);
 			if (befaehigungen == null) {
 				continue;
 			}
 			for (final DTOLehrerPersonaldatenLehramtBefaehigung befaehigung : befaehigungen) {
-				final LehrerLehrbefaehigungKatalogEintrag bef = LehrerLehrbefaehigung.data().getEintragByID(befaehigung.Lehrbefaehigung_Katalog_ID);
+				final LehrerLehrbefaehigungKatalogEintrag bef = LehrerLehrbefaehigung.data().getEintragByID(befaehigung.idLehrbefaehigung);
 				if (bef == null) {
 					continue;
 				}

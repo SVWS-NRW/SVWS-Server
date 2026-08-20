@@ -18,6 +18,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
@@ -64,6 +65,9 @@ class DataLehrerPersonaldatenTest {
 	private LehrerFachrichtungService fachrichtungService;
 
 	@Mock
+	private LehrerLehrbefaehigungService lehrbefaehigungService;
+
+	@Mock
 	private LehrerAnrechnungsstundeService anrechnungsService;
 
 	@Mock
@@ -98,6 +102,8 @@ class DataLehrerPersonaldatenTest {
 				.thenReturn(personalabschnittsdatenService);
 		lenient().when(serviceFactory.getLehrerFachrichtungService())
 				.thenReturn(fachrichtungService);
+		lenient().when(serviceFactory.getLehrerLehrbefaehigungService())
+				.thenReturn(lehrbefaehigungService);
 
 		lenient().when(personalabschnittsdatenService.getByIdLehrer(anyLong())).thenReturn(List.of());
 

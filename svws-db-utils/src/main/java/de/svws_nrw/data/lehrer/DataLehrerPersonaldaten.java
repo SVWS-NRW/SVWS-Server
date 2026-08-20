@@ -65,7 +65,8 @@ public final class DataLehrerPersonaldaten extends DataManagerRevised<Long, DTOL
 		final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
 		daten.abschnittsdaten.addAll(lehrerServiceFactory.getLehrerPersonalabschnittsdatenService().getByIdLehrer(dto.ID));
 		final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-		final var dataLehrerLehramt = new DataLehrerLehramt(conn, dto.ID, lehrerFachrichtungService);
+		final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
+		final var dataLehrerLehramt = new DataLehrerLehramt(conn, dto.ID, lehrerFachrichtungService, lehrerLehrbefaehigungService);
 		daten.lehraemter.addAll(dataLehrerLehramt.getListByLehrerId(conn, dto.ID));
 		return daten;
 	}

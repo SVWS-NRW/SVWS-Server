@@ -18,65 +18,65 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerPersonaldatenLehramtLehrbefaehigung")
-@JsonPropertyOrder({"ID", "Lehreramt_ID", "Lehrbefaehigung_Katalog_ID", "LehrbefaehigungAnerkennung_Katalog_ID"})
+@JsonPropertyOrder({"id", "idLehramt", "idLehrbefaehigung", "idAnerkennungsgrund"})
 public final class DTOLehrerPersonaldatenLehramtBefaehigung {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.id = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.id IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.id IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes id */
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.id = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes id */
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.id IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehreramt_ID */
-	public static final String QUERY_BY_LEHRERAMT_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.Lehreramt_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idLehramt */
+	public static final String QUERY_BY_IDLEHRAMT = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idLehramt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehreramt_ID */
-	public static final String QUERY_LIST_BY_LEHRERAMT_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.Lehreramt_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idLehramt */
+	public static final String QUERY_LIST_BY_IDLEHRAMT = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idLehramt IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrbefaehigung_Katalog_ID */
-	public static final String QUERY_BY_LEHRBEFAEHIGUNG_KATALOG_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.Lehrbefaehigung_Katalog_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idLehrbefaehigung */
+	public static final String QUERY_BY_IDLEHRBEFAEHIGUNG = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idLehrbefaehigung = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrbefaehigung_Katalog_ID */
-	public static final String QUERY_LIST_BY_LEHRBEFAEHIGUNG_KATALOG_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.Lehrbefaehigung_Katalog_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idLehrbefaehigung */
+	public static final String QUERY_LIST_BY_IDLEHRBEFAEHIGUNG = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idLehrbefaehigung IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes LehrbefaehigungAnerkennung_Katalog_ID */
-	public static final String QUERY_BY_LEHRBEFAEHIGUNGANERKENNUNG_KATALOG_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.LehrbefaehigungAnerkennung_Katalog_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idAnerkennungsgrund */
+	public static final String QUERY_BY_IDANERKENNUNGSGRUND = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idAnerkennungsgrund = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes LehrbefaehigungAnerkennung_Katalog_ID */
-	public static final String QUERY_LIST_BY_LEHRBEFAEHIGUNGANERKENNUNG_KATALOG_ID = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.LehrbefaehigungAnerkennung_Katalog_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idAnerkennungsgrund */
+	public static final String QUERY_LIST_BY_IDANERKENNUNGSGRUND = "SELECT e FROM DTOLehrerPersonaldatenLehramtBefaehigung e WHERE e.idAnerkennungsgrund IN ?1";
 
 	/** Eine eindeutige ID für den Eintrag zu der Lehrbefähigung zu einem Lehramt eines Lehrers */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public long ID;
+	public long id;
 
 	/** Die ID des Lehramtseintrags des Lehrers zu der die Lehrbefähigung gehört */
 	@Column(name = "Lehreramt_ID")
 	@JsonProperty
-	public long Lehreramt_ID;
+	public long idLehramt;
 
 	/** Die ID der Lehrbefähigung aus dem zugehörigen Statistik-Katalog */
 	@Column(name = "Lehrbefaehigung_Katalog_ID")
 	@JsonProperty
-	public long Lehrbefaehigung_Katalog_ID;
+	public long idLehrbefaehigung;
 
 	/** Die ID des Anerkennungsgrundes für die Lehrbefähigung des Lehrers aus dem zugehörigen Statistik-Katalog */
 	@Column(name = "LehrbefaehigungAnerkennung_Katalog_ID")
 	@JsonProperty
-	public Long LehrbefaehigungAnerkennung_Katalog_ID;
+	public Long idAnerkennungsgrund;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerPersonaldatenLehramtBefaehigung ohne eine Initialisierung der Attribute.
@@ -87,14 +87,14 @@ public final class DTOLehrerPersonaldatenLehramtBefaehigung {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerPersonaldatenLehramtBefaehigung ohne eine Initialisierung der Attribute.
-	 * @param ID   der Wert für das Attribut ID
-	 * @param Lehreramt_ID   der Wert für das Attribut Lehreramt_ID
-	 * @param Lehrbefaehigung_Katalog_ID   der Wert für das Attribut Lehrbefaehigung_Katalog_ID
+	 * @param id   der Wert für das Attribut id
+	 * @param idLehramt   der Wert für das Attribut idLehramt
+	 * @param idLehrbefaehigung   der Wert für das Attribut idLehrbefaehigung
 	 */
-	public DTOLehrerPersonaldatenLehramtBefaehigung(final long ID, final long Lehreramt_ID, final long Lehrbefaehigung_Katalog_ID) {
-		this.ID = ID;
-		this.Lehreramt_ID = Lehreramt_ID;
-		this.Lehrbefaehigung_Katalog_ID = Lehrbefaehigung_Katalog_ID;
+	public DTOLehrerPersonaldatenLehramtBefaehigung(final long id, final long idLehramt, final long idLehrbefaehigung) {
+		this.id = id;
+		this.idLehramt = idLehramt;
+		this.idLehrbefaehigung = idLehrbefaehigung;
 	}
 
 
@@ -110,14 +110,14 @@ public final class DTOLehrerPersonaldatenLehramtBefaehigung {
 			return false;
 		}
 		DTOLehrerPersonaldatenLehramtBefaehigung other = (DTOLehrerPersonaldatenLehramtBefaehigung) obj;
-		return ID == other.ID;
+		return id == other.id;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Long.hashCode(ID);
+		result = prime * result + Long.hashCode(id);
 		return result;
 	}
 
@@ -129,7 +129,7 @@ public final class DTOLehrerPersonaldatenLehramtBefaehigung {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerPersonaldatenLehramtBefaehigung(ID=" + this.ID + ", Lehreramt_ID=" + this.Lehreramt_ID + ", Lehrbefaehigung_Katalog_ID=" + this.Lehrbefaehigung_Katalog_ID + ", LehrbefaehigungAnerkennung_Katalog_ID=" + this.LehrbefaehigungAnerkennung_Katalog_ID + ")";
+		return "DTOLehrerPersonaldatenLehramtBefaehigung(id=" + this.id + ", idLehramt=" + this.idLehramt + ", idLehrbefaehigung=" + this.idLehrbefaehigung + ", idAnerkennungsgrund=" + this.idAnerkennungsgrund + ")";
 	}
 
 }

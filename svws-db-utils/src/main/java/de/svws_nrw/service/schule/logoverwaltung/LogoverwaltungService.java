@@ -3,19 +3,19 @@ package de.svws_nrw.service.schule.logoverwaltung;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Logo;
 import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
+import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.Strings;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -145,21 +145,14 @@ public class LogoverwaltungService {
 	 * @return eine Liste der gelöschten Logos
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> ids) {
-		return transactional(() -> {
-			final var entities = repository.findListByIds(ids);
-
-			final var notFoundResponses = ids.stream()
-					.filter(id -> entities.stream().noneMatch(entity -> entity.id == id))
-					.map(idNotFound -> SimpleOperationResponse.ofError(idNotFound, NOT_FOUND_MESSAGE.formatted(idNotFound)))
-					.toList();
-
-			final var deletedResponses = repository.delete(entities).stream()
-					.map(deleted -> SimpleOperationResponse.ofSuccess(deleted.id))
-					.sorted(Comparator.comparingLong(res -> res.id))
-					.toList();
-
-			return Stream.concat(deletedResponses.stream(), notFoundResponses.stream()).toList();
-		});
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						ids,
+						repository,
+						e -> e.id,
+						"Logoverwaltung"
+				)
+		);
 	}
 
 	private Logo toApi(final DTOLogo entity) {

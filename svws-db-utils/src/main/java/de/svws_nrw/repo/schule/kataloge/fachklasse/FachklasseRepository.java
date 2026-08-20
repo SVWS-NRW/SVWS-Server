@@ -2,9 +2,8 @@ package de.svws_nrw.repo.schule.kataloge.fachklasse;
 
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOFachklassen;
 import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
-import de.svws_nrw.repo.Repository;
 
-public interface FachklasseRepository extends Repository<DTOFachklassen>, ReferencedBulkDeletionRepository<DTOFachklassen> {
+public interface FachklasseRepository extends ReferencedBulkDeletionRepository<DTOFachklassen> {
 
 	/**
 	 * Prüft, ob eine Fachklasse mit dem angegebenen Kürzel bereits in der Datenbank existiert.

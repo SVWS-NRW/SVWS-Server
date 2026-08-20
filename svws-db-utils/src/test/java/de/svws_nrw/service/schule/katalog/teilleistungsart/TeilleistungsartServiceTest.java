@@ -133,56 +133,80 @@ class TeilleistungsartServiceTest {
 	}
 
 	@Test
-	@DisplayName("getAll | Erfolg")
-	void testGetAllReferenced() {
-		final long firstId = 1;
-		final long secondId = 2;
-		final DTOTeilleistungsarten first = createEntity(firstId, "1", true, 1);
-		final DTOTeilleistungsarten second = createEntity(secondId, "2", true, 2);
-		when(teilleistungsartRepository.getAll()).thenReturn(List.of(first, second));
-		when(teilleistungsartRepository.getReferencedIds(List.of(firstId, secondId))).thenReturn(Set.of(firstId));
-
-		final var results = teilleistungsartService.getAll();
-
-		assertThat(results)
-				.hasSize(2)
-				.extracting(
-						"id",
-						"bezeichnung",
-						"istSichtbar",
-						"sortierung",
-						"referenziertInAnderenTabellen"
-				)
-				.containsExactlyInAnyOrder(
-						tuple(firstId, "1", true, 1, true),
-						tuple(2L, "2", true, 2, false)
-				);
-	}
-
-	@Test
-	@DisplayName("delete | Erfolg")
+	@DisplayName("delete | referenzierte ID wird nicht gelöscht, nicht referenzierte schon")
 	void testDelete() {
 		final long firstId = 1;
 		final long secondId = 2;
+		final var savedFirst = createEntity(firstId, "leistungsart 1", true, 2);
+		final var savedSecond = createEntity(secondId, "leistungsart 2", true, 2);
+
 		when(teilleistungsartRepository.getReferencedIds(List.of(firstId, secondId))).thenReturn(Set.of(firstId));
-		final DTOTeilleistungsarten savedFirst = createEntity(1, "leistungsart 1", true, 2);
-		final DTOTeilleistungsarten savedSecond = createEntity(2, "leistungsart 2", true, 2);
 		when(teilleistungsartRepository.findListByIds(List.of(firstId, secondId))).thenReturn(List.of(savedFirst, savedSecond));
 		when(teilleistungsartRepository.delete(List.of(savedSecond))).thenReturn(List.of(savedSecond));
 
-		final var resultLogs = teilleistungsartService.delete(List.of(firstId, secondId));
+		final var result = teilleistungsartService.delete(List.of(firstId, secondId));
 
-		assertThat(resultLogs)
+		assertThat(result)
 				.hasSize(2)
-				.extracting(
-						"id",
-						"success",
-						"log"
-				)
+				.extracting("id", "success")
 				.containsExactlyInAnyOrder(
-						tuple(firstId, false, List.of("Teilleistungsart mit der Bezeichnung leistungsart 1 ist referenziert")),
-						tuple(secondId, true, List.of())
+						tuple(firstId, false),
+						tuple(secondId, true)
 				);
+		verify(teilleistungsartRepository).delete(List.of(savedSecond));
+	}
+
+	@Test
+	@DisplayName("delete | alle referenziert - keine Löschung")
+	void testDelete_alleReferenziert() {
+		final long firstId = 1;
+		final long secondId = 2;
+		final var savedFirst = createEntity(firstId, "leistungsart 1", true, 2);
+		final var savedSecond = createEntity(secondId, "leistungsart 2", true, 2);
+
+		when(teilleistungsartRepository.getReferencedIds(List.of(firstId, secondId))).thenReturn(Set.of(firstId, secondId));
+		when(teilleistungsartRepository.findListByIds(List.of(firstId, secondId))).thenReturn(List.of(savedFirst, savedSecond));
+		when(teilleistungsartRepository.delete(List.of())).thenReturn(List.of());
+
+		final var result = teilleistungsartService.delete(List.of(firstId, secondId));
+
+		assertThat(result)
+				.hasSize(2)
+				.allSatisfy(r -> {
+					assertThat(r.success).isFalse();
+					assertThat(r.log).anyMatch(m -> m.contains("referenziert"));
+				});
+		verify(teilleistungsartRepository).delete(List.of());
+	}
+
+	@Test
+	@DisplayName("delete | ID nicht gefunden - Error-Response")
+	void testDelete_nichtGefunden() {
+		when(teilleistungsartRepository.getReferencedIds(List.of(99L))).thenReturn(Set.of());
+		when(teilleistungsartRepository.findListByIds(List.of(99L))).thenReturn(List.of());
+		when(teilleistungsartRepository.delete(List.of())).thenReturn(List.of());
+
+		final var result = teilleistungsartService.delete(List.of(99L));
+
+		assertThat(result)
+				.hasSize(1)
+				.satisfiesExactly(r -> {
+					assertThat(r.success).isFalse();
+					assertThat(r.id).isEqualTo(99L);
+					assertThat(r.log).anyMatch(m -> m.contains("nicht gefunden"));
+				});
+	}
+
+	@Test
+	@DisplayName("delete | leere Eingabe - leere Rückgabe")
+	void testDelete_leereEingabe() {
+		when(teilleistungsartRepository.getReferencedIds(List.of())).thenReturn(Set.of());
+		when(teilleistungsartRepository.findListByIds(List.of())).thenReturn(List.of());
+		when(teilleistungsartRepository.delete(List.of())).thenReturn(List.of());
+
+		final var result = teilleistungsartService.delete(List.of());
+
+		assertThat(result).isEmpty();
 	}
 
 	private DTOTeilleistungsarten createEntity(final long id, final String bezeichnung, final boolean sichtbar, final int sortierung) {

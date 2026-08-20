@@ -59,28 +59,13 @@ class LehrerServiceFactoryTest {
 		assertNotNull(service);
 
 		// Prüfe, ob die das Repository für die Lehramtsdaten genau einmal genutzt wird...
-		verify(repoLehrerFactory, times(2)).getLehrerPersonaldatenLehramtRepository();
+		verify(repoLehrerFactory, times(3)).getLehrerPersonaldatenLehramtRepository();
 
 		// ... und auch (indirekt) die beiden Repositories für die Fachrichtungen und die Lehrbefähigungen
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtFachrichtungRepository();
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtLehrbefaehigungenRepository();
 	}
 
-	@Test
-	@DisplayName("Test: Prüfe, on getLehrerLehrbefaehigungService den Service korrekt erstellt")
-	void testGetLehrerLehrbefaehigungService() {
-		final var service = serviceFactory.getLehrerLehrbefaehigungService();
-		assertNotNull(service);
-		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtLehrbefaehigungenRepository();
-	}
-
-	@Test
-	@DisplayName("Test: Prüfe, on getLehrerFachrichtungService den Service korrekt erstellt")
-	void testGetLehrerFachrichtungService() {
-		final var service = serviceFactory.getLehrerFachrichtungService();
-		assertNotNull(service);
-		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtFachrichtungRepository();
-	}
 
 	@Test
 	@DisplayName("Test: Prüfe, on getLehrerPersonalabschnittsdatenAnrechnungsstundenService den Service korrekt erstellt")
@@ -129,6 +114,16 @@ class LehrerServiceFactoryTest {
 		assertNotNull(service);
 
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtFachrichtungRepository();
+		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtRepository();
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerLehrbefaehigungService den Service mit dem Kontext korrekt erstellt")
+	void getLehrerLehrbefaehigungService() {
+		final var service = serviceFactory.getLehrerLehrbefaehigungService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtLehrbefaehigungenRepository();
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtRepository();
 	}
 

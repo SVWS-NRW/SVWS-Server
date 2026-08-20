@@ -29,11 +29,4 @@ public class LehrerLehrbefaehigungEintrag {
 	@Schema(description = "Die Katalog-ID des Anerkennungsgrund für die Lehrbefähigung.", example = "4713")
 	public Long idAnerkennungsgrund;
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public LehrerLehrbefaehigungEintrag() {
-		// leer
-	}
-
 }

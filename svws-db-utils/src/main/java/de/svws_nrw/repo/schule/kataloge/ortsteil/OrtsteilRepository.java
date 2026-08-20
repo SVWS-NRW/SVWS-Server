@@ -2,9 +2,8 @@ package de.svws_nrw.repo.schule.kataloge.ortsteil;
 
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
-import de.svws_nrw.repo.Repository;
 
-public interface OrtsteilRepository extends Repository<DTOOrtsteil>, ReferencedBulkDeletionRepository<DTOOrtsteil> {
+public interface OrtsteilRepository extends ReferencedBulkDeletionRepository<DTOOrtsteil> {
 
 	/**
 	 * Gibt zurück, ob der Name des Ortsteils für den gegebenen Ort noch nicht vergeben ist.

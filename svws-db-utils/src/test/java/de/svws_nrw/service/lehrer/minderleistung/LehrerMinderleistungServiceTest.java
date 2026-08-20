@@ -280,7 +280,7 @@ class LehrerMinderleistungServiceTest {
 	}
 
 	@Test
-	@DisplayName("delete | Sucess - simpleOperationResponse zurückgegeben")
+	@DisplayName("delete | Success - simpleOperationResponse zurückgegeben")
 	void testDeleteSuccess() {
 		final var entity = createEntity(5L, 10L, 1.0, null);
 
@@ -294,15 +294,18 @@ class LehrerMinderleistungServiceTest {
 	}
 
 	@Test
-	@DisplayName("deleteMultiple | Sucess - Liste von SimpleOperationResponse zurückgegeben")
+	@DisplayName("deleteMultiple | Success - alle gefunden und gelöscht")
 	void testDeleteMultipleSuccess() {
 		final var firstEntity = createEntity(1L, 10L, 1.0, null);
 		final var secondEntity = createEntity(2L, 10L, 2.0, null);
-		when(lehrerMinderleistungRepository.findListByIds(List.of(1L, 2L))).thenReturn(List.of(firstEntity, secondEntity));
+		final var entities = List.of(firstEntity, secondEntity);
+
+		when(lehrerMinderleistungRepository.findListByIds(List.of(1L, 2L))).thenReturn(entities);
+		when(lehrerMinderleistungRepository.delete(entities)).thenReturn(entities);
 
 		final var result = cut.deleteMultiple(List.of(1L, 2L));
 
-		verify(lehrerMinderleistungRepository).delete(List.of(firstEntity, secondEntity));
+		verify(lehrerMinderleistungRepository).delete(entities);
 		assertThat(result)
 				.hasSize(2)
 				.allSatisfy(r -> assertThat(r.success).isTrue())
@@ -311,9 +314,28 @@ class LehrerMinderleistungServiceTest {
 	}
 
 	@Test
-	@DisplayName("deleteMultiple | Sucess - Empty Response bei leerer Liste")
+	@DisplayName("deleteMultiple | Success - nicht gefundene ID liefert Error-Response")
+	void testDeleteMultipleNotFound() {
+		final var entity = createEntity(1L, 10L, 1.0, null);
+
+		when(lehrerMinderleistungRepository.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
+		when(lehrerMinderleistungRepository.delete(List.of(entity))).thenReturn(List.of(entity));
+
+		final var result = cut.deleteMultiple(List.of(1L, 99L));
+
+		assertThat(result).hasSize(2);
+		assertThat(result).extracting(r -> r.id).containsExactly(1L, 99L);
+		assertThat(result.stream().filter(r -> r.id == 1L).findFirst().orElseThrow().success).isTrue();
+		final var notFound = result.stream().filter(r -> r.id == 99L).findFirst().orElseThrow();
+		assertThat(notFound.success).isFalse();
+		assertThat(notFound.log).anyMatch(m -> m.contains("nicht gefunden"));
+	}
+
+	@Test
+	@DisplayName("deleteMultiple | Success - leere Eingabe liefert leere Liste")
 	void testDeleteMultipleEmptyResponse() {
 		when(lehrerMinderleistungRepository.findListByIds(List.of())).thenReturn(List.of());
+		when(lehrerMinderleistungRepository.delete(List.of())).thenReturn(List.of());
 
 		final var result = cut.deleteMultiple(List.of());
 

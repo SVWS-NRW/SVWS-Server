@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -34,6 +35,7 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	private final Long idLehrer;
 
 	private final LehrerFachrichtungService lehrerFachrichtungService;
+	private final LehrerLehrbefaehigungService lehrerLehrbefaehigungService;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerLehramtEintrag}.
@@ -41,14 +43,17 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idLehrer   die ID des Lehrers für den die Lehrämter verwaltet werden
 	 * @param lehrerFachrichtungService   {@link LehrerFachrichtungService}
+	 * @param lehrerLehrbefaehigungService   {@link LehrerLehrbefaehigungService}
 	 */
 	public DataLehrerLehramt(
 			final DBEntityManager conn,
 			final Long idLehrer,
-			final LehrerFachrichtungService lehrerFachrichtungService) {
+			final LehrerFachrichtungService lehrerFachrichtungService,
+			final LehrerLehrbefaehigungService lehrerLehrbefaehigungService) {
 		super(conn);
 		this.idLehrer = idLehrer;
 		this.lehrerFachrichtungService = lehrerFachrichtungService;
+		this.lehrerLehrbefaehigungService = lehrerLehrbefaehigungService;
 		setAttributesRequiredOnCreation("idLehrer");
 	}
 
@@ -63,7 +68,7 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	@Override
 	protected LehrerLehramtEintrag map(final DTOLehrerPersonaldatenLehramt dto) throws ApiOperationException {
 		final List<LehrerLehrbefaehigungEintrag> lehrbefaehigungen =
-				DataLehrerLehrbefaehigung.getListByLehramtId(conn, dto.ID);
+				lehrerLehrbefaehigungService.getByIdLehramt(dto.ID);
 
 		final List<LehrerFachrichtungEintrag> fachrichtungen =
 				lehrerFachrichtungService.getByIdLehramt(dto.ID);
@@ -190,7 +195,7 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 				.toList();
 
 		final Map<Long, List<LehrerLehrbefaehigungEintrag>> mapLehrbefaehigungen =
-				DataLehrerLehrbefaehigung.getMapByLehramtIds(conn, idsLehraemter);
+				lehrerLehrbefaehigungService.getLehrerLehrbefaehigungByIdLehramt(idsLehraemter);
 
 		final Map<Long, List<LehrerFachrichtungEintrag>> mapFachrichtungen =
 				lehrerFachrichtungService.getLehrerFachrichtungenByIdLehramt(idsLehraemter);

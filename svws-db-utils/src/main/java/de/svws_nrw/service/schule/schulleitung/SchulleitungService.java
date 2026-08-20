@@ -1,7 +1,6 @@
 package de.svws_nrw.service.schule.schulleitung;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 
 import de.svws_nrw.asd.data.schule.Schulleitung;
@@ -12,6 +11,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -107,14 +107,14 @@ public final class SchulleitungService {
 	 * @return eine Liste von Antworten mit dem Status jeder Löschoperation, sortiert nach ID
 	 */
 	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
-		return TransactionSupport.transactional(() -> {
-			final var entitiesToDelete = this.repository.findListByIds(idsToDelete);
-			return this.repository.delete(entitiesToDelete)
-					.stream()
-					.map(entry -> createResponseLog(entry.ID))
-					.sorted(Comparator.comparingLong(response -> response.id))
-					.toList();
-		});
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						idsToDelete,
+						repository,
+						e -> e.ID,
+						"Schulleitung"
+				)
+		);
 	}
 
 	private void validateCreate(final SchulleitungCreateRequest dto) {
@@ -152,13 +152,5 @@ public final class SchulleitungService {
 			}
 		}
 	}
-
-	private static SimpleOperationResponse createResponseLog(final long id) {
-		final var log = new SimpleOperationResponse();
-		log.id = id;
-		log.success = true;
-		return log;
-	}
-
 
 }

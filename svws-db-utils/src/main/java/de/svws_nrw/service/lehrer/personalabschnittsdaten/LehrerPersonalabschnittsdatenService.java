@@ -27,6 +27,7 @@ import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
@@ -219,19 +220,15 @@ public final class LehrerPersonalabschnittsdatenService {
 	 *
 	 * @return Liste von {@link SimpleOperationResponse} mit dem Ergebnis je Eintrag
 	 */
-	public List<SimpleOperationResponse> deleteMultiple(final Collection<Long> ids) {
-		return TransactionSupport.transactional(() -> {
-			final var entities = this.repo.findListByIds(ids);
-			repo.delete(entities);
-
-			final var foundIds = entities.stream().map(e -> e.ID).collect(Collectors.toSet());
-
-			return ids.stream()
-					.map(id -> foundIds.contains(id)
-							? SimpleOperationResponse.ofSuccess(id)
-							: SimpleOperationResponse.ofError(id, DATEN_NOT_FOUND_BY_ID.formatted(id)))
-					.toList();
-		});
+	public List<SimpleOperationResponse> deleteMultiple(final List<Long> ids) {
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						ids,
+						repo,
+						e -> e.ID,
+						"LehrerAbschnittsdaten"
+				)
+		);
 	}
 
 	private DTOLehrerAbschnittsdaten validateAndResolveCreate(final LehrerPersonalabschnittsdatenCreateRequest dto) {

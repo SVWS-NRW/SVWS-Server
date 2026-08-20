@@ -10,7 +10,7 @@ import de.svws_nrw.repo.Repository;
 /**
  * Das Interface für ein Repository zum Zugriff auf die Lehrer-Lehrbefähigungs-Tabelle der SVWS-Datenbank
  */
-public interface LehrerLehramtLehrbefaehigungenRepository extends Repository<DTOLehrerPersonaldatenLehramtBefaehigung> {
+public interface LehrerLehramtLehrbefaehigungRepository extends Repository<DTOLehrerPersonaldatenLehramtBefaehigung> {
 
 	/**
 	 * Bestimmt die Zuordnung der Lehrbefähigungen zu den Lehrämtern mit den übergebenen IDs.
@@ -19,6 +19,13 @@ public interface LehrerLehramtLehrbefaehigungenRepository extends Repository<DTO
 	 *
 	 * @return die Zuordnung
 	 */
-	Map<Long, List<DTOLehrerPersonaldatenLehramtBefaehigung>> getMapByLehramt(Collection<Long> idsLehraemter);
+	Map<Long, List<DTOLehrerPersonaldatenLehramtBefaehigung>> getLehrerLehrbefaehigungByIdLehramt(Collection<Long> idsLehraemter);
+
+	/**
+	 * Gibt die Liste der Lehrbefaehigungen für die idLehramt zurück.
+	 * @param idLehramt idLehramt
+	 * @return die Liste der Lehrbefaehigungen für die idLehramt.
+	 */
+	List<DTOLehrerPersonaldatenLehramtBefaehigung> getByIdLehramt(long idLehramt);
 
 }

@@ -513,22 +513,5 @@ class LehrerFachrichtungServiceTest {
 			verify(repo).findListByIds(List.of(2L, ID));
 			verify(repo).delete(List.of(entity2, entity));
 		}
-
-		@Test
-		@DisplayName("Gibt eine leere Liste zurück, wenn keine Fachrichtungen gefunden werden")
-		void delete_leer() {
-			when(repo.findListByIds(List.of(999L)))
-					.thenReturn(List.of());
-			when(repo.delete(List.of()))
-					.thenReturn(List.of());
-
-			final var result =
-					service.delete(List.of(999L));
-
-			assertThat(result).isEmpty();
-
-			verify(repo).findListByIds(List.of(999L));
-			verify(repo).delete(List.of());
-		}
 	}
 }

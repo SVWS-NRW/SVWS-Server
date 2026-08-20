@@ -24,9 +24,6 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 	public idAnerkennungsgrund: number | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
