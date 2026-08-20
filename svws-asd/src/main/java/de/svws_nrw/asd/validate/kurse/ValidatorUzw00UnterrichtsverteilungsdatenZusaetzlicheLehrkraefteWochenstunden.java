@@ -8,7 +8,7 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Validator führt eine Statistikprüfung aus.
+ * Dieser Validator prüft die Lehrkraft.
  */
 public final class ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden extends Validator {
 

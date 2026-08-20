@@ -361,6 +361,9 @@ export { ValidatorKs00KlassenSchulgliederung } from './asd/validate/klassen/Vali
 export { ValidatorKs01KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs01KlassenSchulgliederung';
 export { ValidatorKs02KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs02KlassenSchulgliederung';
 export { ValidatorKsKlassenSchulgliederung } from './asd/validate/klassen/ValidatorKsKlassenSchulgliederung';
+export { ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
+export { ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
+export { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
 export { ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
 export { ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';

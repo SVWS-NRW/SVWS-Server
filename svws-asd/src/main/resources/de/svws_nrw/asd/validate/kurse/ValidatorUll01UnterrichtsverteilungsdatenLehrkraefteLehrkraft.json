@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft",
+    "historie" : [ {
+      "praefix" : "ULL01",
+      "zweig" : "Unterrichtsverteilungsdaten-Lehrkraefte-Lehrkraft",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Lehrkraft'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Lehrkraft: Das Feld 'Lehrkraft' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KursDaten.lehrer ≠ einer id aus der Liste der Lehrer-IDs der Schule",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
