@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUf02UnterrichtsverteilungsdatenFach",
+    "historie" : [ {
+      "praefix" : "UF02",
+      "zweig" : "Unterrichtsverteilungsdaten-Fach",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Fach'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["UF01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Fach des Kurses: Der eingetragene Wert für das Feld 'Fach' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "KursDaten.idFach ≠ einem zeitlich gültigen Historieneintrag in Fach.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

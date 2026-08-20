@@ -1,0 +1,19 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUfUnterrichtsverteilungsdatenFach",
+    "historie" : [ {
+      "praefix" : "UF",
+      "zweig" : "Unterrichtsverteilungsdaten-Fach",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Fach'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

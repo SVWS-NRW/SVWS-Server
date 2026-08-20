@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUf01UnterrichtsverteilungsdatenFach",
+    "historie" : [ {
+      "praefix" : "UF01",
+      "zweig" : "Unterrichtsverteilungsdaten-Fach",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Fach'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["UF00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Fach des Kurses: Das Feld 'Fach' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KursDaten.idFach ≠ einer id eines Eintrages in Fach.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

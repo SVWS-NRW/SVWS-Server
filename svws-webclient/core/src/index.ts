@@ -363,6 +363,10 @@ export { ValidatorKs00KlassenSchulgliederung } from './asd/validate/klassen/Vali
 export { ValidatorKs01KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs01KlassenSchulgliederung';
 export { ValidatorKs02KlassenSchulgliederung } from './asd/validate/klassen/ValidatorKs02KlassenSchulgliederung';
 export { ValidatorKsKlassenSchulgliederung } from './asd/validate/klassen/ValidatorKsKlassenSchulgliederung';
+export { ValidatorUf00UnterrichtsverteilungsdatenFach } from './asd/validate/kurse/ValidatorUf00UnterrichtsverteilungsdatenFach';
+export { ValidatorUf01UnterrichtsverteilungsdatenFach } from './asd/validate/kurse/ValidatorUf01UnterrichtsverteilungsdatenFach';
+export { ValidatorUf02UnterrichtsverteilungsdatenFach } from './asd/validate/kurse/ValidatorUf02UnterrichtsverteilungsdatenFach';
+export { ValidatorUfUnterrichtsverteilungsdatenFach } from './asd/validate/kurse/ValidatorUfUnterrichtsverteilungsdatenFach';
 export { ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
