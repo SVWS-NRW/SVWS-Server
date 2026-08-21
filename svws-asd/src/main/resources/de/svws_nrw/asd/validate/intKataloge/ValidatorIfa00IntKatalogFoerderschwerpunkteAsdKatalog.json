@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IFA00",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Förderschwerpunkte-AsdKatalog",
+      "dtos" : "FoerderschwerpunktStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Förderschwerpunkte",
+      "anzeigebereich_ui" : "Förderschwerpunkt ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Förderschwerpunkt des Schülers: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "FoerderschwerpunktStatistikGesamt.idKatalog = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
+  

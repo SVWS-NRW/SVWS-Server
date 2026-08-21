@@ -336,6 +336,10 @@ export { ValidatorGldGesamtLehrerdatenDuplikate } from './asd/validate/gesamt/Va
 export { ValidatorGsGesamtSchuelerdaten } from './asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 export { ValidatorGsd10GesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsd10GesamtSchuelerdatenDuplikate';
 export { ValidatorGsdGesamtSchuelerdatenDuplikate } from './asd/validate/gesamt/ValidatorGsdGesamtSchuelerdatenDuplikate';
+export { ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog } from './asd/validate/intKataloge/ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog';
+export { ValidatorIfa01IntKatalogFoerderschwerpunkteAsdKatalog } from './asd/validate/intKataloge/ValidatorIfa01IntKatalogFoerderschwerpunkteAsdKatalog';
+export { ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog } from './asd/validate/intKataloge/ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog';
+export { ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog } from './asd/validate/intKataloge/ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog';
 export { ValidatorIka00IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka00IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIka01IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka01IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIka02IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka02IntKatalogKonfessionenAsdKatalog';

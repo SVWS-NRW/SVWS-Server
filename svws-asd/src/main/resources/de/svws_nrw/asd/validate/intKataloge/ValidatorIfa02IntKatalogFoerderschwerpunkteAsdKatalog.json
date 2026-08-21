@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IFA02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Foerderschwerpunkte-AsdKatalog",
+      "dtos" : "FoerderschwerpunktStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Förderschwerpunkte",
+      "anzeigebereich_ui" : "Förderschwerpunkt ASD-Kürzel",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IFA01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Foerderschwerpunkt des Schülers: Der eingetragene Wert für das Feld 'Förderschwerpunkt ASD-Kürzel' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog.",
+      "bedingung" : "FoerderschwerpunktStatistikGesamt.idKatalog ≠ einem zeitlich gültigen Historieneintrag in Foerderschwerpunkt.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
+  
