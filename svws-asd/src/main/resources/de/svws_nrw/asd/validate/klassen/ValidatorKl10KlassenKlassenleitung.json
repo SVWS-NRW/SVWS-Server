@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKl10KlassenKlassenleitung",
+    "historie" : [ {
+      "praefix" : "KL10",
+      "zweig" : "Klassen-Klassenleitung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Kürzel, Nachname, Rufname'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Leitung der Klasse: Zu jeder Klasse muss mindestens eine Klassenleitung vorliegen.",
+      "erlaeuterung" : "",
+      "bedingung" : "ANZAHL(KlassenDaten.klassenLeitungen) = 0",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

@@ -350,6 +350,8 @@ export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/Validator
 export { ValidatorKk01KlassenKlassenart } from './asd/validate/klassen/ValidatorKk01KlassenKlassenart';
 export { ValidatorKk02KlassenKlassenart } from './asd/validate/klassen/ValidatorKk02KlassenKlassenart';
 export { ValidatorKkKlassenKlassenart } from './asd/validate/klassen/ValidatorKkKlassenKlassenart';
+export { ValidatorKl10KlassenKlassenleitung } from './asd/validate/klassen/ValidatorKl10KlassenKlassenleitung';
+export { ValidatorKlKlassenKlassenleitung } from './asd/validate/klassen/ValidatorKlKlassenKlassenleitung';
 export { ValidatorKoKlassenOrganisationsform } from './asd/validate/klassen/ValidatorKoKlassenOrganisationsform';
 export { ValidatorKoa00KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa00KlassenOrganisationsformAllgemeinbildend';
 export { ValidatorKoa01KlassenOrganisationsformAllgemeinbildend } from './asd/validate/klassen/ValidatorKoa01KlassenOrganisationsformAllgemeinbildend';
