@@ -1,6 +1,5 @@
-import type { RouteStateInterface } from "~/router/RouteData";
-import { RouteData } from "~/router/RouteData";
-import { ArrayList, Arrays, type List, type Logo } from "@core";
+import { ArrayList, Arrays, type List, type Logo, type ApiFile } from "@core";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
 
 interface RouteStateSchuleLogoverwaltung extends RouteStateInterface {
@@ -62,6 +61,10 @@ export class RouteDataSchuleLogoverwaltung extends RouteData<RouteStateSchuleLog
 		}
 
 		this.setPatchedDefaultState({ logos });
+	};
+
+	zipLogos = async (logosToZip: List<number>): Promise<ApiFile> => {
+		return api.server.getLogosAsZip(logosToZip, api.schema);
 	};
 
 }

@@ -37,6 +37,7 @@ export class RouteSchuleLogoverwaltung extends RouteNode<RouteDataSchuleLogoverw
 			addLogo: this.data.addLogo,
 			patchLogo: this.data.patchLogo,
 			deleteLogo: this.data.deleteLogo,
+			zipLogos: this.data.zipLogos,
 		};
 	}
 

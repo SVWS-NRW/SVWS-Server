@@ -76,7 +76,7 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, ref, shallowRef, type ShallowRef } from "vue";
-	import { DeveloperNotificationException, type Logo, ReportingBildDefinition } from "@core";
+	import { Arrays, type Logo, type ApiFile, ReportingBildDefinition } from "@core";
 	import { GridManager, type TableActions, useModelProxyList, useSchuleState, ValidationResult } from "@ui";
 	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
 	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
@@ -251,20 +251,26 @@
 		const extension = getExtension(logoModel.proxy.base64);
 		const filename = `${logoModel.proxy.kennung}${extension}`;
 
-		triggerExport(logoModel.proxy.base64, filename);
+		const logoFile: ApiFile = {
+			name: filename,
+			data: base64ToBlob(logoModel.proxy.base64),
+		};
+		triggerExport(logoFile);
 	}
 
 	async function exportImagesAsZip(): Promise<void> {
-		throw new DeveloperNotificationException("Zip-Export ist noch nicht implementiert. Bitte Bilder einzeln exportieren");
+		const kennungen = new Set<string>(bulkSelectedLogoModels.value.map(l => l.proxy.kennung));
+		const dbLogosToZip = [...props.logos()].filter(dbLogo => kennungen.has(dbLogo.kennung));
+		const apiFile = await props.zipLogos(Arrays.asList(dbLogosToZip.map(logo => logo.id)));
+		triggerExport(apiFile);
 	}
 
-	function triggerExport(base64: string, filename: string): void {
-		const blob = base64ToBlob(base64);
-		const url = URL.createObjectURL(blob);
+	function triggerExport(file: ApiFile): void {
+		const url = URL.createObjectURL(file.data);
 
 		const link = document.createElement("a");
 		link.href = url;
-		link.download = filename;
+		link.download = file.name;
 		link.click();
 
 		URL.revokeObjectURL(url);
