@@ -197,6 +197,8 @@
 .text-input--readonly .text-input--control {
 	@apply pointer-events-auto cursor-default select-none;
 	padding-top: 3px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .text-input--placeholder {

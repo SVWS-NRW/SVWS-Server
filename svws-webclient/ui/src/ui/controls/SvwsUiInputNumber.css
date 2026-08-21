@@ -151,6 +151,8 @@ input {
 
 .input-number--readonly .input-number--control {
 	@apply pointer-events-auto cursor-default select-none;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .input-number--placeholder {
