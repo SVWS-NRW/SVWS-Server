@@ -15,38 +15,35 @@
 			</div>
 			<svws-ui-table scroll selectable :items="listBenutzergruppen" :disable-footer="true" :columns>
 				<template #header>
-					<div role="row" class="svws-ui-tr gruppen-tr">
-						<!--<div class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-					<svws-ui-checkbox :model-value="selected" />
-				</div>-->
-						<div class="svws-ui-td col-span-2" role="columnheader">
+					<tr class="svws-ui-tr gruppen-tr">
+						<th id="zugewieseneBenutzergruppen" class="svws-ui-td col-span-2">
 							Zugewiesene Benutzergruppen
-						</div>
-					</div>
+						</th>
+					</tr>
 				</template>
 				<template #body>
-					<div role="row" class="svws-ui-tr gruppen-tr" v-for="row in listBenutzergruppen" :key="row.id">
-						<div class="svws-ui-td svws-align-center" role="cell">
+					<tr class="svws-ui-tr gruppen-tr" v-for="row in listBenutzergruppen" :key="row.id">
+						<td class="svws-ui-td svws-align-center">
 							<svws-ui-checkbox type="toggle"
 								:model-value="getBenutzerManager().istInGruppe(row.id)"
 								@update:model-value="val => val ? addBenutzerToBenutzergruppe(row.id) : removeBenutzerFromBenutzergruppe(row.id)"
 								:disabled="readonly" />
-						</div>
-						<div class="svws-ui-td" role="cell">
+						</td>
+						<td class="svws-ui-td">
 							<div class="flex items-center gap-0.5">
 								<svws-ui-button type="icon" @click="gotoBenutzergruppe(row.id)">
 									<span class="icon i-ri-link" />
 								</svws-ui-button>
 								{{ row.bezeichnung }}
 							</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
+						</td>
+						<td class="svws-ui-td">
 							<svws-ui-tooltip v-if="row.istAdmin">
 								<span class="icon i-ri-shield-star-line h-5 w-5 -m-0.5" />
 								<template #content>Administrative Gruppe</template>
 							</svws-ui-tooltip>
-						</div>
-					</div>
+						</td>
+					</tr>
 				</template>
 			</svws-ui-table>
 		</div>
@@ -65,13 +62,13 @@
 			</div>
 			<svws-ui-table :items="kompetenzgruppen" scroll>
 				<template #header>
-					<div class="svws-ui-tr kompetenz-tr" role="row">
-						<div class="svws-ui-td" role="columnheader" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</div>
-						<div class="svws-ui-td" role="columnheader">
+					<tr class="svws-ui-tr kompetenz-tr">
+						<th id="kompetenz" class="svws-ui-td" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</th>
+						<th id="info" class="svws-ui-td">
 							<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
-						</div>
-						<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-ui-50" role="columnheader">Übernommen aus der Gruppe</div>
-					</div>
+						</th>
+						<th v-if="!getBenutzerManager().istAdmin()" id="uerbenommenGruppe" class="svws-ui-td pl-1! text-ui-50">Übernommen aus der Gruppe</th>
+					</tr>
 				</template>
 				<template #body>
 					<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
@@ -88,10 +85,12 @@
 	import { computed, ref, shallowRef } from 'vue';
 	import type { BenutzerProps } from './SBenutzerProps';
 	import { BenutzerKompetenzGruppe, BenutzerTyp } from '@core';
-	import { useBenutzerState } from '@ui';
+	import { useBenutzerState, useSchuleState } from '@ui';
 
 	const props = defineProps<BenutzerProps>();
 	const benutzerState = useBenutzerState();
+	const schuleState = useSchuleState();
+
 	const readonly = computed<boolean>(() => (props.getBenutzerManager().daten().id === benutzerState.benutzerdaten.id));
 
 	const columns = [
@@ -109,7 +108,12 @@
 		}
 	}
 
-	const kompetenzgruppen = computed<BenutzerKompetenzGruppe[]>(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
+	const kompetenzgruppen = computed<BenutzerKompetenzGruppe[]>(() =>
+		BenutzerKompetenzGruppe.values()
+			.filter(gr => gr.daten.id >= 0)
+			// BenutzerKompetenzGruppe ABSCHLUSS_BK darf nur bei berufsbildenden Schulformen auswählbar sein
+			.filter(gr => (gr !== BenutzerKompetenzGruppe.ABSCHLUSS_BK) || schuleState.schulform.istBerufsbildend())
+	);
 
 	const inputIstAdmin = computed<boolean>({
 		get: () => props.getBenutzerManager().istAdmin(),
