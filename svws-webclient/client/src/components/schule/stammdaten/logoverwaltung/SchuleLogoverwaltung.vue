@@ -75,8 +75,8 @@
 </template>
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, shallowRef, type ShallowRef } from "vue";
-	import { Arrays, type Logo, type ApiFile, ReportingBildDefinition } from "@core";
+	import { computed, ref, shallowRef, type ShallowRef, watch } from "vue";
+	import { type ApiFile, Arrays, type Logo, ReportingBildDefinition } from "@core";
 	import { GridManager, type TableActions, useModelProxyList, useSchuleState, ValidationResult } from "@ui";
 	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
 	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
@@ -114,10 +114,10 @@
 	);
 
 	/**
-	 * Initiale Berechnung der Bilddimensionen zur Validierung.
+	 * Berechnung der Bilddimensionen zur Validierung.
 	 * Die Dateigröße kann aus base64 nicht konkret bestimmt werden, daher wird diese hier nicht validiert
 	 */
-	onMounted(async () => {
+	watch(logoModels, async () => {
 		for (const logoModel of logoModels.value) {
 			const base64 = logoModel.proxy.base64;
 			if (base64 === '') {
@@ -125,10 +125,9 @@
 			}
 			const fileType = parseBase64(base64)?.mimeType ?? null;
 			await setModelImageInfo(logoModel, base64, fileType, null);
-			// Revalidierung nach dem Setzen der Werte wieder notwendig
 			logoModel.validate();
 		}
-	});
+	}, { immediate: true });
 
 	function getImageColumnWitdh(): string {
 		const bildDefinitions = [...ReportingBildDefinition.getBySchulform(schuleState.schulform)];

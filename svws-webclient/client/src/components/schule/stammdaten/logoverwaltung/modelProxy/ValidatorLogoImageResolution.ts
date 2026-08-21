@@ -30,11 +30,11 @@ export class ValidatorLogoImageResolution extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const imageInfo = this.imageInfo();
+		const imageType = imageInfo.fileType;
 		const imageWidth = imageInfo.width;
 		const imageHeight = imageInfo.height;
-		if ((imageHeight === 0) || (imageWidth === 0)) {
-			this.addFehler(0, `Die Auflösung konnte nicht berechnet werden.`);
-			return false;
+		if ((imageHeight === 0) || (imageWidth === 0) || (imageType === "image/svg+xml")) {
+			return true;
 		}
 
 		const imageRestrictions = this.imageRestrictions;
@@ -46,7 +46,8 @@ export class ValidatorLogoImageResolution extends BasicValidator {
 		const dpiHoehe = (imageHeight * 25.4) / targetHeightInMM;
 		const aufloesung = Math.min(dpiBreite, dpiHoehe);
 		if (aufloesung < targetDpi) {
-			this.addFehler(0, `Zu geringe Auflösung: ${Math.round(aufloesung)} DPI. Dies kann zu einer unscharfen Darstellung des Bildes führen.`);
+			this.addFehler(0, `Zu geringe Auflösung: ${Math.round(aufloesung)} DPI statt ${imageRestrictions.aufloesungInDPI} DPI.
+			Dies kann zu einer unscharfen Darstellung des Bildes führen.`);
 			return false;
 		}
 

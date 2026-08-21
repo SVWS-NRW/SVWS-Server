@@ -77,29 +77,34 @@ export async function setModelImageInfo(logoModel: LogoModelProxy | undefined, b
 	});
 }
 
+function getNormalizedAspectRatio(hoehe: number, breite: number): number {
+	if ((hoehe <= 0) || (breite <= 0)) {
+		return 1;
+	}
+
+	return Math.round((hoehe / breite) * 100) / 100;
+}
+
 export function getAspectRatio(hoehe: number, breite: number): string {
-	const divisor = greatestCommonDivisor(breite, hoehe);
-	return `${breite / divisor}:${hoehe / divisor}`;
+	const normalizedHeight = getNormalizedAspectRatio(hoehe, breite);
+	return `1:${normalizedHeight}`;
 }
 
 export function getCssAspectRatio(kennung: string | null): string {
 	if (kennung === null) {
 		return "1 / 1";
 	}
+
 	const definition = ReportingBildDefinition.getByKennung(kennung);
 	if (definition === null) {
 		return "1 / 1";
 	}
+
 	const height = definition.getHoehe();
 	const width = definition.getBreite();
-	if ((height <= 0) || (width <= 0)) {
-		return "1 / 1";
-	}
-	return `${width} / ${height}`;
-}
+	const normalizedHeight = getNormalizedAspectRatio(height, width);
 
-export function greatestCommonDivisor(a: number, b: number): number {
-	return (b === 0) ? a : greatestCommonDivisor(b, a % b);
+	return `1 / ${normalizedHeight}`;
 }
 
 /**

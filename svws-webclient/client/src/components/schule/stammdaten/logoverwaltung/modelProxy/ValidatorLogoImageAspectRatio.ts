@@ -1,5 +1,6 @@
 import { BasicValidator, ValidatorFehlerart } from "@core";
 import type { ImageInfo, ImageRestrictions } from "../LogoUtils";
+import { getAspectRatio } from "../LogoUtils";
 
 
 /**
@@ -35,8 +36,7 @@ export class ValidatorLogoImageAspectRatio extends BasicValidator {
 		const height = imageInfo.height;
 
 		if ((height === 0) || (width === 0)) {
-			this.addFehler(0, `Das Seitenverhältnis konnte nicht berechnet werden.`);
-			return false;
+			return true;
 		}
 
 		const imageRestrictions = this.imageRestrictions;
@@ -45,9 +45,9 @@ export class ValidatorLogoImageAspectRatio extends BasicValidator {
 
 		const actualRatio = width / height;
 		const expectedRatio = targetWidthInMM / targetHeightInMM;
-		if (Math.abs(actualRatio - expectedRatio) > 0.01) {
-			const richtung = actualRatio > expectedRatio ? "zu breit" : "zu hoch";
-			this.addFehler(0, `Unpassendes Seitenverhältnisse. Das Bild ist ${richtung}. Dies kann zu einer verzerrten Darstellung des Bildes führen.`);
+		if (Math.abs(actualRatio - expectedRatio) > 0.03) {
+			this.addFehler(0, `Unpassendes Seitenverhältnisse: ${getAspectRatio(height, width)} statt ${imageRestrictions.seitenverhaeltnis}.
+			Dies kann zu einer verzerrten Darstellung des Bildes führen.`);
 			return false;
 		}
 
