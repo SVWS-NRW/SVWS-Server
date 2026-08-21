@@ -25,8 +25,8 @@
 						<ui-card :title="cardTitle(createKaoaModel)"
 							:is-open="true"
 							:collapsible="false">
-							<template #info v-if="(schuljahresabschnitt)">
-								{{ schuljahresabschnittText(schuljahresabschnitt) }}
+							<template #info v-if="(abschnittState.auswahl)">
+								{{ schuljahresabschnittText(abschnittState.auswahl) }}
 							</template>
 							<kaoa-form :model="createKaoaModel"
 								:manager
@@ -87,20 +87,14 @@
 	import { computed, shallowRef } from 'vue';
 	import type { Schuljahresabschnitt } from "@core";
 	import { BenutzerKompetenz, Jahrgaenge, SchuelerKAoADaten } from "@core";
-	import { useBenutzerState, useModelProxyList } from '@ui';
+	import { useBenutzerState, useModelProxyList, useAbschnittState } from '@ui';
 	import { SchuelerKaoaModelProxy } from "./modelproxy/SchuelerKaoaModelProxy";
 	import type { SchuelerKAoAProps } from './SchuelerKaoaProps';
 
 	const props = defineProps<SchuelerKAoAProps>();
 	const benutzerState = useBenutzerState();
+	const abschnittState = useAbschnittState();
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN));
-
-	const schuljahresabschnitt = computed<Schuljahresabschnitt | null>(() =>
-		props.manager().schuljahresabschnitteById.get(props.auswahl().idSchuljahresabschnitt) ?? null
-	);
-	const schuljahr = computed<number>(() => (props.manager().schuljahr));
-	const kuerzelJahrgang = computed(() => props.manager().lernabschnitteBySchuljahr.get(schuljahr.value)?.jahrgang ?? '');
-	const jahrgang = computed(() => Jahrgaenge.data().getWertByKuerzel(kuerzelJahrgang.value)?.daten(schuljahr.value) ?? null);
 
 	const createKaoaModel = shallowRef<SchuelerKaoaModelProxy>();
 	const patchKaoaModels = useModelProxyList(
@@ -111,8 +105,9 @@
 
 	function createAddModel() {
 		const kaoaDaten = new SchuelerKAoADaten();
-		kaoaDaten.idJahrgang = jahrgang.value?.id ?? -1;
-		kaoaDaten.idSchuljahresabschnitt = schuljahresabschnitt.value?.id ?? -1;
+		const kuerzelJahrgang = props.manager().lernabschnitteBySchuljahr.get(abschnittState.auswahl.schuljahr)?.jahrgang ?? '';
+		kaoaDaten.idJahrgang = Jahrgaenge.data().getWertByKuerzel(kuerzelJahrgang)?.daten(abschnittState.auswahl.schuljahr)?.id ?? -1;
+		kaoaDaten.idSchuljahresabschnitt = abschnittState.auswahl.id;
 
 		createKaoaModel.value = new SchuelerKaoaModelProxy(() => kaoaDaten, () => props.manager());
 	}
