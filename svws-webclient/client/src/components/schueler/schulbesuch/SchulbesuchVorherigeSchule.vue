@@ -96,7 +96,7 @@
 		SchulabschlussBerufsbildend, Schulform } from "@core";
 	import type { List, SchulEintrag, KatalogEntlassgrund } from "@core";
 	import type { SchuelerSchulbesuchManager } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState } from "@ui";
+	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import type { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 
 	const props = defineProps<{
@@ -106,6 +106,7 @@
 		readonly: boolean;
 	}>();
 	const benutzerState = useBenutzerState();
+	const schuleState = useSchuleState();
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const disabled = computed(() => !updateKompetenz.value);
 	const schuljahr = computed(() => props.manager().schuljahr);
@@ -228,6 +229,7 @@
 	const schulformVorherigKeinAbschlussManager = new CoreTypeSelectManager({
 		clazz: HerkunftSonstige.class,
 		schuljahr: schuljahr,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});
