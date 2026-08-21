@@ -41,7 +41,7 @@ Folgende Props können gesetzt werden, um die Komponente zu konfigurieren.
 | headless             | `boolean`                     | `false`                                                | Definiert, ob das Select headless (ohne Rahmen und Hintergrund) dargestellt wird, z.B. für Tabellen                                                                           |                            |
 | minOptions           | `number`                      | `undefined`                                            | Definiert die minimale Anzahl an auszuwählenden Optionen. Wird mit `maxOptions` abgeglichen. <br/>Fügt automatisch einen Validator hinzu, wenn kein `validation` gesetzt ist. |
 | maxOptions           | `number`                      | `undefined`                                            | Definiert die maximale Anzahl an auswählbaren Optionen. Wird mit `minOptions` abgeglichen. <br/>Fügt automatisch einen Validator hinzu, wenn kein `validation` gesetzt ist.   |
-| validation           | `() => List<ValidatorFehler>` | undefined                                              | Eine Liste von Validatorfehlern, die bei Überprüfung der selektierten Optionen aufgetreten sind.                                                                              |
+| validation           | `() => List<ValidatorFehler>` | `undefined`                                            | Eine Liste von Validatorfehlern, die bei Überprüfung der selektierten Optionen aufgetreten sind.                                                                              |
 
 
 
