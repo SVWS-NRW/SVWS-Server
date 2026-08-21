@@ -151,7 +151,8 @@ class ClientCredentialsFlowTest {
 				"client-id",
 				"client-secret",
 				URI.create("https://issuer.example/oauth2/token"),
-				null
+				null,
+				OAuthDomain.IT_NRW
 		);
 	}
 }

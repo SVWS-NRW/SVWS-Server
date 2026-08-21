@@ -53,7 +53,7 @@ class CachingTokenProviderTest {
 	void getTokenReturnsCachedTokenWhenValid() {
 
 		final Schema schema = new Schema("tenant_schema_a");
-		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null);
+		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null, OAuthDomain.IT_NRW);
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken token = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
@@ -69,7 +69,7 @@ class CachingTokenProviderTest {
 	void getTokenNormalizesBlankScopeToEmptyString() {
 
 		final Schema schema = new Schema("tenant_schema_a");
-		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null);
+		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null, OAuthDomain.IT_NRW);
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken token = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));
@@ -86,7 +86,7 @@ class CachingTokenProviderTest {
 		final Instant base = Instant.parse("2026-06-18T12:00:00Z");
 
 		final Schema schema = new Schema("tenant_schema_a");
-		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null);
+		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null, OAuthDomain.IT_NRW);
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken expired = new AccessToken("old", "Bearer", base);
@@ -108,7 +108,7 @@ class CachingTokenProviderTest {
 	void invalidateRemovesCachedEntryAndForcesRefetch() {
 
 		final Schema schema = new Schema("tenant_schema_a");
-		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null);
+		final Credentials creds = new Credentials("client-id", "client-secret", URI.create("https://issuer.example/token"), null, OAuthDomain.IT_NRW);
 		when(credStoreService.getBySchema(schema)).thenReturn(creds);
 
 		final AccessToken token1 = new AccessToken("v1", "Bearer", Instant.parse("2026-06-18T12:10:00Z"));

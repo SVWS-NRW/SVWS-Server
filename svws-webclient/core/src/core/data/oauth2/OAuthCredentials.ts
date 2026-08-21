@@ -4,24 +4,35 @@ import { Class } from '../../../java/lang/Class';
 export class OAuthCredentials extends JavaObject {
 
 	/**
-	 * CLient ID
+	 * Die ID des Clients
+	 */
+	public id: number = 0;
+
+	/**
+	 * Die Client ID
 	 */
 	public clientId: string | null = null;
 
 	/**
-	 * Client Secret
+	 * Das Client Secret
 	 */
 	public clientSecret: string | null = null;
 
 	/**
-	 * tokenUrl
+	 * Die URL des Auth Servers
 	 */
 	public tokenUrl: string | null = null;
 
 	/**
-	 * defaultScope
+	 * Das Scope das Requested wird
 	 */
-	public defaultScope: string | null = null;
+	public requestedScope: string | null = null;
+
+	/**
+	 *  Die Domäne der Credentials
+	 *  @see OAuthServiceDomain
+	 */
+	public domain: string | null = null;
 
 
 	public constructor() {
@@ -41,19 +52,25 @@ export class OAuthCredentials extends JavaObject {
 	public static transpilerFromJSON(json: string): OAuthCredentials {
 		const obj = JSON.parse(json) as Partial<OAuthCredentials>;
 		const result = new OAuthCredentials();
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		result.clientId = (obj.clientId === undefined) ? null : obj.clientId === null ? null : obj.clientId;
 		result.clientSecret = (obj.clientSecret === undefined) ? null : obj.clientSecret === null ? null : obj.clientSecret;
 		result.tokenUrl = (obj.tokenUrl === undefined) ? null : obj.tokenUrl === null ? null : obj.tokenUrl;
-		result.defaultScope = (obj.defaultScope === undefined) ? null : obj.defaultScope === null ? null : obj.defaultScope;
+		result.requestedScope = (obj.requestedScope === undefined) ? null : obj.requestedScope === null ? null : obj.requestedScope;
+		result.domain = (obj.domain === undefined) ? null : obj.domain === null ? null : obj.domain;
 		return result;
 	}
 
 	public static transpilerToJSON(obj: OAuthCredentials): string {
 		let result = '{';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"clientId" : ' + ((obj.clientId === null) ? 'null' : JSON.stringify(obj.clientId)) + ',';
 		result += '"clientSecret" : ' + ((obj.clientSecret === null) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
 		result += '"tokenUrl" : ' + ((obj.tokenUrl === null) ? 'null' : JSON.stringify(obj.tokenUrl)) + ',';
-		result += '"defaultScope" : ' + ((obj.defaultScope === null) ? 'null' : JSON.stringify(obj.defaultScope)) + ',';
+		result += '"requestedScope" : ' + ((obj.requestedScope === null) ? 'null' : JSON.stringify(obj.requestedScope)) + ',';
+		result += '"domain" : ' + ((obj.domain === null) ? 'null' : JSON.stringify(obj.domain)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -61,6 +78,9 @@ export class OAuthCredentials extends JavaObject {
 
 	public static transpilerToJSONPatch(obj: Partial<OAuthCredentials>): string {
 		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
 		if (obj.clientId !== undefined) {
 			result += '"clientId" : ' + ((obj.clientId === null) ? 'null' : JSON.stringify(obj.clientId)) + ',';
 		}
@@ -70,8 +90,11 @@ export class OAuthCredentials extends JavaObject {
 		if (obj.tokenUrl !== undefined) {
 			result += '"tokenUrl" : ' + ((obj.tokenUrl === null) ? 'null' : JSON.stringify(obj.tokenUrl)) + ',';
 		}
-		if (obj.defaultScope !== undefined) {
-			result += '"defaultScope" : ' + ((obj.defaultScope === null) ? 'null' : JSON.stringify(obj.defaultScope)) + ',';
+		if (obj.requestedScope !== undefined) {
+			result += '"requestedScope" : ' + ((obj.requestedScope === null) ? 'null' : JSON.stringify(obj.requestedScope)) + ',';
+		}
+		if (obj.domain !== undefined) {
+			result += '"domain" : ' + ((obj.domain === null) ? 'null' : JSON.stringify(obj.domain)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

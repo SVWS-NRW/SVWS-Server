@@ -12,7 +12,7 @@ public interface TokenProvider {
 	 * Liefert ein gueltiges Token fuer (schema, scope).
 	 *
 	 * @param schema Schema
-	 * @param scope darf null/blank sein → defaultScope der Credentials wird genutzt.
+	 * @param scope darf null/blank sein → requestedScope der Credentials wird genutzt.
 	 *
 	 * @return aufgelöstes {@link AccessToken}
 	 */

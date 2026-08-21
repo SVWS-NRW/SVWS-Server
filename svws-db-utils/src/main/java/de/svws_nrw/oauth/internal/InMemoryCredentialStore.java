@@ -61,7 +61,7 @@ public final class InMemoryCredentialStore implements CredentialStore {
 			throw new MissingCredentialsException(ENV_PROPERTY_TOKEN_URL);
 		}
 
-		return new Credentials(clientId, clientSecret, URI.create(tokenUrl), null);
+		return new Credentials(clientId, clientSecret, URI.create(tokenUrl), null, OAuthDomain.IT_NRW);
 	}
 
 	private String readClientId() {

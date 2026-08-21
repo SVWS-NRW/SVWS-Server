@@ -10,44 +10,37 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	static readonly all_values_by_name: Map<string, OAuthServiceDomain> = new Map<string, OAuthServiceDomain>();
 
 	/**
-	 * Web Noten Manager
+	 *  Web Noten Manager
 	 */
-	public static readonly WENOM: OAuthServiceDomain = new OAuthServiceDomain("WENOM", 0, 1, "WENOM");
+	public static readonly WENOM: OAuthServiceDomain = new OAuthServiceDomain("WENOM", 0, "WENOM");
 
 	/**
-	 * Schüler Online
+	 *  Schüler Online
 	 */
-	public static readonly SCHUELER_ONLINE: OAuthServiceDomain = new OAuthServiceDomain("SCHUELER_ONLINE", 1, 2, "SCHUELER_ONLINE");
+	public static readonly SCHUELER_ONLINE: OAuthServiceDomain = new OAuthServiceDomain("SCHUELER_ONLINE", 1, "SCHUELER_ONLINE");
 
-	private readonly id: number;
+	/**
+	 *  IT NRW
+	 */
+	public static readonly IT_NRW: OAuthServiceDomain = new OAuthServiceDomain("IT_NRW", 2, "IT_NRW");
 
 	private readonly dbValue: string | null;
 
 	/**
 	 * Erstellt eine neue OAuth Service Domäne
 	 *
-	 * @param id   die ID des OAuth-Domäne
 	 * @param dbValue der DB-Wert der OAuth-Domäne
 	 */
-	private constructor(name: string, ordinal: number, id: number, dbValue: string | null) {
+	private constructor(name: string, ordinal: number, dbValue: string | null) {
 		super(name, ordinal);
 		OAuthServiceDomain.all_values_by_ordinal.push(this);
 		OAuthServiceDomain.all_values_by_name.set(name, this);
-		this.id = id;
 		this.dbValue = dbValue;
 	}
 
 	/**
-	 * Gibt die ID der OAuth Domäne wieder
-	 *
-	 * @return die ID
-	 */
-	public getId(): number {
-		return this.id;
-	}
-
-	/**
 	 * Gibt den DB-Wert des Enums zurück
+	 *
 	 * @return den DB-Wert
 	 */
 	public getDbValue(): string | null {
@@ -55,39 +48,24 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	}
 
 	/**
-	 * Diese Methode ermittelt den OAuth-Domäne anhand der übergebenen ID.
-	 *
-	 * @param id   die ID des OAuth-Domäne
-	 *
-	 * @return die OAuth Domaine
-	 */
-	public static getByID(id: number): OAuthServiceDomain | null {
-		for (const s of OAuthServiceDomain.values()) {
-			if (s.id === id) {
-				return s;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Diese Methode ermittelt die OAuth Domäne anhand des übergebenen Database Wertes.
 	 *
-	 * @param dbValue   DB Wert der OAuth Domaine
-	 *
+	 * @param dbValue DB Wert der OAuth Domaine
 	 * @return die OAuth Domaine
 	 */
 	public static getByDbValue(dbValue: string | null): OAuthServiceDomain | null {
-		let _sevar_1342810125 : any;
-		const _seexpr_1342810125 = (dbValue);
-		if (_seexpr_1342810125 === "WENOM") {
-			_sevar_1342810125 = OAuthServiceDomain.WENOM;
-		} else if (_seexpr_1342810125 === "SCHUELER_ONLINE") {
-			_sevar_1342810125 = OAuthServiceDomain.SCHUELER_ONLINE;
+		let _sevar_238503942 : any;
+		const _seexpr_238503942 = (dbValue);
+		if (_seexpr_238503942 === "WENOM") {
+			_sevar_238503942 = OAuthServiceDomain.WENOM;
+		} else if (_seexpr_238503942 === "SCHUELER_ONLINE") {
+			_sevar_238503942 = OAuthServiceDomain.SCHUELER_ONLINE;
+		} else if (_seexpr_238503942 === "IT_NRW") {
+			_sevar_238503942 = OAuthServiceDomain.IT_NRW;
 		} else {
-			_sevar_1342810125 = null;
+			_sevar_238503942 = null;
 		}
-		return _sevar_1342810125;
+		return _sevar_238503942;
 	}
 
 	/**

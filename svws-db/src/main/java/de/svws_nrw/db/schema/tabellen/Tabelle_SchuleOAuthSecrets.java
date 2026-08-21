@@ -14,56 +14,67 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID des OAuth-Datensatzes");
 
 	/** Die Definition der Tabellenspalte AuthServer */
 	public final SchemaTabelleSpalte col_AuthServer = add("AuthServer", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("authServerUrl")
 			.setNotNull()
 			.setJavaComment("Der Authorization Server");
 
 	/** Die Definition der Tabellenspalte ClientID */
 	public final SchemaTabelleSpalte col_ClientID = add("ClientID", SchemaDatentypen.TEXT, false)
+			.setJavaName("clientId")
 			.setNotNull()
 			.setJavaComment("Die ID des Clients");
 
 	/** Die Definition der Tabellenspalte ClientSecret */
 	public final SchemaTabelleSpalte col_ClientSecret = add("ClientSecret", SchemaDatentypen.TEXT, false)
+			.setJavaName("clientSecret")
 			.setNotNull()
 			.setJavaComment("Das Secret des Clients");
 
 	/** Die Definition der Tabellenspalte TokenType */
 	public final SchemaTabelleSpalte col_TokenType = add("TokenType", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("tokenType")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Der Typ des Tokens");
 
 	/** Die Definition der Tabellenspalte TokenTimestamp */
 	public final SchemaTabelleSpalte col_TokenTimestamp = add("TokenTimestamp", SchemaDatentypen.BIGINT, false)
+			.setJavaName("tokenTimestamp")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Ankunftzeitpunkt des Tokens als Zeitstempel in Millisekungen");
 
 	/** Die Definition der Tabellenspalte TokenExpiresIn */
 	public final SchemaTabelleSpalte col_TokenExpiresIn = add("TokenExpiresIn", SchemaDatentypen.BIGINT, false)
+			.setJavaName("tokenExpiresIn")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Lebensdauer des Tokens in Sekunden");
 
 	/** Die Definition der Tabellenspalte TokenScope */
 	public final SchemaTabelleSpalte col_TokenScope = add("TokenScope", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("tokenScope")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Der Gültigkeitsbereich des Tokens");
 
 	/** Die Definition der Tabellenspalte Token */
 	public final SchemaTabelleSpalte col_Token = add("Token", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("token")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Das Token");
 
 	/** Die Definition der Tabellenspalte TLSCert */
 	public final SchemaTabelleSpalte col_TLSCert = add("TLSCert", SchemaDatentypen.TEXT, false)
+			.setJavaName("tlsCert")
 			.setRevision(SchemaRevisionen.REV_32)
 			.setJavaComment("Das TLS Zertifikat des OAuth2-Servers");
 
 	/** Die Definition der Tabellenspalte TLSCertIsKnown */
 	public final SchemaTabelleSpalte col_TLSCertIsKnown = add("TLSCertIsKnown", SchemaDatentypen.INT, false)
+			.setJavaName("tlsCertIsKnown")
 			.setDefault("0")
 			.setConverter(Boolean01Converter.class)
 			.setRevision(SchemaRevisionen.REV_32)
@@ -71,6 +82,7 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte TLSCertIsTrusted */
 	public final SchemaTabelleSpalte col_TLSCertIsTrusted = add("TLSCertIsTrusted", SchemaDatentypen.INT, false)
+			.setJavaName("tlsCertIsTrusted")
 			.setDefault("0")
 			.setConverter(Boolean01Converter.class)
 			.setRevision(SchemaRevisionen.REV_32)
@@ -101,6 +113,7 @@ public class Tabelle_SchuleOAuthSecrets extends SchemaTabelle {
 		setJavaSubPackage("svws.auth");
 		setJavaClassName("DTOSchuleOAuthSecrets");
 		setJavaComment("Tabelle für die Credentials bei der OAuth-Authentifizierung durch die Schule");
+		setPKAutoIncrement();
 	}
 
 }

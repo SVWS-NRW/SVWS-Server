@@ -156,7 +156,7 @@ import { LongPair } from '../core/data/uv/LongPair';
 import { Merkmal } from '../core/data/schule/Merkmal';
 import { NationalitaetenKatalogEintrag } from '../asd/data/schule/NationalitaetenKatalogEintrag';
 import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
-import { OAuth2ClientConnection } from '../core/data/oauth2/OAuth2ClientConnection';
+import { OAuthCredentials } from '../core/data/oauth2/OAuthCredentials';
 import { OrganisationsformKatalogEintrag } from '../asd/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
@@ -12156,142 +12156,147 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getOAuthClientSecrets für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets
+	 * Implementierung der POST-Methode addClientCredential für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/credentials
 	 *
-	 * Gibt die OAuth2-Client-Secrets der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Client-Secrets besitzt.
+	 * Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Credentials und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von OAuth2-Credentials besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste der OAuth2-Client-Secrets der Schule.
+	 *   Code 201: Der Eintrag wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<OAuth2ClientConnection>
-	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Client-Secrets.
+	 *     - Rückgabe-Typ: OAuthCredentials
+	 *   Code 400: Der Eintrag enthält Fehler, bspw. eine invalide URL.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein OAuth2-Client-Secret für die Schule anzulegen.
+	 *   Code 409: Es existiert bereits ein Eintrag für den gegebenen OAuth2-Server.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OAuthCredentials>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addClientCredential(data: Partial<OAuthCredentials>, schema: string): Promise<OAuthCredentials> {
+		const path = "/db/{schema}/oauth/credentials"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = OAuthCredentials.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return OAuthCredentials.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getOAuthClientCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/credentials
+	 *
+	 * Gibt die OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Credentials besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der OAuth2-Credentials der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<OAuthCredentials>
+	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Credentials.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste der OAuth2-Client-Secrets der Schule.
+	 * @returns Eine Liste der OAuth2-Credentials der Schule.
 	 */
-	public async getOAuthClientSecrets(schema: string): Promise<List<OAuth2ClientConnection>> {
-		const path = "/db/{schema}/oauth/secrets"
+	public async getOAuthClientCredentials(schema: string): Promise<List<OAuthCredentials>> {
+		const path = "/db/{schema}/oauth/credentials"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result: string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<OAuth2ClientConnection>();
+		const ret = new ArrayList<OAuthCredentials>();
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
-			ret.add(OAuth2ClientConnection.transpilerFromJSON(text));
+			ret.add(OAuthCredentials.transpilerFromJSON(text));
 		});
 		return ret;
 	}
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchOAuthSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteOAuthCredential für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/credentials/{id : \d+}
 	 *
-	 * Passt die OAuth2-Client-Secrets zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von OAuth2-Client-Secrets besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die OAuth2-Client-Secrets der Schule integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets zu ändern.
-	 *   Code 404: Kein OAuth2-Client-Secrets mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<OAuth2ClientConnection>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchOAuthSecret(data: Partial<OAuth2ClientConnection>, schema: string, id: number): Promise<void> {
-		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body: string = OAuth2ClientConnection.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteOAuthSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
-	 *
-	 * Entfernt ein OAuth2-Client-Secrets. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von OAuth Client Secrets hat.
+	 * Entfernt ein OAuth2-Credentials. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von OAuth Client Secrets hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das OAuth2-Client-Secrets wurde erfolgreich entfernt.
+	 *   Code 200: Das OAuth2-Credentials wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: OAuth2ClientConnection
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um OAuth2-Client-Secrets zu entfernen.
-	 *   Code 404: OAuth2-Client-Secrets nicht vorhanden
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um OAuth2-Credentials zu entfernen.
+	 *   Code 404: OAuth2-Credentials nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Das OAuth2-Client-Secrets wurde erfolgreich entfernt.
+	 * @returns Das OAuth2-Credentials wurde erfolgreich entfernt.
 	 */
-	public async deleteOAuthSecret(schema: string, id: number): Promise<OAuth2ClientConnection> {
-		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
+	public async deleteOAuthCredential(schema: string, id: number): Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/oauth/credentials/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result: string = await super.deleteJSON(path, null);
 		const text = result;
-		return OAuth2ClientConnection.transpilerFromJSON(text);
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
 	/**
-	 * Implementierung der GET-Methode getOAuthClientSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/{id : \d+}
+	 * Implementierung der GET-Methode getOAuthCredential für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/credentials/{id : \d+}
 	 *
-	 * Gibt das OAuth2-Client-Secrets der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Client-Secrets besitzt.
+	 * Gibt das OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von OAuth2-Credentials besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das OAuth2-Client-Secrets der Schule
+	 *   Code 200: Das OAuth2-Credentials der Schule
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: OAuth2ClientConnection
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Client-Secrets anzusehen.
-	 *   Code 404: Kein OAuth2-Client-Secrets mit der ID bei der Schule gefunden
+	 *     - Rückgabe-Typ: OAuthCredentials
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die OAuth2-Credentials anzusehen.
+	 *   Code 404: Keine OAuth2-Credentials mit der ID bei der Schule gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Das OAuth2-Client-Secrets der Schule
+	 * @returns Das OAuth2-Credentials der Schule
 	 */
-	public async getOAuthClientSecret(schema: string, id: number): Promise<OAuth2ClientConnection> {
-		const path = "/db/{schema}/oauth/secrets/{id : \\d+}"
+	public async getOAuthCredential(schema: string, id: number): Promise<OAuthCredentials> {
+		const path = "/db/{schema}/oauth/credentials/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result: string = await super.getJSON(path);
 		const text = result;
-		return OAuth2ClientConnection.transpilerFromJSON(text);
+		return OAuthCredentials.transpilerFromJSON(text);
 	}
 
 
 	/**
-	 * Implementierung der POST-Methode addOAuthClientSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/secrets/create
+	 * Implementierung der GET-Methode getOAuthCredentialsForDomain für den Zugriff auf die URL https://{hostname}/db/{schema}/oauth/domain/{domain}/credentials
 	 *
-	 * Erstellt einen neuen Eintrag für die schulspezifischen OAuth2-Client-Secrets und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von OAuth2-Client-Secrets besitzt.
+	 * Gibt die OAuth2-Credentials der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der OAuth2-Credentials besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Der Eintrag wurde erfolgreich hinzugefügt.
+	 *   Code 200: Eine Liste der OAuth2-Credentials der Schule.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: OAuth2ClientConnection
-	 *   Code 400: Der Eintrag enthält Fehler, bspw. eine invalide URL.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein OAuth2-Client-Secret für die Schule anzulegen.
-	 *   Code 409: Es existiert bereits ein Eintrag für den gegebenen OAuth2-Server.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *     - Rückgabe-Typ: List<OAuthCredentials>
+	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der OAuth2-Credentials.
 	 *
-	 * @param {Partial<OAuth2ClientConnection>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} domain - der Pfad-Parameter domain
 	 *
-	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
+	 * @returns Eine Liste der OAuth2-Credentials der Schule.
 	 */
-	public async addOAuthClientSecret(data: Partial<OAuth2ClientConnection>, schema: string): Promise<OAuth2ClientConnection> {
-		const path = "/db/{schema}/oauth/secrets/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = OAuth2ClientConnection.transpilerToJSONPatch(data);
-		const result: string = await super.postJSON(path, body);
-		const text = result;
-		return OAuth2ClientConnection.transpilerFromJSON(text);
+	public async getOAuthCredentialsForDomain(schema: string, domain: string): Promise<List<OAuthCredentials>> {
+		const path = "/db/{schema}/oauth/domain/{domain}/credentials"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{domain\s*(:[^{}]+({[^{}]+})*)?}/g, domain);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<OAuthCredentials>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(OAuthCredentials.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 

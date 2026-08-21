@@ -18,16 +18,17 @@ class CredentialsTest {
 	@DisplayName("<init> | allows null default scope")
 	void constructorAllowsNullDefaultScope() {
 		final URI tokenUrl = URI.create("https://issuer.example/oauth2/token");
-		final Credentials creds = new Credentials("client-id", "client-secret", tokenUrl, null);
+		final Credentials creds = new Credentials("client-id", "client-secret", tokenUrl, null, OAuthDomain.IT_NRW);
 		assertNotNull(creds);
-		assertNull(creds.defaultScope());
+		assertNull(creds.requestedScope());
 	}
 
 	@Test
 	@DisplayName("<init> | throws when clientId is null")
 	void constructorThrowsWhenClientIdIsNull() {
 		final URI tokenUrl = URI.create("https://issuer.example/oauth2/token");
-		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new Credentials(null, "client-secret", tokenUrl, null));
+		final NullPointerException ex =
+				assertThrows(NullPointerException.class, () -> new Credentials(null, "client-secret", tokenUrl, null, OAuthDomain.IT_NRW));
 		assertEquals("clientId", ex.getMessage());
 	}
 
@@ -35,14 +36,15 @@ class CredentialsTest {
 	@DisplayName("<init> | throws when clientSecret is null")
 	void constructorThrowsWhenClientSecretIsNull() {
 		final URI tokenUrl = URI.create("https://issuer.example/oauth2/token");
-		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new Credentials("client-id", null, tokenUrl, null));
+		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new Credentials("client-id", null, tokenUrl, null, OAuthDomain.IT_NRW));
 		assertEquals("clientSecret", ex.getMessage());
 	}
 
 	@Test
-	@DisplayName("<init> | throws when tokenUrl is null")
+	@DisplayName("<init> | throws when authServerUrl is null")
 	void constructorThrowsWhenTokenUrlIsNull() {
-		final NullPointerException ex = assertThrows(NullPointerException.class, () -> new Credentials("client-id", "client-secret", null, null));
-		assertEquals("tokenUrl", ex.getMessage());
+		final NullPointerException ex =
+				assertThrows(NullPointerException.class, () -> new Credentials("client-id", "client-secret", null, null, OAuthDomain.IT_NRW));
+		assertEquals("authServerUrl", ex.getMessage());
 	}
 }

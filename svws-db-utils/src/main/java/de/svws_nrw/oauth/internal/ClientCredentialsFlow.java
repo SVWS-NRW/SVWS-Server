@@ -56,7 +56,7 @@ public final class ClientCredentialsFlow implements OAuthFlow {
 	@Override
 	public AccessToken acquire(final Credentials creds, final OAuthScope scope) {
 		final HttpRequest request = HttpRequest.newBuilder()
-				.uri(creds.tokenUrl())
+				.uri(creds.authServerUrl())
 				.timeout(REQUEST_TIMEOUT_SEC)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
 				.header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ public final class ClientCredentialsFlow implements OAuthFlow {
 			return handleResponse(response);
 		} catch (final IOException | InterruptedException e) {
 			Thread.currentThread().interrupt();
-			throw new TokenRequestException("token request failed: " + creds.tokenUrl(), e);
+			throw new TokenRequestException("token request failed: " + creds.authServerUrl(), e);
 		}
 	}
 
@@ -84,7 +84,7 @@ public final class ClientCredentialsFlow implements OAuthFlow {
 	private static String resolveScope(final Credentials creds, final OAuthScope scope) {
 		return Optional.ofNullable(scope)
 				.map(OAuthScope::text)
-				.orElse(creds.defaultScope());
+				.orElse(creds.requestedScope());
 	}
 
 	private static String buildBasicAuthHeader(final Credentials creds) {
