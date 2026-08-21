@@ -29,13 +29,35 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 
 	private parse(json: string): GostKlausurvorgabe[] {
 		const arr = JSON.parse(json);
-		return arr.map((e: unknown) =>
-			GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(e))
-		);
+		if (!Array.isArray(arr)) {
+			return [];
+		}
+		const result: GostKlausurvorgabe[] = [];
+		for (const e of arr) {
+			if ((typeof e !== "object") || (e === null)) {
+				continue;
+			}
+			const obj = e as Partial<GostKlausurvorgabe>;
+			if ((obj.halbjahr === undefined) || (obj.quartal === undefined) || (obj.idFach === undefined) || (obj.kursart === undefined)) {
+				continue;
+			}
+			const vorgabe = new GostKlausurvorgabe();
+			vorgabe.halbjahr = obj.halbjahr;
+			vorgabe.quartal = obj.quartal;
+			vorgabe.idFach = obj.idFach;
+			vorgabe.kursart = obj.kursart;
+			result.push(vorgabe);
+		}
+		return result;
 	}
 
 	private stringify(list: GostKlausurvorgabe[]): string {
-		return "[" + list.map(v => GostKlausurvorgabe.transpilerToJSON(v)).join(",") + "]";
+		return JSON.stringify(list.map(v => ({
+			halbjahr: v.halbjahr,
+			quartal: v.quartal,
+			idFach: v.idFach,
+			kursart: v.kursart,
+		})));
 	}
 
 	public getAll(): List<GostKlausurvorgabe> {
