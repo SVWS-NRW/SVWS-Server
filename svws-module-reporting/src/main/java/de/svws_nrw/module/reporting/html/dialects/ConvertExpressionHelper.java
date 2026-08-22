@@ -6,6 +6,10 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.encoding.Base32;
 import de.svws_nrw.core.utils.encoding.Base45;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemmelder;
 import de.svws_nrw.module.reporting.utils.ReportingBarcodeUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,23 +29,23 @@ import java.util.Date;
 // toDateObject(...) ist ein bewusster Adapter an die Thymeleaf-Template-API, die für ihre Datums-Hilfsmethoden ein Date erwartet.
 public class ConvertExpressionHelper {
 
-	/** Der Logger des Reports, für den die Vorlage gerade gerendert wird. Er ist {@code null}, wenn der Context keinen Logger mitführt. */
-	private final Logger logger;
+	/** Die Meldefassade des Reports, für den die Vorlage gerade gerendert wird. Sie ist {@code null}, wenn der Context keine mitführt. */
+	private final ReportingProblemmelder melder;
 
 	/**
-	 * Erstellt einen neuen ConvertExpressionHelper ohne Logger. Hinweise auf Lücken in der Ausgabe erreichen dann nur den globalen Log.
+	 * Erstellt einen neuen ConvertExpressionHelper ohne Meldefassade. Hinweise auf Lücken in der Ausgabe erreichen dann nur den globalen Log.
 	 */
 	public ConvertExpressionHelper() {
 		this(null);
 	}
 
 	/**
-	 * Erstellt einen neuen ConvertExpressionHelper mit dem Logger des laufenden Reports.
+	 * Erstellt einen neuen ConvertExpressionHelper mit der Meldefassade des laufenden Reports.
 	 *
-	 * @param logger Der Logger des Reports oder {@code null}, wenn der Context keinen mitführt.
+	 * @param melder Die Meldefassade des Reports oder {@code null}, wenn der Context keine mitführt.
 	 */
-	public ConvertExpressionHelper(final Logger logger) {
-		this.logger = logger;
+	public ConvertExpressionHelper(final ReportingProblemmelder melder) {
+		this.melder = melder;
 	}
 
 	/**
@@ -220,17 +224,19 @@ public class ConvertExpressionHelper {
 	}
 
 	/**
-	 * Protokolliert einen fehlgeschlagenen Code und gibt an seiner Stelle eine leere, transparente Fläche zurück.
+	 * Meldet einen fehlgeschlagenen Code als Ausgabeproblem und gibt an seiner Stelle eine leere, transparente Fläche zurück.
 	 * <p>Ein Code, der sich aus den Daten nicht erzeugen lässt — etwa weil der Inhalt Zeichen enthält, die der Zeichensatz des Codes nicht kennt —,
-	 * darf die Druckausgabe nicht abbrechen. Nach den Reporting-Konventionen wird ein solcher Wert als saubere Lücke dargestellt; der Log hält fest,
-	 * warum die Fläche leer geblieben ist.</p>
+	 * darf die Druckausgabe nicht abbrechen. Nach den Reporting-Konventionen wird ein solcher Wert als saubere Lücke dargestellt; die Meldefassade hält
+	 * fest, warum die Fläche leer geblieben ist, und der Befund erreicht den Aufrufer über den Hinweisvertrag.</p>
+	 * <p>Alle fehlgeschlagenen Codes eines Aufrufs teilen sich einen Schlüssel und zählen damit als ein Hinweis: Welcher Datensatz betroffen ist, weiß
+	 * die Vorlage, nicht diese Methode.</p>
 	 * <p>Die Fläche übernimmt die Maße, die der erfolgreiche Code hätte — einschließlich der Standardwerte, die je Codeart verschieden sind. Nur so
 	 * bleibt das Layout der Vorlage unverändert.</p>
 	 * <p>Dies gilt für die Verwendung in Vorlagen. Aufrufer, für die ein Code fachlich tragend ist — etwa die Signatur-QR-Codes der
 	 * Schulbescheinigung —, rufen {@link ReportingBarcodeUtils} unmittelbar auf und werten den Fehler selbst aus, statt ein Dokument mit leerer
 	 * Fläche entstehen zu lassen.</p>
 	 *
-	 * @param art             Die Bezeichnung des Codes für den Logeintrag.
+	 * @param art             Die Bezeichnung des Codes für die Meldung.
 	 * @param inhalt          Der Inhalt, der nicht dargestellt werden konnte.
 	 * @param breiteInMM      Die gewünschte Breite in Millimetern.
 	 * @param hoeheInMM       Die gewünschte Höhe in Millimetern.
@@ -241,9 +247,14 @@ public class ConvertExpressionHelper {
 	 */
 	private String leereFlaeche(final String art, final String inhalt, final double breiteInMM, final double hoeheInMM, final double standardHoeheMM,
 			final Exception e) {
-		final String meldung = "WARNUNG: Der %s zum Inhalt '%s' konnte nicht erzeugt werden und bleibt leer: %s".formatted(art, inhalt, e.getMessage());
-		// Ohne Logger im Context - etwa beim Erzeugen eines Dateinamens - bleibt nur der globale Log.
-		((logger != null) ? logger : Logger.global()).logLn(LogLevel.WARNING, meldung);
+		final String meldung = "Der %s zum Inhalt '%s' konnte nicht erzeugt werden und bleibt leer.".formatted(art, inhalt);
+		if (melder != null) {
+			melder.melde(ReportingProblemursache.NICHT_DARSTELLBAR, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+					ReportingProblemSchluessel.fuer(ReportingBarcodeUtils.class), meldung, e);
+		} else {
+			// Ohne Meldefassade - etwa beim Erzeugen eines Dateinamens - bleibt nur der globale Log.
+			Logger.global().logLn(LogLevel.WARNING, "WARNUNG: %s %s".formatted(meldung, e.getMessage()));
+		}
 		return ReportingBarcodeUtils.leeresTransparentesSVG(
 				(breiteInMM <= 0) ? ReportingBarcodeUtils.STANDARD_BREITE_MM : breiteInMM,
 				(hoeheInMM <= 0) ? standardHoeheMM : hoeheInMM);

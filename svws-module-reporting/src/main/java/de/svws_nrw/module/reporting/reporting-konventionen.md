@@ -4,8 +4,9 @@ Verbindliche Regeln für alle Änderungen im Modul `svws-module-reporting`. Dies
 **normative Referenz** — kompakt genug, um sie bei jeder Änderung vollständig zu lesen.
 Die *Beschreibung* der Architektur (Schichten, Klassen, Datenfluss) steht in
 [`reporting-architektur.md`](reporting-architektur.md); die Anleitung für Vorlagen-Autoren in
-[`reporting-template-erstellung.md`](reporting-template-erstellung.md). Bei Konflikt gilt diese
-Datei; Regel-Änderungen werden hier gepflegt.
+[`reporting-template-erstellung.md`](reporting-template-erstellung.md), die Anleitung zu Sortierung
+und Filterung in [`reporting-sortierung-und-filterung.md`](reporting-sortierung-und-filterung.md).
+Bei Konflikt gilt diese Datei; Regel-Änderungen werden hier gepflegt.
 
 ---
 
@@ -73,9 +74,10 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
   einen des Servers. `404` gilt allein der adressierten Hauptressource des Reports; welche das
   ist, bestimmt ihre fachliche Rolle und nicht das technische Parameterfeld. In der
   GOSt-Laufbahnplanung ist der Abiturjahrgang die Hauptressource, obwohl er in `idsHauptdaten`
-  transportiert wird; in der GOSt-Klausurplanung ist derselbe Abiturjahrgang ein optionaler
-  Filter. Ein Listenreport über Schüler, Klassen oder Lehrkräfte hat kein einzelnes
-  Hauptdatenobjekt — seine IDs sind die Nutzlast.
+  transportiert wird; in der GOSt-Klausurplanung sind die Stufen aus Abiturjahrgang und Halbjahr
+  Nutzlast wie die IDs eines Listenreports — ein nicht vorhandener Abiturjahrgang wird dort
+  ausgelassen und gemeldet. Ein Listenreport über Schüler, Klassen oder Lehrkräfte hat kein
+  einzelnes Hauptdatenobjekt — seine IDs sind die Nutzlast.
 - **G-2 — Fehlende untergeordnete Daten führen zu einer unvollständigen Ausgabe.** Untergeordnete
   Daten, die fachlich nicht vorhanden oder datensatzbezogen nicht ladbar sind, werden auf genau
   der betroffenen Ebene ausgelassen: Fehlt ein Schüler, entfällt dieser Schüler; fehlen Teildaten
@@ -89,10 +91,11 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
 - **G-3 — Das Hauptdatenobjekt ist die Ausnahme.** Existiert das fachlich adressierte
   Hauptdatenobjekt nicht, endet die Ausgabe mit `404`; existiert es, ist aber technisch nicht
   ladbar, mit `500`. Ein leeres Dokument wäre in beiden Fällen irreführend.
-- **G-4 — Nicht darstellbare Werte werden sichtbar ersetzt.** Ein vorhandener Wert, der sich
-  nicht darstellen lässt, bricht die Ausgabe nicht ab; an seiner Stelle entsteht ein erkennbares
-  Fehlerbild in den Standardmaßen der Ausgabeart (ausgestaltet in der Regel „Nicht darstellbare
-  Werte“, Abschnitt 4.2).
+- **G-4 — Nicht darstellbare Werte werden maßgleich ersetzt.** Ein vorhandener Wert, der sich
+  nicht darstellen lässt, bricht die Ausgabe nicht ab; an seiner Stelle entsteht eine
+  Ersatzdarstellung in den Standardmaßen der Ausgabeart, damit der Fehlerfall das Layout nicht
+  verschiebt. Ob sie als Fehlerbild erkennbar ist oder als leere Fläche erscheint, entscheidet die
+  Vorlage (ausgestaltet in der Regel „Nicht darstellbare Werte“, Abschnitt 4.2).
 - **G-5 — Der Ladezustand wird explizit geführt.** Ein Datenzugriff unterscheidet
   `Geladen(wert)`, `NichtVorhanden` und `Fehlgeschlagen(ursache, exception)` — im Code
   `ReportingLadezustand`. Eine leere Collection ist ein geladener Wert; `Geladen(null)` ist
@@ -113,10 +116,13 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
 ### 4.2 Melde- und Logging-Regeln
 
 - Logging nur über `reportingContext.logger()` / `reportingContext.log()`. **Thymeleaf-Dialekte**
-  sind einmalig an der geteilten `TemplateEngine` registriert und können keinen Logger als Feld
-  halten; sie erhalten ihn über die Context-Variable `ReportBuilderUtils.VARIABLE_LOGGER`, die der
-  `ReportRendererHtml` vor dem Rendern setzt. `Logger.global()` bleibt nur der Rückfall, wenn der
-  Context keinen Logger führt — etwa beim Erzeugen eines Dateinamens.
+  sind einmalig an der geteilten `TemplateEngine` registriert und können die Meldefassade nicht als
+  Feld halten; sie erhalten sie über die Context-Variable `ReportBuilderUtils.VARIABLE_PROBLEMMELDER`,
+  die der `ReportRendererHtml` vor dem Rendern aus den Daten-Contexts setzt, und melden darüber wie
+  jede andere Stelle. Abgelegt wird bewusst nur der schmale `ReportingProblemmelder` und nicht der
+  Reporting-Context: Der wäre per OGNL für jede Vorlage erreichbar und öffnete deren Zugriff auf die
+  Repositories. `Logger.global()` bleibt der Rückfall, wenn der Context keine Meldefassade führt —
+  etwa beim Erzeugen eines Dateinamens.
 - Fehler als `ApiOperationException` (ist `RuntimeException`). In Caller-Lambdas der
   `ReportingRepositoryUtils` **kein eigenes try/catch** — das würde den pro-ID-Fallback
   unterbinden.
@@ -135,15 +141,19 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
 - **Ein Ladefehler wird dort bewertet, wo die Daten gebraucht werden.** Repositories, die der
   `ReportingContext` für jeden Report aufbaut, protokollieren einen Ladefehler nicht bei der
   Initialisierung, sondern halten ihn als `ApiOperationException` fest — ein `boolean` verlöre die
-  Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptdatum, folgen
+  Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptobjekt, folgen
   `ERROR` und Wurf; sind sie Beiwerk, folgt höchstens eine `WARNING` je Repository-Instanz und die
   Ausgabe läuft ohne diese Daten weiter (Muster: `ReportingRepositoryStundenplan`).
-- **Der Hinweis-Header entsteht nur bei angebundenem Datenaufbau.** Eine erfolgreiche HTML-, PDF-
-  oder ZIP-Antwort trägt `SVWS-Reporting-Hinweise` ausschließlich dann, wenn die
-  `HtmlContextInitializerRegistry` den Datenaufbau als an die Diagnose angebunden führt.
-  Andernfalls **fehlt der Header ganz**: Ein `gesamt=0` an einem Pfad, dessen
-  Datenzugriffe noch nicht melden, bescheinigte eine Vollständigkeit, die niemand geprüft hat. Für
-  den Client bedeutet ein fehlender Header „unbekannt“, nie „nachweislich vollständig“. Gesetzt wird
+- **Der Hinweis-Header entsteht bei jedem Erfolg — aus dem gemeldeten Ausgabeumfang.** Eine
+  erfolgreiche HTML-, PDF- oder ZIP-Antwort trägt `SVWS-Reporting-Hinweise`; zum Stand seiner
+  Auslieferung siehe 4.4. Voraussetzung ist der
+  am `ReportingContext` gemeldete Ausgabeumfang. Jeder Datenaufbau meldet ihn genau einmal — dort,
+  wo die Zählwerte entstehen — und benennt seine Meldestelle über
+  `HtmlContextInitializer.meldetAusgabeumfangImContextAufbau()`; ein neuer Datenaufbau wird erst
+  registriert, wenn seine Hinweis- und Zähllogik geprüft ist. Fehlt die Meldung, bricht die
+  `HtmlFactory` nach dem Context-Aufbau mit einem Serverfehler ab: Ein Header, dessen Zählwerte
+  niemand ermittelt hat, bescheinigte eine geprüfte Vollständigkeit, die es nicht gibt. Für den
+  Client bedeutet ein fehlender Header „unbekannt“, nie „nachweislich vollständig“. Gesetzt wird
   er an genau einer Stelle (`ReportingHinweiseHeader`); ein zweiter Ort für dieselbe Entscheidung
   ließe die Ausgabewege auseinanderlaufen.
 - **Ein Ladefehler von Teildaten wird gemeldet und nicht selbst protokolliert.** Scheitert das Laden
@@ -152,48 +162,51 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
   Teildaten. Das gilt für jeden Fehler außer einem Verbindungsabbruch; zu dessen Erkennung siehe
   weiter unten. Der Befund läuft über `reportingContext.meldeAusgabeproblem(…)` mit der Auswirkung
   `TEILDATEN_FEHLEN` und in aller Regel der Ursache `DATENSATZBEZOGENER_LADEFEHLER`; die Fassade
-  protokolliert ihn dann dedupliziert und auf dem Level, das die Ausgabe fortsetzen lässt. Die Repositories melden
-  einheitlich über `ReportingRepositoryUtils.meldeTeildatenLadefehler(…)`, damit die Wortwahl im Log
-  nicht je Repository abweicht. Ein eigener `logException`-Aufruf daneben führte denselben Fehler
-  zweimal im Log, und mit `ERROR` höbe er den eigenen Rückfallwert wieder auf. Der Schlüssel führt die Objektart der ausgelassenen Teildaten und die ID
-  des Datensatzes, zu dem sie gehören: So zählt jede Art von Teildaten je Datensatz genau einmal.
-  Betrifft der Zugriff keinen einzelnen Datensatz — etwa die Leistungsdaten aller Lernabschnitte
-  eines Schuljahresabschnitts —, bleibt der Schlüssel ohne ID und zählt einmal je Aufruf.
-  Ein solcher Pfad fängt `Exception` und nicht einen einzelnen Fehlertyp: Sonst hängt das Auslassen
-  davon ab, welche Art Fehler der Zugriff gerade erzeugt.
-  **Der try-Block umfasst dabei nur den Datenzugriff.** Cache-Einträge und der Aufbau von
+  protokolliert ihn dann dedupliziert und auf dem Level, das die Ausgabe fortsetzen lässt. Die
+  Repositories melden einheitlich über `ReportingRepositoryUtils.meldeTeildatenLadefehler(…)`, damit
+  die Wortwahl im Log nicht je Repository abweicht. Ein eigener `logException`-Aufruf daneben führte
+  denselben Fehler zweimal im Log, und mit `ERROR` höbe er den eigenen Rückfallwert wieder auf.
+- **Der Schlüssel bestimmt, was einmal zählt.** Er führt die Objektart der ausgelassenen Teildaten
+  und die ID des Datensatzes, zu dem sie gehören: So zählt jede Art von Teildaten je Datensatz genau
+  einmal. Betrifft der Zugriff keinen einzelnen Datensatz — etwa die Leistungsdaten aller
+  Lernabschnitte eines Schuljahresabschnitts —, bleibt der Schlüssel ohne ID und zählt einmal je
+  Aufruf.
+- **Ein tolerierender Pfad fängt `Exception`** und nicht einen einzelnen Fehlertyp: Sonst hinge das
+  Auslassen davon ab, welche Art Fehler der Zugriff gerade erzeugt.
+- **Der try-Block umfasst nur den Datenzugriff.** Cache-Einträge und der Aufbau von
   Reporting-Objekten aus den geladenen Daten stehen außerhalb: Ein Fehler dort ist ein
   Programmierfehler, kein Datenfehler, und beendet die Ausgabe. Im generischen Bulk-/Einzel-Fallback
   der `ReportingRepositoryUtils` gehört die Aufbereitung des einzelnen Datensatzes im Loader-Lambda
   dagegen zum Laden genau dieses Datensatzes: Scheitert sie an dessen Daten, isoliert der
   Einzel-Fallback den Datensatz — genau das ist ein datensatzbezogener Fehler.
-  Die Ursache bestimmt die Meldestelle nicht selbst: Sie übergibt den Fehler, und
-  `ReportingProblemursache.fuerLadefehler(…)` klassifiziert ihn als einzige Stelle des Moduls.
-  Ein Verbindungsabbruch in der Ursachenkette ergibt `INFRASTRUKTURSTOERUNG`, und die Fassade wirft
-  dann einen Serverfehler, statt den Befund zu sammeln. Erkannt wird er an
+- **Die Ursache bestimmt die Meldestelle nicht selbst.** Sie übergibt den Fehler, und
+  `ReportingProblemursache.fuerLadefehler(…)` klassifiziert ihn als einzige Stelle des Moduls. Ein
+  Verbindungsabbruch in der Ursachenkette ergibt `INFRASTRUKTURSTOERUNG`, und die Fassade wirft dann
+  einen Serverfehler, statt den Befund zu sammeln. Erkannt wird er an
   `SQLNonTransientConnectionException`, `SQLTransientConnectionException` und `ConnectException`.
   Diese drei genügen, weil der Server auf MariaDB läuft und dessen Treiber jeden Verbindungsfehler
   darauf abbildet; die übrigen DBMS erscheinen allein in Sicherungen und Migrationen. Jeder andere
   Fehler bleibt `DATENSATZBEZOGENER_LADEFEHLER`: Ein unsicherer Fall wird hingenommen, statt eine
   ganze Ausgabe an einem einzelnen Datensatz scheitern zu lassen.
-  *Vollständig umgestellt sind `ReportingRepositorySchueler` (Pilot), `ReportingRepositoryLehrer`,
-  `ReportingRepositoryLerngruppen` und `ReportingRepositoryStundenplan`; bei den drei
-  erstgenannten melden auch die `xxx(List<Long>)`-Listen-Zugriffe eine ID, deren Laden endgültig
-  scheitert. Daneben melden die K-1-Rückfallstellen in `ReportingRepositoryKataloge` über dieselbe
-  Fassade; die übrigen GOSt-Zugriffe folgen.*
 - **Nicht darstellbare Werte sind ein gemeldetes Ausgabeproblem.** Ein vorhandener Wert, der sich
   nicht ausgeben lässt — etwa ein Barcode-Inhalt mit Zeichen, die der Zeichensatz des Codes nicht
-  kennt, oder eine Schulbescheinigung, deren Signierung scheitert —, bricht die Ausgabe nicht ab.
+  kennt, oder ein Inhalt jenseits der Längengrenze des Codes —, bricht die Ausgabe nicht ab.
   Die verantwortliche Erzeugungsstelle meldet über die Fassade `NICHT_DARSTELLBAR` mit der
   Auswirkung `TEILDATEN_FEHLEN` samt auslösender Exception; die übrige Ausgabe entsteht. Wie die
   Vorlage die betroffene Stelle kennzeichnet, ist ihre Darstellungsentscheidung — ein Fehlertext
   oder eine leere Fläche in den **Standardmaßen der jeweiligen Ausgabeart**, damit der Fehlerfall
-  das Layout nicht gegenüber dem Erfolgsfall verschiebt. Eine Ausnahme für fachlich tragende
-  Elemente gibt es nicht mehr: Auch die Signatur-QR-Codes der Schulbescheinigung werfen nicht —
-  die Vorlage zeigt an der Stelle des Codes den Fehlertext, und das Dokument sieht damit nicht
-  signiert aus (Muster: `SchulbescheinigungQrFactory`).
-  *Umgestellt ist die Schulbescheinigung; die Barcode-Hilfsmethoden der Vorlagen protokollieren
-  noch selbst mit `WARNING` und folgen.*
+  das Layout nicht gegenüber dem Erfolgsfall verschiebt. Für die Codes des `#convert`-Dialekts
+  gilt: Alle nicht erzeugbaren Codes eines Aufrufs teilen sich einen Schlüssel und zählen zusammen
+  als ein Hinweis, denn welcher Datensatz betroffen ist, weiß allein die Vorlage.
+- **Die signierte Schulbescheinigung unterscheidet ihre Fehlerquellen** (Muster:
+  `SchulbescheinigungQrFactory`). Nicht darstellbar ist dort allein das Rendern der QR-Codes; es
+  wird als `NICHT_DARSTELLBAR` gemeldet. Ein Signierfehler, der nur einzelne Schüler betrifft, ist
+  dagegen ein `DATENSATZBEZOGENER_LADEFEHLER`: Die Signatur ist ein fehlender Wert, kein
+  Darstellungsproblem. Beides bricht nicht ab — die Vorlage zeigt je Schüler den Zustand
+  `DATENFEHLER` oder `SIGNIERFEHLER` als Fehlerbild, und das Dokument sieht damit nicht signiert
+  aus. Der Dienst selbst bricht dagegen ab: ein erkennbarer Anmeldefehler mit `400`, eine fehlende
+  Berechtigung mit `403`, ein Ausfall oder ein Stapel ohne eine einzige verwertbare Signatur mit
+  `500` (siehe die Fehlercode-Matrix in 4.3).
 
 ### 4.3 Fehlercode-Matrix (HTTP-Status der `ApiOperationException`)
 
@@ -250,6 +263,54 @@ Ergänzende Regeln:
   Für tolerierte Ausgabeprobleme protokolliert der Problemsammler den Block aus Fehlertyp,
   Ursachenkette und Stacktrace **einmal je Fehler-Instanz** — reist dieselbe Instanz mit einem
   weiteren Befund, erhält dessen Meldung nur einen Verweis auf den ersten Eintrag.
+
+### 4.4 Öffentlicher Hinweisvertrag
+
+Was intern gemeldet wird (4.2), erreicht den Aufrufer über den Response-Header
+`SVWS-Reporting-Hinweise` und über die Beilage `HINWEISE.txt` im ZIP-Archiv. Beides ist Vertrag:
+
+```http
+SVWS-Reporting-Hinweise: v=1, angefordert=120, ausgegeben=117, hinweise=3, datensaetze=3
+```
+
+- **Den Header trägt jede erfolgreiche Dokumentantwort** — HTML, einzelne PDF-Datei und ZIP-Archiv.
+  Die JSON-Startantwort des E-Mail-Versands trägt ihn nicht; sie liefert kein Dokument. Eine
+  Fehlerantwort trägt ihn ebenfalls nie.
+- **Gesetzt wird er an genau einer Stelle** (`ReportingHinweiseHeader`). Ein zweiter Ort für
+  dieselbe Entscheidung ließe die Ausgabewege auseinanderlaufen.
+- **Ein fehlender Header bedeutet „unbekannt"**, niemals „nachweislich vollständig". Der Download
+  läuft ohne Meldung weiter.
+- **Pflichtfelder sind `v`, `angefordert`, `ausgegeben` und `hinweise`**, alle als nicht negative
+  ganze Zahlen. Zugesagt ist `ausgegeben <= angefordert`. Die Kategorien `datensaetze`, `angaben`
+  und `darstellung` sind optional, erscheinen nur mit einem Wert größer als null, und ihre Summe
+  ergibt stets `hinweise`. Die Reihenfolge der Felder ist fest, jedes Feld kommt höchstens einmal
+  vor.
+- **`hinweise` ist eine Diagnosegröße, keine Mengenangabe.** Die Zahl ist weder die Zahl fehlender
+  Datensätze noch die fehlender Dokumente.
+- **Die Differenz aus `angefordert` und `ausgegeben` ist nicht zwingend durch Hinweise erklärbar.**
+  Ein Benutzerfilter verkleinert die Ausgabe, ohne ein Ausgabeproblem zu sein (siehe 4.2). Der
+  Vertrag verspricht keine Arithmetik zwischen den Feldern.
+- **Jeder Datenaufbau legt seine Zähleinheit fest und sichert sie mit einem Test ab.** Was eine
+  Einheit ist — eine angeforderte ID, ein Schüler, ein Termin, ein Fach —, bestimmt der Aufbau; die
+  Zahl der angeforderten Einheiten stammt dabei aus einer Quelle **vor** Filterung und Ladefehlern.
+  Ohne gemeldeten Ausgabeumfang bricht der Aufbau mit `500` ab: Ein Header, dessen Zählwerte
+  niemand ermittelt hat, bescheinigte eine geprüfte Vollständigkeit, die es nicht gibt.
+- **Nach außen gelangen ausschließlich Zählwerte, Kategorie und Anzahl.** Weder IDs, Namen und
+  Freitexte noch Fehlermeldungen oder Stacktraces verlassen den Server — Header und Beilage
+  begleiten Dokumente, die weitergegeben und archiviert werden.
+- **Erweiterungen sind nur additiv.** Ein Feld oder eine Kategorie zu entfernen, umzubenennen oder
+  anders zu deuten erfordert eine neue Vertragsversion. Die Schlüssel sind Vertrag, die Namen der
+  Enum-Konstanten sind es nicht. Unbekannte Einträge und Versionen ignoriert ein Verbraucher.
+- **Die `HINWEISE.txt` entsteht im ZIP-Archiv**, sobald es etwas zu erklären gibt — bei mindestens
+  einem Hinweis oder bei einer zulässig leeren Ausgabe. Sie ist der einzige Weg, auf dem die
+  Hinweise den Anwender ohne Clientanpassung erreichen; besonders ein Archiv ohne PDF-Datei braucht
+  sie. Sie nennt die Zählwerte, Anzahlen und lesbare Kategorien und unterliegt denselben
+  Datenschutzgrenzen wie der Header.
+
+**Auslieferungszustand (2026-08-20):** Der Header wird derzeit nur im Server-Modus `DEV` gesetzt;
+seine Freigabe wartet auf die Entscheidung über die Auswertung im Webclient. Ermittlung, Prüfung
+und interne Meldung laufen in jedem Modus. Das ist ein Zustand, keine Vertragsregel — er endet mit
+der Freigabe, der Vertrag nicht.
 
 ## 5. Templates & OGNL-Grenzen
 

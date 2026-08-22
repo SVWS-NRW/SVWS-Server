@@ -181,4 +181,53 @@ class TestReportRendererHtml {
 		assertTrue(fehlermeldungenImLog().isEmpty(), "Fehlende Daten sind kein Fehlerfall.");
 	}
 
+	// ##### Statustragende Ursachen aus den Datenzugriffen der Vorlage #####
+
+	/** Die Meldung des klassifizierten Fehlers, der beim Datenzugriff der Vorlage geworfen wird. */
+	private static final String MELDUNG_KLASSIFIZIERT = "FEHLER: Die Anmeldung am Signierdienst ist fehlgeschlagen.";
+
+	/**
+	 * Ein Wert, dessen Zugriff mit einer statustragenden Exception scheitert - wie ein Datenzugriff der Vorlage, etwa der Abbruch des Signier-Batches.
+	 */
+	public static final class WerfenderWert {
+		/**
+		 * Wirft beim Zugriff einen klassifizierten Client-Fehler.
+		 *
+		 * @return Kehrt nie zurück.
+		 */
+		public String wert() {
+			throw new ApiOperationException(Status.BAD_REQUEST, MELDUNG_KLASSIFIZIERT);
+		}
+	}
+
+	/**
+	 * Ein minimaler Context für beliebige Objekte, damit die Vorlage auf deren Methoden zugreifen kann.
+	 */
+	private static final class ObjektContext extends HtmlContext<Object> {
+		/**
+		 * Erzeugt den Context mit den übergebenen Daten.
+		 *
+		 * @param variablenname Der Name der Thymeleaf-Variablen.
+		 * @param daten         Die Daten des Contexts.
+		 */
+		private ObjektContext(final String variablenname, final List<Object> daten) {
+			super(null);
+			erzeugeContext(variablenname, daten);
+		}
+	}
+
+	@Test
+	void testEineStatustragendeUrsacheAusDemDatenzugriffBehaeltStatusUndMeldung() {
+		// Thymeleaf wickelt den Wurf eines Getters in eigene Exceptions; die Statuszuordnung entpackt die Ursachenkette. Ohne das käme etwa der
+		// klassifizierte Anmeldefehler des Signierdienstes als undifferenzierter Serverfehler am API-Rand an.
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final List<HtmlContext<?>> contexts = List.of(new ObjektContext("Werfer", List.of(new WerfenderWert())));
+		final String template = "<html><body><span th:text=\"${Werfer[0].wert()}\">x</span></body></html>";
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml(template, contexts));
+
+		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
+		assertEquals(MELDUNG_KLASSIFIZIERT, aoe.getBody(), "Die Meldung des klassifizierten Fehlers bleibt erhalten.");
+	}
+
 }

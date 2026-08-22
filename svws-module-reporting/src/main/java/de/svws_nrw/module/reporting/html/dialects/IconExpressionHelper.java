@@ -95,6 +95,20 @@ public class IconExpressionHelper {
 		return result.isBlank() ? "" : (escapeXml(fuehrenderText) + result + escapeXml(folgenderText));
 	}
 
+
+	/**
+	 * Liefert die Data-URI des Icons in der angegebenen Farbe für ein eigenes {@code <img>}-Element der Vorlage - etwa wenn dessen Größe in Millimetern
+	 * gesetzt wird und das feste Pixelmaß von {@link #get(String, int, String)} deshalb nicht passt. Das SVG skaliert verlustfrei.
+	 *
+	 * @param name  Der Icon-Name (z. B. {@code "error_warning"}).
+	 * @param farbe Die Füllfarbe des Icons (CSS-Farbwert).
+	 *
+	 * @return Der Data-URI String des SVGs oder ein leerer String bei unbekanntem Icon.
+	 */
+	public String getSrc(final String name, final String farbe) {
+		return ReportingIcon.get(name, ReportingIcon.STANDARD_GROESSE, farbe);
+	}
+
 	/**
 	 * Maskiert die für XML/XHTML kritischen Zeichen, damit ein Text gefahrlos in das per {@code th:utext} eingebundene
 	 * Fragment übernommen werden kann.

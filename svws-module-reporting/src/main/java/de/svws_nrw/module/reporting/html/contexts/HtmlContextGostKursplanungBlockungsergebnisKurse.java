@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
@@ -68,5 +69,18 @@ public final class HtmlContextGostKursplanungBlockungsergebnisKurse extends Html
 	@Override
 	public List<Long> getIds() {
 		return this.blockungsergebnis.kurse().stream().map(ReportingGostKursplanungKurs::id).distinct().toList();
+	}
+
+	/**
+	 * Die Zähleinheit dieser Sichtweise sind die Kurse des Blockungsergebnisses: die vorhandenen gegen die nach Filterung ausgegebenen.
+	 *
+	 * @param ergebnis Das aufgebaute Blockungsergebnis dieses Reports.
+	 *
+	 * @return Der Ausgabeumfang dieser Sichtweise.
+	 */
+	@Override
+	protected ReportingAusgabeumfang ermittleAusgabeumfang(final ReportingGostKursplanungBlockungsergebnis ergebnis) {
+		final int ausgegeben = ergebnis.kurse().size();
+		return new ReportingAusgabeumfang(ergebnis.anzahlKurseVorhanden(), ausgegeben, ausgegeben == 0);
 	}
 }

@@ -57,6 +57,9 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 				abiturdaten.pruefungBestanden);
 		this.reportingContext = reportingContext;
 
+		// Der Abschnitt 2 des Abiturschuljahres kann an der Schule fehlen - etwa bei einem Jahrgang, der sein Abitur erst ablegt. Er bleibt dann null: Ein
+		// virtueller Abschnitt hätte hier keine Funktion, denn die Vorlagen nutzen den Abschnitt allein für die Lernabschnitts-Auflösung des Schülers, und
+		// die geht mit null um.
 		super.abiturSchuljahresabschnitt = this.reportingContext.repositorySchule().schuljahresabschnitt(super.abiturSchuljahr, 2);
 		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 

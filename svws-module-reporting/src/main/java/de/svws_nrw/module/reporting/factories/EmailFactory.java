@@ -77,7 +77,7 @@ public final class EmailFactory {
 
 			// Ohne Datensatz gibt es nichts zu versenden. Die Prüfung steht nach der Parameterprüfung - eine fehlerhafte Anfrage bleibt eine fehlerhafte
 			// Anfrage - und vor jedem weiteren Schritt: Weder Absenderadresse noch SMTP-Sitzung werden für einen Versand benötigt, der nicht stattfindet.
-			if (pdfFactory.bewusstLeer()) {
+			if (pdfFactory.leereAusgabeZulaessig()) {
 				return antwortOhneJob();
 			}
 
@@ -156,16 +156,17 @@ public final class EmailFactory {
 	 */
 	private ReportingParameterTypisiert pruefeParameter() throws ApiOperationException {
 		if ((this.reportingContext.reportingParameter() == null) || (this.reportingContext.reportingParameter().eMailDaten() == null)) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da die notwendigen Parameter und E-Mail-Daten nicht übergeben wurden.");
-			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
+			final String meldung =
+					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da die notwendigen Parameter und E-Mail-Daten nicht übergeben wurden.";
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
 		}
 		final ReportingParameterTypisiert parameter = this.reportingContext.reportingParameter();
 		if ((parameter.eMailDaten().betreff == null) || parameter.eMailDaten().betreff.isBlank()
 				|| (parameter.eMailDaten().text == null) || parameter.eMailDaten().text.isBlank()) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff oder Text für die E-Mail angegeben wurde.");
-			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
+			final String meldung = "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff oder Text für die E-Mail angegeben wurde.";
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
 		}
 
 		return parameter;
@@ -183,9 +184,10 @@ public final class EmailFactory {
 		final String emailAdresse = validatedEmailOrEmpty(reportingContext.benutzer().emailSmtpAdresse());
 
 		if (emailAdresse.isBlank()) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige"
-					+ " E-Mail-Adresse ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
-			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
+			final String meldung = "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse"
+					+ " ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.";
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
 		}
 		return emailAdresse;
 	}
@@ -385,9 +387,9 @@ public final class EmailFactory {
 				yield new ArrayList<>(lehrer);
 			}
 			default -> {
-				reportingContext.logger().logLn(LogLevel.ERROR, 4,
-						"### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt. Der Versand der E-Mails wurde abgebrochen.");
-				throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
+				final String meldung = "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt. Der Versand der E-Mails wurde abgebrochen.";
+				reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
+				throw new ApiOperationException(Status.BAD_REQUEST, meldung);
 			}
 		};
 	}

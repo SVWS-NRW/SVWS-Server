@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -22,35 +21,7 @@ class TestHtmlContextValidierungOhneContext {
 	/** Die Abiturjahrgänge, die in den Tests als vorhanden gelten. */
 	private static final List<Integer> VORHANDENE_ABITURJAHRGAENGE = List.of(2024, 2025);
 
-	@Test
-	void testEinVorhandenesAbiturjahrIstGueltig() {
-		assertDoesNotThrow(() -> HtmlContextValidierung.validiereAbiturjahr(2025, VORHANDENE_ABITURJAHRGAENGE));
-	}
 
-	@Test
-	void testEinNichtVorhandenesAbiturjahrIstUngueltig() {
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.validiereAbiturjahr(2026, VORHANDENE_ABITURJAHRGAENGE));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
-
-	@Test
-	void testEinAbiturjahrVor1900IstAuchDannUngueltigWennEsVorhandenIst() {
-		// Die untere Wertebereichsgrenze wird vor der Prüfung auf den Bestand ausgewertet und entscheidet damit allein.
-		final List<Integer> abiturjahrgaenge = List.of(1899);
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.validiereAbiturjahr(1899, abiturjahrgaenge));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-	}
-
-	@Test
-	void testOhneVorhandeneAbiturjahrgaengeIstJedesAbiturjahrUngueltig() {
-		final List<Integer> abiturjahrgaenge = List.of();
-		final ApiOperationException aoe =
-				assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.validiereAbiturjahr(2025, abiturjahrgaenge));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-	}
 
 	@Test
 	void testAlleGostHalbjahreSindGueltig() {
@@ -69,55 +40,7 @@ class TestHtmlContextValidierungOhneContext {
 		}
 	}
 
-	@Test
-	void testPaarweiseParameterZerlegenAbiturjahrUndHalbjahr() {
-		// 20253 steht für den Abiturjahrgang 2025 und das GOSt-Halbjahr mit der ID 3.
-		assertDoesNotThrow(() -> HtmlContextValidierung.validiereParameterPaarweise(List.of(20253L, 20240L), VORHANDENE_ABITURJAHRGAENGE));
-	}
 
-	@Test
-	void testPaarweiseParameterMeldenEinUngueltigesHalbjahr() {
-		final List<Long> parameterDaten = List.of(20256L);
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterPaarweise(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
-
-	@Test
-	void testPaarweiseParameterMeldenEinenUnbekanntenAbiturjahrgang() {
-		final List<Long> parameterDaten = List.of(20263L);
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterPaarweise(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
-
-	@Test
-	void testEineZuLangeKombinierteIdWirdAbgewiesen() {
-		// 202503 sieht nach "Abiturjahr 2025, Halbjahr 3" aus, wird von der Zerlegung aber zu Abiturjahr 20250 und Halbjahr 3. Da die Wertprüfung nur eine
-		// untere Grenze kennt, fängt allein der Abgleich mit den vorhandenen Abiturjahrgängen diesen Fall ab.
-		final List<Long> parameterDaten = List.of(202503L);
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterPaarweise(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
-
-	@Test
-	void testEineZuKurzeKombinierteIdWirdAbgewiesen() {
-		// Der Gegenfall: Ein Abiturjahr ohne angehängtes Halbjahr zerfällt zu Abiturjahr 202 und Halbjahr 5 und scheitert an der unteren Grenze.
-		final List<Long> parameterDaten = List.of(2025L);
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterPaarweise(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
-
-	@Test
-	void testPaarweiseParameterUeberspringenNullEintraege() {
-		assertDoesNotThrow(() -> HtmlContextValidierung.validiereParameterPaarweise(Arrays.asList(20253L, null), VORHANDENE_ABITURJAHRGAENGE));
-	}
 
 	@Test
 	void testEinzelneParameterAusAbiturjahrgangUndHalbjahrenSindGueltig() {
@@ -130,8 +53,20 @@ class TestHtmlContextValidierungOhneContext {
 	}
 
 	@Test
-	void testEinzelneParameterMeldenEinenUnbekanntenAbiturjahrgang() {
+	void testEinzelneParameterMeldenEinenUnbekanntenAbiturjahrgangAlsNotFound() {
+		// Der Abiturjahrgang ist in dieser Rolle die Hauptressource des Reports: Ein formal gültiges, aber nicht vorhandenes Jahr ist die Auskunft
+		// "gibt es nicht" und kein Parameterfehler.
 		final List<Long> parameterDaten = List.of(2026L, 0L);
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereParameterEinzeln(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
+		assertEquals(Status.NOT_FOUND, aoe.getStatus());
+		assertEquals("FEHLER: Der Abiturjahrgang 2026 ist nicht vorhanden.", aoe.getBody());
+	}
+
+	@Test
+	void testEinzelneParameterMeldenEineWertebereichsverletzungAlsBadRequest() {
+		// Die Gegenprobe zur 404-Antwort: Ein Wert unterhalb von 1900 ist kein adressierbarer Jahrgang, sondern ein unzulässiger Eingabewert.
+		final List<Long> parameterDaten = List.of(202L, 0L);
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
 				() -> HtmlContextValidierung.validiereParameterEinzeln(parameterDaten, VORHANDENE_ABITURJAHRGAENGE));
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());

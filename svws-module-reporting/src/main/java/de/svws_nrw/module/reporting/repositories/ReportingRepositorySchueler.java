@@ -30,6 +30,8 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
@@ -37,6 +39,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrFactory;
+import de.svws_nrw.module.reporting.signing.SchulbescheinigungSignaturzustand;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -91,7 +94,6 @@ public class ReportingRepositorySchueler {
 	private final Map<Long, Exception> ladefehlerSprachbelegungen = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerSchulbesuchsdaten = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerTelefonkontakte = new HashMap<>();
-	private final Map<Long, Exception> ladefehlerSchulbescheinigungQrDaten = new HashMap<>();
 
 	/**
 	 * Erstellt ein neues ReportingSchuelerRepository.
@@ -335,24 +337,30 @@ public class ReportingRepositorySchueler {
 	 *
 	 * @param idSchueler Die ID des Schülers.
 	 *
-	 * @return Die QR-Daten der Schulbescheinigung; im Fehlerfall ein Eintrag mit gesetzter Fehlermeldung (niemals {@code null}).
+	 * @return Die QR-Daten der Schulbescheinigung; im Fehlerfall ein Eintrag mit dem Zustand DATENFEHLER oder SIGNIERFEHLER (niemals {@code null}).
 	 */
 	public SchulbescheinigungQrDaten schulbescheinigungQrDaten(final long idSchueler) {
-		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
-				mapSchuelerStammdaten.keySet(),
-				mapSchulbescheinigungQrDaten,
-				idsSchueler -> new SchulbescheinigungQrFactory(this.reportingContext).erzeuge(idsSchueler),
-				"Schulbescheinigung-QR-Daten",
-				this.reportingContext.logger(),
-				ladefehlerSchulbescheinigungQrDaten);
-		// Eine gescheiterte Signatur- oder QR-Erzeugung meldet die Factory selbst an der Entstehungsstelle: Nur sie unterscheidet, ob die Ausgangsdaten fehlen
-		// oder die Erzeugung trotz geladener Daten scheitert. Eine Ableitung aus dem Ergebnis würde die Ursache aus dem Symptom raten. Hier verbleibt allein
-		// der gescheiterte Ladevorgang des Caches - etwa wenn ein inkonsistenter Zustand aus der Factory propagiert und der Lade-Fallback ihn festhält.
-		meldeTeildatenLadefehler(ladefehlerSchulbescheinigungQrDaten, idSchueler, SchulbescheinigungQrDaten.class, "Die QR-Codes der Schulbescheinigung");
+		// Bewusst nicht über das generische Ladeverfahren: Genau ein Batch-Aufruf für alle Schüler des Vorgangs. Ein Abbruch der Factory - Dienstausfall
+		// oder Anmeldefehler - propagiert unverändert; der generische Einzel-ID-Fallback würde ihn verschlucken und den ausgefallenen Dienst je Schüler
+		// erneut aufrufen.
+		if (mapSchulbescheinigungQrDaten.isEmpty()) {
+			// Fehler-Marker (Wert null) bleiben außen vor: Diese Schüler sind bereits von der Auswahl als ausgelassen gemeldet; im Batch erzeugten sie
+			// eine zweite Meldung mit anderem Schlüssel, und der Sammler könnte nicht deduplizieren.
+			final List<Long> idsGeladen = mapSchuelerStammdaten.entrySet().stream()
+					.filter(eintrag -> eintrag.getValue() != null).map(Map.Entry::getKey).toList();
+			mapSchulbescheinigungQrDaten.putAll(new SchulbescheinigungQrFactory(this.reportingContext).erzeuge(idsGeladen));
+		}
 		final SchulbescheinigungQrDaten daten = mapSchulbescheinigungQrDaten.get(idSchueler);
-		// Der Fehler-Marker des Lade-Fallbacks ist null. Die Vorlage erhält stattdessen einen Fehlereintrag: Ihr Vertrag "niemals null" muss auch dann halten,
-		// wenn die Erzeugung selbst geworfen hat - sonst scheiterte das Rendern genau an dem Fall, der als Ausgabeproblem hingenommen wurde.
-		return (daten != null) ? daten : new SchulbescheinigungQrDaten(null, null, "Die QR-Codes der Schulbescheinigung konnten nicht erzeugt werden.");
+		if (daten != null) {
+			return daten;
+		}
+		// Der Schüler war beim Batch nicht geladen - die Factory garantiert je übergebener ID einen Eintrag. Die Vorlage erhält den Datenfehler-Zustand,
+		// ihr Vertrag "niemals null" hält; der Befund wird gemeldet.
+		this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+				ReportingProblemSchluessel.fuer(SchulbescheinigungQrDaten.class, idSchueler),
+				"Für den Schüler %d liegen keine QR-Daten aus dem Signier-Batch vor; die Bescheinigung erscheint ohne digitale Signatur."
+						.formatted(idSchueler), null);
+		return new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.DATENFEHLER);
 	}
 
 	// ##### Lernabschnitts- und Leistungsdaten, Ankreuzkompetenzen #####

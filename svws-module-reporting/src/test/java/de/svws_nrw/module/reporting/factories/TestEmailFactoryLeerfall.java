@@ -28,6 +28,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -80,14 +81,15 @@ class TestEmailFactoryLeerfall {
 
 
 	/**
-	 * Erzeugt die PDF-Factory einer bewusst leeren Auswahl: keine Builder und das Kennzeichen gesetzt.
+	 * Erzeugt die PDF-Factory einer bewusst leeren Auswahl: keine Builder und ein Ausgabeumfang, der die leere Ausgabe zulässt.
 	 *
 	 * @return Die PDF-Factory.
 	 *
 	 * @throws ApiOperationException Wenn die Factory die übergebenen Daten ablehnt.
 	 */
 	private PdfFactory pdfFactoryOhneDokument() throws ApiOperationException {
-		return new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(new ReportingAusgabeumfang(5, 0, true));
+		return new PdfFactory(List.of(), reportingContext);
 	}
 
 	/**
@@ -100,7 +102,8 @@ class TestEmailFactoryLeerfall {
 	 * @throws ApiOperationException Wenn die Factory die übergebenen Daten ablehnt.
 	 */
 	private PdfFactory pdfFactoryMitDokument() throws ApiOperationException {
-		return new PdfFactory(List.of(mock(ReportBuilderHtml.class)), false, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(new ReportingAusgabeumfang(1, 1, false));
+		return new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
 	}
 
 	/**
@@ -180,7 +183,7 @@ class TestEmailFactoryLeerfall {
 		when(reportingContext.benutzer().emailSmtpAdresse()).thenReturn("absender@beispiel-schule.de");
 		reportingContext.reportingParameter().eMailDaten().empfaengerTyp = ReportingEMailEmpfaengerTyp.SCHUELER.getId();
 		final PdfFactory pdfFactory = mock(PdfFactory.class);
-		when(pdfFactory.bewusstLeer()).thenReturn(false);
+		when(pdfFactory.leereAusgabeZulaessig()).thenReturn(false);
 		when(pdfFactory.getPdfBuildersById()).thenReturn(Map.of(-1L, List.of()));
 		final Response[] response = new Response[1];
 

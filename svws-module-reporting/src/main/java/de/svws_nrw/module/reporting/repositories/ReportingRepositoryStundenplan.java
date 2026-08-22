@@ -20,9 +20,10 @@ import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.stundenplanung.ProxyReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -43,9 +44,6 @@ public class ReportingRepositoryStundenplan {
 	 * <i>dass</i> das Laden fehlschlug, sondern die Ursache als {@code cause} weitergegeben werden kann.
 	 */
 	private final ApiOperationException ladefehlerDefinitionen;
-
-	/** Gibt an, ob der optionale Zugriff den Ladefehler bereits als Warnung protokolliert hat. */
-	private boolean ladefehlerAlsWarnungProtokolliert = false;
 
 	private final Map<Long, StundenplanManager> mapStundenplanManager = new HashMap<>();
 	private final Map<Long, ReportingStundenplanungStundenplan> mapStundenplaene = new HashMap<>();
@@ -91,25 +89,11 @@ public class ReportingRepositoryStundenplan {
 	}
 
 	/**
-	 * Protokolliert den Ladefehler der Definitionen als Warnung, jedoch höchstens einmal je Repository-Instanz und damit je Reporting-Aufruf.
-	 * <p>Der optionale Zugriff erfolgt je Klausurraum erneut. Ohne die Begrenzung stünde derselbe Fehler samt Stacktrace bei dreißig Klausurräumen dreißigmal
-	 * im Log. Da der Zugriff nicht wirft, ist diese Ausgabe zugleich die einzige Gelegenheit, Ursache und Stacktrace festzuhalten.</p>
-	 */
-	private void protokolliereLadefehlerAlsWarnung() {
-		if (this.ladefehlerAlsWarnungProtokolliert) {
-			return;
-		}
-		this.ladefehlerAlsWarnungProtokolliert = true;
-		ReportingExceptionUtils.logException(
-				"WARNUNG: Die Stundenplandefinitionen konnten nicht ermittelt werden. Angaben aus dem Stundenplan bleiben in dieser Ausgabe leer.",
-				this.ladefehlerDefinitionen, this.reportingContext.logger(), LogLevel.WARNING, 8);
-	}
-
-	/**
 	 * Gibt den Stundenplan zurück, der am übergebenen Datum gültig ist.
 	 * <p><b>Optionaler Zugriff:</b> Der Stundenplan ist hier Beiwerk einer anderen Ausgabe - etwa die Raumangabe eines Klausurtermins. Ein fehlender oder
-	 * nicht ladbarer Stundenplan wird als Lücke dargestellt und bricht die Ausgabe nicht ab: Die Methode wirft nicht und protokolliert einen Ladefehler
-	 * höchstens als Warnung. Wer den Stundenplan als Hauptdatum benötigt, verwendet {@link #stundenplan(long)}.</p>
+	 * nicht ladbarer Stundenplan wird als Lücke dargestellt und über die Fassade gemeldet, statt die Ausgabe abzubrechen; allein eine Infrastrukturstörung
+	 * bricht über die Fassade ab. Dedupliziert wird je Datum, nicht je aufrufendem Klausurraum. Wer den Stundenplan als angefordertes Hauptobjekt benötigt, verwendet
+	 * {@link #stundenplan(long)}.</p>
 	 *
 	 * @param datum Das Datum im Format yyyy-mm-dd.
 	 *
@@ -123,11 +107,10 @@ public class ReportingRepositoryStundenplan {
 		}
 
 		if (this.ladefehlerDefinitionen != null) {
-			protokolliereLadefehlerAlsWarnung();
-			return null;
-		}
-
-		if (stundenplandefinitionen.isEmpty()) {
+			// Der Grund des Fehlens entscheidet über die Ursache: Der Ladefehler der Definitionen wird über seine Ursachenkette klassifiziert.
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
+					ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class),
+					"Die Stundenplandefinitionen", this.ladefehlerDefinitionen);
 			return null;
 		}
 
@@ -135,16 +118,21 @@ public class ReportingRepositoryStundenplan {
 				.filter(d -> ((d.gueltigAb != null) && (d.gueltigBis != null) && (datum.compareTo(d.gueltigAb) >= 0) && (datum.compareTo(d.gueltigBis) <= 0)))
 				.findFirst().orElse(null);
 
-		if (stundenplandefinitionZuDatum != null) {
-			return ermittleStundenplan(stundenplandefinitionZuDatum.id);
-		} else {
+		if (stundenplandefinitionZuDatum == null) {
+			// Kein Plan zum Datum ist ein fachlicher Befund: Der optionale Wert fehlt, die abhängigen Angaben bleiben leer.
+			this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.OPTIONALER_WERT_FEHLT, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+					ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, datumAlsSchluessel(datum)),
+					"Zum Datum %s gibt es keinen gültigen Stundenplan; die davon abhängigen Angaben fehlen in der Ausgabe.".formatted(datum), null);
 			return null;
 		}
+
+		return ermittleStundenplan(stundenplandefinitionZuDatum.id);
 	}
+
 
 	/**
 	 * Gibt den Stundenplan zur übergebenen ID zurück. Fehlt der Eintrag im Cache, wird er aus der Datenbank erzeugt.
-	 * <p><b>Strikter Zugriff:</b> Der Stundenplan ist hier das angeforderte Hauptdatum, und maßgeblich ist die Definitionsliste dieses Aufrufs: Führt sie die
+	 * <p><b>Strikter Zugriff:</b> Der Stundenplan ist hier das angeforderte Hauptobjekt, und maßgeblich ist die Definitionsliste dieses Aufrufs: Führt sie die
 	 * ID und entsteht dennoch kein Stundenplan, ist das ein Serverfehler - auch dann, wenn der Einzelzugriff den Plan nicht mehr findet, etwa nach einem
 	 * parallelen Löschen. Eine ID, zu der es keine Definition gibt, ergibt dagegen null - der Aufrufer macht daraus ein {@code NOT_FOUND}. Für den optionalen
 	 * Zugriff auf einen Stundenplan als Beiwerk gilt {@link #stundenplan(String)}.</p>
@@ -285,6 +273,21 @@ public class ReportingRepositoryStundenplan {
 		ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
 				ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, idStundenplan),
 				"Die Daten des Stundenplans %d".formatted(idStundenplan), fehler);
+	}
+
+	/**
+	 * Bildet ein Datum im Format yyyy-mm-dd auf eine Schlüssel-Zahl ab (z. B. 20260314), damit die Meldung je Datum einmal zählt.
+	 *
+	 * @param datum Das Datum im Format yyyy-mm-dd.
+	 *
+	 * @return Die Ziffernfolge des Datums als Zahl oder -1, falls das Datum nicht numerisch ist.
+	 */
+	private static long datumAlsSchluessel(final String datum) {
+		try {
+			return Long.parseLong(datum.replace("-", ""));
+		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
+			return -1L;
+		}
 	}
 
 }

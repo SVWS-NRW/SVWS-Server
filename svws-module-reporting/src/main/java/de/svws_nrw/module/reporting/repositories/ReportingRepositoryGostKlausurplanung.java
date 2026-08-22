@@ -130,6 +130,19 @@ public class ReportingRepositoryGostKlausurplanung {
 	}
 
 	/**
+	 * Gibt die Anzahl der Schüler zurück, die der Klausurplan-Manager zu den ausgewählten Stufen kennt - vor jeder Filterung. Aus ihr entsteht das Feld
+	 * {@code angefordert} des Hinweis-Headers der Schüler-Sichtweise.
+	 *
+	 * @return Die Anzahl der Schüler im Plan; 0 vor der Initialisierung des Managers.
+	 */
+	public int anzahlSchuelerVorhanden() {
+		if (manager == null) {
+			return 0;
+		}
+		return (int) manager.schuelerklausurGetMengeAsList().stream().map(sk -> sk.idSchueler).distinct().count();
+	}
+
+	/**
 	 * Liefert die Kurse des Klausurplans über das zentrale Lerngruppen-Repository. Die Kurs-IDs werden aus dem
 	 * Kurs-Manager des Klausurplan-Managers ermittelt; die zurückgegebene Liste ist gemäß FILTER und SORTIERUNG des
 	 * Lerngruppen-Repositories gefiltert und sortiert. Eine klausurplan-spezifische Zusatzfilterung erfolgt nicht.
@@ -145,6 +158,19 @@ public class ReportingRepositoryGostKlausurplanung {
 		return reportingContext.repositoryLerngruppen().kurse(ids);
 	}
 
+	/**
+	 * Gibt die Anzahl der Kurse zurück, die der Kurs-Manager des Klausurplan-Managers kennt - vor jeder Filterung. Aus ihr entsteht das Feld
+	 * {@code angefordert} des Hinweis-Headers der Kurs-Sichtweise.
+	 *
+	 * @return Die Anzahl der Kurse im Plan; 0 vor der Initialisierung des Managers.
+	 */
+	public int anzahlKurseVorhanden() {
+		if (manager == null) {
+			return 0;
+		}
+		return manager.getKursManager().kurse().size();
+	}
+
 
 	// ##### Klausurtermine #####
 
@@ -157,6 +183,16 @@ public class ReportingRepositoryGostKlausurplanung {
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermine() {
 		return getListeMitFilter(mapKlausurtermine, ReportingGostKlausurplanungKlausurtermin.class,
 				ReportingGostKlausurplanungKlausurtermin.FILTER, ReportingGostKlausurplanungKlausurtermin.SORTIERUNG);
+	}
+
+	/**
+	 * Gibt die Anzahl der Klausurtermine des Klausurplans zurück - vor der Filterung über das FILTER-Companion. Aus ihr entsteht das Feld
+	 * {@code angefordert} des Hinweis-Headers der Termin-Sichtweise.
+	 *
+	 * @return Die Anzahl der Klausurtermine im Plan; 0 vor der Initialisierung des Managers.
+	 */
+	public int anzahlKlausurtermineVorhanden() {
+		return mapKlausurtermine.size();
 	}
 
 	/**
@@ -318,6 +354,8 @@ public class ReportingRepositoryGostKlausurplanung {
 		for (final var k : manager.kursklausurGetMengeAsList()) {
 			final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurs(manager.kursdatenByKursklausur(k).id);
 			if (kurs == null) {
+				// Bewusst still: Das zentrale Lerngruppen-Repository liefert kein Objekt, wenn der Benutzerfilter den Kurs ausschließt
+				// (Auswahlentscheidung) oder sein Laden scheiterte - den Ladefehler meldet es dabei selbst über die Fassade.
 				continue;
 			}
 			final GostKlausurtermin terminOrNull = manager.terminOrNullByKursklausur(k);
@@ -330,6 +368,8 @@ public class ReportingRepositoryGostKlausurplanung {
 		for (final ReportingGostKlausurplanungKlausurtermin termin : mapKlausurtermine.values()) {
 			final GostKlausurtermin gostTermin = manager.terminGetByIdOrNull(termin.id());
 			if (gostTermin == null) {
+				// Bewusst still: Die Termin-Map ist aus derselben Manager-Menge aufgebaut; ein hier nicht auflösbarer Termin ist auf dem produktiven
+				// Weg nicht erreichbar.
 				continue;
 			}
 			for (final GostKlausurraum terminraum : manager.raumGetMengeByTermin(gostTermin)) {
@@ -384,10 +424,13 @@ public class ReportingRepositoryGostKlausurplanung {
 	private void erzeugeSchuelerklausurtermin(final GostSchuelerklausur sk, final GostSchuelerklausurtermin skTermin) {
 		final ReportingSchueler schueler = reportingContext.repositorySchueler().schueler(sk.idSchueler);
 		if (schueler == null) {
+			// Bewusst still: Das zentrale Schüler-Repository liefert kein Objekt, wenn der Benutzerfilter den Schüler ausschließt oder sein Laden
+			// scheiterte - den Ladefehler meldet es dabei selbst über die Fassade.
 			return;
 		}
 		final ReportingGostKlausurplanungKursklausur kursklausur = mapKursklausuren.get(manager.kursklausurBySchuelerklausur(sk).id);
 		if (kursklausur == null) {
+			// Bewusst still: Die Kursklausur fehlt genau dann, wenn ihr Kurs oben ausgeschlossen wurde - dieselbe Auswahlentscheidung, kein neuer Befund.
 			return;
 		}
 
@@ -399,6 +442,7 @@ public class ReportingRepositoryGostKlausurplanung {
 			klausurtermin = (skTermin.idTermin != null) ? mapKlausurtermine.get(skTermin.idTermin) : null;
 		}
 		if (klausurtermin == null) {
+			// Bewusst still: Ein noch nicht angesetzter Termin - etwa ein offener Nachschreibtermin - ist ein regulärer fachlicher Zustand der Planung.
 			return;
 		}
 

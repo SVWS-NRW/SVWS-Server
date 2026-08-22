@@ -103,7 +103,9 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
 		if ((super.fachwahlstatistik() == null) || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
-			final List<GostStatistikFachwahl> gostFachwahlenStatistik = this.reportingContext.repositoryGost().fachwahlen(super.abiturjahr());
+			// Die Fachwahl-Anzahlen aus der Laufbahnplanung reichern die Kursausgabe an: Ein Ladefehler wird gemeldet, die Kurse erscheinen weiterhin und die
+			// Vorlage zeigt an den Statistik-Stellen ihren Platzhalter.
+			final List<GostStatistikFachwahl> gostFachwahlenStatistik = this.reportingContext.repositoryGost().fachwahlenOptional(super.abiturjahr());
 			if (!gostFachwahlenStatistik.isEmpty()) {
 				mapFachwahlStatistik.putAll(
 						gostFachwahlenStatistik.stream().collect(

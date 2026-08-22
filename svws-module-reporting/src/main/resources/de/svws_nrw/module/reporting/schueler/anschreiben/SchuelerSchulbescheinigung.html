@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}"><!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
     <!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */--><!--/* @thymesVar id="#aktuell" type="de.svws_nrw.module.reporting.html.dialects.AktuellExpressionHelper" */-->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schulbescheinigung',
@@ -188,7 +188,7 @@
 					<!-- WICHTIG: th:with und th:if NICHT auf dasselbe Element setzen - th:if hat höhere Präzedenz und liefe vor der Definition von qr. -->
 					<div th:if="${mitDigitaleSignatur}" style="position: absolute; bottom: -10mm; left: 15mm;" th:with="qr = ${schueler.schulbescheinigungQrDaten()}">
 						<th:block th:if="${qr != null}">
-							<div th:if="${qr.qr2Svg() != null}">
+							<div th:if="${qr.istSigniert()}">
 								<table class="qr-tabelle">
 									<tr>
 										<!-- Explizite mm-Maße am img (aus den Vorlage-Parametern): die intrinsische SVG-Größe wird von Renderern wie openhtmltopdf nicht zuverlässig honoriert. -->
@@ -203,7 +203,18 @@
 									</tr>
 								</table>
 							</div>
-							<p th:unless="${qr.qr2Svg() != null}" class="f-tiny" th:text="${qr.fehlermeldung()}">Signierung nicht verfügbar.</p>
+							<th:block th:unless="${qr.istSigniert()}">
+								<!-- Statt eines halben Signaturblocks erscheinen zwei identische Fehlerbilder mit einem festen Text je Fehlerart.
+									 Technische Fehlertexte stehen nie auf der Bescheinigung; sie stehen im Server-Log. -->
+								<table class="qr-tabelle">
+									<tr>
+										<th><img th:style="'width: ' + ${qrCodeBreite} + 'mm; height: ' + ${qrCodeHoehe} + 'mm; border: 0.3mm solid #888888; padding: 1.5mm; box-sizing: border-box;'" th:src="${#icon.getSrc('error_warning', '#444444')}" alt="Kein QR-Code: Die Bescheinigung ist nicht digital signiert"/></th>
+										<th style="width: 20mm;"></th>
+										<th><img th:style="'width: ' + ${qrCodeBreite} + 'mm; height: ' + ${qrCodeHoehe} + 'mm; border: 0.3mm solid #888888; padding: 1.5mm; box-sizing: border-box;'" th:src="${#icon.getSrc('error_warning', '#444444')}" alt="Kein QR-Code: Die Bescheinigung ist nicht digital signiert"/></th>
+									</tr>
+								</table>
+								<p class="f-tiny" th:text="${qr.hatDatenfehler()} ? 'Diese Bescheinigung wurde aufgrund fehlender oder fehlerhafter Daten ohne digitale Signatur ausgestellt.' : 'Diese Bescheinigung wurde aufgrund eines Fehlers im Signierprozess ohne digitale Signatur ausgestellt.'">Hinweis zur fehlenden Signatur</p>
+							</th:block>
 						</th:block>
 					</div>
 			</div>

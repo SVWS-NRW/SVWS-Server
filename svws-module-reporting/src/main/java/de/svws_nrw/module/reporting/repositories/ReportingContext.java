@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.repositories;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.base.email.EmailJobManager;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
@@ -16,6 +17,7 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterService;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSammler;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
@@ -55,6 +57,9 @@ public class ReportingContext {
 
 	/** Sammler der hingenommenen Ausgabeprobleme dieses Aufrufs. */
 	private final ReportingProblemSammler problemSammler;
+
+	/** Der gemeldete Ausgabeumfang dieses Aufrufs oder {@code null}, solange die Meldestelle des Datenaufbaus nicht gemeldet hat. */
+	private ReportingAusgabeumfang ausgabeumfang = null;
 
 	/** Objekt zum aktuell angemeldeten Benutzer. */
 	private final ProxyReportingBenutzer benutzer;
@@ -292,6 +297,29 @@ public class ReportingContext {
 	 */
 	public List<ReportingProblem> ausgabeprobleme() {
 		return this.problemSammler.probleme();
+	}
+
+
+	// ##### Ausgabeumfang #####
+
+	/**
+	 * Meldet den Ausgabeumfang dieses Aufrufs. Die Meldestelle des Datenaufbaus ruft dies genau einmal auf - dort, wo die Zählwerte entstehen: bei einer
+	 * ID-Auswahl im Initializer, bei den Manager-Aufbauten und der Fachwahlstatistik im Context-Aufbau. Ohne Meldung bricht die Ausgabefactory nach dem
+	 * Aufbau der Daten-Contexts mit einem Serverfehler ab.
+	 *
+	 * @param umfang Der Ausgabeumfang; {@code null} ist unzulässig.
+	 */
+	public void meldeAusgabeumfang(final ReportingAusgabeumfang umfang) {
+		this.ausgabeumfang = Objects.requireNonNull(umfang, "Ein fehlender Ausgabeumfang ist keine Meldung.");
+	}
+
+	/**
+	 * Gibt den gemeldeten Ausgabeumfang dieses Aufrufs zurück.
+	 *
+	 * @return Der Ausgabeumfang oder {@code null}, solange die Meldestelle des Datenaufbaus nicht gemeldet hat.
+	 */
+	public ReportingAusgabeumfang ausgabeumfang() {
+		return this.ausgabeumfang;
 	}
 
 

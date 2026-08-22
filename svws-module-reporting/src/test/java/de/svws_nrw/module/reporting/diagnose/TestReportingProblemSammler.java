@@ -204,7 +204,7 @@ class TestReportingProblemSammler {
 
 	@Test
 	void testDieselbeFehlerInstanzProtokolliertIhrenStacktraceNurEinmal() {
-		// Dieselbe Fehler-Instanz reist mit mehreren Befunden - etwa eine nicht ladbare Lehrkraft, die als Hauptdatum ausgelassen und zusätzlich als
+		// Dieselbe Fehler-Instanz reist mit mehreren Befunden - etwa eine nicht ladbare Lehrkraft, die als angefordertes Hauptobjekt ausgelassen und zusätzlich als
 		// Klassenleitung gemeldet wird. Beide Befunde zählen; der Block aus Typ, Ursachenkette und Stacktrace stünde sonst je Befund erneut im Log.
 		final IllegalStateException fehler = new IllegalStateException("Der Datensatz ist beschädigt.");
 

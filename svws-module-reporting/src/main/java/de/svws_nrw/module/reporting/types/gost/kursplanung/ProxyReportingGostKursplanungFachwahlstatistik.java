@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -25,12 +26,6 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 				-1,
 				reportingGostFachwahlstatistik);
 
-		int kursgroessendifferenzLK = -1;
-		int kursgroessendifferenzGK = -1;
-		int kursgroessendifferenzZK = -1;
-		int kursgroessendifferenzPJK = -1;
-		int kursgroessendifferenzVTF = -1;
-
 		final ReportingFach reportingFach = (super.reportingGostFachwahlstatistik == null) ? null : super.reportingGostFachwahlstatistik.fach();
 
 		// Ohne zugeordnetes Fach können keine Kursgrößendifferenzen ermittelt werden; die Werte bleiben auf dem Default (-1) aus dem Super-Konstruktor.
@@ -38,36 +33,30 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 			return;
 		}
 
-		try {
-			kursgroessendifferenzLK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.LK.id);
-		} catch (@SuppressWarnings("unused") final Exception ignored) {
-			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
-		}
-		try {
-			kursgroessendifferenzGK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.GK.id);
-		} catch (@SuppressWarnings("unused") final Exception ignored) {
-			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
-		}
-		try {
-			kursgroessendifferenzZK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.ZK.id);
-		} catch (@SuppressWarnings("unused") final Exception ignored) {
-			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
-		}
-		try {
-			kursgroessendifferenzPJK = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.PJK.id);
-		} catch (@SuppressWarnings("unused") final Exception ignored) {
-			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
-		}
-		try {
-			kursgroessendifferenzVTF = ergebnisManager.getOfFachOfKursartKursdifferenz(reportingFach.id(), GostKursart.VTF.id);
-		} catch (@SuppressWarnings("unused") final Exception ignored) {
-			// DeveloperNotificationException wird ignoriert. Hier wurde eine Differenz zu einer nicht vorhandenen Fach-Kursart-Kombination abgefragt.
-		}
+		super.differenzKursgroessenLK = kursdifferenzOderRueckfall(ergebnisManager, reportingFach.id(), GostKursart.LK);
+		super.differenzKursgroessenGK = kursdifferenzOderRueckfall(ergebnisManager, reportingFach.id(), GostKursart.GK);
+		super.differenzKursgroessenZK = kursdifferenzOderRueckfall(ergebnisManager, reportingFach.id(), GostKursart.ZK);
+		super.differenzKursgroessenPJK = kursdifferenzOderRueckfall(ergebnisManager, reportingFach.id(), GostKursart.PJK);
+		super.differenzKursgroessenVTF = kursdifferenzOderRueckfall(ergebnisManager, reportingFach.id(), GostKursart.VTF);
+	}
 
-		super.differenzKursgroessenLK = kursgroessendifferenzLK;
-		super.differenzKursgroessenGK = kursgroessendifferenzGK;
-		super.differenzKursgroessenZK = kursgroessendifferenzZK;
-		super.differenzKursgroessenPJK = kursgroessendifferenzPJK;
-		super.differenzKursgroessenVTF = kursgroessendifferenzVTF;
+
+	/**
+	 * Ermittelt die Kursgrößendifferenz zu Fach und Kursart über den Ergebnis-Manager. Eine nicht vorhandene Fach-Kursart-Kombination meldet der Manager
+	 * mit einer {@link DeveloperNotificationException}; allein sie wird in den Rückfallwert -1 übersetzt, den die Vorlage als Platzhalter zeigt. Jeder
+	 * andere Fehler propagiert - er wäre sonst still als fehlende Kombination gedeutet.
+	 *
+	 * @param ergebnisManager Der Manager des Blockungsergebnisses.
+	 * @param idFach          Die ID des Fachs.
+	 * @param kursart         Die Kursart, deren Differenz ermittelt werden soll.
+	 *
+	 * @return Die Kursgrößendifferenz oder -1, falls die Fach-Kursart-Kombination im Ergebnis nicht vorkommt.
+	 */
+	private static int kursdifferenzOderRueckfall(final GostBlockungsergebnisManager ergebnisManager, final long idFach, final GostKursart kursart) {
+		try {
+			return ergebnisManager.getOfFachOfKursartKursdifferenz(idFach, kursart.id);
+		} catch (@SuppressWarnings("unused") final DeveloperNotificationException e) {
+			return -1;
+		}
 	}
 }

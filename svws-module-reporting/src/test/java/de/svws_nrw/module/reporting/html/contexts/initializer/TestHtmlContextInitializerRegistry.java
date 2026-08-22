@@ -89,23 +89,6 @@ class TestHtmlContextInitializerRegistry {
 	private static final Set<ReportingReportvorlageDatenContext> SOLL_OHNE_EINZELAUSGABE =
 			Set.of(ReportingReportvorlageDatenContext.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG);
 
-	/**
-	 * Die Datenaufbauten, deren Datenzugriffe vollständig über die Diagnose melden und deren Ausgaben deshalb den öffentlichen Hinweisvertrag tragen dürfen.
-	 * Angebunden sind die vier Listen-Aufbauten und die fünf Sichtweisen der Stundenplanung - neun von sechzehn; die Menge wächst mit der Migration. Sie
-	 * steht hier als Literal, weil eine Ableitung aus dem Produktivcode jede versehentliche Anbindung mitschriebe und dem Client eine Vollständigkeit
-	 * bescheinigte, die niemand geprüft hat.
-	 */
-	private static final Set<ReportingReportvorlageDatenContext> SOLL_AN_HINWEISVERTRAG_ANGEBUNDEN = Set.of(
-			ReportingReportvorlageDatenContext.SCHUELER,
-			ReportingReportvorlageDatenContext.KLASSEN,
-			ReportingReportvorlageDatenContext.KURSE,
-			ReportingReportvorlageDatenContext.LEHRER,
-			ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH,
-			ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN,
-			ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER,
-			ReportingReportvorlageDatenContext.STUNDENPLANUNG_RAUM,
-			ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER);
-
 
 	@Test
 	void testJederDatenaufbauHatGenauEinenRegistryEintrag() {
@@ -158,23 +141,5 @@ class TestHtmlContextInitializerRegistry {
 		assertEquals(soll, ist);
 	}
 
-	@Test
-	void testJederDatenaufbauFuehrtEineEntscheidungZumHinweisvertrag() {
-		for (final ReportingReportvorlageDatenContext datenContext : ReportingReportvorlageDatenContext.values()) {
-			assertNotNull(HtmlContextInitializerRegistry.anbindungHinweisvertragOderNull(datenContext),
-					"Zum Datenaufbau %s fehlt die Entscheidung über den Hinweisvertrag.".formatted(datenContext.name()));
-		}
-	}
-
-	@Test
-	void testNurDieVorgesehenenDatenaufbautenSindAnDenHinweisvertragAngebunden() {
-		final Map<String, Boolean> ist = new TreeMap<>();
-		final Map<String, Boolean> soll = new TreeMap<>();
-		for (final ReportingReportvorlageDatenContext datenContext : ReportingReportvorlageDatenContext.values()) {
-			ist.put(datenContext.name(), HtmlContextInitializerRegistry.istAnHinweisvertragAngebunden(datenContext));
-			soll.put(datenContext.name(), SOLL_AN_HINWEISVERTRAG_ANGEBUNDEN.contains(datenContext));
-		}
-		assertEquals(soll, ist);
-	}
 
 }

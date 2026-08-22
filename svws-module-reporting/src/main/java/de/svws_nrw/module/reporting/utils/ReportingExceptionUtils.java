@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -42,11 +44,92 @@ public final class ReportingExceptionUtils {
 	}
 
 	/**
+	 * Erzeugt eine Fehlerausgabe wie {@link #getLogAsSimpleOperationResponse(LogConsumerList)} und stellt dem Log eine Kopfzeile voran.
+	 * <p>Das Log eines abgebrochenen Reports ist lang, und der Abbruchgrund steht an seinem Ende - unterhalb aller Befunde, die der Lauf zuvor gemeldet hat
+	 * und die mit dem Abbruch nichts zu tun haben. Wer die Antwort liest, sieht deshalb zuerst einen unbeteiligten Fehler. Die Kopfzeile wiederholt den
+	 * Abbruchgrund bewusst an erster Stelle.</p>
+	 *
+	 * @param log       Liste, die Einträge aus dem Logger gesammelt hat.
+	 * @param kopfzeile Die Zeile, die dem Log vorangestellt wird; {@code null} oder leer lässt das Log unverändert.
+	 *
+	 * @return Die SimpleOperationResponse, die die Kopfzeile und das Log enthält.
+	 */
+	public static SimpleOperationResponse getLogAsSimpleOperationResponse(final LogConsumerList log, final String kopfzeile) {
+		final SimpleOperationResponse simpleOperationResponse = getLogAsSimpleOperationResponse(log);
+		if ((kopfzeile != null) && !kopfzeile.isEmpty()) {
+			// Die Leerzeile hebt die Kopfzeile vom Ablauf darunter ab.
+			simpleOperationResponse.log.add(0, "");
+			simpleOperationResponse.log.add(0, kopfzeile);
+		}
+		return simpleOperationResponse;
+	}
+
+	/**
+	 * Bildet die Kopfzeile für einen abgebrochenen Report. Sie nennt den Statuscode und die Meldung des Abbruchs.
+	 * <p>Trägt die Ursachenkette eine {@link ApiOperationException}, gilt deren Meldung: Sie benennt den Abbruchgrund fachlich, während die Meldung der
+	 * äußersten Exception nur sagt, an welcher Stelle der Erzeugung er aufgetreten ist.</p>
+	 *
+	 * @param statuscode     Der HTTP-Status, mit dem die Anfrage endet.
+	 * @param fehlerursache  Die Exception, die zum Abbruch geführt hat; darf {@code null} sein.
+	 * @param ersatzmeldung  Die Meldung, die gilt, wenn die Kette keine ApiOperationException trägt.
+	 *
+	 * @return Die Kopfzeile für das Log der Fehlerantwort.
+	 */
+	public static String abbruchKopfzeile(final int statuscode, final Exception fehlerursache, final String ersatzmeldung) {
+		final String ausDerKette = abbruchmeldungInUrsachenkette(fehlerursache);
+		final String meldung = (ausDerKette != null) ? ausDerKette : ersatzmeldung;
+		// Auch die Kopfzeile wird maskiert: Einzelne Stellen übernehmen die Meldung eines fremden Fehlers in ihre eigene, und dann trüge sie den
+		// Quelltext der Vorlage an die erste Stelle der Fehlerantwort.
+		final String ohneQuelltext = ohneTemplateQuelltext(meldung, templateQuelltexteInUrsachenkette(fehlerursache));
+		return "ABBRUCH (Status %d): %s".formatted(statuscode, ohneMarker(ohneQuelltext));
+	}
+
+	/**
+	 * Entfernt den führenden Marker einer Meldung. Die Kopfzeile ist an ihrem eigenen Wort erkennbar; ein zweiter Marker mitten in der Zeile führt in der
+	 * schmalen Fehlerleiste des Clients zu nichts.
+	 *
+	 * @param meldung Die Meldung; darf {@code null} sein.
+	 *
+	 * @return Die Meldung ohne führenden Marker; ein leerer Text, wenn keine Meldung übergeben wurde.
+	 */
+	private static String ohneMarker(final String meldung) {
+		if (meldung == null) {
+			return "";
+		}
+		final String getrimmt = meldung.strip();
+		return getrimmt.startsWith("###") ? getrimmt.substring(3).strip() : getrimmt;
+	}
+
+	/**
+	 * Sucht in der Ursachenkette die Meldung, die den Abbruch fachlich benennt.
+	 * <p>Gesucht wird die erste {@link ApiOperationException} <b>mit</b> Meldung. Eine ApiOperationException trägt nur dann eine Meldung, wenn ihr Body ein
+	 * Text ist; wer eine Fehlerantwort als Body mitgibt, hinterlässt eine Exception ohne Meldung. Beim ersten Glied stehenzubleiben hieße, den Abbruchgrund
+	 * zu verlieren, obwohl er ein Glied tiefer steht.</p>
+	 *
+	 * @param fehler Der Fehler, dessen Kette durchsucht wird.
+	 *
+	 * @return Die Meldung oder {@code null}, wenn die Kette keine trägt.
+	 */
+	private static String abbruchmeldungInUrsachenkette(final Throwable fehler) {
+		Throwable glied = fehler;
+		// Die Kette ist begrenzt, damit eine im Kreis verkettete Ursache diese Suche nicht endlos laufen lässt.
+		for (int i = 0; (glied != null) && (i < 20); i++) {
+			if ((glied instanceof final ApiOperationException aoe) && (aoe.getMessage() != null) && !aoe.getMessage().isEmpty()) {
+				return aoe.getMessage();
+			}
+			glied = glied.getCause();
+		}
+		return null;
+	}
+
+	/**
 	 * Erzeugt Log-Einträge für die Inhalte der übergebenen Exception, inklusive Causes und StackTrace.
 	 * <p>Das übergebene Log-Level gilt für den gesamten Block. Ein Aufrufer, der einen Fehler abfängt und mit einem Rückfallwert weiterarbeitet, protokolliert
 	 * damit unterhalb von {@link LogLevel#ERROR}: Dieses Level ist dem Abbruch vorbehalten, und ein erfolgreicher Report hinterlässt keinen solchen Eintrag.</p>
 	 * <p>Der Einzug des Loggers ist nach dem Aufruf derselbe wie davor. Andernfalls summierte sich der Einzug aller Aufrufe über die weiteren Log-Einträge des
 	 * Reports auf.</p>
+	 * <p>Eingebetteter Template-Quelltext wird durch einen Platzhalter ersetzt. Thymeleaf bekommt die Vorlage als Zeichenkette und führt sie als Namen des
+	 * Templates in seinen Meldungen; ohne die Ersetzung stünde die ganze Vorlage mehrfach im Log und in der Fehlerantwort an den Client.</p>
 	 *
 	 * @param beschreibung		Optionale Beschreibung, die im Log vorangestellt wird.
 	 * @param exception 		Die Exception, die geworfen wurde.
@@ -63,19 +146,36 @@ public final class ReportingExceptionUtils {
 			logger.modifyIndent(4);
 
 			if (exception != null) {
-				final String htmlTemplate = (exception instanceof final TemplateProcessingException tpe) ? tpe.getTemplateName() : "";
-				final String templateOriginalString = htmlTemplate.isEmpty() ? "" : ("(template: \"" + htmlTemplate + "\"");
-				final String templateReplaceString = htmlTemplate.isEmpty() ? "" : "(REMOVED TEMPLATE FROM LOG";
+				final List<String> templateQuelltexte = templateQuelltexteInUrsachenkette(exception);
 
-				logExceptionTypeAndMessage(exception, logger, loglevel, templateOriginalString, templateReplaceString);
-				logErrorCauses(exception, logger, loglevel, templateOriginalString, templateReplaceString);
-				logStackTrace(exception, logger, loglevel, templateOriginalString, templateReplaceString);
+				logExceptionTypeAndMessage(exception, logger, loglevel, templateQuelltexte);
+				logErrorCauses(exception, logger, loglevel, templateQuelltexte);
+				logStackTrace(exception, logger, loglevel, templateQuelltexte);
 			} else {
 				logger.logLn(loglevel, 0, "### FEHLER: Fehler ohne Exception - Es werden im Folgenden nur Log-Daten ausgegeben.");
 			}
 		} finally {
 			logger.setIndent(indentVorAufruf);
 		}
+	}
+
+	/**
+	 * Sucht in der Ursachenkette des Fehlers die erste statustragende {@link ApiOperationException}. Die Kette ist begrenzt, damit eine im Kreis
+	 * verkettete Ursache nicht endlos läuft.
+	 *
+	 * @param fehler Der Fehler, dessen Kette durchsucht wird.
+	 *
+	 * @return Die erste ApiOperationException der Kette oder {@code null}, wenn keine enthalten ist.
+	 */
+	public static ApiOperationException apiOperationExceptionInUrsachenkette(final Throwable fehler) {
+		Throwable glied = fehler;
+		for (int i = 0; (glied != null) && (i < 20); i++) {
+			if (glied instanceof final ApiOperationException aoe) {
+				return aoe;
+			}
+			glied = glied.getCause();
+		}
+		return null;
 	}
 
 	/**
@@ -95,7 +195,7 @@ public final class ReportingExceptionUtils {
 	}
 
 	private static void logExceptionTypeAndMessage(final Exception exception, final Logger logger, final LogLevel loglevel,
-			final String templateOriginalString, final String templateReplaceString) {
+			final List<String> templateQuelltexte) {
 		if (exception instanceof final ApiOperationException aoe) {
 			logger.logLn(loglevel, 0, "### FEHLER: Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
 		} else {
@@ -103,17 +203,13 @@ public final class ReportingExceptionUtils {
 		}
 		logger.modifyIndent(4);
 		// Die Meldung wird für jeden Exception-Typ ausgegeben. Sie ist die eigentliche Fehlerbeschreibung und steht sonst nur in der Kopfzeile des Stacktrace.
-		String message = exception.getMessage();
+		final String message = ohneTemplateQuelltext(exception.getMessage(), templateQuelltexte);
 		if (message != null) {
-			if (!templateOriginalString.isEmpty()) {
-				message = message.replace(templateOriginalString, templateReplaceString);
-			}
 			logger.logLn(loglevel, message);
 		}
 	}
 
-	private static void logErrorCauses(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString,
-			final String templateReplaceString) {
+	private static void logErrorCauses(final Exception exception, final Logger logger, final LogLevel loglevel, final List<String> templateQuelltexte) {
 		// Der Abschnitt zeigt die Ursachenkette und beginnt deshalb erst bei der ersten Ursache: Die Meldung der Exception selbst steht bereits im
 		// Abschnitt darüber. Ohne Ursache entfällt der Abschnitt, statt eine Überschrift über eine Kopie zu setzen.
 		if (exception.getCause() == null) {
@@ -122,19 +218,15 @@ public final class ReportingExceptionUtils {
 		logger.logLn(loglevel, 0, "### FEHLERGRÜNDE:");
 		logger.modifyIndent(4);
 		for (Throwable cause = exception.getCause(); cause != null; cause = cause.getCause()) {
-			String message = cause.getMessage();
+			final String message = ohneTemplateQuelltext(cause.getMessage(), templateQuelltexte);
 			if ((message != null) && !message.isEmpty()) {
-				if (!templateOriginalString.isEmpty()) {
-					message = message.replace(templateOriginalString, templateReplaceString);
-				}
 				logger.logLn(loglevel, message);
 			}
 		}
 		logger.modifyIndent(-4);
 	}
 
-	private static void logStackTrace(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString,
-			final String templateReplaceString) {
+	private static void logStackTrace(final Exception exception, final Logger logger, final LogLevel loglevel, final List<String> templateQuelltexte) {
 		logger.logLn(loglevel, 0, "### STACKTRACE:");
 		logger.modifyIndent(4);
 
@@ -145,15 +237,72 @@ public final class ReportingExceptionUtils {
 			exception.getCause().printStackTrace(new PrintWriter(stringWriter));
 		}
 
-		String fullStacktrace = stringWriter.toString();
-		if (!templateOriginalString.isEmpty()) {
-			fullStacktrace = fullStacktrace.replace(templateOriginalString, templateReplaceString);
-		}
+		final String fullStacktrace = ohneTemplateQuelltext(stringWriter.toString(), templateQuelltexte);
 
 		final BufferedReader reader = new BufferedReader(new StringReader(fullStacktrace));
 		reader.lines().forEach(l -> logger.logLn(loglevel, l));
 
 		logger.modifyIndent(-4);
 	}
+
+	/**
+	 * Sammelt die Template-Quelltexte aus der Ursachenkette eines Fehlers.
+	 * <p>Thymeleaf bekommt die Vorlage als Zeichenkette übergeben und führt sie deshalb als Namen des Templates in seinen Meldungen. Eine gescheiterte
+	 * Ausgabe trüge damit die ganze Vorlage mehrfach im Log und in der Fehlerantwort. Gesucht wird in der gesamten Kette, denn eine Thymeleaf-Exception
+	 * steht selten außen: Der Renderer verpackt sie in eine {@link ApiOperationException}, damit der Status des Abbruchs erhalten bleibt.</p>
+	 * <p>Als Quelltext gilt ein Name mit Zeilenumbrüchen, mit Markup oder von erheblicher Länge. Reine Pfadnamen bleiben stehen - der Name eines Fragments
+	 * aus dem Klassenpfad ist eine nützliche Angabe zur Fehlerstelle und kein Quelltext.</p>
+	 *
+	 * @param fehler Der Fehler, dessen Kette durchsucht wird.
+	 *
+	 * @return Die gefundenen Quelltexte ohne Wiederholungen; eine leere Liste, wenn die Kette keinen trägt.
+	 */
+	private static List<String> templateQuelltexteInUrsachenkette(final Throwable fehler) {
+		final List<String> quelltexte = new ArrayList<>();
+		Throwable glied = fehler;
+		// Die Kette ist begrenzt, damit eine im Kreis verkettete Ursache diese Suche nicht endlos laufen lässt.
+		for (int i = 0; (glied != null) && (i < 20); i++) {
+			if ((glied instanceof final TemplateProcessingException tpe) && tpe.hasTemplateName()) {
+				final String name = tpe.getTemplateName();
+				if (istEingebetteterQuelltext(name) && !quelltexte.contains(name)) {
+					quelltexte.add(name);
+				}
+			}
+			glied = glied.getCause();
+		}
+		return quelltexte;
+	}
+
+	/**
+	 * Prüft, ob ein Template-Name in Wahrheit der Quelltext der Vorlage ist. Ein spitzes Klammerzeichen entscheidet die Frage allein: Ein Pfad im
+	 * Klassenpfad trägt keines, eine Vorlage beginnt damit.
+	 *
+	 * @param templateName Der Name aus der Thymeleaf-Exception.
+	 *
+	 * @return true, wenn der Name Quelltext ist, sonst false.
+	 */
+	private static boolean istEingebetteterQuelltext(final String templateName) {
+		return (templateName != null) && (templateName.contains("<") || templateName.contains("\n") || (templateName.length() > 120));
+	}
+
+	/**
+	 * Ersetzt die eingebetteten Template-Quelltexte in einem Text durch einen Platzhalter.
+	 *
+	 * @param text               Der Text, der ausgegeben werden soll; darf {@code null} sein.
+	 * @param templateQuelltexte Die Quelltexte, die ersetzt werden.
+	 *
+	 * @return Der Text ohne Quelltexte; {@code null}, wenn kein Text übergeben wurde.
+	 */
+	private static String ohneTemplateQuelltext(final String text, final List<String> templateQuelltexte) {
+		if ((text == null) || templateQuelltexte.isEmpty()) {
+			return text;
+		}
+		String ergebnis = text;
+		for (final String quelltext : templateQuelltexte) {
+			ergebnis = ergebnis.replace("(template: \"" + quelltext + "\"", "(REMOVED TEMPLATE FROM LOG");
+		}
+		return ergebnis;
+	}
+
 
 }

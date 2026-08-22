@@ -240,12 +240,15 @@ public final class ReportingFactory {
 		final HtmlFactory htmlFactory = erzeugeHtmlFactory();
 		final List<ReportBuilderHtml> htmlBuilders = htmlFactory.createHtmlBuilders();
 		this.logger.logLn(LogLevel.DEBUG, 4, "HTML-Builder wurden erzeugt.");
-		return new PdfFactory(htmlBuilders, htmlFactory.bewusstLeer(), reportingContext);
+		return new PdfFactory(htmlBuilders, reportingContext);
 	}
 
 	/**
 	 * Erzeugt die Response eines Ausgabeformats. Sie entsteht innerhalb eines try-with-resources, damit sie im Fehlerfall automatisch geschlossen wird
-	 * (SonarQube-Vorgabe); zurückgegeben wird ein Klon, damit die Antwort nicht auf der bereits geschlossenen Ressource sitzt.
+	 * (SonarQube-Vorgabe); zurückgegeben wird ein Klon, damit die Antwort nicht auf der bereits geschlossenen Ressource sitzt. Der Klon übernimmt Status,
+	 * Inhalt und <b>alle Header</b> - er ist die letzte Station des Hinweis-Headers vor dem API-Rand.
+	 * <p>Die Methode ist paketprivat, damit ein Test diese Weitergabe messen kann: Die übrigen Header-Tests messen an den Ausgabefactorys und damit vor
+	 * dem Klon.</p>
 	 *
 	 * @param erzeuger Die Methode des jeweiligen Ausgabeformats, die die Response erzeugt. Sie darf eine {@link ApiOperationException} werfen; diese ist
 	 *                 ungeprüft und wird unverändert weitergereicht.
@@ -254,7 +257,7 @@ public final class ReportingFactory {
 	 *
 	 * @throws ApiOperationException Im Fehlerfall der Erzeugung.
 	 */
-	private static Response erzeugeResponse(final Supplier<Response> erzeuger) throws ApiOperationException {
+	static Response erzeugeResponse(final Supplier<Response> erzeuger) throws ApiOperationException {
 		try (Response autocloseResponse = erzeuger.get()) {
 			return Response.fromResponse(autocloseResponse).build();
 		}
@@ -263,6 +266,8 @@ public final class ReportingFactory {
 	/**
 	 * Protokolliert einen aufgetretenen Fehler samt Stacktrace, gibt das gesammelte Log für Entwicklungszwecke auf der Konsole aus und
 	 * erzeugt die nach außen zu werfende Exception mit dem vollständigen Log als Body.
+	 * <p>Dem Log wird eine Kopfzeile mit Status und Abbruchgrund vorangestellt. Der Abbruch steht sonst am Ende eines langen Logs, unterhalb der Befunde
+	 * des Laufs - wer die Antwort liest, sähe zuerst einen unbeteiligten Fehler.</p>
 	 *
 	 * @param fehlerursache Die aufgetretene Exception.
 	 * @param meldung       Die Meldung, die protokolliert wird.
@@ -273,7 +278,8 @@ public final class ReportingFactory {
 	 */
 	private ApiOperationException zuApiOperationException(final Exception fehlerursache, final String meldung, final Status status) {
 		ReportingExceptionUtils.logException(meldung, fehlerursache, logger, LogLevel.ERROR, 0);
-		final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
+		final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log,
+				ReportingExceptionUtils.abbruchKopfzeile(status.getStatusCode(), fehlerursache, meldung));
 		sop.log.forEach(Logger.global()::logLn);
 		return new ApiOperationException(status, fehlerursache, sop, MediaType.APPLICATION_JSON);
 	}

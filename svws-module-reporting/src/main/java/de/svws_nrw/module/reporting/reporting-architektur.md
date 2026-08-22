@@ -2,11 +2,13 @@
 
 Diese Dokumentation beschreibt den Ablauf der Report-Erzeugung im SVWS-Server und die Verantwortung der einzelnen Klassen-Typen. Sie richtet sich an Entwickler, die das Reporting-Modul erweitern oder warten.
 
-Die Doku des Reporting-Moduls ist auf drei Dateien verteilt:
+Die Doku des Reporting-Moduls ist auf mehrere Dateien verteilt:
 
+- **[`README.md`](README.md)** — der Einstieg: Wegweiser, ein Fünf-Minuten-Überblick am Beispiel und die Begriffstabelle zu den vier Bedeutungen von „Context".
 - **`reporting-architektur.md`** (diese Datei) — *beschreibt* Schichten, Klassen und Datenfluss.
 - **[`reporting-konventionen.md`](reporting-konventionen.md)** — die *verbindlichen* Regeln und Invarianten (Schichtentrennung, Null-Sicherheit, Fehlercodes, OGNL-Grenzen). **Vor jeder Änderung am Modul lesen**; bei Konflikt gilt die Konventionen-Datei.
 - **[`reporting-template-erstellung.md`](reporting-template-erstellung.md)** — Schritt-für-Schritt-Anleitung für Vorlagen-Autoren.
+- **[`reporting-sortierung-und-filterung.md`](reporting-sortierung-und-filterung.md)** — Anleitung, wie eine Sortierung oder ein Filter für einen Reporting-Typ ergänzt wird.
 
 ---
 
@@ -25,26 +27,73 @@ Architekturisch arbeitet das Modul in vier Schichten:
 
 ## 2. Schichten im Überblick
 
-Die Pipeline einer Report-Erzeugung ist immer dieselbe — unabhängig vom Ausgabeformat:
+Die Pipeline einer Report-Erzeugung ist immer dieselbe. Was sich je Anfrage unterscheidet, ist das
+Ausgabeformat und der Datenaufbau.
 
+```mermaid
+flowchart TD
+    API["APIReporting<br/>nimmt die Anfrage entgegen"]
+    API --> FAC["ReportingFactory<br/>prüft die Eingaben,<br/>wählt das Ausgabeformat"]
+    FAC --> CTX["ReportingContext<br/>Infrastruktur, Repositories,<br/>Diagnose"]
+    CTX --> HTML["HtmlFactory<br/>baut die Daten-Contexts<br/>und rendert das HTML"]
+
+    HTML -. "meldet Befunde beim<br/>Aufbau und Rendern" .-> CTX
+
+    HTML --> FORMAT{"Ausgabeformat?"}
+    FORMAT -- HTML --> DOK["Dokumentantwort"]
+    FORMAT -- "PDF oder E-Mail" --> PDF["PdfFactory<br/>erzeugt die PDF-Dokumente"]
+
+    PDF --> ZWECK{"Versand?"}
+    ZWECK -- nein --> ANZAHL{"mehrere Dokumente?"}
+    ANZAHL -- nein --> DOK
+    ANZAHL -- ja --> ZIP["ZIP-Archiv"]
+    ZIP --> DOK
+    ZWECK -- ja --> MAIL["EmailFactory<br/>Job mit den PDF-Anhängen"]
+    MAIL --> START["Startantwort<br/>kein Dokument, kein Header"]
+
+    CTX -. "Hinweis-Header<br/>derzeit nur im Modus DEV" .-> DOK
+    CTX -. "HINWEISE.txt" .-> ZIP
 ```
-APIReporting
-    │ instanziiert
-    ▼
-ReportingFactory ─── validiert Eingaben, baut den Kontext
-    │ erzeugt
-    ▼
-ReportingContext (+ 9 Domänen-Repositories, Sortierung, Filterung)
-    │ wird übergeben an
-    ▼
-HtmlFactory ── erzeugt HtmlContexts (Daten gemäß Template) ──► ReportBuilderHtml ── ReportRendererHtml ──► HTML
-    │ (bei PDF/E-Mail)
-    ▼
-PdfFactory ── ReportBuilderPdf ── ReportRendererPdf ──► PDF
-    │ (bei E-Mail)
-    ▼
-EmailFactory ── erzeugt EmailJob mit PDF-Anhängen ──► asynchroner Versand
+
+Die durchgezogenen Pfeile bedeuten hier **„danach"**, nicht „ruft auf" — wer wen kennen darf, steht
+in Abschnitt 2.1 und sieht anders aus.
+
+Die Diagnose ist kein eigener Schritt, sondern läuft mit: Sie sammelt Befunde während des
+Daten- und Context-Aufbaus und während des Renderns und speist zwei ungleiche Kanäle — den Header an einer Dokumentantwort und die Beilage
+allein im Archiv (Abschnitt 9.3). Die Startantwort des E-Mail-Versands trägt nichts von beidem.
+Der Header wird derzeit nur im Server-Modus `DEV` gesetzt; die Regeln dazu stehen in den
+Konventionen, der Weg dorthin in Abschnitt 9.3.
+
+### 2.1 Zulässige Abhängigkeiten
+
+Das Bild oben zeigt, was nacheinander passiert. Wer wen kennen darf, ist eine andere Frage:
+
+```mermaid
+flowchart TD
+    API["API-Schicht"] --> FACT["Factories<br/>steuern den Ablauf"]
+    FACT --> INIT["Initializer<br/>bauen die Daten-Contexts auf"]
+    FACT --> BUILD["Builder und Renderer<br/>erzeugen HTML und PDF"]
+    INIT --> CTXS["Daten-Contexts<br/>halten die Reporting-Objekte<br/>für die Vorlage"]
+    BUILD --> CTXS
+    CTXS --> TYP["Reporting-Typen<br/>reine Daten"]
+    CTXS --> PROXY["Proxy-Typen<br/>laden Werte beim<br/>Zugriff nach"]
+    PROXY --> REPO["Domänen-Repositories"]
+    REPO --> DB["Datenbank und<br/>Data-Klassen des Servers"]
 ```
+
+Ein Pfeil bedeutet „kennt und verwendet". Diese Regeln halten die Schichten auseinander:
+
+- **Nur Repositories greifen auf Datenbank und Data-Klassen zu.** Alles darüber arbeitet mit
+  Reporting-Typen.
+- **Reine Reporting-Typen kennen weder ein Repository noch den `ReportingContext`.** Allein die
+  Proxys laden nach; sie sind Untertypen der reinen Typen (Abschnitt 5.3), weshalb eine Vorlage den
+  Unterschied nicht sieht.
+- **Die Builder kennen den `ReportingContext` nicht.** Sie erhalten Vorlage, Renderer und die
+  fertig aufgebauten Daten-Contexts — mehr brauchen sie nicht. Nur so lässt sich ein Builder ohne
+  Datenbankverbindung testen.
+- **Der `ReportingContext` kennt niemanden über sich.** Factories, Initializer, Daten-Contexts,
+  Repositories und Proxys verwenden ihn; er selbst hält nur die Repositories und die Infrastruktur
+  dieser einen Anfrage.
 
 ---
 
@@ -54,7 +103,7 @@ EmailFactory ── erzeugt EmailJob mit PDF-Anhängen ──► asynchroner Ver
 
 Pfad: `svws-openapi/.../api/server/APIReporting.java`
 
-Die API-Klasse stellt drei JAX-RS-Endpunkte bereit:
+Die API-Klasse stellt die JAX-RS-Endpunkte des Reportings bereit:
 
 - **HTML-Ausgabe**: `POST /db/{schema}/reporting/html` — gibt den Report als selbsttragendes HTML-Dokument zurück.
 - **PDF-Ausgabe**: `POST /db/{schema}/reporting/ausgabe` — gibt den Report als PDF-Datei bzw. ZIP-Archiv zurück.
@@ -84,6 +133,28 @@ Ihre Methode `createReportResponse()` dispatcht auf das Ausgabeformat:
 
 ## 4. Datenebene
 
+Die Repositories laden die Hauptdaten einmal je Anfrage. Alles Weitere holt der Proxy erst dann,
+wenn die Vorlage danach fragt:
+
+```mermaid
+flowchart TD
+    CTX["ReportingContext<br/>entsteht einmal je Anfrage"]
+    CTX --> LADEN["Das Repository lädt<br/>die Hauptdaten und legt<br/>sie in seinen Cache"]
+    LADEN --> PROXY["Proxy-Objekt je Datensatz"]
+    PROXY --> RENDERN["Thymeleaf rendert<br/>die Vorlage"]
+    RENDERN --> ZUGRIFF["Die Vorlage greift auf<br/>eine Angabe zu, die noch<br/>nicht geladen ist"]
+    ZUGRIFF --> NACH["Der Proxy lädt sie<br/>beim Repository nach"]
+    NACH --> BEFUND{"Angabe vorhanden?"}
+    BEFUND -- ja --> WERT["Der Wert steht im Dokument"]
+    BEFUND -- nein --> PFLICHT{"Ist das Fehlen<br/>hier meldepflichtig?"}
+    PFLICHT -- "ja, etwas fehlt unerwartet" --> MELDUNG["Ausgabeproblem melden;<br/>die Stelle bleibt leer"]
+    PFLICHT -- "nein: optionale Angabe<br/>oder Auswahlentscheidung" --> STILL["Die Stelle bleibt leer,<br/>ohne Meldung"]
+```
+
+Das Nachladen passiert **während** des Renderns — deshalb entstehen Befunde noch dort und nicht
+schon beim Aufbau der Daten. Nicht jedes Fehlen ist ein Befund: Eine optionale Angabe darf fehlen,
+und ein vom Benutzerfilter ausgeschlossener Datensatz ist eine Auswahlentscheidung (Abschnitt 9.2).
+
 ### 4.1 `ReportingContext`
 
 Pfad: `module.reporting.repositories.ReportingContext`
@@ -100,25 +171,36 @@ Der `ReportingContext` ist der zentrale Kontext-Container, der durch die gesamte
 - `repositorySchule()`, `repositoryKataloge()`, `repositoryLehrer()`, `repositorySchueler()`, `repositoryLerngruppen()`, `repositoryStundenplan()`, `repositoryGost()`, `repositoryGostKlausurplanung()`, `repositoryGostKursplanung()`
 
 **Aktuell angemeldeter Benutzer**
-- `benutzer()` liefert einen `ProxyReportingBenutzer`, der den angemeldeten Benutzer der DB-Verbindung bündelt (Benutzerdaten, E-Mail-Daten, benutzerbezogener `EmailJobManagerContext`). Der Proxy wird im Konstruktor des Contexts initialisiert und steht damit allen nachgelagerten Schichten zur Verfügung — z. B. für E-Mail-Versand im Namen des Benutzers und für Berechtigungs-/Identitäts-Anzeigen in Reports.
+- `benutzer()` liefert einen `ProxyReportingBenutzer`, der den angemeldeten Benutzer der DB-Verbindung bündelt (Benutzerdaten, E-Mail-Daten, benutzerbezogener `EmailJobManager`). Der Proxy wird im Konstruktor des Contexts initialisiert und steht damit allen nachgelagerten Schichten zur Verfügung — z. B. für E-Mail-Versand im Namen des Benutzers und für Berechtigungs-/Identitäts-Anzeigen in Reports.
 
-Der `ReportingContext` selbst hält keine fachlichen Daten und keinen eigenen Cache — er delegiert vollständig an die Domänen-Repositories. Sein Konstruktor instanziiert in fester Reihenfolge die neun Domänen-Repositories und reicht jedem davon `this` weiter, sodass jedes Sub-Repository im Bedarfsfall auf die Infrastruktur und auf die anderen Domänen zugreifen kann.
+Der `ReportingContext` selbst hält keine fachlichen Daten und keinen eigenen Cache — er delegiert vollständig an die Domänen-Repositories. Sein Konstruktor instanziiert in fester Reihenfolge die Domänen-Repositories und reicht jedem davon `this` weiter, sodass jedes Sub-Repository im Bedarfsfall auf die Infrastruktur und auf die anderen Domänen zugreifen kann.
 
-### 4.2 Die neun Domänen-Repositories
+### 4.2 Die Domänen-Repositories
 
-Alle Repositories liegen unter `module.reporting.repositories`. Jedes ist verantwortlich für eine fachliche Domäne. Die meisten Repositories arbeiten konsequent lazy: die Konstruktoren halten lediglich die Referenz auf den `ReportingContext`, alle DB-Zugriffe erfolgen erst beim ersten Aufruf des jeweiligen Getters bzw. der ID-basierten Lookup-Methode und werden anschließend intern gecached. Lediglich `ReportingRepositorySchule` und `ReportingRepositoryStundenplan` laden im Konstruktor kleine, ohnehin in jedem Report benötigte Metadaten (Schulstammdaten, Abschnitt, Stundenplandefinitionen). Die beiden GOSt-Subdomain-Repositories `ReportingRepositoryGostKlausurplanung` und `ReportingRepositoryGostKursplanung` verwalten je einen Manager pro Reporting-Request, der über eine explizite `initManager(...)`-Methode initialisiert wird — der Aufruf erfolgt aktuell aus dem Konstruktor des jeweils zuständigen HtmlContext (`HtmlContextGostKlausurplanungKlausurplan` bzw. `HtmlContextGostKursplanungBlockungsergebnis`); alle Reporting-Objekte (Klausurtermine/Kursklausuren/Schülerklausuren bzw. Blockungsergebnis/Schienen/Kurse) werden anschließend zentral im Repository aufgebaut und gecached. **Achtung Temporalkopplung:** Zugriffe auf diese Repositories vor der Context-Erzeugung (z. B. aus der `EmailFactory`) setzen voraus, dass der Manager bereits initialisiert wurde.
+Alle Repositories liegen unter `module.reporting.repositories`. Jedes ist verantwortlich für eine fachliche Domäne.
 
-| Repository | Verantwortung | Typische Methoden |
-|------------|---------------|-------------------|
-| `ReportingRepositorySchule`              | Schulstammdaten, Schullogo, aktiver, kontextueller und ausgewählter Schuljahresabschnitt, Berechnungsmethoden auf Abschnittsebene | `stammdaten()`, `schullogoBase64()`, `schuljahresabschnitt(id)`, `aktuellerSchuljahresabschnitt()`, `auswahlSchuljahresabschnitt()` |
-| `ReportingRepositoryKataloge`            | Fächerkatalog, Jahrgänge, Erzieherarten, weitere stammdaten-nahe Listen | `faecher()`, `jahrgaenge()`, `erzieherart(id)` |
-| `ReportingRepositoryLehrer`              | Lehrkräfte, Kollegium, Leitungsfunktionen, Lehrer-spezifische Unterrichts-Aufstellungen | `lehrer(id)`, `lehrer(ids)`, `alleLehrer()`, `existiertLehrer(id)` |
-| `ReportingRepositorySchueler`            | Schüler-Stammdaten, Lernabschnitte, Erzieher, Leistungsdaten, Sprachenfolgen | `schueler(id)`, `waehleAus(ids)`, `lernabschnitte(id)`, `erzieherStammdaten(id)` |
-| `ReportingRepositoryLerngruppen`         | Klassen und Kurse | `klasse(id)`, `kurs(id)`, `waehleKlassenAus(ids)`, `klassen(idSchuljahresabschnitt)` |
-| `ReportingRepositoryStundenplan`         | Stundenpläne inkl. Pausen, Räume und Aufsichten | `stundenplan(id)` (strikt), `stundenplan(datum)` (optional), `manager(id)` |
-| `ReportingRepositoryGost`                | Allgemeine Daten der gymnasialen Oberstufe: Abiturjahrgänge, Jahrgangsdaten und FächerManager, Laufbahn-Beratungsdaten, Abiturdaten, Fachwahlstatistik | `abiturjahrgaenge()`, `jahrgangsdaten(abiturjahr)`, `faecherManager(abiturjahr)`, `beratungsdaten(id)`, `schuelerAbiturdaten(id)`, `fachwahlen(abiturjahr)` |
-| `ReportingRepositoryGostKlausurplanung`  | GOSt-Klausurplanung: zentral aufgebauter `GostKlausurplanManager` sowie alle daraus abgeleiteten Reporting-Objekte (Klausurtermine, Kursklausuren, Schülerklausuren). Schüler und Kurse werden über die zentralen Schüler- und Lerngruppen-Repositories bezogen. | `initManager(selection)`, `manager()`, `klausurtermine()`/`klausurtermin(id)`, `kursklausuren()`/`kursklausur(id)`, `schuelerklausuren()`/`schuelerklausur(id)`, `schueler()`, `kurse()` |
-| `ReportingRepositoryGostKursplanung`     | GOSt-Kursplanung: zentral aufgebauter `GostBlockungsergebnisManager` sowie alle daraus abgeleiteten Reporting-Objekte (Blockungsergebnis, Schienen, Kurse). Schüler/Lehrer werden über die zentralen Repositories bezogen. | `initManager(idBlockungsergebnis)`, `manager()`, `blockungsergebnis()`/`blockungsergebnis(id)`, `schienen()`/`schiene(id)`, `kurse()`/`kurs(id)` |
+**Geladen wird beim ersten Zugriff.** Die Konstruktoren halten lediglich die Referenz auf den `ReportingContext`. Alle DB-Zugriffe erfolgen erst beim ersten Aufruf des jeweiligen Getters bzw. der ID-basierten Lookup-Methode und werden anschließend intern gecached.
+
+**Zwei Repositories laden eigene Metadaten im Konstruktor.** `ReportingRepositorySchule` und `ReportingRepositoryStundenplan` holen dort kleine, ohnehin in jedem Report benötigte Daten: Schulstammdaten, Abschnitt und Stundenplandefinitionen.
+
+**Die beiden GOSt-Planungs-Repositories arbeiten mit einem Manager.** `ReportingRepositoryGostKlausurplanung` und `ReportingRepositoryGostKursplanung` verwalten je einen Manager pro Reporting-Request, der über eine explizite `initManager(...)`-Methode initialisiert wird. Der Aufruf erfolgt aus dem Konstruktor des jeweils zuständigen HtmlContext — `HtmlContextGostKlausurplanungKlausurplan` bzw. `HtmlContextGostKursplanungBlockungsergebnis`. Die daraus abgeleiteten Reporting-Objekte (Klausurtermine, Kursklausuren und Schülerklausuren bzw. Blockungsergebnis, Schienen und Kurse) werden anschließend zentral im Repository aufgebaut und gecached.
+
+**Daraus folgt eine Reihenfolge-Abhängigkeit.** Ein Zugriff auf diese beiden Repositories vor der Context-Erzeugung — etwa aus der `EmailFactory` — setzt voraus, dass der Manager bereits initialisiert ist.
+
+| Repository | Verantwortung |
+|------------|---------------|
+| `ReportingRepositorySchule`              | Schulstammdaten, Schullogo, aktiver, kontextueller und ausgewählter Schuljahresabschnitt, Berechnungsmethoden auf Abschnittsebene |
+| `ReportingRepositoryKataloge`            | Fächerkatalog, Jahrgänge, Erzieherarten, weitere stammdaten-nahe Listen |
+| `ReportingRepositoryLehrer`              | Lehrkräfte, Kollegium, Leitungsfunktionen, Lehrer-spezifische Unterrichts-Aufstellungen |
+| `ReportingRepositorySchueler`            | Schüler-Stammdaten, Lernabschnitte, Erzieher, Leistungsdaten, Sprachenfolgen |
+| `ReportingRepositoryLerngruppen`         | Klassen und Kurse |
+| `ReportingRepositoryStundenplan`         | Stundenpläne inkl. Pausen, Räume und Aufsichten |
+| `ReportingRepositoryGost`                | Allgemeine Daten der gymnasialen Oberstufe: Abiturjahrgänge, Jahrgangsdaten und FächerManager, Laufbahn-Beratungsdaten, Abiturdaten, Fachwahlstatistik |
+| `ReportingRepositoryGostKlausurplanung`  | GOSt-Klausurplanung: Klausurplan-Manager und die daraus abgeleiteten Objekte |
+| `ReportingRepositoryGostKursplanung`     | GOSt-Kursplanung: Blockungsergebnis-Manager und die daraus abgeleiteten Objekte |
+
+Schüler, Lehrkräfte und Kurse beziehen die beiden Planungs-Repositories über die zentralen
+Repositories, damit deren Filterung und Sortierung auch dort gilt.
 
 Die Repositories sind die einzigen Stellen im Modul, die `new DataXxx(...)` aus dem Server-DB-Paket aufrufen oder direkt Queries gegen `conn()` absetzen. Alle übrigen Schichten — insbesondere die Proxy-Reporting-Typen — gehen ausschließlich über die Repository-Methoden.
 
@@ -130,190 +212,13 @@ Auch das Instanziieren der zugehörigen `ProxyReporting…`-Objekte (z. B. `Prox
 
 Sortierung und Filterung sind im Reporting-Modul typsicher pro Reporting-Typ konfiguriert. Für jeden Reporting-Typ existiert eine **Begleit-Datei** neben dem Typ, die dessen Registry (Whitelist erlaubter Attribute) und — bei Sortierung — die Standardsortierung beschreibt. Der zugehörige Reporting-Typ exponiert die fertigen Konfigurationen als statische Konstanten `SORTIERUNG` und `FILTER` mit den Typen `ReportingSortierung<T>` bzw. `ReportingFilterung<T>`.
 
-Auf API-Seite übergibt der Endnutzer in den `ReportingParameter` für jeden Reporting-Typ eine eigene **Gruppe** (Schlüssel ist der einfache Klassenname, z. B. `"ReportingSchueler"`). Zwei zustandslose Helfer-Services im `ReportingContext` — `ReportingSortierungService` und `ReportingFilterService` — extrahieren aus den Parametern die Gruppe zum gewünschten Typ. Die typisierte Umsetzung in einen `Comparator<T>` bzw. `Predicate<T>` erfolgt anschließend über die `SORTIERUNG`/`FILTER`-Konstante des Reporting-Typs.
+Auf API-Seite übergibt der Endnutzer in den `ReportingParameter` für jeden Reporting-Typ eine eigene **Gruppe** (Schlüssel ist der einfache Klassenname, z. B. `"ReportingSchueler"`). Zustandslose Helfer-Services im `ReportingContext` — `ReportingSortierungService` und `ReportingFilterService` — extrahieren aus den Parametern die Gruppe zum gewünschten Typ. Die typisierte Umsetzung in einen `Comparator<T>` bzw. `Predicate<T>` erfolgt anschließend über die `SORTIERUNG`/`FILTER`-Konstante des Reporting-Typs.
 
 Neue Reporting-Typen werden eingebunden, indem eine `Reporting<Typ>Sortierung`- und/oder `Reporting<Typ>Filter`-Begleit-Datei angelegt und am Reporting-Typ eine `SORTIERUNG`/`FILTER`-Konstante exponiert wird — ohne Eingriff in die Services.
 
-#### 4.3.1 `ReportingSortierung<T>` und Begleit-Datei `Reporting<Typ>Sortierung`
-
-Pfad: `module.reporting.sortierung.ReportingSortierung`
-
-Bündelt für einen Reporting-Typ `T` die `SortierungRegistry<T>` und die Standardsortierung in einer typsicheren Konfiguration. Wird über einen Builder erzeugt (`ReportingSortierung.<T>builder().registry(...).standard(...).build()`) und stellt folgende Methoden bereit:
-
-- `registry()` — die zugrundeliegende `SortierungRegistry<T>` (z. B. für `importiereRegistryEintraege(...)` in einer übergeordneten Registry).
-- `standardsortierung()` — Liste der Attributnamen der Standardsortierung in Sortierreihenfolge.
-- `comparator(List<String> attribute, List<String> validierungsfehler)` — baut einen `Comparator<T>` aus extern übergebenen Attributen. Unbekannte Attribute werden in `validierungsfehler` gesammelt.
-- `comparatorStandard()` — baut einen `Comparator<T>` aus der Standardsortierung. Da diese aus dem Code stammt, wäre ein unbekanntes Attribut ein Programmierfehler und wird als `IllegalStateException` sichtbar.
-- `comparatorIdentitaet()` — Comparator, der die Eingabereihenfolge unverändert lässt (macht „keine Sortierung" an der Aufrufstelle explizit).
-
-Die Begleit-Datei `Reporting<Typ>Sortierung.java` (z. B. `ReportingSchuelerSortierung`, `ReportingKursSortierung`, `ReportingGostKlausurplanungSchuelerklausurSortierung`) liegt direkt neben dem Reporting-Typ und enthält:
-
-- eine private `buildRegistry()`-Methode, die alle erlaubten Attribute mit ihren Extraktoren registriert,
-- eine `public static final ReportingSortierung<T> SORTIERUNG`-Konstante mit Registry und Standardsortierung,
-- einen privaten Konstruktor, der die Begleit-Klasse als nicht-instanziierbar markiert.
-
-Der Reporting-Typ selbst exponiert die Konstante mit kurzer Schreibweise weiter, z. B.:
-
-```java
-public static final ReportingSortierung<ReportingSchueler> SORTIERUNG = ReportingSchuelerSortierung.SORTIERUNG;
-```
-
-#### 4.3.2 `SortierungRegistry<T>`
-
-Pfad: `module.reporting.sortierung.SortierungRegistry`
-
-Generische Registry, die eine Map aus normierten Attributnamen auf typsichere Extraktor-Funktionen verwaltet und Builder-Helfer bereitstellt:
-
-- `registiereString(name, extractor)` / `registiereString(SerializableFunction)` — Attribute mit String-Wert (locale-aware deutsche Sortierung).
-- `registiereComparable(name, extractor)` / `registiereComparable(SerializableFunction)` — Attribute mit numerischem/Date-/Enum-Wert.
-- `importiereRegistryEintraege(prefix, sub-registry, navigator)` — übernimmt Einträge einer fremden Registry mit Pfad-Präfix (z. B. `auswahlLernabschnitt.klasse.kuerzel`). Genutzt, um die Attribute eines verschachtelten Reporting-Typs unter einem Prefix in die aktuelle Registry zu spiegeln.
-
-Methodennamen werden über `ReportingTypesUtils.methodeToString(SerializableFunction)` typsicher aus `SerializedLambda` extrahiert — das vermeidet Magic-Strings in der Standardsortierung und in Import-Prefixen.
-
-#### 4.3.3 `ReportingSortierungService`
-
-Pfad: `module.reporting.sortierung.ReportingSortierungService`
-
-Zustandsloser Service. Einstiegsmethode:
-
-```java
-List<String> getSortierungsAttribute(String typ, List<String> fallbackStandardsortierung)
-```
-
-Sie sucht die `ReportingSortierungDefinitionGruppe` für den angegebenen Typnamen in den Reporting-Parametern und löst sie wie folgt auf:
-
-1. Liegt eine benutzerdefinierte Definition vor (`verwendeStandardsortierung == false`, mindestens ein Attribut), werden deren *bereinigte* Attributnamen zurückgegeben (Whitespace und nachgestellte `()` werden entfernt).
-2. Wird explizit die Standardsortierung gewünscht (`verwendeStandardsortierung == true`) ODER fehlt eine passende Definition ganz, wird die übergebene `fallbackStandardsortierung` zurückgegeben.
-3. Bei `fallbackStandardsortierung == null` und ohne benutzerdefinierte Sortierung liefert die Methode eine leere Liste — interpretiert als „keine Sortierung".
-
-Der Service kennt selbst keine Reporting-Typen und keine Registries — die Standardsortierung wird ausschließlich von der Aufrufstelle übergeben (typischerweise `Typ.SORTIERUNG.standardsortierung()`).
-
-#### 4.3.4 `ComparatorFactory`
-
-Pfad: `module.reporting.sortierung.ComparatorFactory`
-
-Stellt die einzige zentrale Methode bereit, die Service und Begleit-Konstante zusammenbringt:
-
-```java
-<T> Comparator<T> buildComparator(
-        ReportingSortierungService sortierungService,
-        Logger logger,
-        String typName,
-        ReportingSortierung<T> sortierung,
-        boolean erzeugeComparatorZuSortierung)
-```
-
-Ablauf:
-
-1. Wenn `erzeugeComparatorZuSortierung == false` oder kein Service vorhanden ist, wird `sortierung.comparatorIdentitaet()` zurückgegeben.
-2. Sonst fragt die Methode `sortierungService.getSortierungsAttribute(typName, sortierung.standardsortierung())` ab.
-3. Ist die Attributliste leer, wird ebenfalls die Identität zurückgegeben.
-4. Sonst wird `sortierung.comparator(attribute, validierungsfehler)` aufgerufen; eventuelle Validierungsfehler werden ins Log geschrieben.
-
-Die Domänen-Repositories (z. B. `ReportingRepositoryLehrer.lehrer(List<Long>, boolean)`) nutzen diese Methode, um beim Bulk-Load direkt sortierte Listen zurückzugeben. Die `HtmlContext`-Subklassen sortieren über `HtmlContextSortierung`, die ebenfalls an diese Methode delegiert (siehe Abschnitt 6.3).
-
-#### 4.3.5 `ReportingFilterung<T>` und Begleit-Datei `Reporting<Typ>Filter`
-
-Pfad: `module.reporting.filterung.ReportingFilterung`
-
-Bündelt für einen Reporting-Typ `T` dessen `FilterRegistry<T>` in einer typsicheren Konfiguration. Wird über einen Builder erzeugt (`ReportingFilterung.<T>builder().registry(...).build()`) und stellt bereit:
-
-- `registry()` — die zugrundeliegende `FilterRegistry<T>`.
-- `bedingung(ReportingFilterDefinitionGruppe gruppe, List<String> validierungsfehler)` — baut aus einer Filtergruppe ein `Predicate<T>`:
-  - Ist die Gruppe `null` oder leer, liefert die Methode ein Pass-Through `t -> true`.
-  - Enthält die Gruppe genau eine `ReportingFilterDefinition`, wird sie 1:1 verwendet.
-  - Bei mehreren Definitionen werden sie gemäß `gruppe.multiselectVerknuepfung` (`AND`/`OR`) kombiniert.
-
-Die Begleit-Datei `Reporting<Typ>Filter.java` (z. B. `ReportingSchuelerFilter`, `ReportingKursFilter`, `ReportingGostKursplanungKursFilter`) liegt direkt neben dem Reporting-Typ und enthält:
-
-- eine private `buildRegistry()`-Methode mit allen `registriereAttribut(...)`-Aufrufen,
-- eine `public static final ReportingFilterung<T> FILTER`-Konstante,
-- einen privaten Konstruktor zur Markierung als nicht-instanziierbar.
-
-Der Reporting-Typ exponiert die Konstante weiter, z. B.:
-
-```java
-public static final ReportingFilterung<ReportingSchueler> FILTER = ReportingSchuelerFilter.FILTER;
-```
-
-#### 4.3.6 `FilterRegistry<T>`
-
-Pfad: `module.reporting.filterung.FilterRegistry`
-
-Generische Auswertungs-Engine:
-
-- `registriereAttribut(name, Function<T, ?>)` / `registriereAttribut(SerializableFunction)` — registriert ein filterbares Attribut (case-insensitiv gespeichert).
-- `erstelleFilter(ReportingFilterDefinition, validierungsfehler)` — Hauptmethode, baut aus einer Definition ein `Predicate<T>`. Eine Definition besteht aus *Kriterien*; ein Kriterium aus *Einträgen* (Attribut+Operation+Werte) und optionalen *Unterkriterien*. Innerhalb eines Kriteriums werden Einträge gemäß `verknuepfung` (`AND`/`OR`) verknüpft, optional negiert. Unterkriterien werden rekursiv ausgewertet.
-- Unterstützte Operationen (siehe `ReportingFilterOperation`): `EQUAL`, `NOT_EQUAL`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `GREATER`, `GREATER_OR_EQUAL`, `LESS`, `LESS_OR_EQUAL`, `IN`, `BETWEEN`.
-- Typ-Anpassung: Der String-Wert aus dem Filter wird abhängig vom Laufzeit-Typ des Attributwerts konvertiert (`String`, `Number`, `Boolean`, `LocalDate`, `LocalDateTime`, generische `Comparable`-Typen). String-Vergleiche sind case-insensitiv.
-- Unbekannte Attribute werden ignoriert (Predicate liefert `true`); der Name wird in `validierungsfehler` gesammelt und kann später z. B. ins Log ausgegeben werden.
-
-#### 4.3.7 `ReportingFilterService`
-
-Pfad: `module.reporting.filterung.ReportingFilterService`
-
-Zustandsloser Service mit zwei Methoden:
-
-```java
-ReportingFilterDefinitionGruppe getFilter(String typ)
-boolean                         hatFilter(String typ)
-```
-
-- `getFilter(typ)` liefert den Filter in Form einer `ReportingFilterDefinitionGruppe` aus den `ReportingParameter.filterDefinitionenGruppen` für den angegebenen Reporting-Typ — oder `null`, wenn keine Gruppe vorhanden ist. Das Ergebnis wird direkt an `Typ.FILTER.bedingung(gruppe, validierungsfehler)` weitergegeben, um daraus das `Predicate<T>` zu bauen.
-- `hatFilter(typ)` liefert `true`, sobald für den Typ mindestens eine Filterdefinition mit mindestens einem Kriterium existiert. Wird typischerweise im Reporting-Datenaufbau benötigt, um zu entscheiden, ob ein gefilterter Sub-Datensatz separat aufgebaut werden muss (z. B. „nur die selektierten Kurse" zusätzlich zu „alle Kurse" im selben Report).
-
-#### 4.3.8 Definitions-Klassen und Factories (Paket `core.data.reporting` / `core.utils.reporting`)
-
-Die *Definitions*-Datenklassen werden im Core-Modul gepflegt, damit der WebClient sie über die transpiliert verfügbar hat:
-
-- `ReportingSortierungDefinitionGruppe` — Gruppe pro Reporting-Typ, enthält `typ`, `ortsteil`, Liste der ausgewählten `sortierungDefinitionen` und der zur Auswahl stehenden `sortierungDefinitionenOptionen`.
-- `ReportingSortierungDefinition` — eine einzelne Sortierung mit `attribute: List<String>` und Flag `verwendeStandardsortierung`.
-- `ReportingFilterDefinitionGruppe` — analog für Filter; zusätzlich `uiIstMultiselect` und `multiselectVerknuepfung` (`AND`/`OR`).
-- `ReportingFilterDefinition` — eine einzelne Definition mit Liste von `ReportingFilterKriterium`.
-- `ReportingFilterKriterium` — Baustein mit `eintraege` (Attribut + Operation + Werte), `unterkriterien`, `verknuepfung` und Negations-Flag.
-
-Zum bequemen programmatischen Erzeugen dieser Strukturen — vor allem im Client, der über transpilierte Versionen verfügt — stehen Factory-Klassen bereit:
-
-- `ReportingSortierungDefinitionFactory` / `ReportingSortierungDefinitionGruppeFactory`
-- `ReportingFilterDefinitionFactory` (mit statischen Helfern wie `definition(...)`, `and(...)`, `or(...)`, `eq(...)`, `in(attribut, werte...)`)
-- `ReportingFilterDefinitionGruppeFactory` mit zwei Convenience-Methoden:
-  - `gruppe(bezeichnung, typ, uiIstSichtbar, definitionen...)` — Standardfall.
-  - `gruppeAusIds(bezeichnung, typ, uiIstSichtbar, List<Long> idsListe)` — Kurzform für eine ID-basierte Auswahl: erzeugt automatisch eine Definition mit einem `IN`-Filter auf das Attribut `"id"`.
-
-#### 4.3.9 Typischer Einsatz
-
-Filterung und Sortierung werden zentral in den Listen-Methoden der Domänen-Repositories angewandt. Das Muster sieht — analog zu `ComparatorFactory.buildComparator(...)` für die Sortierung — so aus:
-
-```java
-// Filter-Predicate aus dem Service holen — Typname per ClassName
-final Predicate<ReportingLehrer> filter = ReportingLehrer.FILTER.bedingung(
-        reportingContext.filterService().getFilter(ReportingLehrer.class.getSimpleName()),
-        null);
-
-// Comparator analog
-final Comparator<ReportingLehrer> comparator = ComparatorFactory.buildComparator(
-        reportingContext.sortierungService(),
-        reportingContext.logger(),
-        ReportingLehrer.class.getSimpleName(),
-        ReportingLehrer.SORTIERUNG,
-        sortiereListe);
-
-// Beides wird an die zentrale Helper-Methode übergeben, die laden → filtern → sortieren übernimmt:
-ReportingRepositoryUtils.waehleAus(
-        ids, mapStammdaten, mapReportingObjekte,
-        stammdatenLoader, reportingObjektErsteller, idExtractor,
-        comparator, filter, "Lehrer", reportingContext.logger(), ladefehlerLehrerStammdaten);
-```
-
-Damit propagieren Filter und Sortierung automatisch in alle Aggregate (Klassen, Kurse, Klausurplan, Blockungsergebnis, Stundenplanung …), sobald sie ihre Aggregat-Listen über die Repos auflösen. Die Aufrufer benötigen keine eigene Filter-Logik mehr.
-
-Innerhalb von Konstruktoren oder Sub-Listen werden die Sortier-Attributnamen häufig direkt über den Service geholt und an einen Sub-Konstruktor übergeben — die Standardsortierung kommt dabei explizit aus der `SORTIERUNG`-Konstante des Typs:
-
-```java
-reportingContext.sortierungService().getSortierungsAttribute(
-        ReportingSchueler.class.getSimpleName(),
-        ReportingSchueler.SORTIERUNG.standardsortierung());
-```
+Die Bausteine im Einzelnen — Registry, Companion-Dateien, Services, Factories — und die
+Schritt-für-Schritt-Einbindung eines neuen Typs beschreibt die Anleitung
+[`reporting-sortierung-und-filterung.md`](reporting-sortierung-und-filterung.md).
 
 ### 4.4 Parameter
 
@@ -324,19 +229,22 @@ reportingContext.sortierungService().getSortierungsAttribute(
 
 Die Eingabe-Validierung liegt in der paketprivaten Hilfsklasse `HtmlContextValidierung` (Paket `html.contexts.initializer`) und wird von den Initializern vor dem Bau der `HtmlContext`-Instanzen aufgerufen. Ihre Methoden sind statisch und nehmen den `ReportingContext` als ersten Parameter — nur so sind sie sowohl aus den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwendbar. Neben den allgemeinen Prüfungen enthält sie die je Datenaufbau gebündelten Zusatzprüfungen (`pruefungenGostAbitur(...)`, `pruefungenGostLaufbahnplanung(...)`), die in der Registry als Methodenreferenz eingetragen sind:
 
-- `pruefeUndMeldeAuswahl(...)` — prüft, dass die Anfrage überhaupt Hauptdaten benennt (eine im Request leere ID-Liste ergibt `BAD_REQUEST`), und meldet je ausgelassener ID der Auswahl ein Ausgabeproblem mit der Ursache aus ihrem Ladezustand. Über diese Prüfung laufen die Datenaufbauten nach dem Listen-Muster und die fünf Sichtweisen der Stundenplanung: Eine ID, die sich nicht auflösen lässt, wird ausgelassen, statt den Report abzubrechen.
+- `pruefeUndMeldeAuswahl(...)` — prüft, dass die Anfrage überhaupt Hauptdaten benennt (eine im Request leere ID-Liste ergibt `BAD_REQUEST`), und meldet je ausgelassener ID der Auswahl ein Ausgabeproblem mit der Ursache aus ihrem Ladezustand. Über diese Prüfung laufen die Datenaufbauten nach dem Listen-Muster und die Sichtweisen der Stundenplanung: Eine ID, die sich nicht auflösen lässt, wird ausgelassen, statt den Report abzubrechen.
 - `validiereSchuleMitGost()` — delegiert an `repositorySchule().istSchuleMitGost()` und wirft bei `false` eine `ApiOperationException`.
-- `validiereParameterFuerAbiturjahrgangUndHalbjahre(boolean paarweise)` — vereint die Validierungen für die GOSt-Klausurplanung; je nach Flag werden Abiturjahre und Halbjahre paarweise (z. B. (2026, EF.1), (2026, EF.2)) oder unabhängig validiert. Stützt sich auf `validiereAbiturjahr(...)`, `validiereHalbjahr(...)`, `validiereParameterPaarweise(...)` und `validiereParameterEinzeln(...)`.
+- `validiereAbiturjahrgangAlsHauptressource(...)` — prüft die Parameter eines Reports, dessen Hauptressource ein einzelner Abiturjahrgang ist (Fachwahlstatistiken der GOSt-Laufbahnplanung): erste ID das Abiturjahr, danach beliebige Halbjahre. Ein nicht vorhandener Abiturjahrgang ergibt `NOT_FOUND`, ein unlesbarer Wert oder eine Wertebereichsverletzung `BAD_REQUEST`. Stützt sich auf `validiereParameterEinzeln(...)` und `validiereHalbjahr(...)`.
+Die Stufen der GOSt-Klausurplanung (kombinierte IDs aus Abiturjahrgang und GOSt-Halbjahr, z. B. 20261 für (2026, EF.2)) prüft dagegen deren Initializer selbst: Sie sind Nutzlast wie die IDs eines Listenreports. Form und Wertebereich ergeben `BAD_REQUEST`, ein nicht vorhandener Abiturjahrgang wird ausgelassen und gemeldet; bleibt keine Stufe übrig, meldet der Initializer den bewussten Leerfall. Ohne übergebene Stufen durchlaufen die drei aus dem Schuljahresabschnitt abgeleiteten Stufen dieselbe Auswahl.
 
-Alle Validierer werfen bei Fehlern eine `ApiOperationException` und behalten ihr bisheriges Logging-Verhalten: die Prüfung der leeren ID-Liste und `validiereSchuleMitGost(...)` protokollieren zuvor über `reportingContext.logger()`, `validiereParameterFuerAbiturjahrgangUndHalbjahre(...)` und die von ihr genutzten Prüfungen werfen ohne eigenen Log-Eintrag. Die Prüf-Logik steht damit an einer Stelle und ist nicht an die `HtmlFactory` gebunden.
+Die Prüfungen laden die vorhandenen Abiturjahrgänge über `repositoryGost().abiturjahrgaenge()`; ein Fehler dieses Ladens ist ein Serverproblem, das Repository wirft ihn statustragend mit `INTERNAL_SERVER_ERROR`, und die Prüfungen reichen ihn unverändert durch.
+
+Alle Validierer werfen bei Fehlern eine `ApiOperationException`. Die Prüfung der leeren ID-Liste und `validiereSchuleMitGost(...)` protokollieren zuvor über `reportingContext.logger()`; die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne eigenen Log-Eintrag. Die Prüf-Logik steht damit an einer Stelle und ist nicht an die `HtmlFactory` gebunden.
 
 ### 4.6 Signierte Schulbescheinigung (QR-Code) — Paket `signing/`
 
 Für die fälschungssichere Schulbescheinigung erzeugt das Paket `module.reporting.signing` zwei QR-Codes pro Schüler: einen mit den komprimierten Bescheinigungsdaten und einen mit deren digitaler Signatur. Die Pipeline ist bewusst aus der Repository-Schicht herausgelöst und in einer eigenen Factory gebündelt; das Repository verantwortet nur das Caching.
 
-- **`SchulbescheinigungQrFactory`** — Einstiegspunkt. `erzeuge(List<Long> idsSchueler)` durchläuft die mehrstufige Pipeline für einen ganzen Batch: Ausstellungsdaten ermitteln → je Schüler XSchule-XML erzeugen → alle XMLs in **einem** Aufruf des Signierdienstes signieren → QR-Codes als SVG rendern. Der Signier-Service wird lazy über einen `Supplier<SignatureService>` (Default: `SignatureServiceFactory`/it.NRW) bezogen, damit Konfigurationsfehler erst bei tatsächlichem Bedarf greifen. Scheitern XML-Erzeugung, Signierung oder Rendering trotz geladener Ausgangsdaten, legt die Factory je betroffenem Schüler einen Eintrag mit Fehlermeldung an und meldet das Ausgabeproblem. Fehler beim Aufbau der gemeinsamen Ausstellungsdaten fängt sie dagegen bewusst nicht: Sie propagieren zum Lade-Fallback des aufrufenden Repositories, das die Exception je Schüler festhält und nach außen weiterhin einen Fehlereintrag statt `null` liefert.
+- **`SchulbescheinigungQrFactory`** — Einstiegspunkt. `erzeuge(List<Long> idsSchueler)` durchläuft die mehrstufige Pipeline für einen ganzen Batch: Ausstellungsdaten ermitteln → je Schüler XSchule-XML erzeugen → alle XMLs in **einem** Aufruf des Signierdienstes signieren → QR-Codes als SVG rendern. Der Signier-Service wird lazy über einen `Supplier<SignatureService>` (Default: `SignatureServiceFactory`/it.NRW) bezogen, damit Konfigurationsfehler erst bei tatsächlichem Bedarf greifen. Scheitern XML-Erzeugung, Signierung oder Rendering trotz geladener Ausgangsdaten, legt die Factory je betroffenem Schüler einen Eintrag mit dem Signaturzustand `DATENFEHLER` beziehungsweise `SIGNIERFEHLER` an und meldet das Ausgabeproblem. Fehler beim Aufbau der gemeinsamen Ausstellungsdaten fängt sie dagegen bewusst nicht: Die Schulstammdaten sind längst geladen, ein Scheitern bezeichnet also einen inkonsistenten Zustand und beendet die Ausgabe. Das aufrufende Repository ruft die Factory bewusst ohne das generische Ladeverfahren auf — ein Einzel-ID-Fallback würde einen Dienstausfall verschlucken und den ausgefallenen Dienst je Schüler erneut aufrufen.
 - **`SchulbescheinigungXmlFactory`** — `erzeugeXml(ReportingSchueler, ReportingSchule, …)` baut das XSchule-konforme XML einer einzelnen Bescheinigung.
-- **`SchulbescheinigungQrDaten`** — `record(String qr1Svg, String qr2Svg, String fehlermeldung)`: das Ergebnis pro Schüler (Daten-QR, Signatur-QR, optionale Fehlermeldung).
+- **`SchulbescheinigungQrDaten`** — `record(String qr1Svg, String qr2Svg, SchulbescheinigungSignaturzustand zustand)`: das Ergebnis pro Schüler (Daten-QR, Signatur-QR, Signaturzustand). Eine technische Fehlermeldung führt der Typ bewusst nicht — so kann kein Diensttext auf der Bescheinigung erscheinen; die Ursache läuft über die Meldefassade und das Log.
 - **`SchulbescheinigungQrEinstellungen`** — zentrale Konstanten: Präfixe `DATAV1:` (QR 1, Daten) und `SIGNV1:` (QR 2, Signatur), Maße (`QR_BREITE_MM`/`QR_HOEHE_MM` = 40 mm) und Fehlerkorrektur-Level.
 
 **Anbindung:** Die Templates greifen nicht direkt auf das `signing/`-Paket zu. Stattdessen liefert `ReportingRepositorySchueler.schulbescheinigungQrDaten(long idSchueler)` die `SchulbescheinigungQrDaten` und cached sie in `mapSchulbescheinigungQrDaten`; der Bulk-Aufbau über `SchulbescheinigungQrFactory.erzeuge(...)` läuft nach demselben Lazy-/Cache-Muster wie die übrigen Repository-Daten. Im Reporting-Typ werden die SVGs über `ProxyReportingSchueler` / `ReportingSchueler` bereitgestellt.
@@ -366,6 +274,24 @@ Sie kennen weder die Datenbank noch den `ReportingContext`. Sie sind das, was Th
 **Null-Sicherheit (modulweit umgesetzt 2026-06):** Getter liefern non-null per Default — String-/Datums-Felder werden im Basis-Konstruktor auf `""` normalisiert, Listen/Maps auf leere Defensivkopien; Objekt-/Enum-/Boxed-Getter dürfen dokumentiert `null` sein. Die verbindlichen Konstruktor-Regeln inkl. der Rückreferenz-Ausnahme stehen in [`reporting-konventionen.md`](reporting-konventionen.md), Abschnitt 2.
 
 ### 5.3 Proxy-Reporting-Types (Lazy Loading)
+
+```mermaid
+classDiagram
+    ReportingTyp <|-- ProxyReportingTyp
+    class ReportingTyp {
+        reiner Datentyp ohne Datenbankzugriff
+        alle Werte stammen aus dem Konstruktor
+    }
+    class ProxyReportingTyp {
+        kennt den ReportingContext
+        überschreibt einzelne Getter
+        lädt deren Werte beim Zugriff nach
+    }
+```
+
+Der Proxy ist ein **Untertyp** und kann überall dort verwendet werden, wo der Basistyp erwartet
+wird. Eine Vorlage kennt nur den Basistyp und erhält in aller Regel einen Proxy — deshalb steht in
+keiner Vorlage eine Fallunterscheidung.
 
 Für jeden "schweren" Reporting-Typ existiert eine `ProxyReporting…`-Subklasse (z. B. `ProxyReportingSchueler`, `ProxyReportingLehrer`, `ProxyReportingKlasse`). Diese Proxy-Typen:
 
@@ -404,47 +330,77 @@ Aufgaben:
 
 1. Validiert die HTML-Vorlage und prüft die Benutzer-Kompetenzen gegen die in der Vorlage hinterlegten Pflicht-Kompetenzen.
 2. Baut über `erzeugeContexts()` eine Map `mapHtmlContexts: String → HtmlContext<?>`. Die Schlüssel sind interne Bezeichnungen der Context-Map und dienen insbesondere dem Nachschlagen und Ersetzen des Haupt-Contexts bei der Einzelausgabe. Sie sind nicht mit den Thymeleaf-Variablennamen gleichzusetzen und stehen als Konstanten in `HtmlContextSchluessel` (Paket `html.contexts.initializer`), auf die sowohl die `HtmlFactory` als auch die Registry zugreifen.
-3. Holt sich über die `HtmlContextInitializerRegistry` den zum `ReportingReportvorlageDatenContext` gehörenden Initializer und stößt dessen Aufbau an — die Factory kennt die einzelnen Datenaufbauten nicht mehr. Der `ReportingReportvorlageDatenContext` benennt mit seinen 16 Werten je genau einen Ablauf des Datenaufbaus; die 28 Reportvorlagen verteilen sich auf diese 16 Werte, so dass zu einer Vorlage eindeutig feststeht, welche Daten geladen und welche Prüfungen durchgeführt werden. Details siehe Abschnitt 6.2.
+3. Holt sich über die `HtmlContextInitializerRegistry` den zum `ReportingReportvorlageDatenContext` gehörenden Initializer und stößt dessen Aufbau an — die Factory kennt die einzelnen Datenaufbauten nicht mehr. Jeder Wert des `ReportingReportvorlageDatenContext` benennt genau einen Ablauf des Datenaufbaus; mehrere Reportvorlagen teilen sich denselben Wert, so dass zu einer Vorlage eindeutig feststeht, welche Daten geladen und welche Prüfungen durchgeführt werden. Details siehe Abschnitt 6.2.
 4. Erzeugt mit `createHtmlBuilders()` bzw. `createHtmlResponse()` die `ReportBuilderHtml`-Instanzen und liefert das HTML als Response. Ein ZIP entsteht ausschließlich im PDF-Pfad; die HTML-Ausgabe liefert stets genau eine Datei.
-5. Gibt über `bewusstLeer()` die Auskunft des Initializers heraus, ob die Auswahl bewusst keinen Datensatz enthält, und ergänzt die erfolgreiche Antwort über `ReportingHinweiseHeader` um den öffentlichen Hinweis-Header — sofern der Datenaufbau an die Diagnose angebunden ist (Abschnitt 9.3). **HTML bildet dabei keinen Sonderpfad** — es trägt den Header unter denselben Bedingungen wie PDF und ZIP. Dass der heutige generierte Client die Response-Metadaten verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
+5. Erzwingt nach dem Aufbau der Daten-Contexts, dass der Ausgabeumfang gemeldet ist, und ergänzt die erfolgreiche Antwort über `ReportingHinweiseHeader` um den öffentlichen Hinweis-Header (Abschnitt 9.3). **HTML bildet dabei keinen Sonderpfad** — es trägt den Header unter denselben Bedingungen wie PDF und ZIP. Dass der heutige generierte Client die Response-Metadaten verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
 
 Die Factory wird ausschließlich über die statische Methode `HtmlFactory.erzeuge(reportingContext)` erzeugt; der Konstruktor ist privat. Damit ist jede erreichbare `HtmlFactory` vollständig initialisiert — ein Objekt mit geprüfter Vorlage, aber ohne aufgebaute Contexts, ist strukturell unerreichbar.
 
 Die `HtmlFactory` unterstützt zwei Modi:
 
 - **Aggregierte Ausgabe** — alle Datensätze landen in einem einzigen HTML-Dokument.
-- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt; der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren. Unter welchem Schlüssel der Haupt-Context dabei ersetzt wird, liefert der Initializer über `einzelContextBezeichnung()`; Datenaufbauten ohne Einzelausgabe erben die Standard-Implementierung, die einen `BAD_REQUEST` wirft.
+- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt. Sie kommt nur bei der PDF- und der E-Mail-Ausgabe vor: Für das Ausgabeformat HTML setzt der `ReportingParameterBuilder` das Kennzeichen zwingend auf `false`, sodass dieser Weg immer genau ein Dokument liefert. Der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren. Unter welchem Schlüssel der Haupt-Context dabei ersetzt wird, liefert der Initializer über `einzelContextBezeichnung()`; Datenaufbauten ohne Einzelausgabe erben die Standard-Implementierung, die einen `BAD_REQUEST` wirft.
 
 ### 6.2 Der Aufbau der Daten-Contexts (`html/contexts/initializer/`)
 
-Welche Daten ein Report lädt und welche Prüfungen dabei laufen, hängt nicht an der Reportvorlage, sondern an ihrem **Datenaufbau** (`ReportingReportvorlageDatenContext`, 16 Werte). Die 28 Vorlagen verteilen sich auf diese 16 Abläufe, die sich wiederum auf **fünf Ablaufmuster** zurückführen lassen. Neue Vorlagen mit bekanntem Datenaufbau brauchen deshalb kein Java.
+Welche Daten ein Report lädt und welche Prüfungen dabei laufen, hängt nicht an der Reportvorlage, sondern an ihrem **Datenaufbau** (`ReportingReportvorlageDatenContext`). Mehrere Vorlagen teilen sich denselben Datenaufbau, und mehrere Datenaufbauten teilen sich dasselbe **Ablaufmuster**. Neue Vorlagen mit bekanntem Datenaufbau brauchen deshalb kein Java.
+
+```mermaid
+flowchart TD
+    VORLAGE["Reportvorlage"]
+    VORLAGE -- "bestimmt" --> AUFBAU["Datenaufbau<br/>mehrere Vorlagen<br/>teilen sich einen"]
+    VORLAGE -- "liefert" --> TPL["HTML-Vorlagendatei<br/>und Dateiname"]
+
+    AUFBAU --> REG["Registry<br/>ordnet jedem Datenaufbau<br/>seine Konfiguration zu"]
+    REG --> INIT["Initializer<br/>mehrere Datenaufbauten<br/>teilen sich ein Muster"]
+    INIT --> AUSWAHL["Hauptdaten auswählen,<br/>ausgelassene melden"]
+    AUSWAHL --> CONTEXTS["Daten-Contexts<br/>bei Einzelausgabe einer<br/>je Datensatz, sonst<br/>einer für alle"]
+
+    CONTEXTS --> BUILDER["ReportBuilderHtml<br/>einer je Dokument"]
+    TPL --> BUILDER
+    BUILDER --> RENDER["ReportRendererHtml<br/>Thymeleaf verbindet<br/>Vorlage und Daten"]
+    RENDER --> DOK["HTML-Dokument"]
+```
+
+Die Reportvorlage wird zweimal ausgewertet, und beide Wege führen zum selben Dokument: Sie
+**bestimmt** über ihren Datenaufbau, welche Daten geladen und welche Prüfungen ausgeführt werden,
+und sie **liefert** die Vorlagendatei, die der Renderer am Ende mit diesen Daten füllt. Alles
+zwischen Datenaufbau und Daten-Contexts ist die Initialisierung — sie entscheidet allein über den
+Inhalt, nicht über das Aussehen.
 
 Das Paket trennt konsequent zwischen der request-unabhängigen **Konfiguration** und dem **Initializer**, der sie für einen konkreten Request ausführt:
 
 | Typ | Rolle |
 |-----|-------|
-| `HtmlContextInitializerRegistry` | Unveränderliche Zuordnung Datenaufbau → Konfiguration; eine Zeile je Datenaufbau. Nachschlagen über `aufbau(reportingContext, datenContext)`. Führt außerdem je Datenaufbau die Entscheidung, ob er an den Hinweisvertrag angebunden ist, abrufbar über `istAnHinweisvertragAngebunden(datenContext)`. |
+| `HtmlContextInitializerRegistry` | Unveränderliche Zuordnung Datenaufbau → Konfiguration; eine Zeile je Datenaufbau. Nachschlagen über `aufbau(reportingContext, datenContext)`. |
 | `HtmlContextAufbau` | Schnittstelle der Konfigurationen: `contextSchluessel()`, `unterstuetztEinzelausgabe()`, `initializer(...)`. Die Metadaten sind **ohne Reporting-Context lesbar** — genau darauf setzen die Registry-Tests auf. |
-| `HtmlContextInitializer` | `init()` baut die Contexts auf, `einzelContextBezeichnung()` benennt den Haupt-Context. |
+| `HtmlContextInitializer` | `init()` baut die Contexts auf, `einzelContextBezeichnung()` benennt den Haupt-Context; `meldetAusgabeumfangImContextAufbau()` benennt die Meldestelle des Ausgabeumfangs (Abschnitt 9.3). |
 | `HtmlContextInitializerBasis` | Gemeinsame Felder plus die Standard-Einzelausgabe für Datenaufbauten, die sie nicht unterstützen. |
 | `HtmlContextSchluessel` | Die Schlüssel der Context-Map als Konstanten. |
 | `HtmlContextValidierung` | Alle Prüfungen der Eingabeparameter (siehe Abschnitt 4.5). |
 
-Die fünf Ablaufmuster mit ihren Konfigurationstypen:
+Die Ablaufmuster mit ihren Konfigurationstypen:
 
-| Muster | Datenaufbauten | Worin sich die Zeilen unterscheiden |
-|--------|----------------|-------------------------------------|
-| `HtmlContextInitializerListe` | 6 (Schüler ×3, Klassen, Kurse, Lehrer) | Beschriftungen, Objektart, Auswahl der Hauptdaten, Context-Erzeuger und fachliche Einschränkung — über den Typparameter aneinander gebunden und damit compile-geprüft |
-| `HtmlContextInitializerStundenplan` | 5 (Fach, Klassen, Lehrer, Raum, Schüler) | Beschriftungen, Objektart, Auswahl der Hauptdaten und Context-Erzeuger; das Laden des Stundenplans steht einmal im Initializer. Klassen, Lehrkräfte und Schüler wählen über ihr Repository aus, Fächer und Räume gegen den Bestand des geladenen Stundenplans |
-| `HtmlContextInitializerGostKursplanung` | 2 (Kurs-, Schüler-Sicht) | nur der Context-Typ |
-| `HtmlContextInitializerGostKlausurplanung` | 2 (Schüler-, Termin-Sicht) | nur der Context-Typ |
-| `HtmlContextInitializerGostLaufbahnplanung` | 1 | Einzelfall ohne Konfiguration; einziger Datenaufbau ohne Einzelausgabe |
+- **`HtmlContextInitializerListe`** — für Datenaufbauten, die einer Liste von Hauptdaten-IDs
+  folgen. Die Zeilen unterscheiden sich in Beschriftungen, Objektart, Auswahl der Hauptdaten,
+  Context-Erzeuger und fachlicher Einschränkung; über den Typparameter sind sie aneinander gebunden
+  und damit compile-geprüft.
+- **`HtmlContextInitializerStundenplan`** — für die Sichtweisen der Stundenplanung. Das Laden des
+  Stundenplans steht einmal im Initializer; die Zeilen unterscheiden sich in Beschriftungen,
+  Objektart, Auswahl und Context-Erzeuger. Klassen, Lehrkräfte und Schüler wählen über ihr
+  Repository aus, Fächer und Räume gegen den Bestand des geladenen Stundenplans.
+- **`HtmlContextInitializerGostKursplanung`** — für die Sichtweisen der GOSt-Kursplanung. Die
+  Zeilen unterscheiden sich allein im Context-Typ.
+- **`HtmlContextInitializerGostKlausurplanung`** — für die Sichtweisen der GOSt-Klausurplanung,
+  ebenfalls nur im Context-Typ unterschieden.
+- **`HtmlContextInitializerGostLaufbahnplanung`** — für die Fachwahlstatistik eines
+  Abiturjahrgangs. Ein Einzelfall ohne Konfiguration und ohne Einzelausgabe.
 
 Nach außen sichtbar sind nur `HtmlContextInitializerRegistry`, `HtmlContextAufbau`, `HtmlContextInitializer` und `HtmlContextSchluessel` — alles Musterspezifische ist paketprivat.
 
-**Ein neuer Datenaufbau** bedeutet einen neuen Enum-Wert plus eine Registry-Zeile; eine neue Klasse braucht es nur bei einem neuen Ablaufmuster. Die Tests in `TestHtmlContextInitializerRegistry` prüfen ohne Datenbank, dass jeder Enum-Wert einen Eintrag hat und dass Zuordnung, Map-Schlüssel, Einzelausgabe-Metadaten und Anbindung an den Hinweisvertrag den Sollwerten entsprechen. Ein weiterer Test verlangt zu jedem Enum-Wert eine geführte Entscheidung über die Anbindung, damit ein neuer Datenaufbau nicht unbemerkt ohne Header bleibt.
+**Ein neuer Datenaufbau** bedeutet einen neuen Enum-Wert plus eine Registry-Zeile; eine neue Klasse braucht es nur bei einem neuen Ablaufmuster. Die Tests in `TestHtmlContextInitializerRegistry` prüfen ohne Datenbank, dass jeder Enum-Wert einen Eintrag hat und dass Zuordnung, Map-Schlüssel und Einzelausgabe-Metadaten den Sollwerten entsprechen.
 
-**Die Registry führt auch die Anbindung an den Hinweisvertrag.** Zu jedem Datenaufbau steht dort ausdrücklich `true` oder `false`, und ein fehlender Eintrag wird als „nicht angebunden“ beantwortet: Ein vergessener Eintrag darf nicht wie eine geprüfte, vollständige Ausgabe aussehen. Angebunden sind die vier Datenaufbauten nach dem Listen-Muster (`SCHUELER`, `KLASSEN`, `KURSE`, `LEHRER`) und die fünf Sichtweisen der Stundenplanung — neun von sechzehn. Die GOSt-Datenaufbauten lesen zusätzlich GOSt-Daten, deren Zugriffe noch nicht vollständig melden, und bleiben deshalb auf `false`.
+**Jeder Datenaufbau meldet seinen Ausgabeumfang.** Die Meldestelle liegt dort, wo die Zählwerte entstehen: bei einer ID-Auswahl im Initializer, bei den Manager-Aufbauten der Kurs- und Klausurplanung sowie der Fachwahlstatistik im Context-Aufbau. Jeder Initializer benennt seine Meldestelle über die abstrakte Methode `meldetAusgabeumfangImContextAufbau()` — ein neuer Datenaufbau muss die Entscheidung treffen, statt still ohne Zählwerte zu laufen. Fehlt die Meldung nach dem Aufbau, bricht die `HtmlFactory` mit einem Serverfehler ab (Abschnitt 9.3).
 
 ### 6.3 `HtmlContext<T>`
 
@@ -458,7 +414,7 @@ Generische Basisklasse aller HTML-Kontexte. Sie kapselt:
 
 Subklassen befüllen den Thymeleaf-Context unter ihrem festen Variablennamen (PascalCase, z. B. `Schueler`, `Klassen`, `Schule`, `Parameter`, `GostBlockungsergebnis`). Häufig genutzte Subklassen:
 
-- `HtmlContextBasisdaten` — wird bei jedem Report mitgeliefert (Schule, Schuljahresabschnitt, Parameter)
+- `HtmlContextBasisdaten` — wird bei jedem Report mitgeliefert und stellt vier Variablen bereit: `Schule`, `Benutzer` (der angemeldete Benutzer), `Parameter` (die Reporting-Parameter des Aufrufs) und `VorlageParameter` (die Werte, die der Anwender für diese Vorlage gesetzt hat)
 - `HtmlContextSchueler`, `HtmlContextLehrer`, `HtmlContextKlassen`, `HtmlContextKurse`
 - `HtmlContextGostKursplanungBlockungsergebnis`, `HtmlContextGostKlausurplanungKlausurplan`, `HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken`
 - `HtmlContextStundenplanungFachStundenplan`, `…KlassenStundenplan`, `…LehrerStundenplan`, `…RaumStundenplan`, `…SchuelerStundenplan`
@@ -466,7 +422,7 @@ Subklassen befüllen den Thymeleaf-Context unter ihrem festen Variablennamen (Pa
 
 Innerhalb der Subklassen wird ausschließlich über den `reportingContext` auf Daten zugegriffen — analog zu den Proxy-Typen sind direkte DB-Zugriffe verboten.
 
-Die Sortierung der Context-Daten läuft über die Basisklassen-Methoden `setContextDataSortiert(liste, SORTIERUNG, typ)` bzw. `erzeugeContextSortiert(...)`, die an die zustandslose Utility `HtmlContextSortierung.sortiere(...)` (Paket `module.reporting.html.contexts`) delegieren. Diese nutzt die `ComparatorFactory` und die `SORTIERUNG`-Konstante (`Reporting<Typ>.SORTIERUNG`) des jeweiligen Reporting-Typs. Liegt in den Reporting-Parametern eine benutzerdefinierte Sortierung für den Typ vor, wird diese verwendet, sonst die Standardsortierung des Typs.
+Die Sortierung der Context-Daten läuft über die Basisklassen-Methode `setContextDataSortiert(liste, SORTIERUNG, typ)`, die an die zustandslose Utility `HtmlContextSortierung.sortiere(...)` (Paket `module.reporting.html.contexts`) delegiert. Diese nutzt die `ComparatorFactory` und die `SORTIERUNG`-Konstante (`Reporting<Typ>.SORTIERUNG`) des jeweiligen Reporting-Typs. Liegt in den Reporting-Parametern eine benutzerdefinierte Sortierung für den Typ vor, wird diese verwendet, sonst die Standardsortierung des Typs.
 
 **Filterung wird nicht im HtmlContext angewandt.** Alle Reporting-Typen werden zentral in den Repositories gefiltert (FILTER-Companion, siehe Abschnitt 4.3); die List-Contexts übernehmen die bereits gefilterten Listen unverändert.
 
@@ -480,13 +436,17 @@ Das Ergebnis ist der gerenderte HTML-String, den die `HtmlFactory` entweder dire
 
 ### 6.5 Eigene Thymeleaf-Dialekte (`html/dialects/`)
 
-Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUtils` beim Aufbau der `TemplateEngine` drei SVWS-eigene Expression-Dialekte aus dem Paket `module.reporting.html.dialects`. Jeder Dialekt stellt ein Expression-Objekt bereit, das im Template über `#<name>` aufgerufen wird:
+Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUtils` beim Aufbau der `TemplateEngine` die SVWS-eigenen Expression-Dialekte aus dem Paket `module.reporting.html.dialects`. Jeder Dialekt stellt ein Expression-Objekt bereit, das im Template über `#<name>` aufgerufen wird:
 
 - **`ConvertExpressionDialect`** (`#convert`) — Konvertierungs- und Encoding-Helfer aus `ConvertExpressionHelper`: Datums-Formatierung (`toDateDE`, `toDateDELong`, `toWochentagDE`, `toKalenderwocheDE`, …), Checkbox-/Barcode-/QR-Code-SVGs (`toCheckboxSVG`, `toBarcodeCode128AsSvgHtmlImageSource`, `to2DCodeQRCodeAsSvgHtmlImageSource`) sowie GZip-Kompression und Base32/45/64-Codierung.
-- **`InlineExpressionDialect`** (`#inline`) — über `InlineExpressionHelper.css(relativerCssPfad)` wird eine CSS-Datei inline in das HTML überführt. Das ist Voraussetzung für die PDF-Erzeugung und die iframe-Vorschau im WebClient (vgl. `feedback_reporting_css_inline_xml`).
+- **`InlineExpressionDialect`** (`#inline`) — über `InlineExpressionHelper.css(relativerCssPfad)` wird eine CSS-Datei inline in das HTML überführt. Das ist Voraussetzung für die PDF-Erzeugung und die iframe-Vorschau im WebClient; die Regeln für das inline gesetzte CSS stehen in den Konventionen.
 - **`IconExpressionDialect`** (`#icon`) — über `IconExpressionHelper` werden Icons als SVG-Data-URI in einem `<img>`-Element erzeugt (Ausgabe per `th:utext`): `get(name)`, `get(name, groessePx)`, `get(name, groessePx, farbe)` sowie der Spezial-Helfer `getExtern(...)` für die Kennzeichnung externer Schüler inkl. optionalem Stammschul-Kürzel. Der Icon-Katalog (RemixIcon-Pfaddaten) liegt in `ReportingIcon` und wird aus der Ressource `icons/icons.json` geladen; neue Icons werden dort ergänzt. Standardgröße 14 px, Standardfarbe `black`; erzeugte Data-URIs werden gecacht.
 
+- **`AktuellExpressionDialect`** (`#aktuell`) — über `AktuellExpressionHelper` liefert er den aktuellen Zeitpunkt: `datum()` im ISO-Format, `uhrzeit()` als `HH:mm`, `formatiert(muster)` nach eigenem Muster und `jetzt()` als `LocalDateTime`. Vorlagen formatieren einen Zeitpunkt über diesen Dialekt und nicht über `#dates.format(...)`: Der Helper liest aus einer `Clock`, die in Tests fest eingestellt werden kann und ihre Zeitzone mitführt — `#dates` arbeitet dagegen auf `java.util.Date` und bände die Ausgabe an die Zeitzone der JVM.
+
 Jeder Dialekt besteht aus drei Klassen: `…Dialect` (Registrierung + Dialekt-Name), `…Factory` (`IExpressionObjectFactory`, liefert die Expression-Namen und das Helper-Objekt) und `…Helper` (die eigentlichen, aus dem Template aufrufbaren Java-Methoden).
+
+Weil die Dialekte an der geteilten `TemplateEngine` registriert sind, halten sie keinen Zustand des laufenden Reports. Der `#convert`-Dialekt erhält seine Meldefassade deshalb je Rendervorgang als Context-Variable: Der `ReportRendererHtml` legt einen schmalen `ReportingProblemmelder` unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` ab (Abschnitt 9.2); ein Code, der sich nicht erzeugen lässt, wird darüber als Ausgabeproblem gemeldet.
 
 ---
 
@@ -496,22 +456,22 @@ Jeder Dialekt besteht aus drei Klassen: `…Dialect` (Registrierung + Dialekt-Na
 
 Pfad: `module.reporting.factories.PdfFactory`
 
-Wird mit der Liste der bereits erzeugten `ReportBuilderHtml`-Instanzen, dem Kennzeichen `bewusstLeer` und dem `ReportingContext` initialisiert. Die Factory erzeugt aus jedem HTML-Builder einen `ReportBuilderPdf`. Die Ausgabe folgt der **Zahl der Dokumente**:
+Wird mit der Liste der bereits erzeugten `ReportBuilderHtml`-Instanzen und dem `ReportingContext` initialisiert; das Kennzeichen der zulässig leeren Ausgabe liest sie aus dem am Context gemeldeten Ausgabeumfang. Die Factory erzeugt aus jedem HTML-Builder einen `ReportBuilderPdf`. Die Ausgabe folgt der **Zahl der Dokumente**:
 
 | Dokumente | Ergebnis |
 |---|---|
 | eines | die PDF-Datei direkt als Response, Dateiname aus dem Builder |
 | mehrere | ZIP-Archiv |
-| keines, `bewusstLeer` gesetzt | ZIP-Archiv **ohne** PDF-Datei |
-| keines, `bewusstLeer` nicht gesetzt | `INTERNAL_SERVER_ERROR` |
+| keines, `leereAusgabeZulaessig` gesetzt | ZIP-Archiv **ohne** PDF-Datei |
+| keines, `leereAusgabeZulaessig` nicht gesetzt | `INTERNAL_SERVER_ERROR` |
 
-**`bewusstLeer` erlaubt den Leerfall, erzwingt ihn aber nicht.** Es stammt aus dem Auswahlergebnis des Datenaufbaus und wird über `HtmlContextInitializer.bewusstLeer()` und `HtmlFactory.bewusstLeer()` durchgereicht (siehe Abschnitt 9.2). Ohne dieses Kennzeichen wäre eine leere Builder-Liste nicht von einem Ausfall der Dokumenterzeugung zu unterscheiden, und ein Serverfehler ginge als leere Ausgabe durch. Umgekehrt ist es bei einer **Sammelausgabe** über eine leere Auswahl ebenfalls gesetzt — dort entsteht aber genau ein Builder mit leerem fachlichem Inhalt, und die Ausgabe bleibt ein Dokument. Deshalb entscheidet zuerst die Zahl der Builder und erst danach das Kennzeichen.
+**`leereAusgabeZulaessig` erlaubt den Leerfall, erzwingt ihn aber nicht.** Das Kennzeichen stammt aus dem am `ReportingContext` gemeldeten Ausgabeumfang (Abschnitt 9.2): Es ist eine Absichtserklärung der Meldestelle vor dem Rendern. Ohne dieses Kennzeichen wäre eine leere Builder-Liste nicht von einem Ausfall der Dokumenterzeugung zu unterscheiden, und ein Serverfehler ginge als leere Ausgabe durch. Umgekehrt ist es bei einer **Sammelausgabe** über eine leere Auswahl ebenfalls gesetzt — dort entsteht aber genau ein Builder mit leerem fachlichem Inhalt, und die Ausgabe bleibt ein Dokument. Deshalb entscheidet zuerst die Zahl der Builder und erst danach das Kennzeichen.
 
 **Der Dateiname des ZIP-Archivs stammt aus der Reportvorlage**, nicht aus dem ersten Builder. Beide liefern denselben Wert — der statische Dateiname wird von der Vorlage über die Builder-Kette nur weitergereicht —, aber ohne ein erzeugtes Dokument gäbe es diesen Weg nicht. Der Name einer fachlich leeren Ausgabe darf nicht davon abhängen, dass wenigstens ein Dokument entstanden ist.
 
-Die Factory gibt `bewusstLeer()` nach außen, weil der **E-Mail-Pfad** dieselbe Angabe anders auswertet: Dort wird kein Job eingereiht (Abschnitt 8.1).
+Die Factory gibt `leereAusgabeZulaessig()` nach außen, weil der **E-Mail-Pfad** dieselbe Angabe anders auswertet: Dort wird kein Job eingereiht (Abschnitt 8.1).
 
-Beide Ausgabewege — einzelne PDF-Datei und ZIP-Archiv — ergänzen ihre erfolgreiche Antwort über `ReportingHinweiseHeader` um den öffentlichen Hinweis-Header, sofern der Datenaufbau an die Diagnose angebunden ist (Abschnitt 9.3).
+Beide Ausgabewege — einzelne PDF-Datei und ZIP-Archiv — ergänzen ihre erfolgreiche Antwort über `ReportingHinweiseHeader` um den öffentlichen Hinweis-Header aus dem gemeldeten Ausgabeumfang und den gemeldeten Problemen (Abschnitt 9.3).
 
 ### 7.2 Builder und Renderer für PDF
 
@@ -536,7 +496,7 @@ Aufgaben:
 
 Der eigentliche Versand findet in einem Hintergrund-Worker statt — die API-Antwort kommt zurück, sobald der Job eingereiht ist.
 
-**Bei einer bewusst leeren Auswahl wird kein Job eingereiht.** Ist `pdfFactory.bewusstLeer()` gesetzt, endet der Versand direkt nach der Parameterprüfung mit einer Startantwort ohne Job-ID (HTTP 200, `success = true`), deren Log beschreibt, dass nichts zu versenden war. Ein eingereihter Job ohne Anhänge sähe erfolgreich aus, ohne etwas zu versenden: Der Anwender erhielte eine Job-ID, verfolgte deren Status und erfährt nie, dass nichts unterwegs war. Ein Fehlerstatus wäre dort ebenso falsch — eine leere Auswahl ist eine gewollte Auswahlentscheidung. Die Prüfung steht **nach** der Parameterprüfung, damit eine fehlerhafte Anfrage weiterhin ihren `BAD_REQUEST` erhält, und **vor** dem Aufbau von SMTP-Sitzung und Absenderadresse, die für einen ausbleibenden Versand nicht benötigt werden.
+**Bei einer zulässig leeren Ausgabe wird kein Job eingereiht.** Ist `pdfFactory.leereAusgabeZulaessig()` gesetzt, endet der Versand direkt nach der Parameterprüfung mit einer Startantwort ohne Job-ID (HTTP 200, `success = true`), deren Log beschreibt, dass nichts zu versenden war. Ein eingereihter Job ohne Anhänge sähe erfolgreich aus, ohne etwas zu versenden: Der Anwender erhielte eine Job-ID, verfolgte deren Status und erfährt nie, dass nichts unterwegs war. Ein Fehlerstatus wäre dort ebenso falsch — eine leere Auswahl ist eine gewollte Auswahlentscheidung. Die Prüfung steht **nach** der Parameterprüfung, damit eine fehlerhafte Anfrage weiterhin ihren `BAD_REQUEST` erhält, und **vor** dem Aufbau von SMTP-Sitzung und Absenderadresse, die für einen ausbleibenden Versand nicht benötigt werden.
 
 ---
 
@@ -553,14 +513,36 @@ Beide werden im `ReportingContext` initialisiert — wenn der API-Aufrufer keine
 
 ### 9.2 Diagnose (`diagnose/`)
 
+```mermaid
+flowchart TD
+    ZUGRIFF["Datenzugriff im Repository"]
+    ZUGRIFF --> ZUSTAND["Ladezustand:<br/>geladen, nicht vorhanden<br/>oder fehlgeschlagen"]
+    ZUSTAND --> BEWERTUNG{"Kann die Ausgabe<br/>sinnvoll fortgesetzt<br/>werden?"}
+    BEWERTUNG -- nein --> ABBRUCH["Abbruch mit Statuscode"]
+    BEWERTUNG -- ja --> MELDUNG["Ausgabeproblem melden<br/>und fortfahren"]
+
+    MELDUNG --> SAMMLER["Der Sammler dedupliziert<br/>und protokolliert einmal"]
+    SAMMLER --> KATEGORIE["Projektion auf die<br/>öffentliche Kategorie"]
+    UMFANG["Ausgabeumfang:<br/>angefordert und ausgegeben"] --> AUSSEN
+    KATEGORIE --> AUSSEN["Hinweis-Header<br/>und HINWEISE.txt"]
+```
+
+Die Verzweigung folgt der **Semantik** und nicht der Rolle der Daten. Ein einzelner Datensatz
+innerhalb einer Auswahl, der sich nicht auflösen lässt, wird ausgelassen und gemeldet — die übrigen
+erscheinen. Nur wo die Ausgabe ohne diese Daten sinnlos wäre, folgt der Abbruch: Die unauflösbare
+Hauptressource, auf der der gesamte Report beruht, bricht ab; ein einzelner Datensatz aus einer
+Liste nicht.
+
 Paket `module.reporting.diagnose`. Es bündelt die Typen, die beschreiben, **warum** Daten in einer Ausgabe fehlen, und was daraus folgt:
 
 - **`ReportingLadezustand<T>`** — das Ergebnis eines Datenzugriffs: `Geladen(wert)`, `NichtVorhanden` oder `Fehlgeschlagen(ursache, exception)`. Eine leere Collection ist ein geladener Wert; `Geladen(null)` ist unzulässig. Der Zustand kennt weder fachlichen Schlüssel noch HTTP-Status.
 - **`ReportingAuswahlergebnis<T>`** — die Auswahl der Hauptdaten mit angeforderten, ausgewählten, ausgelassenen und — davon getrennt — vom Benutzerfilter ausgefilterten IDs sowie `bewusstLeer()`. Unveränderlich; Einschränkungen entstehen über `nurMitGeladenen(...)`.
 - **`ReportingProblemursache`, `ReportingProblemauswirkung`, `ReportingProblemSchluessel`, `ReportingProblem`** — der interne Befund eines hingenommenen Ausgabeproblems. Der Schlüssel führt Objektart und ID und bildet eine Proxy-Klasse auf ihre Basisklasse zurück.
 - **`ReportingProblemSammler`** — sammelt die Befunde eines Aufrufs, dedupliziert nach Ursache, Auswirkung und Schlüssel und protokolliert ein neues Problem einmalig. Den Block aus Fehlertyp, Ursachenkette und Stacktrace schreibt er je Fehler-Instanz nur einmal ins Log (Vergleich über Objektidentität); jeder weitere Befund derselben Instanz erhält seine Meldung mit einem Verweis auf den ersten Eintrag. Gemeldet wird nicht direkt, sondern über die Fassade `ReportingContext.meldeAusgabeproblem(…)`.
+- **`ReportingProblemmelder`** — der schmale funktionale Zugang zur Meldefassade für Stellen, die den `ReportingContext` nicht kennen sollen. Der `ReportRendererHtml` legt ihn als Methodenreferenz unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` in den Thymeleaf-Context; die Dialekte melden darüber. Bewusst nicht der ganze Context: Der wäre per OGNL für jede Vorlage erreichbar.
 - **`ReportingHinweisKategorie`** — der kleine öffentliche Kategorienkatalog: `DATENSAETZE_FEHLEN`, `ANGABEN_FEHLEN`, `WERT_NICHT_DARSTELLBAR`, jeweils mit ihrem Header-Schlüssel. `fuer(problem)` ist die **einzige** Stelle der Projektion vom internen Befund auf die öffentliche Kategorie; sie folgt der Auswirkung, mit dem nicht darstellbaren Wert als eigener Kategorie. Die Zuordnung ist vollständig — eine nicht zugeordnete Kombination müsste im Diagnosepfad behandelt werden.
-- **`ReportingHinweisSerializer`** — bildet den Wert des Response-Headers `SVWS-Reporting-Hinweise` nach RFC 9651, derzeit mit `VERTRAGSVERSION = 0`. Gezählt werden die deduplizierten internen Ausgabeprobleme; die Kategorienzahlen zerlegen dieselbe Menge, ihre Summe ergibt stets `gesamt`. Kategorien ohne Befund fehlen im Wert. Nach außen gelangen nur Kategorie und Anzahl — keine IDs, Namen, Freitexte oder Stacktraces. **Ob** eine Antwort den Header trägt, entscheidet der Aufrufer anhand der Diagnoseabdeckung und nicht dieser Serializer.
+- **`ReportingAusgabeumfang`** — die Zählwerte eines Aufrufs: `angefordert`, `ausgegeben` und das Kennzeichen der zulässig leeren Ausgabe. Gemeldet wird genau einmal über `ReportingContext.meldeAusgabeumfang(…)` — dort, wo die Werte entstehen; die Ausgabefactory erzwingt die Meldung nach dem Context-Aufbau (Abschnitt 6.2). Das Kennzeichen ist eine Absichtserklärung der Meldestelle und keine Ableitung aus den Zählwerten.
+- **`ReportingHinweisSerializer`** — bildet den Wert des Response-Headers `SVWS-Reporting-Hinweise` nach RFC 9651 mit `VERTRAGSVERSION = 1` aus dem gemeldeten Ausgabeumfang und den deduplizierten internen Ausgabeproblemen; die Kategorienzahlen zerlegen dieselbe Menge, ihre Summe ergibt stets `hinweise`. Kategorien ohne Befund fehlen im Wert. Nach außen gelangen nur Zählwerte, Kategorie und Anzahl — keine IDs, Namen, Freitexte oder Stacktraces.
 
 **Die Typen liegen bewusst in einem gemeinsamen Paket.** Ladezustand, Auswahl und Ausgabeproblem sind Stationen desselben Vorgangs: Der Zugriff stellt fest, was fehlt, die Auswahl entscheidet, was in die Ausgabe gelangt, und das Problem beschreibt, was davon zu melden ist. Getrennte Pakete erzwängen für diesen Fluss öffentliche Sichtbarkeit, wo package-privat genügt.
 
@@ -568,55 +550,73 @@ Paket `module.reporting.diagnose`. Es bündelt die Typen, die beschreiben, **war
 
 ### 9.3 Der öffentliche Hinweisvertrag
 
-Eine erfolgreiche HTML-, PDF- oder ZIP-Antwort eines an die Diagnose angebundenen Datenaufbaus trägt den Response-Header `SVWS-Reporting-Hinweise`. Er meldet, ob die Ausgabe vollständig ist, ohne den Download zu behindern: Wer ihn nicht kennt, arbeitet unverändert weiter.
+Eine erfolgreiche Dokumentantwort trägt den Response-Header `SVWS-Reporting-Hinweise`; ein
+ZIP-Archiv erhält zusätzlich die Beilage `HINWEISE.txt`. Beides meldet, wie viele Einheiten
+angefordert und ausgegeben wurden und ob es Hinweise gibt, ohne den Download zu behindern: Wer es
+nicht kennt, arbeitet unverändert weiter.
 
-**Dieser Abschnitt ist die maßgebliche Spezifikation des Vertrags.** Ein Verbraucher — der Webclient oder ein anderer API-Nutzer — braucht keine weitere Quelle.
+**Verbindlich festgelegt ist der Vertrag in den Konventionen** (Abschnitt „Öffentlicher
+Hinweisvertrag"): Felder und ihre Invarianten, Zähleinheiten, Datenschutzgrenzen, das Verhalten bei
+unbekannten Einträgen und der derzeitige Auslieferungszustand. Dieser Abschnitt beschreibt nur, wo
+der Header im Ablauf entsteht und welche Bausteine daran beteiligt sind.
 
-#### Der Headerwert
+#### Der Weg des Headers in die Antwort
 
-Der Wert ist ein Dictionary nach RFC 9651. Ein Boolean wird dort als `?0` oder `?1` geschrieben, nicht als `true` oder `false`:
+```mermaid
+flowchart TD
+    MELDEN["Meldestelle des Aufbaus:<br/>Initializer bei ID-Auswahl,<br/>Context-Aufbau bei den<br/>Manager-Mengen"]
+    MELDEN -- "meldeAusgabeumfang(...)" --> CTX["ReportingContext hält<br/>Ausgabeumfang und<br/>gemeldete Probleme"]
 
-```http
-SVWS-Reporting-Hinweise: v=0, gesamt=5, leer=?0, datensaetze=3, angaben=2
+    CTX --> SCHRANKE{"HtmlFactory:<br/>Umfang gemeldet?"}
+    SCHRANKE -- nein --> ABBRUCH["Abbruch mit 500<br/>(Programmierfehler)"]
+    SCHRANKE -- ja --> AUSGABE["Ausgabe erzeugen:<br/>HTML, einzelne PDF-Datei<br/>oder ZIP-Archiv"]
+
+    AUSGABE --> ERG{"ReportingHinweiseHeader<br/>einzige setzende Stelle"}
+    ERG -- "Zählwerte vertragswidrig<br/>(geprüft in jedem Modus)" --> OHNE["Antwort ohne Header,<br/>WARNING im Log"]
+    ERG -- sonst --> WERT["ReportingHinweisSerializer<br/>bildet den Wert:<br/>v=1, angefordert,<br/>ausgegeben, hinweise,<br/>Kategorien"]
+
+    WERT --> MODUS{"Server-Modus DEV?"}
+    MODUS -- "nein: STABLE, BETA, ALPHA" --> OHNE
+    MODUS -- ja --> SETZEN["response.header(...)"]
+
+    SETZEN --> KLON["ReportingFactory klont<br/>die Antwort mit<br/>allen Headern"]
+    OHNE --> KLON
+    KLON --> RAND["APIReporting gibt<br/>die HTTP-Antwort zurück"]
+
+    RAND -.-> CORS["Ein Browser liest ihn<br/>erst mit der CORS-Freigabe"]
+    AUSGABE -.-> DATEI["HINWEISE.txt<br/>nur im ZIP-Archiv"]
 ```
 
-| Feld | Bedeutung |
-|-----|-------|
-| `v` | Vertragsversion. `0` ist die ausdrücklich vorläufige Fassung |
-| `gesamt` | Zahl der deduplizierten Hinweise. Immer vorhanden, auch als `gesamt=0` |
-| `leer` | `?1`, wenn Datensätze angefordert waren und nach der Auswahl keiner übrig blieb |
-| `datensaetze` | angeforderte Datensätze erscheinen nicht in der Ausgabe |
-| `angaben` | die Datensätze erscheinen, ihnen fehlen einzelne Angaben |
-| `darstellung` | ein vorhandener Wert ließ sich nicht ausgeben, etwa eine Signatur |
+Die Kette hat genau eine setzende Stelle. Der Header entsteht **nach** dem fertig gerenderten
+Dokument und hängt sich an eine bereits gebaute Antwort; er kann sie deshalb nicht verändern.
 
-Für einen Parser gilt: **Jedes Feld kommt höchstens einmal vor.** `v`, `gesamt` und `leer` sind stets vorhanden — `v` als ganze Zahl, derzeit `0` oder `1`, `gesamt` als nicht negative ganze Zahl, `leer` als Boolean. Die drei Kategorien sind optional, ebenfalls nicht negative ganze Zahlen, und erscheinen nur mit einem Wert größer als null. Sie zerlegen dieselbe Menge, ihre Summe ergibt stets `gesamt`. Die Reihenfolge der Felder ist fest, damit derselbe Sachverhalt denselben Wert ergibt.
+Die beiden Prüfungen im Bild greifen an verschiedenen Stellen und haben verschiedenes Gewicht.
+**Ob** der Umfang gemeldet wurde, entscheidet die `HtmlFactory` gleich nach dem Aufbau der
+Daten-Contexts — ohne Meldung bricht der Report ab. Wenn der Header später gesetzt wird, ist ein
+Umfang also immer vorhanden; offen bleibt nur, **ob seine Zählwerte den Vertrag einhalten**:
+negative Werte oder mehr ausgegeben als angefordert. In diesem Fall bleibt die Antwort ohne Header,
+und der Programmierfehler steht als Warnung im Log — eine fertige Ausgabe wird nie wegen der
+Diagnose verworfen.
 
-#### Regeln für Verbraucher
+`ReportingHinweiseHeader` prüft dennoch beides, auch den fehlenden Umfang. Das ist eine
+Absicherung: Käme eine vierte aufrufende Stelle hinzu, die die Schranke der `HtmlFactory` nicht
+durchläuft, entstünde dort sonst ein Header ohne ermittelte Zählwerte. Die Prüfung läuft in jedem
+Modus, allein das Setzen hängt am Auslieferungszustand.
 
-- **Ein fehlender Header bedeutet „unbekannt“**, niemals „nachweislich vollständig“. Der Download läuft ohne Meldung weiter.
-- **Eine unbekannte Version oder ein syntaktisch ungültiger Header wird ignoriert.** Der Download darf daran nicht scheitern.
-- **`gesamt` ist eine Diagnosegröße, keine Mengenangabe.** Die Zahl der Hinweise ist weder die Zahl fehlender Datensätze noch die fehlender Dokumente. Oberflächentexte sprechen deshalb allgemein von Hinweisen auf Unvollständigkeit und behaupten keine bestimmte Zahl ausgelassener Dateien.
-- **`gesamt=0, leer=?1` ist gültig** und bezeichnet den reinen Filterfall: Der Benutzerfilter hat alle Datensätze ausgeschlossen, ohne dass etwas fehlt oder fehlschlug. Dieser Fall verdient eine neutrale Information ohne Fehler- oder Unvollständigkeitsbehauptung. Bei `gesamt=0, leer=?0` gibt es nichts zu melden.
-- **Unbekannte Einträge werden ignoriert**, nicht als Fehler behandelt. Der Katalog darf additiv wachsen.
-- **Bei `v=0` wertet ein Verbraucher allein `gesamt` und `leer` aus** und ignoriert die Kategorien. Nur so bindet er sich nicht an einen Katalog, der sich noch ändern darf.
-- **Nach außen gelangen ausschließlich Kategorie und Anzahl.** Weder IDs, Namen und Freitexte noch Fehlermeldungen oder Stacktraces verlassen den Server.
-- **Ab `v=1` sind Kategorien nur noch additiv.** Eine Kategorie zu entfernen, umzubenennen oder anders zu deuten erfordert eine neue Vertragsversion. Die Schlüssel sind Vertrag, die Namen der Enum-Konstanten sind es nicht.
+#### Die beteiligten Bausteine
 
 | Baustein | Rolle |
 |-----|-------|
-| `ReportingHinweisKategorie` | der kleine öffentliche Kategorienkatalog samt Projektion vom internen Befund (Abschnitt 9.2) |
+| `ReportingAusgabeumfang` | die Zählwerte eines Aufrufs samt Kennzeichen der zulässig leeren Ausgabe; gemeldet über `ReportingContext.meldeAusgabeumfang(…)` (Abschnitt 9.2) |
+| `ReportingHinweisKategorie` | der öffentliche Kategorienkatalog samt Projektion vom internen Befund (Abschnitt 9.2) |
 | `ReportingHinweisSerializer` | bildet den Headerwert nach RFC 9651 und den Text der Hinweisdatei; `HEADER_NAME`, `VERTRAGSVERSION` und `DATEINAME_HINWEISE` stehen dort |
-| `ReportingHinweiseHeader` (Paket `factories`, paketprivat) | **einzige** Stelle, die über das Setzen entscheidet; von HTML-, PDF- und ZIP-Ausgabe aufgerufen |
-| CORS-Freigabe (`Access-Control-Expose-Headers`) | folgt erst mit dem Client-Vorhaben, das den ersten Verbraucher bringt. Bis dahin liest ein Browser den Header nur unter demselben Ursprung; im getrennten Entwicklungsaufbau bleibt er ungelesen |
-| `APIReporting` | beschreibt den Header in der OpenAPI-Dokumentation der Endpunkte `/html` und `/ausgabe` |
+| `ReportingHinweiseHeader` (Paket `factories`, paketprivat) | **einzige** Stelle, die über das Setzen entscheidet; von HTML-, PDF- und ZIP-Ausgabe aufgerufen. Prüft die zugesagten Invarianten und lässt die Antwort bei einer Verletzung ohne Header |
+| CORS-Freigabe (`Access-Control-Expose-Headers`) | folgt erst mit dem Client-Vorhaben, das den ersten Verbraucher bringt. Bis dahin liest ein Browser den Header nur unter demselben Ursprung |
+| `APIReporting` | beschreibt den Header in der OpenAPI-Dokumentation; die Beschreibung ist bis zur Freigabe der Auslieferung als TODO geparkt |
 
-**Der Header fehlt, solange der Datenaufbau nicht angebunden ist.** Gesetzt wird er nur, wenn die Registry den Datenaufbau als angebunden führt — `HtmlContextInitializerRegistry.istAnHinweisvertragAngebunden(...)`, siehe Abschnitt 6.2. Ein Header mit `gesamt=0` an einem Pfad, dessen Datenzugriffe noch nicht melden, bescheinigte eine geprüfte Vollständigkeit, die niemand festgestellt hat; ein fehlender Header bedeutet dagegen „Abdeckung unbekannt" und niemals „nachweislich vollständig". Diese Unterscheidung ist ein Migrationsinstrument und entfällt, sobald alle vorgesehenen Datenaufbauten angebunden sind.
-
-**`v=0` ist eine ausdrücklich vorläufige Fassung.** Der strukturelle Kern — Name, `gesamt`, `leer`, Datenschutzregeln, Verhalten bei unbekannten Einträgen — ist stabil; der Kategorienkatalog darf sich bis `v=1` noch ändern. Ein Verbraucher wertet bei `v=0` deshalb nur `gesamt` und `leer` aus.
-
-**Eine ZIP-Ausgabe erhält zusätzlich die Beilage `HINWEISE.txt`**, sobald es etwas zu erklären gibt — bei mindestens einem Hinweis oder bei einer Auswahl, aus der kein Datensatz übrig blieb. Sie ist der **einzige Weg, auf dem die Hinweise den Anwender ohne Clientanpassung erreichen**: Den Response-Header wertet der heutige generierte Client nicht aus, eine Beilage im Archiv sieht dagegen jeder, der es öffnet. Besonders ein Archiv ohne PDF-Datei braucht sie, sonst stünde der Anwender vor einem leeren Download. Der Text nennt Anzahlen und lesbare Kategorien, aber weder IDs noch Namen, Fehlermeldungen oder Stacktraces; der reine Filter-Leerfall bleibt ohne Fehlerbehauptung. **Anders als der Header hängt die Datei nicht an der Diagnoseabdeckung**: Sie erklärt, was bekannt ist, und behauptet keine Vollständigkeit.
-
-**E-Mail trägt den Header nicht.** Der Versand antwortet mit einer JSON-Startantwort und nicht mit einem Dokument; ob und wo Hinweise dort erscheinen, ist eine eigene fachliche Entscheidung.
+**Der Header setzt den gemeldeten Ausgabeumfang voraus.** Jeder Datenaufbau meldet ihn genau
+einmal — dort, wo die Zählwerte entstehen (Abschnitt 6.2); fehlt die Meldung, bricht die
+`HtmlFactory` nach dem Aufbau der Daten-Contexts mit einem Serverfehler ab.
 
 ### 9.4 Utilities
 
@@ -625,20 +625,13 @@ Paket `module.reporting.utils`:
 - **`ReportingExceptionUtils`** — protokolliert Fehlerblöcke einheitlich: `logException(...)` schreibt Beschreibung, Fehlertyp, Ursachenkette und Stacktrace auf dem übergebenen Log-Level, und `getLogAsSimpleOperationResponse(...)` überführt das gesammelte Log in eine `SimpleOperationResponse` für die Fehlerantwort der API. Exceptions erzeugt die Klasse nicht.
 - Weitere `Reporting*`-Utility-Klassen für Datums-, String- und Format-Helfer.
 
-Paket-privater Helper im `repositories`-Paket:
+**`ReportingRepositoryUtils`** im Paket `repositories` bündelt das generische Auswählen und das Bulk-Nachladen. Es wird ausschließlich von den Domänen-Repositories verwendet und ist deshalb paketprivat. Einige seiner Eigenschaften sind bindend, weil sie sonst still unterlaufen werden:
 
-- **`ReportingRepositoryUtils`** (`module.reporting.repositories.ReportingRepositoryUtils`) — bündelt generisches Listen-Erzeugen und Bulk-Nachladen in einer Klasse. Wird ausschließlich von den Domänen-Repositories verwendet und ist deshalb package-private. Statische Methoden:
-  - `waehleAus(ids, mapStammdaten, mapReportingObjekte, stammdatenLoader, reportingObjektErsteller, idExtractor, comparator, filter, datentyp, logger, ladefehler)` — kombiniert ID-Bereinigung (`null`/Duplikate raus), Bulk-Load fehlender Stammdaten, Cache-Eintrag der Reporting-Objekte (`putIfAbsent` gegen zirkuläre Abhängigkeiten), Filterung (`Predicate<R>`; `null` schaltet Filter aus) und **danach** Sortierung (`Comparator<R>`; ein Identitäts-Comparator lässt die Reihenfolge unverändert). Stammdaten- und Reporting-Maps werden vollständig befüllt — Filter und Sortierung wirken nur auf die Auswahl. Die Reihenfolge ist verbindlich: Die Comparatoren greifen auf nachladende Getter zu, sodass eine Sortierung vor dem Filtern auch für ausgeschlossene Datensätze Datenzugriffe, Logeinträge und Fehler auslöste. Wird in den List-Repositories (`Lehrer`, `Schueler`, `Lerngruppen`) als zentrale Methode für die `xxx(List<Long>, boolean)`-Lookups eingesetzt.
-    Rückgabe ist ein `ReportingAuswahlergebnis<R>`: Es führt neben den Objekten die **ausgelassenen** IDs samt Ladezustand und, davon getrennt, die vom Benutzerfilter **ausgefilterten**. Nur so ist später unterscheidbar, ob ein Datensatz fehlt, weil er nicht vorhanden oder nicht ladbar ist (Ausgabeproblem, wird gemeldet), oder weil der Anwender ihn ausgeschlossen hat (Auswahlentscheidung, wird nicht gemeldet). Eine negative ID gilt dabei als unbekannt und wird ausgelassen.
-    `ladefehler` ist die Fehler-Map des jeweiligen Repositories und lebt so lange wie dessen Cache: Der Fehler-Marker `put(id, null)` verhindert jeden weiteren Ladeversuch, sodass ein späterer Zugriff die Exception nicht erneut erzeugen könnte.
-  - `ladeFehlendeWerteInRepositoryMap(ids, repositoryMap, bulkLoader, datenbezeichnung, logger)` — für `Map<Long, T>`-Caches; trägt im Fehlerfall (nach Bulk- und pro-ID-Fallback) `null` ein, damit erneute Anfragen für dieselbe ID nicht in Endlosschleifen laufen.
-  - `ladeFehlendeWerteInRepositoryMap(…, logger, fehlerJeId)` — dieselbe Ladung mit Rückkanal: Der Fehler des endgültig gescheiterten Einzelzugriffs wird je ID festgehalten **statt** protokolliert. Er entsteht dann bei der Meldung des Ausgabeproblems, gemeinsam dedupliziert und auf dem dafür vorgesehenen Level. Der Fehler des **gesammelten** Zugriffs bleibt unabhängig davon im Log — er ist kein Ausgabeproblem, solange die Einzelzugriffe gelingen, und ist damit die Spur, wenn niemand den Einzelfehler bewertet. Die Map gehört dem Repository und lebt so lange wie dessen Cache.
-  - `ladeFehlendeListenInRepositoryMap(ids, repositoryMap, bulkLoader, datenbezeichnung, logger)` — für `Map<Long, List<T>>`-Caches; trägt im Fehlerfall eine leere Liste ein, sodass Konsumenten nie `null` sehen.
-  - `ladeFehlendeListenInRepositoryMap(…, logger, fehlerJeId)` — dieselbe Ladung mit Rückkanal. Bei Listen ist er die **einzige** Spur des Fehlers: Der Cache enthält danach die leere Liste und ist damit nicht mehr von einer ID zu unterscheiden, zu der es fachlich keine Daten gibt. Wer daraus ein Ausgabeproblem meldet, erkennt den Fehlschlag an dieser Map und nicht am Cache-Eintrag. Der Logeintrag des Einzelfehlers unterbleibt dann; der Fehler des gesammelten Zugriffs bleibt im Log.
-  - `zustaendeAus(ids, repositoryMap, fehlerJeId)` — leitet aus einer Repository-Map den `ReportingLadezustand` je ID ab: Wert vorhanden → geladen, Eintrag ohne Wert → gescheiterter Ladevorgang samt festgehaltener Exception, kein Eintrag → nicht vorhanden. Die Map allein trennt diese Fälle nicht, und wer sie gleich behandelt, macht aus einer Störung eine fachlich fehlende Akte. Wird dort gebraucht, wo eine Prüfung über zusätzlich benötigte Daten entscheidet (`ReportingRepositoryGost.zustaende…`).
-  - `meldeFehlgeschlageneAuslassungen(reportingContext, auswahl, objektart, bezeichnung)` — meldet je ausgelassener ID einer Auswahl, deren Laden gescheitert ist, ein Ausgabeproblem. Die `xxx(List<Long>)`-Listen-Zugriffe der Repositories geben nur die Objekte heraus und rufen diese Meldung selbst auf: Ohne sie bliebe ein endgültig gescheiterter Einzelzugriff völlig still, weil der Rückkanal den Logeintrag des Ladefehlers unterdrückt. Nicht vorhandene und vom Benutzerfilter ausgefilterte IDs werden nicht gemeldet.
+- **Erst gesammelt, dann einzeln.** Schlägt der Bulk-Zugriff fehl, wird jede ID einzeln nachgeladen, um fehlerhafte Datensätze zu isolieren. Da `ApiOperationException` eine `RuntimeException` ist, propagieren die übergebenen Lambdas Datenbankfehler unverändert; ein eigenes `try`/`catch` dort würde den Fallback unterbinden.
+- **Erst filtern, dann sortieren.** Die Comparatoren greifen auf nachladende Getter zu. Eine Sortierung vor dem Filtern löste damit Datenzugriffe, Logeinträge und Fehler auch für Datensätze aus, die gar nicht ausgegeben werden.
+- **Ein Fehler-Marker bleibt im Cache.** Ein Eintrag ohne Wert verhindert jeden weiteren Ladeversuch und bleibt zugleich vom Fall „nicht vorhanden" unterscheidbar — nur so wird aus einer Störung keine fachlich fehlende Akte (Abschnitt 9.2).
 
-  Alle Lademethoden folgen demselben Fallback-Muster: zunächst Bulk-Load aller fehlenden IDs; schlägt der gesammelte Aufruf fehl, wird jede ID einzeln nachgeladen, um fehlerhafte Datensätze zu isolieren. Da `ApiOperationException` eine `RuntimeException` ist, propagieren Caller-Lambdas Datenbank-Fehler unverändert in den Helper; ein eigenes try/catch in der Lambda ist nicht nötig und würde den pro-ID-Fallback unterbinden.
+Die einzelnen Methoden, ihre Parameter und die Rückkanäle für festgehaltene Fehler sind am Code dokumentiert.
 
 ---
 
@@ -646,6 +639,7 @@ Paket-privater Helper im `repositories`-Paket:
 
 - **[`reporting-konventionen.md`](reporting-konventionen.md)** — die verbindlichen Regeln und Invarianten des Moduls (Schichtentrennung, Null-Sicherheit der Typen, Filter-/Sortier-Regeln, Fehlercode-Matrix, OGNL-Grenzen, CSS-/Stil-Regeln). **Normative Referenz** — vor jeder Änderung am Modul lesen; bei Konflikt mit dieser Beschreibung gilt die Konventionen-Datei.
 - **[`reporting-template-erstellung.md`](reporting-template-erstellung.md)** — Schritt-für-Schritt-Anleitung zum Erstellen von Reportvorlagen (HTML + Thymeleaf). Richtet sich an Vorlagen-Autoren (auch ohne tiefe Java-Kenntnisse) und ist bewusst eigenständig lesbar, ohne dieses Architektur-Dokument vorauszusetzen.
+- **[`reporting-sortierung-und-filterung.md`](reporting-sortierung-und-filterung.md)** — Anleitung für die Arbeit an Sortierung und Filterung: welche Teile ein Reporting-Typ dafür mitbringt, wie die Auswahl im Client entsteht und was beim Ergänzen zu beachten ist.
 
 > Die frühere Kurzreferenz „Abschnitt 11 — Invarianten & Konventionen“ ist vollständig in
 > `reporting-konventionen.md` aufgegangen und dort um die Fehlercode-Matrix, die

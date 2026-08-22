@@ -5,6 +5,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -41,35 +42,35 @@ public class PdfFactory {
 	private final List<ReportBuilderHtml> htmlBuilders;
 
 	/**
-	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Nur dieses Kennzeichen macht eine Ausgabe ohne PDF-Datei gültig; ohne es
-	 * bleibt eine leere Builder-Liste ein Programmierfehler, und ein Ausfall der Dokumenterzeugung ginge als leere Ausgabe durch.
+	 * Gibt an, ob eine Ausgabe ohne PDF-Datei zulässig ist. Nur dieses Kennzeichen aus dem gemeldeten Ausgabeumfang macht eine leere Builder-Liste gültig;
+	 * ohne es bleibt sie ein Programmierfehler, und ein Ausfall der Dokumenterzeugung ginge als leere Ausgabe durch.
 	 */
-	private final boolean bewusstLeer;
+	private final boolean leereAusgabeZulaessig;
 
 
 	/**
-	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen HTML-Inhalten zu erzeugen.
+	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen HTML-Inhalten zu erzeugen. Ob eine leere Ausgabe zulässig ist, stammt aus dem
+	 * am Context gemeldeten Ausgabeumfang.
 	 *
 	 * @param htmlBuilders 				Eine Map mit den Dateinamen und HTML-Dateiinhalten.
-	 * @param bewusstLeer				Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Nur dann darf die Liste leer sein.
 	 * @param reportingContext		Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final boolean bewusstLeer, final ReportingContext reportingContext)
+	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final ReportingContext reportingContext)
 			throws ApiOperationException {
 
 		this.reportingContext = reportingContext;
-		this.bewusstLeer = bewusstLeer;
+		this.leereAusgabeZulaessig = (reportingContext.ausgabeumfang() != null) && reportingContext.ausgabeumfang().leereAusgabeZulaessig();
 
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 
-		// Validiere die HTML-Builder. Ohne Liste liegt immer ein Programmierfehler vor; eine leere Liste ist allein bei einer bewusst leeren Auswahl zulässig.
+		// Validiere die HTML-Builder. Ohne Liste liegt immer ein Programmierfehler vor; eine leere Liste ist allein bei einer zulässig leeren Ausgabe gültig.
 		if (htmlBuilders == null) {
 			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 		}
-		if (htmlBuilders.isEmpty() && !bewusstLeer) {
+		if (htmlBuilders.isEmpty() && !leereAusgabeZulaessig) {
 			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 		}
@@ -98,11 +99,9 @@ public class PdfFactory {
 			// Die Reihenfolge ist verbindlich: Zuerst zählt, wie viele Dokumente entstanden sind, erst danach, ob eine leere Menge zulässig ist. Eine bewusst
 			// leere Auswahl in der Sammelausgabe ergibt einen Builder mit leerem fachlichem Inhalt - dort entsteht ein Dokument und kein leeres Archiv.
 			if (pdfBuilders.isEmpty()) {
-				if (!bewusstLeer) {
-					reportingContext.logger().logLn(LogLevel.ERROR, 0,
-							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
+				if (!leereAusgabeZulaessig) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung. Es sind keine PDF-Inhalte generiert worden.");
+							"### FEHLER: Es sind keine PDF-Dokumente entstanden, obwohl die Ausgabe Daten enthalten sollte.");
 				}
 				return erzeugeZipResponse(pdfBuilders);
 			}
@@ -113,7 +112,7 @@ public class PdfFactory {
 				reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 				return ReportingHinweiseHeader.ergaenze(
 						Response.ok(data, einzigerPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
-						reportingContext, bewusstLeer).build();
+						reportingContext).build();
 			}
 			return erzeugeZipResponse(pdfBuilders);
 		} catch (final Exception e) {
@@ -124,13 +123,13 @@ public class PdfFactory {
 
 
 	/**
-	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält und deshalb kein Dokument entsteht. Die PDF-Ausgabe antwortet dann mit einem
-	 * Archiv ohne PDF-Dateien; der E-Mail-Versand reiht keinen Job ein, weil ein Job ohne Anhänge erfolgreich aussähe, ohne etwas zu versenden.
+	 * Gibt an, ob eine Ausgabe ohne Dokument zulässig ist, weil keine Einheit des gemeldeten Ausgabeumfangs ausgegeben wird. Die PDF-Ausgabe antwortet dann
+	 * mit einem Archiv ohne PDF-Dateien; der E-Mail-Versand reiht keinen Job ein, weil ein Job ohne Anhänge erfolgreich aussähe, ohne etwas zu versenden.
 	 *
-	 * @return true, wenn Datensätze angefordert waren und keiner übrig blieb, sonst false.
+	 * @return true, wenn eine Ausgabe ohne Dokument zulässig ist, sonst false.
 	 */
-	protected boolean bewusstLeer() {
-		return this.bewusstLeer;
+	protected boolean leereAusgabeZulaessig() {
+		return this.leereAusgabeZulaessig;
 	}
 
 	/**
@@ -150,7 +149,7 @@ public class PdfFactory {
 		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 		return ReportingHinweiseHeader.ergaenze(
 				Response.ok(data, "application/zip").header("Content-Disposition", "attachment; " + encodedFilename),
-				reportingContext, bewusstLeer).build();
+				reportingContext).build();
 	}
 
 	/**
@@ -512,8 +511,8 @@ public class PdfFactory {
 
 	/**
 	 * Ergänzt das Archiv um die Hinweisdatei, sofern es etwas zu erklären gibt. Sie ist die einzige Stelle, an der die Hinweise den Anwender ohne
-	 * Clientanpassung erreichen; besonders ein Archiv ohne PDF-Datei braucht sie, sonst stünde der Anwender vor einem leeren Download. Anders als der Header
-	 * hängt sie nicht an der Diagnoseabdeckung: Sie erklärt, was bekannt ist, und behauptet keine Vollständigkeit.
+	 * Clientanpassung erreichen; besonders ein Archiv ohne PDF-Datei braucht sie, sonst stünde der Anwender vor einem leeren Download. Sie erklärt, was
+	 * bekannt ist, und behauptet keine Vollständigkeit.
 	 *
 	 * @param zos Der {@code ZipOutputStream}, zu dem die Hinweisdatei hinzugefügt wird.
 	 *
@@ -521,12 +520,13 @@ public class PdfFactory {
 	 */
 	private void ergaenzeHinweisdatei(final ZipOutputStream zos) throws ApiOperationException {
 		final List<ReportingProblem> probleme = reportingContext.ausgabeprobleme();
-		if (!ReportingHinweisSerializer.brauchtHinweisdatei(probleme, bewusstLeer)) {
+		final ReportingAusgabeumfang umfang = reportingContext.ausgabeumfang();
+		if ((umfang == null) || !ReportingHinweisSerializer.brauchtHinweisdatei(umfang, probleme)) {
 			return;
 		}
 		try {
 			zos.putNextEntry(new ZipEntry(ReportingHinweisSerializer.DATEINAME_HINWEISE));
-			zos.write(ReportingHinweisSerializer.hinweisdatei(probleme, bewusstLeer).getBytes(StandardCharsets.UTF_8));
+			zos.write(ReportingHinweisSerializer.hinweisdatei(umfang, probleme).getBytes(StandardCharsets.UTF_8));
 			zos.closeEntry();
 		} catch (final Exception e) {
 			reportingContext.logger().logLn(LogLevel.ERROR, 4,

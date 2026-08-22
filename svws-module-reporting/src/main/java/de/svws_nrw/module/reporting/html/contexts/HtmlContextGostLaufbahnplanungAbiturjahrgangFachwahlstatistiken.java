@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikenAbiturjahrgang;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistik;
@@ -60,6 +61,12 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 				proxyReportingGostFachwahlstatistikenAbiturjahrgang.fachwahlstatistikenByIds(idsFaecher);
 		final List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikenAuswahlNachFaechernHalbjahren =
 				proxyReportingGostFachwahlstatistikenAbiturjahrgang.fachwahlstatistikenHalbjahreByIds(idsFaecher, idsGostHalbjahre);
+
+		// Die Zähleinheit dieses Datenaufbaus sind die Fächer, über die die Vorlage iteriert - und das ist die vollständige Liste. Die beiden nach Fächern
+		// eingeschränkten Listen stehen zwar im Context, werden von keiner Vorlage gelesen; aus ihnen gezählt, meldete der Header eine Auswahl, während die
+		// Ausgabe alle Fächer zeigt. Die Zahlen entstehen erst hier und werden deshalb hier gemeldet.
+		final int anzahlFaecher = fachwahlstatistiken.size();
+		reportingContext.meldeAusgabeumfang(new ReportingAusgabeumfang(anzahlFaecher, anzahlFaecher, anzahlFaecher == 0));
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

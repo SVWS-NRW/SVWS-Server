@@ -68,7 +68,7 @@ Dazu kommt **ein** Java-Eintrag, der die Vorlage im System bekannt macht (siehe 
 - **Reporting-Typ** – Ein Java-Datenobjekt wie `ReportingSchueler` oder `ReportingKlasse`. Seine Werte holst du über **Methoden mit Klammern**, z. B. `schueler.vorname()`. (Anders als bei normalen Webseiten gibt es hier keine „Felder ohne Klammern".)
 - **VorlageParameter** – Optionen, die der Nutzer vor dem Druck einstellt (Checkboxen, Textfelder …), z. B. „mit Foto". Im Template abgefragt mit `VorlageParameter.get('mitFoto')`.
 - **Fragment** – Ein wiederverwendbarer HTML-Baustein (z. B. der Seitenkopf). Du bindest ihn ein, statt ihn zu kopieren.
-- **Dialekt** – Eine SVWS-Erweiterung von Thymeleaf mit Zusatzfunktionen. Wichtig: `#convert` (Datum, QR-Codes …), `#icon` (Symbole als Bild) und `#inline` (CSS einbetten – brauchst du nur indirekt).
+- **Dialekt** – Eine SVWS-Erweiterung von Thymeleaf mit Zusatzfunktionen. Wichtig: `#convert` (Datum, QR-Codes …), `#aktuell` (aktuelles Datum und aktuelle Uhrzeit), `#icon` (Symbole als Bild) und `#inline` (CSS einbetten – brauchst du nur indirekt).
 - **`.name.tpl`** – Eine kleine Vorlage, die den **Dateinamen** der erzeugten Datei festlegt.
 
 ---
@@ -312,10 +312,11 @@ in einem bestimmten Kurs sowie Klasse und Lernabschnitt eines Schülers.
 Diese „`#`-Objekte" sind eingebaut und oft nützlich:
 
 - `#strings.isEmpty(text)`, `#strings.trim(text)`, `#strings.length(text)`
-- `#dates.format(#aktuell.jetztAlsDate(), 'dd.MM.yyyy HH:mm')` – aktuelles Datum/Uhrzeit. Nutze
-  hierfür immer `#aktuell.jetztAlsDate()`, **nicht** `#dates.createNow()` – nur der
-  `#aktuell`-Dialect liefert im DEV-Modus mit `SVWS_REPORTING_FIXED_DATE=true` ein festes Datum
-  und macht Snapshot-Tests damit deterministisch.
+- `#aktuell.formatiert('dd.MM.yyyy HH:mm')` – aktuelles Datum/Uhrzeit. Nutze dafür immer den
+  `#aktuell`-Dialekt und **nicht** `#dates.createNow()` oder `#dates.format(...)`: Nur `#aktuell`
+  liefert im DEV-Modus mit `SVWS_REPORTING_FIXED_DATE=true` ein festes Datum und macht Snapshot-Tests
+  damit deterministisch. `#dates` arbeitet zudem auf einem Datumstyp ohne Zeitzone und bände die
+  Ausgabe an die Zeitzone des Servers.
 - Für SVWS-Datumswerte (z. B. Geburtsdatum) nimm aber `#convert` – siehe Schritt 6.
 
 ### Zwischenvariablen mit `th:with`
@@ -411,9 +412,11 @@ Die vollständige Liste steht in der Java-Klasse [`html/dialects/ConvertExpressi
 **Barcodes und QR-Codes immer über `#convert` einbinden.** Die beiden Funktionen liefern **immer** eine
 Bildquelle – auch dann, wenn der Inhalt leer ist oder sich nicht darstellen lässt. Letzteres kommt vor:
 Ein Code128-Barcode und ein QR-Code kennen ohne festen Zeichensatz nur den Zeichenvorrat bis
-ISO-8859-1; ein Name in kyrillischer oder chinesischer Schrift lässt sich damit nicht kodieren. In
-diesen Fällen erscheint an der Stelle eine leere Fläche in den angeforderten Maßen, der Report wird
-aber fertig gedruckt, und der Grund steht als Warnung im Log.
+ISO-8859-1; ein Name in kyrillischer oder chinesischer Schrift lässt sich damit nicht kodieren. Ein
+Code128-Barcode fasst außerdem höchstens 64 Zeichen – ein längerer Inhalt wird nicht gekürzt, denn
+ein gekürzter Code enthielte etwas anderes als die Daten. In diesen Fällen erscheint an der Stelle
+eine leere Fläche in den angeforderten Maßen, der Report wird aber fertig gedruckt, und der Grund
+wird als Ausgabeproblem gemeldet – er zählt als Hinweis im Header der Antwort und steht im Log.
 
 Das gilt nur für den Weg über `#convert`. Die zugrunde liegende Klasse `ReportingBarcodeUtils` direkt
 aufzurufen ist **nicht vorgesehen**: Sie meldet einen nicht darstellbaren Inhalt als Fehler, weil
@@ -535,7 +538,7 @@ Sie nutzt die kompakte „Text-Schreibweise" von Thymeleaf (`[# ...]` statt HTML
 [# th:if="${!Schueler.isEmpty()}"]
     [# th:each="schueler,iterState : ${Schueler}"]
         [# th:if="${iterState.first}"]
-            Schueler-Liste-Kontaktdaten-Erzieher_[(${ #dates.format(#aktuell.jetztAlsDate(), 'yyyyMMdd-HHmm') })]
+            Schueler-Liste-Kontaktdaten-Erzieher_[(${ #aktuell.formatiert('yyyyMMdd-HHmm') })]
         [/]
     [/]
 [/]
@@ -663,6 +666,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
   `encodeBase64`/`decodeBase64`, `encodeBase45`/`decodeBase45`, `encodeBase32`/`decodeBase32`.
 
 **Der Dialekt `#icon`** (siehe auch Schritt 6): `#icon.get(name)`, `#icon.get(name, groessePx)`, `#icon.get(name, groessePx, farbe)` liefern ein `<img>`-Element mit dem Icon als SVG-Data-URI (Ausgabe per `th:utext`); `#icon.getExtern(groessePx, schueler, mitKuerzel, fuehrenderText, folgenderText)` erzeugt die Extern-Kennzeichnung eines Schülers. Die Methoden stehen in `html/dialects/IconExpressionHelper.java`, der Icon-Katalog in `icons/icons.json`.
+
+**Der Dialekt `#aktuell`** liefert den Zeitpunkt der Ausgabe: `#aktuell.formatiert(muster)` nach eigenem Muster (etwa `'dd.MM.yyyy HH:mm'` oder `'yyyyMMdd-HHmm'` im Dateinamen), `#aktuell.datum()` im ISO-Format `yyyy-MM-dd`, `#aktuell.uhrzeit()` im Format `HH:mm` und `#aktuell.jetzt()` als Zeitpunkt-Objekt für weitere Berechnungen. Nimm für die Formatierung immer `formatiert(...)` und nicht `#dates.format(...)`: Der Dialekt liest aus einer Uhr, die sich für Snapshot-Tests festhalten lässt und ihre Zeitzone mitführt. Die Methoden stehen in `html/dialects/AktuellExpressionHelper.java`.
 
 > Die meisten IDE-Plugins kennen diese Dialekte nicht und zeigen sie als „unbekannt" an. Das ist normal – zur Laufzeit funktionieren sie trotzdem. Die `@thymesVar`-Kommentarzeile aus dem Grundgerüst hilft der IDE etwas bei der Autovervollständigung.
 

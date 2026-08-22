@@ -38,13 +38,24 @@ final class HtmlContextInitializerGostLaufbahnplanung extends HtmlContextInitial
 				"Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen Fachwahlstatistiken für die HTML-Generierung.");
 
 		HtmlContextValidierung.validiereSchuleMitGost(reportingContext);
-		HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, false);
+		HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext);
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Laufbahnplan-Abiturjahrgang-Fachwahlstatistiken für die HTML-Generierung mit Template %s."
 						.formatted(reportingReportvorlage.name()));
 		mapHtmlContexts.put(HtmlContextSchluessel.GOST_LAUFBAHNPLANUNG_FACHWAHLSTATISTIKEN,
 				new HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(reportingContext));
+	}
+
+
+	/**
+	 * Die Zähleinheit dieses Datenaufbaus sind die Fächer der Statistik; sie stehen erst mit deren Erstellung im Context fest.
+	 *
+	 * @return true, denn der Context-Aufbau meldet den Ausgabeumfang.
+	 */
+	@Override
+	public boolean meldetAusgabeumfangImContextAufbau() {
+		return true;
 	}
 
 }

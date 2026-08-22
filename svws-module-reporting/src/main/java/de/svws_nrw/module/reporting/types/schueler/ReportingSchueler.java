@@ -358,14 +358,16 @@ public class ReportingSchueler extends ReportingPerson {
 	// ##### Getter #####
 
 	/**
-	 * Zum gegebenen Schuljahresabschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt
+	 * Zum gegebenen Schuljahresabschnitt wird der darin aktive Lernabschnitt (WechselNr. 0) ermittelt.
+	 * <p>Die Vorlagen rufen diese Methode auch mit {@code null} auf - etwa mit dem Abitur-Schuljahresabschnitt eines Jahrgangs, dessen Abschnitt die Schule
+	 * nicht angelegt hat. Ohne den Guard bräche die Druckausgabe dort mit einer NullPointerException ab.</p>
 	 *
-	 * @param schuljahresabschnitt  Der Schuljahresabschnitt, dessen Lernabschnitt ermittelt werden soll.
+	 * @param schuljahresabschnitt  Der Schuljahresabschnitt, dessen Lernabschnitt ermittelt werden soll, oder {@code null}.
 	 *
-	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein solcher Abschnitt existiert.
+	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein Abschnitt übergeben wurde oder kein solcher Lernabschnitt existiert.
 	 */
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		if ((lernabschnitte() == null) || lernabschnitte().isEmpty()) {
+		if ((schuljahresabschnitt == null) || (lernabschnitte() == null) || lernabschnitte().isEmpty()) {
 			return null;
 		}
 		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);

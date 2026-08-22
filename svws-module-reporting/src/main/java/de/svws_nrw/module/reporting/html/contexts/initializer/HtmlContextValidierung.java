@@ -28,6 +28,10 @@ final class HtmlContextValidierung {
 	/** Die Meldung für eine im Request leere ID-Liste; der Platzhalter nimmt den ID-Typ des jeweiligen Datenaufbaus auf. */
 	private static final String FEHLER_KEINE_IDS = "FEHLER: Es wurden keine %s übergeben.";
 
+	/** Die Meldung für Parameter, die sich nicht als Abiturjahrgang und GOSt-Halbjahre auswerten lassen. */
+	private static final String FEHLER_PARAMETER_UNLESBAR =
+			"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.";
+
 	private HtmlContextValidierung() {
 		throw new IllegalStateException("Hilfsklasse - Initialisierung nicht möglich.");
 	}
@@ -116,86 +120,51 @@ final class HtmlContextValidierung {
 	}
 
 	/**
-	 * Validiert die Parameter für Gost-Daten.
+	 * Validiert die Parameter eines Reports, dessen Hauptressource ein einzelner Abiturjahrgang ist - etwa die Fachwahlstatistiken der GOSt-Laufbahnplanung.
+	 * Erwartet wird ein Abiturjahrgang gefolgt von beliebigen GOSt-Halbjahren.
+	 * <p>Die Statuswahl folgt der Rolle: Ein nicht vorhandener Abiturjahrgang ist die adressierte Hauptressource und ergibt {@code 404}, ein unlesbarer Wert
+	 * oder eine Wertebereichsverletzung {@code 400}. Ein Fehler beim Laden der vorhandenen Abiturjahrgänge ist ein Serverproblem; das Repository wirft ihn
+	 * statustragend, und er bleibt hier unangetastet.</p>
 	 *
 	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
-	 * @param paarweise        Gibt an, ob die Daten paarweise (Abiturjahrgang+GOSt-Halbjahr, Abiturjahrgang+GOSt-Halbjahr, ...) vorliegen müssen.
-	 *                         Ist der Wert false, wird ein einzelner Abiturjahrgang gefolgt von beliebigen Halbjahren erwartet.
 	 *
-	 * @throws ApiOperationException Falls die Parameter ungültig sind.
+	 * @throws ApiOperationException Falls die Parameter ungültig sind oder die vorhandenen Abiturjahrgänge nicht geladen werden konnten.
 	 */
-	static void validiereParameterFuerAbiturjahrgangUndHalbjahre(final ReportingContext reportingContext, final boolean paarweise)
-			throws ApiOperationException {
-		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten();
-		if (parameterDaten.isEmpty()) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.");
-		}
+	static void validiereAbiturjahrgangAlsHauptressource(final ReportingContext reportingContext) throws ApiOperationException {
+		final List<Long> parameterDaten = pflichtParameterAbiturjahrgang(reportingContext);
+		final List<Integer> vorhandeneAbiturjahrgaenge = reportingContext.repositoryGost().abiturjahrgaenge();
 		try {
-			final List<Integer> vorhandeneAbiturjahrgaenge = reportingContext.repositoryGost().abiturjahrgaenge();
-
-			if (paarweise) {
-				validiereParameterPaarweise(parameterDaten, vorhandeneAbiturjahrgaenge);
-			} else {
-				validiereParameterEinzeln(parameterDaten, vorhandeneAbiturjahrgaenge);
-			}
+			validiereParameterEinzeln(parameterDaten, vorhandeneAbiturjahrgaenge);
 		} catch (final ApiOperationException aoe) {
 			throw aoe;
 		} catch (final Exception e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, e,
-					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+			throw new ApiOperationException(Status.BAD_REQUEST, e, FEHLER_PARAMETER_UNLESBAR);
 		}
 	}
 
-	/**
-	 * Validiert die Parameter für Gost-Daten paarweise, d. h. am Abiturjahr ist direkt das Gost-Halbjahr angehängt (beispielsweise 20253).
-	 *
-	 * @param parameterDaten             Liste der Parameter
-	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
-	 *
-	 * @throws ApiOperationException Falls die Parameter ungültig sind.
-	 */
-	static void validiereParameterPaarweise(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
-			throws ApiOperationException {
-		for (final Long kombinierteId : parameterDaten) {
-			if (kombinierteId != null) {
-				final int abiturjahr = (int) (kombinierteId / 10);
-				validiereAbiturjahr(abiturjahr, vorhandeneAbiturjahrgaenge);
-				final int idGostHalbjahr = (int) (kombinierteId % 10);
-				validiereHalbjahr(idGostHalbjahr);
-			}
-		}
-	}
 
 	/**
-	 * Validiert die Parameter für Gost-Daten einzeln (ein Abiturjahrgang gefolgt von beliebigen Halbjahren).
+	 * Validiert die Parameter für Gost-Daten einzeln (ein Abiturjahrgang gefolgt von beliebigen Halbjahren). Der Abiturjahrgang ist hier die Hauptressource
+	 * des Reports: Existiert er nicht, lautet die Antwort {@code 404}; ein Wert außerhalb des Wertebereichs bleibt ein Client-Fehler mit {@code 400}.
 	 * <p>Die Liste muss mindestens den Abiturjahrgang enthalten; auf eine leere Liste prüft der Aufrufer
-	 * {@link #validiereParameterFuerAbiturjahrgangUndHalbjahre(ReportingContext, boolean)}.</p>
+	 * {@link #validiereAbiturjahrgangAlsHauptressource(ReportingContext)}.</p>
 	 *
 	 * @param parameterDaten             Liste der Parameter
 	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
 	 *
-	 * @throws ApiOperationException Falls die Parameter ungültig sind.
+	 * @throws ApiOperationException Falls die Parameter ungültig sind oder der Abiturjahrgang nicht existiert.
 	 */
 	static void validiereParameterEinzeln(final List<Long> parameterDaten, final List<Integer> vorhandeneAbiturjahrgaenge)
 			throws ApiOperationException {
-		validiereAbiturjahr(Math.toIntExact(parameterDaten.getFirst()), vorhandeneAbiturjahrgaenge);
+		final int abiturjahr = Math.toIntExact(parameterDaten.getFirst());
+		if (abiturjahr < 1900) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+		}
+		if (!vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
+			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Der Abiturjahrgang %d ist nicht vorhanden.".formatted(abiturjahr));
+		}
 		for (int i = 1; i < parameterDaten.size(); i++) {
 			validiereHalbjahr(Math.toIntExact(parameterDaten.get(i)));
-		}
-	}
-
-	/**
-	 * Validiert ein einzelnes Abiturjahr.
-	 *
-	 * @param abiturjahr                 das zu prüfende Abiturjahr
-	 * @param vorhandeneAbiturjahrgaenge Liste der vorhandenen Abiturjahrgänge
-	 *
-	 * @throws ApiOperationException Falls das Abiturjahr ungültig ist.
-	 */
-	static void validiereAbiturjahr(final int abiturjahr, final List<Integer> vorhandeneAbiturjahrgaenge) throws ApiOperationException {
-		if ((abiturjahr < 1900) || !vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
 		}
 	}
 
@@ -210,6 +179,24 @@ final class HtmlContextValidierung {
 		if (GostHalbjahr.fromID(halbjahrId) == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
 		}
+	}
+
+	/**
+	 * Liefert die Hauptdaten-IDs des Requests und weist eine leere Liste als Client-Fehler ab.
+	 *
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
+	 * @return Die Hauptdaten-IDs des Requests.
+	 *
+	 * @throws ApiOperationException Falls der Request keine Hauptdaten benennt.
+	 */
+	private static List<Long> pflichtParameterAbiturjahrgang(final ReportingContext reportingContext) throws ApiOperationException {
+		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten();
+		if (parameterDaten.isEmpty()) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.");
+		}
+		return parameterDaten;
 	}
 
 }

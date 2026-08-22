@@ -27,10 +27,12 @@ import org.junit.jupiter.api.Test;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
@@ -56,6 +58,9 @@ class TestPdfFactory {
 	/** Der Root-Pfad, den die Builder für ihre Ressourcen erhalten. */
 	private static final String ROOT_PFAD = "de/svws_nrw/module/reporting/";
 
+	/** Der Umfang einer zulässig leeren Ausgabe: Datensätze waren angefordert, keiner blieb übrig. */
+	private static final ReportingAusgabeumfang LEER_GEFILTERT = new ReportingAusgabeumfang(5, 0, true);
+
 	/** Der Context, den die Factory in den Tests erhält. */
 	private ReportingContext reportingContext;
 
@@ -73,8 +78,12 @@ class TestPdfFactory {
 		log = new LogConsumerList();
 		logger.addConsumer(log);
 		when(reportingContext.logger()).thenReturn(logger);
+		// Der Header wird derzeit nur im Entwicklungsmodus ausgeliefert; die Tests messen deshalb dort.
+		when(reportingContext.serverMode()).thenReturn(ServerMode.DEV);
+		// Der Standard-Umfang der Tests: Alles Angeforderte wird ausgegeben, eine leere Ausgabe ist nicht zulässig.
+		when(reportingContext.ausgabeumfang()).thenReturn(new ReportingAusgabeumfang(2, 2, false));
 		// Die Factory verlangt mindestens einen HTML-Builder. Für die Sammelausgabe werden die PDF-Builder direkt übergeben.
-		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), false, reportingContext);
+		pdfFactory = new PdfFactory(List.of(mock(ReportBuilderHtml.class)), reportingContext);
 	}
 
 	/**
@@ -176,7 +185,7 @@ class TestPdfFactory {
 		// PDF-Builder und würden ein versehentliches Entfernen der Durchreichung nicht bemerken.
 		final PdfFactory factory = new PdfFactory(
 				List.of(htmlBuilder("Bescheinigung_Meier", Set.of(4711L)), htmlBuilder("Bescheinigung_Schulz", Set.of(4712L, 4713L))),
-				false, reportingContext);
+				reportingContext);
 
 		final List<ReportBuilderPdf> pdfBuilders = factory.getPdfBuilders();
 
@@ -186,7 +195,7 @@ class TestPdfFactory {
 
 	@Test
 	void testEinHtmlBuilderOhneIdsErgibtEinenPdfBuilderOhneIds() throws Exception {
-		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Sammelliste", Set.of())), false, reportingContext);
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Sammelliste", Set.of())), reportingContext);
 
 		assertEquals(Set.of(), factory.getPdfBuilders().getFirst().getIds());
 	}
@@ -391,7 +400,8 @@ class TestPdfFactory {
 		// Eine Einzelausgabe ohne verbleibenden Datensatz ist eine gültige Antwort und kein Serverfehler. Das Archiv entsteht, damit die Antwort einen Träger
 		// für die Hinweisdatei hat und der Client eine Datei erhält statt einer Fehlermeldung.
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
-		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
+		final PdfFactory factory = new PdfFactory(List.of(), reportingContext);
 
 		final Response response = factory.createPdfResponse();
 
@@ -405,7 +415,8 @@ class TestPdfFactory {
 	void testDerDateinameDerLeerenZipAusgabeStammtAusDerReportvorlage() throws Exception {
 		// Der Name darf nicht am ersten Builder hängen: Bei einer leeren Auswahl gibt es keinen. Er ist deshalb derselbe wie bei einer gefüllten Ausgabe.
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
-		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
+		final PdfFactory factory = new PdfFactory(List.of(), reportingContext);
 
 		final String dateiname = dateinameAusResponse(factory.createPdfResponse());
 
@@ -413,10 +424,10 @@ class TestPdfFactory {
 	}
 
 	@Test
-	void testOhneBewusstLeereAuswahlBleibtEineLeereAusgabeEinServerfehler() {
-		// Null Builder ohne dieses Kennzeichen sind ein Programmierfehler. Fiele die Unterscheidung, ginge ein Ausfall der Dokumenterzeugung als leere Ausgabe
-		// durch - der Anwender erhielte ein leeres Archiv statt einer Fehlermeldung.
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> new PdfFactory(List.of(), false, reportingContext));
+	void testOhneZulaessigLeereAusgabeBleibtEineLeereAusgabeEinServerfehler() {
+		// Null Builder ohne das Kennzeichen des Ausgabeumfangs sind ein Programmierfehler. Fiele die Unterscheidung, ginge ein Ausfall der Dokumenterzeugung
+		// als leere Ausgabe durch - der Anwender erhielte ein leeres Archiv statt einer Fehlermeldung.
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> new PdfFactory(List.of(), reportingContext));
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 	}
@@ -426,38 +437,40 @@ class TestPdfFactory {
 		// Bei der Sammelausgabe entsteht auch ohne Datensatz genau ein Builder mit leerem fachlichem Inhalt. Maßgeblich ist die Anzahl der Dokumente und nicht
 		// das Kennzeichen: Ein leeres Archiv wäre hier falsch, denn das Dokument existiert.
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
 		final ReportBuilderHtml htmlBuilder = htmlBuilder("Schueler-Liste-Kontaktdaten-Erzieher", Set.of());
-		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder), true, reportingContext);
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder), reportingContext);
 
 		final Response response = factory.createPdfResponse();
 
 		assertEquals("application/pdf", response.getMediaType().toString(), "Eine Sammelausgabe liefert ein Dokument und kein Archiv.");
 		assertEquals("Schueler-Liste-Kontaktdaten-Erzieher.pdf", dateinameAusResponse(response));
-		// Der Header meldet trotzdem leer=?1: Er folgt der Auswahl und nicht der Zahl der Dokumente. Genau diese Unterscheidung braucht der Client, um ein
-		// Dokument mit leerem Inhalt zu erklären - andernfalls stünde der Anwender vor einer leeren Liste ohne Grund.
-		assertEquals("v=0, gesamt=0, leer=?1", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
+		// Der Header meldet trotzdem ausgegeben=0: Er folgt der Auswahl und nicht der Zahl der Dokumente. Genau diese Unterscheidung braucht der Client, um
+		// ein Dokument mit leerem Inhalt zu erklären - andernfalls stünde der Anwender vor einer leeren Liste ohne Grund.
+		assertEquals("v=1, angefordert=5, ausgegeben=0, hinweise=0", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
 	}
 
 	@Test
 	void testDieZipAusgabeTraegtDenHinweisHeader() throws Exception {
 		// Der Nachweis am produktiven Weg: Der Helfer ist eigens getestet, aber nur hier ist belegt, dass die ZIP-Ausgabe ihn auch aufruft.
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
-		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
+		final PdfFactory factory = new PdfFactory(List.of(), reportingContext);
 
 		final Response response = factory.createPdfResponse();
 
-		assertEquals("v=0, gesamt=0, leer=?1", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME),
-				"Eine Ausgabe ohne Dokument muss den Leerstand melden.");
+		assertEquals("v=1, angefordert=5, ausgegeben=0, hinweise=0", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME),
+				"Eine Ausgabe ohne Dokument muss die Zählwerte melden.");
 	}
 
 	@Test
 	void testDieEinzelnePdfDateiTraegtDenHinweisHeader() throws Exception {
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER);
-		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Schueler-Liste-Kontaktdaten-Erzieher", Set.of())), false, reportingContext);
+		final PdfFactory factory = new PdfFactory(List.of(htmlBuilder("Schueler-Liste-Kontaktdaten-Erzieher", Set.of())), reportingContext);
 
 		final Response response = factory.createPdfResponse();
 
-		assertEquals("v=0, gesamt=0, leer=?0", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
+		assertEquals("v=1, angefordert=2, ausgegeben=2, hinweise=0", response.getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
 	}
 
 	@Test
@@ -465,7 +478,8 @@ class TestPdfFactory {
 		// Ohne diese Beilage stünde der Anwender vor einem leeren Download ohne Erklärung. Sie ist zugleich der einzige Weg, auf dem die Hinweise ihn ohne
 		// Clientanpassung erreichen: Den Response-Header wertet der heutige Client nicht aus.
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
-		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
+		final PdfFactory factory = new PdfFactory(List.of(), reportingContext);
 
 		final Response response = factory.createPdfResponse();
 
@@ -475,7 +489,8 @@ class TestPdfFactory {
 	@Test
 	void testDieHinweisdateiImArchivIstLesbarUndErklaertDenLeerstand() throws Exception {
 		gebeReportvorlageVor(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG);
-		final PdfFactory factory = new PdfFactory(List.of(), true, reportingContext);
+		when(reportingContext.ausgabeumfang()).thenReturn(LEER_GEFILTERT);
+		final PdfFactory factory = new PdfFactory(List.of(), reportingContext);
 
 		final String inhalt = eintragsinhalt((byte[]) factory.createPdfResponse().getEntity(), ReportingHinweisSerializer.DATEINAME_HINWEISE);
 

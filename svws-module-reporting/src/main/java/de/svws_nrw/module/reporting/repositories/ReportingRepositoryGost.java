@@ -12,7 +12,6 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
@@ -24,10 +23,10 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenVorgabeService;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Domänen-Repository für GOSt-Daten (Abiturjahrgänge, Beratungsdaten, Kursplanung).
@@ -56,6 +55,9 @@ public class ReportingRepositoryGost {
 	private final Map<Long, Exception> ladefehlerGklWahlen = new HashMap<>();
 	private final Map<Long, Exception> ladefehlerKlausurvorgaben = new HashMap<>();
 
+	/** Die Fehler gescheiterter Ladevorgänge der Fachwahlstatistik je Abiturjahr; die Lebensdauer folgt derselben Regel wie bei den Maps oben. */
+	private final Map<Integer, Exception> ladefehlerFachwahlen = new HashMap<>();
+
 	/** Zwischenspeicher für die Liste der vorhandenen Abiturjahrgänge. */
 	private List<Integer> abiturjahrgaenge = null;
 
@@ -76,10 +78,18 @@ public class ReportingRepositoryGost {
 	 * Die Liste wird beim ersten Aufruf aus der Datenbank geladen und für die Lebensdauer des Reporting-Contexts zwischengespeichert.
 	 *
 	 * @return Liste der vorhandenen Abi-Jahrgänge.
+	 *
+	 * @throws ApiOperationException Mit Status 500, falls die Abiturjahrgänge nicht geladen werden konnten - das ist ein Serverproblem und kein Befund an den
+	 *                               Parametern, die gegen diese Liste geprüft werden.
 	 */
-	public List<Integer> abiturjahrgaenge() {
+	public List<Integer> abiturjahrgaenge() throws ApiOperationException {
 		if (abiturjahrgaenge == null) {
-			abiturjahrgaenge = this.reportingContext.conn().queryAll(DTOGostJahrgangsdaten.class).stream().map(aj -> aj.Abi_Jahrgang).toList();
+			try {
+				abiturjahrgaenge = this.reportingContext.conn().queryAll(DTOGostJahrgangsdaten.class).stream().map(aj -> aj.Abi_Jahrgang).toList();
+			} catch (final Exception e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+						"FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
+			}
 		}
 		return abiturjahrgaenge;
 	}
@@ -304,24 +314,70 @@ public class ReportingRepositoryGost {
 	// ##### Fachwahlen #####
 
 	/**
-	 * Gibt die GOSt-Fachwahlstatistik für den übergebenen Abiturjahrgang zurück. Die Daten werden bei erstem Zugriff aus
-	 * der Datenbank geladen und im Cache gehalten.
+	 * Gibt die GOSt-Fachwahlstatistik für den übergebenen Abiturjahrgang zurück: die Wahlen je Fach und Halbjahr aus der Laufbahnplanung, unabhängig von
+	 * einer Blockung. Die Daten werden bei erstem Zugriff aus der Datenbank geladen und im Cache gehalten.
+	 * <p><b>Strikter Zugriff:</b> Die Statistik ist hier der Hauptinhalt des Reports - der Fachwahlstatistik-Report eines Abiturjahrgangs. Ein gescheiterter
+	 * Ladevorgang bricht deshalb mit einem Serverfehler ab, statt einen leeren Report mit Erfolgsstatus zu erzeugen. Für die Fachwahl-Anzahlen als
+	 * Anreicherung einer anderen Ausgabe gilt {@link #fachwahlenOptional(int)}.</p>
 	 *
 	 * @param abiturjahr Das Abiturjahr des Jahrgangs.
 	 *
-	 * @return Liste der Fachwahl-Statistikeinträge des Abiturjahrgangs. Leere Liste, falls keine Daten ermittelt werden konnten.
+	 * @return Liste der Fachwahl-Statistikeinträge des Abiturjahrgangs; leer, wenn der Jahrgang keine Fachwahlen hat.
+	 *
+	 * @throws ApiOperationException Mit Status 500 und der ursprünglichen Ursache, falls die Statistik nicht geladen werden konnte.
 	 */
-	public List<GostStatistikFachwahl> fachwahlen(final int abiturjahr) {
-		return mapFachwahlen.computeIfAbsent(abiturjahr, jahr -> {
-			try {
-				return GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService().getFachwahlStatistik(jahr);
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
-						this.reportingContext.logger(), LogLevel.INFO, 0);
-				return List.of();
-			}
-		});
+	public List<GostStatistikFachwahl> fachwahlen(final int abiturjahr) throws ApiOperationException {
+		ladeFachwahlen(abiturjahr);
+		final List<GostStatistikFachwahl> fachwahlen = mapFachwahlen.get(abiturjahr);
+		if (fachwahlen == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, ladefehlerFachwahlen.get(abiturjahr),
+					"FEHLER: Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d konnte nicht ermittelt werden.".formatted(abiturjahr));
+		}
+		return fachwahlen;
+	}
+
+	/**
+	 * Gibt die GOSt-Fachwahlstatistik für den übergebenen Abiturjahrgang zurück, ohne bei einem Ladefehler abzubrechen.
+	 * <p><b>Optionaler Zugriff:</b> Die Fachwahl-Anzahlen aus der Laufbahnplanung reichern hier eine andere Ausgabe an - in der Kursstatistik eines
+	 * Blockungsergebnisses die Spalte der Wahlen je Fach und Kursart; die übrigen Statistikwerte dieser Ausgabe stammen aus dem Blockungsergebnis selbst. Ein
+	 * gescheiterter Ladevorgang wird als fehlende Teildaten gemeldet und die Ausgabe ohne diese Werte fortgesetzt; allein eine Infrastrukturstörung bricht
+	 * über die Meldefassade ab. Wer die Statistik als Hauptinhalt benötigt, verwendet {@link #fachwahlen(int)}.</p>
+	 *
+	 * @param abiturjahr Das Abiturjahr des Jahrgangs.
+	 *
+	 * @return Liste der Fachwahl-Statistikeinträge des Abiturjahrgangs; leer, wenn der Jahrgang keine Fachwahlen hat oder das Laden gescheitert ist.
+	 */
+	public List<GostStatistikFachwahl> fachwahlenOptional(final int abiturjahr) {
+		ladeFachwahlen(abiturjahr);
+		final List<GostStatistikFachwahl> fachwahlen = mapFachwahlen.get(abiturjahr);
+		if (fachwahlen == null) {
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext,
+					ReportingProblemSchluessel.fuer(GostStatistikFachwahl.class, abiturjahr),
+					"Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d".formatted(abiturjahr), ladefehlerFachwahlen.get(abiturjahr));
+			return List.of();
+		}
+		return fachwahlen;
+	}
+
+	/**
+	 * Lädt die Fachwahlstatistik des Abiturjahrgangs in den Cache, falls sie dort noch fehlt. Ein gescheiterter Ladevorgang hinterlässt den Fehler-Marker
+	 * {@code null} samt festgehaltenem Fehler; die Bewertung des Fehlschlags liegt bei den beiden Zugriffen, weil nur sie die Rolle der Statistik im
+	 * jeweiligen Report kennen.
+	 *
+	 * @param abiturjahr Das Abiturjahr des Jahrgangs.
+	 */
+	private void ladeFachwahlen(final int abiturjahr) {
+		if (mapFachwahlen.containsKey(abiturjahr)) {
+			return;
+		}
+		try {
+			final List<GostStatistikFachwahl> fachwahlen =
+					GostServiceFactoryBuilder.getGostServiceFactory().getGostJahrgangFachwahlService().getFachwahlStatistik(abiturjahr);
+			mapFachwahlen.put(abiturjahr, (fachwahlen != null) ? fachwahlen : List.of());
+		} catch (final Exception e) {
+			mapFachwahlen.put(abiturjahr, null);
+			ladefehlerFachwahlen.put(abiturjahr, e);
+		}
 	}
 
 

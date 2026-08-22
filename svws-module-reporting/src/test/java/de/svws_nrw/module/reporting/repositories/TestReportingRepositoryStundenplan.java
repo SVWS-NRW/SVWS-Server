@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,7 +43,7 @@ import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanung
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Prüft, dass ein Ladefehler der Stundenplandefinitionen nur dort zum Fehler wird, wo der Stundenplan das angeforderte Hauptdatum ist.
+ * Prüft, dass ein Ladefehler der Stundenplandefinitionen nur dort zum Fehler wird, wo der Stundenplan das angeforderte Hauptobjekt ist.
  * <p>Der {@link ReportingContext} erzeugt das Repository für jeden Report, auch für Ausgaben ohne Stundenplanbezug. Ein Wurf im Konstruktor reißt diese
  * Ausgaben mit; ein Log-Eintrag mit {@link LogLevel#ERROR} wäre dort ebenso falsch, denn dieses Level ist dem Abbruch vorbehalten. Der Nachweis über das
  * fehlende ERROR ist deshalb Gegenstand mehrerer Tests.</p>
@@ -55,9 +54,6 @@ class TestReportingRepositoryStundenplan {
 
 	/** Die Meldung der Ursache, die das Laden der Definitionen scheitern lässt. */
 	private static final String MELDUNG_URSACHE = "Die Verbindung zur Datenbank wurde unterbrochen.";
-
-	/** Die Überschrift des Abschnitts mit dem Stacktrace. Sie markiert einen vollständigen Fehlerblock im Log. */
-	private static final String UEBERSCHRIFT_STACKTRACE = "### STACKTRACE:";
 
 	/** Die ID des Stundenplans, dessen Daten die Tests anfordern. */
 	private static final long ID_STUNDENPLAN = 7L;
@@ -164,20 +160,34 @@ class TestReportingRepositoryStundenplan {
 				"Beim Initialisieren ist die Bedeutung des Fehlers unbekannt; ein ERROR-Eintrag behauptete einen Abbruch, den es nicht gibt.");
 		assertTrue(eintraege(LogLevel.WARNING).isEmpty(), "Auch eine Warnung ist beim Initialisieren zu früh: Erst der Zugriff kennt die Bedeutung.");
 		assertNull(repository.stundenplan("2026-08-10"), "Der optionale Zugriff liefert nach einem Ladefehler null.");
-		assertTrue(eintraege(LogLevel.ERROR).isEmpty(), "Der optionale Zugriff stellt eine Lücke dar und protokolliert deshalb höchstens WARNING.");
-		assertFalse(eintraege(LogLevel.WARNING).isEmpty(), "Da der optionale Zugriff nicht wirft, ist seine Warnung die einzige Spur des Fehlers.");
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class)),
+				anyString(), any());
 	}
 
 	@Test
-	void testDerOptionaleZugriffProtokolliertHoechstensEinmal() {
-		// Der Klausurplan erzeugt je Raum einen Proxy und fragt den Stundenplan zum Termin jedes Mal erneut ab.
+	void testDerOptionaleZugriffMeldetDenLadefehlerJeZugriffUeberDieFassade() {
+		// Der Klausurplan erzeugt je Raum einen Proxy und fragt den Stundenplan zum Termin jedes Mal erneut ab. Die Deduplizierung gleicher Befunde
+		// leistet der Problemsammler der Fassade über den Schlüssel.
 		final ReportingRepositoryStundenplan repository = repositoryMitLadefehler();
 
 		assertNull(repository.stundenplan("2026-08-10"));
 		assertNull(repository.stundenplan("2026-08-11"));
 
-		assertEquals(1, eintraege(LogLevel.WARNING).stream().filter(UEBERSCHRIFT_STACKTRACE::equals).count(),
-				"Derselbe Ladefehler darf nicht je Zugriff erneut mit Ursache und Stacktrace im Log stehen: " + eintraege(LogLevel.WARNING));
+		verify(reportingContext, times(2)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class)),
+				anyString(), any());
+	}
+
+	@Test
+	void testOhneStundenplanZumDatumWirdDerFehlendeOptionaleWertGemeldet() {
+		// Kein Plan zum Datum ist ein fachlicher Befund: Die abhängigen Angaben bleiben leer, der Schlüssel dedupliziert je Datum.
+		final ReportingRepositoryStundenplan repository = repositoryMitDefinitionZu(ID_STUNDENPLAN);
+
+		assertNull(repository.stundenplan("2020-01-15"), "Außerhalb aller Gültigkeitszeiträume gibt es keinen Stundenplan zum Datum.");
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.OPTIONALER_WERT_FEHLT),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class, 20200115L)), anyString(), eq(null));
 	}
 
 	@Test
@@ -198,7 +208,7 @@ class TestReportingRepositoryStundenplan {
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.stundenplan(42L));
 
-		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus(), "Ein nicht ladbares Hauptdatum ist ein Serverproblem, kein NOT_FOUND.");
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus(), "Ein nicht ladbares Hauptobjekt ist ein Serverproblem, kein NOT_FOUND.");
 		assertTrue(ursachen(aoe).contains(MELDUNG_URSACHE), "Die ursprüngliche Ursache bleibt in der Kette erhalten: " + ursachen(aoe));
 		assertEquals(1, eintraege(LogLevel.ERROR).size(),
 				"Das Repository trägt allein die Angabe bei, welcher Zugriff scheitert; den Block aus Typ, Ursachen und Stacktrace gibt die oberste Ebene "

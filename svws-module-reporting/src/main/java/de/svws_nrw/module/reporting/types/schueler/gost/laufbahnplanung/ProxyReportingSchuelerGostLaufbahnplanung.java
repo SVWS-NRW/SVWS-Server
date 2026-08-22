@@ -22,9 +22,9 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -33,8 +33,10 @@ import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.validation.constraints.NotNull;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
@@ -76,6 +78,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		// Objekts sind die Daten aus der Initialisierung.
 
 		// ##### Abiturdaten laden
+		// Der stille Frühausstieg ist auf dem Datenaufbau der GOSt-Laufbahnplanung unerreichbar: Die Auswahl meldet Schüler ohne Beratungs-Abiturdaten und
+		// lässt sie aus, bevor dieser Proxy entsteht.
 		final Abiturdaten abiturdaten = this.reportingContext.repositoryGost().beratungsdatenAbiturdaten(reportingSchueler.id());
 		if ((abiturdaten == null) || (abiturdaten.abiturjahr <= 0)) {
 			return;
@@ -90,14 +94,19 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			gostJahrgangsdaten = this.reportingContext.repositoryGost().jahrgangsdaten(super.abiturjahr());
 			gostFaecherManager = this.reportingContext.repositoryGost().faecherManager(super.abiturjahr());
 		} catch (final ApiOperationException e) {
-			ReportingExceptionUtils.logException("INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung "
-					+ "eines Schülers (Fächer und Jahrgänge).", e, reportingContext.logger(), LogLevel.INFO, 0);
+			// Der Bogen des Schülers erscheint mit leeren Feldern; der Befund wird über die Fassade erfasst, statt still verloren zu gehen. Eine
+			// Infrastrukturstörung bricht dabei über die Fassade ab.
+			this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.fuerLadefehler(e), ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+					ReportingProblemSchluessel.fuer(ReportingSchuelerGostLaufbahnplanung.class, reportingSchueler.id()),
+					"Die Daten der GOSt-Laufbahnplanung des Schülers %d konnten nicht geladen werden und fehlen in der Ausgabe."
+							.formatted(reportingSchueler.id()), e);
 			return;
 		}
 		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten,
 				gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// ##### Beratungsdaten laden
+		// Derselbe gedeckte Frühausstieg wie bei den Abiturdaten: Die Auswahl meldet Schüler ohne Beratungsdaten und lässt sie vorab aus.
 		final GostLaufbahnplanungBeratungsdaten schuelerBeratungsdaten =
 				this.reportingContext.repositoryGost().beratungsdaten(reportingSchueler.id());
 		if (schuelerBeratungsdaten == null) {
@@ -477,11 +486,17 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			return new SprachdatenErgebnis(false, "", "");
 		}
 
-		final String sprachKuerzel = zfach.daten(auswahlSchuljahr).kuerzel;
+		// Die Katalogdaten werden genau einmal aufgelöst; auch checkSprachbelegungsbeginn arbeitet mit diesem Ergebnis, statt erneut aufzulösen.
+		final FachKatalogEintrag zfachDaten = katalogdatenOderMelde(this.reportingContext, zfach, fach, auswahlSchuljahr);
+		if (zfachDaten == null) {
+			return new SprachdatenErgebnis(false, "", "");
+		}
+
+		final String sprachKuerzel = zfachDaten.kuerzel;
 		final Sprachbelegung sprachbelegung = sprachbelegungen.get(sprachKuerzel);
 		final Sprachpruefung sprachpruefung = sprachpruefungen.get(sprachKuerzel);
 
-		if ((sprachbelegung != null) && checkSprachbelegungsbeginn(fach, sprachbelegung, zfach)) {
+		if ((sprachbelegung != null) && checkSprachbelegungsbeginn(fach, sprachbelegung, zfachDaten)) {
 			// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können.
 			final String beginn = sprachbelegung.belegungVonJahrgang;
 			final String reihenfolge = (sprachbelegung.reihenfolge != null) ? sprachbelegung.reihenfolge.toString() : "";
@@ -562,16 +577,39 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 
 	/**
+	 * Löst die Katalogdaten des zulässigen Fachs im übergebenen Schuljahr auf. Fehlt der Eintrag, wird das als fehlende Angabe gemeldet und {@code null}
+	 * geliefert - die Sprachdaten der Fachwahl bleiben dann leer, statt dass das Rendern an der ungeprüften Referenz mit einer NullPointerException endet.
+	 *
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param zfach            Das zulässige Fach aus dem ASD-Katalog.
+	 * @param fach             Das GOSt-Fach, dessen Sprachdaten bestimmt werden; es liefert ID und Kürzel für die Meldung.
+	 * @param schuljahr        Das Schuljahr, in dem die Katalogdaten gelten sollen.
+	 *
+	 * @return Die Katalogdaten des Fachs im Schuljahr oder {@code null}, falls der Katalog dort keinen Eintrag führt.
+	 */
+	static FachKatalogEintrag katalogdatenOderMelde(final ReportingContext reportingContext, final Fach zfach, final GostFach fach, final int schuljahr) {
+		final FachKatalogEintrag katalogdaten = zfach.daten(schuljahr);
+		if (katalogdaten == null) {
+			reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+					ReportingProblemSchluessel.fuer(ReportingFach.class, fach.id),
+					"Der Katalogeintrag des Faches %s fehlt im Schuljahr %d; die Sprachdaten der Fachwahl fehlen in der Ausgabe."
+							.formatted(ersetzeNullBlankTrim(fach.kuerzel), schuljahr), null);
+		}
+		return katalogdaten;
+	}
+
+
+	/**
 	 * Prüft, ob eine Sprachbelegung vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
 	 *
 	 * @param fach				Das zu prüfende Fach
 	 * @param sprachbelegung 	Die Sprachbelegung aus der Sprachenfolge
-	 * @param zfach 			Das zulässige Fach, gegen das der Sprachbeginn geprüft wird.
+	 * @param zfachDaten 		Die Katalogdaten des zulässigen Fachs im ausgewählten Schuljahr, gegen die der Sprachbeginn geprüft wird.
 	 *
 	 * @return true, wenn eine Belegung möglich war, sonst false
 	 */
-	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
-		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
+	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final FachKatalogEintrag zfachDaten) {
+		String abJahrgang = zfachDaten.abJahrgang;
 		if (abJahrgang == null) {
 			return true;
 		}

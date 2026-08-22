@@ -459,7 +459,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	/**
 	 * Der Schuljahresabschnitt, in dem der Schüler sein Abitur abgelegt hat.
 	 *
-	 * @return Inhalt des Feldes abiturSchuljahresabschnitt
+	 * @return Inhalt des Feldes abiturSchuljahresabschnitt; kann {@code null} sein, wenn die Schule den Abschnitt nicht angelegt hat.
 	 */
 	public ReportingSchuljahresabschnitt abiturSchuljahresabschnitt() {
 		return abiturSchuljahresabschnitt;

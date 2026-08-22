@@ -1,13 +1,17 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,9 +23,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
 
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
+import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -39,6 +47,9 @@ import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
+import de.svws_nrw.service.gost.GostServiceFactory;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -64,6 +75,9 @@ class TestReportingRepositoryRueckfallwerte {
 
 	/** Die ID der Klausurvorgabe, die sich nicht laden lässt. */
 	private static final long ID_KLAUSURVORGABE = 23L;
+
+	/** Das Abiturjahr, dessen Fachwahlstatistik sich nicht laden lässt. */
+	private static final int ABITURJAHR = 2025;
 
 	/** Die ID der Klasse, deren Daten sich nicht laden lassen. */
 	private static final long ID_KLASSE = 7L;
@@ -188,6 +202,88 @@ class TestReportingRepositoryRueckfallwerte {
 		assertTrue(repository.klausurvorgaben(List.of(ID_KLAUSURVORGABE)).isEmpty());
 
 		erwarteGemeldetesProblem(ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class, ID_KLAUSURVORGABE));
+		erwarteKeinenFehlerImLog();
+	}
+
+	@Test
+	void testEineFehlendeFachwahlDerKursbelegungWirdGemeldetUndAlsUngueltigAusgegeben() {
+		// Der Rückfallwert ist die als ungültig markierte Belegung: Der Schüler erscheint weiterhin im Kurs. Ohne Meldung wäre die Datenlücke der Blockung
+		// von einer regulär ungültigen Belegung nicht zu unterscheiden.
+		final ReportingRepositoryGostKursplanung repository = new ReportingRepositoryGostKursplanung(reportingContext);
+		final GostBlockungsergebnisManager ergebnisManager = mock(GostBlockungsergebnisManager.class);
+		when(ergebnisManager.getOfSchuelerOfKursFachwahl(ID_SCHUELER, ID_KURS)).thenThrow(new DeveloperNotificationException("Fehlerinjektion"));
+
+		final var fachwahl = repository.fachwahlDatenOderMelde(ergebnisManager, ID_SCHUELER, ID_KURS);
+
+		assertFalse(fachwahl.gueltig(), "Ohne Fachwahl erscheint die Kursbelegung als ungültig.");
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_VORHANDEN),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, ID_SCHUELER)), anyString(), any());
+		erwarteKeinenFehlerImLog();
+	}
+
+	@Test
+	void testEntfernteKurszuordnungenUnbekannterSchuelerWerdenGemeldet() {
+		// Die Zuordnungen stehen im gespeicherten Zwischenergebnis und entfallen beim Aufbau; ohne Meldung erschiene die Ausgabe als vollständig.
+		final ReportingRepositoryGostKursplanung repository = new ReportingRepositoryGostKursplanung(reportingContext);
+
+		repository.meldeEntfernteKurszuordnungen(ID_SCHUELER);
+
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_VORHANDEN),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				eq(ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, ID_SCHUELER)), anyString(), eq(null));
+		erwarteKeinenFehlerImLog();
+	}
+
+	@Test
+	void testEinAndererFehlerDerFachwahlAufloesungPropagiert() {
+		// Allein die fehlende Fachwahl ist der definierte Rückfall-Fall; jeder andere Fehler würde sonst still als fehlende Fachwahl gedeutet.
+		final ReportingRepositoryGostKursplanung repository = new ReportingRepositoryGostKursplanung(reportingContext);
+		final GostBlockungsergebnisManager ergebnisManager = mock(GostBlockungsergebnisManager.class);
+		when(ergebnisManager.getOfSchuelerOfKursFachwahl(ID_SCHUELER, ID_KURS)).thenThrow(new IllegalStateException("Fehlerinjektion"));
+
+		assertThrows(IllegalStateException.class, () -> repository.fachwahlDatenOderMelde(ergebnisManager, ID_SCHUELER, ID_KURS));
+		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
+	}
+
+	@Test
+	void testEineNichtLadbareFachwahlstatistikWirdBeimOptionalenZugriffGemeldet() {
+		// Der Rückfallwert ist die leere Liste: Die Kurse des Blockungsergebnisses erscheinen weiterhin, allein ihre Statistikwerte fehlen. Ohne Meldung wäre
+		// der Fehlschlag nicht von einem Jahrgang ohne Fachwahlen zu unterscheiden.
+		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
+
+		try (MockedStatic<GostServiceFactoryBuilder> serviceFactoryBuilder = mockStatic(GostServiceFactoryBuilder.class)) {
+			final GostServiceFactory serviceFactory = mock(GostServiceFactory.class, RETURNS_DEEP_STUBS);
+			serviceFactoryBuilder.when(GostServiceFactoryBuilder::getGostServiceFactory).thenReturn(serviceFactory);
+			when(serviceFactory.getGostJahrgangFachwahlService().getFachwahlStatistik(ABITURJAHR))
+					.thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehlerinjektion"));
+
+			assertTrue(repository.fachwahlenOptional(ABITURJAHR).isEmpty());
+		}
+
+		erwarteGemeldetesProblem(ReportingProblemSchluessel.fuer(GostStatistikFachwahl.class, ABITURJAHR));
+		erwarteKeinenFehlerImLog();
+	}
+
+	@Test
+	void testEinVerbindungsfehlerDerFachwahlstatistikTraegtDieAbbrechendeUrsache() {
+		// Derselbe Weg mit abgerissener Verbindung: Die Meldung trägt die abbrechende Ursache. Dass die Fassade daraus einen Serverfehler macht, prüft
+		// TestReportingContextMeldefassade - der Mock hier kann nicht werfen.
+		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
+
+		try (MockedStatic<GostServiceFactoryBuilder> serviceFactoryBuilder = mockStatic(GostServiceFactoryBuilder.class)) {
+			final GostServiceFactory serviceFactory = mock(GostServiceFactory.class, RETURNS_DEEP_STUBS);
+			serviceFactoryBuilder.when(GostServiceFactoryBuilder::getGostServiceFactory).thenReturn(serviceFactory);
+			when(serviceFactory.getGostJahrgangFachwahlService().getFachwahlStatistik(ABITURJAHR))
+					.thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							new SQLNonTransientConnectionException("Verbindung zur Datenbank verloren.")));
+
+			assertTrue(repository.fachwahlenOptional(ABITURJAHR).isEmpty());
+		}
+
+		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.INFRASTRUKTURSTOERUNG),
+				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(GostStatistikFachwahl.class, ABITURJAHR)),
+				anyString(), any());
 		erwarteKeinenFehlerImLog();
 	}
 

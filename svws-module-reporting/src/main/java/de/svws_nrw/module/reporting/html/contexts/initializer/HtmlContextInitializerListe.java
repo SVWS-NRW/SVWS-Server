@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -13,8 +14,8 @@ import de.svws_nrw.module.reporting.repositories.ReportingContext;
  * Initializer für alle Datenaufbauten, die einer Liste von Hauptdaten-IDs folgen: Hauptdaten auswählen, Auswahl prüfen und einschränken, Haupt-Context aus den
  * ausgewählten Objekten erzeugen.
  * <p>Der Ablauf ist für alle diese Datenaufbauten derselbe; sie unterscheiden sich allein in ihrer {@link HtmlContextAufbauListe}-Konfiguration.</p>
- * <p>Die Auswahl bleibt nach dem Aufbau abrufbar. Die Ausgabefactory braucht sie, um eine Ausgabe ohne Datensätze von einem Programmierfehler zu
- * unterscheiden: Ohne diese Angabe wäre beides eine leere Builder-Liste.</p>
+ * <p>Der Ausgabeumfang wird direkt aus der Auswahl gemeldet: Die Zählwerte entstehen hier, und die Ausgabefactory braucht sie, um eine gewollt leere Ausgabe
+ * von einem Programmierfehler zu unterscheiden.</p>
  *
  * @param <T> Der Reporting-Typ der ausgewählten Hauptdaten.
  */
@@ -22,9 +23,6 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 
 	/** Die Konfiguration des Datenaufbaus, den dieser Initializer ausführt. */
 	private final HtmlContextAufbauListe<T> aufbau;
-
-	/** Das Ergebnis der Auswahl oder null, solange {@link #init()} nicht gelaufen ist. */
-	private ReportingAuswahlergebnis<T> auswahlergebnis;
 
 
 	/**
@@ -59,7 +57,7 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 		auswahl = aufbau.einschraenkung().schraenkeEin(reportingContext, auswahl);
 		// Die Einschränkung lässt weitere Datensätze aus; sie werden erst danach gemeldet, damit kein Datensatz zweimal in der Meldung erscheint.
 		HtmlContextValidierung.pruefeUndMeldeAuswahl(reportingContext, auswahl, aufbau.objektart(), bezeichnungen);
-		this.auswahlergebnis = auswahl;
+		reportingContext.meldeAusgabeumfang(ReportingAusgabeumfang.ausAuswahl(auswahl));
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext %s für die HTML-Generierung - %d von %d IDs aus %s stehen für Template %s zur Verfügung."
@@ -81,13 +79,13 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 
 
 	/**
-	 * Gibt an, ob die Auswahl dieses Datenaufbaus bewusst keinen Datensatz enthält.
+	 * Der Ausgabeumfang wird direkt in {@link #init()} aus der Auswahl gemeldet.
 	 *
-	 * @return true, wenn die Auswahl gelaufen ist und keinen Datensatz enthält, sonst false.
+	 * @return false, denn dieser Initializer meldet selbst.
 	 */
 	@Override
-	public boolean bewusstLeer() {
-		return (this.auswahlergebnis != null) && this.auswahlergebnis.bewusstLeer();
+	public boolean meldetAusgabeumfangImContextAufbau() {
+		return false;
 	}
 
 }

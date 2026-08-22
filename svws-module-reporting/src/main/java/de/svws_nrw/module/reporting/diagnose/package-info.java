@@ -18,6 +18,6 @@
  * <p>Zwei Regeln halten die Grenzen: Ein vom Benutzerfilter ausgeschlossener Datensatz ist eine Auswahlentscheidung und wird nicht gemeldet. Und eine
  * Ursache, die die Ausgabe abbricht, wird geworfen statt gesammelt.</p>
  *
- * <p>Die Einordnung in die Architektur beschreibt {@code reporting-architektur.md}, Abschnitt 9.2.</p>
+ * <p>Die Einordnung in die Architektur beschreibt die Dokumentation des Moduls.</p>
  */
 package de.svws_nrw.module.reporting.diagnose;

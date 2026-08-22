@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.factories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -16,9 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblem;
@@ -61,6 +64,10 @@ class TestHtmlFactoryResponse {
 		reportingContext = mock(ReportingContext.class);
 		when(reportingContext.logger()).thenReturn(new Logger());
 		when(reportingContext.ausgabeprobleme()).thenReturn(List.of());
+		// Der Initializer meldet den Umfang an den Context; der Mock schluckt die Meldung, deshalb liefert er den Wert hier direkt.
+		when(reportingContext.ausgabeumfang()).thenReturn(new ReportingAusgabeumfang(1, 1, false));
+		// Der Header wird derzeit nur im Entwicklungsmodus ausgeliefert; die Tests messen deshalb dort.
+		when(reportingContext.serverMode()).thenReturn(ServerMode.DEV);
 
 		final ReportingParameterTypisiert reportingParameter = mock(ReportingParameterTypisiert.class);
 		when(reportingParameter.reportVorlage()).thenReturn(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN);
@@ -107,9 +114,20 @@ class TestHtmlFactoryResponse {
 
 
 	@Test
-	void testDieHtmlAusgabeEinesAngebundenenStundenplanPfadsTraegtDenHinweisHeader() throws ApiOperationException {
-		assertEquals("v=0, gesamt=0, leer=?0", htmlResponse().getHeaderString(ReportingHinweisSerializer.HEADER_NAME),
-				"Die Sichtweisen der Stundenplanung sind angebunden; ihre HTML-Antwort muss den Header tragen.");
+	void testOhneGemeldetenAusgabeumfangBrichtDerAufbauAlsServerfehlerAb() {
+		// Die Schranke des Hinweisvertrags: Ein Datenaufbau, dessen Meldestelle fehlt, darf nicht still ohne Zählwerte laufen - sonst entstünde ein Header,
+		// den niemand ermittelt hat, oder gar keiner, ohne dass es auffällt.
+		when(reportingContext.ausgabeumfang()).thenReturn(null);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> HtmlFactory.erzeuge(reportingContext));
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+	}
+
+	@Test
+	void testDieHtmlAusgabeTraegtDenHinweisHeader() throws ApiOperationException {
+		assertEquals("v=1, angefordert=1, ausgegeben=1, hinweise=0", htmlResponse().getHeaderString(ReportingHinweisSerializer.HEADER_NAME),
+				"Die HTML-Antwort muss den Header mit den gemeldeten Zählwerten tragen.");
 	}
 
 	@Test
@@ -117,7 +135,7 @@ class TestHtmlFactoryResponse {
 		when(reportingContext.ausgabeprobleme()).thenReturn(List.of(new ReportingProblem(ReportingProblemursache.NICHT_VORHANDEN,
 				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, ReportingProblemSchluessel.fuer(ReportingLehrer.class, 2L))));
 
-		assertEquals("v=0, gesamt=1, leer=?0, datensaetze=1", htmlResponse().getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
+		assertEquals("v=1, angefordert=1, ausgegeben=1, hinweise=1, datensaetze=1", htmlResponse().getHeaderString(ReportingHinweisSerializer.HEADER_NAME));
 	}
 
 	@Test

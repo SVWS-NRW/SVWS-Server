@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostFachwahl;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -22,6 +23,9 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
@@ -34,7 +38,6 @@ import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplan
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ProxyReportingSchuelerGostKursplanungKursbelegung;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -105,6 +108,8 @@ public class ReportingRepositoryGostKursplanung {
 	 * würden Manager-Methoden, die Schüler-IDs auflösen (z. B. {@link GostBlockungsergebnisManager#getOfKursSchuelermenge}),
 	 * beim Aufbau der Reporting-Objekte eine Exception werfen. Entspricht inhaltlich dem Filter in
 	 * {@link DataGostBlockungsergebnisse#getErgebnisListe}.
+	 * <p>Jeder betroffene Schüler wird vor dem Entfernen als Ausgabeproblem gemeldet: Es entfallen gespeicherte Daten des Zwischenergebnisses, und nur im
+	 * Log wäre dieser Entfall für den Anwender unsichtbar - die Ausgabe meldete sich sonst als vollständig.</p>
 	 *
 	 * @param blockungsergebnis Das geladene Blockungsergebnis.
 	 * @param datenManager      Der zugehörige Blockungsdaten-Manager.
@@ -119,10 +124,23 @@ public class ReportingRepositoryGostKursplanung {
 		if (unbekannteSchuelerIDs.isEmpty()) {
 			return;
 		}
+		for (final Long idSchueler : unbekannteSchuelerIDs) {
+			meldeEntfernteKurszuordnungen(idSchueler);
+		}
 		manager.kursSchuelerUpdateExecute(manager.kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(unbekannteSchuelerIDs));
-		this.reportingContext.logger().logLn(LogLevel.INFO, 4,
-				"INFO: Es wurden Kurszuordnungen von %d Schülern entfernt, die nicht mehr zur Blockung gehören (z. B. Abgänger)."
-						.formatted(unbekannteSchuelerIDs.size()));
+	}
+
+	/**
+	 * Meldet die Kurszuordnungen eines Schülers, der nicht mehr Teil der Blockung ist, als Ausgabeproblem. Die Zuordnungen stehen im gespeicherten
+	 * Zwischenergebnis, lassen sich aber keinem Schüler der Blockung mehr zuordnen und fehlen deshalb in der Ausgabe.
+	 *
+	 * @param idSchueler Die ID des Schülers, dessen Kurszuordnungen entfallen.
+	 */
+	void meldeEntfernteKurszuordnungen(final long idSchueler) {
+		this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+				ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, idSchueler),
+				"Die gespeicherten Kurszuordnungen des Schülers %d gehören zu keinem Schüler der Blockung mehr (z. B. Abgänger) und fehlen in der Ausgabe."
+						.formatted(idSchueler), null);
 	}
 
 	/**
@@ -305,22 +323,23 @@ public class ReportingRepositoryGostKursplanung {
 	 *
 	 * <p>Aus dem Halbjahr werden Schuljahr und Abschnitt der Blockung abgeleitet. Eine ungültige ID darf deshalb nicht
 	 * stillschweigend übergangen werden: Sie führte zu einem falsch berechneten Schuljahresabschnitt und damit zu den
-	 * Fachdaten eines falschen Schuljahres.</p>
+	 * Fachdaten eines falschen Schuljahres. Der Wert stammt aus den gespeicherten Blockungsdaten des Servers; ein
+	 * ungültiger Wert ist damit eine Inkonsistenz der Serverdaten und ein Serverfehler - als "nicht gefunden" suchte
+	 * der Anwender die Ursache bei seiner Anfrage. Den ERROR-Eintrag schreibt die Abschlussgrenze.</p>
 	 *
 	 * @param idGostHalbjahr Die ID des GOSt-Halbjahres aus den Blockungsdaten.
 	 * @param idBlockung     Die ID der Blockung; wird für die Fehlermeldung benötigt.
 	 *
 	 * @return Das GOSt-Halbjahr der Blockung.
 	 *
-	 * @throws ApiOperationException Falls die ID kein gültiges GOSt-Halbjahr bezeichnet.
+	 * @throws ApiOperationException Mit Status 500, falls die ID kein gültiges GOSt-Halbjahr bezeichnet.
 	 */
-	private GostHalbjahr ermittleGostHalbjahr(final int idGostHalbjahr, final long idBlockung) throws ApiOperationException {
+	static GostHalbjahr ermittleGostHalbjahr(final int idGostHalbjahr, final long idBlockung) throws ApiOperationException {
 		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(idGostHalbjahr);
 		if (gostHalbjahr == null) {
-			final String fehlermeldung = "FEHLER: Zur Blockung mit der ID %d konnte aus dem Wert %d kein gültiges GOSt-Halbjahr ermittelt werden."
-					.formatted(idBlockung, idGostHalbjahr);
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
-			throw new ApiOperationException(Response.Status.NOT_FOUND, fehlermeldung);
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+					"FEHLER: Zur Blockung mit der ID %d konnte aus dem Wert %d kein gültiges GOSt-Halbjahr ermittelt werden."
+							.formatted(idBlockung, idGostHalbjahr));
 		}
 		return gostHalbjahr;
 	}
@@ -435,26 +454,50 @@ public class ReportingRepositoryGostKursplanung {
 			final ReportingGostKursplanungKurs reportingKurs, final Map<Long, ReportingSchueler> mapSchueler) {
 		final ReportingSchueler schueler = mapSchueler.get(idKursschueler);
 		if (schueler == null) {
+			// Bewusst still: Hier fehlen nur Schüler, die der Benutzerfilter des zentralen Schüler-Repositorys ausgeschlossen hat - eine
+			// Auswahlentscheidung des Anwenders und kein Ausgabeproblem.
 			return;
 		}
-		String fachwahlAbiturfach = "";
-		boolean fachwahlSchriftlich = false;
-		boolean fachwahlGueltig = !manager.getOfSchuelerOfKursIstUngueltig(idKursschueler, kursId);
-
-		if (fachwahlGueltig) {
-			try {
-				final GostFachwahl gostFachwahl = manager.getOfSchuelerOfKursFachwahl(idKursschueler, kursId);
-				fachwahlAbiturfach = (gostFachwahl.abiturfach != null) ? String.valueOf(gostFachwahl.abiturfach) : "";
-				fachwahlSchriftlich = gostFachwahl.istSchriftlich;
-			} catch (final Exception e) {
-				fachwahlGueltig = false;
-				ReportingExceptionUtils.logException(
-						"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
-						e, reportingContext.logger(), LogLevel.INFO, 0);
-			}
-		}
+		final FachwahlDaten fachwahl = fachwahlDatenOderMelde(manager, idKursschueler, kursId);
 
 		schueler.gostKursplanungKursbelegungen().add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
-				fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich, reportingKurs));
+				fachwahl.abiturfach(), fachwahl.gueltig(), fachwahl.schriftlich(), reportingKurs));
+	}
+
+	/**
+	 * Die Angaben der Fachwahl zu einer Kursbelegung: Abiturfach, Schriftlichkeit und ob die Belegung gültig ist.
+	 *
+	 * @param abiturfach  Die Nummer des Abiturfachs als Text oder ein leerer String.
+	 * @param schriftlich Gibt an, ob das Fach schriftlich belegt ist.
+	 * @param gueltig     Gibt an, ob die Kursbelegung gültig ist.
+	 */
+	record FachwahlDaten(String abiturfach, boolean schriftlich, boolean gueltig) {
+	}
+
+	/**
+	 * Löst die Fachwahl eines Schülers zu seiner Kursbelegung über den Ergebnis-Manager auf. Fehlt die Fachwahl zu einer gültigen Belegung, ist das eine
+	 * Datenlücke der Blockung: Die Belegung erscheint als ungültig, und der Befund wird über die Fassade gemeldet. Jeder andere Fehler propagiert - er wäre
+	 * sonst still als fehlende Fachwahl gedeutet.
+	 *
+	 * @param ergebnisManager Der Manager des Blockungsergebnisses.
+	 * @param idKursschueler  Die ID des Schülers im Kurs.
+	 * @param idKurs          Die ID des Kurses.
+	 *
+	 * @return Die Angaben der Fachwahl zur Kursbelegung.
+	 */
+	FachwahlDaten fachwahlDatenOderMelde(final GostBlockungsergebnisManager ergebnisManager, final long idKursschueler, final long idKurs) {
+		if (ergebnisManager.getOfSchuelerOfKursIstUngueltig(idKursschueler, idKurs)) {
+			return new FachwahlDaten("", false, false);
+		}
+		try {
+			final GostFachwahl gostFachwahl = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, idKurs);
+			return new FachwahlDaten((gostFachwahl.abiturfach != null) ? String.valueOf(gostFachwahl.abiturfach) : "", gostFachwahl.istSchriftlich, true);
+		} catch (final DeveloperNotificationException e) {
+			this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+					ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, idKursschueler),
+					"Die Fachwahl des Schülers %d zum Kurs %d fehlt; die Kursbelegung erscheint in der Ausgabe als ungültig."
+							.formatted(idKursschueler, idKurs), e);
+			return new FachwahlDaten("", false, false);
+		}
 	}
 }

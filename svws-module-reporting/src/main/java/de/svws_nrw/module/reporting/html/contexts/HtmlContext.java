@@ -50,6 +50,17 @@ public abstract class HtmlContext<T> {
 	}
 
 	/**
+	 * Gibt den Reporting-Context dieses Aufrufs zurück. Das Rendern braucht ihn, damit die Thymeleaf-Dialekte ihre Befunde an dieselbe Meldefassade
+	 * geben können wie der übrige Datenaufbau.
+	 *
+	 * @return Der Reporting-Context.
+	 */
+	@JsonIgnore
+	public ReportingContext getReportingContext() {
+		return reportingContext;
+	}
+
+	/**
 	 * Setzen des Thymeleaf-Daten-Context
 	 *
 	 * @param context Thymeleaf-Daten-Context mit den Daten.

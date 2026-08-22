@@ -27,13 +27,17 @@ import de.svws_nrw.service.signature.Signature;
 import de.svws_nrw.service.signature.SignatureService;
 import de.svws_nrw.service.signature.SignatureServiceFactory;
 import de.svws_nrw.service.signature.SignatureStatus;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Erzeugt die gerenderten QR-Codes der signierten Schulbescheinigung. Die mehrstufige Pipeline
  * (Ausstellungsdaten ermitteln, XSchule-XML erzeugen, in einem einzigen Batch signieren, QR-Codes als SVG rendern)
  * ist hier gebündelt, damit das aufrufende Repository nur das Caching der Ergebnisse verantwortet.
  * <p>Die Factory ist die Meldestelle für eine gescheiterte Signatur- oder QR-Erzeugung, denn nur sie kann unterscheiden, woran es lag: Scheitern Signierung
- * oder Rendering trotz vorliegender Ausgangsdaten, entsteht je Schüler ein Ausgabeproblem, und die Bescheinigung erscheint ohne Signatur.</p>
+ * oder Rendering trotz vorliegender Ausgangsdaten, entsteht je Schüler ein Ausgabeproblem, und die Bescheinigung erscheint ohne Signatur. Ein Ausfall des
+ * Signierdienstes, ein Anmeldefehler oder ein Stapel ohne eine einzige erfolgreiche Signatur brechen dagegen die gesamte Erstellung statustragend ab - ohne
+ * Dienst entsteht keine signierte Bescheinigung.</p>
  * <p>Fehler der Ausgangsdaten fängt sie nicht. Ein nicht geladener Schüler erhält nur einen Fehlereintrag - er ist ausgefiltert oder nicht ladbar, und
  * beides meldet eine andere Stelle. Ein Fehler beim Aufbau der Ausstellungsdaten propagiert, weil die Schulstammdaten längst geladen sind und ein Scheitern
  * dort einen inkonsistenten Zustand bezeichnet.</p>
@@ -42,8 +46,9 @@ public final class SchulbescheinigungQrFactory {
 
 	private final ReportingContext reportingContext;
 
-	/** Liefert den Signier-Service. Wird erst bei Bedarf innerhalb der Fehlerbehandlung ausgewertet, damit z. B. eine fehlende
-	 * Konfiguration des Dienstes nicht zum Absturz, sondern zu einer Fehlermeldung je Schüler führt. */
+	/** Liefert den Signier-Service. Er wird erst beim Signieren selbst bezogen, damit z. B. eine fehlende Konfiguration des Dienstes nicht schon beim
+	 * Erzeugen der Factory auffällt, sondern innerhalb der Fehlerbehandlung des Signierens - und dort wie ein Ausfall des Dienstes zum statustragenden
+	 * Abbruch führt. */
 	private final Supplier<SignatureService> signatureServiceSupplier;
 
 	/** Die Uhr, aus der das Ausstellungsdatum der Bescheinigung bezogen wird. */
@@ -75,13 +80,16 @@ public final class SchulbescheinigungQrFactory {
 
 	/**
 	 * Erzeugt für alle übergebenen Schüler die QR-Daten der Schulbescheinigung in einem einzigen Signier-Batch. Für jede ID wird
-	 * ein Eintrag geliefert (im Fehlerfall mit gesetzter Fehlermeldung), damit niemals {@code null} in der Cache-Map landet.
+	 * ein Eintrag geliefert (im Fehlerfall mit dem Zustand DATENFEHLER oder SIGNIERFEHLER), damit niemals {@code null} in der Cache-Map landet.
 	 *
 	 * @param idsSchueler Die IDs der zu verarbeitenden Schüler.
 	 *
 	 * @return Map von der Schüler-ID auf die zugehörigen QR-Daten.
+	 *
+	 * @throws ApiOperationException Mit Status 400 bei einem erkennbaren Anmeldefehler am Signierdienst, mit Status 403 bei einer fehlenden Berechtigung
+	 *                               zum Signieren, mit Status 500 bei dessen Ausfall oder einem Stapel ohne eine einzige verwertbare Signatur.
 	 */
-	public Map<Long, SchulbescheinigungQrDaten> erzeuge(final List<Long> idsSchueler) {
+	public Map<Long, SchulbescheinigungQrDaten> erzeuge(final List<Long> idsSchueler) throws ApiOperationException {
 		final Map<Long, SchulbescheinigungQrDaten> ergebnis = new HashMap<>();
 
 		// Gemeinsame Schul- und Abschnittsdaten einmalig ermitteln. Ein Fehler dabei propagiert, siehe Klassenkommentar.
@@ -93,15 +101,15 @@ public final class SchulbescheinigungQrFactory {
 			return ergebnis;
 		}
 
-		// Genau ein Batch-Aufruf an den Signierdienst und anschließend je Schüler die QR-Codes rendern.
+		// Genau ein Batch-Aufruf an den Signierdienst und anschließend je Schüler die QR-Codes rendern. Ein Dienst- oder Anmeldefehler bricht hier ab.
 		rendereQrCodes(idsSchueler, xmlBytesById, signiere(xmlBytesById), ergebnis);
 		return ergebnis;
 	}
 
 	/**
 	 * Ermittelt die für alle Schüler identischen Ausstellungsdaten der Schulbescheinigung. Kein Schritt hier wird gefangen: Die Schulstammdaten sind längst
-	 * geladen, ein Scheitern bezeichnet deshalb einen inkonsistenten Zustand - etwa einen fehlenden aktuellen Schuljahresabschnitt. Der Fehler propagiert und
-	 * wird vom Lade-Fallback des aufrufenden Repositories je Schüler festgehalten.
+	 * geladen, ein Scheitern bezeichnet deshalb einen inkonsistenten Zustand - etwa einen fehlenden aktuellen Schuljahresabschnitt. Der Fehler propagiert
+	 * und beendet die Ausgabe.
 	 *
 	 * @return Die Ausstellungsdaten der Schulbescheinigung.
 	 */
@@ -119,7 +127,7 @@ public final class SchulbescheinigungQrFactory {
 	 *
 	 * @param idsSchueler       Die IDs der zu verarbeitenden Schüler.
 	 * @param ausstellungsdaten Die gemeinsamen Ausstellungsdaten der Schulbescheinigung.
-	 * @param ergebnis          Die Ergebnis-Map, in die im Fehlerfall die Fehlermeldungen eingetragen werden.
+	 * @param ergebnis          Die Ergebnis-Map, in die im Fehlerfall die Fehlereinträge eingetragen werden.
 	 *
 	 * @return Map von der Schüler-ID auf die XML-Bytes der erfolgreich erzeugten Schulbescheinigungen.
 	 */
@@ -129,7 +137,9 @@ public final class SchulbescheinigungQrFactory {
 		for (final Long id : idsSchueler) {
 			final ReportingSchueler schueler = this.reportingContext.repositorySchueler().schueler(id);
 			if (schueler == null) {
-				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, "Zum Schüler liegen keine geladenen Daten vor."));
+				// Bewusst still: Ein nicht geladener Schüler ist ausgefiltert oder bereits von der Auswahl als ausgelassener Datensatz gemeldet - eine
+				// zweite Meldung mit anderem Schlüssel würde denselben Entfall doppelt zählen. Der Eintrag hält nur den Cache-Vertrag "niemals null".
+				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.DATENFEHLER));
 				continue;
 			}
 			try {
@@ -138,9 +148,12 @@ public final class SchulbescheinigungQrFactory {
 						ausstellungsdaten.bildungsgangEnddatum());
 				xmlBytesById.put(id, xml.getBytes(StandardCharsets.UTF_8));
 			} catch (final Exception e) {
-				final String grund = "Die Schulbescheinigung konnte nicht erzeugt werden: " + e.getMessage();
-				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, grund));
-				meldeFehlendeSignatur(id, grund, e);
+				// Fehlende oder fehlerhafte Pflichtdaten des Schülers: Die Bescheinigung erscheint mit den Fehlerbildern und dem Datenfehler-Text.
+				ergebnis.put(id, new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.DATENFEHLER));
+				this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+						ReportingProblemSchluessel.fuer(SchulbescheinigungQrDaten.class, id),
+						"Die Schulbescheinigung des Schülers %d wird ohne digitale Signatur ausgestellt: Das XSchule-XML konnte nicht erzeugt werden."
+								.formatted(id), e);
 			}
 		}
 		return xmlBytesById;
@@ -148,110 +161,149 @@ public final class SchulbescheinigungQrFactory {
 
 	/**
 	 * Signiert die XSchule-XML-Dokumente aller Schüler in genau einem Batch-Aufruf. Die Schüler-ID dient dabei als
-	 * Zuordnungsschlüssel; dies ist möglich, da der Signier-Service diese IDs nicht nach außen gibt. Ist der Signierdienst nicht
-	 * erreichbar, wird für jeden Schüler eine Fehler-Signatur erzeugt, sodass die Render-Phase die einzige Stelle bleibt, die die
-	 * Ergebnis-Map befüllt.
-	 * <p>Die auslösende Exception wird im Ergebnis mitgeführt und hier nicht protokolliert: Sie erreicht über die Render-Phase die Meldung jedes betroffenen
-	 * Schülers, und dort protokolliert sie die Meldefassade mit Ursachenkette und Stacktrace.</p>
+	 * Zuordnungsschlüssel; dies ist möglich, da der Signier-Service diese IDs nicht nach außen gibt.
+	 * <p>Ein Fehler des Aufrufs bricht die gesamte Erstellung ab: Ohne Dienst entsteht keine signierte Bescheinigung. Ein am Status der Ursachenkette
+	 * erkennbarer Anmeldefehler ergibt {@code 400} - die Diagnose ist fachlich korrekt und weitersagbar -, eine fehlende Berechtigung wird mit
+	 * {@code 403} durchgereicht, alles Übrige ergibt {@code 500}. Ein Stapel ohne eine einzige verwertbare Signatur gilt ebenso als Dienstproblem. Die
+	 * Meldungen nach außen sind fest formuliert; die Originalursache samt Kette protokolliert die Abschlussgrenze im Server-Log.</p>
 	 *
-	 * @param xmlBytesById Map von der Schüler-ID auf die zu signierenden XML-Bytes.
+	 * @param xmlBytesById Map von der Schüler-ID auf die zu signierenden XML-Bytes; nie leer.
 	 *
-	 * @return Die Signaturen je Schüler-ID (bei Dienstausfall mit Status {@link SignatureStatus#ERROR}) samt der auslösenden Exception.
+	 * @return Die Signaturen je Schüler-ID; mindestens eine davon verwertbar im Sinne von {@link #istErfolgreicheSignatur(Signature)}.
+	 *
+	 * @throws ApiOperationException Mit Status 400 bei einem erkennbaren Anmeldefehler, mit Status 403 bei einer fehlenden Berechtigung, sonst mit
+	 *                               Status 500.
 	 */
-	private Signaturergebnis signiere(final Map<Object, byte[]> xmlBytesById) {
+	private Map<Object, Signature> signiere(final Map<Object, byte[]> xmlBytesById) throws ApiOperationException {
+		final Map<Object, Signature> signaturen;
 		try {
-			return new Signaturergebnis(this.signatureServiceSupplier.get().sign(xmlBytesById), null);
+			signaturen = this.signatureServiceSupplier.get().sign(xmlBytesById);
 		} catch (final Exception e) {
-			final Signature fehlerSignatur = new Signature(null, SignatureStatus.ERROR, "Der Signierdienst ist nicht erreichbar: " + e.getMessage());
-			final Map<Object, Signature> signaturen = new HashMap<>();
-			for (final Object id : xmlBytesById.keySet()) {
-				signaturen.put(id, fehlerSignatur);
+			if (istAnmeldefehler(e)) {
+				throw new ApiOperationException(Status.BAD_REQUEST, e,
+						"FEHLER: Die Anmeldung am Signierdienst ist fehlgeschlagen; die Schulbescheinigungen werden nicht erstellt. "
+								+ "Die hinterlegten Zugangsdaten für den Signierdienst sind zu prüfen.");
 			}
-			return new Signaturergebnis(signaturen, e);
+			if (statusInUrsachenkette(e, Status.FORBIDDEN)) {
+				// Ein 403 kann auch lokal aus der Kompetenzprüfung des Services stammen und ist deshalb kein sicherer Anmeldefehler des Dienstes.
+				throw new ApiOperationException(Status.FORBIDDEN, e,
+						"FEHLER: Die Berechtigung zum Erstellen digitaler Signaturen fehlt; die Schulbescheinigungen werden nicht erstellt.");
+			}
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"FEHLER: Der Signierdienst ist nicht erreichbar oder antwortet fehlerhaft; die Schulbescheinigungen werden nicht erstellt.");
 		}
+		if (signaturen.values().stream().noneMatch(SchulbescheinigungQrFactory::istErfolgreicheSignatur)) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"FEHLER: Der Signierdienst hat keine einzige Signatur erstellt; die Schulbescheinigungen werden nicht erstellt.");
+		}
+		return signaturen;
+	}
+
+	/**
+	 * Prüft, ob die Ursachenkette des Fehlers einen Anmeldefehler am Signierdienst bezeichnet. Erkannt wird ausschließlich eine statustragende
+	 * {@link ApiOperationException} mit {@code UNAUTHORIZED}; auf Meldungstexte wird bewusst nicht geprüft, und ein nicht eindeutig
+	 * zuordenbarer Fehler gilt nicht als Anmeldefehler. {@code FORBIDDEN} zählt nicht dazu: Der Service wirft es auch lokal für die fehlende
+	 * Benutzerkompetenz; ein Berechtigungsproblem wird mit seinem eigenen Status durchgereicht.
+	 *
+	 * @param fehler Der Fehler des Signier-Aufrufs.
+	 *
+	 * @return true, wenn die Kette einen Anmeldefehler trägt, sonst false.
+	 */
+	private static boolean istAnmeldefehler(final Throwable fehler) {
+		return statusInUrsachenkette(fehler, Status.UNAUTHORIZED);
+	}
+
+	/**
+	 * Prüft, ob die Ursachenkette eine {@link ApiOperationException} mit dem übergebenen Status trägt.
+	 *
+	 * @param fehler Der Fehler des Signier-Aufrufs.
+	 * @param status Der gesuchte Status.
+	 *
+	 * @return true, wenn die Kette den Status trägt, sonst false.
+	 */
+	private static boolean statusInUrsachenkette(final Throwable fehler, final Status status) {
+		for (Throwable glied = fehler; glied != null; glied = glied.getCause()) {
+			if ((glied instanceof final ApiOperationException aoe) && (aoe.getStatus() == status)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Prüft, ob eine Signatur des Dienstes verwertbar ist: Status {@link SignatureStatus#OK} und ein nicht leerer Inhalt. Dasselbe Kriterium entscheidet
+	 * über den Gesamtabbruch des Stapels und über den Einzelfehler beim QR-Bau - mit zweierlei Maß könnte ein Stapel aus leeren OK-Antworten den Abbruch
+	 * umgehen und ausschließlich unsignierte Bescheinigungen erzeugen.
+	 *
+	 * @param signatur Die Signatur des Dienstes oder {@code null}.
+	 *
+	 * @return true, wenn die Signatur verwertbar ist, sonst false.
+	 */
+	private static boolean istErfolgreicheSignatur(final Signature signatur) {
+		return (signatur != null) && (signatur.status() == SignatureStatus.OK) && (signatur.content() != null) && (signatur.content().length > 0);
 	}
 
 	/**
 	 * Rendert je Schüler die beiden QR-Codes der Schulbescheinigung und trägt sie in {@code ergebnis} ein. Schüler, deren XML zuvor
-	 * nicht erzeugt werden konnte, werden übersprungen (ihre Fehlermeldung wurde bereits hinterlegt).
+	 * nicht erzeugt werden konnte, werden übersprungen (ihr Fehlereintrag wurde bereits hinterlegt).
 	 * <p>Hier wird der Befund gemeldet: Wer diese Schleife erreicht, hat geladene Ausgangsdaten und ein erzeugtes XML, also ist jeder Fehler ein Signatur-
 	 * oder Renderfehler.</p>
 	 *
 	 * @param idsSchueler      Die IDs der zu verarbeitenden Schüler.
 	 * @param xmlBytesById     Map von der Schüler-ID auf die XML-Bytes (für QR1).
-	 * @param signaturergebnis Die Signaturen je Schüler-ID (für QR2) samt der Exception eines gescheiterten Signier-Batches.
+	 * @param signaturen       Die Signaturen je Schüler-ID (für QR2).
 	 * @param ergebnis         Die Ergebnis-Map, in die die gerenderten QR-Daten eingetragen werden.
 	 */
 	private void rendereQrCodes(final List<Long> idsSchueler, final Map<Object, byte[]> xmlBytesById,
-			final Signaturergebnis signaturergebnis, final Map<Long, SchulbescheinigungQrDaten> ergebnis) {
+			final Map<Object, Signature> signaturen, final Map<Long, SchulbescheinigungQrDaten> ergebnis) {
 		// Kapazitätsprüfung == Render-Aufruf, identisches EC-Level.
 		for (final Long id : idsSchueler) {
 			final byte[] xmlBytes = xmlBytesById.get(id);
 			if (xmlBytes == null) {
-				// XML-Erzeugung ist fehlgeschlagen, die Fehlermeldung wurde bereits hinterlegt.
+				// XML-Erzeugung ist fehlgeschlagen; Zustand und Meldung sind bereits hinterlegt.
 				continue;
 			}
-			final QrBauergebnis bau = baue(xmlBytes, signaturergebnis.signaturen().get(id), signaturergebnis.fehler());
+			final QrBauergebnis bau = baue(xmlBytes, signaturen.get(id));
 			ergebnis.put(id, bau.daten());
-			// Maßgeblich ist der fehlende Signatur-Code und nicht das Vorhandensein einer Fehlermeldung: Ein Signierergebnis kann einen Fehlerstatus ohne
-			// eigenen Text tragen, und der Befund darf nicht daran hängen, ob der Dienst einen geliefert hat.
-			if (bau.daten().qr2Svg() == null) {
-				meldeFehlendeSignatur(id, bau.daten().fehlermeldung(), bau.fehler());
+			if (!bau.daten().istSigniert()) {
+				this.reportingContext.meldeAusgabeproblem(bau.ursache(), ReportingProblemauswirkung.TEILDATEN_FEHLEN,
+						ReportingProblemSchluessel.fuer(SchulbescheinigungQrDaten.class, id),
+						"Die Schulbescheinigung des Schülers %d wird ohne digitale Signatur ausgestellt: %s".formatted(id, bau.grund()), bau.fehler());
 			}
 		}
 	}
 
-	/**
-	 * Meldet, dass die Schulbescheinigung dieses Schülers ohne Signatur-QR-Code ausgegeben wird, obwohl ihre Ausgangsdaten geladen sind. Die Bescheinigung
-	 * entsteht weiterhin und zeigt an der Stelle des Codes den Fehlertext; ihr fehlt die Signatur als Teildatum
-	 * ({@link ReportingProblemauswirkung#TEILDATEN_FEHLEN}), und weil der Inhalt vorliegt und allein seine signierte Darstellung scheitert, ist die Ursache
-	 * {@link ReportingProblemursache#NICHT_DARSTELLBAR}. Die Fassade dedupliziert den Befund, sodass er je Schüler genau einmal zählt.
-	 *
-	 * @param idSchueler Die ID des Schülers.
-	 * @param grund      Der Sachverhalt für das Log.
-	 * @param fehler     Der auslösende Fehler oder {@code null}, wenn nur ein Fehlertext vorliegt - etwa aus der Antwort des Signierdienstes.
-	 */
-	private void meldeFehlendeSignatur(final long idSchueler, final String grund, final Exception fehler) {
-		this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_DARSTELLBAR, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
-				ReportingProblemSchluessel.fuer(SchulbescheinigungQrDaten.class, idSchueler),
-				"Die Schulbescheinigung des Schülers %d wird ohne Signatur ausgegeben: %s".formatted(idSchueler, grund), fehler);
-	}
 
 	/**
-	 * Rendert die beiden QR-Codes einer Schulbescheinigung als SVG. QR1 (Inhalt) wird immer erzeugt; QR2 (Signatur) nur bei
-	 * erfolgreicher Signierung. Render-Fehler (z. B. Kapazitätsüberschreitung) werden gefangen und als Fehlermeldung abgelegt.
-	 * <p>Der auslösende Fehler bleibt im Ergebnis erhalten, damit die Meldung des Ausgabeproblems ihn samt Ursachenkette und Stacktrace protokollieren kann.</p>
+	 * Rendert die beiden QR-Codes einer Schulbescheinigung als SVG. Nur wenn beide gelingen, ist der Zustand SIGNIERT; in jedem Fehlerfall entfallen beide
+	 * Codes gemeinsam, denn ein halber Signaturblock sähe bei der Prüfung wie ein defektes Dokument aus. Ein Signierergebnis mit Status {@code OK}, aber
+	 * ohne Inhalt zählt als Signierfehler.
+	 * <p>Der Grund und der auslösende Fehler verbleiben im Bauergebnis für die Meldung über die Fassade; in die Vorlagendaten gelangen sie nicht.</p>
 	 *
-	 * @param xmlBytes       Das signierte XSchule-XML als Bytes (für QR1).
-	 * @param signatur       Die Signatur des Schülers (für QR2); darf {@code null} sein.
-	 * @param signaturfehler Die Exception, an der der Signier-Batch gescheitert ist, oder {@code null} - etwa wenn der Dienst mit einem Fehlerstatus
-	 *                       geantwortet hat, ohne zu werfen.
+	 * @param xmlBytes Das XSchule-XML als Bytes (für QR1).
+	 * @param signatur Die Signatur des Schülers (für QR2); darf {@code null} sein.
 	 *
-	 * @return Die QR-Daten mit beiden SVGs (Erfolg) oder mit gesetzter Fehlermeldung, samt dem auslösenden Fehler.
+	 * @return Das Bauergebnis mit den QR-Daten sowie Ursache, Grund und Fehler eines Fehlschlags.
 	 */
-	private static QrBauergebnis baue(final byte[] xmlBytes, final Signature signatur, final Exception signaturfehler) {
-		final String qr1Svg;
+	private static QrBauergebnis baue(final byte[] xmlBytes, final Signature signatur) {
+		if (!istErfolgreicheSignatur(signatur)) {
+			return new QrBauergebnis(new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.SIGNIERFEHLER),
+					ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, signaturfehlertext(signatur), null);
+		}
+
 		try {
 			final String qr1Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR1 + Base45.encode(GZip.encode(xmlBytes));
-			qr1Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
+			final String qr1Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
 					qr1Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM,
 					SchulbescheinigungQrEinstellungen.EC_QR1);
-		} catch (final Exception e) {
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(null, null, "Der Inhalt-QR-Code konnte nicht erzeugt werden: " + e.getMessage()), e);
-		}
-
-		if ((signatur == null) || (signatur.status() != SignatureStatus.OK)) {
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, null, signaturfehlertext(signatur)), signaturfehler);
-		}
-
-		try {
 			final String qr2Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR2 + Base45.encode(GZip.encode(signatur.content()));
 			final String qr2Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
 					qr2Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM,
 					SchulbescheinigungQrEinstellungen.EC_QR2);
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, qr2Svg, null), null);
+			return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, qr2Svg, SchulbescheinigungSignaturzustand.SIGNIERT), null, null, null);
 		} catch (final Exception e) {
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, null, "Der Signatur-QR-Code konnte nicht erzeugt werden: " + e.getMessage()), e);
+			return new QrBauergebnis(new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.SIGNIERFEHLER),
+					ReportingProblemursache.NICHT_DARSTELLBAR, "Ein QR-Code konnte nicht erzeugt werden.", e);
 		}
 	}
 
@@ -299,24 +351,17 @@ public final class SchulbescheinigungQrFactory {
 			String bildungsgangEnddatum) {
 	}
 
-	/**
-	 * Das Ergebnis des Signier-Batches: die Signaturen je Schüler-ID und - bei einem Wurf des Dienstes - die auslösende Exception. Die {@link Signature} des
-	 * Dienstes führt nur einen Fehlertext; ohne diesen Träger ginge die Exception zwischen Batch und je-Schüler-Meldung verloren.
-	 *
-	 * @param signaturen Die Signaturen je Schüler-ID; bei Dienstausfall mit Status {@link SignatureStatus#ERROR}.
-	 * @param fehler     Die Exception, an der der Batch gescheitert ist, oder {@code null}.
-	 */
-	private record Signaturergebnis(Map<Object, Signature> signaturen, Exception fehler) {
-	}
 
 	/**
-	 * Das Ergebnis des QR-Renderings eines Schülers: die QR-Daten für Cache und Vorlage sowie der auslösende Fehler, falls das Rendern oder Signieren
-	 * gescheitert ist.
+	 * Das Ergebnis des QR-Renderings eines Schülers: die QR-Daten für Cache und Vorlage sowie Ursache, Grund und auslösender Fehler eines Fehlschlags für
+	 * die Meldung über die Fassade.
 	 *
-	 * @param daten  Die QR-Daten des Schülers, nie {@code null}.
-	 * @param fehler Der Fehler, an dem Signatur oder Rendering gescheitert sind, oder {@code null}.
+	 * @param daten   Die QR-Daten des Schülers, nie {@code null}.
+	 * @param ursache Die Ursache des Fehlschlags oder {@code null} bei Erfolg.
+	 * @param grund   Der Sachverhalt für das Log oder {@code null} bei Erfolg.
+	 * @param fehler  Der Fehler, an dem das Rendering gescheitert ist, oder {@code null}.
 	 */
-	private record QrBauergebnis(SchulbescheinigungQrDaten daten, Exception fehler) {
+	private record QrBauergebnis(SchulbescheinigungQrDaten daten, ReportingProblemursache ursache, String grund, Exception fehler) {
 	}
 
 }

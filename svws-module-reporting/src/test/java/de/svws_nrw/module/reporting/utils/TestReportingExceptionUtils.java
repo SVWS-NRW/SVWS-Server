@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.thymeleaf.exceptions.TemplateProcessingException;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -35,6 +37,20 @@ class TestReportingExceptionUtils {
 
 	/** Die Überschrift des Abschnitts mit dem Stacktrace. */
 	private static final String UEBERSCHRIFT_STACKTRACE = "### STACKTRACE:";
+
+	/** Ein Satz aus der Vorlage, an dem sich der Quelltext im Log erkennen lässt. */
+	private static final String KENNSATZ_DER_VORLAGE = "Klassenliste mit Fotos";
+
+	/**
+	 * Der Quelltext einer Vorlage, wie Thymeleaf ihn als Namen des Templates führt. Die Vorlage wird der Engine als Zeichenkette übergeben, deshalb steht
+	 * ihr ganzer Inhalt in den Meldungen der Thymeleaf-Exceptions.
+	 */
+	private static final String TEMPLATE_QUELLTEXT = """
+			<!DOCTYPE html>
+			<html lang="de" xmlns:th="http://www.thymeleaf.org">
+				<head><title>%s</title></head>
+				<body><div th:each="klasse : ${Klassen}" th:text="${klasse.kuerzel()}">06C</div></body>
+			</html>""".formatted(KENNSATZ_DER_VORLAGE);
 
 	/** Der Logger, in den protokolliert wird. */
 	private Logger logger;
@@ -155,6 +171,170 @@ class TestReportingExceptionUtils {
 
 		ReportingExceptionUtils.logException(BESCHREIBUNG, null, logger, LogLevel.WARNING, 4);
 		assertEquals(einzugVorher, logger.getIndent(), "Auch ohne Exception muss der Einzug wiederhergestellt werden.");
+	}
+
+
+	@Test
+	void testDerTemplateQuelltextVerschwindetAuchAusDerTiefeDerUrsachenkette() {
+		// Der Renderer verpackt die Thymeleaf-Exception in eine ApiOperationException, damit der Status des Abbruchs erhalten bleibt. Der Quelltext steht
+		// damit nicht mehr in der äußersten Exception, sondern erst in der Ursachenkette.
+		final TemplateProcessingException tpe =
+				new TemplateProcessingException("An error happened during template parsing", TEMPLATE_QUELLTEXT, new IllegalStateException("Ursache"));
+		final ApiOperationException aoe = new ApiOperationException(Status.BAD_REQUEST, tpe, MELDUNG);
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, aoe, logger, LogLevel.ERROR, 0);
+
+		final List<String> eintraege = log.getLogData().stream().map(eintrag -> eintrag.getText().strip()).toList();
+		assertTrue(eintraege.stream().noneMatch(eintrag -> eintrag.contains(KENNSATZ_DER_VORLAGE)),
+				"Der Quelltext der Vorlage darf weder im Log noch in der Fehlerantwort stehen: " + eintraege);
+		assertTrue(eintraege.stream().anyMatch(eintrag -> eintrag.contains("REMOVED TEMPLATE FROM LOG")),
+				"An der Stelle des Quelltexts muss der Platzhalter stehen, sonst wäre unklar, was fehlt.");
+	}
+
+	@Test
+	void testAuchEineFremdeExceptionVerliertDenTemplateQuelltextAusIhrerMeldung() {
+		// Der reale Fall: Zwischen den Thymeleaf-Exceptions liegt eine ParseException des Parsers. Sie trägt den Quelltext in ihrer Meldung, ist aber
+		// selbst keine Thymeleaf-Klasse und liefert deshalb keinen Templatenamen. Maskiert wird sie nur, weil die Namen der ganzen Kette gelten.
+		final TemplateProcessingException tpe = new TemplateProcessingException("Fehler beim Auswerten", TEMPLATE_QUELLTEXT, null);
+		final IllegalStateException fremde = new IllegalStateException("Parserfehler (template: \"" + TEMPLATE_QUELLTEXT + "\" - line 4, col 12)", tpe);
+		final ApiOperationException aoe = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fremde, MELDUNG);
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, aoe, logger, LogLevel.ERROR, 0);
+
+		final List<String> eintraege = log.getLogData().stream().map(eintrag -> eintrag.getText().strip()).toList();
+		assertTrue(eintraege.stream().noneMatch(eintrag -> eintrag.contains(KENNSATZ_DER_VORLAGE)),
+				"Der Quelltext muss auch aus der Meldung einer fremden Exception verschwinden: " + eintraege);
+	}
+
+	@Test
+	void testAuchEineKurzeVorlageGiltAlsQuelltext() {
+		// Eine Vorlage aus einem Test ist kurz und einzeilig. Sie bleibt Quelltext und gehört nicht ins Log.
+		final String kurzeVorlage = "<html><body><span th:text=\"${1/0}\">Platzhalter</span></body></html>";
+		final TemplateProcessingException tpe = new TemplateProcessingException("Division durch null", kurzeVorlage, new ArithmeticException("/ by zero"));
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, tpe, logger, LogLevel.ERROR, 0);
+
+		final List<String> eintraege = log.getLogData().stream().map(eintrag -> eintrag.getText().strip()).toList();
+		assertTrue(eintraege.stream().noneMatch(eintrag -> eintrag.contains("Platzhalter")),
+				"Auch eine kurze Vorlage ist Quelltext und wird ersetzt: " + eintraege);
+	}
+
+	@Test
+	void testDieKopfzeileUebergehtEinKettengliedOhneMeldung() {
+		// Eine ApiOperationException mit einer Fehlerantwort als Body trägt keine Meldung. Der Abbruchgrund steht dann erst ein Glied tiefer.
+		final ApiOperationException grund = new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Betreff und Text der E-Mail fehlen.");
+		final ApiOperationException ohneMeldung = new ApiOperationException(Status.BAD_REQUEST, grund, new SimpleOperationResponse(), "application/json");
+
+		final String kopfzeile = ReportingExceptionUtils.abbruchKopfzeile(400, ohneMeldung, MELDUNG);
+
+		assertTrue(kopfzeile.contains("Betreff und Text der E-Mail fehlen."),
+				"Ein Glied ohne Meldung darf den Abbruchgrund nicht verdecken: " + kopfzeile);
+	}
+
+	@Test
+	void testDerNameEinesFragmentsBleibtErhalten() {
+		// Ein Fragment wird über den Klassenpfad aufgelöst; sein Name ist kurz und eine nützliche Angabe zur Fehlerstelle.
+		final TemplateProcessingException tpe =
+				new TemplateProcessingException("Fehler im Fragment", "fragments/reportHtmlHead", new IllegalStateException("Ursache"));
+		final ApiOperationException aoe = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, tpe, MELDUNG);
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, aoe, logger, LogLevel.ERROR, 0);
+
+		final List<String> eintraege = log.getLogData().stream().map(eintrag -> eintrag.getText().strip()).toList();
+		assertTrue(eintraege.stream().anyMatch(eintrag -> eintrag.contains("fragments/reportHtmlHead")),
+				"Ein kurzer Templatename ist kein Quelltext und bleibt stehen: " + eintraege);
+	}
+
+	@Test
+	void testEineThymeleafExceptionOhneTemplatenamenBrichtNichtAb() {
+		final TemplateProcessingException tpe = new TemplateProcessingException("Fehler ohne Templatenamen");
+		final ApiOperationException aoe = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, tpe, MELDUNG);
+
+		ReportingExceptionUtils.logException(BESCHREIBUNG, aoe, logger, LogLevel.ERROR, 0);
+
+		assertTrue(eintraegeOhneStacktrace().contains(BESCHREIBUNG), "Ohne Templatenamen muss der Block wie gewohnt entstehen.");
+	}
+
+	@Test
+	void testDieKopfzeileNenntStatusUndDenAbbruchgrundAusDerUrsachenkette() {
+		final ApiOperationException grund = new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Die Anmeldung am Signierdienst ist fehlgeschlagen.");
+		final IllegalStateException verpackt = new IllegalStateException("Method failed", grund);
+
+		final String kopfzeile = ReportingExceptionUtils.abbruchKopfzeile(400, verpackt, MELDUNG);
+
+		assertTrue(kopfzeile.contains("Status 400"), "Die Kopfzeile muss den Statuscode nennen: " + kopfzeile);
+		assertTrue(kopfzeile.contains("Die Anmeldung am Signierdienst ist fehlgeschlagen."),
+				"Die Kopfzeile muss den fachlichen Abbruchgrund nennen und nicht die Stelle, an der er auffiel: " + kopfzeile);
+	}
+
+	@Test
+	void testDieKopfzeileTraegtKeinenMarkerAusDerMeldung() {
+		final ApiOperationException grund = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Es sind keine PDF-Dokumente entstanden.");
+
+		final String kopfzeile = ReportingExceptionUtils.abbruchKopfzeile(500, grund, MELDUNG);
+
+		assertEquals("ABBRUCH (Status 500): FEHLER: Es sind keine PDF-Dokumente entstanden.", kopfzeile,
+				"Der Marker der Meldung gehört nicht mitten in die Kopfzeile.");
+	}
+
+	@Test
+	void testDieKopfzeileTraegtKeinenTemplateQuelltext() {
+		// Einzelne Stellen übernehmen die Meldung eines fremden Fehlers in ihre eigene. Stammt sie von Thymeleaf, trägt sie den Quelltext der Vorlage.
+		final TemplateProcessingException tpe = new TemplateProcessingException("Fehler beim Auswerten", TEMPLATE_QUELLTEXT, null);
+		final ApiOperationException grund =
+				new ApiOperationException(Status.INTERNAL_SERVER_ERROR, tpe, "### FEHLER: Das PDF wurde nicht erzeugt: " + tpe.getMessage());
+
+		final String kopfzeile = ReportingExceptionUtils.abbruchKopfzeile(500, grund, MELDUNG);
+
+		assertFalse(kopfzeile.contains(KENNSATZ_DER_VORLAGE), "Der Quelltext der Vorlage gehört nicht in die Kopfzeile: " + kopfzeile);
+		assertTrue(kopfzeile.contains("REMOVED TEMPLATE FROM LOG"), "An seiner Stelle muss der Platzhalter stehen: " + kopfzeile);
+	}
+
+	@Test
+	void testOhneKlassifizierteUrsacheGiltDieUebergebeneMeldung() {
+		final String kopfzeile = ReportingExceptionUtils.abbruchKopfzeile(500, new IllegalStateException("Technischer Fehler"), MELDUNG);
+
+		assertTrue(kopfzeile.contains("Der Root-Pfad zu den Ressourcen wurde nicht gefunden."),
+				"Ohne ApiOperationException in der Kette bleibt die übergebene Meldung: " + kopfzeile);
+	}
+
+	@Test
+	void testDieKopfzeileStehtAnErsterStelleDerFehlerantwort() {
+		logger.logLn(LogLevel.WARNING, "Ein Befund des Laufs, der mit dem Abbruch nichts zu tun hat.");
+		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.ERROR, 0);
+
+		final List<String> ausgabe = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log, "ABBRUCH (Status 400): Der Grund").log;
+
+		assertEquals("ABBRUCH (Status 400): Der Grund", ausgabe.get(0).strip(),
+				"Der Abbruchgrund steht sonst am Ende des Logs, unter unbeteiligten Befunden.");
+		assertTrue(ausgabe.get(1).isBlank(), "Eine Leerzeile trennt die Kopfzeile vom Ablauf darunter: " + ausgabe.get(1));
+		assertTrue(ausgabe.size() > 2, "Das übrige Log muss erhalten bleiben.");
+	}
+
+	@Test
+	void testDieGanzeFehlerantwortTraegtKeinenTemplateQuelltext() {
+		// Die Fehlerantwort besteht aus Kopfzeile und Log. Beide entstehen getrennt, tragen aber denselben Text - geprüft wird deshalb das Ganze.
+		final TemplateProcessingException tpe = new TemplateProcessingException("Fehler beim Auswerten", TEMPLATE_QUELLTEXT, null);
+		final ApiOperationException abbruch =
+				new ApiOperationException(Status.INTERNAL_SERVER_ERROR, tpe, "### FEHLER: Das PDF wurde nicht erzeugt: " + tpe.getMessage());
+		ReportingExceptionUtils.logException(BESCHREIBUNG, abbruch, logger, LogLevel.ERROR, 0);
+
+		final List<String> ausgabe = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log,
+				ReportingExceptionUtils.abbruchKopfzeile(500, abbruch, MELDUNG)).log;
+
+		assertTrue(ausgabe.stream().noneMatch(zeile -> zeile.contains(KENNSATZ_DER_VORLAGE)),
+				"Keine Zeile der Fehlerantwort darf den Quelltext der Vorlage tragen: "
+						+ ausgabe.stream().filter(zeile -> zeile.contains(KENNSATZ_DER_VORLAGE)).toList());
+		assertTrue(ausgabe.get(0).contains("REMOVED TEMPLATE FROM LOG"), "Auch die Kopfzeile trägt den Platzhalter: " + ausgabe.get(0));
+	}
+
+	@Test
+	void testOhneKopfzeileBleibtDasLogUnveraendert() {
+		ReportingExceptionUtils.logException(BESCHREIBUNG, exceptionMitUrsache(), logger, LogLevel.ERROR, 0);
+
+		final List<String> ohneKopfzeile = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log, "").log;
+
+		assertEquals(log.getStrings().size(), ohneKopfzeile.size(), "Eine leere Kopfzeile darf keinen Eintrag erzeugen.");
 	}
 
 

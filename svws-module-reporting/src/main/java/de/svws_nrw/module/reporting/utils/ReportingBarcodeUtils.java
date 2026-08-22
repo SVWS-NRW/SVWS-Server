@@ -50,22 +50,28 @@ public final class ReportingBarcodeUtils {
 	/**
 	 * Erstellt aus einem übergebenen String einen Code128-Barcode im SVG-Format.
 	 *
-	 * @param barcodeInhalt Der Inhalt, der als Barcode dargestellt werden soll. Maximal 64 Zeichen werden unterstützt.
+	 * @param barcodeInhalt Der Inhalt, der als Barcode dargestellt werden soll. Maximal 64 Zeichen werden unterstützt; ein längerer Inhalt wirft.
 	 * @param breiteInMM    Die Breite des Barcodes in Millimetern. Wenn negativ oder 0, wird die Standardbreite von 50mm verwendet.
 	 * @param hoeheInMM     Die Höhe des Barcodes in Millimetern. Wenn negativ oder 0, wird die Standardhöhe von 30mm verwendet.
 	 *
-	 * @return Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI) oder null, falls ein Fehler auftritt.
+	 * @return Der Barcode als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI); bei leerem Inhalt ein leeres, transparentes SVG.
 	 *         Eine Einbettung könnte dabei mittels Thymeleaf erfolgen: {@code "<img th:src="${StringAusDieserMethode}" alt="Barcode" />}
+	 *
+	 * @throws ApiOperationException Mit Status 500, wenn der Inhalt länger als 64 Zeichen ist oder sich nicht als Barcode kodieren lässt.
 	 */
 	public static @NotNull String erzeugeBarcodeCode128(final String barcodeInhalt, final double breiteInMM, final double hoeheInMM) {
 		// Dimensionen des Barcodes in mm festlegen.
 		final double breiteMM = (breiteInMM <= 0) ? STANDARD_BREITE_MM : breiteInMM;
 		final double hoeheMM = (hoeheInMM <= 0) ? STANDARD_HOEHE_BARCODE_MM : hoeheInMM;
 
-		// Inhalt des Barcodes normalisieren. Dabei wird die Länge des normalisierten Barcodes auf max. 64 Zeichen begrenzt, um noch lesbare Barcodes zu erzeugen.
-		String barcodeInhaltNormalisiert = ((barcodeInhalt == null) || barcodeInhalt.trim().isBlank()) ? "" : barcodeInhalt.trim();
+		// Inhalt des Barcodes normalisieren. Bei mehr als 64 Zeichen wäre der Barcode nicht mehr zuverlässig lesbar - ein stilles Abschneiden erzeugte
+		// dann einen Code mit anderem Inhalt als den Daten. Deshalb wird geworfen; der Aufrufer im Dialekt meldet daraus eine Lücke.
+		final String barcodeInhaltNormalisiert = ((barcodeInhalt == null) || barcodeInhalt.trim().isBlank()) ? "" : barcodeInhalt.trim();
 		if (barcodeInhaltNormalisiert.length() > 64) {
-			barcodeInhaltNormalisiert = barcodeInhaltNormalisiert.substring(0, 64);
+			// Der Inhalt stammt aus den Reportdaten und nicht aus dem Request: Ein nicht darstellbarer Wert ist ein serverseitiges Problem.
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+					"Der Inhalt ist mit %d Zeichen zu lang für einen lesbaren Code128-Barcode (maximal 64): '%s'"
+							.formatted(barcodeInhaltNormalisiert.length(), barcodeInhaltNormalisiert));
 		}
 
 		// Wenn Inhalt des Barcodes leer ist, dann leeres SVG zurückgeben.

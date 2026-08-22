@@ -128,6 +128,8 @@ public final class HtmlFactory {
 
 	/**
 	 * Baut die Daten-Contexts über den in der Registry hinterlegten Initializer des Datenaufbaus auf und hält den Initializer für die Einzelausgabe fest.
+	 * Nach dem Aufbau muss der Ausgabeumfang gemeldet sein - er ist die Schranke, die jeden Datenaufbau an den Hinweisvertrag bindet: Ohne ihn gäbe es
+	 * einen Header, dessen Zählwerte niemand ermittelt hat.
 	 *
 	 * @param datenContext Der Datenaufbau der Reportvorlage.
 	 *
@@ -137,6 +139,13 @@ public final class HtmlFactory {
 		final HtmlContextAufbau aufbau = HtmlContextInitializerRegistry.aufbau(reportingContext, datenContext);
 		this.htmlContextInitializer = aufbau.initializer(reportingContext, mapHtmlContexts);
 		this.htmlContextInitializer.init();
+		if (reportingContext.ausgabeumfang() == null) {
+			final String fehlermeldung = ("FEHLER: Der Datenaufbau %s hat keinen Ausgabeumfang gemeldet. Die Meldestelle liegt laut Initializer %s "
+					+ "und fehlt dort.").formatted(datenContext.name(),
+							this.htmlContextInitializer.meldetAusgabeumfangImContextAufbau() ? "im Context-Aufbau" : "im Initializer selbst");
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlermeldung);
+		}
 	}
 
 	/**
@@ -170,7 +179,7 @@ public final class HtmlFactory {
 					// HTML bildet keinen Sonderpfad: Es trägt denselben Hinweis-Header wie PDF und ZIP. Dass der heutige generierte Client die
 					// Response-Metadaten verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
 					return ReportingHinweiseHeader
-							.ergaenze(Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store"), reportingContext, bewusstLeer())
+							.ergaenze(Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store"), reportingContext)
 							.build();
 				} else {
 					// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die
@@ -303,17 +312,6 @@ public final class HtmlFactory {
 						.withRootPfad(ReportingReportvorlage.getRootPfad())
 						.withLogger(reportingContext.logger());
 		return new ReportBuilderHtml(reportBuilderContext);
-	}
-
-	/**
-	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Die Angabe stammt vom Initializer des Datenaufbaus und reicht damit von der
-	 * Auswahl bis zur Ausgabe. Das vollständige Auswahlergebnis bleibt im Initializer, denn die Ausgabe braucht nur die Antwort auf die Frage, ob sie ohne
-	 * Dokument zulässig ist.
-	 *
-	 * @return true, wenn Datensätze angefordert waren und keiner übrig blieb, sonst false.
-	 */
-	boolean bewusstLeer() {
-		return (htmlContextInitializer != null) && htmlContextInitializer.bewusstLeer();
 	}
 
 	/**

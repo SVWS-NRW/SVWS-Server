@@ -23,8 +23,14 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 class TestReportingHinweisSerializer {
 
-	/** Der erwartete Aufbau des Headerwerts: nur Kleinbuchstaben, Zahlen und die zulässige Boolean-Schreibweise nach RFC 9651. */
-	private static final Pattern ZULAESSIGER_WERT = Pattern.compile("v=\\d+, gesamt=\\d+, leer=\\?[01](, [a-z][a-z0-9_-]*=\\d+)*");
+	/** Der erwartete Aufbau des Headerwerts: nur Kleinbuchstaben und Zahlen nach RFC 9651. */
+	private static final Pattern ZULAESSIGER_WERT = Pattern.compile("v=\\d+, angefordert=\\d+, ausgegeben=\\d+, hinweise=\\d+(, [a-z][a-z0-9_-]*=\\d+)*");
+
+	/** Ein Ausgabeumfang ohne Auffälligkeiten: alles Angeforderte wird ausgegeben. */
+	private static final ReportingAusgabeumfang VOLLSTAENDIG = new ReportingAusgabeumfang(5, 5, false);
+
+	/** Der reine Filter-Leerfall: Datensätze waren angefordert, keiner blieb übrig. */
+	private static final ReportingAusgabeumfang LEER_GEFILTERT = new ReportingAusgabeumfang(5, 0, true);
 
 
 	/**
@@ -53,14 +59,21 @@ class TestReportingHinweisSerializer {
 
 
 	@Test
-	void testOhneBefundMeldetDerHeaderDenStabilenKern() {
-		assertEquals("v=0, gesamt=0, leer=?0", ReportingHinweisSerializer.headerwert(List.of(), false));
+	void testOhneBefundMeldetDerHeaderDieZaehlwerte() {
+		assertEquals("v=1, angefordert=5, ausgegeben=5, hinweise=0", ReportingHinweisSerializer.headerwert(VOLLSTAENDIG, List.of()));
 	}
 
 	@Test
-	void testEineBewusstLeereAusgabeMeldetDenLeerstandOhneBefund() {
-		// Der reine Filter-Leerfall: Es fehlt nichts, es wurde nur alles ausgeschlossen. Eine Warnbehauptung wäre hier falsch.
-		assertEquals("v=0, gesamt=0, leer=?1", ReportingHinweisSerializer.headerwert(List.of(), true));
+	void testDerReineFilterfallMeldetNurDieZaehlwerte() {
+		// Der Benutzerfilter hat alles ausgeschlossen: kein Befund, keine Warnbehauptung - der Client liest die Differenz aus den Zahlen.
+		assertEquals("v=1, angefordert=5, ausgegeben=0, hinweise=0", ReportingHinweisSerializer.headerwert(LEER_GEFILTERT, List.of()));
+	}
+
+	@Test
+	void testEineAnfrageOhneZaehlbareEinheitenMeldetNullVonNull() {
+		// Existierende Stufen ohne Schüler: Die Anfrage ist gültig, es gibt nur nichts zu zählen. Auch diese Ausgabe trägt den Header.
+		assertEquals("v=1, angefordert=0, ausgegeben=0, hinweise=0",
+				ReportingHinweisSerializer.headerwert(new ReportingAusgabeumfang(0, 0, true), List.of()));
 	}
 
 	@Test
@@ -70,7 +83,8 @@ class TestReportingHinweisSerializer {
 				problem(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, 2L));
 
 		// Beide Ursachen fallen in dieselbe Kategorie: Für den Empfänger fehlt der Datensatz, unabhängig davon, warum.
-		assertEquals("v=0, gesamt=2, leer=?0, datensaetze=2", ReportingHinweisSerializer.headerwert(probleme, false));
+		assertEquals("v=1, angefordert=5, ausgegeben=3, hinweise=2, datensaetze=2",
+				ReportingHinweisSerializer.headerwert(new ReportingAusgabeumfang(5, 3, false), probleme));
 	}
 
 	@Test
@@ -79,7 +93,7 @@ class TestReportingHinweisSerializer {
 				problem(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, ReportingProblemauswirkung.TEILDATEN_FEHLEN, 1L),
 				problem(ReportingProblemursache.OPTIONALER_WERT_FEHLT, ReportingProblemauswirkung.TEILDATEN_FEHLEN, 2L));
 
-		assertEquals("v=0, gesamt=2, leer=?0, angaben=2", ReportingHinweisSerializer.headerwert(probleme, false));
+		assertEquals("v=1, angefordert=5, ausgegeben=5, hinweise=2, angaben=2", ReportingHinweisSerializer.headerwert(VOLLSTAENDIG, probleme));
 	}
 
 	@Test
@@ -88,7 +102,7 @@ class TestReportingHinweisSerializer {
 		final List<ReportingProblem> probleme =
 				List.of(problem(ReportingProblemursache.NICHT_DARSTELLBAR, ReportingProblemauswirkung.TEILDATEN_FEHLEN, 1L));
 
-		assertEquals("v=0, gesamt=1, leer=?0, darstellung=1", ReportingHinweisSerializer.headerwert(probleme, false));
+		assertEquals("v=1, angefordert=5, ausgegeben=5, hinweise=1, darstellung=1", ReportingHinweisSerializer.headerwert(VOLLSTAENDIG, probleme));
 	}
 
 	@Test
@@ -99,12 +113,12 @@ class TestReportingHinweisSerializer {
 				problem(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, ReportingProblemauswirkung.TEILDATEN_FEHLEN, 2L),
 				problem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, 3L));
 
-		assertEquals("v=0, gesamt=3, leer=?0, datensaetze=1, angaben=1, darstellung=1",
-				ReportingHinweisSerializer.headerwert(probleme, false));
+		assertEquals("v=1, angefordert=5, ausgegeben=4, hinweise=3, datensaetze=1, angaben=1, darstellung=1",
+				ReportingHinweisSerializer.headerwert(new ReportingAusgabeumfang(5, 4, false), probleme));
 	}
 
 	@Test
-	void testDieSummeDerKategorienErgibtDieGesamtzahl() {
+	void testDieSummeDerKategorienErgibtDieAnzahlDerHinweise() {
 		// Die Kategorien zerlegen dieselbe Menge. Ohne diese Zusage könnte ein Empfänger die Zahlen nicht zusammenzählen.
 		final List<ReportingProblem> probleme = new ArrayList<>();
 		for (long id = 1; id <= 4; id++) {
@@ -116,7 +130,8 @@ class TestReportingHinweisSerializer {
 		final int summe = ReportingHinweisSerializer.anzahlenJeKategorie(probleme).values().stream().mapToInt(Integer::intValue).sum();
 
 		assertEquals(probleme.size(), summe);
-		assertEquals("v=0, gesamt=12, leer=?0, datensaetze=4, angaben=4, darstellung=4", ReportingHinweisSerializer.headerwert(probleme, false));
+		assertEquals("v=1, angefordert=5, ausgegeben=1, hinweise=12, datensaetze=4, angaben=4, darstellung=4",
+				ReportingHinweisSerializer.headerwert(new ReportingAusgabeumfang(5, 1, false), probleme));
 	}
 
 	@Test
@@ -152,8 +167,10 @@ class TestReportingHinweisSerializer {
 	@Test
 	void testEinFehlenderDiagnosebestandWirdAbgelehnt() {
 		// null als "keine Probleme" zu lesen, hieße einen fehlenden Bestand wie eine geprüfte problemfreie Ausgabe zu behandeln. Der Header bescheinigte damit
-		// eine Vollständigkeit, die niemand festgestellt hat - genau das soll der Vertrag ausschließen. Der problemfreie Fall ist die leere Sammlung.
-		assertThrows(NullPointerException.class, () -> ReportingHinweisSerializer.headerwert(null, false));
+		// eine Vollständigkeit, die niemand festgestellt hat - genau das soll der Vertrag ausschließen. Der problemfreie Fall ist die leere Sammlung, und der
+		// Umfang muss gemeldet sein.
+		assertThrows(NullPointerException.class, () -> ReportingHinweisSerializer.headerwert(VOLLSTAENDIG, null));
+		assertThrows(NullPointerException.class, () -> ReportingHinweisSerializer.headerwert(null, List.of()));
 		assertThrows(NullPointerException.class, () -> ReportingHinweisSerializer.anzahlenJeKategorie(null));
 	}
 
@@ -163,7 +180,7 @@ class TestReportingHinweisSerializer {
 		final List<ReportingProblem> probleme =
 				List.of(problem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, 4711L));
 
-		final String wert = ReportingHinweisSerializer.headerwert(probleme, true);
+		final String wert = ReportingHinweisSerializer.headerwert(LEER_GEFILTERT, probleme);
 
 		assertTrue(ZULAESSIGER_WERT.matcher(wert).matches(), "Der Headerwert entspricht nicht dem zugesagten Aufbau: " + wert);
 		assertTrue(!wert.contains("4711"), "Die ID des betroffenen Datensatzes darf den Header nicht erreichen: " + wert);
@@ -175,20 +192,30 @@ class TestReportingHinweisSerializer {
 	@Test
 	void testOhneBefundUndOhneLeerstandEntstehtKeineHinweisdatei() {
 		// Eine Beilage ohne Inhalt stellte jede vollständige Ausgabe unter einen Vorbehalt.
-		assertFalse(ReportingHinweisSerializer.brauchtHinweisdatei(List.of(), false));
+		assertFalse(ReportingHinweisSerializer.brauchtHinweisdatei(VOLLSTAENDIG, List.of()));
 	}
 
 	@Test
 	void testEinBefundOderEinLeerstandVerlangtEineHinweisdatei() {
-		assertTrue(ReportingHinweisSerializer.brauchtHinweisdatei(List.of(), true), "Ein Archiv ohne PDF-Datei muss erklärt werden.");
-		assertTrue(ReportingHinweisSerializer.brauchtHinweisdatei(List.of(ausgelassenerDatensatz(1L)), false));
+		assertTrue(ReportingHinweisSerializer.brauchtHinweisdatei(LEER_GEFILTERT, List.of()), "Ein Archiv ohne PDF-Datei muss erklärt werden.");
+		assertTrue(ReportingHinweisSerializer.brauchtHinweisdatei(VOLLSTAENDIG, List.of(ausgelassenerDatensatz(1L))));
+	}
+
+	@Test
+	void testDieHinweisdateiNenntDieZaehlwerte() {
+		// Die Zeile erscheint immer - auch bei einer Anfrage ohne zählbare Einheiten als "0 von 0".
+		assertTrue(ReportingHinweisSerializer.hinweisdatei(new ReportingAusgabeumfang(120, 117, false), List.of(ausgelassenerDatensatz(1L)))
+				.contains("117 von 120 ausgegeben."));
+		assertTrue(ReportingHinweisSerializer.hinweisdatei(new ReportingAusgabeumfang(0, 0, true), List.of())
+				.contains("0 von 0 ausgegeben."));
 	}
 
 	@Test
 	void testDerReineFilterLeerfallBleibtOhneFehlerbehauptung() {
 		// Wer alles ausfiltert und deshalb nichts erhält, hat nichts falsch gemacht. Eine Warnung wäre dort eine Unterstellung.
-		final String text = ReportingHinweisSerializer.hinweisdatei(List.of(), true);
+		final String text = ReportingHinweisSerializer.hinweisdatei(LEER_GEFILTERT, List.of());
 
+		assertTrue(text.contains("0 von 5 ausgegeben."), text);
 		assertTrue(text.contains("blieb nach der Auswahl kein Datensatz übrig"), text);
 		assertTrue(text.contains("keine PDF-Datei erzeugt"), text);
 		assertFalse(text.contains("unvollständig"), "Der reine Filter-Leerfall ist keine unvollständige Ausgabe: " + text);
@@ -203,7 +230,7 @@ class TestReportingHinweisSerializer {
 				new ReportingProblem(ReportingProblemursache.NICHT_DARSTELLBAR, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
 						ReportingProblemSchluessel.fuer(ReportingSchueler.class, 3L)));
 
-		final String text = ReportingHinweisSerializer.hinweisdatei(probleme, false);
+		final String text = ReportingHinweisSerializer.hinweisdatei(new ReportingAusgabeumfang(5, 3, false), probleme);
 
 		assertTrue(text.contains("Die Ausgabe wurde erstellt, ist aber unvollständig."), text);
 		assertTrue(text.contains("Hinweise insgesamt: 3"), text);
@@ -214,7 +241,7 @@ class TestReportingHinweisSerializer {
 
 	@Test
 	void testEinLeerstandMitBefundenNenntBeides() {
-		final String text = ReportingHinweisSerializer.hinweisdatei(List.of(ausgelassenerDatensatz(1L)), true);
+		final String text = ReportingHinweisSerializer.hinweisdatei(LEER_GEFILTERT, List.of(ausgelassenerDatensatz(1L)));
 
 		assertTrue(text.contains("keine PDF-Datei erzeugt"), text);
 		assertTrue(text.contains("Hinweise insgesamt: 1"), text);
@@ -223,7 +250,7 @@ class TestReportingHinweisSerializer {
 	@Test
 	void testDieHinweisdateiTraegtWederIdsNochNamenNochFehlermeldungen() {
 		// Ein ZIP-Archiv wird weitergegeben, gespeichert und geöffnet, ohne dass jemand über den Inhalt seiner Beilagen nachdenkt.
-		final String text = ReportingHinweisSerializer.hinweisdatei(List.of(ausgelassenerDatensatz(4711L)), true);
+		final String text = ReportingHinweisSerializer.hinweisdatei(LEER_GEFILTERT, List.of(ausgelassenerDatensatz(4711L)));
 
 		assertFalse(text.contains("4711"), "Die ID des betroffenen Datensatzes darf die Hinweisdatei nicht erreichen: " + text);
 		assertFalse(text.contains("Schueler"), "Die Objektart darf die Hinweisdatei nicht erreichen: " + text);
@@ -232,8 +259,8 @@ class TestReportingHinweisSerializer {
 
 	@Test
 	void testDieAnzahlWirdNichtAlsMengeFehlenderDateienAusgegeben() {
-		// gesamt ist eine Diagnosegröße. Oberflächentexte dürfen daraus keine Zahl fehlender Datensätze oder Dateien machen.
-		final String text = ReportingHinweisSerializer.hinweisdatei(List.of(ausgelassenerDatensatz(1L)), false);
+		// Die Zahl der Hinweise ist eine Diagnosegröße. Oberflächentexte dürfen daraus keine Zahl fehlender Datensätze oder Dateien machen.
+		final String text = ReportingHinweisSerializer.hinweisdatei(new ReportingAusgabeumfang(5, 4, false), List.of(ausgelassenerDatensatz(1L)));
 
 		assertTrue(text.contains("nicht die Anzahl fehlender Datensätze oder Dateien"), text);
 	}

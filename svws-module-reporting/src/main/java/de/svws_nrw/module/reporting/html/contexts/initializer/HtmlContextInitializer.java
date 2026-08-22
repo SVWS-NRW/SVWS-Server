@@ -28,14 +28,13 @@ public interface HtmlContextInitializer {
 	String einzelContextBezeichnung() throws ApiOperationException;
 
 	/**
-	 * Gibt an, ob die Auswahl der Hauptdaten bewusst keinen Datensatz enthält. Die Ausgabefactory unterscheidet damit eine gewollt leere Ausgabe von einer, die
-	 * durch einen Programmierfehler leer bleibt; sie braucht allein diese Angabe, weshalb das Auswahlergebnis im Initializer bleibt. Datenaufbauten ohne
-	 * Auswahl über Hauptdaten-IDs - die GOSt-Kursplanung etwa - erben die Standard-Implementierung, für sie bleibt eine leere Ausgabe ein Serverfehler.
+	 * Gibt an, wo dieser Datenaufbau seinen Ausgabeumfang meldet: {@code false}, wenn der Initializer selbst in {@link #init()} meldet, weil er die
+	 * Zählwerte kennt (ID-Auswahl); {@code true}, wenn erst der Context-Aufbau sie kennt und während {@link #init()} meldet (Manager-Aufbauten,
+	 * Fachwahlstatistik). Die Methode hat bewusst keine Standard-Implementierung: Jeder neue Datenaufbau muss die Entscheidung treffen, statt still ohne
+	 * Umfang zu bleiben - die Ausgabefactory bricht ohne Meldung mit einem Serverfehler ab.
 	 *
-	 * @return true, wenn dieser Datenaufbau eine Auswahl getroffen hat und diese keinen Datensatz enthält, sonst false.
+	 * @return true, wenn der Context-Aufbau den Ausgabeumfang meldet, sonst false.
 	 */
-	default boolean bewusstLeer() {
-		return false;
-	}
+	boolean meldetAusgabeumfangImContextAufbau();
 
 }

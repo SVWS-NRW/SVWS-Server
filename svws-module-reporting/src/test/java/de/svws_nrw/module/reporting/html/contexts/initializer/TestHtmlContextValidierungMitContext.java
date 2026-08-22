@@ -123,80 +123,72 @@ class TestHtmlContextValidierungMitContext {
 	}
 
 
-	// ##### validiereParameterFuerAbiturjahrgangUndHalbjahre #####
+	// ##### validiereAbiturjahrgangAlsHauptressource #####
 
 	@Test
 	void testOhneHauptdatenIdsWirdDieParameterpruefungAbgewiesen() {
 		gebeHauptdatenIdsVor(List.of());
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, false));
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		assertEquals("FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.", aoe.getBody());
 		verify(reportingContext, never()).repositoryGost();
 	}
 
-	@Test
-	void testGueltigePaarweiseParameterWerdenAkzeptiert() {
-		gebeHauptdatenIdsVor(List.of(20253L));
-		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
-
-		assertDoesNotThrow(() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, true));
-	}
 
 	@Test
 	void testGueltigeEinzelneParameterWerdenAkzeptiert() {
 		gebeHauptdatenIdsVor(List.of(2025L, 3L));
 		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
 
-		assertDoesNotThrow(() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, false));
+		assertDoesNotThrow(() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 	}
 
-	@Test
-	void testEineWertebereichsverletzungBehaeltIhreEigeneMeldung() {
-		// Die Wertprüfungen werfen selbst eine ApiOperationException. Der vorgezogene catch-Zweig muss sie unverändert durchreichen, statt sie im
-		// allgemeinen catch in die pauschale Meldung zu verpacken.
-		gebeHauptdatenIdsVor(List.of(20256L));
-		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
-
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, true));
-
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
-	}
 
 	@Test
 	void testEinNullEintragInDenEinzelnenParameternFuehrtNichtZumServerfehler() {
-		// Die paarweise Variante überspringt null-Einträge ausdrücklich, die einzelne nicht. Der allgemeine catch-Zweig fängt die dabei entstehende
-		// NullPointerException ab, sodass am API-Rand ein Client-Fehler und kein Serverfehler ankommt.
+		// Der allgemeine catch-Zweig fängt die NullPointerException eines null-Eintrags ab, sodass am API-Rand ein Client-Fehler und kein
+		// Serverfehler ankommt.
 		gebeHauptdatenIdsVor(Arrays.asList(2025L, null));
 		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, false));
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		assertEquals(MELDUNG_PARAMETER_UNLESBAR, aoe.getBody());
 	}
 
 	@Test
-	void testEinFehlerBeimLadenDerAbiturjahrgaengeWirdHeuteAlsBadRequestGemeldet() {
-		// BESTANDSVERHALTEN: Ein serverseitiges Ladeproblem wird hier als Client-Fehler gemeldet. Der Fehlervertrag aus Block 5 des
-		// Stabilisierungsplans löst das auf; bis dahin hält dieser Test den Ist-Zustand fest, damit die spätere Änderung sichtbar wird.
-		gebeHauptdatenIdsVor(List.of(2025L));
-		final IllegalStateException ursache = new IllegalStateException("Datenbank nicht erreichbar");
-		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenThrow(ursache);
+	void testEinNichtVorhandenerAbiturjahrgangDerHauptressourceErgibtNotFound() {
+		// Der Abiturjahrgang ist die adressierte Hauptressource des Reports: Ein formal gültiges, aber nicht vorhandenes Jahr ist die Auskunft
+		// "gibt es nicht" und kein Parameterfehler.
+		gebeHauptdatenIdsVor(List.of(2026L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> HtmlContextValidierung.validiereParameterFuerAbiturjahrgangUndHalbjahre(reportingContext, false));
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
-		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals(MELDUNG_PARAMETER_UNLESBAR, aoe.getBody());
-		assertSame(ursache, aoe.getCause());
+		assertEquals(Status.NOT_FOUND, aoe.getStatus());
+		assertEquals("FEHLER: Der Abiturjahrgang 2026 ist nicht vorhanden.", aoe.getBody());
 	}
 
+	@Test
+	void testEinFehlerBeimLadenDerAbiturjahrgaengeBleibtEinServerfehler() {
+		// Das Repository wirft den Ladefehler statustragend mit 500. Die Prüfung reicht ihn unverändert durch, statt ihn als unlesbaren Parameter
+		// mit 400 auszugeben - der Aufrufer kann an seinen Parametern nichts korrigieren.
+		gebeHauptdatenIdsVor(List.of(2025L));
+		final ApiOperationException ladefehler = new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+				new IllegalStateException("Datenbank nicht erreichbar"), "FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenThrow(ladefehler);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertSame(ladefehler, aoe, "Der statustragende Wurf des Repositorys erreicht den Aufrufer unverändert.");
+	}
 
 	// ##### validiereSchuleMitGost #####
 

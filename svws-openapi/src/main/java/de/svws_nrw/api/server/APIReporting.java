@@ -5,14 +5,12 @@ import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
-import de.svws_nrw.module.reporting.diagnose.ReportingHinweisSerializer;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.module.reporting.factories.ReportingFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,9 +61,14 @@ public class APIReporting {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "
 					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report wurde erfolgreich als HTML erzeugt.",
-			content = @Content(mediaType = MediaType.TEXT_HTML, schema = @Schema(implementation = String.class)),
-			headers = @Header(name = ReportingHinweisSerializer.HEADER_NAME, description = "Begleitet eine erfolgreiche Ausgabe mit Hinweisen auf ihre Vollständigkeit. Dictionary nach RFC 9651, etwa `v=0, gesamt=5, leer=?0, datensaetze=3, angaben=2`. `v` ist die Vertragsversion, `gesamt` die Zahl der Hinweise und `leer` das Kennzeichen, dass angeforderte Datensätze vorhanden waren, nach der Auswahl aber keiner übrig blieb - eine Sammelausgabe liefert dann weiterhin ein Dokument mit leerem fachlichem Inhalt; weitere Einträge nennen Anzahlen je Kategorie und fehlen, wenn sie null wären. Der Header enthält keine IDs, Namen oder Freitexte. **`v=0` ist eine ausdrücklich vorläufige Fassung**: Name, `gesamt`, `leer` und das Verhalten bei unbekannten Einträgen sind stabil, der Kategorienkatalog darf sich bis `v=1` noch ändern - ein Verbraucher wertet bei `v=0` deshalb nur `gesamt` und `leer` aus. **Fehlt der Header, ist die Vollständigkeit unbekannt**; das bedeutet nie `nachweislich vollständig`. Unbekannte Einträge und Versionen sind zu ignorieren.",
-					schema = @Schema(implementation = String.class)))
+			content = @Content(mediaType = MediaType.TEXT_HTML, schema = @Schema(implementation = String.class)))
+	// TODO Diese Beschreibung wieder aufnehmen, sobald die Auslieferung des Hinweis-Headers freigegeben ist. Der Server setzt ihn derzeit nur im
+	// Modus DEV (siehe ReportingHinweiseHeader); eine stabile Installation liefert ihn nicht, deshalb darf die veröffentlichte Schnittstelle ihn
+	// nicht zusagen. Zum Freischalten die folgenden zwei Zeilen in die ApiResponse oben aufnehmen und die Importe für Header und
+	// ReportingHinweisSerializer ergänzen:
+	// headers = @Header(name = ReportingHinweisSerializer.HEADER_NAME,
+	//         description = "Begleitet eine erfolgreiche Ausgabe mit Hinweisen auf ihre Vollständigkeit. Dictionary nach RFC 9651, etwa `v=1, angefordert=120, ausgegeben=117, hinweise=3, datensaetze=3`. `v` ist die Vertragsversion, `angefordert` die Anzahl der bestellten Einheiten des Datenaufbaus (etwa die angeforderten IDs einer Liste), `ausgegeben` die Anzahl der Einheiten in der Ausgabe und `hinweise` die Zahl der Hinweise; weitere Einträge nennen Anzahlen je Kategorie und fehlen, wenn sie null wären. Die Differenz aus `angefordert` und `ausgegeben` ist nicht zwingend durch Hinweise erklärbar - auch der Benutzerfilter reduziert die Ausgabe, ohne ein Hinweis zu sein. Der Header enthält keine IDs, Namen oder Freitexte. **Fehlt der Header, ist die Vollständigkeit unbekannt**; das bedeutet nie `nachweislich vollständig`. Unbekannte Einträge und Versionen sind zu ignorieren.",
+	//         schema = @Schema(implementation = String.class))
 	@ApiResponse(responseCode = "400", description = "Die übergebenen Parameter sind fehlerhaft.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")
@@ -103,9 +106,14 @@ public class APIReporting {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Reports besitzt. "
 					+ "Weitergehende Berechtigungen werden im Vorfeld der Reporterstellung überprüft.")
 	@ApiResponse(responseCode = "200", description = "Der Report mit den übergebenen Daten wurde erfolgreich erstellt.",
-			content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Report")),
-			headers = @Header(name = ReportingHinweisSerializer.HEADER_NAME, description = "Begleitet eine erfolgreiche Ausgabe mit Hinweisen auf ihre Vollständigkeit. Dictionary nach RFC 9651, etwa `v=0, gesamt=5, leer=?0, datensaetze=3, angaben=2`. `v` ist die Vertragsversion, `gesamt` die Zahl der Hinweise und `leer` das Kennzeichen, dass angeforderte Datensätze vorhanden waren, nach der Auswahl aber keiner übrig blieb - eine Sammelausgabe liefert dann weiterhin ein Dokument mit leerem fachlichem Inhalt; weitere Einträge nennen Anzahlen je Kategorie und fehlen, wenn sie null wären. Der Header enthält keine IDs, Namen oder Freitexte. **`v=0` ist eine ausdrücklich vorläufige Fassung**: Name, `gesamt`, `leer` und das Verhalten bei unbekannten Einträgen sind stabil, der Kategorienkatalog darf sich bis `v=1` noch ändern - ein Verbraucher wertet bei `v=0` deshalb nur `gesamt` und `leer` aus. **Fehlt der Header, ist die Vollständigkeit unbekannt**; das bedeutet nie `nachweislich vollständig`. Unbekannte Einträge und Versionen sind zu ignorieren.",
-					schema = @Schema(implementation = String.class)))
+			content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Report")))
+	// TODO Diese Beschreibung wieder aufnehmen, sobald die Auslieferung des Hinweis-Headers freigegeben ist. Der Server setzt ihn derzeit nur im
+	// Modus DEV (siehe ReportingHinweiseHeader); eine stabile Installation liefert ihn nicht, deshalb darf die veröffentlichte Schnittstelle ihn
+	// nicht zusagen. Zum Freischalten die folgenden zwei Zeilen in die ApiResponse oben aufnehmen und die Importe für Header und
+	// ReportingHinweisSerializer ergänzen:
+	// headers = @Header(name = ReportingHinweisSerializer.HEADER_NAME,
+	//         description = "Begleitet eine erfolgreiche Ausgabe mit Hinweisen auf ihre Vollständigkeit. Dictionary nach RFC 9651, etwa `v=1, angefordert=120, ausgegeben=117, hinweise=3, datensaetze=3`. `v` ist die Vertragsversion, `angefordert` die Anzahl der bestellten Einheiten des Datenaufbaus (etwa die angeforderten IDs einer Liste), `ausgegeben` die Anzahl der Einheiten in der Ausgabe und `hinweise` die Zahl der Hinweise; weitere Einträge nennen Anzahlen je Kategorie und fehlen, wenn sie null wären. Die Differenz aus `angefordert` und `ausgegeben` ist nicht zwingend durch Hinweise erklärbar - auch der Benutzerfilter reduziert die Ausgabe, ohne ein Hinweis zu sein. Der Header enthält keine IDs, Namen oder Freitexte. **Fehlt der Header, ist die Vollständigkeit unbekannt**; das bedeutet nie `nachweislich vollständig`. Unbekannte Einträge und Versionen sind zu ignorieren.",
+	//         schema = @Schema(implementation = String.class))
 	@ApiResponse(responseCode = "400", description = "Die übergebenen Parameter sind fehlerhaft.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den geforderten Report zu erstellen.")

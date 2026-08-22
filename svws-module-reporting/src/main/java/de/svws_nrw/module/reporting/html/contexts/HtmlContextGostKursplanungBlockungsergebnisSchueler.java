@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
@@ -69,5 +70,21 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 	@Override
 	public List<Long> getIds() {
 		return this.blockungsergebnis.schueler().stream().map(ReportingSchueler::id).distinct().toList();
+	}
+
+	/**
+	 * Die Zähleinheit dieser Sichtweise sind die Schüler des Blockungsergebnisses: die vorhandenen gegen die nach Filterung ausgegebenen.
+	 * <p>Die angeforderte Zahl stammt aus {@code anzahlSchueler()} und damit aus den Blockungsdaten selbst. Die Schülerliste des Ergebnisses taugt dafür
+	 * nicht: Sie entsteht über das zentrale Schüler-Repository und ist bereits um ausgefilterte und nicht ladbare Schüler verkürzt. Aus ihr gebildet, meldete
+	 * der Header eine vollständige Ausgabe, obwohl Datensätze fehlen.</p>
+	 *
+	 * @param ergebnis Das aufgebaute Blockungsergebnis dieses Reports.
+	 *
+	 * @return Der Ausgabeumfang dieser Sichtweise.
+	 */
+	@Override
+	protected ReportingAusgabeumfang ermittleAusgabeumfang(final ReportingGostKursplanungBlockungsergebnis ergebnis) {
+		final int ausgegeben = ergebnis.schueler().size();
+		return new ReportingAusgabeumfang(ergebnis.anzahlSchueler(), ausgegeben, ausgegeben == 0);
 	}
 }

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -18,12 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.gost.GostServiceFactory;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -39,6 +43,9 @@ class TestReportingRepositoryAbbruchstatus {
 
 	/** Die ID der Blockung, zu der das Blockungsergebnis gehört. */
 	private static final long ID_BLOCKUNG = 7L;
+
+	/** Das Abiturjahr, dessen Fachwahlstatistik die Tests anfordern. */
+	private static final int ABITURJAHR = 2025;
 
 	/** Der gemockte Context. Er liefert bewusst keine Datenbankverbindung, sodass jeder Datenzugriff scheitert. */
 	private ReportingContext reportingContext;
@@ -127,6 +134,53 @@ class TestReportingRepositoryAbbruchstatus {
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
 		}
 		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+	}
+
+	@Test
+	void testNichtLadbareAbiturjahrgaengeBrechenMitEinemServerfehlerAb() {
+		// Gegen diese Liste prüfen die GOSt-Datenaufbauten ihre Parameter. Ein Ladefehler ist ein Serverproblem; als Parameterfehler ausgegeben, suchte der
+		// Aufrufer die Ursache bei seinen Eingaben.
+		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, repository::abiturjahrgaenge);
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertNotNull(aoe.getCause(), "Die Ursache gehört in den Abbruch; die Abschlussgrenze protokolliert sie mit Stacktrace.");
+		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEineNichtLadbareFachwahlstatistikBrichtDenStriktenZugriffMitEinemServerfehlerAb() {
+		// Der strikte Zugriff bedient den Report, dessen Hauptinhalt die Statistik ist. Ein leerer Report mit Erfolgsstatus wäre dort ein stiller Leerlauf.
+		final ReportingRepositoryGost repository = new ReportingRepositoryGost(reportingContext);
+		final ApiOperationException ursache = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Fachwahlen sind nicht lesbar.");
+
+		try (MockedStatic<GostServiceFactoryBuilder> serviceFactoryBuilder = mockStatic(GostServiceFactoryBuilder.class)) {
+			final GostServiceFactory serviceFactory = mock(GostServiceFactory.class, RETURNS_DEEP_STUBS);
+			serviceFactoryBuilder.when(GostServiceFactoryBuilder::getGostServiceFactory).thenReturn(serviceFactory);
+			when(serviceFactory.getGostJahrgangFachwahlService().getFachwahlStatistik(ABITURJAHR)).thenThrow(ursache);
+
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.fachwahlen(ABITURJAHR));
+
+			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
+		}
+		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEinUngueltigesHalbjahrDerBlockungsdatenIstEinServerfehler() {
+		// Die Halbjahres-ID stammt aus den gespeicherten Blockungsdaten des Servers; ein ungültiger Wert ist eine Inkonsistenz der Serverdaten. Als
+		// NOT_FOUND suchte der Anwender die Ursache bei seiner Anfrage.
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(9, ID_BLOCKUNG));
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+	}
+
+	@Test
+	void testEinGueltigesHalbjahrDerBlockungsdatenWirdAufgeloest() {
+		assertEquals(GostHalbjahr.Q11, ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(GostHalbjahr.Q11.id, ID_BLOCKUNG));
 	}
 
 	@Test

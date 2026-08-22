@@ -186,7 +186,8 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	}
 
 	/**
-	 * Anzahl der Schüler im Ergebnis
+	 * Anzahl der Schüler im Ergebnis, wie sie die Blockungsdaten führen. Diese Zahl ist von Filterung und Ladefehlern unberührt und deshalb die Quelle für
+	 * das Feld {@code angefordert} des Hinweis-Headers; die Liste aus {@link #schueler()} taugt dafür nicht, denn sie ist bereits verkürzt.
 	 *
 	 * @return Inhalt des Feldes anzahlSchueler
 	 */
@@ -241,6 +242,16 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	}
 
 	/**
+	 * Gibt die Anzahl aller Kurse des Blockungsergebnisses zurück - vor der Filterung der Ausgabe. Aus ihr entsteht das Feld {@code angefordert} des
+	 * Hinweis-Headers der Kurs-Sichtweise.
+	 *
+	 * @return Die Anzahl aller Kurse des Blockungsergebnisses.
+	 */
+	public int anzahlKurseVorhanden() {
+		return this.kurse.size();
+	}
+
+	/**
 	 * Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet.
 	 *
 	 * @return Inhalt des Feldes schienen; nie {@code null}, bei fehlender Zuordnung eine leere Liste.
@@ -251,13 +262,15 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 
 	/**
 	 * Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet. Es werden nur Schüler
-	 * zurückgegeben, die das konfigurierte Filter-Prädikat erfüllen.
+	 * zurückgegeben, die das konfigurierte Filter-Prädikat erfüllen. Für die Zahl der ursprünglich angeforderten Schüler ist deshalb
+	 * {@link #anzahlSchueler()} zu verwenden.
 	 *
 	 * @return Liste der Schüler
 	 */
 	public List<ReportingSchueler> schueler() {
 		return this.schueler.stream().filter(filterSchueler).toList();
 	}
+
 
 
 	/**

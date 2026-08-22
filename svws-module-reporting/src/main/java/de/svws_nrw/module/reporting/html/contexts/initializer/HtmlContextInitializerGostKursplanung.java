@@ -64,4 +64,15 @@ final class HtmlContextInitializerGostKursplanung extends HtmlContextInitializer
 		return aufbau.contextSchluessel();
 	}
 
+
+	/**
+	 * Die Zähleinheit dieses Datenaufbaus sind die Kurse bzw. Schüler des Blockungsergebnisses; sie stehen erst nach dem Manager-Aufbau im Context fest.
+	 *
+	 * @return true, denn der Context-Aufbau meldet den Ausgabeumfang.
+	 */
+	@Override
+	public boolean meldetAusgabeumfangImContextAufbau() {
+		return true;
+	}
+
 }

@@ -132,33 +132,6 @@ public final class HtmlContextInitializerRegistry {
 					new HtmlContextAufbauGostKlausurplanung(HtmlContextGostKlausurplanungKlausurplanTermine::new)));
 
 	/**
-	 * Zu jedem Datenaufbau die Entscheidung, ob seine Datenzugriffe vollständig über die Diagnose melden. Nur bei true trägt seine Ausgabe den
-	 * Hinweis-Header. Die Zuordnung ist vollständig geführt und wird vom Vollständigkeitstest der Registry erzwungen: Ein neuer Datenaufbau muss die
-	 * Entscheidung treffen, statt still ohne Header zu bleiben.
-	 * <p>Angebunden sind die Datenaufbauten nach dem Listen-Muster und die fünf Sichtweisen der Stundenplanung; ihre Datenzugriffe sind je Aufbau gelesen und
-	 * melden oder werfen. Die GOSt-Datenaufbauten stehen bewusst auf false: Sie lesen zusätzlich GOSt-Daten, deren Zugriffe noch nicht vollständig melden -
-	 * ein Header dort würde eine geprüfte Vollständigkeit behaupten, die es nicht gibt.</p>
-	 */
-	private static final Map<ReportingReportvorlageDatenContext, Boolean> HINWEISVERTRAG_ANBINDUNG = Map.ofEntries(
-			Map.entry(ReportingReportvorlageDatenContext.SCHUELER, true),
-			Map.entry(ReportingReportvorlageDatenContext.SCHUELER_GOST_LAUFBAHNPLANUNG, false),
-			Map.entry(ReportingReportvorlageDatenContext.SCHUELER_GOST_ABITUR, false),
-			Map.entry(ReportingReportvorlageDatenContext.KLASSEN, true),
-			Map.entry(ReportingReportvorlageDatenContext.KURSE, true),
-			Map.entry(ReportingReportvorlageDatenContext.LEHRER, true),
-			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH, true),
-			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN, true),
-			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, true),
-			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_RAUM, true),
-			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, true),
-			Map.entry(ReportingReportvorlageDatenContext.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG, false),
-			Map.entry(ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_KURSE, false),
-			Map.entry(ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_SCHUELER, false),
-			Map.entry(ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_SCHUELER, false),
-			Map.entry(ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_TERMINE, false));
-
-
-	/**
 	 * Liefert die Konfiguration zum übergebenen Datenaufbau.
 	 *
 	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
@@ -191,31 +164,6 @@ public final class HtmlContextInitializerRegistry {
 	static HtmlContextAufbau aufbauOderNull(final ReportingReportvorlageDatenContext datenContext) {
 		return AUFBAUTEN.get(datenContext);
 	}
-
-	/**
-	 * Gibt an, ob der Datenaufbau seine Ausgabeprobleme vollständig über die Diagnose meldet.
-	 * <p>Ein Datenaufbau ohne Eintrag gilt als noch nicht angebunden - ein vergessener Eintrag darf nicht wie eine geprüfte, vollständige Ausgabe aussehen.</p>
-	 *
-	 * @param datenContext Der Datenaufbau der Reportvorlage.
-	 *
-	 * @return true, wenn die Anbindung vollständig ist, sonst false.
-	 */
-	public static boolean istAnHinweisvertragAngebunden(final ReportingReportvorlageDatenContext datenContext) {
-		return Boolean.TRUE.equals(HINWEISVERTRAG_ANBINDUNG.get(datenContext));
-	}
-
-	/**
-	 * Gibt die geführte Entscheidung zum Hinweisvertrag zurück oder {@code null}, falls sie zum Datenaufbau fehlt. Für den Vollständigkeitstest der
-	 * Registry, der genau dieses Fehlen finden soll.
-	 *
-	 * @param datenContext Der Datenaufbau der Reportvorlage.
-	 *
-	 * @return true oder false gemäß Zuordnung, sonst {@code null}.
-	 */
-	static Boolean anbindungHinweisvertragOderNull(final ReportingReportvorlageDatenContext datenContext) {
-		return HINWEISVERTRAG_ANBINDUNG.get(datenContext);
-	}
-
 
 	// ##### Hilfsmethoden, die die Tabelle oben lesbar halten #####
 

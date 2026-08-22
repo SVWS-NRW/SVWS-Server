@@ -5,13 +5,13 @@ import java.util.function.Predicate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGostKursplanung;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
 
@@ -82,14 +82,29 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 			repo.initManager(idBlockungsergebnis);
 			this.blockungsergebnis = repo.blockungsergebnis();
 
+			// Erst das aufgebaute Blockungsergebnis kennt die Zähleinheiten dieses Datenaufbaus; die Sichtweise bestimmt, ob Kurse oder Schüler gezählt werden.
+			this.reportingContext.meldeAusgabeumfang(ermittleAusgabeumfang(this.blockungsergebnis));
+
 			final Context context = new Context();
 			context.setVariable("GostBlockungsergebnis", this.blockungsergebnis);
 			context.setVariable("zeigeProSchueler",
 					reportingContext.filterService().hatFilter(ReportingSchueler.class.getSimpleName()));
 			super.setContext(context);
 		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Response.Status.NOT_FOUND, e,
+			// Der Status der Datenschicht bleibt erhalten, die Meldung wird nur um den Kontext angereichert. Ein pauschaler Status würde am API-Rand
+			// einen Serverfehler als "Blockungsergebnis nicht gefunden" ausgeben.
+			throw new ApiOperationException(e.getStatus(), e,
 					"FEHLER: Das Blockungsergebnis und der zugehörige Datenmanager konnten nicht ermittelt werden. " + e.getMessage());
 		}
 	}
+
+	/**
+	 * Ermittelt den Ausgabeumfang dieser Sichtweise aus dem aufgebauten Blockungsergebnis: die vorhandenen Einheiten gegen die nach Filterung ausgegebenen.
+	 * Eine leere Ausgabe ist zulässig, wenn keine Einheit ausgegeben wird - sei es, weil das Ergebnis keine enthält oder der Benutzerfilter alle ausschließt.
+	 *
+	 * @param ergebnis Das aufgebaute Blockungsergebnis dieses Reports.
+	 *
+	 * @return Der Ausgabeumfang dieser Sichtweise.
+	 */
+	protected abstract ReportingAusgabeumfang ermittleAusgabeumfang(ReportingGostKursplanungBlockungsergebnis ergebnis);
 }

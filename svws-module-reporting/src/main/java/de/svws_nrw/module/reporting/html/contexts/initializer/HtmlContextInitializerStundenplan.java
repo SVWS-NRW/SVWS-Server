@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -24,9 +25,6 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 
 	/** Die Konfiguration des Datenaufbaus, den dieser Initializer ausführt. */
 	private final HtmlContextAufbauStundenplan<T, H> aufbau;
-
-	/** Das Ergebnis der Auswahl oder null, solange {@link #init()} nicht gelaufen ist. */
-	private ReportingAuswahlergebnis<H> auswahlergebnis;
 
 
 	/**
@@ -66,7 +64,7 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 		final List<Long> ids = reportingParameter.idsHauptdaten();
 		final ReportingAuswahlergebnis<H> auswahl = aufbau.auswahl().waehle(reportingContext, stundenplan, ids);
 		HtmlContextValidierung.pruefeUndMeldeAuswahl(reportingContext, auswahl, aufbau.objektart(), aufbau.bezeichnungen());
-		this.auswahlergebnis = auswahl;
+		reportingContext.meldeAusgabeumfang(ReportingAusgabeumfang.ausAuswahl(auswahl));
 
 		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().erzeuge(reportingContext, stundenplan, auswahl.idsAusgewaehlt()));
 	}
@@ -84,13 +82,13 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 
 
 	/**
-	 * Gibt an, ob die Auswahl dieses Datenaufbaus bewusst keinen Datensatz enthält.
+	 * Der Ausgabeumfang wird direkt in {@link #init()} aus der Auswahl gemeldet.
 	 *
-	 * @return true, wenn die Auswahl gelaufen ist und keinen Datensatz enthält, sonst false.
+	 * @return false, denn dieser Initializer meldet selbst.
 	 */
 	@Override
-	public boolean bewusstLeer() {
-		return (this.auswahlergebnis != null) && this.auswahlergebnis.bewusstLeer();
+	public boolean meldetAusgabeumfangImContextAufbau() {
+		return false;
 	}
 
 }

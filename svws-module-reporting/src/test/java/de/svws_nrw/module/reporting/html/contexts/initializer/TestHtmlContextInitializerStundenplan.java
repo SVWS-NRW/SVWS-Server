@@ -34,6 +34,7 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlageDatenContext;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
@@ -51,7 +52,7 @@ import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanung
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Prüft den Initializer, für den der Stundenplan das angeforderte Hauptdatum ist: die Statuszuordnung des Stundenplan-Ladens und die Auswahl der
+ * Prüft den Initializer, für den der Stundenplan das angeforderte Hauptobjekt ist: die Statuszuordnung des Stundenplan-Ladens und die Auswahl der
  * Hauptdaten je Sichtweise.
  * <p>Drei Ursachen sehen im Repository ähnlich aus, dürfen am API-Rand aber nicht denselben Status ergeben: Eine ID, zu der es keine Definition gibt, ist
  * {@code NOT_FOUND}; nicht ladbare Definitionen und ein vorhandener Stundenplan mit nicht ladbaren Daten sind Serverprobleme.</p>
@@ -265,7 +266,7 @@ class TestHtmlContextInitializerStundenplan {
 	}
 
 	@Test
-	void testEineAuswahlOhneVerbleibendeDatensaetzeIstBewusstLeer() {
+	void testEineAuswahlOhneVerbleibendeDatensaetzeMeldetDieZulaessigLeereAusgabe() {
 		gebeGeladenenStundenplanVor(stundenplan(null, null));
 		gebeKlassenAuswahlVor(List.of(1L), ReportingAuswahlergebnis.aus(List.of(1L), Map.of(),
 				Map.of(1L, ReportingLadezustand.nichtVorhanden()), List.of()));
@@ -273,7 +274,8 @@ class TestHtmlContextInitializerStundenplan {
 
 		assertDoesNotThrow(initializer::init);
 
-		assertTrue(initializer.bewusstLeer(), "Bleibt kein Datensatz übrig, rechtfertigt allein diese Angabe eine Ausgabe ohne Dokument.");
+		// Bleibt kein Datensatz übrig, rechtfertigt allein das gemeldete Kennzeichen eine Ausgabe ohne Dokument.
+		verify(reportingContext).meldeAusgabeumfang(new ReportingAusgabeumfang(1, 0, true));
 	}
 
 	@Test

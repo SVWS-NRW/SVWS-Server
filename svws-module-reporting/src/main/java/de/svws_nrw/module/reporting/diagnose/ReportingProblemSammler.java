@@ -68,7 +68,7 @@ public final class ReportingProblemSammler {
 	/**
 	 * Protokolliert ein neu gemeldetes Problem mit {@link LogLevel#WARNING}. Ein vorhandener Fehler wird samt Stacktrace ausgegeben - die meldende Stelle
 	 * wirft nicht, dieser Eintrag ist die einzige Gelegenheit dafür. Reist dieselbe Fehler-Instanz mit einem weiteren Befund - etwa eine nicht ladbare
-	 * Lehrkraft, die als Hauptdatum ausgelassen und zusätzlich als Klassenleitung gemeldet wird -, genügt die Meldung mit einem Verweis: Ihr Block stünde
+	 * Lehrkraft, die als angefordertes Hauptobjekt ausgelassen und zusätzlich als Klassenleitung gemeldet wird -, genügt die Meldung mit einem Verweis: Ihr Block stünde
 	 * sonst je Befund erneut im Log.
 	 *
 	 * @param schluessel   Welches Objekt betroffen ist.

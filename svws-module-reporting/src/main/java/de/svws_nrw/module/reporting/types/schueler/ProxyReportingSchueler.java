@@ -281,6 +281,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten zum Abitur in der GOSt des Schülers zur Verfügung.
+	 * <p>Der Rückgabewert {@code null} unterscheidet nicht, ob keine Abiturdaten vorliegen oder ob ihr Laden gescheitert ist. Auf dem Abitur-Datenaufbau ist
+	 * beides vorab gedeckt: Die Auswahl meldet betroffene Schüler und lässt sie aus, bevor dieser Getter läuft; die Vorlagen prüfen zusätzlich auf
+	 * {@code null}.</p>
 	 *
 	 * @return Daten zum Abitur in der GOSt; kann {@code null} sein, wenn zum Schüler keine Abiturdaten vorliegen.
 	 */
