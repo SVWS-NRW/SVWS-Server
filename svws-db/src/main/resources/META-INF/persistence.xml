@@ -114,11 +114,11 @@
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskeln</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOLeitungsfunktion</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrtsteil</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOReligion</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchuelerSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchuleNRW</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOTextDateien</class>
@@ -312,11 +312,11 @@
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOOrt</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOReligion</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchuelerSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOTextDateien</class>

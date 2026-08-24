@@ -33,9 +33,9 @@ import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuelerSchwerpunkt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
@@ -642,20 +642,20 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Religion aus dem Core-Type befüllen
-		final ArrayList<DTOKonfession> dtoKonfession = new ArrayList<>();
+		final ArrayList<DTOReligion> dtoReligionen = new ArrayList<>();
 		int i = 1;
 		for (final Religion kon : Religion.values()) {
 			final CoreTypeData eintrag = kon.daten(schuljahr);
 			if (eintrag == null) {
 				continue;
 			}
-			final DTOKonfession dto = new DTOKonfession(i, eintrag.text);
-			dto.StatistikKrz = eintrag.kuerzel;
-			dto.Sortierung = i;
-			dtoKonfession.add(dto);
+			final DTOReligion dto = new DTOReligion(i, eintrag.text);
+			dto.schluesselReligion = eintrag.schluessel;
+			dto.sortierung = i;
+			dtoReligionen.add(dto);
 			i++;
 		}
-		conn.transactionPersistAll(dtoKonfession);
+		conn.transactionPersistAll(dtoReligionen);
 		conn.transactionFlush();
 
 		// K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schule und der eigenen Schule befüllen (Core-Type)

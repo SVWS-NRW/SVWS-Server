@@ -18508,18 +18508,18 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Religionen bzw. Konfessionen unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, welche auf dem Zeugnis erscheint, einem Statistik-Kürzel, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller im Katalog vorhandenen Religionen bzw. Konfessionen unter Angabe der ID, der Bezeichnung, der Zeugnisbezeichnung, des Statistik-Kürzels, der Sortierreihenfolge sowie der Sichtbarkeit und Änderbarkeit. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *   Code 200: Eine Liste von Religion-Katalog-Einträgen
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<ReligionEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *   Code 404: Keine Religion-Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Katalog-Einträgen
+	 * @returns Eine Liste von Religion-Katalog-Einträgen
 	 */
 	public async getReligionen(schema: string): Promise<List<ReligionEintrag>> {
 		const path = "/db/{schema}/schule/religionen"
@@ -18538,47 +18538,51 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/{id : \d+}
 	 *
-	 * Passt die Religion-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Religion besitzt.
+	 * Passt die Religion mit der angegebenen ID an, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Religion-Daten integriert.
+	 *   Code 200: Die Religion wurde erfolgreich aktualisiert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ReligionEintrag
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Religion-Daten zu ändern.
-	 *   Code 404: Keine Religion mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Religionen zu ändern.
+	 *   Code 404: Keine Religion mit der angegebenen ID gefunden.
+	 *   Code 500: Unspezifizierter Fehler, z. B. beim Datenbankzugriff.
 	 *
 	 * @param {Partial<ReligionEintrag>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Religion wurde erfolgreich aktualisiert.
 	 */
-	public async patchReligion(data: Partial<ReligionEintrag>, schema: string, id: number): Promise<void> {
+	public async patchReligion(data: Partial<ReligionEintrag>, schema: string, id: number): Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = ReligionEintrag.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return ReligionEintrag.transpilerFromJSON(text);
 	}
 
 
 	/**
 	 * Implementierung der POST-Methode addReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/create
 	 *
-	 * Erstellt eine neue Religion und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.
+	 * Erstellt eine neue Religion, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Religion wurde erfolgreich angelegt.
+	 *   Code 201: Die Religion wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: ReligionEintrag
+	 *   Code 400: Die übergebenen Daten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Religion anzulegen.
-	 *   Code 404: Keine Religion  mit dem eingegebenen Kuerzel gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *   Code 500: Unspezifizierter Fehler, z. B. beim Datenbankzugriff.
 	 *
 	 * @param {Partial<ReligionEintrag>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Religion wurde erfolgreich angelegt.
+	 * @returns Die Religion wurde erfolgreich angelegt.
 	 */
 	public async addReligion(data: Partial<ReligionEintrag>, schema: string): Promise<ReligionEintrag> {
 		const path = "/db/{schema}/schule/religionen/create"
@@ -18593,21 +18597,20 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/delete/multiple
 	 *
-	 * Entfernt mehrere Religion-Katalog-Einträge der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 * Entfernt mehrere Religionen, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
+	 *   Code 200: Die Löschoperationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Religion-Katalog-Einträge nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Religionen zu entfernen.
+	 *   Code 404: Religionen nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler, z. B. beim Datenbankzugriff.
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
+	 * @returns Die Löschoperationen wurden ausgeführt.
 	 */
 	public async deleteReligionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/religionen/delete/multiple"

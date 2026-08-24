@@ -8,6 +8,8 @@ import de.svws_nrw.controller.schule.katalog.ort.OrtController;
 import de.svws_nrw.controller.schule.katalog.ort.OrtControllerImpl;
 import de.svws_nrw.controller.schule.katalog.ortsteil.OrtsteilController;
 import de.svws_nrw.controller.schule.katalog.ortsteil.OrtsteilControllerImpl;
+import de.svws_nrw.controller.schule.katalog.religion.ReligionController;
+import de.svws_nrw.controller.schule.katalog.religion.ReligionControllerImpl;
 import de.svws_nrw.controller.schule.katalog.teilleistungsart.TeilleistungsartController;
 import de.svws_nrw.controller.schule.katalog.teilleistungsart.TeilleistungsartControllerImpl;
 import de.svws_nrw.core.types.ServerMode;
@@ -141,6 +143,15 @@ public final class KatalogControllerFactory {
 	 */
 	public OrtsteilController getOrtsteilController() {
 		return new OrtsteilControllerImpl(serviceFactory.getOrtsteilService());
+	}
+
+	/**
+	 * Erstellt einen neuen ReligionController.
+	 *
+	 * @return {@link ReligionController} - neu erzeugter Controller
+	 */
+	public ReligionController getReligionController() {
+		return new ReligionControllerImpl(serviceFactory.getReligionService());
 	}
 
 }

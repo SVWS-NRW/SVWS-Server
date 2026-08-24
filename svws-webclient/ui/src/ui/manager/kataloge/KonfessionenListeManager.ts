@@ -24,8 +24,8 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 		if (cmp !== 0) {
 			return cmp;
 		}
-		if (a.kuerzel !== null && b.kuerzel !== null) {
-			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (a.idReligion !== null && b.idReligion !== null) {
+			cmp = JavaLong.compare(a.idReligion, b.idReligion);
 			if (cmp !== 0) {
 				return cmp;
 			}
@@ -84,8 +84,7 @@ export class KonfessionenListeManager extends AuswahlManager<number, ReligionEin
 
 	private entryMatchesSearchterm(eintrag: ReligionEintrag) {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		return (eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower)
-			|| ((eintrag.kuerzel !== null) && eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower)));
+		return eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower);
 	}
 
 	get searchTerm(): string {

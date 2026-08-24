@@ -4,12 +4,14 @@ import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
 import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
 import de.svws_nrw.mapper.schule.katalog.ortsteil.OrtsteilMapper;
+import de.svws_nrw.mapper.schule.katalog.religion.ReligionMapper;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilService;
+import de.svws_nrw.service.schule.katalog.religion.ReligionService;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartService;
 
 public final class KatalogServiceFactory {
@@ -88,6 +90,19 @@ public final class KatalogServiceFactory {
 				katalogRepositoryFactory.getOrtsteilRepository(),
 				katalogRepositoryFactory.getOrtRepository(),
 				OrtsteilMapper.INSTANCE);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des ReligionService.
+	 *
+	 * @return eine neue Instanz des ReligionService.
+	 */
+	public ReligionService getReligionService() {
+		return new ReligionService(
+				katalogRepositoryFactory.getReligionRepository(),
+				ReligionMapper.INSTANCE,
+				eigeneSchuleServiceFactory.getSchuleService()
+		);
 	}
 
 }

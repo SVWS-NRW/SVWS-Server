@@ -6,12 +6,12 @@
 					<ui-select label="Konfession ASD-Kürzel"
 						v-model="model.selectedKonfession.value"
 						:manager="konfessionKuerzelSelectManager"
-						:validation="() => model.getFehler('kuerzel')"
+						:validation="() => model.getFehler('idReligion')"
 						searchable statistics :readonly="!hatKompetenzUpdate" :removable="false" required />
 					<ui-select label="Konfession ASD-Text"
 						v-model="model.selectedKonfession.value"
 						:manager="konfessionTextSelectManager"
-						:validation="() => model.getFehler('kuerzel')"
+						:validation="() => model.getFehler('idReligion')"
 						searchable statistics :readonly="!hatKompetenzUpdate" :removable="false" required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung"
 						v-model="model.proxy.bezeichnung"
@@ -62,7 +62,6 @@
 	const model = new KonfessionModelProxy(
 		() => props.manager().daten(),
 		() => props.manager().liste.list(),
-		schuleState.abschnitt.schuljahr,
 		props.patch
 	);
 

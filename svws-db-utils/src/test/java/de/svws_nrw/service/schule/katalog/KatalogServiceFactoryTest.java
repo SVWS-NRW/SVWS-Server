@@ -5,6 +5,7 @@ import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
+import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
@@ -12,6 +13,7 @@ import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilService;
+import de.svws_nrw.service.schule.katalog.religion.ReligionService;
 import de.svws_nrw.service.schule.katalog.teilleistungsart.TeilleistungsartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +48,9 @@ class KatalogServiceFactoryTest {
 
 	@Mock
 	private EigeneSchuleService eigeneSchuleService;
+
+	@Mock
+	private ReligionRepository religionRepository;
 
 	@Mock
 	private OrtRepository ortRepository;
@@ -355,6 +360,64 @@ class KatalogServiceFactoryTest {
 			final OrtsteilService service = underTest.getOrtsteilService();
 
 			assertThat(service).isInstanceOf(OrtsteilService.class);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+// getReligionService()
+// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getReligionService()")
+	class GetReligionService {
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getReligionRepository())
+					.thenReturn(religionRepository);
+			when(eigeneSchuleServiceFactory.getSchuleService())
+					.thenReturn(eigeneSchuleService);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null ReligionService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final ReligionService service = underTest.getReligionService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			final ReligionService service1 = underTest.getReligionService();
+			final ReligionService service2 = underTest.getReligionService();
+
+			assertThat(service1).isNotSameAs(service2);
+		}
+
+		@Test
+		@DisplayName("ruft getReligionRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToKatalogRepositoryFactory() {
+			underTest.getReligionService();
+
+			verify(katalogRepositoryFactory).getReligionRepository();
+		}
+
+		@Test
+		@DisplayName("ruft getSchuleService() auf der EigeneSchuleServiceFactory auf")
+		void shouldDelegateToEigeneSchuleServiceFactory() {
+			underTest.getReligionService();
+
+			verify(eigeneSchuleServiceFactory).getSchuleService();
+		}
+
+		@Test
+		@DisplayName("erstellt eine ReligionService-Instanz")
+		void shouldCreateReligionService() {
+			final ReligionService service = underTest.getReligionService();
+
+			assertThat(service).isInstanceOf(ReligionService.class);
 		}
 	}
 

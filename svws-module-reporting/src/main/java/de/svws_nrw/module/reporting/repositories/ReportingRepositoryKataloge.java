@@ -25,7 +25,6 @@ import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataAnkreuzkompetenzJahrgangszuordnungen;
 import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
-import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -34,13 +33,11 @@ import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
-import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilService;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
-import de.svws_nrw.service.schule.katalog.ort.OrtService;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Domänen-Repository für Kataloge, Fächer, Jahrgänge und Erzieherarten.
@@ -137,20 +134,13 @@ public class ReportingRepositoryKataloge {
 		if (orteById == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Orte.");
-				orteById = createOrtService().getAll().stream()
+				orteById = getKatalogServiceFactory().getOrtService().getAll().stream()
 						.collect(Collectors.toMap(o -> o.id, o -> o));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Orte", e);
 			}
 		}
 		return orteById;
-	}
-
-	private static OrtService createOrtService() {
-		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-		final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-		return KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtService();
 	}
 
 	/**
@@ -168,20 +158,13 @@ public class ReportingRepositoryKataloge {
 		if (ortsteileById == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Ortsteile.");
-				ortsteileById = createOrtsteilService().getAll().stream()
+				ortsteileById = getKatalogServiceFactory().getOrtsteilService().getAll().stream()
 						.collect(Collectors.toMap(o -> o.id, o -> o));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Ortsteile", e);
 			}
 		}
 		return ortsteileById;
-	}
-
-	private static OrtsteilService createOrtsteilService() {
-		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-		final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
-		return KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory).getOrtsteilService();
 	}
 
 	/**
@@ -199,7 +182,7 @@ public class ReportingRepositoryKataloge {
 		if (katalogReligionen == null) {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Katalog Religionen.");
-				katalogReligionen = new DataReligionen(this.reportingContext.conn()).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+				katalogReligionen = getKatalogServiceFactory().getReligionService().getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Religionen", e);
 			}
@@ -448,5 +431,12 @@ public class ReportingRepositoryKataloge {
 	private static ApiOperationException fehlerKatalogdatenLaden(final String datentyp, final Exception fehlerursache) {
 		return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlerursache,
 				"FEHLER: Katalogdaten vom Typ '%s' konnte nicht aus der Datenbank ermittelt werden.".formatted(datentyp));
+	}
+
+	private static KatalogServiceFactory getKatalogServiceFactory() {
+		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
+		final var eigeneSchuleRepoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepoFactory);
+		return KatalogServiceFactory.getNewInstance(katalogRepoFactory, eigeneSchuleServiceFactory);
 	}
 }

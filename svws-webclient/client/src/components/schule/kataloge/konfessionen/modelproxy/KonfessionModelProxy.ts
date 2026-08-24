@@ -5,31 +5,27 @@ import { ValidatorKonfessionBezeichnung } from "~/components/schule/kataloge/kon
 import { computed } from "vue";
 
 export class KonfessionModelProxy extends ModelProxy<ReligionEintrag> {
-	private readonly schuljahr: number;
 
 	/**
 	 * Modelproxy für Konfession
 	 *
 	 * @param data Lambda für den Zugriff auf Original-Daten
 	 * @param alleKonfessionen Lambda zur Liste aller Konfessionen
-	 * @param schuljahr das Schuljahr
 	 * @param patch Methode zum Patchen einzelner Attribute
 	 */
 	constructor(
 		data: () => ReligionEintrag,
 		alleKonfessionen: () => Iterable<ReligionEintrag>,
-		schuljahr: number,
 		patch?: (data: Partial<ReligionEintrag>) => Promise<boolean>
 	) {
-		const listOfAutopatchProps: Iterable<keyof ReligionEintrag> = ["kuerzel", "istSichtbar"];
+		const listOfAutopatchProps: Iterable<keyof ReligionEintrag> = ["idReligion", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps });
-		this.schuljahr = schuljahr;
 		this.addValidatoren(alleKonfessionen);
 		this.validate();
 	}
 
 	private addValidatoren(liste: () => Iterable<ReligionEintrag>) {
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzel), "kuerzel");
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idReligion), "idReligion");
 		this.addBlockingValidator(new ValidatorKonfessionBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungZeugnis, null, 50), "bezeichnungZeugnis");
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnungZeugnis, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bezeichnungZeugnis");
@@ -38,8 +34,8 @@ export class KonfessionModelProxy extends ModelProxy<ReligionEintrag> {
 	}
 
 	selectedKonfession = computed<CoreTypeData | null>({
-		get: () => Religion.data().getEintragBySchuljahrUndSchluessel(this.schuljahr, this.proxy.kuerzel ?? ""),
-		set: (value: CoreTypeData | null) => this.proxy.kuerzel = value?.schluessel ?? null,
+		get: () => Religion.data().getEintragByID(this.proxy.idReligion ?? -1),
+		set: (value: CoreTypeData | null) => this.proxy.idReligion = value?.id ?? null,
 	});
 
 }

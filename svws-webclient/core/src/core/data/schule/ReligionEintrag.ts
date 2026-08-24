@@ -16,22 +16,22 @@ export class ReligionEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint.
 	 */
-	public bezeichnungZeugnis: string | null = "";
+	public bezeichnungZeugnis: string | null = null;
 
 	/**
-	 * Das Kürzel des Eintrages für die Statistik.
+	 * Die ID des Eintrages für die Statistik.
 	 */
-	public kuerzel: string | null = "";
+	public idReligion: number | null = null;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 1;
+	public sortierung: number = 0;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
 	 * Gibt an, ob die Religion in anderen Datenbanktabellen referenziert ist oder nicht.
@@ -39,9 +39,6 @@ export class ReligionEintrag extends JavaObject {
 	public referenziertInAnderenTabellen: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -66,7 +63,7 @@ export class ReligionEintrag extends JavaObject {
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		result.bezeichnungZeugnis = (obj.bezeichnungZeugnis === undefined) ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
-		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.idReligion = (obj.idReligion === undefined) ? null : obj.idReligion === null ? null : obj.idReligion;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -84,7 +81,7 @@ export class ReligionEintrag extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
-		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"idReligion" : ' + ((obj.idReligion === null) ? 'null' : obj.idReligion.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -104,8 +101,8 @@ export class ReligionEintrag extends JavaObject {
 		if (obj.bezeichnungZeugnis !== undefined) {
 			result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
 		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		if (obj.idReligion !== undefined) {
+			result += '"idReligion" : ' + ((obj.idReligion === null) ? 'null' : obj.idReligion.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

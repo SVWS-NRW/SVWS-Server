@@ -10,7 +10,6 @@
 								ID: {{ manager().auswahl().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ manager().auswahl().kuerzel }}</span>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Konfession...</h2>
@@ -46,7 +45,7 @@
 		if (auswahl.size() > 5) {
 			return `${auswahl.size()} Konfessionen ausgewählt`;
 		}
-		return [...auswahl].map(k => k.kuerzel).join(', ');
+		return [...auswahl].map(k => k.bezeichnung).join(', ');
 	});
 
 </script>

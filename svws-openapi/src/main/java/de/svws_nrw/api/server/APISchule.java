@@ -20,6 +20,7 @@ import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
+import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.controller.schule.logoverwaltung.LogoverwaltungControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
@@ -87,7 +88,6 @@ import de.svws_nrw.data.schule.DataKatalogSchultraeger;
 import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
 import de.svws_nrw.data.schule.DataLeitungsfunktionen;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -95,6 +95,8 @@ import de.svws_nrw.data.schule.DataSchulleitung;
 import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataVermerkarten;
+import de.svws_nrw.service.schule.katalog.religion.ReligionCreateRequest;
+import de.svws_nrw.service.schule.katalog.religion.ReligionPatchRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoCreateRequest;
 import de.svws_nrw.service.schule.logoverwaltung.LogoPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -622,114 +624,132 @@ public class APISchule {
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Religion.
 	 *
-	 * @param schema       das Datenbankschema, in welchem die Religion erstellt wird
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 * @param is           das JSON-Objekt
-	 * @return die HTTP-Antwort mit der neuen Religion
+	 * @param schema  das Datenbankschema, in welchem die Religion erstellt wird
+	 * @param dto     das Create-Objekt
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Religion
 	 */
 	@POST
 	@Path("/religionen/create")
-	@Operation(summary = "Erstellt eine neue Religion und gibt sie zurück.",
-			description = "Erstellt eine neue Religion und gibt sie zurück."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.")
-	@ApiResponse(responseCode = "201", description = "Religion wurde erfolgreich angelegt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class)))
+	@Operation(summary = "Erstellt eine neue Religion und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Religion, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "201", description = "Die Religion wurde erfolgreich angelegt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ReligionEintrag.class)))
+	@ApiResponse(responseCode = "400", description = "Die übergebenen Daten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Religion anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Keine Religion  mit dem eingegebenen Kuerzel gefunden")
-	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler, z. B. beim Datenbankzugriff.")
+	public Response addReligion(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Religion.", required = true,
+					content = @Content(
+							mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ReligionEintrag.class))) final ReligionCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getReligionController()
+				.create(dto);
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Patchen einer Betriebsart im angegebenen Schema
+	 * Die OpenAPI-Methode für das Patchen einer Religion.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Religion
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id      die ID zur Identifikation der Religion
+	 * @param patch   das Patchobjekt
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return das Ergebnis der Patch-Operation
+	 * @return die HTTP-Antwort mit der aktualisierten Religion
 	 */
 	@PATCH
 	@Path("/religionen/{id : \\d+}")
-	@Operation(summary = "Passt die zu der ID der Religion zugehörigen Stammdaten an.",
-			description = "Passt die Religion-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Religion besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Religion-Daten integriert.")
+	@Operation(summary = "Passt die Religion mit der angegebenen ID an.",
+			description = "Passt die Religion mit der angegebenen ID an, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Die Religion wurde erfolgreich aktualisiert.",
+			content = @Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ReligionEintrag.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Religion-Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Religion-Stammdaten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Religionen zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler, z. B. beim Datenbankzugriff.")
+	public Response patchReligion(
+			@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Der Patch der Religion.", required = true,
+					content = @Content(
+							mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = ReligionEintrag.class))) final ReligionPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getReligionController()
+				.patch(id, patch);
 	}
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Religionen bzw. Konfessionen.
+	 * Die OpenAPI-Methode für die Abfrage der Religionen im angegebenen Schema.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return          die Liste mit dem Katalog der Religionen bzw. Konfessionen
+	 * @return die Liste der Religionen
 	 */
 	@GET
 	@Path("/religionen")
 	@Operation(summary = "Gibt eine Übersicht aller Religionen bzw. Konfessionen im Katalog zurück.",
-			description =
-					"Erstellt eine Liste aller in dem Katalog vorhanden Religionen bzw. Konfessionen unter Angabe der ID, der Bezeichnung sowie der Bezeichnung, "
-							+ "welche auf dem Zeugnis erscheint, einem Statistik-Kürzel, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar "
-							+ "sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
+			description = "Erstellt eine Liste aller im Katalog vorhandenen Religionen bzw. Konfessionen "
+					+ "unter Angabe der ID, der Bezeichnung, der Zeugnisbezeichnung, des Statistik-Kürzels, "
+					+ "der Sortierreihenfolge sowie der Sichtbarkeit und Änderbarkeit. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Religion-Katalog-Einträgen", content = @Content(
+			mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = ReligionEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getAllAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+	@ApiResponse(responseCode = "404", description = "Keine Religion-Katalog-Einträge gefunden")
+	public Response getReligionen(
+			@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getReligionController()
+				.getAll();
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen mehrerer Religion-Katalog-Einträge der Schule.
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Religionen.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Religion-Katalog-Einträge
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema
+	 * @param ids     die IDs der zu löschenden Religionen
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Religion-Katalog-Einträgen
+	 * @return die HTTP-Antwort mit dem Status der Löschoperationen
 	 */
 	@DELETE
 	@Path("/religionen/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Religion-Katalog-Einträge der Schule.",
-			description = "Entfernt mehrere Religion-Katalog-Einträge der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Religion-Katalog-Einträge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteReligionen(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Religion-Katalog-Einträge", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+	@Operation(summary = "Entfernt mehrere Religionen.", description = "Entfernt mehrere Religionen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Löschoperationen wurden ausgeführt.",
+			content = @Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(
+							schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Religionen zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Religionen nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler, z. B. beim Datenbankzugriff.")
+	public Response deleteReligionen(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Religionen.", required = true,
+					content = @Content(
+							mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getReligionController()
+				.delete(ids);
 	}
 
 

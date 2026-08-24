@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
 import de.svws_nrw.service.schueler.foto.SchuelerFoto;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoServiceFactory;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +26,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -377,7 +377,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	private void checkReligionExists(final Long religionID) {
-		final DTOKonfession religionDto = this.conn.queryByKey(DTOKonfession.class, religionID);
+		final DTOReligion religionDto = this.conn.queryByKey(DTOReligion.class, religionID);
 		if (religionDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Konfession zur ID %d gefunden.".formatted(religionID));
 		}

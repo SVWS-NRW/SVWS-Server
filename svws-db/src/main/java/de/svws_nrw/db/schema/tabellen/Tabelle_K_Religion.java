@@ -14,41 +14,49 @@ public class Tabelle_K_Religion extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID der Religion");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
+			.setJavaName("bezeichnung")
 			.setNotNull()
 			.setJavaComment("Bezeichnung der Religion");
 
 	/** Die Definition der Tabellenspalte StatistikKrz */
 	public final SchemaTabelleSpalte col_StatistikKrz = add("StatistikKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
+			.setJavaName("schluesselReligion")
 			.setJavaComment("Statistikkürzel der Religion");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setDefault("32000")
 			.setJavaComment("Sortierung der Religion");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istSichtbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichbarkeit der Religion");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istAenderbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Änderbarkeit der Religion");
 
 	/** Die Definition der Tabellenspalte ExportBez */
 	public final SchemaTabelleSpalte col_ExportBez = add("ExportBez", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
+			.setJavaName("bezeichnungExport")
 			.setJavaComment("Exportbezeichnung der Religion");
 
 	/** Die Definition der Tabellenspalte ZeugnisBezeichnung */
 	public final SchemaTabelleSpalte col_ZeugnisBezeichnung = add("ZeugnisBezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
+			.setJavaName("bezeichnungZeugnis")
 			.setJavaComment("Zeugnisbezeichnung der Religion");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -73,7 +81,7 @@ public class Tabelle_K_Religion extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOKonfession");
+		setJavaClassName("DTOReligion");
 		setJavaComment("Liste der verwendeten Konfessionen mit interner Bezeichnung und ASD-Kürzel (IT.NRW)");
 	}
 

@@ -58,7 +58,7 @@ export class RouteDataKonfessionen extends RouteDataAuswahl<KonfessionenListeMan
 	};
 
 	protected deleteMessage(id: number, konfession: ReligionEintrag | null): string {
-		return `Konfession ${konfession?.kuerzel} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
+		return `Konfession ${konfession?.bezeichnung} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
 	public deleteCheck = (): { success: boolean, logs: Iterable<string> } => {

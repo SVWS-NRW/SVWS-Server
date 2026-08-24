@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.statistik.ReligionStatistikGesamt;
 import de.svws_nrw.asd.types.schule.Religion;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
 import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.service.schule.SchuljahresabschnittService;
@@ -39,10 +39,10 @@ public final class ReligionStatistikService {
 	}
 
 
-	private static ReligionStatistikGesamt map(final DTOKonfession dto, final int schuljahr) {
+	private static ReligionStatistikGesamt map(final DTOReligion dto, final int schuljahr) {
 		final var daten = new ReligionStatistikGesamt();
-		daten.id = dto.ID;
-		final var eintrag = Religion.data().getIDByWertAndSchuljahr(Religion.data().getWertBySchluessel(dto.StatistikKrz), schuljahr);
+		daten.id = dto.id;
+		final var eintrag = Religion.data().getIDByWertAndSchuljahr(Religion.data().getWertBySchluessel(dto.schluesselReligion), schuljahr);
 		daten.idKatalog = (eintrag == null) ? Religion.OH.daten(schuljahr).id : eintrag;
 		return daten;
 	}

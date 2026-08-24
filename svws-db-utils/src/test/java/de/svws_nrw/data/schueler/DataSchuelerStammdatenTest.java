@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
 import de.svws_nrw.service.schueler.foto.SchuelerFoto;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoServiceFactory;
@@ -47,7 +48,6 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -427,12 +427,12 @@ class DataSchuelerStammdatenTest {
 	}
 
 	void mapAttributeStubbings(final String attributeName, final Object expectedValue) {
-		final DTOKonfession konfessionDto = new DTOKonfession(123L, "TestKonfession");
+		final DTOReligion konfessionDto = new DTOReligion(123L, "TestKonfession");
 		final DTOFahrschuelerart fahrschuelerartDto = new DTOFahrschuelerart(22L, "TestFahrschuelerArt");
 		final DTOHaltestellen haltestelleDto = new DTOHaltestellen(33L, "TestHaltestelle");
 
 		if (attributeName.equals("religionID") && Long.valueOf(123L).equals(expectedValue)) {
-			when(this.conn.queryByKey(DTOKonfession.class, 123L)).thenReturn(konfessionDto);
+			when(this.conn.queryByKey(DTOReligion.class, 123L)).thenReturn(konfessionDto);
 		} else if (attributeName.equals("status") && (expectedValue != null)) {
 			final Benutzer benutzer = mock(Benutzer.class);
 			final Schuljahresabschnitt schuljahresabschnitt = new Schuljahresabschnitt();

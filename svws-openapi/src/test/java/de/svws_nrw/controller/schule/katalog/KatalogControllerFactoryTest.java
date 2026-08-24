@@ -4,6 +4,7 @@ import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
 import de.svws_nrw.controller.schule.katalog.ort.OrtController;
 import de.svws_nrw.controller.schule.katalog.ortsteil.OrtsteilController;
+import de.svws_nrw.controller.schule.katalog.religion.ReligionController;
 import de.svws_nrw.controller.schule.katalog.teilleistungsart.TeilleistungsartController;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -164,6 +165,16 @@ class KatalogControllerFactoryTest {
 		final OrtsteilController controller = KatalogControllerFactory
 				.withReadAccessStable(request)
 				.getOrtsteilController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getReligionController | gibt einen Controller zurück")
+	void getReligionController() {
+		final ReligionController controller = KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getReligionController();
 
 		assertNotNull(controller);
 	}
