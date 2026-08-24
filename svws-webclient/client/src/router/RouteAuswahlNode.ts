@@ -1,13 +1,12 @@
-import { type BenutzerKompetenz, DeveloperNotificationException, type Schulform, type ServerMode } from "@core";
+import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import { type BenutzerKompetenz, DeveloperNotificationException, type Schulform } from "@core";
+import type { AuswahlManager } from "@ui";
+import { ConfigElement, ViewType } from "@ui";
 import type { RouteDataAuswahl, RouteStateAuswahlInterface } from "./RouteDataAuswahl";
 import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
 import { RouteTabNode } from "./RouteTabNode";
-import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { AuswahlManager } from "@ui";
-import { ViewType } from "@ui";
 import { routeError } from "./error/RouteError";
-import { ConfigElement } from "../../../ui/src/utils/Config";
 import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 
@@ -37,12 +36,23 @@ export interface RouteAuswahlProps<TAuswahlManager extends AuswahlManager<number
 	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 
-
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für das Routing innerhalb des
  * SVWS-Clients, welche eine Navigation über einen Tab-Manager bieten und mithilfe eines Auswahllisten-Managers
  * zur Verfügung stellen.
- */
+ *
+ * Abstrakte Basisklasse für Routing-Knoten mit kombinierter Auswahllisten- und Tab-Navigation.
+ * Sie erweitert {@link RouteTabNode} um die Verwaltung eines {@link AuswahlManager}-basierten
+ * Listenbereichs (linke Spalte),der mit dem Tab-gesteuerten Applikationsbereich (rechte Spalte) zusammenarbeitet.
+ *
+ * @abstract
+ * @typeParam TAuswahlManager - konkreter {@link AuswahlManager}-Typ für die Auswahlliste
+ * @typeParam TRouteData      - konkreter {@link RouteDataAuswahl}-Typ mit dem zugehörigen State
+ * @typeParam TRouteParent    - Typ des übergeordneten Routing-Knotens
+ * @typeParam TAuswahl        - Typ eines einzelnen Listeneintrags
+ * @typeParam TDaten          - Typ der Detaildaten des gewählten Eintrags
+ *
+  */
 export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TRouteData extends RouteDataAuswahl<TAuswahlManager, RouteStateAuswahlInterface<TAuswahlManager>>, TRouteParent extends RouteNode<any, any>, TAuswahl = any, TDaten = any>
 	extends RouteTabNode<TRouteData, TRouteParent> {
 
@@ -72,8 +82,16 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 * @param data          die dem Knoten zugeordneten Daten
 	 * @param idParam       der Routingparameter für die ID
 	 */
-	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent,
-		componentList: RouteComponent, data: TRouteData, idParam: string = "id") {
+	public constructor(
+		schulformen: Iterable<Schulform>,
+		kompetenzen: Iterable<BenutzerKompetenz>,
+		name: string,
+		path: string,
+		component: RouteComponent,
+		componentList: RouteComponent,
+		data: TRouteData,
+		idParam: string = "id") {
+
 		super(schulformen, kompetenzen, name, path, component, data);
 		this._idParam = idParam;
 		super.setView("liste", componentList, (_route) => this._getAuswahlListProps({

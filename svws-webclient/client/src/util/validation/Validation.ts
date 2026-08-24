@@ -45,7 +45,7 @@ export function optionalInputIsValid(input: string | null, maxLength: number): b
  * ausgeschlossen werden, z. B. wenn ein bestehender Datensatz beim Bearbeiten
  * seinen eigenen Wert behalten darf.
  *
- * @template T            Typ der Listenelemente
+ * @typeParam T            Typ der Listenelemente
  *
  * @param value           Zu prüfender Wert (z. B. Eingabe des Benutzers)
  * @param list            Sammlung von Objekten, in denen der Wert eindeutig sein soll

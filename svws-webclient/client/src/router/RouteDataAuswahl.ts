@@ -1,11 +1,11 @@
+import type { RouteParamsRawGeneric } from "vue-router";
 import type { JavaMap, List, SimpleOperationResponse } from "@core";
 import { ArrayList, DeveloperNotificationException, HashMap } from "@core";
-import { RouteData, type RouteStateInterface } from "./RouteData";
-import type { RouteParamsRawGeneric } from "vue-router";
-import { RouteManager } from "./RouteManager";
-import { RoutingStatus } from "./RoutingStatus";
 import { ViewType } from "@ui";
 import type { AuswahlManager } from "@ui";
+import { RouteData, type RouteStateInterface } from "./RouteData";
+import { RouteManager } from "./RouteManager";
+import { RoutingStatus } from "./RoutingStatus";
 import type { RouteNode } from "./RouteNode";
 import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 
@@ -17,15 +17,21 @@ export interface RouteStateAuswahlInterface<TAuswahlManager extends AuswahlManag
 	manager: TAuswahlManager | undefined;
 }
 
-
 /**
- * Eine abstrakte Klasse für allgemeine Methoden beim Zugriff auf die Daten, welche einer Route
- * zugeordnet sind. Hier auch mit Methoden für die Handhabung von Auswahl-Managern einer Auswahlliste.
- * Erweitert die allgemeine Klasse RouteData.
+ * Abstrakte Basisklasse für den Datenzugriff von Routen mit einer Auswahlliste.
+ *
+ * Erweitert {@link RouteData} um die Verwaltung eines {@link AuswahlManager}-basierten Listenbereichs:
+ * Laden, Filtern, Auswählen, Patchen und Löschen von Einträgen sowie die Navigation zwischen den verschiedenen
+ * Ansichtstypen ({@link ViewType}).
+ *
+ * @abstract
+ * @typeParam TAuswahlManager - Konkreter {@link AuswahlManager}-Typ
+ * @typeParam RouteState      - Konkreter State-Typ, der {@link RouteStateAuswahlInterface} erfüllt
+ * @typeParam TAuswahl        - Typ eines einzelnen Listeneintrags
+ * @typeParam TDaten          - Typ der Detaildaten des gewählten Eintrags
  */
 export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, RouteState extends RouteStateAuswahlInterface<TAuswahlManager>, TAuswahl = any, TDaten = any>
 	extends RouteData<RouteState> {
-
 
 	/** Die Route für Gruppenprozesse */
 	private readonly _routeGruppenprozesse: RouteNode<any, any> | undefined;
@@ -40,13 +46,11 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
-	 * Optional können noch gültige Sichten/Child Routes übergeben werden, sofern diese
-	 * hier genutzt werden.
+	 * Optional können die Routen für Gruppenprozesse, Hinzufügen und Schnelleingabe
+	 * übergeben werden, sofern die jeweilige Ansicht genutzt wird.
 	 *
-	 * @param defaultState   der Default-State
-	 * @param routeGruppenprozesse Route für Gruppenprozesse
-	 * @param routeHinzufuegen Route für Hinzufügen
-	 * @param _routeSchnelleingabe Route für Schnelleingabe
+	 * @param defaultState   der initiale Default-State der Route
+	 * @param routes         die optionalen Routen für die unterstützten Ansichten
 	 */
 	protected constructor(defaultState: RouteState, routes: { gruppenprozesse?: RouteNode<any, any>, hinzufuegen?: RouteNode<any, any>, schnelleingabe?: RouteNode<any, any> }) {
 		super(defaultState);
@@ -108,7 +112,8 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 
 	/**
-	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
+	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und triggert
+	 * damit das Laden der Daten für diesen Abschnitt
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 * @param isEntering Gibt an, ob die zugehörige Route initial betreten wird

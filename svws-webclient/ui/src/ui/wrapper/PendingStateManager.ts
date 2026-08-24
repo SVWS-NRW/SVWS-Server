@@ -8,7 +8,7 @@ import { computed } from 'vue';
 
 /**
  * Schnittstelle, die den Zustand der ausstehenden Patches darstellt.
- * @template T - Der Typ der zu patchenden Werte.
+ * @typeParam T - Der Typ der zu patchenden Werte.
  */
 interface PendingState<T> {
 	pendingValues: Partial<T>;
@@ -17,7 +17,7 @@ interface PendingState<T> {
 
 /**
  * Klasse zur Verwaltung des Zustands ausstehender Patches.
- * @template T - Der Typ der zu patchenden Werte.
+ * @typeParam T - Der Typ der zu patchenden Werte.
  * @extends StateManager<PendingStateManager<T>>
  */
 export class PendingStateManager<T> extends StateManager<PendingState<T>> {

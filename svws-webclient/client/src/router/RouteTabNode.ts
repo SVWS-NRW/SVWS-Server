@@ -1,8 +1,8 @@
+import type { RouteComponent, RouteLocationRaw, RouteParams } from "vue-router";
 import { DeveloperNotificationException, type BenutzerKompetenz, type Schulform } from "@core";
+import type { TabData, TabManager, ViewType } from "@ui";
 import type { RouteData } from "./RouteData";
 import { RouteNode } from "./RouteNode";
-import type { RouteComponent, RouteLocationRaw, RouteParams } from "vue-router";
-import type { TabData, TabManager, ViewType } from "@ui";
 import { RouteManager } from "./RouteManager";
 
 
@@ -17,8 +17,15 @@ export interface RouteTabProps {
 
 
 /**
- * Diese abstrakte Klasse ist die Basisklasse aller Knoten für das Routing innerhalb des
- * SVWS-Clients, welche eine Navigation über einen Tab-Manager bieten.
+ * Abstrakte Basisklasse für alle Routing-Knoten im SVWS-Client, die eine Tab-basierte Navigation
+ * über einen {@link TabManager} anbieten.
+ *
+ * `RouteTabNode` erweitert {@link RouteNode} um die Fähigkeit, mehrere Unter-Ansichten
+ * (Child-Routen) über einen Tab-Manager zu verwalten.
+ *
+ * @abstract
+ * @typeParam TRouteData    - Der konkrete Typ der zugeordneten {@link RouteData}-Instanz.
+ * @typeParam TRouteParent  - Der Typ des übergeordneten Routing-Knotens.
  */
 export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRouteParent extends RouteNode<any, any>> extends RouteNode<TRouteData, TRouteParent> {
 
@@ -32,7 +39,14 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
 	 * @param data          die dem Knoten zugeordneten Daten
 	 */
-	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component?: RouteComponent, data?: TRouteData) {
+	public constructor(
+		schulformen: Iterable<Schulform>,
+		kompetenzen: Iterable<BenutzerKompetenz>,
+		name: string,
+		path: string,
+		component?: RouteComponent,
+		data?: TRouteData) {
+
 		super(schulformen, kompetenzen, name, path, component, data);
 		super.propHandler = (route) => this.getProps({
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
@@ -55,7 +69,13 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	 *
 	 * @returns ggf. die Route für ein redirect oder ein Fehler
 	 */
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+	protected async update(
+		to: RouteNode<any, any>,
+		to_params: RouteParams,
+		from: RouteNode<any, any> | undefined,
+		from_params: RouteParams,
+		isEntering: boolean,
+		redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name) {
 			return this.getRouteDefaultChild();
 		}

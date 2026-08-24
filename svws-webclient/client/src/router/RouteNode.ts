@@ -1,19 +1,30 @@
+import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 import type { ComputedRef, Ref } from "vue";
 import { computed, defineComponent, ref } from "vue";
-import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 import type { Schulform } from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 import type { TabData } from "@ui";
 import { TabManager, Checkpoint, ViewType } from "@ui";
 import type { RouteData } from "./RouteData";
+import { RouteManager } from "./RouteManager";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
-import { RouteManager } from "./RouteManager";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 /**
- * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
- * das Routing innerhalb des SVWS-Clients.
+ * Abstrakte Basisklasse für jeden Routing-Knoten im SVWS-Client.
+ *
+ * Die Routen-Knoten bilden einen Baum, der die verschachtelte Routenstruktur (Nested Routing)
+ * abbildet. Jeder Knoten kapselt sein `RouteRecordRaw`-Objekt für Vue Router und trägt die gesamte
+ * Routing-Logik für seinen Bereich.
+ *
+ * ### Konventionen
+ * Konkrete Knoten werden als Singleton exportiert (`export const routeXxx = new RouteXxx()`)
+ * und dürfen keine Navigation über `useRouter().push()` auslösen.
+ * Navigationen erfolgen ausschließlich über {@link RouteManager.doRoute}.
+ *
+ * @typeParam TRouteData – Typ der dem Knoten zugeordneten Daten (implementiert {@link RouteData})
+ * @typeParam TRouteParent – Typ des Eltern-Knotens; bei Top-Level-Knoten `RouteNode<any, any>`
  */
 export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent extends RouteNode<any, any>> {
 
@@ -82,7 +93,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
 	 * @param data          die dem Knoten zugeordneten Daten
 	 */
-	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component?: RouteComponent, data?: TRouteData) {
+	public constructor(
+		schulformen: Iterable<Schulform>,
+		kompetenzen: Iterable<BenutzerKompetenz>,
+		name: string,
+		path: string,
+		component?: RouteComponent,
+		data?: TRouteData
+	) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
 			name: name,
@@ -323,7 +341,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Die Methode prüft ob diese RouteNode mindestens eine der übergebenen ViewTypes als Typ hinterlegt hat.
+	 * Die Methode prüft, ob diese RouteNode mindestens eine der übergebenen ViewTypes als Typ hinterlegt hat.
 	 *
 	 * @param viewTypes Array der zu prüfenden ViewTypes
 	 *
@@ -334,7 +352,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Die Methode prüft ob diese RouteNode den übergebenen ViewType als Typ hinterlegt hat.
+	 * Die Methode prüft, ob diese RouteNode den übergebenen ViewType als Typ hinterlegt hat.
 	 *
 	 * @param viewType der zu prüfende ViewType
 	 *
@@ -434,25 +452,30 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Gibt ein passend zu dem getter children ein Array zurück,
-	 * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
-	 * nicht.
+	 * Gibt ein passend zu dem getter children ein Array zurück, welches angibt,
+	 * ob die einzelnen Kind-Knoten versteckt sind oder nicht.
 	 *
-	 * @returns ein Array mit der
+	 * @returns ein Array mit booleschen Werten, das angibt, ob der jeweilige Kind-Knoten versteckt ist
 	 */
 	public children_hidden(): ComputedRef<boolean[]> {
 		return computed(() => this.children.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false));
 	}
 
 	/**
-	 * TODO
+	 * Gibt den aktuell ausgewählten Kind-Knoten zurück.
+	 * Dieser wird automatisch gesetzt, wenn ein Kind-Knoten betreten wird.
+	 *
+	 * @returns der ausgewählte Kind-Knoten oder undefined, wenn kein Kind ausgewählt ist
 	 */
 	public get selectedChild(): RouteNode<any, any> | undefined {
 		return this._selectedChild.value;
 	}
 
 	/**
-	 * TODO
+	 * Setzt den ausgewählten Kind-Knoten anhand des übergebenen RouteRecordRaw-Objekts.
+	 * Ist der Name des Records undefined, wird die Auswahl aufgehoben.
+	 *
+	 * @param record   das RouteRecordRaw-Objekt des auszuwählenden Kind-Knotens
 	 */
 	public set selectedChildRecord(record: RouteRecordRaw | undefined) {
 		this._selectedChild.value = (record?.name === undefined)
@@ -460,32 +483,39 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * TODO
+	 * Gibt das RouteRecordRaw-Objekt des aktuell ausgewählten Kind-Knotens zurück.
+	 *
+	 * @returns das RouteRecordRaw-Objekt oder undefined, wenn kein Kind ausgewählt ist
 	 */
 	public get selectedChildRecord(): RouteRecordRaw | undefined {
 		return this._selectedChild.value?.record;
 	}
 
 	/**
-	 * TODO
+	 * Setzt den Kind-Knoten, der als Standard ausgewählt werden soll,
+	 * wenn keine explizite Auswahl vorliegt.
+	 *
+	 * @param node   der Standard-Kind-Knoten oder undefined
 	 */
 	public set defaultChild(node: RouteNode<any, any> | undefined) {
 		this._defaultChild = node;
 	}
 
 	/**
-	 * TODO
+	 * Gibt den Kind-Knoten zurück, der als Standard ausgewählt wird,
+	 * wenn keine explizite Auswahl vorliegt.
+	 *
+	 * @returns der Standard-Kind-Knoten oder undefined
 	 */
 	public get defaultChild(): RouteNode<any, any> | undefined {
 		return this._defaultChild;
 	}
 
 	/**
-	 * Gibt ein passend zu dem getter menu ein Array zurück,
-	 * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
-	 * nicht.
+	 * Gibt ein passend zu dem getter menu ein Array zurück, welches angibt,
+	 * ob die einzelnen Kind-Knoten versteckt sind oder nicht.
 	 *
-	 * @returns ein Array mit der
+	 * @returns ein Array mit booleschen Werten, das angibt, ob der jeweilige Kind-Knoten versteckt ist
 	 */
 	public menu_hidden(): ComputedRef<boolean[]> {
 		return computed(() => this.menu.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false));
@@ -500,7 +530,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname       der Name des ausgewählten Tabs
 	 * @param setTab        die Callback-Methode
 	 */
-	public createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname: string, setTab: (value: TabData) => Promise<void>, type: ViewType = ViewType.DEFAULT) {
+	public createTabManager(
+		nodes: RouteNode<any, any>[],
+		nodesHidden: boolean[],
+		tabname: string,
+		setTab: (value: TabData) => Promise<void>, type: ViewType = ViewType.DEFAULT
+	) {
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const node of nodes) {
@@ -548,7 +583,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Prüft, ob das übergeben Tab sichtbar ist oder nicht. Diese Methode kann von Route-Nodes
+	 * Prüft, ob das übergebene Tab sichtbar ist oder nicht. Diese Methode kann von Route-Nodes
 	 * überschrieben werden, um bedingte Sichtbarkeit der Child-Routes zu steuern.
 	 *
 	 * @param tab   der zu prüfende Tab
@@ -562,8 +597,6 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/**
 	 * Prüft, ob die Schulform des angemeldeten Benutzers für die Route
 	 * erlaubt ist oder nicht.
-	 *
-	 * @param schulform   die zu prüfende Schulform
 	 *
 	 * @returns true, falls die Schulform erlaubt ist und ansonsten false
 	 */
@@ -591,7 +624,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Setzt der Property-Handler für die Default-View
+	 * Setzt den Property-Handler für die Default-View.
+	 *
+	 * @param handler  der Handler, der die Props für die Default-View aus der aktuellen Route ableitet
 	 */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>).default = handler;
@@ -633,12 +668,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Setzt die Informationen zu der (weiteren?) Router-View mit dem Namen "name". Ist eine
-	 * View mit dem Namen bereits definiert, so wird diese ersetzt.
+	 * Registriert eine benannte Router-View für diesen Knoten. Ist eine View mit dem
+	 * angegebenen Namen bereits vorhanden, wird sie ersetzt.
 	 *
-	 * @param name   der name der zweiten Router-View
-	 * @param component   die vue-Komponente für die Darstellung
-	 * @param prop_handler   der Property-Handler zum Erstellen der Properties für die Komponente
+	 * @param name          der Name der Router-View
+	 * @param component     die Vue-Komponente für die Darstellung
+	 * @param prop_handler  der Property-Handler zum Erstellen der Props für die Komponente
 	 */
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		if ((this._record.components === undefined) || (this._record.props === undefined)) {
@@ -680,38 +715,58 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/**
 	 * Hook die ausgeführt wird, nach dem ein aktiver Checkpoint betreten wurde.
 	 *
-	 * @param destination Ziel Route zu der ursprünglich navigiert werden sollte.
+	 * @param destination Zielroute zu der ursprünglich navigiert werden sollte.
 	 */
 	public async doCheckpoint(destination: RouteLocationRaw): Promise<void> {
 		return this._checkpoint?.doCheckpoint(destination);
 	}
 
 	/**
-	 * TODO see RouterManager - global hook
+	 * Hook, der im globalen beforeEach-Guard des {@link RouteManager} aufgerufen wird,
+	 * bevor eine Navigation zu dieser Route durchgeführt wird.
+	 * Kann in konkreten Knoten überschrieben werden, um die Navigation zu prüfen
+	 * oder umzuleiten.
 	 *
-	 * @param to    die Ziel-Route
-	 * @param to_params die Parameter der Ziel-Route
-	 * @param from   die Quell-Route
+	 * @param to          die Ziel-Route
+	 * @param to_params   die Parameter der Ziel-Route
+	 * @param from        die Quell-Route
 	 * @param from_params die Parameter der Quell-Route
+	 *
+	 * @returns true bei Erfolg, false zum Abbrechen oder eine Redirect-Route
 	 */
-	protected async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
+	protected async beforeEach(
+		to: RouteNode<any, any>,
+		to_params: RouteParams,
+		from: RouteNode<any, any> | undefined,
+		from_params: RouteParams
+	): Promise<boolean | void | Error | RouteLocationRaw> {
 		return true;
 	}
 
 	/**
-	 * TODO see RouterManager - global hook
+	 * Öffentlicher Einstiegspunkt für den beforeEach-Hook des {@link RouteManager}.
+	 * Delegiert an {@link beforeEach} und fängt Fehler ab, die zu einer Weiterleitung
+	 * auf die Fehlerroute führen.
 	 *
-	 * @param to    die Ziel-Route
-	 * @param to_params die Parameter der Ziel-Route
-	 * @param from   die Quell-Route
+	 * @param to          die Ziel-Route
+	 * @param to_params   die Parameter der Ziel-Route
+	 * @param from        die Quell-Route
 	 * @param from_params die Parameter der Quell-Route
+	 *
+	 * @returns true bei Erfolg, false zum Abbrechen oder eine Redirect-Route
 	 */
-	public async doBeforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
+	public async doBeforeEach(
+		to: RouteNode<any, any>,
+		to_params: RouteParams,
+		from: RouteNode<any, any> | undefined,
+		from_params: RouteParams
+	): Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
 			RouteManager.instance.errorcode = undefined;
-			RouteManager.instance.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
+			RouteManager.instance.error = e instanceof Error ?
+				e : new DeveloperNotificationException("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
 			return { name: "error" };
 		}
 	}
@@ -790,18 +845,25 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
 	 * wenn die Informationen einer Route aktualisiert werden sollen.
 	 * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
-	 * mal betreten wird oder einfach nur angepasst wird
+	 * Mal betreten wird oder einfach nur angepasst wird
 	 *
 	 * @param to            die neue Route
 	 * @param to_params     die Routen-Parameter
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
-	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param isEntering    gibt an, ob die Route das erste Mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
 	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
 	 *
 	 * @returns ggf. die Route für ein redirect oder ein Fehler
 	 */
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+	protected async update(
+		to: RouteNode<any, any>,
+		to_params: RouteParams,
+		from: RouteNode<any, any> | undefined,
+		from_params: RouteParams,
+		isEntering: boolean,
+		redirected: RouteNode<any, any> | undefined
+	): Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -820,16 +882,25 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
 	 * wenn die Informationen einer Route aktualisiert werden sollen.
 	 * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste
-	 * mal betreten wird oder einfach nur angepasst wird
+	 * Mal betreten wird oder einfach nur angepasst wird
 	 *
 	 * @param to            die neue Route
 	 * @param to_params     die Routen-Parameter
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
-	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param isEntering    gibt an, ob die Route das erste Mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
 	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
+	 *
+	 * @returns ggf. eine Redirect-Route oder einen Fehler, andernfalls void
 	 */
-	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(
+		to: RouteNode<any, any>,
+		to_params: RouteParams,
+		from: RouteNode<any, any> | undefined,
+		from_params: RouteParams,
+		isEntering: boolean,
+		redirected: RouteNode<any, any> | undefined
+	): Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -848,27 +919,38 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-	 * bevor eine Route verlassen wird.
+	 * Hook, der im globalen beforeEach-Guard aufgerufen wird, bevor diese Route verlassen wird.
+	 * Kann in konkreten Knoten überschrieben werden, um die Navigation zu prüfen oder umzuleiten.
 	 *
-	 * @param from          die Route, die verlassen wird
-	 * @param from_params   die Routen-Parameter dazu
-	 * @param to            die Route, wohin verlassen wird
-	 * @param to_params     die Routen-Parameter dazu
+	 * @param from         die Route, die verlassen wird
+	 * @param from_params  die Routen-Parameter der verlassenen Route
+	 *
+	 * @returns ggf. eine Redirect-Route oder einen Fehler, andernfalls void
 	 */
-	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
+	protected async leaveBefore(
+		from: RouteNode<any, any>,
+		from_params: RouteParams,
+		to: RouteNode<any, any>,
+		to_params: RouteParams
+	): Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
-	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-	 * bevor eine Route verlassen wird.
+	 * Öffentlicher Einstiegspunkt für den leaveBefore-Hook des {@link RouteManager}.
+	 * Delegiert an {@link leaveBefore} und fängt Fehler ab, die zu einer Weiterleitung
+	 * auf die Fehlerroute führen.
 	 *
-	 * @param from          die Route, die verlassen wird
-	 * @param from_params   die Routen-Parameter dazu
-	 * @param to            die Route, wohin verlassen wird
-	 * @param to_params     die Routen-Parameter dazu
+	 * @param from         die Route, die verlassen wird
+	 * @param from_params  die Routen-Parameter der verlassenen Route
+	 *
+	 * @returns ggf. eine Redirect-Route oder einen Fehler, andernfalls void
 	 */
-	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
+	public async doLeaveBefore(
+		from: RouteNode<any, any>,
+		from_params: RouteParams,
+		to: RouteNode<any, any>,
+		to_params: RouteParams
+	): Promise<void | Error | RouteLocationRaw> {
 		try {
 			return await this.leaveBefore(from, from_params, to, to_params);
 		} catch (e) {
@@ -932,7 +1014,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param params   die Parameter der Route
 	 * @param names[]  der Namen der Parameter
 	 *
-	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
+	 * @returns der ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
 	 */
 	protected static getIntParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], number | undefined> {
 		const res: Record<string, number | undefined> = {};
@@ -956,7 +1038,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param params   die Parameter der Route
 	 * @param names[]  der Namen der Parameter
 	 *
-	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
+	 * @returns der ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
 	 */
 	protected static getStringParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], string | undefined> {
 		const res: Record<string, string | undefined> = {};

@@ -1,12 +1,12 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
+import { DeveloperNotificationException, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
-import { DeveloperNotificationException, ServerMode } from "@core";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
@@ -17,6 +17,27 @@ interface RouteStateError {
 	text: string | undefined;
 }
 
+/**
+ * Zentraler Singleton-Manager für das Routing im SVWS-Client.
+ *
+ * Der `RouteManager` kapselt den Vue Router und stellt sicher, dass alle Navigationen
+ * kontrolliert und konsistent ablaufen. Komponenten und RouteNodes lösen Navigationen
+ * ausschließlich über {@link RouteManager.doRoute} aus – ein direktes `router.push()`
+ * ist nicht zulässig.
+ *
+ * ### Verantwortlichkeiten
+ * - Registrierung der globalen Navigation-Guards (`beforeEach`, `afterEach`)
+ * - Registrierung der Top-Level-Routen (`routeLogin`, `routeInit`, `routeError`, `routeApp`)
+ * - Schutz vor parallelen Navigationen über ein internes `active`-Flag
+ * - Prüfung und Ausführung von Checkpoints vor einer Navigation
+ * - Bereitstellung des aktuell aktiven {@link RouteNode} und seiner Parameter
+ * - Zurücksetzen des gesamten Routing-States beim Logout
+ *
+ * ### Instanz
+ * Die Instanz wird einmalig (in `main.ts`) über {@link RouteManager.create} erzeugt.
+ * Ein zweiter Aufruf wirft eine {@link DeveloperNotificationException}.
+ * Der Zugriff auf die Instanz erfolgt über {@link RouteManager.instance}.
+ */
 export class RouteManager {
 
 	/** Die Instanz des Route-Managers */

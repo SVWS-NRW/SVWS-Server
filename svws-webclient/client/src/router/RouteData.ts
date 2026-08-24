@@ -1,25 +1,48 @@
 import { ref } from "vue";
-
-import { type RouteNode } from "~/router/RouteNode";
 import { DeveloperNotificationException } from "@core";
 import { StateManager, ViewType } from "@ui";
-
+import { type RouteNode } from "~/router/RouteNode";
 
 /**
- * Die Definition von gemeinsamen Attributen des States von Routen.
+ * Definiert die gemeinsamen State-Attribute, die jede Route mindestens bereitstellen kann.
+ *
+ * Die Felder sind optional, da nicht jede Route "view" und "gruppenprozesse" Ansichten hat.
+ * Konkrete `RouteData*`-Implementierungen erweitern dieses Interface.
  */
 export interface RouteStateInterface {
+	/** Die aktuell aktive Ansicht (Child Route) */
 	view?: RouteNode<any, any>;
+	/** Die aktuell aktive Gruppenprozess-Ansicht (Child Route) */
 	gruppenprozesseView?: RouteNode<any, any>,
+	/** Die Art der aktuell aktiven Ansicht (z.B. Default, Hinzufügen, Gruppenprozess) */
 	activeViewType?: ViewType;
 }
 
-
 /**
- * Eine abstrakte Klasse für allgemeine Methoden beim Zugriff auf die Daten, welche einer Route
- * zugeordnet sind.
- * Dabei wird intern ein reaktiver State (ShallowRef von vue.js) genutzt, welcher bei den hier
- * definierten Methoden zum Anpassen des States jeweils einmalig getriggert wird.
+ * Abstrakte Basisklasse für den Datenzugriff einer Route.
+ *
+ * Erweitert den {@link StateManager} um route-spezifische Hilfsmethoden für die Verwaltung von
+ * Ansichten (`view`), Gruppenprozess-Ansichten und dem aktiven View-Typ ({@link ViewType}).
+ * Konkrete Subklassen (`RouteData*`) erben diese Klasse und befüllen den State mit fachlichen Daten.
+ *
+ * @abstract
+ * @typeParam RouteState - Der konkrete State-Typ der Route; muss {@link RouteStateInterface} erfüllen.
+ * @example
+ * ```ts
+ * interface SchuelerState extends RouteStateInterface {
+ *   schuelerListe: SchuelerListeEintrag[];
+ *   ausgewaehlterSchueler: SchuelerListeEintrag | null;
+ * }
+ *
+ * export class RouteDataSchueler extends RouteData<SchuelerState> {
+ *   public constructor() {
+ *     super({
+ *       schuelerListe: [],
+ *       ausgewaehlterSchueler: null,
+ *     });
+ *   }
+ * }
+ * ```
  */
 export abstract class RouteData<RouteState extends RouteStateInterface> extends StateManager<RouteState> {
 
@@ -27,27 +50,23 @@ export abstract class RouteData<RouteState extends RouteStateInterface> extends 
 	protected _autofocus = ref<boolean>(false);
 
 	/**
-	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
-	 * Optional können noch gültige Sichten/Child Routes übergeben werden, sofern diese
-	 * hier genutzt werden.
+	 * Erzeugt ein neues `RouteData`-Objekt mit dem übergebenen Default-State.
+	 * Delegiert die Initialisierung an {@link StateManager}.
 	 *
-	 * @param defaultState   der Default-State
+	 * @param defaultState - Der initiale Default-State der Route.
 	 */
 	protected constructor(defaultState: RouteState) {
 		super(defaultState);
 	}
 
 	/**
-	 * Setzt den aktuellen State auf den Default-State gepatched mit dem übergebenen patch.
-	 * Dabei bleibt die gewählte Ansicht/Child Route jedoch erhalten - selbst wenn der
-	 * Patch eine alternative Route angibt.
+	 * Aktualisiert den aktuellen State reaktiv mit dem angegebenen Patch, aber erhält die
+	 * gewählte Ansicht/Child Route - selbst wenn der Patch eine alternative Route angibt.
 	 *
 	 * @param patch   der Patch, welcher auf den Default-State angewendet wird.
 	 */
-	protected setPatchedDefaultStateKeepView(patch: Partial<RouteState>) {
-		const tmp = { ...this._state.value, ...patch };
-		tmp.view = this._state.value.view;
-		this._state.value = tmp;
+	protected setPatchedStateKeepView(patch: Partial<RouteState>) {
+		this.setPatchedState({ ...patch, view: this._state.value.view });
 	}
 
 	/**

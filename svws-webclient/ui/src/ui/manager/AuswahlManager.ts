@@ -13,11 +13,13 @@ import type { AuswahlManagerSortierOrdnung as SortierOrdnung } from "./AuswahlMa
 import { ListeMitAuswahl } from './ListeMitAuswahl';
 
 /**
- * Ein abstrakter Auswahl-Manager, welcher für die Auswahllisten im Client verwendet wird
+ * Abstrakte Basisklasse für Auswahl-Manager, die im Client für die Verwaltung von
+ * Auswahllisten eingesetzt werden.
  *
- * @param <TID>        der primitve Typ (number|string) der ID des Auswahl-Elemente
- * @param <TAuswahl>   der Typ der Auswahl-Einträge
- * @param <TDaten>     der Typ der mit der aktuellen Auswahl verknüpften Daten
+ * @abstract
+ * @typeParam TID 				- der primitive Typ (number|string) der ID des Auswahl-Elementes
+ * @typeParam TAuswahl		- der Typ der Auswahl-Einträge
+ * @typeParam TDaten			- der Typ der mit der aktuellen Auswahl verknüpften Daten
  */
 export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDaten> {
 
@@ -73,7 +75,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	/** Die Daten aus der vorherigen Auswahl */
 	protected _vorherigeAuswahl: TDaten | null = null;
 
-	/** Map mit allen selektierten Gruppenprozess CoreDto Objekten */
+	/** Map der aktuell für den Gruppenprozess selektierten Einträge, indexiert nach ID */
 	protected _listeDaten: JavaMap<TID, TDaten> = new HashMap<TID, TDaten>();
 
 
@@ -141,7 +143,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	}
 
 	/**
-	 * Entfernt den aktuelle Cache für die gefilterte Liste und forciert so eine Neu-Berechnung der gecachten Liste
+	 * Entfernt den aktuellen Cache für die gefilterte Liste und forciert so eine Neu-Berechnung der gecachten Liste
 	 */
 	public filterInvalidateCache(): void {
 		this._filtered = null;
@@ -162,7 +164,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 * @param a   der erste Eintrag
 	 * @param b   der zweite Eintrag
 	 *
-	 * @return ein negativer Wert, 0 oder ein positiver Werte, wenn der erste Eintrag
+	 * @return ein negativer Wert, 0 oder ein positiver Wert, wenn der erste Eintrag
 	 *         kleiner, gleich oder größer ist als der zweite Eintrag
 	 */
 	protected abstract compareAuswahl(a: TAuswahl, b: TAuswahl): number;
@@ -210,11 +212,10 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	}
 
 	/**
-	 * Setzt die Sortier-Ordnung für die gefilterten Listen. Hier wird eine Menge von Paaren angegeben,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Setzt die Sortier-Ordnung (Array). Jeder Eintrag beschreibt ein Sortierfeld (als String) und
+	 * die zugehörige Richtung: aufsteigend (`true`) oder absteigend (`false`).
 	 *
-	 * @param order   die Sortier-Ordnung
+	 * @param order   die neue Sortier-Ordnung
 	 */
 	public orderSet(order: Array<SortierOrdnung>): void {
 		this._order = [...order];
@@ -222,11 +223,10 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	}
 
 	/**
-	 * Gibt die Sortier-Ordnung für die gefilterten Listen zurück als eine Menge von Paaren,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Gibt die aktuelle Sortier-Ordnung (Array) zurück. Jeder Eintrag beschreibt ein Sortierfeld (als String)
+	 * und die zugehörige Richtung: aufsteigend (`true`) oder absteigend (`false`).
 	 *
-	 * @return die Sortier-Ordnung
+	 * @return die aktuellen Sortier-Ordnung (als Kopie)
 	 */
 	public orderGet(): Array<SortierOrdnung> {
 		return [...this._order];
@@ -234,6 +234,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 
 	/**
 	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld.
+	 *
 	 * Vorhandene Feld-Einträge werden angepasst oder bei null entfernt.
 	 * Nicht vorhandene Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
 	 * Geänderte oder neue Einträge werden an den Anfang der Sortier-Ordnung gesetzt.
@@ -407,9 +408,9 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	}
 
 	/**
-	 * Setzt Daten vom Typ TDaten der selektierten Gruppenprozesseinträge
+	 * Setzt die Map der für den Gruppenprozess selektierten Einträge.
 	 *
-	 * @param listeDaten selektierte Daten
+	 * @param listeDaten   Map der selektierten Einträge, indexiert nach ihrer ID
 	 */
 	public setListeDaten(listeDaten: JavaMap<TID, TDaten>): void {
 		this._listeDaten = listeDaten;
