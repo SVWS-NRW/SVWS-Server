@@ -13,13 +13,14 @@ public interface HtmlContextInitializer {
 	/**
 	 * Baut die Daten-Contexts für diesen Datenaufbau auf und legt sie in der Context-Map ab.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	void init() throws ApiOperationException;
 
 	/**
 	 * Der Schlüssel des Haupt-Contexts in der Context-Map — nur für die Einzelausgabe. Unter diesem Schlüssel wird der Haupt-Context für jedes Einzeldokument
-	 * ersetzt. Datenaufbauten ohne Einzelausgabe erben die Standard-Implementierung der Basisklasse, die den entsprechenden Fehler wirft.
+	 * ersetzt. Ob ein Datenaufbau die Einzelausgabe zusagt, sagt {@link HtmlContextAufbau#unterstuetztEinzelausgabe()}; die Basisklasse liest die Zusage und
+	 * wirft ohne sie den passenden Client-Fehler.
 	 *
 	 * @return Der Schlüssel des Haupt-Contexts in der Context-Map.
 	 *

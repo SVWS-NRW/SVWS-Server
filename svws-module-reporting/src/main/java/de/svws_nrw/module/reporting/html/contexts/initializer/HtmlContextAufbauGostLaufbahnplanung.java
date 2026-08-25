@@ -43,7 +43,7 @@ final class HtmlContextAufbauGostLaufbahnplanung implements HtmlContextAufbau {
 	 */
 	@Override
 	public HtmlContextInitializer initializer(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts) {
-		return new HtmlContextInitializerGostLaufbahnplanung(reportingContext, mapHtmlContexts);
+		return new HtmlContextInitializerGostLaufbahnplanung(reportingContext, mapHtmlContexts, this);
 	}
 
 }

@@ -34,7 +34,7 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 	 */
 	HtmlContextInitializerListe(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts,
 			final HtmlContextAufbauListe<T> aufbau) {
-		super(reportingContext, mapHtmlContexts);
+		super(reportingContext, mapHtmlContexts, aufbau);
 		this.aufbau = aufbau;
 	}
 
@@ -43,7 +43,7 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 	 * Wählt die Hauptdaten zu den übergebenen IDs aus, meldet die dabei ausgelassenen, schränkt die Auswahl fachlich ein und legt den daraus erzeugten
 	 * Haupt-Context in der Context-Map ab.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@Override
 	public void init() throws ApiOperationException {
@@ -64,17 +64,6 @@ final class HtmlContextInitializerListe<T> extends HtmlContextInitializerBasis {
 						.formatted(bezeichnungen.nominativ(), auswahl.objekte().size(), auswahl.idsAngefordert().size(), bezeichnungen.dativ(),
 								reportingReportvorlage.name()));
 		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().apply(reportingContext, auswahl.objekte()));
-	}
-
-
-	/**
-	 * Der Schlüssel des Haupt-Contexts in der Context-Map. Die Datenaufbauten dieses Musters unterstützen die Einzelausgabe.
-	 *
-	 * @return Der Schlüssel des Haupt-Contexts in der Context-Map.
-	 */
-	@Override
-	public String einzelContextBezeichnung() {
-		return aufbau.contextSchluessel();
 	}
 
 

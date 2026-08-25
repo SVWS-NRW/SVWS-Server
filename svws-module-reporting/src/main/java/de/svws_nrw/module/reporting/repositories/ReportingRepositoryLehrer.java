@@ -219,7 +219,7 @@ public class ReportingRepositoryLehrer {
 		} catch (final Exception e) {
 			// Ohne den Vollbestand der Lehrerstammdaten fehlt eine Grundlage des Reports; das ist ein Serverproblem. Protokolliert wird hier nicht, damit der
 			// eine ERROR-Eintrag an der Abschlussgrenze entsteht.
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 		}
 	}
 

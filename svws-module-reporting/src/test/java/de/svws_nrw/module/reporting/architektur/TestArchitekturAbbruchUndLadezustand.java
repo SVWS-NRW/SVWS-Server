@@ -19,6 +19,9 @@ import de.svws_nrw.module.reporting.architektur.Reportingquelltexte.Quelldatei;
  * danach nur noch werfend, und eine Repository-Map mit Fehler-Marker braucht einen dauerhaften Rückkanal für den Fehler.
  * <p>Die Prüfung findet beim Bauen statt und nicht im Betrieb: Eine Laufzeitprüfung des Logs kann einen Verstoß erst melden, wenn ein Anwender ihn auslöst,
  * und sie unterscheidet nicht zwischen einem gewollten Rückfallwert und einem vergessenen Wurf.</p>
+ * <p>Die erste Regel greift nur, <b>wenn</b> ein Catch-Block {@code LogLevel.ERROR} enthält. Sie sagt nichts darüber, woher die Meldung eines Abbruchs
+ * stammt, und steht dem Fehlervertrag - eine Meldungsquelle, protokolliert wird an der Abschlussgrenze - deshalb nicht entgegen. Ein Catch-Block mit einer
+ * technischen {@code ERROR}-Zeile endet mit einem Wurf.</p>
  * <p><b>Grenzen:</b> Die erste Regel sieht nur Catch-Blöcke. Ein {@code ERROR}-Eintrag, der außerhalb davon entsteht und mit {@code return} statt einem Wurf
  * endet, bliebe unentdeckt und stünde im Log eines erfolgreichen Reports. Beide Regeln erkennen zudem nicht, wenn ein breiter Catch den Abbruch der
  * Meldefassade verschluckt, der als {@code ApiOperationException} reist.</p>
@@ -45,6 +48,12 @@ class TestArchitekturAbbruchUndLadezustand {
 
 	/** Der Protokollaufruf, um den sich die erste Regel dreht. */
 	private static final String FEHLERPROTOKOLL = "LogLevel.ERROR";
+
+	/**
+	 * Die Mindestzahl an Catch-Blöcken mit einem Fehlerprotokoll. Zwei technische Zeilen tragen einen Zusammenhang, den die Fehlerquelle nicht kennt, und
+	 * bleiben deshalb dauerhaft: der Dateiname des betroffenen Dokuments in der Sammelausgabe und die Zuordnung eines Anhangs zum Empfänger.
+	 */
+	private static final int SCHWELLE_FEHLERPROTOKOLL = 2;
 
 	/** Der Aufruf, mit dem eine Meldung über die Fassade entsteht. Er ersetzt den Wurf, wo ein Befund hingenommen wird. */
 	private static final String MELDUNG_UEBER_FASSADE = "meldeAusgabeproblem";
@@ -237,6 +246,12 @@ class TestArchitekturAbbruchUndLadezustand {
 				.flatMap(datei -> Reportingquelltexte.catchbloecke(datei).stream())
 				.filter(block -> AUSSTIEG.matcher(block.rumpf()).find())
 				.count();
+		// Auch die Voraussetzung der ersten Regel braucht eine Gegenprobe: Sie betrachtet einen Catch-Block nur, wenn er ERROR protokolliert. Findet das
+		// Suchwort keinen einzigen solchen Block, prüft die Regel nichts mehr.
+		final long catchbloeckeMitFehlerprotokoll = quellen.stream()
+				.flatMap(datei -> Reportingquelltexte.catchbloecke(datei).stream())
+				.filter(block -> block.rumpf().contains(FEHLERPROTOKOLL))
+				.count();
 
 		assertFalse(quellen.isEmpty(), "Ohne eingelesene Quellen prüfen die Architekturtests nichts.");
 		assertFalse(catchbloecke < 10, "Es wurden zu wenige Catch-Blöcke gefunden; das Suchmuster greift nicht: " + catchbloecke);
@@ -245,6 +260,9 @@ class TestArchitekturAbbruchUndLadezustand {
 				"Es wurden zu wenige Catch-Blöcke ohne Wurf am Ende gefunden; die Enderkennung greift nicht: " + catchbloeckeOhneWurfAmEnde);
 		assertFalse(catchbloeckeMitAusstieg < 10,
 				"Es wurden zu wenige Catch-Blöcke mit einem Ausstieg gefunden; das Ausstiegsmuster greift nicht: " + catchbloeckeMitAusstieg);
+		assertFalse(catchbloeckeMitFehlerprotokoll < SCHWELLE_FEHLERPROTOKOLL,
+				"Es wurden zu wenige Catch-Blöcke mit einem Fehlerprotokoll gefunden; die erste Regel betrachtet dann keinen Block mehr: "
+						+ catchbloeckeMitFehlerprotokoll);
 	}
 
 }

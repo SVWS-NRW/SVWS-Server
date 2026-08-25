@@ -2,13 +2,14 @@ package de.svws_nrw.module.reporting.builders;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
@@ -20,6 +21,9 @@ import jakarta.ws.rs.core.Response.Status;
  * kein fehlerhafter Client-Input - die Prüfungen müssen deshalb {@code INTERNAL_SERVER_ERROR} melden.</p>
  * <p>Besonderes Gewicht hat die leere HTML-Vorlage: Eine vorhandene, aber leere Vorlagendatei passiert die Leseprüfung der {@code HtmlFactory} nicht mehr
  * und wird hier als zweite Sicherung abgefangen.</p>
+ * <p>Geprüft wird der Status und der Wert, dessen Fehlen die Meldung benennt - nicht ihr Wortlaut. Die Form der Meldung sichert
+ * {@code TestArchitekturFehlermeldungen} für alle Meldungen des Moduls; hier ginge sie nur als Wiederholung ein und machte jede spätere Umformulierung
+ * zu einer Teständerung.</p>
  */
 class TestReportBuilderContextValidierung {
 
@@ -37,20 +41,21 @@ class TestReportBuilderContextValidierung {
 				.withHtmlInput("<html><body><p>Testinhalt</p></body></html>")
 				.withDateiname("Bescheinigung_Meier")
 				.withStatischerDateiname("Bescheinigungen")
-				.withRootPfad(ROOT_PFAD)
-				.withLogger(new Logger());
+				.withRootPfad(ROOT_PFAD);
 	}
 
 	/**
 	 * Prüft, dass der übergebene Aufruf einen internen Fehler mit der erwarteten Meldung meldet.
 	 *
-	 * @param aufruf   Der Aufruf, der fehlschlagen muss.
-	 * @param meldung  Die erwartete Meldung.
+	 * @param aufruf     Der Aufruf, der fehlschlagen muss.
+	 * @param fehlt      Der Wert, dessen Fehlen die Meldung benennen muss.
 	 */
-	private static void pruefeInternerFehler(final Runnable aufruf, final String meldung) {
+	private static void pruefeInternerFehler(final Runnable aufruf, final String fehlt) {
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, aufruf::run);
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
-		assertEquals(meldung, aoe.getBody());
+		assertInstanceOf(String.class, aoe.getBody(), "Ohne String-Body bliebe die Kopfzeile der Fehlerantwort ohne Abbruchgrund.");
+		assertTrue(((String) aoe.getBody()).contains(fehlt),
+				"Die Meldung muss '%s' benennen, sonst unterscheidet sie die Prüfungen nicht: %s".formatted(fehlt, aoe.getBody()));
 	}
 
 
@@ -62,7 +67,7 @@ class TestReportBuilderContextValidierung {
 		// leer ist oder nur Leerraum enthält.
 		for (final String vorlage : Arrays.asList(null, "", "   ")) {
 			pruefeInternerFehler(() -> new ReportBuilderContextHtml().withHtmlTemplate(vorlage),
-					"Bei der HTML-Erzeugung darf die HTML-Vorlage nicht leer sein");
+					"die HTML-Vorlage");
 		}
 	}
 
@@ -70,9 +75,8 @@ class TestReportBuilderContextValidierung {
 	void testEinHtmlKontextOhneVorlageBestehtDieValidierungNicht() {
 		final ReportBuilderContextHtml kontext = new ReportBuilderContextHtml()
 				.withStatischerDateiname("Bescheinigungen")
-				.withRootPfad(ROOT_PFAD)
-				.withLogger(new Logger());
-		pruefeInternerFehler(kontext::validiert, "Die HTML-Vorlage des Report-Builders darf nicht leer sein");
+				.withRootPfad(ROOT_PFAD);
+		pruefeInternerFehler(kontext::validiert, "die HTML-Vorlage");
 	}
 
 
@@ -81,14 +85,14 @@ class TestReportBuilderContextValidierung {
 	@Test
 	void testJederUnbrauchbareHtmlInputIstEinInternerFehler() {
 		for (final String htmlInput : Arrays.asList(null, "", "   ")) {
-			pruefeInternerFehler(() -> new ReportBuilderContextPdf().withHtmlInput(htmlInput), "Der HTML-Input des Report-Builders darf nicht leer sein");
+			pruefeInternerFehler(() -> new ReportBuilderContextPdf().withHtmlInput(htmlInput), "der HTML-Inhalt");
 		}
 	}
 
 	@Test
 	void testJederUnbrauchbareDateinameIstEinInternerFehler() {
 		for (final String dateiname : Arrays.asList(null, "", "   ")) {
-			pruefeInternerFehler(() -> new ReportBuilderContextPdf().withDateiname(dateiname), "Der Dateiname des Report-Builders darf nicht leer sein");
+			pruefeInternerFehler(() -> new ReportBuilderContextPdf().withDateiname(dateiname), "der Dateiname");
 		}
 	}
 
@@ -97,18 +101,13 @@ class TestReportBuilderContextValidierung {
 
 	@Test
 	void testEinLeererRootPfadIstEinInternerFehler() {
-		pruefeInternerFehler(() -> new ReportBuilderContextPdf().withRootPfad(""), "Der Root-Pfad des Report-Builders darf nicht leer sein");
+		pruefeInternerFehler(() -> new ReportBuilderContextPdf().withRootPfad(""), "der Pfad zu den Ressourcen");
 	}
 
 	@Test
 	void testEinLeererStatischerDateinameIstEinInternerFehler() {
 		pruefeInternerFehler(() -> new ReportBuilderContextPdf().withStatischerDateiname(""),
-				"Der statische Dateiname des Report-Builders darf nicht leer sein");
-	}
-
-	@Test
-	void testEinFehlenderLoggerIstEinInternerFehler() {
-		pruefeInternerFehler(() -> new ReportBuilderContextPdf().withLogger(null), "Der Logger des Report-Builders darf nicht leer sein");
+				"der feste Dateiname");
 	}
 
 
@@ -118,19 +117,26 @@ class TestReportBuilderContextValidierung {
 	void testEinLeererKontextBestehtDieValidierungNicht() {
 		// Die Setter weisen leere Werte ab; die Prüfungen in validiert() greifen deshalb nur, wenn ein Wert nie gesetzt wurde. Der statische Dateiname
 		// wird zuerst geprüft.
-		pruefeInternerFehler(() -> new ReportBuilderContextPdf().validiert(), "Der statische Dateiname des Report-Builders nicht leer sein");
+		pruefeInternerFehler(() -> new ReportBuilderContextPdf().validiert(), "der feste Dateiname");
 	}
 
 	@Test
 	void testEinKontextOhneRootPfadBestehtDieValidierungNicht() {
 		final ReportBuilderContextPdf kontext = new ReportBuilderContextPdf().withStatischerDateiname("Bescheinigungen");
-		pruefeInternerFehler(kontext::validiert, "Der Root-Pfad des Report-Builders nicht leer sein");
+		pruefeInternerFehler(kontext::validiert, "der Pfad zu den Ressourcen");
 	}
 
 	@Test
-	void testEinKontextOhneLoggerBestehtDieValidierungNicht() {
+	void testEinKontextOhneDateinameBestehtDieValidierungNicht() {
 		final ReportBuilderContextPdf kontext = new ReportBuilderContextPdf().withStatischerDateiname("Bescheinigungen").withRootPfad(ROOT_PFAD);
-		pruefeInternerFehler(kontext::validiert, "Der Logger des Report-Builders nicht leer sein");
+		pruefeInternerFehler(kontext::validiert, "der Dateiname");
+	}
+
+	@Test
+	void testEinKontextOhneHtmlInhaltBestehtDieValidierungNicht() {
+		final ReportBuilderContextPdf kontext = new ReportBuilderContextPdf().withStatischerDateiname("Bescheinigungen").withRootPfad(ROOT_PFAD)
+				.withDateiname("Bescheinigung_Meier");
+		pruefeInternerFehler(kontext::validiert, "der HTML-Inhalt");
 	}
 
 
@@ -142,7 +148,7 @@ class TestReportBuilderContextValidierung {
 		// eigene Ableitung, weil die produktiven Builder ihn fest vorgeben.
 		for (final String contentType : Arrays.asList(null, "", "   ")) {
 			pruefeInternerFehler(() -> new TestBuilder(vollstaendigerPdfKontext(), contentType),
-					"Der Content-Type (MIME-Type) des Report-Builders darf nicht leer sein");
+					"die Angabe des Dateityps");
 		}
 	}
 

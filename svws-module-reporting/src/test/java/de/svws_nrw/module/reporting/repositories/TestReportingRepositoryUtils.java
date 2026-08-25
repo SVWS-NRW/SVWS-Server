@@ -198,7 +198,7 @@ class TestReportingRepositoryUtils {
 			final Predicate<Reportingobjekt> filter) {
 		final LongFunction<Reportingobjekt> ersteller = id -> new Reportingobjekt(id, mapStammdaten.get(id).name());
 		return ReportingRepositoryUtils.waehleAus(ids, mapStammdaten, mapReportingObjekte, loader, ersteller,
-				stammdaten -> stammdaten.id(), Comparator.comparingLong(Reportingobjekt::id), filter, DATENTYP, logger, ladefehler);
+				Stammdaten::id, Comparator.comparingLong(Reportingobjekt::id), filter, DATENTYP, logger, ladefehler);
 	}
 
 	@Test
@@ -291,7 +291,7 @@ class TestReportingRepositoryUtils {
 		final LongFunction<Reportingobjekt> ersteller = id -> new Reportingobjekt(id, mapStammdaten.get(id).name());
 
 		ReportingRepositoryUtils.waehleAus(List.of(1L, 2L, 3L), mapStammdaten, mapReportingObjekte, loaderMitFehlerFuer(List.of()), ersteller,
-				stammdaten -> stammdaten.id(), comparator, objekt -> objekt.id() != 2L, DATENTYP, logger, ladefehler);
+				Stammdaten::id, comparator, objekt -> objekt.id() != 2L, DATENTYP, logger, ladefehler);
 
 		assertFalse(verglichen.contains(2L), "Der Comparator darf für ein ausgefiltertes Objekt nicht aufgerufen werden: " + verglichen);
 	}

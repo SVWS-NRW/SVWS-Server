@@ -40,7 +40,7 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param selection			Die vom Initializer ausgewählten Stufen (Abiturjahrgang und GOSt-Halbjahr).
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingContext reportingContext, final List<GostKlausurenHalbjahresdaten> selection)
 			throws ApiOperationException {
@@ -97,10 +97,9 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 
 			super.setContext(context);
 		} catch (final ApiOperationException e) {
-			// Der Status der Datenschicht bleibt erhalten, die Meldung wird nur um den Kontext angereichert. Ein pauschaler Status würde am API-Rand
-			// einen Serverfehler als fehlende Klausurdaten ausgeben.
-			throw new ApiOperationException(e.getStatus(), e,
-					"FEHLER: Die Daten des Klausurplans konnten nicht ermittelt werden. " + e.getMessage());
+			// Der Status der Datenschicht bleibt erhalten; ein pauschaler Status gäbe am API-Rand einen Serverfehler als fehlende Klausurdaten aus.
+			// Die Meldung der Ursache reist als cause mit und erscheint im Fehlerblock unter den Fehlergründen.
+			throw new ApiOperationException(e.getStatus(), e, "### FEHLER: Die Daten des Klausurplans konnten nicht geladen werden.");
 		}
 	}
 

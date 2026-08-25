@@ -73,12 +73,11 @@ public class ReportingRepositorySchule {
 		} catch (final Exception e) {
 			// Protokolliert wird hier nicht, damit der eine ERROR-Eintrag an der Abschlussgrenze entsteht.
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden.");
+					"### FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden.");
 		}
 
 		if (!mapSchuljahresabschnitte.containsKey(idAuswahlSchuljahresabschnitt)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"FEHLER: Der übergebene Schuljahresabschnitt %d gehört nicht zu dieser Schule.".formatted(idAuswahlSchuljahresabschnitt));
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Der gewählte Schuljahresabschnitt gehört nicht zu dieser Schule.");
 		}
 		this.idAuswahlSchuljahresabschnitt = idAuswahlSchuljahresabschnitt;
 	}

@@ -208,7 +208,7 @@ public class ReportingRepositoryKataloge {
 				katalogSchulen = new DataSchulen(this.reportingContext.conn()).getAll().stream()
 						.collect(Collectors.toMap(s -> s.id, s -> s));
 			} catch (final Exception e) {
-				throw fehlerKatalogdatenLaden("Schulen (nach IDs)", e);
+				throw fehlerKatalogdatenLaden("Schulen", e);
 			}
 		}
 		return katalogSchulen;
@@ -234,7 +234,7 @@ public class ReportingRepositoryKataloge {
 						.filter(s -> (s.schulnummerStatistik != null) && (!s.schulnummerStatistik.isEmpty()))
 						.collect(Collectors.toMap(s -> s.schulnummerStatistik, s -> s, (s1, s2) -> s1));
 			} catch (final Exception e) {
-				throw fehlerKatalogdatenLaden("Schulen (nach Schulnummer)", e);
+				throw fehlerKatalogdatenLaden("Schulen", e);
 			}
 		}
 		return katalogSchulenNachSchulnummer;
@@ -430,7 +430,7 @@ public class ReportingRepositoryKataloge {
 	 */
 	private static ApiOperationException fehlerKatalogdatenLaden(final String datentyp, final Exception fehlerursache) {
 		return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlerursache,
-				"FEHLER: Katalogdaten vom Typ '%s' konnte nicht aus der Datenbank ermittelt werden.".formatted(datentyp));
+				"### FEHLER: Die Katalogdaten '%s' konnten nicht ermittelt werden.".formatted(datentyp));
 	}
 
 	private static KatalogServiceFactory getKatalogServiceFactory() {

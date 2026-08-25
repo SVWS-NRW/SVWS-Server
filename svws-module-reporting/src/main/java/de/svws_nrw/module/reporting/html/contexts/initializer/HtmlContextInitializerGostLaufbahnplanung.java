@@ -11,8 +11,7 @@ import de.svws_nrw.module.reporting.repositories.ReportingContext;
 /**
  * Initializer für den Datenaufbau der GOSt-Laufbahnplanung eines Abiturjahrgangs mit dessen Fachwahlstatistiken.
  * <p>Dieser Datenaufbau ist ein Einzelfall: Er kennt nur eine Reportvorlage, und die Hauptdaten sind kein Bestand an IDs, sondern ein Abiturjahrgang mit
- * seinen Halbjahren. Er überschreibt {@link HtmlContextInitializerBasis#einzelContextBezeichnung()} bewusst <b>nicht</b> — dieser Datenaufbau unterstützt
- * keine Einzelausgabe, und die Standard-Implementierung der Basisklasse wirft dafür den passenden Fehler.</p>
+ * seinen Halbjahren. Eine Einzelausgabe gibt es nicht; das sagt der Datenaufbau zu, und die Basisklasse weist sie dafür ab.</p>
  */
 final class HtmlContextInitializerGostLaufbahnplanung extends HtmlContextInitializerBasis {
 
@@ -21,16 +20,18 @@ final class HtmlContextInitializerGostLaufbahnplanung extends HtmlContextInitial
 	 *
 	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param mapHtmlContexts  Die Map, in der die erzeugten HTML-Contexts gesammelt werden.
+	 * @param aufbau           Die request-unabhängige Konfiguration dieses Datenaufbaus.
 	 */
-	HtmlContextInitializerGostLaufbahnplanung(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts) {
-		super(reportingContext, mapHtmlContexts);
+	HtmlContextInitializerGostLaufbahnplanung(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts,
+			final HtmlContextAufbauGostLaufbahnplanung aufbau) {
+		super(reportingContext, mapHtmlContexts, aufbau);
 	}
 
 
 	/**
 	 * Prüft die gymnasiale Oberstufe sowie die Parameter für Abiturjahrgang und Halbjahre und legt den erzeugten Haupt-Context in der Context-Map ab.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@Override
 	public void init() throws ApiOperationException {

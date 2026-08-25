@@ -123,8 +123,7 @@ public final class EmailFactory {
 			// Validierungs-Statuscodes (z. B. BAD_REQUEST aus pruefeParameter/ermittleAbsenderEmail) unverändert durchreichen.
 			throw aoe;
 		} catch (final Exception e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Der E-Mail-Versand konnte nicht als Job gestartet werden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Fehler beim Starten des E-Mail-Jobs.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Der E-Mail-Versand konnte nicht gestartet werden.");
 		}
 	}
 
@@ -156,17 +155,12 @@ public final class EmailFactory {
 	 */
 	private ReportingParameterTypisiert pruefeParameter() throws ApiOperationException {
 		if ((this.reportingContext.reportingParameter() == null) || (this.reportingContext.reportingParameter().eMailDaten() == null)) {
-			final String meldung =
-					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da die notwendigen Parameter und E-Mail-Daten nicht übergeben wurden.";
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
-			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für den E-Mail-Versand wurden keine E-Mail-Daten übergeben.");
 		}
 		final ReportingParameterTypisiert parameter = this.reportingContext.reportingParameter();
 		if ((parameter.eMailDaten().betreff == null) || parameter.eMailDaten().betreff.isBlank()
 				|| (parameter.eMailDaten().text == null) || parameter.eMailDaten().text.isBlank()) {
-			final String meldung = "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da kein Betreff oder Text für die E-Mail angegeben wurde.";
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
-			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für die E-Mail fehlt der Betreff oder der Text. Beide sind anzugeben.");
 		}
 
 		return parameter;
@@ -184,10 +178,8 @@ public final class EmailFactory {
 		final String emailAdresse = validatedEmailOrEmpty(reportingContext.benutzer().emailSmtpAdresse());
 
 		if (emailAdresse.isBlank()) {
-			final String meldung = "### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse"
-					+ " ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.";
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
-			throw new ApiOperationException(Status.BAD_REQUEST, meldung);
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für den angemeldeten Benutzer ist keine gültige "
+					+ "Absender-E-Mail-Adresse hinterlegt. Die E-Mail-Einstellungen des Benutzers sind zu prüfen.");
 		}
 		return emailAdresse;
 	}
@@ -205,9 +197,8 @@ public final class EmailFactory {
 		final ReportingEMailEmpfaengerTyp empfaengerTyp = ((parameter == null) || (parameter.eMailDaten() == null))
 				? ReportingEMailEmpfaengerTyp.UNDEFINED
 				: ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp);
-		if ((empfaengerTyp == null) || (empfaengerTyp == ReportingEMailEmpfaengerTyp.UNDEFINED)) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
-			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt.");
+		if (empfaengerTyp == ReportingEMailEmpfaengerTyp.UNDEFINED) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Der angegebene Empfängertyp für den E-Mail-Versand ist nicht bekannt.");
 		}
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der E-Mail-Empfänger-Typ wurde ermittelt: %s".formatted(empfaengerTyp.name()));
 		return empfaengerTyp;
@@ -284,14 +275,13 @@ public final class EmailFactory {
 			} catch (final ApiOperationException e) {
 				// Der Builder klassifiziert den Fehler bereits nach seiner Quelle; ohne diesen Zweig macht der Anhangaufbau daraus einen Serverfehler.
 				// Protokolliert werden allein Dateiname und ID als Zuordnung zum Empfänger; die Meldung selbst reist mit der Exception.
-				reportingContext.logger().logLn(LogLevel.ERROR, 4,
-						"### FEHLER: Die PDF-Datei '%s' für die ID %d konnte nicht erzeugt werden.".formatted(pdfBuilder.getDateiname(), id));
+				reportingContext.logger().logLn(LogLevel.ERROR, 4, "Anhang für die ID %d: %s".formatted(id, pdfBuilder.getDateiname()));
 				throw e;
 			} catch (final Exception e) {
-				reportingContext.logger().logLn(LogLevel.ERROR, 4,
-						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
+				// Die Meldung nennt den Dateinamen; allein die fachliche ID zur Zuordnung des Anhangs fehlt ihr und steht in keiner Ursachenkette.
+				reportingContext.logger().logLn(LogLevel.ERROR, 4, "Anhang für die ID %d.".formatted(id));
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
+						"### FEHLER: Die PDF-Datei '%s' konnte nicht erzeugt werden.".formatted(pdfBuilder.getDateiname()));
 			}
 		}
 
@@ -386,11 +376,10 @@ public final class EmailFactory {
 				final List<ReportingLehrer> lehrer = (kurs.lehrkraefte() == null) ? new ArrayList<>() : kurs.lehrkraefte();
 				yield new ArrayList<>(lehrer);
 			}
-			default -> {
-				final String meldung = "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt. Der Versand der E-Mails wurde abgebrochen.";
-				reportingContext.logger().logLn(LogLevel.ERROR, 4, meldung);
-				throw new ApiOperationException(Status.BAD_REQUEST, meldung);
-			}
+			// UNDEFINED wird vor dem Switch abgewiesen; alle aktuellen Empfängertypen sind einzeln behandelt. Der Zweig sichert künftig
+			// ergänzte Enum-Werte ab.
+			default -> throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Der Empfängertyp für den E-Mail-Versand wird vom Server nicht unterstützt.");
 		};
 	}
 

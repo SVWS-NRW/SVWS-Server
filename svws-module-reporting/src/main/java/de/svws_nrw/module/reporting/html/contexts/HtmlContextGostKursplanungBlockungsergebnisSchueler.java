@@ -25,7 +25,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnisSchueler extends H
 	 *
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	public HtmlContextGostKursplanungBlockungsergebnisSchueler(final ReportingContext reportingContext) throws ApiOperationException {
 		super(reportingContext);

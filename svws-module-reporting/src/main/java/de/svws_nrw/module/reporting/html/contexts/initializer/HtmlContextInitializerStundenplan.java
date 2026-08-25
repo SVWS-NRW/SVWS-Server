@@ -36,7 +36,7 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 	 */
 	HtmlContextInitializerStundenplan(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts,
 			final HtmlContextAufbauStundenplan<T, H> aufbau) {
-		super(reportingContext, mapHtmlContexts);
+		super(reportingContext, mapHtmlContexts, aufbau);
 		this.aufbau = aufbau;
 	}
 
@@ -45,7 +45,7 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 	 * Lädt den Stundenplan zur übergebenen ID, wählt die Hauptdaten der Sichtweise aus, meldet die dabei ausgelassenen und legt den erzeugten Haupt-Context
 	 * in der Context-Map ab. Der Context entsteht aus den ausgewählten IDs und nicht erneut aus den Request-IDs - sonst wäre das Auslassen wirkungslos.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@Override
 	public void init() throws ApiOperationException {
@@ -53,9 +53,7 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 
 		final ReportingStundenplanungStundenplan stundenplan = reportingContext.repositoryStundenplan().stundenplan(reportingParameter.idHauptdatenObjekt());
 		if (stundenplan == null) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Mit der angegebenen Stundenplan-ID konnte kein Stundenplan ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "### FEHLER: Der angeforderte Stundenplan ist nicht vorhanden.");
 		}
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
@@ -67,17 +65,6 @@ final class HtmlContextInitializerStundenplan<T, H> extends HtmlContextInitializ
 		reportingContext.meldeAusgabeumfang(ReportingAusgabeumfang.ausAuswahl(auswahl));
 
 		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().erzeuge(reportingContext, stundenplan, auswahl.idsAusgewaehlt()));
-	}
-
-
-	/**
-	 * Der Schlüssel des Haupt-Contexts in der Context-Map. Die Datenaufbauten der Stundenplanung unterstützen die Einzelausgabe.
-	 *
-	 * @return Der Schlüssel des Haupt-Contexts in der Context-Map.
-	 */
-	@Override
-	public String einzelContextBezeichnung() {
-		return aufbau.contextSchluessel();
 	}
 
 

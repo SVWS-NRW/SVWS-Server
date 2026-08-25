@@ -115,14 +115,79 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
 
 ### 4.2 Melde- und Logging-Regeln
 
+**Der Fehlervertrag:** Ein Abbruch hat **eine Meldungsquelle — die Meldung der Exception.**
+Protokolliert wird an der **Abschlussgrenze**, nicht an der Wurfstelle.
+
+- **Die Wurfstelle wirft und schweigt.** Den Block aus Beschreibung, Fehlertyp, Meldung, Ursachenkette
+  und Stacktrace gibt die Ebene aus, die den Fehler abschließend behandelt — über
+  `ReportingExceptionUtils.logException(…)`. Eine eigene Log-Zeile neben dem `throw` führte denselben
+  Satz ein zweites Mal im Log und damit auch in der Fehlerantwort an den Client. Ausgenommen ist allein
+  die technische Angabe, die den Befund erst benennt — der letzte Punkt dieser Liste.
+- **Eine Quelle heißt nicht eine Ausgabe.** Der Satz erscheint zweimal: als Kopfzeile ganz oben in der
+  Fehlerantwort und als Meldungszeile im Fehlerblock. Beide entstehen aus derselben Meldung. Die Zeile
+  im Fehlerblock lässt sich nicht streichen, denn `logException` bedient auch die geduldeten Befunde,
+  die keine Kopfzeile bekommen.
+- **Jeder Wurf unterhalb der Abschlussgrenze trägt seine Meldung als String-Body.** Nur ein String-Body
+  wird zur Meldung der `ApiOperationException`. Wer dort stattdessen eine Fehlerantwort als Body
+  mitgibt, hinterlässt eine Exception ohne Meldung; die Kopfzeile fällt dann auf einen Ersatztext
+  zurück und nennt die Phase statt des Grundes. Die fertige Fehlerantwort gibt allein die
+  Abschlussgrenze als Body mit — ohne sie erhielte der Client das Log nicht.
+- **Die Meldung sagt dem Anwender, was los ist; der Fehlerblock sagt es dem Betreiber.** Die Meldung
+  beginnt mit `### FEHLER: `, nennt die Ursache statt der Stelle und kommt mit kurzen Sätzen aus. Pfade,
+  Klassennamen und interne Bezeichnungen gehören nicht hinein. Ein veränderlicher Wert gehört hinein,
+  **soweit der Anwender ihn kennt** — der angefragte Vorlagenname ja, der Pfad einer Datei auf dem
+  Server nein.
+- **Ein zweiter Satz steht nur dort, wo er eine Handlung nennt, die der Leser ausführen kann** — der
+  Anwender berichtigt seine eigene Eingabe, der Betreiber prüft etwas an der Installation. Formeln wie
+  „Das ist ein Programmfehler im Server.“ oder „Die Anfrage ist zu berichtigen.“ entfallen: Die
+  Anfrage baut der Client, und den Statuscode trägt die Kopfzeile ohnehin. Sagt eine Meldung zu wenig,
+  liegt der Mangel im Hauptsatz und ist dort zu beheben, nicht in einem Zusatz.
+- **Der Kontext der Anfrage wird einmal am Eingang protokolliert.** Die Meldungen tragen keine
+  technischen Werte; die Kenndaten der Anfrage hält deshalb eine `DEBUG`-Zeile in der
+  `ReportingFactory` fest, bevor die erste inhaltliche Prüfung läuft. Sie arbeitet auf ungeprüften
+  Daten aus dem Request und ist deshalb in jedem Feld nullsicher; freien Text gibt sie maskiert und
+  längenbegrenzt aus.
+- **Eine technische Angabe, die den Befund erst benennt, bekommt eine eigene Log-Zeile.** Das ist die
+  einzige Ausnahme vom Schweigen der Wurfstelle: Die Zeile steht neben dem `throw`, trägt das Level des
+  Abbruchs und nennt **allein** diese Angabe — die Meldung wiederholt sie nicht. Sie ist dort am Platz,
+  wo weder die Meldung noch die Ursachenkette noch das Eingangsprotokoll den Befund trägt, etwa beim
+  beanstandeten einzelnen Element einer übergebenen Liste. Prüft eine Methode ohne Reporting-Context, steht
+  die Zeile bei ihrem kontexttragenden Aufrufer: Er führt die Schleife und kennt als einziger den
+  beanstandeten Wert. Die Zeile nennt diesen einen Wert, nie die ganze Liste — sonst stünde eine Anfrage mit
+  vielen IDs ungekürzt im Log.
+- **Die Form der Meldungen prüft ein Quelltexttest, kein Wortlaut-Test.** `TestArchitekturFehlermeldungen`
+  liest alle Quelldateien und verlangt je Meldung den Marker, ein Satzzeichen am Schluss, keinen internen
+  Begriff und keine ID; dieselbe Klasse verbietet jeder Protokollzeile den Marker, gleich wie sie ihr Level
+  erhält, denn damit wiederholte sie eine Exception-Meldung — ausgenommen allein `ReportingExceptionUtils`, das
+  die Exception-Blöcke schreibt. Die Regeln gelten dadurch auch für Klassen, die es
+  heute nicht gibt. Ein Test, der einen einzelnen Satz festschreibt, leistet das nicht und macht jede
+  spätere Umformulierung zur Teständerung.
+- **Der Marker kennzeichnet eine Exception-Meldung, nicht das Level und keinen Abbruch.** `### FEHLER:` steht
+  vor der Meldung einer Exception und im Exception-Block, den `ReportingExceptionUtils` schreibt — auf
+  `ERROR` für den Abbruch an der Abschlussgrenze, auf `WARNING` oder `INFO` für einen hingenommenen Fehler.
+  Ob ein Fehler hingenommen wurde, zeigt allein das Level: `ERROR` ist dem Abbruch vorbehalten; ein Block auf
+  `WARNING` dokumentiert ein hingenommenes Ausgabeproblem, einer auf `INFO` einen gelungenen Rückfall. An
+  einer gewöhnlichen Wurfstelle steht keine zweite Meldung.
+- **Der Quelltexttest liest Text und hat darin seine Grenze.** Er findet nicht, was erst ein Vergleich
+  zeigt: eine Protokollzeile, die den Meldungstext ohne Marker wiederholt, und einen Catch, der die
+  gefangene Exception nicht als Ursache mitgibt oder ihre Meldung durch eine eigene ersetzt. Er sieht auch
+  keine Meldung, die als Variable oder als Konstante einer anderen Datei am Wurf ankommt — aufgelöst wird
+  nur eine Konstante derselben Datei. Das sichern die Verhaltenstests an der jeweiligen Stelle: die Zusicherung auf ein leeres Log neben dem Wurf und der
+  Vergleich der Meldung, die durch eine Zwischenschicht hindurch am Ende ankommt. Wo eine solche Schicht
+  dazwischenliegt, bindet ein Test den Wortlaut deshalb bewusst ganz — das ist dort kein Wortlaut-Test,
+  sondern die Prüfung, dass nichts ersetzt wurde.
+
+**Die übrigen Melde- und Logging-Regeln:**
+
 - Logging nur über `reportingContext.logger()` / `reportingContext.log()`. **Thymeleaf-Dialekte**
   sind einmalig an der geteilten `TemplateEngine` registriert und können die Meldefassade nicht als
   Feld halten; sie erhalten sie über die Context-Variable `ReportBuilderUtils.VARIABLE_PROBLEMMELDER`,
-  die der `ReportRendererHtml` vor dem Rendern aus den Daten-Contexts setzt, und melden darüber wie
-  jede andere Stelle. Abgelegt wird bewusst nur der schmale `ReportingProblemmelder` und nicht der
-  Reporting-Context: Der wäre per OGNL für jede Vorlage erreichbar und öffnete deren Zugriff auf die
-  Repositories. `Logger.global()` bleibt der Rückfall, wenn der Context keine Meldefassade führt —
-  etwa beim Erzeugen eines Dateinamens.
+  die `ReportBuilderUtils.mergeHtmlContexts` für beide Template-Pfade — HTML-Report und
+  Dateinamensvorlage — aus den Daten-Contexts setzt, und melden darüber wie jede andere Stelle.
+  Abgelegt wird bewusst nur der schmale `ReportingProblemmelder` und nicht der Reporting-Context: Der
+  wäre per OGNL für jede Vorlage erreichbar und öffnete deren Zugriff auf die Repositories.
+  `Logger.global()` ist der Abschlussgrenze vorbehalten; kein Dialekt und keine andere Stelle schreibt
+  hinein.
 - Fehler als `ApiOperationException` (ist `RuntimeException`). In Caller-Lambdas der
   `ReportingRepositoryUtils` **kein eigenes try/catch** — das würde den pro-ID-Fallback
   unterbinden.
@@ -130,20 +195,28 @@ Ihre Kennungen sind stabile Bezeichner, die auch Tests und Arbeitsdokumente refe
   kein „sichtbarer Datenfehler“. Fehlende Daten werden ausgelassen; die betroffene Stelle bleibt
   leer oder zeigt einen neutralen Platzhalter.
 - **Ein `ERROR`-Logeintrag ist dem Abbruch vorbehalten** (Konkretisierung von G-6). Ein
-  erfolgreicher Report hinterlässt keinen einzigen; `ERROR` steht nur dort, wo auch geworfen wird.
-  Wer einen Befund hinnehmen und weiterlaufen will, protokolliert höchstens `WARNING` — ein `ERROR`
+  erfolgreicher Report hinterlässt keinen einzigen; `ERROR` steht allein auf dem Weg eines Abbruchs,
+  und wo der Eintrag entsteht, regelt der Fehlervertrag. Wer einen Befund hinnehmen und weiterlaufen
+  will, protokolliert höchstens `WARNING` — ein `ERROR`
   gäbe einem hingenommenen Ausgabeproblem die Dringlichkeit eines Abbruchs und machte das Log als
   Abbruchspur unbrauchbar. Ein Architekturtest hält die Regel: Kein Catch-Block protokolliert
-  `ERROR`, ohne zu werfen.
+  `ERROR`, ohne zu werfen. Er prüft allein diese Reihenfolge und nicht, woher die Meldung stammt; dem
+  Fehlervertrag widerspricht er damit nicht. Ein Catch-Block mit einer technischen `ERROR`-Zeile endet
+  deshalb mit einem Wurf.
 - **Das Log-Level gilt für den gesamten Fehlerblock.** `ReportingExceptionUtils.logException()`
   schreibt Beschreibung, Fehlertyp, Meldung, Ursachenkette und Stacktrace auf dem übergebenen Level.
   Ein Aufruf mit `WARNING` hinterlässt damit keinen ERROR-Eintrag.
 - **Ein Ladefehler wird dort bewertet, wo die Daten gebraucht werden.** Repositories, die der
   `ReportingContext` für jeden Report aufbaut, protokollieren einen Ladefehler nicht bei der
   Initialisierung, sondern halten ihn als `ApiOperationException` fest — ein `boolean` verlöre die
-  Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptobjekt, folgen
-  `ERROR` und Wurf; sind sie Beiwerk, folgt höchstens eine `WARNING` je Repository-Instanz und die
-  Ausgabe läuft ohne diese Daten weiter (Muster: `ReportingRepositoryStundenplan`).
+  Ursache. Erst der Zugriff kennt die Bedeutung: Sind die Daten das angeforderte Hauptobjekt, wirft er
+  und gibt den festgehaltenen Fehler als `cause` mit — den `ERROR`-Block schreibt die Abschlussgrenze;
+  sind sie Beiwerk, meldet er den Befund über die Fassade `reportingContext.meldeAusgabeproblem(…)`
+  und die Ausgabe läuft ohne diese Daten weiter (Muster: `ReportingRepositoryStundenplan`). Die
+  Fassade protokolliert ihn mit `WARNING` und dedupliziert innerhalb des Reporting-Aufrufs über
+  Ursache, Auswirkung und Schlüssel. Wer an der meldenden Stelle selbst mitzählte, würde damit Befunde
+  zu anderen Schlüsseln unterdrücken. Allein ein Verbindungsabbruch endet auch hier im Wurf; dazu der
+  Punkt zur Klassifikation weiter unten.
 - **Der Hinweis-Header entsteht bei jedem Erfolg — aus dem gemeldeten Ausgabeumfang.** Eine
   erfolgreiche HTML-, PDF- oder ZIP-Antwort trägt `SVWS-Reporting-Hinweise`; zum Stand seiner
   Auslieferung siehe 4.4. Voraussetzung ist der
@@ -244,21 +317,24 @@ Ergänzende Regeln:
   verpacken, brauchen davor einen eigenen Zweig `catch (ApiOperationException aoe)`, der die
   Exception mit ihrem ursprünglichen Status durchreicht — sonst werden 400/403/404 am API-Rand
   zu 500 verschluckt (Muster: `ReportingFactory`). Das gilt auch dann, wenn die eigene Meldung
-  innerhalb desselben `try`-Blocks geworfen wird: Sonst überschreibt der allgemeine Catch sie und
-  protokolliert den Fehler ein zweites Mal.
+  innerhalb desselben `try`-Blocks geworfen wird: Sonst ersetzt der allgemeine Catch sie durch seine
+  eigene, unspezifische Meldung.
 - **Ursache übergeben:** Wird eine unerwartete Exception neu verpackt, gehört sie als `cause` in
   die `ApiOperationException`. Für bewusst erzeugte Validierungsexceptions gilt das nicht — sie
   haben konstruktionsbedingt keine Ursache.
 - **Status nicht verschärfen:** Ein Builder, der einen Renderer aufruft, reicht dessen Status
   weiter, statt ihn erneut zu verpacken. Die Fehlerquelle ist dort bereits bekannt, der Aufrufer
   kennt sie nicht besser.
-- **Log-Level:** Zu jedem geworfenen Fehler gehört ein Log-Eintrag mit `LogLevel.ERROR`
-  (nicht `DEBUG`/`INFO`).
-- **Wer protokolliert:** Ein Fehler wird **einmal an seiner Quelle** protokolliert. Eine Ebene, die
-  ihn nur durchreicht, protokolliert nur dann, wenn sie einen Zusammenhang beiträgt, den die Quelle
-  nicht kennt — etwa den Dateinamen des betroffenen Dokuments in einer Sammelausgabe. Sie gibt dann
-  **allein diesen Zusammenhang** aus und hängt nicht `e.getMessage()` an: Die Meldung der Quelle
-  steht bereits in deren Eintrag und reist mit der Exception weiter. Der Log-Block wird als
+- **Log-Level:** Zu einem Abbruch gehört ein Log-Eintrag mit `LogLevel.ERROR` (nicht `DEBUG`/`INFO`).
+  Er entsteht an der Abschlussgrenze. Ein geworfener Fehler, den ein tolerierender Pfad auffängt, ist
+  kein Abbruch und bekommt keinen — dort meldet die Fassade.
+- **Wer protokolliert:** Ein Fehler wird **einmal an der Abschlussgrenze** protokolliert — dort, wo er
+  abschließend behandelt und zur Fehlerantwort wird (Fehlervertrag, 4.2). Die Wurfstelle schreibt
+  höchstens ihre technische Angabe. Eine Ebene dazwischen protokolliert nur dann, wenn sie einen
+  Zusammenhang beiträgt, den die Wurfstelle nicht kennt — etwa den Dateinamen des betroffenen
+  Dokuments in einer Sammelausgabe. Sie gibt
+  dann **allein diesen Zusammenhang** aus und hängt nicht `e.getMessage()` an: Die Meldung der Quelle
+  reist mit der Exception weiter und steht im Fehlerblock. Der Log-Block wird als
   `SimpleOperationResponse` an den Client ausgeliefert; jede Wiederholung steht dort ebenfalls.
   Für tolerierte Ausgabeprobleme protokolliert der Problemsammler den Block aus Fehlertyp,
   Ursachenkette und Stacktrace **einmal je Fehler-Instanz** — reist dieselbe Instanz mit einem

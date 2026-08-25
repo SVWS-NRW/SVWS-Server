@@ -1,9 +1,12 @@
 package de.svws_nrw.module.reporting.repositories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -34,7 +38,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Prüft, mit welchem Status die Repositories abbrechen, wenn ein Zugriff scheitert, den der Report nicht auslassen kann.
  * <p>Zwei Fragen entscheidet dieser Test: Trägt der Abbruch überhaupt einen Status - eine {@code IllegalStateException} kommt am API-Rand als undefinierter
  * Serverfehler an -, und ist es der richtige. Ein pauschales {@code NOT_FOUND} über einem Serverfehler sagt dem Anwender, seine Daten gebe es nicht.</p>
- * <p>Kein Repository protokolliert den Abbruch selbst: Den einen {@code ERROR}-Eintrag schreibt die Abschlussgrenze, die auch den Status nach außen gibt.</p>
+ * <p>Kein Repository protokolliert den Abbruch selbst: Den Fehlerblock schreibt die Abschlussgrenze, die auch den Status nach außen gibt. Erlaubt ist
+ * allein eine technische Zeile mit einer Angabe, die sonst niemand trägt - hier die Blockung der GOSt-Kursplanung, die aus dem gewählten Ergebnis
+ * abgeleitet ist.</p>
  */
 class TestReportingRepositoryAbbruchstatus {
 
@@ -82,7 +88,42 @@ class TestReportingRepositoryAbbruchstatus {
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus(), "Ein nicht ladbarer Katalog ist ein Serverproblem und trägt diesen Status nach außen.");
 		assertNotNull(aoe.getCause(), "Die Ursache gehört in den Abbruch; die Abschlussgrenze protokolliert sie mit Stacktrace.");
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEinNichtLadbarerSchulkatalogNachIdNenntKeineInterneUnterscheidung() {
+		// Die Katalogbezeichnung wird zur Laufzeit in die Meldung eingesetzt; der Quelltexttest sieht sie nicht. Beide Lader des Schulkatalogs heißen für
+		// den Anwender gleich: Er kennt weder die IDs noch die Unterscheidung nach dem Index.
+		final ReportingRepositoryKataloge repository = new ReportingRepositoryKataloge(reportingContext);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.schule(1L));
+
+		pruefeSchulkatalogAbbruch(aoe);
+	}
+
+	@Test
+	void testEinNichtLadbarerSchulkatalogNachSchulnummerNenntKeineInterneUnterscheidung() {
+		final ReportingRepositoryKataloge repository = new ReportingRepositoryKataloge(reportingContext);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.schuleNachSchulnummer("123456"));
+
+		pruefeSchulkatalogAbbruch(aoe);
+	}
+
+	/**
+	 * Prüft den Abbruch eines nicht ladbaren Schulkatalogs: Status, Ursache und eine Meldung, die den Katalog nennt, ohne ID oder Lader zu verraten.
+	 *
+	 * @param aoe Der Abbruch.
+	 */
+	private void pruefeSchulkatalogAbbruch(final ApiOperationException aoe) {
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertNotNull(aoe.getCause(), "Die Ursache gehört in den Abbruch.");
+		final String meldung = assertInstanceOf(String.class, aoe.getBody(), "Ohne String-Body bliebe die Kopfzeile ohne Abbruchgrund.");
+		assertTrue(meldung.contains("Schulen"), "Die Meldung nennt den Katalog: " + meldung);
+		assertFalse(meldung.contains("ID"), "Die Meldung nennt keine IDs: " + meldung);
+		assertFalse(meldung.contains("(nach"), "Die Meldung verrät nicht, nach welchem Index der Katalog geladen wurde: " + meldung);
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
 	}
 
 	@Test
@@ -93,7 +134,7 @@ class TestReportingRepositoryAbbruchstatus {
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 		assertNotNull(aoe.getCause());
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
 	}
 
 	@Test
@@ -111,7 +152,7 @@ class TestReportingRepositoryAbbruchstatus {
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
 		}
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
 	}
 
 	@Test
@@ -133,7 +174,8 @@ class TestReportingRepositoryAbbruchstatus {
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
 		}
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of("Blockung 7"), fehlermeldungenImLog(),
+				"Die Blockung ist aus dem Ergebnis abgeleitet und steht in keinem Eingangsprotokoll; die Zeile nennt allein sie.");
 	}
 
 	@Test
@@ -146,7 +188,7 @@ class TestReportingRepositoryAbbruchstatus {
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 		assertNotNull(aoe.getCause(), "Die Ursache gehört in den Abbruch; die Abschlussgrenze protokolliert sie mit Stacktrace.");
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
 	}
 
 	@Test
@@ -165,7 +207,7 @@ class TestReportingRepositoryAbbruchstatus {
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
 		}
-		assertEquals(List.of(), fehlermeldungenImLog(), "Den einen ERROR-Eintrag schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Repository protokolliert nicht; den Fehlerblock schreibt die Abschlussgrenze: " + fehlermeldungenImLog());
 	}
 
 	@Test
@@ -173,14 +215,40 @@ class TestReportingRepositoryAbbruchstatus {
 		// Die Halbjahres-ID stammt aus den gespeicherten Blockungsdaten des Servers; ein ungültiger Wert ist eine Inkonsistenz der Serverdaten. Als
 		// NOT_FOUND suchte der Anwender die Ursache bei seiner Anfrage.
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(9, ID_BLOCKUNG));
+				() -> ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(9));
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 	}
 
 	@Test
 	void testEinGueltigesHalbjahrDerBlockungsdatenWirdAufgeloest() {
-		assertEquals(GostHalbjahr.Q11, ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(GostHalbjahr.Q11.id, ID_BLOCKUNG));
+		assertEquals(GostHalbjahr.Q11, ReportingRepositoryGostKursplanung.ermittleGostHalbjahr(GostHalbjahr.Q11.id));
+	}
+
+	@Test
+	void testEinUngueltigesHalbjahrDerBlockungsdatenHaeltBlockungUndWertImLogFest() {
+		// Die Meldung nennt weder Blockung noch Wert, und in keiner Ursachenkette stehen sie: Ohne diese Zeile wäre der inkonsistente Datensatz nicht
+		// auffindbar.
+		final ReportingRepositoryGostKursplanung repository = new ReportingRepositoryGostKursplanung(reportingContext);
+		final GostBlockungsdaten blockungsdaten = new GostBlockungsdaten();
+		blockungsdaten.id = ID_BLOCKUNG;
+		blockungsdaten.gostHalbjahr = 9;
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.gostHalbjahrDerBlockung(blockungsdaten));
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertEquals(List.of("Blockung 7, GOSt-Halbjahr-Wert 9"), fehlermeldungenImLog(), "Die Zeile nennt allein Blockung und Wert.");
+	}
+
+	@Test
+	void testEinGueltigesHalbjahrDerBlockungsdatenHinterlaesstKeinenFehlereintrag() throws ApiOperationException {
+		final ReportingRepositoryGostKursplanung repository = new ReportingRepositoryGostKursplanung(reportingContext);
+		final GostBlockungsdaten blockungsdaten = new GostBlockungsdaten();
+		blockungsdaten.id = ID_BLOCKUNG;
+		blockungsdaten.gostHalbjahr = GostHalbjahr.Q11.id;
+
+		assertEquals(GostHalbjahr.Q11, repository.gostHalbjahrDerBlockung(blockungsdaten));
+		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test

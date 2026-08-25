@@ -84,7 +84,7 @@ public class ReportingRepositoryStundenplan {
 			return aoe;
 		} catch (final Exception e) {
 			this.stundenplandefinitionen.clear();
-			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "FEHLER: Die Daten der Stundenpläne konnten nicht ermittelt werden.");
+			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Die Stundenpläne der Schule konnten nicht geladen werden.");
 		}
 	}
 
@@ -145,20 +145,20 @@ public class ReportingRepositoryStundenplan {
 	 */
 	public ReportingStundenplanungStundenplan stundenplan(final long idStundenplan) throws ApiOperationException {
 		if (this.ladefehlerDefinitionen != null) {
-			// Nur die Quellmeldung: Den strukturierten Block aus Typ, Ursachenkette und Stacktrace gibt die oberste Ebene aus, die diesen Wurf behandelt.
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 8,
-					"FEHLER: Der angeforderte Stundenplan ist nicht ermittelbar, da die Stundenplandefinitionen nicht geladen werden konnten.");
+			// Der Grund steht in der Ursachenkette: Der festgehaltene Ladefehler der Definitionen reist als cause mit.
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, this.ladefehlerDefinitionen,
-					"FEHLER: Der angeforderte Stundenplan ist nicht ermittelbar, da die Stundenplandefinitionen nicht geladen werden konnten.");
+					"### FEHLER: Der angeforderte Stundenplan konnte nicht geladen werden.");
 		}
 
 		final ReportingStundenplanungStundenplan stundenplan = ermittleStundenplan(idStundenplan);
 		if ((stundenplan == null) && stundenplandefinitionen.stream().anyMatch(d -> d.id == idStundenplan)) {
 			// Die Definitionsliste dieses Aufrufs führt den Stundenplan; dass er dennoch fehlt, ist ein Serverproblem. Als NOT_FOUND wäre das die falsche
 			// Auskunft, der Anwender suchte nach einem Datensatz, den die Schule führt.
+			// Dass die Definitionsliste den Plan führt, seine Daten aber fehlen, ist der eigentliche Befund und steht in keinem Eingangsprotokoll.
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 8,
+					"Stundenplan %d steht in den Definitionen, seine Daten fehlen.".formatted(idStundenplan));
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, this.ladefehlerStundenplaene.get(idStundenplan),
-					"FEHLER: Der Stundenplan %d ist in den Stundenplandefinitionen vorhanden, seine Daten konnten aber nicht geladen werden."
-							.formatted(idStundenplan));
+					"### FEHLER: Die Daten des angeforderten Stundenplans konnten nicht geladen werden.");
 		}
 		return stundenplan;
 	}

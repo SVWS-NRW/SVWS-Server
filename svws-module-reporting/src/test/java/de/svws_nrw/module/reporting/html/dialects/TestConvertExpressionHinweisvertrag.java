@@ -82,7 +82,7 @@ class TestConvertExpressionHinweisvertrag {
 	 * @return Das gerenderte HTML.
 	 */
 	private String rendere(final String template) {
-		return new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), new Logger())
+		return new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine())
 				.renderHtml(template, List.of(new TestHtmlContext(reportingContext)));
 	}
 

@@ -36,8 +36,8 @@ public class ReportingVorlageParameterTypisiert<T> {
 	}
 
 	/**
-	 * Erstellt eine Instanz und wandelt den Wert des übergebenen ReportingVorlageParameter in den Zieltyp T um,
-	 * sofern T mit dem Typ des Vorlage-Parameters kompatibel ist. Andernfalls wird eine IllegalArgumentException geworfen.
+	 * Erstellt eine Instanz und wandelt den Wert des übergebenen ReportingVorlageParameter in den Zieltyp T um. Lässt sich der Wert nicht in den Typ
+	 * des Vorlage-Parameters wandeln, wird eine ApiOperationException geworfen.
 	 *
 	 * @param reportingReportVorlageParameter der Vorlage-Parameter
 	 * @throws ApiOperationException falls der Zieltyp nicht mit dem Parameter-Typ kompatibel ist oder die Konvertierung fehlschlägt
@@ -85,7 +85,7 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 * @throws ApiOperationException Wenn die Konvertierung fehlschlägt oder ein ungültiger Typ angegeben wurde
 	 */
 	private static <T> T getTypisiertenWert(final ReportingReportvorlageParameter reportingReportVorlageParameter) throws ApiOperationException {
-		return getTypisiertenWert(reportingReportVorlageParameter.typ, reportingReportVorlageParameter.wert, reportingReportVorlageParameter.name);
+		return getTypisiertenWert(reportingReportVorlageParameter.typ, reportingReportVorlageParameter.wert);
 	}
 
 	/**
@@ -94,14 +94,13 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 * @param <T>   Der Zieltyp, in den der Wert konvertiert werden soll
 	 * @param typ   Der Typ des Parameters gemäß {@link ReportingReportvorlageParameterTyp}
 	 * @param wert  Der zu konvertierende Wert als Zeichenkette
-	 * @param name  Der Name des Parameters für die Fehlermeldung
 	 *
 	 * @return Der in den Zieltyp T konvertierte Wert
 	 *
 	 * @throws ApiOperationException Wenn die Konvertierung fehlschlägt oder ein ungültiger Typ angegeben wurde
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T getTypisiertenWert(final int typ, final String wert, final String name) throws ApiOperationException {
+	private static <T> T getTypisiertenWert(final int typ, final String wert) throws ApiOperationException {
 		final String s = (wert == null) ? "" : wert.trim();
 		try {
 			return switch (ReportingReportvorlageParameterTyp.getByID(typ)) {
@@ -112,8 +111,8 @@ public class ReportingVorlageParameterTypisiert<T> {
 				case STRING, UNDEFINED -> (T) s;
 			};
 		} catch (final Exception e) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
-					"Konvertierung des Werts " + s + " für die Vorlagenparameter " + name + " fehlgeschlagen.");
+			// Der Wert stammt aus der Vorlagendefinition auf dem Server; Werte aus Request und Konfiguration prüft der ParameterBuilder vorher auf Typkonformität.
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Ein Vorlagenparameter des Reports ist auf dem Server ungültig.");
 		}
 	}
 
@@ -134,7 +133,7 @@ public class ReportingVorlageParameterTypisiert<T> {
 			return "true".equalsIgnoreCase(s) || "false".equalsIgnoreCase(s);
 		}
 		try {
-			getTypisiertenWert(typ, s, "");
+			getTypisiertenWert(typ, s);
 			return true;
 		} catch (final ApiOperationException e) {
 			return false;

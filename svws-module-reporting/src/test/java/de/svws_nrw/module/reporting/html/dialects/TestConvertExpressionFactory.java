@@ -15,7 +15,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.IExpressionContext;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.builders.ReportBuilderUtils;
 import de.svws_nrw.module.reporting.builders.ReportRendererHtml;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
@@ -109,7 +108,7 @@ class TestConvertExpressionFactory {
 	@Test
 	void testDerRendererReichtDenReportingContextBisInDenDialekt() {
 		final ReportingContext reportingContext = mock(ReportingContext.class);
-		final String html = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), new Logger())
+		final String html = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine())
 				.renderHtml(TEMPLATE, List.of(new TestHtmlContext(reportingContext)));
 
 		// Der Report wird trotz des nicht darstellbaren Codes fertig gerendert, und der Befund erreicht genau diesen Aufruf.
@@ -119,7 +118,7 @@ class TestConvertExpressionFactory {
 
 	@Test
 	void testOhneReportingContextInDenDatenRendertDerReportTrotzdem() {
-		final String html = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), new Logger())
+		final String html = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine())
 				.renderHtml(TEMPLATE, List.of(new TestHtmlContext(null)));
 
 		assertTrue(html.contains("Testinhalt"), "Ein Datenaufbau ohne Reporting-Context darf die Ausgabe nicht verhindern.");
@@ -131,8 +130,8 @@ class TestConvertExpressionFactory {
 		final ReportingContext ersterReport = mock(ReportingContext.class);
 		final ReportingContext zweiterReport = mock(ReportingContext.class);
 
-		new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), new Logger()).renderHtml(TEMPLATE, List.of(new TestHtmlContext(ersterReport)));
-		new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), new Logger()).renderHtml(TEMPLATE, List.of(new TestHtmlContext(zweiterReport)));
+		new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine()).renderHtml(TEMPLATE, List.of(new TestHtmlContext(ersterReport)));
+		new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine()).renderHtml(TEMPLATE, List.of(new TestHtmlContext(zweiterReport)));
 
 		// Jeder Aufruf erhält genau eine Meldung: Ein festgehaltener Context brächte dem ersten Report zwei und dem zweiten keine.
 		hatEineLueckeGemeldet(ersterReport);

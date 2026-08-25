@@ -88,7 +88,7 @@ public class ReportingRepositoryGost {
 				abiturjahrgaenge = this.reportingContext.conn().queryAll(DTOGostJahrgangsdaten.class).stream().map(aj -> aj.Abi_Jahrgang).toList();
 			} catch (final Exception e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-						"FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
+						"### FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
 			}
 		}
 		return abiturjahrgaenge;
@@ -331,7 +331,7 @@ public class ReportingRepositoryGost {
 		final List<GostStatistikFachwahl> fachwahlen = mapFachwahlen.get(abiturjahr);
 		if (fachwahlen == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, ladefehlerFachwahlen.get(abiturjahr),
-					"FEHLER: Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d konnte nicht ermittelt werden.".formatted(abiturjahr));
+					"### FEHLER: Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d konnte nicht ermittelt werden.".formatted(abiturjahr));
 		}
 		return fachwahlen;
 	}

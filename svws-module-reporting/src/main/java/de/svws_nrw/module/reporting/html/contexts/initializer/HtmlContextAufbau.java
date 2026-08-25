@@ -20,7 +20,8 @@ public interface HtmlContextAufbau {
 	String contextSchluessel();
 
 	/**
-	 * Gibt an, ob dieser Datenaufbau die Aufteilung in Einzeldokumente unterstützt.
+	 * Gibt an, ob dieser Datenaufbau die Aufteilung in Einzeldokumente unterstützt. Der Initializer liest die Zusage: Er gibt den Schlüssel des
+	 * Haupt-Contexts für die Einzelausgabe nur heraus, wenn sie gilt.
 	 *
 	 * @return true, wenn die Einzelausgabe unterstützt wird, sonst false.
 	 */

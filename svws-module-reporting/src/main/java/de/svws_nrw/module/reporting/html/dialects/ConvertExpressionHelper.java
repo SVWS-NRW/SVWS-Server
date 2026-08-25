@@ -1,8 +1,6 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
 import de.svws_nrw.base.compression.GZip;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.encoding.Base32;
 import de.svws_nrw.core.utils.encoding.Base45;
@@ -33,7 +31,8 @@ public class ConvertExpressionHelper {
 	private final ReportingProblemmelder melder;
 
 	/**
-	 * Erstellt einen neuen ConvertExpressionHelper ohne Meldefassade. Hinweise auf Lücken in der Ausgabe erreichen dann nur den globalen Log.
+	 * Erstellt einen neuen ConvertExpressionHelper ohne Meldefassade. Lücken in der Ausgabe bleiben dann ungemeldet; produktiv legt mergeHtmlContexts
+	 * die Fassade für beide Template-Pfade ab.
 	 */
 	public ConvertExpressionHelper() {
 		this(null);
@@ -248,12 +247,10 @@ public class ConvertExpressionHelper {
 	private String leereFlaeche(final String art, final String inhalt, final double breiteInMM, final double hoeheInMM, final double standardHoeheMM,
 			final Exception e) {
 		final String meldung = "Der %s zum Inhalt '%s' konnte nicht erzeugt werden und bleibt leer.".formatted(art, inhalt);
+		// Ohne Meldefassade bleibt die Lücke ungemeldet; produktiv legt mergeHtmlContexts sie für beide Template-Pfade ab.
 		if (melder != null) {
 			melder.melde(ReportingProblemursache.NICHT_DARSTELLBAR, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
 					ReportingProblemSchluessel.fuer(ReportingBarcodeUtils.class), meldung, e);
-		} else {
-			// Ohne Meldefassade - etwa beim Erzeugen eines Dateinamens - bleibt nur der globale Log.
-			Logger.global().logLn(LogLevel.WARNING, "WARNUNG: %s %s".formatted(meldung, e.getMessage()));
 		}
 		return ReportingBarcodeUtils.leeresTransparentesSVG(
 				(breiteInMM <= 0) ? ReportingBarcodeUtils.STANDARD_BREITE_MM : breiteInMM,

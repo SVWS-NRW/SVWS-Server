@@ -4,6 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.sql.SQLNonTransientConnectionException;
 import java.util.HashMap;
@@ -11,9 +16,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -43,7 +50,18 @@ class TestReportBuilderDateiname {
 		 * @param daten         Die Daten, die unter diesem Namen bereitstehen.
 		 */
 		private TestHtmlContext(final String variablenname, final List<T> daten) {
-			super(null);
+			this(variablenname, daten, null);
+		}
+
+		/**
+		 * Erzeugt den Context mit den übergebenen Daten und dem Reporting-Context, dessen Meldefassade die Dialekte erreichen sollen.
+		 *
+		 * @param variablenname    Der Name der Thymeleaf-Variablen.
+		 * @param daten            Die Daten, die unter diesem Namen bereitstehen.
+		 * @param reportingContext Der Reporting-Context des Reports; {@code null}, wenn keiner mitgeführt wird.
+		 */
+		private TestHtmlContext(final String variablenname, final List<T> daten, final ReportingContext reportingContext) {
+			super(reportingContext);
 			erzeugeContext(variablenname, daten);
 		}
 	}
@@ -84,6 +102,19 @@ class TestReportBuilderDateiname {
 		return List.of(new TestHtmlContext<>("Daten", List.of(new DatensatzMitVerbindungsabbruch())));
 	}
 
+	@Test
+	void testDieDateinamensvorlageMeldetEineLueckeUeberDieFassadeDesReports() {
+		// Die Dialekte melden an denselben Report wie der übrige Datenaufbau - auch aus der Dateinamensvorlage heraus, denn mergeHtmlContexts legt die
+		// Meldefassade für beide Template-Pfade ab. Ohne sie bliebe die Lücke ungemeldet.
+		final ReportingContext reportingContext = mock(ReportingContext.class);
+		final List<HtmlContext<?>> contexts = List.of(new TestHtmlContext<>("Daten", List.of("Meier"), reportingContext));
+
+		ReportBuilderUtils.generiereDateinameAusVorlage("[(${#convert.to2DCodeQRCodeAsSvgHtmlImageSource('学校证明', 50, 50)})]", contexts);
+
+		verify(reportingContext).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_DARSTELLBAR), eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN),
+				any(), anyString(), any());
+	}
+
 	/**
 	 * Gibt an, ob die Ursachenkette des übergebenen Fehlers den injizierten Verbindungsabbruch führt.
 	 *
@@ -118,8 +149,7 @@ class TestReportBuilderDateiname {
 				.addHtmlContexts(contexts(daten))
 				.withDateinamensvorlage(dateinamensvorlage)
 				.withStatischerDateiname(STATISCHER_NAME)
-				.withRootPfad("de/svws_nrw/module/reporting/")
-				.withLogger(new Logger()));
+				.withRootPfad("de/svws_nrw/module/reporting/"));
 	}
 
 
@@ -182,8 +212,10 @@ class TestReportBuilderDateiname {
 	void testEineInfrastrukturstoerungBeendetDieNamensbildungStattZurueckzufallen() {
 		// Der Rückfall auf den statischen Namen gilt Vorlagen, die keinen Namen hergeben. Eine abgerissene Verbindung ist kein solcher Fall: Sie beendet die
 		// Ausgabe. Ohne diese Unterscheidung liefe die Störung hier ins Leere und meldete sich erst beim Rendern mit einer unpräziseren Ursache.
+		final List<HtmlContext<?>> contexts = contextsMitVerbindungsabbruch();
+
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
-				() -> ReportBuilderUtils.generiereDateinameAusVorlage("Bescheinigung_[(${Daten[0].nachname})]", contextsMitVerbindungsabbruch()));
+				() -> ReportBuilderUtils.generiereDateinameAusVorlage("Bescheinigung_[(${Daten[0].nachname})]", contexts));
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 		// Die direkte Ursache ist der Fehler, in den Thymeleaf die Auswertung verpackt; der Verbindungsabbruch liegt tiefer. Ohne die erhaltene Kette stünde

@@ -8,20 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.IContext;
 
-import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -37,13 +36,7 @@ class TestReportRendererHtml {
 	private static final String TEMPLATE = "<html><body><span th:text=\"${Daten[0]}\">Platzhalter</span></body></html>";
 
 	/** Die Meldung, die bei fehlender Template-Engine oder fehlendem Template erwartet wird. */
-	private static final String MELDUNG_KEIN_TEMPLATE = "### FEHLER: Die HTML-Template-Engine oder das HTML-Template wurden nicht übergeben.";
-
-	/** Der Logger, den der Renderer in den Tests verwendet. */
-	private Logger logger;
-
-	/** Die Liste, die die Einträge des Loggers sammelt. */
-	private LogConsumerList log;
+	private static final String MELDUNG_KEIN_TEMPLATE = "### FEHLER: Für die HTML-Erzeugung fehlt die Vorlage oder ihre Verarbeitung.";
 
 
 	/**
@@ -64,24 +57,19 @@ class TestReportRendererHtml {
 		}
 	}
 
+	/** Ein Context, der einen Reporting-Context mitführt, aber keine fachliche Variable - die Lage, in der die Meldefassade allein im Context läge. */
+	private static final class ContextOhneVariablen extends HtmlContext<String> {
 
-	@BeforeEach
-	void setUp() {
-		logger = new Logger();
-		log = new LogConsumerList();
-		logger.addConsumer(log);
+		/**
+		 * Erzeugt den Context mit dem übergebenen Reporting-Context und ohne Variablen.
+		 *
+		 * @param reportingContext Der Reporting-Context, dessen Meldefassade der zusammengeführte Context erhält.
+		 */
+		private ContextOhneVariablen(final ReportingContext reportingContext) {
+			super(reportingContext);
+		}
 	}
 
-
-	/**
-	 * Gibt die Texte aller Logeinträge mit dem Level ERROR zurück. Die Einrückung, die der Logger dem Text voranstellt, wird dabei entfernt: Geprüft wird
-	 * die Meldung, nicht ihre Formatierung.
-	 *
-	 * @return Die Texte der ERROR-Logeinträge in der Reihenfolge ihres Auftretens.
-	 */
-	private List<String> fehlermeldungenImLog() {
-		return log.getLogData().stream().filter(eintrag -> eintrag.getLevel() == LogLevel.ERROR).map(eintrag -> eintrag.getText().strip()).toList();
-	}
 
 	/**
 	 * Gibt die Contexts zurück, mit denen der Renderer in den Tests aufgerufen wird.
@@ -93,18 +81,16 @@ class TestReportRendererHtml {
 	}
 
 	/**
-	 * Prüft, dass die übergebene Exception das fehlende Template als Serverfehler meldet, ihre eigene Meldung behält und genau einmal im Log erscheint.
-	 * <p>Neben dem Status wird die Meldung geprüft, weil sie die Ursache benennt: Fängt der allgemeine Catch die eigene Exception, ersetzt er Status
-	 * <b>und</b> Meldung durch die unspezifische Angabe, das HTML habe nicht gerendert werden können.</p>
-	 * <p>Der Log wird als vollständige Liste verglichen und nicht nur auf ein Vorkommen geprüft: Fängt der allgemeine Catch die eigene Exception, gibt er
-	 * über {@code ReportingExceptionUtils} zusätzlich Typ, Fehlergründe und Stacktrace als ERROR aus. Genau diese zweite Ausgabe soll ausbleiben.</p>
+	 * Prüft, dass die übergebene Exception das fehlende Template als Serverfehler meldet und die Ursache benennt.
+	 * <p>Neben dem Status wird die Meldung geprüft, weil sie zur Kopfzeile der Fehlerantwort wird: Steht dort die unspezifische Angabe, das HTML habe nicht
+	 * gerendert werden können, erfährt der Leser den Grund des Abbruchs nicht mehr.</p>
+	 * <p>Das Log bleibt außen vor: Ein Abbruch hat eine Meldungsquelle - die Meldung der Exception -, und protokolliert wird an der Abschlussgrenze.</p>
 	 *
 	 * @param aoe Die geworfene Exception.
 	 */
 	private void pruefeMeldungFehlendesTemplate(final ApiOperationException aoe) {
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 		assertEquals(MELDUNG_KEIN_TEMPLATE, aoe.getBody(), "Die eigene Meldung darf nicht von der allgemeinen Fehlerbehandlung überschrieben werden.");
-		assertEquals(List.of(MELDUNG_KEIN_TEMPLATE), fehlermeldungenImLog(), "Der Fehler muss genau einmal mit dem Level ERROR protokolliert werden.");
 	}
 
 
@@ -112,7 +98,7 @@ class TestReportRendererHtml {
 
 	@Test
 	void testEineFehlendeTemplateEngineIstEinServerfehler() {
-		final ReportRendererHtml renderer = new ReportRendererHtml(null, logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(null);
 		final List<HtmlContext<?>> contexts = contexts();
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml(TEMPLATE, contexts));
 		pruefeMeldungFehlendesTemplate(aoe);
@@ -120,7 +106,7 @@ class TestReportRendererHtml {
 
 	@Test
 	void testEinFehlendesTemplateIstEinServerfehler() {
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
 		final List<HtmlContext<?>> contexts = contexts();
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml(null, contexts));
 		pruefeMeldungFehlendesTemplate(aoe);
@@ -128,7 +114,7 @@ class TestReportRendererHtml {
 
 	@Test
 	void testEinLeeresTemplateIstEinServerfehler() {
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
 		final List<HtmlContext<?>> contexts = contexts();
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml("   ", contexts));
 		pruefeMeldungFehlendesTemplate(aoe);
@@ -145,7 +131,7 @@ class TestReportRendererHtml {
 		final TemplateEngine templateEngine = mock(TemplateEngine.class);
 		when(templateEngine.process(anyString(), any(IContext.class))).thenThrow(ursprung);
 
-		final ReportRendererHtml renderer = new ReportRendererHtml(templateEngine, logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(templateEngine);
 		final List<HtmlContext<?>> contexts = contexts();
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml(TEMPLATE, contexts));
 		assertSame(ursprung, aoe, "Die ursprüngliche Exception muss unverändert durchgereicht werden.");
@@ -155,7 +141,7 @@ class TestReportRendererHtml {
 	@Test
 	void testEinUnerwarteterFehlerNenntSeineUrsache() {
 		// Eine zur Laufzeit scheiternde Expression: Thymeleaf meldet sie als TemplateProcessingException, die als Ursache erhalten bleiben muss.
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
 		final List<HtmlContext<?>> contexts = contexts();
 		final String template = "<html><body><span th:text=\"${1/0}\">Platzhalter</span></body></html>";
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> renderer.renderHtml(template, contexts));
@@ -168,17 +154,27 @@ class TestReportRendererHtml {
 
 	@Test
 	void testEinTemplateWirdMitDenContextDatenGerendert() {
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
 		final String html = renderer.renderHtml(TEMPLATE, contexts());
 		assertTrue(html.contains("Testinhalt"), "Das gerenderte HTML muss die Daten des Contexts enthalten.");
-		assertTrue(fehlermeldungenImLog().isEmpty(), "Ein erfolgreicher Lauf darf keine Fehler protokollieren.");
 	}
 
 	@Test
 	void testOhneContextvariablenEntstehtEinLeeresErgebnisUndKeinFehler() {
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
-		assertEquals("", renderer.renderHtml(TEMPLATE, List.of()));
-		assertTrue(fehlermeldungenImLog().isEmpty(), "Fehlende Daten sind kein Fehlerfall.");
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
+		assertEquals("", renderer.renderHtml(TEMPLATE, List.of()), "Fehlende Daten sind kein Fehlerfall, sondern ergeben ein leeres Ergebnis.");
+	}
+
+	@Test
+	void testDieMeldefassadeAlleinZaehltNichtAlsInhalt() {
+		// mergeHtmlContexts legt die Meldefassade in den Context, sobald ein Daten-Context einen Reporting-Context führt. Sie ist eine interne Variable:
+		// Ohne fachliche Variablen bleibt das Ergebnis leer, und die Engine läuft nicht an.
+		final TemplateEngine templateEngine = mock(TemplateEngine.class);
+		final ReportRendererHtml renderer = new ReportRendererHtml(templateEngine);
+		final List<HtmlContext<?>> contexts = List.of(new ContextOhneVariablen(mock(ReportingContext.class)));
+
+		assertEquals("", renderer.renderHtml(TEMPLATE, contexts), "Die Meldefassade allein ist kein Inhalt.");
+		verify(templateEngine, never()).process(anyString(), any(IContext.class));
 	}
 
 	// ##### Statustragende Ursachen aus den Datenzugriffen der Vorlage #####
@@ -220,7 +216,7 @@ class TestReportRendererHtml {
 	void testEineStatustragendeUrsacheAusDemDatenzugriffBehaeltStatusUndMeldung() {
 		// Thymeleaf wickelt den Wurf eines Getters in eigene Exceptions; die Statuszuordnung entpackt die Ursachenkette. Ohne das käme etwa der
 		// klassifizierte Anmeldefehler des Signierdienstes als undifferenzierter Serverfehler am API-Rand an.
-		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine(), logger);
+		final ReportRendererHtml renderer = new ReportRendererHtml(ReportBuilderUtils.getHtmlTemplateEngine());
 		final List<HtmlContext<?>> contexts = List.of(new ObjektContext("Werfer", List.of(new WerfenderWert())));
 		final String template = "<html><body><span th:text=\"${Werfer[0].wert()}\">x</span></body></html>";
 

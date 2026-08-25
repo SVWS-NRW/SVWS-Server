@@ -129,7 +129,8 @@ class TestConvertExpressionHelperCodes {
 
 	@Test
 	void testOhneMeldefassadeEntstehtTrotzdemEineLuecke() {
-		// Der parameterlose Konstruktor bildet den Fall ab, dass der Context keine Meldefassade mitführt - etwa beim Erzeugen eines Dateinamens.
+		// Der parameterlose Konstruktor bildet den Sicherungsfall ab, dass der Context keine Meldefassade mitführt; produktiv legt mergeHtmlContexts
+		// sie für beide Template-Pfade ab. Die Lücke entsteht auch dann, nur ungemeldet.
 		final String svg = new ConvertExpressionHelper().to2DCodeQRCodeAsSvgHtmlImageSource(NICHT_KODIERBAR, 50.0, 50.0);
 		assertEquals(ReportingBarcodeUtils.leeresTransparentesSVG(50.0, 50.0), svg);
 	}

@@ -86,7 +86,7 @@ public class ReportingContext {
 	 * @param logger 					Logger, der den Ablauf protokolliert und Fehlerdaten sammelt.
 	 * @param log 						Die Liste, die Einträge aus dem Logger sammelt.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@SuppressWarnings("java:S3366") // Die Warnung "'this' should not be exposed from constructors" kann aus folgendem Grund hier unterdrückt werden.
 	// Die Weitergabe von 'this innerhalb des Konstruktors birgt normalerweise die Gefahr, dass die Sub-Klassen eine Referenz auf ein noch nicht vollständig
@@ -259,7 +259,9 @@ public class ReportingContext {
 	/**
 	 * Meldet ein Ausgabeproblem und ist der einzige Weg dorthin: Der Befund wird registriert und einmal je Ursache, Auswirkung und Schlüssel protokolliert,
 	 * höchstens mit {@code WARNING} - ein {@code ERROR} ist dem Abbruch vorbehalten. Eine abbrechende Ursache wird dagegen nicht gesammelt, sondern
-	 * als Serverfehler geworfen; den Logeintrag dazu schreibt die Abschlussgrenze.
+	 * als Serverfehler geworfen; den Fehlerblock schreibt die Abschlussgrenze. Zuvor hält die Fassade in einer technischen Zeile fest, welcher Zugriff
+	 * scheiterte und welcher Datensatz betroffen ist - beides trägt sonst niemand: Die Ursache ist ein Verbindungsfehler ohne Datensatz, das
+	 * Eingangsprotokoll zählt IDs, und ein Schlüssel ohne ID nennt den Zugriff nicht.
 	 *
 	 * @param ursache      Woran es liegt; eine abbrechende Ursache führt zum Wurf.
 	 * @param auswirkung   Was daraus in der Ausgabe folgt.
@@ -273,8 +275,10 @@ public class ReportingContext {
 	public void meldeAusgabeproblem(final ReportingProblemursache ursache, final ReportingProblemauswirkung auswirkung,
 			final ReportingProblemSchluessel schluessel, final String beschreibung, final Exception fehler) {
 		if (ursache.istAbbruch()) {
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehler,
-					"Die Ausgabe wird abgebrochen: %s [%s]".formatted((beschreibung == null) ? "" : beschreibung, schluessel.beschreibung()));
+			// Die Beschreibung nennt den gescheiterten Zugriff, den ein Schlüssel ohne ID nicht trägt; der Schlüssel nennt den Datensatz. Beides steht sonst
+			// nirgends.
+			logger().logLn(LogLevel.ERROR, 4, "Betroffen: %s [%s]".formatted((beschreibung == null) ? "" : beschreibung, schluessel.beschreibung()).strip());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehler, "### FEHLER: Eine Störung der Infrastruktur hat die Ausgabe beendet.");
 		}
 		this.problemSammler.melde(ursache, auswirkung, schluessel, beschreibung, fehler);
 	}

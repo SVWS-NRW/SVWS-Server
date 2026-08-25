@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -51,11 +53,17 @@ class TestHtmlContextInitializerGostKlausurplanung {
 	/** Hält die Stufen fest, die der Initializer an den Context-Erzeuger übergibt. */
 	private final AtomicReference<List<GostKlausurenHalbjahresdaten>> uebergebeneStufen = new AtomicReference<>();
 
+	/** Die Liste, die die Einträge des Loggers sammelt. */
+	private LogConsumerList log;
+
 
 	@BeforeEach
 	void setUp() {
 		reportingContext = mock(ReportingContext.class);
-		when(reportingContext.logger()).thenReturn(new Logger());
+		final Logger logger = new Logger();
+		log = new LogConsumerList();
+		logger.addConsumer(log);
+		when(reportingContext.logger()).thenReturn(logger);
 
 		reportingParameter = mock(ReportingParameterTypisiert.class);
 		when(reportingParameter.reportVorlage()).thenReturn(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN);
@@ -140,13 +148,24 @@ class TestHtmlContextInitializerGostKlausurplanung {
 		assertTrue(initializer().meldetAusgabeumfangImContextAufbau());
 	}
 
+	/**
+	 * Gibt die Texte aller Logeinträge mit dem Level ERROR zurück, ohne die Einrückung des Loggers.
+	 *
+	 * @return Die Texte der ERROR-Logeinträge in der Reihenfolge ihres Auftretens.
+	 */
+	private List<String> fehlermeldungenImLog() {
+		return log.getLogData().stream().filter(eintrag -> eintrag.getLevel() == LogLevel.ERROR).map(eintrag -> eintrag.getText().strip()).toList();
+	}
+
 	@Test
 	void testEineZuLangeKombinierteIdBleibtEinClientFehler() {
 		// Form vor Existenz: 202503 zerfällt zu Jahrgang 20250 und Halbjahr 3. Ohne Obergrenze würde die kaputte ID still als unbekannter Jahrgang
 		// ausgelassen.
 		gebeHauptdatenIdsVor(List.of(202503L));
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 	}
@@ -156,7 +175,9 @@ class TestHtmlContextInitializerGostKlausurplanung {
 		// Der Gegenfall: 2026 zerfällt zu Jahrgang 202 und Halbjahr 6 und scheitert an der Untergrenze.
 		gebeHauptdatenIdsVor(List.of(2026L));
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 	}
@@ -165,10 +186,47 @@ class TestHtmlContextInitializerGostKlausurplanung {
 	void testEinUngueltigesHalbjahrBleibtEinClientFehler() {
 		gebeHauptdatenIdsVor(List.of(20266L));
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.", aoe.getBody());
+		assertEquals("### FEHLER: Ein angegebenes GOSt-Halbjahr ist ungültig.", aoe.getBody());
+	}
+
+	@Test
+	void testDieBeanstandeteStufeStehtImLog() {
+		// Die Meldung nennt weder die kombinierte ID noch das daraus abgeleitete Jahr, und das Eingangsprotokoll zeigt nur einen Auszug der Rohwerte.
+		// Ohne diese Zeile bliebe unauffindbar, welche der übergebenen Stufen die Ausgabe beendet hat.
+		gebeHauptdatenIdsVor(List.of(20261L, 20272L, 202503L));
+
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		assertThrows(ApiOperationException.class, initializer::init);
+
+		assertEquals(List.of("Beanstandete Stufe: 202503"), fehlermeldungenImLog(),
+				"Die Zeile nennt allein die beanstandete Stufe und wiederholt die Meldung nicht.");
+	}
+
+	@Test
+	void testDieSchleifeBrichtBeiDerErstenBeanstandetenStufeAb() {
+		// Zwei ungültige IDs ergeben genau einen Eintrag: Die Prüfung endet beim ersten Befund, und das Log spiegelt das.
+		gebeHauptdatenIdsVor(List.of(20266L, 20269L));
+
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		assertThrows(ApiOperationException.class, initializer::init);
+
+		assertEquals(List.of("Beanstandete Stufe: 20266"), fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEineGelungeneStufenauswahlHinterlaesstKeinenFehlereintrag() throws ApiOperationException {
+		gebeHauptdatenIdsVor(List.of(20261L, 20272L));
+
+		initializer().init();
+
+		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test
@@ -201,10 +259,12 @@ class TestHtmlContextInitializerGostKlausurplanung {
 	void testEinLadefehlerDerAbiturjahrgaengeBleibtEinServerfehler() {
 		gebeHauptdatenIdsVor(List.of(20263L));
 		final ApiOperationException ladefehler = new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-				"FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
+				"### FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
 		when(reportingContext.repositoryGost().abiturjahrgaenge()).thenThrow(ladefehler);
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializerGostKlausurplanung initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 	}

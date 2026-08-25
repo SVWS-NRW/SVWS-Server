@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -24,7 +25,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
@@ -72,7 +72,6 @@ class TestSchulbescheinigungQrFactory {
 	@BeforeEach
 	void setUp() {
 		reportingContext = mock(ReportingContext.class);
-		when(reportingContext.logger()).thenReturn(new Logger());
 
 		final ReportingSchuljahresabschnitt abschnitt = mock(ReportingSchuljahresabschnitt.class);
 		when(abschnitt.schuljahr()).thenReturn(2025);
@@ -178,7 +177,7 @@ class TestSchulbescheinigungQrFactory {
 				"Der Renderfehler bleibt auf den betroffenen Schüler beschränkt.");
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_DARSTELLBAR),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(SchulbescheinigungQrDaten.class, ID_SCHUELER)),
-				anyString(), any(Exception.class));
+				contains("mit der Signatur"), any(Exception.class));
 	}
 
 	@Test

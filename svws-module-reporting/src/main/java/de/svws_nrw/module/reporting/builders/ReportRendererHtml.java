@@ -1,11 +1,7 @@
 package de.svws_nrw.module.reporting.builders;
 
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.diagnose.ReportingProblemmelder;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
-import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.TemplateEngine;
@@ -18,18 +14,16 @@ import java.util.List;
  */
 public final class ReportRendererHtml {
 
-	private final Logger logger;
 	private final TemplateEngine templateEngine;
 
 	/**
-	 * Erzeugt eine Instanz mit gegebener TemplateEngine und Logger.
+	 * Erzeugt eine Instanz mit der gegebenen TemplateEngine.
+	 * <p>Der Renderer protokolliert nicht: Ein Abbruch trägt seinen Grund als Meldung der Exception, und ausgegeben wird er an der Abschlussgrenze.</p>
 	 *
 	 * @param templateEngine Die zu verwendende TemplateEngine
-	 * @param logger         Logger für Fehlermeldungen
 	 */
-	public ReportRendererHtml(final TemplateEngine templateEngine, final Logger logger) {
+	public ReportRendererHtml(final TemplateEngine templateEngine) {
 		this.templateEngine = templateEngine;
-		this.logger = logger;
 	}
 
 	/**
@@ -40,7 +34,7 @@ public final class ReportRendererHtml {
 	 * @param htmlTemplate Das HTML-Template (Thymeleaf)
 	 * @param contexts     Liste der HtmlContexts, die zu einem finalen Context zusammengeführt werden
 	 *
-	 * @return Der gerenderte HTML-String (nie null)
+	 * @return Der gerenderte HTML-String (nie null); leer, wenn die Contexts keine fachlichen Variablen tragen.
 	 *
 	 * @throws ApiOperationException Bei fehlender Template-Engine oder fehlendem Template sowie bei einem Fehler während des Renderns jeweils mit
 	 *                               {@code INTERNAL_SERVER_ERROR}. Eine aus den Daten-Zugriffen der Vorlage stammende {@link ApiOperationException} wird
@@ -49,19 +43,14 @@ public final class ReportRendererHtml {
 	public String renderHtml(final String htmlTemplate, final List<HtmlContext<?>> contexts) throws ApiOperationException {
 		try {
 			if ((templateEngine == null) || (htmlTemplate == null) || htmlTemplate.isBlank()) {
-				if (logger != null) {
-					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Engine oder das HTML-Template wurden nicht übergeben.");
-				}
-				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Die HTML-Template-Engine oder das HTML-Template wurden "
-						+ "nicht übergeben.");
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+						"### FEHLER: Für die HTML-Erzeugung fehlt die Vorlage oder ihre Verarbeitung.");
 			}
 			final Context finalContext = ReportBuilderUtils.mergeHtmlContexts(contexts);
-			if (finalContext.getVariableNames().isEmpty()) {
+			// Der Melder ist eine interne Variable und zählt nicht als Inhalt: Ohne fachliche Variablen gibt es nichts zu rendern.
+			if (finalContext.getVariableNames().stream().allMatch(ReportBuilderUtils.VARIABLE_PROBLEMMELDER::equals)) {
 				return "";
 			}
-			// Die Meldefassade begleitet die Daten, damit die Dialekte ihre Befunde an denselben Report geben wie der übrige Datenaufbau. Abgelegt wird
-			// nur der schmale Melder: Der ganze Reporting-Context wäre per OGNL für jede Vorlage erreichbar.
-			finalContext.setVariable(ReportBuilderUtils.VARIABLE_PROBLEMMELDER, problemmelderAus(contexts));
 			return templateEngine.process(htmlTemplate, finalContext);
 		} catch (final ApiOperationException e) {
 			// Bereits klassifizierte Fehler behalten ihren Status - sonst würde der allgemeine Catch daraus einen Serverfehler machen.
@@ -72,35 +61,12 @@ public final class ReportRendererHtml {
 			// undifferenzierten Serverfehler.
 			final ApiOperationException klassifiziert = ReportingExceptionUtils.apiOperationExceptionInUrsachenkette(e);
 			if (klassifiziert != null) {
-				throw new ApiOperationException(klassifiziert.getStatus(), e,
-						(klassifiziert.getMessage() != null) ? klassifiziert.getMessage() : "### FEHLER: Das HTML konnte nicht gerendert werden.");
+				throw new ApiOperationException(klassifiziert.getStatus(), e, (klassifiziert.getMessage() != null) ? klassifiziert.getMessage()
+						: "### FEHLER: Die HTML-Vorlage des Reports konnte nicht verarbeitet werden.");
 			}
-			if (logger != null) {
-				ReportingExceptionUtils.logException("### FEHLER: Das HTML konnte nicht gerendert werden.", e, logger, LogLevel.ERROR, 0);
-			}
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Das HTML konnte nicht gerendert werden.");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
+					"### FEHLER: Die HTML-Vorlage des Reports konnte nicht verarbeitet werden.");
 		}
-	}
-
-	/**
-	 * Bildet aus den Daten-Contexts den Melder für die Dialekte. Alle Daten-Contexts eines Reports tragen denselben Reporting-Context, daher genügt der
-	 * erste, der einen mitführt; abgelegt wird nur die Referenz auf seine Meldefassade.
-	 *
-	 * @param contexts Die Daten-Contexts des Reports.
-	 *
-	 * @return Der Melder oder {@code null}, wenn keiner der Daten-Contexts einen Reporting-Context mitführt.
-	 */
-	private static ReportingProblemmelder problemmelderAus(final List<HtmlContext<?>> contexts) {
-		if (contexts == null) {
-			return null;
-		}
-		for (final HtmlContext<?> htmlContext : contexts) {
-			final ReportingContext reportingContext = (htmlContext == null) ? null : htmlContext.getReportingContext();
-			if (reportingContext != null) {
-				return reportingContext::meldeAusgabeproblem;
-			}
-		}
-		return null;
 	}
 
 }

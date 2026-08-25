@@ -70,8 +70,8 @@ public final class ReportingBarcodeUtils {
 		if (barcodeInhaltNormalisiert.length() > 64) {
 			// Der Inhalt stammt aus den Reportdaten und nicht aus dem Request: Ein nicht darstellbarer Wert ist ein serverseitiges Problem.
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-					"Der Inhalt ist mit %d Zeichen zu lang für einen lesbaren Code128-Barcode (maximal 64): '%s'"
-							.formatted(barcodeInhaltNormalisiert.length(), barcodeInhaltNormalisiert));
+					"### FEHLER: Der Inhalt ist mit %d Zeichen zu lang für einen lesbaren Barcode; erlaubt sind höchstens 64 Zeichen."
+							.formatted(barcodeInhaltNormalisiert.length()));
 		}
 
 		// Wenn Inhalt des Barcodes leer ist, dann leeres SVG zurückgeben.
@@ -95,8 +95,7 @@ public final class ReportingBarcodeUtils {
 			return exportToSVGBase64(exporter, g2d -> barcode.draw(g2d, 0.0, 0.0, breiteMM, hoeheMM));
 		} catch (final BarcodeException | IOException ex) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, ex,
-					"Fehler: Beim Erzeugen des Barcodes aus dem String '" + barcodeInhaltNormalisiert + "' ist folgender Fehler aufgetreten: "
-							+ ex.getMessage());
+					"### FEHLER: Der Barcode konnte nicht erzeugt werden.");
 		}
 	}
 
@@ -159,7 +158,7 @@ public final class ReportingBarcodeUtils {
 			} else {
 				// Der Inhalt stammt aus den Reportdaten und nicht aus dem Request: Ein nicht darstellbarer Wert ist ein serverseitiges Problem.
 				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Der Inhalt kann nicht als QR-Code enkodiert werden: '" + qrInhaltNormalisiert + "'");
+						"### FEHLER: Der Inhalt lässt sich nicht als QR-Code darstellen.");
 			}
 
 			// Ein Exporter für eine SVG-Grafik in Schwarz und Weiß erzeugen.
@@ -168,11 +167,11 @@ public final class ReportingBarcodeUtils {
 
 			return exportToSVGBase64(exporter, g2d -> symbol.draw(g2d, 0.0, 0.0, breiteMM, hoeheMM));
 		} catch (final ApiOperationException ex) {
-			// Die Meldung oben nennt den nicht kodierbaren Inhalt; der allgemeine Catch verpackt sie sonst ein zweites Mal.
+			// Die eigene Meldung oben ist bereits klassifiziert; der allgemeine Catch verpackte sie sonst ein zweites Mal.
 			throw ex;
 		} catch (final Exception ex) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, ex,
-					"Fehler: Beim Erzeugen des QR-Codes aus dem String '" + qrInhaltNormalisiert + "' ist folgender Fehler aufgetreten: " + ex.getMessage());
+					"### FEHLER: Der QR-Code konnte nicht erzeugt werden.");
 		}
 	}
 

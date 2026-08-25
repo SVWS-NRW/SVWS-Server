@@ -32,13 +32,11 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class ReportingFactory {
 
-	/** Meldung für Fehler, die während der Initialisierung und Validierung der Factory auftreten. */
-	private static final String FEHLER_INITIALISIERUNG =
-			"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.";
+	/** Ersatzmeldung für einen Abbruch beim Vorbereiten des Reports, wenn die Ursachenkette keine eigene Meldung trägt. */
+	private static final String FEHLER_INITIALISIERUNG = "### FEHLER: Der Report konnte nicht vorbereitet werden.";
 
-	/** Meldung für Fehler, die während der Erzeugung der API-Response auftreten. */
-	private static final String FEHLER_RESPONSE =
-			"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.";
+	/** Ersatzmeldung für einen Abbruch beim Erstellen der Ausgabe, wenn die Ursachenkette keine eigene Meldung trägt. */
+	private static final String FEHLER_RESPONSE = "### FEHLER: Die Ausgabe des Reports konnte nicht erstellt werden.";
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
@@ -69,51 +67,49 @@ public final class ReportingFactory {
 			// Initialisiere Log für Status- und Fehlermeldungen
 			this.logger.addConsumer(log);
 
-			this.logger.logLn(LogLevel.DEBUG, 0, ">>> Aufruf des Reporting in SVWS-Server-Version %s - Modus: %s".formatted(ReportingServerUtils.serverversion(), ReportingServerUtils.servermodetext()));
+			this.logger.logLn(LogLevel.DEBUG, 0, ">>> Aufruf des Reporting in SVWS-Server-Version %s - Modus: %s"
+					.formatted(ReportingServerUtils.serverversion(), ReportingServerUtils.servermodetext()));
 			this.logger.logLn(LogLevel.DEBUG, 0, ">>> Beginn des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 
 			// Validiere Datenbankverbindung
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Datenbankverbindung.");
 			if (conn == null) {
-				this.logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung der Reporting-Factory "
-						+ "übergeben.");
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"### FEHLER: Es wurde keine Verbindung zur Datenbank für die Initialisierung der Reporting-Factory übergeben.");
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für den Report steht keine Verbindung zur Datenbank bereit.");
 			}
 
 			// Validiere Reporting-Parameter
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Reporting-Parameter.");
 			if (reportingParameter == null) {
-				this.logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurden keine Reporting-Parameter für die Initialisierung der Reporting-Factory übergeben"
-						+ ".");
-				throw new ApiOperationException(Status.BAD_REQUEST,
-						"### FEHLER: Es wurden keine Reporting-Parameter für die Initialisierung der Reporting-Factory übergeben.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für den Report wurden keine Angaben übergeben.");
 			}
 			this.reportingParameter = reportingParameter;
+
+			// Die Kenndaten der Anfrage einmal festhalten, bevor die erste Prüfung sie bewertet oder bereinigt. Die Meldungen eines Abbruchs tragen keine
+			// technischen Werte; ohne diese Zeile fehlte der Diagnose der Bezug zum Request.
+			this.logger.logLn(LogLevel.DEBUG, 4, ReportingParameterLogUtils.kenndaten(this.reportingParameter, reportingAusgabeformat));
 
 			// Validiere das Ausgabeformat, insbesondere, ob dieses mit dem von der API vorgegebenen Ausgabeformat übereinstimmt.
 			if ((reportingAusgabeformat == null) || reportingAusgabeformat.equals(ReportingAusgabeformat.UNDEFINED)
 					|| (ReportingAusgabeformat.getByID(this.reportingParameter.ausgabeformat) == ReportingAusgabeformat.UNDEFINED)
 					|| (ReportingAusgabeformat.getByID(this.reportingParameter.ausgabeformat) != reportingAusgabeformat)) {
-				this.logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiges Ausgabeformat definiert oder in den Reporting-Parametern ist ein "
-						+ "anderes als für den API-Aufruf gültiges Ausgabeformat definiert worden.");
 				throw new ApiOperationException(Status.BAD_REQUEST,
-						"### FEHLER: Es wurde kein gültiges Ausgabeformat definiert oder in den Reporting-Parametern ist ein anderes als für den API-Aufruf "
-								+ "gültiges Ausgabeformat definiert worden.");
+						"### FEHLER: Das angeforderte Ausgabeformat ist unbekannt oder passt nicht zur aufgerufenen Ausgabe.");
 			}
 
 			// Validiere die Angaben zur Vorlage für den Report.
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Report-Vorlage.");
-			final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
-			if (reportvorlage == null) {
-				this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
-				throw new ApiOperationException(Status.BAD_REQUEST,
-						"### FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
+			// Die fehlende Angabe ist ein eigener Fall: Sie nennt keinen Namen, den die Meldung einsetzen könnte. Zugleich liest getByBezeichnung den
+			// Namen ohne eigene Null-Prüfung, und die NPE käme als Serverfehler beim Aufrufer an statt als Hinweis auf seine Anfrage.
+			final String vorlagenname = this.reportingParameter.reportvorlage;
+			if ((vorlagenname == null) || vorlagenname.isBlank()) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für den Report wurde keine Reportvorlage angegeben.");
 			}
-
-			// Logge für einen evtl. späteren Fehlerfall das Format und das Template.
-			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebenes und validiertes Ausgabeformat: " + reportingAusgabeformat.name());
-			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebene und validierte Report-Vorlage: " + reportvorlage.getBezeichnung());
+			final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(vorlagenname);
+			if (reportvorlage == null) {
+				// Der Name stammt aus dem Request und wird maskiert: Die Kopfzeile der Fehlerantwort maskiert nicht selbst.
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"### FEHLER: Die Reportvorlage '%s' ist nicht bekannt.".formatted(ReportingParameterLogUtils.maskiert(vorlagenname)));
+			}
 
 			// Validiere Hauptdaten-Angabe
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Hauptdaten.");
@@ -167,7 +163,7 @@ public final class ReportingFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das Dokument oder die ZIP-Datei.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Im Fehlerfall mit dem Status des Abbruchs und dem gesammelten Log als Body der Fehlerantwort.
 	 */
 	public Response createReportResponse() throws ApiOperationException {
 
@@ -177,11 +173,8 @@ public final class ReportingFactory {
 			final Response reportResponse;
 
 			switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
-				case ReportingAusgabeformat.UNDEFINED -> {
-					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Das Ausgabeformat UNDEFINIERT wurde für die Report-Generierung übergeben.");
-					final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-					throw new ApiOperationException(Status.BAD_REQUEST, null, sop, MediaType.APPLICATION_JSON);
-				}
+				case ReportingAusgabeformat.UNDEFINED ->
+					throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Für den Report wurde kein Ausgabeformat angegeben.");
 				case ReportingAusgabeformat.HTML -> {
 					this.logger.logLn(LogLevel.DEBUG, 4, "HTML als Ausgabeformat für die Report-Generierung gewählt.");
 					final HtmlFactory htmlFactory = erzeugeHtmlFactory();
@@ -198,11 +191,11 @@ public final class ReportingFactory {
 					final EmailFactory emailFactory = new EmailFactory(reportingContext);
 					reportResponse = erzeugeResponse(() -> emailFactory.sendEmails(pdfFactory));
 				}
-				case null, default -> {
-					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
-					final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
-				}
+				// getByID liefert für unbekannte IDs UNDEFINED; dieser Wert und alle aktuellen Ausgabeformate sind bereits behandelt. Der Zweig sichert
+				// spätere Änderungen am Enum oder seiner Auflösung ab.
+				case null, default ->
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Das Ausgabeformat des Reports wird vom Server nicht "
+							+ "unterstützt.");
 			}
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;

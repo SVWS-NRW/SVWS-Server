@@ -24,9 +24,6 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
@@ -56,9 +53,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 	/** Der gemockte Context, den der Proxy erhält. */
 	private ReportingContext reportingContext;
 
-	/** Die Liste, die die Einträge des Loggers sammelt. */
-	private LogConsumerList log;
-
 
 	@BeforeAll
 	static void initCoreTypes() {
@@ -69,10 +63,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 	@BeforeEach
 	void setUp() {
 		reportingContext = mock(ReportingContext.class);
-		final Logger logger = new Logger();
-		log = new LogConsumerList();
-		logger.addConsumer(log);
-		when(reportingContext.logger()).thenReturn(logger);
 
 		final ReportingRepositorySchule repositorySchule = mock(ReportingRepositorySchule.class, RETURNS_DEEP_STUBS);
 		when(repositorySchule.auswahlSchuljahresabschnitt().schuljahr()).thenReturn(2025);
@@ -105,14 +95,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 		return schueler;
 	}
 
-	/**
-	 * Prüft, dass das Log keinen Eintrag mit dem Level ERROR enthält.
-	 */
-	private void erwarteKeinenFehlerImLog() {
-		assertTrue(log.getLogData().stream().noneMatch(eintrag -> eintrag.getLevel() == LogLevel.ERROR),
-				"Ein hingenommener Befund darf keinen ERROR-Eintrag hinterlassen: Dieses Level ist dem Abbruch vorbehalten.");
-	}
-
 
 	// ##### Ladefehler der Jahrgangsdaten und Fächer #####
 
@@ -128,7 +110,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingSchuelerGostLaufbahnplanung.class, ID_SCHUELER)),
 				anyString(), eq(fehler));
-		erwarteKeinenFehlerImLog();
 	}
 
 	@Test
@@ -143,7 +124,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.INFRASTRUKTURSTOERUNG),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingSchuelerGostLaufbahnplanung.class, ID_SCHUELER)),
 				anyString(), eq(fehler));
-		erwarteKeinenFehlerImLog();
 	}
 
 
@@ -160,7 +140,6 @@ class TestProxyReportingSchuelerGostLaufbahnplanung {
 		assertNull(katalogdaten, "Vor Beginn der Katalog-Historie gibt es keinen Eintrag; die Sprachdaten der Fachwahl bleiben leer.");
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_VORHANDEN),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingFach.class, 42L)), anyString(), eq(null));
-		erwarteKeinenFehlerImLog();
 	}
 
 	@Test

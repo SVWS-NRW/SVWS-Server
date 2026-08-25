@@ -26,8 +26,6 @@ import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
-import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageDatenContext;
@@ -65,23 +63,20 @@ class TestHtmlContextInitializerStundenplan {
 	/** Die ID, unter der ein Stundenplan angefordert wird. */
 	private static final long ID_STUNDENPLAN = 42L;
 
+	/** Die Meldung des Fehlers, an dem das Laden der Stundenplandefinitionen scheitert. */
+	private static final String MELDUNG_LADEFEHLER = "Die Verbindung zur Datenbank wurde unterbrochen.";
+
 	/** Der gemockte Context, den der Initializer erhält. */
 	private ReportingContext reportingContext;
 
 	/** Die gemockten typisierten Parameter des Requests. */
 	private ReportingParameterTypisiert reportingParameter;
 
-	/** Die Liste, die die Einträge des Loggers sammelt. */
-	private LogConsumerList log;
-
-
 	@BeforeEach
 	void setUp() {
 		reportingContext = mock(ReportingContext.class);
-		final Logger logger = new Logger();
-		log = new LogConsumerList();
-		logger.addConsumer(log);
-		when(reportingContext.logger()).thenReturn(logger);
+		// Der Initializer hält seinen Ablauf auf DEBUG fest; ohne Logger liefe er in eine NPE. Ausgewertet wird das Log nicht.
+		when(reportingContext.logger()).thenReturn(new Logger());
 
 		reportingParameter = mock(ReportingParameterTypisiert.class);
 		when(reportingParameter.reportVorlage()).thenReturn(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN);
@@ -101,7 +96,7 @@ class TestHtmlContextInitializerStundenplan {
 	 * Verdrahtet den Context mit einem echten Repository, dessen Definitionen sich nicht laden lassen.
 	 */
 	private void repositoryMitLadefehler() {
-		verdrahteRepository(null, new IllegalStateException("Die Verbindung zur Datenbank wurde unterbrochen."));
+		verdrahteRepository(null, new IllegalStateException(MELDUNG_LADEFEHLER));
 	}
 
 	/**
@@ -149,14 +144,18 @@ class TestHtmlContextInitializerStundenplan {
 	}
 
 	/**
-	 * Gibt die Texte der Log-Einträge des übergebenen Levels zurück.
+	 * Gibt die Meldungen der Ursachenkette eines Fehlers zurück, von der äußersten Ursache bis zur innersten.
 	 *
-	 * @param level Das Level, dessen Einträge gesucht sind.
+	 * @param exception Der Fehler, dessen Kette gelesen wird.
 	 *
-	 * @return Die Texte der Einträge, ohne die Einrückung des Loggers.
+	 * @return Die Meldungen der Ursachen.
 	 */
-	private List<String> eintraege(final LogLevel level) {
-		return log.getLogData().stream().filter(eintrag -> eintrag.getLevel() == level).map(eintrag -> eintrag.getText().strip()).toList();
+	private static List<String> ursachen(final Exception exception) {
+		final List<String> meldungen = new ArrayList<>();
+		for (Throwable ursache = exception.getCause(); ursache != null; ursache = ursache.getCause()) {
+			meldungen.add(String.valueOf(ursache.getMessage()));
+		}
+		return meldungen;
 	}
 
 
@@ -164,7 +163,9 @@ class TestHtmlContextInitializerStundenplan {
 	void testEineNichtVorhandeneStundenplanIdErgibtNotFound() {
 		repositoryOhneDefinitionen();
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializer initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.NOT_FOUND, aoe.getStatus(), "Der einzeln adressierte Stundenplan existiert nicht; das ist kein Serverfehler.");
 	}
@@ -177,7 +178,9 @@ class TestHtmlContextInitializerStundenplan {
 
 		try (MockedConstruction<DataStundenplan> dataStundenplan = mockConstruction(DataStundenplan.class, (dataMock, ctx) -> when(
 				dataMock.getById(ID_STUNDENPLAN)).thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten sind nicht lesbar.")))) {
-			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+			final HtmlContextInitializer initializer = initializer();
+
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 		}
@@ -187,12 +190,13 @@ class TestHtmlContextInitializerStundenplan {
 	void testNichtLadbareDefinitionenErgebenEinenServerfehler() {
 		repositoryMitLadefehler();
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializer initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus(),
 				"Ein technischer Ladefehler darf nicht als „Stundenplan existiert nicht“ beim Client ankommen.");
-		assertTrue(eintraege(LogLevel.ERROR).stream().anyMatch(eintrag -> eintrag.contains("Stundenplandefinitionen")),
-				"Die Quelle des Fehlers benennt das Repository: " + eintraege(LogLevel.ERROR));
+		assertTrue(ursachen(aoe).contains(MELDUNG_LADEFEHLER), "Die ursprüngliche Ursache bleibt in der Kette erhalten: " + ursachen(aoe));
 	}
 
 
@@ -262,7 +266,6 @@ class TestHtmlContextInitializerStundenplan {
 
 		verify(reportingContext).meldeAusgabeproblem(eq(ReportingProblemursache.NICHT_VORHANDEN), eq(ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN),
 				eq(ReportingProblemSchluessel.fuer(ReportingKlasse.class, 2L)), anyString(), any());
-		assertEquals(List.of(), eintraege(LogLevel.ERROR));
 	}
 
 	@Test
@@ -283,10 +286,13 @@ class TestHtmlContextInitializerStundenplan {
 		gebeGeladenenStundenplanVor(stundenplan(null, null));
 		gebeKlassenAuswahlVor(List.of(), ReportingAuswahlergebnis.aus(List.of(), Map.of(), Map.of(), List.of()));
 
-		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> initializer().init());
+		final HtmlContextInitializer initializer = initializer();
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, initializer::init);
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus(), "Eine im Request leere ID-Liste fordert nichts an; das bleibt ein Clientfehler.");
-		assertEquals("FEHLER: Es wurden keine Klassen-IDs übergeben.", aoe.getBody());
+		assertEquals("### FEHLER: Es wurden keine Klassen ausgewählt. Für die Ausgabe ist mindestens ein Datensatz auszuwählen.",
+				aoe.getBody(), "Der Anwender wählt Klassen aus, keine IDs.");
 	}
 
 	@Test

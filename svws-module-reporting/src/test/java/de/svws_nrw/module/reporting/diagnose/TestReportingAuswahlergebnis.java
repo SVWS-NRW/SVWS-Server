@@ -141,7 +141,9 @@ class TestReportingAuswahlergebnis {
 		final ReportingAuswahlergebnis<String> auswahl = auswahlMit(List.of(1L));
 		final Map<Long, ReportingLadezustand<String>> ausgelassen = auswahl.ausgelassen();
 
-		assertThrows(UnsupportedOperationException.class, () -> ausgelassen.put(2L, ReportingLadezustand.nichtVorhanden()));
+		final ReportingLadezustand<String> zustand = ReportingLadezustand.nichtVorhanden();
+
+		assertThrows(UnsupportedOperationException.class, () -> ausgelassen.put(2L, zustand));
 	}
 
 }

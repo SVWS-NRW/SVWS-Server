@@ -13,7 +13,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -79,7 +78,6 @@ class TestHtmlContextAusgabeumfang {
 		// Die Vorlage iteriert über die vollständige Liste. Die nach idsDetaildaten eingeschränkte Liste steht zwar im Context, wird aber von keiner Vorlage
 		// gelesen. Aus ihr gezählt, meldete der Header bei einer Auswahl von einem Fach "1 von 1", während die Ausgabe alle vier Fächer zeigt.
 		final ReportingContext reportingContext = mock(ReportingContext.class);
-		when(reportingContext.logger()).thenReturn(new Logger());
 		final ReportingParameterTypisiert reportingParameter = mock(ReportingParameterTypisiert.class);
 		when(reportingParameter.idsHauptdaten()).thenReturn(List.of(ABITURJAHR));
 		when(reportingParameter.idsDetaildaten()).thenReturn(List.of(4711L));

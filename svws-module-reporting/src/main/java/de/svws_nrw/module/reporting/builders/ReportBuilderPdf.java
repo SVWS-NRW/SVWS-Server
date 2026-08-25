@@ -21,7 +21,7 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	 * den Einstellungen des übergebenen {@link ReportBuilderContextPdf}.
 	 *
 	 * @param builderContext Der Kontext, der die Konfigurationen und Parameter für die PDF-Report-Erstellung enthält,
-	 *                        einschließlich HTML-Inhalt, Dateinamen, Root-Pfad und Logger.
+	 *                        einschließlich HTML-Inhalt, Dateinamen und Root-Pfad.
 	 *
 	 * @throws ApiOperationException Wird geworfen, wenn die im Kontext definierten Anforderungen (z. B. HTML-Inhalt,
 	 *                                Dateiname, Root-Pfad) nicht erfüllt sind oder fehlerhaft konfiguriert wurden.

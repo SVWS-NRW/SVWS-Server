@@ -227,16 +227,16 @@ Schritt-für-Schritt-Einbindung eines neuen Typs beschreibt die Anleitung
 
 ### 4.5 Validierung der Eingabeparameter
 
-Die Eingabe-Validierung liegt in der paketprivaten Hilfsklasse `HtmlContextValidierung` (Paket `html.contexts.initializer`) und wird von den Initializern vor dem Bau der `HtmlContext`-Instanzen aufgerufen. Ihre Methoden sind statisch und nehmen den `ReportingContext` als ersten Parameter — nur so sind sie sowohl aus den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwendbar. Neben den allgemeinen Prüfungen enthält sie die je Datenaufbau gebündelten Zusatzprüfungen (`pruefungenGostAbitur(...)`, `pruefungenGostLaufbahnplanung(...)`), die in der Registry als Methodenreferenz eingetragen sind:
+Die Eingabe-Validierung liegt in der paketprivaten Hilfsklasse `HtmlContextValidierung` (Paket `html.contexts.initializer`) und wird von den Initializern vor dem Bau der `HtmlContext`-Instanzen aufgerufen. Ihre Methoden sind statisch. Alle Prüfungen, die Daten nachladen, nehmen den `ReportingContext` als ersten Parameter — nur so sind sie sowohl aus den Initializern als auch als Methodenreferenz aus der request-unabhängigen Konfiguration der Registry heraus verwendbar. Die reinen Wertprüfungen `validiereAbiturjahrgang(...)` und `validiereHalbjahr(...)` kommen ohne ihn aus und sind dadurch ohne Infrastruktur testbar. Neben den allgemeinen Prüfungen enthält sie die je Datenaufbau gebündelten Zusatzprüfungen (`pruefungenGostAbitur(...)`, `pruefungenGostLaufbahnplanung(...)`), die in der Registry als Methodenreferenz eingetragen sind:
 
 - `pruefeUndMeldeAuswahl(...)` — prüft, dass die Anfrage überhaupt Hauptdaten benennt (eine im Request leere ID-Liste ergibt `BAD_REQUEST`), und meldet je ausgelassener ID der Auswahl ein Ausgabeproblem mit der Ursache aus ihrem Ladezustand. Über diese Prüfung laufen die Datenaufbauten nach dem Listen-Muster und die Sichtweisen der Stundenplanung: Eine ID, die sich nicht auflösen lässt, wird ausgelassen, statt den Report abzubrechen.
 - `validiereSchuleMitGost()` — delegiert an `repositorySchule().istSchuleMitGost()` und wirft bei `false` eine `ApiOperationException`.
-- `validiereAbiturjahrgangAlsHauptressource(...)` — prüft die Parameter eines Reports, dessen Hauptressource ein einzelner Abiturjahrgang ist (Fachwahlstatistiken der GOSt-Laufbahnplanung): erste ID das Abiturjahr, danach beliebige Halbjahre. Ein nicht vorhandener Abiturjahrgang ergibt `NOT_FOUND`, ein unlesbarer Wert oder eine Wertebereichsverletzung `BAD_REQUEST`. Stützt sich auf `validiereParameterEinzeln(...)` und `validiereHalbjahr(...)`.
+- `validiereAbiturjahrgangAlsHauptressource(...)` — prüft die Parameter eines Reports, dessen Hauptressource ein einzelner Abiturjahrgang ist (Fachwahlstatistiken der GOSt-Laufbahnplanung): erste ID das Abiturjahr, danach beliebige Halbjahre. Ein nicht vorhandener Abiturjahrgang ergibt `NOT_FOUND`, ein unlesbarer Wert oder eine Wertebereichsverletzung `BAD_REQUEST`. Die Schleife über die Parameter läuft in der Methode selbst, weil allein sie den beanstandeten Einzelwert kennt und protokollieren kann; geprüft wird je Wert über `validiereAbiturjahrgang(...)` und `validiereHalbjahr(...)`.
 Die Stufen der GOSt-Klausurplanung (kombinierte IDs aus Abiturjahrgang und GOSt-Halbjahr, z. B. 20261 für (2026, EF.2)) prüft dagegen deren Initializer selbst: Sie sind Nutzlast wie die IDs eines Listenreports. Form und Wertebereich ergeben `BAD_REQUEST`, ein nicht vorhandener Abiturjahrgang wird ausgelassen und gemeldet; bleibt keine Stufe übrig, meldet der Initializer den bewussten Leerfall. Ohne übergebene Stufen durchlaufen die drei aus dem Schuljahresabschnitt abgeleiteten Stufen dieselbe Auswahl.
 
 Die Prüfungen laden die vorhandenen Abiturjahrgänge über `repositoryGost().abiturjahrgaenge()`; ein Fehler dieses Ladens ist ein Serverproblem, das Repository wirft ihn statustragend mit `INTERNAL_SERVER_ERROR`, und die Prüfungen reichen ihn unverändert durch.
 
-Alle Validierer werfen bei Fehlern eine `ApiOperationException`. Die Prüfung der leeren ID-Liste und `validiereSchuleMitGost(...)` protokollieren zuvor über `reportingContext.logger()`; die Prüfungen für Abiturjahrgang und Halbjahre werfen ohne eigenen Log-Eintrag. Die Prüf-Logik steht damit an einer Stelle und ist nicht an die `HtmlFactory` gebunden.
+Alle Validierer werfen bei Fehlern eine `ApiOperationException` und protokollieren dabei nicht: Ein Abbruch hat eine Meldungsquelle — die Meldung der Exception —, und protokolliert wird an der Abschlussgrenze. Eine Ausnahme macht `validiereAbiturjahrgangAlsHauptressource(...)` bei einem ungültigen Halbjahr oder einem Zahlenüberlauf: Welcher der übergebenen Werte beanstandet wird, nennt dann weder die Meldung noch das Eingangsprotokoll, denn dieses zeigt einen Auszug der Rohwerte, während die Prüfung auf der bereinigten Liste läuft. Diese eine technische Angabe hält eine eigene Log-Zeile fest. Ein zu kleines oder nicht vorhandenes Abiturjahr steht dagegen in der Meldung selbst und braucht keine. Die Prüf-Logik steht damit an einer Stelle und ist nicht an die `HtmlFactory` gebunden.
 
 ### 4.6 Signierte Schulbescheinigung (QR-Code) — Paket `signing/`
 
@@ -339,7 +339,7 @@ Die Factory wird ausschließlich über die statische Methode `HtmlFactory.erzeug
 Die `HtmlFactory` unterstützt zwei Modi:
 
 - **Aggregierte Ausgabe** — alle Datensätze landen in einem einzigen HTML-Dokument.
-- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt. Sie kommt nur bei der PDF- und der E-Mail-Ausgabe vor: Für das Ausgabeformat HTML setzt der `ReportingParameterBuilder` das Kennzeichen zwingend auf `false`, sodass dieser Weg immer genau ein Dokument liefert. Der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren. Unter welchem Schlüssel der Haupt-Context dabei ersetzt wird, liefert der Initializer über `einzelContextBezeichnung()`; Datenaufbauten ohne Einzelausgabe erben die Standard-Implementierung, die einen `BAD_REQUEST` wirft.
+- **Einzelausgabe** (`reportingParameter.einzelausgabeDaten()`) — pro Datensatz wird ein separates HTML-Dokument erzeugt. Sie kommt nur bei der PDF- und der E-Mail-Ausgabe vor: Für das Ausgabeformat HTML setzt der `ReportingParameterBuilder` das Kennzeichen zwingend auf `false`, sodass dieser Weg immer genau ein Dokument liefert. Der zugehörige `HtmlContext` muss dafür `HtmlContextAufteilbar` implementieren. Unter welchem Schlüssel der Haupt-Context dabei ersetzt wird, liefert der Initializer über `einzelContextBezeichnung()`. Ob ein Datenaufbau die Einzelausgabe zusagt, sagt sein `HtmlContextAufbau.unterstuetztEinzelausgabe()`; die Basisklasse `HtmlContextInitializerBasis` liest diese Zusage als einzige Stelle und wirft ohne sie einen `BAD_REQUEST` — ein Datenaufbau kann sie nicht durch einen eigenen Override umgehen.
 
 ### 6.2 Der Aufbau der Daten-Contexts (`html/contexts/initializer/`)
 
@@ -428,7 +428,7 @@ Die Sortierung der Context-Daten läuft über die Basisklassen-Methode `setConte
 
 ### 6.4 Builder und Renderer für HTML
 
-- **`ReportBuilderContextHtml`** (Paket `module.reporting.builders`) — Builder-Pattern-Container für Template-Code, HTML-Kontexte, IDs, Dateiname-Vorlage, Logger.
+- **`ReportBuilderContextHtml`** (Paket `module.reporting.builders`) — Builder-Pattern-Container für Template-Code, HTML-Kontexte, IDs und Dateiname-Vorlage.
 - **`ReportBuilderHtml`** — kapselt einen einzelnen HTML-Reportlauf: Dateiname, Content-Type, Inhalt. Delegiert die eigentliche Renderung an den Renderer.
 - **`ReportRendererHtml`** — mergt alle Variablen aus den `HtmlContext`-Instanzen in einen einzigen `Context` und ruft `engine.process(template, ctx, writer)` auf. Die `TemplateEngine` selbst wird zentral in **`ReportBuilderUtils`** (Paket `module.reporting.builders`) konfiguriert; dort werden auch die eigenen Thymeleaf-Dialekte registriert (siehe unten).
 
@@ -446,7 +446,7 @@ Zur Erweiterung des Funktionsumfangs der Templates registriert `ReportBuilderUti
 
 Jeder Dialekt besteht aus drei Klassen: `…Dialect` (Registrierung + Dialekt-Name), `…Factory` (`IExpressionObjectFactory`, liefert die Expression-Namen und das Helper-Objekt) und `…Helper` (die eigentlichen, aus dem Template aufrufbaren Java-Methoden).
 
-Weil die Dialekte an der geteilten `TemplateEngine` registriert sind, halten sie keinen Zustand des laufenden Reports. Der `#convert`-Dialekt erhält seine Meldefassade deshalb je Rendervorgang als Context-Variable: Der `ReportRendererHtml` legt einen schmalen `ReportingProblemmelder` unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` ab (Abschnitt 9.2); ein Code, der sich nicht erzeugen lässt, wird darüber als Ausgabeproblem gemeldet.
+Weil die Dialekte an der geteilten `TemplateEngine` registriert sind, halten sie keinen Zustand des laufenden Reports. Der `#convert`-Dialekt erhält seine Meldefassade deshalb je Rendervorgang als Context-Variable: `ReportBuilderUtils.mergeHtmlContexts` legt einen schmalen `ReportingProblemmelder` unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` ab — für beide Template-Pfade, den HTML-Report und die Dateinamensvorlage (Abschnitt 9.2); ein Code, der sich nicht erzeugen lässt, wird darüber als Ausgabeproblem gemeldet.
 
 ---
 
@@ -502,7 +502,7 @@ Der eigentliche Versand findet in einem Hintergrund-Worker statt — die API-Ant
 
 ## 9. Querschnittliches
 
-### 9.1 Logging
+### 9.1 Logging und der Weg eines Abbruchs
 
 Das Reporting-Modul nutzt durchgängig das Logger-Framework aus `core.logger`:
 
@@ -510,6 +510,23 @@ Das Reporting-Modul nutzt durchgängig das Logger-Framework aus `core.logger`:
 - **`LogConsumerList`** — Consumer, der Log-Einträge in einer Liste sammelt; wird im `ReportingContext` registriert und zusammen mit einer `ApiOperationException` an den Aufrufer zurückgegeben.
 
 Beide werden im `ReportingContext` initialisiert — wenn der API-Aufrufer keinen Logger übergibt, erzeugt der Kontext einen neuen. Alle Schichten unterhalb davon greifen ausschließlich über `reportingContext.logger()` und `reportingContext.log()` auf das Logging zu.
+
+**Ein Abbruch hat eine Meldungsquelle: die Meldung der Exception.** Die Wurfstelle protokolliert ihn nicht; das tut einmal die Abschlussgrenze `ReportingFactory.zuApiOperationException(…)`. Dort entstehen der Fehlerblock im Log und die Kopfzeile darüber, und beides geht als eine Antwort an den Client. Das folgende Diagramm zeigt diesen Weg — es setzt dort an, wo die Verzweigung in Abschnitt 9.2 mit „Abbruch mit Statuscode" endet:
+
+```mermaid
+flowchart TD
+    WURF["Wurfstelle:<br/>ApiOperationException<br/>mit Status und Meldung"]
+    WURF -.-> TECHNISCH["nur wo nötig:<br/>technische Log-Zeile<br/>mit einer Angabe,<br/>die sonst niemand trägt"]
+    WURF --> DURCH["Zwischenschichten<br/>reichen weiter oder<br/>geben sie als cause mit"]
+    DURCH --> GRENZE["Abschlussgrenze:<br/>zuApiOperationException"]
+
+    GRENZE --> BLOCK["Fehlerblock ins Log:<br/>Vorgang, Fehlertyp,<br/>Meldung, Ursachen,<br/>Stacktrace"]
+    GRENZE --> KOPF["Kopfzeile aus der<br/>Ursachenkette:<br/>ABBRUCH, Status,<br/>Meldung"]
+    BLOCK --> ANTWORT["Fehlerantwort an den<br/>Client: Kopfzeile<br/>über dem Log"]
+    KOPF --> ANTWORT
+```
+
+Die Meldung der Kopfzeile stammt aus der Ursachenkette — aus dem ersten Glied, das eine trägt. Damit erreicht der Abbruchgrund den Anwender auch dann unverändert, wenn eine Zwischenschicht die Exception nur weitergereicht hat. Die verbindlichen Regeln dazu — Form der Meldungen, wann eine technische Zeile zulässig ist, welche Grenzen die Quelltexttests haben — stehen in [`reporting-konventionen.md`](reporting-konventionen.md), Abschnitt 4.2.
 
 ### 9.2 Diagnose (`diagnose/`)
 
@@ -539,7 +556,7 @@ Paket `module.reporting.diagnose`. Es bündelt die Typen, die beschreiben, **war
 - **`ReportingAuswahlergebnis<T>`** — die Auswahl der Hauptdaten mit angeforderten, ausgewählten, ausgelassenen und — davon getrennt — vom Benutzerfilter ausgefilterten IDs sowie `bewusstLeer()`. Unveränderlich; Einschränkungen entstehen über `nurMitGeladenen(...)`.
 - **`ReportingProblemursache`, `ReportingProblemauswirkung`, `ReportingProblemSchluessel`, `ReportingProblem`** — der interne Befund eines hingenommenen Ausgabeproblems. Der Schlüssel führt Objektart und ID und bildet eine Proxy-Klasse auf ihre Basisklasse zurück.
 - **`ReportingProblemSammler`** — sammelt die Befunde eines Aufrufs, dedupliziert nach Ursache, Auswirkung und Schlüssel und protokolliert ein neues Problem einmalig. Den Block aus Fehlertyp, Ursachenkette und Stacktrace schreibt er je Fehler-Instanz nur einmal ins Log (Vergleich über Objektidentität); jeder weitere Befund derselben Instanz erhält seine Meldung mit einem Verweis auf den ersten Eintrag. Gemeldet wird nicht direkt, sondern über die Fassade `ReportingContext.meldeAusgabeproblem(…)`.
-- **`ReportingProblemmelder`** — der schmale funktionale Zugang zur Meldefassade für Stellen, die den `ReportingContext` nicht kennen sollen. Der `ReportRendererHtml` legt ihn als Methodenreferenz unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` in den Thymeleaf-Context; die Dialekte melden darüber. Bewusst nicht der ganze Context: Der wäre per OGNL für jede Vorlage erreichbar.
+- **`ReportingProblemmelder`** — der schmale funktionale Zugang zur Meldefassade für Stellen, die den `ReportingContext` nicht kennen sollen. `ReportBuilderUtils.mergeHtmlContexts` legt ihn als Methodenreferenz unter `ReportBuilderUtils.VARIABLE_PROBLEMMELDER` in den Thymeleaf-Context — für beide Template-Pfade; die Dialekte melden darüber. Bewusst nicht der ganze Context: Der wäre per OGNL für jede Vorlage erreichbar.
 - **`ReportingHinweisKategorie`** — der kleine öffentliche Kategorienkatalog: `DATENSAETZE_FEHLEN`, `ANGABEN_FEHLEN`, `WERT_NICHT_DARSTELLBAR`, jeweils mit ihrem Header-Schlüssel. `fuer(problem)` ist die **einzige** Stelle der Projektion vom internen Befund auf die öffentliche Kategorie; sie folgt der Auswirkung, mit dem nicht darstellbaren Wert als eigener Kategorie. Die Zuordnung ist vollständig — eine nicht zugeordnete Kombination müsste im Diagnosepfad behandelt werden.
 - **`ReportingAusgabeumfang`** — die Zählwerte eines Aufrufs: `angefordert`, `ausgegeben` und das Kennzeichen der zulässig leeren Ausgabe. Gemeldet wird genau einmal über `ReportingContext.meldeAusgabeumfang(…)` — dort, wo die Werte entstehen; die Ausgabefactory erzwingt die Meldung nach dem Context-Aufbau (Abschnitt 6.2). Das Kennzeichen ist eine Absichtserklärung der Meldestelle und keine Ableitung aus den Zählwerten.
 - **`ReportingHinweisSerializer`** — bildet den Wert des Response-Headers `SVWS-Reporting-Hinweise` nach RFC 9651 mit `VERTRAGSVERSION = 1` aus dem gemeldeten Ausgabeumfang und den deduplizierten internen Ausgabeproblemen; die Kategorienzahlen zerlegen dieselbe Menge, ihre Summe ergibt stets `hinweise`. Kategorien ohne Befund fehlen im Wert. Nach außen gelangen nur Zählwerte, Kategorie und Anzahl — keine IDs, Namen, Freitexte oder Stacktraces.

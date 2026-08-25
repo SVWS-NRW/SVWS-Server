@@ -39,7 +39,7 @@ final class HtmlContextInitializerGostKlausurplanung extends HtmlContextInitiali
 	 */
 	HtmlContextInitializerGostKlausurplanung(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts,
 			final HtmlContextAufbauGostKlausurplanung aufbau) {
-		super(reportingContext, mapHtmlContexts);
+		super(reportingContext, mapHtmlContexts, aufbau);
 		this.aufbau = aufbau;
 	}
 
@@ -47,7 +47,7 @@ final class HtmlContextInitializerGostKlausurplanung extends HtmlContextInitiali
 	/**
 	 * Prüft die gymnasiale Oberstufe, wählt die Stufen aus und legt den erzeugten Haupt-Context in der Context-Map ab.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@Override
 	public void init() throws ApiOperationException {
@@ -74,17 +74,6 @@ final class HtmlContextInitializerGostKlausurplanung extends HtmlContextInitiali
 
 
 	/**
-	 * Der Schlüssel des Haupt-Contexts in der Context-Map. Die Datenaufbauten der GOSt-Klausurplanung unterstützen die Einzelausgabe.
-	 *
-	 * @return Der Schlüssel des Haupt-Contexts in der Context-Map.
-	 */
-	@Override
-	public String einzelContextBezeichnung() {
-		return aufbau.contextSchluessel();
-	}
-
-
-	/**
 	 * Wählt die Stufen des Klausurplans aus: übergebene kombinierte IDs oder ohne Übergabe die drei aus dem ausgewählten Schuljahresabschnitt abgeleiteten
 	 * Stufen. Formfehler der übergebenen IDs sind Client-Fehler; ein nicht vorhandener Abiturjahrgang und ein abgeleitetes Paar ohne GOSt-Halbjahr werden
 	 * ausgelassen und gemeldet - für sie gibt es keine Ausgabe.
@@ -100,7 +89,14 @@ final class HtmlContextInitializerGostKlausurplanung extends HtmlContextInitiali
 		if (!parameterDaten.isEmpty()) {
 			for (final Long kombinierteId : parameterDaten) {
 				if (kombinierteId != null) {
-					kandidaten.add(zerlegeKombinierteId(kombinierteId));
+					try {
+						kandidaten.add(zerlegeKombinierteId(kombinierteId));
+					} catch (final ApiOperationException aoe) {
+						// Welche der übergebenen Stufen beanstandet wird, trägt weder die Meldung noch das Eingangsprotokoll: Dieses zeigt nur einen
+						// Auszug der Rohwerte, und die Prüfung läuft auf der bereinigten Liste.
+						reportingContext.logger().logLn(LogLevel.ERROR, 4, "Beanstandete Stufe: " + kombinierteId);
+						throw aoe;
+					}
 				}
 			}
 		} else {
@@ -143,7 +139,7 @@ final class HtmlContextInitializerGostKlausurplanung extends HtmlContextInitiali
 	private static long[] zerlegeKombinierteId(final long kombinierteId) throws ApiOperationException {
 		final long abiturjahr = kombinierteId / 10;
 		if ((abiturjahr < 1900) || (abiturjahr > 9999)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Die Angabe zum Abiturjahrgang ist ungültig.");
 		}
 		HtmlContextValidierung.validiereHalbjahr((int) (kombinierteId % 10));
 		return new long[] { abiturjahr, kombinierteId % 10 };

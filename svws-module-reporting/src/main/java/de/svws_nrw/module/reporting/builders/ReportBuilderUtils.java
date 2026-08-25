@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Locale;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemmelder;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.dialects.AktuellExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.IconExpressionDialect;
 import de.svws_nrw.module.reporting.html.dialects.InlineExpressionDialect;
+import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -109,7 +111,9 @@ public final class ReportBuilderUtils {
 	}
 
 	/**
-	 * Führt mehrere HtmlContext-Objekte zu einem einzigen Thymeleaf-Context zusammen.
+	 * Führt mehrere HtmlContext-Objekte zu einem einzigen Thymeleaf-Context zusammen und legt die Meldefassade des Reports als Variable
+	 * {@link #VARIABLE_PROBLEMMELDER} ab, sofern ein Context einen Reporting-Context mitführt. Beide Template-Pfade - der HTML-Report und die
+	 * Dateinamensvorlage - laufen hier durch; die Dialekte melden ihre Befunde darüber an denselben Report wie der übrige Datenaufbau.
 	 *
 	 * @param contexts Liste der HtmlContext-Objekte (kann null oder leer sein)
 	 *
@@ -135,7 +139,31 @@ public final class ReportBuilderUtils {
 				}
 			}
 		}
+		// Abgelegt wird nur der schmale Melder: Der ganze Reporting-Context wäre per OGNL für jede Vorlage erreichbar und öffnete deren Zugriff auf die
+		// Repositories.
+		final ReportingProblemmelder melder = problemmelderAus(contexts);
+		if (melder != null) {
+			finalContext.setVariable(VARIABLE_PROBLEMMELDER, melder);
+		}
 		return finalContext;
+	}
+
+	/**
+	 * Bildet aus den Daten-Contexts den Melder für die Dialekte. Alle Daten-Contexts eines Reports tragen denselben Reporting-Context, daher genügt der
+	 * erste, der einen mitführt; abgelegt wird nur die Referenz auf seine Meldefassade.
+	 *
+	 * @param contexts Die Daten-Contexts des Reports.
+	 *
+	 * @return Der Melder oder {@code null}, wenn keiner der Daten-Contexts einen Reporting-Context mitführt.
+	 */
+	private static ReportingProblemmelder problemmelderAus(final List<HtmlContext<?>> contexts) {
+		for (final HtmlContext<?> htmlContext : contexts) {
+			final ReportingContext reportingContext = (htmlContext == null) ? null : htmlContext.getReportingContext();
+			if (reportingContext != null) {
+				return reportingContext::meldeAusgabeproblem;
+			}
+		}
+		return null;
 	}
 
 	/**

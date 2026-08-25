@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,10 +20,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingLadezustand;
@@ -38,24 +39,23 @@ import jakarta.ws.rs.core.Response.Status;
  * Tests der Prüfungen aus {@link HtmlContextValidierung}, die auf die Domänen-Repositories zugreifen.
  * <p>Der {@link ReportingContext} wird gemockt, weil sein einziger Konstruktor alle neun Repositories aufbaut und dafür eine Datenbankverbindung
  * benötigt. Der Mock umgeht den Konstruktor; je Test werden nur der Logger und die tatsächlich benötigten Repository-Getter verdrahtet.</p>
- * <p>Der Schwerpunkt liegt auf den <b>Fehlerpfaden</b>: Sie sind heute nirgends abgedeckt und legen zugleich das Verhalten fest, gegen das die
- * Statusklassifikation und der Repository-Fehlervertrag später geprüft werden.</p>
+ * <p>Der Schwerpunkt liegt auf den <b>Fehlerpfaden</b>: Sie legen fest, mit welchem Status ein Abbruch die Prüfung verlässt, und bilden die Grundlage für
+ * die Statustests an Repository und Factory.</p>
  */
 class TestHtmlContextValidierungMitContext {
 
 	/** Die Meldung, die eine fehlende gymnasiale Oberstufe anzeigt. */
-	private static final String MELDUNG_KEINE_GOST = "FEHLER: Die Schule besitzt keine gymnasiale Oberstufe (GOSt).";
+	private static final String MELDUNG_KEINE_GOST = "### FEHLER: Der Report ist nur für Schulen mit gymnasialer Oberstufe (GOSt) vorgesehen.";
 
 	/** Die Meldung, die die Parameterprüfung bei einem nicht auswertbaren Wert erzeugt. */
 	private static final String MELDUNG_PARAMETER_UNLESBAR =
-			"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.";
+			"### FEHLER: Die Angaben zu Abiturjahrgang und GOSt-Halbjahr konnten nicht ausgewertet werden.";
 
 	/** Der gemockte Context, den die Prüfungen in den Tests erhalten. */
 	private ReportingContext reportingContext;
 
 	/** Die Liste, die die Einträge des Loggers sammelt. */
 	private LogConsumerList log;
-
 
 	@BeforeEach
 	void setUp() {
@@ -68,13 +68,14 @@ class TestHtmlContextValidierungMitContext {
 
 
 	/**
-	 * Gibt die Texte aller Logeinträge mit dem Level ERROR zurück. Die Einrückung, die der Logger dem Text voranstellt, wird dabei entfernt.
+	 * Gibt die Texte aller Logeinträge mit dem Level ERROR zurück, ohne die Einrückung des Loggers.
 	 *
 	 * @return Die Texte der ERROR-Logeinträge in der Reihenfolge ihres Auftretens.
 	 */
 	private List<String> fehlermeldungenImLog() {
 		return log.getLogData().stream().filter(eintrag -> eintrag.getLevel() == LogLevel.ERROR).map(eintrag -> eintrag.getText().strip()).toList();
 	}
+
 
 	/**
 	 * Verdrahtet das Schul-Repository und legt fest, ob die Schule eine gymnasiale Oberstufe besitzt.
@@ -133,7 +134,7 @@ class TestHtmlContextValidierungMitContext {
 				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
-		assertEquals("FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr wurden nicht übergeben.", aoe.getBody());
+		assertEquals("### FEHLER: Es wurden kein Abiturjahrgang und keine GOSt-Halbjahre übergeben.", aoe.getBody());
 		verify(reportingContext, never()).repositoryGost();
 	}
 
@@ -172,7 +173,8 @@ class TestHtmlContextValidierungMitContext {
 				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
 		assertEquals(Status.NOT_FOUND, aoe.getStatus());
-		assertEquals("FEHLER: Der Abiturjahrgang 2026 ist nicht vorhanden.", aoe.getBody());
+		assertEquals("### FEHLER: Der Abiturjahrgang '2026' ist an dieser Schule nicht vorhanden.", aoe.getBody());
+		assertEquals(List.of(), fehlermeldungenImLog(), "Die Meldung nennt den Wert bereits; eine Zusatzzeile wiederholte ihn nur.");
 	}
 
 	@Test
@@ -181,13 +183,97 @@ class TestHtmlContextValidierungMitContext {
 		// mit 400 auszugeben - der Aufrufer kann an seinen Parametern nichts korrigieren.
 		gebeHauptdatenIdsVor(List.of(2025L));
 		final ApiOperationException ladefehler = new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-				new IllegalStateException("Datenbank nicht erreichbar"), "FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
+				new IllegalStateException("Datenbank nicht erreichbar"), "### FEHLER: Die vorhandenen Abiturjahrgänge konnten nicht ermittelt werden.");
 		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenThrow(ladefehler);
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
 				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
 
 		assertSame(ladefehler, aoe, "Der statustragende Wurf des Repositorys erreicht den Aufrufer unverändert.");
+		assertEquals(List.of(), fehlermeldungenImLog(), "Das Laden scheitert vor der Parameterprüfung; die Parameter sind hier nicht der Befund.");
+	}
+
+	@Test
+	void testEinUngueltigesHalbjahrHaeltDenBeanstandetenWertImLogFest() {
+		// Die Meldung nennt den beanstandeten Wert nicht, und das Eingangsprotokoll zeigt nur einen Auszug der Rohwerte. Ohne diese Zeile bliebe
+		// unauffindbar, welcher Wert die Ausgabe beendet hat.
+		gebeHauptdatenIdsVor(List.of(2025L, 0L, 99L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
+		assertEquals("### FEHLER: Ein angegebenes GOSt-Halbjahr ist ungültig.", aoe.getBody());
+		assertEquals(List.of("Beanstandeter Parameter: 99"), fehlermeldungenImLog(),
+				"Die Zeile nennt allein den beanstandeten Wert - nicht die Liste und nicht die Meldung.");
+	}
+
+	@Test
+	void testEinWertJenseitsDesZahlenbereichsHaeltDenBeanstandetenWertImLogFest() {
+		// Math.toIntExact wirft hier eine ArithmeticException, deren Meldung allein "integer overflow" lautet. Weder sie noch die Sammelmeldung
+		// nennen den Wert.
+		gebeHauptdatenIdsVor(List.of(2025L, 2147483648L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
+		assertEquals(MELDUNG_PARAMETER_UNLESBAR, aoe.getBody());
+		assertEquals(List.of("Beanstandeter Parameter: 2147483648"), fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEinAbiturjahrAusserhalbDesWertebereichsErzeugtKeinenZusatzeintrag() {
+		// Die Gegenprobe zum nicht vorhandenen Jahrgang: Auch diese Meldung trägt den Wert selbst.
+		gebeHauptdatenIdsVor(List.of(202L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals("### FEHLER: Das Abiturjahr '202' liegt außerhalb des zulässigen Bereichs.", aoe.getBody());
+		assertEquals(List.of(), fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEinUebergelaufenesAbiturjahrHaeltDenWertTrotzdemImLogFest() {
+		// Beim Überlauf erreicht der Wert die Prüfung nicht, die Meldung kann ihn also nicht nennen - hier braucht auch der erste Parameter die Zeile.
+		gebeHauptdatenIdsVor(List.of(2147483648L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals(MELDUNG_PARAMETER_UNLESBAR, aoe.getBody());
+		assertEquals(List.of("Beanstandeter Parameter: 2147483648"), fehlermeldungenImLog());
+	}
+
+	@Test
+	void testDasLogBleibtAuchBeiEinerLangenParameterlisteKurz() {
+		// Die Zeile darf die Kürzung des Eingangsprotokolls nicht unterlaufen: Eine Anfrage mit vielen IDs ergibt genau einen Eintrag mit einem Wert.
+		final List<Long> vieleIds = new ArrayList<>(List.of(2025L));
+		for (long halbjahr = 0; halbjahr < 200; halbjahr++) {
+			vieleIds.add(halbjahr % 6);
+		}
+		vieleIds.add(99L);
+		gebeHauptdatenIdsVor(vieleIds);
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		assertThrows(ApiOperationException.class, () -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals(List.of("Beanstandeter Parameter: 99"), fehlermeldungenImLog());
+	}
+
+	@Test
+	void testEineGelungenePruefungHinterlaesstKeinenFehlereintrag() {
+		gebeHauptdatenIdsVor(List.of(2025L, 0L, 1L));
+		when(gebeRepositoryGostVor().abiturjahrgaenge()).thenReturn(List.of(2025));
+
+		assertDoesNotThrow(() -> HtmlContextValidierung.validiereAbiturjahrgangAlsHauptressource(reportingContext));
+
+		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	// ##### validiereSchuleMitGost #####
@@ -197,7 +283,6 @@ class TestHtmlContextValidierungMitContext {
 		gebeSchuleVor(true);
 
 		assertDoesNotThrow(() -> HtmlContextValidierung.validiereSchuleMitGost(reportingContext));
-		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test
@@ -208,7 +293,6 @@ class TestHtmlContextValidierungMitContext {
 
 		assertEquals(Status.BAD_REQUEST, aoe.getStatus());
 		assertEquals(MELDUNG_KEINE_GOST, aoe.getBody());
-		assertEquals(List.of(MELDUNG_KEINE_GOST), fehlermeldungenImLog());
 	}
 
 
@@ -259,7 +343,6 @@ class TestHtmlContextValidierungMitContext {
 				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostLaufbahnplanung(reportingContext, auswahlMit(List.of(1L))));
 
 		assertEquals(List.of(1L), auswahl.idsAusgewaehlt());
-		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test
@@ -288,8 +371,8 @@ class TestHtmlContextValidierungMitContext {
 
 		assertEquals(List.of(), auswahl.idsAusgewaehlt(), "Ein Schüler ohne Beratungsdaten gehört nicht zur GOSt und entfällt.");
 		assertEquals(Set.of(1L), auswahl.ausgelassen().keySet());
-		assertEquals(ReportingProblemursache.NICHT_VORHANDEN, auswahl.ausgelassen().get(1L).ursache());
-		assertEquals(List.of(), fehlermeldungenImLog(), "Ein ausgelassener Datensatz bricht die Ausgabe nicht ab.");
+		assertEquals(ReportingProblemursache.NICHT_VORHANDEN, auswahl.ausgelassen().get(1L).ursache(),
+				"Ein ausgelassener Datensatz bricht die Ausgabe nicht ab; gemeldet wird er erst beim Prüfen der Auswahl.");
 	}
 
 	@Test
@@ -356,7 +439,6 @@ class TestHtmlContextValidierungMitContext {
 				assertDoesNotThrow(() -> HtmlContextValidierung.pruefungenGostAbitur(reportingContext, auswahlMit(List.of(1L))));
 
 		assertEquals(List.of(1L), auswahl.idsAusgewaehlt());
-		assertEquals(List.of(), fehlermeldungenImLog());
 	}
 
 	@Test

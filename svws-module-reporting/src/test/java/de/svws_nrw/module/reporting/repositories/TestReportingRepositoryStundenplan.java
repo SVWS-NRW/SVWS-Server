@@ -158,7 +158,6 @@ class TestReportingRepositoryStundenplan {
 
 		assertTrue(eintraege(LogLevel.ERROR).isEmpty(),
 				"Beim Initialisieren ist die Bedeutung des Fehlers unbekannt; ein ERROR-Eintrag behauptete einen Abbruch, den es nicht gibt.");
-		assertTrue(eintraege(LogLevel.WARNING).isEmpty(), "Auch eine Warnung ist beim Initialisieren zu früh: Erst der Zugriff kennt die Bedeutung.");
 		assertNull(repository.stundenplan("2026-08-10"), "Der optionale Zugriff liefert nach einem Ladefehler null.");
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingStundenplanungStundenplan.class)),
@@ -198,8 +197,7 @@ class TestReportingRepositoryStundenplan {
 		assertNull(repository.stundenplan(""), "Ohne Datum gibt es keinen Stundenplan zum Termin.");
 		assertNull(repository.stundenplan((String) null), "Ohne Datum gibt es keinen Stundenplan zum Termin.");
 
-		assertTrue(eintraege(LogLevel.WARNING).isEmpty(),
-				"Eine Warnung über nicht benötigte Daten wäre für den Leser des Logs irreführend: " + eintraege(LogLevel.WARNING));
+		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
 	}
 
 	@Test
@@ -210,9 +208,6 @@ class TestReportingRepositoryStundenplan {
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus(), "Ein nicht ladbares Hauptobjekt ist ein Serverproblem, kein NOT_FOUND.");
 		assertTrue(ursachen(aoe).contains(MELDUNG_URSACHE), "Die ursprüngliche Ursache bleibt in der Kette erhalten: " + ursachen(aoe));
-		assertEquals(1, eintraege(LogLevel.ERROR).size(),
-				"Das Repository trägt allein die Angabe bei, welcher Zugriff scheitert; den Block aus Typ, Ursachen und Stacktrace gibt die oberste Ebene "
-						+ "aus: " + eintraege(LogLevel.ERROR));
 	}
 
 	@Test
@@ -329,7 +324,7 @@ class TestReportingRepositoryStundenplan {
 		assertNull(repository.stundenplan(42L), "Ohne passende Definition liefert der strikte Zugriff null; daraus erzeugt der Initializer sein NOT_FOUND.");
 		assertNull(repository.stundenplan("2026-08-10"), "Der optionale Zugriff liefert ebenfalls null.");
 		assertTrue(eintraege(LogLevel.ERROR).isEmpty(), "Eine geladene, aber leere Liste ist ein zulässiger Datenwert und kein Fehler.");
-		assertTrue(eintraege(LogLevel.WARNING).isEmpty(), "Ohne Ladefehler gibt es auch nichts zu warnen.");
+		verify(reportingContext, never()).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER), any(), any(), anyString(), any());
 	}
 
 }

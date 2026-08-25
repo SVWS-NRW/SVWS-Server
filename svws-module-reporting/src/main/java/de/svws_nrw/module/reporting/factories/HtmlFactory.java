@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageDatenContext;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -59,7 +60,7 @@ public final class HtmlFactory {
 	 *
 	 * @return Die einsatzbereite HTML-Factory.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	static HtmlFactory erzeuge(final ReportingContext reportingContext) throws ApiOperationException {
 		final HtmlFactory htmlFactory = new HtmlFactory(reportingContext);
@@ -73,7 +74,7 @@ public final class HtmlFactory {
 	 *
 	 * @param reportingContext        Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private HtmlFactory(final ReportingContext reportingContext)
 			throws ApiOperationException {
@@ -87,20 +88,16 @@ public final class HtmlFactory {
 		// Validiere die Angaben zur HTML-Vorlage.
 		this.reportingReportvorlage = this.reportingParameter.reportVorlage();
 		if (this.reportingReportvorlage == null) {
-			this.reportingContext.logger()
-					.logLn(LogLevel.ERROR, 4, "FEHLER: Die Template-Definitionen für die HTML-Factory sind inkonsistent.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Template-Definitionen für die HTML-Factory sind inkonsistent.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für den Report konnte keine gültige Vorlage ermittelt werden.");
 		}
 
 		// Prüfe, ob die Rechte des Benutzers zu den in der TemplateDefinition hinterlegten Rechten passen.
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Prüfe die Berechtigungen des Benutzers für den Zugriff auf die für die Ausgabe notwendigen Daten.");
 		if (!this.reportingContext.benutzer().pruefeKompetenz(reportingReportvorlage.getBenutzerKompetenzen())) {
-			this.reportingContext.logger()
-					.logLn(LogLevel.ERROR, 4,
-							"FEHLER: Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
 			throw new ApiOperationException(Status.FORBIDDEN,
-					"FEHLER: Der Benutzer hat nicht die erforderlichen Rechte, um auf die Daten für die Erstellung der Ausgabe zu zugreifen.");
+					"### FEHLER: Für die Reportvorlage '%s' fehlt die Berechtigung; erforderlich ist mindestens eine dieser Kompetenzen: %s."
+							.formatted(reportingReportvorlage.getBezeichnung(), benannteKompetenzen(reportingReportvorlage)));
 		}
 
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
@@ -110,7 +107,7 @@ public final class HtmlFactory {
 	/**
 	 * Erzeugte die notwendigen Contexts für die HTML-Erstellung auf Basis des angegebenen HTML-Templates.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private void erzeugeContexts() throws ApiOperationException {
 
@@ -133,18 +130,17 @@ public final class HtmlFactory {
 	 *
 	 * @param datenContext Der Datenaufbau der Reportvorlage.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private void initContextUeberRegistry(final ReportingReportvorlageDatenContext datenContext) throws ApiOperationException {
 		final HtmlContextAufbau aufbau = HtmlContextInitializerRegistry.aufbau(reportingContext, datenContext);
 		this.htmlContextInitializer = aufbau.initializer(reportingContext, mapHtmlContexts);
 		this.htmlContextInitializer.init();
 		if (reportingContext.ausgabeumfang() == null) {
-			final String fehlermeldung = ("FEHLER: Der Datenaufbau %s hat keinen Ausgabeumfang gemeldet. Die Meldestelle liegt laut Initializer %s "
-					+ "und fehlt dort.").formatted(datenContext.name(),
-							this.htmlContextInitializer.meldetAusgabeumfangImContextAufbau() ? "im Context-Aufbau" : "im Initializer selbst");
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlermeldung);
+			// Welcher Datenaufbau die Meldung schuldig blieb, steht in keiner Ursachenkette und benennt den Programmfehler erst.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Datenaufbau %s, vorgesehene Meldestelle des Ausgabeumfangs: %s."
+					.formatted(datenContext.name(), this.htmlContextInitializer.meldetAusgabeumfangImContextAufbau() ? "Context-Aufbau" : "Initializer"));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für den Report wurde kein Ausgabeumfang ermittelt.");
 		}
 	}
 
@@ -153,7 +149,7 @@ public final class HtmlFactory {
 	 *
 	 * @return Eine Liste mit ReportBuilderHtml-Instanzen.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	protected List<ReportBuilderHtml> createHtmlBuilders() throws ApiOperationException {
 		return getHtmlBuilders();
@@ -165,48 +161,52 @@ public final class HtmlFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das HTML-Dokument.
 	 *
-	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	protected Response createHtmlResponse() throws ApiOperationException {
-		try {
-			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-			final List<ReportBuilderHtml> htmlBuilders = getHtmlBuilders();
-			if (!htmlBuilders.isEmpty()) {
-				final ReportBuilderHtml firstHtmlBuilder = htmlBuilders.getFirst();
-				if (htmlBuilders.size() == 1) {
-					final String html = firstHtmlBuilder.generate();
-					reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-					// HTML bildet keinen Sonderpfad: Es trägt denselben Hinweis-Header wie PDF und ZIP. Dass der heutige generierte Client die
-					// Response-Metadaten verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
-					return ReportingHinweiseHeader
-							.ergaenze(Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store"), reportingContext)
-							.build();
-				} else {
-					// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die
-					// HTML-Ausgabe auf dem fertig kombinierten Parametersatz auf false festlegt - ohne Aufteilung entsteht genau ein Builder.
-					reportingContext.logger().logLn(LogLevel.ERROR, 0,
-							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es wurde mehr als ein Builder übergeben.");
-				}
-			}
-			reportingContext.logger().logLn(LogLevel.ERROR, 0,
-					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es sind keine HTML-Inhalte generiert worden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung. Es sind keine HTML-Inhalte generiert worden.");
-		} catch (final Exception e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
-			throw e;
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
+		final List<ReportBuilderHtml> htmlBuilders = getHtmlBuilders();
+		if (htmlBuilders.isEmpty()) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die HTML-Ausgabe ist kein Dokument entstanden.");
 		}
+		if (htmlBuilders.size() > 1) {
+			// Reine Absicherung: Der Zweig ist unerreichbar, seit ReportingParameterBuilder die Aufteilung in Einzeldateien für die HTML-Ausgabe auf dem
+			// fertig kombinierten Parametersatz auf false festlegt - ohne Aufteilung entsteht genau ein Builder.
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die HTML-Ausgabe ist mehr als ein Dokument entstanden.");
+		}
+
+		final String html = htmlBuilders.getFirst().generate();
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine HTML-Generierung.");
+		// HTML bildet keinen Sonderpfad: Es trägt denselben Hinweis-Header wie PDF und ZIP. Dass der heutige generierte Client die Response-Metadaten
+		// verwirft und ihn deshalb nicht anzeigt, ändert am Serververtrag nichts.
+		return ReportingHinweiseHeader
+				.ergaenze(Response.ok(html, "text/html; charset=UTF-8").header("Cache-Control", "no-store"), reportingContext)
+				.build();
 	}
 
+
+	/**
+	 * Gibt die Kompetenzen einer Reportvorlage als lesbare Aufzählung zurück, jeweils mit ihrer Gruppe.
+	 * <p>Die Bezeichnung allein genügt nicht: Mehrere Kompetenzen heißen schlicht "Ansehen" und wären ohne ihre Gruppe nicht zuzuordnen. Ist die Gruppe
+	 * nicht auflösbar, bleibt es bei der Bezeichnung - eine unvollständige Auskunft ist besser als keine.</p>
+	 *
+	 * @param reportvorlage Die Reportvorlage, deren Kompetenzen aufgezählt werden.
+	 *
+	 * @return Die Kompetenzen, durch Komma getrennt.
+	 */
+	private static String benannteKompetenzen(final ReportingReportvorlage reportvorlage) {
+		return String.join(", ", reportvorlage.getBenutzerKompetenzen().stream().map(kompetenz -> {
+			final BenutzerKompetenzGruppe gruppe = BenutzerKompetenzGruppe.getByID(kompetenz.daten.gruppe_id);
+			return (gruppe == null) ? kompetenz.daten.bezeichnung : (gruppe.daten.bezeichnung + ": " + kompetenz.daten.bezeichnung);
+		}).toList());
+	}
 
 	/**
 	 * Erzeugt auf Basis der übergebenen HTML-Vorlage und Daten die HTML-Inhalte der Dateien und legt diese Inhalte in einer Liste ab.
 	 *
 	 * @return Eine Liste mit ReportBuilderHtml-Instanzen.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private List<ReportBuilderHtml> getHtmlBuilders() throws ApiOperationException {
 
@@ -216,10 +216,9 @@ public final class HtmlFactory {
 		// lesbare und ist als interne Ressource ein Serverfehler. Ohne die Prüfung lehnte sie erst der Builder-Kontext ab - mit falschem Status.
 		final String htmlTemplateCode = ResourceUtils.text(reportingReportvorlage.getRootPfadHtmlTemplate());
 		if ((htmlTemplateCode == null) || htmlTemplateCode.isBlank()) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden "
-					+ "oder ist leer.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"### FEHLER: Die HTML-Template-Datei für die HTML-Erzeugung konnte nicht eingelesen werden oder ist leer.");
+					"### FEHLER: Die HTML-Vorlage für den Report '%s' konnte auf dem Server nicht gelesen werden oder ist leer."
+							.formatted(reportingReportvorlage.getBezeichnung()));
 		}
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
@@ -239,7 +238,7 @@ public final class HtmlFactory {
 	 * @param htmlBuilders     Eine Liste von {@code ReportBuilderHtml}-Objekten, in die die erzeugten HTML-Inhalte gespeichert werden.
 	 * @param htmlTemplateCode Der HTML-Template-Code, der beim Generieren der HTML-Inhalte verwendet wird.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private void erzeugeEinzelContexts(final List<ReportBuilderHtml> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
 		final String contextBezeichnung = htmlContextInitializer.einzelContextBezeichnung();
@@ -249,10 +248,9 @@ public final class HtmlFactory {
 		// kann beides nicht unterscheiden und würde einen fehlenden Context als fehlende Fähigkeit ausweisen. Beide Fälle setzen eine fehlkonfigurierte
 		// Registry voraus.
 		if (baseContext == null) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Der Kontext " + contextBezeichnung + " für die Aufteilung in Einzeldokumente wurde nicht aufgebaut.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"FEHLER: Der Kontext " + contextBezeichnung + " für die Aufteilung in Einzeldokumente wurde nicht aufgebaut.");
+			// Der Schlüssel benennt die fehlerhafte Zuordnung in der Registry und steht in keiner Ursachenkette.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Nicht aufgebauter Daten-Context der Einzelausgabe: " + contextBezeichnung);
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Ausgabe in einzelne Dateien fehlen die aufbereiteten Daten.");
 		}
 
 		if (baseContext instanceof final HtmlContextAufteilbar<?> aufteilbarerContext) {
@@ -266,10 +264,11 @@ public final class HtmlFactory {
 				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
 			}
 		} else {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"FEHLER: Der Kontext " + contextBezeichnung + " unterstützt das Aufteilen in Einzeldokumente nicht.");
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"FEHLER: Der Kontext " + contextBezeichnung + " unterstützt das Aufteilen in Einzeldokumente nicht.");
+			// Der Schlüssel und die tatsächliche Klasse benennen die fehlerhafte Zuordnung in der Registry und stehen in keiner Ursachenkette.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Nicht aufteilbarer Daten-Context der Einzelausgabe: %s (%s)"
+					.formatted(contextBezeichnung, baseContext.getClass().getSimpleName()));
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Die Daten dieses Reports lassen sich nicht in einzelne Dateien aufteilen.");
 		}
 	}
 
@@ -309,8 +308,7 @@ public final class HtmlFactory {
 						.addIds(getContextsIds())
 						.withDateinamensvorlage(ladeDateinamensvorlageAusDatei(reportingReportvorlage.getPfadDateinamensvorlage()))
 						.withStatischerDateiname(reportingReportvorlage.getDateiname())
-						.withRootPfad(ReportingReportvorlage.getRootPfad())
-						.withLogger(reportingContext.logger());
+						.withRootPfad(ReportingReportvorlage.getRootPfad());
 		return new ReportBuilderHtml(reportBuilderContext);
 	}
 

@@ -58,7 +58,7 @@ public final class SchulbescheinigungQrFactory {
 	 * Erstellt eine neue Factory, die den Signier-Service über die Standard-Factories und das Ausstellungsdatum über die Standard-Uhr des Reportings
 	 * bezieht.
 	 *
-	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf Schüler-Repository, Logger und Datenbankverbindung.
+	 * @param reportingContext Der zentrale Reporting-Context mit Zugriff auf Schul- und Schüler-Repository und die Meldefassade für Ausgabeprobleme.
 	 */
 	public SchulbescheinigungQrFactory(final ReportingContext reportingContext) {
 		this(reportingContext, SchulbescheinigungQrFactory::erzeugeSignatureService, ReportingUhr.standard());
@@ -181,20 +181,20 @@ public final class SchulbescheinigungQrFactory {
 		} catch (final Exception e) {
 			if (istAnmeldefehler(e)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, e,
-						"FEHLER: Die Anmeldung am Signierdienst ist fehlgeschlagen; die Schulbescheinigungen werden nicht erstellt. "
+						"### FEHLER: Die Anmeldung am Signierdienst ist fehlgeschlagen; die Schulbescheinigungen werden nicht erstellt. "
 								+ "Die hinterlegten Zugangsdaten für den Signierdienst sind zu prüfen.");
 			}
 			if (statusInUrsachenkette(e, Status.FORBIDDEN)) {
 				// Ein 403 kann auch lokal aus der Kompetenzprüfung des Services stammen und ist deshalb kein sicherer Anmeldefehler des Dienstes.
 				throw new ApiOperationException(Status.FORBIDDEN, e,
-						"FEHLER: Die Berechtigung zum Erstellen digitaler Signaturen fehlt; die Schulbescheinigungen werden nicht erstellt.");
+						"### FEHLER: Die Berechtigung zum Erstellen digitaler Signaturen fehlt; die Schulbescheinigungen werden nicht erstellt.");
 			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"FEHLER: Der Signierdienst ist nicht erreichbar oder antwortet fehlerhaft; die Schulbescheinigungen werden nicht erstellt.");
+					"### FEHLER: Der Signierdienst ist nicht erreichbar oder antwortet fehlerhaft; die Schulbescheinigungen werden nicht erstellt.");
 		}
 		if (signaturen.values().stream().noneMatch(SchulbescheinigungQrFactory::istErfolgreicheSignatur)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"FEHLER: Der Signierdienst hat keine einzige Signatur erstellt; die Schulbescheinigungen werden nicht erstellt.");
+					"### FEHLER: Der Signierdienst hat keine einzige Signatur erstellt; die Schulbescheinigungen werden nicht erstellt.");
 		}
 		return signaturen;
 	}
@@ -278,7 +278,8 @@ public final class SchulbescheinigungQrFactory {
 	 * Rendert die beiden QR-Codes einer Schulbescheinigung als SVG. Nur wenn beide gelingen, ist der Zustand SIGNIERT; in jedem Fehlerfall entfallen beide
 	 * Codes gemeinsam, denn ein halber Signaturblock sähe bei der Prüfung wie ein defektes Dokument aus. Ein Signierergebnis mit Status {@code OK}, aber
 	 * ohne Inhalt zählt als Signierfehler.
-	 * <p>Der Grund und der auslösende Fehler verbleiben im Bauergebnis für die Meldung über die Fassade; in die Vorlagendaten gelangen sie nicht.</p>
+	 * <p>Der Grund und der auslösende Fehler verbleiben im Bauergebnis für die Meldung über die Fassade; in die Vorlagendaten gelangen sie nicht. Der Grund
+	 * nennt, welcher der beiden Codes scheiterte - den Inhalt, einen langen Base45-Block, nennt weder er noch die Meldung der Codeerzeugung.</p>
 	 *
 	 * @param xmlBytes Das XSchule-XML als Bytes (für QR1).
 	 * @param signatur Die Signatur des Schülers (für QR2); darf {@code null} sein.
@@ -291,20 +292,38 @@ public final class SchulbescheinigungQrFactory {
 					ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER, signaturfehlertext(signatur), null);
 		}
 
+		final String qr1Svg;
 		try {
 			final String qr1Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR1 + Base45.encode(GZip.encode(xmlBytes));
-			final String qr1Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
+			qr1Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
 					qr1Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM,
 					SchulbescheinigungQrEinstellungen.EC_QR1);
+		} catch (final Exception e) {
+			return nichtDarstellbar("Der QR-Code mit den Bescheinigungsdaten konnte nicht erzeugt werden.", e);
+		}
+		final String qr2Svg;
+		try {
 			final String qr2Inhalt = SchulbescheinigungQrEinstellungen.PRAEFIX_QR2 + Base45.encode(GZip.encode(signatur.content()));
-			final String qr2Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
+			qr2Svg = ReportingBarcodeUtils.erzeuge2DCodeQRCode(
 					qr2Inhalt, SchulbescheinigungQrEinstellungen.QR_BREITE_MM, SchulbescheinigungQrEinstellungen.QR_HOEHE_MM,
 					SchulbescheinigungQrEinstellungen.EC_QR2);
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, qr2Svg, SchulbescheinigungSignaturzustand.SIGNIERT), null, null, null);
 		} catch (final Exception e) {
-			return new QrBauergebnis(new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.SIGNIERFEHLER),
-					ReportingProblemursache.NICHT_DARSTELLBAR, "Ein QR-Code konnte nicht erzeugt werden.", e);
+			return nichtDarstellbar("Der QR-Code mit der Signatur konnte nicht erzeugt werden.", e);
 		}
+		return new QrBauergebnis(new SchulbescheinigungQrDaten(qr1Svg, qr2Svg, SchulbescheinigungSignaturzustand.SIGNIERT), null, null, null);
+	}
+
+	/**
+	 * Bildet das Bauergebnis eines QR-Codes, der sich nicht darstellen lässt. Beide Codes entfallen gemeinsam; der Grund nennt den gescheiterten.
+	 *
+	 * @param grund  Der Grund für die Meldung über die Fassade.
+	 * @param fehler Der auslösende Fehler.
+	 *
+	 * @return Das Bauergebnis ohne QR-Daten.
+	 */
+	private static QrBauergebnis nichtDarstellbar(final String grund, final Exception fehler) {
+		return new QrBauergebnis(new SchulbescheinigungQrDaten(null, null, SchulbescheinigungSignaturzustand.SIGNIERFEHLER),
+				ReportingProblemursache.NICHT_DARSTELLBAR, grund, fehler);
 	}
 
 	/**

@@ -113,7 +113,7 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	 */
 	public ReportBuilderContextHtml withHtmlTemplate(final String htmlTemplate) throws ApiOperationException {
 		if ((htmlTemplate == null) || htmlTemplate.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Bei der HTML-Erzeugung darf die HTML-Vorlage nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt die HTML-Vorlage.");
 		}
 		this.htmlTemplate = htmlTemplate;
 		return this;
@@ -155,7 +155,7 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	public ReportBuilderContextHtml validiert() throws ApiOperationException {
 		super.validiert();
 		if ((htmlTemplate == null) || htmlTemplate.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Die HTML-Vorlage des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt die HTML-Vorlage.");
 		}
 		return this;
 	}
@@ -215,13 +215,13 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 
 	/**
 	 * Gibt den aktuellen HTML-Renderer zurück. Falls kein Renderer vorhanden ist, wird ein neuer {@link ReportRendererHtml} mit der aktuellen
-	 * Template-Engine und dem Logger erstellt.
+	 * Template-Engine erstellt.
 	 *
 	 * @return Der aktuelle oder neu erstellte HTML-Renderer.
 	 */
 	ReportRendererHtml getRenderer() {
 		if (this.renderer == null) {
-			this.renderer = new ReportRendererHtml(this.getHtmlTemplateEngine(), this.logger);
+			this.renderer = new ReportRendererHtml(this.getHtmlTemplateEngine());
 		}
 		return renderer;
 	}

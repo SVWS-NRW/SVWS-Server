@@ -55,7 +55,7 @@ public class PdfFactory {
 	 * @param htmlBuilders 				Eine Map mit den Dateinamen und HTML-Dateiinhalten.
 	 * @param reportingContext		Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	protected PdfFactory(final List<ReportBuilderHtml> htmlBuilders, final ReportingContext reportingContext)
 			throws ApiOperationException {
@@ -67,12 +67,11 @@ public class PdfFactory {
 
 		// Validiere die HTML-Builder. Ohne Liste liegt immer ein Programmierfehler vor; eine leere Liste ist allein bei einer zulässig leeren Ausgabe gültig.
 		if (htmlBuilders == null) {
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die PDF-Erzeugung wurden keine HTML-Inhalte übergeben.");
 		}
 		if (htmlBuilders.isEmpty() && !leereAusgabeZulaessig) {
-			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Für die PDF-Erzeugung liegen keine HTML-Inhalte vor, obwohl die Ausgabe Daten enthalten sollte.");
 		}
 		if (htmlBuilders.isEmpty()) {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 4,
@@ -89,36 +88,31 @@ public class PdfFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	protected Response createPdfResponse() throws ApiOperationException {
 
-		try {
-			reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
-			final List<ReportBuilderPdf> pdfBuilders = getPdfBuilders();
-			// Die Reihenfolge ist verbindlich: Zuerst zählt, wie viele Dokumente entstanden sind, erst danach, ob eine leere Menge zulässig ist. Eine bewusst
-			// leere Auswahl in der Sammelausgabe ergibt einen Builder mit leerem fachlichem Inhalt - dort entsteht ein Dokument und kein leeres Archiv.
-			if (pdfBuilders.isEmpty()) {
-				if (!leereAusgabeZulaessig) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-							"### FEHLER: Es sind keine PDF-Dokumente entstanden, obwohl die Ausgabe Daten enthalten sollte.");
-				}
-				return erzeugeZipResponse(pdfBuilders);
-			}
-			if (pdfBuilders.size() == 1) {
-				final ReportBuilderPdf einzigerPdfBuilder = pdfBuilders.getFirst();
-				final byte[] data = einzigerPdfBuilder.generate();
-				final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(einzigerPdfBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
-				reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
-				return ReportingHinweiseHeader.ergaenze(
-						Response.ok(data, einzigerPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
-						reportingContext).build();
+		reportingContext.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+		final List<ReportBuilderPdf> pdfBuilders = getPdfBuilders();
+		// Die Reihenfolge ist verbindlich: Zuerst zählt, wie viele Dokumente entstanden sind, erst danach, ob eine leere Menge zulässig ist. Eine bewusst
+		// leere Auswahl in der Sammelausgabe ergibt einen Builder mit leerem fachlichem Inhalt - dort entsteht ein Dokument und kein leeres Archiv.
+		if (pdfBuilders.isEmpty()) {
+			if (!leereAusgabeZulaessig) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"### FEHLER: Es sind keine PDF-Dokumente entstanden, obwohl die Ausgabe Daten enthalten sollte.");
 			}
 			return erzeugeZipResponse(pdfBuilders);
-		} catch (final Exception e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 0, "### Fehler bei der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
-			throw e;
 		}
+		if (pdfBuilders.size() == 1) {
+			final ReportBuilderPdf einzigerPdfBuilder = pdfBuilders.getFirst();
+			final byte[] data = einzigerPdfBuilder.generate();
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(einzigerPdfBuilder.getDateinameMitEndung(), StandardCharsets.UTF_8);
+			reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
+			return ReportingHinweiseHeader.ergaenze(
+					Response.ok(data, einzigerPdfBuilder.getContentType()).header("Content-Disposition", "attachment; " + encodedFilename),
+					reportingContext).build();
+		}
+		return erzeugeZipResponse(pdfBuilders);
 	}
 
 
@@ -141,7 +135,7 @@ public class PdfFactory {
 	 *
 	 * @return Die Response mit der ZIP-Datei.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	private Response erzeugeZipResponse(final List<ReportBuilderPdf> pdfBuilders) throws ApiOperationException {
 		final byte[] data = createZIP(pdfBuilders);
@@ -236,8 +230,7 @@ public class PdfFactory {
 						.withDateiname(reportBuilderHtml.getDateiname())
 						.addIds(reportBuilderHtml.getIds())
 						.withStatischerDateiname(reportBuilderHtml.getStatischerDateiname())
-						.withRootPfad(reportBuilderHtml.getRootPfad())
-						.withLogger(reportingContext.logger());
+						.withRootPfad(reportBuilderHtml.getRootPfad());
 		return new ReportBuilderPdf(reportBuilderContext);
 	}
 
@@ -251,7 +244,7 @@ public class PdfFactory {
 	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	byte[] createZIP(final List<ReportBuilderPdf> pdfBuilders) throws ApiOperationException {
 		final List<String> eintragsnamen = ermittleZipEintragsnamen(pdfBuilders);
@@ -268,9 +261,8 @@ public class PdfFactory {
 				zipData = byteArrayOutputStream.toByteArray();
 			}
 		} catch (final IOException e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
+					"### FEHLER: Die PDF-Dateien konnten nicht zu einer ZIP-Datei zusammengestellt werden.");
 		}
 		return zipData;
 	}
@@ -529,8 +521,6 @@ public class PdfFactory {
 			zos.write(ReportingHinweisSerializer.hinweisdatei(umfang, probleme).getBytes(StandardCharsets.UTF_8));
 			zos.closeEntry();
 		} catch (final Exception e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Die Hinweisdatei der ZIP-Ausgabe konnte nicht geschrieben werden: " + e.getMessage());
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"### FEHLER: Die Hinweisdatei der ZIP-Ausgabe konnte nicht geschrieben werden.");
 		}
@@ -555,14 +545,12 @@ public class PdfFactory {
 		} catch (final ApiOperationException e) {
 			// Der Builder klassifiziert den Fehler bereits nach seiner Quelle; ohne diesen Zweig macht die Sammelausgabe daraus einen Serverfehler.
 			// Protokolliert wird allein der Dateiname: Er ist bei einer Sammelausgabe die einzige Angabe, welches Dokument betroffen ist. Die Meldung
-			// selbst steht bereits im Eintrag der Fehlerquelle und wird mit der Exception weitergereicht.
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Die PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte nicht erzeugt werden.");
+			// der Fehlerquelle reist mit der Exception und erscheint im Fehlerblock der Abschlussgrenze.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Betroffene Datei: " + pdfBuilder.getDateiname());
 			throw e;
 		} catch (final Exception e) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-					"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' konnte mit folgender Fehlermeldung nicht generiert werden: " + e.getMessage());
+					"### FEHLER: Die PDF-Datei '%s' konnte nicht erzeugt werden.".formatted(pdfBuilder.getDateiname()));
 		}
 	}
 }

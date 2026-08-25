@@ -13,8 +13,10 @@ import java.util.stream.Stream;
 
 /**
  * Zugriff auf die Quelltexte des Moduls für die Architekturtests. Sie prüfen Regeln, die kein Aufruf sichtbar macht, und lesen den Code dafür als Text.
- * <p>Kommentare und Zeichenketten werden vor der Prüfung ausgeblendet: Ohne das meldete eine JavaDoc-Zeile, die eine Regel beschreibt, denselben Treffer wie
- * echter Code. Die Zeilenstruktur bleibt erhalten, damit Fundstellen mit ihrer Zeilennummer benannt werden können.</p>
+ * <p>{@link #alle()} blendet Kommentare und Zeichenketten aus: Ohne das meldete eine JavaDoc-Zeile, die eine Regel beschreibt, denselben Treffer wie echter
+ * Code. Die Zeilenstruktur bleibt erhalten, damit Fundstellen mit ihrer Zeilennummer benannt werden können.</p>
+ * <p>{@link #alleMitTexten()} behält die Zeichenketten. Eine Regel über den Wortlaut von Meldungen wäre sonst nicht prüfbar - der Marker steht in genau der
+ * Zeichenkette, die der andere Weg entfernt.</p>
  */
 final class Reportingquelltexte {
 
@@ -74,13 +76,35 @@ final class Reportingquelltexte {
 	 * @return Die Quelldateien mit bereinigtem Inhalt.
 	 */
 	static List<Quelldatei> alle() {
+		return quelldateien(true);
+	}
+
+	/**
+	 * Liest alle Quelldateien des Moduls und behält dabei die Zeichenketten; Kommentare fallen wie sonst weg.
+	 * <p>Für eine Regel über den Wortlaut von Meldungen ist das der einzige gangbare Weg: {@link #alle()} entfernt genau die Zeichenkette, in der die
+	 * Meldung steht.</p>
+	 *
+	 * @return Alle Quelldateien des Moduls mit ihren Zeichenketten.
+	 */
+	static List<Quelldatei> alleMitTexten() {
+		return quelldateien(false);
+	}
+
+	/**
+	 * Liest alle Java-Dateien des Quellverzeichnisses ein.
+	 *
+	 * @param ohneTexte true, wenn auch die Zeichenketten ausgeblendet werden sollen.
+	 *
+	 * @return Die eingelesenen Quelldateien.
+	 */
+	private static List<Quelldatei> quelldateien(final boolean ohneTexte) {
 		if (!Files.isDirectory(QUELLVERZEICHNIS)) {
 			throw new IllegalStateException("Die Quellen des Moduls wurden nicht gefunden: " + QUELLVERZEICHNIS.toAbsolutePath());
 		}
 		try (Stream<Path> pfade = Files.walk(QUELLVERZEICHNIS)) {
 			return pfade.filter(pfad -> pfad.toString().endsWith(".java"))
 					.filter(pfad -> !pfad.toString().contains(VERZEICHNIS_DOKU))
-					.map(Reportingquelltexte::lies)
+					.map(pfad -> lies(pfad, ohneTexte))
 					.toList();
 		} catch (final IOException e) {
 			throw new UncheckedIOException("Die Quellen des Moduls konnten nicht gelesen werden.", e);
@@ -88,28 +112,30 @@ final class Reportingquelltexte {
 	}
 
 	/**
-	 * Liest eine Quelldatei und blendet Kommentare und Zeichenketten aus.
+	 * Liest eine Quelldatei und blendet dabei die Kommentare aus.
 	 *
-	 * @param pfad Der Pfad der Datei.
+	 * @param pfad      Der Pfad der Datei.
+	 * @param ohneTexte true, wenn auch die Zeichenketten ausgeblendet werden sollen.
 	 *
 	 * @return Die eingelesene Quelldatei.
 	 */
-	private static Quelldatei lies(final Path pfad) {
+	private static Quelldatei lies(final Path pfad, final boolean ohneTexte) {
 		try {
-			return new Quelldatei(pfad, ohneKommentareUndTexte(Files.readString(pfad, StandardCharsets.UTF_8)));
+			return new Quelldatei(pfad, bereinigt(Files.readString(pfad, StandardCharsets.UTF_8), ohneTexte));
 		} catch (final IOException e) {
 			throw new UncheckedIOException("Die Quelldatei %s konnte nicht gelesen werden.".formatted(pfad), e);
 		}
 	}
 
 	/**
-	 * Ersetzt Kommentare und Zeichenketten durch Leerzeichen und behält dabei alle Zeilenumbrüche.
+	 * Ersetzt Kommentare - und auf Wunsch die Zeichenketten - durch Leerzeichen und behält dabei alle Zeilenumbrüche.
 	 *
 	 * @param quelltext Der ursprüngliche Quelltext.
+	 * @param ohneTexte true, wenn auch die Zeichenketten ausgeblendet werden sollen.
 	 *
 	 * @return Der bereinigte Quelltext gleicher Länge.
 	 */
-	private static String ohneKommentareUndTexte(final String quelltext) {
+	private static String bereinigt(final String quelltext, final boolean ohneTexte) {
 		final StringBuilder ergebnis = new StringBuilder(quelltext.length());
 		int i = 0;
 		while (i < quelltext.length()) {
@@ -120,6 +146,10 @@ final class Reportingquelltexte {
 				i = endeBlockkommentar(quelltext, i);
 			} else if ((quelltext.charAt(i) == '"') || (quelltext.charAt(i) == '\'')) {
 				i = endeText(quelltext, i);
+				if (!ohneTexte) {
+					ergebnis.append(quelltext, start, i);
+					continue;
+				}
 			} else {
 				ergebnis.append(quelltext.charAt(i));
 				i++;

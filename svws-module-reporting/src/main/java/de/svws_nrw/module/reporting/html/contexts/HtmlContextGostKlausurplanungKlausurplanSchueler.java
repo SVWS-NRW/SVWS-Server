@@ -29,7 +29,7 @@ public final class HtmlContextGostKlausurplanungKlausurplanSchueler extends Html
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param selection			Die vom Initializer ausgewählten Stufen (Abiturjahrgang und GOSt-Halbjahr).
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	public HtmlContextGostKlausurplanungKlausurplanSchueler(final ReportingContext reportingContext,
 			final List<GostKlausurenHalbjahresdaten> selection) throws ApiOperationException {

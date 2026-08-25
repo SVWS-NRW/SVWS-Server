@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
+import de.svws_nrw.core.data.gost.GostBlockungsdaten;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -170,9 +171,7 @@ public class ReportingRepositoryGostKursplanung {
 		try {
 			return DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingContext.conn(), idBlockungsergebnis);
 		} catch (final ApiOperationException aoe) {
-			throw new ApiOperationException(aoe.getStatus(), aoe,
-					"FEHLER: Zur angegebenen Blockungsergebnis-ID %d konnte kein Blockungsergebnis ermittelt werden."
-							.formatted(idBlockungsergebnis));
+			throw new ApiOperationException(aoe.getStatus(), aoe, "### FEHLER: Das gewählte Blockungsergebnis konnte nicht ermittelt werden.");
 		}
 	}
 
@@ -190,8 +189,11 @@ public class ReportingRepositoryGostKursplanung {
 		try {
 			return DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingContext.conn(), idBlockung);
 		} catch (final ApiOperationException aoe) {
+			// Die Blockung ist aus dem gewählten Ergebnis abgeleitet: Das Eingangsprotokoll kennt sie nicht, und nicht jeder Fehlerpfad der Datenschicht
+			// nennt sie.
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "Blockung " + idBlockung);
 			throw new ApiOperationException(aoe.getStatus(), aoe,
-					"FEHLER: Zur Blockungs-ID %d konnte kein Blockungsdaten-Manager ermittelt werden.".formatted(idBlockung));
+					"### FEHLER: Die Blockungsdaten zum gewählten Blockungsergebnis konnten nicht ermittelt werden.");
 		}
 	}
 
@@ -325,23 +327,43 @@ public class ReportingRepositoryGostKursplanung {
 	 * stillschweigend übergangen werden: Sie führte zu einem falsch berechneten Schuljahresabschnitt und damit zu den
 	 * Fachdaten eines falschen Schuljahres. Der Wert stammt aus den gespeicherten Blockungsdaten des Servers; ein
 	 * ungültiger Wert ist damit eine Inkonsistenz der Serverdaten und ein Serverfehler - als "nicht gefunden" suchte
-	 * der Anwender die Ursache bei seiner Anfrage. Den ERROR-Eintrag schreibt die Abschlussgrenze.</p>
+	 * der Anwender die Ursache bei seiner Anfrage. Den Fehlerblock schreibt die Abschlussgrenze; Blockung und Wert hält
+	 * {@link #gostHalbjahrDerBlockung(GostBlockungsdaten)} in der erlaubten technischen Zeile fest, denn die Meldung nennt beides nicht. Diese Prüfung
+	 * selbst kommt ohne Context aus.</p>
 	 *
 	 * @param idGostHalbjahr Die ID des GOSt-Halbjahres aus den Blockungsdaten.
-	 * @param idBlockung     Die ID der Blockung; wird für die Fehlermeldung benötigt.
 	 *
 	 * @return Das GOSt-Halbjahr der Blockung.
 	 *
 	 * @throws ApiOperationException Mit Status 500, falls die ID kein gültiges GOSt-Halbjahr bezeichnet.
 	 */
-	static GostHalbjahr ermittleGostHalbjahr(final int idGostHalbjahr, final long idBlockung) throws ApiOperationException {
+	static GostHalbjahr ermittleGostHalbjahr(final int idGostHalbjahr) throws ApiOperationException {
 		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(idGostHalbjahr);
 		if (gostHalbjahr == null) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-					"FEHLER: Zur Blockung mit der ID %d konnte aus dem Wert %d kein gültiges GOSt-Halbjahr ermittelt werden."
-							.formatted(idBlockung, idGostHalbjahr));
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Die Blockungsdaten nennen kein gültiges GOSt-Halbjahr.");
 		}
 		return gostHalbjahr;
+	}
+
+	/**
+	 * Ermittelt das GOSt-Halbjahr der Blockung und hält bei einem ungültigen Wert Blockung und Wert im Log fest. Die Meldung nennt beides nicht, weil der
+	 * Anwender keines von beiden kennt; in keiner Ursachenkette und in keinem Eingangsprotokoll steht es - ohne diese Zeile wäre der inkonsistente Datensatz
+	 * nicht auffindbar.
+	 *
+	 * @param blockungsdaten Die Blockungsdaten mit der Halbjahres-ID.
+	 *
+	 * @return Das GOSt-Halbjahr der Blockung.
+	 *
+	 * @throws ApiOperationException Mit Status 500, falls die Blockungsdaten kein gültiges GOSt-Halbjahr nennen.
+	 */
+	GostHalbjahr gostHalbjahrDerBlockung(final GostBlockungsdaten blockungsdaten) throws ApiOperationException {
+		try {
+			return ermittleGostHalbjahr(blockungsdaten.gostHalbjahr);
+		} catch (final ApiOperationException aoe) {
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4,
+					"Blockung %d, GOSt-Halbjahr-Wert %d".formatted(blockungsdaten.id, blockungsdaten.gostHalbjahr));
+			throw aoe;
+		}
 	}
 
 	/**
@@ -357,7 +379,7 @@ public class ReportingRepositoryGostKursplanung {
 	private void erzeugeReportingObjekte(final GostBlockungsergebnis blockungsergebnis, final GostBlockungsdatenManager datenManager)
 			throws ApiOperationException {
 		final var blockungsdaten = datenManager.daten();
-		final GostHalbjahr gostHalbjahr = ermittleGostHalbjahr(blockungsdaten.gostHalbjahr, blockungsdaten.id);
+		final GostHalbjahr gostHalbjahr = gostHalbjahrDerBlockung(blockungsdaten);
 		final int schuljahr = gostHalbjahr.getSchuljahrFromAbiturjahr(blockungsdaten.abijahrgang);
 		final int abschnitt = gostHalbjahr.halbjahr;
 		// Blockungen sind auch für Halbjahre möglich, für die die Schule noch keinen Schuljahresabschnitt angelegt hat.

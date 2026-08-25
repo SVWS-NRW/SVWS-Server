@@ -44,13 +44,13 @@ public final class HtmlContextInitializerRegistry {
 	}
 
 	/** Die Beschriftungen der Schüler-Datenaufbauten. Sie gelten für die drei Listen-Aufbauten und den Schüler-Stundenplan gleichermaßen. */
-	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_SCHUELER = bezeichnungen("Schüler", "Schülern", "Schüler-IDs");
+	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_SCHUELER = bezeichnungen("Schüler", "Schülern");
 
 	/** Die Beschriftungen der Klassen-Datenaufbauten - für die Klassenliste und den Klassen-Stundenplan dieselben. */
-	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_KLASSEN = bezeichnungen("Klassen", "Klassen", "Klassen-IDs");
+	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_KLASSEN = bezeichnungen("Klassen", "Klassen");
 
 	/** Die Beschriftungen der Lehrer-Datenaufbauten - für die Lehrerliste und den Lehrer-Stundenplan dieselben. */
-	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_LEHRER = bezeichnungen("Lehrer", "Lehrern", "Lehrer-IDs");
+	private static final HtmlContextDatenbezeichnungen BEZEICHNUNGEN_LEHRER = bezeichnungen("Lehrer", "Lehrern");
 
 	/**
 	 * Die Zuordnung von Datenaufbau auf dessen Konfiguration. Zu jedem Wert des Enums gehört genau ein Eintrag; der Vollständigkeitstest der Registry
@@ -81,7 +81,7 @@ public final class HtmlContextInitializerRegistry {
 					HtmlContextKlassen::new)),
 
 			Map.entry(ReportingReportvorlageDatenContext.KURSE, listenAufbau(
-					bezeichnungen("Kurse", "Kursen", "Kurs-IDs"), HtmlContextSchluessel.KURSE, ReportingKurs.class,
+					bezeichnungen("Kurse", "Kursen"), HtmlContextSchluessel.KURSE, ReportingKurs.class,
 					(ctx, ids) -> ctx.repositoryLerngruppen().waehleKurseAus(ids),
 					HtmlContextKurse::new)),
 
@@ -92,7 +92,7 @@ public final class HtmlContextInitializerRegistry {
 
 			// Fächer und Räume stammen aus dem bereits geladenen Stundenplan; ihre Auswahl löst gegen dessen Bestand auf, statt Daten nachzuladen.
 			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH, stundenplanAufbau(
-					bezeichnungen("Fächer", "Fächern", "Fach-IDs"), HtmlContextSchluessel.STUNDENPLANUNG_FAECHER, ReportingFach.class,
+					bezeichnungen("Fächer", "Fächern"), HtmlContextSchluessel.STUNDENPLANUNG_FAECHER, ReportingFach.class,
 					(ctx, stundenplan, ids) -> ReportingAuswahlergebnis.ausVorhandenen(ids,
 							id -> (stundenplan.schuljahresabschnitt() == null) ? null : stundenplan.schuljahresabschnitt().fach(id)),
 					HtmlContextStundenplanungFachStundenplan::new)),
@@ -108,7 +108,7 @@ public final class HtmlContextInitializerRegistry {
 					HtmlContextStundenplanungLehrerStundenplan::new)),
 
 			Map.entry(ReportingReportvorlageDatenContext.STUNDENPLANUNG_RAUM, stundenplanAufbau(
-					bezeichnungen("Räume", "Räumen", "Raum-IDs"), HtmlContextSchluessel.STUNDENPLANUNG_RAEUME, ReportingStundenplanungRaum.class,
+					bezeichnungen("Räume", "Räumen"), HtmlContextSchluessel.STUNDENPLANUNG_RAEUME, ReportingStundenplanungRaum.class,
 					(ctx, stundenplan, ids) -> ReportingAuswahlergebnis.ausVorhandenen(ids, stundenplan::raum),
 					HtmlContextStundenplanungRaumStundenplan::new)),
 
@@ -145,10 +145,9 @@ public final class HtmlContextInitializerRegistry {
 			throws ApiOperationException {
 		final HtmlContextAufbau aufbau = AUFBAUTEN.get(datenContext);
 		if (aufbau == null) {
-			final String fehlermeldung =
-					"FEHLER: Für den Datenaufbau %s ist kein Aufbau der Daten-Contexts registriert.".formatted(datenContext.name());
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, fehlermeldung);
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, fehlermeldung);
+			// Welcher Datenaufbau fehlt, benennt den Programmfehler erst und steht in keiner Ursachenkette.
+			reportingContext.logger().logLn(LogLevel.ERROR, 4, "Nicht registrierter Datenaufbau: " + datenContext.name());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Die Reportvorlage ist auf dem Server nicht vollständig eingerichtet.");
 		}
 		return aufbau;
 	}
@@ -172,12 +171,11 @@ public final class HtmlContextInitializerRegistry {
 	 *
 	 * @param nominativ Die Bezeichnung im Nominativ Plural, z. B. "Kurse".
 	 * @param dativ     Die Bezeichnung im Dativ Plural, z. B. "Kursen".
-	 * @param idTyp     Die Bezeichnung des ID-Typs, z. B. "Kurs-IDs".
 	 *
 	 * @return Die Beschriftungen des Datenaufbaus.
 	 */
-	private static HtmlContextDatenbezeichnungen bezeichnungen(final String nominativ, final String dativ, final String idTyp) {
-		return new HtmlContextDatenbezeichnungen(nominativ, dativ, idTyp);
+	private static HtmlContextDatenbezeichnungen bezeichnungen(final String nominativ, final String dativ) {
+		return new HtmlContextDatenbezeichnungen(nominativ, dativ);
 	}
 
 	/**

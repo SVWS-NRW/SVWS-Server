@@ -146,7 +146,7 @@ class TestHtmlFactoryAbbruchstatus {
 		// Die Statistik ist der Hauptinhalt dieses Reports; der strikte Repository-Zugriff wirft statustragend. Weder Proxy noch Context noch Initializer
 		// dürfen daraus einen anderen Status oder einen leeren Report machen.
 		final ApiOperationException ladefehler = new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-				"FEHLER: Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d konnte nicht ermittelt werden.".formatted(ABITURJAHR));
+				"### FEHLER: Die GOSt-Fachwahlstatistik des Abiturjahrgangs %d konnte nicht ermittelt werden.".formatted(ABITURJAHR));
 		when(gebeFachwahlstatistikReportVor(ABITURJAHR).fachwahlen(ABITURJAHR)).thenThrow(ladefehler);
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> HtmlFactory.erzeuge(reportingContext));

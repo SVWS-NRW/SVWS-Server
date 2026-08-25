@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
@@ -63,7 +64,6 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	/**
 	 * Erstellt einen typisierten Parameter basierend auf dem übergebenen ReportingVorlageParameter.
 	 * Der Typ wird auf Grundlage des {@link ReportingReportvorlageParameterTyp} festgelegt.
-	 * Bei einem Fehler während der Typisierung wird als Fallback ein String-Typ verwendet.
 	 *
 	 * @param reportingReportVorlageParameter der Vorlage-Parameter, aus dem der typisierte Parameter erstellt wird
 	 *
@@ -79,14 +79,15 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 		try {
 			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
 				case BOOLEAN, INTEGER, LONG, DECIMAL, STRING -> new ReportingVorlageParameterTypisiert<>(reportingReportVorlageParameter);
-				default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-						"Der Reporting-Vorlage-Parameter " + reportingReportVorlageParameter.name + " besitzt keinen auflösbaren Typ.");
+				default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Ein Vorlagenparameter hat keinen bekannten Typ.");
 			};
 		} catch (final ApiOperationException e) {
-			// Die Meldung oben benennt den betroffenen Parameter; der allgemeine Catch ersetzt sie sonst durch eine Angabe ohne Namen.
+			// Der interne Name benennt den betroffenen Parameter - bei unbekanntem Typ wie bei einem nicht lesbaren Wert - und steht in keiner Ursachenkette;
+			// die Bezeichnung taugt nicht, sie darf leer sein. Die eigene Meldung reist unverändert weiter; der allgemeine Catch darunter ersetzte sie sonst.
+			this.reportingContext.logger().logLn(LogLevel.ERROR, 4, "Vorlagenparameter: " + reportingReportVorlageParameter.name);
 			throw e;
 		} catch (final Exception e) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "Fehler bei der Typisierung der Vorlage-Parameter aufgetreten.");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Die Vorlagenparameter konnten nicht ausgewertet werden.");
 		}
 	}
 }

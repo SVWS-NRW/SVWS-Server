@@ -9,8 +9,6 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import com.openhtmltopdf.util.XRLog;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -23,15 +21,12 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 // Der Calendar ist von PDFBox vorgegeben: PDDocumentInformation.setCreationDate(...) und setModificationDate(...) erwarten diesen Typ.
 public final class ReportRendererPdf {
 
-	private final Logger logger;
-
 	/**
 	 * Erstellt eine neue Instanz des ReportingRendererPDF.
-	 *
-	 * @param logger Der Logger, der für die Fehlerausgabe verwendet werden soll
+	 * <p>Der Renderer protokolliert nicht: Ein Abbruch trägt seinen Grund als Meldung der Exception, und ausgegeben wird er an der Abschlussgrenze.</p>
 	 */
-	public ReportRendererPdf(final Logger logger) {
-		this.logger = logger;
+	public ReportRendererPdf() {
+		// Der Renderer hält keinen Zustand; der Konstruktor besteht allein, damit die Klasse ihren Zweck über ihren Namen benennt.
 	}
 
 	private static final String SVWSSERVER = "SVWS-Server";
@@ -70,11 +65,8 @@ public final class ReportRendererPdf {
 			final PdfRendererBuilder builder = new PdfRendererBuilder();
 			final URL baseRes = PDDocument.class.getClassLoader().getResource(rootPfad);
 			if (baseRes == null) {
-				if (logger != null) {
-					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
-				}
 				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
-						"### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
+						"### FEHLER: Das Ressourcenverzeichnis für die PDF-Erzeugung fehlt auf dem Server.");
 			}
 			final String baseURI = baseRes.toString();
 
@@ -90,14 +82,10 @@ public final class ReportRendererPdf {
 			// PDF generieren
 			builder.run();
 		} catch (final ApiOperationException e) {
-			// Bereits klassifizierte Fehler behalten ihren Status - sonst würde der allgemeine Catch die Meldung überschreiben und erneut protokollieren.
+			// Bereits klassifizierte Fehler behalten ihren Status - sonst ersetzte der allgemeine Catch die Meldung durch seine eigene, unspezifische.
 			throw e;
 		} catch (final Exception e) {
-			if (logger != null) {
-				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Das PDF konnte aufgrund des folgenden Fehlers nicht gerendert werden: " + e.getMessage());
-			}
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
-					"### FEHLER: Das PDF konnte aufgrund der folgenden Fehlers nicht gerendert werden: " + e.getMessage());
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Das PDF-Dokument konnte aus dem HTML nicht erzeugt werden.");
 		}
 	}
 
@@ -137,19 +125,15 @@ public final class ReportRendererPdf {
 
 		try (InputStream is = PDDocument.class.getClassLoader().getResourceAsStream(path)) {
 			if (is == null) {
-				if (logger != null) {
-					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
-				}
-				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Schriftart nicht gefunden: " + path);
+				throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+						"### FEHLER: Eine Schriftart für die PDF-Erzeugung fehlt auf dem Server.");
 			}
 		} catch (final ApiOperationException e) {
-			// Die eigene Meldung oben liegt innerhalb des try-Blocks und würde sonst vom allgemeinen Catch ein zweites Mal protokolliert.
+			// Die eigene Meldung oben liegt innerhalb des try-Blocks; ohne diesen Zweig ersetzte der allgemeine Catch sie durch die des Ladefehlers.
 			throw e;
 		} catch (final Exception e) {
-			if (logger != null) {
-				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
-			}
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "### FEHLER: Schriftart nicht gefunden: " + path);
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
+					"### FEHLER: Eine Schriftart für die PDF-Erzeugung konnte auf dem Server nicht geladen werden.");
 		}
 		builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream(path), family, weight, style, embed);
 	}

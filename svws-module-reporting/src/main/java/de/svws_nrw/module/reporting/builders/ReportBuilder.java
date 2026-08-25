@@ -37,7 +37,7 @@ public abstract class ReportBuilder<T> {
 			throws ApiOperationException {
 		this.reportBuilderContext = reportBuilderContext.validiert();
 		if ((contentType == null) || contentType.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Content-Type (MIME-Type) des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt die Angabe des Dateityps.");
 		}
 		this.contentType = contentType;
 		this.dateiname = (dateiname != null) ? dateiname : "";

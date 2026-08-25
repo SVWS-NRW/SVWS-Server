@@ -27,7 +27,7 @@ final class HtmlContextInitializerGostKursplanung extends HtmlContextInitializer
 	 */
 	HtmlContextInitializerGostKursplanung(final ReportingContext reportingContext, final Map<String, HtmlContext<?>> mapHtmlContexts,
 			final HtmlContextAufbauGostKursplanung aufbau) {
-		super(reportingContext, mapHtmlContexts);
+		super(reportingContext, mapHtmlContexts, aufbau);
 		this.aufbau = aufbau;
 	}
 
@@ -35,7 +35,7 @@ final class HtmlContextInitializerGostKursplanung extends HtmlContextInitializer
 	/**
 	 * Prüft die gymnasiale Oberstufe und die übergebene Blockungsergebnis-ID und legt den erzeugten Haupt-Context in der Context-Map ab.
 	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
 	@Override
 	public void init() throws ApiOperationException {
@@ -43,25 +43,13 @@ final class HtmlContextInitializerGostKursplanung extends HtmlContextInitializer
 
 		HtmlContextValidierung.validiereSchuleMitGost(reportingContext);
 		if (reportingParameter.idHauptdatenObjekt() < 0) {
-			reportingContext.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
-			throw new ApiOperationException(Status.BAD_REQUEST, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "### FEHLER: Es wurde kein Blockungsergebnis angegeben.");
 		}
 
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
 						.formatted(reportingParameter.idHauptdatenObjekt(), reportingReportvorlage.name()));
 		mapHtmlContexts.put(aufbau.contextSchluessel(), aufbau.contextErzeuger().apply(reportingContext));
-	}
-
-
-	/**
-	 * Der Schlüssel des Haupt-Contexts in der Context-Map. Die Datenaufbauten der GOSt-Kursplanung unterstützen die Einzelausgabe.
-	 *
-	 * @return Der Schlüssel des Haupt-Contexts in der Context-Map.
-	 */
-	@Override
-	public String einzelContextBezeichnung() {
-		return aufbau.contextSchluessel();
 	}
 
 

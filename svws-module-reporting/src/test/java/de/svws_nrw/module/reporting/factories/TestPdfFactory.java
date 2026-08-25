@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.factories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -376,7 +377,7 @@ class TestPdfFactory {
 		assertEquals(Status.NOT_FOUND, aoe.getStatus());
 		// Der Dateiname ist bei einer Sammelausgabe die einzige Angabe, welches Dokument betroffen ist - und damit das Einzige, was diese Ebene beiträgt.
 		// Die Meldung der Fehlerquelle gehört nicht hinein: Sie steht bereits in deren eigenem Eintrag und reist mit der Exception weiter.
-		assertEquals(List.of("### FEHLER: Die PDF-Datei 'Bescheinigung_Meier' konnte nicht erzeugt werden."), fehlermeldungenImLog(),
+		assertEquals(List.of("Betroffene Datei: Bescheinigung_Meier"), fehlermeldungenImLog(),
 				"Die Sammelausgabe muss genau ihren eigenen Zusammenhang protokollieren.");
 	}
 
@@ -430,6 +431,19 @@ class TestPdfFactory {
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> new PdfFactory(List.of(), reportingContext));
 
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+	}
+
+	@Test
+	void testEineFehlendeUndEineLeereBuilderlisteWerdenVerschiedenGemeldet() {
+		// Beide Lagen sind Programmierfehler, aber verschiedene: Einmal hat der Aufrufer die Liste gar nicht übergeben, einmal hat die Erzeugung der
+		// Dokumente versagt. Mit demselben Text wären sie in der Fehlerantwort nicht auseinanderzuhalten.
+		final ApiOperationException ohneListe = assertThrows(ApiOperationException.class, () -> new PdfFactory(null, reportingContext));
+		final ApiOperationException leereListe = assertThrows(ApiOperationException.class, () -> new PdfFactory(List.of(), reportingContext));
+
+		assertEquals(Status.INTERNAL_SERVER_ERROR, ohneListe.getStatus());
+		assertEquals(Status.INTERNAL_SERVER_ERROR, leereListe.getStatus());
+		assertNotEquals(ohneListe.getMessage(), leereListe.getMessage(),
+				"Die beiden Lagen brauchen verschiedene Meldungen: " + ohneListe.getMessage());
 	}
 
 	@Test

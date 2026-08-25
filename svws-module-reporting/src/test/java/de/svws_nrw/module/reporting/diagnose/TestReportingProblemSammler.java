@@ -238,8 +238,10 @@ class TestReportingProblemSammler {
 	@Test
 	void testEineInfrastrukturstoerungWirdNichtHingenommen() {
 		// Sie bricht die Ausgabe ab. Sie hier zu melden hieße, einen nicht arbeitsfähigen Server als fehlende Daten auszugeben.
+		final ReportingProblemSchluessel schluessel = ReportingProblemSchluessel.fuer(ReportingSchueler.class, 42L);
+
 		assertThrows(IllegalArgumentException.class, () -> sammler.melde(ReportingProblemursache.INFRASTRUKTURSTOERUNG,
-				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, ReportingProblemSchluessel.fuer(ReportingSchueler.class, 42L), "Verbindung weg.", null));
+				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, schluessel, "Verbindung weg.", null));
 
 		assertTrue(sammler.istLeer());
 	}
@@ -247,8 +249,10 @@ class TestReportingProblemSammler {
 	@Test
 	void testEineInfrastrukturstoerungIstAuchDirektKeinProblem() {
 		// Die Invariante hängt nicht am Sammler: Ein Ausgabeproblem mit abbrechender Ursache darf gar nicht erst entstehen.
+		final ReportingProblemSchluessel schluessel = ReportingProblemSchluessel.fuer(ReportingSchueler.class, 42L);
+
 		assertThrows(IllegalArgumentException.class, () -> new ReportingProblem(ReportingProblemursache.INFRASTRUKTURSTOERUNG,
-				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, ReportingProblemSchluessel.fuer(ReportingSchueler.class, 42L)));
+				ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN, schluessel));
 	}
 
 	@Test
@@ -292,7 +296,9 @@ class TestReportingProblemSammler {
 
 		assertEquals(42L, probleme.getFirst().schluessel().id());
 		assertEquals(43L, probleme.getLast().schluessel().id());
-		assertThrows(UnsupportedOperationException.class, () -> probleme.add(probleme.getFirst()),
+		final ReportingProblem erstes = probleme.getFirst();
+
+		assertThrows(UnsupportedOperationException.class, () -> probleme.add(erstes),
 				"Gemeldet wird ausschließlich über die Fassade des Contexts.");
 	}
 

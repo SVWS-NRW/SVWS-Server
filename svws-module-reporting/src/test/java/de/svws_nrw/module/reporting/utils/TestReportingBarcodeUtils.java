@@ -1,6 +1,9 @@
 package de.svws_nrw.module.reporting.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,10 +14,10 @@ import de.vwsoft.barcodelib4j.twod.QRCodeErrorCorrection;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Tests der QR-Code-Erzeugung aus {@link ReportingBarcodeUtils}.
- * <p>Der Inhalt eines QR-Codes stammt aus den Reportdaten und nicht aus dem Request; ein nicht darstellbarer Wert ist deshalb ein serverseitiges Problem
- * und kein Client-Fehler. Geprüft wird zugleich, dass die Meldung den betroffenen Inhalt benennt: Sie entsteht innerhalb des {@code try}-Blocks und wird
- * ohne vorgezogenen Catch von der allgemeinen Fehlerbehandlung überschrieben.</p>
+ * Tests der Barcode- und QR-Code-Erzeugung aus {@link ReportingBarcodeUtils}.
+ * <p>Der Inhalt eines Codes stammt aus den Reportdaten und nicht aus dem Request; ein nicht darstellbarer Wert ist deshalb ein serverseitiges Problem
+ * und kein Client-Fehler. Die Meldung nennt den Inhalt nicht - den trägt der Dialekt in seinem Hinweis. Sie entsteht innerhalb des {@code try}-Blocks:
+ * Ohne vorgezogenen Catch ersetzte die allgemeine Fehlerbehandlung sie durch ihre eigene. Geprüft werden deshalb je Zweig Status, Wortlaut und Ursache.</p>
  * <p><b>Diese Ebene wirft bewusst.</b> Die Signatur-QR-Codes der Schulbescheinigung werten den Fehler aus und markieren die Bescheinigung als nicht
  * erzeugbar; eine still eingesetzte leere Fläche ergäbe ein Dokument, das ohne Prüfcode gültig aussieht. Für die Verwendung in Vorlagen fängt der
  * {@code #convert}-Dialekt den Fehler dagegen ab und stellt eine Lücke dar — geprüft in {@code TestConvertExpressionHelperCodes}.</p>
@@ -32,8 +35,42 @@ class TestReportingBarcodeUtils {
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
 				() -> ReportingBarcodeUtils.erzeuge2DCodeQRCode(NICHT_KODIERBAR, 50.0, 50.0, QRCodeErrorCorrection.L));
 		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
-		assertEquals("Der Inhalt kann nicht als QR-Code enkodiert werden: '" + NICHT_KODIERBAR + "'", aoe.getBody(),
-				"Die Meldung muss den betroffenen Inhalt benennen und darf nicht von der allgemeinen Fehlerbehandlung ersetzt werden.");
+		final String meldung = assertInstanceOf(String.class, aoe.getBody());
+		assertEquals("### FEHLER: Der Inhalt lässt sich nicht als QR-Code darstellen.", meldung,
+				"Die eigene Meldung darf nicht von der allgemeinen Fehlerbehandlung ersetzt werden.");
+		assertFalse(meldung.contains(NICHT_KODIERBAR), "Den Inhalt nennt der Dialekt in seinem Hinweis; die Meldung bleibt ohne ihn: " + meldung);
+	}
+
+	@Test
+	void testEinZuLangerQrInhaltIstEinServerfehlerMitUrsache() {
+		// Die Kapazität eines QR-Codes endet bei Version 40; die Bibliothek wirft erst beim Aufbau des Symbols. Das ist der Weg der allgemeinen
+		// Fehlerbehandlung, und die Ursache muss mitreisen - sonst nennt der Fehlerblock keinen Grund.
+		final String inhalt = "X".repeat(8000);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> ReportingBarcodeUtils.erzeuge2DCodeQRCode(inhalt, 50.0, 50.0, QRCodeErrorCorrection.L));
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertEquals("### FEHLER: Der QR-Code konnte nicht erzeugt werden.", aoe.getBody());
+		assertNotNull(aoe.getCause(), "Die Ausnahme der Bibliothek reist als Ursache mit.");
+	}
+
+	@Test
+	void testEinNichtKodierbarerBarcodeInhaltIstEinServerfehlerMitUrsache() {
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class,
+				() -> ReportingBarcodeUtils.erzeugeBarcodeCode128(NICHT_KODIERBAR, 50.0, 30.0));
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertEquals("### FEHLER: Der Barcode konnte nicht erzeugt werden.", aoe.getBody());
+		assertNotNull(aoe.getCause(), "Die Ausnahme der Bibliothek reist als Ursache mit.");
+	}
+
+	@Test
+	void testEinZuLangerBarcodeInhaltIstEinServerfehler() {
+		// Mehr als 64 Zeichen ergäben keinen zuverlässig lesbaren Code128; die Prüfung steht vor der Bibliothek und nennt die Länge, nicht den Inhalt.
+		final String inhalt = "X".repeat(65);
+
+		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> ReportingBarcodeUtils.erzeugeBarcodeCode128(inhalt, 50.0, 30.0));
+		assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
+		assertEquals("### FEHLER: Der Inhalt ist mit 65 Zeichen zu lang für einen lesbaren Barcode; erlaubt sind höchstens 64 Zeichen.", aoe.getBody());
 	}
 
 	@Test

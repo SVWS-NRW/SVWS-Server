@@ -38,7 +38,7 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	public ReportBuilderContextPdf withDateiname(final String dateiname) throws ApiOperationException {
 		if ((dateiname == null) || dateiname.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Dateiname des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt der Dateiname.");
 		}
 		this.dateiname = dateiname;
 		return this;
@@ -55,7 +55,7 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 */
 	public ReportBuilderContextPdf withHtmlInput(final String htmlInput) throws ApiOperationException {
 		if ((htmlInput == null) || htmlInput.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der HTML-Input des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt der HTML-Inhalt.");
 		}
 		this.htmlInput = htmlInput;
 		return this;
@@ -102,10 +102,10 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	public ReportBuilderContextPdf validiert() throws ApiOperationException {
 		super.validiert();
 		if ((dateiname == null) || dateiname.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der Dateiname des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt der Dateiname.");
 		}
 		if ((htmlInput == null) || htmlInput.isBlank()) {
-			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Der HTML-Input des Report-Builders darf nicht leer sein");
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Für die Erzeugung des Reports fehlt der HTML-Inhalt.");
 		}
 		return this;
 	}
@@ -139,14 +139,14 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	}
 
 	/**
-	 * Gibt den Renderer zurück, der zur Generierung des Reports verwendet wird. Falls kein Renderer gesetzt wurde, wird ein neuer {@link ReportRendererPdf}
-	 * mit dem aktuellen Logger erstellt.
+	 * Gibt den Renderer zurück, der zur Generierung des Reports verwendet wird. Falls kein Renderer gesetzt wurde, wird ein neuer
+	 * {@link ReportRendererPdf} erstellt.
 	 *
 	 * @return Der Renderer vom Typ {@link ReportRendererPdf}, der für die Reportgenerierung verwendet wird.
 	 */
 	ReportRendererPdf getRenderer() {
 		if (this.renderer == null) {
-			this.renderer = new ReportRendererPdf(this.logger);
+			this.renderer = new ReportRendererPdf();
 		}
 		return renderer;
 	}
