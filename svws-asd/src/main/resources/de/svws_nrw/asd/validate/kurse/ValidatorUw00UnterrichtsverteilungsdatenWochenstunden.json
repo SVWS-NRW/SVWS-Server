@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUw00UnterrichtsverteilungsdatenWochenstunden",
+    "historie" : [ {
+      "praefix" : "UW00",
+      "zweig" : "Unterrichtsverteilungsdaten-Wochenstunden",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Wochenstunden des Kurses'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Wochenstunden des Kurses: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "KursDaten.wochenstunden = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

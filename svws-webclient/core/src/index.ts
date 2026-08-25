@@ -376,6 +376,9 @@ export { ValidatorUfUnterrichtsverteilungsdatenFach } from './asd/validate/kurse
 export { ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
+export { ValidatorUw00UnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUw00UnterrichtsverteilungsdatenWochenstunden';
+export { ValidatorUw10UnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUw10UnterrichtsverteilungsdatenWochenstunden';
+export { ValidatorUwUnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUwUnterrichtsverteilungsdatenWochenstunden';
 export { ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw00UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
 export { ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzw10UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
 export { ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
