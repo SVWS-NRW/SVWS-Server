@@ -5,7 +5,7 @@ import { RouteBenutzerprofilMenuGroup } from "~/router/apps/benutzerprofil/Route
 import { RouteDataBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteDataBenutzerprofilWiedervorlagen";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { WiedervorlagenAppProps } from "~/components/benutzerprofil/wiedervorlagen/WiedervorlagenAppProps";
-import { wiedervorlageStateImpl } from "~/states/WiedervorlageStateImpl";
+import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 const App = () => import("~/components/benutzerprofil/wiedervorlagen/WiedervorlagenApp.vue");
 
@@ -28,7 +28,10 @@ export class RouteBenutzerprofilWiedervorlagen extends RouteNode<RouteDataBenutz
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// initialize used states
-		await wiedervorlageStateImpl.init();
+		await Promise.all([
+			wiedervorlageStateImpl.init(),
+			wiedervorlageStateImpl.ladeWiedervorlagen(),
+		]);
 	}
 
 	public getProps(to: RouteLocationNormalized): WiedervorlagenAppProps {

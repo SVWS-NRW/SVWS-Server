@@ -6,7 +6,7 @@ import { DeveloperNotificationException } from "../../../../../core/src/core/exc
 /**
  * Diese Klasse ist eine abtrakte Basisklasse für Inputs, welche zur Verwaltung
  * zu einem GridManager hinzugefügt werden können. Die Inputs werden
- * dabei mit dem Grid über eine Referent an den Html-Komponenten verknüpft,
+ * dabei mit dem Grid über eine Referenz an den Html-Komponenten verknüpft,
  * indem bei dem Grid-Manager die applyInput-Methode aufgerufen wird.
  * Diese Methode erstellt dann auch die konkrete Instanz des abgeleiteten
  * Grid-Inputs.

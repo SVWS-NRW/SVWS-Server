@@ -9,7 +9,7 @@
 		}">
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
-				<div class="notification--header pr-3">
+				<div class="notification--header flex pr-3">
 					<div v-if="icon || type" class="notification--icon">
 						<span class="icon i-ri-lock-2-line" v-if="icon === 'login'" />
 						<span class="icon i-ri-alert-fill" v-else-if="icon === 'error' || type === 'error'" />

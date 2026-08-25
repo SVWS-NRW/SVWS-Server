@@ -34,7 +34,7 @@ interface ModelProxyConfigurationComplete<T extends object> {
 
 
 /**
- * Ein Typ mit den verpflichtenden Felder für eine Model-Proxy-Konfiguration
+ * Ein Typ mit den verpflichtenden Feldern für eine Model-Proxy-Konfiguration
  */
 export type ModelProxyConfiguration<T extends object> = Partial<ModelProxyConfigurationComplete<T>> & Pick<ModelProxyConfigurationComplete<T>, 'data'>;
 
@@ -237,7 +237,7 @@ export class ModelProxy<T extends object> {
 	 * und die in der Liste der Autopatch-Props vorkommt.
 	 *
 	 * @param update   das Update für den Pending-State
-	 * @param prop     das Attribut auf welches sich die Änderung im update bezieht, sofern es
+	 * @param prop     das Attribut, auf welches sich die Änderung im Update bezieht, sofern es
 	 *                 sich um eine Einzeländerung handelt.
 	 */
 	public async applyToPending(update: Partial<T>, prop?: keyof T): Promise<void> {
@@ -349,7 +349,7 @@ export class ModelProxy<T extends object> {
 	}
 
 	/**
-	 * Wechselt den Status für das übergebene Attribut, ob eine Valididerung
+	 * Wechselt den Status für das übergebene Attribut, ob eine Validierung
 	 * stattfindet oder nicht.
 	 *
 	 * @param prop   das Attribut
@@ -367,7 +367,7 @@ export class ModelProxy<T extends object> {
 	}
 
 	/**
-	 * Setzt das Proxy-Objekt zurück auf die Default Daten aus der Config
+	 * Setzt das Proxy-Objekt zurück auf die Default-Daten aus der Config
 	 */
 	public reset(): void {
 		this._proxy.value = this.createNewProxy();

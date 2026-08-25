@@ -1,8 +1,10 @@
 <template>
 	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal type="schueler" mode="create"
-			:person-id="model.proxy.id"
-			:person-name="`${model.proxy.vorname} ${model.proxy.nachname}`">
+			:data="{
+				idPerson: model.proxy.id,
+				namePerson: `${model.proxy.vorname} ${model.proxy.nachname}`
+			}">
 			<template #default="{openModal}">
 				<svws-ui-button @click="openModal" type="secondary">
 					<span class="icon i-ri-alarm-line" aria-hidden="true" /> Wiedervorlage anlegen

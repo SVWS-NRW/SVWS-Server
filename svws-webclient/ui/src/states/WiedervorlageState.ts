@@ -21,6 +21,8 @@ export interface WiedervorlageState {
 
 	patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void>;
 
+	setWiedervorlageErledigt(data: WiedervorlageEintrag): Promise<void>;
+
 	getBenutzergruppen(): Promise<List<BenutzergruppeListeEintrag>>;
 }
 

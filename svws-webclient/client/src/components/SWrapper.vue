@@ -1,39 +1,68 @@
 <template>
 	<router-view />
 	<ui-color-mode headless />
-	<svws-ui-notifications v-if="errors.size > 0">
-		<div v-if="errors.size > 1" class="bg-ui">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui text-ui border-ui fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
-			<div class="min-h-[1.85rem]" />
-		</div>
-		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
-			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="copyString(error)">
-				<template #header>
-					{{ error.name }}
-				</template>
-				{{ error.message }}
-				<template v-if="error.log !== null">
-					<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
-				</template>
-				<template #stack v-if="error.stack">
-					<pre v-text="error.stack" />
-				</template>
-			</svws-ui-notification>
+
+	<svws-ui-notifications v-if="errors.size > 0 || appNotifications.size > 0">
+		<!-- Fehler-Notifications für Captured Errors -->
+		<template v-if="errors.size > 0">
+			<div v-if="errors.size > 1" class="bg-ui">
+				<svws-ui-button @click="errors.clear()"
+					type="transparent"
+					class="pointer-events-auto ml-auto rounded-lg bg-ui text-ui border-ui fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">
+					Alle {{ errors.size }} Meldungen schließen
+				</svws-ui-button>
+				<div class="min-h-[1.85rem]" />
+			</div>
+			<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
+				<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="copyString(error)">
+					<template #header>{{ error.name }}</template>
+					{{ error.message }}
+					<template v-if="error.log !== null">
+						<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
+					</template>
+					<template #stack v-if="error.stack">
+						<pre v-text="error.stack" />
+					</template>
+				</svws-ui-notification>
+			</template>
+		</template>
+
+		<!-- Notifications aus NotificationsState -->
+		<template v-if="appNotifications.size > 0">
+			<div v-if="appNotifications.size > 1" class="bg-ui">
+				<svws-ui-button @click="notificationsState.removeAll()"
+					type="transparent"
+					class="pointer-events-auto ml-auto rounded-lg bg-ui text-ui border-ui fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">
+					Alle {{ appNotifications.size }} Meldungen schließen
+				</svws-ui-button>
+				<div class="min-h-[1.85rem]" />
+			</div>
+			<template v-for="notification of [...appNotifications.values()].reverse().slice(0, 20)"
+				:key="notification.id">
+				<svws-ui-notification :type="notification.type"
+					:id="notification.id"
+					@click="id => notificationsState.remove(id)">
+					<template #header>{{ notification.titel }}</template>
+					{{ notification.nachricht }}
+				</svws-ui-notification>
+			</template>
 		</template>
 	</svws-ui-notifications>
 </template>
 
 <script setup lang="ts">
-
-	import { ref, onErrorCaptured } from "vue";
+	import { ref, computed, onErrorCaptured } from "vue";
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { api } from '~/router/Api';
-	import { useServerState } from "@ui";
+	import { useNotificationsState, useServerState } from "@ui";
 
 	const serverState = useServerState();
+	const notificationsState = useNotificationsState();
 
-	/** Fehlerbehandlung */
+	/** Reaktive Notifications aus dem State (computed für Reaktivität via StateManager) */
+	const appNotifications = computed(() => notificationsState.notifications);
+
 	type CapturedError = {
 		id: number;
 		name: string;
@@ -43,6 +72,8 @@
 	};
 
 	const counter = ref(0);
+
+	// TODO captured errors in NotificationsState umziehen
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
@@ -72,7 +103,7 @@
 		if (reason.name === 'resetAllErrors') {
 			errors.value.clear();
 		} else {
-			void createCapturedError(reason);
+			createCapturedError(reason).catch((e: unknown) => console.error("Fehler im Error-Handler:", e));
 		}
 		return false;
 	});
@@ -80,15 +111,31 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
-		let name = `Fehler ${reason.name === 'Error' ? '' : ': ' + reason.name}`;
+
+		const { name, message, log } = await resolveErrorDetails(reason);
+
+		const newError: CapturedError = {
+			id: counter.value,
+			name,
+			message,
+			stack: reason.stack?.split("\n") ?? [],
+			log,
+		};
+		errors.value.set(newError.id, newError);
+	}
+
+	async function resolveErrorDetails(reason: Error): Promise<Pick<CapturedError, 'name' | 'message' | 'log'>> {
+		let name = `Fehler${reason.name === 'Error' ? '' : ': ' + reason.name}`;
 		let message = reason.message;
 		let log = null;
+
 		if (reason instanceof DeveloperNotificationException) {
 			name = "Programmierfehler: Bitte melden Sie diesen Fehler.";
 		} else if (reason instanceof UserNotificationException) {
 			name = "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
 		} else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
+
 			if (reason.response instanceof Response) {
 				const text = await reason.response.text();
 				try {
@@ -105,13 +152,8 @@
 				}
 			}
 		}
-		const newError: CapturedError = {
-			id: counter.value,
-			name,
-			message,
-			stack: reason.stack?.split("\n") || '',
-			log,
-		};
-		errors.value.set(newError.id, newError);
+
+		return { name, message, log };
 	}
+
 </script>

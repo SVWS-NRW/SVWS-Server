@@ -1,6 +1,6 @@
 import {
 	AppContext, BenutzerStateKey, AbschnittStateKey, AuskunftStateKey, ConfigStateKey, GostLaufbahnplanungStateKey, ReportingStateKey,
-	SchuleStateKey, ServerStateKey, WiedervorlageStateKey, NotenmodulStateKey, OrteStateKey,
+	SchuleStateKey, ServerStateKey, WiedervorlageStateKey, NotenmodulStateKey, OrteStateKey, NotificationsStateKey,
 } from "@ui";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
@@ -10,9 +10,10 @@ import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
 import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
-import { wiedervorlageStateImpl } from "./WiedervorlageStateImpl";
+import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
+import { notificationStateImpl } from "~/states/NotificationsStateImpl";
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
 
 
@@ -29,5 +30,6 @@ export function registerStates(): void {
 	context.provide(AuskunftStateKey, auskunftStateImpl);
 	context.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
 	context.provide(NotenmodulStateKey, notenmodulStateImpl);
+	context.provide(NotificationsStateKey, notificationStateImpl);
 	context.provide(OrteStateKey, orteStateImpl);
 }

@@ -112,6 +112,7 @@ export { useWiedervorlageState, WiedervorlageStateKey, type WiedervorlageState }
 export { useNotenmodulState, NotenmodulStateKey, type NotenmodulState } from "./states/NotenmodulState";
 export { useConfigState, ConfigStateKey, type ConfigState } from "./states/ConfigState";
 export { useBenutzerState, BenutzerStateKey, type BenutzerState } from "./states/BenutzerState";
+export { useNotificationsState, NotificationsStateKey, type NotificationsState, type NotificationEintrag } from "./states/NotificationsState";
 export { type KatalogState } from "./states/kataloge/KatalogState";
 export { useOrteState, OrteStateKey, type OrteState, type OrtsteileKatalogState } from "./states/kataloge/OrteState";
 

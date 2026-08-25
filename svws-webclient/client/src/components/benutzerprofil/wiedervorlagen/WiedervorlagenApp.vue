@@ -36,7 +36,7 @@
 		</div>
 
 		<!--	Table	-->
-		<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-6">
+		<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-6 select-text">
 			<template #header>
 				<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
 					<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
@@ -114,21 +114,24 @@
 		</template>
 	</div>
 
-	<wiedervorlage-modal v-model="showCreateModal"
+	<wiedervorlage-modal v-model="modal.visible"
 		type="allgemein"
-		mode="create" />
+		:mode="modal.status ?? undefined"
+		:data="modal.data" />
 </template>
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { GridManager, useBenutzerState, useWiedervorlageState, type TableActions } from "@ui";
-	import type { WiedervorlageEintrag } from "@core";
+	import { GridManager, useBenutzerState, useWiedervorlageState, type TableActions, useNotificationsState } from "@ui";
+	import { WiedervorlageEintrag } from "@core";
 	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
 	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
 
 	const props = defineProps<WiedervorlagenAppProps>();
+
 	const benutzerState = useBenutzerState();
 	const wiedervorlageState = useWiedervorlageState();
+	const notificationState = useNotificationsState();
 
 	const hasWiedervorlagen = computed(() => wiedervorlageState.wiedervorlagenListe.size() > 0);
 
@@ -151,7 +154,7 @@
 		{ kuerzel: "tsWiedervorlage", name: "Wiedervorlage am", width: "minmax(7rem, 0.25fr)", hideable: false },
 		{ kuerzel: "typPerson", name: "Art", width: "minmax(8rem, 0.25fr)", hideable: false },
 		{ kuerzel: "idPerson", name: "Name", width: "minmax(8rem, 0.25fr)", hideable: false },
-		{ kuerzel: "bemerkung", name: "Bemerkung", width: "minmax(12rem, 1fr)", hideable: false },
+		{ kuerzel: "bemerkung", name: "Bemerkung", width: "minmax(12rem, 7fr)", hideable: false },
 		{ kuerzel: "idBenutzer", name: "Angelegt von", width: "minmax(8rem, 0.25fr)", hideable: false },
 		{ kuerzel: "tsAngelegt", name: "Angelegt am", width: "minmax(7rem, 0.25fr)", hideable: false },
 		{ kuerzel: "idBenutzerErledigt", name: "Erledigt von", width: "minmax(8rem, 0.25fr)", hideable: false },
@@ -214,26 +217,65 @@
 	}
 	//# endregion
 
-	//# region ----------------------- Selection & Actions ------------------------
+	//# region ----------------------- Auswahl & Actions ------------------------
+	type modalType = {
+		visible: boolean,
+		status: null | "create" | "edit",
+		id: null | number,
+		data: WiedervorlageEintrag
+	};
 
-	const showCreateModal = ref(false);
+	const modal = ref<modalType>({
+		visible: false,
+		status: null,
+		id: null,
+		data: new WiedervorlageEintrag(),
+	});
 
 	/* currently only implemented as readonly checkboxes and action buttons	 */
 	const selection = ref<WiedervorlageEintrag[]>([]);
+
 	const bulkChecked = computed(() => selection.value.length > 0);
 	const bulkActions = computed(() => {
 		return [
-			{ label: "Allgemeine Wiedervorlage anlegen", action: () => showCreateModal.value = true, iconClasses: "i-ri-add-line" },
-			{ label: "Ausgewählte Wiedervorlagen löschen", action: () => {}, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
+			{
+				label: "Allgemeine Wiedervorlage anlegen",
+				action: () => modal.value = { visible: true, status: "create", id: null, data: new WiedervorlageEintrag() },
+				iconClasses: "i-ri-add-line",
+			},
+			{
+				label: "Ausgewählte Wiedervorlagen löschen",
+				action: () => {},
+				iconClasses: "i-ri-delete-bin-line icon-ui-danger",
+				disabled: true },
 		];
 	});
 
 	function rowActions(row: WiedervorlageEintrag): TableActions<WiedervorlageEintrag>[] {
 		return [
-			{ label: "Wiedervorlage als erledigt markieren", action: () => {}, iconClasses: "i-ri-check-line", disabled: true },
-			{ label: "Wiedervorlage bearbeiten", action: () => {}, iconClasses: "i-ri-edit-2-line", disabled: true },
+			{
+				label: "Wiedervorlage als erledigt markieren",
+				action: () => setWiedervorlageErledigt(row),
+				iconClasses: "i-ri-check-line",
+				disabled: row.tsErledigt !== null,
+			},
+			{
+				label: "Wiedervorlage bearbeiten",
+				action: () => modal.value = { visible: true, status: "edit", id: row.id, data: row },
+				iconClasses: "i-ri-edit-2-line",
+				disabled: row.tsErledigt !== null,
+			},
 			{ label: "Wiedervorlage löschen", action: () => { }, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
 		];
+	}
+
+	async function setWiedervorlageErledigt(row: WiedervorlageEintrag) {
+		await wiedervorlageState.setWiedervorlageErledigt(row);
+
+		const text = row.namePerson !== null ?
+			`Wiedervorlage für "${row.namePerson}" als erledigt markiert: "${row.bemerkung}"`
+			: `Wiedervorlage als erledigt markiert: "${row.bemerkung}"`;
+		notificationState.success("Gespeichert", text);
 	}
 	//# endregion
 </script>

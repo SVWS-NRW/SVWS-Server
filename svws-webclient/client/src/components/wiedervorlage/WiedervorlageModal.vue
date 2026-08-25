@@ -1,5 +1,5 @@
 <template>
-	<!-- optional slot to render the button and provide a method to open the modal -->
+	<!-- Optionaler Slot für einen Button, der das Modal öffnet -->
 	<slot :open-modal />
 
 	<div class="absolute">
@@ -16,9 +16,9 @@
 						<template v-if="type === 'allgemein'">
 							<span>Allgemein</span>
 						</template>
-						<template v-else-if="personName">
-							<span :class="`icon ${icon} mr-2`" />
-							<span>{{ personName }}</span>
+						<template v-else-if="data.namePerson">
+							<span v-if="icon !== null" :class="`icon ${icon} mr-2`" />
+							<span>{{ data.namePerson }}</span>
 						</template>
 					</h3>
 
@@ -58,51 +58,41 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, watch } from 'vue';
-	import type { WiedervorlageEintrag } from "@core";
-	import { dateTodayPlus, formatDateToDateTime } from "~/utils/date";
+	import { computed, shallowRef, watch } from 'vue';
+	import type { BenutzergruppeListeEintrag, WiedervorlageEintrag } from "@core";
+	import { dateTodayPlus, formatDateToDateTime, getDateFromDateTime } from "~/utils/date";
 	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
 	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
-	import { useWiedervorlageState } from "@ui";
-	const wiedervorlageState = useWiedervorlageState();
+	import { useNotificationsState, useWiedervorlageState } from "@ui";
 
 	const props = withDefaults(defineProps<{
-		personId?: number,
-		personName?: string,
 		mode?: "create" | "edit",
 		type?: "allgemein" | "schueler" | "lehrkraft" | "erzieher",
+		data: Partial<WiedervorlageEintrag>
 	}>(), {
 		mode: "create",
 		type: "allgemein",
-		personName: undefined,
-		personId: undefined,
 	});
 
+	const wiedervorlageState = useWiedervorlageState();
+	const notificationsState = useNotificationsState();
+
 	const emit = defineEmits<{
-		// event when new entry was created
+		// Event nach Anlegen eines neuen Eintrages
 		created: [val: WiedervorlageEintrag];
-		// even when an entry was changed
-		updated: [val: WiedervorlageEintrag];
+		// Event nach Änderung eines Eintrags
+		updated: [];
 	}>();
 
 	const show = defineModel({ type: Boolean, default: false });
 
-	const defaultValue: Wiedervorlage = {
-		idBenutzergruppe: null,
-		typPerson: null,
-		idPerson: null,
-		bemerkung: "",
-		tsWiedervorlage: null,
-		automatischErledigt: true,
-	};
-
-	const modelProxy = new WiedervorlageModelProxy(() => defaultValue);
+	const modelProxy = shallowRef<WiedervorlageModelProxy>(new WiedervorlageModelProxy(() => getInitialData())) ;
 
 	const hatFehler = computed(() => {
-		return modelProxy.getAlleFehler().size() > 0;
+		return modelProxy.value.getAlleFehler().size() > 0;
 	});
 
-	const icon = computed(() => {
+	const icon = computed<string | null>(() => {
 		if (props.type === "schueler" || props.type === "erzieher") {
 			return "i-ri-group-line";
 		}
@@ -112,35 +102,69 @@
 		return null;
 	});
 
+	watch(
+		show,
+		() => {
+			if (show.value === true) {
+				modelProxy.value = new WiedervorlageModelProxy(() => getInitialData());
+			}
+		}
+	);
+
 	function getTypPerson() {
-		switch (props.type) {
-			case "lehrkraft":
-				return 1;
-			case "schueler":
-				return 2;
-			case "erzieher":
-				return 3;
+		const typPersonMap: Record<string, 1 | 2 | 3> = {
+			lehrkraft: 1,
+			schueler: 2,
+			erzieher: 3,
+		};
+
+		return typPersonMap[props.type] ?? null;
+	}
+
+	function getInitialDate(): string | null {
+		switch (props.mode) {
+			case "create":
+				return dateTodayPlus({ days: 7 });
+			case "edit":
 			default:
+				if (props.data.tsWiedervorlage !== null && props.data.tsWiedervorlage !== undefined) {
+					return getDateFromDateTime(props.data.tsWiedervorlage) ?? null;
+				}
 				return null;
 		}
 	}
 
-	function setInitialData() {
-		modelProxy.proxy.idPerson = props.personId ?? null;
-		modelProxy.proxy.typPerson = getTypPerson();
-
-		if (props.mode === "create") {
-			modelProxy.proxy.tsWiedervorlage = dateTodayPlus({ days: 7 });
+	function findBenutzergruppeById(
+		id: number
+	): BenutzergruppeListeEintrag | null {
+		for (const gruppe of wiedervorlageState.benutzerGruppen) {
+			if (gruppe.id === id) {
+				return gruppe;
+			}
 		}
+
+		return null;
 	}
 
-	function resetModal() {
-		modelProxy.reset();
-		setInitialData();
+
+	function getInitialData(): Wiedervorlage {
+		const idBenutzergruppe = props.data.idBenutzergruppe !== null && props.data.idBenutzergruppe !== undefined ?
+			findBenutzergruppeById(props.data.idBenutzergruppe) : null;
+
+		const tsWiedervorlage = getInitialDate();
+
+		return {
+			id: props.data.id ?? null,
+			idBenutzergruppe,
+			typPerson: getTypPerson(),
+			idPerson: props.data.idPerson ?? null,
+			bemerkung: props.data.bemerkung ?? "",
+			tsWiedervorlage,
+			automatischErledigt: props.data.automatischErledigt ?? false,
+		};
 	}
 
-	async function openModal() {
-		// open Modal
+	function openModal() {
 		show.value = true;
 	}
 
@@ -149,54 +173,34 @@
 	}
 
 	async function submit() {
+		const { id, ...rest } = { ...modelProxy.value.proxy };
+
 		const submitData: Partial<WiedervorlageEintrag> = {
-			...modelProxy.proxy,
-			tsWiedervorlage: modelProxy.proxy.tsWiedervorlage === null ? null : (formatDateToDateTime(modelProxy.proxy.tsWiedervorlage) ?? null),
-			idBenutzergruppe: modelProxy.proxy.idBenutzergruppe?.id ?? null,
+			...rest,
+			tsWiedervorlage: modelProxy.value.proxy.tsWiedervorlage === null ? null : (formatDateToDateTime(modelProxy.value.proxy.tsWiedervorlage) ?? null),
+			idBenutzergruppe: modelProxy.value.proxy.idBenutzergruppe?.id ?? null,
 		};
 
 		if (props.mode === "create") {
 			await create(submitData);
-		} else {
-			await update(submitData);
+		} else if (id !== null) {
+			await update(submitData, id);
 		}
 	}
 
 	async function create(data: Partial<WiedervorlageEintrag>) {
-		try {
-			const response = await wiedervorlageState.addWiedervorlage(data);
-			await wiedervorlageState.ladeWiedervorlagen();
-			emit("created", response);
-		} finally {
-			closeModal();
-		}
+		const response = await wiedervorlageState.addWiedervorlage(data);
+		emit("created", response);
+		notificationsState.success("Gespeichert", "Die Wiedervorlage wurde erstellt.");
+		closeModal();
 	}
 
-	async function update(data: Partial<WiedervorlageEintrag>) {
-		// add update in further implementation steps
+	async function update(data: Partial<WiedervorlageEintrag>, id: number) {
+		await wiedervorlageState.patchWiedervorlage(data, id);
+		emit("updated");
+		notificationsState.success("Gespeichert", "Die Wiedervorlage wurde angepasst.");
+
+		closeModal();
 	}
 
-	watch(
-		show,
-		async () => {
-			if (show.value === true) {
-				// reset data to inital data
-				resetModal();
-			}
-		}
-	);
-
-	watch(
-		() => [props.personId],
-		() => {
-			modelProxy.proxy.idPerson = props.personId ?? null;
-		}
-	);
-
-	watch(
-		() => [props.type],
-		() => {
-			modelProxy.proxy.typPerson = getTypPerson();
-		}
-	);
 </script>

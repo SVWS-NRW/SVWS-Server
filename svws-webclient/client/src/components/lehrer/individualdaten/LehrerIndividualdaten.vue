@@ -1,8 +1,10 @@
 <template>
 	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal type="lehrkraft" mode="create"
-			:person-id="lehrerListeManager().daten().id"
-			:person-name="`${lehrerListeManager().daten().vorname} ${lehrerListeManager().daten().nachname}`">
+			:data="{
+				idPerson: lehrerListeManager().daten().id,
+				namePerson: `${lehrerListeManager().daten().vorname} ${lehrerListeManager().daten().nachname}`
+			}">
 			<template #default="{openModal}">
 				<svws-ui-button @click="openModal" type="secondary">
 					<span class="icon i-ri-alarm-line" aria-hidden="true" /> Wiedervorlage anlegen

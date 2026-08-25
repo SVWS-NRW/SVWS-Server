@@ -9,7 +9,8 @@
 		</thead>
 		<tbody>
 			<template v-for="(row, index) in manager().daten" :key="manager().getRowKey(row)">
-				<tr :class="[{ 'bg-ui-selected': !hideSelection && (manager().focusRow === index) }, 'group']" @click="rowClicked(row, index)">
+				<tr :class="[{ 'hover:bg-ui-hover': showRowHighlight,'bg-ui-selected': !hideSelection && (manager().focusRow === index) }, 'group']"
+					@click="rowClicked(row, index)">
 					<slot :row :index />
 				</tr>
 			</template>
@@ -44,11 +45,13 @@
 		name?: string | undefined,
 		manager: () => GridManager<U, T, Collection<T> | T[]>,
 		hideSelection?: boolean,
+		showRowHighlight?: boolean,
 	}>(), {
 		headerCount: 1,
 		footerCount: 1,
 		name: undefined,
 		hideSelection: false,
+		showRowHighlight: true,
 	});
 
 	const gridTemplateColumnsComputed = computed<string>(() => props.manager().getGridTemplateColumns());
