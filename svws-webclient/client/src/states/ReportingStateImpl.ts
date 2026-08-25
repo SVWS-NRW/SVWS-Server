@@ -6,6 +6,7 @@ import { api } from "~/router/Api";
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
+import { schuleStateImpl } from "./SchuleStateImpl";
 
 interface ReportingReactiveState {
 }
@@ -122,6 +123,11 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 	public istAktiv(element: ElementMitAnforderung): boolean {
 		return this.hatKompetenz(element.uiErforderlicheKompetenzen);
+	}
+
+	public istSchulformZulaessig(vorlage: ReportingReportvorlage): boolean {
+		// Client und Server beantworten die Frage über dieselbe Methode auf Basis der Vorgabe aus der Vorlagendefinition
+		return vorlage.giltFuerSchulform(schuleStateImpl.schulform);
 	}
 
 	public istParameterSichtbar(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean {

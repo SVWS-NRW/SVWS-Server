@@ -1,5 +1,8 @@
 package de.svws_nrw.core.types.reporting;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
@@ -7,9 +10,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.regex.Pattern;
@@ -18,6 +25,11 @@ class TestReportingReportvorlage {
 
 	/** Erlaubtes Muster: nur ASCII-Buchstaben, Ziffern, Unterstriche und Bindestriche – keine Umlaute, kein ß. */
 	private static final Pattern PATTERN_ERLAUBTE_ZEICHEN = Pattern.compile("^[a-zA-Z0-9_-]+$");
+
+	@BeforeAll
+	static void initCoreTypes() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	@Test
 	void testBezeichnungenSindEindeutigCaseInsensitive() {
@@ -209,6 +221,67 @@ class TestReportingReportvorlage {
 		if (!fehler.isEmpty()) {
 			fail("Parameternamen mit unerlaubten Zeichen gefunden:\n" + String.join("\n", fehler));
 		}
+	}
+
+	/** Nennt eine Vorlage keine Schulform, so steht sie jeder Schule offen - auch ohne bekannte Schulform. */
+	@Test
+	void testEineVorlageOhneSchulformenGiltUeberall() {
+		final ReportingReportvorlage reportvorlage = ersteVorlageMitSchulformen(false);
+
+		for (final Schulform schulform : Schulform.values()) {
+			assertTrue(reportvorlage.giltFuerSchulform(schulform), schulform.name());
+		}
+		assertTrue(reportvorlage.giltFuerSchulform(null));
+	}
+
+	/** Nennt eine Vorlage Schulformen, so gilt sie an diesen und sonst nirgends. */
+	@Test
+	void testEineVorlageMitSchulformenGiltNurAnDiesen() {
+		final ReportingReportvorlage reportvorlage = ersteVorlageMitSchulformen(true);
+		final List<Schulform> genannte = reportvorlage.getSchulformen();
+
+		for (final Schulform schulform : genannte) {
+			assertTrue(reportvorlage.giltFuerSchulform(schulform), schulform.name());
+		}
+		for (final Schulform schulform : Schulform.values()) {
+			if (!genannte.contains(schulform)) {
+				assertFalse(reportvorlage.giltFuerSchulform(schulform), schulform.name());
+			}
+		}
+		assertFalse(reportvorlage.giltFuerSchulform(null));
+	}
+
+	/**
+	 * Bindet die im Quelltext genannten Schulformen an den Katalog: Jede Vorlage, die Schulformen nennt, ist eine GOSt-Vorlage und muss die Schulformen
+	 * führen, für die {@code SchulformKatalogEintrag.hatGymOb} gilt. Kommt eine Vorlage mit anderer Bindung hinzu, ist der Test zu erweitern.
+	 */
+	@Test
+	void testDieGenanntenSchulformenEntsprechenDemKatalog() {
+		final Set<Schulform> mitGymnasialerOberstufe = Set.copyOf(Schulform.getListAllMitGymOb());
+
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			final List<Schulform> schulformen = reportvorlage.getSchulformen();
+			if (!schulformen.isEmpty()) {
+				assertEquals(mitGymnasialerOberstufe, Set.copyOf(schulformen), reportvorlage.name());
+			}
+		}
+	}
+
+	/**
+	 * Liefert eine Vorlage mit oder ohne genannte Schulformen. Die Auswahl über diese Eigenschaft statt über den Namen hält die Tests unabhängig davon,
+	 * welche Schulformen eine einzelne Vorlage nennt.
+	 *
+	 * @param mitSchulformen true für eine Vorlage mit genannten Schulformen, false für eine ohne.
+	 *
+	 * @return Die erste passende Vorlage.
+	 */
+	private static ReportingReportvorlage ersteVorlageMitSchulformen(final boolean mitSchulformen) {
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			if (reportvorlage.getSchulformen().isEmpty() != mitSchulformen) {
+				return reportvorlage;
+			}
+		}
+		return fail("Keine Reportvorlage " + (mitSchulformen ? "mit" : "ohne") + " genannte Schulformen vorhanden");
 	}
 
 	private static String normalize(final String value) {

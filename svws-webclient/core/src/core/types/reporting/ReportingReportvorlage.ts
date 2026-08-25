@@ -5,6 +5,7 @@ import { ReportingReportvorlageParameter } from '../../../core/data/reporting/Re
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { ReportingReportvorlageDatenContext } from '../../../core/types/reporting/ReportingReportvorlageDatenContext';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ReportingReportvorlageKonfigurationKurse } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationKurse';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ReportingReportvorlageUtils } from '../../../core/utils/reporting/ReportingReportvorlageUtils';
@@ -32,142 +33,142 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	/**
 	 * Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse
 	 */
-	public static readonly GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN", 0, "GostKlausurplanung-KlausurtermineMitKursen", "Klausurplan der Kurse", "Einen Plan mit den Klausurterminen der Kurse erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_TERMINE, "gost/klausurplanung/GostKlausurplanungKlausurtermineMitKursen.html", "GOSt-Klausurplanung-Klausurtermine-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen());
+	public static readonly GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN", 0, "GostKlausurplanung-KlausurtermineMitKursen", "Klausurplan der Kurse", "Einen Plan mit den Klausurterminen der Kurse erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_TERMINE, "gost/klausurplanung/GostKlausurplanungKlausurtermineMitKursen.html", "GOSt-Klausurplanung-Klausurtermine-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Klausurplanung - Schueler-Klausuren
 	 */
-	public static readonly GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN", 1, "GostKlausurplanung-SchuelerMitKlausuren", "Klausurplan der Schülerinnen und Schüler", "Einen Plan mit den Klausurterminen der Schülerinnen und Schüler erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_SCHUELER, "gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.html", "GOSt-Klausurplanung-Schueler-Klausuren", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren());
+	public static readonly GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN", 1, "GostKlausurplanung-SchuelerMitKlausuren", "Klausurplan der Schülerinnen und Schüler", "Einen Plan mit den Klausurterminen der Schülerinnen und Schüler erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG_SCHUELER, "gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.html", "GOSt-Klausurplanung-Schueler-Klausuren", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler
 	 */
-	public static readonly GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN", 2, "GostKursplanung-KursMitKursschuelern", "Kursliste", "Eine Liste mit den Schülerinnen und Schülern der Kurse aus der GOSt-Kursplaung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_KURSE, "gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "GOSt-Blockungsergebnis-Kurs-Schueler", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern());
+	public static readonly GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN", 2, "GostKursplanung-KursMitKursschuelern", "Kursliste", "Eine Liste mit den Schülerinnen und Schülern der Kurse aus der GOSt-Kursplaung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_KURSE, "gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "GOSt-Blockungsergebnis-Kurs-Schueler", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurse-Statistikwerte
 	 */
-	public static readonly GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN", 3, "GostKursplanung-KurseMitStatistikwerten", "Kursstatistik", "Eine Liste mit den Kursen aus der GOSt-Kursplanung und ihren Statistikwerten erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_KURSE, "gost/kursplanung/GostKursplanungKurseMitStatistikwerten.html", "GOSt-Blockungsergebnis-Kurse-Statistikwerte", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten());
+	public static readonly GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN", 3, "GostKursplanung-KurseMitStatistikwerten", "Kursstatistik", "Eine Liste mit den Kursen aus der GOSt-Kursplanung und ihren Statistikwerten erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_KURSE, "gost/kursplanung/GostKursplanungKurseMitStatistikwerten.html", "GOSt-Blockungsergebnis-Kurse-Statistikwerte", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN", 4, "GostKursplanung-SchuelerMitKursen", "Kurszuordnungen der Schülerinnen und Schüler", "Eien Übersicht mit den einzelnen Kurszuorndungen der Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_SCHUELER, "gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "GOSt-Blockungsergebnis-Schueler-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen());
+	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN", 4, "GostKursplanung-SchuelerMitKursen", "Kurszuordnungen der Schülerinnen und Schüler", "Eien Übersicht mit den einzelnen Kurszuorndungen der Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_SCHUELER, "gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "GOSt-Blockungsergebnis-Schueler-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen", "Kurs-Schienen-Zuordnungen der Schülerinnen und Schüler", "Eine Übersicht mit den einzelnen Kurszuordnungen und deeren Schienen für die Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_SCHUELER, "gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "GOSt-Blockungsergebnis-Schueler-Schienen-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen());
+	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen", "Kurs-Schienen-Zuordnungen der Schülerinnen und Schüler", "Eine Übersicht mit den einzelnen Kurszuordnungen und deeren Schienen für die Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG_SCHUELER, "gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "GOSt-Blockungsergebnis-Schueler-Schienen-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken
 	 */
-	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", "Fachwahlstatistiken", "Eine statische Übersicht der Fachwahlen eines Abiturjahrgangs aus der GOSt-Laufbahnplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG, "gost/laufbahnplanung/GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken.html", "GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken());
+	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", "Fachwahlstatistiken", "Eine statische Übersicht der Fachwahlen eines Abiturjahrgangs aus der GOSt-Laufbahnplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG, "gost/laufbahnplanung/GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken.html", "GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Fotos - Namen
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN", 7, "Klasse-Liste-Schueler-Fotos-Namen", "Fotoübersicht klassenweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerFotosNamen.html", "Klasse-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerFotosNamen());
+	public static readonly KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN", 7, "Klasse-Liste-Schueler-Fotos-Namen", "Fotoübersicht klassenweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerFotosNamen.html", "Klasse-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerFotosNamen());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 8, "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", "Klassenliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerKontaktdatenErzieher.html", "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher());
+	public static readonly KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 8, "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", "Klassenliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerKontaktdatenErzieher.html", "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN", 9, "Klasse-Liste-Schueler-Leistungsdaten", "Leistungsübersicht klassenweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/leistungsdaten/KlasseListeSchuelerLeistungsdaten.html", "Klassen-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten());
+	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN", 9, "Klasse-Liste-Schueler-Leistungsdaten", "Leistungsübersicht klassenweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/leistungsdaten/KlasseListeSchuelerLeistungsdaten.html", "Klassen-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ArrayList.of(), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten - Detailliert
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT", 10, "Klasse-Liste-Schueler-Leistungsdaten-Detailliert", "Leistungsübersicht klassenweise (detailliert)", "Eine detaillierte Übersicht der Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/leistungsdaten/KlasseListeSchuelerLeistungsdatenDetailliert.html", "Klassen-Liste-Schueler-Leistungsdaten-Detailliert", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdatenDetailliert());
+	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT", 10, "Klasse-Liste-Schueler-Leistungsdaten-Detailliert", "Leistungsübersicht klassenweise (detailliert)", "Eine detaillierte Übersicht der Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/leistungsdaten/KlasseListeSchuelerLeistungsdatenDetailliert.html", "Klassen-Liste-Schueler-Leistungsdaten-Detailliert", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ArrayList.of(), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdatenDetailliert());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 11, "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", "Kursliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerKontaktdatenErzieher.html", "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerKontaktdatenerzieher());
+	public static readonly KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 11, "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", "Kursliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerKontaktdatenErzieher.html", "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Fotos - Namen
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN", 12, "Kurs-Liste-Schueler-Fotos-Namen", "Fotoübersicht kursweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerFotosNamen.html", "Kurs-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerFotosNamen());
+	public static readonly KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN", 12, "Kurs-Liste-Schueler-Fotos-Namen", "Fotoübersicht kursweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerFotosNamen.html", "Kurs-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerFotosNamen());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN", 13, "Kurs-Liste-Schueler-Leistungsdaten", "Leistungsübersicht kursweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Kurse erzeugen.", ReportingReportvorlageDatenContext.KURSE, "kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.html", "Kurs-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten());
+	public static readonly KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN", 13, "Kurs-Liste-Schueler-Leistungsdaten", "Leistungsübersicht kursweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Kurse erzeugen.", ReportingReportvorlageDatenContext.KURSE, "kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.html", "Kurs-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ArrayList.of(), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN", 14, "Lehrer-Liste-Schueler-Leistungsdaten", "Leistungsdaten der Lerngruppen", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte nach Lerngruppen erzeugen", ReportingReportvorlageDatenContext.LEHRER, "lehrer/leistungsdaten/LehrerListeSchuelerLeistungsdaten.html", "Lehrer-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten());
+	public static readonly LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN", 14, "Lehrer-Liste-Schueler-Leistungsdaten", "Leistungsdaten der Lerngruppen", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte nach Lerngruppen erzeugen", ReportingReportvorlageDatenContext.LEHRER, "lehrer/leistungsdaten/LehrerListeSchuelerLeistungsdaten.html", "Lehrer-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ArrayList.of(), ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Lehrer - Stammdaten - Liste
 	 */
-	public static readonly LEHRER_V_STAMMDATENLISTE: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_STAMMDATENLISTE", 15, "Lehrer-Stammdatenliste", "Stammdatenliste der Lehrkräfte", "Stammdatenliste der Lehrkräfte erzeugen.", ReportingReportvorlageDatenContext.LEHRER, "lehrer/stammdaten/LehrerStammdatenliste.html", "Lehrer-Stammdatenliste", ArrayList.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN), ReportingReportvorlageKonfigurationLehrer.getLehrerVStammdatenliste());
+	public static readonly LEHRER_V_STAMMDATENLISTE: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_STAMMDATENLISTE", 15, "Lehrer-Stammdatenliste", "Stammdatenliste der Lehrkräfte", "Stammdatenliste der Lehrkräfte erzeugen.", ReportingReportvorlageDatenContext.LEHRER, "lehrer/stammdaten/LehrerStammdatenliste.html", "Lehrer-Stammdatenliste", ArrayList.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationLehrer.getLehrerVStammdatenliste());
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - DIN-A4
 	 */
-	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4", 16, "Schueler-GostAbiturApoAnlage12-A4", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A4)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER_GOST_ABITUR, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4());
+	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4", 16, "Schueler-GostAbiturApoAnlage12-A4", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A4)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER_GOST_ABITUR, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4());
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - DIN-A3
 	 */
-	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3", 17, "Schueler-GostAbiturApoAnlage12-A3", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A3)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER_GOST_ABITUR, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3());
+	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3", 17, "Schueler-GostAbiturApoAnlage12-A3", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A3)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER_GOST_ABITUR, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 18, "Schueler-GostLaufbahnplanungErgebnisuebersicht", "Ergebnisübersicht der GOSt-Laufbahnplanung", "Ergebnisübersicht der GOSt-Laufbahnplanung nach Schülerinnen und Schüler für Beratungslehrkräfte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER_GOST_LAUFBAHNPLANUNG, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html", "GOSt-Laufbahnplanung-Pruefungsergebnisse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht());
+	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 18, "Schueler-GostLaufbahnplanungErgebnisuebersicht", "Ergebnisübersicht der GOSt-Laufbahnplanung", "Ergebnisübersicht der GOSt-Laufbahnplanung nach Schülerinnen und Schüler für Beratungslehrkräfte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER_GOST_LAUFBAHNPLANUNG, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html", "GOSt-Laufbahnplanung-Pruefungsergebnisse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 19, "Schueler-GostLaufbahnplanungWahlbogen", "GOST-Laufbahnwahlbogen", "Die GOST-Laufbahnwahlbögen für Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER_GOST_LAUFBAHNPLANUNG, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.html", "GOSt-Laufbahnplanung-Wahlboegen", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen());
+	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 19, "Schueler-GostLaufbahnplanungWahlbogen", "GOST-Laufbahnwahlbogen", "Die GOST-Laufbahnwahlbögen für Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER_GOST_LAUFBAHNPLANUNG, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.html", "GOSt-Laufbahnplanung-Wahlboegen", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen());
 
 	/**
 	 * Report-Vorlage: Schüler - Schulbescheinigung
 	 */
-	public static readonly SCHUELER_V_SCHULBESCHEINIGUNG: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_SCHULBESCHEINIGUNG", 20, "Schueler-Schulbescheinigung", "Schulbescheinigung", "Eine Schulbescheinigung für Schülerinnen und Schüler oder deren Erziehungsberechtigte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/anschreiben/SchuelerSchulbescheinigung.html", "Schueler-Schulbescheinigung", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVSchulbescheinigung());
+	public static readonly SCHUELER_V_SCHULBESCHEINIGUNG: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_SCHULBESCHEINIGUNG", 20, "Schueler-Schulbescheinigung", "Schulbescheinigung", "Eine Schulbescheinigung für Schülerinnen und Schüler oder deren Erziehungsberechtigte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/anschreiben/SchuelerSchulbescheinigung.html", "Schueler-Schulbescheinigung", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationSchueler.getSchuelerVSchulbescheinigung());
 
 	/**
 	 * Report-Vorlage: Schüler - Liste - Kontaktdaten - Erzieher
 	 */
-	public static readonly SCHUELER_V_LISTE_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_LISTE_KONTAKTDATENERZIEHER", 21, "Schueler-Liste-Kontaktdaten-Erzieher", "Schülerliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/listen/SchuelerListeKontaktdatenErzieher.html", "Schueler-Liste-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVListeKontaktdatenerzieher());
+	public static readonly SCHUELER_V_LISTE_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_LISTE_KONTAKTDATENERZIEHER", 21, "Schueler-Liste-Kontaktdaten-Erzieher", "Schülerliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/listen/SchuelerListeKontaktdatenErzieher.html", "Schueler-Liste-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationSchueler.getSchuelerVListeKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_FACH_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_FACH_STUNDENPLAN", 22, "Stundenplanung-FachStundenplan", "Fach-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Fächer erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH, "stundenplanung/StundenplanungFachStundenplan.html", "Fach-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVFachStundenplan());
+	public static readonly STUNDENPLANUNG_V_FACH_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_FACH_STUNDENPLAN", 22, "Stundenplanung-FachStundenplan", "Fach-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Fächer erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH, "stundenplanung/StundenplanungFachStundenplan.html", "Fach-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVFachStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 23, "Stundenplanung-KlassenStundenplan", "Klassen-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN, "stundenplanung/StundenplanungKlassenStundenplan.html", "Klassen-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan());
+	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 23, "Stundenplanung-KlassenStundenplan", "Klassen-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN, "stundenplanung/StundenplanungKlassenStundenplan.html", "Klassen-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN", 24, "Stundenplanung-LehrerStundenplan", "Lehrer-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, "stundenplanung/StundenplanungLehrerStundenplan.html", "Lehrer-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplan());
+	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN", 24, "Stundenplanung-LehrerStundenplan", "Lehrer-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, "stundenplanung/StundenplanungLehrerStundenplan.html", "Lehrer-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
 	 */
-	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT", 25, "Stundenplanung-LehrerStundenplanKombiniert", "Lehrer-Stundenplan kombiniert", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte in einer kombinierten Ansicht erzeugen", ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, "stundenplanung/StundenplanungLehrerStundenplanKombiniert.html", "Lehrer-Stundenplan-Kombiniert", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplanKombiniert());
+	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT", 25, "Stundenplanung-LehrerStundenplanKombiniert", "Lehrer-Stundenplan kombiniert", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte in einer kombinierten Ansicht erzeugen", ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, "stundenplanung/StundenplanungLehrerStundenplanKombiniert.html", "Lehrer-Stundenplan-Kombiniert", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplanKombiniert());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_RAUM_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_RAUM_STUNDENPLAN", 26, "Stundenplanung-RaumStundenplan", "Raum-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Räume erzeugen.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_RAUM, "stundenplanung/StundenplanungRaumStundenplan.html", "Raum-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVRaumStundenplan());
+	public static readonly STUNDENPLANUNG_V_RAUM_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_RAUM_STUNDENPLAN", 26, "Stundenplanung-RaumStundenplan", "Raum-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Räume erzeugen.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_RAUM, "stundenplanung/StundenplanungRaumStundenplan.html", "Raum-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVRaumStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Schüler - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN", 27, "Stundenplanung-SchuelerStundenplan", "Schüler-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, "stundenplanung/StundenplanungSchuelerStundenplan.html", "Schueler-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVSchuelerStundenplan());
+	public static readonly STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN", 27, "Stundenplanung-SchuelerStundenplan", "Schüler-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, "stundenplanung/StundenplanungSchuelerStundenplan.html", "Schueler-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ArrayList.of(), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVSchuelerStundenplan());
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage
@@ -203,6 +204,11 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * Die Liste mit Benutzerkompetenzen (als OR-Verknüpfung) gemäß {@link BenutzerKompetenz}, die zur Nutzung des Templates erforderlich sind.
 	 */
 	private readonly benutzerKompetenzen: List<BenutzerKompetenz>;
+
+	/**
+	 * Die Schulformen, an denen die Report-Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen.
+	 */
+	private readonly schulformen: List<Schulform>;
 
 	/**
 	 * Reporting-Parameter inkl. der gültigen Vorlage-Parametergruppen für diese Report-Vorlage.
@@ -245,9 +251,10 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * @param pfadHtmlTemplate    Pfad zur HTML-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
 	 * @param dateiname           Der statische Dateiname ohne Dateiendung.
 	 * @param benutzerKompetenzen Die Liste mit Benutzerkompetenzen.
+	 * @param schulformen         Die Schulformen, an denen die Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen.
 	 * @param reportingParameter  Eine Liste mit den Vorlage-Parametern, basierend auf der jeweiligen Definition.
 	 */
-	private constructor(name: string, ordinal: number, bezeichnung: string, uiTitel: string, uiBeschreibung: string, datenContext: ReportingReportvorlageDatenContext, pfadHtmlTemplate: string, dateiname: string, benutzerKompetenzen: List<BenutzerKompetenz>, reportingParameter: ReportingParameter) {
+	private constructor(name: string, ordinal: number, bezeichnung: string, uiTitel: string, uiBeschreibung: string, datenContext: ReportingReportvorlageDatenContext, pfadHtmlTemplate: string, dateiname: string, benutzerKompetenzen: List<BenutzerKompetenz>, schulformen: List<Schulform>, reportingParameter: ReportingParameter) {
 		super(name, ordinal);
 		ReportingReportvorlage.all_values_by_ordinal.push(this);
 		ReportingReportvorlage.all_values_by_name.set(name, this);
@@ -259,6 +266,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 		this.pfadHtmlTemplate = pfadHtmlTemplate;
 		this.dateiname = dateiname;
 		this.benutzerKompetenzen = benutzerKompetenzen;
+		this.schulformen = schulformen;
 		this.reportingParameter = reportingParameter;
 	}
 
@@ -361,6 +369,28 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getBenutzerKompetenzen(): List<BenutzerKompetenz> {
 		return this.benutzerKompetenzen;
+	}
+
+	/**
+	 * Gibt die Schulformen zurück, an denen diese Report-Vorlage genutzt werden darf.
+	 * Ist die Liste leer, so gilt die Vorlage für alle Schulformen.
+	 *
+	 * @return Die Liste der Schulformen
+	 */
+	public getSchulformen(): List<Schulform> {
+		return this.schulformen;
+	}
+
+	/**
+	 * Gibt an, ob diese Report-Vorlage an der übergebenen Schulform genutzt werden darf. Eine leere Liste an der Vorlage lässt jede Schulform zu.
+	 * Nennt die Vorlage Schulformen, muss die übergebene darunter sein; eine nicht übergebene Schulform gilt dann als unzulässig.
+	 *
+	 * @param schulform Die zu prüfende Schulform. {@code null} ist zulässig.
+	 *
+	 * @return true, wenn die Vorlage an dieser Schulform genutzt werden darf; sonst false.
+	 */
+	public giltFuerSchulform(schulform: Schulform | null): boolean {
+		return this.schulformen.isEmpty() || ((schulform !== null) && this.schulformen.contains(schulform));
 	}
 
 	/**

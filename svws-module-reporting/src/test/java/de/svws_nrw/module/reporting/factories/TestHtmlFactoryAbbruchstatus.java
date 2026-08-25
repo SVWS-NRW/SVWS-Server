@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
@@ -70,6 +71,8 @@ class TestHtmlFactoryAbbruchstatus {
 		final ReportingRepositorySchule repositorySchule = mock(ReportingRepositorySchule.class);
 		when(repositorySchule.schule()).thenReturn(mock(ReportingSchule.class));
 		when(repositorySchule.istSchuleMitGost()).thenReturn(true);
+		// Die GOSt-Vorlagen sind an Schulformen mit gymnasialer Oberstufe gebunden.
+		when(repositorySchule.schulform()).thenReturn(Schulform.GY);
 		when(reportingContext.repositorySchule()).thenReturn(repositorySchule);
 
 		when(reportingContext.repositoryGostKursplanung()).thenReturn(new ReportingRepositoryGostKursplanung(reportingContext));

@@ -115,6 +115,16 @@ export interface ReportingState {
 	fehlendeKompetenzNamen(erforderlicheKompetenzen: List<number>): string[];
 
 	/**
+	 * Eine Vorlage darf an dieser Schule genutzt werden, wenn sie keine Schulformen nennt oder die Schulform der Schule darunter ist. Eine unzulässige
+	 * Vorlage wird ausgeblendet. Unabhängig von der Ausblendung lehnt der Server selbst eine Anfrage mit ungültiger Schulform ab.
+	 *
+	 * @param vorlage   die zu prüfende Reportvorlage
+	 *
+	 * @returns true, wenn die Vorlage an dieser Schule genutzt werden darf
+	 */
+	istSchulformZulaessig(vorlage: ReportingReportvorlage): boolean;
+
+	/**
 	 * Erzeuge die Parameter für die übergebene Vorlage, zusammengestellt aus neuen und gespeicherten Daten
 	 *
 	 * @param vorlage   die Vorlage, für die die Parameter erzeugt werden sollen

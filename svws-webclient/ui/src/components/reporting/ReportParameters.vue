@@ -276,10 +276,14 @@
 	const parameter = ref(new ReportingParameter());
 	const altParameter = ref();
 
+	/** Die Vorlagen, die an dieser Schulform genutzt werden dürfen. Versorgt die Auswahlliste und die Vorauswahl, damit keine ausgeblendete Vorlage
+	 * vorausgewählt wird. */
+	const zulaessigeReportvorlagen = ReportingReportvorlage.values().filter(vorlage => reportingState.istSchulformZulaessig(vorlage));
+
 	watch(() => props.reportvorlage, () => {
 			localReportvorlage.value = props.reportvorlage;
 			if (localReportvorlage.value === undefined) {
-				localReportvorlage.value = ReportingReportvorlage.values().at(0);
+				localReportvorlage.value = zulaessigeReportvorlagen.at(0);
 			}
 		},
 		{ immediate: true });
@@ -412,7 +416,7 @@
 	}
 
 	const reportvorlageSelectManager = new SelectManager({
-		options: ReportingReportvorlage.values(),
+		options: zulaessigeReportvorlagen,
 		selectionDisplayText: option => option.getBezeichnung(),
 		optionDisplayText: option => option.getBezeichnung(),
 	});

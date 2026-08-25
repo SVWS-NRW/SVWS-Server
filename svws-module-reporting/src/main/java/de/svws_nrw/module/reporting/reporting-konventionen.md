@@ -290,7 +290,7 @@ des Moduls:
 |---|---|
 | Client-Input fehlt (Pflichtfeld, leere ID-Liste, nicht übergebenes Parameter-Objekt) | `BAD_REQUEST` |
 | Client-Input ungültig (Wert außerhalb Wertebereich, ungültige Enum-Bezeichnung) | `BAD_REQUEST` |
-| Geschäfts-Voraussetzung verletzt (Schule ohne GOSt, Vorlage passt nicht zu Daten) | `BAD_REQUEST` |
+| Geschäfts-Voraussetzung verletzt (Schule ohne GOSt, Vorlage passt nicht zu Daten, Vorlage an dieser Schulform nicht vorgesehen) | `BAD_REQUEST` |
 | Berechtigung fehlt | `FORBIDDEN` |
 | Eine konkret per ID adressierte Einzel-Ressource existiert nicht (z. B. Stundenplan zur ID) | `NOT_FOUND` |
 | Eine adressierte Einzel-Ressource existiert, ihre Daten sind aber nicht ladbar | `INTERNAL_SERVER_ERROR` |
@@ -307,6 +307,14 @@ Ergänzende Regeln:
   `BAD_REQUEST` bleibt allein der **im Request leeren** ID-Liste vorbehalten: Dort hat der
   Aufrufer nichts angefordert, was etwas anderes ist als eine Liste, die erst durch das Auslassen
   leer wird. `NOT_FOUND` bleibt der einzelnen, direkt adressierten Ressource vorbehalten.
+- **Die Schulform ist keine Berechtigungsfrage.** Eine Reportvorlage nennt die Schulformen, an denen
+  sie genutzt werden darf; eine leere Liste gilt für alle. Passt die Schulform der Schule nicht dazu,
+  ist das `BAD_REQUEST` und nicht `FORBIDDEN`: Die Schulform gehört der Schule und nicht dem
+  Benutzer, niemand an dieser Schule darf die Vorlage ausgeben, und keine zusätzliche Kompetenz
+  ändert daran etwas. Ein `403` schickte den Anwender eine Berechtigung suchen, die es nicht gibt.
+  Lässt sich die Schulform der Schule nicht ermitteln, ist das dagegen `INTERNAL_SERVER_ERROR` — der
+  Aufrufer hat daran keinen Anteil. Geprüft wird in der `HtmlFactory` neben den Kompetenzen, und nur
+  dann, wenn die Vorlage überhaupt Schulformen nennt.
 - **Interne Ressourcen sind niemals Client-Input:** Template-Engine, HTML-Template, Root-Pfad und
   Schriftarten baut der Server selbst auf; der Client benennt sie nicht. Ihr Fehlen ist deshalb
   weder `BAD_REQUEST` noch `NOT_FOUND`, sondern `INTERNAL_SERVER_ERROR`. Dasselbe gilt für alle

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.email.DataEmailJobs;
@@ -92,6 +93,17 @@ public class ReportingRepositorySchule {
 	 */
 	public SchuleStammdaten stammdaten() {
 		return schulstammdaten;
+	}
+
+	/**
+	 * Gibt die Schulform der Schule zurück, aufgelöst aus dem Kürzel der Stammdaten. Der vorgezogene Test auf ein leeres Kürzel verhindert die Ausnahme,
+	 * mit der der Katalog ein fehlendes Kürzel beantwortet.
+	 *
+	 * @return Die Schulform der Schule oder null, falls das Kürzel der Stammdaten zu keiner Schulform gehört.
+	 */
+	public Schulform schulform() {
+		final String kuerzel = this.schulstammdaten.schulform;
+		return ((kuerzel == null) || kuerzel.isBlank()) ? null : Schulform.data().getWertByKuerzel(kuerzel);
 	}
 
 	/**

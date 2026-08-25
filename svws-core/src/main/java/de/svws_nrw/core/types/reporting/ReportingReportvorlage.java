@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
@@ -50,6 +51,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Klausurplanung-Klausurtermine-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen()
 	),
 
@@ -62,6 +64,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Klausurplanung-Schueler-Klausuren",
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren()
 	),
 
@@ -74,6 +77,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Kurs-Schueler",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern()
 	),
 
@@ -86,6 +90,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Kurse-Statistikwerte",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten()
 	),
 
@@ -98,6 +103,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Schueler-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen()
 	),
 
@@ -110,6 +116,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen()
 	),
 
@@ -122,6 +129,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken()
 	),
 
@@ -133,6 +141,7 @@ public enum ReportingReportvorlage {
 			"klassen/KlasseListeSchuelerFotosNamen.html",
 			"Klasse-Liste-Schueler-Fotos-Namen",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerFotosNamen()
 	),
 
@@ -144,6 +153,7 @@ public enum ReportingReportvorlage {
 			"klassen/KlasseListeSchuelerKontaktdatenErzieher.html",
 			"Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher()
 	),
 
@@ -155,6 +165,7 @@ public enum ReportingReportvorlage {
 			"klassen/leistungsdaten/KlasseListeSchuelerLeistungsdaten.html",
 			"Klassen-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten()
 	),
 
@@ -166,6 +177,7 @@ public enum ReportingReportvorlage {
 			"klassen/leistungsdaten/KlasseListeSchuelerLeistungsdatenDetailliert.html",
 			"Klassen-Liste-Schueler-Leistungsdaten-Detailliert",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdatenDetailliert()
 	),
 
@@ -177,6 +189,7 @@ public enum ReportingReportvorlage {
 			"kurse/KursListeSchuelerKontaktdatenErzieher.html",
 			"Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerKontaktdatenerzieher()
 	),
 
@@ -188,6 +201,7 @@ public enum ReportingReportvorlage {
 			"kurse/KursListeSchuelerFotosNamen.html",
 			"Kurs-Liste-Schueler-Fotos-Namen",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerFotosNamen()
 	),
 
@@ -199,6 +213,7 @@ public enum ReportingReportvorlage {
 			"kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.html",
 			"Kurs-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
+			List.of(),
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten()
 	),
 
@@ -210,6 +225,7 @@ public enum ReportingReportvorlage {
 			"lehrer/leistungsdaten/LehrerListeSchuelerLeistungsdaten.html",
 			"Lehrer-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
+			List.of(),
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten()
 	),
 
@@ -221,6 +237,7 @@ public enum ReportingReportvorlage {
 			"lehrer/stammdaten/LehrerStammdatenliste.html",
 			"Lehrer-Stammdatenliste",
 			List.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVStammdatenliste()
 	),
 
@@ -231,6 +248,7 @@ public enum ReportingReportvorlage {
 			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html",
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4()
 	),
 
@@ -241,6 +259,7 @@ public enum ReportingReportvorlage {
 			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html",
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3()
 	),
 
@@ -253,6 +272,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Pruefungsergebnisse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht()
 	),
 
@@ -265,6 +285,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Wahlboegen",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
+			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen()
 	),
 
@@ -276,6 +297,7 @@ public enum ReportingReportvorlage {
 			"schueler/anschreiben/SchuelerSchulbescheinigung.html",
 			"Schueler-Schulbescheinigung",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVSchulbescheinigung()
 	),
 
@@ -287,6 +309,7 @@ public enum ReportingReportvorlage {
 			"schueler/listen/SchuelerListeKontaktdatenErzieher.html",
 			"Schueler-Liste-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVListeKontaktdatenerzieher()
 	),
 
@@ -298,6 +321,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungFachStundenplan.html",
 			"Fach-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVFachStundenplan()
 	),
 
@@ -309,6 +333,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungKlassenStundenplan.html",
 			"Klassen-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan()
 	),
 
@@ -320,6 +345,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungLehrerStundenplan.html",
 			"Lehrer-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplan()
 	),
 
@@ -331,6 +357,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungLehrerStundenplanKombiniert.html",
 			"Lehrer-Stundenplan-Kombiniert",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplanKombiniert()
 	),
 
@@ -342,6 +369,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungRaumStundenplan.html",
 			"Raum-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVRaumStundenplan()
 	),
 
@@ -353,6 +381,7 @@ public enum ReportingReportvorlage {
 			"stundenplanung/StundenplanungSchuelerStundenplan.html",
 			"Schueler-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
+			List.of(),
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVSchuelerStundenplan()
 	);
 
@@ -377,6 +406,9 @@ public enum ReportingReportvorlage {
 
 	/** Die Liste mit Benutzerkompetenzen (als OR-Verknüpfung) gemäß {@link BenutzerKompetenz}, die zur Nutzung des Templates erforderlich sind. */
 	private final @NotNull List<BenutzerKompetenz> benutzerKompetenzen;
+
+	/** Die Schulformen, an denen die Report-Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen. */
+	private final @NotNull List<Schulform> schulformen;
 
 
 	/** Reporting-Parameter inkl. der gültigen Vorlage-Parametergruppen für diese Report-Vorlage. */
@@ -410,14 +442,15 @@ public enum ReportingReportvorlage {
 	 * @param pfadHtmlTemplate    Pfad zur HTML-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
 	 * @param dateiname           Der statische Dateiname ohne Dateiendung.
 	 * @param benutzerKompetenzen Die Liste mit Benutzerkompetenzen.
+	 * @param schulformen         Die Schulformen, an denen die Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen.
 	 * @param reportingParameter  Eine Liste mit den Vorlage-Parametern, basierend auf der jeweiligen Definition.
 	 */
-	// SONARQUBE WARNUNG: Es sollen max. 7 Paramater an den Konstruktor übergeben werden. Hier sind es nun mal acht, aber dennoch ist alles gut nachvollziehbar.
+	// SONARQUBE WARNUNG: Es sollen max. 7 Paramater an den Konstruktor übergeben werden. Hier sind es nun mal neun, aber dennoch ist alles gut nachvollziehbar.
 	@SuppressWarnings("java:S107")
 	ReportingReportvorlage(final @NotNull String bezeichnung, final @NotNull String uiTitel,
 			final @NotNull String uiBeschreibung, final @NotNull ReportingReportvorlageDatenContext datenContext,
 			final @NotNull String pfadHtmlTemplate, final @NotNull String dateiname, final @NotNull List<BenutzerKompetenz> benutzerKompetenzen,
-			final @NotNull ReportingParameter reportingParameter) {
+			final @NotNull List<Schulform> schulformen, final @NotNull ReportingParameter reportingParameter) {
 		this.bezeichnung = bezeichnung;
 		this.uiTitel = uiTitel;
 		this.uiBeschreibung = uiBeschreibung;
@@ -426,6 +459,7 @@ public enum ReportingReportvorlage {
 		this.pfadHtmlTemplate = pfadHtmlTemplate;
 		this.dateiname = dateiname;
 		this.benutzerKompetenzen = benutzerKompetenzen;
+		this.schulformen = schulformen;
 		this.reportingParameter = reportingParameter;
 	}
 
@@ -529,6 +563,28 @@ public enum ReportingReportvorlage {
 	 */
 	public @NotNull List<BenutzerKompetenz> getBenutzerKompetenzen() {
 		return this.benutzerKompetenzen;
+	}
+
+	/**
+	 * Gibt die Schulformen zurück, an denen diese Report-Vorlage genutzt werden darf.
+	 * Ist die Liste leer, so gilt die Vorlage für alle Schulformen.
+	 *
+	 * @return Die Liste der Schulformen
+	 */
+	public @NotNull List<Schulform> getSchulformen() {
+		return this.schulformen;
+	}
+
+	/**
+	 * Gibt an, ob diese Report-Vorlage an der übergebenen Schulform genutzt werden darf. Eine leere Liste an der Vorlage lässt jede Schulform zu.
+	 * Nennt die Vorlage Schulformen, muss die übergebene darunter sein; eine nicht übergebene Schulform gilt dann als unzulässig.
+	 *
+	 * @param schulform Die zu prüfende Schulform. {@code null} ist zulässig.
+	 *
+	 * @return true, wenn die Vorlage an dieser Schulform genutzt werden darf; sonst false.
+	 */
+	public boolean giltFuerSchulform(final Schulform schulform) {
+		return this.schulformen.isEmpty() || ((schulform != null) && this.schulformen.contains(schulform));
 	}
 
 	/**

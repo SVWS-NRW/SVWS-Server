@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
@@ -100,7 +101,59 @@ public final class HtmlFactory {
 							.formatted(reportingReportvorlage.getBezeichnung(), benannteKompetenzen(reportingReportvorlage)));
 		}
 
+		pruefeSchulform();
+
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
+	}
+
+
+	/**
+	 * Prüft, ob die Reportvorlage an der Schulform dieser Schule genutzt werden darf. Nennt die Vorlage keine Schulform, gilt sie überall und die Schulform
+	 * wird nicht ermittelt; das hält eine Schule ohne auflösbares Kürzel in den Stammdaten für alle übrigen Vorlagen ausgabefähig.
+	 *
+	 * @throws ApiOperationException Mit Status 400, wenn die Vorlage an dieser Schulform nicht vorgesehen ist; mit Status 500, wenn sich die Schulform der
+	 *                               Schule nicht ermitteln lässt.
+	 */
+	private void pruefeSchulform() throws ApiOperationException {
+		if (reportingReportvorlage.getSchulformen().isEmpty()) {
+			return;
+		}
+
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Prüfe die Schulform der Schule gegen die für die Vorlage zulässigen Schulformen.");
+		final Schulform schulform = this.reportingContext.repositorySchule().schulform();
+		if (schulform == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "### FEHLER: Die Schulform dieser Schule konnte nicht ermittelt werden.");
+		}
+		if (reportingReportvorlage.giltFuerSchulform(schulform)) {
+			return;
+		}
+
+		// Der Test auf die leere Aufzählung verhindert einen abgebrochenen Satz in der Meldung, wenn der Katalog zu keiner der Schulformen einen Namen führt.
+		final String namenDerSchulformen = benannteSchulformen();
+		if (namenDerSchulformen.isEmpty()) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"### FEHLER: Die Reportvorlage '%s' ist für die Schulform dieser Schule nicht vorgesehen."
+							.formatted(reportingReportvorlage.getBezeichnung()));
+		}
+		throw new ApiOperationException(Status.BAD_REQUEST,
+				"### FEHLER: Die Reportvorlage '%s' ist nur für folgende Schulformen vorgesehen: %s."
+						.formatted(reportingReportvorlage.getBezeichnung(), namenDerSchulformen));
+	}
+
+	/**
+	 * Gibt die Namen der Schulformen zurück, an denen die Reportvorlage genutzt werden darf, als lesbare Aufzählung. Die Namen stehen schuljahresabhängig im
+	 * Katalog und werden für das Schuljahr des gewählten Abschnitts gelesen. Eine im Schuljahr nicht gültige Schulform hat dort keinen Namen und entfällt;
+	 * das Ergebnis kann deshalb auch dann leer sein, wenn die Vorlage Schulformen nennt.
+	 *
+	 * @return Die Namen der Schulformen, durch Komma getrennt; leer, wenn sich keiner ermitteln lässt.
+	 */
+	private String benannteSchulformen() {
+		final int schuljahr = this.reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr();
+		return String.join(", ", reportingReportvorlage.getSchulformen().stream()
+				.map(schulform -> Schulform.data().getEintragBySchuljahrUndWert(schuljahr, schulform))
+				.filter(Objects::nonNull)
+				.map(eintrag -> eintrag.text)
+				.toList());
 	}
 
 
