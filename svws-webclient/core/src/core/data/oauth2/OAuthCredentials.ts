@@ -4,7 +4,7 @@ import { Class } from '../../../java/lang/Class';
 export class OAuthCredentials extends JavaObject {
 
 	/**
-	 * Die ID des Clients
+	 * Die ID des Datensatzes
 	 */
 	public id: number = 0;
 
