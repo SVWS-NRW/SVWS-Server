@@ -141,7 +141,7 @@
 					</div>
 				</template>
 				<template #body>
-					<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
+					<template v-for="fachwahl in fachwahlListe" :key="fachwahl.fachwahlen.id">
 						<template v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)">
 							<template v-if="listeDerKurse(fachwahl).isEmpty() && (getAnzahlFachwahlen(fachwahl) !== 0) && istVorlage && hatUpdateKompetenz">
 								<template v-if="blockungstabelleHidden() === 'nichts'">

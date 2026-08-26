@@ -1,7 +1,7 @@
 <template>
 	<!--TODO: Pausenzeiten, wenn Zeitachse deaktiviert ist-->
 	<!-- TODO Modi 'normal', 'kurz, 'tooltip' -->
-	<template v-for="pause in getPausenzeitenListeByWochentag(wochentag)" :key="pause">
+	<template v-for="pause in getPausenzeitenListeByWochentag(wochentag)" :key="pause.id">
 		<div class="svws-ui-stundenplan--pause" :style="posPause(pause.id)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
 			<template v-if="mode === 'normal'">
 				<div v-for="pausenaufsicht in getPausenaufsichten(pause.id)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht grow"

@@ -74,7 +74,7 @@
 					{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 				</td>
 				<template v-for="(idArt, indexArt) of setTeilleistungsarten" :key="idArt">
-					<template v-for="teilleistung of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : [ null ]" :key="teilleistung">
+					<template v-for="teilleistung, i of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : [ null ]" :key="teilleistung?.id ?? (0 - i)">
 						<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 							<td v-if="teilleistung === null" class="bg-ui-disabled" />
 							<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt)"
