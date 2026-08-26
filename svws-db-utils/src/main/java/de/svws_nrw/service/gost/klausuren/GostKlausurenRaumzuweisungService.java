@@ -547,8 +547,8 @@ public final class GostKlausurenRaumzuweisungService {
 		}
 
 		private List<StundenplanZeitraster> getZeitrasterZuRaum() {
-			final int minStart = manager.minKlausurstartzeitBySchuelerklausurterminMenge(schuelerklausurtermine, true);
-			final int maxEnd = manager.maxKlausurendzeitBySchuelerklausurterminMenge(schuelerklausurtermine, true);
+			final int minStart = manager.minKlausurstartzeitByKlausurraumAndSchuelerklausurterminMenge(raum.klausurraum, schuelerklausurtermine, true);
+			final int maxEnd = manager.maxKlausurendzeitByKlausurraumAndSchuelerklausurterminMenge(raum.klausurraum, schuelerklausurtermine, true);
 			final LocalDate klausurdatum = LocalDate.parse(termin.datum);
 			final StundenplanManager stundenplanManager = manager.stundenplanManagerGetByTerminOrException(termin);
 			final List<StundenplanZeitraster> zeitrasterRaum =
@@ -624,7 +624,7 @@ public final class GostKlausurenRaumzuweisungService {
 
 		private List<StundenplanZeitraster> getZeitrasterZuSchuelerklausurtermin(final GostSchuelerklausurtermin schuelerklausurtermin,
 				final LocalDate klausurdatum) {
-			final int startzeit = manager.startzeitBySchuelerklausurterminOrException(schuelerklausurtermin);
+			final int startzeit = manager.startzeitByKlausurraumAndSchuelerklausurterminOrException(raum.klausurraum, schuelerklausurtermin);
 			final List<StundenplanZeitraster> zeitrasterSk =
 					manager.stundenplanManagerGetByTerminOrException(termin).getZeitrasterByWochentagStartVerstrichen(
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),

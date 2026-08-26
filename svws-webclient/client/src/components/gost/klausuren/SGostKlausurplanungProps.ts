@@ -1,15 +1,7 @@
 import type { ApiStatus } from "~/components/ApiStatus";
-import type { GostHalbjahr, GostJahrgangsdaten, GostKlausurplanManager } from "@core";
-import type { WritableComputedRef } from "vue";
 import type { TabManager } from "@ui";
 
 export interface GostKlausurplanungProps {
 	apiStatus: ApiStatus;
-	kMan: () => GostKlausurplanManager;
-	jahrgangsdaten: GostJahrgangsdaten | undefined;
-	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	halbjahr: GostHalbjahr;
 	tabManager: () => TabManager;
-	getConfigNumberValue: (value: string) => number;
-	getObjectValue: <T>(key: string, fromJSON: (json: string) => T) => T | null;
 }

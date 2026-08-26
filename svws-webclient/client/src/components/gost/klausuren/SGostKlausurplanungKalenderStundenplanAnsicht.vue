@@ -17,7 +17,7 @@
 			<!-- Die Zeitachse des Stundenplans auf der linken Seite -->
 			<div class="svws-ui-stundenplan--zeitraster svws-zeitachse">
 				<template v-for="n in zeitrasterRows" :key="n">
-					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
+					<span v-if="(n % 3 === 2)" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': (n % 4 === 2), 'svws-small': (n % 4 === 1) || (n % 4 === 3)}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
 						<template v-if="n % 4 === 2">
 							{{ Math.floor((beginn + n * 5) / 60) }}:00
 						</template>
@@ -31,7 +31,7 @@
 					class="svws-ui-stundenplan--stunde text-center justify-center"
 					:style="posZeitraster(undefined, stunde)">
 					<div class="text-headline-sm"> {{ stunde }}. Stunde </div>
-					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
+					<div v-for="zeiten in stundenplanManagerAktuell().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
@@ -47,10 +47,10 @@
 			<div v-for="wochentag in wochentagRange" :key="wochentag.a.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<template v-if="kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(abschnitt!.id, wochentag.b) !== null && stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrNull(wochentag.a.id, stunde)">
+					<template v-if="(state.manager.stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnittId, wochentag.b) !== null) && stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrNull(wochentag.a.id, stunde)">
 						<div class="svws-ui-stundenplan--stunde flex-row relative"
 							:class="{
-								'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity': dragData && dragData() !== undefined,
+								'z-20 svws-ui-stundenplan--stunde--klausurplan-opacity': dragData && (dragData() !== undefined),
 							}"
 							:style="posZeitraster(wochentag.a, stunde)"
 							@dragover="checkDropZoneZeitraster($event, stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrException(wochentag.a.id, stunde))"
@@ -58,8 +58,8 @@
 							@drop="onDrop(stundenplanManager(wochentag.b).zeitrasterGetByWochentagAndStundeOrException(wochentag.a.id, stunde))">
 							<div v-if="kurseGefiltert(wochentag.b, wochentag.a, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-ui-50 flex absolute inset-1 w-auto bg-ui-75 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
-									<span class="text-button">{{ [...kurseGefiltert(wochentag.b, wochentag.a, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
-									<span v-if="dragData !== undefined && sumSchreiber(wochentag.b, wochentag.a, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag.b, wochentag.a, stunde) }}</span>
+									<span class="text-button">{{ [...kurseGefiltert(wochentag.b, wochentag.a, stunde)].map(kurs => state.manager.kursKurzbezeichnungByKursklausur(kurs)).join(", ") }}</span>
+									<span v-if="(dragData !== undefined) && (sumSchreiber(wochentag.b, wochentag.a, stunde) > 0)" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag.b, wochentag.a, stunde) }}</span>
 								</div>
 							</div>
 						</div>
@@ -77,7 +77,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(wochentag.b, zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
+				<template v-for="item in state.manager.terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(wochentag.b, state.zeigeAlleJahrgaenge ? null : state.jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +
@@ -92,7 +92,7 @@
 									: ''
 								)"
 							:data="termin"
-							:draggable="termin.abiturjahrgang === jahrgangsdaten.abiturjahr && hatKompetenzUpdate"
+							:draggable="(termin.abiturjahrgang === state.jahrgangsdaten.abiturjahr) && hatKompetenzUpdate"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
 							<div class="bg-ui-caution text-ui-oncaution border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
@@ -100,22 +100,15 @@
 									'bg-ui-neutral border-ui-25': dragData !== undefined,
 									'shadow-sm border-ui-10': dragData === undefined,
 								}">
-								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abiturjahrgang === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
-								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
-								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abiturjahrgang, abschnittState.auswahl.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
-								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abiturjahrgang === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abiturjahrgang !== jahrgangsdaten.abiturjahr}">
+								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="(termin.abiturjahrgang === state.jahrgangsdaten.abiturjahr) && hatKompetenzUpdate" />
+								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-ui" :style="{background: (kursklausurMouseOver() !== undefined) && (kursklausurMouseOver()!.idTermin === termin.id) ? 'none' : getBgColors(termin)}" />
+								<span v-if="state.zeigeAlleJahrgaenge" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abiturjahrgang, abschnittState.auswahl.schuljahr, state.halbjahr.halbjahr)?.jahrgang }}</span>
+								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abiturjahrgang === state.jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abiturjahrgang !== state.jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
-										<span class="line-clamp-4 text-ui" :class="dragData && dragData() !== undefined ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
+										<span class="line-clamp-4 text-ui" :class="dragData && (dragData() !== undefined) ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
-										<s-gost-klausurplanung-termin :termin
-											in-tooltip
-											:goto-kalenderdatum
-											:goto-raumzeit-termin
-											:patch-klausurtermin
-											:k-man>
-											<template #datum><span /></template>
-										</s-gost-klausurplanung-termin>
+										<s-gost-klausurplanung-termin :termin in-tooltip />
 									</template>
 								</svws-ui-tooltip>
 								<span class="absolute bottom-0 left-0 py-1.5 pl-1.5 text-sm opacity-50 hidden group-hover:block pointer-events-none text-uistatic">Details</span>
@@ -133,8 +126,9 @@
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht, List, StundenplanPausenzeit } from "@core";
-	import { DateUtils, Fach, GostHalbjahr, BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useBenutzerState } from "@ui";
+	import { DateUtils, GostHalbjahr, BenutzerKompetenz } from "@core";
+	import { useAbschnittState, useBenutzerState, useGostKlausurplanungState } from "@ui";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
@@ -147,61 +141,50 @@
 
 	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
+	const state = useGostKlausurplanungState();
+	const presenter = useKlausurplanungPresenter(state);
 
-	const stundenplanManager = (datum: string) => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum);
+	const stundenplanManagerAktuell = () => state.manager.stundenplanManagerGetByAbschnittAndKwOrException(props.abschnittId, props.kalenderwoche().jahr, props.kalenderwoche().kw);
+
+	const stundenplanManager = (datum: string) => state.manager.stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnittId, datum);
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
-	const terminBezeichnung = (termin: GostKlausurtermin) => {
-		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0) {
-			return termin.bezeichnung;
-		}
-		if (!termin.istHaupttermin) {
-			return "Nachschreibtermin";
-		}
-		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0) {
-			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ");
-		}
-		return "Klausurtermin";
-	};
-
-	const kursInfos = (idKurs: number) => {
-		return props.kMan().getKursManager().get(idKurs)?.kuerzel;
-	};
+	const terminBezeichnung = (termin: GostKlausurtermin) => presenter.terminTitel(termin);
 
 	const beginn = computed(() => {
 		if (props.ignoreEmpty) {
-			return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
+			return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
 		}
-		return props.manager().pausenzeitUndZeitrasterGetMinutenMin();
+		return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
 		if (props.ignoreEmpty) {
-			return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
+			return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
 		}
-		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
+		return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 
 	const wochentagRange = computed(() => {
-		return DateUtils.gibDatenDerWochentageOfJahrAndKalenderwoche(props.kalenderwoche().jahr, props.kalenderwoche().kw, props.manager().zeitrasterGetWochentageAlsEnumRange());
+		return DateUtils.gibDatenDerWochentageOfJahrAndKalenderwoche(props.kalenderwoche().jahr, props.kalenderwoche().kw, stundenplanManagerAktuell().zeitrasterGetWochentageAlsEnumRange());
 	});
 
 	const zeitrasterRange = computed(() => {
 		if (props.ignoreEmpty) {
-			return props.manager().zeitrasterGetStundenRangeOhneLeere();
+			return stundenplanManagerAktuell().zeitrasterGetStundenRangeOhneLeere();
 		}
-		return props.manager().zeitrasterGetStundenRange();
+		return stundenplanManagerAktuell().zeitrasterGetStundenRange();
 	});
 
 	const pausenzeiten = computed(() => {
 		if (props.mode === 'schueler') {
-			return props.manager().pausenzeitGetMengeBySchuelerIdAsList(props.id);
+			return stundenplanManagerAktuell().pausenzeitGetMengeBySchuelerIdAsList(props.id);
 		}
 		if (props.mode === 'lehrer') {
-			return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
+			return stundenplanManagerAktuell().pausenzeitGetMengeByLehrerIdAsList(props.id);
 		}
-		return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
+		return stundenplanManagerAktuell().pausenzeitGetMengeByKlasseIdAsList(props.id);
 	});
 
 	const gesamtzeit = computed(() => {
@@ -217,7 +200,7 @@
 	function aufsichtsbereiche(pausenaufsicht: StundenplanPausenaufsicht): string {
 		let result = "";
 		for (const aufsichtsbereich of pausenaufsicht.bereiche) {
-			const bereich = props.manager().aufsichtsbereichGetByIdOrException(aufsichtsbereich.idAufsichtsbereich);
+			const bereich = stundenplanManagerAktuell().aufsichtsbereichGetByIdOrException(aufsichtsbereich.idAufsichtsbereich);
 			if (result !== "") {
 				result += ",";
 			}
@@ -229,29 +212,29 @@
 
 	function getPausenzeitenWochentag(wochentag: Wochentag): List<StundenplanPausenzeit> {
 		if (props.mode === 'schueler') {
-			return props.manager().pausenzeitGetMengeBySchuelerIdAndWochentagAsList(props.id, wochentag.id);
+			return stundenplanManagerAktuell().pausenzeitGetMengeBySchuelerIdAndWochentagAsList(props.id, wochentag.id);
 		}
 		if (props.mode === 'lehrer') {
-			return props.manager().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag.id);
+			return stundenplanManagerAktuell().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag.id);
 		}
-		return props.manager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
+		return stundenplanManagerAktuell().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
 	}
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
 		if (props.mode === 'schueler') {
-			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+			return stundenplanManagerAktuell().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 		}
 		if (props.mode === 'lehrer') {
-			return props.manager().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+			return stundenplanManagerAktuell().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 		}
-		return props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+		return stundenplanManagerAktuell().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 	}
 
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
-		let zbeginn = props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
-		let zende = props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
+		let zbeginn = stundenplanManagerAktuell().zeitrasterGetMinutenMinDerStunde(stunde);
+		let zende = stundenplanManagerAktuell().zeitrasterGetMinutenMaxDerStunde(stunde);
 		if (wochentag !== undefined) {
-			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
+			const z = stundenplanManagerAktuell().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
 			if (z !== null) {
 				if (z.stundenbeginn !== null) {
 					zbeginn = z.stundenbeginn;
@@ -267,7 +250,7 @@
 	}
 
 	function posPause(pause: StundenplanPausenzeit): string {
-		const pzeit = props.manager().pausenzeitGetByIdOrException(pause.id);
+		const pzeit = stundenplanManagerAktuell().pausenzeitGetByIdOrException(pause.id);
 		let rowStart = 0;
 		let rowEnd = 10;
 		if ((pzeit.beginn !== null) && (pzeit.ende !== null)) {
@@ -280,17 +263,17 @@
 	function posKlausurtermin(termin: GostKlausurtermin): string {
 		let rowStart = 0;
 		let rowEnd = 10;
-		const terminBeginn = (termin.startzeit === null) ? -1 : props.kMan().minKlausurstartzeitByTermin(termin, true);
+		const terminBeginn = (termin.startzeit === null) ? -1 : state.manager.minKlausurstartzeitByTermin(termin, true);
 		let terminEnde = -1;
 		if (terminBeginn !== -1) {
-			if (props.kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty()) {
-				let dauer = props.kMan().maxKlausurdauerGetByTermin(termin, true);
+			if (state.manager.schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty()) {
+				let dauer = state.manager.maxKlausurdauerGetByTermin(termin, true);
 				if (dauer === 0) {
 					dauer = GostHalbjahr.fromIDorException(termin.halbjahr).istEinfuehrungsphase() ? 90 : 135;
 				}
 				terminEnde = Math.ceil((terminBeginn + dauer) / 5) * 5;
 			} else {
-				terminEnde = Math.ceil(props.kMan().maxKlausurendzeitByTermin(termin, true) / 5) * 5;
+				terminEnde = Math.ceil(state.manager.maxKlausurendzeitByTermin(termin, true) / 5) * 5;
 			}
 		}
 		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
@@ -308,12 +291,11 @@
 	}
 
 	function getBgColors(termin: GostKlausurtermin) {
-		if (termin.abiturjahrgang !== props.jahrgangsdaten.abiturjahr) {
+		if (termin.abiturjahrgang !== state.jahrgangsdaten.abiturjahr) {
 			return "#f2f4f5";
 		}
 
-		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0]);
-		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr - 1, 1));
+		const colors = [...state.manager.kursklausurGetMengeByTermin(termin)].map(klausur => presenter.kursBadge(klausur).farbe ?? "#f2f4f5");
 
 		let gradient = '';
 

@@ -1,6 +1,6 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-		<svws-ui-button-select v-if="!kMan().terminGetMengeAsList().isEmpty()" type="secondary" :dropdown-actions="dropdownList">
+		<svws-ui-button-select v-if="!state.manager.terminGetMengeAsList().isEmpty()" type="secondary" :dropdown-actions="dropdownList">
 			<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 		</svws-ui-button-select>
 	</Teleport>
@@ -8,7 +8,7 @@
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-tab-bar :tab-manager secondary :focus-switching-enabled :focus-help-visible>
 				<template #badge="{ tab }">
-					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
+					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && state.manager.hasFehlenddatenZuAbijahrUndHalbjahr(state.jahrgangsdaten.abiturjahr, state.halbjahr)">
 						<div class="font-bold text-ui-ondanger bg-ui-danger rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
 						<div class="font-bold text-ui-oncaution bg-ui-caution rounded-full shadow-sm h-5 ml-1 -mt-2 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
 					</template>
@@ -26,13 +26,15 @@
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
-	import { useAbschnittState, useRegionSwitch, useReportingState } from "@ui";
+	import { useAbschnittState, useConfigState, useGostKlausurplanungState, useRegionSwitch, useReportingState } from "@ui";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
 	import { ArrayList, ReportingReportvorlage } from "@core";
 
 	const props = defineProps<GostKlausurplanungProps>();
+	const state = useGostKlausurplanungState();
 	const abschnittState = useAbschnittState();
 	const reportingState = useReportingState();
+	const configState = useConfigState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -40,21 +42,21 @@
 	onMounted(() => isMounted.value = true);
 
 	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
-		props.getObjectValue,
+		(key, fromJSON) => configState.config.getObjectValue(key, fromJSON),
 		undefined
 	);
 
 	const numErrors = computed<number>(() => {
-		if (props.jahrgangsdaten!.abiturjahr === -1) {
+		if (state.jahrgangsdaten.abiturjahr === -1) {
 			return 0;
 		}
-		return props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit"), vorgabenIgnoreManager.getAll());
+		return state.manager.planungsfehlerGetAnzahlByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, state.kwErrorLimit, vorgabenIgnoreManager.getAll());
 	});
 	const numWarnings = computed<number>(() => {
-		if (props.jahrgangsdaten!.abiturjahr === -1) {
+		if (state.jahrgangsdaten.abiturjahr === -1) {
 			return 0;
 		}
-		return props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwWarnLimit"), props.getConfigNumberValue("kwErrorLimit"));
+		return state.manager.planungshinweiseGetAnzahlByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, state.kwWarnLimit, state.kwErrorLimit);
 	});
 
 	const dropdownList = [
@@ -95,7 +97,7 @@
 
 		if (title.indexOf(" alle ") <= 0) {
 			// Die ID für ein bestimmtes Gost-Halbjahr eines Abiturjahrgangs wird als fünfstellige Zahl codiert.
-			reportingParameter.idsHauptdaten.add(((props.jahrgangsdaten!.abiturjahr * 10) + props.halbjahr.id));
+			reportingParameter.idsHauptdaten.add(((state.jahrgangsdaten.abiturjahr * 10) + state.halbjahr.id));
 		}
 		await reportingState.createPDFReport(reportingParameter);
 	}

@@ -1,4 +1,5 @@
-import type { RouteLocationAsRelativeGeneric, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import type { RouteLocationAsRelativeGeneric, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
 
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 
@@ -17,9 +18,8 @@ import { routeGostKlausurplanungNachschreibAnsicht } from "~/router/apps/gost/kl
 
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteDataGostKlausurplanung";
 
-import type { GostKlausurplanungAuswahlProps } from "~/components/gost/klausuren/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
-import { ConfigElement } from "@ui";
+import { ConfigElement, CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausuren/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
@@ -28,9 +28,16 @@ import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 
-
 const SGostKlausurplanung = () => import("~/components/gost/klausuren/SGostKlausurplanung.vue");
 const SGostKlausurplanungAuswahl = () => import("~/components/gost/klausuren/SGostKlausurplanungAuswahl.vue");
+
+export function checkHiddenKlausurplanungStundenplan(params?: RouteParams): false | RouteLocationRaw {
+	const abschnitt = gostKlausurplanungStateImpl.abschnitt;
+	if ((abschnitt === undefined) || !gostKlausurplanungStateImpl.manager.stundenplanManagerGeladenAndExistsByAbschnitt(abschnitt.id)) {
+		return { name: routeGostKlausurplanung.defaultChild!.name, params };
+	}
+	return false;
+}
 
 export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanung, RouteGost> {
 
@@ -41,8 +48,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung", "klausurplanung/:halbjahr([0-5])?", SGostKlausurplanung, new RouteDataGostKlausurplanung());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
-		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
+		super.propHandler = () => this.getProps();
+		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, () => ({ gotoHalbjahr: this.data.gotoHalbjahr }));
 		super.text = "Klausurplanung";
 		super.children = [
 			routeGostKlausurplanungVorgaben,
@@ -56,15 +63,15 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		configStateImpl.config.addElements([
-			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
-			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
-			new ConfigElement("gost.klausurplan.kwWarnLimit", "user", "3"),
-			new ConfigElement("gost.klausurplan.kwErrorLimit", "user", "4"),
-			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),
-			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", "user", "true"),
-			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
-			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", "user", "false"),
-			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selben_klausurstart_pro_raum", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "quartal", "user", "0"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "zeigeAlleJahrgaenge", "user", "false"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "kwWarnLimit", "user", "3"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "kwErrorLimit", "user", "4"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", "user", "false"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_forciere_selben_klausurstart_pro_raum", "user", "true"),
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE, "user", "[]"),
 		]);
 		this.isHidden = (params?: RouteParams) => {
@@ -74,8 +81,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public checkHidden(params?: RouteParams) {
 		try {
-			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null)) {
+			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
+			if (abiturjahr === undefined) {
 				return routeGost.getRouteDefaultChild({ abiturjahr: -1 });
 			}
 			return false;
@@ -104,26 +111,23 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			if (abiturjahr === undefined) {
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 			}
-			// Füge ggf. die Konfiguration fpr die Routen-Parameter zur Config hinzu
-			if (!configStateImpl.config.hasElement("gost.klausurplan.routeparams")) {
-				const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
-				configStateImpl.config.addElement(new ConfigElement("gost.klausurplan.routeparams." + strAbiturjahr, "user", ""));
+			// Füge ggf. die Konfiguration für die Routen-Parameter zur Config hinzu
+			const routeParamsKey = this.data.getParamsKey(abiturjahr);
+			if (!configStateImpl.config.hasElement(routeParamsKey)) {
+				configStateImpl.config.addElement(new ConfigElement(routeParamsKey, "user", ""));
+			}
+			// Aktualisiere das Abiturjahr
+			const abiturjahrwechsel = await gostKlausurplanungStateImpl.setAbiturjahr(abiturjahr);
+			if ((abiturjahr === -1) && (this.data.view !== routeGostKlausurplanungVorgaben)) {
+				this.data.setView(routeGostKlausurplanungVorgaben, this.children);
 			}
 			// Prüfe, ob ggf. Routing-Parameter für den Abiturjahrgang wiederhergestellt werden sollen...
 			if (isEntering) {
-				const temp = this.data.getParams(abiturjahr);
-				if (temp !== undefined) {
-					const { view } = RouteNode.getStringParams(temp, ["view"]);
-					delete temp.view;
-					const { halbjahr: tempHalbjahr } = RouteNode.getIntParams(temp, ["halbjahr"]);
-					if ((view !== this.data.view.name) || ((view === this._defaultChild!.name) && (tempHalbjahr !== halbjahrId))) {
-						this.data.setView(RouteNode.getNodeByName(view) ?? this._defaultChild!, this.children);
-						return { name: view, params: temp };
-					}
+				const route = await this.getRouteFromStoredParams(abiturjahr, halbjahrId);
+				if (route !== undefined) {
+					return route;
 				}
 			}
-			// Aktualisiere das Abiturjahr
-			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr);
 			// Aktualisiere das Halbjahr
 			let halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if (abiturjahrwechsel || (halbjahr === null)) {
@@ -132,27 +136,58 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				hj ??= (abiturjahr < abschnittStateImpl.auswahl.schuljahr + abschnittStateImpl.auswahl.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				halbjahr = hj;
 			}
-			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, abiturjahrwechsel);
-			if (!to.name.startsWith(this.data.view.name)) {
-				for (const child of this.children) {
-					if (to.name.startsWith(child.name)) {
-						this.data.setView(child, this.children);
-					}
-				}
-			}
+			const changedHalbjahr: boolean = await gostKlausurplanungStateImpl.setHalbjahr(halbjahr, abiturjahrwechsel);
+			this.updateViewByRoute(to);
 			if (changedHalbjahr || (to.name === this.name)) {
-				if ((this.data.view.name === "gost.klausurplanung.raumzeit") && (idtermin !== undefined)) {
-					return this.data.view.getRoute({ halbjahr: halbjahr.id, idtermin });
-				}
-				if (this.data.view.name === "gost.klausurplanung.kalender") {
-					return this.data.view.getRoute({ halbjahr: halbjahr.id, datum, idtermin });
-				}
-				return this.data.view.getRoute({ halbjahr: halbjahr.id });
+				return this.getRouteForCurrentView(halbjahr, datum, idtermin);
 			}
 		} catch (e) {
 			this.data.reset();
+			gostKlausurplanungStateImpl.reset();
 			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
+	}
+
+	private async getRouteFromStoredParams(abiturjahr: number, halbjahrId: number | undefined): Promise<RouteLocationRaw | undefined> {
+		const params = this.data.getParams(abiturjahr);
+		if (params === undefined) {
+			return undefined;
+		}
+		const { view } = RouteNode.getStringParams(params, ["view"]);
+		delete params.view;
+		const { halbjahr: storedHalbjahrId } = RouteNode.getIntParams(params, ["halbjahr"]);
+		if ((view === this.data.view.name) && ((view !== this._defaultChild!.name) || (storedHalbjahrId === halbjahrId))) {
+			return undefined;
+		}
+		const route = RouteNode.getNodeByName(view) ?? this._defaultChild!;
+		this.data.setView(route, this.children);
+		const halbjahrRestored = GostHalbjahr.fromID(storedHalbjahrId ?? null);
+		if (halbjahrRestored !== null) {
+			await gostKlausurplanungStateImpl.setHalbjahr(halbjahrRestored, true);
+		}
+		return { name: route.name, params };
+	}
+
+	private updateViewByRoute(to: RouteNode<any, any>): void {
+		if (to.name.startsWith(this.data.view.name)) {
+			return;
+		}
+		for (const child of this.children) {
+			if (to.name.startsWith(child.name)) {
+				this.data.setView(child, this.children);
+				return;
+			}
+		}
+	}
+
+	private getRouteForCurrentView(halbjahr: GostHalbjahr, datum: string | undefined, idtermin: number | undefined): RouteLocationRaw {
+		if ((this.data.view.name === routeGostKlausurplanungRaumzeit.name) && (idtermin !== undefined)) {
+			return this.data.view.getRoute({ halbjahr: halbjahr.id, idtermin });
+		}
+		if (this.data.view.name === routeGostKlausurplanungKalender.name) {
+			return this.data.view.getRoute({ halbjahr: halbjahr.id, datum, idtermin });
+		}
+		return this.data.view.getRoute({ halbjahr: halbjahr.id });
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -161,35 +196,22 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			this.data.setParams(abiturjahr, from_params);
 		}
 		this.data.reset();
+		gostKlausurplanungStateImpl.reset();
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
-		return { halbjahr: this.data.halbjahr.id };
+		return { halbjahr: gostKlausurplanungStateImpl.halbjahr.id };
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
+	public getProps(): GostKlausurplanungProps {
 		return {
 			apiStatus: api.status,
-			kMan: () => routeGostKlausurplanung.data.manager,
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
-			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-			halbjahr: this.data.halbjahr,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
-			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
-			getObjectValue: configStateImpl.config.getObjectValue.bind(configStateImpl.config),
-		};
-	}
-
-	public getAuswahlProps(to: RouteLocationNormalized): GostKlausurplanungAuswahlProps {
-		return {
-			kMan: () => routeGostKlausurplanung.data.manager,
-			gotoHalbjahr: this.data.gotoHalbjahr,
-			halbjahr: this.data.halbjahr,
 		};
 	}
 
 	protected checkTabVisibility(tab: TabData) {
-		if (this.data.abiturjahr === -1) {
+		if (gostKlausurplanungStateImpl.abiturjahr === -1) {
 			return (tab.name === routeGostKlausurplanungVorgaben.name);
 		}
 		return true;

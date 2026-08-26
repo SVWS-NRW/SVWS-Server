@@ -7202,6 +7202,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausurtermineMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/multiple
+	 *
+	 * Patcht mehrere GostSchuelerklausurtermine. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von GostSchuelerklausurterminen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Patches wurden erfolgreich in die GostSchuelerklausurtermine integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
+	 *   Code 400: Die Patches sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostSchuelerklausurtermine zu ändern.
+	 *   Code 404: Mindestens ein GostSchuelerklausurtermin-Eintrag mit der angegebenen ID wurde nicht gefunden
+	 *   Code 409: Ein Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<GostSchuelerklausurtermin>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Patches wurden erfolgreich in die GostSchuelerklausurtermine integriert.
+	 */
+	public async patchGostKlausurenSchuelerklausurtermineMultiple(data: List<Partial<GostSchuelerklausurtermin>>, schema: string): Promise<GostKlausurenPatchResponseData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<GostSchuelerklausurtermin>).map(d => GostSchuelerklausurtermin.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode setzeGostSchuelerklausurtermineZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/raumzuweisungen
 	 *
 	 * Weist die in den GostKlausurraumRich-Objekten übergebenen IDs der GostSchuelerklausurtermine dem jeweiligen GostKlausurraum zu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.

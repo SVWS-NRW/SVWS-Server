@@ -1,8 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
-import type { GostKlausurplanungRaumzeitProps } from "~/components/gost/klausuren/SGostKlausurplanungRaumzeitProps";
+import { checkHiddenKlausurplanungStundenplan, routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
@@ -17,18 +17,22 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung.raumzeit", String.raw`raumzeit/:idtermin(\d+)?`, SGostKlausurplanungRaumzeit);
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = () => this.getProps();
 		super.text = "Räume und Startzeiten";
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		};
 	}
 
+	public getProps() {
+		return {
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
+			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
+		};
+	}
+
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false) {
-			return { name: routeGostKlausurplanung.defaultChild!.name, params };
-		}
-		return false;
+		return checkHiddenKlausurplanungStundenplan(params);
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
@@ -38,15 +42,15 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
 			}
-			const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
+			const terminList = gostKlausurplanungStateImpl.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(gostKlausurplanungStateImpl.jahrgangsdaten.abiturjahr, gostKlausurplanungStateImpl.halbjahr, gostKlausurplanungStateImpl.quartal);
 			if ((idtermin === undefined) && !terminList.isEmpty()) {
-				const termin = (routeGostKlausurplanung.data.terminSelected.value !== undefined) && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
+				const termin = (gostKlausurplanungStateImpl.selectedTermin !== undefined) && terminList.contains(gostKlausurplanungStateImpl.selectedTermin) ? gostKlausurplanungStateImpl.selectedTermin : terminList.getFirst();
 				return this.getRoute({ idtermin: termin.id });
 			}
-			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
+			const termin = gostKlausurplanungStateImpl.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
 			if (termin !== undefined && termin.datum !== null) {
-				if (routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnittAndDatum(routeGostKlausurplanung.data.abschnitt!.id, termin.datum)) {
-					routeGostKlausurplanung.data.setRaumTermin(termin);
+				if (gostKlausurplanungStateImpl.manager.stundenplanManagerExistsByAbschnittAndDatum(gostKlausurplanungStateImpl.abschnittOrException.id, termin.datum)) {
+					gostKlausurplanungStateImpl.setRaumTermin(termin);
 				}
 			}
 		} catch (e) {
@@ -54,31 +58,6 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
-		return {
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
-			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			abschnitt: routeGostKlausurplanung.data.abschnitt,
-			gotoTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
-			kMan: () => routeGostKlausurplanung.data.manager,
-			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
-			loescheKlausurraum: routeGostKlausurplanung.data.loescheKlausurraum,
-			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
-			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
-			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
-			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
-			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-			setRaumTermin: routeGostKlausurplanung.data.setRaumTermin,
-			terminSelected: routeGostKlausurplanung.data.terminSelected,
-			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
-			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
-			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
-			getConfigValue: routeGostKlausurplanung.data.getConfigValue,
-			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
-		};
-	}
-
 }
 
 export const routeGostKlausurplanungRaumzeit = new RouteGostKlausurplanungRaumzeit();
-

@@ -1,9 +1,9 @@
 <template>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
+		<s-gost-klausurplanung-quartal-auswahl />
 	</Teleport>
 	<div class="page page-flex-col">
-		<svws-ui-content-card class="col-span-full" :title="`Nachschreibplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
+		<svws-ui-content-card class="col-span-full" :title="`Nachschreibplan ${state.jahrgangsdaten.jahrgang}, ${state.halbjahr.halbjahr}. Halbjahr${state.quartal === 0 ? '' : ', ' + state.quartal + '. Quartal'}`">
 			<svws-ui-table v-model:sort-by-and-order="sortByAndOrder" :columns="cols" :items="itemsSorted">
 				<template #noData>
 					<slot name="noData">
@@ -12,28 +12,28 @@
 				</template>
 
 				<template #cell(nachname)="{ rowData }">
-					{{ kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.nachname }}
+					{{ presenter.schuelerklausurterminNachname(rowData) }}
 				</template>
 				<template #cell(vorname)="{ rowData }">
-					{{ kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(rowData.idSchuelerklausur).idSchueler)?.vorname }}
+					{{ presenter.schuelerklausurterminVorname(rowData) }}
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurtermin(rowData)) };`">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurtermin(rowData)) }}</span>
+					<s-gost-klausurplanung-kurs-badge :schuelerklausurtermin="rowData" :tooltip="false" />
 				</template>
 				<template #cell(kuerzel)="{ rowData }">
-					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurtermin(rowData)) }}
+					{{ presenter.schuelerklausurterminLehrerKuerzel(rowData) }}
 				</template>
 				<template #cell(datum)="{ rowData }">
-					{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurtermin(rowData).datum!) }}
+					{{ presenter.schuelerklausurterminDatumText(rowData) }}
 				</template>
 				<template #cell(startzeit)="{ rowData }">
-					{{ DateUtils.getStringOfUhrzeitFromMinuten(rowData.startzeit !== null ? rowData.startzeit : kMan().terminOrExceptionBySchuelerklausurtermin(rowData).startzeit!) }}
+					{{ presenter.startzeitBySchuelerklausurtermin(rowData) }}
 				</template>
 				<template #cell(dauer)="{ rowData }">
-					{{ kMan().vorgabeBySchuelerklausurtermin(rowData).dauer }}
+					{{ presenter.schuelerklausurterminDauerText(rowData) }}
 				</template>
 				<template #cell(raum)="{ rowData }">
-					{{ kMan().stundenplanraumGetBySchuelerklausurtermin(rowData)?.kuerzel ?? "-" }}
+					{{ presenter.schuelerklausurterminRaumText(rowData) }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -42,12 +42,12 @@
 
 <script setup lang="ts">
 	import { computed, onMounted, ref } from 'vue';
-	import type { GostKlausurplanungNachschreibAnsichtProps } from './SGostKlausurplanungNachschreibAnsichtProps';
-	import type { DataTableColumn, SortByAndOrder } from '@ui';
+	import { useGostKlausurplanungState, type DataTableColumn, type SortByAndOrder } from '@ui';
 	import type { GostSchuelerklausurtermin } from '@core';
-	import { DateUtils } from '@core';
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
-	const props = defineProps<GostKlausurplanungNachschreibAnsichtProps>();
+	const state = useGostKlausurplanungState();
+	const presenter = useKlausurplanungPresenter(state);
 
 	const isMounted = ref(false);
 
@@ -58,23 +58,21 @@
 	const sortByAndOrder = ref<SortByAndOrder | undefined>();
 
 	const itemsSorted = computed(() => {
-		const arr = props.kMan().schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).toArray() as GostSchuelerklausurtermin[];
+		const arr = state.manager.schuelerklausurterminNtAktuellMitTerminUndDatumGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal).toArray() as GostSchuelerklausurtermin[];
 		let temp = sortByAndOrder.value;
-		if (temp === undefined || temp.order === null) {
+		if ((temp === undefined) || (temp.order === null)) {
 			temp = { key: 'nachname', order: true };
 		}
 		arr.sort((a, b) => {
 			switch (temp.key) {
 				case 'nachname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).nachname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).nachname, "de-DE");
+					return presenter.compareSchuelerklausurterminNachname(a, b);
 				case 'vorname':
-					return props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler).vorname.localeCompare(props.kMan().schuelerGetByIdOrException(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler).vorname, "de-DE");
+					return presenter.compareSchuelerklausurterminVorname(a, b);
 				case 'kurs':
-					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurtermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurtermin(b)), "de-DE");
-				case 'datum': {
-					const ord = props.kMan().terminGetByIdOrException(a.idTermin!).datum!.localeCompare(props.kMan().terminGetByIdOrException(b.idTermin!).datum!, "de-DE");
-					return ord === 0 ? props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurtermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurtermin(b)), "de-DE") : ord;
-				}
+					return presenter.compareSchuelerklausurterminKurs(a, b);
+				case 'datum':
+					return presenter.compareSchuelerklausurterminDatum(a, b);
 				default:
 					return 0;
 			}
@@ -84,7 +82,7 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 8.25, sortable: true },
+			{ key: "nachname", label: "Nachname", minWidth: 8.25, sortable: true },
 			{ key: "vorname", label: "Vorname", minWidth: 8, sortable: true },
 			{ key: "kurs", label: "Kurs", span: 1.25, sortable: true },
 			{ key: "kuerzel", label: "Lehrkraft" },

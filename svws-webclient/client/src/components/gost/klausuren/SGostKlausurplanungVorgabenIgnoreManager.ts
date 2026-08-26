@@ -1,7 +1,8 @@
 import type { List } from "@core";
 import { ArrayList, GostKlausurvorgabe } from "@core";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui";
 
-export const CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE = "gost.klausurplan.vorgabenToIgnore";
+export const CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE = CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "vorgabenToIgnore";
 
 export class SGostKlausurplanungVorgabenIgnoreManager {
 
@@ -21,10 +22,10 @@ export class SGostKlausurplanungVorgabenIgnoreManager {
 	) {}
 
 	private equals(a: GostKlausurvorgabe, b: GostKlausurvorgabe): boolean {
-		return a.halbjahr === b.halbjahr
-				&& a.quartal === b.quartal
-				&& a.idFach === b.idFach
-				&& a.kursart === b.kursart;
+		return (a.halbjahr === b.halbjahr)
+			&& (a.quartal === b.quartal)
+			&& (a.idFach === b.idFach)
+			&& (a.kursart === b.kursart);
 	}
 
 	private parse(json: string): GostKlausurvorgabe[] {

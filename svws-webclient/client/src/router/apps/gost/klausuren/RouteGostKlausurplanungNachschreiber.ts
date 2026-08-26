@@ -1,8 +1,7 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerKompetenz, GostHalbjahr, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
-import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/klausuren/SGostKlausurplanungNachschreiberProps";
 import { routeError } from "~/router/error/RouteError";
 import { schulformenGymOb } from "~/router/RouteHelper";
 
@@ -17,14 +16,28 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 		], "gost.klausurplanung.nachschreiber", "nachschreiber", SGostKlausurplanungNachschreiber);
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = () => this.getProps();
 		super.text = "Nachschreiber";
+		this.isHidden = (params?: RouteParams) => {
+			return this.checkHidden(params);
+		};
+	}
+
+	public getProps() {
+		return {
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
+			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
+			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
+		};
 	}
 
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
-			return ((abiturjahr === undefined) || (abiturjahr === -1));
+			if ((abiturjahr === undefined) || (abiturjahr === -1)) {
+				return { name: routeGostKlausurplanung.defaultChild!.name, params };
+			}
+			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
@@ -42,26 +55,6 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {
-		return {
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
-			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => routeGostKlausurplanung.data.manager,
-			patchKlausur: routeGostKlausurplanung.data.patchKlausur,
-			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
-			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
-			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,
-			blockenNachschreibklausuren: routeGostKlausurplanung.data.blockenNachschreiber,
-			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
-			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
-			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
-			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
-			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
-		};
-	}
-
 }
 
 export const routeGostKlausurplanungNachschreiber = new RouteGostKlausurplanungNachschreiber();
-

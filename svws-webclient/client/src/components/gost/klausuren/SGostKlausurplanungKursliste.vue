@@ -12,89 +12,94 @@
 		</template>
 	</svws-ui-modal>
 
-	<div v-if="kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe !== null && kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe!.trim().length > 0">
-		<h3 class="border-b text-headline-md">Bemerkung zur Vorgabe</h3>
-		{{ kMan().vorgabeByKursklausur(kursklausur).bemerkungVorgabe }}
-	</div>
-	<h2 class="border-b text-headline my-4 whitespace-nowrap">Klausurschreiber im Kurs {{ kMan().kursKurzbezeichnungByKursklausur(kursklausur) }}</h2>
-	<table class="w-full">
-		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id" class="border-b">
-			<td>
-				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
-					<div>
-						<span class="line-through text-ui-danger">
-							{{ kMan().schuelerGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(s).vorname }}
-						</span>
+	<div class="flex flex-col text-left">
+		<div v-if="bemerkungVorgabe !== null" class="mb-4 rounded-lg border border-ui-warning bg-ui-warning-weak px-4 py-3">
+			<div class="text-base font-bold leading-tight">Bemerkung zur Vorgabe</div>
+			<div class="mt-1.5 whitespace-pre-wrap leading-snug">{{ bemerkungVorgabe }}</div>
+		</div>
+		<header v-if="showHeader" class="border-b border-ui-25 pb-3">
+			<h2 class="text-headline leading-tight">Klausurschreiber im Kurs {{ state.manager.kursKurzbezeichnungByKursklausur(kursklausur) }}</h2>
+			<div class="mt-1.5 text-base leading-tight opacity-60">
+				{{ state.manager.kursAnzahlKlausurschreiberByKursklausur(kursklausur) }} Schüler
+			</div>
+		</header>
+		<div v-else class="pb-2 text-base leading-tight opacity-60">
+			{{ state.manager.kursAnzahlKlausurschreiberByKursklausur(kursklausur) }} Schüler
+		</div>
+		<div class="max-h-[calc(100vh-18rem)] overflow-y-auto border-t border-ui-25">
+			<div v-for="s in state.manager.schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id"
+				class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-ui-10 py-2 text-base leading-tight last:border-b-0"
+				:class="{'bg-ui-danger/5': !schreibtTermin(s)}">
+				<div class="min-w-0">
+					<div class="truncate" :class="{'text-ui-danger line-through': !schreibtTermin(s)}">
+						{{ presenter.schuelerNameBySchuelerklausurtermin(s) }}
 					</div>
-				</template>
-				<span v-else>
-					{{ kMan().schuelerGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(s).vorname }}
-				</span>
-			</td>
-			<td class="text-center pl-5">
-				<svws-ui-button v-if="patchKlausur && createSchuelerklausurtermin && hatKompetenzUpdate && termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; show = true">
-					<svws-ui-tooltip>
-						<template #content>
-							Klausur nicht mitgeschrieben
-						</template>
+					<div v-if="hatKompetenzUpdate && (termin !== undefined) && !schreibtTermin(s)" class="mt-1 grid grid-cols-[8.25rem_minmax(0,1fr)] items-center gap-2">
+						<span class="self-end pb-1 text-base leading-tight opacity-60">Versäumnisgrund:</span>
+						<svws-ui-text-input :disabled="!hatKompetenzUpdate" class="min-w-0 text-base" :model-value="s.bemerkung" @change="bemerkung => state.patchKlausur(s, {bemerkung})" />
+					</div>
+				</div>
+				<svws-ui-tooltip v-if="hatKompetenzUpdate && (termin !== undefined) && schreibtTermin(s)">
+					<template #content>
+						Klausur nicht mitgeschrieben
+					</template>
+					<svws-ui-button type="icon" size="small" title="Klausur nicht mitgeschrieben" @click="terminSelected = s; show = true">
 						<span class="icon i-ri-user-forbid-line" />
-					</svws-ui-tooltip>
-				</svws-ui-button>
-				<span class="whitespace-nowrap flex items-center" v-else-if="hatKompetenzUpdate && termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
-					<span>(</span><svws-ui-textarea-input :disabled="!hatKompetenzUpdate || !patchKlausur" class="text-sm inline-block align-middle" headless :rows="1" resizeable="none" autoresize placeholder="Grund des Fehlens" :model-value="s.bemerkung" @change="bemerkung => patchKlausur?.(s, {bemerkung})" /><span>)</span>
-				</span>
-			</td>
-		</tr>
-	</table>
-	<div class="my-4">
-		<svws-ui-textarea-input placeholder="Bemerkungen zum Kurs" resizeable="none" autoresize :disabled="!hatKompetenzUpdate || !patchKlausur" :model-value="kursklausur.bemerkung" @change="bemerkung => patchKlausur?.(kursklausur, {bemerkung})" />
+					</svws-ui-button>
+				</svws-ui-tooltip>
+			</div>
+			<div class="grid grid-cols-[8.25rem_minmax(0,1fr)] items-start gap-2 py-3">
+				<div class="self-start pt-2 text-base font-medium leading-tight opacity-70">Bemerkungen zum Kurs:</div>
+				<svws-ui-textarea-input resizeable="none" autoresize :disabled="!hatKompetenzUpdate" :model-value="kursklausur.bemerkung" @change="bemerkung => state.patchKlausur(kursklausur, {bemerkung})" />
+			</div>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watchEffect } from 'vue';
-	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin } from '@core';
+	import { computed, ref } from 'vue';
+	import type { GostKursklausur, GostKlausurtermin } from '@core';
 	import { BenutzerKompetenz, GostSchuelerklausurtermin } from '@core';
-	import { useBenutzerState } from '@ui';
+	import { useBenutzerState, useGostKlausurplanungState } from '@ui';
+	import { useKlausurplanungPresenter } from './SGostKlausurplanungPresenter';
 
 	const props = withDefaults(defineProps<{
-		kMan: () => GostKlausurplanManager;
 		kursklausur: GostKursklausur;
 		termin?: GostKlausurtermin;
-		createSchuelerklausurtermin?: (skt: Partial<GostSchuelerklausurtermin>) => Promise<void>;
-		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurtermin, patch: Partial<GostKursklausur | GostSchuelerklausurtermin>) => Promise<void>;
+		showHeader?: boolean;
 	}>(), {
 		termin: undefined,
-		createSchuelerklausurtermin: undefined,
-		patchKlausur: undefined,
+		showHeader: true,
 	});
 
 	const benutzerState = useBenutzerState();
-
-	const emit = defineEmits<{
-		'modal': [value: boolean];
-	}>();
+	const state = useGostKlausurplanungState();
+	const presenter = useKlausurplanungPresenter(state);
 
 	const show = ref<boolean>(false);
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
-
-	watchEffect(() => {
-		if (show.value) {
-			emit('modal', true);
-		} else {
-			emit('modal', false);
-		}
+	const bemerkungVorgabe = computed<string | null>(() => {
+		const bemerkung = state.manager.vorgabeByKursklausur(props.kursklausur).bemerkungVorgabe;
+		return ((bemerkung === null) || (bemerkung.trim().length === 0)) ? null : bemerkung;
 	});
 
 	const terminSelected = ref<GostSchuelerklausurtermin>(new GostSchuelerklausurtermin());
 
+	function schreibtTermin(schuelerklausurtermin: GostSchuelerklausurtermin): boolean {
+		if (props.termin === undefined) {
+			return true;
+		}
+		const schueler = state.manager.schuelerGetBySchuelerklausurtermin(schuelerklausurtermin);
+		return state.manager.schuelerSchreibtKlausurtermin(schueler.id, props.termin);
+	}
+
 	const createTermin = async (create: boolean) => {
-		if (props.patchKlausur && props.createSchuelerklausurtermin && create) {
-			await props.patchKlausur(terminSelected.value, { bemerkung: terminSelected.value.bemerkung });
+		if (create) {
+			await state.patchKlausur(terminSelected.value, { bemerkung: terminSelected.value.bemerkung });
 			const sktNeu = new GostSchuelerklausurtermin();
 			sktNeu.idSchuelerklausur = terminSelected.value.idSchuelerklausur;
-			await props.createSchuelerklausurtermin(sktNeu);
+			await state.createSchuelerklausurtermin(sktNeu);
 		}
 		show.value = false;
 		terminSelected.value = new GostSchuelerklausurtermin();

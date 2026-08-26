@@ -3,12 +3,12 @@
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
+		<s-gost-klausurplanung-quartal-auswahl />
 	</Teleport>
 	<div class="page page-flex-col min-w-128 max-w-256">
-		<ui-card v-if="abschnitt !== undefined && !kMan().stundenplanManagerGeladenAndExistsByAbschnitt(abschnitt.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"
-			title="Kein Stundenplan" subtitle="Es existiert kein Stundenplan für diesen Schuljahresabschnitt." :is-open="currentAction === 'stundenplan_fehlend'"
-			@update:is-open="(isOpen) => setCurrentAction('stundenplan_fehlend', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="stundenplan_fehlend" v-model:current-action="currentAction"
+			:show="(state.abschnitt !== undefined) && !state.manager.stundenplanManagerGeladenAndExistsByAbschnitt(state.abschnitt.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"
+			title="Kein Stundenplan" subtitle="Es existiert kein Stundenplan für diesen Schuljahresabschnitt.">
 			<p>Zur Terminierung von Klausurschienen und Raumplanung muss zwingend ein Stundenplan definiert sein.</p>
 			<template #buttonFooterLeft>
 				<svws-ui-button title="Zur Stundenplandefinition" @click="gotoStundenplan" class="mt-2">
@@ -16,17 +16,17 @@
 					Zur Stundenplandefinition
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!vorgabenAlle().isEmpty()" icon="i-ri-draft-line" title="Fehlende Klausurvorgaben" :fehler="vorgaben().size() > 0 ? ValidatorFehlerart.MUSS : ValidatorFehlerart.UNGENUTZT"
-			:is-open="!vorgaben().isEmpty() && currentAction === 'vorgaben_fehlend'"
-			@update:is-open="(isOpen) => setCurrentAction('vorgaben_fehlend', isOpen)" :collapsible="!vorgaben().isEmpty()">
+		<s-gost-klausurplanung-problem-card problem-id="vorgaben_fehlend" v-model:current-action="currentAction" :show="!vorgabenAlle().isEmpty()" icon="i-ri-draft-line"
+			title="Fehlende Klausurvorgaben" :fehler="vorgaben().size() > 0 ? ValidatorFehlerart.MUSS : ValidatorFehlerart.UNGENUTZT"
+			:can-open="!vorgaben().isEmpty()" :collapsible="!vorgaben().isEmpty()">
 			<template #subtitle>
 				<span>{{ vorgaben().size() }} fehlende Klausurvorgabe{{ vorgaben().size() === 1 ? "" : "n" }} gefunden.
-					<template v-if="halbjahr.istEinfuehrungsphase()">
+					<template v-if="state.halbjahr.istEinfuehrungsphase()">
 						<span v-if="vorgabenAnzahlAusgeblendet() > 0" class="inline-flex items-center italic"> ( {{ vorgabenAnzahlAusgeblendet() }} ausgeblendet
 							<span @click.stop>
-								<svws-ui-button @click="ignoreVorgabenToggle = !ignoreVorgabenToggle; setCurrentAction('vorgaben_fehlend', true)" type="icon" :title="'Ignorierte Vorgaben ' + (ignoreVorgabenToggle ? 'anzeigen' : 'ausblenden')">
+								<svws-ui-button @click="ignoreVorgabenToggle = !ignoreVorgabenToggle; currentAction = 'vorgaben_fehlend'" type="icon" :title="'Ignorierte Vorgaben ' + (ignoreVorgabenToggle ? 'anzeigen' : 'ausblenden')">
 									<span v-if="ignoreVorgabenToggle" class="icon i-ri-eye-off-line" />
 									<span v-else class="icon i-ri-eye-line" :class="vorgaben().size() > 0 ? 'icon-ui-ondanger' : ''" />
 								</svws-ui-button>
@@ -58,18 +58,18 @@
 					Zur Vorgabenansicht
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!schuelerklausuren().isEmpty()" icon="i-ri-group-line" title="Abweichende Schülerklausurmenge" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="schuelerklausuren().size() + ' Abweichung' + (schuelerklausuren().size() === 1 ? '' : 'en') + ' gefunden.'" :is-open="currentAction === 'schuelerklausurmenge_abweichend'"
-			@update:is-open="(isOpen) => setCurrentAction('schuelerklausurmenge_abweichend', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="schuelerklausurmenge_abweichend" v-model:current-action="currentAction" :show="!schuelerklausuren().isEmpty()"
+			icon="i-ri-group-line" title="Abweichende Schülerklausurmenge" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="schuelerklausuren().size() + ' Abweichung' + (schuelerklausuren().size() === 1 ? '' : 'en') + ' gefunden.'">
 			<svws-ui-table :items="schuelerklausuren()" :columns="addStatusColumn(colsSchuelerklausuren)">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button v-if="rowData.id === -1" type="icon" @click="async () => {
 						if (isAwaiting) return;
 						isAwaiting = true;
 						try {
-							await erzeugeSchuelerklausuren(ListUtils.create1(rowData));
+							await state.erzeugeSchuelerklausuren(ListUtils.create1(rowData));
 						} finally {
 							isAwaiting = false;
 						}
@@ -80,7 +80,7 @@
 						if (isAwaiting) return;
 						isAwaiting = true;
 						try {
-							await loescheSchuelerklausuren(ListUtils.create1(rowData));
+							await state.loescheSchuelerklausuren(ListUtils.create1(rowData));
 						} finally {
 							isAwaiting = false;
 						}
@@ -89,27 +89,27 @@
 					</svws-ui-button>
 				</template>
 				<template #cell(name)="{ rowData }">
-					{{ kMan().schuelerGetBySchuelerklausur(rowData).nachname }}, {{ kMan().schuelerGetBySchuelerklausur(rowData).vorname }}
+					{{ presenter.schuelerNameBySchuelerklausur(rowData) }}
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(rowData)}`">{{ kMan().kursdatenBySchuelerklausur(rowData).kuerzel }}</span>
+					<s-gost-klausurplanung-kurs-badge :kursklausur="state.manager.kursklausurBySchuelerklausur(rowData)" :tooltip="false" :show-bemerkungen="false" />
 				</template>
 				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
+					{{ state.manager.vorgabeBySchuelerklausur(rowData).quartal }}
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!kursklausuren().isEmpty()" icon="i-ri-book-2-line" title="Abweichende Kursklausurmenge" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="kursklausuren().size() + ' Abweichung' + (kursklausuren().size() === 1 ? '' : 'en') + ' gefunden.'" :is-open="currentAction === 'kursklausuren_fehlend'"
-			@update:is-open="(isOpen) => setCurrentAction('kursklausuren_fehlend', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="kursklausuren_fehlend" v-model:current-action="currentAction" :show="!kursklausuren().isEmpty()"
+			icon="i-ri-book-2-line" title="Abweichende Kursklausurmenge" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="kursklausuren().size() + ' Abweichung' + (kursklausuren().size() === 1 ? '' : 'en') + ' gefunden.'">
 			<svws-ui-table :items="kursklausuren()" :columns="(kursklausuren().toArray() as GostKursklausur[]).some(kk => kk.id !== -1) ? addStatusColumn(colsKursklausuren) : colsKursklausuren">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button v-if="rowData.id !== -1" type="transparent" @click="async () => {
 						if (isAwaiting) return;
 						isAwaiting = true;
 						try {
-							await loescheKursklausuren(ListUtils.create1(rowData));
+							await state.loescheKursklausuren(ListUtils.create1(rowData));
 						} finally {
 							isAwaiting = false;
 						}
@@ -118,13 +118,13 @@
 					</svws-ui-button>
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(rowData)}`">{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}</span>
+					<s-gost-klausurplanung-kurs-badge :kursklausur="rowData" :tooltip="false" :show-bemerkungen="false" />
 				</template>
 				<template #cell(lehrer)="{ rowData }">
-					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+					{{ state.manager.kursLehrerKuerzelByKursklausur(rowData) }}
 				</template>
 				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
+					{{ state.manager.vorgabeByKursklausur(rowData).quartal }}
 				</template>
 			</svws-ui-table>
 			<template #buttonFooterLeft>
@@ -133,20 +133,20 @@
 					Fehlende Kursklausuren erstellen
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!kursklausurenNichtVerteilt().isEmpty()" icon="i-ri-book-2-line" title="Nicht verteilte Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="kursklausurenNichtVerteilt().size() + ' nicht verteilte Kursklausur' + (kursklausurenNichtVerteilt().size() === 1 ? '' : 'en') + ' gefunden.'"
-			:is-open="currentAction === 'kursklausuren_nicht_verteilt'" @update:is-open="(isOpen) => setCurrentAction('kursklausuren_nicht_verteilt', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="kursklausuren_nicht_verteilt" v-model:current-action="currentAction" :show="!kursklausurenNichtVerteilt().isEmpty()"
+			icon="i-ri-book-2-line" title="Nicht verteilte Kursklausuren" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="kursklausurenNichtVerteilt().size() + ' nicht verteilte Kursklausur' + (kursklausurenNichtVerteilt().size() === 1 ? '' : 'en') + ' gefunden.'">
 			<svws-ui-table :items="kursklausurenNichtVerteilt()" :columns="colsKursklausuren">
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(rowData)}`">{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}</span>
+					<s-gost-klausurplanung-kurs-badge :kursklausur="rowData" :tooltip="false" :show-bemerkungen="false" />
 				</template>
 				<template #cell(lehrer)="{ rowData }">
-					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+					{{ state.manager.kursLehrerKuerzelByKursklausur(rowData) }}
 				</template>
 				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
+					{{ state.manager.vorgabeByKursklausur(rowData).quartal }}
 				</template>
 			</svws-ui-table>
 			<template #buttonFooterLeft>
@@ -155,17 +155,16 @@
 					Zur Schienenansicht
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!termineOhneStundenplan().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne gültigen Stundenplan" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="termineOhneStundenplan().size() + ' Klausurtermin' + (termineOhneStundenplan().size() === 1 ? '' : 'e') + ' ohne gültigen Stundenplan gefunden.'" :is-open="currentAction === 'termine_ohne_stundenplan'"
-			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_stundenplan', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="termine_ohne_stundenplan" v-model:current-action="currentAction" :show="!termineOhneStundenplan().isEmpty()"
+			icon="i-ri-calendar-event-line" title="Klausurtermine ohne gültigen Stundenplan" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="termineOhneStundenplan().size() + ' Klausurtermin' + (termineOhneStundenplan().size() === 1 ? '' : 'e') + ' ohne gültigen Stundenplan gefunden.'">
 			<svws-ui-table :items="termineOhneStundenplan()" :columns="colsTermine">
 				<template #cell(kurse)="{ rowData }">
 					<div class="flex flex-wrap">
-						<span v-for="kurs in terminBezeichnung(rowData)" :key="kurs.text ?? kurs" class="svws-ui-badge mr-1 whitespace-nowrap" :style="kurs.text ? `color: var(--color-text-uistatic); background-color: ${kurs.farbe}` : ''">
-							{{ kurs.text ?? kurs }}
-						</span>
+						<s-gost-klausurplanung-kurs-badge v-for="klausur in kursklausurenByTermin(rowData)" :key="klausur.id" class="mr-1"
+							:kursklausur="klausur" :termin="rowData" :tooltip="false" :show-bemerkungen="false" />
 					</div>
 				</template>
 				<template #cell(quartal)="{ rowData }">
@@ -178,12 +177,11 @@
 					Zur Stundenplandefinition
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!termineMitKonflikten().isEmpty()" icon="i-ri-alert-line" title="Klausurtermine mit Schülerkonflikten" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="termineMitKonflikten().size() + ' Klausurtermin' + (termineMitKonflikten().size() === 1 ? '' : 'e') + ' mit Schülerkonflikten gefunden.'"
-			:is-open="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
-			@update:is-open="(isOpen) => setCurrentAction('klausurtermine_mit_schuelerkonflikten', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="klausurtermine_mit_schuelerkonflikten" v-model:current-action="currentAction" :show="!termineMitKonflikten().isEmpty()"
+			icon="i-ri-alert-line" title="Klausurtermine mit Schülerkonflikten" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="termineMitKonflikten().size() + ' Klausurtermin' + (termineMitKonflikten().size() === 1 ? '' : 'e') + ' mit Schülerkonflikten gefunden.'">
 			<svws-ui-table :items="termineMitKonflikten()" :columns="addStatusColumn(colsTermine, 'Gehe zu')">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button type="transparent" @click="gotoSchienen(rowData)"
@@ -193,44 +191,42 @@
 				</template>
 				<template #cell(kurse)="{ rowData }">
 					<div class="flex flex-wrap">
-						<span v-for="kurs in terminBezeichnung(rowData)" :key="kurs.text ?? kurs" class="svws-ui-badge mr-1 whitespace-nowrap" :style="kurs.text ? `color: var(--color-text-uistatic); background-color: ${kurs.farbe}` : ''">
-							{{ kurs.text ?? kurs }}
-						</span>
+						<s-gost-klausurplanung-kurs-badge v-for="klausur in kursklausurenByTermin(rowData)" :key="klausur.id" class="mr-1"
+							:kursklausur="klausur" :termin="rowData" :tooltip="false" :show-bemerkungen="false" />
 					</div>
 				</template>
 				<template #cell(quartal)="{ rowData }">
 					{{ rowData.quartal }}
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!termineOhneDatum().isEmpty()" icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum" :fehler="ValidatorFehlerart.KANN"
-			:subtitle="termineOhneDatum().size() + ' Klausurtermin' + (termineOhneDatum().size() === 1 ? '' : 'e') + ' ohne Datum gefunden.'" :is-open="currentAction === 'termine_ohne_datum'"
-			@update:is-open="(isOpen) => setCurrentAction('termine_ohne_datum', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="termine_ohne_datum" v-model:current-action="currentAction" :show="!termineOhneDatum().isEmpty()"
+			icon="i-ri-calendar-event-line" title="Klausurtermine ohne Datum" :fehler="ValidatorFehlerart.KANN"
+			:subtitle="termineOhneDatum().size() + ' Klausurtermin' + (termineOhneDatum().size() === 1 ? '' : 'e') + ' ohne Datum gefunden.'">
 			<svws-ui-table :items="termineOhneDatum()" :columns="addStatusColumn(colsTermine, 'Gehe zu')">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button type="transparent" @click="gotoKalenderdatum(undefined, rowData)"
 						title="Datum setzen" size="small"
-						:disabled="abschnitt === undefined || !kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id)">
+						:disabled="(state.abschnitt === undefined) || !state.manager.stundenplanManagerExistsByAbschnitt(state.abschnitt.id)">
 						<span class="icon i-ri-link" /> datieren
 					</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{ rowData }">
 					<div class="flex flex-wrap">
-						<span v-for="kurs in terminBezeichnung(rowData)" :key="kurs.text ?? kurs" class="svws-ui-badge mr-1 whitespace-nowrap" :style="kurs.text ? `color: var(--color-text-uistatic); background-color: ${kurs.farbe}` : ''">
-							{{ kurs.text ?? kurs }}
-						</span>
+						<s-gost-klausurplanung-kurs-badge v-for="klausur in kursklausurenByTermin(rowData)" :key="klausur.id" class="mr-1"
+							:kursklausur="klausur" :termin="rowData" :tooltip="false" :show-bemerkungen="false" />
 					</div>
 				</template>
 				<template #cell(quartal)="{ rowData }">
 					{{ rowData.quartal }}
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!termineUnvollstaendigeRaumzuweisung().isEmpty()" icon="i-ri-team-line" title="Klausurtermine mit unvollständiger Raumplanung" :fehler="ValidatorFehlerart.KANN"
-			:subtitle="termineUnvollstaendigeRaumzuweisung().size() + ' Klausurtermin' + (termineUnvollstaendigeRaumzuweisung().size() === 1 ? '' : 'e') + ' mit unvollständiger Raumplanung gefunden.'"
-			:is-open="currentAction === 'termine_ohne_raumplanung'" @update:is-open="(isOpen) => setCurrentAction('termine_ohne_raumplanung', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="termine_ohne_raumplanung" v-model:current-action="currentAction" :show="!termineUnvollstaendigeRaumzuweisung().isEmpty()"
+			icon="i-ri-team-line" title="Klausurtermine mit unvollständiger Raumplanung" :fehler="ValidatorFehlerart.KANN"
+			:subtitle="termineUnvollstaendigeRaumzuweisung().size() + ' Klausurtermin' + (termineUnvollstaendigeRaumzuweisung().size() === 1 ? '' : 'e') + ' mit unvollständiger Raumplanung gefunden.'">
 			<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()" :columns="addStatusColumn(colsTermine, 'Gehe zu')">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button type="transparent"
@@ -241,20 +237,19 @@
 				</template>
 				<template #cell(kurse)="{ rowData }">
 					<div class="flex flex-wrap">
-						<span v-for="kurs in terminBezeichnung(rowData)" :key="kurs.text ?? kurs" class="svws-ui-badge mr-1 whitespace-nowrap" :style="kurs.text ? `color: var(--color-text-uistatic); background-color: ${kurs.farbe}` : ''">
-							{{ kurs.text ?? kurs }}
-						</span>
+						<s-gost-klausurplanung-kurs-badge v-for="klausur in kursklausurenByTermin(rowData)" :key="klausur.id" class="mr-1"
+							:kursklausur="klausur" :termin="rowData" :tooltip="false" :show-bemerkungen="false" />
 					</div>
 				</template>
 				<template #cell(quartal)="{ rowData }">
 					{{ rowData.quartal }}
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="termineOhneStundenplan().isEmpty() && !raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten" :fehler="ValidatorFehlerart.KANN"
-			:subtitle="raumkapazitaetUeberschritten().size() + ' Klausurtermin' + (raumkapazitaetUeberschritten().size() === 1 ? '' : 'e') + ' mit überschrittener Raumkapazität gefunden.'"
-			:is-open="currentAction === 'termine_raumkapazität'" @update:is-open="(isOpen) => setCurrentAction('termine_raumkapazität', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="termine_raumkapazität" v-model:current-action="currentAction"
+			:show="termineOhneStundenplan().isEmpty() && !raumkapazitaetUeberschritten().isEmpty()" icon="i-ri-team-line" title="Raumkapazität überschritten" :fehler="ValidatorFehlerart.KANN"
+			:subtitle="raumkapazitaetUeberschritten().size() + ' Klausurtermin' + (raumkapazitaetUeberschritten().size() === 1 ? '' : 'e') + ' mit überschrittener Raumkapazität gefunden.'">
 			<svws-ui-table :items="raumkapazitaetUeberschritten()" :columns="addStatusColumn(colsTermine, 'Gehe zu')">
 				<template #cell(status)="{ rowData }">
 					<svws-ui-button type="transparent"
@@ -265,91 +260,89 @@
 				</template>
 				<template #cell(kurse)="{ rowData }">
 					<div class="flex flex-wrap">
-						<span v-for="kurs in terminBezeichnung(rowData)" :key="kurs.text ?? kurs" class="svws-ui-badge mr-1 whitespace-nowrap" :style="kurs.text ? `color: var(--color-text-uistatic); background-color: ${kurs.farbe}` : ''">
-							{{ kurs.text ?? kurs }}
-						</span>
+						<s-gost-klausurplanung-kurs-badge v-for="klausur in kursklausurenByTermin(rowData)" :key="klausur.id" class="mr-1"
+							:kursklausur="klausur" :termin="rowData" :tooltip="false" :show-bemerkungen="false" />
 					</div>
 				</template>
 				<template #cell(quartal)="{ rowData }">
 					{{ rowData.quartal }}
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card v-if="!nachschreibklausurenNichtZugewiesen().isEmpty()" icon="i-ri-spam-3-line" title="Nicht zugewiesene Nachschreibklausuren" :fehler="ValidatorFehlerart.KANN"
-			:subtitle="nachschreibklausurenNichtZugewiesen().size() + ' nicht zugewiesene Nachschreibklausur' + (nachschreibklausurenNichtZugewiesen().size() === 1 ? '' : 'en') + ' gefunden.'"
-			:is-open="currentAction === 'nachschreibklausuren_nicht_zugewiesen'"
-			@update:is-open="(isOpen) => setCurrentAction('nachschreibklausuren_nicht_zugewiesen', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="nachschreibklausuren_nicht_zugewiesen" v-model:current-action="currentAction"
+			:show="!nachschreibklausurenNichtZugewiesen().isEmpty()" icon="i-ri-spam-3-line" title="Nicht zugewiesene Nachschreibklausuren" :fehler="ValidatorFehlerart.KANN"
+			:subtitle="nachschreibklausurenNichtZugewiesen().size() + ' nicht zugewiesene Nachschreibklausur' + (nachschreibklausurenNichtZugewiesen().size() === 1 ? '' : 'en') + ' gefunden.'">
 			<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()" :columns="colsSchuelerklausuren">
 				<template #cell(name)="{ rowData }">
-					<span>{{ kMan().schuelerGetBySchuelerklausurtermin(rowData).nachname }},
-						{{ kMan().schuelerGetBySchuelerklausurtermin(rowData).vorname }}</span>
+					<span>{{ presenter.schuelerNameBySchuelerklausurtermin(rowData) }}</span>
 				</template>
 				<template #cell(kurs)="{ rowData }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(rowData)}`">{{ kMan().kursdatenBySchuelerklausurtermin(rowData).kuerzel }}</span>
+					<s-gost-klausurplanung-kurs-badge :schuelerklausurtermin="rowData" :tooltip="false" :show-bemerkungen="false" />
 				</template>
 				<template #cell(quartal)="{ rowData }">
-					{{ kMan().vorgabeBySchuelerklausurtermin(rowData).quartal }}
+					{{ state.manager.vorgabeBySchuelerklausurtermin(rowData).quartal }}
 				</template>
 			</svws-ui-table>
 
 			<template #buttonFooterLeft>
 				<svws-ui-button title="Zur Nachschreiberansicht"
-					@click="gotoNachschreiber(jahrgangsdaten!.abiturjahr, halbjahr)"
+					@click="gotoNachschreiber(state.jahrgangsdaten.abiturjahr, state.halbjahr)"
 					class="mt-2">
 					<span class="icon i-ri-play-line" />
 					Zur Nachschreiberansicht
 				</svws-ui-button>
 			</template>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card icon="i-ri-alert-line" :collapsible="!klausurenProKwWarning().isEmpty()" :fehler="ValidatorFehlerart.KANN"
-			:is-open="!klausurenProKwWarning().isEmpty() && currentAction === 'konflikt_drei_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_drei_wochenklausuren', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="konflikt_drei_wochenklausuren" v-model:current-action="currentAction" icon="i-ri-alert-line"
+			:collapsible="!klausurenProKwWarning().isEmpty()" :can-open="!klausurenProKwWarning().isEmpty()" :fehler="ValidatorFehlerart.KANN">
 			<template #title>
 				<div class="ui-card--header--title flex items-center gap-3">
 					Warnung für Schüler mit
-					<div @click.stop>
-						<svws-ui-input-number headless v-model="kwWarnLimit" :min="2" :max="5" />
+					<div class="w-20 shrink-0" @click.stop>
+						<svws-ui-input-number class="w-full" headless :model-value="state.kwWarnLimit" @update:model-value="state.setKwWarnLimit" :min="2" :max="5" />
 					</div>
 					oder mehr Klausuren in einer Woche
 				</div>
 			</template>
 			<template #subtitle>
 				<div class="flex">
-					<span>{{ klausurenProKwWarning().size() === 0 ? 'Keine' : klausurenProKwWarning().size() }} Schüler mit {{ kwWarnLimit }}&nbsp;</span>
-					<span v-if="kwErrorLimit - 1 > kwWarnLimit">bis {{ kwErrorLimit - 1 }}&nbsp;</span>
+					<span>{{ klausurenProKwWarning().size() === 0 ? 'Keine' : klausurenProKwWarning().size() }} Schüler mit {{ state.kwWarnLimit }}&nbsp;</span>
+					<span v-if="state.kwErrorLimit - 1 > state.kwWarnLimit">bis {{ state.kwErrorLimit - 1 }}&nbsp;</span>
 					<span>Klausuren in einer Woche gefunden.</span>
 				</div>
 			</template>
 			<svws-ui-table :items="klausurenProKwWarning()" :columns="colsKwKonflikte">
 				<template #cell(kw)="{ rowData }">
 					<svws-ui-button type="transparent"
-						@click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurtermin(rowData.b.getFirst()!).datum!, undefined)"
+						@click="gotoKalenderdatum(state.manager.terminOrExceptionBySchuelerklausurtermin(rowData.b.getFirst()!).datum!, undefined)"
 						title="Springe zu Kalenderwoche" size="small">
 						<span class="icon i-ri-link" /> {{ rowData.a.a }}
 					</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{ rowData }">
-					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }},
-					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}
+					{{ schuelerName(rowData.a.b) }}
 				</template>
 				<template #cell(klausuren)="{rowData}">
-					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-uistatic); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurtermin(klausur))};`">
-						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurtermin(klausur)) }}</span>
-						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurtermin(klausur).datum!) }}</span>
-					</span>
+					<div class="grid grid-cols-4 gap-x-1 gap-y-2">
+						<span v-for="klausur in rowData.b" :key="klausur.id" class="flex flex-col items-center">
+							<s-gost-klausurplanung-kurs-badge :schuelerklausurtermin="klausur" :tooltip="false" :show-bemerkungen="false" />
+							<span class="text-sm font-medium">{{ datumText(klausur) }}</span>
+						</span>
+					</div>
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 
-		<ui-card icon="i-ri-alert-fill" :collapsible="!klausurenProKwError().isEmpty()" :fehler="ValidatorFehlerart.MUSS"
-			:subtitle="(klausurenProKwError().size() === 0 ? 'Keine' : klausurenProKwError().size()) + ' Schüler mit ' + kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'"
-			:is-open="!klausurenProKwError().isEmpty() && currentAction === 'konflikt_vier_wochenklausuren'" @update:is-open="(isOpen) => setCurrentAction('konflikt_vier_wochenklausuren', isOpen)">
+		<s-gost-klausurplanung-problem-card problem-id="konflikt_vier_wochenklausuren" v-model:current-action="currentAction" icon="i-ri-alert-fill"
+			:collapsible="!klausurenProKwError().isEmpty()" :can-open="!klausurenProKwError().isEmpty()" :fehler="ValidatorFehlerart.MUSS"
+			:subtitle="(klausurenProKwError().size() === 0 ? 'Keine' : klausurenProKwError().size()) + ' Schüler mit ' + state.kwErrorLimit + ' oder mehr Klausuren in einer Woche gefunden.'">
 			<template #title>
 				<div class="ui-card--header--title flex items-center gap-3">
 					Fehler für Schüler mit
-					<div @click.stop>
-						<svws-ui-input-number headless v-model="kwErrorLimit" :min="3" :max="5" />
+					<div class="w-20 shrink-0" @click.stop>
+						<svws-ui-input-number class="w-full" headless :model-value="state.kwErrorLimit" @update:model-value="state.setKwErrorLimit" :min="3" :max="5" />
 					</div>
 					oder mehr Klausuren in einer Woche
 				</div>
@@ -357,98 +350,91 @@
 			<svws-ui-table :items="klausurenProKwError()" :columns="colsKwKonflikte">
 				<template #cell(kw)="{ rowData }">
 					<svws-ui-button type="transparent"
-						@click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurtermin(rowData.b.getFirst()!).datum!, undefined)"
+						@click="gotoKalenderdatum(state.manager.terminOrExceptionBySchuelerklausurtermin(rowData.b.getFirst()!).datum!, undefined)"
 						title="Springe zu Kalenderwoche" size="small">
 						<span class="icon i-ri-link" /> {{ rowData.a.a }}
 					</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{ rowData }">
 					<span>
-						{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }},
-						{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}
+						{{ schuelerName(rowData.a.b) }}
 					</span>
 				</template>
 				<template #cell(klausuren)="{rowData}">
-					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`color: var(--color-text-uistatic); background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurtermin(klausur))};`">
-						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurtermin(klausur)) }}</span>
-						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurtermin(klausur).datum!) }}</span>
-					</span>
+					<div class="grid grid-cols-4 gap-x-1 gap-y-2">
+						<span v-for="klausur in rowData.b" :key="klausur.id" class="flex flex-col items-center">
+							<s-gost-klausurplanung-kurs-badge :schuelerklausurtermin="klausur" :tooltip="false" :show-bemerkungen="false" />
+							<span class="text-sm font-medium">{{ datumText(klausur) }}</span>
+						</span>
+					</div>
 				</template>
 			</svws-ui-table>
-		</ui-card>
+		</s-gost-klausurplanung-problem-card>
 	</div>
 
 	<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="gotoVorgaben" jump-to-text="Zu den Klausurvorgaben" abbrechen-text="OK" />
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted, computed } from 'vue';
-	import type { DataTableColumn } from "@ui";
-	import type { GostKlausurtermin, GostKursklausur } from "@core";
-	import { DateUtils, Fach, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart, GostSchuelerklausur, GostSchuelerklausurtermin	} from "@core";
-	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
+	import { ref, onMounted } from 'vue';
+	import { useConfigState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
+	import type { GostKlausurtermin, GostKursklausur, GostSchuelerklausurtermin, SchuelerListeEintrag } from "@core";
+	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
+	import SGostKlausurplanungProblemCard from "./SGostKlausurplanungProblemCard.vue";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
-	const props = defineProps<GostKlausurplanungProblemeProps>();
+	type KlausurplanungProblemId =
+		| "stundenplan_fehlend"
+		| "vorgaben_fehlend"
+		| "schuelerklausurmenge_abweichend"
+		| "kursklausuren_fehlend"
+		| "kursklausuren_nicht_verteilt"
+		| "termine_ohne_stundenplan"
+		| "klausurtermine_mit_schuelerkonflikten"
+		| "termine_ohne_datum"
+		| "termine_ohne_raumplanung"
+		| "termine_raumkapazität"
+		| "nachschreibklausuren_nicht_zugewiesen"
+		| "konflikt_drei_wochenklausuren"
+		| "konflikt_vier_wochenklausuren";
 
-	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(props.getObjectValue, props.setObjectValue);
+	const { gotoKalenderdatum, gotoNachschreiber, gotoRaumzeitTermin, gotoSchienen, gotoStundenplan, gotoVorgaben } = defineProps<{
+		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
+		gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => Promise<void>;
+		gotoSchienen: (termin: GostKlausurtermin | undefined) => Promise<void>;
+		gotoStundenplan: () => Promise<void>;
+		gotoVorgaben: () => Promise<void>;
+	}>();
+	const state = useGostKlausurplanungState();
+	const configState = useConfigState();
+	const presenter = useKlausurplanungPresenter(state);
+
+	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
+		(key, fromJSON) => configState.config.getObjectValue(key, fromJSON),
+		(key, value, toJSON) => configState.config.setObjectValue(key, value, toJSON)
+	);
 
 	const ignoreVorgabenToggle = ref<boolean>(true);
 
-	const vorgaben = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, (ignoreVorgabenToggle.value ? vorgabenIgnoreManager.getAll() : null));
-	const vorgabenAlle = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, null);
+	const vorgaben = () => state.manager.vorgabefehlendGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, (ignoreVorgabenToggle.value ? vorgabenIgnoreManager.getAll() : null));
+	const vorgabenAlle = () => state.manager.vorgabefehlendGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, null);
 	const vorgabenAnzahlAusgeblendet = () => vorgabenIgnoreManager.countContained(vorgabenAlle());
-	const kursklausuren = () => props.kMan().kursklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const kursklausurenNichtVerteilt = () => props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const schuelerklausuren = () => props.kMan().schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const termineOhneDatum = () => props.kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const termineOhneStundenplan = () => props.kMan().terminOhneStundenplanGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const termineMitKonflikten = () => props.kMan().terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const termineUnvollstaendigeRaumzuweisung = () => props.kMan().terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const raumkapazitaetUeberschritten = () => props.kMan().terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const nachschreibklausurenNichtZugewiesen = () => props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
-	const klausurenProKwWarning = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, kwWarnLimit.value, kwErrorLimit.value);
-	const klausurenProKwError = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, kwErrorLimit.value, -1);
+	const kursklausuren = () => state.manager.kursklausurfehlendGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const kursklausurenNichtVerteilt = () => state.manager.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const schuelerklausuren = () => state.manager.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const termineOhneDatum = () => state.manager.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const termineOhneStundenplan = () => state.manager.terminOhneStundenplanGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const termineMitKonflikten = () => state.manager.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const termineUnvollstaendigeRaumzuweisung = () => state.manager.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const raumkapazitaetUeberschritten = () => state.manager.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const nachschreibklausurenNichtZugewiesen = () => state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+	const klausurenProKwWarning = () => state.manager.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, state.kwWarnLimit, state.kwErrorLimit);
+	const klausurenProKwError = () => state.manager.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, state.kwErrorLimit, -1);
 
-	const oldAction = ref({
-		name: "",
-		open: false,
-	});
-	const currentAction = ref<string>('');
+	const currentAction = ref<KlausurplanungProblemId | "">('');
 	const isAwaiting = ref(false);
-
-	const kwWarnLimit = computed<number>({
-		get: () => props.getConfigNumberValue("kwWarnLimit"),
-		set: (value) => {
-			if (value > kwErrorLimit.value) {
-				kwErrorLimit.value = value;
-			}
-			props.setConfigValue("kwWarnLimit", value).catch(() => {});
-		},
-	});
-
-	const kwErrorLimit = computed<number>({
-		get: () => props.getConfigNumberValue("kwErrorLimit"),
-		set: (value) => {
-			if (value < kwWarnLimit.value) {
-				kwWarnLimit.value = value;
-			}
-			props.setConfigValue("kwErrorLimit", value).catch(() => {});
-		},
-	});
-
-	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open) {
-			return;
-		}
-		oldAction.value.name = currentAction.value;
-		oldAction.value.open = currentAction.value !== "";
-		if (open) {
-			currentAction.value = newAction;
-		} else {
-			currentAction.value = "";
-		}
-	}
 
 	const isMounted = ref(false);
 	onMounted(() => {
@@ -491,70 +477,36 @@
 		return newColumns;
 	}
 
-	function getBgColor(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin): string {
-		const kuerzel = resolveFachkuerzel(input);
-		if (kuerzel === null) {
-			return "rgb(220,220,220)";
-		}
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1);
+	function getBgColor(idFach: number): string {
+		const fach = state.manager.getFaecherManager(state.jahrgangsdaten.abiturjahr).get(idFach);
+		const kuerzel = fach?.kuerzel ?? null;
+		return presenter.fachFarbeByKuerzel(kuerzel);
 	}
 
 	function fachBezeichnungById(idFach: number): string {
-		return props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(idFach)?.bezeichnung ?? `Fach-ID ${idFach}`;
+		return state.manager.getFaecherManager(state.jahrgangsdaten.abiturjahr).get(idFach)?.bezeichnung ?? `Fach-ID ${idFach}`;
 	}
 
 	function fachFehltText(idFach: number): string | undefined {
-		return props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(idFach) === null ? `Fach mit ID ${idFach} ist nicht als Fach der Oberstufe definiert.` : undefined;
+		return state.manager.getFaecherManager(state.jahrgangsdaten.abiturjahr).get(idFach) === null ? `Fach mit ID ${idFach} ist nicht als Fach der Oberstufe definiert.` : undefined;
 	}
 
-	function resolveFachkuerzel(input: string | number | null | GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin): string | null {
-		if (input === null) {
-			return null;
-		}
-		if (typeof input === "string") {
-			return input;
-		}
-		if (typeof input === "number") {
-			const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(input);
-			return fach?.kuerzel ?? null;
-		}
-		let vorgabe;
-		if (input instanceof GostSchuelerklausur) {
-			vorgabe = props.kMan().vorgabeBySchuelerklausur(input);
-		} else if (input instanceof GostSchuelerklausurtermin) {
-			vorgabe = props.kMan().vorgabeBySchuelerklausurtermin(input);
-		} else {
-			return props.kMan().fachOrNullByKursklausur(input)?.kuerzel ?? null;
-		}
-		const fach = props.kMan().fachOrNullByVorgabe(vorgabe);
-		return fach?.kuerzel ?? null;
+	const kursklausurenByTermin = (termin: GostKlausurtermin) => state.manager.kursklausurGetMengeByTermin(termin);
+
+	function datumText(klausur: GostSchuelerklausurtermin): string {
+		return DateUtils.gibDatumGermanFormat(state.manager.terminOrExceptionBySchuelerklausurtermin(klausur).datum!).slice(0, 6);
 	}
 
-	type KursBadge = { text: string; farbe: string | null };
-	const terminBezeichnung = (termin: GostKlausurtermin): KursBadge[] => {
-		const wrap = (text: string): KursBadge => ({ text, farbe: null });
-		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0) {
-			return [wrap(termin.bezeichnung)];
-		}
-		if (!termin.istHaupttermin) {
-			return [wrap("Nachschreibtermin")];
-		}
-		const menge = props.kMan().kursklausurGetMengeByTermin(termin);
-		if (menge.size() > 0) {
-			return [...menge].map(k => ({
-				text: props.kMan().kursKurzbezeichnungByKursklausur(k),
-				farbe: getBgColor(k),
-			}));
-		}
-		return [wrap("Leerer Klausurtermin")];
-	};
+	function schuelerName(schueler: SchuelerListeEintrag): string {
+		return `${schueler.nachname}, ${schueler.vorname}`;
+	}
 
 	const modalVorgaben = ref<boolean>(false);
 	const modalError = ref<string | undefined>(undefined);
 
 	async function erzeugeKursklausurenAusVorgabenOrModal() {
 		try {
-			await props.erzeugeKursklausurenAusVorgaben(props.quartalsauswahl.value);
+			await state.erzeugeKursklausurenAusVorgaben(state.quartal);
 		} catch (err) {
 			if (err instanceof OpenApiError) {
 				modalError.value = await err.response?.text();

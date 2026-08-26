@@ -1,11 +1,10 @@
-import type { RouteLocationNormalized, RouteParams } from "vue-router";
+import type { RouteParams } from "vue-router";
 
 import type { DeveloperNotificationException } from "@core";
 import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
-import type { GostKlausurplanungNachschreibAnsichtProps } from "~/components/gost/klausuren/SGostKlausurplanungNachschreibAnsichtProps";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 
@@ -19,29 +18,24 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 		], "gost.klausurplanung.nachschreibansicht", "nachschreibansicht", SGostKlausurplanungNachschreibAnsicht);
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
 		super.text = "Nachschreibplan";
+		this.isHidden = (params?: RouteParams) => {
+			return this.checkHidden(params);
+		};
 	}
 
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
-			return ((abiturjahr === undefined) || (abiturjahr === -1));
+			if ((abiturjahr === undefined) || (abiturjahr === -1)) {
+				return { name: routeGostKlausurplanung.defaultChild!.name, params };
+			}
+			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreibAnsichtProps {
-		return {
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
-			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			kMan: () => routeGostKlausurplanung.data.manager,
-			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
-		};
-	}
-
 }
 
 export const routeGostKlausurplanungNachschreibAnsicht = new RouteGostKlausurplanungNachschreibAnsicht();
-

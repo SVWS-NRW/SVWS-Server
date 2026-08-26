@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr :zeige-alle-jahrgaenge :set-zeige-alle-jahrgaenge />
+		<s-gost-klausurplanung-quartal-auswahl show-alle-jahrgaenge />
 	</Teleport>
 
 	<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="big">
@@ -18,21 +18,21 @@
 					</slot>
 				</template>
 				<template #body>
-					<template v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)" :key="termin.id">
-						<div class="svws-ui-tr" role="row" style="grid-template-columns: 2rem 8rem 4rem minmax(4rem, 1fr)">
-							<div class="svws-ui-td" role="cell">
-								<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''"
-									:disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen"
-									@update:model-value="nachschreiberZugelassen => patchKlausurtermin(termin.id, { nachschreiberZugelassen } )" />
+					<template v-for="termin in state.manager.terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal)" :key="termin.id">
+						<div class="svws-ui-tr" style="grid-template-columns: 2rem 8rem 4rem minmax(4rem, 1fr)">
+							<div class="svws-ui-td">
+								<svws-ui-checkbox :title="state.manager.schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''"
+									:disabled="state.manager.schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen"
+									@update:model-value="nachschreiberZugelassen => state.patchKlausurtermin(termin.id, { nachschreiberZugelassen } )" />
 							</div>
-							<div class="svws-ui-td" role="cell">
+							<div class="svws-ui-td">
 								{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
 							</div>
-							<div class="svws-ui-td" role="cell">
-								{{ kMan().schuelerklausurterminGetMengeByTermin(termin).size() }}
+							<div class="svws-ui-td">
+								{{ state.manager.schuelerklausurterminGetMengeByTermin(termin).size() }}
 							</div>
-							<div class="svws-ui-td" role="cell">
-								{{ [...kMan().kursklausurGetMengeByTermin(termin)].map(k => kMan().kursKurzbezeichnungByKursklausur(k)).join(", ") }}
+							<div class="svws-ui-td">
+								{{ [...state.manager.kursklausurGetMengeByTermin(termin)].map(k => state.manager.kursKurzbezeichnungByKursklausur(k)).join(", ") }}
 							</div>
 						</div>
 					</template>
@@ -61,43 +61,82 @@
 		</template>
 	</svws-ui-modal>
 
-	<div class="page page-flex-row">
-		<div class="min-w-180 max-w-180 flex flex-col gap-2">
-			<div class="text-headline-md">In Planung</div>
-			<div class="flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()"
-				:class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurtermin && dragData.idTermin !== null) ? 'border-ui-danger ring-4 ring-ui-danger/10 border-2 rounded-xl border-dashed' : '']">
-				<s-gost-klausurplanung-schuelerklausur-table :k-man
-					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
-					:on-drag
-					:draggable="() => hatKompetenzUpdate"
-					:selected-items="selectedNachschreiber">
-					<template #noData>
-						<div class="leading-tight flex flex-col gap-0.5">
-							<span>Aktuell keine Nachschreibklausuren zu planen.</span>
-							<span class="opacity-50">Bereits geplante Klausuren können hier zurückgelegt werden.</span>
-						</div>
+	<s-gost-klausurplanung-layout sidebar-title="In Planung"
+		:sidebar-drop-enabled="nachschreiberDragDataHatTermin(dragData)"
+		@sidebar-drop="onDrop(undefined)">
+		<template #sidebar>
+			<s-gost-klausurplanung-sidebar-liste :empty="state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal).isEmpty()">
+				<template #empty>
+					<span>Aktuell keine Nachschreibklausuren zu planen.</span>
+					<span class="opacity-50">Bereits geplante Klausuren können hier zurückgelegt werden.</span>
+				</template>
+				<template #beforeList>
+					<div class="mb-2 px-1">
+						<svws-ui-checkbox :model-value="selectedNachschreiber.containsAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal))" @update:model-value="selectedNachschreiber.containsAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal)) ? selectedNachschreiber.clear() : selectedNachschreiber.addAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal))">Alle auswählen</svws-ui-checkbox>
+					</div>
+				</template>
+				<s-gost-klausurplanung-sidebar-eintrag v-for="schuelertermin in state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal)" :key="schuelertermin.id"
+					:id="`nachschreiber-sidebar-${schuelertermin.id}`"
+					:data="schuelertermin"
+					:draggable="draggable(schuelertermin)"
+					selectable
+					:checked="selectedNachschreiber.contains(schuelertermin)"
+					:selected="selectedNachschreiber.contains(schuelertermin)"
+					:dragging="isDraggedNachschreiber(schuelertermin)"
+					:title="presenter.schuelerNameBySchuelerklausurtermin(schuelertermin)"
+					@update:checked="selectedNachschreiber.contains(schuelertermin) ? selectedNachschreiber.remove(schuelertermin) : selectedNachschreiber.add(schuelertermin)"
+					@dragstart="onDrag($event, schuelertermin);$event.stopPropagation()"
+					@dragend="onDrag($event, undefined);$event.stopPropagation()">
+					<template #badge>
+						<s-gost-klausurplanung-kurs-badge :schuelerklausurtermin="schuelertermin" :tooltip="false" />
 					</template>
-				</s-gost-klausurplanung-schuelerklausur-table>
-			</div>
-		</div>
-		<div class="grow flex flex-col gap-8 w-full overflow-hidden">
+					<template #titleMeta>
+						{{ state.manager.kursLehrerKuerzelByKursklausur(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}
+					</template>
+					<template #meta>
+						<span v-if="multijahrgang()" class="opacity-60">{{ presenter.schuelerklausurterminJahrgangText(schuelertermin) }}</span>
+						<span>{{ state.manager.vorgabeBySchuelerklausurtermin(schuelertermin).dauer }} Min.</span>
+					</template>
+					<template #tooltip>
+						<dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1">
+							<dt class="col-span-2 text-base font-bold">{{ state.manager.kursKurzbezeichnungByKursklausur(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}</dt>
+							<dt class="opacity-60">Fachlehrer</dt>
+							<dd>{{ presenter.kursLehrerNameText(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}</dd>
+							<dt class="opacity-60">Kursgröße</dt>
+							<dd>{{ state.manager.kursAnzahlSchuelerGesamtByKursklausur(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}</dd>
+							<dt class="opacity-60">Klausurschreiber</dt>
+							<dd>{{ state.manager.kursAnzahlKlausurschreiberByKursklausur(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}</dd>
+							<dt class="opacity-60">Klausurdauer</dt>
+							<dd>{{ state.manager.vorgabeBySchuelerklausurtermin(schuelertermin).dauer }} Min.</dd>
+							<dt class="opacity-60">Klausurdatum</dt>
+							<dd>{{ presenter.schuelerklausurterminVorgaengerDatumText(schuelertermin) }}</dd>
+							<dt class="opacity-60">Schiene</dt>
+							<dd>{{ presenter.kursSchieneText(state.manager.kursklausurBySchuelerklausurtermin(schuelertermin)) }}</dd>
+							<dt class="opacity-60">Versäumnisgrund</dt>
+							<dd class="whitespace-pre-wrap">{{ presenter.schuelerklausurterminVorgaengerBemerkung(schuelertermin) ?? "-" }}</dd>
+						</dl>
+					</template>
+				</s-gost-klausurplanung-sidebar-eintrag>
+			</s-gost-klausurplanung-sidebar-liste>
+		</template>
+		<template #workspace>
 			<div class="flex flex-col gap-4 w-full">
 				<div v-if="multijahrgang()" class="flex flex-col gap-4 rounded-lg bg-ui-warning-weak px-6 py-3 min-w-120 w-full">
 					<span class="leading-tight text-headline-md gap-1">
-						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))" class="icon i-ri-alert-fill icon-ui-danger px-4" />
+						<span v-if="(!state.zeigeAlleJahrgaenge && state.manager.terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, true))" class="icon i-ri-alert-fill icon-ui-danger px-4" />
 						<span>Jahrgangsübergreifende Planung</span>
-						<span v-if="(!zeigeAlleJahrgaenge() && kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
+						<span v-if="(!state.zeigeAlleJahrgaenge && state.manager.terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, true))"> aktiviert, da jahrgangsgemischte Termine existieren</span>
 					</span>
 					<ul>
 						<li class="flex font-bold">
-							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() }} Nachschreiber im akutellen Jahrgang,&nbsp;</span>
-							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+							<span>{{ state.manager.schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal).size() }} Nachschreiber im aktuellen Jahrgang,&nbsp;</span>
+							<span v-if="state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal).size() === 0" class="text-ui-success">alle zugewiesen.</span>
 							<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 						</li>
-						<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
-							<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
-								<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
-								<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() === 0" class="text-ui-success">alle zugewiesen.</span>
+						<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(state.jahrgangsdaten.abiturjahr, state.halbjahr, false)" :key="pair.a">
+							<li class="flex" v-if="state.manager.schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, state.quartal).size() > 0">
+								<span>{{ state.manager.schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, state.quartal).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
+								<span v-if="state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, state.quartal).size() === 0" class="text-ui-success">alle zugewiesen.</span>
 								<span v-else class="text-ui-danger">nicht alle zugewiesen.</span>
 								<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 							</li>
@@ -106,7 +145,7 @@
 				</div>
 				<div class="flex justify-between items-start">
 					<div class="flex flex-wrap items-center gap-2 w-full">
-						<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line" />Neuer Nachschreibtermin</svws-ui-button>
+						<svws-ui-button :disabled="!hatKompetenzUpdate" @click="state.erzeugeKlausurtermin(state.quartal, false)"><span class="icon i-ri-add-line" />Neuer Nachschreibtermin</svws-ui-button>
 						<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line" />Haupttermin zulassen</svws-ui-button>
 						<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 					</div>
@@ -117,22 +156,16 @@
 					<template v-if="termine.size()">
 						<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
 							:termin="() => termin"
-							:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurtermin).isEmpty()}"
-							:k-man
 							:drag-data
 							:on-drag
 							:on-drop
 							:draggable
 							:termin-selected="terminSelected?.id===termin.id"
 							@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
-							:loesche-klausurtermine
-							:patch-klausurtermin
 							:klausur-css-classes
-							:patch-klausur
 							:show-schuelerklausuren="true"
 							:goto-kalenderdatum
-							:goto-raumzeit-termin
-							:zeige-alle-jahrgaenge />
+							:goto-raumzeit-termin />
 					</template>
 					<template v-else>
 						<div class="shadow-inner rounded-lg h-48" />
@@ -141,28 +174,35 @@
 					</template>
 				</div>
 			</div>
-		</div>
-	</div>
+		</template>
+	</s-gost-klausurplanung-layout>
 </template>
 
 <script setup lang="ts">
-	import type { JavaSet } from "@core";
-	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurtermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList, BenutzerKompetenz } from "@core";
-	import { computed, ref, onMounted } from 'vue';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
-	import { useBenutzerState, type DataTableColumn } from "@ui";
+	import type { GostHalbjahr, JavaSet, List } from "@core";
+	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurtermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList, BenutzerKompetenz, ListUtils } from "@core";
+	import { computed, ref, onMounted, type HTMLAttributes } from 'vue';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone, GostNachschreiberDragData } from "./SGostKlausurplanung";
+	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
+	import { useBenutzerState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
+	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
-	const props = defineProps<GostKlausurplanungNachschreiberProps>();
-
+	const { gotoKalenderdatum, gotoNachschreiber, gotoRaumzeitTermin } = defineProps<{
+		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
+		gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => Promise<void>;
+	}>();
+	const state = useGostKlausurplanungState();
 	const benutzerState = useBenutzerState();
+	const presenter = useKlausurplanungPresenter(state);
 
 	const showModalTerminGrund = ref<boolean>(false);
 	const showModalAutomatischBlocken = ref<boolean>(false);
 	const nachschreiber_der_selben_klausur_auf_selbe_termine = ref(false);
 	const gleiche_fachart_auf_selbe_termine = ref(false);
 
-	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, true);
+	const multijahrgang = () => state.zeigeAlleJahrgaenge || state.manager.terminNtMengeEnthaeltFremdeJgstByAbijahrAndHalbjahrAndQuartalMultijahrgang(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, true);
 
 	const selectedNachschreiber = ref<JavaSet<GostSchuelerklausurtermin>>(new HashSet<GostSchuelerklausurtermin>());
 
@@ -171,61 +211,177 @@
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
-	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
-
-	const onDrag = (event: DragEvent, data: GostKlausurplanungDragData) => {
-		terminSelected.value = undefined;
-		dragData.value = data;
-	};
+	const { dragData, setDragData } = useKlausurplanungDragAndDrop(() => terminSelected.value = undefined);
 
 	async function blocken() {
 		showModalAutomatischBlocken.value = false;
 		loading.value = true;
 		const config = new GostNachschreibterminblockungKonfiguration();
 		config.termine = termine.value;
-		selectedNachschreiber.value.retainAll(props.kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
+		selectedNachschreiber.value.retainAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
 		config.schuelerklausurtermine = new ArrayList<GostSchuelerklausurtermin>(selectedNachschreiber.value);
 		config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
 		config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
-		await props.blockenNachschreibklausuren(config);
+		await state.blockenNachschreiber(config);
 		selectedNachschreiber.value.clear();
 		loading.value = false;
 	}
 
 	function draggable(data: GostKlausurplanungDragData) {
-		return hatKompetenzUpdate.value && data instanceof GostSchuelerklausurtermin;
+		return hatKompetenzUpdate.value && (data instanceof GostSchuelerklausurtermin);
+	}
+
+	function createNachschreiberDragData(schuelertermin: GostSchuelerklausurtermin): GostNachschreiberDragData {
+		selectedNachschreiber.value.retainAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
+		if (selectedNachschreiber.value.contains(schuelertermin) && (selectedNachschreiber.value.size() > 1)) {
+			return { type: "nachschreiber", items: new ArrayList<GostSchuelerklausurtermin>(selectedNachschreiber.value) };
+		}
+		return { type: "nachschreiber", items: ListUtils.create1(schuelertermin) };
+	}
+
+	function onDrag(event: DragEvent | undefined, data: GostKlausurplanungDragData): void {
+		if (data === undefined) {
+			setDragData(undefined);
+		} else if (data instanceof GostSchuelerklausurtermin) {
+			const nachschreiberDragData = createNachschreiberDragData(data);
+			setDragImage(event, nachschreiberDragData);
+			setDragData(nachschreiberDragData);
+		} else {
+			setDragData(data);
+		}
+	}
+
+	function setDragImage(event: DragEvent | undefined, data: GostNachschreiberDragData): void {
+		if ((event?.dataTransfer === null) || (event?.dataTransfer === undefined)) {
+			return;
+		}
+		if (data.items.size() <= 1) {
+			return;
+		}
+		const preview = document.createElement("div");
+		preview.className = "fixed -top-1000 left-0 flex flex-col gap-2";
+		preview.style.width = `${(event.currentTarget instanceof HTMLElement) ? event.currentTarget.getBoundingClientRect().width : 384}px`;
+		for (const item of data.items) {
+			const card = document.getElementById(`nachschreiber-sidebar-${item.id}`)?.cloneNode(true);
+			if (!(card instanceof HTMLElement)) {
+				continue;
+			}
+			card.removeAttribute("id");
+			preview.append(card);
+		}
+		if (preview.childElementCount === 0) {
+			return;
+		}
+		document.body.append(preview);
+		event.dataTransfer.setDragImage(preview, 16, 16);
+		window.setTimeout(() => preview.remove(), 0);
+	}
+
+	function nachschreiberDragDataHatTermin(data: GostKlausurplanungDragData): boolean {
+		if (!isGostNachschreiberDragData(data)) {
+			return false;
+		}
+		for (const item of data.items) {
+			if (item.idTermin !== null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function removeSelectedNachschreiber(items: List<GostSchuelerklausurtermin>): void {
+		for (const item of items) {
+			selectedNachschreiber.value.remove(item);
+		}
+	}
+
+	function isDraggedNachschreiber(schuelertermin: GostSchuelerklausurtermin): boolean {
+		if (!isGostNachschreiberDragData(dragData.value)) {
+			return false;
+		}
+		if (dragData.value.items.size() <= 1) {
+			return false;
+		}
+		return dragData.value.items.contains(schuelertermin);
+	}
+
+	async function patchNachschreiberTermin(items: List<GostSchuelerklausurtermin>, idTermin: number | null): Promise<boolean> {
+		const patchItems = new ArrayList<GostSchuelerklausurtermin>();
+		for (const item of items) {
+			if (item.idTermin !== idTermin) {
+				patchItems.add(item);
+			}
+		}
+		if (patchItems.isEmpty()) {
+			return false;
+		}
+		await state.patchSchuelerklausurtermine(patchItems, { idTermin });
+		removeSelectedNachschreiber(items);
+		return true;
 	}
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKursklausur || dragData.value instanceof GostSchuelerklausurtermin) {
-			if (zone === undefined && dragData.value.idTermin !== null) {
-				await props.patchKlausur(dragData.value, { idTermin: null });
-			} else if (zone instanceof GostKlausurtermin) {
-				if (zone.id !== dragData.value.idTermin) {
-					await props.patchKlausur(dragData.value, { idTermin: zone.id });
-					terminSelected.value = zone;
-				}
-			}
+		const data = dragData.value;
+		if (!isGostNachschreiberDragData(data)) {
+			return;
+		}
+		if (zone === undefined) {
+			await patchNachschreiberTermin(data.items, null);
+			return;
+		}
+		if (!(zone instanceof GostKlausurtermin) || !state.manager.schuelerklausurterminePassenInNachschreibtermin(zone, data.items)) {
+			return;
+		}
+		if (await patchNachschreiberTermin(data.items, zone.id)) {
+			terminSelected.value = zone;
 		}
 	};
 
-	const termine = computed(() => props.kMan().terminNTGetMengeByAbijahrAndHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
+	const termine = computed(() => state.manager.terminNTGetMengeByAbijahrAndHalbjahrAndQuartalMultijahrgang(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal, multijahrgang()));
 
-	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
-		if (klausur instanceof GostKursklausur && dragData.value !== undefined) {
-			return {
-				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktZuKursklausurBySchuelerklausur((dragData.value as GostSchuelerklausurtermin), klausur),
-			};
-		} else if (klausur instanceof GostSchuelerklausurtermin && dragData.value !== undefined) {
-			return {
-				"bg-ui-danger text-ui-ondanger": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurtermin).idSchuelerklausur).idSchueler,
-			};
-		} else if (klausur instanceof GostSchuelerklausurtermin && termin !== undefined) {
-			return {
-				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0,
-			};
+	function hatKonfliktMitGezogenenNachschreibern(klausur: GostKursklausur, data: GostNachschreiberDragData): boolean {
+		for (const item of data.items) {
+			if (state.manager.konfliktZuKursklausurBySchuelerklausur(item, klausur)) {
+				return true;
+			}
 		}
+		return false;
+	}
+
+	function istGezogenerNachschreiber(klausur: GostSchuelerklausurtermin, data: GostNachschreiberDragData): boolean {
+		for (const item of data.items) {
+			if (klausur.id === item.id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function hatKonfliktMitGezogenenNachschreiberSchuelern(klausur: GostSchuelerklausurtermin, data: GostNachschreiberDragData): boolean {
+		const idSchueler = state.manager.schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler;
+		for (const item of data.items) {
+			if ((klausur.id !== item.id) && (idSchueler === state.manager.schuelerklausurGetByIdOrException(item.idSchuelerklausur).idSchueler)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined): HTMLAttributes["class"] => {
+		let hatKonflikt = false;
+		const data = dragData.value;
+		if ((klausur instanceof GostKursklausur) && isGostNachschreiberDragData(data)) {
+			hatKonflikt = hatKonfliktMitGezogenenNachschreibern(klausur, data);
+		} else if ((klausur instanceof GostSchuelerklausurtermin) && isGostNachschreiberDragData(data)) {
+			hatKonflikt = !istGezogenerNachschreiber(klausur, data) && hatKonfliktMitGezogenenNachschreiberSchuelern(klausur, data);
+		} else if ((klausur instanceof GostSchuelerklausurtermin) && (termin !== undefined)) {
+			hatKonflikt = state.manager.konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0;
+		}
+		if (!hatKonflikt) {
+			return undefined;
+		}
+		return "bg-ui-danger text-ui-ondanger";
 	};
 
 	const isMounted = ref(false);
@@ -241,18 +397,3 @@
 	];
 
 </script>
-
-<!-- <style lang="postcss" scoped>
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.is-drop-zone {
-		@apply relative bg-ui-brand/5;
-
-		&:before {
-			content: '';
-			@apply absolute inset-1 border border-ui-brand pointer-events-none rounded-lg ring-4 ring-ui-brand/25;
-		}
-	}
-
-</style> -->

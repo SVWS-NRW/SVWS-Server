@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.gost.klausuren;
 
+import java.util.List;
+
 import de.svws_nrw.core.data.gost.klausuren.GostNachschreibterminblockungKonfiguration;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminCreateRequest;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminPatchRequest;
@@ -27,6 +29,15 @@ public interface GostKlausurenSchuelerklausurterminWorkflowController {
 	 * @return die Response
 	 */
 	Response patch(GostKlausurenSchuelerklausurterminPatchRequest patchRequest);
+
+	/**
+	 * Patcht mehrere Schülerklausurtermine.
+	 *
+	 * @param patchRequests die Patch-Daten
+	 *
+	 * @return die Response
+	 */
+	Response patchMultiple(List<GostKlausurenSchuelerklausurterminPatchRequest> patchRequests);
 
 	/**
 	 * Blockt Nachschreibtermine.

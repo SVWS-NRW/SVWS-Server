@@ -972,4 +972,35 @@ public class APIGostKlausuren {
 				.getGostKlausurenSchuelerklausurterminWorkflowController().patch(patchRequest);
 	}
 
+	/**
+	 * Patcht mehrere {@link GostSchuelerklausurtermin}e.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Patches ausgeführt werden sollen
+	 * @param patchRequests JSON-Array mit den Patch-Daten und den IDs der {@link GostSchuelerklausurtermin}e
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die durch die Patches geänderten Raumdaten als {@link GostKlausurenPatchResponseData}-Objekt
+	 */
+	@PATCH
+	@Path("/schuelerklausuren/termine/multiple")
+	@Operation(summary = "Patcht mehrere GostSchuelerklausurtermine.", description = "Patcht mehrere GostSchuelerklausurtermine."
+			+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von GostSchuelerklausurterminen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Patches wurden erfolgreich in die GostSchuelerklausurtermine integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
+	@ApiResponse(responseCode = "400", description = "Die Patches sind fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um GostSchuelerklausurtermine zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Mindestens ein GostSchuelerklausurtermin-Eintrag mit der angegebenen ID wurde nicht gefunden")
+	@ApiResponse(responseCode = "409", description = "Ein Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostKlausurenSchuelerklausurtermineMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Patches für die GostSchuelerklausurtermine", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(
+									schema = @Schema(implementation = GostSchuelerklausurtermin.class)))) @Valid final List<GostKlausurenSchuelerklausurterminPatchRequest> patchRequests,
+			@Context final HttpServletRequest request) {
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenSchuelerklausurterminWorkflowController().patchMultiple(patchRequests);
+	}
+
 }

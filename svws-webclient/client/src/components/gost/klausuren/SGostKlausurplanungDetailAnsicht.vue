@@ -1,15 +1,13 @@
 <template>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
+		<s-gost-klausurplanung-quartal-auswahl />
 	</Teleport>
 	<div class="page page-flex-col">
-		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
-			<div v-if="kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() > 0" class="flex flex-col gap-20 mt-8">
-				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
+		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${state.jahrgangsdaten.jahrgang}, ${state.halbjahr.halbjahr}. Halbjahr${state.quartal === 0 ? '' : ', ' + state.quartal + '. Quartal'}`">
+			<div v-if="termine.size() > 0" class="flex flex-col gap-20 mt-8">
+				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in termine"
 					:key="termin.id"
-					:abschnitt
-					:termin
-					:k-man />
+					:termin />
 			</div>
 			<div v-else>
 				<span>Es wurden noch keine Klausurtermine geplant.</span>
@@ -19,10 +17,11 @@
 </template>
 
 <script setup lang="ts">
-	import { onMounted, ref } from 'vue';
-	import type { GostKlausurplanungDetailAnsichtProps } from './SGostKlausurplanungDetailAnsichtProps';
+	import { computed, onMounted, ref } from 'vue';
+	import { useGostKlausurplanungState } from '@ui';
 
-	const props = defineProps<GostKlausurplanungDetailAnsichtProps>();
+	const state = useGostKlausurplanungState();
+	const termine = computed(() => state.manager.terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
 
 	const isMounted = ref(false);
 

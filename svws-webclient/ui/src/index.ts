@@ -105,6 +105,8 @@ export { useAbschnittState, AbschnittStateKey, type AbschnittState } from "./sta
 export { useAuskunftState, AuskunftStateKey, type AuskunftState } from "./states/AuskunftState";
 export { useGostLaufbahnplanungState, GostLaufbahnplanungStateKey, type GostLaufbahnplanungState, type GostBelegpruefungsModus }
 	from "./states/GostLaufbahnplanungState";
+export { useGostKlausurplanungState, GostKlausurplanungStateKey, CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX, type GostKlausurplanungState }
+	from "./states/GostKlausurplanungState";
 export { useReportingState, ReportingStateKey, type ReportingState, type ElementMitAnforderung } from "./states/ReportingState";
 export { useSchuleState, SchuleStateKey, type SchuleState } from "./states/SchuleState";
 export { useServerState, ServerStateKey, type ServerState } from "./states/ServerState";

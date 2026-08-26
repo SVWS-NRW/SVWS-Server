@@ -1,27 +1,21 @@
-import type { StundenplanZeitraster, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKlausurplanManager, List, StundenplanKalenderwochenzuordnung, Wochentag, GostKlausurtermin, Schuljahresabschnitt, StundenplanManager } from "@core";
+import type { StundenplanZeitraster, GostHalbjahr, GostKursklausur, List, StundenplanKalenderwochenzuordnung, Wochentag, GostKlausurtermin } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
-	abschnitt: Schuljahresabschnitt | undefined;
-	jahrgangsdaten: GostJahrgangsdaten;
-	halbjahr: GostHalbjahr;
 	ignoreEmpty?: boolean;
 	id: number;
+	abschnittId: number;
 	kalenderwoche: (datum?: string) => StundenplanKalenderwochenzuordnung;
-	manager: () => StundenplanManager;
-	kMan: () => GostKlausurplanManager;
 	wochentyp: () => number;
 	// kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
-	kurseGefiltert: (datum: string, day: Wochentag, stunde: number) => List<number>;
-	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
+	kurseGefiltert: (datum: string, day: Wochentag, stunde: number) => List<GostKursklausur>;
 	sumSchreiber: (datum: string, day: Wochentag, stunde: number) => number;
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster | undefined) => void;
-	zeigeAlleJahrgaenge: () => boolean;
 	kursklausurMouseOver: () => GostKursklausur | undefined;
 	gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;

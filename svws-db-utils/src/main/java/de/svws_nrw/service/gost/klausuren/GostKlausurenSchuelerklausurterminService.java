@@ -141,7 +141,33 @@ public final class GostKlausurenSchuelerklausurterminService {
 	 * @return der gepatchte Schülerklausurtermin
 	 */
 	GostSchuelerklausurtermin patch(final GostKlausurenSchuelerklausurterminPatchRequest patchRequest) {
-		final DTOGostKlausurenSchuelerklausurenTermine dto = repository.getById(patchRequest.id);
+		return patchMultiple(List.of(patchRequest)).getFirst();
+	}
+
+	/**
+	 * Patcht ausschließlich mehrere Schülerklausurtermine selbst ohne fachliche Querprüfungen und ohne Raumdaten-Seiteneffekte.
+	 *
+	 * Package-private, damit REST-Workflows den höherwertigen {@link GostKlausurenSchuelerklausurterminPatchService} verwenden und diese Seiteneffekte
+	 * nicht umgehen.
+	 *
+	 * @param patchRequests die Patch-Daten
+	 *
+	 * @return die gepatchten Schülerklausurtermine
+	 */
+	List<GostSchuelerklausurtermin> patchMultiple(final Collection<GostKlausurenSchuelerklausurterminPatchRequest> patchRequests) {
+		final List<DTOGostKlausurenSchuelerklausurenTermine> dtos = new ArrayList<>();
+		for (final GostKlausurenSchuelerklausurterminPatchRequest patchRequest : patchRequests) {
+			final DTOGostKlausurenSchuelerklausurenTermine dto = repository.getById(patchRequest.id);
+			applyPatchAttributes(dto, patchRequest);
+			dtos.add(dto);
+		}
+		repository.update(dtos);
+		repository.flush();
+		return dtos.stream().map(GostKlausurenSchuelerklausurterminService::toApi).toList();
+	}
+
+	private static void applyPatchAttributes(final DTOGostKlausurenSchuelerklausurenTermine dto,
+			final GostKlausurenSchuelerklausurterminPatchRequest patchRequest) {
 		if (patchRequest.idTermin.isPresent()) {
 			dto.Termin_ID = JSONMapper.convertToLong(patchRequest.idTermin.get(), true, "idTermin");
 		}
@@ -152,9 +178,6 @@ public final class GostKlausurenSchuelerklausurterminService {
 			dto.Bemerkungen = StringUtils.trimToNull(JSONMapper.convertToString(patchRequest.bemerkung.get(), true, true,
 					Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge(), "bemerkung"));
 		}
-		repository.update(dto);
-		repository.flush();
-		return toApi(dto);
 	}
 
 	/**
