@@ -42,11 +42,11 @@ export class ValidatorLogoImageResolution extends BasicValidator {
 		const targetHeightInMM = imageRestrictions.hoeheInMM;
 		const targetDpi = imageRestrictions.aufloesungInDPI;
 
-		const dpiBreite = (imageWidth * 25.4) / targetWidthInMM;
-		const dpiHoehe = (imageHeight * 25.4) / targetHeightInMM;
+		const dpiBreite = Math.round((imageWidth * 25.4) / targetWidthInMM);
+		const dpiHoehe = Math.round((imageHeight * 25.4) / targetHeightInMM);
 		const aufloesung = Math.min(dpiBreite, dpiHoehe);
 		if (aufloesung < targetDpi) {
-			this.addFehler(0, `Zu geringe Auflösung: ${Math.round(aufloesung)} DPI statt ${imageRestrictions.aufloesungInDPI} DPI.
+			this.addFehler(0, `Zu geringe Auflösung: ${aufloesung} DPI statt ${imageRestrictions.aufloesungInDPI} DPI.
 			Dies kann zu einer unscharfen Darstellung des Bildes führen.`);
 			return false;
 		}
