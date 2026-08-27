@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf die StaatsangehoerigkeitID bei den Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Validator {
+public final class ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/** Die Lehrer-Stammdaten */
 	private final @NotNull Supplier<@NotNull String> _staatsangehoerigkeitSchluessel;
@@ -26,21 +26,15 @@ public final class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends 
 	private static final @NotNull Set<String> setStaatsangehoerigkeit =
 			Set.of("DEU", "BEL", "BGR", "DNK", "EST", "FIN", "FRA", "HRV", "SVN", "GRC", "IRL", "ISL", "ITA", "LVA", "LIE", "LTU", "LUX", "MLT",
 					"NLD", "NOR", "AUT", "POL", "PRT", "ROU", "SVK", "SWE", "CHE", "ESP", "CZE", "HUN", "GBR", "CYP");
-	private static final @NotNull String FEHLERTEXT =
-			"Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '\" + LehrerStammdaten.staatsangehoerigkeitID + \"' angegeben. "
-					+ "Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). "
-					+ "Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit "
-					+ "besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ";
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param staatsangehoerigkeitSchluessel   der staatsangehoerigkeitSchluessel des Lehrers
-	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
-	 * @param kontext                  der Kontext des Validators
+	 * @param rechtsverhaeltnis                das Rechtsverhältnis des Lehrers
+	 * @param kontext                          der Kontext des Validators
 	 */
-	public ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel,
+	public ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel,
 			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> rechtsverhaeltnis,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
@@ -68,7 +62,10 @@ public final class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends 
 					&& !setStaatsangehoerigkeit
 							.contains(
 									katalogEintrag.iso3)) {
-				addFehler(0, FEHLERTEXT);
+				addFehler(0, "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '" + this._staatsangehoerigkeitSchluessel.get() + "' angegeben. "
+						+ "Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). "
+						+ "Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit "
+						+ "besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ");
 				return false;
 			}
 		}

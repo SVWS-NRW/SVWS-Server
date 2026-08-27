@@ -7,9 +7,6 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
-	/**
-	 * Die Lehrer-Stammdaten
-	 */
 	private readonly _staatsangehoerigkeitSchluessel: Supplier<string>;
 
 	private readonly schuljahr: number;

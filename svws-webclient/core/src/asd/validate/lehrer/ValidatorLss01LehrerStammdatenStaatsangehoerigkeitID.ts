@@ -1,17 +1,12 @@
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
-import { ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID';
 import { ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
-import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
-	/**
-	 * Die Lehrer-Stammdaten
-	 */
 	private readonly _idStaatsangehoerigkeit: Supplier<number>;
 
 
@@ -19,16 +14,14 @@ export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
-	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit: Supplier<number>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
+	public constructor(idStaatsangehoerigkeit: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 		const staatsangehoerigkeitSchluessel: Supplier<string> = this.getNotNullSupplier({ get: () => Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get()) });
 		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahr() };
 		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, schuljahr, kontext));
-		this._validatoren.add(new ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, rechtsverhaeltnis, kontext));
 	}
 
 	protected pruefe(): boolean {

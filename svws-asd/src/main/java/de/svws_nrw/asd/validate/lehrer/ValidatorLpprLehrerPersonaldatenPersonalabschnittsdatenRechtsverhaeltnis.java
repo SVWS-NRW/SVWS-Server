@@ -18,17 +18,19 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idRechtsverhaeltnis, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
 	}
 
 	@Override

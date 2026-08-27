@@ -115,8 +115,8 @@
 			if (l === undefined) {
 				continue;
 			}
-			genValidatorFehler.addFehlerByKey("Stammdaten", l, lehrer, new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, schuleState.validatorKontext));
-			genValidatorFehler.addFehlerByKey("Personaldaten", l, lehrer, new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, schuleState.validatorKontext));
+			genValidatorFehler.addFehlerByKey("Stammdaten", l, lehrer, new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, schuleState.validatorKontext));
+			genValidatorFehler.addFehlerByKey("Personaldaten", l, lehrer, new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, schuleState.validatorKontext));
 		}
 		return genValidatorFehler.mapFehler;
 	});

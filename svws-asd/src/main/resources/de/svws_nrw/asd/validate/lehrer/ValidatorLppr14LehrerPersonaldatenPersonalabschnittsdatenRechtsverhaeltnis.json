@@ -1,0 +1,24 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+  "historie" : [ {
+    "praefix" : "LPPR14",
+    "altes_kuerzel" : "BB",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Feld 'Rechtsverhaeltnis'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPPR01"],
+      "muss" : [ ],
+      "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+      "hinweis" : [ ],
+      "text" : "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit ' + LehrerStammdaten.staatsangehoerigkeitID + ' angegeben. Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'.",
+      "erlaeuterung" : "VORSICHT: Es gab Umstellungen, sodass rechtsverhaeltnis jetzt idRechtsverhaeltnis ist, Validator wird so nicht mehr funktionieren",
+      "bedingung" : " LehrerStammdaten.rechtsverhaeltnis = L, N, P, W ∧ LehrerStammdaten.staatsangehoerigkeitID ≠ DEU, BEL, BGR, DNK, EST, FIN, FRA, HRV, SVN, GRC, IRL, ISL, ITA, LVA, LIE, LTU, LUX, MLT, NLD, NOR, AUT, POL, PRT, ROU, SVK, SWE, CHE, ESP, CZE, HUN, GBR, CYP",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

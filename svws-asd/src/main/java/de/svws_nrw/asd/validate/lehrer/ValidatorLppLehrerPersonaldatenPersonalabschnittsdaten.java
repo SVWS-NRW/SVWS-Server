@@ -29,13 +29,18 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	/** Die ID des Schuljahresabschnittes, auf den sich die Personalabschnittsdaten beziehen. */
 	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
 
+	/** Die Staatsangehoerigkeit der Lehrkraft. */
+	private final @NotNull Supplier<@AllowNull Long> _idStaatsangehoerigkeit;
+
 	/** Das Rechtsverhältnis der Lehrkraft. */
 	private final @NotNull Supplier<@AllowNull Long> _idRechtsverhaeltnis;
+
 
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
+	 * @param idStaatsangehoerigkeit  die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis     das Rechtsverhältnis
 	 * @param pflichtstundensoll      das Pflichtstundensoll
 	 * @param anrechnungen            die Liste der Anrechnungsstunden
@@ -49,6 +54,7 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	 */
 	public ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
@@ -62,8 +68,8 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 		super(kontext);
 		this._geburtsdatum = geburtsdatum;
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-
 		// Hinzufügen der fachspezifischen Validatoren
 		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
@@ -92,7 +98,7 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 			final @NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable = () -> datum;
 			final @NotNull Supplier<DateManager> supplierGeburtsdatum = this.getNotNullSupplierObject(supplierGeburtsdatumNullable);
 
-			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(_idSchuljahresabschnitt, _idRechtsverhaeltnis,
+			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(_idSchuljahresabschnitt, _idStaatsangehoerigkeit, _idRechtsverhaeltnis,
 					supplierGeburtsdatum, this.kontext()));
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			// Falls kein gültiges Geburtsdatum vorliegt, wird die spezifische Altersprüfung

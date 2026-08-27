@@ -68,7 +68,7 @@ class TestValidatorLss00LehrerStammdatenStaatsangehoerigkeitID {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(() -> idStaatsangehoerigkeit, () -> null, kontext);
+				new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(() -> idStaatsangehoerigkeit, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

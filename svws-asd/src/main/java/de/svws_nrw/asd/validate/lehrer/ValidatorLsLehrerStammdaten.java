@@ -22,7 +22,6 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 	 * @param geschlecht               die Daten des Validators
 	 * @param kuerzel                  die Daten des Validators
 	 * @param idStaatsangehoerigkeit   die Daten des Validators
-	 * @param idRechtsverhaeltnis      die Daten des Validators
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLsLehrerStammdaten(final @NotNull Supplier<@AllowNull String> nachname,
@@ -31,7 +30,6 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull Supplier<@AllowNull String> kuerzel,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
-			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorLsnLehrerStammdatenNachname(nachname, kontext));
@@ -39,7 +37,7 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(kuerzel, kontext));
-		_validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, idRechtsverhaeltnis, kontext));
+		_validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override

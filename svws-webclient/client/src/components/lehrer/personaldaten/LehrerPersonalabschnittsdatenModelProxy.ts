@@ -40,6 +40,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 
 		this.addValidator(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
 			{ get: () => this.proxy.idSchuljahresabschnitt },
+			{ get: () => manager().daten().idStaatsangehoerigkeit },
 			{ get: () => this.proxy.idRechtsverhaeltnis },
 			{ get: () => this.proxy.pflichtstundensoll },
 			{ get: () => this.proxy.anrechnungen },

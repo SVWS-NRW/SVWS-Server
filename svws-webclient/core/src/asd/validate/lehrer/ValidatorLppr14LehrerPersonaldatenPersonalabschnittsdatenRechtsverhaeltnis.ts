@@ -9,7 +9,7 @@ import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsv
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Validator {
+export class ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/**
 	 * Die Lehrer-Stammdaten
@@ -22,15 +22,13 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 
 	private static readonly setStaatsangehoerigkeit: JavaSet<string> = java_util_Set_of("DEU", "BEL", "BGR", "DNK", "EST", "FIN", "FRA", "HRV", "SVN", "GRC", "IRL", "ISL", "ITA", "LVA", "LIE", "LTU", "LUX", "MLT", "NLD", "NOR", "AUT", "POL", "PRT", "ROU", "SVK", "SWE", "CHE", "ESP", "CZE", "HUN", "GBR", "CYP");
 
-	private static readonly FEHLERTEXT: string = "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '\" + LehrerStammdaten.staatsangehoerigkeitID + \"' angegeben. Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ";
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param staatsangehoerigkeitSchluessel   der staatsangehoerigkeitSchluessel des Lehrers
-	 * @param rechtsverhaeltnis        das Rechtsverhältnis des Lehrers
-	 * @param kontext                  der Kontext des Validators
+	 * @param rechtsverhaeltnis                das Rechtsverhältnis des Lehrers
+	 * @param kontext                          der Kontext des Validators
 	 */
 	public constructor(staatsangehoerigkeitSchluessel: Supplier<string>, rechtsverhaeltnis: Supplier<LehrerRechtsverhaeltnis | null>, kontext: ValidatorKontext) {
 		super(kontext);
@@ -47,8 +45,8 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 		const nationalitaet: Nationalitaeten | null = Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get());
 		if ((nationalitaet !== null)) {
 			const katalogEintrag: NationalitaetenKatalogEintrag | null = nationalitaet.daten(schuljahr);
-			if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && (katalogEintrag !== null) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(katalogEintrag.iso3)) {
-				this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
+			if (ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.setRechtsverhaeltnis.contains(this._rechtsverhaeltnis.get()) && (katalogEintrag !== null) && !ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.setStaatsangehoerigkeit.contains(katalogEintrag.iso3)) {
+				this.addFehler(0, "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '" + this._staatsangehoerigkeitSchluessel.get() + "' angegeben. Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ");
 				return false;
 			}
 		}
@@ -56,17 +54,17 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID>('de.svws_nrw.asd.validate.lehrer.ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID');
+	public static readonly class = new Class<ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis>('de.svws_nrw.asd.validate.lehrer.ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(obj: unknown): ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
-	return obj as ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(obj: unknown): ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
+	return obj as ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis;
 }

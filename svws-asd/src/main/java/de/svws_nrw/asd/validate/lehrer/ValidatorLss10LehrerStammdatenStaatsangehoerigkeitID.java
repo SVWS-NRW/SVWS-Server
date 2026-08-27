@@ -14,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
-	/** Die Lehrer-Stammdaten */
 	private final @NotNull Supplier<@NotNull String> _staatsangehoerigkeitSchluessel;
 	private final int schuljahr;
 	private static final @NotNull String FEHLERTEXT =
@@ -29,7 +28,9 @@ public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends 
 	 */
 	public ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel,
 			final @NotNull Supplier<Integer> schuljahr, final @NotNull ValidatorKontext kontext) {
+
 		super(kontext);
+
 		this._staatsangehoerigkeitSchluessel = staatsangehoerigkeitSchluessel;
 		this.schuljahr = schuljahr.get();
 	}

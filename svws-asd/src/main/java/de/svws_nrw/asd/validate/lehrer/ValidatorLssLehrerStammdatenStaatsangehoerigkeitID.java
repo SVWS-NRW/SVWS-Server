@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -18,16 +17,14 @@ public final class ValidatorLssLehrerStammdatenStaatsangehoerigkeitID extends Va
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
-	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
-			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull ValidatorKontext kontext) {
+
 		super(kontext);
-		final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> rechtsverhaeltnis =
-				() -> LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis.get());
-		_validatoren.add(new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, rechtsverhaeltnis, kontext));
+
+		_validatoren.add(new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override

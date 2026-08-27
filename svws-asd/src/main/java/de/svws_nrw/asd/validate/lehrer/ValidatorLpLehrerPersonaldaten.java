@@ -21,6 +21,7 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 	 *
 	 * @param lehrerId                 die LehrerId
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
 	 * @param pflichtstundensoll       der Pflichtstundensoll
 	 * @param anrechnungen             die Anrechnungen
@@ -35,6 +36,7 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 	public ValidatorLpLehrerPersonaldaten(
 			final @NotNull Supplier<Long> lehrerId,
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
@@ -46,7 +48,7 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idRechtsverhaeltnis, pflichtstundensoll,
+		_validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, pflichtstundensoll,
 				anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
 
 		_validatoren.add(new ValidatorLplLehrerPersonaldatenLehramt(lehraemter, lehrerId, getDateManagerSupplier(geburtsdatum), kontext));

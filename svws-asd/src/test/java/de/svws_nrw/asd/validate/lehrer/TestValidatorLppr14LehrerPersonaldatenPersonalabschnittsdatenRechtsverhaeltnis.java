@@ -17,7 +17,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLss11LehrerStammdatenStaasangehoerigkeitID}
+ *   <li> {@link ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis}
  * </ul>
  * </p>
 
@@ -28,8 +28,8 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * CoreType: LehrerStammdaten
  */
-@DisplayName("Tests ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID")
-class TestValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
+@DisplayName("Tests ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
+class TestValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
 			'000', 'L', true
@@ -53,13 +53,13 @@ class TestValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
 	}
 
 	/**
-	 * Test von ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID
+	 * Test von ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis
 	 *
 	 * CoreType: LehrerStammdaten
 	 *
 	 * @param staatsangehoerigkeitSchluessel   der staatsangehoerigkeitSchluessel, welcher bei den eingelesenen Testdaten ersetzt wird
-	 * @param rechtsverhaeltnis      das Rechtsverhältnis, welches bei den eingelesenen Testdaten ersetzt wird
-	 * @param result                   gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param rechtsverhaeltnis                das Rechtsverhältnis, welches bei den eingelesenen Testdaten ersetzt wird
+	 * @param result                           gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID")
 	@ParameterizedTest
@@ -71,8 +71,8 @@ class TestValidatorLss11LehrerStammdatenStaatsangehoerigkeitID {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID(() -> staatsangehoerigkeitSchluessel, () -> rechtsverhaeltnis, kontext);
+		final ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
+				new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> staatsangehoerigkeitSchluessel, () -> rechtsverhaeltnis, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 
