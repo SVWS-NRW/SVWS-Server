@@ -8,7 +8,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? '' })" type="text" />
 					<svws-ui-select title="Fach" :readonly v-model="fach" :items="manager().faecher.list()"
-						:item-text="f => f.kuerzel + ' (' + f.bezeichnung + ')'" statistics />
+						:item-text="f => `${f.kuerzel} ${!f.istSichtbar ? '(Fach unsichtbar!)' : ''} (${f.bezeichnung})`" statistics />
 					<svws-ui-select title="Kursart" :readonly :items="kursarten.keys()" :item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'"
 						:model-value="data().kursartAllg" @update:model-value="value => patch({ kursartAllg: value ?? '' })" statistics />
 					<svws-ui-input-number placeholder="Wochenstunden des Kurses" :readonly :model-value="data().wochenstunden" statistics

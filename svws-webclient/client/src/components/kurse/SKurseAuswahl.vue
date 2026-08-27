@@ -44,8 +44,8 @@
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { useAbschnittState, useServerState, useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder, useBenutzerState } from "@ui";
-	import type { FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz } from "@core";
+	import type { FachDaten, KursDaten, List, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { BenutzerKompetenz, LehrerListeEintrag, JahrgangsDaten } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
 	const benutzerState = useBenutzerState();
@@ -90,7 +90,13 @@
 	});
 
 	function text(eintrag: LehrerListeEintrag | JahrgangsDaten | FachDaten): string {
-		return eintrag.kuerzel ?? "";
+		if (eintrag instanceof LehrerListeEintrag) {
+			return `${eintrag.kuerzel} (${eintrag.nachname}, ${eintrag.vorname})`;
+		} else if (eintrag instanceof JahrgangsDaten) {
+			return eintrag.kuerzel ?? "";
+		} else {
+			return `${eintrag.kuerzel} (${eintrag.bezeichnung})`;
+		}
 	}
 
 	function find(items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) {

@@ -3,7 +3,6 @@ import type { Comparator, List, FachDaten, Schueler, Schuljahresabschnitt, Schue
 import { ArrayList, Arrays, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
 	HashMap2D, SchuelerUtils, Schulgliederung, SchuelerStatus, KursUtils, LehrerUtils } from "@core";
 import { AuswahlManager, ListeMitAuswahl, JahrgaengeListeManager } from '@ui';
-
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
@@ -141,14 +140,20 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 			KursListeManager._kursToId,
 			[{ field: "idJahrgaenge", ascending: true }, { field: "kuerzel", ascending: true }]
 		);
-		this.schuelerstatus = new ListeMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new ListeMitAuswahl(Arrays.asList(SchuelerStatus.values()), this._schuelerstatusToId, KursListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new ListeMitAuswahl(schueler, KursListeManager._schuelerToId, SchuelerUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new ListeMitAuswahl(jahrgaenge, KursListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new ListeMitAuswahl(lehrer, KursListeManager._lehrerToId, LehrerUtils.comparatorKuerzel, this._eventHandlerFilterChanged);
-		this.faecher = new ListeMitAuswahl(faecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
-		const gliederungen: List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, schulform);
+		const gliederungen: List<Schulgliederung> = (schulform === null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(schuleStateImpl.schuljahr, schulform);
 		this.schulgliederungen = new ListeMitAuswahl(gliederungen, this._schulgliederungToId, KursListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.initKurse();
+		const filteredFaecher = new ArrayList<FachDaten>();
+		for (const fach of faecher) {
+			if (fach.istSichtbar || this._mapKursHatFach.containsKey1(fach.id)) {
+				filteredFaecher.add(fach);
+			}
+		}
+		this.faecher = new ListeMitAuswahl(filteredFaecher, KursListeManager._fachToId, KursListeManager.comparatorFaecherListe, this._eventHandlerFilterChanged);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 	}
