@@ -1,12 +1,13 @@
+import { computed } from "vue";
 import type { LehrerStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ValidatorKontext } from "@core";
-import { AdressenUtils, Geschlecht, Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsnLehrerStammdatenNachname,
+import { AdressenUtils,	Geschlecht,	Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsgLehrerStammdatenGeschlecht,
+	ValidatorLskLehrerStammdatenKuerzel, ValidatorLsnLehrerStammdatenNachname, ValidatorLssLehrerStammdatenStaatsangehoerigkeitID,
 	ValidatorLsvLehrerStammdatenVorname } from "@core";
 import type { LehrerListeManager, OrteState } from "@ui";
 import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStrasse, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import { computed } from "vue";
-import { ValidatorLehrerIndividualdatenKuerzel } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenKuerzel";
-import { ValidatorLehrerIndividualdatenNachname } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenNachname";
-import { ValidatorLehrerIndividualdatenVorname } from "~/components/lehrer/individualdaten/modelproxy/ValidatorLehrerIndividualdatenVorname";
+import { ValidatorLehrerIndividualdatenKuerzel } from "./ValidatorLehrerIndividualdatenKuerzel";
+import { ValidatorLehrerIndividualdatenNachname } from "./ValidatorLehrerIndividualdatenNachname";
+import { ValidatorLehrerIndividualdatenVorname } from "./ValidatorLehrerIndividualdatenVorname";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 /**
@@ -41,6 +42,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 
 		// Kürzel
 		this.addBlockingValidator(new ValidatorLehrerIndividualdatenKuerzel(() => this.proxy, () => this.manager().liste.list()), "kuerzel");
+		this.addValidator(new ValidatorLskLehrerStammdatenKuerzel({ get: () => this.proxy.kuerzel }, validatorKontext()), "kuerzel");
 
 		// Personal-Typ
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.personalTyp), "personalTyp");
@@ -55,12 +57,15 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 
 		// Geschlecht
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.geschlecht.value), "geschlecht");
+		this.addValidator(new ValidatorLsgLehrerStammdatenGeschlecht({ get: () => this.proxy.geschlecht }, validatorKontext()), "geschlecht");
 
 		// Geburtsdatum
 		this.addValidator(new ValidatorLsdLehrerStammdatenGeburtsdatum({ get: () => this.proxy.geburtsdatum }, validatorKontext()), "geburtsdatum");
 
 		// Staatsangehörigkeit
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
+		this.addValidator(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(
+			{ get: () => this.proxy.idStaatsangehoerigkeit }, validatorKontext()), "idStaatsangehoerigkeit");
 
 		// Akademischer Grad
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.titel, null, 20), "titel");
