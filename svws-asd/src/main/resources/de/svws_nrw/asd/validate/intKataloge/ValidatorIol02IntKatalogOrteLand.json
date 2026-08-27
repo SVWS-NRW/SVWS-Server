@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIol02IntKatalogOrteLand",
+    "historie" : [ {
+      "praefix" : "IOL02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Orte-Land",
+      "dtos" : "OrteStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Orte",
+      "anzeigebereich_ui" : "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IOL01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Der eingetragene Wert für das Feld 'Land' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "",
+      "bedingung" : "OrteStatistikGesamt.idLand ≠ einem zeitlich gültigen Historieneintrag in Laender.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }

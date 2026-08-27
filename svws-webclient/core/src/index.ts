@@ -344,6 +344,10 @@ export { ValidatorIka00IntKatalogKonfessionenAsdKatalog } from './asd/validate/i
 export { ValidatorIka01IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka01IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIka02IntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIka02IntKatalogKonfessionenAsdKatalog';
 export { ValidatorIkaIntKatalogKonfessionenAsdKatalog } from './asd/validate/intKataloge/ValidatorIkaIntKatalogKonfessionenAsdKatalog';
+export { ValidatorIol00IntKatalogOrteLand } from './asd/validate/intKataloge/ValidatorIol00IntKatalogOrteLand';
+export { ValidatorIol01IntKatalogOrteLand } from './asd/validate/intKataloge/ValidatorIol01IntKatalogOrteLand';
+export { ValidatorIol02IntKatalogOrteLand } from './asd/validate/intKataloge/ValidatorIol02IntKatalogOrteLand';
+export { ValidatorIolIntKatalogOrteLand } from './asd/validate/intKataloge/ValidatorIolIntKatalogOrteLand';
 export { ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet';
 export { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
 export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/ValidatorKk00KlassenKlassenart';

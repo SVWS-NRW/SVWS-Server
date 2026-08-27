@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIol00IntKatalogOrteLand",
+    "historie" : [ {
+      "praefix" : "IOL00",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Orte-Land",
+      "dtos" : "OrteStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Orte",
+      "anzeigebereich_ui" : "?",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Das Feld 'Land' muss besetzt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "OrteStatistikGesamt.idLand = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
