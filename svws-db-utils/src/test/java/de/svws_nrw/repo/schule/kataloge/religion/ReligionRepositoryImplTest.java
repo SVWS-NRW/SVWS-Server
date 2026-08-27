@@ -200,4 +200,55 @@ class ReligionRepositoryImplTest {
 			verify(conn, times(1)).query(anyString(), eq(Long.class));
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// existsById
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("existsById")
+	class ExistsById {
+
+		@Test
+		@DisplayName("Gibt true zurück, wenn die Religion vorhanden ist")
+		void existsById_found() {
+			final long idReligion = 500L;
+
+			when(conn.existsBy(
+					DTOReligion.QUERY_BY_ID,
+					DTOReligion.class,
+					idReligion))
+					.thenReturn(true);
+
+			final var result = repository.existsById(idReligion);
+
+			assertThat(result).isTrue();
+
+			verify(conn, times(1)).existsBy(
+					DTOReligion.QUERY_BY_ID,
+					DTOReligion.class,
+					idReligion);
+		}
+
+		@Test
+		@DisplayName("Gibt false zurück, wenn die Religion nicht vorhanden ist")
+		void existsById_notFound() {
+			final long idReligion = 999L;
+
+			when(conn.existsBy(
+					DTOReligion.QUERY_BY_ID,
+					DTOReligion.class,
+					idReligion))
+					.thenReturn(false);
+
+			final var result = repository.existsById(idReligion);
+
+			assertThat(result).isFalse();
+
+			verify(conn, times(1)).existsBy(
+					DTOReligion.QUERY_BY_ID,
+					DTOReligion.class,
+					idReligion);
+		}
+	}
 }

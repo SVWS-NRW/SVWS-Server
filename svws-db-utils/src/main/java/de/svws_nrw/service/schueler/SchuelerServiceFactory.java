@@ -2,19 +2,27 @@ package de.svws_nrw.service.schueler;
 
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
+import de.svws_nrw.mapper.schueler.foto.SchuelerFotoMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerBisherigeSchuleMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
+import de.svws_nrw.mapper.schueler.stammdaten.SchuelerStammdatenMapper;
 import de.svws_nrw.repo.DbConnectionProvider;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.service.schueler.sprachdaten.SchuelerSprachdatenService;
 import de.svws_nrw.service.schueler.sprachenfolge.SchuelerSprachenfolgeService;
 import de.svws_nrw.service.schueler.sprachpruefung.SchuelerSprachpruefungService;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenRepositories;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 
 /**
  * Eine Factory zum Erstellen der Services für Schüler
@@ -30,20 +38,18 @@ public final class SchuelerServiceFactory {
 	/** die Factory für die Katalog-Repositories */
 	private final KatalogRepositoryFactory katalogRepositoryFactory;
 
-	/**
-	 * Erstellt eine neue Service-Factory
-	 *
-	 * @param benutzerRepositoryFactory   die Factory für Benutzer-Repositories
-	 * @param schuelerRepositoryFactory   die Factory für Schüler-Repositories
-	 * @param katalogRepositoryFactory   die Factory für Katalog-Repositories
-	 */
+	/** die Factory für die Katalog-Services */
+	private final KatalogServiceFactory katalogServiceFactory;
+
 	private SchuelerServiceFactory(
 			final BenutzerRepositoryFactory benutzerRepositoryFactory,
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
-			final KatalogRepositoryFactory katalogRepositoryFactory) {
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final KatalogServiceFactory katalogServiceFactory) {
 		this.benutzerRepositoryFactory = benutzerRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.katalogRepositoryFactory = katalogRepositoryFactory;
+		this.katalogServiceFactory = katalogServiceFactory;
 	}
 
 
@@ -52,15 +58,32 @@ public final class SchuelerServiceFactory {
 	 *
 	 * @param benutzerRepositoryFactory   die Factory für Benutzer-Repositories
 	 * @param schuelerRepositoryFactory   die Factory für Schüler-Repositories
-	 * @param katalogRepositoryFactory   die Factory für Katalog-Repositories
+	 * @param katalogRepositoryFactory  die Factory für Katalog-Repositories
+	 * @param katalogServiceFactory   die Factory für Katalog-Repositories
 	 *
 	 * @return die Factory
 	 */
 	public static SchuelerServiceFactory getNewInstance(
 			final BenutzerRepositoryFactory benutzerRepositoryFactory,
 			final SchuelerRepositoryFactory schuelerRepositoryFactory,
-			final KatalogRepositoryFactory katalogRepositoryFactory) {
-		return new SchuelerServiceFactory(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory);
+			final KatalogRepositoryFactory katalogRepositoryFactory,
+			final KatalogServiceFactory katalogServiceFactory) {
+		return new SchuelerServiceFactory(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory, katalogServiceFactory);
+	}
+
+	/**
+	 * Erzeugt eine neue Instanz der Service-Factory
+	 *
+	 * @return die Factory
+	 */
+	public static SchuelerServiceFactory getNewInstance() {
+		final var benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
+		final var schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
+		final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+		final var katalogServiceFactory = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory);
+		return new SchuelerServiceFactory(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory, katalogServiceFactory);
 	}
 
 
@@ -124,7 +147,7 @@ public final class SchuelerServiceFactory {
 	public SchuelerMerkmalService getSchuelerMerkmalService() {
 		return new SchuelerMerkmalService(
 				schuelerRepositoryFactory.getSchuelerMerkmaleRepository(),
-				katalogRepositoryFactory.getMerkmalRepository(),
+				katalogServiceFactory.getMerkmalService(),
 				SchuelerMerkmalMapper.INSTANCE);
 	}
 
@@ -141,6 +164,39 @@ public final class SchuelerServiceFactory {
 				new DataKatalogEntlassgruende(DbConnectionProvider.getConnection()),
 				new DataSchulen(DbConnectionProvider.getConnection()),
 				SchulbesuchMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerFotoService}.
+	 *
+	 * @return ein neuer {@code SchuelerFotoService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerFotoService getSchuelerFotoService() {
+		return new SchuelerFotoService(
+				schuelerRepositoryFactory.getSchuelerFotoRepository(),
+				SchuelerFotoMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerStammdatenService}.
+	 *
+	 * @return ein neuer {@code SchuelerStammdatenService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerStammdatenService getSchuelerStammdatenService() {
+		final var repositories = new SchuelerStammdatenRepositories(
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				katalogRepositoryFactory.getReligionRepository(),
+				katalogRepositoryFactory.getOrtRepository(),
+				katalogRepositoryFactory.getOrtsteilRepository(),
+				katalogRepositoryFactory.getFahrschuelerartRepository(),
+				katalogRepositoryFactory.getHaltestelleRepository()
+		);
+		return new SchuelerStammdatenService(
+				repositories,
+				SchuelerStammdatenMapper.INSTANCE,
+				this.getSchuelerFotoService()
 		);
 	}
 

@@ -10,17 +10,19 @@ import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
 import jakarta.ws.rs.core.Response;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 /** DataManager zum Erstellen eines Schülers. */
 public final class DataSchuelerNeu {
 
-	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
-	private final DataSchuelerStammdaten dataSchuelerStammdaten;
+	private final SchuelerStammdatenService schuelerStammdatenService;
 	private final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
 	private final SchuelerSchulbesuchService schuelerSchulbesuchService;
 	private final DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
@@ -28,10 +30,12 @@ public final class DataSchuelerNeu {
 	private final DataLernplattformen dataLernplattformen;
 	private final DataEinwilligungsarten dataEinwilligungsarten;
 
+	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
+
 	/**
 	 * Erstellt einen neuen {@link DataSchuelerNeu} für das Core-DTO {@link SchuelerNeu}
 	 *
-	 * @param dataSchuelerStammdaten			DataSchuelerStammdaten
+	 * @param schuelerStammdatenService			DataSchuelerStammdaten
 	 * @param dataSchuelerLernabschnittsdaten	DataSchuelerLernabschnittsdaten
 	 * @param schuelerSchulbesuchService				SchulbesuchService
 	 * @param dataSchuelerEinwilligungen		DataSchuelerEinwilligungen
@@ -40,14 +44,14 @@ public final class DataSchuelerNeu {
 	 * @param dataEinwilligungsarten			DataEinwilligungsarten
 	 */
 	public DataSchuelerNeu(
-			final DataSchuelerStammdaten dataSchuelerStammdaten,
+			final SchuelerStammdatenService schuelerStammdatenService,
 			final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten,
 			final SchuelerSchulbesuchService schuelerSchulbesuchService,
 			final DataSchuelerEinwilligungen dataSchuelerEinwilligungen,
 			final DataSchuelerLernplattformen dataSchuelerLernplattformen,
 			final DataLernplattformen dataLernplattformen,
 			final DataEinwilligungsarten dataEinwilligungsarten) {
-		this.dataSchuelerStammdaten = dataSchuelerStammdaten;
+		this.schuelerStammdatenService = schuelerStammdatenService;
 		this.dataSchuelerLernabschnittsdaten = dataSchuelerLernabschnittsdaten;
 		this.schuelerSchulbesuchService = schuelerSchulbesuchService;
 		this.dataSchuelerEinwilligungen = dataSchuelerEinwilligungen;
@@ -79,20 +83,21 @@ public final class DataSchuelerNeu {
 	}
 
 	private SchuelerStammdaten addSchueler(final Map<String, Object> initAttributes) {
-		final Map<String, Object> schuelerAttributes = new HashMap<>();
-		putIfPresent(schuelerAttributes, "nachname", initAttributes.get("nachname"));
-		putIfPresent(schuelerAttributes, "vorname", initAttributes.get("vorname"));
-		putIfPresent(schuelerAttributes, "alleVornamen", initAttributes.get("alleVornamen"));
-		putIfPresent(schuelerAttributes, "geschlecht", initAttributes.get("geschlecht"));
-		putIfPresent(schuelerAttributes, "geburtsdatum", initAttributes.get("geburtsdatum"));
-		putIfPresent(schuelerAttributes, "status", initAttributes.get("status"));
-		putIfPresent(schuelerAttributes, "anmeldedatum", initAttributes.get("anmeldedatum"));
-		putIfPresent(schuelerAttributes, "aufnahmedatum", initAttributes.get("aufnahmedatum"));
-		putIfPresent(schuelerAttributes, "beginnBildungsgang", initAttributes.get("beginnBildungsgang"));
-		putIfPresent(schuelerAttributes, "dauerBildungsgang", initAttributes.get("dauerBildungsgang"));
-		putIfPresent(schuelerAttributes, "religionID", initAttributes.get("idReligion"));
-		putIfPresent(schuelerAttributes, ID_SCHULJAHRESABSCHNITT, initAttributes.get(ID_SCHULJAHRESABSCHNITT));
-		return this.dataSchuelerStammdaten.add(schuelerAttributes);
+		final var neuerSchueler = new SchuelerImportData(
+				JSONMapper.convertToString(initAttributes.get("nachname"), false, false, Schema.tab_Schueler.col_Name.datenlaenge(), "nachname"),
+				JSONMapper.convertToString(initAttributes.get("vorname"), false, false, Schema.tab_Schueler.col_Vorname.datenlaenge(), "vorname"),
+				JSONMapper.convertToString(initAttributes.get("alleVornamen"), true, true, Schema.tab_Schueler.col_Zusatz.datenlaenge(), "alleVornamen"),
+				JSONMapper.convertToInteger(initAttributes.get("geschlecht"), false, "geschlecht"),
+				JSONMapper.convertToString(initAttributes.get("geburtsdatum"), false, false, null, "geburtsdatum"),
+				JSONMapper.convertToInteger(initAttributes.get("status"), false, "status"),
+				JSONMapper.convertToString(initAttributes.get("anmeldedatum"), true, false, null, "anmeldedatum"),
+				JSONMapper.convertToString(initAttributes.get("aufnahmedatum"), true, false, null, "aufnahmedatum"),
+				JSONMapper.convertToString(initAttributes.get("beginnBildungsgang"), true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(), "beginnBildungsgang"),
+				JSONMapper.convertToInteger(initAttributes.get("dauerBildungsgang"), true, "dauerBildungsgang"),
+				JSONMapper.convertToLongInRange(initAttributes.get("idReligion"), true, 0L, null, "idReligion"),
+				JSONMapper.convertToLong(initAttributes.get(ID_SCHULJAHRESABSCHNITT), false, ID_SCHULJAHRESABSCHNITT)
+		);
+		return schuelerStammdatenService.create(neuerSchueler);
 	}
 
 	private void addLernabschnitt(final Map<String, Object> initAttributes, final long idSchueler) {

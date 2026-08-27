@@ -49,22 +49,20 @@ import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenBatchPatchRequest;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -215,15 +213,17 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return SchuelerControllerFactory
+				.withNoAccess(request)
+				.getSchuelerStammdatenController()
+				.get(id);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Stammdaten mehrerer Schüler.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param is        Inputstream mit einer Liste von Schüler IDs
+	 * @param ids       eine Liste von Schüler IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Stammdaten der Schüler
@@ -240,10 +240,12 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return SchuelerControllerFactory
+				.withNoAccess(request)
+				.getSchuelerStammdatenController()
+				.getList(ids);
 	}
 
 	/**
@@ -271,12 +273,10 @@ public class APISchueler {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> {
-					final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
-					final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
-					final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
-					final var schulbesuchService = SchuelerServiceFactory.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory)
-							.getSchulbesuchService();
-					return new DataSchuelerNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
+					final var schuelerServiceFactory = SchuelerServiceFactory.getNewInstance();
+					final var schuelerstammdatenService = schuelerServiceFactory.getSchuelerStammdatenService();
+					final var schulbesuchService = schuelerServiceFactory.getSchulbesuchService();
+					return new DataSchuelerNeu(schuelerstammdatenService, new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
 							new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
 							new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is);
 				},
@@ -288,7 +288,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Schülers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patchRequest  das Patch-Objekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -307,47 +307,50 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerStammdaten.class))) final SchuelerStammdatenPatchRequest patchRequest,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerControllerFactory
+				.withWriteAccess(request)
+				.getSchuelerStammdatenController()
+				.patch(id, patchRequest);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten mehrerer Schüler.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param dtos     die zu aktualisierenden SchülerStammdaten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
 	@Path("/stammdaten")
-	@Operation(summary = "Patch für mehrere Schüler Stammdaten Objekte.",
-			description = "Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
-	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@Operation(summary = "Aktualisiert mehrere bestehende SchülerStammdaten.",
+			description = "Aktualisiert die SchülerStammdaten mit den angegebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülern besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die aktualisierten SchülerStammdaten", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = SchuelerStammdaten.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	@ApiResponse(responseCode = "404", description = "SchülerStammdaten mit einer angegebenen ID wurde nicht gefunden.")
 	public Response patchSchuelerStammdatenMultiple(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true,
+			@RequestBody(description = "Die zu aktualisierenden SchülerStammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = SchuelerStammdaten.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(
+									implementation = SchuelerStammdaten.class)))) final List<SchuelerStammdatenBatchPatchRequest> dtos,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patchMultipleAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerControllerFactory
+				.withWriteAccess(request)
+				.getSchuelerStammdatenController()
+				.patchMultiple(dtos);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param ids      	die Liste von zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -363,11 +366,12 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchueler(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataSchuelerStammdaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LOESCHEN);
+		return SchuelerControllerFactory
+				.withDeleteAccess(request)
+				.getSchuelerStammdatenController()
+				.delete(ids);
 	}
 
 	/**
@@ -454,7 +458,7 @@ public class APISchueler {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return SchuelerControllerFactory
-				.withDeleteAccess(request)
+				.withWriteAccess(request)
 				.getSchuelerBisherigeSchuleController()
 				.delete(ids);
 	}

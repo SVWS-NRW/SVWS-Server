@@ -3,6 +3,7 @@ package de.svws_nrw.controller.schueler;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerSchulbesuchController;
+import de.svws_nrw.controller.schueler.stammdaten.SchuelerStammdatenController;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -75,7 +76,17 @@ class SchuelerControllerFactoryTest {
 		final var factory = SchuelerControllerFactory.withDeleteAccess(request);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
-				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)), times(1));
+				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.SCHUELER_LOESCHEN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withNoAccess | Factory wird erstellt und DBBenutzerUtils mit KEINE aufgerufen")
+	void withNoAccess() {
+		final var factory = SchuelerControllerFactory.withNoAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.KEINE)), times(1));
 		assertNotNull(factory);
 	}
 
@@ -106,6 +117,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerSchulbesuchController controller = factory.getSchuelerSchulbesuchController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withReadAccess | getSchuelerStammdatenController gibt einen Controller zurück")
+	void getSchuelerStammdatenController() {
+		final var factory = SchuelerControllerFactory.withReadAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerStammdatenController controller = factory.getSchuelerStammdatenController();
 		assertNotNull(controller);
 	}
 }

@@ -27942,7 +27942,7 @@ SchuelerSchulbesuchsdaten {
 
 exports[`Schueler Tests  > gegen { schema: 'GymAbi01' } > getSchuelerStammdaten 1`] = `
 SchuelerStammdaten {
-  "alleVornamen": "",
+  "alleVornamen": null,
   "anmeldedatum": "2013-02-14",
   "aufnahmedatum": "2013-08-01",
   "beginnBildungsgang": null,

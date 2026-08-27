@@ -9,35 +9,36 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
-import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import jakarta.ws.rs.core.Response;
 
 public class SchuelerMerkmalService {
 
 	private final SchuelerMerkmalRepository repository;
-	private final MerkmalRepository merkmalRepository;
+	private final MerkmalService merkmalService;
 	private final SchuelerMerkmalMapper mapper;
 
 
 	/**
 	 * Erstellt einen neuen {@code SchuelerMerkmalService}.
 	 *
-	 * @param repository                  das Repository für {@link DTOSchuelerMerkmale}-Einträge
-	 * @param merkmalRepository           das Repository für {@link DTOMerkmale}-Einträge
-	 * @param mapper                      der Mapper zur Konvertierung zwischen Entity und API-Modell
+	 * @param repository	das Repository für {@link DTOSchuelerMerkmale}-Einträge
+	 * @param merkmalService	das Repository für {@link DTOMerkmale}-Einträge
+	 * @param mapper	der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 */
 	public SchuelerMerkmalService(
 			final SchuelerMerkmalRepository repository,
-			final MerkmalRepository merkmalRepository,
+			final MerkmalService merkmalService,
 			final SchuelerMerkmalMapper mapper) {
 		this.repository = repository;
-		this.merkmalRepository = merkmalRepository;
+		this.merkmalService = merkmalService;
 		this.mapper = mapper;
 	}
 
@@ -49,7 +50,7 @@ public class SchuelerMerkmalService {
 	 * @return Liste der Merkmale, leer wenn keine vorhanden
 	 */
 	public List<SchuelerSchulbesuchMerkmal> getAllByIdSchueler(final long idSchueler) {
-		final var merkmaleByKuerzel = this.merkmalRepository.getAll()
+		final var merkmaleByKuerzel = this.merkmalService.getAll()
 				.stream()
 				.collect(Collectors.toMap(m -> m.kuerzel, m -> m));
 		return this.repository
@@ -59,7 +60,7 @@ public class SchuelerMerkmalService {
 				.toList();
 	}
 
-	private SchuelerSchulbesuchMerkmal mapApi(final DTOSchuelerMerkmale entity, final Map<String, DTOMerkmale> merkmaleByKuerzel) {
+	private SchuelerSchulbesuchMerkmal mapApi(final DTOSchuelerMerkmale entity, final Map<String, Merkmal> merkmaleByKuerzel) {
 		final var idMerkmal = Optional.ofNullable(entity.kuerzelMerkmal)
 				.map(merkmaleByKuerzel::get)
 				.map(m -> m.id)
@@ -107,11 +108,8 @@ public class SchuelerMerkmalService {
 			validateAndResolvePatch(entity, dto);
 			mapper.patch(dto, entity);
 
-			final var idMerkmal = dto.idMerkmal.orElseGet(() ->
-					merkmalRepository.getByKuerzel(entity.kuerzelMerkmal)
-							.map(m -> m.id)
-							.orElseThrow(() -> new ApiOperationException(Response.Status.BAD_REQUEST,
-									"Das Kürzel %s kann nicht eindeutig einem Merkmal zugeordnet werden".formatted(entity.kuerzelMerkmal)))
+			final var idMerkmal = dto.idMerkmal.orElseGet(
+					() -> merkmalService.getByKuerzel(entity.kuerzelMerkmal).id
 			);
 
 			return this.mapper.toApi(entity, idMerkmal);
@@ -158,7 +156,7 @@ public class SchuelerMerkmalService {
 	}
 
 	private String resolveMerkmal(final long idMerkmal) {
-		return this.merkmalRepository.getById(idMerkmal).kuerzel;
+		return this.merkmalService.getById(idMerkmal).kuerzel;
 	}
 
 	private void validateDatumBis(final String datumBis, final String datumVon) {

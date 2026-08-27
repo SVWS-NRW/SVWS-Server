@@ -17,6 +17,10 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryImpl;
+import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepository;
+import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepositoryImpl;
+import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepository;
+import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
@@ -208,5 +212,22 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 		return this.getOrCreate(SchuleRepository.class, () -> new SchuleRepositoryImpl(conn));
 	}
 
+	/**
+	 * Erstellt ein neues Repository.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public FahrschuelerartRepository getFahrschuelerartRepository() {
+		return this.getOrCreate(FahrschuelerartRepository.class, () -> new FahrschuelerartRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public HaltestelleRepository getHaltestelleRepository() {
+		return this.getOrCreate(HaltestelleRepository.class, () -> new HaltestelleRepositoryImpl(this.conn));
+	}
 
 }

@@ -11,13 +11,12 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
  * Diese Klasse dient dem Zugriff auf die Datenbank, um ein Erzieher-Adressbuch für einen Schuljahresabschnitt zu generieren.
@@ -110,13 +109,13 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 		}
 
 		// ... ansonsten müssen die entsprechenden Daten zusammengestellt werden.
-		final List<DTOSchueler> listDTOSchueler = new DataSchuelerStammdaten(conn).getDTOList(idsSchueler);
-		final Set<Long> idsOrte = listDTOSchueler.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
+		final var schueler = SchuelerServiceFactory.getNewInstance().getSchuelerStammdatenService().getList(idsSchueler);
+		final Set<Long> idsOrte = schueler.stream().map(s -> s.wohnortID).collect(Collectors.toSet());
 		idsOrte.addAll(erzieherBySchuelerID.values().stream().map(e -> e.ErzOrt_ID).collect(Collectors.toSet()));
 		final Map<Long, DTOOrt> mapOrtID = queryMapOrte(idsOrte);
 
 		// Leite die Kategorien von den Kategorien der Schüler ab
-		final Map<Long, Set<String>> tmpCategoriesBySchuelerID = cardDavSchueler.getCategoriesById(listDTOSchueler);
+		final Map<Long, Set<String>> tmpCategoriesBySchuelerID = cardDavSchueler.getCategoriesById(schueler);
 		final Map<Long, Set<String>> categoriesBySchuelerID = new HashMap<>();
 		for (final Map.Entry<Long, Set<String>> e : tmpCategoriesBySchuelerID.entrySet()) {
 			categoriesBySchuelerID.put(e.getKey(), e.getValue().stream().map(s -> "Eltern " + s).collect(Collectors.toSet()));

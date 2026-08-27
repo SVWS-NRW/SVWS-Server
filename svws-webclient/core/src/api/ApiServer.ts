@@ -14985,24 +14985,33 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSchuelerStammdatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/stammdaten
 	 *
-	 * Passt die Schüler-Stammdaten zu den angegebenen IDs an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
+	 * Aktualisiert die SchülerStammdaten mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülern besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich in die Schülerstammdaten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 200: Die aktualisierten SchülerStammdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerStammdaten>
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
-	 *   Code 404: Ein Schüler-Eintrag mit den angegebenen IDs wurde nicht gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *   Code 404: SchülerStammdaten mit einer angegebenen ID wurde nicht gefunden.
 	 *
 	 * @param {List<Partial<SchuelerStammdaten>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die aktualisierten SchülerStammdaten
 	 */
-	public async patchSchuelerStammdatenMultiple(data: List<Partial<SchuelerStammdaten>>, schema: string): Promise<void> {
+	public async patchSchuelerStammdatenMultiple(data: List<Partial<SchuelerStammdaten>>, schema: string): Promise<List<SchuelerStammdaten>> {
 		const path = "/db/{schema}/schueler/stammdaten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<SchuelerStammdaten>).map(d => SchuelerStammdaten.transpilerToJSONPatch(d)).join() + "]";
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerStammdaten>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchuelerStammdaten.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 

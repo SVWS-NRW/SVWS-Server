@@ -13,6 +13,8 @@ import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
+import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +45,7 @@ import static org.mockito.Mockito.when;
 class DataSchuelerNeuTest {
 
 	@Mock
-	private DataSchuelerStammdaten dataSchuelerStammdaten;
+	private SchuelerStammdatenService schuelerStammdatenService;
 
 	@Mock
 	private DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
@@ -77,6 +79,9 @@ class DataSchuelerNeuTest {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
 		schuelerNeu.put("vorname", "Max");
+		schuelerNeu.put("geburtsdatum", "2000-01-01");
+		schuelerNeu.put("geschlecht", 3);
+		schuelerNeu.put("status", 2);
 		schuelerNeu.put("idSchuljahresabschnitt", 8L);
 		schuelerNeu.put("idJahrgang", 5L);
 		schuelerNeu.put("idGrundschuleEinschulungsart", 51L);
@@ -84,7 +89,7 @@ class DataSchuelerNeuTest {
 		final var created = new SchuelerStammdaten();
 		created.id = 100L;
 
-		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
+		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
 		when(dataLernplattformen.getAllIds()).thenReturn(List.of(1L, 2L));
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of(10L, 20L));
 
@@ -93,7 +98,7 @@ class DataSchuelerNeuTest {
 		assertThat(response.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
 		assertThat(response.getEntity()).isEqualTo(created);
 
-		verify(dataSchuelerStammdaten, times(1)).add(any());
+		verify(schuelerStammdatenService, times(1)).create(any(SchuelerImportData.class));
 		verify(dataSchuelerLernabschnittsdaten).add(argThat(map ->
 				map.get("schuelerID").equals(100L)
 						&& (((Number) map.get("schuljahresabschnitt")).longValue() == 8L)
@@ -110,12 +115,15 @@ class DataSchuelerNeuTest {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
 		schuelerNeu.put("vorname", null);
+		schuelerNeu.put("geburtsdatum", "2000-01-01");
+		schuelerNeu.put("geschlecht", 3);
+		schuelerNeu.put("status", 2);
 		schuelerNeu.put("idSchuljahresabschnitt", 8L);
 
 		final var created = new SchuelerStammdaten();
 		created.id = 100L;
 
-		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
+		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
 		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of());
 
@@ -124,11 +132,7 @@ class DataSchuelerNeuTest {
 
 			data.add(mock(InputStream.class));
 
-			verify(dataSchuelerStammdaten).add(argThat(map ->
-					map.containsKey("nachname")
-							&& !map.containsKey("vorname")
-							&& map.containsKey(ID_SCHULJAHRESABSCHNITT)
-			));
+			verify(schuelerStammdatenService).create(any(SchuelerImportData.class));
 		}
 	}
 
@@ -137,8 +141,10 @@ class DataSchuelerNeuTest {
 	void addThrowsWhenSchuelerIsNull() {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
-
-		when(dataSchuelerStammdaten.add(any())).thenReturn(null);
+		schuelerNeu.put("geburtsdatum", "2000-01-01");
+		schuelerNeu.put("geschlecht", 3);
+		schuelerNeu.put("status", 2);
+		schuelerNeu.put("idSchuljahresabschnitt", 1L);
 
 		final var inputStream = TestUtils.fromObject(schuelerNeu);
 		assertThatThrownBy(() -> data.add(inputStream))
@@ -150,12 +156,16 @@ class DataSchuelerNeuTest {
 	void addSkipsSchulbesuchWhenEinschulungsartAbsent() {
 		final var schuelerNeu = new HashMap<String, Object>();
 		schuelerNeu.put("nachname", "Test");
+		schuelerNeu.put("vorname", "Test");
+		schuelerNeu.put("geburtsdatum", "2000-01-01");
+		schuelerNeu.put("geschlecht", 3);
+		schuelerNeu.put("status", 2);
 		schuelerNeu.put("idSchuljahresabschnitt", 8L);
 
 		final var created = new SchuelerStammdaten();
 		created.id = 100L;
 
-		when(dataSchuelerStammdaten.add(any())).thenReturn(created);
+		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
 		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of());
 
@@ -164,5 +174,4 @@ class DataSchuelerNeuTest {
 		verify(schuelerSchulbesuchService, never()).patch(anyLong(), any());
 	}
 
-	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
 }

@@ -3,10 +3,10 @@ package de.svws_nrw.service.gost;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
@@ -30,8 +30,6 @@ public final class GostServiceFactoryBuilder {
 	public static GostServiceFactory getGostServiceFactory() {
 		final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
 		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
-		final KatalogRepositoryFactory katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-		final BenutzerServiceFactory benutzerServiceFactory = BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory);
 		return GostServiceFactory.getNewInstance(
 				GostRepositoryFactory.getNewInstance(),
 				schuelerRepositoryFactory,
@@ -39,10 +37,11 @@ public final class GostServiceFactoryBuilder {
 				benutzerRepositoryFactory,
 				KatalogRepositoryFactory.getNewInstance(),
 				EigeneSchuleRepositoryFactory.getNewInstance(),
-				benutzerServiceFactory,
+				BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory),
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
-				GostKlausurenRepositoryFactory.getNewInstance());
+				SchuelerServiceFactory.getNewInstance(),
+				GostKlausurenRepositoryFactory.getNewInstance()
+		);
 	}
 
 }

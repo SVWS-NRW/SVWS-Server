@@ -192,4 +192,55 @@ class OrtRepositoryImplTest {
 			verify(conn, times(1)).query(anyString(), eq(Long.class));
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// existsById
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("existsById")
+	class ExistsById {
+
+		@Test
+		@DisplayName("Gibt true zurück, wenn das Lehramt vorhanden ist")
+		void existsById_found() {
+			final long idOrt = 500L;
+
+			when(conn.existsBy(
+					DTOOrt.QUERY_BY_ID,
+					DTOOrt.class,
+					idOrt))
+					.thenReturn(true);
+
+			final var result = repository.existsById(idOrt);
+
+			assertThat(result).isTrue();
+
+			verify(conn, times(1)).existsBy(
+					DTOOrt.QUERY_BY_ID,
+					DTOOrt.class,
+					idOrt);
+		}
+
+		@Test
+		@DisplayName("Gibt false zurück, wenn das Lehramt nicht vorhanden ist")
+		void existsById_notFound() {
+			final long idOrt = 999L;
+
+			when(conn.existsBy(
+					DTOOrt.QUERY_BY_ID,
+					DTOOrt.class,
+					idOrt))
+					.thenReturn(false);
+
+			final var result = repository.existsById(idOrt);
+
+			assertThat(result).isFalse();
+
+			verify(conn, times(1)).existsBy(
+					DTOOrt.QUERY_BY_ID,
+					DTOOrt.class,
+					idOrt);
+		}
+	}
 }

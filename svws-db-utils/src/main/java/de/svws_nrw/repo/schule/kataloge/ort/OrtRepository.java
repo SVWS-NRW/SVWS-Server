@@ -26,4 +26,10 @@ public interface OrtRepository extends ReferencedBulkDeletionRepository<DTOOrt> 
 	 */
 	boolean ortsnameIsUniqueForPlzPatch(String ortsname, String plz, long idOrt);
 
+	/**
+	 * @param idOrt {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idOrt);
+
 }

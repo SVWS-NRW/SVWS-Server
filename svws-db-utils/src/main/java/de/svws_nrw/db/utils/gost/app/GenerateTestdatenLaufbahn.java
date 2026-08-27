@@ -11,12 +11,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.jboss.resteasy.core.ResteasyContext;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
@@ -46,20 +42,12 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.gost.GostRepositoryFactory;
-import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
-import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
-import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
-import de.svws_nrw.service.crypto.CryptoServiceFactory;
 import de.svws_nrw.service.gost.GostAbiturdatenService;
-import de.svws_nrw.service.gost.GostServiceFactory;
-import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
+import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.core.ResteasyContext;
 
 /**
  * Diese Klasse stellt eine Kommandozeilen-Anwendung zur Verfügung, die dem
@@ -109,7 +97,7 @@ public class GenerateTestdatenLaufbahn {
 
 	/**
 	 ** Hauptmethode zum Generieren von Testfällen für die Gymnasiale Oberstufe aus den Laufbahnplanungsdaten
-     * der Gymnasialen Oberstufe einer SVWS-DB. Diese können im Server-Teilprojekt svws-test-libcore verwendet werden.
+	 * der Gymnasialen Oberstufe einer SVWS-DB. Diese können im Server-Teilprojekt svws-test-libcore verwendet werden.
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 * @throws ApiOperationException    im Fehlerfall.
@@ -271,22 +259,7 @@ public class GenerateTestdatenLaufbahn {
 		try {
 			// Erzeuge die einzelnen Repository-Klassen mit dem angepassten Zugriff über den Mocked Request in den Context-Daten
 			ResteasyContext.pushContext(HttpServletRequest.class, mockedRequest);
-			final BenutzerRepositoryFactory benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
-			final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
-			final KatalogRepositoryFactory katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-			final GostServiceFactory gostServiceFactory = GostServiceFactory.getNewInstance(
-					GostRepositoryFactory.getNewInstance(),
-					schuelerRepositoryFactory,
-					LehrerRepositoryFactory.getNewInstance(),
-					benutzerRepositoryFactory,
-					KatalogRepositoryFactory.getNewInstance(),
-					EigeneSchuleRepositoryFactory.getNewInstance(),
-					BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory),
-					CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-					SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
-					GostKlausurenRepositoryFactory.getNewInstance()
-			);
-			return gostServiceFactory.getGostAbiturdatenService();
+			return GostServiceFactoryBuilder.getGostServiceFactory().getGostAbiturdatenService();
 		} finally {
 			// Entferne den Mocked Request wieder aus den Context-Daten - das Repository kennt jetzt die Verbindung
 			ResteasyContext.clearContextData();

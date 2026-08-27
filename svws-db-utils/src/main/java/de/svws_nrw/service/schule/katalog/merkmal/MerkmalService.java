@@ -51,6 +51,32 @@ public final class MerkmalService {
 	}
 
 	/**
+	 * Gibt ein Merkmal zum Kürzel zurück
+	 *
+	 * @param kuerzel  kuerzel
+	 *
+	 * @return ein Merkmal
+	 */
+	public Merkmal getByKuerzel(final String kuerzel) {
+		return this.repository.getByKuerzel(kuerzel)
+				.map(this.mapper::toApi)
+				.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, "Kein Merkmal zum Kürzel %s gefunden".formatted(kuerzel)));
+	}
+
+	/**
+	 * Gibt ein Merkmal zur ID zurück
+	 *
+	 * @param id id
+	 *
+	 * @return ein Merkmal
+	 */
+	public Merkmal getById(final Long id) {
+		return this.repository.findById(id)
+				.map(this.mapper::toApi)
+				.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, "Kein Merkmal zur ID %d gefunden".formatted(id)));
+	}
+
+	/**
 	 * Erstellt ein neues Merkmal.
 	 * Validiert die Eingabedaten und erstellt das Merkmal in einer Transaktion.
 	 *

@@ -7,10 +7,10 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.gost.GostRepositoryFactory;
 import de.svws_nrw.repo.gost.klausuren.GostKlausurenRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
-import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.crypto.CryptoServiceFactory;
 import de.svws_nrw.service.gost.GostServiceFactory;
@@ -38,7 +38,7 @@ public final class GostLaufbahnplanungControllerFactory {
 		final SchuelerRepositoryFactory schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
 		final GostRepositoryFactory gostRepositoryFactory = GostRepositoryFactory.getNewInstance();
 		final KatalogRepositoryFactory katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-
+		final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
 		this.benutzerServiceFactory = BenutzerServiceFactory.getNewInstance(benutzerRepositoryFactory);
 
 		this.gostServiceFactory = GostServiceFactory.getNewInstance(
@@ -47,10 +47,10 @@ public final class GostLaufbahnplanungControllerFactory {
 				LehrerRepositoryFactory.getNewInstance(),
 				benutzerRepositoryFactory,
 				katalogRepositoryFactory,
-				EigeneSchuleRepositoryFactory.getNewInstance(),
+				eigeneSchuleRepositoryFactory,
 				benutzerServiceFactory,
 				CryptoServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory),
-				SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepositoryFactory, katalogRepositoryFactory),
+				SchuelerServiceFactory.getNewInstance(),
 				GostKlausurenRepositoryFactory.getNewInstance());
 	}
 

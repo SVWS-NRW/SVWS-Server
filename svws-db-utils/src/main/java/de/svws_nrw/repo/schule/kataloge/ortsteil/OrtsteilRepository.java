@@ -23,5 +23,10 @@ public interface OrtsteilRepository extends ReferencedBulkDeletionRepository<DTO
 	 */
 	boolean ortsteilnameIsUniqueForIdOrtPatch(String ortsteil, Long idOrt, long idOrtsteil);
 
+	/**
+	 * @param idOrtsteil {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idOrtsteil);
 
 }

@@ -23,7 +23,6 @@ import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
@@ -32,11 +31,6 @@ import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
-import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrFactory;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungSignaturzustand;
@@ -45,15 +39,17 @@ import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerAnkreuzkompetenz;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerAnkreuzkompetenz;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchuelerSchulbesuch;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
@@ -200,18 +196,29 @@ public class ReportingRepositorySchueler {
 	 * @return Das Auswahlergebnis.
 	 */
 	private ReportingAuswahlergebnis<ReportingSchueler> waehleAus(final List<Long> idsSchueler, final boolean sortiereListe, final boolean mitFilter) {
-		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(this.reportingContext.sortierungService(),
-				this.reportingContext.logger(), ReportingSchueler.class.getSimpleName(),
-				ReportingSchueler.SORTIERUNG, sortiereListe);
-		final Predicate<ReportingSchueler> filter = mitFilter ? ReportingSchueler.FILTER.bedingung(
-				this.reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null) : null;
+		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildComparator(
+				this.reportingContext.sortierungService(),
+				this.reportingContext.logger(),
+				ReportingSchueler.class.getSimpleName(),
+				ReportingSchueler.SORTIERUNG,
+				sortiereListe
+		);
+		final Predicate<ReportingSchueler> filter = mitFilter
+				? ReportingSchueler.FILTER.bedingung(this.reportingContext.filterService().getFilter(ReportingSchueler.class.getSimpleName()), null)
+				: null;
 
-		return ReportingRepositoryUtils.waehleAus(idsSchueler, mapSchuelerStammdaten, mapSchueler,
-				fehlendeIds -> new DataSchuelerStammdaten(this.reportingContext.conn()).getListByIds(fehlendeIds),
+		return ReportingRepositoryUtils.waehleAus(
+				idsSchueler,
+				mapSchuelerStammdaten,
+				mapSchueler,
+				fehlendeIds -> SchuelerServiceFactory.getNewInstance().getSchuelerStammdatenService().getList(fehlendeIds),
 				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
-				"Schüler", this.reportingContext.logger(), ladefehlerSchuelerStammdaten);
+				"Schüler",
+				this.reportingContext.logger(),
+				ladefehlerSchuelerStammdaten
+		);
 	}
 
 	/**
@@ -316,11 +323,8 @@ public class ReportingRepositorySchueler {
 	}
 
 	private Map<Long, SchuelerSchulbesuchsdaten> ladeSchulbesuchsdaten(final List<Long> idsSchueler) {
-		final var benutzerRepoFactory = BenutzerRepositoryFactory.getNewInstance();
-		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
-		final var katalogRepoFactory = KatalogRepositoryFactory.getNewInstance();
 		return SchuelerServiceFactory
-				.getNewInstance(benutzerRepoFactory, schuelerRepoFactory, katalogRepoFactory)
+				.getNewInstance()
 				.getSchulbesuchService()
 				.getByIds(idsSchueler)
 				.stream()

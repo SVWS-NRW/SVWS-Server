@@ -1,17 +1,16 @@
 package de.svws_nrw.service.schueler.schulbesuch;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
+import de.svws_nrw.core.data.schule.Merkmal;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
-import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.repo.schueler.schulbesuch.SchuelerMerkmalRepository;
-import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
+import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +39,7 @@ class SchuelerMerkmalServiceTest {
 	private SchuelerMerkmalRepository repository;
 
 	@Mock
-	private MerkmalRepository merkmalRepository;
+	private MerkmalService merkmalService;
 
 	@Mock
 	private SchuelerMerkmalMapper mapper;
@@ -50,14 +49,15 @@ class SchuelerMerkmalServiceTest {
 	private MockedStatic<TransactionSupport> transactionSupportMock;
 
 	// Testdaten
-	private DTOMerkmale merkmal;
+	private Merkmal merkmal;
 
 	@BeforeEach
 	void setUp() {
-		merkmal = new DTOMerkmale(10L);
+		merkmal = new Merkmal();
+		merkmal.id = 10L;
 		merkmal.kuerzel = "AB";
 
-		service = new SchuelerMerkmalService(repository, merkmalRepository, mapper);
+		service = new SchuelerMerkmalService(repository, merkmalService, mapper);
 		transactionSupportMock = mockStatic(TransactionSupport.class);
 	}
 
@@ -81,7 +81,7 @@ class SchuelerMerkmalServiceTest {
 
 		when(repository.getAllByIdSchueler(idSchueler)).thenReturn(List.of(entity));
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
-		when(merkmalRepository.getAll()).thenReturn(List.of(merkmal));
+		when(merkmalService.getAll()).thenReturn(List.of(merkmal));
 
 		final var result = service.getAllByIdSchueler(idSchueler);
 
@@ -160,7 +160,7 @@ class SchuelerMerkmalServiceTest {
 
 		final var apiModel = mock(SchuelerSchulbesuchMerkmal.class);
 
-		when(merkmalRepository.getById(merkmal.id)).thenReturn(merkmal);
+		when(merkmalService.getById(merkmal.id)).thenReturn(merkmal);
 		when(mapper.toDomain(dto, merkmal.kuerzel)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
@@ -188,7 +188,7 @@ class SchuelerMerkmalServiceTest {
 
 		final var apiModel = mock(SchuelerSchulbesuchMerkmal.class);
 
-		when(merkmalRepository.getById(merkmal.id)).thenReturn(merkmal);
+		when(merkmalService.getById(merkmal.id)).thenReturn(merkmal);
 		when(mapper.toDomain(dto, merkmal.kuerzel)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
@@ -206,7 +206,7 @@ class SchuelerMerkmalServiceTest {
 		dto.idSchueler = 42L;
 		dto.idMerkmal = 999L;
 
-		when(merkmalRepository.getById(999L))
+		when(merkmalService.getById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "999"));
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
@@ -252,7 +252,7 @@ class SchuelerMerkmalServiceTest {
 
 		final var apiModel = mock(SchuelerSchulbesuchMerkmal.class);
 
-		when(merkmalRepository.getById(merkmal.id)).thenReturn(merkmal);
+		when(merkmalService.getById(merkmal.id)).thenReturn(merkmal);
 		when(mapper.toDomain(dto, merkmal.kuerzel)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
@@ -282,7 +282,7 @@ class SchuelerMerkmalServiceTest {
 		final var apiModel = mock(SchuelerSchulbesuchMerkmal.class);
 
 		when(repository.getById(id)).thenReturn(entity);
-		when(merkmalRepository.getById(merkmal.id)).thenReturn(merkmal);
+		when(merkmalService.getById(merkmal.id)).thenReturn(merkmal);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
@@ -311,7 +311,7 @@ class SchuelerMerkmalServiceTest {
 
 		when(repository.getById(id)).thenReturn(entity);
 		// idMerkmal ist undefined → Fallback auf entity.kuerzelMerkmal via getByKuerzel
-		when(merkmalRepository.getByKuerzel(merkmal.kuerzel)).thenReturn(Optional.ofNullable(merkmal));
+		when(merkmalService.getByKuerzel(merkmal.kuerzel)).thenReturn(merkmal);
 		when(mapper.toApi(entity, merkmal.id)).thenReturn(apiModel);
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))
@@ -331,7 +331,7 @@ class SchuelerMerkmalServiceTest {
 		final var entity = new DTOSchuelerMerkmale(id, 42L);
 
 		when(repository.getById(id)).thenReturn(entity);
-		when(merkmalRepository.getById(999L))
+		when(merkmalService.getById(999L))
 				.thenThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "999"));
 
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<?>>any()))

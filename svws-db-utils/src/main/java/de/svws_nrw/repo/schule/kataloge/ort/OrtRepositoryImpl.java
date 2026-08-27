@@ -53,4 +53,10 @@ public final class OrtRepositoryImpl extends RepositoryImpl<DTOOrt> implements O
 		return !conn.existsBy(query, DTOOrt.class, ortsname, plz, idOrt);
 	}
 
+	@Override
+	public boolean existsById(final Long idOrt) {
+		return conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, idOrt);
+	}
+
+
 }

@@ -33,4 +33,10 @@ public interface ReligionRepository extends ReferencedBulkDeletionRepository<DTO
 	 */
 	boolean bezeichnungIstBereitsVergebenExceptId(String bezeichnung, long id);
 
+	/**
+	 * @param idReligion {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idReligion);
+
 }

@@ -50,4 +50,9 @@ public final class ReligionRepositoryImpl extends RepositoryImpl<DTOReligion> im
 		return new HashSet<>(results);
 	}
 
+	@Override
+	public boolean existsById(final Long idReligion) {
+		return conn.existsBy(DTOReligion.QUERY_BY_ID, DTOReligion.class, idReligion);
+	}
+
 }

@@ -1,6 +1,7 @@
 package de.svws_nrw.service.schule.katalog.merkmale;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.schule.Merkmal;
@@ -84,6 +85,60 @@ class MerkmalServiceTest {
 		verify(mapper, times(2)).toApi(any(DTOMerkmale.class));
 	}
 
+	// --- getByKuerzel ---
+
+	@Test
+	@DisplayName("getByKuerzel | Erfolg")
+	void getByKuerzel_success() {
+		final var kuerzel = "TEST";
+		final var entity = new DTOMerkmale(1L);
+		final var apiMerkmal = mock(Merkmal.class);
+
+		when(repository.getByKuerzel(kuerzel)).thenReturn(Optional.of(entity));
+		when(mapper.toApi(entity)).thenReturn(apiMerkmal);
+
+		assertThat(service.getByKuerzel(kuerzel))
+				.isEqualTo(apiMerkmal);
+	}
+
+	@Test
+	@DisplayName("getByKuerzel | Nicht gefunden")
+	void getByKuerzel_notFound() {
+		final var kuerzel = "UNBEKANNT";
+
+		when(repository.getByKuerzel(kuerzel)).thenReturn(Optional.empty());
+
+		assertThatThrownBy(() -> service.getByKuerzel(kuerzel))
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	// --- getById ---
+
+	@Test
+	@DisplayName("getById | Erfolg")
+	void getById_success() {
+		final var id = 1L;
+		final var entity = new DTOMerkmale(id);
+		final var apiMerkmal = mock(Merkmal.class);
+
+		when(repository.findById(id)).thenReturn(Optional.of(entity));
+		when(mapper.toApi(entity)).thenReturn(apiMerkmal);
+
+		assertThat(service.getById(id))
+				.isEqualTo(apiMerkmal);
+	}
+
+	@Test
+	@DisplayName("getById | Nicht gefunden")
+	void getById_notFound() {
+		final var id = 99L;
+
+		when(repository.findById(id)).thenReturn(Optional.empty());
+
+		assertThatThrownBy(() -> service.getById(id))
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
 	@Test
 	@DisplayName("create | Erfolg")
 	void create_success() {
@@ -161,6 +216,29 @@ class MerkmalServiceTest {
 	}
 
 	@Test
+	@DisplayName("create | repository.create wird aufgerufen")
+	void create_repositoryCreateIsCalled() {
+		final var dto = new MerkmalCreateRequest();
+		dto.kuerzel = "TEST";
+		dto.bezeichnung = "Test Merkmal";
+		dto.istSchulmerkmal = true;
+		dto.istSchuelermerkmal = false;
+
+		final var entity = new DTOMerkmale(1L);
+		final var createdEntity = new DTOMerkmale(1L);
+
+		when(repository.bezeichnungIsAlreadyUsedCreate(dto.bezeichnung)).thenReturn(false);
+		when(repository.kuerzelIsAlreadyUsedCreate(dto.kuerzel)).thenReturn(false);
+		when(mapper.toDomain(dto)).thenReturn(entity);
+		when(repository.create(entity)).thenReturn(createdEntity);
+		when(mapper.toApi(createdEntity)).thenReturn(mock(Merkmal.class));
+
+		service.create(dto);
+
+		verify(repository, times(1)).create(entity);
+	}
+
+	@Test
 	@DisplayName("patch | Erfolg")
 	void patch_success() {
 		final var id = 1L;
@@ -213,6 +291,47 @@ class MerkmalServiceTest {
 	}
 
 	@Test
+	@DisplayName("patch | Kürzel bereits vorhanden")
+	void patch_kuerzelAlreadyExists() {
+		final var id = 1L;
+		final var dto = new MerkmalPatchRequest();
+		dto.kuerzel = JsonNullable.of("EXIST");
+		dto.bezeichnung = JsonNullable.undefined();
+		dto.istSchulmerkmal = JsonNullable.undefined();
+		dto.istSchuelermerkmal = JsonNullable.undefined();
+
+		final var entity = new DTOMerkmale(id);
+		entity.istSchulmerkmal = true;
+		entity.istSchuelermerkmal = false;
+
+		when(repository.getById(id)).thenReturn(entity);
+		when(repository.kuerzelIsAlreadyUsedPatch("EXIST", id)).thenReturn(true);
+
+		assertThatThrownBy(() -> service.patch(id, dto))
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | Keine Merkmaltypen ausgewählt")
+	void patch_noMerkmalTypeSelected() {
+		final var id = 1L;
+		final var dto = new MerkmalPatchRequest();
+		dto.bezeichnung = JsonNullable.undefined();
+		dto.kuerzel = JsonNullable.undefined();
+		dto.istSchulmerkmal = JsonNullable.of(false);
+		dto.istSchuelermerkmal = JsonNullable.of(false);
+
+		final var entity = new DTOMerkmale(id);
+		entity.istSchulmerkmal = true;
+		entity.istSchuelermerkmal = false;
+
+		when(repository.getById(id)).thenReturn(entity);
+
+		assertThatThrownBy(() -> service.patch(id, dto))
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
 	@DisplayName("delete | Erfolg mit mehreren IDs")
 	void delete_success() {
 		final var ids = List.of(1L, 2L, 3L);
@@ -254,4 +373,23 @@ class MerkmalServiceTest {
 				.isEmpty();
 		verify(repository, times(1)).findListByIds(ids);
 	}
+
+	@Test
+	@DisplayName("delete | Teils nicht gefundene IDs ergeben success=false")
+	void delete_partialFailure_notFoundIds() {
+		final var ids = List.of(1L, 2L, 3L);
+		final var entity1 = new DTOMerkmale(1L);
+		final var entity3 = new DTOMerkmale(3L);
+		final var foundEntities = List.of(entity1, entity3);
+
+		when(repository.findListByIds(ids)).thenReturn(foundEntities);
+		when(repository.delete(foundEntities)).thenReturn(foundEntities);
+
+		final var result = service.delete(ids);
+
+		assertThat(result.get(1))
+				.hasFieldOrPropertyWithValue("id", 2L)
+				.hasFieldOrPropertyWithValue("success", false);
+	}
+
 }

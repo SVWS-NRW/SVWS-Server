@@ -51,4 +51,10 @@ public final class OrtsteilRepositoryImpl extends RepositoryImpl<DTOOrtsteil> im
 		final String query = "SELECT o FROM DTOOrtsteil o WHERE LOWER(o.ortsteil) = LOWER(?1) AND o.idOrt = ?2 AND o.id != ?3";
 		return !conn.existsBy(query, DTOOrtsteil.class, ortsteil, idOrt, idOrtsteil);
 	}
+
+	@Override
+	public boolean existsById(final Long idOrtsteil) {
+		return conn.existsBy(DTOOrtsteil.QUERY_BY_ID, DTOOrtsteil.class, idOrtsteil);
+	}
+
 }

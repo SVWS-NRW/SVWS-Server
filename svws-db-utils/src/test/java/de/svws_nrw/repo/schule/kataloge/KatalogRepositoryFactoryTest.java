@@ -59,6 +59,8 @@ class KatalogRepositoryFactoryTest {
 		assertNotNull(factory.getFachklasseRepository());
 		assertNotNull(factory.getMerkmalRepository());
 		assertNotNull(factory.getSchulenRepository());
+		assertNotNull(factory.getFahrschuelerartRepository());
+		assertNotNull(factory.getHaltestelleRepository());
 	}
 
 }

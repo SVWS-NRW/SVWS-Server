@@ -6,12 +6,11 @@ import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerSchulbesuchController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerSchulbesuchControllerImpl;
+import de.svws_nrw.controller.schueler.stammdaten.SchuelerStammdatenController;
+import de.svws_nrw.controller.schueler.stammdaten.SchuelerStammdatenControllerImpl;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -25,11 +24,7 @@ public final class SchuelerControllerFactory {
 
 	private static SchuelerControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
-		final var schuelerRepoFactory = SchuelerRepositoryFactory.getNewInstance();
-		final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
-		final var benutzerRepositoryFactory = BenutzerRepositoryFactory.getNewInstance();
-		final var serviceFactory = SchuelerServiceFactory.getNewInstance(benutzerRepositoryFactory, schuelerRepoFactory, katalogRepositoryFactory);
-
+		final var serviceFactory = SchuelerServiceFactory.getNewInstance();
 		return new SchuelerControllerFactory(serviceFactory);
 	}
 
@@ -44,6 +39,19 @@ public final class SchuelerControllerFactory {
 	 */
 	public static SchuelerControllerFactory withReadAccess(final HttpServletRequest request) {
 		return getNewInstance(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz ohne erforderliche Benutzerkompetenz.
+	 * <p>
+	 * Für diese Factory wird keine zusätzliche Berechtigung vorausgesetzt.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerControllerFactory-Instanz ohne zusätzliche Berechtigungsanforderung
+	 */
+	public static SchuelerControllerFactory withNoAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -69,7 +77,7 @@ public final class SchuelerControllerFactory {
 	 * @return eine SchuelerControllerFactory-Instanz mit Löschberechtigung
 	 */
 	public static SchuelerControllerFactory withDeleteAccess(final HttpServletRequest request) {
-		return getNewInstance(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return getNewInstance(request, BenutzerKompetenz.SCHUELER_LOESCHEN);
 	}
 
 	/**
@@ -97,6 +105,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerSchulbesuchController getSchuelerSchulbesuchController() {
 		return new SchuelerSchulbesuchControllerImpl(schuelerServiceFactory.getSchulbesuchService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerStammdatenController-Instanz.
+	 *
+	 * @return ein neuer SchuelerStammdatenController mit dem konfigurierten SchuelerStammdatenService
+	 */
+	public SchuelerStammdatenController getSchuelerStammdatenController() {
+		return new SchuelerStammdatenControllerImpl(schuelerServiceFactory.getSchuelerStammdatenService());
 	}
 
 }

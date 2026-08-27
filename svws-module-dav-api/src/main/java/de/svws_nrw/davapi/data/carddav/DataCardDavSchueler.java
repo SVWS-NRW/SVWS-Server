@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
@@ -17,7 +18,6 @@ import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.klassen.DataKlassendaten;
-import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
@@ -26,10 +26,10 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 
 /**
  * Diese Klasse dient dem Zugriff auf die Datenbank, um ein Schüler-Adressbuch für einen Schuljahresabschnitt zu generieren.
@@ -59,26 +59,26 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	 *
 	 * @return der Kontakt
 	 */
-	private AdressbuchEintrag mapContact(final DTOSchueler schueler, final List<Telefonnummer> nummern, final DTOOrt ort, final Set<String> categories) {
+	private AdressbuchEintrag mapContact(final SchuelerStammdaten schueler, final List<Telefonnummer> nummern, final DTOOrt ort, final Set<String> categories) {
 		final AdressbuchKontakt k = new AdressbuchKontakt();
-		k.id = getKontaktId(schueler.ID);
-		k.email = schueler.Email;
+		k.id = getKontaktId(schueler.id);
+		k.email = schueler.emailPrivat;
 
 		if (nummern != null) {
 			k.telefonnummern.addAll(nummern);
 		}
-		addStandardTelefonnummer(schueler.Fax, k.telefonnummern, "cell");
-		addStandardTelefonnummer(schueler.Telefon, k.telefonnummern, "voice");
+		addStandardTelefonnummer(schueler.telefonMobil, k.telefonnummern, "cell");
+		addStandardTelefonnummer(schueler.telefon, k.telefonnummern, "voice");
 
-		k.hausnummer = schueler.HausNr;
-		k.hausnummerZusatz = schueler.HausNrZusatz;
-		k.nachname = schueler.Nachname;
+		k.hausnummer = schueler.hausnummer;
+		k.hausnummerZusatz = schueler.hausnummerZusatz;
+		k.nachname = schueler.nachname;
 		if (ort != null) {
 			k.plz = ort.plz;
 			k.ort = ort.ortsname;
 		}
-		k.strassenname = schueler.Strassenname;
-		k.vorname = schueler.Vorname;
+		k.strassenname = schueler.strassenname;
+		k.vorname = schueler.vorname;
 		k.rolle = "Schüler";
 		k.organisation = getSchulname();
 		if (categories != null) {
@@ -117,7 +117,7 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 
 		// Bestimme zunächst die Schülerliste für den Schuljahresabschnitt und filtere anschließend die relevanten Schüler anhand des Schüler-Status
 		final List<SchuelerListeEintrag> listSchueler = DataSchuelerliste.getListeSchueler(conn, schuljahresabschnitt.id, false).stream()
-				.filter(s -> filterBySchuelerStatus(s)).toList();
+				.filter(DataCardDavSchueler::filterBySchuelerStatus).toList();
 
 		// Wenn keine Payload erzeugt wird, so können leere Adressbuch-Einträge zurückgegeben werden ...
 		if (!withPayload) {
@@ -131,16 +131,16 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 		if (idsSchueler.isEmpty()) {
 			return result;
 		}
-		final List<DTOSchueler> listDTOSchueler = new DataSchuelerStammdaten(conn).getDTOList(idsSchueler);
+		final var schueler = SchuelerServiceFactory.getNewInstance().getSchuelerStammdatenService().getList(idsSchueler);
 
-		final Set<Long> idsOrte = listDTOSchueler.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
+		final Set<Long> idsOrte = schueler.stream().map(s -> s.wohnortID).collect(Collectors.toSet());
 
 		final Map<Long, DTOOrt> mapOrtID = queryMapOrte(idsOrte);
 		final Map<Long, List<Telefonnummer>> mapTelefonnummernBySchuelerId = getMapTelefonnummernBySchuelerId(idsSchueler);
-		final Map<Long, Set<String>> mapCategoriesBySchuelerId = getCategoriesById(listDTOSchueler);
-		for (final DTOSchueler s : listDTOSchueler) {
-			final List<Telefonnummer> telefonnummern = mapTelefonnummernBySchuelerId.get(s.ID);
-			final AdressbuchEintrag eintrag = mapContact(s, telefonnummern, mapOrtID.get(s.Ort_ID), mapCategoriesBySchuelerId.get(s.ID));
+		final Map<Long, Set<String>> mapCategoriesBySchuelerId = getCategoriesById(schueler);
+		for (final var s : schueler) {
+			final List<Telefonnummer> telefonnummern = mapTelefonnummernBySchuelerId.get(s.id);
+			final AdressbuchEintrag eintrag = mapContact(s, telefonnummern, mapOrtID.get(s.wohnortID), mapCategoriesBySchuelerId.get(s.id));
 			result.add(eintrag);
 		}
 		return result;
@@ -167,7 +167,10 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 				conn.queryList(DTOSchuelerTelefon.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerTelefon.class, idsSchueler);
 		for (final DTOSchuelerTelefon dto : dtoSchuelerTelefonQueryResult) {
 			final DTOTelefonArt art = mapTelefonartById.get(dto.TelefonArt_ID);
-			if (dto.Gesperrt.booleanValue() || (dto.Telefonnummer == null) || (art == null) || !art.Sichtbar.booleanValue()) {
+			if (Boolean.TRUE.equals(dto.Gesperrt)
+					|| (dto.Telefonnummer == null)
+					|| (art == null)
+					|| !Boolean.TRUE.equals(art.Sichtbar)) {
 				continue;
 			}
 
@@ -184,31 +187,45 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	/**
 	 * Hilfsmethode für die Suche aller Kategorien (für Gruppen im Adressbuch) zu den Schüler-IDs.
 	 *
-	 * @param listSchueler   die Liste der Schüler
+	 * @param schueler   die Liste der Schüler
 	 *
 	 * @return eine Map, welche den Schüler-IDs die Liste der zugehörigen Kategorien zugeordnet
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	Map<Long, Set<String>> getCategoriesById(final List<DTOSchueler> listSchueler) throws ApiOperationException {
-		// Die Map mit der Zuordnung der einzelnen Kategorien der Schüler zu deren Schüler-IDs
+	Map<Long, Set<String>> getCategoriesById(final List<SchuelerStammdaten> schueler) {
 		final Map<Long, Set<String>> result = new HashMap<>();
+		final List<Long> idsSchueler = schueler.stream()
+				.map(s -> s.id)
+				.toList();
 
-		// Die Liste der Schüler-IDs für spätere Datenbankzugriffe
-		final List<Long> idsSchueler = listSchueler.stream().map(s -> s.ID).toList();
+		final Set<Long> setNeuaufnahmen = collectNeuaufnahmen(schueler);
+		setNeuaufnahmen.forEach(idSchueler -> result.computeIfAbsent(idSchueler, s -> new HashSet<>()).add("Neuaufnahmen"));
 
-		// Kategorie "Neuaufnahmen" setzen
-		final Set<Long> setNeuaufnahmen =
-				listSchueler.stream()
-						.filter(schueler -> SchuelerStatus.data()
-								.getWertByIDOrNull(schueler.idStatus == null ? null : schueler.idStatus.longValue()) == SchuelerStatus.NEUAUFNAHME)
-						.map(s -> s.ID).collect(Collectors.toSet());
-		setNeuaufnahmen.stream().forEach(idSchueler -> result.computeIfAbsent(idSchueler, s -> new HashSet<>()).add("Neuaufnahmen"));
-
-		// Kategorie zur Jahrgangs- und Klassenzugehörigkeit anhand des Lernabschnittes
-		final Map<Long, String> mapJahrgangById = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
-		final Map<Long, DTOKlassen> mapKlassenById = new DataKlassendaten(conn).getDTOsBySchuljahresabschnittId(schuljahresabschnitt.id)
+		final Map<Long, String> jahrgangById = conn.queryAll(DTOJahrgang.class).stream()
+				.collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
+		final Map<Long, DTOKlassen> klassenById = new DataKlassendaten(conn)
+				.getDTOsBySchuljahresabschnittId(schuljahresabschnitt.id)
 				.stream().collect(Collectors.toMap(s -> s.ID, Function.identity()));
+
+		addLernabschnittKategorien(result, idsSchueler, jahrgangById, klassenById, setNeuaufnahmen);
+		addKursKategorien(result, jahrgangById);
+
+		return result;
+	}
+
+	private Set<Long> collectNeuaufnahmen(final List<SchuelerStammdaten> schueler) {
+		return schueler.stream()
+				.filter(s -> SchuelerStatus.data().getWertByIDOrNull((long) s.status) == SchuelerStatus.NEUAUFNAHME)
+				.map(s -> s.id)
+				.collect(Collectors.toSet());
+	}
+
+	private void addLernabschnittKategorien(
+			final Map<Long, Set<String>> result,
+			final List<Long> idsSchueler,
+			final Map<Long, String> mapJahrgangById,
+			final Map<Long, DTOKlassen> mapKlassenById,
+			final Set<Long> setNeuaufnahmen
+	) {
 		final List<DTOSchuelerLernabschnittsdaten> listLernabschnitte =
 				conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2",
 						DTOSchuelerLernabschnittsdaten.class, idsSchueler, schuljahresabschnitt.id);
@@ -236,8 +253,9 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 				categories.add("Jahrgang %s %s".formatted(klasse.Jahrgang_ID, strSchuljahresabschnitt));
 			}
 		}
+	}
 
-		// Kategorie Kurs
+	private void addKursKategorien(final Map<Long, Set<String>> result, final Map<Long, String> mapJahrgangById) {
 		final Map<Long, DTOKurs> mapKursById = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, schuljahresabschnitt.id)
 				.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final List<DTOKursSchueler> dtoKursSchuelerQueryResult =
@@ -257,7 +275,6 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 				// TODO Jahrgangsübergreifende Kurse: "Kurs %s %s %s", Beispiel "Kurs AG-Netzwerk (05,06,07) 2024/25.2"
 			}
 		}
-		return result;
 	}
 
 }
