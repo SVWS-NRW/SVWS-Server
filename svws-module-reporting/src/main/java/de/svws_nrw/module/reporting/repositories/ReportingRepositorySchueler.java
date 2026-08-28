@@ -51,6 +51,7 @@ import de.svws_nrw.module.reporting.types.schueler.telefon.ProxyReportingSchuele
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.foto.SchuelerFoto;
 
 /**
  * Domänen-Repository für Schülerdaten (Stammdaten, Lernabschnitte, Leistungsdaten und Reporting-Objekte).
@@ -67,6 +68,13 @@ public class ReportingRepositorySchueler {
 	 * verhindert; ohne diesen Speicher stünde in einer späteren Meldung nur noch, dass das Laden scheiterte, nicht mehr woran.
 	 */
 	private final Map<Long, Exception> ladefehlerSchuelerStammdaten = new HashMap<>();
+
+	/** Die Fotos je Schüler-ID. Sie werden erst beim ersten Zugriff geladen, denn die Stammdaten werden auch für Ausgaben ohne Fotos gebraucht. */
+	private final Map<Long, String> mapSchuelerFotos = new HashMap<>();
+
+	/** Die Fehler gescheiterter Foto-Ladevorgänge je Schüler-ID. */
+	private final Map<Long, Exception> ladefehlerSchuelerFotos = new HashMap<>();
+
 	private final Map<Long, List<ErzieherStammdaten>> mapErzieherStammdaten = new HashMap<>();
 	private final Map<Long, List<Sprachbelegung>> mapSchuelerSprachbelegungen = new HashMap<>();
 	private final Map<Long, SchuelerSchulbesuchsdaten> mapSchuelerSchulbesuchsdaten = new HashMap<>();
@@ -211,7 +219,7 @@ public class ReportingRepositorySchueler {
 				idsSchueler,
 				mapSchuelerStammdaten,
 				mapSchueler,
-				fehlendeIds -> SchuelerServiceFactory.getNewInstance().getSchuelerStammdatenService().getList(fehlendeIds),
+				fehlendeIds -> SchuelerServiceFactory.getNewInstance().getSchuelerStammdatenService().getListOhneFotos(fehlendeIds),
 				key -> new ProxyReportingSchueler(this.reportingContext, mapSchuelerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
@@ -242,6 +250,50 @@ public class ReportingRepositorySchueler {
 	 */
 	public void registriereStammdaten(final long idSchueler, final SchuelerStammdaten stammdaten) {
 		mapSchuelerStammdaten.put(idSchueler, stammdaten);
+	}
+
+	/**
+	 * Liefert das Foto des übergebenen Schülers im Base64-Format. Beim ersten Zugriff werden die Fotos aller bereits bekannten Schüler gesammelt
+	 * nachgeladen, so dass eine Ausgabe mit Fotos nicht je Schüler eine eigene Abfrage absetzt.
+	 * <p>
+	 * Die Stammdaten kommen bewusst ohne Fotos; eine Ausgabe ohne Bilder überträgt sie damit gar nicht erst.
+	 *
+	 * @param idSchueler Die ID des Schülers.
+	 *
+	 * @return Das Foto im Base64-Format oder ein leerer String, wenn keines hinterlegt ist oder das Laden gescheitert ist.
+	 */
+	public String schuelerFoto(final long idSchueler) {
+		final List<Long> ids = new ArrayList<>(idsGeladenerSchueler());
+		ids.add(idSchueler);
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				ids,
+				mapSchuelerFotos,
+				this::ladeFotos,
+				"Schülerfotos",
+				this.reportingContext.logger(),
+				ladefehlerSchuelerFotos);
+		meldeTeildatenLadefehler(ladefehlerSchuelerFotos, idSchueler, ReportingSchueler.class, "Die Fotodaten");
+		final String foto = mapSchuelerFotos.get(idSchueler);
+		return (foto == null) ? "" : foto;
+	}
+
+	/**
+	 * Lädt die Fotos zu den übergebenen Schüler-IDs. Schüler ohne hinterlegtes Foto erhalten einen leeren Eintrag: Ohne ihn gälten sie als noch nicht
+	 * geladen, und jeder weitere Zugriff stieße eine erneute Abfrage an.
+	 *
+	 * @param idsSchueler Die IDs der Schüler, deren Fotos geladen werden sollen.
+	 *
+	 * @return Map mit Schüler-ID als Schlüssel und dem Foto im Base64-Format als Wert.
+	 */
+	private Map<Long, String> ladeFotos(final List<Long> idsSchueler) {
+		final Map<Long, String> gefundene = SchuelerServiceFactory.getNewInstance().getSchuelerFotoService().getBySchuelerIds(idsSchueler).stream()
+				.filter(f -> f.fotoBase64() != null)
+				.collect(Collectors.toMap(SchuelerFoto::idSchueler, SchuelerFoto::fotoBase64));
+		final Map<Long, String> ergebnis = new HashMap<>();
+		for (final Long id : idsSchueler) {
+			ergebnis.put(id, gefundene.getOrDefault(id, ""));
+		}
+		return ergebnis;
 	}
 
 
@@ -613,8 +665,8 @@ public class ReportingRepositorySchueler {
 
 	/**
 	 * Meldet ein Ausgabeproblem, wenn das Laden der genannten Teildaten dieses Schülers gescheitert ist. Ohne festgehaltenen Fehler geschieht nichts.
-	 * <p>Der Schlüssel führt die Objektart der Teildaten und die ID des Schülers; damit zählt jede Art von Teildaten je Schüler genau einmal. Gemeldet wird bei
-	 * jedem Zugriff, denn welcher der erste ist, hängt an der Reportvorlage - die Deduplizierung macht daraus einen Befund und einen Logeintrag.</p>
+	 * <p>Der Schlüssel führt die Objektart der Teildaten und die ID des Schülers; damit zählt jede Art von Teildaten je Schüler genau einmal. Diese Methode
+	 * ergänzt die gemeinsame Meldestelle allein um die Wortwahl für Schüler.</p>
 	 *
 	 * @param ladefehler  Die Fehler gescheiterter Ladevorgänge dieser Teildaten je Schüler-ID.
 	 * @param idSchueler  Die ID des Schülers, dessen Teildaten fehlen.
@@ -622,11 +674,8 @@ public class ReportingRepositorySchueler {
 	 * @param bezeichnung Die Benennung der ausgelassenen Teildaten für den Logeintrag, etwa "Die Erzieherdaten".
 	 */
 	private void meldeTeildatenLadefehler(final Map<Long, Exception> ladefehler, final long idSchueler, final Class<?> objektart, final String bezeichnung) {
-		if (!ladefehler.containsKey(idSchueler)) {
-			return;
-		}
-		meldeTeildatenLadefehler(ReportingProblemSchluessel.fuer(objektart, idSchueler), "%s des Schülers %d".formatted(bezeichnung, idSchueler),
-				ladefehler.get(idSchueler));
+		ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ladefehler, idSchueler, objektart,
+				"%s des Schülers %d".formatted(bezeichnung, idSchueler));
 	}
 
 	/**

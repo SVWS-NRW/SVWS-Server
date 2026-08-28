@@ -5,6 +5,7 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.utils.ReportingBildquelle;
 import de.svws_nrw.module.reporting.utils.ReportingStrings;
 
 /**
@@ -24,6 +25,15 @@ public class ReportingPerson extends ReportingBaseType {
 
 	/** Die schulische Fax-Nummer. */
 	protected String faxSchule;
+
+	/** Das Foto der Person im Base64-Format. Gepflegt wird es allein für Schüler und Lehrkräfte. */
+	protected String foto;
+
+	/** Die Bildquelle des Fotos, beim ersten Zugriff aus den Base64-Daten abgeleitet. */
+	protected String fotoHtmlSource;
+
+	/** Gibt an, ob das Foto vorliegt. */
+	private boolean fotoGeladen;
 
 	/** Das Geburtsdatum. */
 	protected String geburtsdatum;
@@ -92,6 +102,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @param emailPrivat			Die private E-Mail-Adresse.
 	 * @param emailSchule			Die schulische E-Mail-Adresse.
 	 * @param faxSchule 			Die schulische Fax-Nummer.
+	 * @param foto					Das Foto der Person im Base64-Format.
 	 * @param geburtsdatum			Das Geburtsdatum.
 	 * @param geburtsland			Das Geburtsland.
 	 * @param geburtsname			Der Geburtsname.
@@ -114,7 +125,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @param wohnortsteil			Ggf. der Ortsteil des Wohnortes.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ReportingPerson(final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule, final String geburtsdatum,
+	public ReportingPerson(final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule, final String foto, final String geburtsdatum,
 			final String geburtsland, final String geburtsname, final String geburtsort, final Geschlecht geschlecht, final String hausnummer,
 			final String hausnummerZusatz, final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
 			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule,
@@ -125,6 +136,8 @@ public class ReportingPerson extends ReportingBaseType {
 		this.emailPrivat = ersetzeNullBlankTrim(emailPrivat);
 		this.emailSchule = ersetzeNullBlankTrim(emailSchule);
 		this.faxSchule = ersetzeNullBlankTrim(faxSchule);
+		this.foto = ersetzeNullBlankTrim(foto);
+		this.fotoGeladen = (foto != null);
 		this.geburtsdatum = ersetzeNullBlankTrim(geburtsdatum);
 		this.geburtsland = ersetzeNullBlankTrim(geburtsland);
 		this.geburtsname = ersetzeNullBlankTrim(geburtsname);
@@ -512,6 +525,44 @@ public class ReportingPerson extends ReportingBaseType {
 	 */
 	public String faxSchule() {
 		return faxSchule;
+	}
+
+	/**
+	 * Das Foto der Person im Base64-Format. Liegt es noch nicht vor, wird es einmalig über {@link #ladeFoto()} nachgefordert; jeder Zugriff auf das Foto
+	 * muss deshalb über diesen Getter laufen und nicht über das Feld.
+	 *
+	 * @return Inhalt des Feldes foto; nie {@code null}, bei fehlendem Foto ein leerer String.
+	 */
+	public String foto() {
+		if (!fotoGeladen) {
+			foto = ersetzeNullBlankTrim(ladeFoto());
+			fotoGeladen = true;
+		}
+		return foto;
+	}
+
+	/**
+	 * Fordert das Foto aus der Datenquelle an. Die Basisklasse kennt keine und behält, was sie beim Erzeugen bekommen hat; die Proxy-Klassen holen es hier
+	 * aus ihrem Repository.
+	 *
+	 * @return Das Foto im Base64-Format oder {@code null}, wenn keines vorliegt. Der Getter normalisiert das Ergebnis, so dass nach außen wie beim
+	 *         Konstruktor ein leerer String steht.
+	 */
+	protected String ladeFoto() {
+		return foto;
+	}
+
+	/**
+	 * Die Bildquelle des Fotos als Data-URL inklusive MIME-Type. Den Typ bestimmt {@link ReportingBildquelle} aus den Bilddaten.
+	 * Die Zeichenkette entsteht erst beim ersten Zugriff: Personendaten werden auch für Ausgaben geladen, die keine Fotos zeigen.
+	 *
+	 * @return Die Bildquelle oder ein leerer String, wenn kein oder ein nicht darstellbares Foto vorliegt.
+	 */
+	public String fotoHtmlSource() {
+		if (fotoHtmlSource == null) {
+			fotoHtmlSource = ReportingBildquelle.ausBase64(foto());
+		}
+		return fotoHtmlSource;
 	}
 
 	/**

@@ -28,7 +28,6 @@ import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.utils.ReportingBildquelle;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
@@ -84,12 +83,6 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Die ID der Art des Fahr des Schülers. */
 	protected Long fahrschuelerArtID;
-
-	/** Das Foto (in Base64 kodiert) des Schülers. */
-	protected String foto;
-
-	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers, beim ersten Zugriff aus den Base64-Daten abgeleitet. */
-	protected String fotoHtmlSource;
 
 	/** Das Geburtsland der Mutter des Schülers. */
 	protected String geburtslandMutter;
@@ -250,7 +243,7 @@ public class ReportingSchueler extends ReportingPerson {
 			final List<ReportingSchuelerTelefonkontakt> telefonKontakte, final String telefonPrivat, final String telefonPrivatMobil, final String titel,
 			final String verkehrspracheFamilie, final String vorname, final String vornamen, final OrtKatalogEintrag wohnort,
 			final OrtsteilKatalogEintrag wohnortsteil, final Integer zuzugsjahr) {
-		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
+		super(anrede, emailPrivat, emailSchule, "", foto, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz, nachname,
 				staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname, vornamen, wohnort,
 				wohnortsteil);
 		this.aktuellerLernabschnitt = aktuellerLernabschnitt;
@@ -266,7 +259,6 @@ public class ReportingSchueler extends ReportingPerson {
 		this.externeSchulNr = ersetzeNullBlankTrim(externeSchulNr);
 		this.externesSchulKuerzel = ersetzeNullBlankTrim(externesSchulKuerzel);
 		this.fahrschuelerArtID = fahrschuelerArtID;
-		this.foto = ersetzeNullBlankTrim(foto);
 		this.geburtslandMutter = ersetzeNullBlankTrim(geburtslandMutter);
 		this.geburtslandVater = ersetzeNullBlankTrim(geburtslandVater);
 		this.gostAbitur = gostAbitur;
@@ -496,28 +488,6 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public Long fahrschuelerArtID() {
 		return this.fahrschuelerArtID;
-	}
-
-	/**
-	 * Das Foto (in Base64 kodiert) des Schülers.
-	 *
-	 * @return Inhalt des Feldes foto; nie {@code null}, bei fehlendem Wert ein leerer String.
-	 */
-	public String foto() {
-		return this.foto;
-	}
-
-	/**
-	 * Liefert eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Den MIME-Type bestimmt {@link ReportingBildquelle} aus den Bilddaten.
-	 * Die Zeichenkette entsteht erst beim ersten Zugriff: Eine Ausgabe ohne Fotos lädt zwar die Schüler, wandelt deren Bilder aber nicht um.
-	 *
-	 * @return Data-URI für das Foto oder ein leerer String, wenn kein oder ein nicht auflösbares Foto vorliegt.
-	 */
-	public String fotoHtmlSource() {
-		if (this.fotoHtmlSource == null) {
-			this.fotoHtmlSource = ReportingBildquelle.ausBase64(this.foto);
-		}
-		return this.fotoHtmlSource;
 	}
 
 	/**

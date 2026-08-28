@@ -29,9 +29,6 @@ public class ReportingLehrer extends ReportingPerson {
 	/** Ggf. die Amtsbezeichnung des Lehrers. */
 	protected String amtsbezeichnung;
 
-	/** Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers). */
-	protected String foto;
-
 	/** Die ID des Lehrers. */
 	protected long id;
 
@@ -98,11 +95,10 @@ public class ReportingLehrer extends ReportingPerson {
 			final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname, final String telefonPrivat,
 			final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel, final String vorname,
 			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, faxSchule, foto, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule, telefonSchuleMobil,
 				titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.amtsbezeichnung = ersetzeNullBlankTrim(amtsbezeichnung);
-		this.foto = foto;
 		this.id = id;
 		this.kuerzel = ersetzeNullBlankTrim(kuerzel);
 		this.leitungsfunktionen = (leitungsfunktionen != null) ? new ArrayList<>(leitungsfunktionen.stream().filter(Objects::nonNull).toList()) : new ArrayList<>();
@@ -232,15 +228,6 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	public String amtsbezeichnung() {
 		return amtsbezeichnung;
-	}
-
-	/**
-	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers).
-	 *
-	 * @return Inhalt des Feldes foto; kann {@code null} sein, wenn kein Foto hinterlegt ist.
-	 */
-	public String foto() {
-		return foto;
 	}
 
 	/**

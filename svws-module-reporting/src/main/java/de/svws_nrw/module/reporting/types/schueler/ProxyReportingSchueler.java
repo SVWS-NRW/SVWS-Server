@@ -66,7 +66,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				ersetzeNullBlankTrim(schuelerStammdaten.externeSchulNr),
 				"",
 				schuelerStammdaten.fahrschuelerArtID,
-				schuelerStammdaten.foto,
+				null, // foto - wird beim ersten Zugriff nachgeladen
 				ersetzeNullBlankTrim(schuelerStammdaten.geburtsdatum),
 				geburtslandBezeichnung(schuelerStammdaten.idGeburtsland),
 				geburtslandBezeichnung(schuelerStammdaten.idGeburtslandMutter),
@@ -423,6 +423,16 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			super.schulbescheinigungQrDaten = this.reportingContext.repositorySchueler().schulbescheinigungQrDaten(this.id());
 		}
 		return super.schulbescheinigungQrDaten;
+	}
+
+	/**
+	 * Holt das Foto des Schülers aus dem Repository. Die Stammdaten kommen ohne Fotos, deshalb läuft jeder Zugriff hierüber.
+	 *
+	 * @return Das Foto im Base64-Format; nie {@code null}, bei fehlendem Foto ein leerer String.
+	 */
+	@Override
+	protected String ladeFoto() {
+		return this.reportingContext.repositorySchueler().schuelerFoto(this.id());
 	}
 
 

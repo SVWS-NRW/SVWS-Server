@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
@@ -27,6 +29,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Domänen-Repository für Lehrkräfte (Stammdaten und Reporting-Objekte).
  * Die Lehrerstammdaten werden erst bei Bedarf aus der Datenbank geladen: per einzelner ID über {@link #lehrer(long)},
  * per Liste über {@link #lehrer(List)} mit Bulk-Nachladen oder als Vollbestand über {@link #alleLehrer()}.
+ * Die Fotos gehören nicht zu den Stammdaten; sie kommen erst beim Zugriff über {@link #lehrerFoto(long)}.
  */
 public class ReportingRepositoryLehrer {
 
@@ -76,6 +79,12 @@ public class ReportingRepositoryLehrer {
 
 	/** Markiert, ob die Stammdaten aller Lehrkräfte bereits einmal vollständig aus der Datenbank geladen wurden. */
 	private boolean alleLehrerStammdatenGeladen = false;
+
+	/** Die Fotos je Lehrer-ID. Sie werden erst beim ersten Zugriff geladen, denn die Stammdaten werden auch für Ausgaben ohne Fotos gebraucht. */
+	private final Map<Long, String> mapLehrerFotos = new HashMap<>();
+
+	/** Die Fehler gescheiterter Foto-Ladevorgänge je Lehrer-ID. */
+	private final Map<Long, Exception> ladefehlerLehrerFotos = new HashMap<>();
 
 	/**
 	 * Erstellt ein neues ReportingLehrerRepository. Die Stammdaten werden erst bei Bedarf geladen.
@@ -170,7 +179,7 @@ public class ReportingRepositoryLehrer {
 
 		return ReportingRepositoryUtils.waehleAus(idsLehrer, mapLehrerStammdaten, mapLehrer,
 				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
-						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDs(fehlendeIds),
+						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDsOhneFotos(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
@@ -237,6 +246,52 @@ public class ReportingRepositoryLehrer {
 	public void registriereStammdaten(final long idLehrer, final LehrerStammdaten stammdaten) {
 		ladeAlleLehrerStammdaten();
 		mapLehrerStammdaten.putIfAbsent(idLehrer, stammdaten);
+	}
+
+
+	// ##### Lehrerfotos #####
+
+	/**
+	 * Gibt das Foto der Lehrkraft zurück. Beim ersten Zugriff werden die Fotos aller bekannten Lehrkräfte gesammelt nachgeladen und im Cache abgelegt.
+	 * Die Stammdaten kommen bewusst ohne Fotos; eine Ausgabe ohne Bilder überträgt sie damit gar nicht erst.
+	 *
+	 * @param idLehrer Die ID der Lehrkraft.
+	 *
+	 * @return Das Foto im Base64-Format oder ein leerer String, wenn keines hinterlegt ist oder das Laden gescheitert ist.
+	 */
+	public String lehrerFoto(final long idLehrer) {
+		final List<Long> ids = new ArrayList<>(mapLehrerStammdaten.keySet());
+		ids.add(idLehrer);
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				ids,
+				mapLehrerFotos,
+				this::ladeFotos,
+				"Lehrerfotos",
+				this.reportingContext.logger(),
+				ladefehlerLehrerFotos);
+		ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ladefehlerLehrerFotos, idLehrer, ReportingLehrer.class,
+				"Die Fotodaten der Lehrkraft %d".formatted(idLehrer));
+		final String foto = mapLehrerFotos.get(idLehrer);
+		return (foto == null) ? "" : foto;
+	}
+
+	/**
+	 * Lädt die Fotos zu den übergebenen Lehrer-IDs. Lehrkräfte ohne hinterlegtes Foto erhalten einen leeren Eintrag: Ohne ihn gälten sie als noch nicht
+	 * geladen, und jeder weitere Zugriff stieße eine erneute Abfrage an.
+	 *
+	 * @param idsLehrer Die IDs der Lehrkräfte, deren Fotos geladen werden sollen.
+	 *
+	 * @return Map mit Lehrer-ID als Schlüssel und dem Foto im Base64-Format als Wert.
+	 */
+	private Map<Long, String> ladeFotos(final List<Long> idsLehrer) {
+		final Map<Long, String> gefundene = this.reportingContext.conn().queryByKeyList(DTOLehrerFoto.class, idsLehrer).stream()
+				.filter(f -> f.FotoBase64 != null)
+				.collect(Collectors.toMap(f -> f.Lehrer_ID, f -> f.FotoBase64));
+		final Map<Long, String> ergebnis = new HashMap<>();
+		for (final Long id : idsLehrer) {
+			ergebnis.put(id, gefundene.getOrDefault(id, ""));
+		}
+		return ergebnis;
 	}
 
 

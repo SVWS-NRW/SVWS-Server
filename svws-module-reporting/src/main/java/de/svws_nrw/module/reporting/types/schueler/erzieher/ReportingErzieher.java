@@ -65,7 +65,7 @@ public class ReportingErzieher extends ReportingPerson {
 			final ReportingSchueler schueler, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2,
 			final String strassenname, final String telefonPrivat, final String telefonPrivatMobil, final String titel, final String vorname,
 			final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, "", "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, "", "", titel, vorname,
 				vornamen, wohnort, wohnortsteil);
 		this.art = art;

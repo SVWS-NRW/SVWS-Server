@@ -176,4 +176,14 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 		return super.kursunterrichtAlsZusatzlehrer;
 	}
 
+	/**
+	 * Holt das Foto der Lehrkraft aus dem Repository. Gerufen wird die Methode nur, wenn die Stammdaten es nicht schon mitgebracht haben.
+	 *
+	 * @return Das Foto im Base64-Format; nie {@code null}, bei fehlendem Foto ein leerer String.
+	 */
+	@Override
+	protected String ladeFoto() {
+		return this.reportingContext.repositoryLehrer().lehrerFoto(this.id());
+	}
+
 }

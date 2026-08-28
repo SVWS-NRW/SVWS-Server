@@ -454,4 +454,25 @@ final class ReportingRepositoryUtils {
 		reportingContext.meldeAusgabeproblem(ReportingProblemursache.fuerLadefehler(fehler), ReportingProblemauswirkung.TEILDATEN_FEHLEN,
 				schluessel, "%s konnten nicht geladen werden und fehlen in der Ausgabe.".formatted(bezeichnung), fehler);
 	}
+
+	/**
+	 * Meldet ein Ausgabeproblem, wenn zu der übergebenen ID ein Ladefehler festgehalten ist. Liegt keiner vor, geschieht nichts.
+	 * <p>Diese Prüfung gehört zu jedem Zugriff, der {@link #ladeFehlendeWerteInRepositoryMap} eine Fehlermap mitgibt: Die Utility protokolliert einen
+	 * endgültig gescheiterten Einzelzugriff dann nicht mehr selbst, und ohne die Meldung verschwände der Fehler spurlos.</p>
+	 * <p>Gemeldet wird bei jedem Zugriff, denn welcher der erste ist, hängt an der Reportvorlage - die Deduplizierung macht daraus einen Befund und einen
+	 * Logeintrag.</p>
+	 *
+	 * @param reportingContext Context mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @param ladefehler       Die Fehler gescheiterter Ladevorgänge dieser Teildaten je ID.
+	 * @param id               Die ID des Datensatzes, dessen Teildaten fehlen.
+	 * @param objektart        Die Objektart der ausgelassenen Teildaten für den Schlüssel des Ausgabeproblems.
+	 * @param bezeichnung      Die Benennung der ausgelassenen Daten für den Logeintrag, etwa "Die Erzieherdaten des Schülers 42".
+	 */
+	static void meldeTeildatenLadefehler(final ReportingContext reportingContext, final Map<Long, Exception> ladefehler, final long id,
+			final Class<?> objektart, final String bezeichnung) {
+		if (!ladefehler.containsKey(id)) {
+			return;
+		}
+		meldeTeildatenLadefehler(reportingContext, ReportingProblemSchluessel.fuer(objektart, id), bezeichnung, ladefehler.get(id));
+	}
 }

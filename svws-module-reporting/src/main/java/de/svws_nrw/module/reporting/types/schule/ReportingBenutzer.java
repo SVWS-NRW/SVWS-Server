@@ -97,7 +97,7 @@ public class ReportingBenutzer extends ReportingPerson {
 			final String nachname, final Nationalitaeten staatsangehoerigkeit, final Nationalitaeten staatsangehoerigkeit2, final String strassenname,
 			final String telefonPrivat, final String telefonPrivatMobil, final String telefonSchule, final String telefonSchuleMobil, final String titel,
 			final String vorname, final String vornamen, final OrtKatalogEintrag wohnort, final OrtsteilKatalogEintrag wohnortsteil) {
-		super(anrede, emailPrivat, emailSchule, faxSchule, geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
+		super(anrede, emailPrivat, emailSchule, faxSchule, "", geburtsdatum, geburtsland, geburtsname, geburtsort, geschlecht, hausnummer, hausnummerZusatz,
 				nachname, staatsangehoerigkeit, staatsangehoerigkeit2, strassenname, telefonPrivat, telefonPrivatMobil, telefonSchule,
 				telefonSchuleMobil, titel, vorname, vornamen, wohnort, wohnortsteil);
 		this.anzeigename = ersetzeNullBlankTrim(anzeigename);

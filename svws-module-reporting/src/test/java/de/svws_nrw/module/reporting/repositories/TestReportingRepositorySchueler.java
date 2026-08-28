@@ -34,6 +34,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrDaten;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungQrFactory;
 import de.svws_nrw.module.reporting.signing.SchulbescheinigungSignaturzustand;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieher;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
@@ -127,6 +128,13 @@ class TestReportingRepositorySchueler {
 		assertTrue(repository.telefonkontakte(ID_SCHUELER).isEmpty());
 
 		erwarteTeildatenProblem(ReportingSchuelerTelefonkontakt.class, ID_SCHUELER);
+	}
+
+	@Test
+	void testNichtLadbaresFotoWirdAlsAusgabeproblemGemeldet() {
+		assertEquals("", repository.schuelerFoto(ID_SCHUELER));
+
+		erwarteTeildatenProblem(ReportingSchueler.class, ID_SCHUELER);
 	}
 
 	@Test
