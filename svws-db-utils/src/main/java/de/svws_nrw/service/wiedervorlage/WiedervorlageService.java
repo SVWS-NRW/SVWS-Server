@@ -9,6 +9,7 @@ import java.util.Set;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.WiedervorlageEintrag;
+import de.svws_nrw.core.data.schule.WiedervorlageErledigungRequest;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
@@ -258,12 +259,28 @@ public final class WiedervorlageService {
 	 * @return der aktualisierte {@link WiedervorlageEintrag}
 	 */
 	public WiedervorlageEintrag markiereAlsErledigt(final long id) {
+		return setErledigungIntern(id, true);
+	}
+
+	/**
+	 * Setzt den Erledigungsstatus eines Wiedervorlage-Eintrags.
+	 *
+	 * @param id           die ID des Wiedervorlage-Eintrags
+	 * @param erledigungRequest der Request-Body mit dem gewünschten Erledigungsstatus
+	 *
+	 * @return der aktualisierte {@link WiedervorlageEintrag}
+	 */
+	public WiedervorlageEintrag setErledigung(final long id, final WiedervorlageErledigungRequest erledigungRequest) {
+		return setErledigungIntern(id, erledigungRequest.erledigt);
+	}
+
+	private WiedervorlageEintrag setErledigungIntern(final long id, final boolean erledigt) {
 		return TransactionSupport.transactional(() -> {
 			final long idUser = benutzerAllgemeinRepository.getAktuellerBenutzerId();
 			final DTOWiedervorlage wiedervorlage = getPersistedEntityByUser(id, idUser);
 
-			wiedervorlage.idBenutzerErledigt = idUser;
-			wiedervorlage.tsErledigt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZONE_BERLIN));
+			wiedervorlage.idBenutzerErledigt = erledigt ? idUser : null;
+			wiedervorlage.tsErledigt = erledigt ? JSONMapper.tsFormatter.format(ZonedDateTime.now(ZONE_BERLIN)) : null;
 
 			return toApi(wiedervorlage);
 		});
@@ -354,4 +371,5 @@ public final class WiedervorlageService {
 	private static String getFullName(final String firstName, final String lastName) {
 		return String.format("%s %s", firstName, lastName);
 	}
+
 }

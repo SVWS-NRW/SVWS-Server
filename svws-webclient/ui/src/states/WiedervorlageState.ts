@@ -21,9 +21,9 @@ export interface WiedervorlageState {
 
 	patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void>;
 
-	setWiedervorlageErledigt(data: WiedervorlageEintrag): Promise<void>;
+	toggleWiedervorlageErledigung(data: WiedervorlageEintrag): Promise<boolean>;
 
-	getBenutzergruppen(): Promise<List<BenutzergruppeListeEintrag>>;
+	setBenutzergruppen(): Promise<void>;
 }
 
 export const WiedervorlageStateKey: InjectionKey<WiedervorlageState> = Symbol('WiedervorlageState');

@@ -252,12 +252,13 @@
 	});
 
 	function rowActions(row: WiedervorlageEintrag): TableActions<WiedervorlageEintrag>[] {
+		const isErledigt = row.tsErledigt !== null;
+
 		return [
 			{
-				label: "Wiedervorlage als erledigt markieren",
-				action: () => setWiedervorlageErledigt(row),
-				iconClasses: "i-ri-check-line",
-				disabled: row.tsErledigt !== null,
+				label: `Wiedervorlage als ${isErledigt ? 'unerledigt' : 'erledigt'} markieren`,
+				action: () => setWiedervorlageErledigung(row),
+				iconClasses: isErledigt ? "i-ri-close-line" : "i-ri-check-line",
 			},
 			{
 				label: "Wiedervorlage bearbeiten",
@@ -269,11 +270,12 @@
 		];
 	}
 
-	async function setWiedervorlageErledigt(row: WiedervorlageEintrag) {
-		await wiedervorlageState.setWiedervorlageErledigt(row);
+	async function setWiedervorlageErledigung(row: WiedervorlageEintrag) {
+		const erledigungStatus = await wiedervorlageState.toggleWiedervorlageErledigung(row);
+		const erledigtText = erledigungStatus === true ? "erledigt" : "unerledigt";
 
 		const text = row.namePerson !== null ?
-			`Wiedervorlage für "${row.namePerson}" als erledigt markiert: "${row.bemerkung}"`
+			`Wiedervorlage für "${row.namePerson}" als ${erledigtText} markiert: "${row.bemerkung}"`
 			: `Wiedervorlage als erledigt markiert: "${row.bemerkung}"`;
 		notificationState.success("Gespeichert", text);
 	}

@@ -955,6 +955,7 @@ export { Teilstandort } from './core/data/schule/Teilstandort';
 export { Telefonart } from './core/data/schule/Telefonart';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
+export { WiedervorlageErledigungRequest } from './core/data/schule/WiedervorlageErledigungRequest';
 export { SchuljahresabschnittV1 } from './core/data/schuljahresabschnitt/v1/SchuljahresabschnittV1';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';

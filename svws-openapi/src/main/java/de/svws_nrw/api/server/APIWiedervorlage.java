@@ -5,6 +5,7 @@ import java.util.Set;
 import de.svws_nrw.controller.wiedervorlage.WiedervorlageControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.WiedervorlageEintrag;
+import de.svws_nrw.core.data.schule.WiedervorlageErledigungRequest;
 import de.svws_nrw.service.wiedervorlage.WiedervorlageCreateRequest;
 import de.svws_nrw.service.wiedervorlage.WiedervorlagePatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -250,5 +251,35 @@ public class APIWiedervorlage {
 		return WiedervorlageControllerFactory.withWriteAccess(request)
 				.getWiedervorlageController()
 				.markiereAlsErledigt(id);
+	}
+
+	/**
+	 * Setzt den Erledigungsstatus eines Wiedervorlage-Eintrags.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die ID des Wiedervorlage-Eintrags
+	 * @param input     der Request-Body mit dem gewünschten Erledigungsstatus
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Response im Erfolgsfall mit dem angepassten Wiedervorlage-Eintrag
+	 */
+	@PATCH
+	@Path("/{id : \\d+}/erledigung")
+	@Operation(summary = "Setzt den Erledigungsstatus des Wiedervorlage-Eintrags mit der angegebenen ID.",
+			description = "Setzt den Erledigungsstatus des Wiedervorlage-Eintrags mit der angegebenen ID. "
+					+ "Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.")
+	@ApiResponse(responseCode = "200", description = "Der angepasste Wiedervorlage-Eintrag",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = WiedervorlageEintrag.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Erledigungsstatus des Wiedervorlage-Eintrags zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Der Wiedervorlage-Eintrag mit der angegebenen ID wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchWiedervorlageEintragErledigung(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der gewünschte Erledigungsstatus", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = WiedervorlageErledigungRequest.class))) final WiedervorlageErledigungRequest input,
+			@Context final HttpServletRequest request) {
+		return WiedervorlageControllerFactory.withWriteAccess(request)
+				.getWiedervorlageController()
+				.setErledigung(id, input);
 	}
 }

@@ -5,10 +5,6 @@ import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { benutzerStateImpl } from "../BenutzerStateImpl";
 
-interface State {
-	valid: boolean;
-}
-
 interface BenutzerGruppen {
 	data: List<BenutzergruppeListeEintrag>
 }
@@ -18,7 +14,7 @@ interface Wiedervorlagen {
 }
 
 interface WiedervorlageReactiveState {
-	benutzerGruppen: BenutzerGruppen & State;
+	benutzerGruppen: BenutzerGruppen;
 	wiedervorlagenListe: Wiedervorlagen;
 }
 
@@ -29,7 +25,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 
 	public constructor() {
 		super({
-			benutzerGruppen: { data: new ArrayList(), valid: false },
+			benutzerGruppen: { data: new ArrayList<BenutzergruppeListeEintrag>() },
 			wiedervorlagenListe: { data: new ArrayList<WiedervorlageEintrag>() },
 		});
 	}
@@ -46,8 +42,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 	/** Initialisierung des States - lädt alle Daten */
 	public async init() {
 		await Promise.all([
-			// TODO entfernen und direkt benutzerstate nutzen (inkl laden von benutzergruppenliste?)
-			this.getBenutzergruppen(),
+			this.setBenutzergruppen(),
 			// TODO lade wiedervorlagen anzahl
 		]);
 	}
@@ -60,7 +55,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		} catch {
 			throw new DeveloperNotificationException("Das Laden der Wiedervorlagen ist fehlgeschlagen.");
 		}
-		this.setPatchedDefaultState({ wiedervorlagenListe: { data: wiedervorlagenListe } });
+		this.setPatchedState({ wiedervorlagenListe: { data: wiedervorlagenListe } });
 
 	}
 
@@ -86,40 +81,36 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		await this.ladeWiedervorlagen();
 	}
 
+	/** Wechselt den Erledigungsstatus einer Wiedervorlage */
+	public async toggleWiedervorlageErledigung(data: WiedervorlageEintrag): Promise<boolean> {
+		const isErledigt = data.tsErledigt !== null;
+		const { id } = data;
 
-	public async setWiedervorlageErledigt(data: WiedervorlageEintrag, value: boolean = true): Promise<void> {
 		try {
-			if (value) {
-				const { id } = data;
-				// TODO fehlender endpunkt, der erledigt status zurücksetzt
-				await api.server.setWiedervorlageEintragErledigt(api.schema, id);
-			}
+			await api.server.patchWiedervorlageEintragErledigung({ erledigt: !isErledigt }, api.schema, id);
 		} catch {
-			throw new DeveloperNotificationException("Das Bearbeiten der Wiedervorlage ist fehlgeschlagen.");
+			throw new DeveloperNotificationException("Das Setzen des Status der Wiedervorlage ist fehlgeschlagen.");
 		}
 		await this.ladeWiedervorlagen();
+		return !isErledigt;
 	}
 
-	/** Lädt die Benutzergruppen */
-	public async getBenutzergruppen(): Promise<List<BenutzergruppeListeEintrag>> {
-		if (!this.state.benutzerGruppen.valid) {
-			let data: List<BenutzergruppeListeEintrag>;
-			try {
-				if (benutzerStateImpl.istAdmin) {
-					// für "admin" alle Benutzergruppen zurückgeben
-					data = await api.server.getBenutzergruppenliste(api.schema);
-				} else {
-					// sonst nur eigene Benutzergruppen zurückgeben
-					const benutzerdaten = benutzerStateImpl.benutzerdaten;
-					data = benutzerdaten.gruppen;
-				}
-			} catch {
-				throw new DeveloperNotificationException("Das Laden der Benutzergruppen ist fehlgeschlagen.");
+	/** Setzt die Benutzergruppen */
+	public async setBenutzergruppen(): Promise<void> {
+		let data: List<BenutzergruppeListeEintrag>;
+		try {
+			if (benutzerStateImpl.istAdmin) {
+				// für "admin" alle Benutzergruppen zurückgeben
+				data = await api.server.getBenutzergruppenliste(api.schema);
+			} else {
+				// sonst nur eigene Benutzergruppen zurückgeben
+				const benutzerdaten = benutzerStateImpl.benutzerdaten;
+				data = benutzerdaten.gruppen;
 			}
-			this.setPatchedDefaultState({ benutzerGruppen: { valid: true, data } });
+		} catch {
+			throw new DeveloperNotificationException("Das Laden der Benutzergruppen ist fehlgeschlagen.");
 		}
-
-		return this.state.benutzerGruppen.data;
+		this.setPatchedState({ benutzerGruppen: { data } });
 	}
 }
 

@@ -2,9 +2,10 @@ package de.svws_nrw.controller.wiedervorlage;
 
 import java.util.Set;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.WiedervorlageEintrag;
+import de.svws_nrw.core.data.schule.WiedervorlageErledigungRequest;
 import de.svws_nrw.data.Responses;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.wiedervorlage.WiedervorlageCreateRequest;
 import de.svws_nrw.service.wiedervorlage.WiedervorlagePatchRequest;
 import de.svws_nrw.service.wiedervorlage.WiedervorlageService;
@@ -80,7 +81,7 @@ public final class WiedervorlageController {
 	 *
 	 * @param id die ID des zu löschenden Eintrags
 	 *
-	 * @return {@link Response} mit {@link de.svws_nrw.core.data.SimpleOperationResponse} log
+	 * @return {@link Response} mit {@link SimpleOperationResponse} log
 	 */
 	public Response delete(final long id) {
 		final var log = wiedervorlageService.delete(id);
@@ -93,7 +94,7 @@ public final class WiedervorlageController {
 	 *
 	 * @param ids die IDs der zu löschenden Einträge
 	 *
-	 * @return {@link Response} mit Liste von {@link de.svws_nrw.core.data.SimpleOperationResponse} logs
+	 * @return {@link Response} mit Liste von {@link SimpleOperationResponse} logs
 	 */
 	public Response delete(final Set<Long> ids) {
 		final var logs = wiedervorlageService.delete(ids);
@@ -118,10 +119,20 @@ public final class WiedervorlageController {
 	 * @param id die ID des als erledigt zu markierenden Eintrags
 	 *
 	 * @return {@link Response} mit dem aktualisierten {@link WiedervorlageEintrag}
-	 * @throws ApiOperationException falls der Eintrag nicht gefunden wurde oder kein Zugriff besteht
 	 */
-	public Response markiereAlsErledigt(final long id) throws ApiOperationException {
+	public Response markiereAlsErledigt(final long id) {
 		return Responses.ok(wiedervorlageService.markiereAlsErledigt(id));
 	}
 
+	/**
+	 * Setzt den Erledigungsstatus eines Wiedervorlage-Eintrags.
+	 *
+	 * @param id           die ID des Wiedervorlage-Eintrags, dessen Erledigungsstatus gesetzt werden soll
+	 * @param patchRequest der Request-Body mit dem gewünschten Erledigungsstatus
+	 *
+	 * @return {@link Response} mit dem aktualisierten {@link WiedervorlageEintrag}
+	 */
+	public Response setErledigung(final long id, final WiedervorlageErledigungRequest patchRequest) {
+		return Responses.ok(wiedervorlageService.setErledigung(id, patchRequest));
+	}
 }

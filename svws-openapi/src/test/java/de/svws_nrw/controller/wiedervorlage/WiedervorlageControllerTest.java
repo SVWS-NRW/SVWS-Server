@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.svws_nrw.core.data.schule.WiedervorlageEintrag;
+import de.svws_nrw.core.data.schule.WiedervorlageErledigungRequest;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.wiedervorlage.WiedervorlageCreateRequest;
 import de.svws_nrw.service.wiedervorlage.WiedervorlagePatchRequest;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openapitools.jackson.nullable.JsonNullable;
 
@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("WiedervorlageController")
@@ -52,7 +53,7 @@ class WiedervorlageControllerTest {
 		@DisplayName("gibt 200 mit Liste aller Eintraege zurueck")
 		void getAllSuccess() throws ApiOperationException {
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.getAll()).thenReturn(List.of(eintrag));
+			when(wiedervorlageService.getAll()).thenReturn(List.of(eintrag));
 
 			final Response response = cut.getAll();
 
@@ -69,7 +70,7 @@ class WiedervorlageControllerTest {
 		@DisplayName("gibt 200 mit Eintrag zurueck")
 		void getSuccess() throws ApiOperationException {
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.get(1L)).thenReturn(eintrag);
+			when(wiedervorlageService.get(1L)).thenReturn(eintrag);
 
 			final Response response = cut.get(1L);
 
@@ -87,7 +88,7 @@ class WiedervorlageControllerTest {
 		void createSuccess() throws ApiOperationException {
 			final var request = validCreateRequest();
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.create(request)).thenReturn(eintrag);
+			when(wiedervorlageService.create(request)).thenReturn(eintrag);
 
 			final Response response = cut.create(request);
 
@@ -220,7 +221,7 @@ class WiedervorlageControllerTest {
 			final var request = validCreateRequest();
 			request.typPerson = null;
 			request.idPerson = null;
-			Mockito.when(wiedervorlageService.create(request)).thenReturn(new WiedervorlageEintrag());
+			when(wiedervorlageService.create(request)).thenReturn(new WiedervorlageEintrag());
 
 			final Response response = cut.create(request);
 
@@ -232,7 +233,7 @@ class WiedervorlageControllerTest {
 		void createValidationTsWiedervorlageKorrektesFormat() throws ApiOperationException {
 			final var request = validCreateRequest();
 			request.tsWiedervorlage = "2026-04-07 08:00:00";
-			Mockito.when(wiedervorlageService.create(request)).thenReturn(new WiedervorlageEintrag());
+			when(wiedervorlageService.create(request)).thenReturn(new WiedervorlageEintrag());
 
 			final Response response = cut.create(request);
 
@@ -250,7 +251,7 @@ class WiedervorlageControllerTest {
 		void patchSuccess() throws ApiOperationException {
 			final var request = validPatchRequest();
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.patch(request, 1L)).thenReturn(eintrag);
+			when(wiedervorlageService.patch(request, 1L)).thenReturn(eintrag);
 
 			final Response response = cut.patch(1L, request);
 
@@ -263,7 +264,7 @@ class WiedervorlageControllerTest {
 		void patchAllesFelderAbsentSuccess() throws ApiOperationException {
 			final var request = new WiedervorlagePatchRequest(); // alle Felder undefined
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.patch(request, 1L)).thenReturn(eintrag);
+			when(wiedervorlageService.patch(request, 1L)).thenReturn(eintrag);
 
 			final Response response = cut.patch(1L, request);
 
@@ -352,12 +353,45 @@ class WiedervorlageControllerTest {
 		@DisplayName("gibt 200 mit aktualisiertem Eintrag zurueck")
 		void markiereAlsErledigtSuccess() throws ApiOperationException {
 			final var eintrag = new WiedervorlageEintrag();
-			Mockito.when(wiedervorlageService.markiereAlsErledigt(1L)).thenReturn(eintrag);
+			when(wiedervorlageService.markiereAlsErledigt(1L)).thenReturn(eintrag);
 
 			final Response response = cut.markiereAlsErledigt(1L);
 
 			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
 			verify(wiedervorlageService).markiereAlsErledigt(1L);
+		}
+	}
+
+	@Nested
+	@DisplayName("setErledigung")
+	class SetErledigung {
+
+		@Test
+		@DisplayName("gibt 200 mit aktualisiertem Eintrag zurueck wenn erledigt=true")
+		void setErledigungMarkiertAlsErledigtSuccess() throws ApiOperationException {
+			final var request = new WiedervorlageErledigungRequest();
+			request.erledigt = true;
+			final var eintrag = new WiedervorlageEintrag();
+			when(wiedervorlageService.setErledigung(1L, request)).thenReturn(eintrag);
+
+			final Response response = cut.setErledigung(1L, request);
+
+			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+			verify(wiedervorlageService).setErledigung(1L, request);
+		}
+
+		@Test
+		@DisplayName("gibt 200 mit aktualisiertem Eintrag zurueck wenn erledigt=false")
+		void setErledigungEntferntMarkierungSuccess() throws ApiOperationException {
+			final var request = new WiedervorlageErledigungRequest();
+			request.erledigt = false;
+			final var eintrag = new WiedervorlageEintrag();
+			when(wiedervorlageService.setErledigung(1L, request)).thenReturn(eintrag);
+
+			final Response response = cut.setErledigung(1L, request);
+
+			assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
+			verify(wiedervorlageService).setErledigung(1L, request);
 		}
 	}
 

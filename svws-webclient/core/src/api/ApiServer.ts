@@ -251,6 +251,7 @@ import { UvZeitrasterEintrag } from '../core/data/uv/UvZeitrasterEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../asd/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
 import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
+import { WiedervorlageErledigungRequest } from '../core/data/schule/WiedervorlageErledigungRequest';
 import { ZulaessigeKursartKatalogEintrag } from '../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
 
 export class ApiServer extends BaseApi {
@@ -24050,6 +24051,36 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result: string = await super.postJSON(path, null);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchWiedervorlageEintragErledigung für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}/erledigung
+	 *
+	 * Setzt den Erledigungsstatus des Wiedervorlage-Eintrags mit der angegebenen ID. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der angepasste Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Erledigungsstatus des Wiedervorlage-Eintrags zu ändern.
+	 *   Code 404: Der Wiedervorlage-Eintrag mit der angegebenen ID wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<WiedervorlageErledigungRequest>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der angepasste Wiedervorlage-Eintrag
+	 */
+	public async patchWiedervorlageEintragErledigung(data: Partial<WiedervorlageErledigungRequest>, schema: string, id: number): Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}/erledigung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = WiedervorlageErledigungRequest.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
 		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}

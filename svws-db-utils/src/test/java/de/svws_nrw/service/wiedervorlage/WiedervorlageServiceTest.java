@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schule.WiedervorlageErledigungRequest;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
@@ -484,6 +485,69 @@ class WiedervorlageServiceTest {
 		final long result = cut.getAnzahlOffeneWiedervorlagen();
 
 		assertThat(result).isEqualTo(3L);
+	}
+
+	@Test
+	@DisplayName("setErledigung | erledigt=true | tsErledigt und idBenutzerErledigt werden gesetzt")
+	void setErledigungMarkiertAlsErledigt() {
+		final long idBenutzer = 42L;
+		final var dto = buildEntity(1L, idBenutzer, null, null);
+		final var request = new WiedervorlageErledigungRequest();
+		request.erledigt = true;
+
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
+		when(viewBenutzerDetailsRepository.findById(idBenutzer)).thenReturn(Optional.of(buildBenutzerAllgemein(idBenutzer, "Benutzername")));
+
+		final var result = cut.setErledigung(1L, request);
+
+		assertThat(dto)
+				.hasFieldOrPropertyWithValue("idBenutzerErledigt", idBenutzer)
+				.satisfies(d -> assertThat(d.tsErledigt).isNotNull());
+
+		assertThat(result)
+				.hasFieldOrPropertyWithValue("idBenutzerErledigt", idBenutzer)
+				.satisfies(r -> assertThat(r.tsErledigt).isNotNull());
+	}
+
+	@Test
+	@DisplayName("setErledigung | erledigt=false | tsErledigt und idBenutzerErledigt werden zurueckgesetzt")
+	void setErledigungEntferntErledigungsmarkierung() {
+		final long idBenutzer = 42L;
+		final var dto = buildEntity(1L, idBenutzer, idBenutzer, null);
+		dto.tsErledigt = "2026-01-01 10:00:00";
+		final var request = new WiedervorlageErledigungRequest();
+		request.erledigt = false;
+
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(1L, idBenutzer)).thenReturn(Optional.of(dto));
+		when(viewBenutzerDetailsRepository.findById(idBenutzer)).thenReturn(Optional.of(buildBenutzerAllgemein(idBenutzer, "Benutzername")));
+
+		final var result = cut.setErledigung(1L, request);
+
+		assertThat(dto)
+				.hasFieldOrPropertyWithValue("idBenutzerErledigt", null)
+				.hasFieldOrPropertyWithValue("tsErledigt", null);
+
+		assertThat(result)
+				.hasFieldOrPropertyWithValue("idBenutzerErledigt", null)
+				.hasFieldOrPropertyWithValue("tsErledigt", null);
+	}
+
+	@Test
+	@DisplayName("setErledigung | NOT_FOUND wenn kein Eintrag mit der ID existiert")
+	void setErledigungNotFound() {
+		final long idBenutzer = 42L;
+		final var request = new WiedervorlageErledigungRequest();
+		request.erledigt = true;
+
+		when(benutzerAllgemeinRepository.getAktuellerBenutzerId()).thenReturn(idBenutzer);
+		when(wiedervorlageRepository.findByIdAndBenutzerId(99L, idBenutzer)).thenReturn(Optional.empty());
+
+		Assertions.assertThatThrownBy(() -> cut.setErledigung(99L, request))
+				.isInstanceOf(ApiOperationException.class)
+				.extracting("status")
+				.isEqualTo(Status.NOT_FOUND);
 	}
 
 	private static DTOWiedervorlage buildEntity(final long id, final long idBenutzer, final Long idBenutzerErledigt, final Long idGruppe) {
