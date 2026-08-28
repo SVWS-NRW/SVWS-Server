@@ -143,6 +143,28 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	/**
+	 * Gibt die Liste der Stammdaten aller Lehrer zurück, die in der angegebenen Liste enthalten sind, jeweils ohne das Foto.
+	 *
+	 * @param idsLehrer die Liste der IDs der gewünschten Lehrer
+	 *
+	 * @return Liste der Stammdaten der Lehrer zu den IDs, jeweils ohne Foto
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<LehrerStammdaten> getListByIDsOhneFotos(final List<Long> idsLehrer) throws ApiOperationException {
+		final List<LehrerStammdaten> result = new ArrayList<>();
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
+			return result;
+		}
+
+		final List<DTOLehrer> lehrer = conn.queryByKeyList(DTOLehrer.class, idsLehrer);
+		for (final DTOLehrer dtoLehrer : lehrer) {
+			result.add(mapWithoutFoto(dtoLehrer));
+		}
+		return result;
+	}
+
+	/**
 	 * Gibt die Liste der Stammdaten der Lehrer zurück, die sichtbar sind.
 	 *
 	 * @return Liste der Stammdaten der sichtbaren Lehrer
