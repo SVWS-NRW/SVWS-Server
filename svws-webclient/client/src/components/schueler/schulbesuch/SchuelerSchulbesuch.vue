@@ -6,7 +6,7 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<!-- Vorhandene Abschlüsse !-->
-		<svws-ui-content-card title="Vorhandene Abschlüsse">
+		<svws-ui-content-card title="Vorhandene Abschlüsse" v-if="!eigeneSchuleIstGrundschule">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Höchster allgemeinbildender Abschluss"
 					:manager="hoechsterAbschlussManager"
@@ -19,6 +19,7 @@
 				</svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<div v-else />
 		<svws-ui-content-card title="Schulbesuchsjahre" v-if="showSchulbesuchsjahre">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Schulbesuchsjahre"
@@ -131,7 +132,7 @@
 		</svws-ui-content-card>
 
 		<!-- Sekundarstufe I !-->
-		<svws-ui-content-card title="Sekundarstufe I">
+		<svws-ui-content-card title="Sekundarstufe I" v-if="!eigeneSchuleIstGrundschule">
 			<svws-ui-input-wrapper>
 				<svws-ui-input-number placeholder="Jahr Wechsel Sek I" class="contentFocusField"
 					v-model="model.proxy.wechseljahrSekI"
@@ -151,6 +152,7 @@
 					statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<div v-else />
 		<schueler-schulbesuch-merkmale :manager
 			:get-merkmale="() => props.manager().daten.merkmale"
 			:add-merkmal
@@ -195,6 +197,7 @@
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
 	const eigeneSchuleIstBKOderWBK = computed(
 		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
+	const eigeneSchuleIstGrundschule = computed(() => schuleState.schulform === Schulform.G);
 
 	const wechselBevorstehend = ref<boolean>(false);
 

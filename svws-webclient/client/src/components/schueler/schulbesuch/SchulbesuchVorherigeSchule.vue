@@ -45,45 +45,44 @@
 			<svws-ui-text-input placeholder="Statistik-Schulnummer" v-if="!keinSchulbesuchSelected"
 				:model-value="model.schulnummerStatistik.value"
 				statistics readonly />
+			<ui-select label="Schulgliederung" v-if="vorherigeSchuleIstBKOderWBK"
+				:manager="schulgliederungManager"
+				v-model="model.schulgliederungVorherigeSchule.value"
+				:readonly statistics />
+			<ui-select label="Fachklasse" v-if="vorherigeSchuleIstBK"
+				:manager="fachklasseManager"
+				v-model="model.fachklasseVorherigeSchule.value"
+				:readonly statistics />
 			<svws-ui-text-input :placeholder="labelEntlassdatum" type="date"
 				v-model="model.proxy.entlassdatumVorherigeSchule"
+				statistics :readonly />
+			<ui-select label="Entlassjahrgang" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
+				:manager="vorherigeEntlassjahrgaengeManager"
+				v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
+				statistics
+				:disabled="model.vorherigeSchule.value === undefined" :readonly />
+			<ui-select label="Entlassgrund" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
+				:manager="vorherigerEntlassgrundManager"
+				v-model="model.idEntlassgrundVorherigeSchule.value"
+				:readonly />
+			<div v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH" />
+			<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
+				:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
+				v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
+				:readonly statistics />
+			<ui-select label="Höchster berufsbildender Abschluss" v-if="abschlussartBerufsbildendSelectable"
+				:manager="abschlussartBerufsbildendVorherigeSchuleManager"
+				v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
+				:readonly statistics />
+			<ui-select label="Versetzung" class="col-span-full" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
+				:manager="herkunftsartenManager"
+				v-model="model.idHerkunftsartVersetzungVorherigeSchule.value"
 				statistics :readonly />
 			<svws-ui-text-input placeholder="Bemerkung" span="full"
 				v-model="model.proxy.bemerkungVorherigeSchule"
 				:validation="() => model.getFehler('bemerkungVorherigeSchule')"
 				@change="model.patch"
 				:max-len="255" :readonly />
-			<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
-				:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
-				v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
-				:readonly />
-			<ui-select label="Höchster berufsbildender Abschluss" v-if="abschlussartBerufsbildendSelectable"
-				:manager="abschlussartBerufsbildendVorherigeSchuleManager"
-				v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
-				:readonly />
-			<ui-select label="Versetzung" class="col-span-full"
-				:manager="herkunftsartenManager"
-				v-model="model.idHerkunftsartVersetzungVorherigeSchule.value"
-				statistics :readonly />
-			<ui-select label="Entlassjahrgang"
-				:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.KEIN_SCHULBESUCH }"
-				:manager="vorherigeEntlassjahrgaengeManager"
-				v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
-				statistics
-				:disabled="model.vorherigeSchule.value === undefined" :readonly />
-			<ui-select label="Entlassgrund"
-				:class="{ 'invisible pointer-events-none': currentMode === Schulauswahl.KEIN_SCHULBESUCH }"
-				:manager="vorherigerEntlassgrundManager"
-				v-model="model.idEntlassgrundVorherigeSchule.value"
-				:readonly />
-			<ui-select label="Schulgliederung" v-if="vorherigeSchuleIstBKOderWBK"
-				:manager="schulgliederungManager"
-				v-model="model.schulgliederungVorherigeSchule.value"
-				:readonly />
-			<ui-select label="Fachklasse" v-if="vorherigeSchuleIstBK"
-				:manager="fachklasseManager"
-				v-model="model.fachklasseVorherigeSchule.value"
-				:readonly />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -92,8 +91,10 @@
 
 
 	import { computed, ref, watch } from "vue";
-	import { ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige, Jahrgaenge, SchulabschlussAllgemeinbildend,
-		SchulabschlussBerufsbildend, Schulform } from "@core";
+	import {
+		ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige, Jahrgaenge, SchulabschlussAllgemeinbildend,
+		SchulabschlussBerufsbildend, Schulform,
+	} from "@core";
 	import type { List, SchulEintrag, KatalogEntlassgrund } from "@core";
 	import type { SchuelerSchulbesuchManager } from "@ui";
 	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
@@ -143,12 +144,16 @@
 	const schuleInNRWSelected = computed(() => currentMode.value === Schulauswahl.SCHULE_IN_NRW);
 	const sonstigeSchuleSelected = computed(() => currentMode.value === Schulauswahl.SONSTIGE_SCHULE);
 	const keinSchulbesuchSelected = computed(() => currentMode.value === Schulauswahl.KEIN_SCHULBESUCH);
+	const eigeneSchuleIstGrundschule = computed(() => schuleState.schulform === Schulform.G);
 
 	watch(() => props.manager().daten.id, () => {
 		schulauswahlMode.value = null;
 	});
 
 	const abschlussartBerufsbildendSelectable = computed(() => {
+		if (eigeneSchuleIstGrundschule.value) {
+			return false;
+		}
 		if (currentMode.value === Schulauswahl.KEIN_SCHULBESUCH) {
 			return true;
 		}
@@ -156,9 +161,13 @@
 			[Schulform.SB, Schulform.BK, Schulform.WB].includes(props.model.schulformVorherigeSchule.value);
 	});
 
-	const abschlussartAllgemeinbildendSelectable = computed(() => {
-		return !(props.model.schulformVorherigeSchule.value !== null && [Schulform.G].includes(props.model.schulformVorherigeSchule.value));
-	});
+	const vorherigeSchuleIstGrundschule = computed(() => ((props.model.schulformVorherigeSchule.value !== null)
+		&& (props.model.schulformVorherigeSchule.value === Schulform.G)));
+
+	const abschlussartAllgemeinbildendSelectable = computed(
+		() => !vorherigeSchuleIstGrundschule.value
+			&& !eigeneSchuleIstGrundschule.value
+	);
 
 	const vorherigeSchuleIstBK = computed(() => {
 		return props.model.schulformVorherigeSchule.value !== null &&
