@@ -444,6 +444,30 @@ Für kleine Symbole (z. B. die Kennzeichnung externer Schüler) gibt es den Dial
 
 > Es gibt außerdem den Dialekt `#inline`, der CSS einbettet. Den brauchst du nicht direkt – er steckt schon im Head-Fragment.
 
+### Bilder aus der Logoverwaltung einbinden
+
+Die Schule hinterlegt Bilder in der Logoverwaltung – etwa einen Briefkopf oder ihr Schullogo. Welche es gibt, legt der Katalog `ReportingBildDefinition` fest. Jeder Eintrag hat eine Kennung und ein Sollmaß in Millimetern.
+
+Eine Vorlage holt sich ein Bild über `Schule.bild(...)`. Die Bilddefinition wird als Enum-Konstante übergeben:
+
+```html
+<div th:with="briefkopf = ${Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@DIN5008_BRIEFKOPF)}">
+    <img th:if="${briefkopf.vorhanden()}" th:src="@{${briefkopf.htmlImageSource()}}" alt="Briefkopf"/>
+</div>
+```
+
+Die Schreibweise `@paket.Klasse@KONSTANTE` ist der OGNL-Zugriff auf ein statisches Feld. Ein Tippfehler im Namen bricht sofort beim Rendern – er fällt also nicht erst im fertigen Druck auf.
+
+Das gelieferte Objekt ist nie `null` und bietet vier Methoden:
+
+- `vorhanden()` – ob eine anzeigbare Bildquelle vorliegt
+- `htmlImageSource()` – die Bildquelle für `th:src`, leer wenn kein Bild vorliegt
+- `breiteMM()` und `hoeheMM()` – die Sollmaße aus der Bilddefinition
+
+Ist kein Bild hinterlegt, bleibt die Stelle still leer. Eine Meldung entsteht dabei nicht, denn welche Bilder eine Schule pflegt, entscheidet sie selbst. Sieh eine Ersatzdarstellung vor, wenn die Stelle nicht leer bleiben darf – die Schulbescheinigung zeigt beim fehlenden Briefkopf ihren Textkopf.
+
+> Für das Schullogo gibt es eine Abkürzung: `Schule.schullogoHtmlImageSource()` nimmt zuerst `SCHULLOGO_QUADRATISCH` und weicht sonst auf das aus SchILD-NRW übernommene `SCHULLOGO_SCHILD` aus.
+
 ---
 
 ## 10. Schritt 7 – Layout & CSS

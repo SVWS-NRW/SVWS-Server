@@ -28,7 +28,10 @@ Bei Konflikt gilt diese Datei; Regel-Änderungen werden hier gepflegt.
 ## 2. Reporting-Typen & Null-Sicherheit
 
 - Reporting-Typen sind **immutable POJOs**, erben von `ReportingBaseType` und kennen weder DB
-  noch `ReportingContext`.
+  noch `ReportingContext`. Ausgenommen ist ein Feld, das allein einen aus den eigenen Daten
+  abgeleiteten Wert beim ersten Zugriff festhält (`ReportingBild.htmlImageSource()`): Es ändert
+  keinen fachlichen Zustand und spart die Berechnung, wenn eine Vorlage je Einzeldatei erneut
+  rendert.
 - **Getter liefern non-null per Default** — nullable ist die dokumentierte Ausnahme:
   - **String-/Datums-Felder** werden im **Basis-Konstruktor** per `ersetzeNullBlankTrim(...)`
     auf `""` normalisiert (nicht nur im Proxy). Datums-Strings: leer = „nicht gesetzt“,

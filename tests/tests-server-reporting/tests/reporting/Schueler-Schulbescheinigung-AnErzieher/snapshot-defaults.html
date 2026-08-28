@@ -1103,6 +1103,20 @@ Format-CSS-Dateien (reporting-A4-hoch.css, reporting-A4-quer.css, …) gesetzt.
 	margin: 10mm 10mm 10mm 10mm;
 }
 
+/* Der Bild-Briefkopf reicht bis an die obere Blattkante und endet an der 45-mm-Linie, ab der nach DIN 5008 Form B das
+   Anschriftfeld liegt. Der Seitenrahmen setzt erst bei 10 mm auf, daher der negative Versatz. */
+.briefkopfbereich {
+	top: -10mm;
+	height: 45mm;
+}
+
+/* Das Bild bleibt vollständig sichtbar, auch wenn es die geforderten 190 mal 45 mm verfehlt. */
+.briefkopfbereich img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: scale-down;
+}
+
 /* Abstand des Formulars zum Betreff. */
 .formular {
 	margin-top: 6mm;

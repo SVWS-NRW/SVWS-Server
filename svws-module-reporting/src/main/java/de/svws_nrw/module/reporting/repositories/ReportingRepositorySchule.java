@@ -1,6 +1,7 @@
 package de.svws_nrw.module.reporting.repositories;
 
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +11,15 @@ import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.email.EmailJobContext;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.schule.ReportingBild;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import jakarta.ws.rs.core.Response.Status;
@@ -27,7 +32,6 @@ public class ReportingRepositorySchule {
 
 	private final ReportingContext reportingContext;
 	private final SchuleStammdaten schulstammdaten;
-	private final String schullogoBase64;
 	private final Long idAktuellerSchuljahresabschnitt;
 	private final Long idAuswahlSchuljahresabschnitt;
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
@@ -38,6 +42,9 @@ public class ReportingRepositorySchule {
 	 * tatsächlich vorhandenen Abschnitte der Schule auftauchen. Siehe {@link #schuljahresabschnittOderVirtuell(int, int)}.
 	 */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapVirtuelleSchuljahresabschnitte = new HashMap<>();
+
+	/** Zwischenspeicher der bereits geladenen Bilder aus der Logoverwaltung, indiziert nach ihrer Bilddefinition. */
+	private final Map<ReportingBildDefinition, ReportingBild> mapBilder = new EnumMap<>(ReportingBildDefinition.class);
 
 	/** Zwischenspeicher für das Reporting-Objekt der Schule, damit es nicht mehrfach instanziiert wird. */
 	private ReportingSchule schule;
@@ -60,9 +67,7 @@ public class ReportingRepositorySchule {
 		this.reportingContext = reportingContext;
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
 		try {
-			final DataSchuleStammdaten dataSchuleStammdaten = new DataSchuleStammdaten(this.reportingContext.conn());
 			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.reportingContext.conn());
-			this.schullogoBase64 = dataSchuleStammdaten.getSchullogoBase64();
 
 			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.reportingContext.conn().getUser().schuleGetStammdaten().abschnitte;
 			for (final Schuljahresabschnitt datenSchuljahresabschnitt : datenSchuljahresabschnitte) {
@@ -84,7 +89,7 @@ public class ReportingRepositorySchule {
 	}
 
 
-	// ##### Schulstammdaten und Schullogo #####
+	// ##### Schulstammdaten und Bilder #####
 
 	/**
 	 * Gibt die Stammdaten der Schule zurück.
@@ -107,12 +112,41 @@ public class ReportingRepositorySchule {
 	}
 
 	/**
-	 * Gibt das Schullogo der Schule im Base64-Format zurück.
+	 * Gibt das Bild zu der übergebenen Bilddefinition aus der Logoverwaltung zurück. Das Bild wird beim ersten Zugriff geladen und danach
+	 * zwischengespeichert, so dass eine Ausgabe nur die Bilder lädt, die ihre Vorlage tatsächlich verwendet.
+	 * Ein nicht hinterlegtes Bild ergibt ein leeres Objekt und ist kein Ausgabeproblem: Welche Bilddefinitionen eine Schule pflegt, entscheidet sie selbst,
+	 * und ob die aufrufende Stelle ohne das Bild auskommt, weiß allein sie.
 	 *
-	 * @return Das Schullogo im Base64-Format.
+	 * @param bildDefinition Die Bilddefinition, deren Bild gesucht wird.
+	 *
+	 * @return Das Bild, nie {@code null}.
 	 */
-	public String schullogoBase64() {
-		return schullogoBase64;
+	public ReportingBild bild(final ReportingBildDefinition bildDefinition) {
+		if (bildDefinition == null) {
+			return new ReportingBild(null, "");
+		}
+		return mapBilder.computeIfAbsent(bildDefinition, this::ladeBild);
+	}
+
+	/**
+	 * Lädt das Bild zu der übergebenen Bilddefinition aus der Logoverwaltung. Ein Bild ist untergeordnetes Datum: Scheitert sein Laden, so erscheint die
+	 * Ausgabe weiterhin und ihr fehlt allein das Bild.
+	 *
+	 * @param bildDefinition Die Bilddefinition, deren Bild geladen wird.
+	 *
+	 * @return Das Bild oder ein leeres Objekt, wenn nichts hinterlegt ist oder das Laden gescheitert ist.
+	 */
+	private ReportingBild ladeBild(final ReportingBildDefinition bildDefinition) {
+		final DTOLogo dtoLogo;
+		try {
+			dtoLogo = this.reportingContext.conn().queryList(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, bildDefinition)
+					.stream().findFirst().orElse(null);
+		} catch (final Exception e) {
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingBild.class, bildDefinition),
+					"Die Bilddaten aus der Logoverwaltung", e);
+			return new ReportingBild(bildDefinition, "");
+		}
+		return new ReportingBild(bildDefinition, (dtoLogo == null) ? "" : dtoLogo.logoBase64);
 	}
 
 	/**

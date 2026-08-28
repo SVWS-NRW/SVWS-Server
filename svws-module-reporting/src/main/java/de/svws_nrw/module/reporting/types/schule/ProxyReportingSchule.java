@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
@@ -44,7 +45,6 @@ public class ProxyReportingSchule extends ReportingSchule {
 				new ArrayList<>(), // schuljahresabschnitte
 				null,
 				null, // schulleitung
-				null, // schullogo
 				null, // stvSchulleitung
 				ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().webAdresse));
 
@@ -56,8 +56,6 @@ public class ProxyReportingSchule extends ReportingSchule {
 		super.bezeichnung.add(ersetzeNullBlankTrim(reportingContext.repositorySchule().stammdaten().bezeichnung3));
 		super.bezeichnung.removeIf(Objects::isNull);
 		super.bezeichnung.removeIf(String::isBlank);
-
-		super.schullogo = this.reportingContext.repositorySchule().schullogoBase64();
 
 		super.schulform = this.reportingContext.repositoryKataloge().schulformen()
 				.stream().filter(sf -> ((Objects.equals(sf.kuerzel, reportingContext.repositorySchule().stammdaten().schulform)) && (sf.gueltigBis == null)))
@@ -106,5 +104,17 @@ public class ProxyReportingSchule extends ReportingSchule {
 					.stream().filter(ReportingLehrer::istStvSchulleitungAktuell).findFirst().orElse(null);
 		}
 		return super.stvSchulleitung;
+	}
+
+	/**
+	 * Das Bild aus der Logoverwaltung zu der übergebenen Bilddefinition.
+	 *
+	 * @param bildDefinition Die Bilddefinition, deren Bild gesucht wird.
+	 *
+	 * @return Das Bild, nie {@code null}.
+	 */
+	@Override
+	public ReportingBild bild(final ReportingBildDefinition bildDefinition) {
+		return this.reportingContext.repositorySchule().bild(bildDefinition);
 	}
 }

@@ -28,7 +28,7 @@ import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.utils.ReportingImageUtils;
+import de.svws_nrw.module.reporting.utils.ReportingBildquelle;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
@@ -88,7 +88,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/** Das Foto (in Base64 kodiert) des Schülers. */
 	protected String foto;
 
-	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt. */
+	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers, beim ersten Zugriff aus den Base64-Daten abgeleitet. */
 	protected String fotoHtmlSource;
 
 	/** Das Geburtsland der Mutter des Schülers. */
@@ -267,7 +267,6 @@ public class ReportingSchueler extends ReportingPerson {
 		this.externesSchulKuerzel = ersetzeNullBlankTrim(externesSchulKuerzel);
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = ersetzeNullBlankTrim(foto);
-		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
 		this.geburtslandMutter = ersetzeNullBlankTrim(geburtslandMutter);
 		this.geburtslandVater = ersetzeNullBlankTrim(geburtslandVater);
 		this.gostAbitur = gostAbitur;
@@ -509,12 +508,15 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Liefert eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers.
-	 * Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt.
+	 * Liefert eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Den MIME-Type bestimmt {@link ReportingBildquelle} aus den Bilddaten.
+	 * Die Zeichenkette entsteht erst beim ersten Zugriff: Eine Ausgabe ohne Fotos lädt zwar die Schüler, wandelt deren Bilder aber nicht um.
 	 *
-	 * @return Data-URI für das Foto oder ein leerer String, wenn kein Foto vorhanden ist.
+	 * @return Data-URI für das Foto oder ein leerer String, wenn kein oder ein nicht auflösbares Foto vorliegt.
 	 */
 	public String fotoHtmlSource() {
+		if (this.fotoHtmlSource == null) {
+			this.fotoHtmlSource = ReportingBildquelle.ausBase64(this.foto);
+		}
 		return this.fotoHtmlSource;
 	}
 

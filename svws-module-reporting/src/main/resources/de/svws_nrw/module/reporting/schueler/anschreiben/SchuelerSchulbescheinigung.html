@@ -10,6 +10,7 @@
 
 	<body th:with="fuerErzieher = ${VorlageParameter.get('fuerErzieher')},
 				   mitBildBriefkopf = ${VorlageParameter.get('mitBildBriefkopf')},
+				   briefkopf = ${mitBildBriefkopf ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@DIN5008_BRIEFKOPF).htmlImageSource() : ''},
 				   mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
 				   keineAnschrift = ${VorlageParameter.get('keineAnschrift')},
 				   keinInfoblock = ${VorlageParameter.get('keinInfoblock')},
@@ -38,17 +39,17 @@
 			<div class="din5008-seitenrahmen start-new-page" style="position: relative;">
 
 				<!-- Briefkopfbereich -->
-				<div th:if="${mitBildBriefkopf}" class="briefkopfbereich">
-					<!-- Hier kann eine Grafik (35mm hoch und 190mm breit) als Ersatz für den gesamten Briefkopf eingebunden werden. -->
+				<div th:if="${!briefkopf.isEmpty()}" class="briefkopfbereich">
+					<img th:src="@{${briefkopf}}" alt="Briefkopf der Schule"/>
 				</div>
 
 				<!-- Schulbezeichnung und Anschrift -->
-				<div th:if="${!mitBildBriefkopf}" class="absenderanschrift">
+				<div th:if="${briefkopf.isEmpty()}" class="absenderanschrift">
 					<span th:utext="${Schule.anschriftVollstaendigHtml()}">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</span>
 				</div>
 
 				<!-- Schullogo -->
-				<div th:if="${!mitBildBriefkopf && mitSchullogo}" class="schullogo">
+				<div th:if="${briefkopf.isEmpty() && mitSchullogo}" class="schullogo">
 					<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/>
 				</div>
 

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
-import de.svws_nrw.module.reporting.utils.ReportingImageUtils;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.
@@ -43,9 +43,6 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	/** Der Lehrer, der die Schulleitungsfunktion besitzt. */
 	protected ReportingLehrer schulleitung;
 
-	/** Das Logo der Schule im Base64-Format. */
-	protected String schullogo;
-
 	/** Der Lehrer, der die stv. Schulleitungsfunktion besitzt. */
 	protected ReportingLehrer stvSchulleitung;
 
@@ -76,7 +73,6 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	 * @param schuljahresabschnitte      Die Schuljahresabschnitte der Schule.
 	 * @param schulform                  Die Schulform (z. B. Gymnasium, Realschule, etc.).
 	 * @param schulleitung               Die Schulleitung der Schule.
-	 * @param schullogo                  Das Logo der Schule.
 	 * @param stvSchulleitung            Die stellvertretende Schulleitung.
 	 * @param webAdresse                 Die Webadresse der Schule.
 	 */
@@ -88,7 +84,6 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 			final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt,
 			final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit,
 			final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final SchulformKatalogEintrag schulform, final ReportingLehrer schulleitung,
-			final String schullogo,
 			final ReportingLehrer stvSchulleitung, final String webAdresse) {
 		super(bezeichnung, email, fax, hausnummer, ort, plz, schulnummer, strassenname, telefon, hausnummerZusatz);
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
@@ -105,7 +100,6 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 				: new ArrayList<>();
 		this.schulform = schulform;
 		this.schulleitung = schulleitung;
-		this.schullogo = schullogo;
 		this.stvSchulleitung = stvSchulleitung;
 		this.webAdresse = ersetzeNullBlankTrim(webAdresse);
 	}
@@ -206,21 +200,30 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	}
 
 	/**
-	 * Das Schullogo der Schule im Base64-Format
+	 * Das Schullogo der Schule als HTML-ImageSource inklusive MIME-Type. Dieser wird versucht aus den Bilddaten zu ermitteln.
+	 * Beide Quellen liegen in der Logoverwaltung: Vorrang hat das quadratische Schullogo, sonst greift das aus SchILD-NRW übernommene. Die Übernahme
+	 * geschieht bei der Migration auf Schema-Revision 62, so dass die alte Tabelle EigeneSchule_Logo hier nicht mehr gelesen wird.
 	 *
-	 * @return Inhalt des Feldes schullogo
+	 * @return Das Schullogo der Schule als HTML-ImageSource im base64-Format mit MIME-Type oder ein leerer String, wenn beide Quellen leer sind.
 	 */
-	public String schullogo() {
-		return schullogo;
+	public String schullogoHtmlImageSource() {
+		final ReportingBild logoQuadratisch = bild(ReportingBildDefinition.SCHULLOGO_QUADRATISCH);
+		if (logoQuadratisch.vorhanden()) {
+			return logoQuadratisch.htmlImageSource();
+		}
+		return bild(ReportingBildDefinition.SCHULLOGO_SCHILD).htmlImageSource();
 	}
 
 	/**
-	 * Das Schullogo der Schule als HTML-ImageSource inklusive MIME-Type. Dieser wird versucht aus den Bilddaten zu ermitteln.
+	 * Das Bild aus der Logoverwaltung zu der übergebenen Bilddefinition. Die Basisklasse kennt die Logoverwaltung nicht und liefert deshalb ein leeres
+	 * Objekt; das Bild wird erst von der Proxy-Klasse geladen.
 	 *
-	 * @return Das Schullogo der Schule als HTML-ImageSource im base64-Format mit MIME-Type.
+	 * @param bildDefinition Die Bilddefinition, deren Bild gesucht wird.
+	 *
+	 * @return Das Bild, nie {@code null}.
 	 */
-	public String schullogoHtmlImageSource() {
-		return ReportingImageUtils.base64ImageToHtmlImageSource(schullogo, "", null);
+	public ReportingBild bild(final ReportingBildDefinition bildDefinition) {
+		return new ReportingBild(bildDefinition, "");
 	}
 
 	/**
