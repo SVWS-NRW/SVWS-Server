@@ -224,6 +224,57 @@ class SchuelerStammdatenServiceTest {
 	}
 
 	// =========================================================================
+	// getListOhneFotos
+	// =========================================================================
+
+	@Test
+	@DisplayName("getListOhneFotos - null -> leere Liste")
+	void getListOhneFotos_null() {
+		assertThat(service.getListOhneFotos(null)).isEmpty();
+		verify(repository, never()).findListByIds(anyList());
+	}
+
+	@Test
+	@DisplayName("getListOhneFotos - leer -> leere Liste")
+	void getListOhneFotos_empty() {
+		assertThat(service.getListOhneFotos(List.of())).isEmpty();
+		verify(repository, never()).findListByIds(anyList());
+	}
+
+	@Test
+	@DisplayName("getListOhneFotos - zwei Einträge")
+	void getListOhneFotos() {
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var apiModel2 = new SchuelerStammdaten();
+		apiModel2.id = 2L;
+
+		when(repository.findListByIds(List.of(1L, 2L))).thenReturn(List.of(entity, entity2));
+		when(mapper.toApi(entity)).thenReturn(apiModel);
+		when(mapper.toApi(entity2)).thenReturn(apiModel2);
+
+		final var result = service.getListOhneFotos(List.of(1L, 2L));
+
+		assertThat(result).containsExactly(apiModel, apiModel2);
+	}
+
+	@Test
+	@DisplayName("getListOhneFotos - fragt die Fotos nicht ab")
+	void getListOhneFotos_ohneFotoAbfrage() {
+		// Der Zweck der Methode: Die zweite Abfrage auf die Foto-Tabelle unterbleibt. Ohne diese Prüfung bliebe der Test auch grün, wenn die Fotos
+		// weiterhin geladen und nur nicht zugewiesen würden.
+		final var foto = new SchuelerFoto(1L, "base64data");
+		lenient().when(schuelerFotoService.getBySchuelerIds(List.of(1L))).thenReturn(List.of(foto));
+		when(repository.findListByIds(List.of(1L))).thenReturn(List.of(entity));
+		when(mapper.toApi(entity)).thenReturn(apiModel);
+
+		final var result = service.getListOhneFotos(List.of(1L));
+
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().foto).isNull();
+		verify(schuelerFotoService, never()).getBySchuelerIds(anyList());
+	}
+
+	// =========================================================================
 	// create
 	// =========================================================================
 

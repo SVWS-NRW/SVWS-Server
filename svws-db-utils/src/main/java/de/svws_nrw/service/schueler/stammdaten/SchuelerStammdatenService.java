@@ -95,6 +95,20 @@ public final class SchuelerStammdatenService {
 	}
 
 	/**
+	 * Gibt alle {@link SchuelerStammdaten} zu übergebenen IDs ohne die Fotos zurück. Das Feld {@code foto} bleibt leer.
+	 *
+	 * @param ids für das Auflösen benötigte Identifier
+	 *
+	 * @return Liste aller {@link SchuelerStammdaten} als API-Modelle, jeweils ohne Foto
+	 */
+	public List<SchuelerStammdaten> getListOhneFotos(final List<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return List.of();
+		}
+		return repository.findListByIds(ids).stream().map(mapper::toApi).toList();
+	}
+
+	/**
 	 * Legt einen neuen Schüler anhand der übergebenen Importdaten an.
 	 * <p>
 	 * Validiert vor dem Anlegen Geschlecht, Schülerstatus und Religion.
