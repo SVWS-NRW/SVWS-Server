@@ -118,7 +118,7 @@ class TestReportingRepositoryLehrerFotos {
 	 */
 	private void gebeVollbestandVor(final List<LehrerStammdaten> alle) {
 		try (MockedConstruction<DataLehrerStammdaten> datenklasse = mockConstruction(DataLehrerStammdaten.class,
-				(dataLehrerStammdaten, kontext) -> when(dataLehrerStammdaten.getAll()).thenReturn(alle))) {
+				(dataLehrerStammdaten, kontext) -> when(dataLehrerStammdaten.getAllOhneFotos()).thenReturn(alle))) {
 			repository.registriereStammdaten(alle.getFirst().id, alle.getFirst());
 		}
 	}

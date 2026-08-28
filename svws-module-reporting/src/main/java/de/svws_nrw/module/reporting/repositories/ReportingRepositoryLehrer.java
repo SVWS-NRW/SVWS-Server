@@ -220,7 +220,7 @@ public class ReportingRepositoryLehrer {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade alle Lehrerstammdaten.");
 			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(this.reportingContext.conn(),
 					new DataLernplattformen(this.reportingContext.conn()),
-					new DataEinwilligungsarten(this.reportingContext.conn())).getAll();
+					new DataEinwilligungsarten(this.reportingContext.conn())).getAllOhneFotos();
 			for (final LehrerStammdaten ls : alle) {
 				mapLehrerStammdaten.putIfAbsent(ls.id, ls);
 			}

@@ -152,6 +152,35 @@ class DataLehrerStammdatenTest {
 	}
 
 	@Test
+	@DisplayName("getAllOhneFotos | Erfolg, ohne Abfrage der Foto-Tabelle")
+	void getAllOhneFotosTest() throws ApiOperationException {
+		// Die Methode darf die Foto-Tabelle nicht anfassen. Beide verify decken je einen Weg dorthin ab: die Abfrage für alle Lehrkräfte und die für
+		// eine einzelne. Eine Prüfung auf ein leeres Foto allein genügte nicht - sie bliebe auch grün, wenn die Fotos geladen und nur verworfen würden.
+		final var dtoLehrer = new DTOLehrer(1L, "abc", "abc");
+		dtoLehrer.PersonTyp = PersonalTyp.LEHRKRAFT;
+		dtoLehrer.Geschlecht = Geschlecht.X;
+		when(this.conn.queryAll(DTOLehrer.class)).thenReturn(List.of(dtoLehrer));
+
+		final var result = this.dataLehrerStammdaten.getAllOhneFotos();
+
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst())
+				.hasFieldOrPropertyWithValue("id", 1L)
+				.hasFieldOrPropertyWithValue("kuerzel", "abc")
+				.hasFieldOrPropertyWithValue("foto", null);
+		verify(this.conn, never()).queryByKeyList(eq(DTOLehrerFoto.class), anyList()); // Weg über mapList
+		verify(this.conn, never()).queryByKey(DTOLehrerFoto.class, 1L); // Weg über map
+	}
+
+	@Test
+	@DisplayName("getAllOhneFotos | keine Lehrkräfte vorhanden")
+	void getAllOhneFotosLeerTest() throws ApiOperationException {
+		when(this.conn.queryAll(DTOLehrer.class)).thenReturn(List.of());
+
+		assertThat(this.dataLehrerStammdaten.getAllOhneFotos()).isEmpty();
+	}
+
+	@Test
 	@DisplayName("getListByID | Erfolg")
 	void getListByIDTest() throws ApiOperationException {
 		final var dtoLehrer = new DTOLehrer(1L, "abc", "abc");
