@@ -21,8 +21,8 @@
 					<!-- TODO Select mit der Liste der Teilstandorte für diese Schule (:disabled="!hatKompetenzUpdate" ) -->
 					<svws-ui-text-input placeholder="Teilstandort" disabled v-model="modelProxy.proxy.teilstandort" @change="modelProxy.patch" />
 					<div class="flex flex-row">
-						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0"
-							v-model="modelProxy.proxy.sortierung" @change="modelProxy.patch" />
+						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true"
+							v-model="modelProxy.proxy.sortierung" @change="modelProxy.patch" :validation="() => modelProxy.getFehler('sortierung')" />
 					</div>
 					<svws-ui-spacing />
 

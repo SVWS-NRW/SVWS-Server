@@ -1,8 +1,8 @@
 import { computed } from "vue";
-import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, Jahrgaenge, Klassenart, Schulgliederung,
+import { AllgemeinbildendOrganisationsformen, ArrayList, BerufskollegOrganisationsformen, Jahrgaenge, JavaInteger, Klassenart, Schulgliederung,
 	WeiterbildungskollegOrganisationsformen } from "@core";
 import type { JahrgangsDaten, KlassenDaten, List, KlassenListeEintrag, KlassenDatenMinimal } from "@core";
-import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength } from "@ui";
+import { ModelProxy, ValidatorInputRequired, ValidatorKlassenKuerzel, ValidatorNumberRange, ValidatorStringLength } from "@ui";
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
@@ -21,8 +21,11 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		patch?: (data: Partial<KlassenDaten>) => Promise<boolean>) {
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
+
 		this.addValidator(new ValidatorKlassenKuerzel(() => this.proxy.kuerzel ?? null, vorhanden), "kuerzel");
 		this.addValidator(new ValidatorStringLength(() => this.proxy.beschreibung, 1, 150), "beschreibung");
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 		this.validate();
 	}
 
