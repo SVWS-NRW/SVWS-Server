@@ -16,6 +16,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -55,7 +56,7 @@ class DataAnkreuzkompetenzenTest {
 	private DBEntityManager conn;
 
 	@Mock
-	private DataAnkreuzkompetenzJahrgangszuordnungen dataAnkreuzkompetenzJahrgangszuordnungen;
+	private AnkreuzkompetenzJahrgangService ankreuzkompetenzJahrgangService;
 
 	@InjectMocks
 	private DataAnkreuzkompetenzen data;
@@ -112,7 +113,7 @@ class DataAnkreuzkompetenzenTest {
 	@Test
 	@DisplayName("initDTO | Erfolg")
 	void initDTO() {
-		final var dataAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.conn, this.dataAnkreuzkompetenzJahrgangszuordnungen);
+		final var dataAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.conn, this.ankreuzkompetenzJahrgangService);
 		final var dto = new DTOAnkreuzfloskeln(1L, 0, "");
 
 		dataAnkreuzkompetenzen.initDTO(dto, 2L, null);
@@ -192,16 +193,19 @@ class DataAnkreuzkompetenzenTest {
 	@Test
 	@DisplayName("getList | Erfolg")
 	void getList() {
-		final var dataAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.conn, this.dataAnkreuzkompetenzJahrgangszuordnungen);
+		final var dataAnkreuzkompetenzen = new DataAnkreuzkompetenzen(this.conn, this.ankreuzkompetenzJahrgangService);
 		final var dto1 = new DTOAnkreuzfloskeln(1L, 0, "Test 1");
 		final var dto2 = new DTOAnkreuzfloskeln(2L, 0, "Test 2");
 
 		when(this.conn.queryAll(DTOAnkreuzfloskeln.class)).thenReturn(List.of(dto1, dto2));
+
 		final var zuordnung = new AnkreuzkompetenzJahrgangszuordnung();
 		zuordnung.id = 42L;
 		zuordnung.idAnkreuzkompetenz = 1L;
 		zuordnung.idJahrgang = 1L;
-		when(this.dataAnkreuzkompetenzJahrgangszuordnungen.getAll()).thenReturn(List.of(zuordnung));
+		when(this.ankreuzkompetenzJahrgangService.getAllByIdAnkreuzkompetenz())
+				.thenReturn(Map.of(1L, List.of(zuordnung)));
+
 		@SuppressWarnings("unchecked") final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));

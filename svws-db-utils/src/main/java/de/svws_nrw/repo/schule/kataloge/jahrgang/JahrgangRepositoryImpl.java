@@ -18,4 +18,9 @@ public final class JahrgangRepositoryImpl extends RepositoryImpl<DTOJahrgang> im
 		super(conn, DTOJahrgang.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
+	@Override
+	public boolean existsById(final Long idJahrgang) {
+		return conn.existsBy(DTOJahrgang.QUERY_BY_ID, DTOJahrgang.class, idJahrgang);
+	}
+
 }

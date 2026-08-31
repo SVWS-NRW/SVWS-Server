@@ -2,7 +2,6 @@ package de.svws_nrw.data.schule;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -35,17 +35,17 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 
 	private static final String ID_FACH = "idFach";
 	private static final String IST_ASV = "istASV";
-	private final DataAnkreuzkompetenzJahrgangszuordnungen dataAnkreuzkompetenzJahrgangszuordnungen;
+	private final AnkreuzkompetenzJahrgangService ankreuzkompetenzJahrgangService;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Ankreuzkompetenz}.
 	 *
 	 * @param conn	 die Datenbankverbindung
-	 * @param data   DataAnkreuzkompetenzJahrgangszuordnungen
+	 * @param service   {@link AnkreuzkompetenzJahrgangService}
 	 */
-	public DataAnkreuzkompetenzen(final DBEntityManager conn, final DataAnkreuzkompetenzJahrgangszuordnungen data) {
+	public DataAnkreuzkompetenzen(final DBEntityManager conn, final AnkreuzkompetenzJahrgangService service) {
 		super(conn);
-		this.dataAnkreuzkompetenzJahrgangszuordnungen = data;
+		this.ankreuzkompetenzJahrgangService = service;
 		setAttributesNotPatchable("id", "referenziertInAnderenTabellen");
 		setAttributesRequiredOnCreation(IST_ASV, "floskelText");
 	}
@@ -99,7 +99,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 				.map(a -> a.ID)
 				.collect(Collectors.toSet()));
 
-		final Map<Long, List<AnkreuzkompetenzJahrgangszuordnung>> zuordnungenById = this.mapZuordnungenByIdAnkreuzkompetenz();
+		final Map<Long, List<AnkreuzkompetenzJahrgangszuordnung>> zuordnungenById = ankreuzkompetenzJahrgangService.getAllByIdAnkreuzkompetenz();
 
 		return allAnkreuzkompetenzen
 				.stream()
@@ -227,17 +227,6 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 
 	private static void updateSortierung(final DTOAnkreuzfloskeln dto, final String name, final Object value) {
 		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
-	}
-
-	private Map<Long, List<AnkreuzkompetenzJahrgangszuordnung>> mapZuordnungenByIdAnkreuzkompetenz() {
-		if (this.dataAnkreuzkompetenzJahrgangszuordnungen == null) {
-			return new HashMap<>();
-		}
-
-		return this.dataAnkreuzkompetenzJahrgangszuordnungen
-				.getAll()
-				.stream()
-				.collect(Collectors.groupingBy(a -> a.idAnkreuzkompetenz));
 	}
 
 	private Ankreuzkompetenz addJahrgangszuordnungen(final Ankreuzkompetenz ankreuzkompetenz,

@@ -1,7 +1,10 @@
 package de.svws_nrw.service.schule.katalog;
 
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzJahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import de.svws_nrw.repo.schule.kataloge.ort.OrtRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
@@ -9,6 +12,7 @@ import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
@@ -364,8 +368,8 @@ class KatalogServiceFactoryTest {
 	}
 
 	// -------------------------------------------------------------------------
-// getReligionService()
-// -------------------------------------------------------------------------
+	// getReligionService()
+	// -------------------------------------------------------------------------
 
 	@Nested
 	@DisplayName("getReligionService()")
@@ -418,6 +422,83 @@ class KatalogServiceFactoryTest {
 			final ReligionService service = underTest.getReligionService();
 
 			assertThat(service).isInstanceOf(ReligionService.class);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// getAnkreuzkompetenzJahrgangService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getAnkreuzkompetenzJahrgangService()")
+	class GetAnkreuzkompetenzJahrgangService {
+
+		@Mock
+		private AnkreuzkompetenzJahrgangRepository ankreuzkompetenzJahrgangRepository;
+
+		@Mock
+		private AnkreuzkompetenzRepository ankreuzkompetenzRepository;
+
+		@Mock
+		private JahrgangRepository jahrgangRepository;
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getAnkreuzkompetenzJahrgangRepository())
+					.thenReturn(ankreuzkompetenzJahrgangRepository);
+			when(katalogRepositoryFactory.getAnkreuzkompetenzRepository())
+					.thenReturn(ankreuzkompetenzRepository);
+			when(katalogRepositoryFactory.getJahrgangRepository())
+					.thenReturn(jahrgangRepository);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null AnkreuzkompetenzJahrgangService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final AnkreuzkompetenzJahrgangService service = underTest.getAnkreuzkompetenzJahrgangService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			final AnkreuzkompetenzJahrgangService service1 = underTest.getAnkreuzkompetenzJahrgangService();
+			final AnkreuzkompetenzJahrgangService service2 = underTest.getAnkreuzkompetenzJahrgangService();
+
+			assertThat(service1).isNotSameAs(service2);
+		}
+
+		@Test
+		@DisplayName("ruft getAnkreuzkompetenzJahrgangRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToAnkreuzkompetenzJahrgangRepository() {
+			underTest.getAnkreuzkompetenzJahrgangService();
+
+			verify(katalogRepositoryFactory).getAnkreuzkompetenzJahrgangRepository();
+		}
+
+		@Test
+		@DisplayName("ruft getAnkreuzkompetenzRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToAnkreuzkompetenzRepository() {
+			underTest.getAnkreuzkompetenzJahrgangService();
+
+			verify(katalogRepositoryFactory).getAnkreuzkompetenzRepository();
+		}
+
+		@Test
+		@DisplayName("ruft getJahrgangRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToJahrgangRepository() {
+			underTest.getAnkreuzkompetenzJahrgangService();
+
+			verify(katalogRepositoryFactory).getJahrgangRepository();
+		}
+
+		@Test
+		@DisplayName("verwendet AnkreuzkompetenzJahrgangMapper.INSTANCE")
+		void shouldUseAnkreuzkompetenzJahrgangMapperInstance() {
+			final AnkreuzkompetenzJahrgangService service = underTest.getAnkreuzkompetenzJahrgangService();
+
+			assertThat(service).isInstanceOf(AnkreuzkompetenzJahrgangService.class);
 		}
 	}
 

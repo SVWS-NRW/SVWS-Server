@@ -112,7 +112,7 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 
 	private async internalAddJahrgaengezuordnungen(idAnkreuzkompetenz: number, idsJahrgaenge: List<number>): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
 		const zuordnungenToCreate = this.createJahrgaengezuordnungen(idAnkreuzkompetenz, idsJahrgaenge);
-		return await api.server.addAnkreuzkompetenzJahrgangszuordnung(zuordnungenToCreate, api.schema);
+		return await api.server.addAnkreuzkompetenzJahrgangszuordnungMultiple(zuordnungenToCreate, api.schema);
 	}
 
 	deleteCheck = (): [boolean, List<string>] => {

@@ -8,6 +8,10 @@ import de.svws_nrw.repo.Repository;
  */
 public interface JahrgangRepository extends Repository<DTOJahrgang> {
 
-	// Hier sollten ggf. weitere spezifische Funktionen ergänzt werden
+	/**
+	 * @param idJahrgang {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idJahrgang);
 
 }

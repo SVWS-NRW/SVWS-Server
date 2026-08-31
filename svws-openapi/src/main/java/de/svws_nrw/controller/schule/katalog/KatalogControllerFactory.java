@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.schule.katalog;
 
+import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangController;
+import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangControllerImpl;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
@@ -152,6 +154,15 @@ public final class KatalogControllerFactory {
 	 */
 	public ReligionController getReligionController() {
 		return new ReligionControllerImpl(serviceFactory.getReligionService());
+	}
+
+	/**
+	 * Erstellt einen neuen AnkreuzkompetenzJahrgangController.
+	 *
+	 * @return {@link AnkreuzkompetenzJahrgangController} - neu erzeugter Controller
+	 */
+	public AnkreuzkompetenzJahrgangController getAnkreuzkompetenzJahrgangController() {
+		return new AnkreuzkompetenzJahrgangControllerImpl(serviceFactory.getAnkreuzkompetenzJahrgangService());
 	}
 
 }

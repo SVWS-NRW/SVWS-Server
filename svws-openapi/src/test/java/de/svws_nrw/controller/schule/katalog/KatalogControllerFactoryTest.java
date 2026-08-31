@@ -179,4 +179,14 @@ class KatalogControllerFactoryTest {
 		assertNotNull(controller);
 	}
 
+	@Test
+	@DisplayName("getAnkreuzkompetenzJahrgangController | gibt einen Controller zurück")
+	void getAnkreuzkompetenzJahrgangController() {
+		final var controller = KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getAnkreuzkompetenzJahrgangController();
+
+		assertNotNull(controller);
+	}
+
 }

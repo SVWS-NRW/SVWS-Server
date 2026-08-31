@@ -18,4 +18,9 @@ public final class AnkreuzkompetenzRepositoryImpl extends RepositoryImpl<DTOAnkr
 		super(conn, DTOAnkreuzfloskeln.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
+	@Override
+	public boolean existsById(final Long idAnkreuzkompetenz) {
+		return conn.existsBy(DTOAnkreuzfloskeln.QUERY_BY_ID, DTOAnkreuzfloskeln.class, idAnkreuzkompetenz);
+	}
+
 }

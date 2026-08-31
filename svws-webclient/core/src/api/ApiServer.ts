@@ -16263,61 +16263,60 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addAnkreuzkompetenzJahrgangszuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung
+	 * Implementierung der DELETE-Methode deleteAnkreuzkompetenzJahrgangszuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple
 	 *
-	 * Erstellt eine neue AnkreuzkompetenzJahrgangszuordnungen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.
+	 * Entfernt die AnkreuzkompetenzJahrgangszuordnungen mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.
+	 *   Code 200: Die Ergebnisse der Löschoperationen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<AnkreuzkompetenzJahrgangszuordnung>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
-	 * @param {List<Partial<AnkreuzkompetenzJahrgangszuordnung>>} data - der Request-Body für die HTTP-Methode
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.
+	 * @returns Die Ergebnisse der Löschoperationen
 	 */
-	public async addAnkreuzkompetenzJahrgangszuordnung(data: List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, schema: string): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
-		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung"
+	public async deleteAnkreuzkompetenzJahrgangszuordnungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = "[" + (data.toArray() as Array<AnkreuzkompetenzJahrgangszuordnung>).map(d => AnkreuzkompetenzJahrgangszuordnung.transpilerToJSONPatch(d)).join() + "]";
-		const result: string = await super.postJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
+		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
-			ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text));
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
 		});
 		return ret;
 	}
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteAnkreuzkompetenzJahrgangszuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple
+	 * Implementierung der POST-Methode addAnkreuzkompetenzJahrgangszuordnungMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/multiple
 	 *
-	 * Entfernt AnkreuzkompetenzJahrgangszuordnungen, insofern der SVWS-Benutzer die notwendige Berechtigung hat.
+	 * Erstellt mehrere neue AnkreuzkompetenzJahrgangszuordnungen und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.
+	 *   Code 201: Die AnkreuzkompetenzJahrgangszuordnungen wurden erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<AnkreuzkompetenzJahrgangszuordnung>
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Keine AnkreuzkompetenzJahrgangszuordnung vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
 	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
 	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {List<Partial<AnkreuzkompetenzJahrgangszuordnung>>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.
+	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurden erfolgreich hinzugefügt.
 	 */
-	public async deleteAnkreuzkompetenzJahrgangszuordnungen(data: List<number>, schema: string): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
-		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple"
+	public async addAnkreuzkompetenzJahrgangszuordnungMultiple(data: List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, schema: string): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result: string = await super.deleteJSON(path, body);
+		const body: string = "[" + (data.toArray() as Array<AnkreuzkompetenzJahrgangszuordnung>).map(d => AnkreuzkompetenzJahrgangszuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
 		obj.forEach((elem: any) => {

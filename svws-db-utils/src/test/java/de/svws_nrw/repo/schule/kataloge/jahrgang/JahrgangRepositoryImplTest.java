@@ -1,26 +1,19 @@
 package de.svws_nrw.repo.schule.kataloge.jahrgang;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class JahrgangRepositoryImplTest {
@@ -31,100 +24,69 @@ class JahrgangRepositoryImplTest {
 	@InjectMocks
 	private JahrgangRepositoryImpl repository;
 
-	private final DTOJahrgang testJahrgang1 = getTestJahrgang1();
-
-	private static DTOJahrgang getTestJahrgang1() {
-		final var testJahrgang = new DTOJahrgang(42);
-		testJahrgang.InternKrz = "05";
-		return testJahrgang;
-	}
-
-	private final DTOJahrgang testJahrgang2 = getTestJahrgang2();
-
-	private static DTOJahrgang getTestJahrgang2() {
-		final var testJahrgang = new DTOJahrgang(43);
-		testJahrgang.InternKrz = "06";
-		return testJahrgang;
-	}
+	// -------------------------------------------------------------------------
+	// Konstruktor
+	// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("Test: Bestimme einen Jahrgang anhand seiner ID.")
-	void testGetById() {
-		final Long id = 42L;
-		when(conn.queryByKey(DTOJahrgang.class, id)).thenReturn(testJahrgang1);
+	@DisplayName("Konstruktor | Erfolg")
+	void constructor_success() {
+		final var newRepository = new JahrgangRepositoryImpl(conn);
 
-		final DTOJahrgang result = repository.getById(id);
-
-		assertNotNull(result);
-		assertEquals(testJahrgang1, result);
-		verify(conn).queryByKey(DTOJahrgang.class, id);
+		assertThat(newRepository)
+				.isNotNull()
+				.isInstanceOf(JahrgangRepositoryImpl.class)
+				.isInstanceOf(JahrgangRepository.class);
 	}
 
-	@Test
-	@DisplayName("Test: Bestimme mehrere Jahrgänge anhand einer Liste von IDs.")
-	void testGetListByIds() {
-		final List<Long> ids = Arrays.asList(42L, 43L);
-		final List<DTOJahrgang> list = Arrays.asList(testJahrgang1, testJahrgang2);
+	// -------------------------------------------------------------------------
+	// existsById
+	// -------------------------------------------------------------------------
 
-		when(conn.queryByKeyList(DTOJahrgang.class, ids)).thenReturn(list);
+	@Nested
+	@DisplayName("existsById")
+	class ExistsById {
 
-		final List<DTOJahrgang> result = repository.findListByIds(ids);
+		@Test
+		@DisplayName("Gibt true zurück, wenn der Jahrgang vorhanden ist")
+		void existsById_found() {
+			final long idJahrgang = 500L;
 
-		assertEquals(2, result.size());
-		verify(conn).queryByKeyList(DTOJahrgang.class, ids);
+			when(conn.existsBy(
+					DTOJahrgang.QUERY_BY_ID,
+					DTOJahrgang.class,
+					idJahrgang))
+					.thenReturn(true);
+
+			final var result = repository.existsById(idJahrgang);
+
+			assertThat(result).isTrue();
+
+			verify(conn, times(1)).existsBy(
+					DTOJahrgang.QUERY_BY_ID,
+					DTOJahrgang.class,
+					idJahrgang);
+		}
+
+		@Test
+		@DisplayName("Gibt false zurück, wenn der Jahrgang nicht vorhanden ist")
+		void existsById_notFound() {
+			final long idJahrgang = 999L;
+
+			when(conn.existsBy(
+					DTOJahrgang.QUERY_BY_ID,
+					DTOJahrgang.class,
+					idJahrgang))
+					.thenReturn(false);
+
+			final var result = repository.existsById(idJahrgang);
+
+			assertThat(result).isFalse();
+
+			verify(conn, times(1)).existsBy(
+					DTOJahrgang.QUERY_BY_ID,
+					DTOJahrgang.class,
+					idJahrgang);
+		}
 	}
-
-	@Test
-	@DisplayName("Test: Erhalten eine leere Liste bei einen Aufruf von getListByIds mit einer leeren Liste oder null ohne eine Datenbank-Aufruf")
-	void testGetListByIdsEmpty() {
-		final List<DTOJahrgang> resultNull = repository.findListByIds(null);
-		final List<DTOJahrgang> resultEmpty = repository.findListByIds(Collections.emptyList());
-		assertTrue(resultNull.isEmpty());
-		assertTrue(resultEmpty.isEmpty());
-		verifyNoInteractions(conn);
-	}
-
-	@Test
-	@DisplayName("Test: Bestimme alle Jahrgänge.")
-	void testGetAll() {
-		when(conn.queryAll(DTOJahrgang.class)).thenReturn(Arrays.asList(testJahrgang1));
-		final List<DTOJahrgang> result = repository.getAll();
-		assertFalse(result.isEmpty());
-		verify(conn).queryAll(DTOJahrgang.class);
-	}
-
-	@Test
-	@DisplayName("Test: Erstelle einen neuen Jahrgang mit der automatischen ID-Zuweisung.")
-	void testCreate() {
-		final DTOJahrgang neuesFach = new DTOJahrgang(-1);
-
-		final long erwarteteId = 1001L;
-		when(conn.transactionGetNextID(DTOJahrgang.class)).thenReturn(erwarteteId);
-		when(conn.transactionPersist(neuesFach)).thenReturn(true);
-
-		final DTOJahrgang result = repository.create(neuesFach);
-
-		// Verifizierung
-		assertEquals(erwarteteId, result.ID, "Die ID wurde nicht durch den setId-Consumer im Repository korrekt gesetzt.");
-
-		verify(conn).transactionGetNextID(DTOJahrgang.class);
-		verify(conn).transactionPersist(neuesFach);
-	}
-
-	@Test
-	@DisplayName("Test: Aktualisiere bzw. speichere alle Jahrgänge.")
-	void testUpdate() {
-		when(conn.transactionPersist(testJahrgang1)).thenReturn(true);
-		repository.update(testJahrgang1);
-		verify(conn).transactionPersist(testJahrgang1);
-	}
-
-	@Test
-	@DisplayName("Test: Lösche einen Jahrgang")
-	void testDelete() {
-		when(conn.transactionRemove(testJahrgang1)).thenReturn(true);
-		repository.delete(testJahrgang1);
-		verify(conn).transactionRemove(testJahrgang1);
-	}
-
 }

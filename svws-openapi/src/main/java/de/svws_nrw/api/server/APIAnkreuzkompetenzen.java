@@ -1,7 +1,9 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
+import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.AnkreuzkompetenzJahrgangszuordnung;
@@ -9,8 +11,12 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.schule.DataAnkreuzkompetenzJahrgangszuordnungen;
 import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangCreateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -67,7 +73,14 @@ public class APIAnkreuzkompetenzen {
 	@ApiResponse(responseCode = "404", description = "Keine Ankreuzkompetenz-Einträge gefunden")
 	public Response getAnkreuzkompetenzen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzen(conn, new DataAnkreuzkompetenzJahrgangszuordnungen(conn)).getListAsResponse(),
+				conn -> {
+					final var katalogRepositoryFactory = KatalogRepositoryFactory.getNewInstance();
+					final var eigeneSchuleRepositoryFactory = EigeneSchuleRepositoryFactory.getNewInstance();
+					final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+					final var ankreuzkompetenzJahrgangService = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory)
+							.getAnkreuzkompetenzJahrgangService();
+					return new DataAnkreuzkompetenzen(conn, ankreuzkompetenzJahrgangService).getListAsResponse();
+				},
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
 	}
 
@@ -158,61 +171,65 @@ public class APIAnkreuzkompetenzen {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Hinzufügen einer AnkreuzkompetenzJahrgangszuordnung.
+	 * Die OpenAPI-Methode für das Hinzufügen mehrerer AnkreuzkompetenzJahrgangszuordnungen.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Create ausgeführt werden soll
-	 * @param is        der Input-Stream mit den Daten der AnkreuzkompetenzJahrgangszuordnung
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema, auf welches der Create ausgeführt werden soll
+	 * @param dtos    die Daten der zu erstellenden AnkreuzkompetenzJahrgangszuordnungen
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit der neuen AnkreuzkompetenzJahrgangszuordnung
+	 * @return die HTTP-Antwort mit den neu erstellten AnkreuzkompetenzJahrgangszuordnungen
 	 */
 	@POST
-	@Path("/jahrgangzuordnung")
-	@Operation(summary = "Erstellt eine neue AnkreuzkompetenzJahrgangszuordnungen und gibt das zugehörige Objekt zurück.",
-			description = "Erstellt eine neue AnkreuzkompetenzJahrgangszuordnungen und gibt das zugehörige Objekt zurück. "
+	@Path("/jahrgangzuordnung/multiple")
+	@Operation(summary = "Erstellt mehrere neue AnkreuzkompetenzJahrgangszuordnungen und gibt die zugehörigen Objekte zurück.",
+			description = "Erstellt mehrere neue AnkreuzkompetenzJahrgangszuordnungen und gibt die zugehörigen Objekte zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.")
-	@ApiResponse(responseCode = "201", description = "Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.",
+	@ApiResponse(responseCode = "201", description = "Die AnkreuzkompetenzJahrgangszuordnungen wurden erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response addAnkreuzkompetenzJahrgangszuordnung(@PathParam("schema") final String schema,
+	public Response addAnkreuzkompetenzJahrgangszuordnungMultiple(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden AnkreuzkompetenzJahrgangszuordnungen ohne ID, die automatisch generiert werden",
 					required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class)))) final InputStream is,
+							array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class)))) final List<AnkreuzkompetenzJahrgangCreateRequest> dtos,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzJahrgangszuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getAnkreuzkompetenzJahrgangController()
+				.createMultiple(dtos);
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen von AnkreuzkompetenzJahrgangszuordnungen.
+	 * Die OpenAPI-Methode für das Entfernen mehrerer AnkreuzkompetenzJahrgangszuordnungen.
 	 *
-	 * @param schema    das Datenbankschema
-	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema  das Datenbankschema
+	 * @param ids     die Datenbank-IDs der zu löschenden AnkreuzkompetenzJahrgangszuordnungen
+	 * @param request die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten AnkreuzkompetenzJahrgangszuordnungen
+	 * @return die Ergebnisse der Löschoperationen
 	 */
 	@DELETE
 	@Path("/jahrgangzuordnung/delete/multiple")
-	@Operation(summary = "Entfernt AnkreuzkompetenzJahrgangszuordnungen.",
-			description = "Entfernt AnkreuzkompetenzJahrgangszuordnungen, insofern der SVWS-Benutzer die notwendige Berechtigung hat.")
-	@ApiResponse(responseCode = "200", description = "Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class))))
+	@Operation(summary = "Entfernt mehrere AnkreuzkompetenzJahrgangszuordnungen.",
+			description = "Entfernt die AnkreuzkompetenzJahrgangszuordnungen mit den angegebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Ergebnisse der Löschoperationen",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine AnkreuzkompetenzJahrgangszuordnung vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response deleteAnkreuzkompetenzJahrgangszuordnungen(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Ids der zu löschenden Objekte", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@RequestBody(description = "Die IDs der zu löschenden AnkreuzkompetenzJahrgangszuordnungen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzJahrgangszuordnungen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getAnkreuzkompetenzJahrgangController()
+				.deleteMultiple(ids);
 	}
+
 }
