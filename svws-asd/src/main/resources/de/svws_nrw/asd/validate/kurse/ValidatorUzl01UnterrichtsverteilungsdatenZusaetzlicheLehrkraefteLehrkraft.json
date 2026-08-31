@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUzl01UnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft",
+    "historie" : [ {
+      "praefix" : "UZL01",
+      "zweig" : "Unterrichtsverteilungsdaten-ZusaetzlicheLehrkraefte-Lehrkraft",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Tabelle 'Zusätzliche Lehrkraft'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Zusätzliche Lehrkraft: Ungültige ausgewählte Lehrkraft",
+      "erlaeuterung" : "Wir wollen hier prüfen, ob jeder Eintrag in dem Array weitereLehrer einer gültigen Lehrer ID zuordnenbar ist. ",
+      "bedingung" : "KursDaten.weitereLehrer[]. ≠ einer id aus der Liste der Lehrer-IDs der Schule ",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
