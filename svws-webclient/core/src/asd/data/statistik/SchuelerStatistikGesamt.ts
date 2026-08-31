@@ -48,6 +48,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public status: number = 0;
 
 	/**
+	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
+	 */
+	public istSchulpflichtErfuellt: boolean = false;
+
+	/**
 	 * Das Datum der Religionsabmeldung des Schülerdatensatzes.
 	 */
 	public religionabmeldung: string | null = null;
@@ -197,6 +202,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.status === undefined)
 			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
+		if (obj.istSchulpflichtErfuellt === undefined)
+			throw new Error('invalid json format, missing attribute istSchulpflichtErfuellt');
+		result.istSchulpflichtErfuellt = obj.istSchulpflichtErfuellt;
 		result.religionabmeldung = (obj.religionabmeldung === undefined) ? null : obj.religionabmeldung === null ? null : obj.religionabmeldung;
 		result.religionanmeldung = (obj.religionanmeldung === undefined) ? null : obj.religionanmeldung === null ? null : obj.religionanmeldung;
 		result.bkAzvo = (obj.bkAzvo === undefined) ? null : obj.bkAzvo === null ? null : obj.bkAzvo;
@@ -241,6 +249,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"idStaatsangehoerigkeit2" : ' + ((obj.idStaatsangehoerigkeit2 === null) ? 'null' : obj.idStaatsangehoerigkeit2.toString()) + ',';
 		result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
+		result += '"istSchulpflichtErfuellt" : ' + obj.istSchulpflichtErfuellt.toString() + ',';
 		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
 		result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		result += '"bkAzvo" : ' + ((obj.bkAzvo === null) ? 'null' : obj.bkAzvo.toString()) + ',';
@@ -301,6 +310,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';
+		}
+		if (obj.istSchulpflichtErfuellt !== undefined) {
+			result += '"istSchulpflichtErfuellt" : ' + obj.istSchulpflichtErfuellt.toString() + ',';
 		}
 		if (obj.religionabmeldung !== undefined) {
 			result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';

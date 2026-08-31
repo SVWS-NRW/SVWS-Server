@@ -177,6 +177,7 @@ public final class SchuelerStatistikService {
 		daten.idStaatsangehoerigkeit2 = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.StaatKrz2, schuljahr);
 		daten.religionID = dtoSchueler.Religion_ID;
 		daten.status = dtoSchueler.idStatus;
+		daten.istSchulpflichtErfuellt = (dtoSchueler.SchulpflichtErf == null) ? false : dtoSchueler.SchulpflichtErf;
 		daten.religionabmeldung = dtoSchueler.Religionsabmeldung;
 		daten.religionanmeldung = dtoSchueler.Religionsanmeldung;
 		daten.bkAzvo = dtoSchueler.BKAZVO;

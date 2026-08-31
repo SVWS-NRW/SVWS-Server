@@ -50,6 +50,10 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "die ID des aktuellen Schülerstatus", example = "2")
 	public int status;
 
+	/** Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht. */
+	@Schema(description = "gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht", example = "true")
+	public boolean istSchulpflichtErfuellt;
+
 	/** Das Datum der Religionsabmeldung des Schülerdatensatzes. */
 	@Schema(description = "das Datum der Religionsabmeldung", example = "11.11.1911")
 	public String religionabmeldung;
