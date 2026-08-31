@@ -2,7 +2,7 @@ import { computed } from "vue";
 import type { BetriebeListeManager } from "@ui";
 import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import type { Betrieb, Betriebsart, OrtKatalogEintrag } from "@core";
-import { AdressenUtils } from "@core";
+import { JavaInteger, AdressenUtils } from "@core";
 import { ValidatorBetriebName } from "~/components/schule/kataloge/betriebe/modelproxy/validation/ValidatorBetriebName";
 import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
 import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
@@ -56,7 +56,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.fax, StringPattern.IS_PHONE_NUMBER), "fax");
 
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	betriebsart = computed<Betriebsart | null>({

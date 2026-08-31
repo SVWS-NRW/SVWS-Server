@@ -1,5 +1,6 @@
 import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 import type { Betriebsart } from "@core";
+import { JavaInteger } from "@core";
 import { ValidatorBetriebsartBezeichnung } from "~/components/schule/kataloge/betriebsarten/modelproxy/validation/ValidatorBetriebsartBezeichnung";
 
 /**
@@ -28,6 +29,6 @@ export class BetriebsartenModelProxy extends ModelProxy<Betriebsart> {
 	private addValidatoren(liste: () => Iterable<Betriebsart>) {
 		this.addBlockingValidator(new ValidatorBetriebsartBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 }

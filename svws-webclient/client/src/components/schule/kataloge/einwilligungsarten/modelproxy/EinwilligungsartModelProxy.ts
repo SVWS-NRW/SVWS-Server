@@ -1,7 +1,7 @@
 import type { EinwilligungsartenListeManager } from "@ui";
 import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import type { Einwilligungsart, EinwilligungsschluesselKatalogEintrag } from "@core";
-import { Einwilligungsschluessel, PersonTyp } from "@core";
+import { Einwilligungsschluessel, PersonTyp, JavaInteger } from "@core";
 import { ValidatorEinwilligungsartBezeichnungIsUniqueInList } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/validation/ValidatorEinwilligungsartBezeichnungIsUniqueInList";
 import { computed } from "vue";
 import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
@@ -45,7 +45,7 @@ export class EinwilligungsartModelProxy extends ModelProxy<Einwilligungsart> {
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 		// sortierung
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	einwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({

@@ -17,7 +17,7 @@
 						v-model="data.proxy.sortierung"
 						:validation="() => data.getFehler('sortierung')"
 						@change="data.patch"
-						:min="0" :max="32000"
+						:min="0"
 						:readonly
 						:removable="false" required />
 					<svws-ui-spacing />

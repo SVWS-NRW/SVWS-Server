@@ -15,7 +15,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="data.proxy.sortierung"
 						:validation="() => data.getFehler('sortierung')"
-						:min="0" :max="32000"
+						:min="0"
 						:disabled
 						:removeable="false" required />
 					<svws-ui-spacing />
