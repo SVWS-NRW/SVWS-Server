@@ -1,11 +1,12 @@
 package de.svws_nrw.repo;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -14,10 +15,10 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -26,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.svws_nrw.db.DBEntityManager;
 
 /**
- * Test für die Klasse {@link RepositoryImpl}
+ * Tests für die Klasse {@link RepositoryImpl}.
  */
 @ExtendWith(MockitoExtension.class)
 class RepositoryImplTest {
@@ -35,16 +36,16 @@ class RepositoryImplTest {
 	private DBEntityManager conn;
 
 	/**
-	 * Eine minimale Hilfsklasse für den Test auf eine konkrete Instanz der abstrakten
-	 * {@link RepositoryImpl}-Klasse. Diese braucht eine Datenbank-Entität für die Tests.
+	 * Eine minimale Hilfsklasse als Datenbank-Entität für die Tests.
 	 */
 	private static final class TestEntity {
-		/** Die ID für die Test-Entität */
+		/** Die ID der Test-Entität */
 		Long id;
 	}
 
 	/**
-	 * Ein Test-Repository als konkrete Instanz des abtrakten {@link RepositoryImpl}
+	 * Standardimplementierung des abstrakten {@link RepositoryImpl} für Tests.
+	 * {@link #autoAssignId()} gibt {@code true} zurück (Standardverhalten).
 	 */
 	private static class TestRepository extends RepositoryImpl<TestEntity> {
 		protected TestRepository(final DBEntityManager conn) {
@@ -52,11 +53,26 @@ class RepositoryImplTest {
 		}
 	}
 
-	/** Das konkrete Repository für die einezelnen Tests */
+	/**
+	 * Implementierung des abstrakten {@link RepositoryImpl} für Tests mit FK-als-PK-Verhalten.
+	 * {@link #autoAssignId()} gibt {@code false} zurück.
+	 */
+	private static class TestRepositoryFkAlsPk extends RepositoryImpl<TestEntity> {
+		protected TestRepositoryFkAlsPk(final DBEntityManager conn) {
+			super(conn, TestEntity.class, o -> o.id, (o, id) -> o.id = id);
+		}
+
+		@Override
+		protected boolean autoAssignId() {
+			return false;
+		}
+	}
+
+	/** Das Standard-Repository für die einzelnen Tests */
 	private TestRepository repository;
 
 	/**
-	 * Erstellt für jeden Test vorab eine neue Instanz des Test-Repositories
+	 * Erstellt für jeden Test vorab eine neue Instanz des Test-Repositories.
 	 */
 	@BeforeEach
 	void setUp() {
@@ -64,145 +80,259 @@ class RepositoryImplTest {
 	}
 
 
-	@Test
-	@DisplayName("Test: Der Konstruktor wirft eine IllegalArgumentException, wenn kein Consumer für setId als Parameter übergeben wird.")
-	@SuppressWarnings("unused")
-	void testConstructorRequiresSetId() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			new RepositoryImpl<TestEntity>(conn, TestEntity.class, null, null) {
+	@Nested
+	@DisplayName("Konstruktor")
+	class KonstruktorTests {
+
+		@Test
+		@DisplayName("Wirft IllegalArgumentException, wenn kein Consumer für setId übergeben wird.")
+		@SuppressWarnings("unused")
+		void testKonstruktorOhneSetIdWirftException() {
+			assertThrows(IllegalArgumentException.class, () -> new RepositoryImpl<>(conn, TestEntity.class, null, null) {
 				// Anonyme Klasse zum Testen des abstrakten RepositoryImpl
-			};
-		});
-	}
-
-	@Test
-	@DisplayName("Test: findListByIds() ruft bei einer gültigen Übergabe von einer oder mehreren IDs queryByKeyList auf.")
-	void testGetListByIds_WithValidIds() {
-		final List<Long> ids = Arrays.asList(1L, 2L);
-		final List<TestEntity> expectedList = Arrays.asList(new TestEntity(), new TestEntity());
-		when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(expectedList);
-
-		final List<TestEntity> result = repository.findListByIds(ids);
-
-		assertEquals(2, result.size());
-		verify(conn).queryByKeyList(TestEntity.class, ids);
-	}
-
-	@Test
-	@DisplayName("Test: findListByIds() gibt bei null oder einer leeren Liste eine leere Liste zurück ohne eine Datenbank-Abfrage auszuführen.")
-	void testGetListByIds_WithEmptyOrNull() {
-		assertTrue(repository.findListByIds(null).isEmpty());
-		assertTrue(repository.findListByIds(Collections.emptyList()).isEmpty());
-		verifyNoInteractions(conn);
-	}
-
-	@Test
-	@DisplayName("Test: Bei create(entity) wird die ID automatisch gesetzt und das Objekt wird erfolgreich persistiert.")
-	void testCreate() {
-		final TestEntity entity = new TestEntity();
-
-		final long idNeu = 42L;
-		when(conn.transactionGetNextID(TestEntity.class)).thenReturn(idNeu);
-		when(conn.transactionPersist(entity)).thenReturn(true);
-		repository.create(entity);
-
-		assertEquals(idNeu, entity.id);
-		verify(conn).transactionGetNextID(TestEntity.class);
-		verify(conn).transactionPersist(entity);
-	}
-
-	@Test
-	@DisplayName("Test: Bei create(entities) werden die IDs fortlaufend gesetzt und die Objekte werden erfolgreich persistiert.")
-	void testCreateMultiple() {
-		final List<TestEntity> entities = Arrays.asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity());
-
-		final long startId = 42L;
-		when(conn.transactionGetNextID(TestEntity.class)).thenReturn(startId);
-		when(conn.transactionPersistAll(entities)).thenReturn(true);
-
-		final List<TestEntity> result = repository.create(entities);
-
-		assertEquals(4, result.size());
-		assertEquals(42L, entities.get(0).id);
-		assertEquals(43L, entities.get(1).id);
-		assertEquals(44L, entities.get(2).id);
-		assertEquals(45L, entities.get(3).id);
-
-		verify(conn).transactionGetNextID(TestEntity.class);
-		verify(conn).transactionPersistAll(entities);
+			});
+		}
 	}
 
 
-	@Test
-	@DisplayName("Test: Prüfe, ob mapIdToParameter() die Long-ID korrekt in ein in ein Object-Array verpackt.")
-	void testMapIdToParameter() {
-		final Long id = 42L;
-		final TestEntity entity = new TestEntity();
-		entity.id = id;
+	@Nested
+	@DisplayName("autoAssignId()")
+	class AutoAssignIdTests {
 
-		// Teste über die Methode getById der Basisklasse. Diese ruft intern die Methode mapIdToParameter(id) auf
-		when(conn.queryByKey(TestEntity.class, id)).thenReturn(entity);
+		@Test
+		@DisplayName("Gibt standardmäßig true zurück.")
+		void testAutoAssignIdStandardTrue() {
+			assertThat(repository.autoAssignId()).isTrue();
+		}
 
-		final TestEntity result = repository.getById(id);
-
-		assertNotNull(result);
-		assertEquals(id, result.id);
-
-		// Wenn einmal auf die ID zugegriffen wurde, so kann davon ausgegangen werden, dass auch mapIdToParameter verwendet wurde.
-		verify(conn, times(1)).queryByKey(TestEntity.class, id);
+		@Test
+		@DisplayName("Gibt false zurück, wenn von Subklasse mit false überschrieben.")
+		void testAutoAssignIdFkAlsPkFalse() {
+			final var fkAlsPkRepository = new TestRepositoryFkAlsPk(conn);
+			assertThat(fkAlsPkRepository.autoAssignId()).isFalse();
+		}
 	}
 
-	@Test
-	@DisplayName("Test: getMap() liefert eine Map aller Entitäten, indiziert durch ihre ID.")
-	void testGetMap() {
-	    final TestEntity e1 = new TestEntity();
-	    e1.id = 10L;
-	    final TestEntity e2 = new TestEntity();
-	    e2.id = 20L;
 
-	    when(conn.queryAll(TestEntity.class)).thenReturn(Arrays.asList(e1, e2));
+	@Nested
+	@DisplayName("create(entity)")
+	class CreateSingleTests {
 
-	    final Map<Long, TestEntity> resultMap = repository.getMap();
+		@Test
+		@DisplayName("Setzt die ID automatisch und persistiert die Entität.")
+		void testCreateSetzt_IdUndPersistiert() {
+			final var entity = new TestEntity();
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(42L);
+			when(conn.transactionPersist(entity)).thenReturn(true);
 
-	    assertThat(resultMap)
-	        .isNotNull()
-	        .hasSize(2)
-	        .containsOnly(
-	            entry(10L, e1),
-	            entry(20L, e2)
-	        );
-	    verify(conn).queryAll(TestEntity.class);
+			repository.create(entity);
+
+			assertEquals(42L, entity.id);
+			verify(conn).transactionGetNextID(TestEntity.class);
+			verify(conn).transactionPersist(entity);
+		}
+
+		@Test
+		@DisplayName("Überschreibt die ID nicht, wenn autoAssignId() false zurückgibt.")
+		void testCreateUeberschreibtIdNichtBeiAutoAssignIdFalse() {
+			final var fkAlsPkRepository = new TestRepositoryFkAlsPk(conn);
+			final var entity = new TestEntity();
+			entity.id = 9296L;
+			when(conn.transactionPersist(entity)).thenReturn(true);
+
+			fkAlsPkRepository.create(entity);
+
+			assertEquals(9296L, entity.id);
+			verify(conn, never()).transactionGetNextID(TestEntity.class);
+			verify(conn).transactionPersist(entity);
+		}
+
+		@Test
+		@DisplayName("Wirft RepositoryException, wenn transactionPersist false zurückgibt.")
+		void testCreateWirftExceptionBeiPersistFehler() {
+			final var entity = new TestEntity();
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(1L);
+			when(conn.transactionPersist(entity)).thenReturn(false);
+
+			assertThatThrownBy(() -> repository.create(entity))
+					.isInstanceOf(RepositoryException.class);
+		}
 	}
 
-	@Test
-	@DisplayName("Test: findMapByIds() liefert eine Map der gefundenen Entitäten für die gegebenen IDs.")
-	void testFindMapByIds() {
-	    // Arrange
-	    final List<Long> ids = Arrays.asList(1L, 3L);
-	    final TestEntity e1 = new TestEntity();
-	    e1.id = 1L;
-	    final TestEntity e2 = new TestEntity();
-	    e2.id = 3L;
 
-	    when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(Arrays.asList(e1, e2));
+	@Nested
+	@DisplayName("create(entities)")
+	class CreateMultipleTests {
 
-	    final Map<Long, TestEntity> resultMap = repository.findMapByIds(ids);
+		@Test
+		@DisplayName("Setzt IDs fortlaufend und persistiert alle Entitäten.")
+		void testCreateMultipleSetzt_IdsUndPersistiert() {
+			final var entities = Arrays.asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity());
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(42L);
+			when(conn.transactionPersistAll(entities)).thenReturn(true);
 
-	    assertThat(resultMap)
-	        .isNotNull()
-	        .hasSize(2)
-	        .containsEntry(1L, e1)
-	        .containsEntry(3L, e2);
+			final var result = repository.create(entities);
 
-	    verify(conn).queryByKeyList(TestEntity.class, ids);
+			assertThat(result)
+					.hasSize(4)
+					.extracting(e -> e.id)
+					.containsExactly(42L, 43L, 44L, 45L);
+			verify(conn).transactionGetNextID(TestEntity.class);
+			verify(conn).transactionPersistAll(entities);
+		}
+
+		@Test
+		@DisplayName("Wirft RepositoryException, wenn transactionPersistAll false zurückgibt.")
+		void testCreateMultipleWirftExceptionBeiPersistFehler() {
+			final var entities = List.of(new TestEntity());
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(1L);
+			when(conn.transactionPersistAll(entities)).thenReturn(false);
+
+			assertThatThrownBy(() -> repository.create(entities))
+					.isInstanceOf(RepositoryException.class);
+		}
 	}
 
-	@Test
-	@DisplayName("Test: findMapByIds() gibt bei leeren IDs eine leere Map zurück.")
-	void testFindMapByIds_EmptyInput() {
-	    final Map<Long, TestEntity> resultMap = repository.findMapByIds(Collections.emptyList());
-	    assertThat(resultMap).isEmpty();
-	    verifyNoInteractions(conn);
+
+	@Nested
+	@DisplayName("getNextID()")
+	class GetNextIdTests {
+
+		@Test
+		@DisplayName("Delegiert an conn.transactionGetNextID und gibt die nächste freie ID zurück.")
+		void testGetNextId() {
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(99L);
+
+			final long result = repository.getNextID();
+
+			assertEquals(99L, result);
+			verify(conn).transactionGetNextID(TestEntity.class);
+		}
 	}
 
+
+	@Nested
+	@DisplayName("findListByIds()")
+	class FindListByIdsTests {
+
+		@Test
+		@DisplayName("Gibt die gefundenen Entitäten zurück, wenn gültige IDs übergeben werden.")
+		void testFindListByIdsGueltigeIds() {
+			final var ids = Arrays.asList(1L, 2L);
+			final var expected = Arrays.asList(new TestEntity(), new TestEntity());
+			when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(expected);
+
+			final var result = repository.findListByIds(ids);
+
+			assertThat(result).hasSize(2);
+			verify(conn).queryByKeyList(TestEntity.class, ids);
+		}
+
+		@Test
+		@DisplayName("Gibt eine leere Liste zurück und führt keine DB-Abfrage aus, wenn null übergeben wird.")
+		void testFindListByIdsNull() {
+			assertTrue(repository.findListByIds(null).isEmpty());
+			verifyNoInteractions(conn);
+		}
+
+		@Test
+		@DisplayName("Gibt eine leere Liste zurück und führt keine DB-Abfrage aus, wenn eine leere Liste übergeben wird.")
+		void testFindListByIdsLeereListe() {
+			assertTrue(repository.findListByIds(Collections.emptyList()).isEmpty());
+			verifyNoInteractions(conn);
+		}
+	}
+
+
+	@Nested
+	@DisplayName("findMapByIds()")
+	class FindMapByIdsTests {
+
+		@Test
+		@DisplayName("Gibt eine Map der gefundenen Entitäten zurück, indiziert nach ID.")
+		void testFindMapByIdsGueltigeIds() {
+			final var ids = Arrays.asList(1L, 3L);
+			final var e1 = new TestEntity();
+			e1.id = 1L;
+			final var e2 = new TestEntity();
+			e2.id = 3L;
+			when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(Arrays.asList(e1, e2));
+
+			final var result = repository.findMapByIds(ids);
+
+			assertThat(result)
+					.hasSize(2)
+					.containsEntry(1L, e1)
+					.containsEntry(3L, e2);
+			verify(conn).queryByKeyList(TestEntity.class, ids);
+		}
+
+		@Test
+		@DisplayName("Filtert null-Einträge aus der DB-Antwort heraus.")
+		void testFindMapByIdsFiltertNull() {
+			final var ids = Arrays.asList(1L, 2L);
+			final var e1 = new TestEntity();
+			e1.id = 1L;
+			when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(Arrays.asList(e1, null));
+
+			final var result = repository.findMapByIds(ids);
+
+			assertThat(result)
+					.hasSize(1)
+					.containsEntry(1L, e1);
+		}
+
+		@Test
+		@DisplayName("Gibt eine leere Map zurück, wenn eine leere ID-Liste übergeben wird.")
+		void testFindMapByIdsLeereListe() {
+			final var result = repository.findMapByIds(Collections.emptyList());
+			assertThat(result).isEmpty();
+			verifyNoInteractions(conn);
+		}
+	}
+
+
+	@Nested
+	@DisplayName("getMap()")
+	class GetMapTests {
+
+		@Test
+		@DisplayName("Gibt eine Map aller Entitäten zurück, indiziert nach ID.")
+		void testGetMap() {
+			final var e1 = new TestEntity();
+			e1.id = 10L;
+			final var e2 = new TestEntity();
+			e2.id = 20L;
+			when(conn.queryAll(TestEntity.class)).thenReturn(Arrays.asList(e1, e2));
+
+			final var result = repository.getMap();
+
+			assertThat(result)
+					.hasSize(2)
+					.containsOnly(entry(10L, e1), entry(20L, e2));
+			verify(conn).queryAll(TestEntity.class);
+		}
+	}
+
+
+	@Nested
+	@DisplayName("mapIdToParameter()")
+	class MapIdToParameterTests {
+
+		@Test
+		@DisplayName("Verpackt die Long-ID korrekt in ein Object-Array für DB-Abfragen.")
+		void testMapIdToParameter() {
+			final var entity = new TestEntity();
+			entity.id = 42L;
+			when(conn.queryByKey(TestEntity.class, 42L)).thenReturn(entity);
+
+			final var result = repository.getById(42L);
+
+			assertThat(result)
+					.isNotNull()
+					.extracting(e -> e.id)
+					.isEqualTo(42L);
+			verify(conn, times(1)).queryByKey(TestEntity.class, 42L);
+		}
+	}
 }

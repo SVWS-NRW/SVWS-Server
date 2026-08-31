@@ -104,11 +104,27 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 		return conn.transactionGetNextID(entityClass);
 	}
 
+	/**
+	 * Gibt an, ob beim Anlegen einer neuen Entität automatisch eine neue ID vergeben werden soll.
+	 * <p>
+	 * Der Standardwert ist {@code true} und eignet sich für Entitäten mit eigenem Auto-Increment-PK.
+	 * Subklassen, deren Primärschlüssel gleichzeitig ein Fremdschlüssel ist (FK-als-PK-Muster,
+	 * z. B. 1:1-Erweiterungstabellen), überschreiben diese Methode mit {@code false},
+	 * damit die bereits gesetzte ID nicht durch {@link #getNextID()} überschrieben wird.
+	 *
+	 * @return {@code true}, wenn eine neue ID per {@link #getNextID()} vergeben werden soll,
+	 *         {@code false}, wenn die ID der Entität unverändert übernommen wird
+	 */
+	protected boolean autoAssignId() {
+		return true;
+	}
 
 	/**
-	 * Persistiert die Datenbank-Entität in der Datenbank. Für den Fall,
-	 * dass IDs automatisch vergeben werden, wird eine neue ID bei der
-	 * Entität vergeben. Die Rückgabe enthält dann die Entität mit der ID.
+	 * Persistiert die Datenbank-Entität in der Datenbank.
+	 * <p>
+	 * Gibt {@link #autoAssignId()} {@code true} zurück, wird vor dem Persistieren
+	 * eine neue ID per {@link #getNextID()} ermittelt und an der Entität gesetzt.
+	 * Andernfalls wird die bereits an der Entität gesetzte ID unverändert übernommen.
 	 *
 	 * @param entity   die zu persistierende Datenbank-Entität
 	 *
@@ -118,9 +134,9 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	 */
 	@Override
 	public T create(final T entity) throws RepositoryException {
-		// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und setzt diese bei der Entität über den übergebenen Consumer
-		setId.accept(entity, this.getNextID());
-		// und persistiere die Entität
+		if (autoAssignId()) {
+			setId.accept(entity, this.getNextID());
+		}
 		return super.create(entity);
 	}
 
