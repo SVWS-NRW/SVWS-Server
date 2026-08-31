@@ -91,6 +91,14 @@ allprojects {
 		withSourcesJar()
 	}
 
+	checkstyle {
+		toolVersion = "13.9.0"
+	}
+	
+	dependencies {
+		checkstyle("com.puppycrawl.tools:checkstyle:" + checkstyle.toolVersion)
+	}	
+
 	sonar {
 		properties {
 			property "sonar.sourceEncoding", "UTF-8"
@@ -125,10 +133,6 @@ tasks.named("sonar").configure {
 
 def projectsWithJacoco = []
 subprojects {
-	checkstyle {
-		toolVersion = "13.6.0"
-	}
-
 	jacoco {
 		toolVersion = "0.8.13"
 	}
