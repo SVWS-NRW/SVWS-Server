@@ -33,7 +33,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionEclipselink = '4.0.9';
 		def versionMariaDB = '3.5.9';
 		def versionSQLite = '3.53.2.0';
-		def versionUCanAccess = '5.1.5';
+		def versionUCanAccess = '5.1.7';
 		def versionJackcess = '5.1.2';
 		def versionMySQL = '9.6.0';
 		def versionMSSQL = '13.4.0.jre11';
@@ -46,8 +46,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('database', 'io.github.spannm:jackcess:' + versionJackcess);
 		project.dependencies.add('database', 'com.mysql:mysql-connector-j:' + versionMySQL);
 		project.dependencies.add('database', 'com.microsoft.sqlserver:mssql-jdbc:' + versionMSSQL);
-		// vulnerability fix for: com.mysql:mysql-connector-j:9.0.0 -> pin com.google.protobuf:protobuf-java:4.28.2
-		// project.dependencies.add('database', 'com.google.protobuf:protobuf-java:4.28.2');
+		// vulnerability fix for: io.github.spannm:ucanaccess:5.1.7 -> pin org.apache.logging.log4j:log4j-api:2.26.1
+		project.dependencies.add('database', 'org.apache.logging.log4j:log4j-api:2.26.1');
 	}
 
 
