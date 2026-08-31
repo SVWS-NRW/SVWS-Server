@@ -17,7 +17,7 @@
 						v-model="data.proxy.sortierung"
 						:validation="() => data.getFehler('sortierung')"
 						@change="data.patch"
-						:min="0" :max="32000" :readonly />
+						:readonly :min="0" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="data.proxy.istSichtbar" :readonly>
 						Sichtbar
