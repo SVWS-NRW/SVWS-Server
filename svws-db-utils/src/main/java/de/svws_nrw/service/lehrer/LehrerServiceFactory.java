@@ -204,7 +204,7 @@ public final class LehrerServiceFactory {
 		final var subRepos = new LehrerPersonalabschnittsdatenRepos(
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
-				katalogRepositoryFactory.getSchulenRepository(),
+				katalogRepositoryFactory.getSchuleRepository(),
 				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository()
 		);
 

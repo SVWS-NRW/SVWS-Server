@@ -103,6 +103,10 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "Die Schulnr der vorher besuchten Schule", example = "123456")
 	public String vorherigeSchuleNr;
 
+	/** Die Statistik-Schulnummer der vorher besuchten Schule. */
+	@Schema(description = "Die Statistik-Schulnummer der vorher besuchten Schule", example = "999000")
+	public String vorherigeSchuleSchulnummerStatistik;
+
 	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule. */
 	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
 			example = "Grundschule (auch Primarstufe der Volkschule)")

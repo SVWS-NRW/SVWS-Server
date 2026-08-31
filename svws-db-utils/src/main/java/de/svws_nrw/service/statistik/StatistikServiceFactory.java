@@ -207,13 +207,17 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Schülerdaten
 	 */
 	public SchuelerStatistikService getSchuelerStatistikService() {
-		return new SchuelerStatistikService(benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
+		final var repositories = new SchuelerStatistikRepositories(
+				benutzerRepositoryFactory.getBenutzerAllgemeinRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerAbiturRepository(),
 				schuelerRepositoryFactory.getSchuelerAbiturFachRepository(),
-				katalogRepositoryFactory.getFachRepository());
+				katalogRepositoryFactory.getFachRepository(),
+				katalogRepositoryFactory.getSchuleRepository()
+		);
+		return new SchuelerStatistikService(repositories);
 	}
 
 

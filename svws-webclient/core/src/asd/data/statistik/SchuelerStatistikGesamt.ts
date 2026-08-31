@@ -108,6 +108,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public vorherigeSchuleNr: string | null = null;
 
 	/**
+	 * Die Statistik-Schulnummer der vorher besuchten Schule.
+	 */
+	public vorherigeSchuleSchulnummerStatistik: string | null = null;
+
+	/**
 	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule.
 	 */
 	public vorigeAllgHerkunft: string | null = null;
@@ -222,6 +227,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 			}
 		}
 		result.vorherigeSchuleNr = (obj.vorherigeSchuleNr === undefined) ? null : obj.vorherigeSchuleNr === null ? null : obj.vorherigeSchuleNr;
+		result.vorherigeSchuleSchulnummerStatistik = (obj.vorherigeSchuleSchulnummerStatistik === undefined) ? null : obj.vorherigeSchuleSchulnummerStatistik === null ? null : obj.vorherigeSchuleSchulnummerStatistik;
 		result.vorigeAllgHerkunft = (obj.vorigeAllgHerkunft === undefined) ? null : obj.vorigeAllgHerkunft === null ? null : obj.vorigeAllgHerkunft;
 		result.vorigeArtLetzteVersetzung = (obj.vorigeArtLetzteVersetzung === undefined) ? null : obj.vorigeArtLetzteVersetzung === null ? null : obj.vorigeArtLetzteVersetzung;
 		result.idVorigeAbschlussart = (obj.idVorigeAbschlussart === undefined) ? null : obj.idVorigeAbschlussart === null ? null : obj.idVorigeAbschlussart;
@@ -268,6 +274,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';
+		result += '"vorherigeSchuleSchulnummerStatistik" : ' + ((obj.vorherigeSchuleSchulnummerStatistik === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleSchulnummerStatistik)) + ',';
 		result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
 		result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
 		result += '"idVorigeAbschlussart" : ' + ((obj.idVorigeAbschlussart === null) ? 'null' : JSON.stringify(obj.idVorigeAbschlussart)) + ',';
@@ -353,6 +360,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		}
 		if (obj.vorherigeSchuleNr !== undefined) {
 			result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';
+		}
+		if (obj.vorherigeSchuleSchulnummerStatistik !== undefined) {
+			result += '"vorherigeSchuleSchulnummerStatistik" : ' + ((obj.vorherigeSchuleSchulnummerStatistik === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleSchulnummerStatistik)) + ',';
 		}
 		if (obj.vorigeAllgHerkunft !== undefined) {
 			result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';

@@ -208,7 +208,7 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	/**
 	 * @return {@link SchuleRepository}
 	 */
-	public SchuleRepository getSchulenRepository() {
+	public SchuleRepository getSchuleRepository() {
 		return this.getOrCreate(SchuleRepository.class, () -> new SchuleRepositoryImpl(conn));
 	}
 

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -40,6 +42,7 @@ import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -67,35 +70,24 @@ public final class SchuelerStatistikService {
 
 	/** Das Repository für den Zugriff auf allgemeine Fächer-Daten */
 	private final FachRepository fachRepository;
+	private final SchuleRepository schuleRepository;
 
 
 	/**
 	 * Erstellt einen neuen Service.
 	 *
-	 * @param benutzerRepository                das Repository für den Zugriff auf die Daten des aktuellen Benutzers
-	 * @param schuelerRepository                das Repository für Schülerdaten
-	 * @param schuelerLernabschnittRepository   das Repository für Lernabschnitte der Schüler
-	 * @param schuelerLeistungsdatenRepository  das Repository für den Zugriff auf die Leistungsdaten
-	 * @param schuelerAbiturRepository          das Repository für Abiturdaten der Schüler
-	 * @param schuelerAbiturFachRepository      das Repository für Abiturfachdaten der Schüler
-	 * @param fachRepository                    das Repository für Fächer
+	 * @param schuelerStatistikRepositories die vom Service benötigten Repositories
 	 */
-	public SchuelerStatistikService(final BenutzerAllgemeinRepository benutzerRepository,
-			final SchuelerRepository schuelerRepository,
-			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
-			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
-			final SchuelerAbiturRepository schuelerAbiturRepository,
-			final SchuelerAbiturFachRepository schuelerAbiturFachRepository,
-			final FachRepository fachRepository) {
-		this.benutzerRepository = benutzerRepository;
-		this.schuelerRepository = schuelerRepository;
-		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
-		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
-		this.schuelerAbiturRepository = schuelerAbiturRepository;
-		this.schuelerAbiturFachRepository = schuelerAbiturFachRepository;
-		this.fachRepository = fachRepository;
+	public SchuelerStatistikService(final SchuelerStatistikRepositories schuelerStatistikRepositories) {
+		this.benutzerRepository = schuelerStatistikRepositories.benutzerRepository();
+		this.schuelerRepository = schuelerStatistikRepositories.schuelerRepository();
+		this.schuelerLernabschnittRepository = schuelerStatistikRepositories.schuelerLernabschnittRepository();
+		this.schuelerLeistungsdatenRepository = schuelerStatistikRepositories.schuelerLeistungsdatenRepository();
+		this.schuelerAbiturRepository = schuelerStatistikRepositories.schuelerAbiturRepository();
+		this.schuelerAbiturFachRepository = schuelerStatistikRepositories.schuelerAbiturFachRepository();
+		this.fachRepository = schuelerStatistikRepositories.fachRepository();
+		this.schuleRepository = schuelerStatistikRepositories.schuleRepository();
 	}
-
 
 	private static AbiturStatistikGesamt mapAbiturdaten(final DTOSchuelerAbitur dto, final List<String> faecher) {
 		final var daten = new AbiturStatistikGesamt();
@@ -136,7 +128,8 @@ public final class SchuelerStatistikService {
 				schuljahr);
 		daten.idJahrgang = dto.Jahrgang_ID;
 		final long epJahreIdAusInteger = dto.EPJahre == null ? 0L : Long.valueOf(dto.EPJahre);
-		daten.idEpJahre = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getIDByWertAndSchuljahr(PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(epJahreIdAusInteger), schuljahr);
+		daten.idEpJahre = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
+				.getIDByWertAndSchuljahr(PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(epJahreIdAusInteger), schuljahr);
 		daten.idFachklasse = dto.Fachklasse_ID;
 		final Schulform schulform = benutzerRepository.getAktuellerBenutzer().schuleGetSchulform();
 
@@ -154,14 +147,20 @@ public final class SchuelerStatistikService {
 		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
 		daten.idFoerderschwerpunkt1 = dto.Foerderschwerpunkt_ID;
 		daten.idFoerderschwerpunkt2 = dto.Foerderschwerpunkt2_ID;
-		daten.idVersetzungsvermerk = (Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz) == null) ? -1L : Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz).id(schuljahr);
+		daten.idVersetzungsvermerk = (Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz) == null) ? -1L
+				: Versetzungsvermerk.data().getWertByKuerzel(dto.VersetzungKrz).id(schuljahr);
 		daten.leistungsdaten.addAll(dtosLeistungen.stream().map(SchuelerStatistikService::mapLeistungsdaten).toList());
 		return daten;
 	}
 
-	private SchuelerStatistikGesamt map(final DTOSchueler dtoSchueler, final DTOSchuelerLernabschnittsdaten dtoLernabschnitt,
-			final DTOSchuelerLernabschnittsdaten lernabschnittLetzteVersetzung, final List<DTOSchuelerLeistungsdaten> dtosLeistungen,
-			final DTOSchuelerAbitur dtoAbitur, final List<String> abiturfaecher) {
+	private SchuelerStatistikGesamt map(
+			final DTOSchueler dtoSchueler,
+			final DTOSchuelerLernabschnittsdaten dtoLernabschnitt,
+			final DTOSchuelerLernabschnittsdaten lernabschnittLetzteVersetzung,
+			final List<DTOSchuelerLeistungsdaten> dtosLeistungen,
+			final DTOSchuelerAbitur dtoAbitur, final List<String> abiturfaecher,
+			final Map<String, DTOSchuleNRW> schulenBySchulnummer
+	) {
 		final Schuljahresabschnitt schuljahresabschnitt =
 				benutzerRepository.getAktuellerBenutzer().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		if (schuljahresabschnitt == null) {
@@ -190,6 +189,9 @@ public final class SchuelerStatistikService {
 		daten.idGeburtslandMutter = Nationalitaeten.data().getIDByWertAndSchuljahr(dtoSchueler.GeburtslandMutter, schuljahr);
 
 		daten.vorherigeSchuleNr = dtoSchueler.LSSchulNr;
+		daten.vorherigeSchuleSchulnummerStatistik = Optional.ofNullable(schulenBySchulnummer.get(dtoSchueler.LSSchulNr))
+				.map(s -> s.SchulNr_SIM)
+				.orElse(null);
 		daten.vorigeAllgHerkunft = dtoSchueler.LSSchulform;
 		daten.vorigeArtLetzteVersetzung = dtoSchueler.LSVersetzung;
 		daten.idVorigeAbschlussart = dtoSchueler.LSEntlassArt;
@@ -252,7 +254,7 @@ public final class SchuelerStatistikService {
 
 		final var mapSchuelerAbitur = abiturDaten.mapSchuelerAbitur();
 		final var mapSchuelerAbiturFach = abiturDaten.mapSchuelerAbiturFach();
-
+		final var schulenBySchulnummer = schuleRepository.getSchulenBySchulnummer();
 		final List<SchuelerStatistikGesamt> result = new ArrayList<>();
 		for (final long id : mapLernabschnitte.keySet()) {
 			final var schueler = mapSchueler.get(id);
@@ -261,7 +263,7 @@ public final class SchuelerStatistikService {
 			final var lernabschnittLetzteVersetzung = mapLernabschnitteVorher.get(id);
 			final var schuelerAbitur = mapSchuelerAbitur.get(id);
 			final var schuelerAbiturFaecher = mapSchuelerAbiturFach.get(id);
-			result.add(map(schueler, lernabschnitt, lernabschnittLetzteVersetzung, leistungsdaten, schuelerAbitur, schuelerAbiturFaecher));
+			result.add(map(schueler, lernabschnitt, lernabschnittLetzteVersetzung, leistungsdaten, schuelerAbitur, schuelerAbiturFaecher, schulenBySchulnummer));
 		}
 		return result;
 	}
@@ -293,7 +295,7 @@ public final class SchuelerStatistikService {
 
 		final var mapSchuelerAbitur = abiturDaten.mapSchuelerAbitur();
 		final var mapSchuelerAbiturFach = abiturDaten.mapSchuelerAbiturFach();
-
+		final var schulenBySchulnummer = schuleRepository.getSchulenBySchulnummer();
 		final List<SchuelerStatistikGesamt> result = new ArrayList<>();
 		for (final long id : mapLernabschnitte.keySet()) {
 			final var schueler = mapSchueler.get(id);
@@ -302,7 +304,7 @@ public final class SchuelerStatistikService {
 			final var schuelerAbitur = mapSchuelerAbitur.get(id);
 			final var schuelerAbiturFaecher = mapSchuelerAbiturFach.get(id);
 
-			result.add(map(schueler, lernabschnitt, null, leistungsdaten, schuelerAbitur, schuelerAbiturFaecher));
+			result.add(map(schueler, lernabschnitt, null, leistungsdaten, schuelerAbitur, schuelerAbiturFaecher, schulenBySchulnummer));
 		}
 		return result;
 	}
