@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.repo.RepositoryImpl;
 
@@ -42,7 +41,7 @@ public final class LehrerLehramtRepositoryImpl extends RepositoryImpl<DTOLehrerP
 
 	@Override
 	public boolean existsById(final Long idLehramt) {
-		return conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, idLehramt);
+		return conn.existsBy(DTOLehrerPersonaldatenLehramt.QUERY_BY_ID, DTOLehrerPersonaldatenLehramt.class, idLehramt);
 	}
 
 }

@@ -11427,24 +11427,29 @@ export class ApiServer extends BaseApi {
 	 * Entfernt den Fachrichtungseintrag eines Lehramtes eines Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das Ergebnis der Löschoperation
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
 	 *   Code 404: Keine LehrerFachrichtungen mit der angegebenen ID gefunden.
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Das Ergebnis der Löschoperation
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteLehrerFachrichtungen(data: List<number>, schema: string): Promise<SimpleOperationResponse> {
+	public async deleteLehrerFachrichtungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result: string = await super.deleteJSON(path, body);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 
@@ -11536,12 +11541,12 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteLehrerLehrbefaehigungen für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung
 	 *
-	 * Entfernt den Lehrbefähigungseintrag eines Lehramtes eines Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 * Entfernt mehrere Lehrbefähigungseinträge, insofern der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerLehrbefaehigungEintrag
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 400: Die Anfrage ist fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
 	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
@@ -11550,15 +11555,20 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteLehrerLehrbefaehigungen(data: List<number>, schema: string): Promise<LehrerLehrbefaehigungEintrag> {
+	public async deleteLehrerLehrbefaehigungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/lehrer/personaldaten/lehramt/lehrbefaehigung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result: string = await super.deleteJSON(path, body);
-		const text = result;
-		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 

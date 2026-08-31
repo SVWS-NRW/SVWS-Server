@@ -605,7 +605,7 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class))) final LehrerLehrbefaehigungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccess(request)
+				.withWriteAccess(request)
 				.getLehrerLehrbefaehigungController()
 				.patch(id, patch);
 	}
@@ -637,28 +637,28 @@ public class APILehrer {
 					schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class))) final LehrerLehrbefaehigungCreateRequest dto,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccess(request)
+				.withWriteAccess(request)
 				.getLehrerLehrbefaehigungController()
 				.create(dto);
 	}
 
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Lehrbefähigung zu einem Lehramt eines Lehrers.
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Lehrbefähigungen.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids        die IDs des Lehrbefähigungseintrags
+	 * @param ids       die IDs der Lehrbefähigungseinträge
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz
 	 */
 	@DELETE
 	@Path("/personaldaten/lehramt/lehrbefaehigung")
-	@Operation(summary = "Entfernt den Lehrbefähigungseintrag eines Lehramtes eines Lehrers.",
-			description = "Entfernt den Lehrbefähigungseintrag eines Lehramtes eines Lehrers aus der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Datensatz wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class)))
+	@Operation(summary = "Entfernt mehrere Lehrbefähigungseinträge.",
+			description = "Entfernt mehrere Lehrbefähigungseinträge, insofern der SVWS-Benutzer die notwendige Berechtigung zum Ändern von "
+					+ "Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "400", description = "Die Anfrage ist fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit den angegebenen IDs gefunden")
@@ -669,7 +669,7 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory
-				.withReadAccess(request)
+				.withWriteAccess(request)
 				.getLehrerLehrbefaehigungController()
 				.delete(ids);
 	}
@@ -777,8 +777,8 @@ public class APILehrer {
 	@Operation(summary = "Entfernt den Fachrichtungseintrag eines Lehramtes eines Lehrers.",
 			description = "Entfernt den Fachrichtungseintrag eines Lehramtes eines Lehrers aus der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das Ergebnis der Löschoperation", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Keine LehrerFachrichtungen mit der angegebenen ID gefunden.")
 	public Response deleteLehrerFachrichtungen(@PathParam("schema") final String schema,

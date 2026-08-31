@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -163,8 +162,8 @@ class LehrerLehramtRepositoryImplTest {
 			final long idLehramt = 500L;
 
 			when(conn.existsBy(
-					DTOLehrer.QUERY_BY_ID,
-					DTOLehrer.class,
+					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
+					DTOLehrerPersonaldatenLehramt.class,
 					idLehramt))
 					.thenReturn(true);
 
@@ -173,8 +172,8 @@ class LehrerLehramtRepositoryImplTest {
 			assertThat(result).isTrue();
 
 			verify(conn, times(1)).existsBy(
-					DTOLehrer.QUERY_BY_ID,
-					DTOLehrer.class,
+					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
+					DTOLehrerPersonaldatenLehramt.class,
 					idLehramt);
 		}
 
@@ -184,8 +183,8 @@ class LehrerLehramtRepositoryImplTest {
 			final long idLehramt = 999L;
 
 			when(conn.existsBy(
-					DTOLehrer.QUERY_BY_ID,
-					DTOLehrer.class,
+					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
+					DTOLehrerPersonaldatenLehramt.class,
 					idLehramt))
 					.thenReturn(false);
 
@@ -194,8 +193,8 @@ class LehrerLehramtRepositoryImplTest {
 			assertThat(result).isFalse();
 
 			verify(conn, times(1)).existsBy(
-					DTOLehrer.QUERY_BY_ID,
-					DTOLehrer.class,
+					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
+					DTOLehrerPersonaldatenLehramt.class,
 					idLehramt);
 		}
 	}
