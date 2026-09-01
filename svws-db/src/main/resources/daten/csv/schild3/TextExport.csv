@@ -101,10 +101,10 @@ Schueler;Entlassdatum;Entlassdatum;D;;;;;ALLE
 Schueler;Entlassjahrgang_ID;Entlassjahrgang;S;;;ASDJahrgang;SELECT ASDJahrgang from EigeneSchule_Jahrgaenge WHERE ID=%;ALLE
 Schueler;Entlassjahrgang_ID;Entlassjahrgang (interne Bezeichnung);S;;;InternKrz;SELECT InternKrz from EigeneSchule_Jahrgaenge WHERE ID=%;ALLE
 Schueler;ErsteSchulform_SI;Erste Schulform in Sek.I;S;;;;;ALLE
-Schueler;Fahrschueler_ID;Fahrschülerart;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Fahrschuelerart WHERE ID=%;ALLE
+Schueler;Fahrschueler_ID;Fahrschülerart;S;;;Bezeichnung;SELECT Bezeichnung FROM K_FahrschuelerArt WHERE ID=%;ALLE
 Schueler;Fax;Fax-Nr.;S;;;;;ALLE
-Schueler;Foerderschwerpunkt2_ID;Förderschwerpunkt 2;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt2_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
-Schueler;Foerderschwerpunkt_ID;Förderschwerpunkt 1;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
+Schueler;ID;Weiterer Förderschwerpunkt;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt2_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
+Schueler;ID;Förderschwerpunkt;S;;;Bezeichnung;SELECT K.Bezeichnung FROM K_Foerderschwerpunkt K WHERE K.ID=(SELECT A.Foerderschwerpunkt_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
 Schueler;GU_ID;eindeutige Nummer (GUID);S;;;;;ALLE
 Schueler;Geburtsdatum;Geburtsdatum;D;;;;;ALLE
 Schueler;GeburtslandMutter;Geburtsland Mutter;S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
