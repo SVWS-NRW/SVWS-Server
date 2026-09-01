@@ -141,10 +141,10 @@
 		LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
 	import type { LehrerListeManager } from "@ui";
 	import { CoreTypeSelectManager, GridManager, useAbschnittState } from "@ui";
-	import { LehrerLehramtEintragModelProxy } from "./LehrerLehramtEintragModelProxy";
-	import type { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
-	import { LehrerLehrbefaehigungEintragModelProxy } from "./LehrerLehrbefaehigungEintragModelProxy";
-	import { LehrerFachrichtungEintragModelProxy } from "./LehrerFachrichtungEintragModelProxy";
+	import { LehrerLehramtEintragModelProxy } from "./modelproxy/LehrerLehramtEintragModelProxy";
+	import type { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
+	import { LehrerLehrbefaehigungEintragModelProxy } from "./modelproxy/LehrerLehrbefaehigungEintragModelProxy";
+	import { LehrerFachrichtungEintragModelProxy } from "./modelproxy/LehrerFachrichtungEintragModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

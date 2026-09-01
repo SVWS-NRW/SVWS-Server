@@ -2,42 +2,80 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Identnummer" span="full" class="contentFocusField"
-					v-model="personaldatenModelProxy.proxy.identNrTeil1" @change="personaldatenModelProxy.patch" :readonly focus statistics :max-len="10" />
+				<svws-ui-text-input placeholder="Identnummer"
+					span="full" class="contentFocusField"
+					v-model="personaldatenModelProxy.proxy.identNrTeil1"
+					:validation="() => personaldatenModelProxy.getFehler('identNrTeil1')"
+					@change="personaldatenModelProxy.patch"
+					:readonly focus statistics :max-len="10" />
 				<svws-ui-text-input placeholder="Seriennummer"
-					v-model="personaldatenModelProxy.proxy.identNrTeil2SerNr" @change="personaldatenModelProxy.patch" :readonly statistics :max-len="5" />
+					v-model="personaldatenModelProxy.proxy.identNrTeil2SerNr"
+					:validation="() => personaldatenModelProxy.getFehler('identNrTeil2SerNr')"
+					@change="personaldatenModelProxy.patch"
+					:readonly statistics :max-len="5" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel"
-					v-model="personaldatenModelProxy.proxy.lbvVerguetungsschluessel" @change="personaldatenModelProxy.patch" :readonly :max-len="1" />
+					v-model="personaldatenModelProxy.proxy.lbvVerguetungsschluessel"
+					:validation="() => personaldatenModelProxy.getFehler('lbvVerguetungsschluessel')"
+					@change="personaldatenModelProxy.patch"
+					:readonly :max-len="1" />
 				<svws-ui-text-input placeholder="PA-Nummer"
-					v-model="personaldatenModelProxy.proxy.personalaktennummer" @change="personaldatenModelProxy.patch" :readonly :max-len="20" />
+					v-model="personaldatenModelProxy.proxy.personalaktennummer"
+					:validation="() => personaldatenModelProxy.getFehler('personalaktennummer')"
+					@change="personaldatenModelProxy.patch"
+					:readonly :max-len="20" />
 				<svws-ui-text-input placeholder="LBV-Personalnummer"
-					v-model="personaldatenModelProxy.proxy.lbvPersonalnummer" @change="personaldatenModelProxy.patch" :readonly :max-len="15" />
+					v-model="personaldatenModelProxy.proxy.lbvPersonalnummer"
+					:validation="() => personaldatenModelProxy.getFehler('lbvPersonalnummer')"
+					@change="personaldatenModelProxy.patch"
+					:readonly :max-len="15" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Zugangsdatum" type="date"
-					v-model="personaldatenModelProxy.proxy.zugangsdatum" @change="personaldatenModelProxy.patch" :readonly />
-				<svws-ui-text-input placeholder="Abgangsdatum" type="date"
-					v-model="personaldatenModelProxy.proxy.abgangsdatum" @change="personaldatenModelProxy.patch" :readonly />
-				<ui-select label="Zugangsgrund" v-model="personaldatenModelProxy.zugangsgrund.value" :manager="zugangsgrundManager" :readonly />
-				<ui-select label="Abgangsgrund" v-model="personaldatenModelProxy.abgangsgrund.value" :manager="abgangsgrundManager" :readonly />
+				<svws-ui-text-input placeholder="Zugangsdatum"
+					type="date"
+					v-model="personaldatenModelProxy.proxy.zugangsdatum"
+					@change="personaldatenModelProxy.patch"
+					:readonly />
+				<svws-ui-text-input placeholder="Abgangsdatum"
+					type="date"
+					v-model="personaldatenModelProxy.proxy.abgangsdatum"
+					@change="personaldatenModelProxy.patch"
+					:readonly />
+				<ui-select label="Zugangsgrund"
+					v-model="personaldatenModelProxy.zugangsgrund.value"
+					:manager="zugangsgrundManager"
+					:readonly />
+				<ui-select label="Abgangsgrund"
+					v-model="personaldatenModelProxy.abgangsgrund.value"
+					:manager="abgangsgrundManager"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Rechtsverhältnis" class="contentFocusField"
-					v-model="personalabschnittsdatenModelProxy.rechtsverhaeltnis.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idRechtsverhaeltnis')"
-					:manager="rechtsverhaeltnisSelectManager" :removable="false" :readonly required statistics />
+				<ui-select label="Rechtsverhältnis"
+					class="contentFocusField"
+					v-model="personalabschnittsdatenModelProxy.rechtsverhaeltnis.value"
+					:validation="() => personalabschnittsdatenModelProxy.getFehler('idRechtsverhaeltnis')"
+					:manager="rechtsverhaeltnisSelectManager"
+					:removable="false" :readonly required statistics />
 				<ui-select label="Beschäftigungsart"
-					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idBeschaeftigungsart')"
-					:manager="beschaeftigungsartSelectManager" :removable="false" required :readonly statistics />
+					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value"
+					:validation="() => personalabschnittsdatenModelProxy.getFehler('idBeschaeftigungsart')"
+					:manager="beschaeftigungsartSelectManager"
+					:removable="false" required :readonly statistics />
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
-					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @change="personalabschnittsdatenModelProxy.patch"
+					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll"
+					@change="personalabschnittsdatenModelProxy.patch"
 					:decimal-places="1" :steps="0.5" :readonly statistics />
 				<ui-select label="Einsatzstatus"
-					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idEinsatzstatus')"
-					:manager="einsatzstatusSelectManager" :readonly statistics :removable="false" required />
+					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value"
+					:validation="() => personalabschnittsdatenModelProxy.getFehler('idEinsatzstatus')"
+					:manager="einsatzstatusSelectManager"
+					:readonly statistics :removable="false" required />
 				<ui-select label="Stammschule"
 					v-model="personalabschnittsdatenModelProxy.proxy.stammschulnummer"
-					:manager="stammschuleSelectManager" :removable="true" :readonly required statistics />
+					:validation="() => personalabschnittsdatenModelProxy.getFehler('stammschulnummer')"
+					:manager="stammschuleSelectManager"
+					:removable="true" :readonly required statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
@@ -56,9 +94,9 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
-				<lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
-					:add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung :remove-minderleistung
-					:add-anrechnung :patch-anrechnungen :remove-anrechnung />
+				<lehrer-personaldaten-anrechnungen :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
+					:hat-update-kompetenz="!readonly" :add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung
+					:remove-minderleistung :add-anrechnung :patch-anrechnungen :remove-anrechnung />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -71,13 +109,12 @@
 	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
 	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState, useServerState } from "@ui";
-	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
-	import { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
+	import { LehrerPersonalabschnittsdatenModelProxy } from "~/components/lehrer/personaldaten/modelproxy/LehrerPersonalabschnittsdatenModelProxy";
+	import { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
-
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
 

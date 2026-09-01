@@ -15,7 +15,7 @@
 				</div>
 				<!-- Label -->
 				<div v-if="showLabel"
-					:class="[labelClasses, 'ui-select-multi--label absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
+					:class="[labelClasses, 'ui-select-multi--label z-10 absolute transition-all duration-100 ease-in-out pointer-events-none rounded left-2 whitespace-nowrap max-w-fit flex justify-center items-center gap-1 px-1 -translate-y-1/2']">
 					<span v-if="statistics" class="ui-select-multi--label--statistics cursor-pointer flex">
 						<svws-ui-tooltip position="right">
 							<span :class="[disabled ? 'icon-ui-disabled' : 'icon-ui-statistic', 'icon i-ri-bar-chart-2-line pointer-events-auto']"
@@ -35,8 +35,8 @@
 					<span v-if="required" class="ui-select-multi--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
-					<span v-if="validationResult.hasFehler">
-						<ui-validation-tooltip :validation-result :disabled />
+					<span class="cursor-pointer pointer-events-auto inline-block -my-1">
+						<ui-validation-tooltip v-if="validationResult.hasFehler" :validation-result :disabled />
 					</span>
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select-multi--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />

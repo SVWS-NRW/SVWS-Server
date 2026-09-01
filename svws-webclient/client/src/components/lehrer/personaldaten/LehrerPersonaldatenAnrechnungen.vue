@@ -70,8 +70,8 @@
 	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
 		LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag, Comparator } from "@core";
 	import { LehrerMehrleistungsarten, LehrerMinderleistungsarten, LehrerAnrechnungsgrund, ArrayList, HashSet } from "@core";
-	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
-	import type { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
+	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
+	import type { LehrerPersonalabschnittsdatenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
