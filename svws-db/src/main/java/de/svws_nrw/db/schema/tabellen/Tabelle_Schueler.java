@@ -437,6 +437,12 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_LSSchulform = add("LSSchulform", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 			.setJavaComment("letzte Schule Schulform");
 
+	/** Die Definition der Tabellenspalte ID_Hochschulabschluss */
+	public final SchemaTabelleSpalte col_ID_Hochschulabschluss = add("ID_Hochschulabschluss", SchemaDatentypen.BIGINT, false)
+			.setRevision(SchemaRevisionen.REV_75)
+			.setJavaName("idHochschulabschluss")
+			.setJavaComment("Die Id des Hochschulabschlusses");
+
 	/** Die Definition der Tabellenspalte KonfDruck */
 	public final SchemaTabelleSpalte col_KonfDruck = add("KonfDruck", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("+")

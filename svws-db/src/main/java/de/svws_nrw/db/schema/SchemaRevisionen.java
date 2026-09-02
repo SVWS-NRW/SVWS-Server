@@ -357,21 +357,24 @@ public enum SchemaRevisionen {
 	/** Tabelle: SchuleOAuthSecrets um Spalte Domaine ergänzt**/
 	REV_73(73, "2026-08-06"),
 	/** Tabelle: SchuleOAuthSecrets um Trigger ergänzt**/
-	REV_74(74, "2026-08-18");
+	REV_74(74, "2026-08-18"),
+
+	/** Erweiterung Tabelle Schueler um Feld idHochschulabschluss */
+	REV_75(75, "2026-09-01");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_74;
+	public static final SchemaRevisionen maxRevision = REV_75;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_74;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_75;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
