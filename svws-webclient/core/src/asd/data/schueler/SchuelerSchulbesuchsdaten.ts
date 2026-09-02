@@ -78,6 +78,11 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public schluesselCoreTypeFachklasseVorherigeSchule: string | null = null;
 
 	/**
+	 * Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB).
+	 */
+	public idHochschulabschluss: number | null = null;
+
+	/**
 	 * Das Entlassdatum von dieser Schule.
 	 */
 	public entlassdatumDieseSchule: string | null = null;
@@ -213,6 +218,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result.schluesselAbschlussartBerufsbildendVorherigeSchule = (obj.schluesselAbschlussartBerufsbildendVorherigeSchule === undefined) ? null : obj.schluesselAbschlussartBerufsbildendVorherigeSchule === null ? null : obj.schluesselAbschlussartBerufsbildendVorherigeSchule;
 		result.idSchulgliederungVorherigeSchule = (obj.idSchulgliederungVorherigeSchule === undefined) ? null : obj.idSchulgliederungVorherigeSchule === null ? null : obj.idSchulgliederungVorherigeSchule;
 		result.schluesselCoreTypeFachklasseVorherigeSchule = (obj.schluesselCoreTypeFachklasseVorherigeSchule === undefined) ? null : obj.schluesselCoreTypeFachklasseVorherigeSchule === null ? null : obj.schluesselCoreTypeFachklasseVorherigeSchule;
+		result.idHochschulabschluss = (obj.idHochschulabschluss === undefined) ? null : obj.idHochschulabschluss === null ? null : obj.idHochschulabschluss;
 		result.entlassdatumDieseSchule = (obj.entlassdatumDieseSchule === undefined) ? null : obj.entlassdatumDieseSchule === null ? null : obj.entlassdatumDieseSchule;
 		result.idEntlassjahrgangDieseSchule = (obj.idEntlassjahrgangDieseSchule === undefined) ? null : obj.idEntlassjahrgangDieseSchule === null ? null : obj.idEntlassjahrgangDieseSchule;
 		result.idEntlassgrundDieseSchule = (obj.idEntlassgrundDieseSchule === undefined) ? null : obj.idEntlassgrundDieseSchule === null ? null : obj.idEntlassgrundDieseSchule;
@@ -266,6 +272,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"schluesselAbschlussartBerufsbildendVorherigeSchule" : ' + ((obj.schluesselAbschlussartBerufsbildendVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schluesselAbschlussartBerufsbildendVorherigeSchule)) + ',';
 		result += '"idSchulgliederungVorherigeSchule" : ' + ((obj.idSchulgliederungVorherigeSchule === null) ? 'null' : obj.idSchulgliederungVorherigeSchule.toString()) + ',';
 		result += '"schluesselCoreTypeFachklasseVorherigeSchule" : ' + ((obj.schluesselCoreTypeFachklasseVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schluesselCoreTypeFachklasseVorherigeSchule)) + ',';
+		result += '"idHochschulabschluss" : ' + ((obj.idHochschulabschluss === null) ? 'null' : obj.idHochschulabschluss.toString()) + ',';
 		result += '"entlassdatumDieseSchule" : ' + ((obj.entlassdatumDieseSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumDieseSchule)) + ',';
 		result += '"idEntlassjahrgangDieseSchule" : ' + ((obj.idEntlassjahrgangDieseSchule === null) ? 'null' : obj.idEntlassjahrgangDieseSchule.toString()) + ',';
 		result += '"idEntlassgrundDieseSchule" : ' + ((obj.idEntlassgrundDieseSchule === null) ? 'null' : obj.idEntlassgrundDieseSchule.toString()) + ',';
@@ -348,6 +355,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		}
 		if (obj.schluesselCoreTypeFachklasseVorherigeSchule !== undefined) {
 			result += '"schluesselCoreTypeFachklasseVorherigeSchule" : ' + ((obj.schluesselCoreTypeFachklasseVorherigeSchule === null) ? 'null' : JSON.stringify(obj.schluesselCoreTypeFachklasseVorherigeSchule)) + ',';
+		}
+		if (obj.idHochschulabschluss !== undefined) {
+			result += '"idHochschulabschluss" : ' + ((obj.idHochschulabschluss === null) ? 'null' : obj.idHochschulabschluss.toString()) + ',';
 		}
 		if (obj.entlassdatumDieseSchule !== undefined) {
 			result += '"entlassdatumDieseSchule" : ' + ((obj.entlassdatumDieseSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumDieseSchule)) + ',';

@@ -67,6 +67,10 @@ public class SchuelerSchulbesuchPatchRequest {
 	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")
 	public JsonNullable<@Size(max = 10) String> schluesselCoreTypeFachklasseVorherigeSchule = JsonNullable.undefined();
 
+	/** Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB). */
+	@Schema(description = "Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB).", example = "2000")
+	public JsonNullable<Long> idHochschulabschluss = JsonNullable.undefined();
+
 	/** Das Entlassdatum von dieser Schule. */
 	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")
 	@ValidDateFormat

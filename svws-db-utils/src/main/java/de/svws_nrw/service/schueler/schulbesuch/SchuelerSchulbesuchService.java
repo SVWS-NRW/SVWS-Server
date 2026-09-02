@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.Hochschulabschluss;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
@@ -133,6 +134,7 @@ public final class SchuelerSchulbesuchService {
 		patchRequest.idSchulgliederungVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchHerkunftbildungsgang(entity, id));
 		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
 		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, id));
+		patchRequest.idHochschulabschluss.ifPresent(this::validateIdHochschulabschluss);
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
 	}
 
@@ -307,6 +309,15 @@ public final class SchuelerSchulbesuchService {
 					"Kein Kindergartenbesuch mit der ID %d gefunden.".formatted(id));
 		}
 		entity.DauerKindergartenbesuch = eintrag.schluessel;
+	}
+
+	private void validateIdHochschulabschluss(final Long idHochschulabschluss) {
+		if (idHochschulabschluss == null) {
+			return;
+		}
+		if (Hochschulabschluss.data().getEintragByID(idHochschulabschluss) == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Hochschulabschluss mit der ID %d gefunden.".formatted(idHochschulabschluss));
+		}
 	}
 
 	private DTOSchueler getSchueler(final long id) {

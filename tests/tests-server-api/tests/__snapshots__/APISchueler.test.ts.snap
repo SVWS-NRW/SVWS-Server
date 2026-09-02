@@ -27911,6 +27911,7 @@ SchuelerSchulbesuchsdaten {
   "idEntlassjahrgangDieseSchule": null,
   "idHerkunftSonstigeVorherigeSchule": null,
   "idHerkunftsartVersetzungVorherigeSchule": "11001",
+  "idHochschulabschluss": null,
   "idKindergarten": null,
   "idSchulgliederungVorherigeSchule": null,
   "idUebergangsempfehlungGrundschule": null,

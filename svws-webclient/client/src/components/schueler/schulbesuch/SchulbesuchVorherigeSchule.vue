@@ -65,7 +65,11 @@
 				:manager="vorherigerEntlassgrundManager"
 				v-model="model.idEntlassgrundVorherigeSchule.value"
 				:readonly />
-			<div v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH" />
+			<div v-if="currentMode === Schulauswahl.SCHULE_IN_NRW" />
+			<ui-select label="Hochschulabschluss" v-if="sonstigeSchuleSelected && eigeneSchuleIstBKorSBorWB"
+				:manager="hochschulabschlussManager"
+				v-model="model.idHochschulabschluss.value"
+				:readonly statistics />
 			<ui-select label="Höchster allgemeinbildender Abschluss" v-if="abschlussartAllgemeinbildendSelectable"
 				:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
 				v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
@@ -91,10 +95,9 @@
 
 
 	import { computed, ref, watch } from "vue";
-	import {
-		ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige, Jahrgaenge, SchulabschlussAllgemeinbildend,
-		SchulabschlussBerufsbildend, Schulform,
-	} from "@core";
+	import { ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige,
+		Hochschulabschluss, Jahrgaenge, SchulabschlussAllgemeinbildend,
+		SchulabschlussBerufsbildend, Schulform } from "@core";
 	import type { List, SchulEintrag, KatalogEntlassgrund } from "@core";
 	import type { SchuelerSchulbesuchManager } from "@ui";
 	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
@@ -145,6 +148,10 @@
 	const sonstigeSchuleSelected = computed(() => currentMode.value === Schulauswahl.SONSTIGE_SCHULE);
 	const keinSchulbesuchSelected = computed(() => currentMode.value === Schulauswahl.KEIN_SCHULBESUCH);
 	const eigeneSchuleIstGrundschule = computed(() => schuleState.schulform === Schulform.G);
+	const eigeneSchuleIstBKorSBorWB = computed(() => (schuleState.schulform === Schulform.BK)
+		|| (schuleState.schulform === Schulform.SB)
+		|| (schuleState.schulform === Schulform.WB)
+	);
 
 	watch(() => props.manager().daten.id, () => {
 		schulauswahlMode.value = null;
@@ -239,6 +246,13 @@
 		clazz: HerkunftSonstige.class,
 		schuljahr: schuljahr,
 		schulformen: schuleState.schulform,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
+	});
+
+	const hochschulabschlussManager = new CoreTypeSelectManager({
+		clazz: Hochschulabschluss.class,
+		schuljahr: schuljahr,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});

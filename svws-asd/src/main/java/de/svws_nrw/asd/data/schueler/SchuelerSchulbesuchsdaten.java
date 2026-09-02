@@ -75,6 +75,10 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")
 	public String schluesselCoreTypeFachklasseVorherigeSchule;
 
+	/** Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB). */
+	@Schema(description = "Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB).", example = "2000")
+	public Long idHochschulabschluss;
+
 	/** Das Entlassdatum von dieser Schule. */
 	@Schema(description = "Das Entlassdatum von dieser Schule.", example = "1902-03-11")
 	public String entlassdatumDieseSchule;

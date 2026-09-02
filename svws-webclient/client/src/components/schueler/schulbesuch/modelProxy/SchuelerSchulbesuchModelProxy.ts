@@ -3,9 +3,11 @@ import { ModelProxy, ValidatorNumberRange, ValidatorStringLength } from "@ui";
 import type { EinschulungsartKatalogEintrag, HerkunftsartenKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, KatalogEntlassgrund, Kindergarten,
 	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten,
 	SchulabschlussAllgemeinbildendKatalogEintrag, HerkunftSonstigeKatalogEintrag, SchulabschlussBerufsbildendKatalogEintrag, SchulEintrag,
-	SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag, FachklasseKatalogEintrag, HerkunftBildungsgangKatalogEintrag } from "@core";
+	SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag, FachklasseKatalogEintrag, HerkunftBildungsgangKatalogEintrag,
+	HochschulabschlussKatalogEintrag } from "@core";
 import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
-	SchulabschlussAllgemeinbildend, SchulabschlussBerufsbildend, HerkunftSchulform, HerkunftSonstige, Fachklasse, HerkunftBildungsgang } from "@core";
+	SchulabschlussAllgemeinbildend, SchulabschlussBerufsbildend, HerkunftSchulform, HerkunftSonstige, Fachklasse, HerkunftBildungsgang,
+	Hochschulabschluss } from "@core";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
@@ -24,7 +26,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
 				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss", "schluesselAbschlussartAllgemeinbildendVorherigeSchule",
 				"schluesselAbschlussartBerufsbildendVorherigeSchule", "idSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule",
-				"idHerkunftSonstigeVorherigeSchule"];
+				"idHerkunftSonstigeVorherigeSchule", "idHochschulabschluss"];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
@@ -106,6 +108,11 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	idEntlassgrundVorherigeSchule = computed<KatalogEntlassgrund | null>({
 		get: () => this.manager().entlassgruendeById.get(this.proxy.idEntlassgrundVorherigeSchule ?? -1) ?? null,
 		set: (v: KatalogEntlassgrund | null) => this.proxy.idEntlassgrundVorherigeSchule = v?.id ?? null,
+	});
+
+	idHochschulabschluss = computed<HochschulabschlussKatalogEintrag | null>({
+		get: () => Hochschulabschluss.data().getEintragByID(this.proxy.idHochschulabschluss ?? -1),
+		set: (v: HochschulabschlussKatalogEintrag | null) => this.proxy.idHochschulabschluss = v?.id ?? null,
 	});
 
 	idHerkunftsartVersetzungVorherigeSchule = computed<HerkunftsartenKatalogEintrag | null>({

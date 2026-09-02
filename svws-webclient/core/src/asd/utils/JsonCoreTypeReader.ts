@@ -145,6 +145,8 @@ import { LaenderKatalogEintrag } from "../data/schule/LaenderKatalogEintrag";
 import { Laender } from "../types/schule/Laender";
 import { OrteKatalogEintrag } from "../data/schule/OrteKatalogEintrag";
 import { Orte } from "../types/schule/Orte";
+import { Hochschulabschluss } from "../types/schueler/Hochschulabschluss";
+import { HochschulabschlussKatalogEintrag } from "../data/schueler/HochschulabschlussKatalogEintrag";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -230,6 +232,7 @@ export class JsonCoreTypeReader {
 		{ key: "AnrechnungsantragBKAZVO", entry: AnrechnungsantragBKAZVOKatalogEintrag, type: AnrechnungsantragBKAZVO, simple: true },
 		{ key: "Laender", entry: LaenderKatalogEintrag, type: Laender },
 		{ key: "Orte", entry: OrteKatalogEintrag, type: Orte, simple: true },
+		{ key: "Hochschulabschluss", entry: HochschulabschlussKatalogEintrag, type: Hochschulabschluss },
 	];
 
 	/**

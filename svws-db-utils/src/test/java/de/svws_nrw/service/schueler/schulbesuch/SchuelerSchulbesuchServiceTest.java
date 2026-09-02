@@ -44,6 +44,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -881,5 +882,33 @@ class SchuelerSchulbesuchServiceTest {
 				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
 	}
 
+	// -------------------------------------------------------------------------
+	// validate - Hochschulabschluss
+	// -------------------------------------------------------------------------
+
+	@Test
+	@DisplayName("patch - patchHochschulabschluss - null")
+	void patchHochschulabschluss_null() {
+		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
+		patchRequest.idHochschulabschluss = JsonNullable.of(null);
+		schueler.idHochschulabschluss = 99L;
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatNoException().isThrownBy(() -> schuelerSchulbesuchService.patch(idSchueler, patchRequest));
+	}
+
+	@Test
+	@DisplayName("patch - patchHochschulabschluss - invalid id")
+	void patchHochschulabschluss_invalidId() {
+		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
+		patchRequest.idHochschulabschluss = JsonNullable.of(-1L);
+		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
+
+		assertThatException()
+				.isThrownBy(() -> schuelerSchulbesuchService.patch(idSchueler, patchRequest))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Kein Hochschulabschluss mit der ID -1 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST);
+	}
 
 }
