@@ -1,0 +1,23 @@
+{
+	"version" : 1,
+	"validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+	"historie" : [ {
+		"praefix" : "LPPR00",
+		"altes_kuerzel" : "",
+		"zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+		"dtos" : "LehrerPersonalabschnittsdaten",
+		"ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+		"anzeigebereich_ui" : "Feld 'Rechtsverhältnis'",
+		"svws" : true,
+		"zebras" : true,
+		"vorbedingung" : [ ],
+		"muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+		"kann" : [ ],
+		"hinweis" : [ ],
+		"text" : "Rechtsverhältnis des Lehrers: Das Feld darf nicht leer sein.",
+		"erlaeuterung" : "",
+		"bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis = @",
+		"gueltigVon" : null,
+		"gueltigBis" : null
+	} ]
+}

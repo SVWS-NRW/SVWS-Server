@@ -29,7 +29,7 @@ export class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		this._validatoren.add(new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus, kontext));
 	}
 
-	protected pruefe(): boolean {
+	public pruefe(): boolean {
 		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
 		if (idBeschaeftigungsart === null) {
 			this.addFehler(0, ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);

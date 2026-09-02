@@ -45,7 +45,7 @@ public final class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBesc
 	}
 
 	@Override
-	protected boolean pruefe() {
+	public boolean pruefe() {
 		// Bestimme die Beschäftigungsart.
 		final @NotNull Long idBeschaeftigungsart = _idBeschaeftigungsart.get();
 		final @AllowNull LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertByIDOrNull(idBeschaeftigungsart);

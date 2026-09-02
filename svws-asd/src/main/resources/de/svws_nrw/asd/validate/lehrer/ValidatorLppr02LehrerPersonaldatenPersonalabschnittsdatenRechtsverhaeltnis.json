@@ -1,0 +1,23 @@
+{
+	"version" : 1,
+	"validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
+	"historie" : [ {
+		"praefix" : "LPPR02",
+		"altes_kuerzel" : "",
+		"zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+		"dtos" : "LehrerPersonalabschnittsdaten",
+		"ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+		"anzeigebereich_ui" : "Feld 'Rechtsverhältnis'",
+		"svws" : true,
+		"zebras" : true,
+		"vorbedingung" : ["LPPR01"],
+		"muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+		"kann" : [ ],
+		"hinweis" : [ ],
+		"text" : "Rechtsverhältnis des Lehrers: Der eingetragene Wert für das Feld 'Rechtsverhältnis' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+		"erlaeuterung" : "",
+		"bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis ≠ einem gültigen Historieneintrag in LehrerRechtsverhaeltnis.json",
+		"gueltigVon" : null,
+		"gueltigBis" : null
+	} ]
+}

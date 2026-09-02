@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpprb17LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart",
+    "historie" : [ {
+      "praefix" : "LPPRB17",
+      "altes_kuerzel" : "BW",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis-Beschaeftigungsart",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+      "anzeigebereich_ui" : "Feld 'Beschaeftigungsart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Für das Rechtsverhältnis 'Beamte auf Widerruf (LAA)' sind die Beschätigungsarten 'Beamte auf Widerruf (LAA) in Teilzeit' und 'Beamte auf Widerruf (LAA) in Vollzeit' zulässig.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis ≙ Bezeichner 'W' in LehrerRechtsverhaeltnis.json ∧ LehrerPersonalabschnittsdaten.idBeschaeftigungsart ≠ Bezeichner 'WV', 'WT' in LehrerBeschaeftigungsart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

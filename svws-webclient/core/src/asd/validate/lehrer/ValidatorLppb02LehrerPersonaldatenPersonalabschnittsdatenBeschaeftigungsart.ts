@@ -33,7 +33,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		this._validatoren.add(new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, pflichtstundensoll, kontext));
 	}
 
-	protected pruefe(): boolean {
+	public pruefe(): boolean {
 		if (!LehrerBeschaeftigungsart.data().isGueltig(this._idBeschaeftigungsart.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;

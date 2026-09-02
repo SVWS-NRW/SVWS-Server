@@ -30,9 +30,9 @@ class TestValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll {
 			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	private static final String TESTDATEN_LPP1 = """
-45, false
-12, true
-""";
+				45, false
+				12, true
+				""";
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.

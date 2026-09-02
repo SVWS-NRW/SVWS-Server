@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -13,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Geburtsdatum im Kontext des Rechtsverhältnisses
  * der Abschnittsdaten eines Lehrers einer Schule aus.
  */
-public final class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
+public final class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/** Das Rechtsverhältnis */
 	private final @NotNull Supplier<@AllowNull Long> _idRechtsverhaeltnis;
@@ -27,10 +26,10 @@ public final class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
+	public ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
-			final @NotNull Supplier<@NotNull Long> idRechtsverhaeltnis,
+			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
@@ -38,17 +37,17 @@ public final class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRech
 
 		_idRechtsverhaeltnis = idRechtsverhaeltnis;
 
-		_validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, getNotNullSupplierLong(idRechtsverhaeltnis), geburtsdatum, kontext));
 	}
 
 	@Override
 	public boolean pruefe() {
-		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final Long idRechtsverhaeltnis = _idRechtsverhaeltnis.get();
-		final LehrerRechtsverhaeltnis rv = (idRechtsverhaeltnis == null) ? null : LehrerRechtsverhaeltnis.data().getWertByIDOrNull(idRechtsverhaeltnis);
 
-		if (rv == null) {
-			addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
+		// Bestimme das Rechtsverhaeltnis.
+		final Long idRechtsverhaeltnis = _idRechtsverhaeltnis.get();
+
+		if (idRechtsverhaeltnis == null) {
+			addFehler(0, "Lehrer Rechtsverhältnis: Das Feld darf nicht leer sein.");
 			return false;
 		}
 

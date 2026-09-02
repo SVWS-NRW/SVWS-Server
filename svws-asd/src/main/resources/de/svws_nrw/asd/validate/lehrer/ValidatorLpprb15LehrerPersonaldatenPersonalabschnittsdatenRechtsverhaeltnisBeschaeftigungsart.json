@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpprb15LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart",
+    "historie" : [ {
+      "praefix" : "LPPRB15",
+      "altes_kuerzel" : "BW",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis-Beschaeftigungsart",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+      "anzeigebereich_ui" : "Feld 'Beschaeftigungsart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Für das Rechtsverhältnis 'Gestellungsvertrag' ist die Beschätigungsart 'Gestellungsvertrag' zulässig.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis ≙ Bezeichner 'S' in LehrerRechtsverhaeltnis.json ∧ LehrerPersonalabschnittsdaten.idBeschaeftigungsart ≠ Bezeichner 'G' in LehrerBeschaeftigungsart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  

@@ -47,7 +47,7 @@ public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBesc
 	}
 
 	@Override
-	protected boolean pruefe() {
+	public boolean pruefe() {
 		if (!LehrerBeschaeftigungsart.data().isGueltig(_idBeschaeftigungsart.get(), kontext().getSchuljahr())) {
 			addFehler(0, FEHLERTEXT);
 			return false;

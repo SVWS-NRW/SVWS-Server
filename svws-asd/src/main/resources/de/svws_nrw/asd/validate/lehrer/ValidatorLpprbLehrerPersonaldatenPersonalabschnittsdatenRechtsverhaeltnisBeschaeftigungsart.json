@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart",
+	"historie": [
+		{
+		"praefix": "LPPRB",
+		"svws": true,
+		"zebras": true,
+		"vorbedingung" : ["LPPB00, LPPB01, LPPB02, LPPR00, LPPR01, LPPR02"],
+		"muss": ["G","H","V","S","KS","R","PS","SK","GE","FW","HI","WF","GY","WB","BK","SR","SG","SB"],
+		"kann": [],
+		"hinweis": [],
+		"gueltigVon": null,
+		"gueltigBis": null
+		}
+	]
+}

@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpprb10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart",
+    "historie" : [ {
+      "praefix" : "LPPRB10",
+      "altes_kuerzel" : "BW",
+      "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis-Beschaeftigungsart",
+      "dtos" : "LehrerPersonalabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+      "anzeigebereich_ui" : "Feld 'Beschaeftigungsart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Für das Rechtsverhältnis 'Angestellte, befristet (TVL-Vertrag)' sind die Beschätigungsarten 'Vollzeit', 'Teilzeit', 'Teilzeitbeschäftigung im Blockmodell' und 'Angestellte, nebenberuflich' zulässig.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idRechtsverhaeltnis ≙ Bezeichner 'B' in LehrerRechtsverhaeltnis.json ∧ LehrerPersonalabschnittsdaten.idBeschaeftigungsart ≠ Bezeichner 'V', 'T', 'TS', 'SB' in LehrerBeschaeftigungsart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  
