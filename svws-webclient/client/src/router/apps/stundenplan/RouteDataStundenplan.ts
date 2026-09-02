@@ -1,7 +1,7 @@
-import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, SimpleOperationResponse } from "@core";
+import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, SimpleOperationResponse, Wochentag, StundenplanZeitraster } from "@core";
 import { Jahrgaenge } from "@core";
 import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
-import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
+import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -659,11 +659,13 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, this.manager.auswahl().id);
 			this.manager.daten().zeitrasterRemoveAll(list);
 			this.updateStundenplanUnterrichtListeManager();
-			if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
-				|| (typeof this.selected === 'number')
-				|| (this.selected instanceof Wochentag)) {
-				this._state.value.selected = undefined;
-			}
+			// remove?
+			// if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
+			// 	|| (typeof this.selected === 'number')
+			// 	|| (this.selected instanceof Wochentag)) {
+			// 	this._state.value.selected = undefined;
+			// }
+			this._state.value.selected = undefined;
 			this.commit();
 		}
 		api.status.stop();
