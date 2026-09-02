@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIoo00IntKatalogOrteOrtsname",
+    "historie" : [ {
+      "praefix" : "IOO00",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Orte-Ortsname",
+      "dtos" : "OrteStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Orte",
+      "anzeigebereich_ui" : "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Das Feld 'Ortsname' muss besetzt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "OrteStatistikGesamt.ortsname = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }

@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIoo02IntKatalogOrteOrtsname",
+    "historie" : [ {
+      "praefix" : "IOO02",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Orte-Ortsname",
+      "dtos" : "OrteStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Orte",
+      "anzeigebereich_ui" : "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IOO01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Der eingetragene Wert für das Feld 'Ortsname' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung" : "Der Fehler soll nur bei ungültigen Ortsnamen kommen, sofern als Bundesland Nordrhein-Westfalen eingetragen wurde.",
+      "bedingung" : "OrteStatistikGesamt.idLand ≙ Bezeichner 'NW' in Laender.json ∧ OrteStatistikGesamt.ortsname ≠ einem zeitlich gültigen Historieneintrag im Attribut 'orte' in der Orte.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }

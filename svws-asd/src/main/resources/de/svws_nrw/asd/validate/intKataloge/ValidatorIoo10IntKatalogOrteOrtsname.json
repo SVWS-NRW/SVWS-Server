@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIoo10IntKatalogOrteOrtsname",
+    "historie" : [ {
+      "praefix" : "IOO10",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Orte-Orte",
+      "dtos" : "OrteStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Orte",
+      "anzeigebereich_ui" : "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["IOO00, IOP00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!",
+      "erlaeuterung" : "Wenn als Bundesland Nordrhein-Westfalen eingetragen wurde, muss im Feld Wohnort die PLZ zusammen mit dem Ort auftauchen ('PLZ Ort' statt nur 'PLZ' oder nur 'Ort').",
+      "bedingung" : "siehe Erläuterung",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
