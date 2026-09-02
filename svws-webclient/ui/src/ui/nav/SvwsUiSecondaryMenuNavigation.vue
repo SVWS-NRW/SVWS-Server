@@ -2,21 +2,21 @@
 	<div class="secondary-menu--navigation">
 		<template v-for="tabgroup of tabManager().tabgroups" :key="tabgroup">
 			<template v-if="tabManager().isGroupVisible(tabgroup)">
-				<table class="svws-ui-table" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
+				<table class="svws-ui-table" aria-label="Tabelle">
+					<thead class="svws-ui-thead cursor-pointer mb-1" aria-label="Tabellenkopf">
 						<tr class="svws-ui-tr" role="row" @click="toggle(tabgroup)">
-							<td class="svws-ui-td" role="columnheader">
+							<th class="svws-ui-td">
 								<span v-if="setCollapsed.has(tabgroup)" class="icon i-ri-arrow-right-s-line" />
 								<span v-else class="icon i-ri-arrow-down-s-line" />
 								{{ tabgroup }}
-							</td>
+							</th>
 						</tr>
 					</thead>
-					<tbody v-if="!isCollapsed(tabgroup)" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
+					<tbody v-if="!isCollapsed(tabgroup)" class="svws-ui-tbody" aria-label="Tabelleninhalt">
 						<template v-for="tab of tabManager().getTabsOfGroup(tabgroup)" :key="tab.name">
 							<template v-if="tabManager().isVisible(tab.name)">
 								<tr class="svws-ui-tr" role="row">
-									<td class="svws-ui-td border-none ml-4" role="cell">
+									<td class="svws-ui-td border-none ml-4">
 										<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)" :focus="isCurrent(tab)" secondary>
 											<template #label><span>{{ tab.text }}</span></template>
 										</svws-ui-menu-item>

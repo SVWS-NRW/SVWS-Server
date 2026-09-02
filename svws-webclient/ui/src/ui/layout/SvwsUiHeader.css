@@ -70,5 +70,5 @@
 }
 
 .svws-ui-header--actions {
-	@apply flex flex-wrap gap-2 min-h-[3rem] items-start;
+	@apply flex flex-wrap gap-2 min-h-12 items-start;
 }

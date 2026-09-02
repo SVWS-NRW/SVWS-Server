@@ -12,8 +12,7 @@
 			<slot name="footer" />
 			<div class="sidebar--menu--footer-credits flex flex-col items-center text-ui-secondary">
 				<div class="text-sm mt-2 mb-2 text-center">Powered by<br>SVWS NRW</div>
-				<button role="link" @click="show = true"
-					class="mb-1 underline hover:text-ui-secondary-hover text-sm">
+				<button @click="show = true" class="mb-1 underline hover:text-ui-secondary-hover text-sm">
 					Client Info
 				</button>
 			</div>

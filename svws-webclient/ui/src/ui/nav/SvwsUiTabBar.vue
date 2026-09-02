@@ -62,7 +62,7 @@
 	};
 
 	let processingKeyboardEvent = false;
-	const tabsListElement = ref();
+	const tabsListElement = ref<any>();
 
 	const state = ref<ComponentData>({
 		scrolled: false,

@@ -216,9 +216,9 @@
 	]);
 
 	const selectedRows = ref([]);
-	const docsMultiselectFilterA = ref();
-	const docsMultiselectFilterB = ref();
-	const clickedRow = ref(undefined);
+	const docsMultiselectFilterA = ref<any>();
+	const docsMultiselectFilterB = ref<any>();
+	const clickedRow = ref<any>(undefined);
 	const search = ref("");
 
 	const filterReset = () => {

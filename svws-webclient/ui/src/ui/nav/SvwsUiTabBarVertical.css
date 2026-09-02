@@ -16,11 +16,11 @@
 
 .tab-bar-vertical--content {
 	@apply bg-ui-neutral;
-	@apply rounded-md p-[4px];
+	@apply rounded-md p-1;
 	@apply flex flex-col;
 	@apply overflow-y-scroll;
 	@apply relative;
-	@apply gap-[2px];
+	@apply gap-0.5;
 
 	-ms-overflow-style: none;
 	/* Remove Scrollbar in IE and Edge */
@@ -54,14 +54,14 @@
 }
 
 .tab-bar-vertical--scroll-button-background-down {
-	@apply bg-gradient-to-b;
+	@apply bg-linear-to-b;
 	@apply pt-8;
 	@apply rounded-b-full;
 	bottom: 0.875rem;
 }
 
 .tab-bar-vertical--scroll-button-background-up {
-	@apply bg-gradient-to-t;
+	@apply bg-linear-to-t;
 	@apply pb-8;
 	@apply rounded-t-full;
 	top: 0.875rem;
@@ -131,7 +131,7 @@
 
 		.svws-ui-tabs--vertical & {
 			&:before {
-				@apply absolute -left-[5px] -top-px -bottom-px w-[2px] border-r-2;
+				@apply absolute -left-1.25 -top-px -bottom-px w-0.5 border-r-2;
 				content: '';
 			}
 		}

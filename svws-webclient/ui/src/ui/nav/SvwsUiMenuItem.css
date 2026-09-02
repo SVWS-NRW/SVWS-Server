@@ -3,7 +3,7 @@
 	padding: 0.25rem 0.1rem;
 
 	@media (orientation: portrait) {
-		@apply my-0 px-1 min-w-[4.5rem] justify-center;
+		@apply my-0 px-1 min-w-18 justify-center;
 	}
 
 	&:last-child {
@@ -105,7 +105,7 @@
 	&,
 	&:hover,
 	&:focus {
-		@apply bg-ui-disabled text-ui-disabled !border-ui-disabled;
+		@apply bg-ui-disabled text-ui-disabled border-ui-disabled!;
 		@apply pointer-events-none;
 	}
 }

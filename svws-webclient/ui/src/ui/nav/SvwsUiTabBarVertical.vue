@@ -1,6 +1,6 @@
 <template>
 	<div class="svws-ui-tabs--vertical">
-		<div class="tab-bar-vertical--wrapper print:!hidden">
+		<div class="tab-bar-vertical--wrapper print:hidden!">
 			<div v-if="state.scrolled" class="tab-bar-vertical--scroll-button-background tab-bar-vertical--scroll-button-background-up">
 				<button class="tab-bar-vertical--scroll-button" @click="scroll('up')">
 					<span class="icon"> <span class="icon i-ri-arrow-up-line" /> </span>
@@ -48,7 +48,7 @@
 		maxScrollTop: number;
 	};
 
-	const contentEl = ref();
+	const contentEl = ref<any>();
 
 	const state = ref<ComponentData>({
 		scrolled: false,

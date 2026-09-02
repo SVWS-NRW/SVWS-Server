@@ -1,6 +1,6 @@
 .svws-ui-sub-nav {
 	@apply w-full;
-	@apply print:!hidden;
+	@apply print:hidden!;
 
 	.svws-ui-sub-nav--wrapper {
 		@apply flex items-center relative z-30 shrink-0 overflow-hidden;

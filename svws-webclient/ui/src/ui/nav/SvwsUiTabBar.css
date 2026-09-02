@@ -17,7 +17,7 @@
 .svws-ui-tabs,
 .svws-sub-nav-target {
 	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
-	@apply print:!hidden;
+	@apply print:hidden!;
 
 	.svws-ui-tabs--secondary {
 		@apply px-0;
@@ -26,18 +26,19 @@
 
 
 .svws-sub-nav-target {
+	@apply overflow-x-auto shrink-0;
 	@apply w-full relative z-30;
 	scrollbar-width: none;
 }
 
 .svws-has-sub-nav .svws-ui-tabs--wrapper:before {
-	@apply rounded-md h-[10px] bottom-[-8px];
+	@apply rounded-md h-2.5 -bottom-2;
 }
 
 
 .svws-ui-tabs--wrapper:before {
 	@apply bg-ui-neutral;
-	@apply h-[2px] absolute left-0 right-0 bottom-0;
+	@apply h-0.5 absolute left-0 right-0 bottom-0;
 	content: '';
 }
 
@@ -47,7 +48,7 @@
 }
 
 .svws-ui-tabs--list {
-	@apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2 -mb-px;
+	@apply flex flex-row items-center relative w-full gap-x-0.5 p-0.5 overflow-x-scroll pb-2 -mb-px;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 
@@ -83,12 +84,8 @@
 	}
 }
 
-.svws-sub-nav-target {
-	@apply overflow-x-auto shrink-0;
-}
-
 .svws-ui-secondary-tabs {
-	@apply text-button flex gap-[2px] pt-1.5 pb-3 px-1 -mt-px rounded-md;
+	@apply text-button flex gap-0.5 pt-1.5 pb-3 px-1 -mt-px rounded-md;
 }
 
 .svws-ui-tab-button {
@@ -143,7 +140,7 @@
 		.svws-ui-tabs &,
 		.svws-ui-secondary-tabs & {
 			&:before {
-				@apply absolute left-2 right-2 -bottom-2 h-[2px] border-b-2;
+				@apply absolute left-2 right-2 -bottom-2 h-0.5 border-b-2;
 				content: '';
 			}
 		}

@@ -8,7 +8,7 @@
 		@apply w-12 h-12 xl:w-14 xl:h-14;
 
 		&.svws-is-admin-client:before {
-			@apply absolute top-0 left-0 right-0 h-[4px];
+			@apply absolute top-0 left-0 right-0 h-1;
 			content: '';
 			background: repeating-linear-gradient(-45deg, #000, #000 5px, #ffff00 5px, #ffff00 10px);
 		}

@@ -3,7 +3,7 @@
 
 	.ui-card--header {
 		@apply p-4 flex items-center gap-3 text-left w-full rounded-lg border transition-[border-radius]
-			duration-100 delay-[450ms] ease-in-out;
+			duration-100 delay-450 ease-in-out;
 
 		.ui-card--header--icon span {
 			@apply icon-xl block;
@@ -89,7 +89,7 @@
 					@apply flex justify-center items-center w-auto h-auto;
 
 					&.button--icon {
-						@apply !p-0 mt-1 box-border;
+						@apply p-0! mt-1 box-border;
 
 						span {
 							@apply icon;
@@ -139,7 +139,7 @@
 
 	.ui-card--collapse-enter-active,
 	.ui-card--collapse-leave-active {
-		@apply transition-[max-height] duration-500 delay-[50ms] ease-in-out;
+		@apply transition-[max-height] duration-500 delay-50 ease-in-out;
 	}
 
 	.ui-card--collapse-leave-active {

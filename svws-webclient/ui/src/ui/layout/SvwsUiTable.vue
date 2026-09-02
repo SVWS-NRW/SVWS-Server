@@ -18,7 +18,7 @@
 						<span>Daten</span>
 					</svws-ui-button>
 					<template #content>
-						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+						<ul class="min-w-40 flex flex-col gap-0.5 pt-1">
 							<li v-for="(column, index) in columns.filter(col => (typeof col !== 'string') && !col.toggleInvisible)" :key="index">
 								<template v-if="typeof column !== 'string'">
 									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="(ok: boolean) => updateHiddenColumns(column.key, ok)">
@@ -178,7 +178,6 @@
 
 	import { computed, toRef, toRaw, ref, watch, nextTick, onMounted } from "vue";
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../../types";
-	import type { TableActions } from "../controls/tablegrid/UiTableActions.vue";
 
 	type DataTableColumnSource = DataTableColumn | string;
 
@@ -228,7 +227,7 @@
 			uniqueKey?: string;
 			clickable?: boolean;
 			// allowUnclick?: boolean;
-			clicked?: DataTableItem | undefined | null;
+			clicked?: DataTableItem | null;
 			selectable?: boolean;
 			disableHeader?: boolean;
 			disableFooter?: boolean;

@@ -35,7 +35,7 @@
 		}
 
 		.sidebar--menu--footer-credits {
-			@apply order-2 ml-8 min-w-[5rem] mr-3;
+			@apply order-2 ml-8 min-w-20 mr-3;
 
 			.mb-2 {
 				margin-bottom: 0.25rem;

@@ -19,7 +19,7 @@
 
 			.svws-ui-tr {
 				.svws-ui-td:last-child {
-					@apply !pr-0;
+					@apply pr-0!;
 				}
 			}
 

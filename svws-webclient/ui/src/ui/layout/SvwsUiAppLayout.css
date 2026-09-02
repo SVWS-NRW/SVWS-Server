@@ -12,20 +12,6 @@ html {
 }
 
 
-/*html {
-	font-size: 12px;
-	@apply bg-ui-neutral text-ui;
-
-	&.font-size-small {
-		font-size: 11px;
-	}
-
-	&.font-size-large {
-		font-size: 13px;
-	}
-}*/
-
-
 @media (min-width: 1280px) {
 	html {
 		font-size: 12px;
