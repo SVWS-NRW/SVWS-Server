@@ -1,5 +1,6 @@
 <template>
 	<div class="page page-grid-cards">
+		<VermerkartenNotify class="col-span-full font-bold text-center border rounded-sm p-2 text-ui-caution" />
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">

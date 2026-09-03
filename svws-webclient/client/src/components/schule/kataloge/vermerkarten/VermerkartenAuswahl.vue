@@ -18,7 +18,7 @@
 				<template #actions v-if="!readonly">
 					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
-							@click="gotoHinzufuegenView(true)"
+							@click="openModalVermerkarten"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -29,12 +29,30 @@
 				</template>
 			</svws-ui-table>
 		</div>
+		<!--
+			Das Modal ist hier direkt implementiert, weil es einzigartig ist und aktuell keine weitere Verwendung findet.
+		 	Hinweis auf Verordnung zur Schülerdatenverwaltung muss jedes Mal vor der Neuanlage einer Vermerktart als gelesen bestätigt werden
+		-->
+		<svws-ui-modal v-model:show="showModalVermerkarten" size="medium">
+			<template #modalTitle>
+				Neue Vermerkart anlegen
+			</template>
+			<template #modalContent>
+				<VermerkartenNotify class="text-center m-2 text-lg" />
+				<div class="mt-7 flex flex-row gap-4 justify-end">
+					<svws-ui-button type="secondary" @click="closeModalVermerkarten">Abbrechen</svws-ui-button>
+					<svws-ui-button @click="acceptModalVermerkarten">
+						Verstanden
+					</svws-ui-button>
+				</div>
+			</template>
+		</svws-ui-modal>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { VermerkartEintrag } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
@@ -49,6 +67,7 @@
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const showModalVermerkarten = ref<boolean>(false);
 	const searchTerm = computed<string>({
 		get: () => props.manager().searchTerm,
 		set: (v: string) => {
@@ -81,6 +100,19 @@
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2 },
 	];
+
+	function openModalVermerkarten() {
+		showModalVermerkarten.value = true;
+	}
+
+	function closeModalVermerkarten() {
+		showModalVermerkarten.value = false;
+	}
+
+	async function acceptModalVermerkarten() {
+		showModalVermerkarten.value = false;
+		await props.gotoHinzufuegenView(true);
+	}
 
 	function setAuswahl(vermerkarten: VermerkartEintrag[]): void {
 		props.manager().liste.auswahlClear();
