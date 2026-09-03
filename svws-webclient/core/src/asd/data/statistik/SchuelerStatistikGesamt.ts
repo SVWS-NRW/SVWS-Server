@@ -13,6 +13,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist.
+	 */
+	public idSchuljahresabschnitt: number | null = null;
+
+	/**
 	 * Die ID des Geschlechtes
 	 */
 	public geschlecht: number = 0;
@@ -196,6 +201,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.idSchuljahresabschnitt = (obj.idSchuljahresabschnitt === undefined) ? null : obj.idSchuljahresabschnitt === null ? null : obj.idSchuljahresabschnitt;
 		if (obj.geschlecht === undefined)
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
@@ -248,6 +254,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerStatistikGesamt): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + ((obj.idSchuljahresabschnitt === null) ? 'null' : obj.idSchuljahresabschnitt.toString()) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
@@ -296,6 +303,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + ((obj.idSchuljahresabschnitt === null) ? 'null' : obj.idSchuljahresabschnitt.toString()) + ',';
 		}
 		if (obj.geschlecht !== undefined) {
 			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';

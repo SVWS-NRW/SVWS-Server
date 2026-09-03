@@ -22,6 +22,10 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "die ID des Schülerdatensatzes", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
+	/** Die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist. */
+	@Schema(description = "die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist", example = "42")
+	public Long idSchuljahresabschnitt;
+
 	/** Die ID des Geschlechtes */
 	@Schema(description = "die ID des Geschlechtes", example = "3")
 	public int geschlecht;

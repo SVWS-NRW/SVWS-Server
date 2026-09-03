@@ -45,6 +45,7 @@ public interface SchuelerStammdatenMapper {
 	 * @return die befüllten {@link SchuelerStammdaten}
 	 */
 	@Mapping(target = "id", source = "ID")
+	@Mapping(target = "idSchuljahresabschnitt", source = "Schuljahresabschnitts_ID")
 	@Mapping(target = "foto", ignore = true)
 	@Mapping(target = "nachname", source = "Nachname")
 	@Mapping(target = "vorname", source = "Vorname")

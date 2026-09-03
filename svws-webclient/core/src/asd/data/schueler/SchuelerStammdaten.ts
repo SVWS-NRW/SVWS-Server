@@ -9,6 +9,11 @@ export class SchuelerStammdaten extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist.
+	 */
+	public idSchuljahresabschnitt: number | null = null;
+
+	/**
 	 * Das Foto (in Base64 kodiert) des Schülerdatensatzes.
 	 */
 	public foto: string | null = null;
@@ -264,6 +269,7 @@ export class SchuelerStammdaten extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.idSchuljahresabschnitt = (obj.idSchuljahresabschnitt === undefined) ? null : obj.idSchuljahresabschnitt === null ? null : obj.idSchuljahresabschnitt;
 		result.foto = (obj.foto === undefined) ? null : obj.foto === null ? null : obj.foto;
 		if (obj.nachname === undefined)
 			throw new Error('invalid json format, missing attribute nachname');
@@ -347,6 +353,7 @@ export class SchuelerStammdaten extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerStammdaten): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + ((obj.idSchuljahresabschnitt === null) ? 'null' : obj.idSchuljahresabschnitt.toString()) + ',';
 		result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
@@ -403,6 +410,9 @@ export class SchuelerStammdaten extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + ((obj.idSchuljahresabschnitt === null) ? 'null' : obj.idSchuljahresabschnitt.toString()) + ',';
 		}
 		if (obj.foto !== undefined) {
 			result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';

@@ -27971,6 +27971,7 @@ SchuelerStammdaten {
   "idGeburtslandMutter": null,
   "idGeburtslandVater": null,
   "idSchuelerausweis": null,
+  "idSchuljahresabschnitt": 1,
   "idStaatsangehoerigkeit": 68069085,
   "idStaatsangehoerigkeit2": null,
   "idVerkehrspracheFamilie": null,

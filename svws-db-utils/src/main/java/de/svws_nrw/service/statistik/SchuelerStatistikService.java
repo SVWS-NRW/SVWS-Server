@@ -169,6 +169,7 @@ public final class SchuelerStatistikService {
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 		final var daten = new SchuelerStatistikGesamt();
 		daten.id = dtoSchueler.ID;
+		daten.idSchuljahresabschnitt = dtoSchueler.Schuljahresabschnitts_ID;
 		daten.geschlecht = dtoSchueler.Geschlecht.id;
 		daten.geburtsdatum = dtoSchueler.Geburtsdatum;
 		daten.wohnortID = dtoSchueler.Ort_ID;

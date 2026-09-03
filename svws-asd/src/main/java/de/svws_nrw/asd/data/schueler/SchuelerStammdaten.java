@@ -20,6 +20,10 @@ public class SchuelerStammdaten {
 	@Schema(description = "die ID", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
+	/** Die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist. */
+	@Schema(description = "die ID des Schuljahresabschnitts, welchem der Schüler aktuell zugeordnet ist", example = "42")
+	public Long idSchuljahresabschnitt;
+
 	/** Das Foto (in Base64 kodiert) des Schülerdatensatzes. */
 	@Schema(description = "ggf. das Foto des Schülers (jpg, Base64-kodiert)", example = "ein Bild")
 	public String foto;
