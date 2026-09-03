@@ -7,13 +7,13 @@ export interface LehrerPersonaldatenProps {
 	mapSchulen: () => Map<string, SchulEintrag>;
 	patchPersonaldaten: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>;
 	patchAbschnittsdaten: (data: Partial<LehrerPersonalabschnittsdaten>, id: number) => Promise<void>;
-	patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<void>;
+	patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<boolean>;
 	addLehramt: (eintrag: Partial<LehrerLehramtEintrag>) => Promise<void>;
 	removeLehraemter: (eintraege: List<LehrerLehramtEintrag>) => Promise<void>;
-	patchLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => Promise<void>;
+	patchLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => Promise<boolean>;
 	addLehrbefaehigung: (eintrag: Partial<LehrerLehrbefaehigungEintrag>) => Promise<void>;
 	removeLehrbefaehigungen: (eintraege: List<LehrerLehrbefaehigungEintrag>) => Promise<void>;
-	patchFachrichtung: (eintrag: LehrerFachrichtungEintrag, patch: Partial<LehrerFachrichtungEintrag>) => Promise<void>;
+	patchFachrichtung: (eintrag: LehrerFachrichtungEintrag, patch: Partial<LehrerFachrichtungEintrag>) => Promise<boolean>;
 	addFachrichtung: (eintrag: Partial<LehrerFachrichtungEintrag>) => Promise<void>;
 	removeFachrichtungen: (eintraege: List<LehrerFachrichtungEintrag>) => Promise<void>;
 	addMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;

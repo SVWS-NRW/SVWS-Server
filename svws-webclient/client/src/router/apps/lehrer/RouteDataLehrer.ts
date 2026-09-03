@@ -372,6 +372,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
+		return true;
 	};
 
 	addLehrbefaehigung = async (eintrag: Partial<LehrerLehrbefaehigungEintrag>) => {
@@ -413,6 +414,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await api.server.patchLehrerLehrbefaehigung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
+		return true;
 	};
 
 	addFachrichtung = async (eintrag: Partial<LehrerFachrichtungEintrag>) => {
@@ -453,6 +455,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await api.server.patchLehrerFachrichtung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
+		return true;
 	};
 
 	get mapFaecher(): Map<number, FachDaten> {
