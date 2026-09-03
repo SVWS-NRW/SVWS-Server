@@ -19,7 +19,7 @@ public final class ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idLehrkraft   die Wochenstunden des Lehrer
+	 * @param idLehrkraft   der Lehrer
 	 * @param listLehrer    die Liste aller Lehrer dieser Schule
 	 * @param kontext       der Kontext des Validators
 	 */

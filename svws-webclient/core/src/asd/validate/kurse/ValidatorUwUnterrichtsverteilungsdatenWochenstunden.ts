@@ -10,8 +10,8 @@ export class ValidatorUwUnterrichtsverteilungsdatenWochenstunden extends Validat
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param wochenstundenKurs     die Wochenstunden des Kurses
-	 * @param kontext               der Kontext des Validators
+	 * @param wochenstundenKurs   die Wochenstunden des Kurses
+	 * @param kontext             der Kontext des Validators
 	 */
 	public constructor(wochenstundenKurs: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);

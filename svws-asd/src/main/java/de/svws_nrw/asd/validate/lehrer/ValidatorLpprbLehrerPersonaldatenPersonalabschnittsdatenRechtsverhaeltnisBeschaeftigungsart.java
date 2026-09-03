@@ -29,8 +29,6 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
-//		getNotNullSupplierObject
-
 	@NotNull Supplier<@NotNull DateManager> datumUebergabe = getNotNullSupplierObject(getDateManagerSupplier(() -> "1971-06-04"));
 
 		// Hier kann nicht nur die Vorbedingung 02 geprüft werden, da die ID's "null" sein könnten, muss vorher auch 00 und 01 geprüft werden

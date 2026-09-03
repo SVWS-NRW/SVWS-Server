@@ -1,20 +1,32 @@
-import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/ValidatorSsSchuelerStammdaten';
+import { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from '../../asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 import { ArrayList } from '../../java/util/ArrayList';
-import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { ValidatorSlSchuelerLernabschnittsdaten } from '../../asd/validate/schueler/ValidatorSlSchuelerLernabschnittsdaten';
 import { ValidatorKoKlassenOrganisationsform } from '../../asd/validate/klassen/ValidatorKoKlassenOrganisationsform';
 import { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from '../../asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
+import { ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft } from '../../asd/validate/kurse/ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft';
+import { ValidatorIolIntKatalogOrteLand } from '../../asd/validate/intKataloge/ValidatorIolIntKatalogOrteLand';
+import { ValidatorUwUnterrichtsverteilungsdatenWochenstunden } from '../../asd/validate/kurse/ValidatorUwUnterrichtsverteilungsdatenWochenstunden';
+import { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from '../../asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
+import { ValidatorKsKlassenSchulgliederung } from '../../asd/validate/klassen/ValidatorKsKlassenSchulgliederung';
+import { ValidatorIopIntKatalogOrtePlz } from '../../asd/validate/intKataloge/ValidatorIopIntKatalogOrtePlz';
+import type { List } from '../../java/util/List';
+import type { Supplier } from '../../java/util/function/Supplier';
+import { ValidatorIooIntKatalogOrteOrtsname } from '../../asd/validate/intKataloge/ValidatorIooIntKatalogOrteOrtsname';
+import { ValidatorKlKlassenKlassenleitung } from '../../asd/validate/klassen/ValidatorKlKlassenKlassenleitung';
+import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/ValidatorSsSchuelerStammdaten';
+import { ValidatorIkaIntKatalogKonfessionenAsdKatalog } from '../../asd/validate/intKataloge/ValidatorIkaIntKatalogKonfessionenAsdKatalog';
+import { ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from '../../asd/validate/kurse/ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
+import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
 import { ValidatorKkKlassenKlassenart } from '../../asd/validate/klassen/ValidatorKkKlassenKlassenart';
 import { ValidatorGsGesamtSchuelerdaten } from '../../asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 import { LehrerLehramt } from '../../asd/types/lehrer/LehrerLehramt';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
-import type { List } from '../../java/util/List';
-import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
 import { StatistikGesamt } from '../../asd/data/statistik/StatistikGesamt';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
+import { ValidatorUfUnterrichtsverteilungsdatenFach } from '../../asd/validate/kurse/ValidatorUfUnterrichtsverteilungsdatenFach';
 import { ValidatorLsLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLsLehrerStammdaten';
 
 export class ValidatorGesamt extends Validator {
@@ -63,9 +75,27 @@ export class ValidatorGesamt extends Validator {
 				this._validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
 			}
 		}
-		for (const klassen of gesamt.klassen) {
+		this._validatoren.add(new ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet({ get: () => gesamt.klassen }, this.kontext()));
+		for (const klasse of gesamt.klassen) {
 			this._validatoren.add(new ValidatorKkKlassenKlassenart({ get: () => null }, this.kontext()));
+			this._validatoren.add(new ValidatorKlKlassenKlassenleitung({ get: () => klasse.klassenLeitungen }, this.kontext()));
 			this._validatoren.add(new ValidatorKoKlassenOrganisationsform({ get: () => null }, { get: () => null }, { get: () => null }, this.kontext()));
+			this._validatoren.add(new ValidatorKsKlassenSchulgliederung({ get: () => null }, this.kontext()));
+		}
+		for (const religion of gesamt.religionen) {
+			this._validatoren.add(new ValidatorIkaIntKatalogKonfessionenAsdKatalog({ get: () => religion.idKatalog }, this.kontext()));
+		}
+		for (const ort of gesamt.orte) {
+			this._validatoren.add(new ValidatorIolIntKatalogOrteLand({ get: () => ort.idLand }, this.kontext()));
+			this._validatoren.add(new ValidatorIooIntKatalogOrteOrtsname({ get: () => ort.plz }, { get: () => ort.ortsname }, { get: () => ort.idLand }, this.kontext()));
+			this._validatoren.add(new ValidatorIopIntKatalogOrtePlz({ get: () => ort.plz }, { get: () => ort.ortsname }, { get: () => ort.idLand }, this.kontext()));
+		}
+		for (const kurs of gesamt.kurse) {
+			this._validatoren.add(new ValidatorUfUnterrichtsverteilungsdatenFach({ get: () => kurs.idFach }, this.kontext()));
+			this._validatoren.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.lehrer }, { get: () => gesamt.lehrer }, this.kontext()));
+			this._validatoren.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden({ get: () => kurs.wochenstunden as number }, this.kontext()));
+			this._validatoren.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft({ get: () => kurs.weitereLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
+			this._validatoren.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 		}
 		return true;
 	}

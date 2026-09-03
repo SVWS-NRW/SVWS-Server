@@ -85,6 +85,8 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
 						kontext));
 
+		_validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis, idBeschaeftigungsart,	kontext));
+
 	}
 
 	@Override

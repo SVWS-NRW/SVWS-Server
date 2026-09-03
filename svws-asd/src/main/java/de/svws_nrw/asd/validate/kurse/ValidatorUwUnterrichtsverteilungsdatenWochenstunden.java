@@ -15,8 +15,8 @@ public final class ValidatorUwUnterrichtsverteilungsdatenWochenstunden extends V
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param wochenstundenKurs     die Wochenstunden des Kurses
-	 * @param kontext               der Kontext des Validators
+	 * @param wochenstundenKurs   die Wochenstunden des Kurses
+	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorUwUnterrichtsverteilungsdatenWochenstunden(final @NotNull Supplier<@AllowNull Double> wochenstundenKurs, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
