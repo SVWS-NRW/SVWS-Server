@@ -40,7 +40,7 @@ export class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
 					}
 				}
 			}
-			this.addFehler(0, "Das Feld 'Ortsname' muss zulässig sein.");
+			this.addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
 			return false;
 		}
 		return true;

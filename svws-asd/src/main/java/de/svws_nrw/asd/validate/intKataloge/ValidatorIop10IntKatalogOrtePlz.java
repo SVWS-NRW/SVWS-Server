@@ -11,28 +11,24 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Validator IOO10: Prüft, ob Ort korrekt ist.
+ * Validator IOP10: Prüft, ob PLZ korrekt ist.
  */
-public final class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
+public final class ValidatorIop10IntKatalogOrtePlz extends Validator {
 
-	private final @NotNull Supplier<@AllowNull String> plz;
-	private final @NotNull Supplier<@AllowNull String> ortsname;
+	private final @NotNull Supplier<@NotNull String> plz;
 	private final @NotNull Supplier<@AllowNull Long> idLand;
 
 	/**
 	 * @param plz         die Postleitzahl
-	 * @param ortsname    der Name des Ortes
 	 * @param idLand      die ID des Landes
 	 * @param kontext	  Kontext
 	 */
-	public ValidatorIoo10IntKatalogOrteOrtsname(
-			final @NotNull Supplier<@AllowNull String> plz,
-			final @NotNull Supplier<@AllowNull String> ortsname,
+	public ValidatorIop10IntKatalogOrtePlz(
+			final @NotNull Supplier<@NotNull String> plz,
 			final @NotNull Supplier<@AllowNull Long> idLand,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.plz = plz;
-		this.ortsname = ortsname;
 		this.idLand = idLand;
 	}
 
@@ -42,22 +38,18 @@ public final class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
 		final Laender laender =
 				Laender.data().getWertByIDOrNull(idLand.get());
 
-		if (Laender.NW.equals(laender)) {
+		if (!Laender.NW.equals(laender)) {
 
-			String ortsnameString = ortsname.get();
 			String plzString = plz.get();
 
 			for (Orte ort : Orte.data().getWerte()) {
 				for (OrteKatalogEintrag orteKatalogEintrag : ort.historie()) {
-					if (orteKatalogEintrag.ort.equals(ortsnameString) && orteKatalogEintrag.plz.equals(plzString)) {
-						return true;
+					if (orteKatalogEintrag.plz.equals(plzString)) {
+						addFehler(0, "Für Orte, die nicht in Nordrhein-Westfalen liegen, darf keine in Nordrhein-Westfalen liegende Postleitzahl verwendet werden. Bitte prüfen!");
+						return false;
 					}
 				}
 			}
-
-			addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
-			return false;
-
 		}
 
 		return true;

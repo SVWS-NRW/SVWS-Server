@@ -353,6 +353,11 @@ export { ValidatorIoo01IntKatalogOrteOrtsname } from './asd/validate/intKataloge
 export { ValidatorIoo02IntKatalogOrteOrtsname } from './asd/validate/intKataloge/ValidatorIoo02IntKatalogOrteOrtsname';
 export { ValidatorIoo10IntKatalogOrteOrtsname } from './asd/validate/intKataloge/ValidatorIoo10IntKatalogOrteOrtsname';
 export { ValidatorIooIntKatalogOrteOrtsname } from './asd/validate/intKataloge/ValidatorIooIntKatalogOrteOrtsname';
+export { ValidatorIop00IntKatalogOrtePlz } from './asd/validate/intKataloge/ValidatorIop00IntKatalogOrtePlz';
+export { ValidatorIop01IntKatalogOrtePlz } from './asd/validate/intKataloge/ValidatorIop01IntKatalogOrtePlz';
+export { ValidatorIop02IntKatalogOrtePlz } from './asd/validate/intKataloge/ValidatorIop02IntKatalogOrtePlz';
+export { ValidatorIop10IntKatalogOrtePlz } from './asd/validate/intKataloge/ValidatorIop10IntKatalogOrtePlz';
+export { ValidatorIopIntKatalogOrtePlz } from './asd/validate/intKataloge/ValidatorIopIntKatalogOrtePlz';
 export { ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckp10KlassenKombinationKlassenjahrgangParallelitaet';
 export { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from './asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
 export { ValidatorKk00KlassenKlassenart } from './asd/validate/klassen/ValidatorKk00KlassenKlassenart';

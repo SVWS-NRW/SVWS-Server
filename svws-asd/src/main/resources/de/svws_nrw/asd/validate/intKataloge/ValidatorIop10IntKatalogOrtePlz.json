@@ -1,0 +1,24 @@
+{
+    "version": 1,
+    "validator": "de.svws_nrw.asd.validate.intKataloge.ValidatorIop10IntKatalogOrtePlz",
+    "historie": [{
+            "praefix": "IOP10",
+            "altes_kuerzel": "",
+            "zweig": "IntKatalog-Orte-Plz",
+            "dtos": "OrteStatistikGesamt",
+            "ausfuehrungsbereich_ui": "Schule, Kataloge, Orte",
+            "anzeigebereich_ui": "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+            "svws": true,
+            "zebras": true,
+            "vorbedingung": ["IOP00"],
+            "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+            "kann": [],
+            "hinweis": [],
+            "text": "Für Orte, die nicht in Nordrhein-Westfalen liegen, darf keine in Nordrhein-Westfalen liegende Postleitzahl verwendet werden. Bitte prüfen!",
+            "erlaeuterung": "Wenn ein anderes Bundesland als Nordrhein-Westfalen im Feld 'Land' eingetragen wurde, darf die PLZ nicht im vorhandenen Orte-Katalog auftauchen ('Ort' statt 'PLZ Ort').",
+            "bedingung": "siehe Erläuterung",
+            "gueltigVon": null,
+            "gueltigBis": null
+        }
+    ]
+}

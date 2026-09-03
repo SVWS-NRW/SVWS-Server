@@ -11,29 +11,27 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Validator IOO10: Prüft, ob Ort korrekt ist.
+ * Validator IOP01: Prüft, ob PLZ korrekt ist.
  */
-public final class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
+public final class ValidatorIop01IntKatalogOrtePlz extends Validator {
 
-	private final @NotNull Supplier<@AllowNull String> plz;
-	private final @NotNull Supplier<@AllowNull String> ortsname;
+	private final @NotNull Supplier<@NotNull String> plz;
 	private final @NotNull Supplier<@AllowNull Long> idLand;
 
 	/**
-	 * @param plz         die Postleitzahl
-	 * @param ortsname    der Name des Ortes
-	 * @param idLand      die ID des Landes
-	 * @param kontext	  Kontext
+	 * @param plz        die Postleitzahl
+	 * @param idLand     die ID des Landes
+	 * @param kontext    Kontext
 	 */
-	public ValidatorIoo10IntKatalogOrteOrtsname(
-			final @NotNull Supplier<@AllowNull String> plz,
-			final @NotNull Supplier<@AllowNull String> ortsname,
+	public ValidatorIop01IntKatalogOrtePlz(
+			final @NotNull Supplier<@NotNull String> plz,
 			final @NotNull Supplier<@AllowNull Long> idLand,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.plz = plz;
-		this.ortsname = ortsname;
 		this.idLand = idLand;
+		this.plz = plz;
+
+		_validatoren.add(new ValidatorIop02IntKatalogOrtePlz(plz, idLand, kontext));
 	}
 
 	@Override
@@ -44,18 +42,17 @@ public final class ValidatorIoo10IntKatalogOrteOrtsname extends Validator {
 
 		if (Laender.NW.equals(laender)) {
 
-			String ortsnameString = ortsname.get();
 			String plzString = plz.get();
 
 			for (Orte ort : Orte.data().getWerte()) {
 				for (OrteKatalogEintrag orteKatalogEintrag : ort.historie()) {
-					if (orteKatalogEintrag.ort.equals(ortsnameString) && orteKatalogEintrag.plz.equals(plzString)) {
+					if (plzString.equals(orteKatalogEintrag.plz)) {
 						return true;
 					}
 				}
 			}
 
-			addFehler(0, "Da der eigetragene Ort in Nordrhein-Westfalen liegt, muss die dazugehörige Postleitzahl auch in Nordrhein-Westfalen liegen. Bitte prüfen!");
+			addFehler(0, "Das Feld 'PLZ' muss zulässig sein.");
 			return false;
 
 		}

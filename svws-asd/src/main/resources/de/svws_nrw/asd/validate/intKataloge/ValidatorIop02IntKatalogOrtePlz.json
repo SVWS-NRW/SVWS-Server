@@ -1,0 +1,24 @@
+{
+    "version": 1,
+    "validator": "de.svws_nrw.asd.validate.intKataloge.ValidatorIop02IntKatalogOrtePlz",
+    "historie": [{
+            "praefix": "IOP02",
+            "altes_kuerzel": "",
+            "zweig": "IntKatalog-Orte-Plz",
+            "dtos": "OrteStatistikGesamt",
+            "ausfuehrungsbereich_ui": "Schule, Kataloge, Orte",
+            "anzeigebereich_ui": "Schüler, Feld 'Wohnort' und Lehrkräfte, Feld 'Wohnort'",
+            "svws": true,
+            "zebras": true,
+            "vorbedingung": ["IOP01"],
+            "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+            "kann": [],
+            "hinweis": [],
+            "text": "Der eingetragene Wert für das Feld 'PLZ' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+            "erlaeuterung": "Der Fehler soll nur bei ungültigen PLZ kommen, sofern als Bundesland Nordrhein-Westfalen eingetragen wurde.",
+            "bedingung": "OrteStatistikGesamt.idLand ≙ Bezeichner 'NW' in Laender.json ∧ OrteStatistikGesamt.plz ≠ einem zeitlich gültigen Historieneintrag im Attribut 'plz' in der Orte.json",
+            "gueltigVon": null,
+            "gueltigBis": null
+        }
+    ]
+}
