@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden",
+    "historie" : [ {
+      "praefix" : "ULW10",
+      "zweig" : "Unterrichtsverteilungsdaten-Lehrkraefte-Wochenstunden",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Wochenstunden'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Wochenstunden der Lehrkraft: Es sind nur Werte >= 0 erlaubt",
+      "erlaeuterung" : "",
+      "bedingung" : "KursDaten.wochenstunden < 0",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

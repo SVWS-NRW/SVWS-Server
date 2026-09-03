@@ -390,6 +390,9 @@ export { ValidatorUfUnterrichtsverteilungsdatenFach } from './asd/validate/kurse
 export { ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll00UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUll01UnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 export { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from './asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
+export { ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden';
+export { ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden';
+export { ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden } from './asd/validate/kurse/ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden';
 export { ValidatorUw00UnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUw00UnterrichtsverteilungsdatenWochenstunden';
 export { ValidatorUw10UnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUw10UnterrichtsverteilungsdatenWochenstunden';
 export { ValidatorUwUnterrichtsverteilungsdatenWochenstunden } from './asd/validate/kurse/ValidatorUwUnterrichtsverteilungsdatenWochenstunden';
