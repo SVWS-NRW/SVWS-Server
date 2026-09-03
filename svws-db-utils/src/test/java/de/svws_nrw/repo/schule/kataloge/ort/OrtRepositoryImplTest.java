@@ -243,4 +243,54 @@ class OrtRepositoryImplTest {
 					idOrt);
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// existsByIds
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("existsByIds")
+	class ExistsByIds {
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei null")
+		void existsByIds_null() {
+			final var result = repository.existsByIds(null);
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei leerer Liste")
+		void existsByIds_empty() {
+			final var result = repository.existsByIds(List.of());
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt nur die gefundenen IDs zurück")
+		void existsByIds_partialMatch() {
+			final var dto1 = new DTOOrt(1L, "53840", "Troisdorf");
+			final var dto2 = new DTOOrt(2L, "53111", "Bonn");
+
+			when(conn.queryList(DTOOrt.QUERY_LIST_PK, DTOOrt.class, List.of(1L, 2L, 99L)))
+					.thenReturn(List.of(dto1, dto2));
+
+			final var result = repository.existsByIds(List.of(1L, 2L, 99L));
+
+			assertThat(result).containsExactlyInAnyOrder(1L, 2L);
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück wenn keine IDs gefunden")
+		void existsByIds_noneFound() {
+			when(conn.queryList(DTOOrt.QUERY_LIST_PK, DTOOrt.class, List.of(99L)))
+					.thenReturn(List.of());
+
+			final var result = repository.existsByIds(List.of(99L));
+
+			assertThat(result).isEmpty();
+		}
+	}
 }

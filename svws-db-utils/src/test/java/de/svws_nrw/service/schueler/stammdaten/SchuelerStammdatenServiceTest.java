@@ -3,11 +3,13 @@ package de.svws_nrw.service.schueler.stammdaten;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.data.TransactionSupport;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schueler.stammdaten.SchuelerStammdatenMapper;
@@ -385,7 +387,7 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Religion nicht gefunden -> BAD_REQUEST")
 	void patch_religionNichtGefunden() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(religionRepository.existsById(42L)).thenReturn(false);
+		when(religionRepository.existsByIds(Set.of(42L))).thenReturn(Set.of());
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.religionID = JsonNullable.of(42L);
 
@@ -425,7 +427,7 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Fahrschülerart nicht gefunden -> BAD_REQUEST")
 	void patch_fahrschuelerartNichtGefunden() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(fahrschuelerartRepository.existsById(7L)).thenReturn(false);
+		when(fahrschuelerartRepository.existsByIds(Set.of(7L))).thenReturn(Set.of());
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.fahrschuelerArtID = JsonNullable.of(7L);
 
@@ -439,7 +441,7 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Haltestelle nicht gefunden -> BAD_REQUEST")
 	void patch_haltestelleNichtGefunden() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(haltestelleRepository.existsById(5L)).thenReturn(false);
+		when(haltestelleRepository.existsByIds(Set.of(5L))).thenReturn(Set.of());
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.haltestelleID = JsonNullable.of(5L);
 
@@ -467,7 +469,7 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Ort nicht gefunden -> NOT_FOUND")
 	void patch_ortNichtGefunden() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(ortRepository.existsById(100L)).thenReturn(false);
+		when(ortRepository.existsByIds(Set.of(100L))).thenReturn(Set.of());
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.wohnortID = JsonNullable.of(100L);
 		req.ortsteilID = JsonNullable.undefined();
@@ -482,12 +484,11 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Ortsteil nicht zum Ort -> BAD_REQUEST")
 	void patch_ortsteilPasstNichtZuOrt() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(ortRepository.existsById(100L)).thenReturn(true);
+		when(ortRepository.existsByIds(Set.of(100L))).thenReturn(Set.of(100L));
 
-		// Ortsteil gehört zu einem anderen Ort
-		final var falscherOrtsteil = new de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil(20L, "Falscher Ortsteil");
+		final var falscherOrtsteil = new DTOOrtsteil(20L, "Falscher Ortsteil");
 		falscherOrtsteil.idOrt = 999L;
-		when(ortsteilRepository.findById(20L)).thenReturn(Optional.of(falscherOrtsteil));
+		when(ortsteilRepository.findListByIds(Set.of(20L))).thenReturn(List.of(falscherOrtsteil));
 
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.wohnortID = JsonNullable.of(100L);
@@ -503,8 +504,8 @@ class SchuelerStammdatenServiceTest {
 	@DisplayName("patch - Ortsteil nicht gefunden -> NOT_FOUND")
 	void patch_ortsteilNichtGefunden() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(ortRepository.existsById(100L)).thenReturn(true);
-		when(ortsteilRepository.findById(20L)).thenReturn(Optional.empty());
+		when(ortRepository.existsByIds(Set.of(100L))).thenReturn(Set.of(100L));
+		when(ortsteilRepository.findListByIds(Set.of(20L))).thenReturn(List.of());
 
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.wohnortID = JsonNullable.of(100L);
@@ -551,9 +552,7 @@ class SchuelerStammdatenServiceTest {
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.idStaatsangehoerigkeit = JsonNullable.of(NATIONALITAET_DZA);
 
-		final var result = service.patch(1L, req);
-
-		assertThat(result).isEqualTo(apiModel);
+		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
 	}
 
 	@Test
@@ -565,9 +564,7 @@ class SchuelerStammdatenServiceTest {
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.idVerkehrspracheFamilie = JsonNullable.of(VERKEHRSSPRACHE_XY);
 
-		final var result = service.patch(1L, req);
-
-		assertThat(result).isEqualTo(apiModel);
+		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
 	}
 
 	@Test
@@ -579,29 +576,25 @@ class SchuelerStammdatenServiceTest {
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.idStaatsangehoerigkeit = JsonNullable.of(null);
 
-		final var result = service.patch(1L, req);
-
-		assertThat(result).isEqualTo(apiModel);
+		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
 	}
 
 	@Test
 	@DisplayName("patch - Ort und passender Ortsteil -> erfolgreich")
 	void patch_ortUndPassenderOrtsteil() {
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
-		when(ortRepository.existsById(100L)).thenReturn(true);
+		when(ortRepository.existsByIds(Set.of(100L))).thenReturn(Set.of(100L));
 
-		final var ortsteil = new de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil(20L, "Richtiger Ortsteil");
+		final var ortsteil = new DTOOrtsteil(20L, "Richtiger Ortsteil");
 		ortsteil.idOrt = 100L;
-		when(ortsteilRepository.findById(20L)).thenReturn(Optional.of(ortsteil));
+		when(ortsteilRepository.findListByIds(Set.of(20L))).thenReturn(List.of(ortsteil));
 		stubToApi(apiModel);
 
 		final var req = new SchuelerStammdatenPatchRequest();
 		req.wohnortID = JsonNullable.of(100L);
 		req.ortsteilID = JsonNullable.of(20L);
 
-		final var result = service.patch(1L, req);
-
-		assertThat(result).isEqualTo(apiModel);
+		assertThat(service.patch(1L, req)).isEqualTo(apiModel);
 	}
 
 	// =========================================================================
@@ -615,6 +608,7 @@ class SchuelerStammdatenServiceTest {
 		dto.id = 99L;
 
 		when(repository.findMapByIds(List.of(99L))).thenReturn(Map.of());
+		stubEmptyBulkContext();
 
 		assertThatException()
 				.isThrownBy(() -> service.patchMultiple(List.of(dto)))
@@ -638,6 +632,7 @@ class SchuelerStammdatenServiceTest {
 		when(repository.findMapByIds(List.of(1L, 2L))).thenReturn(Map.of(1L, entity, 2L, entity2));
 		when(mapper.toApi(entity)).thenReturn(apiModel);
 		when(mapper.toApi(entity2)).thenReturn(apiModel2);
+		stubEmptyBulkContext();
 
 		final var result = service.patchMultiple(List.of(dto1, dto2));
 
@@ -652,6 +647,7 @@ class SchuelerStammdatenServiceTest {
 		dto1.geschlecht = JsonNullable.of(GESCHLECHT_INVALID);
 
 		when(repository.findMapByIds(List.of(1L))).thenReturn(Map.of(1L, entity));
+		stubEmptyBulkContext();
 
 		assertThatException()
 				.isThrownBy(() -> service.patchMultiple(List.of(dto1)))
@@ -660,6 +656,8 @@ class SchuelerStammdatenServiceTest {
 
 		verify(mapper, never()).patch(any(), any());
 	}
+
+
 
 	// =========================================================================
 	// delete
@@ -735,5 +733,13 @@ class SchuelerStammdatenServiceTest {
 				idReligion,
 				1L
 		);
+	}
+
+	private void stubEmptyBulkContext() {
+		lenient().when(ortRepository.existsByIds(any())).thenReturn(Set.of());
+		lenient().when(ortsteilRepository.findListByIds(any())).thenReturn(List.of());
+		lenient().when(religionRepository.existsByIds(any())).thenReturn(Set.of());
+		lenient().when(fahrschuelerartRepository.existsByIds(any())).thenReturn(Set.of());
+		lenient().when(haltestelleRepository.existsByIds(any())).thenReturn(Set.of());
 	}
 }

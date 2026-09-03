@@ -251,4 +251,54 @@ class ReligionRepositoryImplTest {
 					idReligion);
 		}
 	}
+
+	// -------------------------------------------------------------------------
+	// existsByIds
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("existsByIds")
+	class ExistsByIds {
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei null")
+		void existsByIds_null() {
+			final var result = repository.existsByIds(null);
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei leerer Liste")
+		void existsByIds_empty() {
+			final var result = repository.existsByIds(List.of());
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt nur die gefundenen IDs zurück")
+		void existsByIds_partialMatch() {
+			final var dto1 = new DTOReligion(1L, "Christentum");
+			final var dto2 = new DTOReligion(2L, "Ohne");
+
+			when(conn.queryList(DTOReligion.QUERY_LIST_PK, DTOReligion.class, List.of(1L, 2L, 99L)))
+					.thenReturn(List.of(dto1, dto2));
+
+			final var result = repository.existsByIds(List.of(1L, 2L, 99L));
+
+			assertThat(result).containsExactlyInAnyOrder(1L, 2L);
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück wenn keine IDs gefunden")
+		void existsByIds_noneFound() {
+			when(conn.queryList(DTOReligion.QUERY_LIST_PK, DTOReligion.class, List.of(99L)))
+					.thenReturn(List.of());
+
+			final var result = repository.existsByIds(List.of(99L));
+
+			assertThat(result).isEmpty();
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package de.svws_nrw.repo.schule.kataloge.haltestelle;
 
+import java.util.List;
+
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import org.junit.jupiter.api.DisplayName;
@@ -87,6 +89,56 @@ class HaltestelleRepositoryImplTest {
 					DTOHaltestellen.QUERY_BY_ID,
 					DTOHaltestellen.class,
 					idHaltestelle);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// existsByIds
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("existsByIds")
+	class ExistsByIds {
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei null")
+		void existsByIds_null() {
+			final var result = repository.existsByIds(null);
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück bei leerer Liste")
+		void existsByIds_empty() {
+			final var result = repository.existsByIds(List.of());
+
+			assertThat(result).isEmpty();
+		}
+
+		@Test
+		@DisplayName("Gibt nur die gefundenen IDs zurück")
+		void existsByIds_partialMatch() {
+			final var dto1 = new DTOHaltestellen(1L, "Troisdorf");
+			final var dto2 = new DTOHaltestellen(2L, "Bonn");
+
+			when(conn.queryList(DTOHaltestellen.QUERY_LIST_PK, DTOHaltestellen.class, List.of(1L, 2L, 99L)))
+					.thenReturn(List.of(dto1, dto2));
+
+			final var result = repository.existsByIds(List.of(1L, 2L, 99L));
+
+			assertThat(result).containsExactlyInAnyOrder(1L, 2L);
+		}
+
+		@Test
+		@DisplayName("Gibt leeres Set zurück wenn keine IDs gefunden")
+		void existsByIds_noneFound() {
+			when(conn.queryList(DTOHaltestellen.QUERY_LIST_PK, DTOHaltestellen.class, List.of(99L)))
+					.thenReturn(List.of());
+
+			final var result = repository.existsByIds(List.of(99L));
+
+			assertThat(result).isEmpty();
 		}
 	}
 

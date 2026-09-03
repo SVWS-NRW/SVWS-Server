@@ -143,7 +143,15 @@ public final class SchuelerStammdatenService {
 		return TransactionSupport.transactional(() -> {
 			final var entityToPatch = repository.findById(id)
 					.orElseThrow(() -> new ApiOperationException(Response.Status.NOT_FOUND, DATEN_NOT_FOUND_BY_ID.formatted(id)));
-			validatePatch(patchRequest);
+			final var context = SchuelerStammdatenBulkValidationContext.load(
+					List.of(patchRequest),
+					ortRepository,
+					ortsteilRepository,
+					religionRepository,
+					fahrschuelerartRepository,
+					haltestelleRepository
+			);
+			validatePatch(patchRequest, context);
 			patch(patchRequest, entityToPatch);
 			return toApi(entityToPatch);
 		});
@@ -168,8 +176,17 @@ public final class SchuelerStammdatenService {
 					.toList();
 
 			final var toPatchById = this.repository.findMapByIds(idsToPatch);
+			final var context = SchuelerStammdatenBulkValidationContext.load(
+					dtos,
+					ortRepository,
+					ortsteilRepository,
+					religionRepository,
+					fahrschuelerartRepository,
+					haltestelleRepository
+			);
+
 			final var patchedEntities = dtos.stream()
-					.map(dto -> validateAndPatch(dto, toPatchById))
+					.map(dto -> validateAndPatch(dto, toPatchById, context))
 					.toList();
 
 			return toApi(patchedEntities);
@@ -177,15 +194,19 @@ public final class SchuelerStammdatenService {
 	}
 
 	@Nonnull
-	private DTOSchueler validateAndPatch(final SchuelerStammdatenBatchPatchRequest dto, final Map<Long, DTOSchueler> toPatchById) {
+	private DTOSchueler validateAndPatch(
+			final SchuelerStammdatenBatchPatchRequest dto,
+			final Map<Long, DTOSchueler> toPatchById,
+			final SchuelerStammdatenBulkValidationContext context) {
 		final var entity = toPatchById.get(dto.id);
 		if (entity == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, DATEN_NOT_FOUND_BY_ID.formatted(dto.id));
 		}
-		validatePatch(dto);
+		validatePatch(dto, context);
 		patch(dto, entity);
 		return entity;
 	}
+
 
 	/**
 	 * Löscht die Schüler mit den angegebenen IDs.
@@ -234,19 +255,28 @@ public final class SchuelerStammdatenService {
 	private void validateCreate(final SchuelerImportData dto) {
 		validateIdGeschlecht(dto.idGeschlecht());
 		validateIdSchuelerStatus(dto.idSchuelerStatus());
-		validateIdReligion(dto.idReligion());
+		validateIdReligionDirect(dto.idReligion());
 	}
 
-	private void validatePatch(final SchuelerStammdatenPatchRequest patchRequest) {
+	private void validateIdReligionDirect(final Long idReligion) {
+		if (idReligion == null) {
+			return;
+		}
+		if (!religionRepository.existsById(idReligion)) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Religionseintrag zur id %d gefunden.".formatted(idReligion));
+		}
+	}
+
+	private void validatePatch(final SchuelerStammdatenPatchRequest patchRequest, final SchuelerStammdatenBulkValidationContext context) {
 		patchRequest.geschlecht.ifPresent(this::validateIdGeschlecht);
-		validateWohnortAndOrtsteil(patchRequest.wohnortID, patchRequest.ortsteilID);
-		patchRequest.religionID.ifPresent(this::validateIdReligion);
+		validateWohnortAndOrtsteil(patchRequest.wohnortID, patchRequest.ortsteilID, context);
+		patchRequest.religionID.ifPresent(id -> validateIdReligion(id, context));
 		patchRequest.idStaatsangehoerigkeit.ifPresent(this::validateIdNationalitaet);
 		patchRequest.idStaatsangehoerigkeit2.ifPresent(this::validateIdNationalitaet);
 		patchRequest.idVerkehrspracheFamilie.ifPresent(this::validateIdVerkehrssprache);
 		patchRequest.status.ifPresent(this::validateIdSchuelerStatus);
-		patchRequest.fahrschuelerArtID.ifPresent(this::validateIdFahrschuelerart);
-		patchRequest.haltestelleID.ifPresent(this::validateIdHaltestelle);
+		patchRequest.fahrschuelerArtID.ifPresent(id -> validateIdFahrschuelerart(id, context));
+		patchRequest.haltestelleID.ifPresent(id -> validateIdHaltestelle(id, context));
 	}
 
 	private void validateIdSchuelerStatus(final int idSchuelerStatus) {
@@ -261,11 +291,11 @@ public final class SchuelerStammdatenService {
 		}
 	}
 
-	private void validateIdReligion(final Long idReligion) {
+	private void validateIdReligion(final Long idReligion, final SchuelerStammdatenBulkValidationContext context) {
 		if (idReligion == null) {
 			return;
 		}
-		if (!religionRepository.existsById(idReligion)) {
+		if (!context.existingReligionIds().contains(idReligion)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Religionseintrag zur id %d gefunden.".formatted(idReligion));
 		}
 	}
@@ -284,38 +314,42 @@ public final class SchuelerStammdatenService {
 			return;
 		}
 		if (Verkehrssprache.data().getWertByIDOrNull(idVerkehrssprache) == null) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Es wurde keine Verkehrssprache mit der ID %d gefunden.".formatted(idVerkehrssprache));
+			throw new ApiOperationException(Response.Status.BAD_REQUEST,
+					"Es wurde keine Verkehrssprache mit der ID %d gefunden." .formatted(idVerkehrssprache));
 		}
 	}
 
-	private void validateIdFahrschuelerart(final Long idFahrschuelerart) {
+	private void validateIdFahrschuelerart(final Long idFahrschuelerart, final SchuelerStammdatenBulkValidationContext context) {
 		if (idFahrschuelerart == null) {
 			return;
 		}
-		if (!fahrschuelerartRepository.existsById(idFahrschuelerart)) {
+		if (!context.existingFahrschuelerartIds().contains(idFahrschuelerart)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Es wurde keine Fahrschülerart mit der ID %d gefunden.".formatted(idFahrschuelerart));
 		}
 	}
 
-	private void validateIdHaltestelle(final Long idHaltestelle) {
+	private void validateIdHaltestelle(final Long idHaltestelle, final SchuelerStammdatenBulkValidationContext context) {
 		if (idHaltestelle == null) {
 			return;
 		}
-		if (!haltestelleRepository.existsById(idHaltestelle)) {
+		if (!context.existingHaltestelleIds().contains(idHaltestelle)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Es wurde keine Haltestelle mit der ID %d gefunden.".formatted(idHaltestelle));
 		}
 	}
 
-	private void validateWohnortAndOrtsteil(final JsonNullable<Long> idOrt, final JsonNullable<Long> idOrtsteil) {
+	private void validateWohnortAndOrtsteil(
+			final JsonNullable<Long> idOrt,
+			final JsonNullable<Long> idOrtsteil,
+			final SchuelerStammdatenBulkValidationContext context) {
 		if (!idOrt.isPresent() || (idOrt.get() == null)) {
 			validateOrtsteilOhneOrtNichtGesetzt(idOrtsteil);
 			return;
 		}
-		if (!ortExists(idOrt.get())) {
+		if (!context.existingOrtIds().contains(idOrt.get())) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND,
 					"Kein Ort zur ID %d gefunden.".formatted(idOrt.get()));
 		}
-		validateOrtsteilMatchesToOrt(idOrt.get(), idOrtsteil.get());
+		validateOrtsteilMatchesToOrt(idOrt.get(), idOrtsteil.get(), context);
 	}
 
 	private void validateOrtsteilOhneOrtNichtGesetzt(final JsonNullable<Long> idOrtsteil) {
@@ -325,27 +359,29 @@ public final class SchuelerStammdatenService {
 		}
 	}
 
-	private void validateOrtsteilMatchesToOrt(final Long idOrt, final Long idOrtsteil) {
-		if (!ortsteilIsNullOrMatchesToOrt(idOrt, idOrtsteil)) {
+	private void validateOrtsteilMatchesToOrt(
+			final Long idOrt,
+			final Long idOrtsteil,
+			final SchuelerStammdatenBulkValidationContext context) {
+		if (!ortsteilIsNullOrMatchesToOrt(idOrt, idOrtsteil, context)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST,
 					"Die Kombination von Ort und Ortsteil ist nicht zulässig. Der Ortsteil ist dem Ort nicht zugeordnet.");
 		}
 	}
 
-	private boolean ortsteilIsNullOrMatchesToOrt(final Long idOrt, final Long idOrtsteil) {
+	private boolean ortsteilIsNullOrMatchesToOrt(
+			final Long idOrt,
+			final Long idOrtsteil,
+			final SchuelerStammdatenBulkValidationContext context) {
 		if (idOrtsteil == null) {
 			return true;
 		}
-		final var ortsteil = ortsteilRepository.findById(idOrtsteil)
-				.orElseThrow(() -> new ApiOperationException(
-						Response.Status.NOT_FOUND,
-						"Kein Ortsteil zur ID %d gefunden.".formatted(idOrtsteil)
-				));
+		final var ortsteil = context.ortsteilById().get(idOrtsteil);
+		if (ortsteil == null) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND,
+					"Kein Ortsteil zur ID %d gefunden." .formatted(idOrtsteil));
+		}
 		return Objects.equals(ortsteil.idOrt, idOrt);
-	}
-
-	private boolean ortExists(final Long idOrt) {
-		return ortRepository.existsById(idOrt);
 	}
 
 }

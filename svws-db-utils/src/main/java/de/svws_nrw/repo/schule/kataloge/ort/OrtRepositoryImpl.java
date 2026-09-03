@@ -1,9 +1,11 @@
 package de.svws_nrw.repo.schule.kataloge.ort;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
@@ -58,5 +60,15 @@ public final class OrtRepositoryImpl extends RepositoryImpl<DTOOrt> implements O
 		return conn.existsBy(DTOOrt.QUERY_BY_ID, DTOOrt.class, idOrt);
 	}
 
+	@Override
+	public Set<Long> existsByIds(final Collection<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+		return conn.queryList(DTOOrt.QUERY_LIST_PK, DTOOrt.class, ids)
+				.stream()
+				.map(o -> o.id)
+				.collect(Collectors.toCollection(HashSet::new));
+	}
 
 }

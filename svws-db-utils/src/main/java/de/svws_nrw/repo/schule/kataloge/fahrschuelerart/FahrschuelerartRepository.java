@@ -1,5 +1,8 @@
 package de.svws_nrw.repo.schule.kataloge.fahrschuelerart;
 
+import java.util.Collection;
+import java.util.Set;
+
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.repo.Repository;
 
@@ -15,5 +18,13 @@ public interface FahrschuelerartRepository extends Repository<DTOFahrschuelerart
 	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
 	 */
 	boolean existsById(Long idFahrschuelerart);
+
+	/**
+	 * Gibt die Menge der IDs zurück, für die eine Fahrschülerart in der Datenbank existiert.
+	 *
+	 * @param ids die zu prüfenden IDs
+	 * @return Menge der gefundenen IDs
+	 */
+	Set<Long> existsByIds(Collection<Long> ids);
 
 }

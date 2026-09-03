@@ -1,5 +1,11 @@
 package de.svws_nrw.repo.schule.kataloge.haltestelle;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.repo.RepositoryImpl;
@@ -21,6 +27,17 @@ public final class HaltestelleRepositoryImpl extends RepositoryImpl<DTOHaltestel
 	@Override
 	public boolean existsById(final Long idHaltestelle) {
 		return conn.existsBy(DTOHaltestellen.QUERY_BY_ID, DTOHaltestellen.class, idHaltestelle);
+	}
+
+	@Override
+	public Set<Long> existsByIds(final Collection<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+		return conn.queryList(DTOHaltestellen.QUERY_LIST_PK, DTOHaltestellen.class, ids)
+				.stream()
+				.map(h -> h.ID)
+				.collect(Collectors.toCollection(HashSet::new));
 	}
 
 }

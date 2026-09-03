@@ -1,9 +1,11 @@
 package de.svws_nrw.repo.schule.kataloge.religion;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
@@ -53,6 +55,17 @@ public final class ReligionRepositoryImpl extends RepositoryImpl<DTOReligion> im
 	@Override
 	public boolean existsById(final Long idReligion) {
 		return conn.existsBy(DTOReligion.QUERY_BY_ID, DTOReligion.class, idReligion);
+	}
+
+	@Override
+	public Set<Long> existsByIds(final Collection<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+		return conn.queryList(DTOReligion.QUERY_LIST_PK, DTOReligion.class, ids)
+				.stream()
+				.map(r -> r.id)
+				.collect(Collectors.toCollection(HashSet::new));
 	}
 
 }

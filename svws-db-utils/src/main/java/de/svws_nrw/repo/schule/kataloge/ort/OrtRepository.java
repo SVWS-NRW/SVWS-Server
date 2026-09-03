@@ -1,5 +1,8 @@
 package de.svws_nrw.repo.schule.kataloge.ort;
 
+import java.util.Collection;
+import java.util.Set;
+
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 
@@ -31,5 +34,13 @@ public interface OrtRepository extends ReferencedBulkDeletionRepository<DTOOrt> 
 	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
 	 */
 	boolean existsById(Long idOrt);
+
+	/**
+	 * Gibt die Menge der IDs zurück, für die ein Ort in der Datenbank existiert.
+	 *
+	 * @param ids die zu prüfenden IDs
+	 * @return Menge der gefundenen IDs
+	 */
+	Set<Long> existsByIds(Collection<Long> ids);
 
 }

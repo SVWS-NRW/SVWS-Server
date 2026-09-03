@@ -1,5 +1,8 @@
 package de.svws_nrw.repo.schule.kataloge.religion;
 
+import java.util.Collection;
+import java.util.Set;
+
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
 import de.svws_nrw.repo.ReferencedBulkDeletionRepository;
 
@@ -38,5 +41,13 @@ public interface ReligionRepository extends ReferencedBulkDeletionRepository<DTO
 	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
 	 */
 	boolean existsById(Long idReligion);
+
+	/**
+	 * Gibt die Menge der IDs zurück, für die eine Religion in der Datenbank existiert.
+	 *
+	 * @param ids die zu prüfenden IDs
+	 * @return Menge der gefundenen IDs
+	 */
+	Set<Long> existsByIds(Collection<Long> ids);
 
 }
