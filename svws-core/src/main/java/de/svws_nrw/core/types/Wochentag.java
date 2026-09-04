@@ -73,4 +73,32 @@ public enum Wochentag {
 		return wochentage[id - 1];
 	}
 
+	/**
+	 * Liefert das {@link Wochentag}-Objekt anhand seiner ID oder null, falls die ID ungültig ist.
+	 *
+	 * @param id  Die ID des Wochentages.
+	 *
+	 * @return das {@link Wochentag}-Objekt oder null bei einer ungültigen ID.
+	 */
+	public static Wochentag fromIDorNull(final int id) {
+		switch (id) {
+			case 1:
+				return Wochentag.MONTAG;
+			case 2:
+				return Wochentag.DIENSTAG;
+			case 3:
+				return Wochentag.MITTWOCH;
+			case 4:
+				return Wochentag.DONNERSTAG;
+			case 5:
+				return Wochentag.FREITAG;
+			case 6:
+				return Wochentag.SAMSTAG;
+			case 7:
+				return Wochentag.SONNTAG;
+			default:
+				return null;
+		}
+	}
+
 }

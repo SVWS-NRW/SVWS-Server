@@ -95,6 +95,42 @@ export class Wochentag extends JavaEnum<Wochentag> {
 	}
 
 	/**
+	 * Liefert das {@link Wochentag}-Objekt anhand seiner ID oder null, falls die ID ungültig ist.
+	 *
+	 * @param id  Die ID des Wochentages.
+	 *
+	 * @return das {@link Wochentag}-Objekt oder null bei einer ungültigen ID.
+	 */
+	public static fromIDorNull(id: number): Wochentag | null {
+		switch (id) {
+			case 1: {
+				return Wochentag.MONTAG;
+			}
+			case 2: {
+				return Wochentag.DIENSTAG;
+			}
+			case 3: {
+				return Wochentag.MITTWOCH;
+			}
+			case 4: {
+				return Wochentag.DONNERSTAG;
+			}
+			case 5: {
+				return Wochentag.FREITAG;
+			}
+			case 6: {
+				return Wochentag.SAMSTAG;
+			}
+			case 7: {
+				return Wochentag.SONNTAG;
+			}
+			default: {
+				return null;
+			}
+		}
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

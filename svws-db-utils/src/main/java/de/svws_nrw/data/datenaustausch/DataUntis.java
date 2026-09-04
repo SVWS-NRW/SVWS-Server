@@ -66,6 +66,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.DateUtils;
@@ -199,6 +200,17 @@ public final class DataUntis {
 		int maxWochentyp = 0;
 		for (final UntisGPU001 u : unterrichte) {
 			logger.logLn("-> Importiere Unterricht: " + u.toString());
+			if (Wochentag.fromIDorNull(u.wochentag) == null) {
+				logger.logLn(2, "[Fehler] - Der Wochentag %d ist für den Unterricht mit der ID %d ungültig."
+						.formatted(u.wochentag, u.idUnterricht));
+				if (ignoreMissing) {
+					logger.logLn(2, "Der Unterricht-Eintrag wird ignoriert.");
+					continue;
+				}
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Der Wochentag %d ist für den Unterricht mit der ID %d ungültig."
+							.formatted(u.wochentag, u.idUnterricht));
+			}
 			// Bestimme den Zeitraster-Eintrag des neuen Stundenplans
 			final StundenplanZeitraster zeitraster = DataStundenplanZeitraster.getOrCreateZeitrasterEintrag(conn, idStundenplan, u.wochentag, u.stunde);
 			// Bestimme die Klasse des Unterrichtes
