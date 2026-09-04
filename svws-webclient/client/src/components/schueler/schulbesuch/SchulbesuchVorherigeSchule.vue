@@ -295,7 +295,7 @@
 	const herkunftsartenManager = new CoreTypeSelectManager({
 		clazz: Herkunftsarten.class,
 		schuljahr: schuljahr,
-		schulformen: props.model.schulformVorherigeSchule,
+		schulformen: schuleState.schulform,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});
