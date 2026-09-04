@@ -21,6 +21,10 @@ public class SchuelerSchulbesuchPatchRequest {
 	@Schema(description = "Die ID der zuvor besuchten Schule.", example = "12")
 	public JsonNullable<Long> idVorherigeSchule = JsonNullable.undefined();
 
+	/** Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule). */
+	@Schema(description = "Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule).", example = "1000")
+	public JsonNullable<Long> idHerkunftSchulformVorherigeSchule = JsonNullable.undefined();
+
 	/** Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch). */
 	@Schema(description = "Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).", example = "1000")
 	public JsonNullable<Long> idHerkunftSonstigeVorherigeSchule = JsonNullable.undefined();

@@ -22,7 +22,9 @@ import org.apache.commons.lang3.StringUtils;
  * <p>Es gibt drei Toggle-Optionen:
  *
  * <h2>1. Öffentliche oder Ersatzschule in NRW</h2>
- * Die Schulnummer beginnt intern mit "1". Die Schulform wird aus {@code Schulform.json} ermittelt.
+ * Die interne Schulnummer beginnt mit {@code "1"}. Die Schulform wird beim Setzen der Schule
+ * automatisch aus {@code Schulform.json} vorausgefüllt und kann danach nicht mehr über diesen
+ * Resolver geändert werden.
  *
  * <ul>
  *   <li>Schulform != BK, WB, SB:
@@ -36,7 +38,7 @@ import org.apache.commons.lang3.StringUtils;
  *     <ul>
  *       <li>{@code LSSchulNr} = interne Schulnummer aus {@code K_Schule.SchulNr}</li>
  *       <li>{@code LSSchulform} = Kürzel aus CoreType {@code Schulform.json}</li>
- *       <li>{@code LSSchulformSIM} = {@code null} (wird ggf. durch
+ *       <li>{@code LSSchulformSIM} = {@code null} (wird in einem separaten Patch über
  *           {@link #patchHerkunftbildungsgang} mit dem Schlüssel aus
  *           {@code HerkunftBildungsgang.json} befüllt)</li>
  *     </ul>
@@ -44,7 +46,11 @@ import org.apache.commons.lang3.StringUtils;
  * </ul>
  *
  * <h2>2. Sonstige Schule</h2>
- * Die Schulnummer beginnt intern mit "2". Die Schulform wird aus {@code HerkunftSchulform.json} ermittelt.
+ * Die interne Schulnummer beginnt mit {@code "2"} (Statistik-Schulnummer beginnt mit {@code "9"}).
+ * Beim Setzen der Schule über {@link #patchVorherigeSchuleAndSchulform} werden {@code LSSchulform}
+ * und {@code LSSchulformSIM} auf {@code null} zurückgesetzt. Die Schulform wird anschließend
+ * in einem separaten Patch über {@link #patchSchulformSonstigeVorherigeSchule} gesetzt und ist
+ * damit nachträglich änderbar.
  *
  * <ul>
  *   <li>Schulform != BK, WB, SB und != SF:
@@ -58,7 +64,7 @@ import org.apache.commons.lang3.StringUtils;
  *     <ul>
  *       <li>{@code LSSchulNr} = interne Schulnummer aus {@code K_Schule.SchulNr}</li>
  *       <li>{@code LSSchulform} = Kürzel aus CoreType {@code HerkunftSchulform.json}</li>
- *       <li>{@code LSSchulformSIM} = {@code null} (wird ggf. durch
+ *       <li>{@code LSSchulformSIM} = {@code null} (wird in einem separaten Patch über
  *           {@link #patchHerkunftbildungsgang} mit dem Schlüssel aus
  *           {@code HerkunftBildungsgang.json} befüllt)</li>
  *     </ul>
@@ -87,6 +93,9 @@ import org.apache.commons.lang3.StringUtils;
  *   <li>Schulgliederung: Wenn {@code LSSchulform} BK, WB oder SB ist und
  *       {@code LSSchulformSIM} gesetzt ist, wird {@code LSSchulformSIM} als Schlüssel
  *       aus {@code HerkunftBildungsgang.json} interpretiert.</li>
+ *   <li>Sonstige Schule: Wenn {@code LSSchulNr} mit {@code "2"} beginnt und
+ *       {@code LSSchulformSIM} gesetzt ist, wird {@code LSSchulformSIM} als Kürzel
+ *       aus {@code HerkunftSchulform.json} interpretiert.</li>
  *   <li>Kein Schulbesuch: Wenn {@code LSSchulNr} und {@code LSSchulform} {@code null} sind
  *       und {@code LSSchulformSIM} gesetzt ist, wird {@code LSSchulformSIM} als Kürzel
  *       aus {@code HerkunftSonstige.json} interpretiert.</li>
@@ -94,11 +103,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class SchuelerSchulbesuchResolver {
 
-
 	private SchuelerSchulbesuchResolver() {
 		/* This utility class should not be instantiated */
 	}
 
+	/**
+	 * Setzt den Herkunftstyp "Kein Schulbesuch" für die vorherige Schule.
+	 * Bei {@code id == null} werden {@code LSSchulform} und {@code LSSchulformSIM} auf {@code null} gesetzt.
+	 *
+	 * @param entity die Schüler-Entity, deren Felder gesetzt werden
+	 * @param id     die ID des CoreType-Eintrags aus {@code HerkunftSonstige.json}; {@code null} löscht den Eintrag
+	 * @throws ApiOperationException wenn kein Eintrag mit der angegebenen ID gefunden wurde
+	 */
 	static void patchHerkunftSonstigeVorherigeSchule(final DTOSchueler entity, final Long id) {
 		if (id == null) {
 			entity.LSSchulform = null;
@@ -111,6 +127,16 @@ public final class SchuelerSchulbesuchResolver {
 		entity.LSSchulformSIM = herkunftSonstige.kuerzel;
 	}
 
+	/**
+	 * Setzt die Schulgliederung (Herkunftbildungsgang) für die vorherige Schule.
+	 * Wird nur für Schulformen BK, WB und SB verwendet, bei denen {@code LSSchulformSIM}
+	 * nicht aus der Schulform selbst abgeleitet wird.
+	 * Bei {@code id == null} wird {@code LSSchulformSIM} auf {@code null} gesetzt.
+	 *
+	 * @param entity die Schüler-Entity, deren Feld {@code LSSchulformSIM} gesetzt wird
+	 * @param id     die ID des CoreType-Eintrags aus {@code HerkunftBildungsgang.json}; {@code null} löscht den Eintrag
+	 * @throws ApiOperationException wenn kein Eintrag mit der angegebenen ID gefunden wurde
+	 */
 	static void patchHerkunftbildungsgang(final DTOSchueler entity, final Long id) {
 		if (id == null) {
 			entity.LSSchulformSIM = null;
@@ -121,6 +147,25 @@ public final class SchuelerSchulbesuchResolver {
 		entity.LSSchulformSIM = herkunftBildungsgang.schluessel;
 	}
 
+	/**
+	 * Setzt die vorherige Schule und leitet die Schulform aus der gewählten Schule ab.
+	 * Bei {@code idSchule == null} werden alle drei Felder ({@code LSSchulNr}, {@code LSSchulform},
+	 * {@code LSSchulformSIM}) auf {@code null} gesetzt.
+	 *
+	 * <p>Für NRW-Schulen (interne Schulnummer beginnt mit {@code "1"}) wird {@code LSSchulform}
+	 * aus {@code Schulform.json} gesetzt. Für sonstige Schulen (interne Schulnummer beginnt mit
+	 * {@code "2"}) werden {@code LSSchulform} und {@code LSSchulformSIM} auf {@code null} gesetzt;
+	 * die Schulform wird in einem separaten Patch über {@link #patchSchulformSonstigeVorherigeSchule}
+	 * nachgepflegt.
+	 *
+	 * <p>Ein Schulwechsel setzt eine ggf. vorhandene Schulgliederung ({@code LSSchulformSIM}) zurück.
+	 * Sie muss danach über {@link #patchHerkunftbildungsgang} neu gesetzt werden.
+	 *
+	 * @param entity      die Schüler-Entity, deren Felder gesetzt werden
+	 * @param idSchule    die ID der Schule aus {@code K_Schule}; {@code null} löscht die Zuordnung
+	 * @param dataSchulen Datenzugriff auf den Schulkatalog
+	 * @throws ApiOperationException wenn die Schule keine gültige Schulnummer oder Schulform hat
+	 */
 	static void patchVorherigeSchuleAndSchulform(final DTOSchueler entity, final Long idSchule, final DataSchulen dataSchulen) {
 		if (idSchule == null) {
 			entity.LSSchulNr = null;
@@ -134,6 +179,42 @@ public final class SchuelerSchulbesuchResolver {
 		entity.LSSchulform = null;
 		entity.LSSchulformSIM = null;
 		patchSchulform(entity, schule);
+	}
+
+	/**
+	 * Setzt die Schulform für eine sonstige vorherige Schule anhand der ID aus {@code HerkunftSchulform.json}.
+	 * Diese Methode wird in einem separaten Patch nach {@link #patchVorherigeSchuleAndSchulform} aufgerufen.
+	 * Bei {@code idSchulform == null} werden {@code LSSchulform} und {@code LSSchulformSIM} auf {@code null} gesetzt.
+	 *
+	 * <p>Sonderfall SF (Sonstige Schulform):
+	 * {@code LSSchulform} wird auf {@code null} gesetzt, {@code LSSchulformSIM} erhält das Kürzel SF.
+	 *
+	 * <p>Für BK, WB und SB wird {@code LSSchulformSIM} auf {@code null} gesetzt; die Schulgliederung
+	 * wird in einem weiteren Patch über {@link #patchHerkunftbildungsgang} gesetzt.
+	 *
+	 * @param entity      die Schüler-Entity, deren Felder {@code LSSchulform} und {@code LSSchulformSIM} gesetzt werden
+	 * @param idSchulform die ID des CoreType-Eintrags aus {@code HerkunftSchulform.json}; {@code null} löscht den Eintrag
+	 * @throws ApiOperationException wenn kein Eintrag mit der angegebenen ID gefunden wurde
+	 */
+	static void patchSchulformSonstigeVorherigeSchule(final DTOSchueler entity, final Long idSchulform) {
+		if (idSchulform == null) {
+			entity.LSSchulform = null;
+			entity.LSSchulformSIM = null;
+			return;
+		}
+		final String kuerzel = Optional.ofNullable(HerkunftSchulform.data().getEintragByID(idSchulform))
+				.map(s -> s.kuerzel)
+				.filter(StringUtils::isNotBlank)
+				.orElseThrow(
+						() -> new ApiOperationException(Response.Status.BAD_REQUEST, "Keine HerkunftSchulform mit der ID %d gefunden.".formatted(idSchulform)));
+
+		if (isSonstigeSchulform(kuerzel)) {
+			entity.LSSchulform = null;
+			entity.LSSchulformSIM = kuerzel;
+			return;
+		}
+		entity.LSSchulform = kuerzel;
+		entity.LSSchulformSIM = isBKorWBorSB(kuerzel) ? null : kuerzel;
 	}
 
 	private static void validateSchule(final SchulEintrag schule) {
@@ -152,7 +233,7 @@ public final class SchuelerSchulbesuchResolver {
 		if (isOeffentlicheOderErsatzschuleInNRW(schule.schulnummerIntern)) {
 			patchSchulformNRW(entity, schule.idSchulform);
 		} else if (isSonstigeSchule(schule.schulnummerIntern)) {
-			patchSchulformSonstige(entity, schule.idSchulform);
+			patchSchulformSonstigeVorherigeSchule(entity, schule.idSchulform);
 		}
 	}
 
@@ -166,28 +247,19 @@ public final class SchuelerSchulbesuchResolver {
 		entity.LSSchulformSIM = isBKorWBorSB(kuerzel) ? null : kuerzel;
 	}
 
-	private static void patchSchulformSonstige(final DTOSchueler entity, final Long idSchulform) {
-		final String kuerzel = Optional.ofNullable(HerkunftSchulform.data().getEintragByID(idSchulform))
-				.map(s -> s.kuerzel)
-				.filter(StringUtils::isNotBlank)
-				.orElseThrow(
-						() -> new ApiOperationException(Response.Status.BAD_REQUEST, "Keine HerkunftSchulform mit der ID %d gefunden.".formatted(idSchulform)));
-
-		if (isSonstigeSchulform(kuerzel)) {
-			entity.LSSchulform = null;
-			entity.LSSchulformSIM = kuerzel;
-			return;
-		}
-		entity.LSSchulform = kuerzel;
-		entity.LSSchulformSIM = isBKorWBorSB(kuerzel) ? null : kuerzel;
-	}
-
 	private static boolean isOeffentlicheOderErsatzschuleInNRW(final String schulnummer) {
+		if (schulnummer == null) {
+			return false;
+		}
 		return schulnummer.startsWith("1");
 	}
 
 	private static boolean isSonstigeSchule(final String schulnummerIntern) {
-		// Interne Schulnummern für sonstige Schulen werden in DataSchulen:updateSchulnummer() generiert
+		if (schulnummerIntern == null) {
+			return false;
+		}
+		// Interne Schulnummern für sonstige Schulen beginnen mit "2" (generiert aus ID + 200000 in DataSchulen).
+		// Die Statistik-Schulnummer beginnt dagegen mit "9" — diese Methode arbeitet ausschließlich auf der internen Nummer.
 		return schulnummerIntern.startsWith("2");
 	}
 
@@ -205,19 +277,16 @@ public final class SchuelerSchulbesuchResolver {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Falls es sich bei der Auswahl der vorherigen Schule um BK, SB oder WB handelt und eine Schulgliederung hinterlegt ist,
-	 * wird die id des CoreTypes HerkunftBildungsgang.json gemapped
+	 * Mappt die Schulgliederung der vorherigen Schule auf die ID des CoreType-Eintrags aus {@code HerkunftBildungsgang.json}.
 	 *
-	 * <p>Die Abbildung erfolgt nur, wenn die vorherige Schule eine BK-, SB- oder
-	 * WB-Schulform hat und {@code LSSchulformSIM} gesetzt ist. Ist kein passender
-	 * CoreType-Eintrag für das angegebene Schuljahr vorhanden, wird
-	 * {@code idSchulgliederungVorherigeSchule} auf {@code null} gesetzt.
+	 * <p>Die Abbildung erfolgt nur, wenn die vorherige Schule eine BK-, SB- oder WB-Schulform hat
+	 * und {@code LSSchulformSIM} gesetzt ist. Ist kein passender CoreType-Eintrag für das angegebene
+	 * Schuljahr vorhanden, wird {@code idSchulgliederungVorherigeSchule} auf {@code null} gesetzt.
 	 *
-	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr},
-	 *                  {@code LSSchulform} und {@code LSSchulformSIM}
-	 * @param target    das Zielobjekt, in dem {@code idSchulgliederungVorherigeSchule}
-	 *                  gesetzt wird
-	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird
+	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
+	 * @param target    das Zielobjekt, in dem {@code idSchulgliederungVorherigeSchule} gesetzt wird
+	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
+	 *                  ist {@code null}, wird kein Mapping vorgenommen
 	 */
 	public static void mapSchulgliederung(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
 		if (schulgliederungGesetzt(entity) && (schuljahr != null)) {
@@ -236,24 +305,44 @@ public final class SchuelerSchulbesuchResolver {
 	}
 
 	/**
-	 * Falls es sich bei der Auswahl der vorherigen Schule um "Kein Schulbesuch" handelt (Keine Schulnummer in der entity hinterlegt)
-	 * wird die id des CoreTypes HerkunftSonstige.json gemapped
+	 * Mappt den Herkunftstyp "Kein Schulbesuch" auf die ID des CoreType-Eintrags aus {@code HerkunftSonstige.json}.
 	 *
-	 * <p>Die Abbildung erfolgt nur, wenn keine Schulnummer ({@code LSSchulNr}) und
-	 * keine Schulform ({@code LSSchulform}) gesetzt sind, aber {@code LSSchulformSIM}
-	 * einen Wert enthält. Ist kein passender CoreType-Eintrag für das angegebene
-	 * Schuljahr vorhanden, wird {@code idHerkunftSonstigeVorherigeSchule} auf
-	 * {@code null} gesetzt.
+	 * <p>Die Abbildung erfolgt nur, wenn keine Schulnummer ({@code LSSchulNr}) und keine Schulform
+	 * ({@code LSSchulform}) gesetzt sind, aber {@code LSSchulformSIM} einen Wert enthält. Ist kein
+	 * passender CoreType-Eintrag für das angegebene Schuljahr vorhanden, wird
+	 * {@code idHerkunftSonstigeVorherigeSchule} auf {@code null} gesetzt.
 	 *
-	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr},
-	 *                  {@code LSSchulform} und {@code LSSchulformSIM}
-	 * @param target    das Zielobjekt, in dem {@code idHerkunftSonstigeVorherigeSchule}
-	 *                  gesetzt wird
-	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird
+	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
+	 * @param target    das Zielobjekt, in dem {@code idHerkunftSonstigeVorherigeSchule} gesetzt wird
+	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
+	 *                  ist {@code null}, wird kein Mapping vorgenommen
 	 */
 	public static void mapHerkunftSonstige(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
 		if (keinSchulbesuch(entity) && (schuljahr != null)) {
 			target.idHerkunftSonstigeVorherigeSchule = Optional.ofNullable(HerkunftSonstige.data().getWertByKuerzel(entity.LSSchulformSIM))
+					.map(h -> h.daten(schuljahr))
+					.map(h -> h.id)
+					.orElse(null);
+		}
+	}
+
+	/**
+	 * Mappt die Schulform einer sonstigen vorherigen Schule auf die ID des CoreType-Eintrags aus {@code HerkunftSchulform.json}.
+	 *
+	 * <p>Die Abbildung erfolgt nur, wenn die interne Schulnummer ({@code LSSchulNr}) mit {@code "2"} beginnt
+	 * und {@code LSSchulformSIM} gesetzt ist. Ist kein passender CoreType-Eintrag für das angegebene
+	 * Schuljahr vorhanden, wird {@code idHerkunftSchulformVorherigeSchule} auf {@code null} gesetzt.
+	 *
+	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
+	 * @param target    das Zielobjekt, in dem {@code idHerkunftSchulformVorherigeSchule} gesetzt wird
+	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
+	 *                  ist {@code null}, wird kein Mapping vorgenommen
+	 */
+	public static void mapHerkunftSchulform(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
+		// falls schulform == "SF" -> dann wird die Schulform in LSSchulformSIM gespeichert und nicht in LSSchulform
+		final var schulform = (entity.LSSchulform == null) ? entity.LSSchulformSIM : entity.LSSchulform;
+		if (isSonstigeSchule(entity.LSSchulNr) && (schuljahr != null) && (schulform != null)) {
+			target.idHerkunftSchulformVorherigeSchule = Optional.ofNullable(HerkunftSchulform.data().getWertByKuerzel(schulform))
 					.map(h -> h.daten(schuljahr))
 					.map(h -> h.id)
 					.orElse(null);

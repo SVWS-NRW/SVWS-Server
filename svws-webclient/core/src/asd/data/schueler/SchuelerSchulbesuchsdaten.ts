@@ -28,6 +28,11 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public idVorherigeSchule: number | null = null;
 
 	/**
+	 * Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule).
+	 */
+	public idHerkunftSchulformVorherigeSchule: number | null = null;
+
+	/**
 	 * Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).
 	 */
 	public idHerkunftSonstigeVorherigeSchule: number | null = null;
@@ -208,6 +213,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute berufsabschlussVorhanden');
 		result.berufsabschlussVorhanden = obj.berufsabschlussVorhanden;
 		result.idVorherigeSchule = (obj.idVorherigeSchule === undefined) ? null : obj.idVorherigeSchule === null ? null : obj.idVorherigeSchule;
+		result.idHerkunftSchulformVorherigeSchule = (obj.idHerkunftSchulformVorherigeSchule === undefined) ? null : obj.idHerkunftSchulformVorherigeSchule === null ? null : obj.idHerkunftSchulformVorherigeSchule;
 		result.idHerkunftSonstigeVorherigeSchule = (obj.idHerkunftSonstigeVorherigeSchule === undefined) ? null : obj.idHerkunftSonstigeVorherigeSchule === null ? null : obj.idHerkunftSonstigeVorherigeSchule;
 		result.entlassdatumVorherigeSchule = (obj.entlassdatumVorherigeSchule === undefined) ? null : obj.entlassdatumVorherigeSchule === null ? null : obj.entlassdatumVorherigeSchule;
 		result.kuerzelEntlassjahrgangVorherigeSchule = (obj.kuerzelEntlassjahrgangVorherigeSchule === undefined) ? null : obj.kuerzelEntlassjahrgangVorherigeSchule === null ? null : obj.kuerzelEntlassjahrgangVorherigeSchule;
@@ -262,6 +268,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		result += '"schluesselHoechsterSchulabschluss" : ' + ((obj.schluesselHoechsterSchulabschluss === null) ? 'null' : JSON.stringify(obj.schluesselHoechsterSchulabschluss)) + ',';
 		result += '"berufsabschlussVorhanden" : ' + obj.berufsabschlussVorhanden.toString() + ',';
 		result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
+		result += '"idHerkunftSchulformVorherigeSchule" : ' + ((obj.idHerkunftSchulformVorherigeSchule === null) ? 'null' : obj.idHerkunftSchulformVorherigeSchule.toString()) + ',';
 		result += '"idHerkunftSonstigeVorherigeSchule" : ' + ((obj.idHerkunftSonstigeVorherigeSchule === null) ? 'null' : obj.idHerkunftSonstigeVorherigeSchule.toString()) + ',';
 		result += '"entlassdatumVorherigeSchule" : ' + ((obj.entlassdatumVorherigeSchule === null) ? 'null' : JSON.stringify(obj.entlassdatumVorherigeSchule)) + ',';
 		result += '"kuerzelEntlassjahrgangVorherigeSchule" : ' + ((obj.kuerzelEntlassjahrgangVorherigeSchule === null) ? 'null' : JSON.stringify(obj.kuerzelEntlassjahrgangVorherigeSchule)) + ',';
@@ -325,6 +332,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		}
 		if (obj.idVorherigeSchule !== undefined) {
 			result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
+		}
+		if (obj.idHerkunftSchulformVorherigeSchule !== undefined) {
+			result += '"idHerkunftSchulformVorherigeSchule" : ' + ((obj.idHerkunftSchulformVorherigeSchule === null) ? 'null' : obj.idHerkunftSchulformVorherigeSchule.toString()) + ',';
 		}
 		if (obj.idHerkunftSonstigeVorherigeSchule !== undefined) {
 			result += '"idHerkunftSonstigeVorherigeSchule" : ' + ((obj.idHerkunftSonstigeVorherigeSchule === null) ? 'null' : obj.idHerkunftSonstigeVorherigeSchule.toString()) + ',';

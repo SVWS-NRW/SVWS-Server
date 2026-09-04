@@ -35,12 +35,13 @@
 			<svws-ui-text-input placeholder="Schulform" v-if="schuleInNRWSelected"
 				:model-value="model.bezeichnungSchulformVorherigeSchule.value"
 				statistics readonly />
-			<svws-ui-text-input placeholder="Schulform" v-if="sonstigeSchuleSelected"
-				:model-value="model.bezeichnungHerkunftSchulformVorherigeSchule.value"
-				statistics readonly />
+			<ui-select label="Schulform" v-if="sonstigeSchuleSelected"
+				:manager="herkunftSchulformManager"
+				v-model="model.herkunftSchulformVorherigeSchule.value"
+				:readonly :disabled="keineSchuleAusgewaehlt" required :removable="false" />
 			<ui-select label="vorherige Tätigkeit / Herkunft" v-if="currentMode === Schulauswahl.KEIN_SCHULBESUCH"
 				:manager="schulformVorherigKeinAbschlussManager"
-				v-model="model.schulformVorherigeSchuleKeinSchulbesuch.value"
+				v-model="model.herkunftSonstigeKeinSchulbesuch.value"
 				:readonly required :removable="false" />
 			<svws-ui-text-input placeholder="Statistik-Schulnummer" v-if="!keinSchulbesuchSelected"
 				:model-value="model.schulnummerStatistik.value"
@@ -95,9 +96,8 @@
 
 
 	import { computed, ref, watch } from "vue";
-	import { ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige,
-		Hochschulabschluss, Jahrgaenge, SchulabschlussAllgemeinbildend,
-		SchulabschlussBerufsbildend, Schulform } from "@core";
+	import { ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige, Jahrgaenge, SchulabschlussAllgemeinbildend,
+		SchulabschlussBerufsbildend, Schulform, HerkunftSchulform, Hochschulabschluss } from "@core";
 	import type { List, SchulEintrag, KatalogEntlassgrund } from "@core";
 	import type { SchuelerSchulbesuchManager } from "@ui";
 	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
@@ -152,6 +152,7 @@
 		|| (schuleState.schulform === Schulform.SB)
 		|| (schuleState.schulform === Schulform.WB)
 	);
+	const keineSchuleAusgewaehlt = computed(() => props.model.proxy.idVorherigeSchule === null);
 
 	watch(() => props.manager().daten.id, () => {
 		schulauswahlMode.value = null;
@@ -233,6 +234,14 @@
 	function bezeichnungSchule(s: SchulEintrag) {
 		return `${s.schulnummerStatistik}: ${s.name}`;
 	}
+
+	const herkunftSchulformManager = new CoreTypeSelectManager({
+		clazz: HerkunftSchulform.class,
+		schuljahr: schuljahr,
+		schulformen: props.model.schulformVorherigeSchule,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
+	});
 
 	const vorherigeEntlassjahrgaengeManager = new CoreTypeSelectManager({
 		clazz: Jahrgaenge.class,

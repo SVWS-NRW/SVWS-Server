@@ -114,6 +114,22 @@ public interface SchulbesuchMapper {
 	}
 
 	/**
+	 * Falls es sich bei der Auswahl der vorherigen Schule um "Sonstige Schule" handelt (interne Schulnummer startet mit "2")
+	 * wird die id des CoreTypes HerkunftSchulform.json gemapped
+	 *
+	 * @param entity die Schüler-Entity mit dem Quellfeld
+	 * @param ctx    der Kontext
+	 * @param target das bereits gemappte Zielobjekt
+	 */
+	@AfterMapping
+	default void mapHerkunftSchulform(
+			final DTOSchueler entity,
+			@Context final SchulbesuchMappingContext ctx,
+			@MappingTarget final SchuelerSchulbesuchsdaten target) {
+		SchuelerSchulbesuchResolver.mapHerkunftSchulform(entity, target, ctx.jahrEntlassungVorherigeSchule());
+	}
+
+	/**
 	 * Falls es sich bei der Auswahl der vorherigen Schule um BK, SB oder WB handelt und eine Schulgliederung hinterlegt ist,
 	 * wird die id des CoreTypes HerkunftBildungsgang.json gemapped
 	 *
@@ -128,8 +144,6 @@ public interface SchulbesuchMapper {
 			@MappingTarget final SchuelerSchulbesuchsdaten target) {
 		SchuelerSchulbesuchResolver.mapSchulgliederung(entity, target, ctx.jahrEntlassungVorherigeSchule());
 	}
-
-
 
 	/**
 	 * Setzt nach dem Mapping die Merkmale und bisherigen Schulen aus dem {@link SchulbesuchMappingContext}.

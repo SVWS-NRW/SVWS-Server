@@ -34,6 +34,10 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
 
+	/** Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule). */
+	@Schema(description = "Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule).", example = "1000")
+	public Long idHerkunftSchulformVorherigeSchule;
+
 	/** Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch). */
 	@Schema(description = "Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).", example = "1000")
 	public Long idHerkunftSonstigeVorherigeSchule;

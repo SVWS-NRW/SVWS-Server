@@ -118,10 +118,6 @@ public final class SchuelerSchulbesuchService {
 	}
 
 	private void validateAndResolvePatch(final DTOSchueler entity, final SchuelerSchulbesuchPatchRequest patchRequest) {
-		if (patchRequest.idVorherigeSchule.isPresent() && patchRequest.idHerkunftSonstigeVorherigeSchule.isPresent()) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"idVorherigeSchule und idHerkunftSonstigeVorherigeSchule dürfen nicht gleichzeitig gesetzt sein");
-		}
 		patchRequest.idVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchVorherigeSchuleAndSchulform(entity, id, dataSchulen));
 		patchRequest.idEntlassgrundVorherigeSchule.ifPresent(id -> patchLSEntlassgrund(entity, id));
 		patchRequest.idEntlassgrundDieseSchule.ifPresent(id -> patchEntlassgrund(entity, id));
@@ -135,6 +131,7 @@ public final class SchuelerSchulbesuchService {
 		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
 		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, id));
 		patchRequest.idHochschulabschluss.ifPresent(this::validateIdHochschulabschluss);
+		patchRequest.idHerkunftSchulformVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, id));
 		patchAbschlussartVorherigeSchule(entity, patchRequest);
 	}
 
