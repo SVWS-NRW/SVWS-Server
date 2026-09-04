@@ -4,25 +4,23 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card class="col-span-full">
-			<svws-ui-table :items="props.lehrerLernplattformen()" :columns
+			<svws-ui-table :items="lernplattformenProxies" :columns
 				no-data-text="Aktuell gibt es keine Einträge im Katalog 'Lernplattformen'."
 				:no-data="noEntries">
-				<template #cell(idLernplattform)="{ value }">
-					{{ getBezeichnungLernplattform(value) }}
+				<template #cell(idLernplattform)="{ rowData }">
+					{{ getBezeichnungLernplattform(rowData.proxy.idLernplattform) }}
 				</template>
 				<template #cell(EinwilligungAbgefragt)="{ rowData }">
-					<svws-ui-checkbox :model-value="rowData.einwilligungAbgefragt"
-						@update:model-value="value => patch({ einwilligungAbgefragt: value }, rowData.idLernplattform)" :readonly />
+					<svws-ui-checkbox v-model="rowData.proxy.einwilligungAbgefragt" :readonly />
 				</template>
 				<template #cell(EinwilligungNutzung)="{ rowData }">
-					<svws-ui-checkbox :model-value="rowData.einwilligungNutzung"
-						@update:model-value="value => patch({ einwilligungNutzung: value }, rowData.idLernplattform)" :readonly />
+					<svws-ui-checkbox v-model="rowData.proxy.einwilligungNutzung" :readonly />
 				</template>
-				<template #cell(benutzername)="{ value }">
-					{{ value }}
+				<template #cell(benutzername)="{ rowData }">
+					{{ rowData.proxy.benutzername }}
 				</template>
-				<template #cell(initialKennwort)="{ value }">
-					{{ value }}
+				<template #cell(initialKennwort)="{ rowData }">
+					{{ rowData.proxy.initialKennwort }}
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
@@ -30,10 +28,12 @@
 </template>
 
 <script setup lang="ts">
-	import { useBenutzerState, type DataTableColumn } from "@ui";
+	import { useBenutzerState, type DataTableColumn, useModelProxyList } from "@ui";
 	import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
 	import { computed } from "vue";
+	import type { LehrerLernplattform } from "@core";
 	import { BenutzerKompetenz } from "@core";
+	import { LehrerLernplattformenModelProxy } from "./modelproxy/LehrerLernplattformenModelProxy";
 
 	const props = defineProps<LehrerLernplattformenProps>();
 	const benutzerState = useBenutzerState();
@@ -41,6 +41,13 @@
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
+
+	const lernplattformenProxies = useModelProxyList(
+		() => props.lehrerLernplattformen(),
+		(lernplattform) => lernplattform.idLernplattform,
+		(lernplattform) => new LehrerLernplattformenModelProxy(() => lernplattform,
+			(data: Partial<LehrerLernplattform>) => props.patch(data, lernplattform.idLernplattform))
+	);
 
 	const columns: DataTableColumn[] = [
 		{ key: "idLernplattform", label: "Lernplattform", sortable: true },

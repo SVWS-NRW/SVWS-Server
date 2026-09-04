@@ -53,6 +53,7 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 		}
 		this.commit();
 		api.status.stop();
+		return true;
 	};
 
 	public async ladeDaten(auswahl: LehrerListeEintrag | null | undefined) {
