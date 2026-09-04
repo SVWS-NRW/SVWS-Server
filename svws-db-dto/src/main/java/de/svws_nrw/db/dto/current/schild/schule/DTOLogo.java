@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.current.ReportingBildDefinitionConverterDeseria
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Logo")
-@JsonPropertyOrder({"id", "kennung", "logoBase64", "mimeType", "hoehePX", "breitePX", "hoeheMM", "breiteMM", "hinzugefuegtAm"})
+@JsonPropertyOrder({"id", "kennung", "logoBase64", "hinzugefuegtAm"})
 public final class DTOLogo {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -61,36 +61,6 @@ public final class DTOLogo {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes logoBase64 */
 	public static final String QUERY_LIST_BY_LOGOBASE64 = "SELECT e FROM DTOLogo e WHERE e.logoBase64 IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes mimeType */
-	public static final String QUERY_BY_MIMETYPE = "SELECT e FROM DTOLogo e WHERE e.mimeType = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes mimeType */
-	public static final String QUERY_LIST_BY_MIMETYPE = "SELECT e FROM DTOLogo e WHERE e.mimeType IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes hoehePX */
-	public static final String QUERY_BY_HOEHEPX = "SELECT e FROM DTOLogo e WHERE e.hoehePX = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hoehePX */
-	public static final String QUERY_LIST_BY_HOEHEPX = "SELECT e FROM DTOLogo e WHERE e.hoehePX IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes breitePX */
-	public static final String QUERY_BY_BREITEPX = "SELECT e FROM DTOLogo e WHERE e.breitePX = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes breitePX */
-	public static final String QUERY_LIST_BY_BREITEPX = "SELECT e FROM DTOLogo e WHERE e.breitePX IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes hoeheMM */
-	public static final String QUERY_BY_HOEHEMM = "SELECT e FROM DTOLogo e WHERE e.hoeheMM = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes hoeheMM */
-	public static final String QUERY_LIST_BY_HOEHEMM = "SELECT e FROM DTOLogo e WHERE e.hoeheMM IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes breiteMM */
-	public static final String QUERY_BY_BREITEMM = "SELECT e FROM DTOLogo e WHERE e.breiteMM = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes breiteMM */
-	public static final String QUERY_LIST_BY_BREITEMM = "SELECT e FROM DTOLogo e WHERE e.breiteMM IN ?1";
-
 	/** Die Datenbankabfrage für DTOs anhand des Attributes hinzugefuegtAm */
 	public static final String QUERY_BY_HINZUGEFUEGTAM = "SELECT e FROM DTOLogo e WHERE e.hinzugefuegtAm = ?1";
 
@@ -115,31 +85,6 @@ public final class DTOLogo {
 	@Column(name = "logoBase64")
 	@JsonProperty
 	public String logoBase64;
-
-	/** MimeType des Logos */
-	@Column(name = "mimeType")
-	@JsonProperty
-	public String mimeType;
-
-	/** Höhe des Logos in Pixel */
-	@Column(name = "hoehePX")
-	@JsonProperty
-	public Integer hoehePX;
-
-	/** Breite des Logos in Pixel */
-	@Column(name = "breitePX")
-	@JsonProperty
-	public Integer breitePX;
-
-	/** Höhe des Logos in Millimeter */
-	@Column(name = "hoeheMM")
-	@JsonProperty
-	public Integer hoeheMM;
-
-	/** Breite des Logos in Millimeter */
-	@Column(name = "breiteMM")
-	@JsonProperty
-	public Integer breiteMM;
 
 	/** Datum des Hinzufügens des Bildes */
 	@Column(name = "hinzugefuegtAm")
@@ -208,7 +153,7 @@ public final class DTOLogo {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLogo(id=" + this.id + ", kennung=" + this.kennung + ", logoBase64=" + this.logoBase64 + ", mimeType=" + this.mimeType + ", hoehePX=" + this.hoehePX + ", breitePX=" + this.breitePX + ", hoeheMM=" + this.hoeheMM + ", breiteMM=" + this.breiteMM + ", hinzugefuegtAm=" + this.hinzugefuegtAm + ")";
+		return "DTOLogo(id=" + this.id + ", kennung=" + this.kennung + ", logoBase64=" + this.logoBase64 + ", hinzugefuegtAm=" + this.hinzugefuegtAm + ")";
 	}
 
 }

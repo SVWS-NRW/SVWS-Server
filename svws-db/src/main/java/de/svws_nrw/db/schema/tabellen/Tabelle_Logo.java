@@ -33,23 +33,28 @@ public class Tabelle_Logo extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte MimeType: image/png, image/jpeg, etc. */
 	public final SchemaTabelleSpalte col_MimeType = add("mimeType", SchemaDatentypen.VARCHAR, false)
 			.setDatenlaenge(50)
-			.setJavaComment("MimeType des Logos");
+			.setJavaComment("MimeType des Logos")
+			.setVeraltet(SchemaRevisionen.REV_76);
 
 	/** Die Definition der Tabellenspalte Hoehe_PX */
 	public final SchemaTabelleSpalte col_Hoehe_PX = add("hoehePX", SchemaDatentypen.INT, false)
-			.setJavaComment("Höhe des Logos in Pixel");
+			.setJavaComment("Höhe des Logos in Pixel")
+			.setVeraltet(SchemaRevisionen.REV_76);
 
 	/** Die Definition der Tabellenspalte Breite_PX */
 	public final SchemaTabelleSpalte col_Breite_PX = add("breitePX", SchemaDatentypen.INT, false)
-			.setJavaComment("Breite des Logos in Pixel");
+			.setJavaComment("Breite des Logos in Pixel")
+			.setVeraltet(SchemaRevisionen.REV_76);
 
 	/** Die Definition der Tabellenspalte Hoehe_MM */
 	public final SchemaTabelleSpalte col_Hoehe_MM = add("hoeheMM", SchemaDatentypen.INT, false)
-			.setJavaComment("Höhe des Logos in Millimeter");
+			.setJavaComment("Höhe des Logos in Millimeter")
+			.setVeraltet(SchemaRevisionen.REV_76);
 
 	/** Die Definition der Tabellenspalte Breite_MM */
 	public final SchemaTabelleSpalte col_Breite_MM  = add("breiteMM", SchemaDatentypen.INT, false)
-			.setJavaComment("Breite des Logos in Millimeter");
+			.setJavaComment("Breite des Logos in Millimeter")
+			.setVeraltet(SchemaRevisionen.REV_76);
 
 	/** Die Definition der Tabellenspalte Hinzugefuegt_Am */
 	public final SchemaTabelleSpalte col_Hinzugefuegt_Am  = add("hinzugefuegtAm", SchemaDatentypen.DATE, false)

@@ -1,5 +1,7 @@
 package de.svws_nrw.repo.schule.logoverwaltung;
 
+import java.util.Optional;
+
 import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
@@ -19,6 +21,11 @@ public final class LogoverwaltungRepositoryImpl extends RepositoryImpl<DTOLogo> 
 	@Override
 	public boolean existsByKennung(final ReportingBildDefinition kennung) {
 		return conn.existsBy("SELECT e FROM DTOLogo e WHERE e.kennung = ?1", DTOLogo.class, kennung);
+	}
+
+	@Override
+	public Optional<DTOLogo> findByKennung(final ReportingBildDefinition kennung) {
+		return conn.queryFirst(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, kennung);
 	}
 
 }

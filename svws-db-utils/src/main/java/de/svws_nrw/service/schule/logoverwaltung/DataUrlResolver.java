@@ -89,6 +89,11 @@ public final class DataUrlResolver {
 		try {
 			final byte[] imageBytes = Base64.getDecoder().decode(base64);
 			final String mimeType = TIKA.detect(imageBytes);
+			/* Aus org.apache.tika.detect.Detector: "Returns application/octet-stream if the type of the document can not be detected."
+			   Bei einem (für TIKA) unbekannten MIME-Type würde application/octet-stream als valider MIME-Type zurückgegeben statt null. */
+			if (MediaType.OCTET_STREAM.toString().equals(mimeType)) {
+				return null;
+			}
 			return MediaType.parse(mimeType);
 		} catch (final Exception e) {
 			return null;

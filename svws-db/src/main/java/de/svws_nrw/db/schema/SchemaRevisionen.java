@@ -95,12 +95,12 @@ public enum SchemaRevisionen {
 
 	/**
 	 * Befüllen der Foreign-Keys auf die Tabelle K_Ort in den Tabellen K_AllgAdresse, K_Lehrer, Schueler, SchuelerErzAdr.
-	 *
+	 * <p>
 	 * Außerdem wird ein ggf. konfigurierte Quartalsmodus entfernt. Dabei gehen die "Zwischenstände" der vergangenen
 	 * Quartale verloren. Die abschließenden Quartale des Halbjahres werden übernommen. Sollte das aktuelle Quartal
 	 * einer Schule im Quartalsmodus das 1. Quartal eines Halbjahres sein, so wird dieses als Grundlage für das Halbjahr
 	 * verwendet.
-	 *
+	 * <p>
 	 * Abschließend werden doppelte Einträge zur gleichen Sprache in der Schülersprachenfolge ggf. zusammengefasst
 	 */
 	REV_3(3, "2022-09-29"),
@@ -354,27 +354,32 @@ public enum SchemaRevisionen {
 	/** Herkunftbildungsgang ersetzt HerkunftbildungsgangTyp - daher: Umschlüsseln der WBK-Schlüssel AG, AR, KL aus HerkunftbildungsgangTyp auf G02, R02, K02
 	 * in Herkunftbildungsgang und nullen der BK-Schlüssel BF, BS, BY, F0, FS */
 	REV_72(72, "2026-08-04"),
-	/** Tabelle: SchuleOAuthSecrets um Spalte Domaine ergänzt**/
+
+	/** Tabelle: SchuleOAuthSecrets um Spalte Domaine ergänzt */
 	REV_73(73, "2026-08-06"),
-	/** Tabelle: SchuleOAuthSecrets um Trigger ergänzt**/
+
+	/** Tabelle: SchuleOAuthSecrets um Trigger ergänzt */
 	REV_74(74, "2026-08-18"),
 
 	/** Erweiterung Tabelle Schueler um Feld idHochschulabschluss */
-	REV_75(75, "2026-09-01");
+	REV_75(75, "2026-09-01"),
+
+	/** Entfernt überflüssige Spalten aus der Tabelle Logo */
+	REV_76(76, "2026-09-01");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_75;
+	public static final SchemaRevisionen maxRevision = REV_76;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_75;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_76;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

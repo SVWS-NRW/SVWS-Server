@@ -25,7 +25,8 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 public class LogoverwaltungService {
 
 	private static final Set<String> ALLOWED_IMAGE_MIME_TYPES = Set.of("image/png", "image/gif", "image/jpeg", "image/svg+xml", "image/tiff");
-	private static final String NOT_FOUND_MESSAGE = "Es wurde kein Logo mit der ID %d gefunden.";
+	private static final String ID_NOT_FOUND_MESSAGE = "Es wurde kein Logo mit der ID %d gefunden.";
+	private static final String KENNUNG_NOT_FOUND_MESSAGE = "Es wurde kein Logo mit der Kennung %s gefunden.";
 	private static final double MAX_LOGO_SIZE_KB = 2 * 1024d;
 
 	private final LogoverwaltungRepository repository;
@@ -63,7 +64,23 @@ public class LogoverwaltungService {
 		final var entity = repository.findById(id)
 				.orElseThrow(() -> new ApiOperationException(
 						Response.Status.NOT_FOUND,
-						NOT_FOUND_MESSAGE.formatted(id))
+						ID_NOT_FOUND_MESSAGE.formatted(id))
+				);
+		return toApi(entity);
+	}
+
+	/**
+	 * Gibt das Logo mit der angegebenen Kennung zurück.
+	 *
+	 * @param kennung die Kennung des Logos
+	 *
+	 * @return das Logo mit der angegebenen Kennung
+	 */
+	public Logo getByKennung(final ReportingBildDefinition kennung) {
+		final var entity = repository.findByKennung(kennung)
+				.orElseThrow(() -> new ApiOperationException(
+						Response.Status.NOT_FOUND,
+						KENNUNG_NOT_FOUND_MESSAGE.formatted(kennung.getBezeichnung()))
 				);
 		return toApi(entity);
 	}
@@ -130,7 +147,7 @@ public class LogoverwaltungService {
 			var entity = repository.findById(id)
 					.orElseThrow(() -> new ApiOperationException(
 							Response.Status.NOT_FOUND,
-							NOT_FOUND_MESSAGE.formatted(id))
+							ID_NOT_FOUND_MESSAGE.formatted(id))
 					);
 			applyPatch(entity, patchRequest);
 			entity = repository.update(entity);
@@ -152,7 +169,7 @@ public class LogoverwaltungService {
 					final var deleted = repository.delete(entity);
 					return SimpleOperationResponse.ofSuccess(deleted.id);
 				})
-				.orElse(SimpleOperationResponse.ofError(id, NOT_FOUND_MESSAGE.formatted(id))));
+				.orElse(SimpleOperationResponse.ofError(id, ID_NOT_FOUND_MESSAGE.formatted(id))));
 	}
 
 	/**

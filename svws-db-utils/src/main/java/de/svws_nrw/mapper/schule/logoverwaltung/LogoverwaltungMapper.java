@@ -29,11 +29,6 @@ public interface LogoverwaltungMapper {
 	@Mapping(source = "hinzugefuegtAm", target = "hinzugefuegtAm")
 	@Mapping(target = "bezeichnung", ignore = true)
 	@Mapping(target = "beschreibung", ignore = true)
-	@Mapping(target = "mimeType", ignore = true)
-	@Mapping(target = "breitePX", ignore = true)
-	@Mapping(target = "hoehePX", ignore = true)
-	@Mapping(target = "breiteMM", ignore = true)
-	@Mapping(target = "hoeheMM", ignore = true)
 	Logo toApi(DTOLogo entity);
 
 	/**
@@ -47,11 +42,6 @@ public interface LogoverwaltungMapper {
 	@Mapping(source = "logoBase64", target = "logoBase64")
 	@Mapping(source = "hinzugefuegtAm", target = "hinzugefuegtAm")
 	@Mapping(target = "id", ignore = true)
-	@Mapping(target = "mimeType", ignore = true)
-	@Mapping(target = "breitePX", ignore = true)
-	@Mapping(target = "hoehePX", ignore = true)
-	@Mapping(target = "breiteMM", ignore = true)
-	@Mapping(target = "hoeheMM", ignore = true)
 	DTOLogo toDomain(LogoCreateRequest create);
 
 	/**

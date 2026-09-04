@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.LongFunction;
 import java.util.stream.Collectors;
@@ -689,9 +690,7 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			final var q = em.createQuery(query);
-			for (int i = 0; i < params.length; i++) {
-				q.setParameter(i + 1, params[i]);
-			}
+			applyParams(q, params);
 			final int count = q.executeUpdate();
 			if (this.transactionCommit()) {
 				return count;
@@ -1059,11 +1058,28 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return die Liste mit DTO-Objekten
 	 */
 	public <T> List<T> queryList(final String query, final Class<T> cl, final Object... params) {
-		TypedQuery<T> q = em.createQuery(query, cl);
-		for (int i = 0; i < params.length; i++) {
-			q = q.setParameter(i + 1, params[i]);  // Die Parameter in JPQL beginnnen mit 1 und nicht mit 0...
-		}
+		final TypedQuery<T> q = em.createQuery(query, cl);
+		applyParams(q, params);
 		return q.getResultList();
+	}
+
+	/**
+	 * Erzeugt eine TypedQuery gemäß der Methode {@link EntityManager#createQuery(String, Class)},
+	 * setzt die übergebenen Parameter der Query in der angegebenen Reihenfolge und gibt das erste
+	 * Ergebnis als {@link Optional} zurück.
+	 *
+	 * @param <T>     die DTO-Klasse
+	 * @param query   der JPQL-String der Anfrage
+	 * @param cl      das Klassenobjekt der DTO-Klasse
+	 * @param params  die Parameter der JPQL-Anfrage
+	 *
+	 * @return das erste Ergebnis als {@link Optional}, oder {@link Optional#empty()} falls keines vorhanden
+	 */
+	public <T> Optional<T> queryFirst(final String query, final Class<T> cl, final Object... params) {
+		final TypedQuery<T> q = em.createQuery(query, cl);
+		applyParams(q, params);
+		q.setMaxResults(1);
+		return q.getResultList().stream().findFirst();
 	}
 
 	/**
@@ -1077,14 +1093,10 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return die Liste mit DTO-Objekten
 	 */
 	public <T> boolean existsBy(final String query, final Class<T> cl, final Object... params) {
-		TypedQuery<T> q = em.createQuery(query, cl);
+		final TypedQuery<T> q = em.createQuery(query, cl);
+		applyParams(q, params);
 		q.setMaxResults(1);
-		for (int i = 0; i < params.length; i++) {
-			q = q.setParameter(i + 1, params[i]);
-		}
-
-		return !q.getResultList()
-				.isEmpty();
+		return !q.getResultList().isEmpty();
 	}
 
 	/**
@@ -1159,9 +1171,7 @@ public final class DBEntityManager implements AutoCloseable {
 	@SuppressWarnings("unchecked")
 	public List<Object[]> queryNativeWithParameters(final String sql, final Object... params) {
 		final Query q = em.createNativeQuery(sql);
-		for (int i = 0; i < params.length; i++) {
-			q.setParameter(i + 1, params[i]);
-		}
+		applyParams(q, params);
 		return q.getResultList();
 	}
 
@@ -1362,6 +1372,12 @@ public final class DBEntityManager implements AutoCloseable {
 			return false;
 		}
 		return true;
+	}
+
+	private void applyParams(final Query query, final Object... params) {
+		for (int i = 0; i < params.length; i++) {
+			query.setParameter(i + 1, params[i]); // Die Parameter in JPQL beginnnen mit 1 und nicht mit 0...
+		}
 	}
 
 }

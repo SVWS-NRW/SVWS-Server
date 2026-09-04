@@ -93,9 +93,7 @@ class LogoverwaltungMapperTest {
 
 		final DTOLogo result = MAPPER.toDomain(request);
 
-		assertThat(result)
-				.extracting("id", "mimeType", "hoehePX", "breitePX", "hoeheMM", "breiteMM")
-				.containsExactly(0L, null, null, null, null, null);
+		assertThat(result).hasFieldOrPropertyWithValue("id", 0L);
 	}
 
 	@Test

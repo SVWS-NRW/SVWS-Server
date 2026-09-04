@@ -121,6 +121,14 @@ class LogoverwaltungServiceTest {
 		return logo;
 	}
 
+	private static Logo buildLogoWithKennung(final String kennung) {
+		final Logo logo = new Logo();
+		logo.id = 1L;
+		logo.kennung = kennung;
+		logo.logoBase64 = LogoverwaltungServiceTest.VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER;
+		return logo;
+	}
+
 	// ------------------------------------------------------------------
 	// findById
 	// ------------------------------------------------------------------
@@ -167,6 +175,55 @@ class LogoverwaltungServiceTest {
 					.asInstanceOf(InstanceOfAssertFactories.type(ApiOperationException.class))
 					.extracting(ApiOperationException::getStatus, ApiOperationException::getMessage)
 					.containsExactly(Response.Status.NOT_FOUND, "Es wurde kein Logo mit der ID %d gefunden.".formatted(1L));
+		}
+	}
+
+	// ------------------------------------------------------------------
+	// findByKennung
+	// ------------------------------------------------------------------
+
+	@Nested
+	class GetByKennung {
+
+		@Test
+		void gibtLogoZurueck_wennKennungExistiert() {
+			final DTOLogo entity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG, "2024-01-01");
+			final Logo expected = buildLogo(1L, VALID_BASE64_JPEG);
+
+			when(repository.findByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD)).thenReturn(Optional.of(entity));
+			when(mapper.toApi(entity)).thenReturn(expected);
+
+			final Logo result = service.getByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD);
+
+			assertThat(result).isEqualTo(expected);
+			verify(repository).findByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD);
+			verify(mapper).toApi(entity);
+		}
+
+		@Test
+		void gibtLogoZurueckUndErgaenzeMimeTypeHeader_wennKennungExistiertUndMimeTypeHeaderFehlt() {
+			final DTOLogo entity = buildDtoLogo(1L, ReportingBildDefinition.SCHULLOGO_SCHILD, VALID_BASE64_JPEG_WITHOUT_MIME_TYPE_HEADER, "2024-01-01");
+			final Logo expected = buildLogoWithKennung(ReportingBildDefinition.SCHULLOGO_SCHILD.getKennung());
+
+			when(repository.findByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD)).thenReturn(Optional.of(entity));
+			when(mapper.toApi(entity)).thenReturn(expected);
+
+			final Logo result = service.getByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD);
+
+			assertThat(result)
+					.extracting(e -> e.kennung, e -> e.logoBase64)
+					.containsExactly(ReportingBildDefinition.SCHULLOGO_SCHILD.getKennung(), VALID_BASE64_JPEG);
+			verify(repository).findByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD);
+			verify(mapper).toApi(entity);
+		}
+
+		@Test
+		void wirftApiOperationException_wennKennungNichtExistiert() {
+			assertThatThrownBy(() -> service.getByKennung(ReportingBildDefinition.SCHULLOGO_SCHILD))
+					.isInstanceOf(ApiOperationException.class)
+					.asInstanceOf(InstanceOfAssertFactories.type(ApiOperationException.class))
+					.extracting(ApiOperationException::getStatus, ApiOperationException::getMessage)
+					.containsExactly(Response.Status.NOT_FOUND, "Es wurde kein Logo mit der Kennung %s gefunden.".formatted(ReportingBildDefinition.SCHULLOGO_SCHILD.getBezeichnung()));
 		}
 	}
 

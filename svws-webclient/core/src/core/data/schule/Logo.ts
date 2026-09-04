@@ -29,31 +29,6 @@ export class Logo extends JavaObject {
 	public logoBase64: string = "";
 
 	/**
-	 * Der MimeType des Logos.
-	 */
-	public mimeType: string = "";
-
-	/**
-	 * Die Breite des Logos in Pixel.
-	 */
-	public breitePX: number | null = null;
-
-	/**
-	 * Die Höhe des Logos in Pixel.
-	 */
-	public hoehePX: number | null = null;
-
-	/**
-	 * Die Breite des Logos in Millimetern.
-	 */
-	public breiteMM: number | null = null;
-
-	/**
-	 * Die Höhe des Logos in Millimetern.
-	 */
-	public hoeheMM: number | null = null;
-
-	/**
 	 * Datum, wann das Logo hinzugefügt wurde.
 	 */
 	public hinzugefuegtAm: string = "";
@@ -91,13 +66,6 @@ export class Logo extends JavaObject {
 		if (obj.logoBase64 === undefined)
 			throw new Error('invalid json format, missing attribute logoBase64');
 		result.logoBase64 = obj.logoBase64;
-		if (obj.mimeType === undefined)
-			throw new Error('invalid json format, missing attribute mimeType');
-		result.mimeType = obj.mimeType;
-		result.breitePX = (obj.breitePX === undefined) ? null : obj.breitePX === null ? null : obj.breitePX;
-		result.hoehePX = (obj.hoehePX === undefined) ? null : obj.hoehePX === null ? null : obj.hoehePX;
-		result.breiteMM = (obj.breiteMM === undefined) ? null : obj.breiteMM === null ? null : obj.breiteMM;
-		result.hoeheMM = (obj.hoeheMM === undefined) ? null : obj.hoeheMM === null ? null : obj.hoeheMM;
 		if (obj.hinzugefuegtAm === undefined)
 			throw new Error('invalid json format, missing attribute hinzugefuegtAm');
 		result.hinzugefuegtAm = obj.hinzugefuegtAm;
@@ -111,11 +79,6 @@ export class Logo extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result += '"logoBase64" : ' + JSON.stringify(obj.logoBase64) + ',';
-		result += '"mimeType" : ' + JSON.stringify(obj.mimeType) + ',';
-		result += '"breitePX" : ' + ((obj.breitePX === null) ? 'null' : obj.breitePX.toString()) + ',';
-		result += '"hoehePX" : ' + ((obj.hoehePX === null) ? 'null' : obj.hoehePX.toString()) + ',';
-		result += '"breiteMM" : ' + ((obj.breiteMM === null) ? 'null' : obj.breiteMM.toString()) + ',';
-		result += '"hoeheMM" : ' + ((obj.hoeheMM === null) ? 'null' : obj.hoeheMM.toString()) + ',';
 		result += '"hinzugefuegtAm" : ' + JSON.stringify(obj.hinzugefuegtAm) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -138,21 +101,6 @@ export class Logo extends JavaObject {
 		}
 		if (obj.logoBase64 !== undefined) {
 			result += '"logoBase64" : ' + JSON.stringify(obj.logoBase64) + ',';
-		}
-		if (obj.mimeType !== undefined) {
-			result += '"mimeType" : ' + JSON.stringify(obj.mimeType) + ',';
-		}
-		if (obj.breitePX !== undefined) {
-			result += '"breitePX" : ' + ((obj.breitePX === null) ? 'null' : obj.breitePX.toString()) + ',';
-		}
-		if (obj.hoehePX !== undefined) {
-			result += '"hoehePX" : ' + ((obj.hoehePX === null) ? 'null' : obj.hoehePX.toString()) + ',';
-		}
-		if (obj.breiteMM !== undefined) {
-			result += '"breiteMM" : ' + ((obj.breiteMM === null) ? 'null' : obj.breiteMM.toString()) + ',';
-		}
-		if (obj.hoeheMM !== undefined) {
-			result += '"hoeheMM" : ' + ((obj.hoeheMM === null) ? 'null' : obj.hoeheMM.toString()) + ',';
 		}
 		if (obj.hinzugefuegtAm !== undefined) {
 			result += '"hinzugefuegtAm" : ' + JSON.stringify(obj.hinzugefuegtAm) + ',';

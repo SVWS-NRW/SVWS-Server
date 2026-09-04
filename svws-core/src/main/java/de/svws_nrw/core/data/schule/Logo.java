@@ -33,26 +33,6 @@ public class Logo {
 	@Schema(description = "das Logo als Bild im Base64-Format")
 	public @NotNull String logoBase64 = "";
 
-	/** Der MimeType des Logos. */
-	@Schema(description = "der MimeType des Logos", example = "image/png", deprecated = true)
-	public @NotNull String mimeType = "";
-
-	/** Die Breite des Logos in Pixel. */
-	@Schema(description = "die Breite des Logos in Pixel", example = "450", deprecated = true)
-	public Integer breitePX;
-
-	/** Die Höhe des Logos in Pixel. */
-	@Schema(description = "die Höhe des Logos in Pixel", example = "450", deprecated = true)
-	public Integer hoehePX;
-
-	/** Die Breite des Logos in Millimetern. */
-	@Schema(description = "die Breite des Logos in Millimetern", example = "190", deprecated = true)
-	public Integer breiteMM;
-
-	/** Die Höhe des Logos in Millimetern. */
-	@Schema(description = "die Höhe des Logos in Millimetern", example = "45", deprecated = true)
-	public Integer hoeheMM;
-
 	/** Datum, wann das Logo hinzugefügt wurde. */
 	@Schema(description = "Datum, wann das Logo hinzugefügt wurde", example = "2026-04-10")
 	public @NotNull String hinzugefuegtAm = "";
