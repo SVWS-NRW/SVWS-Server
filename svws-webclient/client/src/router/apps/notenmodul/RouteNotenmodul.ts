@@ -1,7 +1,9 @@
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { AppMenuGroup } from "@ui";
 
 
 export class RouteNotenmodul extends RouteNode<never, RouteApp> {

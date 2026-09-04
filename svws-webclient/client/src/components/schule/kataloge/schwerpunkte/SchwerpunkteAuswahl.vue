@@ -34,9 +34,11 @@
 </template>
 
 <script setup lang="ts">
-	import { type SchuelerSchwerpunkt } from "@core";
-	import { type DataTableColumn, useRegionSwitch, useServerState } from "@ui";
 
+	import type { SchuelerSchwerpunkt } from "@core/core/data/kataloge/SchuelerSchwerpunkt";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 

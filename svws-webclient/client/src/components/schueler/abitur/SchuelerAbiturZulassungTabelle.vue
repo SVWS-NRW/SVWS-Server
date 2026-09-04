@@ -107,12 +107,17 @@
 
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, watchEffect } from "vue";
-	import type { AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, List } from "@core";
-	import { Fach, RGBFarbe } from "@core";
-	import { ArrayList, GostHalbjahr } from "@core";
-	import { GridManager } from "@ui";
-
 	import type { SchuelerAbiturZulassungTabelleProps } from "./SchuelerAbiturZulassungTabelleProps";
+	import { RGBFarbe } from "@core/asd/data/RGBFarbe";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+	import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+	import type { AbiturFachbelegungHalbjahr } from "@core/core/data/gost/AbiturFachbelegungHalbjahr";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
 	const props = defineProps<SchuelerAbiturZulassungTabelleProps>();
 

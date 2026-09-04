@@ -1,6 +1,13 @@
-import type { ValidatorKontext, LehrerPersonaldaten, LehrerAbgangsgrundKatalogEintrag, LehrerZugangsgrundKatalogEintrag } from "@core";
-import { LehrerAbgangsgrund, LehrerZugangsgrund } from "@core";
-import { ModelProxy, type LehrerListeManager, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern } from "@ui";
+import type { LehrerAbgangsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag";
+import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
+import type { LehrerZugangsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerZugangsgrundKatalogEintrag";
+import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
+import { LehrerZugangsgrund } from "@core/asd/types/lehrer/LehrerZugangsgrund";
+import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

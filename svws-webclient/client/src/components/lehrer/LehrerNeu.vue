@@ -119,11 +119,20 @@
 
 <script setup lang="ts">
 
+	import { LehrerStammdaten } from '@core/asd/data/lehrer/LehrerStammdaten';
+	import type { NationalitaetenKatalogEintrag } from '@core/asd/data/schule/NationalitaetenKatalogEintrag';
+	import { Geschlecht } from '@core/asd/types/Geschlecht';
+	import { Nationalitaeten } from '@core/asd/types/schule/Nationalitaeten';
+	import type { OrtsteilKatalogEintrag } from '@core/core/data/kataloge/OrtsteilKatalogEintrag';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { PersonalTyp } from '@core/core/types/PersonalTyp';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useOrteState } from '@ui/states/kataloge/OrteState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import type { LehrerNeuProps } from './LehrerNeuProps';
 	import { computed, ref, watch } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useOrteState, useSchuleState } from "@ui";
-	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@core";
 	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerNeuProps>();

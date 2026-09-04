@@ -62,8 +62,9 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { DateUtils, type TLSCertificate } from '@core';
 	import type { NotenmodulVerbindungProps } from './NotenmodulVerbindungProps';
+	import type { TLSCertificate } from '@core/core/data/TLSCertificate';
+	import { DateUtils } from '@core/core/utils/DateUtils';
 
 	const props = defineProps<NotenmodulVerbindungProps>();
 

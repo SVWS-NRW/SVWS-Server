@@ -1,19 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerLaufbahnplanungProps } from "@ui";
-
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, ServerMode } from "@core";
-
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-
-import { ConfigElement, SSchuelerLaufbahnplanung } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { SchuelerLaufbahnplanungProps } from "@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps";
+import { ConfigElement } from "@ui/utils/Config";
+
+const SSchuelerLaufbahnplanung = () => import("@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> {
 

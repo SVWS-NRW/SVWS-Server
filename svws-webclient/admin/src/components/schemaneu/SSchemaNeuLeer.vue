@@ -23,7 +23,7 @@
 	import type { List } from "@core/java/util/List";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
-	import { validatorSchemaName } from "~/utils/helfer";
+	import { validatorSchemaName } from "@admin/utils/helfer";
 
 	const props = defineProps<{
 		addSchema: ((data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>);

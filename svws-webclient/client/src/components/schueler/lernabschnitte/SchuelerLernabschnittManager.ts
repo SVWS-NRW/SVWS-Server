@@ -1,9 +1,31 @@
-import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
-	DeveloperNotificationException, Schulgliederung, JavaString, HashSet } from '@core';
-import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
-	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag, List,
-	Comparator, JavaMap, JavaSet } from '@core';
-import { FoerderschwerpunkteListeManager } from "@ui";
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
+import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { Fach } from "@core/asd/types/fach/Fach";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { Note } from "@core/asd/types/Note";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { KlassenUtils } from "@core/core/utils/klassen/KlassenUtils";
+import { KursUtils } from "@core/core/utils/kurse/KursUtils";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 
 /**
  * Ein Manager zum Verwalten der Schüler-Lernabschnittsdaten eines Schülers.

@@ -1,9 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, SimpleOperationResponse, KatalogEntlassgrund } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ViewType, EntlassgruendeListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeEntlassgruendeDaten } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruendeDaten";
 import { routeEntlassgruendeGruppenprozesse } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruendeGruppenprozesse";
@@ -11,6 +8,13 @@ import { routeEntlassgruendeNeu } from "~/router/apps/schule/kataloge/entlassgru
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { EntlassgruendeListeManager } from "@ui/ui/manager/kataloge/EntlassgruendeListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

@@ -153,10 +153,19 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
-	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
-	import { BenutzerKompetenz, DTOUtils, GostBlockungRegelUpdate, SetUtils, Fach } from "@core";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { GostBlockungRegel } from "@core/core/data/gost/GostBlockungRegel";
+	import { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+	import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
+	import type { GostFachwahl } from "@core/core/data/gost/GostFachwahl";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { GostKursart } from "@core/core/types/gost/GostKursart";
+	import { DTOUtils } from "@core/core/utils/DTOUtils";
+	import { SetUtils } from "@core/core/utils/SetUtils";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 

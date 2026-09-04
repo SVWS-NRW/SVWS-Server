@@ -22,7 +22,7 @@
 
 	import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
 	import { computed, ref, watch } from 'vue';
-	import type { SchuelerBetrieb } from "@core";
+	import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 
 	const props = defineProps<SchuelerBetriebeProps>();
 

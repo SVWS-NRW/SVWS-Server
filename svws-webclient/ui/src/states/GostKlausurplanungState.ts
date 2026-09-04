@@ -1,23 +1,21 @@
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostKlausurenKlausurdaten } from "@core/core/data/gost/klausuren/GostKlausurenKlausurdaten";
+import type { GostKlausurraum } from "@core/core/data/gost/klausuren/GostKlausurraum";
+import type { GostKlausurraumRich } from "@core/core/data/gost/klausuren/GostKlausurraumRich";
+import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostKlausurterminblockungDaten } from "@core/core/data/gost/klausuren/GostKlausurterminblockungDaten";
+import type { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
+import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+import type { GostNachschreibterminblockungKonfiguration } from "@core/core/data/gost/klausuren/GostNachschreibterminblockungKonfiguration";
+import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
+import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
+import type { List } from "@core/java/util/List";
+import { AppContext } from "@ui/AppContext";
 import type { InjectionKey } from "vue";
-import type {
-	GostJahrgangsdaten,
-	GostKlausurraum,
-	GostKlausurraumRich,
-	GostKlausurterminblockungDaten,
-	GostNachschreibterminblockungKonfiguration,
-	GostSchuelerklausur,
-	List,
-	Schuljahresabschnitt,
-} from "../../../core/src";
-import type { GostKlausurvorgabe } from "../../../core/src/core/data/gost/klausuren/GostKlausurvorgabe";
-import type { GostKursklausur } from "../../../core/src/core/data/gost/klausuren/GostKursklausur";
-import type { GostKlausurtermin } from "../../../core/src/core/data/gost/klausuren/GostKlausurtermin";
-import type { GostSchuelerklausurtermin } from "../../../core/src/core/data/gost/klausuren/GostSchuelerklausurtermin";
-import type { GostKlausurenKlausurdaten } from "../../../core/src/core/data/gost/klausuren/GostKlausurenKlausurdaten";
-import type { GostHalbjahr } from "../../../core/src/core/types/gost/GostHalbjahr";
-import type { GostKlausurplanManager } from "../../../core/src/core/utils/gost/klausuren/GostKlausurplanManager";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import { AppContext } from "../AppContext";
 
 export const CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX = "gost.klausuren.";
 

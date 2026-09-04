@@ -1,8 +1,16 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve, basename } from "node:path";
 import { describe, test, expect } from "vitest";
-import type { GostBelegpruefungErgebnisFehler } from "../../../../src";
-import { Abiturdaten, AbiturdatenManager, GostJahrgangFachkombination, GostFaecherManager, GostJahrgangsdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach, ArrayList } from "../../../../src";
+import { AbiturdatenManager } from "../../../../src/core/abschluss/gost/AbiturdatenManager";
+import { GostBelegpruefungErgebnis } from "../../../../src/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { GostBelegpruefungErgebnisFehler } from "../../../../src/core/abschluss/gost/GostBelegpruefungErgebnisFehler";
+import { GostBelegpruefungsArt } from "../../../../src/core/abschluss/gost/GostBelegpruefungsArt";
+import { Abiturdaten } from "../../../../src/core/data/gost/Abiturdaten";
+import { GostFach } from "../../../../src/core/data/gost/GostFach";
+import { GostJahrgangFachkombination } from "../../../../src/core/data/gost/GostJahrgangFachkombination";
+import { GostJahrgangsdaten } from "../../../../src/core/data/gost/GostJahrgangsdaten";
+import { GostFaecherManager } from "../../../../src/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "../../../../src/java/util/ArrayList";
 
 
 const test_dir = resolve(__dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/core/abschluss/gost/belegpruefung/abi2030");

@@ -1,7 +1,7 @@
-import type { KursDaten } from "../../../core/src/asd/data/kurse/KursDaten";
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
-import { JavaString } from "../../../core/src/java/lang/JavaString";
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { JavaString } from "@core/java/lang/JavaString";
 
 /**
  * Ein Validator, welcher prüft, ob ein Kurskürzel gültig ist und nicht bereits bei einem anderenn Kurs vorhanden ist.

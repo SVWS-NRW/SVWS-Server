@@ -1,4 +1,4 @@
+import type { FahrschuelerartenListeManager } from "@ui/ui/manager/kataloge/FahrschuelerartenListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { FahrschuelerartenListeManager } from "@ui";
 
 export type FahrschuelerartenAppProps = RouteAuswahlProps<FahrschuelerartenListeManager>;

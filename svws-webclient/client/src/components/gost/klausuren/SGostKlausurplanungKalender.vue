@@ -86,10 +86,19 @@
 <script setup lang="ts">
 	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, GostHalbjahr } from "@core";
-	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz, StundenplanZeitraster } from "@core";
-	import { useBenutzerState, useGostKlausurplanungState } from "@ui";
 	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
+	import { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import type { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 	const { gotoKalenderdatum, gotoRaumzeitTermin } = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

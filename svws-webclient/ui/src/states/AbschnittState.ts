@@ -1,8 +1,8 @@
 import { type InjectionKey } from "vue";
-import type { Schuljahresabschnitt } from "../../../core/src/asd/data/schule/Schuljahresabschnitt";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { List } from "../../../core/src/java/util/List";
-import { AppContext } from "../AppContext";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { List } from "@core/java/util/List";
+import { AppContext } from "@ui/AppContext";
 
 /**
  * Die Schnittstelle für den Zustand des aktuell ausgewählten Abschnitts und der Liste der möglichen Schuljahresabschnitte

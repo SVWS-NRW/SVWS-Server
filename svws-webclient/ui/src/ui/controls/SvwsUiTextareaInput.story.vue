@@ -194,14 +194,13 @@
 
 <script setup lang="ts">
 
+	import { BasicValidator } from '@core/asd/validate/BasicValidator';
+	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { logEvent } from '@ui/stories/helper';
+	import storyManager from '@ui/stories/StoryManager';
 	import { computed, ref, type Ref, reactive } from 'vue';
-	import storyManager from '../../stories/StoryManager';
-	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
-	import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-
-	import { logEvent } from '../../stories/helper';
 
 	const activeState = computed(() => variantControlsMap.get(storyManager.variant.id) ?? defaultState);
 

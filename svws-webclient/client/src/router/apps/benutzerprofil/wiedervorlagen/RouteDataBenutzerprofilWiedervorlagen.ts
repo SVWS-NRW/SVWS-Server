@@ -1,8 +1,8 @@
-import type { WiedervorlageEintrag } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { type RouteStateInterface, RouteData } from "~/router/RouteData";
+import type { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
 
 interface RouteStateWiedervorlagen extends RouteStateInterface {};
 

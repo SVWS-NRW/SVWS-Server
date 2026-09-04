@@ -35,10 +35,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List } from "@core";
-	import type { FachklassenGruppenprozesseProps } from "~/components/schule/kataloge/fachklassen/gruppenprozesse/FachklassenGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
+	import type { FachklassenGruppenprozesseProps } from "./FachklassenGruppenprozesseProps";
 
 	const props = defineProps<FachklassenGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);

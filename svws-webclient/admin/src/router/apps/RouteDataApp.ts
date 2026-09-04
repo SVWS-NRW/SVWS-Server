@@ -1,8 +1,7 @@
 import { shallowRef } from "vue";
-
-import type { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchema } from "~/router/apps/schema/RouteSchema";
+import type { RouteNode } from "../RouteNode";
+import { routeApp } from "./RouteApp";
+import { routeSchema } from "./schema/RouteSchema";
 
 
 interface RouteStateApp {
@@ -11,11 +10,11 @@ interface RouteStateApp {
 
 export class RouteDataApp {
 
-	private static _defaultState: RouteStateApp = {
+	private static readonly _defaultState: RouteStateApp = {
 		view: routeSchema,
 	};
 
-	private _state = shallowRef<RouteStateApp>(RouteDataApp._defaultState);
+	private readonly _state = shallowRef<RouteStateApp>(RouteDataApp._defaultState);
 
 	private setPatchedDefaultState(patch: Partial<RouteStateApp>) {
 		this._state.value = Object.assign({ ... RouteDataApp._defaultState }, patch);

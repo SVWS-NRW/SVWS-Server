@@ -1,7 +1,5 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { AppProps } from "~/components/SAppProps";
-import { AppMenuManager, ViewType, type TabData, type TabManager } from "@ui";
-import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { RoutingStatus } from "~/router/RoutingStatus";
@@ -73,6 +71,14 @@ import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 import SApp from "~/components/SApp.vue";
 import { routeSchuleReportingKonfiguration } from "./schule/reporting/RouteSchuleReportingKonfiguration";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { AppMenuManager } from "@ui/ui/nav/AppMenuManager";
+import type { TabData } from "@ui/ui/nav/TabData";
+import type { TabManager } from "@ui/ui/nav/TabManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {

@@ -1,13 +1,14 @@
 import type { RouteStateInterface } from "~/router/RouteData";
 import { RouteData } from "~/router/RouteData";
-import type { KlassenListeEintrag, List } from "@core";
-import { DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
-import { SchuelerNeuManager } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { List } from "@core/java/util/List";
+import { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
 
 
 interface RouteStateDataSchuelerNeu extends RouteStateInterface {

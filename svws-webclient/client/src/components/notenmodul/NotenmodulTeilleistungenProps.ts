@@ -1,5 +1,6 @@
-import type { ENMv2Leistung, ENMv2Teilleistung } from "@core";
-import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "@ui";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
+import type { EnmManager, EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
 
 export interface NotenmodulTeilleistungenProps {
 	enmManager: () => EnmManager;

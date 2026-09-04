@@ -1,8 +1,8 @@
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
+import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
 import type { BemerkungenHauptgruppe, EnmManager } from "./EnmManager";
-import type { ENMv2LeistungBemerkungen } from "../../../../core/src/core/data/enm/v2/ENMv2LeistungBemerkungen";
-import type { ENMv2Lernabschnitt } from "../../../../core/src/core/data/enm/v2/ENMv2Lernabschnitt";
-import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
-import type { ENMv2Schueler } from "../../../../core/src/core/data/enm/v2/ENMv2Schueler";
 
 export interface EnmKlassenleitungUebersichtProps {
 	enmManager: () => EnmManager;

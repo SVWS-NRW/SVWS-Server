@@ -1,6 +1,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from '@vue/test-utils';
-import SvwsUiDashboardTile from "../../../src/ui/layout/SvwsUiDashboardTile.vue";
+import SvwsUiDashboardTile from "@ui/ui/layout/SvwsUiDashboardTile.vue";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 
 

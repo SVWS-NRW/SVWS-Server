@@ -1,9 +1,13 @@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type { GostBlockungListeneintrag, List } from "@core";
-import { OpenApiError, SimpleOperationResponse, GostHalbjahr, LongAndStringLists } from "@core";
 import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { OpenApiError } from "@core/api/OpenApiError";
+import type { GostBlockungListeneintrag } from "@core/core/data/gost/GostBlockungListeneintrag";
+import { LongAndStringLists } from "@core/core/data/LongAndStringLists";
+import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { List } from "@core/java/util/List";
 
 
 type RouteStateDatenaustauschUntis = RouteStateInterface;

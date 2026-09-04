@@ -38,9 +38,10 @@
 
 	import { computed } from "vue";
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
-	import type { GostJahrgang } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useBenutzerState, useRegionSwitch } from "@ui";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<GostAuswahlProps>();
 	const benutzerState = useBenutzerState();

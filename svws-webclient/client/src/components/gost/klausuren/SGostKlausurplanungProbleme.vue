@@ -377,12 +377,21 @@
 
 <script setup lang="ts">
 	import { ref, onMounted } from 'vue';
-	import { useConfigState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
-	import type { GostKlausurtermin, GostKursklausur, GostSchuelerklausurtermin, SchuelerListeEintrag } from "@core";
-	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, ValidatorFehlerart } from "@core";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
 	import SGostKlausurplanungProblemCard from "./SGostKlausurplanungProblemCard.vue";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { OpenApiError } from '@core/api/OpenApiError.js';
+	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin.js';
+	import type { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur.js';
+	import type { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin.js';
+	import type { SchuelerListeEintrag } from '@core/core/data/schueler/SchuelerListeEintrag.js';
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr.js';
+	import { DateUtils } from '@core/core/utils/DateUtils.js';
+	import { useConfigState } from '@ui/states/ConfigState.js';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState.js';
+	import type { DataTableColumn } from '@ui/types.js';
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart.js';
+	import { ListUtils } from '@core/core/utils/ListUtils.js';
 
 	type KlausurplanungProblemId =
 		| "stundenplan_fehlend"

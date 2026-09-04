@@ -1,5 +1,5 @@
-import type { Kindergarten } from "@core";
-import type { KindergaertenListeManager } from "@ui";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
 
 export interface KindergaertenDatenProps {
 	manager: () => KindergaertenListeManager;

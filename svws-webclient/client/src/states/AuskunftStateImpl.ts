@@ -1,4 +1,5 @@
-import { StateManager, type AuskunftState } from "@ui";
+import type { AuskunftState } from "@ui/states/AuskunftState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface AuskunftReactiveState {
 	/** Die Datenschutzauskunft */

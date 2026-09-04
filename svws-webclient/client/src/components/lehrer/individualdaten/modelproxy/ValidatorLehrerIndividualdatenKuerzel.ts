@@ -1,6 +1,10 @@
-import { StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { LehrerListeEintrag, LehrerStammdaten } from "@core";
-import { BasicValidator, ValidatorFehlerart } from "@core";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorLehrerIndividualdatenKuerzel extends BasicValidator {
 

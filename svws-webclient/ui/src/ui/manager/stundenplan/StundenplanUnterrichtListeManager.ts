@@ -1,23 +1,23 @@
-import type { StundenplanKlasse } from '../../../../../core/src/core/data/stundenplan/StundenplanKlasse';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import type { StundenplanManager } from '../../../../../core/src/core/utils/stundenplan/StundenplanManager';
-import type { StundenplanKurs } from '../../../../../core/src/core/data/stundenplan/StundenplanKurs';
-import type { StundenplanZeitraster } from '../../../../../core/src/core/data/stundenplan/StundenplanZeitraster';
-import { StundenplanUnterrichtUtils } from '../../../../../core/src/core/utils/stundenplan/StundenplanUnterrichtUtils';
-import type { StundenplanSchueler } from '../../../../../core/src/core/data/stundenplan/StundenplanSchueler';
-import type { StundenplanRaum } from '../../../../../core/src/core/data/stundenplan/StundenplanRaum';
-import type { StundenplanLehrer } from '../../../../../core/src/core/data/stundenplan/StundenplanLehrer';
-import type { StundenplanSchiene } from '../../../../../core/src/core/data/stundenplan/StundenplanSchiene';
-import type { StundenplanFach } from '../../../../../core/src/core/data/stundenplan/StundenplanFach';
-import type { StundenplanUnterricht } from '../../../../../core/src/core/data/stundenplan/StundenplanUnterricht';
-import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
-import type { Wochentag } from '../../../../../core/src/core/types/Wochentag';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { AuswahlManager } from '../AuswahlManager';
-import { ListeMitAuswahl } from '../ListeMitAuswahl';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { StundenplanFach } from "@core/core/data/stundenplan/StundenplanFach";
+import type { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
+import type { StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+import type { StundenplanLehrer } from "@core/core/data/stundenplan/StundenplanLehrer";
+import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+import type { StundenplanSchueler } from "@core/core/data/stundenplan/StundenplanSchueler";
+import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { StundenplanUnterrichtUtils } from "@core/core/utils/stundenplan/StundenplanUnterrichtUtils";
+import { Class } from "@core/java/lang/Class";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
+import { ListeMitAuswahl } from "../ListeMitAuswahl";
 
 export class StundenplanUnterrichtListeManager extends AuswahlManager<number, StundenplanUnterricht, StundenplanUnterricht> {
 

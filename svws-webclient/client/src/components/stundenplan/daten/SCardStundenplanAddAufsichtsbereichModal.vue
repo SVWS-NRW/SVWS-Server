@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { StundenplanAufsichtsbereich } from "@core";
+	import { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
 	import { ref } from "vue";
 
 	const props = defineProps<{

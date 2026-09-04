@@ -1,18 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
-
 import type { GostFachwahlenAbiturFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenAbiturFachProps";
 import { ref } from "vue";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 
 const SGostFachwahlenAbiturFach = () => import("~/components/gost/fachwahlen/SGostFachwahlenAbiturFach.vue");
@@ -29,7 +26,7 @@ export class RouteGostFachwahlenAbiturFach extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-		], "gost.fachwahlen.abitur.fach", "abitur/fach/:idFach(\\d+)?", SGostFachwahlenAbiturFach);
+		], "gost.fachwahlen.abitur.fach", String.raw`abitur/fach/:idFach(\d+)?`, SGostFachwahlenAbiturFach);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Fachspezifisch";

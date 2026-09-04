@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import type { RouteFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import type { FloskelnGruppenprozesseProps } from "~/components/schule/kataloge/floskeln/gruppenprozesse/FloskelnGruppenprozesseProps";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const FloskelnGruppenprozesse = () => import(
 	"~/components/schule/kataloge/floskeln/gruppenprozesse/FloskelnGruppenprozesse.vue");

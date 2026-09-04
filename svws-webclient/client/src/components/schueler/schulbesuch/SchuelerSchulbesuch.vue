@@ -170,11 +170,23 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, SchulEintrag } from "@core";
-	import { BenutzerKompetenz, Einschulungsart, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre,
-		SchulabschlussAllgemeinbildend, Schulform, Uebergangsempfehlung } from "@core";
+	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
+	import { Einschulungsart } from '@core/asd/types/schueler/Einschulungsart';
+	import { Uebergangsempfehlung } from '@core/asd/types/schueler/Uebergangsempfehlung';
+	import { Kindergartenbesuch } from '@core/asd/types/schule/Kindergartenbesuch';
+	import { SchulabschlussAllgemeinbildend } from '@core/asd/types/schule/SchulabschlussAllgemeinbildend';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
+	import type { KatalogEntlassgrund } from '@core/core/data/kataloge/KatalogEntlassgrund';
+	import type { SchulEintrag } from '@core/core/data/kataloge/SchulEintrag';
+	import type { Kindergarten } from '@core/core/data/schule/Kindergarten';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { useServerState } from '@ui/states/ServerState';
+	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { computed, ref } from "vue";
 	import { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 	import SchulbesuchVorherigeSchule from "~/components/schueler/schulbesuch/SchulbesuchVorherigeSchule.vue";

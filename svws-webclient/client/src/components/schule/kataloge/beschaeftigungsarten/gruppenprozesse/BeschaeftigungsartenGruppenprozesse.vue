@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 
-	import type { List } from "@core";
-	import type { BeschaeftigungsartenGruppenprozesseProps } from "~/components/schule/kataloge/beschaeftigungsarten/gruppenprozesse/BeschaeftigungsartenGruppenprozesseProps";
-	import { BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { computed, ref } from "vue";
-	import { useBenutzerState } from "@ui";
+	import type { BeschaeftigungsartenGruppenprozesseProps } from "./BeschaeftigungsartenGruppenprozesseProps";
 
 	const props = defineProps<BeschaeftigungsartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

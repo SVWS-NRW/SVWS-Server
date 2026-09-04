@@ -1,9 +1,17 @@
-import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten } from "@core";
 import { ApiConnection } from "~/router/ApiConnection";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { ApiStatus } from "~/components/ApiStatus";
-import { version } from '../../version';
-import { githash } from "../../githash";
+import type { ApiExternal } from "@core/api/ApiExternal";
+import type { ApiServer } from "@core/api/ApiServer";
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { List } from "@core/java/util/List";
+import { version } from "@version";
+import { githash } from "@githash";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich

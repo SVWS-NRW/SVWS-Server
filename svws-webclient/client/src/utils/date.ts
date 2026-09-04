@@ -1,4 +1,4 @@
-import { DateUtils } from "@core";
+import { DateUtils } from "@core/core/utils/DateUtils";
 
 /**
  * Gibt das heutige lokale Datum zurück im Format YYYY-MM-DD.

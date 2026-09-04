@@ -1,6 +1,6 @@
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-import { JavaString } from "../../../../core/src/java/lang/JavaString";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { JavaString } from "@core/java/lang/JavaString";
 
 /**
  * Prüft, ob ein String-Feld in einer Liste eindeutig ist.

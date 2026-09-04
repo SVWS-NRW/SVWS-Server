@@ -22,9 +22,12 @@
 
 <script setup lang="ts">
 
+	import type { Schueler } from '@core/asd/data/schueler/Schueler';
+	import type { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
+	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { HashSet } from '@core/java/util/HashSet';
 	import { shallowRef } from 'vue';
-	import type { GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, Schueler } from '@core';
-	import { HashSet } from '@core';
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;

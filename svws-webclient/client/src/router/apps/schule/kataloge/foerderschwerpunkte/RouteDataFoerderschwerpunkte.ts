@@ -1,9 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, SimpleOperationResponse, FoerderschwerpunktEintrag } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ViewType, FoerderschwerpunkteListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeFoerderschwerpunkteDaten } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkteDaten";
 import { routeFoerderschwerpunkteGruppenprozesse } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteFoerderschwerpunkteGruppenprozesse";
@@ -11,6 +8,13 @@ import { routeFoerderschwerpunkteNeu } from "~/router/apps/schule/kataloge/foerd
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

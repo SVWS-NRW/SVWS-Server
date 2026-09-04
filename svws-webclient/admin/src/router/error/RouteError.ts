@@ -1,10 +1,10 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { ErrorProps } from "~/components/error/SErrorProps";
 import { ServerMode } from "@core/core/types/ServerMode";
+import type { ErrorProps } from "@admin/components/error/SErrorProps";
 import { RouteManager } from "../RouteManager";
+import { RouteNode } from "../RouteNode";
 
-const SError = () => import("~/components/error/SError.vue");
+const SError = () => import("@admin/components/error/SError.vue");
 
 export class RouteError extends RouteNode<unknown, any> {
 

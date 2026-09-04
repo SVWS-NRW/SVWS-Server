@@ -1,9 +1,9 @@
-import { type InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { List } from "../../../core/src/java/util/List";
-import type { WiedervorlageEintrag } from "../../../core/src/core/data/schule/WiedervorlageEintrag";
-import type { BenutzergruppeListeEintrag } from "../../../core/src/core/data/benutzer/BenutzergruppeListeEintrag";
-import { AppContext } from "../AppContext";
+import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import type { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { List } from "@core/java/util/List";
+import { AppContext } from "@ui/AppContext";
+import type { InjectionKey } from "vue";
 
 /**
  * Die Schnittstelle die Anzeige der Wiedervorlagenliste und ihrer API-Methoden

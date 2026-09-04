@@ -43,12 +43,19 @@
 
 <script setup lang="ts">
 
-	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
+	import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useConfigState } from "@ui/states/ConfigState";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { computed, ref } from "vue";
-	import { lehrer_filter } from '~/utils/helfer';
-	import { LaufbahnplanungUiManager, useBenutzerState, useGostLaufbahnplanungState, useRegionSwitch, useServerState } from "@ui";
-	import { useConfigState } from "../../../../../ui/src/states/ConfigState";
+	import type { GostBeratungProps } from "./SGostBeratungProps";
+	import { lehrer_filter } from "~/utils/helfer";
 
 	const props = defineProps<GostBeratungProps>();
 	const serverState = useServerState();

@@ -55,10 +55,12 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { List } from "@core/java/util/List";
+	import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 	import { computed, ref } from "vue";
-	import type { List, StundenplanPausenzeit } from "@core";
-	import type { StundenplanListeManager } from "@ui";
-	import { Wochentag, DateUtils } from "@core";
 
 	const props = defineProps<{
 		pausenzeitenSyncToVorlage: (raeume: StundenplanPausenzeit[]) => Promise<void>;

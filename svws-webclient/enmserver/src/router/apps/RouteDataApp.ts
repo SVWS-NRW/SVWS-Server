@@ -1,5 +1,5 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeLeistungen } from "~/router/apps/RouteLeistungen";
+import { RouteData, type RouteStateInterface } from "@wenom/router/RouteData";
+import { routeLeistungen } from "@wenom/router/apps/RouteLeistungen";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
 import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
 import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
@@ -15,7 +15,7 @@ import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
-import { authStateImpl } from "~/states/AuthStateImpl";
+import { authStateImpl } from "@wenom/states/AuthStateImpl";
 
 
 /**

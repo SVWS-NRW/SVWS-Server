@@ -120,10 +120,19 @@
 	import { computed, onMounted, ref, watch } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanDatenProps } from "./SStundenplanDatenProps";
-	import type { DataTableColumn, SortByAndOrder } from "@ui";
-	import { SvwsUiSelect, StundenplanListeManager, useBenutzerState } from "@ui";
-	import type { StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, Stundenplan } from "@core";
-	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag, ValidatorFehlerart } from "@core";
+	import type { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+	import type { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn, SortByAndOrder } from "@ui/types";
+	import SvwsUiSelect from "@ui/ui/controls/SvwsUiSelect.vue";
+	import { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import { Wochentag } from "@core/core/types/Wochentag";
 
 	const props = defineProps<StundenplanDatenProps>();
 	const benutzerState = useBenutzerState();

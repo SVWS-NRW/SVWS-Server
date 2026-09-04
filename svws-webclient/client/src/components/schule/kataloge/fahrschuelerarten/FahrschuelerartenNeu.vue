@@ -40,10 +40,11 @@
 <script setup lang="ts">
 
 	import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeuProps";
-	import { BenutzerKompetenz, Fahrschuelerart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<FahrschuelerartenNeuProps>();
 	const benutzerState = useBenutzerState();

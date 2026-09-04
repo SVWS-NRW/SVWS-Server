@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { FoerderschwerpunkteListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 
 export interface FoerderschwerpunkteGruppenprozesseProps {
 	manager: () => FoerderschwerpunkteListeManager;

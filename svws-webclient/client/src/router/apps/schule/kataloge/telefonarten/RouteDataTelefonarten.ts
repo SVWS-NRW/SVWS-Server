@@ -1,7 +1,3 @@
-import type { List, SimpleOperationResponse, Telefonart } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
-import { api } from "~/router/Api";
-import { ViewType, TelefonartenListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -11,6 +7,14 @@ import { routeTelefonartenDaten } from "~/router/apps/schule/kataloge/telefonart
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Telefonart } from "@core/core/data/schule/Telefonart";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import { api } from "~/router/Api";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

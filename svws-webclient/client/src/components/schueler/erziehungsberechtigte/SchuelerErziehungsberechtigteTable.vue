@@ -44,11 +44,13 @@
 </template>
 
 <script setup lang="ts">
+	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+	import type { List } from "@core/java/util/List";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import type { DataTableColumn } from "@ui/types";
 	import { computed } from "vue";
-	import type { DataTableColumn } from "@ui";
-	import { useOrteState } from "@ui";
-	import type { Erzieherart, ErzieherStammdaten, List } from "@core";
-	import { AdressenUtils } from "@core";
 
 	const props = defineProps<{
 		data: () => List<ErzieherStammdaten>;

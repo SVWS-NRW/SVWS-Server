@@ -1,7 +1,7 @@
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import SLogin from "~/components/SLogin.vue";
-import type { LoginProps } from "~/components/SLoginProps";
+import { RouteNode } from "@wenom/router/RouteNode";
+import { RouteManager } from "@wenom/router/RouteManager";
+import SLogin from "@wenom/components/SLogin.vue";
+import type { LoginProps } from "@wenom/components/SLoginProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
 

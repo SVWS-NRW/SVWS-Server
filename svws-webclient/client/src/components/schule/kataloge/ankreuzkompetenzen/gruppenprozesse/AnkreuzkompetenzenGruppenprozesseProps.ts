@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { AnkreuzkompetenzenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/AnkreuzkompetenzenListeManager";
 
 export interface AnkreuzkompetenzenGruppenprozesseProps {
 	manager: () => AnkreuzkompetenzenListeManager;

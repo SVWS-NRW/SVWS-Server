@@ -1,8 +1,13 @@
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { CoreTypeData, ReligionEintrag } from "@core";
-import { Religion } from "@core";
 import { ValidatorKonfessionBezeichnung } from "~/components/schule/kataloge/konfessionen/modelproxy/validation/ValidatorKonfessionBezeichnung";
 import { computed } from "vue";
+import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
+import { Religion } from "@core/asd/types/schule/Religion";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class KonfessionModelProxy extends ModelProxy<ReligionEintrag> {
 

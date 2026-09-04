@@ -54,10 +54,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List } from "@core";
 	import type { EinwilligungsartenGruppenprozesseProps } from "~/components/schule/kataloge/einwilligungsarten/gruppenprozesse/EinwilligungsartenGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<EinwilligungsartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

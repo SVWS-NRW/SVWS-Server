@@ -1,6 +1,7 @@
-import type { List } from "@core";
-import { ArrayList, GostKlausurvorgabe } from "@core";
-import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui";
+import { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
 
 export const CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE = CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "vorgabenToIgnore";
 

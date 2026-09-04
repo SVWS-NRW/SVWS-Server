@@ -21,12 +21,14 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
-			"~": resolve(__dirname, "src"),
-			"@ui": resolve(__dirname, '../ui/src/'),
-			"@core": resolve(__dirname, '../core/src/'),
-			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
-			"@images": resolve(__dirname, "images"),
-			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+			"@lupo": resolve(import.meta.dirname, './src/'),
+			"@core": resolve(import.meta.dirname, '../core/src'),
+			"@ui": resolve(import.meta.dirname, '../ui/src/'),
+			"@json": resolve(import.meta.dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
+			"@images": resolve(import.meta.dirname, "images"),
+			"@icons": resolve(import.meta.dirname, "../../node_modules/remixicon/icons"),
+			"@version": resolve(import.meta.dirname, "./version.ts"),
+			"@githash": resolve(import.meta.dirname, "./githash.ts"),
 		},
 	},
 	build: {

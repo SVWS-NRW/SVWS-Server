@@ -26,9 +26,10 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { BenutzerListeEintrag } from "@core";
 	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
-	import { useRegionSwitch, type DataTableColumn } from "@ui";
+	import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const selectedItems = ref<BenutzerListeEintrag[]>([]);
 

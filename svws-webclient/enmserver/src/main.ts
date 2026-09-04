@@ -3,7 +3,7 @@ import { createApp } from "vue";
 import "@ui/assets/styles/index.css";
 import "./main.css";
 
-import SWrapper from "~/components/SWrapper.vue";
+import SWrapper from "@wenom/components/SWrapper.vue";
 import { auskunftStateImpl } from "./states/AuskunftStateImpl";
 import { registerStates } from "./states/registerStates";
 import { AppContext } from "@ui/AppContext";

@@ -31,7 +31,7 @@
 </script>
 
 <script setup lang="ts">
-	import type { ValidatorFehlerart } from "@core";
+	import type { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{

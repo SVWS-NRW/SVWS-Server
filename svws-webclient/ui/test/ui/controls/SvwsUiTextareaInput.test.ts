@@ -1,12 +1,12 @@
 import { beforeEach, expect, test, afterEach, describe } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import SvwsUiTextareaInput from "../../../src/ui/controls/SvwsUiTextareaInput.vue";
-import SvwsUiTooltip from "../../../src/ui/SvwsUiTooltip.vue";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-import type { List } from "../../../../core/src/java/util/List";
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
+import SvwsUiTextareaInput from "@ui/ui/controls/SvwsUiTextareaInput.vue";
+import SvwsUiTooltip from "@ui/ui/SvwsUiTooltip.vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { List } from "@core/java/util/List";
 
 type prop_names = "modelValue" | "disabled" | "valid" | "statistics" | "resizeable" | "span" | "required";
 

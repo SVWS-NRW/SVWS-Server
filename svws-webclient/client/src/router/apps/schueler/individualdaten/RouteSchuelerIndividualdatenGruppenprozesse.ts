@@ -1,7 +1,4 @@
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -10,6 +7,11 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import { routeError } from "~/router/error/RouteError";
 import { serverStateImpl } from "~/states/ServerStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
 

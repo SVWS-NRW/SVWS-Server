@@ -1,5 +1,6 @@
-import type { ReligionEintrag } from "@core";
-import type { Checkpoint, KonfessionenListeManager } from "@ui";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface KonfessionenNeuProps {

@@ -28,12 +28,14 @@
 </template>
 
 <script setup lang="ts">
-	import { useBenutzerState, type DataTableColumn, useModelProxyList } from "@ui";
 	import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
 	import { computed } from "vue";
-	import type { LehrerLernplattform } from "@core";
-	import { BenutzerKompetenz } from "@core";
+	import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
+	import { useModelProxyList } from "@ui/model/useModelProxyList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
 	import { LehrerLernplattformenModelProxy } from "./modelproxy/LehrerLernplattformenModelProxy";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 	const props = defineProps<LehrerLernplattformenProps>();
 	const benutzerState = useBenutzerState();

@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
+	import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+	import { ArrayList } from "@core/java/util/ArrayList";
 	import { ref } from "vue";
-	import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
-	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;

@@ -1,5 +1,5 @@
-import type { SimpleOperationResponse } from "@core";
-import type { WenomAuswahlListeManager } from "@ui";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
 
 export interface NotenmodulSynchronisationProps {
 	manager: () => WenomAuswahlListeManager;

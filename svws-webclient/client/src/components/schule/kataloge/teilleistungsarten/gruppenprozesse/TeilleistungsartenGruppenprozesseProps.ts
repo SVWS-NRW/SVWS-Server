@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { TeilleistungsartenListeManager } from "../../../../../states/teilleistungsarten/TeilleistungsartenListeManager";
+import type { List } from "@core/java/util/List";
+import type { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 
 export interface TeilleistungsartenGruppenprozesseProps {
 	manager: () => TeilleistungsartenListeManager;

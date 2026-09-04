@@ -1,4 +1,12 @@
-import type { Erzieherart, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag } from "@core";
+import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
+import type { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+import type { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+
 
 
 /** Die Sortierfunktion für den Ortskatalog */

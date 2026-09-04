@@ -23,9 +23,10 @@
 
 <script setup lang="ts">
 
-	import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-	import { useAbschnittState } from '../../states/AbschnittState';
-	import { useSchuleState } from '../../states/SchuleState';
+	import type { Schuljahresabschnitt } from '@core/asd/data/schule/Schuljahresabschnitt';
+	import { useAbschnittState } from '@ui/states/AbschnittState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+
 
 	const props = withDefaults(defineProps<{
 		disabled?: boolean

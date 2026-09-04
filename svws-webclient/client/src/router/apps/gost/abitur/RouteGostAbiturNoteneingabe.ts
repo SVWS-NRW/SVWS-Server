@@ -1,17 +1,14 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, ServerMode } from "@core";
-
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbitur, type RouteGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
-
 import type { GostAbiturNoteneingabeProps } from "~/components/gost/abitur/GostAbiturNoteneingabeProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeGost } from "../RouteGost";
 import { routeError } from "~/router/error/RouteError";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const GostAbiturNoteneingabe = () => import("~/components/gost/abitur/GostAbiturNoteneingabe.vue");
 
@@ -52,9 +49,6 @@ export class RouteGostAbiturNoteneingabe extends RouteNode<any, RouteGostAbitur>
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getProps(to: RouteLocationNormalized): GostAbiturNoteneingabeProps {

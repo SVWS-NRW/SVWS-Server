@@ -1,20 +1,15 @@
+import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { ArrayList } from "@core/java/util/ArrayList";
 import { describe, expect, test, beforeAll } from "vitest";
-import { JsonCoreTypeReaderStatic } from "../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
-import { Schuljahresabschnitt } from "../../../../core/src/asd/data/schule/Schuljahresabschnitt";
-import { KlassenDaten } from "../../../../core/src/asd/data/klassen/KlassenDaten";
-import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
-import { Schulgliederung } from "../../../../core/src/asd/types/schule/Schulgliederung";
-import type { SchuelerListeEintrag } from "../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import { Schueler } from "../../../../core/src/asd/data/schueler/Schueler";
-import { JahrgangsDaten } from "../../../../core/src/core/data/jahrgang/JahrgangsDaten";
-import { LehrerListeEintrag } from "../../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-import type { List } from "../../../../core/src/java/util/List";
-import { Pair } from "../../../../core/src/asd/adt/Pair";
-import { KlassenListeEintrag } from "../../../../core/src/asd/data/klassen/KlassenListeEintrag";
-import type { KlassenDatenMinimal } from "../../../../core/src/asd/data/klassen/KlassenDatenMinimal";
-
-import { KlassenListeManager } from "../../../src/states/klassen/KlassenListeManager";
+import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 /**
  * TODO: Test was moved from /ui. Fix paths to ui/core/.. for tests in Vite Config and enable unit tests

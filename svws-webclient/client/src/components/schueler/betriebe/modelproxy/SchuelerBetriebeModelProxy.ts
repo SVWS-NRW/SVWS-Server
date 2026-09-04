@@ -1,8 +1,15 @@
+import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import type { Betrieb } from "@core/core/data/schule/Betrieb";
+import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
-import type { SchuelerBetriebeManager } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetrieb } from "@core";
-import { StringPattern } from "../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {

@@ -109,15 +109,15 @@ task assembleTranspiled(type: Copy) {
 	into "$rootDir/svws-webclient/core/src"
 	include "**/*.ts"
 	exclude "index.ts"
-	def fileIndexCombined = new File("$rootDir/svws-webclient/core/src/index.ts")
-	def fileIndexSchule = file("$rootDir/svws-schulen/build/ts/index.ts")
-	def fileIndexASD = file("$rootDir/svws-asd/build/ts/index.ts")
-	def fileIndexCore = file("$rootDir/svws-core/build/ts/index.ts")
-	def fileIndexApi = file("$buildDir/tsapi/index.ts")
-	doLast {
-		fileIndexCombined.text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" +
-			fileIndexSchule.getText() + fileIndexASD.getText() + fileIndexCore.getText() + fileIndexApi.getText()
-	}
+	// def fileIndexCombined = new File("$rootDir/svws-webclient/core/src/index.ts")
+	// def fileIndexSchule = file("$rootDir/svws-schulen/build/ts/index.ts")
+	// def fileIndexASD = file("$rootDir/svws-asd/build/ts/index.ts")
+	// def fileIndexCore = file("$rootDir/svws-core/build/ts/index.ts")
+	// def fileIndexApi = file("$buildDir/tsapi/index.ts")
+	// doLast {
+	// 	fileIndexCombined.text = "export { JsonCoreTypeReader } from './asd/utils/JsonCoreTypeReader';\n" +
+	// 		fileIndexSchule.getText() + fileIndexASD.getText() + fileIndexCore.getText() + fileIndexApi.getText()
+	// }
 	doFirst {
 		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "asd/utils/JsonCore*.ts", "**/*.test.ts", "test/**/*.ts" ])
 	}

@@ -66,12 +66,24 @@
 
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, ref, shallowRef } from "vue";
-	import { GridManager, CoreTypeSelectManager, useSchuleState, useAbschnittState } from "@ui";
-	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
-		LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag, Comparator } from "@core";
-	import { LehrerMehrleistungsarten, LehrerMinderleistungsarten, LehrerAnrechnungsgrund, ArrayList, HashSet } from "@core";
 	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
 	import type { LehrerPersonalabschnittsdatenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenModelProxy";
+	import type { LehrerAnrechnungsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag";
+	import type { LehrerMehrleistungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag";
+	import type { LehrerMinderleistungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag";
+	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden";
+	import { LehrerAnrechnungsgrund } from "@core/asd/types/lehrer/LehrerAnrechnungsgrund";
+	import { LehrerMehrleistungsarten } from "@core/asd/types/lehrer/LehrerMehrleistungsarten";
+	import { LehrerMinderleistungsarten } from "@core/asd/types/lehrer/LehrerMinderleistungsarten";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { Comparator } from "@core/java/util/Comparator";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

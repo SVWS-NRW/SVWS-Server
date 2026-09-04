@@ -1,11 +1,13 @@
-import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, StundenplanManager, DeveloperNotificationException } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerStundenplan } from "./RouteSchuelerStundenplan";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 
 
 interface RouteStateSchuelerDataStundenplan extends RouteStateInterface {

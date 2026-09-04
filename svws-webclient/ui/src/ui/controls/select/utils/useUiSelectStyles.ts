@@ -1,7 +1,7 @@
-import type { Ref } from "vue";
-import { computed, type ComputedRef } from "vue";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { ComputedRef, Ref } from "vue";
+import { computed } from "vue";
 import type { UiSelectDropdown, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
-import { ValidatorFehlerart } from '../../../../../../core/src/asd/validate/ValidatorFehlerart';
 
 export function useUiSelectStyles<T>(
 	state: ComputedRef<UiSelectState<T>>,

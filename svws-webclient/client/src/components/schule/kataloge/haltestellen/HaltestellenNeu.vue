@@ -43,10 +43,11 @@
 <script setup lang="ts">
 
 	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/HaltestellenNeuProps";
-	import { BenutzerKompetenz, Haltestelle } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { Haltestelle } from "@core/core/data/schule/Haltestelle";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<HaltestellenNeuProps>();
 	const benutzerState = useBenutzerState();

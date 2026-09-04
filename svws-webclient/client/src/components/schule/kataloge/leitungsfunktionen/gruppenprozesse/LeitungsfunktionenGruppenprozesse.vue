@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { ref, computed } from "vue";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import type { LeitungsfunktionenGruppenprozesseProps } from "~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<LeitungsfunktionenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

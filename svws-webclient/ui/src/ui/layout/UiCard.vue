@@ -111,9 +111,9 @@
 
 <script lang="ts" setup>
 
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
+	import type { ButtonType } from '@ui/types';
 	import { ref, onMounted, computed, useSlots, watch, useId, toRaw } from 'vue';
-	import type { ButtonType } from '../../types';
-	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
 	const props = withDefaults(defineProps<{
 		compact?: boolean;

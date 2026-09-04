@@ -35,7 +35,8 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import { computed } from "vue";
 	import type { BetriebeAppProps } from "~/components/schule/kataloge/betriebe/BetriebeAppProps";
 

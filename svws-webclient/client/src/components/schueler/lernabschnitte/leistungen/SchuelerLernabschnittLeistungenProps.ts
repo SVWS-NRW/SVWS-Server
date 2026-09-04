@@ -1,4 +1,6 @@
-import type { Collection, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
+import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
+import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { Collection } from "@core/java/util/Collection";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 

@@ -1,11 +1,17 @@
 import { ref } from "vue";
-import type { ConfigState } from "@ui";
-import type { DBSchemaListeEintrag, List } from "@core";
-import { ApiServer, DeveloperNotificationException, UserNotificationException, OpenApiError, JsonCoreTypeReader, ApiExternal } from "@core";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { ApiExternal } from "@core/api/ApiExternal";
+import { ApiServer } from "@core/api/ApiServer";
+import { OpenApiError } from "@core/api/OpenApiError";
+import { JsonCoreTypeReader } from "@core/asd/utils/JsonCoreTypeReader";
+import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import type { List } from "@core/java/util/List";
+import type { ConfigState } from "@ui/states/ConfigState";
 
 export class ApiConnection {
 

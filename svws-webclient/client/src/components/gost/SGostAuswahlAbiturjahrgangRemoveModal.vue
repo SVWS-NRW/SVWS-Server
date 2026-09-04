@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgang } from '@core/core/data/gost/GostJahrgang';
 	import { ref } from 'vue';
-	import type { GostJahrgang } from '@core';
 
 	const props = defineProps<{
 		gostJahrgang: GostJahrgang;

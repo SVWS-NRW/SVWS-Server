@@ -1,6 +1,7 @@
-import { ValidatorInputRequired, ValidatorNumberRange } from "@ui";
-import { ModelProxy } from "@ui";
-import type { KatalogEntlassgrund } from "@core";
+import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorEntlassgrundBezeichnung } from "~/components/schule/kataloge/entlassgruende/modelproxy/validation/ValidatorEntlassgrundBezeichnung";
 
 /**

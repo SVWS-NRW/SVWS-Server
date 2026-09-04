@@ -40,12 +40,12 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { computed } from "vue";
-	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
-	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
-	import { GostLaufbahnplanungFachkombinationTyp } from "../../../../../core/src/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
-	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

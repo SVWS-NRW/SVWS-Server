@@ -1,12 +1,12 @@
-import { type InjectionKey } from "vue";
-import { AppContext } from "../AppContext";
-import type { List } from "../../../core/src/java/util/List";
-import type { ReportingParameter } from "../../../core/src/core/data/reporting/ReportingParameter";
-import type { SimpleOperationResponse } from "../../../core/src/core/data/SimpleOperationResponse";
-import type { ReportingReportvorlageParameterGruppe } from "../../../core/src/core/data/reporting/ReportingReportvorlageParameterGruppe";
-import type { ReportingReportvorlageParameter } from "../../../core/src/core/data/reporting/ReportingReportvorlageParameter";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { ReportingReportvorlage } from "../../../core/src/core/types/reporting/ReportingReportvorlage";
+import type { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
+import type { ReportingReportvorlageParameter } from "@core/core/data/reporting/ReportingReportvorlageParameter";
+import type { ReportingReportvorlageParameterGruppe } from "@core/core/data/reporting/ReportingReportvorlageParameterGruppe";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+import type { List } from "@core/java/util/List";
+import { AppContext } from "@ui/AppContext";
+import type { InjectionKey } from "vue";
 
 /** Ein Element (Parameter oder Gruppe) mit Anforderungen an ServerMode und Benutzerkompetenzen. */
 export type ElementMitAnforderung = { uiIstSichtbar: boolean; uiErforderlicherServerMode: string; uiErforderlicheKompetenzen: List<number> };

@@ -1,6 +1,4 @@
 import type { RouteParams } from "vue-router";
-import type { LernplattformListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
@@ -9,6 +7,10 @@ import { RouteDataLernplattformen } from "~/router/apps/schule/kataloge/lernplat
 import { routeLernplattformenDaten } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenDaten";
 import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenNeu";
 import { routeLernplattformenGruppenprozesse } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenGruppenprozesse";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
 
 const LernplattformenAuswahl = () =>
 	import("~/components/schule/kataloge/lernplattformen/LernplattformenAuswahl.vue");
@@ -19,7 +21,7 @@ export class RouteLernplattformen extends RouteAuswahlNode<LernplattformListeMan
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
-			"schule.lernplattformen", "schule/lernplattformen/:id(\\d+)?", LernplattformenApp, LernplattformenAuswahl, new RouteDataLernplattformen());
+			"schule.lernplattformen", String.raw`schule/lernplattformen/:id(\d+)?`, LernplattformenApp, LernplattformenAuswahl, new RouteDataLernplattformen());
 		super.mode = ServerMode.STABLE;
 		super.text = "Lernplattformen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

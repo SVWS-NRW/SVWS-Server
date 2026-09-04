@@ -1,4 +1,3 @@
-
 <template>
 	<Story title="QR-Code" id="Qr-Code" icon="ri:qr-code-line" :layout="{type: 'grid', width: '45%'}">
 		<Variant id="totp"	title="TOTP">

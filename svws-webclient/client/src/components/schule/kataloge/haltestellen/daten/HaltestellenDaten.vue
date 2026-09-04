@@ -38,9 +38,9 @@
 
 	import type { HaltestellenDatenProps } from "~/components/schule/kataloge/haltestellen/daten/HaltestellenDatenProps";
 	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
-	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<HaltestellenDatenProps>();
 	const benutzerState = useBenutzerState();

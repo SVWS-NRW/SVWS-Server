@@ -40,8 +40,11 @@
 
 	import { computed, ref } from "vue";
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
-	import { BenutzerKompetenz, StundenplanPausenzeit, Wochentag, DateUtils } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const benutzerState = useBenutzerState();

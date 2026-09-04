@@ -97,9 +97,9 @@
 
 	import { computed, nextTick, onMounted, ref, watch, watchEffect } from "vue";
 	import type { LoginProps } from "./SLoginProps";
-	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
-	import { useAuthState } from "~/states/AuthState";
+	import { useAuthState } from "@wenom/states/AuthState";
+	import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();

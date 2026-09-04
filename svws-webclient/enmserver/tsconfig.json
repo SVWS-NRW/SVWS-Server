@@ -2,23 +2,5 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "./dist",
-		"resolveJsonModule": true,
-		"paths": {
-			"~/*": ["./src/*"],
-			"@ui/*": ["../ui/src/*"],
-			"@core/*": ["../core/src/*"],
-			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
-		},
 	},
-	"include": [
-		"*.ts",
-		"src/**/*",
-		"test/**/*",
-		"components.d.ts",
-		"../ui/src/",
-		"../core/src/**/*.ts",
-	],
-	"exclude": [
-		"../core/src/index.ts"
-	]
 }

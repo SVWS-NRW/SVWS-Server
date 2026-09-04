@@ -1,8 +1,3 @@
-import {
-	AppContext, BenutzerStateKey, AbschnittStateKey, AuskunftStateKey, ConfigStateKey, GostLaufbahnplanungStateKey, ReportingStateKey,
-	SchuleStateKey, ServerStateKey, WiedervorlageStateKey, NotenmodulStateKey, OrteStateKey, GostKlausurplanungStateKey, NotificationsStateKey,
-} from "@ui";
-
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
@@ -16,6 +11,20 @@ import { notenmodulStateImpl } from "./NotenmodulStateImpl";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
 import { notificationStateImpl } from "~/states/NotificationsStateImpl";
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
+import { AppContext } from "@ui/AppContext";
+import { AbschnittStateKey } from "@ui/states/AbschnittState";
+import { AuskunftStateKey } from "@ui/states/AuskunftState";
+import { BenutzerStateKey } from "@ui/states/BenutzerState";
+import { ConfigStateKey } from "@ui/states/ConfigState";
+import { GostKlausurplanungStateKey } from "@ui/states/GostKlausurplanungState";
+import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState";
+import { OrteStateKey } from "@ui/states/kataloge/OrteState";
+import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
+import { NotificationsStateKey } from "@ui/states/NotificationsState";
+import { ReportingStateKey } from "@ui/states/ReportingState";
+import { SchuleStateKey } from "@ui/states/SchuleState";
+import { ServerStateKey } from "@ui/states/ServerState";
+import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
 
 export function registerStates(): void {

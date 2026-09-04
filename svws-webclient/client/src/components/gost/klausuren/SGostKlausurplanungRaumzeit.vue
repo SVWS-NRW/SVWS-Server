@@ -50,12 +50,21 @@
 
 <script setup lang="ts">
 
-	import type { List } from '@core';
-	import { GostKlausurraum, GostKursklausur, GostKlausurtermin, ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurtermin, ListUtils } from '@core';
 	import { ref, onMounted, computed } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import { useBenutzerState, useGostKlausurplanungState } from '@ui';
 	import { useKlausurplanungDragAndDrop } from './SGostKlausurplanungDragUtils';
+	import { GostKlausurraum } from '@core/core/data/gost/klausuren/GostKlausurraum';
+	import { GostKlausurraumRich } from '@core/core/data/gost/klausuren/GostKlausurraumRich';
+	import { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { ListUtils } from '@core/core/utils/ListUtils';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 
 	const { gotoKalenderdatum, gotoRaumzeitTermin: gotoTermin } = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

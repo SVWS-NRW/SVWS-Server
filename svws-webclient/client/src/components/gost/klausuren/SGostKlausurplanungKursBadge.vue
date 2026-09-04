@@ -30,11 +30,13 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurtermin, GostKursklausur, GostSchuelerklausurtermin } from "@core";
-	import { DeveloperNotificationException } from "@core";
 	import { computed, ref } from "vue";
-	import { useGostKlausurplanungState } from "@ui";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 	const props = withDefaults(defineProps<{
 		kursklausur?: GostKursklausur;

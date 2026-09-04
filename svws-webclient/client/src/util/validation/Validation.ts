@@ -1,4 +1,4 @@
-import { JavaString } from "@core";
+import { JavaString } from "@core/java/lang/JavaString";
 
 export function emailIsValid(value: string | null, maxLength: number) {
 	if ((value === null) || JavaString.isBlank(value)) {

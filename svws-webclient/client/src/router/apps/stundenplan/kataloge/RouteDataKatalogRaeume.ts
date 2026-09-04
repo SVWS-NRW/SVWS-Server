@@ -1,15 +1,15 @@
-import type { Raum } from "@core";
-import { ArrayList, UserNotificationException, DeveloperNotificationException } from "@core";
-import { RaumListeManager } from "@ui";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 import { routeStundenplan } from "../RouteStundenplan";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import type { Raum } from "@core/core/data/schule/Raum";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { RaumListeManager } from "@ui/ui/manager/raum/RaumListeManager";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	raumListeManager: RaumListeManager;

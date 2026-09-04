@@ -1,7 +1,13 @@
-import type { OrtsteileListeManager } from "@ui";
-import { StringPattern, ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-import { ArrayList } from "@core";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { OrtsteileListeManager } from "@ui/ui/manager/kataloge/OrtsteileListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 
 

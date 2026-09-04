@@ -21,9 +21,9 @@
 
 <script setup lang="ts">
 
+	import type { Sprachendaten } from "@core/asd/data/schueler/Sprachendaten";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { computed } from "vue";
-	import type { Sprachendaten } from "../../../../../core/src/asd/data/schueler/Sprachendaten";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

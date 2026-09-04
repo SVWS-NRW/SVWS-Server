@@ -24,9 +24,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
+	import type { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
+	import type { List } from "@core/java/util/List";
 	import { ref, computed } from "vue";
-	import type { BenutzergruppenManager, BenutzerKompetenzGruppe, List } from "@core";
-	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
 		manager: () => BenutzergruppenManager;

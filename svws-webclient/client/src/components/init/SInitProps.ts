@@ -1,4 +1,6 @@
-import type { SchulenKatalogEintrag, List, SimpleOperationResponse } from "@core";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { List } from "@core/java/util/List";
 
 export interface InitProps {
 	listSchulkatalog: List<SchulenKatalogEintrag>;

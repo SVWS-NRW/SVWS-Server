@@ -1,8 +1,4 @@
 import type { RouteLocationRaw } from "vue-router";
-
-import type { GostHalbjahr, GostStatistikFachwahl, List, SchuelerListeEintrag } from "@core";
-import { ArrayList, SchuelerStatus, GostJahrgangsFachwahlenManager, GostJahrgangFachwahlen, DeveloperNotificationException } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -16,6 +12,15 @@ import { routeGostFachwahlenLeistungskurse } from "./RouteGostFachwahlenLeistung
 import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse";
 import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
 import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import { GostJahrgangFachwahlen } from "@core/core/data/gost/GostJahrgangFachwahlen";
+import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostJahrgangsFachwahlenManager } from "@core/core/utils/gost/GostJahrgangsFachwahlenManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 interface RouteStateDataGostFachwahlen extends RouteStateInterface {
 	abiturjahr: number;

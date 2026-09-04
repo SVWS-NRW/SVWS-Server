@@ -1,7 +1,7 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { DateManager } from "../../../core/src/asd/validate/DateManager";
-import { InvalidDateException } from "../../../core/src/asd/validate/InvalidDateException";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { DateManager } from "@core/asd/validate/DateManager";
+import { InvalidDateException } from "@core/asd/validate/InvalidDateException";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 /**
  * Ein Validator, welches das Alter eines Schülers anhand seines Geburtsdatum bei dem angegebenen Bezugsdatum prüft.

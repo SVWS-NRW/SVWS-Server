@@ -3,9 +3,9 @@ import { AppContext } from "@ui/AppContext";
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
 
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "@lupo/router/RouteNode";
+import { routeApp } from "@lupo/router/apps/RouteApp";
+import { routeError } from "@lupo/router/error/RouteError";
 
 interface RouteStateError {
 	code: number | undefined;

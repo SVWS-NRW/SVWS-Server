@@ -1,5 +1,6 @@
-import type { List, StundenplanListeEintrag } from "@core";
-import type { LehrerListeManager } from "@ui";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import type { List } from "@core/java/util/List";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface LehrerAllgemeinesGruppenprozesseProps {

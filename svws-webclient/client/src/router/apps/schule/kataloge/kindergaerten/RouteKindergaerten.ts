@@ -1,14 +1,16 @@
 import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
-import type { KindergaertenListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import { RouteDataKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteDataKindergaerten";
 import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenDaten";
 import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
 
 
 const KindergartenApp = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenApp.vue");
@@ -19,7 +21,7 @@ export class RouteKindergaerten extends RouteAuswahlNode<KindergaertenListeManag
 	public constructor() {
 		super([Schulform.G, Schulform.PS, Schulform.S, Schulform.V, Schulform.FW, Schulform.WF],
 			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.kindergaerten",
-			"schule/kindergaerten/:id(\\d+)?", KindergartenApp, KindergaertenAuswahl, new RouteDataKindergaerten());
+			String.raw`schule/kindergaerten/:id(\d+)?`, KindergartenApp, KindergaertenAuswahl, new RouteDataKindergaerten());
 		super.mode = ServerMode.STABLE;
 		super.text = "Kindergärten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

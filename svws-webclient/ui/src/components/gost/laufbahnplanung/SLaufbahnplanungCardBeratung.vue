@@ -18,12 +18,12 @@
 
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import { ref, computed, watch } from "vue";
-	import { GostLaufbahnplanungBeratungsdaten } from '../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten';
-	import { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
-	import SvwsUiSelect from "../../../ui/controls/SvwsUiSelect.vue";
-	import SvwsUiTextareaInput from "../../../ui/controls/SvwsUiTextareaInput.vue";
-	import SvwsUiTextInput from "../../../ui/controls/SvwsUiTextInput.vue";
-	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
+	import { GostLaufbahnplanungBeratungsdaten } from '@core/core/data/gost/GostLaufbahnplanungBeratungsdaten';
+	import { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
+	import { useGostLaufbahnplanungState } from '@ui/states/GostLaufbahnplanungState';
+	import SvwsUiSelect from '@ui/ui/controls/SvwsUiSelect.vue';
+	import SvwsUiTextareaInput from '@ui/ui/controls/SvwsUiTextareaInput.vue';
+	import SvwsUiTextInput from '@ui/ui/controls/SvwsUiTextInput.vue';
 
 
 	const props = defineProps<{

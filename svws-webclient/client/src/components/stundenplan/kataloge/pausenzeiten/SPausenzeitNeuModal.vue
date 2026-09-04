@@ -19,9 +19,12 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+	import { ArrayList } from "@core/java/util/ArrayList";
 	import { ref, computed } from "vue";
-	import type { StundenplanManager, StundenplanPausenzeit } from "@core";
-	import { Wochentag, DateUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
 		addPausenzeiten: (pausenzeiten: Iterable<Partial<StundenplanPausenzeit>>) => Promise<void>;

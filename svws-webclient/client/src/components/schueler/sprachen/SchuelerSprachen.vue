@@ -10,8 +10,8 @@
 
 	import { computed } from 'vue';
 	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
-	import { BenutzerKompetenz } from '@core';
-	import { useBenutzerState } from '@ui';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 
 	const props = defineProps<SchuelerSprachenProps>();
 	const benutzerState = useBenutzerState();

@@ -1,4 +1,4 @@
-import { ModelProxy } from "@ui";
+import { ModelProxy } from "@ui/model/ModelProxy";
 import type { ImageInfo, TableLogo } from "../LogoUtils";
 import { getImageRestrictions } from "../LogoUtils";
 import { ValidatorLogoImage } from "./ValidatorLogoImage";

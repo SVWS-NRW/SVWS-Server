@@ -87,12 +87,21 @@
 <script setup lang="ts">
 
 
+	import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
+	import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+	import { DQRNiveau } from "@core/asd/types/schule/DQRNiveau";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import { FachklasseEintrag } from "@core/core/data/schule/FachklasseEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { computed, ref, watch } from "vue";
 	import type { FachklassenNeuProps } from "~/components/schule/kataloge/fachklassen/FachklassenNeuProps";
-	import type { SchulgliederungKatalogEintrag, FachklasseKatalogEintrag, List } from "@core";
-	import { ArrayList, BenutzerKompetenz, FachklasseEintrag, Schulgliederung, DQRNiveau } from "@core";
-	import { FachklassenModelProxy } from "~/components/schule/kataloge/fachklassen/modelproxy/FachklassenModelProxy";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { FachklassenModelProxy } from "./modelproxy/FachklassenModelProxy";
 
 	const props = defineProps<FachklassenNeuProps>();
 	const schuleState = useSchuleState();

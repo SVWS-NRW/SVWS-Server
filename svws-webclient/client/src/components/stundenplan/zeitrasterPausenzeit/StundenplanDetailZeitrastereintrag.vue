@@ -45,11 +45,15 @@
 
 <script setup lang="ts">
 
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 	import { computed, ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import type { StundenplanManager } from "@core";
-	import { DateUtils, Wochentag, Fach, StundenplanZeitraster, ListUtils } from "@core";
-	import { SvwsUiTextInput } from "@ui";
+	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 
 	const props = defineProps<{
 		selected: StundenplanZeitraster;

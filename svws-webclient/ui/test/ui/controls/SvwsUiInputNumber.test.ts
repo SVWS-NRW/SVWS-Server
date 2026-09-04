@@ -1,10 +1,10 @@
 import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import SvwsUiInputNumber from "../../../src/ui/controls/SvwsUiInputNumber.vue";
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-import type { List } from "../../../../core/src/java/util/List";
+import SvwsUiInputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { List } from "@core/java/util/List";
 
 describe("HTML Tests SvwsUiInputNumber", () => {
 	test("HTML wird erzeugt.", () => {
@@ -244,7 +244,7 @@ describe("Parsing und Synchronisation zwischen data und visualData", () => {
 		[4.5, "4,5", 4.5],
 		[null, null, null],
 	])("Mit modelValue %s ist visualData = %s und data = %s", (modelValue, visualData, data) => {
-		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, decimalPlaces: 4  } });
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, decimalPlaces: 4 } });
 
 		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
 		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
@@ -265,7 +265,7 @@ describe("Parsing und Synchronisation zwischen data und visualData", () => {
 		[3, "4", "4", 4],
 		[4, "4", "4", 4],
 	])("Mit Prop 'decimalPlaces = %s' und der Input-Eingabe %s ist visualData = %s und data = %s (Sprache: %s)", async (decimalPlaces, input, visualData, data) => {
-		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, decimalPlaces: decimalPlaces as 0 | 1 | 2 | 3 | 4  } });
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, decimalPlaces: decimalPlaces as 0 | 1 | 2 | 3 | 4 } });
 		const inputElement = wrapper.find("input");
 		await inputElement.setValue(input);
 
@@ -482,16 +482,16 @@ describe("Computed values in SvwsUiInputNumber", () => {
 describe("Funktionen in SvwsUiInputNumber", () => {
 	test.each([
 		["up", undefined, 11],
-		["up", false as false, 10],
+		["up", false as const, 10],
 		["up", 1, 11],
 		["up", 0.1, 10.1],
 		["down", undefined, 9],
-		["down", false as false, 10],
+		["down", false as const, 10],
 		["down", 1, 9],
 		["down", 0.1, 9.9],
 	])("onStepperClick mit Argument %s und steps = %s verändert den Wert auf %s", async (direction, steps, result) => {
 		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10, steps, decimalPlaces: 4  },
+			props: { modelValue: 10, steps, decimalPlaces: 4 },
 		});
 
 		const onStepperClick = await wrapper.findComponent({

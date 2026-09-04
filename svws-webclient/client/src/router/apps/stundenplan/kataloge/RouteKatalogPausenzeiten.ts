@@ -1,12 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { StundenplanPausenzeit, DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { PausenzeitenAuswahlProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
 import type { PausenzeitenProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenProps";
 import { RouteDataKatalogPausenzeiten } from "./RouteDataKatalogPausenzeiten";
 import { routeError } from "~/router/error/RouteError";
 import { RouteStundenplan, routeStundenplan } from "../RouteStundenplan";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SPausenzeitenAuswahl = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue");
 const SPausenzeiten = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeiten.vue");

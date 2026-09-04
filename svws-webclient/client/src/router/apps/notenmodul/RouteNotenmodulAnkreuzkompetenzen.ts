@@ -1,8 +1,4 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
-import type { EnmLerngruppenAuswahlListeManager } from "@ui";
-import { ConfigElement } from "@ui";
 import type { RouteApp } from "../RouteApp";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteNode } from "~/router/RouteNode";
@@ -12,6 +8,11 @@ import { routeNotenmodulAnkreuzkompetenzenData } from "./RouteNotenmodulAnkreuzk
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
+import { ConfigElement } from "@ui/utils/Config";
 
 const NotenmodulAnkreuzkompetenzenApp = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenApp.vue");
 const NotenmodulAnkreuzkompetenzenAuswahl = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenAuswahl.vue");

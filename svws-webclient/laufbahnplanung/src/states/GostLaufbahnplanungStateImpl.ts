@@ -32,7 +32,7 @@ import type { List } from "@core/java/util/List";
 import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import { StateManager } from "@ui/ui/StateManager";
 import { Config, ConfigElement } from "@ui/utils/Config";
-import { RouteManager } from "~/router/RouteManager";
+import { RouteManager } from "@lupo/router/RouteManager";
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
 import { HashMap } from "@core/java/util/HashMap";

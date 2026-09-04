@@ -84,12 +84,12 @@
 </template>
 <script setup lang="ts">
 
-	import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
-	import type { ValidatorFehler } from "../../../core/src/asd/validate/ValidatorFehler";
-	import type { List } from "../../../core/src/java/util/List";
-	import { ArrayList } from "../../../core/src/java/util/ArrayList";
 	import { computed } from "vue";
 	import type { ValidationResult } from "../validation/ValidationResult";
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		validationResult: ValidationResult;

@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { NotenmodulVerbindungNeuProps } from "~/components/notenmodul/NotenmodulVerbindungNeuProps";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const NotenmodulVerbindungNeu = () => import("~/components/notenmodul/NotenmodulVerbindungNeu.vue");
 

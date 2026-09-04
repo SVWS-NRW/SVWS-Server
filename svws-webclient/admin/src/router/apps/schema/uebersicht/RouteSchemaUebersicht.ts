@@ -1,11 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchema, type RouteSchema } from "~/router/apps/schema/RouteSchema";
-import type { SchemaUebersichtProps } from "~/components/schema/uebersicht/SSchemaUebersichtProps";
-import { api } from "~/router/Api";
 import { ServerMode } from "@core/core/types/ServerMode";
+import type { SchemaUebersichtProps } from "@admin/components/schema/uebersicht/SSchemaUebersichtProps";
+import { api } from "@admin/router/Api";
+import { RouteNode } from "@admin/router/RouteNode";
+import type { RouteSchema } from "../RouteSchema";
+import { routeSchema } from "../RouteSchema";
 
-const SSchemaUebersicht = () => import("~/components/schema/uebersicht/SSchemaUebersicht.vue");
+const SSchemaUebersicht = () => import("@admin/components/schema/uebersicht/SSchemaUebersicht.vue");
 
 
 export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {

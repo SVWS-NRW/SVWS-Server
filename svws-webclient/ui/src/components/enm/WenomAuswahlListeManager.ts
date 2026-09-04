@@ -1,11 +1,11 @@
-import type { List } from '../../../../core/src/java/util/List';
-import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
-import type { Comparator } from '../../../../core/src/java/util/Comparator';
-import { JavaLong } from '../../../../core/src/java/lang/JavaLong';
-import { ENMServerConnection } from '../../../../core/src/core/data/enm/ENMServerConnection';
-import type { SimpleOperationResponse } from '../../../../core/src/core/data/SimpleOperationResponse';
-import { AuswahlManager } from '../../ui/manager/AuswahlManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { ENMServerConnection } from "@core/core/data/enm/ENMServerConnection";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 
 /**
  * Ein Manager für die Auswahl-Liste der Klassenleitungen im Externen Notenmodul (ENM)

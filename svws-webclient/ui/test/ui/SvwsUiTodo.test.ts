@@ -1,7 +1,7 @@
 import { beforeEach, expect, test, afterEach, describe } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import SvwsUiTodo from "../../src/ui/SvwsUiTodo.vue";
+import SvwsUiTodo from "@ui/ui/SvwsUiTodo.vue";
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiTodo>>;
 

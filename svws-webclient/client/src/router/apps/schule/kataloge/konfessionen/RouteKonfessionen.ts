@@ -1,6 +1,4 @@
 import type { RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { KonfessionenListeManager } from "@ui";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeKonfessionenDaten } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenDaten";
@@ -10,6 +8,10 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKonfessionenGruppenprozesse } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenGruppenprozesse";
 import { routeKonfessionenNeu } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenNeu";
 import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
 
 const KonfessionenAuswahl = () => import("~/components/schule/kataloge/konfessionen/KonfessionenAuswahl.vue");
 const KonfessionenApp = () => import("~/components/schule/kataloge/konfessionen/KonfessionenApp.vue");
@@ -18,7 +20,7 @@ export class RouteKonfessionen extends RouteAuswahlNode<KonfessionenListeManager
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.konfessionen",
-			"schule/konfessionen/:id(\\d+)?", KonfessionenApp, KonfessionenAuswahl, new RouteDataKonfessionen());
+			String.raw`schule/konfessionen/:id(\d+)?`, KonfessionenApp, KonfessionenAuswahl, new RouteDataKonfessionen());
 		super.mode = ServerMode.STABLE;
 		super.text = "Konfessionen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

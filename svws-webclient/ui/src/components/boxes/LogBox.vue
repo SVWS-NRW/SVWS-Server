@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 
+	import type { List } from "@core/java/util/List";
 	import { computed, ref } from "vue";
-	import type { List } from "../../../../core/src/java/util/List";
 
 	const props = withDefaults(defineProps<{
 		logs?: List<string | null>;

@@ -91,12 +91,18 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurraum, GostKlausurtermin } from '@core';
-	import { BenutzerKompetenz, DateUtils, GostHalbjahr, GostKursklausur } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import { useBenutzerState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
 	import { computed } from 'vue';
 	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
+	import type { GostKlausurraum } from '@core/core/data/gost/klausuren/GostKlausurraum';
+	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { DateUtils } from '@core/core/utils/DateUtils';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+	import type { DataTableColumn } from '@ui/types';
 
 	const props = defineProps<{
 		raum: GostKlausurraum;

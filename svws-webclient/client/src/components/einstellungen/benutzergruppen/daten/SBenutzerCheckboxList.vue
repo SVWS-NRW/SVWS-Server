@@ -24,9 +24,11 @@
 </template>
 
 <script setup lang="ts">
+	import type { BenutzerListeEintrag } from '@core/core/data/benutzer/BenutzerListeEintrag';
+	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 
-	import type { List, BenutzerListeEintrag } from "@core";
-	import { useBenutzerState } from "@ui";
+
 
 	defineProps<{
 		title: string;

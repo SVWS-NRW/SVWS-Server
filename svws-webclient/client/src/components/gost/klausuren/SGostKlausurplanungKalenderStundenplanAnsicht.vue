@@ -125,10 +125,18 @@
 
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
-	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht, List, StundenplanPausenzeit } from "@core";
-	import { DateUtils, GostHalbjahr, BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useBenutzerState, useGostKlausurplanungState } from "@ui";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import type { Wochentag } from "@core/core/types/Wochentag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 

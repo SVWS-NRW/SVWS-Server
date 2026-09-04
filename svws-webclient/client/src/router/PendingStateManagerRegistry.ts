@@ -1,5 +1,6 @@
-import { ArrayList, type List } from "@core";
-import type { PendingStateManager } from "@ui";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
 /**
  * Diese Klasse verwaltet eine Liste von {@link PendingStateManager} Objekten, um ausstehende Änderungen aus den Gruppenprozessen übergreifend tracken zu können.

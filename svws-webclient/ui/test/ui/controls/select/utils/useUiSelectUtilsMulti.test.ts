@@ -2,8 +2,8 @@ import { type Ref, ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import UiSelectMulti from "../../../../../src/ui/controls/select/UiSelectMulti.vue";
-import { SelectManager } from "../../../../../src/ui/controls/select/manager/SelectManager";
+import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+import UiSelectMulti from "@ui/ui/controls/select/UiSelectMulti.vue";
 
 type MockBounding = {
 	x: Ref<number>;

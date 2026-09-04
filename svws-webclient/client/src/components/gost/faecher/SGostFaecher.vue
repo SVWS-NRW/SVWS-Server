@@ -15,8 +15,9 @@
 
 	import { computed } from "vue";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
-	import { BenutzerKompetenz, GostLaufbahnplanungFachkombinationTyp } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
 
 	const props = defineProps<GostFaecherProps>();
 	const benutzerState = useBenutzerState();

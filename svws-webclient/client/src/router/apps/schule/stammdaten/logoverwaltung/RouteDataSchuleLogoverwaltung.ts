@@ -1,6 +1,10 @@
-import { ArrayList, Arrays, type List, type Logo, type ApiFile } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
+import type { ApiFile } from "@core/api/BaseApi";
+import type { Logo } from "@core/core/data/schule/Logo";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { List } from "@core/java/util/List";
 
 interface RouteStateSchuleLogoverwaltung extends RouteStateInterface {
 	logos: List<Logo>;

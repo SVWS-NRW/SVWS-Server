@@ -1,6 +1,9 @@
-import type { SchulEintrag } from "@core";
-import { BasicValidator, ValidatorFehlerart } from "@core";
-import { StringPattern, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorSchuleKuerzel extends BasicValidator {
 

@@ -1,8 +1,8 @@
-import { ENMConfigSpalte } from "../../../../core/src/core/data/enm/ENMConfigSpalte";
-import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-import { HashMap } from "../../../../core/src/java/util/HashMap";
-import type { JavaMap } from "../../../../core/src/java/util/JavaMap";
-import type { List } from "../../../../core/src/java/util/List";
+import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 /**
  * Ein Manager für die Verwaltung der Sichtbar-Konfiguration bei Tabellen der ENM-Daten.

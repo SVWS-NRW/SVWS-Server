@@ -1,9 +1,10 @@
-import { BasicValidator, ValidatorFehlerart } from "@core";
 import type { ImageInfo, ImageRestrictions } from "../LogoUtils";
 import { ValidatorLogoImageResolution } from "./ValidatorLogoImageResolution";
 import { ValidatorLogoImageAspectRatio } from "./ValidatorLogoImageAspectRatio";
 import { ValidatorLogoImageFileType } from "./ValidatorLogoImageFileType";
 import { ValidatorLogoImageFileSize } from "./ValidatorLogoImageFileSize";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 
 /**

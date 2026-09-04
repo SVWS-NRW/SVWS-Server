@@ -52,12 +52,15 @@
 
 <script setup lang="ts">
 
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { computed } from "vue";
-	import type { FachDaten, Floskelgruppe, JahrgangsDaten } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
-	import { SelectManager, useBenutzerState } from "@ui";
 	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
+	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
 
 	const props = defineProps<FloskelnDatenProps>();
 	const benutzerState = useBenutzerState();

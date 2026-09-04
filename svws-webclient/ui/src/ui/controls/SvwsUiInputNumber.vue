@@ -71,15 +71,15 @@
 
 <script setup lang="ts">
 
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+	import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+	import { ValidationResult } from "@ui/validation/ValidationResult";
 	import { ref, computed, watch, useId, onBeforeMount, useTemplateRef } from "vue";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-	import { ValidationResult } from "../../validation/ValidationResult";
-	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
-	import { ValidatorNumberRange } from "../../validation/common/ValidatorNumberRange";
-	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 	defineOptions({
 		inheritAttrs: false,

@@ -1,11 +1,11 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { mount } from "@vue/test-utils";
-import UiValidationTooltip from "../../src/ui/UiValidationTooltip.vue";
-import { ValidationResult } from "../../src/validation/ValidationResult";
-import { ArrayList } from "../../../core/src/java/util/ArrayList";
-import type { ValidatorFehler } from "../../../core/src/asd/validate/ValidatorFehler";
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import UiValidationTooltip from "@ui/ui/UiValidationTooltip.vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ValidationResult } from "@ui/validation/ValidationResult";
 
 beforeEach(() => {
 	document.body.appendChild(document.createElement("body"));

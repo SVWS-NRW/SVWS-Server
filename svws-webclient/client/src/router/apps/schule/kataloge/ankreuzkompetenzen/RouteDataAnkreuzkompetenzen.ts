@@ -1,6 +1,3 @@
-import type { Ankreuzkompetenz, SimpleOperationResponse, List } from "@core";
-import { AnkreuzkompetenzJahrgangszuordnung, ArrayList, BenutzerKompetenz } from "@core";
-import { AnkreuzkompetenzenListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -11,6 +8,14 @@ import { routeAnkreuzkompetenzenNeu } from "~/router/apps/schule/kataloge/ankreu
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+import { AnkreuzkompetenzJahrgangszuordnung } from "@core/core/data/schule/AnkreuzkompetenzJahrgangszuordnung";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/AnkreuzkompetenzenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

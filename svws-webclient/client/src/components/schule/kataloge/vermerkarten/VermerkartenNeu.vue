@@ -42,9 +42,10 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import type { VermerkartenNeuProps } from "./VermerkartenNeuProps";
-	import { BenutzerKompetenz, VermerkartEintrag } from "@core";
 	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<VermerkartenNeuProps>();
 	const benutzerState = useBenutzerState();

@@ -1,12 +1,20 @@
-import type { BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List } from "@core";
-import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList, DeveloperNotificationException, BenutzerTyp } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
 import { RouteNode } from "~/router/RouteNode";
+import { BenutzerAllgemeinCredentials } from "@core/core/data/benutzer/BenutzerAllgemeinCredentials";
+import { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
+import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
+import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+import { BenutzerManager } from "@core/core/utils/benutzer/BenutzerManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateEinstellungenBenutzer extends RouteStateInterface {

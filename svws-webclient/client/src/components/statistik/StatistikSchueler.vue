@@ -67,10 +67,17 @@
 
 <script setup lang="ts">
 
-	import { GridManager, useRegionSwitch, TabManager, useSchuleState } from "@ui";
+	import { SchuelerStatistikGesamt } from "@core/asd/data/statistik/SchuelerStatistikGesamt";
+	import { ValidatorSsSchuelerStammdaten } from "@core/asd/validate/schueler/ValidatorSsSchuelerStammdaten";
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { StatistikSchuelerProps } from "./StatistikSchuelerProps";
-	import type { ValidatorFehler, List } from "@core";
-	import { SchuelerListeEintrag, SchuelerStatistikGesamt, ValidatorSsSchuelerStammdaten, ArrayList } from "@core";
 	import { computed, watch } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

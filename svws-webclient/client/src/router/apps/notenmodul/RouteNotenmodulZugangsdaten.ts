@@ -1,4 +1,3 @@
-import { BenutzerKompetenz, Schulform, ServerMode, type DeveloperNotificationException } from "@core";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import type { RouteApp } from "../RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -8,6 +7,10 @@ import { RouteDataNotenmodulZugangsdaten } from "./RouteDataNotenmodulZugangsdat
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import { routeError } from "~/router/error/RouteError";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const NotenmodulZugangsdaten = () => import("~/components/notenmodul/NotenmodulZugangsdaten.vue");
 

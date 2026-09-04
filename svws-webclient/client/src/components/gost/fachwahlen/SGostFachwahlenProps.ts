@@ -1,4 +1,7 @@
-import type { List, GostStatistikFachwahl, GostHalbjahr, GostFaecherManager } from "@core";
+import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import type { List } from "@core/java/util/List";
 
 export interface GostFachwahlenProps {
 	fachwahlstatistik: List<GostStatistikFachwahl>;

@@ -1,5 +1,5 @@
+import type { SchwerpunkteListeManager } from "@ui/ui/manager/kataloge/SchwerpunkteListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { SchwerpunkteListeManager } from "@ui";
 
 export type SchwerpunkteAppProps = RouteAuswahlProps<SchwerpunkteListeManager>;
 

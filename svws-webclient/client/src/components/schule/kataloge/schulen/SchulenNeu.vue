@@ -113,12 +113,22 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ref, watch } from "vue";
-	import { JavaObject, SchulEintrag, Schulform, Herkunftsschulnummer, BenutzerKompetenz, HerkunftSchulform } from "@core";
-	import type { HerkunftsschulnummerKatalogEintrag, SchulenKatalogEintrag } from "@core";
 	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
+	import type { HerkunftsschulnummerKatalogEintrag } from "@core/asd/data/schule/HerkunftsschulnummerKatalogEintrag";
+	import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
+	import { Herkunftsschulnummer } from "@core/asd/types/schule/Herkunftsschulnummer";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+	import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { JavaObject } from "@core/java/lang/JavaObject";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<SchulenNeuProps>();
 	const benutzerState = useBenutzerState();

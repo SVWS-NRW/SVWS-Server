@@ -1,5 +1,7 @@
-import type { GostKlausurvorgabe } from "@core";
-import { BasicValidator, GostHalbjahr, ValidatorFehlerart } from "@core";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 
 export class ValidatorGostKlausurdauer extends BasicValidator {
 

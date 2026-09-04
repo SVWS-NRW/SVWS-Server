@@ -151,10 +151,17 @@
 	 * erlaubt.
 	 */
 
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useServerState } from "@ui/states/ServerState";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import { computed } from "vue";
-	import { AbiturdatenManager, ArrayList, Fach, Fachgruppe, Jahrgaenge } from "@core";
-	import type { GostFach, GostFaecherManager, List } from "@core";
-	import { GridManager, useServerState } from "@ui";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

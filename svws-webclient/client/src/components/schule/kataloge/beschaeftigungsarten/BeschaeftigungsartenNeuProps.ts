@@ -1,6 +1,7 @@
-import type { Beschaeftigungsart } from "@core";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import type { BeschaeftigungsartenListeManager } from "@ui/ui/manager/kataloge/BeschaeftigungsartenListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
-import type { Checkpoint, BeschaeftigungsartenListeManager } from "@ui";
 
 export interface BeschaeftigungsartenNeuProps {
 	manager: () => BeschaeftigungsartenListeManager;

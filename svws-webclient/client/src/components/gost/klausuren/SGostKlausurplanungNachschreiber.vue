@@ -179,14 +179,27 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostHalbjahr, JavaSet, List } from "@core";
-	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurtermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList, BenutzerKompetenz, ListUtils } from "@core";
 	import { computed, ref, onMounted, type HTMLAttributes } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone, GostNachschreiberDragData } from "./SGostKlausurplanung";
 	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
-	import { useBenutzerState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
 	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { GostNachschreibterminblockungKonfiguration } from '@core/core/data/gost/klausuren/GostNachschreibterminblockungKonfiguration';
+	import { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import type { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { ListUtils } from '@core/core/utils/ListUtils';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { HashSet } from '@core/java/util/HashSet';
+	import type { JavaSet } from '@core/java/util/JavaSet';
+	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+	import type { DataTableColumn } from '@ui/types';
+	import { GostKlausurplanManager } from '@core/core/utils/gost/klausuren/GostKlausurplanManager';
+	import { DateUtils } from '@core/core/utils/DateUtils';
 
 	const { gotoKalenderdatum, gotoNachschreiber, gotoRaumzeitTermin } = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

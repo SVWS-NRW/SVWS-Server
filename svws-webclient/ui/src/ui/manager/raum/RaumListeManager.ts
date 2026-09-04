@@ -1,15 +1,15 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import type { Raum } from '../../../../../core/src/core/data/schule/Raum';
-import { HashMap } from '../../../../../core/src/java/util/HashMap';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-import { RaumUtils } from '../../../../../core/src/core/utils/raum/RaumUtils';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { AuswahlManager } from '../AuswahlManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { Raum } from "@core/core/data/schule/Raum";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { RaumUtils } from "@core/core/utils/raum/RaumUtils";
+import { Class } from "@core/java/lang/Class";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaObject } from "@core/java/lang/JavaObject";
+import { JavaString } from "@core/java/lang/JavaString";
+import { HashMap } from "@core/java/util/HashMap";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 

@@ -1,5 +1,3 @@
-import { BenutzerKompetenz, Schulform, ServerMode, type DeveloperNotificationException } from "@core";
-import type { WenomAuswahlListeManager } from "@ui";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "../RouteApp";
@@ -13,6 +11,11 @@ import { routeNotenmodulMail } from "./RouteNotenmodulMail";
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import { routeError } from "~/router/error/RouteError";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
 
 const NotenmodulAdministrationApp = () => import("~/components/notenmodul/NotenmodulAdministrationApp.vue");
 const NotenmodulAdministrationAuswahl = () => import("~/components/notenmodul/NotenmodulAdministrationAuswahl.vue");

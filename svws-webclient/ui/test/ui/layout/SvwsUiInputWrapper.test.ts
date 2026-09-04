@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import SvwsUiInputWrapper from "../../../src/ui/layout/SvwsUiInputWrapper.vue";
+import SvwsUiInputWrapper from "@ui/ui/layout/SvwsUiInputWrapper.vue";
 
 describe("SvwsUiInputWrapper", () => {
 	// Testet, ob das HTML korrekt gerendert wird

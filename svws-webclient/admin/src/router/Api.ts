@@ -1,7 +1,7 @@
-import { ApiConnection } from "~/router/ApiConnection";
-import { ApiStatus } from "~/components/ApiStatus";
-import { version } from '../../version';
-import { githash } from "../../githash";
+import { ApiConnection } from "@admin/router/ApiConnection";
+import { ApiStatus } from "@admin/components/ApiStatus";
+import { version } from "@version";
+import { githash } from "@githash";
 import type { ApiPrivileged } from "@core/api/ApiPrivileged";
 import type { ApiServer } from "@core/api/ApiServer";
 import type { ServerMode } from "@core/core/types/ServerMode";

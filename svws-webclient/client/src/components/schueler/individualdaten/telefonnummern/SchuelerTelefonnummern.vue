@@ -61,10 +61,12 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerTelefonnummernProps } from "./SchuelerTelefonnummernProps";
-	import type { Telefonart } from "@core";
-	import { ArrayList, JavaString, SchuelerTelefon } from "@core";
-	import type { DataTableColumn } from "@ui";
 	import { phoneNumberIsValid } from "~/util/validation/Validation";
+	import { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+	import type { Telefonart } from "@core/core/data/schule/Telefonart";
+	import { JavaString } from "@core/java/lang/JavaString";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<SchuelerTelefonnummernProps>();
 

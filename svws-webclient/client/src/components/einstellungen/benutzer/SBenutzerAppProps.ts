@@ -1,5 +1,5 @@
-import type { BenutzerListeEintrag } from "@core";
-import type { TabManager } from "@ui";
+import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import type { TabManager } from "@ui/ui/nav/TabManager";
 
 export interface BenutzerAppProps {
 	auswahl: () => BenutzerListeEintrag | undefined;

@@ -1,4 +1,4 @@
-import type { LehrerListeManager } from "@ui";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
 export interface LehrerAuswahlProps extends RouteAuswahlListProps<LehrerListeManager> {

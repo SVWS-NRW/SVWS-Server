@@ -254,10 +254,22 @@
 
 <script setup lang="ts">
 
+	import type { Schueler } from '@core/asd/data/schueler/Schueler';
+	import { GostBlockungKurs } from '@core/core/data/gost/GostBlockungKurs';
+	import { GostBlockungRegel } from '@core/core/data/gost/GostBlockungRegel';
+	import { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
+	import { GostBlockungSchiene } from '@core/core/data/gost/GostBlockungSchiene';
+	import type { GostFach } from '@core/core/data/gost/GostFach';
+	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { GostKursart } from '@core/core/types/gost/GostKursart';
+	import { GostKursblockungRegelTyp } from '@core/core/types/kursblockung/GostKursblockungRegelTyp';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { SetUtils } from '@core/core/utils/SetUtils';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, List, Schueler, GostFach } from "@core";
-	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, GostKursart, SetUtils, GostBlockungRegelUpdate, DeveloperNotificationException } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

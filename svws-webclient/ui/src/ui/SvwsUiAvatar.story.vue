@@ -12,6 +12,6 @@
 
 <script setup lang="ts">
 
-	import { logEvent } from '../stories/helper';
+	import { logEvent } from '@ui/stories/helper';
 
 </script>

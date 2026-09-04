@@ -25,9 +25,12 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungsergebnisKursSchuelerZuordnung } from '@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
+	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
+	import { DTOUtils } from '@core/core/utils/DTOUtils';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { HashSet } from '@core/java/util/HashSet';
 	import { computed, shallowRef } from 'vue';
-	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, GostBlockungsergebnisKursSchuelerZuordnung } from '@core';
-	import { DTOUtils, HashSet } from '@core';
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;

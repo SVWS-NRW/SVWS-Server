@@ -54,10 +54,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List } from "@core";
-	import type { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
+	import type { ErzieherartenGruppenprozesseProps } from "./ErzieherartenGruppenprozesseProps";
 
 	const props = defineProps<ErzieherartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

@@ -265,13 +265,32 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
-	import type { JavaSet, NationalitaetenKatalogEintrag, ReligionEintrag, Fahrschuelerart, Haltestelle, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, Verkehrssprache, BenutzerKompetenz, ReportingReportvorlage, HashSet } from "@core";
-	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useOrteState, useReportingState, useSchuleState, useServerState } from "@ui";
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
+	import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+	import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
+	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+	import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
+	import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { useReportingState } from "@ui/states/ReportingState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	// --- Setup ---
 

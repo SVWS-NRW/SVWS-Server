@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 
-	import { SelectManager } from "@ui";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { reactive } from "vue";
 
 	const state = reactive({

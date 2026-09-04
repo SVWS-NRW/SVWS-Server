@@ -1,5 +1,5 @@
-import type { KlassenDaten } from "@core";
-import type { Checkpoint } from "@ui";
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 

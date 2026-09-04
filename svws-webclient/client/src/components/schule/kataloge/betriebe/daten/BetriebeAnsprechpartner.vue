@@ -80,9 +80,12 @@
 
 <script setup lang="ts">
 
+	import { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
+	import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
 	import { computed, ref } from "vue";
-	import { ArrayList, BetriebeAnsprechpartner, type List } from "@core";
-	import type { BetriebeListeManager, DataTableColumn } from "@ui";
 	import { BetriebeAnsprechpartnerModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebeAnsprechpartnerModelProxy";
 
 	const props = defineProps<{

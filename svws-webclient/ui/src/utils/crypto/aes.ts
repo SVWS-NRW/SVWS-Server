@@ -1,5 +1,5 @@
-import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-import { ArrayIndexOutOfBoundsException } from "../../../../core/src/java/lang/ArrayIndexOutOfBoundsException";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayIndexOutOfBoundsException } from "@core/java/lang/ArrayIndexOutOfBoundsException";
 import type { AESAlgo } from "./aesAlgo";
 import { AESException } from "./aesException";
 

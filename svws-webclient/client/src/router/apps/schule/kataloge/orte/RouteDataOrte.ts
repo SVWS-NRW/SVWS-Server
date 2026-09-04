@@ -1,6 +1,4 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import { type JavaSet, type List, type OrtKatalogEintrag, type SimpleOperationResponse, ArrayList, BenutzerKompetenz } from "@core";
-import { OrteListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeOrteGruppenprozesse } from "~/router/apps/schule/kataloge/orte/RouteOrteGruppenprozesse";
 import { routeOrteNeu } from "~/router/apps/schule/kataloge/orte/RouteOrteNeu";
@@ -9,6 +7,14 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { OrteListeManager } from "@ui/ui/manager/kataloge/OrteListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 const defaultState = {

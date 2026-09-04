@@ -1,10 +1,5 @@
-import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag,
-	LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, SchulEintrag,
-	SimpleOperationResponse, StundenplanListeEintrag, Schulleitung } from "@core";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { LehrerListeManager, type PendingStateManager, ViewType } from "@ui";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -17,6 +12,27 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
+import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
+import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
+import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden";
+import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import type { Schulleitung } from "@core/asd/data/schule/Schulleitung";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;

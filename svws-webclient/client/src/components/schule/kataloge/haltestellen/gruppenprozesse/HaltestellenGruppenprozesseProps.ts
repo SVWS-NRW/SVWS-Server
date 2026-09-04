@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { HaltestellenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { HaltestellenListeManager } from "@ui/ui/manager/kataloge/HaltestellenListeManager";
 
 export interface HaltestellenGruppenprozesseProps {
 	delete: () => Promise<[boolean, List<string | null>]>;

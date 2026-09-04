@@ -32,9 +32,9 @@
 
 <script setup lang="ts">
 
+	import type { GostBelegpruefungsErgebnisse } from '@core/core/data/gost/GostBelegpruefungsErgebnisse';
+	import type { GostJahrgangsdaten } from '@core/core/data/gost/GostJahrgangsdaten';
 	import { computed, ref } from 'vue';
-	import type { GostJahrgangsdaten } from '../../../../../core/src/core/data/gost/GostJahrgangsdaten';
-	import type { GostBelegpruefungsErgebnisse } from '../../../../../core/src/core/data/gost/GostBelegpruefungsErgebnisse';
 
 	const props = defineProps<{
 		gostJahrgangsdaten: () => GostJahrgangsdaten;

@@ -1,20 +1,20 @@
-import { DOMWrapper, mount } from "@vue/test-utils";
-import UiSelectMulti from "../../../../src/ui/controls/select/UiSelectMulti.vue";
+import { mount } from "@vue/test-utils";
+import UiSelectMulti from "@ui/ui/controls/select/UiSelectMulti.vue";
 import { describe, test, expect, vi, beforeAll } from "vitest";
-import { SelectManager } from "../../../../src/ui/controls/select/manager/SelectManager";
-import { CoreTypeSelectManager } from "../../../../src/ui/controls/select/manager/CoreTypeSelectManager";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
-import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
-import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
-import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
-import type { List } from "../../../../../core/src/java/util/List";
-import { JsonCoreTypeReaderStatic } from "../../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
-import { Klassenart } from "../../../../../core/src/asd/types/klassen/Klassenart";
-import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-import type { KlassenartKatalogEintrag } from "../../../../../core/src/asd/data/klassen/KlassenartKatalogEintrag";
+import type { KlassenartKatalogEintrag } from "@core/asd/data/klassen/KlassenartKatalogEintrag";
+import { Klassenart } from "@core/asd/types/klassen/Klassenart";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 const reader = new JsonCoreTypeReaderStatic();
-vi.mock("../../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/klassen/Klassenart.json", async () => ({
+vi.mock("@json/klassen/Klassenart.json", async () => ({
 	default: (await import("./manager/Klassenart.mock.json")).default,
 }));
 

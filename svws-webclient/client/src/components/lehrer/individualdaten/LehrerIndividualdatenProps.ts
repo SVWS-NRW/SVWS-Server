@@ -1,5 +1,8 @@
-import type { LehrerStammdaten, Leitungsfunktion, List, Schulleitung } from "@core";
-import type { LehrerListeManager } from "@ui";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import type { Schulleitung } from "@core/asd/data/schule/Schulleitung";
+import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+import type { List } from "@core/java/util/List";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 
 export interface LehrerIndividualdatenProps {
 	patch: (data: Partial<LehrerStammdaten>) => Promise<boolean>;

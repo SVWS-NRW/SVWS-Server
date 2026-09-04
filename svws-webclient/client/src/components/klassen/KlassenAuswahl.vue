@@ -55,9 +55,15 @@
 
 	import { computed, ref } from "vue";
 	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
-	import type { JahrgangsDaten, KlassenListeEintrag, LehrerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useBenutzerState, useRegionSwitch, ViewType } from "@ui";
+	import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const benutzerState = useBenutzerState();

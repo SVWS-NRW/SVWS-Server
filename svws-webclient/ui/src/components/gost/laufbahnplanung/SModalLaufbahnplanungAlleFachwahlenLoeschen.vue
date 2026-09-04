@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 
+	import type { GostBelegpruefungsErgebnisse } from '@core/core/data/gost/GostBelegpruefungsErgebnisse';
 	import { ref } from 'vue';
-	import type { GostBelegpruefungsErgebnisse } from '../../../../../core/src/core/data/gost/GostBelegpruefungsErgebnisse';
 
 	const props = defineProps<{
 		selected: GostBelegpruefungsErgebnisse[];

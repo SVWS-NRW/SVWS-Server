@@ -1,5 +1,5 @@
-import type { ENMv2Leistung } from "@core";
-import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "@ui";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { EnmManager, EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
 
 export interface NotenmodulLeistungenProps {
 	enmManager: () => EnmManager;

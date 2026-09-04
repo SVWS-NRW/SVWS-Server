@@ -102,17 +102,17 @@
 
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
 	import { useUiSelectUtils } from './utils/useUiSelectUtils';
-	import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-	import type { List } from '../../../../../core/src/java/util/List';
-	import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-	import type { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
-	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
-	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
-	import { ValidatorSelectOptionsValid } from "../../../validation/common/ValidatorSelectOptionsValid";
-	import { ValidationResult } from "../../../validation/ValidationResult";
 	import { SelectManager } from './manager/SelectManager';
-	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
+	import type { BasicValidator } from '@core/asd/validate/BasicValidator';
+	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
+	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { JavaObject } from '@core/java/lang/JavaObject';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { ValidatorInputRequired } from '@ui/validation/common/ValidatorInputRequired';
+	import { ValidatorSelectOptionsValid } from '@ui/validation/common/ValidatorSelectOptionsValid';
+	import { ValidationResult } from '@ui/validation/ValidationResult';
+	import type { UiSelectSingleProps, UiSelectState, UiSelectHTMLElements, UiSelectSelectionMethods } from './manager/UiSelectTypes';
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',

@@ -48,11 +48,12 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { SchuelerEinwilligung } from "@core";
-	import { ArrayList, BenutzerKompetenz } from "@core";
 	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
 	import { SchuelerEinwilligungenModelProxy } from "./modelProxy/SchuelerEinwilligungenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import type { SchuelerEinwilligung } from "@core/core/data/schueler/SchuelerEinwilligung";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
 	const benutzerState = useBenutzerState();

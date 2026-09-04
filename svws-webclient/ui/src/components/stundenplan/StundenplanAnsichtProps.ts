@@ -1,13 +1,13 @@
-import type { StundenplanKalenderwochenzuordnung } from "../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
-import type { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
-import type { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
-import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
-import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
-import type { List } from "../../../../core/src/java/util/List";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanKlassenunterricht } from "@core/core/data/stundenplan/StundenplanKlassenunterricht";
+import type { StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import type { List } from "@core/java/util/List";
 
 export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | StundenplanKurs | StundenplanUnterricht | List<StundenplanUnterricht> | StundenplanPausenaufsicht | undefined | StundenplanSchiene;
 

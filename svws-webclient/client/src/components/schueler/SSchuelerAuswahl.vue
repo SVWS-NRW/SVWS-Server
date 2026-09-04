@@ -90,11 +90,21 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from "vue";
-	import type { JahrgangsDaten, KlassenDaten, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz, SchuelerStatus } from "@core";
-	import type { SortByAndOrder } from "@ui";
-	import { useAbschnittState, useBenutzerState, useRegionSwitch, useSchuleState, useServerState, ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
+	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { SortByAndOrder } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 	const benutzerState = useBenutzerState();

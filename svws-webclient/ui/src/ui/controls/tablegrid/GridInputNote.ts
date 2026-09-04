@@ -1,8 +1,8 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
-import { Note } from "../../../../../core/src/asd/types/Note";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
+import { Note } from "@core/asd/types/Note";
+import type { Collection } from "@core/java/util/Collection";
 
 /**
  * Ein Grid-Input für die Schnelleingabe einer Note

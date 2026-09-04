@@ -1,8 +1,8 @@
 import { triggerRef, watch, type MaybeRef, type ShallowRef, isRef, shallowRef, toRaw, toValue } from "vue";
-import type { List } from "../../../../../../core/src/java/util/List";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
 import type { SelectFilter } from "../filter/SelectFilter";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
 
 /**
  * Config des Managers.

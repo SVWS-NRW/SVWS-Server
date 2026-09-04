@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch } from '@ui';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import type { NotenmodulKonfigurationProps } from './NotenmodulKonfigurationProps';
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

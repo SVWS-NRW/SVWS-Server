@@ -8,10 +8,14 @@ import { routeLeitungsfunktionenGruppenprozesse } from "~/router/apps/schule/kat
 import { routeLeitungsfunktionenNeu } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import type { Leitungsfunktion, List, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
-import { LeitungsfunktionenListeManager, ViewType } from "@ui";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { LeitungsfunktionenListeManager } from "@ui/ui/manager/kataloge/LeitungsfunktionenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

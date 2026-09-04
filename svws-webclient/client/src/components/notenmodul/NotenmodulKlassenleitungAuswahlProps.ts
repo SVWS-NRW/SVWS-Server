@@ -1,5 +1,6 @@
-import type { ENMv2Klasse } from "@core";
-import type { EnmKlassenleitungAuswahlListeManager, EnmManager } from "@ui";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { EnmKlassenleitungAuswahlListeManager } from "@ui/components/enm/EnmKlassenleitungAuswahlListeManager";
+import type { EnmManager } from "@ui/components/enm/EnmManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
 export interface NotenmodulKlassenleitungAuswahlProps extends RouteAuswahlListProps<EnmKlassenleitungAuswahlListeManager> {

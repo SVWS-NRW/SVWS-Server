@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
+	import { useGostLaufbahnplanungState } from '@ui/states/GostLaufbahnplanungState';
 	import { ref } from 'vue';
-	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
 
 	const props = defineProps<{
 		show: boolean;

@@ -1,6 +1,10 @@
-import { BasicValidator, type JahrgangsDaten, ValidatorFehlerart } from "@core";
-import { ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern, ValidatorInputRequired } from "@ui";
-import { StringPattern } from "../../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorJahrgangKuerzel extends BasicValidator {
 

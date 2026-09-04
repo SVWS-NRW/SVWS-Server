@@ -106,11 +106,23 @@
 
 	import { computed } from "vue";
 	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
-	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
-	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { LehrerPersonalabschnittsdatenModelProxy } from "~/components/lehrer/personaldaten/modelproxy/LehrerPersonalabschnittsdatenModelProxy";
 	import { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
+	import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+	import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
+	import { LehrerBeschaeftigungsart } from "@core/asd/types/lehrer/LehrerBeschaeftigungsart";
+	import { LehrerEinsatzstatus } from "@core/asd/types/lehrer/LehrerEinsatzstatus";
+	import { LehrerRechtsverhaeltnis } from "@core/asd/types/lehrer/LehrerRechtsverhaeltnis";
+	import { LehrerZugangsgrund } from "@core/asd/types/lehrer/LehrerZugangsgrund";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 	const benutzerState = useBenutzerState();

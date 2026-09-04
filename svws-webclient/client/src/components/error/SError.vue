@@ -69,8 +69,12 @@
 
 	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException, SimpleOperationResponse } from "@core";
-	import { useBenutzerState, useServerState } from "@ui";
+	import { OpenApiError } from "@core/api/OpenApiError";
+	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useServerState } from "@ui/states/ServerState";
 
 	type CapturedError = {
 		id: number;

@@ -1,7 +1,7 @@
 import { beforeEach, expect, test, afterEach } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import SvwsUiHeader from "../../../src/ui/layout/SvwsUiHeader.vue";
+import SvwsUiHeader from "@ui/ui/layout/SvwsUiHeader.vue";
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiHeader>>;
 

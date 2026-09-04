@@ -1,5 +1,6 @@
-import type { Lernplattform } from "@core";
-import type { Checkpoint, LernplattformListeManager } from "@ui";
+import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
+import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface LernplattformenNeuProps {

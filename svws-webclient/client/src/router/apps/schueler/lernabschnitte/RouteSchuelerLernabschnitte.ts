@@ -1,7 +1,4 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -14,11 +11,13 @@ import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/l
 import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
 import { routeSchuelerLernabschnittFoerderempfehlungen } from "./RouteSchuelerLernabschnittFoerderempfehlungen";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
-
-
 import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
-import type { TabData } from "@ui";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { TabData } from "@ui/ui/nav/TabData";
 
 const SchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SchuelerLernabschnitte.vue");
 
@@ -26,7 +25,7 @@ const SchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitt
 export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLernabschnitte, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt", "lernabschnitt/:abschnitt(\\d+)?/:wechselNr(\\d+)?", SchuelerLernabschnitte, new RouteDataSchuelerLernabschnitte());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.lernabschnitt", String.raw`lernabschnitt/:abschnitt(\d+)?/:wechselNr(\d+)?`, SchuelerLernabschnitte, new RouteDataSchuelerLernabschnitte());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernabschnitte";

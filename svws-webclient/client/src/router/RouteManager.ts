@@ -1,6 +1,5 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
-import { DeveloperNotificationException, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -10,6 +9,8 @@ import { routeError } from "~/router/error/RouteError";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 interface RouteStateError {
 	code: number | undefined;

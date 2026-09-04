@@ -1,6 +1,8 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
-import type { Betriebsart } from "@core";
-import { JavaInteger } from "@core";
+import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorBetriebsartBezeichnung } from "~/components/schule/kataloge/betriebsarten/modelproxy/validation/ValidatorBetriebsartBezeichnung";
 
 /**

@@ -74,11 +74,17 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { Schulgliederung, Jahrgaenge, BenutzerKompetenz, Bildungsstufe } from "@core";
-	import type { JahrgangsDaten } from "@core";
 	import type { JahrgaengeDatenProps } from "./JahrgaengeDatenProps";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import { Bildungsstufe } from "@core/asd/types/schule/Bildungsstufe";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<JahrgaengeDatenProps>();
 	const benutzerState = useBenutzerState();

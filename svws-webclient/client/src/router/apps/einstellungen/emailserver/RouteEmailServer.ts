@@ -1,10 +1,12 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataEmailServer } from "~/router/apps/einstellungen/emailserver/RouteDataEmailServer";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteEinstellungenMenuGroup } from "~/router/apps/einstellungen/RouteEinstellungenMenuGroup";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 export const EmailServer = () => import("~/components/einstellungen/emailserver/EmailServer.vue");
 

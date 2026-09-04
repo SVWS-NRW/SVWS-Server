@@ -118,10 +118,12 @@
 
 	import type { BetriebeDatenProps } from "~/components/schule/kataloge/betriebe/daten/BetriebeDatenProps";
 	import { computed } from "vue";
-	import type { Betriebsart, OrtKatalogEintrag } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { SelectManager, useBenutzerState } from "@ui";
 	import { BetriebModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebModelProxy";
+	import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+	import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<BetriebeDatenProps>();
 	const benutzerState = useBenutzerState();

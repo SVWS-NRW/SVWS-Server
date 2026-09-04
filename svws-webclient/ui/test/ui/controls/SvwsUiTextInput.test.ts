@@ -1,11 +1,10 @@
 import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-
-import SvwsUiTextInput from "../../../src/ui/controls/SvwsUiTextInput.vue";
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-import type { List } from "../../../../core/src/java/util/List";
-import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
+import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { List } from "@core/java/util/List";
 
 describe("Komponente kann gemounted werden", () => {
 	test("HTML wird erzeugt", () => {

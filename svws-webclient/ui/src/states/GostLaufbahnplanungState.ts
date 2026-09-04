@@ -1,20 +1,20 @@
+import type { ApiFile } from "@core/api/BaseApi";
+import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
+import type { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import type { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { List } from "@core/java/util/List";
+import { AppContext } from "@ui/AppContext";
 import type { InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import type { GostSchuelerFachwahl } from "../../../core/src/core/data/gost/GostSchuelerFachwahl";
-import type { ApiFile } from "../../../core/src/api/BaseApi";
-import type { SchuelerListeEintrag } from "../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import type { GostJahrgangsdaten } from "../../../core/src/core/data/gost/GostJahrgangsdaten";
-import type { GostLaufbahnplanungBeratungsdaten } from "../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
-import type { GostBelegpruefungErgebnis } from "../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
-import type { AbiturdatenManager } from "../../../core/src/core/abschluss/gost/AbiturdatenManager";
-import type { LehrerListeEintrag } from "../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import type { GostHalbjahr } from "../../../core/src/core/types/gost/GostHalbjahr";
-import type { List } from "../../../core/src/java/util/List";
-import type { GostBeratungslehrer } from "../../../core/src/core/data/gost/GostBeratungslehrer";
-import { AppContext } from "../AppContext";
-import type { GostKlausurvorgabe } from "../../../core/src/core/data/gost/klausuren/GostKlausurvorgabe";
-import type { GostSchuelerGKLWahl } from "../../../core/src/core/data/gost/GostSchuelerGKLWahl";
-import type { GostFach } from "../../../core/src/core/data/gost/GostFach";
 
 export type GostBelegpruefungsModus = 'ef1' | 'gesamt' | 'auto';
 

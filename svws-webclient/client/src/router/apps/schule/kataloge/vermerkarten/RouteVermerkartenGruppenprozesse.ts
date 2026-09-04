@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { RouteVermerkarten } from "./RouteVermerkarten";
 import type { VermerkartenGruppenprozesseProps } from "~/components/schule/kataloge/vermerkarten/gruppenprozesse/VermerkartenGruppenprozesseProps";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { routeVermerkarten } from "./RouteVermerkarten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const VermerkartenGruppenprozesse = () => import("~/components/schule/kataloge/vermerkarten/gruppenprozesse/VermerkartenGruppenprozesse.vue");
 

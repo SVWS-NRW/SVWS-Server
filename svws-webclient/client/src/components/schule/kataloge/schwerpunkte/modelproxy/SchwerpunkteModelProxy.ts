@@ -1,5 +1,7 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
-import type { SchuelerSchwerpunkt } from "@core";
+import type { SchuelerSchwerpunkt } from "@core/core/data/kataloge/SchuelerSchwerpunkt";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorSchwerpunktBezeichnung } from "~/components/schule/kataloge/schwerpunkte/modelproxy/validation/ValidatorSchwerpunktBezeichnung";
 
 /**

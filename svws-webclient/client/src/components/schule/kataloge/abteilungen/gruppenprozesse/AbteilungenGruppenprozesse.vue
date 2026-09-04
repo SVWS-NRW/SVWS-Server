@@ -30,9 +30,10 @@
 
 	import { computed, ref } from "vue";
 	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenGruppenprozesseProps>();

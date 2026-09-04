@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination } from '@core';
+	import type { GostJahrgangFachkombination } from '@core/core/data/gost/GostJahrgangFachkombination';
 	import { ref } from 'vue';
 
 	const props = defineProps<{

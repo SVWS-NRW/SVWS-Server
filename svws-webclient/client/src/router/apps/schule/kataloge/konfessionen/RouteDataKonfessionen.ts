@@ -1,6 +1,3 @@
-import type { List, ReligionEintrag, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
-import { KonfessionenListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { routeKonfessionenDaten } from "./RouteKonfessionenDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -10,6 +7,13 @@ import { routeKonfessionenNeu } from "~/router/apps/schule/kataloge/konfessionen
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 type RouteStateKonfessionen = RouteStateAuswahlInterface<KonfessionenListeManager>;
 

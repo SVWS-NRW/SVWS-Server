@@ -1,5 +1,12 @@
-import type { SchuelerStammdaten, FoerderschwerpunktEintrag,
-	ReligionEintrag, SchulEintrag, Telefonart, SchuelerTelefon, List, Haltestelle, Fahrschuelerart } from "@core";
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { Telefonart } from "@core/core/data/schule/Telefonart";
+import type { List } from "@core/java/util/List";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenProps {

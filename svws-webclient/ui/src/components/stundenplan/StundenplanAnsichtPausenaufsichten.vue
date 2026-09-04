@@ -50,10 +50,10 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanPausenaufsicht } from '../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht';
-	import type { StundenplanPausenzeit } from '../../../../core/src/core/data/stundenplan/StundenplanPausenzeit';
-	import type { StundenplanManager } from '../../../../core/src/core/utils/stundenplan/StundenplanManager';
-	import type { List } from '../../../../core/src/java/util/List';
+	import type { StundenplanPausenaufsicht } from '@core/core/data/stundenplan/StundenplanPausenaufsicht';
+	import type { StundenplanPausenzeit } from '@core/core/data/stundenplan/StundenplanPausenzeit';
+	import type { StundenplanManager } from '@core/core/utils/stundenplan/StundenplanManager';
+	import type { List } from '@core/java/util/List';
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from './StundenplanAnsichtProps';
 
 	const props = defineProps<{

@@ -112,11 +112,30 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { List, AbiturFachbelegung, Comparator, Fachgruppe, NoteKatalogEintrag, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, JavaMap } from "@core";
-	import { GostHalbjahr, ArrayList, Fach, GostBesondereLernleistung, Note, RGBFarbe, DeveloperNotificationException, HashMap, GostAbiturFach, AbiturdatenManager } from "@core";
-	import { SelectManager, GridManager, useServerState } from "@ui";
 
 	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
+	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+	import type { NoteKatalogEintrag } from "@core/asd/data/NoteKatalogEintrag";
+	import { RGBFarbe } from "@core/asd/data/RGBFarbe";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+	import { Note } from "@core/asd/types/Note";
+	import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+	import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { GostAbiturFach } from "@core/core/types/gost/GostAbiturFach";
+	import { GostBesondereLernleistung } from "@core/core/types/gost/GostBesondereLernleistung";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { Comparator } from "@core/java/util/Comparator";
+	import { HashMap } from "@core/java/util/HashMap";
+	import type { JavaMap } from "@core/java/util/JavaMap";
+	import type { List } from "@core/java/util/List";
+	import { useServerState } from "@ui/states/ServerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
 	const props = defineProps<GostAbiturNoteneingabeProps>();
 	const serverState = useServerState();

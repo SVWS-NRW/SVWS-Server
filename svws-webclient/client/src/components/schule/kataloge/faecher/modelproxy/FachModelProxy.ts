@@ -1,10 +1,17 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { BilingualeSpracheKatalogEintrag, FachDaten, FachKatalogEintrag } from "@core";
-import { BilingualeSprache, Fach, JavaInteger } from "@core";
-import { ValidatorFachKuerzel } from "~/components/schule/kataloge/faecher/modelproxy/validation/ValidatorFachKuerzel";
-import { ValidatorFachBezeichnung } from "~/components/schule/kataloge/faecher/modelproxy/validation/ValidatorFachBezeichnung";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import type { BilingualeSpracheKatalogEintrag } from "@core/asd/data/fach/BilingualeSpracheKatalogEintrag";
+import type { FachKatalogEintrag } from "@core/asd/data/fach/FachKatalogEintrag";
+import { BilingualeSprache } from "@core/asd/types/fach/BilingualeSprache";
+import { Fach } from "@core/asd/types/fach/Fach";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
+import { ValidatorFachBezeichnung } from "./validation/ValidatorFachBezeichnung";
+import { ValidatorFachKuerzel } from "./validation/ValidatorFachKuerzel";
 
 export class FachModelProxy extends ModelProxy<FachDaten> {
 

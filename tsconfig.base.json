@@ -21,6 +21,19 @@
 		"checkJs": true,
 		"newLine": "lf",
 		"rootDir": ".",
-		"types": ["vite/client"]
+		"resolveJsonModule": true,
+		"types": ["vite/client"],
+		"paths": 	{
+			"~/*": ["./svws-webclient/client/src/*"],
+			"@admin/*": ["./svws-webclient/admin/src/*"],
+			"@wenom/*": ["./svws-webclient/enmserver/src/*"],
+			"@lupo/*": ["./svws-webclient/laufbahnplanung/src/*"],
+			"@ui/*": ["./svws-webclient/ui/src/*"],
+			"@core/*": ["./svws-webclient/core/src/*"],
+			"@json/*": ["./svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+			"@version": ["./svws-webclient/client/version.ts"],
+			"@githash": ["./svws-webclient/client/githash.ts"],
+		}
 	},
+	"include": ["./svws-webclient/**/*/*.ts", "./svws-webclient/**/*/*.vue"],
 }

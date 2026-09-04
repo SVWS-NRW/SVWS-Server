@@ -129,12 +129,23 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { NationalitaetenKatalogEintrag, SchuelerLernabschnittsdaten, OrtsteilKatalogEintrag, SchuelerStammdaten, VerkehrsspracheKatalogEintrag } from "@core";
-	import { AdressenUtils, DateUtils, Geschlecht, Nationalitaeten, Verkehrssprache } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useOrteState } from "@ui";
-	import type { SchuelerSchnelleingabeManager } from "@ui";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+	import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
+	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

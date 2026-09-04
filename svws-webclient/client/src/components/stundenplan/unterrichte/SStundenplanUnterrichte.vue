@@ -121,9 +121,21 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
-	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ListUtils, Fach, BenutzerKompetenz } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { StundenplanFach } from "@core/core/data/stundenplan/StundenplanFach";
+	import type { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
+	import type { StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+	import type { StundenplanLehrer } from "@core/core/data/stundenplan/StundenplanLehrer";
+	import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+	import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import type { StundenplanSchueler } from "@core/core/data/stundenplan/StundenplanSchueler";
+	import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { Wochentag } from "@core/core/types/Wochentag";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 

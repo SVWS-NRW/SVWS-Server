@@ -1,5 +1,12 @@
-import { AES, AESAlgo, StateManager, type BenutzerState } from "@ui";
-import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, type BenutzerDaten, type BenutzerEMailDaten } from "@core";
+import type { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
+import type { BenutzerEMailDaten } from "@core/core/data/benutzer/BenutzerEMailDaten";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+import type { BenutzerState } from "@ui/states/BenutzerState";
+import { StateManager } from "@ui/ui/StateManager";
+import { AES } from "@ui/utils/crypto/aes";
+import { AESAlgo } from "@ui/utils/crypto/aesAlgo";
 import { api } from "~/router/Api";
 
 interface BenutzerReactiveState {

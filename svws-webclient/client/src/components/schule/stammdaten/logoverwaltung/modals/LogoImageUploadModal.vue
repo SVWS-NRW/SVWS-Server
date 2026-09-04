@@ -92,8 +92,6 @@
 <script setup lang="ts">
 
 	import { computed, ref, useTemplateRef } from "vue";
-	import { ArrayList, type Logo, OpenApiError, ReportingBildDefinition, type ValidatorFehler } from "@core";
-	import { ValidationResult } from "@ui";
 	import { formatToLocalDate } from "~/utils/date";
 	import { getImageRestrictions, parseBase64, readFileAsBase64, setModelImageInfo, SUPPORTED_IMAGE_TYPES } from "../LogoUtils";
 	import LogoImage from "../LogoImage.vue";
@@ -102,6 +100,12 @@
 	import { ValidatorLogoImageFileSize } from "../modelProxy/ValidatorLogoImageFileSize";
 	import { ValidatorLogoImageAspectRatio } from "../modelProxy/ValidatorLogoImageAspectRatio";
 	import { ValidatorLogoImageResolution } from "../modelProxy/ValidatorLogoImageResolution";
+	import { OpenApiError } from "@core/api/OpenApiError";
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import type { Logo } from "@core/core/data/schule/Logo";
+	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { ValidationResult } from "@ui/validation/ValidationResult";
 
 	const props = defineProps<{
 		isOpen: boolean;

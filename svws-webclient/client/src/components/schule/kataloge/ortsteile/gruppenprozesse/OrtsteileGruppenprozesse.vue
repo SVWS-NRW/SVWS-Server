@@ -35,10 +35,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List } from "@core";
 	import type { OrtsteileGruppenprozesseProps } from "~/components/schule/kataloge/ortsteile/gruppenprozesse/OrtsteileGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<OrtsteileGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

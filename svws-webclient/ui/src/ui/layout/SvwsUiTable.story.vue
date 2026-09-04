@@ -97,8 +97,8 @@
 <script setup lang="ts">
 
 	import { ref, reactive, computed } from "vue";
-	import type { DataTableColumn, SortByAndOrder } from "../../types";
 	import type { TableActions } from "../controls/tablegrid/UiTableActions.vue";
+	import type { DataTableColumn, SortByAndOrder } from "@ui/types.js";
 
 	const itemRefs = ref(new Map());
 	const hiddenColumns = ref<Set<string>>(new Set<string>());

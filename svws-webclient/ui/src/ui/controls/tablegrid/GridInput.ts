@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 import type { GridManager } from "./GridManager";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
-import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { Collection } from "@core/java/util/Collection";
 
 /**
  * Diese Klasse ist eine abtrakte Basisklasse für Inputs, welche zur Verwaltung

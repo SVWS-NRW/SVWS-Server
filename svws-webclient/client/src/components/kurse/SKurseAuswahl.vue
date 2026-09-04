@@ -43,9 +43,20 @@
 
 	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
-	import { useAbschnittState, useServerState, useRegionSwitch, ViewType, type DataTableColumn, type SortByAndOrder, useBenutzerState } from "@ui";
-	import type { FachDaten, KursDaten, List, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { BenutzerKompetenz, LehrerListeEintrag, JahrgangsDaten } from "@core";
+	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { DataTableColumn, SortByAndOrder } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<KurseAuswahlProps>();
 	const benutzerState = useBenutzerState();

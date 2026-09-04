@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { KonfessionenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
 
 export interface KonfessionenGruppenprozesseProps {
 	delete: () => Promise<[boolean, List<string | null>]>;

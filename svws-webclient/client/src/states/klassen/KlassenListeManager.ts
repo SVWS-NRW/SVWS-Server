@@ -1,9 +1,35 @@
-import { JavaObject, HashMap, SchuelerUtils, ArrayList, JavaString, DeveloperNotificationException, SchuelerStatus, Schulgliederung,
-	IllegalArgumentException, HashSet, JavaInteger, LehrerUtils, JavaLong, Arrays } from '@core';
-import type { KlassenDaten, SchuelerListeEintrag, SchuelerStatusKatalogEintrag, JavaSet, Schulform, JahrgangsDaten, Comparator,
-	LehrerListeEintrag, SchulgliederungKatalogEintrag, List, Schueler, Schuljahresabschnitt, JavaMap,
-	KlassenListeEintrag, KlassenDatenMinimal } from '@core';
-import { AuswahlManager, JahrgaengeListeManager, ListeMitAuswahl } from '@ui';
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { SchuelerUtils } from "@core/core/utils/schueler/SchuelerUtils";
+import { IllegalArgumentException } from "@core/java/lang/IllegalArgumentException";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaObject } from "@core/java/lang/JavaObject";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 export interface KlassenLookups {

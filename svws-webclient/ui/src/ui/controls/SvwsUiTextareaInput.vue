@@ -54,14 +54,14 @@
 </template>
 
 <script setup lang="ts">
+	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { ValidatorInputRequired } from '@ui/validation/common/ValidatorInputRequired';
+	import { ValidatorStringLength } from '@ui/validation/common/ValidatorStringLength';
+	import { ValidationResult } from '@ui/validation/ValidationResult';
 	import { computed, useId, useTemplateRef, onBeforeMount, nextTick, onUnmounted, watch, ref } from 'vue';
-	import type { List } from "../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-	import { ValidationResult } from "../../validation/ValidationResult";
-	import { ValidatorStringLength } from "../../validation/common/ValidatorStringLength";
-	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 

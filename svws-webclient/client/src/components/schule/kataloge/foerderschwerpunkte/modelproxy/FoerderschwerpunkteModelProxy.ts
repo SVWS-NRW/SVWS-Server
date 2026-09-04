@@ -1,8 +1,13 @@
-import type { FoerderschwerpunkteListeManager } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { FoerderschwerpunktEintrag, FoerderschwerpunktKatalogEintrag } from "@core";
-import { Foerderschwerpunkt } from "@core";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import type { FoerderschwerpunktKatalogEintrag } from "@core/asd/data/schule/FoerderschwerpunktKatalogEintrag";
+import { Foerderschwerpunkt } from "@core/asd/types/schule/Foerderschwerpunkt";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 
 /**

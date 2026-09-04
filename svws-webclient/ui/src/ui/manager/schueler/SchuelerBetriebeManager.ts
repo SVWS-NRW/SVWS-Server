@@ -1,11 +1,11 @@
-import type { SchuelerBetrieb } from "../../../../../core/src/asd/data/schueler/SchuelerBetrieb";
-import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import type { Beschaeftigungsart } from "../../../../../core/src/core/data/schule/Beschaeftigungsart";
-import type { Betrieb } from "../../../../../core/src/core/data/schule/Betrieb";
-import type { BetriebeAnsprechpartner } from "../../../../../core/src/core/data/schule/BetriebeAnsprechpartner";
-import type { List } from "../../../../../core/src/java/util/List";
-import { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import { StateManager } from "../../StateManager";
+import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import type { Betrieb } from "@core/core/data/schule/Betrieb";
+import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
+import type { List } from "@core/java/util/List";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface SchuelerBetriebeState {
 	auswahl: SchuelerListeEintrag;

@@ -26,9 +26,14 @@
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
-	import { useAbschnittState, useConfigState, useGostKlausurplanungState, useRegionSwitch, useReportingState } from "@ui";
 	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
-	import { ArrayList, ReportingReportvorlage } from "@core";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useConfigState } from "@ui/states/ConfigState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+	import { useReportingState } from "@ui/states/ReportingState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<GostKlausurplanungProps>();
 	const state = useGostKlausurplanungState();

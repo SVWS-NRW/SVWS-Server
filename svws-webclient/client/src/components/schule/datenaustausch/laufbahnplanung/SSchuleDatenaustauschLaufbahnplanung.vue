@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { type SimpleOperationResponse } from '@core';
+	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
 
 	const props = defineProps<{
 		setGostLupoImportMDBFuerJahrgang: (formData: FormData, mode: 'none' | 'schueler' | 'all') => Promise<SimpleOperationResponse>;

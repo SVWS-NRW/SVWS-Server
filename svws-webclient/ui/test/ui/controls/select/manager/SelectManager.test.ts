@@ -1,10 +1,11 @@
 import { nextTick, ref } from "vue";
 import { describe, test, expect } from "vitest";
-import { SelectManager, type SelectManagerConfig } from "../../../../../src/ui/controls/select/manager/SelectManager";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import type { List } from "../../../../../../core/src/java/util/List";
-import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
-import type { SelectFilter } from "../../../../../src/ui/controls/select/filter/SelectFilter";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
+import type { SelectFilter } from "@ui/ui/controls/select/filter/SelectFilter";
+import type { SelectManagerConfig } from "@ui/ui/controls/select/manager/SelectManager";
+import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 describe("UiSelect SelectManager Tests", () => {
 

@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { computed, ref } from "vue";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import type { AnkreuzkompetenzenGruppenprozesseProps } from "~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesseProps";
-	import { useBenutzerState } from "@ui";
 
 	const props = defineProps<AnkreuzkompetenzenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

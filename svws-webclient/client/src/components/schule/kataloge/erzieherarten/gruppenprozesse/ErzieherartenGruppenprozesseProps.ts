@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { ErzieherartListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
 
 export interface ErzieherartenGruppenprozesseProps {
 	manager: () => ErzieherartListeManager;

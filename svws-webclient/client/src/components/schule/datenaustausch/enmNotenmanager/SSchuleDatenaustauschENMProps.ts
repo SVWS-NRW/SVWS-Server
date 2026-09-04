@@ -1,4 +1,7 @@
-import type { ApiFile, ENMv2Daten, LehrerListeEintrag, List } from "@core";
+import type { ApiFile } from "@core/api/BaseApi";
+import type { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { List } from "@core/java/util/List";
 
 export interface SchuleDatenaustauschENMProps {
 	listLehrer: List<LehrerListeEintrag>;

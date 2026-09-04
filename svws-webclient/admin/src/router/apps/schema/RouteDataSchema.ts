@@ -1,13 +1,8 @@
-import { type Ref, ref, shallowRef } from "vue";
-
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
-
-import { routeApp } from "../RouteApp";
-import { routeSchema } from "~/router/apps/schema/RouteSchema";
-import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
-import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
+import type { SchemaMigrationQuelle } from "@admin/components/schema/SchemaMigrationQuelle";
+import { api } from "@admin/router/Api";
+import { RouteManager } from "@admin/router/RouteManager";
+import type { RouteNode } from "@admin/router/RouteNode";
+import type { ApiFile } from "@core/api/BaseApi";
 import { OpenApiError } from "@core/api/OpenApiError";
 import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
 import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
@@ -22,7 +17,10 @@ import { JavaString } from "@core/java/lang/JavaString";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
-import type { ApiFile } from "@core/api/BaseApi";
+import { type Ref, ref, shallowRef } from "vue";
+import { routeApp } from "../RouteApp";
+import { routeSchema } from "./RouteSchema";
+import { routeSchemaUebersicht } from "./uebersicht/RouteSchemaUebersicht";
 
 
 interface RouteStateSchema {

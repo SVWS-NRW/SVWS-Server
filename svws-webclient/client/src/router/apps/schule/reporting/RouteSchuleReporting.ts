@@ -1,5 +1,4 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { BenutzerKompetenz, ReportingReportvorlage, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
@@ -7,7 +6,11 @@ import { RouteDataSchuleReporting } from "./RouteDataSchuleReporting";
 import type { SchuleReportingProps } from "~/components/schule/reporting/SchuleReportingProps";
 import { routeSchuleReportingKonfiguration } from "./RouteSchuleReportingKonfiguration";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { ConfigElement } from "@ui";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+import { ConfigElement } from "@ui/utils/Config";
 
 const SchuleReporting = () => import("~/components/schule/reporting/SchuleReporting.vue");
 

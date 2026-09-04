@@ -34,9 +34,8 @@
 
 	import { computed, onBeforeMount, onUnmounted, ref, useSlots } from 'vue';
 	import storyManager from './StoryManager';
-	import type { PaneSplitterConfig } from './../ui/composables/usePaneSplitter';
-	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
+	import type { PaneSplitterConfig } from '@ui/ui/composables/usePaneSplitter';
+	import { usePaneSplitter } from '@ui/ui/composables/usePaneSplitter';
 
 	const props = withDefaults(defineProps<{
 		title: string;

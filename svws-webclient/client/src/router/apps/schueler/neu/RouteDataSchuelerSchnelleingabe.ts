@@ -1,13 +1,29 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, List,
-	ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchulEintrag,
-	Telefonart, VermerkartEintrag, ErzieherStammdaten, SchuelerStammdaten, SchuelerVermerke } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
-import { SchuelerSchnelleingabeManager } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
+import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
+import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { Telefonart } from "@core/core/data/schule/Telefonart";
+import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	manager: SchuelerSchnelleingabeManager | undefined;

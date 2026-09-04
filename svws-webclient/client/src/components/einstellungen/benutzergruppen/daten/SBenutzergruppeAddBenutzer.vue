@@ -16,9 +16,10 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerListeEintrag, List } from "@core";
-	import { ArrayList } from "@core";
 	import { computed } from "vue";
+	import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		alleBenutzer: () => List<BenutzerListeEintrag> ;

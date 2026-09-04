@@ -1,7 +1,4 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { LehrerListeManager } from "@ui";
-import { AppMenuGroup, ConfigElement } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -21,6 +18,12 @@ import type { RouteNode } from "~/router/RouteNode";
 import { Katalog } from "~/cache/Katalog";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+import { ConfigElement } from "@ui/utils/Config";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
 const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");

@@ -53,9 +53,13 @@
 
 	import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, Laender, OrtKatalogEintrag } from "@core";
 	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
-	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { Laender } from "@core/asd/types/schule/Laender";
+	import { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 	const props = defineProps<OrteNeuProps>();
 	const benutzerState = useBenutzerState();

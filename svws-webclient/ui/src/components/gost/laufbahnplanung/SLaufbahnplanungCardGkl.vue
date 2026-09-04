@@ -71,22 +71,22 @@
 
 <script setup lang="ts">
 
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import { GostFachbereich } from "@core/core/types/gost/GostFachbereich";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import { GostSchriftlichkeit } from "@core/core/types/gost/GostSchriftlichkeit";
+	import { JavaInteger } from "@core/java/lang/JavaInteger";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { Comparator } from "@core/java/util/Comparator";
+	import type { List } from "@core/java/util/List";
+	import type { GostKlausurvorgabeEintrag } from "@ui/states/GostLaufbahnplanungState";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
-	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
-	import { GostSchriftlichkeit } from "../../../../../core/src/core/types/gost/GostSchriftlichkeit";
-	import { SelectManager } from "../../../ui/controls/select/manager/SelectManager";
-	import type { GostKlausurvorgabeEintrag } from "../../../states/GostLaufbahnplanungState";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
-	import type { List } from "../../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
-	import type { Comparator } from "../../../../../core/src/java/util/Comparator";
-	import { JavaInteger } from "../../../../../core/src/java/lang/JavaInteger";
-	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
-	import { GridManager } from "../../../ui/controls/tablegrid/GridManager";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

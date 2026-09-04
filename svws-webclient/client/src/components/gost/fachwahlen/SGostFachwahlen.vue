@@ -69,8 +69,10 @@
 
 	import { onMounted, ref, computed } from "vue";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
-	import type { GostStatistikFachwahl, GostStatistikFachwahlHalbjahr } from "@core";
-	import { Fach, GostHalbjahr } from "@core";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+	import type { GostStatistikFachwahlHalbjahr } from "@core/core/data/gost/GostStatistikFachwahlHalbjahr";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 
 	const props = defineProps<GostFachwahlenProps>();
 

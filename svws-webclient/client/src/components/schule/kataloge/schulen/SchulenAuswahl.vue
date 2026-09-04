@@ -40,8 +40,11 @@
 
 	import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SchulenAuswahlProps";
 	import { computed } from 'vue';
-	import { BenutzerKompetenz, type SchulEintrag } from "@core";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<SchulenAuswahlProps>();
 	const benutzerState = useBenutzerState();

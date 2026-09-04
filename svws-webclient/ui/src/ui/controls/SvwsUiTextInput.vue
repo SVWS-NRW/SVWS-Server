@@ -83,16 +83,16 @@
 
 <script setup lang="ts">
 
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { ValidatorDateRange } from "@ui/validation/common/ValidatorDateRange";
+	import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+	import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+	import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+	import { ValidationResult } from "@ui/validation/ValidationResult";
 	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch } from "vue";
-	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import { ValidationResult } from "../../validation/ValidationResult";
-	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
-	import { ValidatorStringLength } from "../../validation/common/ValidatorStringLength";
-	import { StringPattern, ValidatorStringMatchesPattern } from "../../validation/common/ValidatorStringMatchesPattern";
-	import { ValidatorDateRange } from "../../validation/common/ValidatorDateRange";
 
 	defineOptions({
 		inheritAttrs: false,

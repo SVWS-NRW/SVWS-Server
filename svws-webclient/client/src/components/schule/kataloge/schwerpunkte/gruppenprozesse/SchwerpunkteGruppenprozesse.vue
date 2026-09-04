@@ -38,11 +38,12 @@
 </template>
 
 <script setup lang="ts">
+
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { computed, ref } from "vue";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import type { SchwerpunkteGruppenprozesseProps } from './SchwerpunkteGruppenprozesseProps';
-	import { useBenutzerState } from "@ui";
+	import type { SchwerpunkteGruppenprozesseProps } from "./SchwerpunkteGruppenprozesseProps";
 
 	const props = defineProps<SchwerpunkteGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

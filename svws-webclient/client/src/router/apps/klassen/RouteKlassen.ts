@@ -1,19 +1,18 @@
 import type { RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataKlassen } from "~/router/apps/klassen/RouteDataKlassen";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
-
 import type { KlassenAuswahlProps } from "~/components/klassen/KlassenAuswahlProps";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
-import { AppMenuGroup } from "@ui";
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 
 
 const KlassenAuswahl = () => import("~/components/klassen/KlassenAuswahl.vue");

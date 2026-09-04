@@ -52,12 +52,19 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useBenutzerState, useRegionSwitch, ViewType } from "@ui";
-	import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
-	import { BenutzerKompetenz, Floskelgruppenart } from "@core";
 	import { computed } from "vue";
 	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
+	import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { Floskel } from "@core/core/data/schule/Floskel";
+	import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<FloskelnAuswahlProps>();
 	const benutzerState = useBenutzerState();

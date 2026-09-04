@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { KindergaertenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
 
 export interface KindergaertenGruppenprozesseProps {
 	manager: () => KindergaertenListeManager;

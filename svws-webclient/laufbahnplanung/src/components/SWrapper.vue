@@ -32,8 +32,8 @@
 <script setup lang="ts">
 
 	import { onErrorCaptured, ref } from 'vue';
-	import { githash } from '../../githash';
-	import { version } from '../../version';
+	import { githash } from "@githash";
+	import { version } from "@version";
 	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';

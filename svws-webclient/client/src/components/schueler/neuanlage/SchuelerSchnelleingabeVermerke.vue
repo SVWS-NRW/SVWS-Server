@@ -51,11 +51,14 @@
 </template>
 <script setup lang="ts">
 
-	import type { List, VermerkartEintrag } from "@core";
-	import { ArrayList, SchuelerVermerke } from "@core";
-	import { SelectManager } from "@ui";
+	import { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
+	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 	import { computed, ref } from "vue";
-	import type { SchuelerSchnelleingabeManager, DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

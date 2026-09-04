@@ -1,6 +1,8 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
-import type { Beschaeftigungsart } from "@core";
-import { JavaInteger } from "@core";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorBeschaeftigungsartBezeichnung } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/ValidatorBeschaeftigungsartBezeichnung";
 
 export class BeschaeftigungsartModelProxy extends ModelProxy<Beschaeftigungsart> {

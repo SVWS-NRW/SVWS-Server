@@ -1,7 +1,3 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
-import type { SchuleStammdatenProps } from "~/components/schule/stammdaten/SchuleStammdatenProps";
-
 import type { RouteSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { RouteTabNode } from "~/router/RouteTabNode";
@@ -10,6 +6,10 @@ import { routeSchuleStatistikdaten } from "~/router/apps/schule/stammdaten/stati
 import { routeSchuleLogoverwaltung } from "~/router/apps/schule/stammdaten/logoverwaltung/RouteSchuleLogoverwaltung";
 import { routeSchuleSchuljahreswechsel } from "~/router/apps/schule/stammdaten/schuljahreswechsel/RouteSchuleSchuljahreswechsel";
 import { RouteDataSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteDataSchuleStammdaten";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { SchuleStammdatenProps } from "~/components/schule/stammdaten/SchuleStammdatenProps";
 
 const SchuleStammdaten = () => import("~/components/schule/stammdaten/SchuleStammdaten.vue");
 

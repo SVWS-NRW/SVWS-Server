@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 
-	import { GostHalbjahr } from "@core";
-	import { useGostKlausurplanungState } from "@ui";
 
 	defineProps<{
 		gotoHalbjahr: (value: GostHalbjahr) => Promise<void>;

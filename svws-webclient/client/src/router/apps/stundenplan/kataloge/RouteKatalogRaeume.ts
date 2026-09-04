@@ -1,11 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeProps";
 import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { RouteDataKatalogRaeume } from "./RouteDataKatalogRaeume";
 import { RouteStundenplan } from "../RouteStundenplan";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SRaeumeAuswahl = () => import("~/components/stundenplan/kataloge/raeume/SRaeumeAuswahl.vue");
 const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.vue");
@@ -13,7 +16,7 @@ const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.v
 export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "stundenplan.kataloge.raeume", "raeume/:idRaum(\\d+)?", SRaeume, new RouteDataKatalogRaeume());
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "stundenplan.kataloge.raeume", String.raw`raeume/:idRaum(\d+)?`, SRaeume, new RouteDataKatalogRaeume());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";

@@ -1,11 +1,9 @@
+import { api } from "@admin/router/Api";
+import type { RouteNode } from "@admin/router/RouteNode";
 import type { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
 import { shallowRef } from "vue";
-import { api } from "~/router/Api";
-
-import type { RouteNode } from "~/router/RouteNode";
-
-import { routeSchema } from "~/router/apps/schema/RouteSchema";
-import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
+import { routeSchema } from "../schema/RouteSchema";
+import { routeSchemaUebersicht } from "../schema/uebersicht/RouteSchemaUebersicht";
 
 
 interface RouteStateConfig {

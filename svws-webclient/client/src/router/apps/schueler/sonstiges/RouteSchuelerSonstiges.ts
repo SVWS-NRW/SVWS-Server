@@ -1,18 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-
 import type { SchuelerSonstigesProps } from "~/components/schueler/sonstiges/SchuelerSonstigesProps";
-import type { TabData } from "@ui";
 import { routeSchuelerEinwilligungen } from "../einwilligungen/RouteSchuelerEinwilligungen";
 import { routeSchuelerVermerke } from "../vermerke/RouteSchuelerVermerke";
 import { routeSchuelerLernplattformen } from "../lernplattformen/RouteSchuelerLernplattformen";
 import { RouteDataSchuelerLernabschnitte } from "./RouteDataSchuelerSonstiges";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { TabData } from "@ui/ui/nav/TabData";
+import type { RouteSchueler } from "../RouteSchueler";
 
 const SchuelerSonstiges = () => import("~/components/schueler/sonstiges/SchuelerSonstiges.vue");
 

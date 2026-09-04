@@ -1,11 +1,5 @@
 import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
-
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
-
-import { RouteNode } from "~/router/RouteNode";
-
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
 import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen";
 import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
@@ -18,14 +12,20 @@ import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
-import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { AppMenuGroup } from "@ui";
-import type { StundenplanListeManager } from "@ui";
 import { routeStundenplanNeu } from "./RouteStundenplanNeu";
 import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
 import { routeError } from "~/router/error/RouteError";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+import { RouteNode } from "~/router/RouteNode";
+import { ConfigElement } from "@ui/utils/Config";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue");
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue");
@@ -36,7 +36,7 @@ export class RouteStundenplan extends RouteAuswahlNode<StundenplanListeManager, 
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
 			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
-		], "stundenplan", "stundenplan/:id(-?\\d+)?", SStundenplanApp, SStundenplanAuswahl, new RouteDataStundenplan());
+		], "stundenplan", String.raw`stundenplan/:id(-?\d+)?`, SStundenplanApp, SStundenplanAuswahl, new RouteDataStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.text = "Stundenplan";
 		super.children = [

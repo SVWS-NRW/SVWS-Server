@@ -1,4 +1,4 @@
-import type { JahrgangsDaten } from "@core";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 
 export interface GostAbiturjahrgangNeuProps {
 	mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsDaten>;

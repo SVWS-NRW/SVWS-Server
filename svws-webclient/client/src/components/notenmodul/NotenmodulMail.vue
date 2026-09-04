@@ -26,8 +26,9 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import { ENMServerConfigElement, ENMServerConfigSMTP } from '@core';
 	import type { NotenmodulMailProps } from './NotenmodulMailProps';
+	import { ENMServerConfigElement } from '@core/core/data/enm/ENMServerConfigElement';
+	import { ENMServerConfigSMTP } from '@core/core/data/enm/ENMServerConfigSMTP';
 
 	const props = defineProps<NotenmodulMailProps>();
 

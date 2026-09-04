@@ -32,9 +32,9 @@
 
 	import type { LeitungsfunktionenDatenProps } from "./LeitungsfunktionenDatenProps";
 	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
-	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<LeitungsfunktionenDatenProps>();
 	const benutzerState = useBenutzerState();

@@ -1,13 +1,40 @@
-import type { SchuelerSchulbesuchManager } from "@ui";
-import { ModelProxy, ValidatorNumberRange, ValidatorStringLength } from "@ui";
-import type { EinschulungsartKatalogEintrag, HerkunftsartenKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, KatalogEntlassgrund, Kindergarten,
-	KindergartenbesuchKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, SchuelerSchulbesuchsdaten,
-	SchulabschlussAllgemeinbildendKatalogEintrag, HerkunftSonstigeKatalogEintrag, SchulabschlussBerufsbildendKatalogEintrag, SchulEintrag,
-	SchulformKatalogEintrag, UebergangsempfehlungKatalogEintrag, FachklasseKatalogEintrag, HerkunftBildungsgangKatalogEintrag,
-	HerkunftSchulformKatalogEintrag, HochschulabschlussKatalogEintrag } from "@core";
-import { Einschulungsart, Herkunftsarten, Jahrgaenge, Kindergartenbesuch, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, Uebergangsempfehlung,
-	SchulabschlussAllgemeinbildend, SchulabschlussBerufsbildend, HerkunftSchulform, HerkunftSonstige, Fachklasse, HerkunftBildungsgang,
-	Hochschulabschluss } from "@core";
+import type { JahrgaengeKatalogEintrag } from "@core/asd/data/jahrgang/JahrgaengeKatalogEintrag";
+import type { PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from "@core/asd/data/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag";
+import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
+import type { HerkunftBildungsgangKatalogEintrag } from "@core/asd/data/schueler/HerkunftBildungsgangKatalogEintrag";
+import type { HerkunftsartenKatalogEintrag } from "@core/asd/data/schueler/HerkunftsartenKatalogEintrag";
+import type { HerkunftSchulformKatalogEintrag } from "@core/asd/data/schueler/HerkunftSchulformKatalogEintrag";
+import type { HerkunftSonstigeKatalogEintrag } from "@core/asd/data/schueler/HerkunftSonstigeKatalogEintrag";
+import type { HochschulabschlussKatalogEintrag } from "@core/asd/data/schueler/HochschulabschlussKatalogEintrag";
+import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+import type { UebergangsempfehlungKatalogEintrag } from "@core/asd/data/schueler/UebergangsempfehlungKatalogEintrag";
+import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
+import type { KindergartenbesuchKatalogEintrag } from "@core/asd/data/schule/KindergartenbesuchKatalogEintrag";
+import type { SchulabschlussAllgemeinbildendKatalogEintrag } from "@core/asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag";
+import type { SchulabschlussBerufsbildendKatalogEintrag } from "@core/asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag";
+import type { SchulformKatalogEintrag } from "@core/asd/data/schule/SchulformKatalogEintrag";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { PrimarstufeSchuleingangsphaseBesuchsjahre } from "@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre";
+import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
+import { HerkunftBildungsgang } from "@core/asd/types/schueler/HerkunftBildungsgang";
+import { Herkunftsarten } from "@core/asd/types/schueler/Herkunftsarten";
+import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
+import { HerkunftSonstige } from "@core/asd/types/schueler/HerkunftSonstige";
+import { Hochschulabschluss } from "@core/asd/types/schueler/Hochschulabschluss";
+import { Uebergangsempfehlung } from "@core/asd/types/schueler/Uebergangsempfehlung";
+import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
+import { Kindergartenbesuch } from "@core/asd/types/schule/Kindergartenbesuch";
+import { SchulabschlussAllgemeinbildend } from "@core/asd/types/schule/SchulabschlussAllgemeinbildend";
+import { SchulabschlussBerufsbildend } from "@core/asd/types/schule/SchulabschlussBerufsbildend";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {

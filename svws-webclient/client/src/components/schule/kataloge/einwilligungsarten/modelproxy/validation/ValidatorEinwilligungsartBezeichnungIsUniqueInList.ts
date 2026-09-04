@@ -1,5 +1,6 @@
-import { BasicValidator, ValidatorFehlerart } from "@core";
-import type { EinwilligungsartenListeManager } from "@ui";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/EinwilligungsartenListeManager";
 
 /**
  * Prüft, ob die Bezeichnung in einer Liste pro PersonTyp eindeutig ist.

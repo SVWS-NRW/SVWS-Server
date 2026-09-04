@@ -1,7 +1,10 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, test, expect } from "vitest";
-import { AbschlussManager, ServicePrognose, AbschlussErgebnis, GEAbschlussFaecher } from "../../../../src";
+import { AbschlussManager } from "../../../../src/core/abschluss/AbschlussManager";
+import { ServicePrognose } from "../../../../src/core/abschluss/ge/ServicePrognose";
+import { AbschlussErgebnis } from "../../../../src/core/data/abschluss/AbschlussErgebnis";
+import { GEAbschlussFaecher } from "../../../../src/core/data/abschluss/GEAbschlussFaecher";
 
 const test_dir = resolve(__dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/ge/test");
 const files = readdirSync(test_dir);

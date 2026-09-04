@@ -1,6 +1,10 @@
-import type { ReligionEintrag } from "@core";
-import { BasicValidator, ValidatorFehlerart } from "@core";
-import { StringPattern, ValidatorInputRequired, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorKonfessionBezeichnung extends BasicValidator {
 	constructor(data: () => ReligionEintrag, alleKonfessionen: () => Iterable<ReligionEintrag>) {

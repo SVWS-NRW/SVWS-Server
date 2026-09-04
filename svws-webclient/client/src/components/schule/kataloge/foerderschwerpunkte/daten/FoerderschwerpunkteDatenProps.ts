@@ -1,5 +1,5 @@
-import type { FoerderschwerpunktEintrag } from "@core";
-import type { FoerderschwerpunkteListeManager } from "@ui";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import type { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 
 export interface FoerderschwerpunkteDatenProps {
 	manager: () => FoerderschwerpunkteListeManager;

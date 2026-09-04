@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full min-h-8 flex items-center flex-grow">
+	<div class="w-full min-h-8 flex items-center grow">
 		<div v-if="attributeValue !== undefined" @mouseover="pendingIndicatorHovered = true" @mouseleave="pendingIndicatorHovered = false"
 			ref="gruppenProzessIconContainer" @click="revert" class="h-auto w-auto me-2" :id="`tooltip-${String(attributeName)}`">
 			<SvwsUiTooltip color="primary" :show-arrow="false" :indicator="false">
@@ -38,8 +38,8 @@
 
 	import { ref, computed } from 'vue';
 	import type { PendingStateManager } from './PendingStateManager';
-	import type { JavaMap } from "../../../../core/src/java/util/JavaMap";
-	import { HashMap } from "../../../../core/src/java/util/HashMap";
+	import { HashMap } from '@core/java/util/HashMap';
+	import type { JavaMap } from '@core/java/util/JavaMap';
 
 	const props = withDefaults(defineProps<{
 		pendingStateManager: () => PendingStateManager<any>,

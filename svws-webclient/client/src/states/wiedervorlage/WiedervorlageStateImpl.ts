@@ -1,10 +1,21 @@
-import type { WiedervorlageState } from "@ui";
-import { StateManager } from "@ui";
-import type { List, BenutzergruppeListeEintrag, WiedervorlageEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { benutzerStateImpl } from "../BenutzerStateImpl";
-import { notificationStateImpl } from "~/states/NotificationsStateImpl";
+import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import type { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { WiedervorlageState } from "@ui/states/WiedervorlageState";
+import { StateManager } from "@ui/ui/StateManager";
+import { notificationStateImpl } from "../NotificationsStateImpl";
+
+interface BenutzerGruppen {
+	data: List<BenutzergruppeListeEintrag>
+}
+
+interface Wiedervorlagen {
+	data: List<WiedervorlageEintrag>;
+}
 
 interface WiedervorlageReactiveState {
 	anzahlOffeneWiedervorlagen: number;

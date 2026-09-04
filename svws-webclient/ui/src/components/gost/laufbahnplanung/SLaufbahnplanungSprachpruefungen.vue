@@ -23,9 +23,9 @@
 
 <script setup lang="ts">
 
-	import { Fach } from '../../../../../core/src/asd/types/fach/Fach';
-	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
-	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
+	import { Fach } from '@core/asd/types/fach/Fach';
+	import { Sprachpruefungniveau } from '@core/core/types/fach/Sprachpruefungniveau';
+	import { useGostLaufbahnplanungState } from '@ui/states/GostLaufbahnplanungState';
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

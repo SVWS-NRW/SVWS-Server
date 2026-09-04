@@ -1,6 +1,14 @@
-import type { FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten,
-	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, List, SchulEintrag } from "@core";
-import type { LehrerListeManager } from "@ui";
+import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
+import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
+import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
+import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden";
+import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
+import type { List } from "@core/java/util/List";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 
 export interface LehrerPersonaldatenProps {
 	lehrerListeManager: () => LehrerListeManager;

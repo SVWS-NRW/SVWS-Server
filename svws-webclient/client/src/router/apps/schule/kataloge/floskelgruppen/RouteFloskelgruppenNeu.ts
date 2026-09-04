@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import type { RouteFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import { routeFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppen";
 import type { FloskelgruppenNeuProps } from "~/components/schule/kataloge/floskelgruppen/FloskelgruppenNeuProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const FloskelgruppenNeu = () => import("~/components/schule/kataloge/floskelgruppen/FloskelgruppenNeu.vue");
 

@@ -112,11 +112,24 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { useSchuleState, type DataTableColumn, useAbschnittState, useBenutzerState } from "@ui";
 	import type { KlassenDatenProps } from "./KlassenDatenProps";
-	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
-	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
+	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import type { Klassenart } from "@core/asd/types/klassen/Klassenart";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import type { AllgemeinbildendOrganisationsformen } from "@core/asd/types/schule/AllgemeinbildendOrganisationsformen";
+	import type { BerufskollegOrganisationsformen } from "@core/asd/types/schule/BerufskollegOrganisationsformen";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { WeiterbildungskollegOrganisationsformen } from "@core/asd/types/schule/WeiterbildungskollegOrganisationsformen";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<KlassenDatenProps>();
 	const benutzerState = useBenutzerState();

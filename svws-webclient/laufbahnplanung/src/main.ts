@@ -3,7 +3,7 @@ import { createApp } from "vue";
 import "../../ui/src/assets/styles/index.css";
 import "./main.css";
 
-import SWrapper from "~/components/SWrapper.vue";
+import SWrapper from "@lupo/components/SWrapper.vue";
 import { auskunftStateImpl } from "./states/AuskunftStateImpl";
 import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
 import { registerStates } from "./states/registerStates";

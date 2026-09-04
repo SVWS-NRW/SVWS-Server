@@ -1,7 +1,13 @@
-import type { SchuelerSchulbesuchManager } from "@ui";
-import { ModelProxy } from "@ui";
-import type { JahrgaengeKatalogEintrag, SchuelerSchulbesuchSchule, SchulEintrag, SchulgliederungKatalogEintrag } from "@core";
-import { AdressenUtils, Jahrgaenge, Schulform, Schulgliederung } from "@core";
+import type { JahrgaengeKatalogEintrag } from "@core/asd/data/jahrgang/JahrgaengeKatalogEintrag";
+import type { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchSchuleModelProxy extends ModelProxy<SchuelerSchulbesuchSchule> {

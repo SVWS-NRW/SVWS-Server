@@ -1,8 +1,11 @@
-import type { VermerkartenListeManager } from "@ui";
-import { ValidatorNumberRange } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { VermerkartEintrag } from "@core";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { VermerkartenListeManager } from "@ui/ui/manager/kataloge/VermerkartenListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 
 /**

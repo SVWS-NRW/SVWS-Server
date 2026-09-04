@@ -1,6 +1,6 @@
-import type { List } from "../../../../svws-webclient/core/src/java/util/List";
-import type { ValidatorFehler } from "../../../../svws-webclient/core/src/asd/validate/ValidatorFehler";
-import { ValidatorFehlerart } from "../../../../svws-webclient/core/src/asd/validate/ValidatorFehlerart";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { List } from "@core/java/util/List";
 
 /**
  * Diese Klasse repräsentiert das Ergebnis einer Validierung, welche in Form einer Liste von Validator-Fehler-Objekten

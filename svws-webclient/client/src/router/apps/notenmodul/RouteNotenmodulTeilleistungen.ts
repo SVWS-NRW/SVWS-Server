@@ -1,7 +1,4 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { ConfigElement } from "@ui";
-import type { EnmLerngruppenAuswahlListeManager } from "@ui";
 import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 import { RouteDataNotenmodulTeilleistungen } from "./RouteDataNotenmodulTeilleistungen";
 import type { RouteApp } from "../RouteApp";
@@ -10,6 +7,11 @@ import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistung
 import type { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
+import { ConfigElement } from "@ui/utils/Config";
 
 const NotenmodulTeilleistungenApp = () => import("~/components/notenmodul/NotenmodulTeilleistungenApp.vue");
 const NotenmodulTeilleistungenAuswahl = () => import("~/components/notenmodul/NotenmodulTeilleistungenAuswahl.vue");

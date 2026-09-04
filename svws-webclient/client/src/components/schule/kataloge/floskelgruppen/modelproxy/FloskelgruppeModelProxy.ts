@@ -1,9 +1,11 @@
-import { ValidatorInputRequired, ModelProxy } from "@ui";
-import type { Floskelgruppe, FloskelgruppenartKatalogEintrag } from "@core";
-import { Floskelgruppenart } from "@core";
 import { ValidatorFloskelgruppeKuerzel } from "~/components/schule/kataloge/floskelgruppen/modelproxy/validation/ValidatorFloskelgruppeKuerzel";
 import { ValidatorFloskelgruppeBezeichnung } from "~/components/schule/kataloge/floskelgruppen/modelproxy/validation/ValidatorFloskelgruppeBezeichnung";
 import { computed } from "vue";
+import type { FloskelgruppenartKatalogEintrag } from "@core/asd/data/schule/FloskelgruppenartKatalogEintrag";
+import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
+import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 
 /**
  * ModelProxy für Floskelgruppen

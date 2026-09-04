@@ -24,11 +24,14 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Floskelgruppenart } from "@core";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import type { FloskelgruppenDatenProps } from "./FloskelgruppenDatenProps";
 	import { FloskelgruppeModelProxy } from "~/components/schule/kataloge/floskelgruppen/modelproxy/FloskelgruppeModelProxy";
+	import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 	const props = defineProps<FloskelgruppenDatenProps>();
 	const benutzerState = useBenutzerState();

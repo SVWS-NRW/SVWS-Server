@@ -1,5 +1,5 @@
-import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 
 
 export type LaufbahnplanungUiStepperMode = 'manuell' | 'normal' | 'hochschreiben';

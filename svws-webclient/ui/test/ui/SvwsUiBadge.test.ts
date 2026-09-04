@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import SvwsUiBadge from "../../src/ui/SvwsUiBadge.vue";
+import SvwsUiBadge from "@ui/ui/SvwsUiBadge.vue";
 import { mount } from "@vue/test-utils";
-import SvwsUiTooltip from "../../src/ui/SvwsUiTooltip.vue";
-import type { Size, Type } from "../../src/types";
+import SvwsUiTooltip from "@ui/ui/SvwsUiTooltip.vue";
+import type { Size, Type } from "@ui/types";
 
 describe("SvwsUiInputWrapper", () => {
 	// Testet, ob das HTML korrekt gerendert wird
@@ -20,7 +20,7 @@ describe("Bedingtes Rendern mit CSS-Prüfung", () => {
 		const spanClasses = wrapper.find("span").classes();
 
 		// Testen
-		expect(spanClasses.length).toBe(4);
+		expect(spanClasses).toHaveLength(4);
 		expect(spanClasses).toContain("svws-ui-badge");
 		expect(spanClasses).toContain("badge");
 		expect(spanClasses).toContain("badge--light");

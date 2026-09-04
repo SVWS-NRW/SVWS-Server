@@ -252,20 +252,20 @@
 <script setup lang="ts">
 
 	import { computed, reactive, ref, type Ref } from "vue";
-	import storyManager from "../../../stories/StoryManager";
+	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "@core/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+	import { LehrerRechtsverhaeltnis } from "@core/asd/types/lehrer/LehrerRechtsverhaeltnis";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { BasicValidator } from "@core/asd/validate/BasicValidator";
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import type { List } from "@core/java/util/List";
+	import storyManager from "@ui/stories/StoryManager";
 	import { FachSelectFilter } from "./filter/FachSelectFilter";
-	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
-	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
-	import { LehrerRechtsverhaeltnis } from "../../../../../core/src/asd/types/lehrer/LehrerRechtsverhaeltnis";
-	import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-	import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
-	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "../../../../../core/src/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
 	import { CoreTypeSelectManager } from "./manager/CoreTypeSelectManager";
 	import { SelectManager } from "./manager/SelectManager";
 	import Docs from "./UiSelect.story.md";
-	import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
-	import type { List } from "../../../../../core/src/java/util/List";
-	import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 
 	type Sortierung = "id" | "kuerzel" | "text";
 

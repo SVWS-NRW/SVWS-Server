@@ -25,9 +25,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { ArrayList } from "@core";
-	import type { List, SchuelerListeEintrag } from "@core";
 	import type { GostAbiturPruefungsuebersichtProps } from "./GostAbiturPruefungsuebersichtProps";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<GostAbiturPruefungsuebersichtProps>();
 

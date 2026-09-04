@@ -1,17 +1,18 @@
-import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import type { List } from '../../../../../core/src/java/util/List';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { Ankreuzkompetenz } from '../../../../../core/src/core/data/schule/Ankreuzkompetenz';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
-import type { Schulgliederung } from "../../../../../core/src/asd/types/schule/Schulgliederung";
-import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
-import type { AnkreuzkompetenzJahrgangszuordnung } from "../../../../../core/src/core/data/schule//AnkreuzkompetenzJahrgangszuordnung";
-import { HashMap, HashSet } from '../../../../../core/src';
+import type { Schuljahresabschnitt } from '@core/asd/data/schule/Schuljahresabschnitt';
+import type { Schulform } from '@core/asd/types/schule/Schulform';
+import type { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
+import type { FachDaten } from '@core/core/data/fach/FachDaten';
+import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
+import type { Ankreuzkompetenz } from '@core/core/data/schule/Ankreuzkompetenz';
+import type { AnkreuzkompetenzJahrgangszuordnung } from '@core/core/data/schule/AnkreuzkompetenzJahrgangszuordnung';
+import { JavaInteger } from '@core/java/lang/JavaInteger';
+import { JavaLong } from '@core/java/lang/JavaLong';
+import { JavaString } from '@core/java/lang/JavaString';
+import { ArrayList } from '@core/java/util/ArrayList';
+import type { Comparator } from '@core/java/util/Comparator';
+import { HashMap } from '@core/java/util/HashMap';
+import { HashSet } from '@core/java/util/HashSet';
+import type { List } from '@core/java/util/List';
 import { AuswahlManager } from '../AuswahlManager';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {

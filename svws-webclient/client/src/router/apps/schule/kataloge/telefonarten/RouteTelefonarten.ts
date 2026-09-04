@@ -1,6 +1,4 @@
 import type { RouteParams } from "vue-router";
-import type { TelefonartenListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
@@ -9,6 +7,10 @@ import { routeTelefonartenDaten } from "~/router/apps/schule/kataloge/telefonart
 import { routeTelefonartenGruppenprozesse } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenGruppenprozesse";
 import { routeTelefonartenNeu } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenNeu";
 import { RouteDataTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteDataTelefonarten";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
 
 const TelefonartenAuswahl = () => import("~/components/schule/kataloge/telefonarten/TelefonartenAuswahl.vue");
 const TelefonartenApp = () => import("~/components/schule/kataloge/telefonarten/TelefonartenApp.vue");
@@ -16,7 +18,7 @@ const TelefonartenApp = () => import("~/components/schule/kataloge/telefonarten/
 export class RouteTelefonarten extends RouteAuswahlNode<TelefonartenListeManager, RouteDataTelefonarten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.telefonarten", "schule/telefonarten/:id(\\d+)?", TelefonartenApp, TelefonartenAuswahl, new RouteDataTelefonarten());
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.telefonarten", String.raw`schule/telefonarten/:id(\d+)?`, TelefonartenApp, TelefonartenAuswahl, new RouteDataTelefonarten());
 		super.mode = ServerMode.STABLE;
 		super.text = "Telefonarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

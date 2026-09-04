@@ -56,9 +56,9 @@
 <script setup lang="ts">
 	import { computed } from "vue";
 	import type { LehrerEinwilligungenProps } from './LehrerEinwilligungenProps';
-	import type { LehrerEinwilligung } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useBenutzerState } from "@ui";
+	import type { LehrerEinwilligung } from "@core/core/data/lehrer/LehrerEinwilligung";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<LehrerEinwilligungenProps>();
 	const benutzerState = useBenutzerState();

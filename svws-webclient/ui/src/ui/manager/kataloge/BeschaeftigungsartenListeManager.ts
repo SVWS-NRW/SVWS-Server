@@ -1,14 +1,14 @@
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import type { List } from '../../../../../core/src/java/util/List';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { Beschaeftigungsart } from '../../../../../core/src/core/data/schule/Beschaeftigungsart';
-import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { AuswahlManager } from '../AuswahlManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Beschaeftigungsart, Beschaeftigungsart> {
 

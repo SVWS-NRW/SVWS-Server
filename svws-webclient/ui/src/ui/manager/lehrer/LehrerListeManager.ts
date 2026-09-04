@@ -1,25 +1,25 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import { HashMap2D } from '../../../../../core/src/core/adt/map/HashMap2D';
-import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import { HashMap } from '../../../../../core/src/java/util/HashMap';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
-import type { LehrerPersonalabschnittsdaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonalabschnittsdaten';
-import type { List } from '../../../../../core/src/java/util/List';
-import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import type { LehrerPersonaldaten } from '../../../../../core/src/asd/data/lehrer/LehrerPersonaldaten';
-import type { LehrerStammdaten } from '../../../../../core/src/asd/data/lehrer/LehrerStammdaten';
-import { PersonalTyp } from '../../../../../core/src/core/types/PersonalTyp';
-import { LehrerUtils } from '../../../../../core/src/core/utils/lehrer/LehrerUtils';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { AuswahlManager } from '../AuswahlManager';
-import { ListeMitAuswahl } from '../ListeMitAuswahl';
+import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { PersonalTyp } from "@core/core/types/PersonalTyp";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaObject } from "@core/java/lang/JavaObject";
+import { JavaString } from "@core/java/lang/JavaString";
+import { Arrays } from "@core/java/util/Arrays";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
+import { ListeMitAuswahl } from "../ListeMitAuswahl";
 
 export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintrag, LehrerStammdaten> {
 

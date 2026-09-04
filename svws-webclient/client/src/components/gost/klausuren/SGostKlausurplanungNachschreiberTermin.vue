@@ -45,12 +45,17 @@
 
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
-	import type { GostHalbjahr, GostKlausurtermin } from "@core";
-	import { BenutzerKompetenz, Arrays, GostKursklausur, GostSchuelerklausurtermin } from "@core";
-	import { useBenutzerState, useGostKlausurplanungState } from "@ui";
 	import { computed, ref, type HTMLAttributes } from 'vue';
 	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { Arrays } from "@core/java/util/Arrays";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 	const props = defineProps<{
 		termin: () => GostKlausurtermin;

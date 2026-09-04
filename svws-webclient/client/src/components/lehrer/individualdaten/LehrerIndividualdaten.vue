@@ -197,13 +197,28 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { Leitungsfunktion, NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, DateUtils, Geschlecht, JavaString, Nationalitaeten, PersonalTyp, Schulleitung, ArrayList, ServerMode } from "@core";
-	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState, useServerState, useOrteState } from "@ui";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
+	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+	import { Schulleitung } from "@core/asd/data/schule/Schulleitung";
+	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+	import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { PersonalTyp } from "@core/core/types/PersonalTyp";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { JavaString } from "@core/java/lang/JavaString";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ServerMode } from "@core/core/types/ServerMode";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const benutzerState = useBenutzerState();

@@ -1,5 +1,5 @@
-import type { JahrgangsDaten } from "@core";
-import type { JahrgaengeListeManager } from "@ui";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
 
 export interface JahrgaengeDatenProps {
 	manager: () => JahrgaengeListeManager;

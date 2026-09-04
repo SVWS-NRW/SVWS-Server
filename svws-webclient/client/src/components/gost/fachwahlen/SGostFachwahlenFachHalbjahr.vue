@@ -43,7 +43,11 @@
 
 	import { computed } from "vue";
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
-	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<GostFachwahlenFachHalbjahrProps>();
 

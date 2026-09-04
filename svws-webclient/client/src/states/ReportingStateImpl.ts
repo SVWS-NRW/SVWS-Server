@@ -1,12 +1,24 @@
-import type { ApiFile, List, ReportingReportvorlageParameter, ReportingReportvorlageParameterGruppe, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ReportingAusgabeformat, ReportingEinstellungenBenutzerVorlage, ReportingEinstellungenBenutzerVorlageGruppe, ReportingEinstellungenBenutzerVorlagenParameterWert, ReportingParameter, ServerMode, ReportingReportvorlage, ReportingReportvorlageUtils } from "@core";
-import type { ElementMitAnforderung, ReportingState } from "@ui";
-import { StateManager } from "@ui";
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
+import type { ApiFile } from "@core/api/BaseApi";
+import { ReportingEinstellungenBenutzerVorlage } from "@core/core/data/reporting/ReportingEinstellungenBenutzerVorlage";
+import { ReportingEinstellungenBenutzerVorlageGruppe } from "@core/core/data/reporting/ReportingEinstellungenBenutzerVorlageGruppe";
+import { ReportingEinstellungenBenutzerVorlagenParameterWert } from "@core/core/data/reporting/ReportingEinstellungenBenutzerVorlagenParameterWert";
+import { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
+import type { ReportingReportvorlageParameter } from "@core/core/data/reporting/ReportingReportvorlageParameter";
+import type { ReportingReportvorlageParameterGruppe } from "@core/core/data/reporting/ReportingReportvorlageParameterGruppe";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ReportingAusgabeformat } from "@core/core/types/reporting/ReportingAusgabeformat";
+import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ReportingReportvorlageUtils } from "@core/core/utils/reporting/ReportingReportvorlageUtils";
+import type { List } from "@core/java/util/List";
+import type { ReportingState, ElementMitAnforderung } from "@ui/states/ReportingState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface ReportingReactiveState {
 }

@@ -1,5 +1,5 @@
-import { ModelProxy } from "@ui";
-import type { LehrerLernplattform } from "@core";
+import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
+import { ModelProxy } from "@ui/model/ModelProxy";
 
 export class LehrerLernplattformenModelProxy extends ModelProxy<LehrerLernplattform> {
 

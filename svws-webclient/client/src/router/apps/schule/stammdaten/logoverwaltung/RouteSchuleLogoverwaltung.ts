@@ -1,14 +1,13 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuleLogoverwaltungProps } from "~/components/schule/stammdaten/logoverwaltung/SchuleLogoverwaltungProps";
 import { RouteDataSchuleLogoverwaltung } from "~/router/apps/schule/stammdaten/logoverwaltung/RouteDataSchuleLogoverwaltung";
-import { api } from "~/router/Api";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
-const SchuleLogoverwaltung =
-	() => import("~/components/schule/stammdaten/logoverwaltung/SchuleLogoverwaltung.vue");
+const SchuleLogoverwaltung = () => import("~/components/schule/stammdaten/logoverwaltung/SchuleLogoverwaltung.vue");
 
 export class RouteSchuleLogoverwaltung extends RouteNode<RouteDataSchuleLogoverwaltung, RouteSchuleStammdaten> {
 

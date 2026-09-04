@@ -76,10 +76,14 @@
 
 <script setup lang="ts">
 
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { List } from "@core/java/util/List";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import { computed, ref, shallowRef } from "vue";
-	import type { List, FachDaten, LehrerUnterrichtsfach } from "@core";
-	import { ArrayList, HashSet } from "@core";
-	import { GridManager, SelectManager } from "@ui";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

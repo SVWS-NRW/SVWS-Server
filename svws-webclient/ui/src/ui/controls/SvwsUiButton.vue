@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 
-	import type { ButtonType } from '../../types';
+	import type { ButtonType } from "@ui/types";
 	import { onMounted, ref } from "vue";
 
 	const addButton = ref<HTMLButtonElement | null>(null);

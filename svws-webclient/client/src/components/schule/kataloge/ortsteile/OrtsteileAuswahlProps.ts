@@ -1,4 +1,4 @@
+import type { OrtsteileListeManager } from "@ui/ui/manager/kataloge/OrtsteileListeManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { OrtsteileListeManager } from "@ui";
 
 export type OrtsteileAuswahlProps = RouteAuswahlListProps<OrtsteileListeManager>;

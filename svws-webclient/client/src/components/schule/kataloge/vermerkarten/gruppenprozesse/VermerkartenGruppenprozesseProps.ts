@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { VermerkartenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { VermerkartenListeManager } from "@ui/ui/manager/kataloge/VermerkartenListeManager";
 
 export interface VermerkartenGruppenprozesseProps {
 	manager: () => VermerkartenListeManager;

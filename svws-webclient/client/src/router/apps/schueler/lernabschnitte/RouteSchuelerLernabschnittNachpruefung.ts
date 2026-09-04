@@ -1,11 +1,10 @@
 import type { RouteLocationNormalized } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-
 import type { SchuelerLernabschnittNachpruefungProps } from "~/components/schueler/lernabschnitte/nachpruefung/SchuelerLernabschnittNachpruefungProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SchuelerLernabschnittAllgemein = () => import("~/components/schueler/lernabschnitte/nachpruefung/SchuelerLernabschnittNachpruefung.vue");
 

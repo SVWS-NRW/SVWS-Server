@@ -1,4 +1,6 @@
-import { DeveloperNotificationException, type GostJahrgangFachkombination, type GostLaufbahnplanungFachkombinationTyp } from "@core";
+import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 

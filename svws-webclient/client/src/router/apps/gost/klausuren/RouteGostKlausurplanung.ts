@@ -1,13 +1,9 @@
 import type { RouteLocationAsRelativeGeneric, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
-
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
-
 import { RouteManager } from "~/router/RouteManager";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungVorgaben";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungKalender";
@@ -15,18 +11,21 @@ import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausuren/Ro
 import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungDetailAnsicht";
 import { routeGostKlausurplanungNachschreiber } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungNachschreiber";
 import { routeGostKlausurplanungNachschreibAnsicht } from "~/router/apps/gost/klausuren/RouteGostKlausurplanungNachschreibAnsicht";
-
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteDataGostKlausurplanung";
-
 import { routeError } from "~/router/error/RouteError";
-import { ConfigElement, CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausuren/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
-import type { TabData } from "@ui";
 import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
+import type { TabData } from "@ui/ui/nav/TabData";
+import { ConfigElement } from "@ui/utils/Config";
 
 const SGostKlausurplanung = () => import("~/components/gost/klausuren/SGostKlausurplanung.vue");
 const SGostKlausurplanungAuswahl = () => import("~/components/gost/klausuren/SGostKlausurplanungAuswahl.vue");

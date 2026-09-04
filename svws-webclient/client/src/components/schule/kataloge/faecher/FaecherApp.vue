@@ -36,8 +36,9 @@
 
 	import { computed } from "vue";
 	import type { FaecherAppProps } from "./FaecherAppProps";
-	import type { FachDaten } from "@core";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<FaecherAppProps>();
 

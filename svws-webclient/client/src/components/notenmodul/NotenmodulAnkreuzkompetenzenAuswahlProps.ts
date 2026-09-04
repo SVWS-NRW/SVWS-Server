@@ -1,7 +1,7 @@
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
+import type { EnmManager } from "@ui/components/enm/EnmManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
-import type { EnmManager } from "../../../../ui/src/components/enm/EnmManager";
-import type { EnmLerngruppenAuswahlListeManager } from "../../../../ui/src/components/enm/EnmLerngruppenAuswahlListeManager";
 
 export interface NotenmodulAnkreuzkompetenzenAuswahlProps extends RouteAuswahlListProps<EnmLerngruppenAuswahlListeManager> {
 	enmManager: () => EnmManager;

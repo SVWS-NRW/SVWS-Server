@@ -1,5 +1,5 @@
-import type { ENMServerConnection } from "@core";
-import type { WenomAuswahlListeManager } from "@ui";
+import type { ENMServerConnection } from "@core/core/data/enm/ENMServerConnection";
+import type { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
 
 export interface NotenmodulVerbindungProps {
 	manager: () => WenomAuswahlListeManager;

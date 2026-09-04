@@ -1,6 +1,7 @@
-import type { Teilleistungsart } from "@core";
-import { ModelProxy, ValidatorInputRequired } from "@ui";
-import { ValidatorNumberRange } from "@ui";
+import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorTeilleistungsartBezeichnung } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/validation/ValidatorBezeichnung";
 
 /**

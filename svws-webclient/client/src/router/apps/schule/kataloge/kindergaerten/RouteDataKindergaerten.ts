@@ -1,8 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { ArrayList, type List, type SimpleOperationResponse, type Kindergarten, BenutzerKompetenz } from "@core";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { ViewType, KindergaertenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
 import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
@@ -10,6 +8,13 @@ import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergae
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

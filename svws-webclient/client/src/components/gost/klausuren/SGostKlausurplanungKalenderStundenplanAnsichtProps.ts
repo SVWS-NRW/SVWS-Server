@@ -1,4 +1,10 @@
-import type { StundenplanZeitraster, GostHalbjahr, GostKursklausur, List, StundenplanKalenderwochenzuordnung, Wochentag, GostKlausurtermin } from "@core";
+import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import type { List } from "@core/java/util/List";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {

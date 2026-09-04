@@ -54,9 +54,13 @@
 
 	import { ref, computed } from "vue";
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
-	import type { StundenplanListeEintrag, List } from "@core";
-	import { ReportingReportvorlage, BenutzerKompetenz, DateUtils } from "@core";
-	import { SelectManager, useBenutzerState } from "@ui";
+	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
 	type Action = 'druckSchuelerListeKontaktdatenErzieher' | 'druckSchuelerSchulbescheinigung' | 'druckSchuelerStundenplan' | 'delete' | '';
 

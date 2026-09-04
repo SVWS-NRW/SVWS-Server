@@ -10,11 +10,12 @@
 </template>
 
 <script setup lang="ts">
+	import type { StundenplanListeEintrag } from '@core/core/data/stundenplan/StundenplanListeEintrag';
+	import type { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
+	import { DateUtils } from '@core/core/utils/DateUtils';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { StundenplanListeEintrag, ReportingReportvorlage } from '@core';
-	import { DateUtils } from '@core';
-	import { SelectManager } from '@ui';
 
 	const props = defineProps<{
 		mapStundenplaene: Map<number, StundenplanListeEintrag>;

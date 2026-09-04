@@ -1,10 +1,12 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { NutzereinstellungenAppProps } from "~/components/benutzerprofil/einstellungen/SNutzereinstellungenAppProps";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteDataBenutzerprofilNutzereinstellungen";
 import { RouteBenutzerprofilMenuGroup } from "~/router/apps/benutzerprofil/RouteBenutzerprofilMenuGroup";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SBenutzerprofilApp = () => import("~/components/benutzerprofil/einstellungen/SNutzereinstellungenApp.vue");
 

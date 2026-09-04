@@ -1,11 +1,14 @@
 import type { RouteParams, RouteLocationRaw, RouteLocationNormalized } from "vue-router";
 import type { ZeitrasterAuswahlProps } from "~/components/stundenplan/kataloge/zeitraster/SZeitrasterAuswahlProps";
-import type { LehrerListeEintrag } from "@core";
-import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataKatalogZeitraster } from "./RouteDataKatalogZeitraster";
 import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeitProps";
 import { RouteStundenplan, routeStundenplan } from "../RouteStundenplan";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ArrayList } from "@core/java/util/ArrayList";
 
 const SZeitrasterAuswahl = () => import("~/components/stundenplan/kataloge/zeitraster/SZeitrasterAuswahl.vue");
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");

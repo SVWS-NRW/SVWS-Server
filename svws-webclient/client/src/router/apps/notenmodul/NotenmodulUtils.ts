@@ -1,7 +1,7 @@
-import type { ENMv2Abteilung } from "../../../../../core/src/core/data/enm/v2/ENMv2Abteilung";
-import type { ENMv2Jahrgang } from "../../../../../core/src/core/data/enm/v2/ENMv2Jahrgang";
-import type { ENMv2Klasse } from "../../../../../core/src/core/data/enm/v2/ENMv2Klasse";
-import type { Comparator } from "../../../../../core/src/java/util/Comparator";
+import type { ENMv2Abteilung } from "@core/core/data/enm/v2/ENMv2Abteilung";
+import type { ENMv2Jahrgang } from "@core/core/data/enm/v2/ENMv2Jahrgang";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { Comparator } from "@core/java/util/Comparator";
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Klassen-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
 export const comparatorENMKlasse = <Comparator<ENMv2Klasse>>{ compare: (a: ENMv2Klasse, b: ENMv2Klasse): number => {

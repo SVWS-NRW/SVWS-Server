@@ -1,5 +1,5 @@
-import type { NotificationEintrag, NotificationsState } from "@ui";
-import { StateManager } from "@ui";
+import type { NotificationEintrag, NotificationsState } from "@ui/states/NotificationsState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface NotificationsReactiveState {
 	/** Alle aktiven Notifications, geordnet nach ID */

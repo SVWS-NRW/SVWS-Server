@@ -1,5 +1,7 @@
-import type { Betrieb, BetriebeAnsprechpartner, List } from "@core";
-import type { BetriebeListeManager } from "@ui";
+import type { Betrieb } from "@core/core/data/schule/Betrieb";
+import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
+import type { List } from "@core/java/util/List";
+import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
 
 export interface BetriebeDatenProps {
 	manager: () => BetriebeListeManager,

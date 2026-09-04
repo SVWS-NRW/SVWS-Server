@@ -1,7 +1,8 @@
 import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import SvwsUiButton from "../../../src/ui/controls/SvwsUiButton.vue";
-import type { ButtonType } from '../../../src/types';
+import SvwsUiButton from "@ui/ui/controls/SvwsUiButton.vue";
+import type { ButtonType } from "@ui/types";
+
 describe("SvwsUiButton", () => {
 	describe("Komponente kann gemounted werden", () => {
 		test("HTML wird erzeugt", () => {

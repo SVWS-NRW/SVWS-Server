@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { FahrschuelerartenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { FahrschuelerartenListeManager } from "@ui/ui/manager/kataloge/FahrschuelerartenListeManager";
 
 export interface FahrschuelerartenGruppenprozesseProps {
 	manager: () => FahrschuelerartenListeManager;

@@ -36,8 +36,9 @@
 <script setup lang="ts">
 
 	import type { EntlassgruendeAppProps } from "~/components/schule/kataloge/entlassgruende/EntlassgruendeAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<EntlassgruendeAppProps>();
 

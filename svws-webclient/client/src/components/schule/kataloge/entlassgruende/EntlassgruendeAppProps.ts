@@ -1,4 +1,4 @@
+import type { EntlassgruendeListeManager } from "@ui/ui/manager/kataloge/EntlassgruendeListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { EntlassgruendeListeManager } from "@ui";
 
 export type EntlassgruendeAppProps = RouteAuswahlProps<EntlassgruendeListeManager>;

@@ -85,11 +85,15 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef } from 'vue';
-	import type { Schuljahresabschnitt } from "@core";
-	import { BenutzerKompetenz, Jahrgaenge, SchuelerKAoADaten } from "@core";
-	import { useBenutzerState, useModelProxyList, useAbschnittState } from '@ui';
 	import { SchuelerKaoaModelProxy } from "./modelproxy/SchuelerKaoaModelProxy";
 	import type { SchuelerKAoAProps } from './SchuelerKaoaProps';
+	import type { Schuljahresabschnitt } from '@core/asd/data/schule/Schuljahresabschnitt';
+	import { Jahrgaenge } from '@core/asd/types/jahrgang/Jahrgaenge';
+	import { SchuelerKAoADaten } from '@core/core/data/schueler/SchuelerKAoADaten';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useModelProxyList } from '@ui/model/useModelProxyList';
+	import { useAbschnittState } from '@ui/states/AbschnittState';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 
 	const props = defineProps<SchuelerKAoAProps>();
 	const benutzerState = useBenutzerState();

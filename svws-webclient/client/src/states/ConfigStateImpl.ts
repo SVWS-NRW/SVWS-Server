@@ -1,7 +1,7 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { ConfigState } from "@ui/states/ConfigState";
+import { Config } from "@ui/utils/Config";
 import { ref } from "vue";
-import { DeveloperNotificationException } from "@core";
-import { Config } from "@ui";
-import type { ConfigState } from "@ui";
 import { api } from "~/router/Api";
 
 /**

@@ -1,13 +1,13 @@
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { SchulenKatalogEintrag } from '../../../../../core/src/core/data/schule/SchulenKatalogEintrag';
-import type { List } from '../../../../../core/src/java/util/List';
-import type { SchulEintrag } from '../../../../../core/src/core/data/kataloge/SchulEintrag';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { AuswahlManager } from '../AuswahlManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashSet } from "@core/java/util/HashSet";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class SchulenListeManager extends AuswahlManager<number, SchulEintrag, SchulEintrag> {
 

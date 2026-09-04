@@ -1,10 +1,10 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 
-const SchuleStatistikdaten =
-	() => import("~/components/schule/stammdaten/statistikdaten/SchuleStatistikdaten.vue");
+const SchuleStatistikdaten = () => import("~/components/schule/stammdaten/statistikdaten/SchuleStatistikdaten.vue");
 
 export class RouteSchuleStatikstikdaten extends RouteNode<any, RouteSchuleStammdaten> {
 

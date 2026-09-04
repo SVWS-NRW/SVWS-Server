@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { JahrgaengeListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
 
 export interface JahrgaengeGruppenprozesseProps {
 	manager: () => JahrgaengeListeManager;

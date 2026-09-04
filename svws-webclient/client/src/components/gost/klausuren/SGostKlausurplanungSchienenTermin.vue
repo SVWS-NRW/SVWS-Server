@@ -34,11 +34,16 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostHalbjahr as GostHalbjahrType, GostKlausurtermin } from "@core";
-	import { Arrays, BenutzerKompetenz, GostHalbjahr, GostKursklausur, GostSchuelerklausurtermin } from "@core";
-	import { useBenutzerState, useGostKlausurplanungState } from "@ui";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { Arrays } from "@core/java/util/Arrays";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 	import { computed, type HTMLAttributes } from 'vue';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
@@ -52,8 +57,8 @@
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
-		gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahrType) => Promise<void>;
-		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahrType, value: number) => Promise<void>;
+		gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>();
 
 	const benutzerState = useBenutzerState();

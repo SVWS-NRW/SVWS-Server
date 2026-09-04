@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch } from '@ui';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import type { RouteTabProps } from '~/router/RouteTabNode';
 
 	const props = defineProps<RouteTabProps>();

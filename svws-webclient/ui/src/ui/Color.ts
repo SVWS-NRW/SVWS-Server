@@ -1,4 +1,4 @@
-import { RGBFarbe } from "../../../core/src/asd/data/RGBFarbe";
+import { RGBFarbe } from "@core/asd/data/RGBFarbe";
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Umgang mit RGB-Farben zur Verfügung.

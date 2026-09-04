@@ -1,9 +1,8 @@
-import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-import type { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
-import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
-import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
-import type { StundenplanKonfiguration } from "../../../../core/src/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 
 export type StundenplanAnsichtPlanungProps = {
 	manager: () => StundenplanManager;

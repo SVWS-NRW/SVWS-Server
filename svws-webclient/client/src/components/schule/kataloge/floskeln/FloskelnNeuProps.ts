@@ -1,5 +1,6 @@
-import type { Floskel } from "@core";
-import type { Checkpoint, FloskelnListeManager } from "@ui";
+import type { Floskel } from "@core/core/data/schule/Floskel";
+import type { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface FloskelnNeuProps {

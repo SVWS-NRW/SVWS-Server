@@ -1,5 +1,5 @@
-import type { JavaMap } from "@core";
-import type { EnmManager } from "@ui";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { EnmManager } from "@ui/components/enm/EnmManager";
 
 export interface NotenmodulZugangsdatenProps {
 	open: (id: number) => Promise<void>;

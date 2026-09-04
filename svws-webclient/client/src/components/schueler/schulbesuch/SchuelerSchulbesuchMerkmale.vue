@@ -58,12 +58,15 @@
 
 
 	import { computed, ref } from "vue";
-	import type { Merkmal, List } from "@core";
-	import { ArrayList, SchuelerSchulbesuchMerkmal } from "@core";
-	import type { DataTableColumn, SchuelerSchulbesuchManager } from "@ui";
-	import { SelectManager } from "@ui";
 	import { formatToLocalDate } from "~/utils/date";
 	import { SchuelerSchulbesuchMerkmaleModelProxy } from "./modelProxy/SchuelerSchulbesuchMerkmaleModelProxy";
+	import { SchuelerSchulbesuchMerkmal } from "@core/asd/data/schueler/SchuelerSchulbesuchMerkmal";
+	import type { Merkmal } from "@core/core/data/schule/Merkmal";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchulbesuchManager;

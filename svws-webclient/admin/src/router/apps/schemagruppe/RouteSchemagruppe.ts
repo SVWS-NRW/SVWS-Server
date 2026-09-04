@@ -1,17 +1,15 @@
+import type { SchemaAuswahlProps } from "@admin/components/schema/SSchemaAuswahlProps";
+import type { SchemagruppeProps } from "@admin/components/schemagruppe/SSchemagruppeProps";
+import { api } from "@admin/router/Api";
+import { RouteNode } from "@admin/router/RouteNode";
+import { ServerMode } from "@core/core/types/ServerMode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-
+import type { RouteApp } from "../RouteApp";
 import { routeSchema } from "../schema/RouteSchema";
 
-import type { SchemagruppeProps } from "~/components/schemagruppe/SSchemagruppeProps";
-import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
-import { api } from "~/router/Api";
-import { ServerMode } from "@core/core/types/ServerMode";
 
-const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue");
-const SSchemagruppe = () => import("~/components/schemagruppe/SSchemagruppe.vue");
+const SSchemaAuswahl = () => import("@admin/components/schema/SSchemaAuswahl.vue");
+const SSchemagruppe = () => import("@admin/components/schemagruppe/SSchemagruppe.vue");
 
 
 export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {

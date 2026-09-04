@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import type { VueWrapper } from '@vue/test-utils';
 import { flushPromises, mount } from '@vue/test-utils';
-import SvwsUiModal from '../../../src/ui/modal/SvwsUiModal.vue';
+import SvwsUiModal from '@ui/ui/modal/SvwsUiModal.vue';
 import { Dialog, DialogDescription, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import type { Size } from "../../../src/types";
+import type { Size } from '@ui/types';
 
 let wrapper: VueWrapper<any>;
 let idComponent: string;

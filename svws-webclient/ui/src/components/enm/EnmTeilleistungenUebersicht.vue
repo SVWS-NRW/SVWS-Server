@@ -119,16 +119,16 @@
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watch } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
-	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
-	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import type { ENMv2Teilleistung } from '../../../../core/src/core/data/enm/v2/ENMv2Teilleistung';
-	import { HashSet } from '../../../../core/src/java/util/HashSet';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { List } from '../../../../core/src/java/util/List';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import { Note } from '../../../../core/src/asd/types/Note';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
+	import type { PairNN } from '@core/asd/adt/PairNN';
+	import { Note } from '@core/asd/types/Note';
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+	import type { ENMv2Teilleistung } from '@core/core/data/enm/v2/ENMv2Teilleistung';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { HashSet } from '@core/java/util/HashSet';
+	import type { List } from '@core/java/util/List';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	type LocalElement = Element | ComponentPublicInstance<unknown> | null;
 	const props = defineProps<EnmTeilleistungenProps>();

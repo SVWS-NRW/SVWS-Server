@@ -189,16 +189,16 @@
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watchEffect } from 'vue';
 	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
-	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
-	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import { Note } from '../../../../core/src/asd/types/Note';
-	import type { List } from '../../../../core/src/java/util/List';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
-	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
+	import type { PairNN } from '@core/asd/adt/PairNN';
+	import { Note } from '@core/asd/types/Note';
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import type { GridInput } from '@ui/ui/controls/tablegrid/GridInput';
+	import type { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 

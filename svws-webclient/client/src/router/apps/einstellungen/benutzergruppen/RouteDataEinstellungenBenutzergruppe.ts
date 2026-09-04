@@ -1,14 +1,19 @@
-import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List } from "@core";
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList, DeveloperNotificationException, Arrays } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-
 import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 import { RouteNode } from "~/router/RouteNode";
-
+import { BenutzergruppeDaten } from "@core/core/data/benutzer/BenutzergruppeDaten";
+import { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
+import { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { List } from "@core/java/util/List";
 
 interface RoutStateEinstellungenBenutzergruppe extends RouteStateInterface {
 	auswahl: BenutzergruppeListeEintrag | undefined;

@@ -1,7 +1,7 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import SvwsUiRadioOption from "../../../src/ui/controls/SvwsUiRadioOption.vue";
+import SvwsUiRadioOption from "@ui/ui/controls/SvwsUiRadioOption.vue";
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiRadioOption>>;
 let idComponent: string;

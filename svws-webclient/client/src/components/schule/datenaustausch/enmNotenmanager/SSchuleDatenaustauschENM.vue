@@ -40,8 +40,9 @@
 
 	import { ref } from 'vue';
 	import type { SchuleDatenaustauschENMProps } from './SSchuleDatenaustauschENMProps';
-	import { SelectManager } from '@ui';
-	import { ENMv2Daten, type LehrerListeEintrag } from '@core';
+	import { ENMv2Daten } from '@core/core/data/enm/v2/ENMv2Daten';
+	import type { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 
 	const props = defineProps<SchuleDatenaustauschENMProps>();
 	const loading = ref<boolean>(false);

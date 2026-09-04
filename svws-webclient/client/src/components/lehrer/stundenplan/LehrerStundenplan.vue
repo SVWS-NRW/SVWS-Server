@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-	import { ReportingReportvorlage } from '@core';
+	import { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
 	import type { LehrerStundenplanProps } from './LehrerStundenplanProps';
 
 	const props = defineProps<LehrerStundenplanProps>();

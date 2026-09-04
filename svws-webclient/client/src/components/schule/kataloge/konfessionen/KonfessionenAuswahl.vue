@@ -35,10 +35,13 @@
 
 <script setup lang="ts">
 
+	import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import { computed } from "vue";
-	import { BenutzerKompetenz, type ReligionEintrag } from "@core";
 	import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<KonfessionenAuswahlProps>();
 	const benutzerState = useBenutzerState();

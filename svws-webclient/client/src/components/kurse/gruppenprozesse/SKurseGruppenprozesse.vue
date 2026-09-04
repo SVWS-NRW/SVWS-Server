@@ -47,9 +47,12 @@
 <script setup lang="ts">
 	import { ref, computed } from "vue";
 	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
-	import type { List } from "@core";
-	import { ArrayList, BenutzerKompetenz, ReportingReportvorlage } from "@core";
-	import { useBenutzerState, useServerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
 	type Action = 'druckKursListeSchuelerKontaktdatenErzieher' | 'druckKursListeSchuelerFotos' | 'druckKursListeSchuelerLeistungsdaten' | 'delete' | '';
 

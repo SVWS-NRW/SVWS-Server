@@ -1,5 +1,9 @@
-import type { ArrayList, Stundenplan, StundenplanListeEintrag, SimpleOperationResponse } from "@core";
-import type { Checkpoint, StundenplanListeManager } from "@ui";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import type { ArrayList } from "@core/java/util/ArrayList";
+import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanNeuProps {

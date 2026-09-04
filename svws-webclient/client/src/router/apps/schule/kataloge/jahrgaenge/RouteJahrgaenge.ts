@@ -1,8 +1,4 @@
 import type { RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { JahrgaengeListeManager } from "@ui";
-
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeJahrgaengeDaten } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeDaten";
@@ -11,6 +7,10 @@ import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
 import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
 
 const JahrgaengeAuswahl = () => import("~/components/schule/kataloge/jahrgaenge/JahrgaengeAuswahl.vue");
 const JahrgaengeApp = () => import("~/components/schule/kataloge/jahrgaenge/JahrgaengeApp.vue");
@@ -18,7 +18,7 @@ const JahrgaengeApp = () => import("~/components/schule/kataloge/jahrgaenge/Jahr
 export class RouteJahrgaenge extends RouteAuswahlNode<JahrgaengeListeManager, RouteDataJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", JahrgaengeApp, JahrgaengeAuswahl, new RouteDataJahrgaenge());
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge", String.raw`schule/jahrgaenge/:id(\d+)?`, JahrgaengeApp, JahrgaengeAuswahl, new RouteDataJahrgaenge());
 		super.mode = ServerMode.STABLE;
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

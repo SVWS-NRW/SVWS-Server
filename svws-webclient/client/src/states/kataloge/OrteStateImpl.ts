@@ -1,7 +1,11 @@
-import type { List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
-import { StateManager } from "@ui";
-import type { OrteState, OrtsteileKatalogState, KatalogState } from "@ui";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { KatalogState } from "@ui/states/kataloge/KatalogState";
+import type { OrteState, OrtsteileKatalogState } from "@ui/states/kataloge/OrteState";
+import { StateManager } from "@ui/ui/StateManager";
 import { api } from "~/router/Api";
 
 interface OrteReactiveState {

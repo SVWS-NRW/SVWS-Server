@@ -1,10 +1,12 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
 import { type RouteKurse, routeKurse } from "./RouteKurse";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const SKurseNeu = () => import("~/components/kurse/SKurseNeu.vue");
 

@@ -1,4 +1,5 @@
-import type { DBSchemaListeEintrag, List } from "@core";
+import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
+import type { List } from "@core/java/util/List";
 
 export interface LoginProps {
 	setSchema: (schema: DBSchemaListeEintrag) => Promise<void>;

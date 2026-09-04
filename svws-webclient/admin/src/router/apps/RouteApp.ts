@@ -1,18 +1,18 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AppProps } from "~/components/SAppProps";
-import { api } from "~/router/Api";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteDataApp } from "~/router/apps/RouteDataApp";
-import { routeSchema } from "~/router/apps/schema/RouteSchema";
-import { routeLogin } from "~/router/login/RouteLogin";
-import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
-import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
-import { routeConfig } from "./config/RouteConfig";
+import type { AppProps } from "@admin/components/SAppProps";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+import { api } from "../Api";
+import { routeLogin } from "../login/RouteLogin";
+import { RouteManager } from "../RouteManager";
+import { RouteNode } from "../RouteNode";
+import { routeConfig } from "./config/RouteConfig";
+import { RouteDataApp } from "./RouteDataApp";
+import { routeSchema } from "./schema/RouteSchema";
+import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
+import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
 
-const SApp = () => import("~/components/SApp.vue");
+const SApp = () => import("@admin/components/SApp.vue");
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 

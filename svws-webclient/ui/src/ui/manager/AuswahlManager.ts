@@ -1,15 +1,14 @@
-import { HashMap } from '../../../../core/src/java/util/HashMap';
-import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-import { SchuljahresabschnittsUtils } from '../../../../core/src/core/utils/schule/SchuljahresabschnittsUtils';
-import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../../core/src/java/util/Comparator';
-import type { Collection } from '../../../../core/src/java/util/Collection';
-import type { List } from '../../../../core/src/java/util/List';
-import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { JavaMap } from '../../../../core/src/java/util/JavaMap';
-
-import type { AuswahlManagerSortierOrdnung as SortierOrdnung } from "./AuswahlManagerSortierOrdnung";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { SchuljahresabschnittsUtils } from "@core/core/utils/schule/SchuljahresabschnittsUtils";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import type { AuswahlManagerSortierOrdnung } from "./AuswahlManagerSortierOrdnung";
 import { ListeMitAuswahl } from './ListeMitAuswahl';
 
 /**
@@ -67,7 +66,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	private readonly _eventHandlerListeChanged = () => this.onListeChangedInternal();
 
 	/** Die Sortier-Ordnung, welche vom {@link Comparator} verwendet wird */
-	protected _order: Array<SortierOrdnung>;
+	protected _order: Array<AuswahlManagerSortierOrdnung>;
 
 	/** Gibt an, ob die aktuelle Einzel-Auswahl auch bei dem Filter erlaubt wird oder nicht */
 	protected _filterPermitAuswahl: boolean = false;
@@ -101,7 +100,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 		listComparator: Comparator<TAuswahl>,
 		listeToId: (eintrag: TAuswahl) => TID,
 		datenToId: (daten: TDaten) => TID,
-		order: Array<SortierOrdnung>
+		order: Array<AuswahlManagerSortierOrdnung>
 	) {
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this._schuljahresabschnittSchule = schuljahresabschnittSchule;
@@ -217,7 +216,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 *
 	 * @param order   die neue Sortier-Ordnung
 	 */
-	public orderSet(order: Array<SortierOrdnung>): void {
+	public orderSet(order: Array<AuswahlManagerSortierOrdnung>): void {
 		this._order = [...order];
 		this._filtered = null;
 	}
@@ -228,7 +227,7 @@ export abstract class AuswahlManager<TID extends number | string, TAuswahl, TDat
 	 *
 	 * @return die aktuellen Sortier-Ordnung (als Kopie)
 	 */
-	public orderGet(): Array<SortierOrdnung> {
+	public orderGet(): Array<AuswahlManagerSortierOrdnung> {
 		return [...this._order];
 	}
 

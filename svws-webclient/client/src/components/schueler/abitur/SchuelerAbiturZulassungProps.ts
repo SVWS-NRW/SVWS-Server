@@ -1,4 +1,7 @@
-import type { AbiturdatenManager, AbiturFachbelegung, GostBelegpruefungErgebnis, SchuelerListeEintrag } from "@core";
+import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 
 export interface SchuelerAbiturZulassungProps {
 	schueler: SchuelerListeEintrag;

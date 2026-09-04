@@ -154,12 +154,19 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { AdressenUtils, ArrayList, BenutzerKompetenz, JavaString, Teilstandort } from "@core";
 	import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
-	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useBenutzerState, useSchuleState, useServerState } from "@ui";
 	import { TeilstandortModelProxy } from "~/components/schule/stammdaten/adressdaten/modelproxy/TeilstandortModelProxy";
+	import { Teilstandort } from "@core/core/data/schule/Teilstandort";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+	import { JavaString } from "@core/java/lang/JavaString";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<SchuleAdressdatenProps>();
 	const benutzerState = useBenutzerState();

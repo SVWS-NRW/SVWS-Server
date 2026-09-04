@@ -1,7 +1,4 @@
-import type { List, SimpleOperationResponse, Lernplattform } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
 import { api } from "~/router/Api";
-import { ViewType, LernplattformListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
@@ -11,6 +8,13 @@ import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplatt
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

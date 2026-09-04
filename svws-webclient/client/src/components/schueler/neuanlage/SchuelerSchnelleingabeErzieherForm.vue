@@ -63,12 +63,18 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { NationalitaetenKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { AdressenUtils, Nationalitaeten, ErzieherStammdaten } from "@core";
-	import type { SchuelerSchnelleingabeManager } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useOrteState } from "@ui";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { optionalInputIsValid } from "~/util/validation/Validation";
+	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

@@ -113,9 +113,21 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
-	import { useAbschnittState, useBenutzerState, useRegionSwitch, useReportingState, useServerState, type DataTableColumn, type SortByAndOrder } from '@ui';
-	import type { List, GostBelegpruefungErgebnisFehler } from '@core';
-	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz, ReportingReportvorlage } from '@core';
+	import { SchuelerStatus } from '@core/asd/types/schueler/SchuelerStatus';
+	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import { GostBelegpruefungsArt } from '@core/core/abschluss/gost/GostBelegpruefungsArt';
+	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { GostBelegpruefungsErgebnisse } from '@core/core/data/gost/GostBelegpruefungsErgebnisse';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useAbschnittState } from '@ui/states/AbschnittState';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useReportingState } from '@ui/states/ReportingState';
+	import { useServerState } from '@ui/states/ServerState';
+	import type { DataTableColumn, SortByAndOrder } from '@ui/types';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 	const benutzerState = useBenutzerState();

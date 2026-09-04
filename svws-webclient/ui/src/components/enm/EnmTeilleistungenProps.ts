@@ -1,6 +1,6 @@
-import type { ENMv2Leistung } from "../../../../core/src/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
 import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "./EnmManager";
-import type { ENMv2Teilleistung } from "../../../../core/src/core/data/enm/v2/ENMv2Teilleistung";
 
 export interface EnmTeilleistungenProps {
 	enmManager: () => EnmManager;

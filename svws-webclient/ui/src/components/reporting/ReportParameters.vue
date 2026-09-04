@@ -188,32 +188,32 @@
 
 <script setup lang="ts">
 
-	import Checkbox from "../../ui/controls/SvwsUiCheckbox.vue";
-	import Input from "../../ui/controls/SvwsUiTextInput.vue";
-	import InputNumber from "../../ui/controls/SvwsUiInputNumber.vue";
-	import Select from "../../ui/controls/select/UiSelect.vue";
-	import TextArea from "../../ui/controls/SvwsUiTextareaInput.vue";
+	import Checkbox from "@ui/ui/controls/SvwsUiCheckbox.vue";
+	import Input from "@ui/ui/controls/SvwsUiTextInput.vue";
+	import InputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
+	import Select from "@ui/ui/controls/select/UiSelect.vue";
+	import TextArea from "@ui/ui/controls/SvwsUiTextareaInput.vue";
 
 	import type { Component, ComputedRef } from "vue";
 	import { computed, ref, watch, watchEffect } from "vue";
-	import { ReportingReportvorlage } from "../../../../core/src/core/types/reporting/ReportingReportvorlage";
-	import { ReportingParameter } from "../../../../core/src/core/data/reporting/ReportingParameter";
-	import { ReportingUIKomponentenTyp } from "../../../../core/src/core/types/reporting/ReportingUIKomponentenTyp";
-	import type { ReportingReportvorlageParameter } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameter";
-	import type { ReportingReportvorlageParameterGruppe } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameterGruppe";
-	import type { List } from "../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import { ListUtils } from "../../../../core/src/core/utils/ListUtils";
-	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
-	import { ReportingReportvorlageParameterTyp } from "../../../../core/src/core/types/reporting/ReportingReportvorlageParameterTyp";
-	import { SelectManager } from "../../../../ui/src/ui/controls/select/manager/SelectManager";
-	import { ReportingSortierungDefinition } from "../../../../core/src/core/data/reporting/ReportingSortierungDefinition";
-	import { ReportingFilterDefinition } from "../../../../core/src/core/data/reporting/ReportingFilterDefinition";
-	import type { TabData } from "../../ui/nav/TabData";
-	import { TabManager } from "../../ui/nav/TabManager";
-
-	import { useServerState } from "../../states/ServerState";
-	import { useReportingState, type ElementMitAnforderung } from "../../states/ReportingState";
+	import { ReportingFilterDefinition } from "@core/core/data/reporting/ReportingFilterDefinition";
+	import { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
+	import type { ReportingReportvorlageParameter } from "@core/core/data/reporting/ReportingReportvorlageParameter";
+	import type { ReportingReportvorlageParameterGruppe } from "@core/core/data/reporting/ReportingReportvorlageParameterGruppe";
+	import { ReportingSortierungDefinition } from "@core/core/data/reporting/ReportingSortierungDefinition";
+	import { ReportingAusgabeformat } from "@core/core/types/reporting/ReportingAusgabeformat";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { ReportingReportvorlageParameterTyp } from "@core/core/types/reporting/ReportingReportvorlageParameterTyp";
+	import { ReportingUIKomponentenTyp } from "@core/core/types/reporting/ReportingUIKomponentenTyp";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { ElementMitAnforderung } from "@ui/states/ReportingState";
+	import { useReportingState } from "@ui/states/ReportingState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { TabData } from "@ui/ui/nav/TabData";
+	import { TabManager } from "@ui/ui/nav/TabManager";
+	import { ListUtils } from "@core/core/utils/ListUtils";
 
 	const props = defineProps<{
 		showJson?: boolean;

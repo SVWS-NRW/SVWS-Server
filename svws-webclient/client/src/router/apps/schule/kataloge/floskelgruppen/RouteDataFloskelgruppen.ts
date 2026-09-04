@@ -1,9 +1,6 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Floskelgruppe, List, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
-import { ViewType, FloskelgruppenListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeFloskelgruppenDaten } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenDaten";
 import { routeFloskelgruppenGruppenprozesse } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenGruppenprozesse";
@@ -11,6 +8,13 @@ import { routeFloskelgruppenNeu } from "~/router/apps/schule/kataloge/floskelgru
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { FloskelgruppenListeManager } from "@ui/ui/manager/kataloge/FloskelgruppenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 const defaultState = {

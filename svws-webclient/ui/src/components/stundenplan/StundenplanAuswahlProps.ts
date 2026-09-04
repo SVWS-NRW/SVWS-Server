@@ -1,6 +1,6 @@
-import type { StundenplanKalenderwochenzuordnung } from "../../../../core/src/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
-import type { StundenplanListeEintrag } from "../../../../core/src/core/data/stundenplan/StundenplanListeEintrag";
-import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 
 export interface StundenplanAuswahlProps {
 	stundenplan: StundenplanListeEintrag | undefined;

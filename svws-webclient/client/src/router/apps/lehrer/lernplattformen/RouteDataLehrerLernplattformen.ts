@@ -1,8 +1,11 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
-import type { List, Lernplattform, LehrerLernplattform, LehrerListeEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
+import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateLehrerLernplattformen extends RouteStateInterface {

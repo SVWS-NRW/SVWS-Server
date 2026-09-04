@@ -86,11 +86,18 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungListeneintrag } from '@core/core/data/gost/GostBlockungListeneintrag';
+	import type { GostBlockungsdaten } from '@core/core/data/gost/GostBlockungsdaten';
+	import type { GostBlockungsergebnis } from '@core/core/data/gost/GostBlockungsergebnis';
+	import type { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { BlockungsUtils } from '@core/core/utils/BlockungsUtils';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, List, GostBlockungsergebnisManager } from "@core";
-	import { ArrayList, BlockungsUtils } from "@core";
-	import { useRegionSwitch } from '@ui';
 
 	const props = defineProps<{
 		addBlockung: () => Promise<void>;

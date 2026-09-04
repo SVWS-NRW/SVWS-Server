@@ -1,8 +1,21 @@
 import { computed, ref, shallowRef, triggerRef, type ComputedRef } from "vue";
-import type { Collection, Comparator, ENMv2Abteilung, ENMv2Jahrgang, ENMv2Klasse, ENMv2Teilleistungsart, JavaMap, List } from "@core";
-import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet, JavaString } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
-import type { GridColumn } from "../../../../../ui/src/ui/controls/tablegrid/GridManager";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
+import { ENMConfigKlasseSpalte } from "@core/core/data/enm/ENMConfigKlasseSpalte";
+import type { ENMv2Abteilung } from "@core/core/data/enm/v2/ENMv2Abteilung";
+import type { ENMv2Jahrgang } from "@core/core/data/enm/v2/ENMv2Jahrgang";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2Teilleistungsart } from "@core/core/data/enm/v2/ENMv2Teilleistungsart";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import type { GridColumn } from "@ui/ui/controls/tablegrid/GridManager";
 
 /** Der Typ für die einzelnen Einträge in der Liste der Klassen bzw. Klassengruppen */
 export type NotenmodulConfigManagerSperrungenZeile = ENMConfigKlasse | NotenmodulConfigManagerSperrungenGruppe;

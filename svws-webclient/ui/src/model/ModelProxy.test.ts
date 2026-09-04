@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { BasicValidator } from "../../../../svws-webclient/core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../svws-webclient/core/src/asd/validate/ValidatorFehlerart";
 import type { ModelProxyConfiguration } from "./ModelProxy";
 import { ModelProxy } from "./ModelProxy";
 import { nextTick, ref } from "vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 describe("ModelProxy Testsuite", () => {
 	describe("ModelProxy Initialisierung", () => {

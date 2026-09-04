@@ -1,22 +1,31 @@
-
-import type {
-	GostJahrgangsdaten,
-	GostKlausurvorgabe,
-	GostKlausurraum,
-	Schuljahresabschnitt,
-	GostKlausurterminblockungDaten,
-	GostNachschreibterminblockungKonfiguration,
-	List,
-	GostKlausurraumRich,
-} from "@core";
-import { ListUtils, GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurtermin, GostKlausurenAlleKlausurdaten, GostKlausurenHalbjahresdaten, GostKursklausur, GostSchuelerklausur } from "@core";
-import type { GostKlausurplanungState } from "@ui";
-import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX, StateManager } from "@ui";
-
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import { GostKlausurenAlleKlausurdaten } from "@core/core/data/gost/klausuren/GostKlausurenAlleKlausurdaten";
+import { GostKlausurenHalbjahresdaten } from "@core/core/data/gost/klausuren/GostKlausurenHalbjahresdaten";
+import type { GostKlausurraum } from "@core/core/data/gost/klausuren/GostKlausurraum";
+import type { GostKlausurraumRich } from "@core/core/data/gost/klausuren/GostKlausurraumRich";
+import { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostKlausurterminblockungDaten } from "@core/core/data/gost/klausuren/GostKlausurterminblockungDaten";
+import type { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
+import { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+import type { GostNachschreibterminblockungKonfiguration } from "@core/core/data/gost/klausuren/GostNachschreibterminblockungKonfiguration";
+import { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
+import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
+import { ListUtils } from "@core/core/utils/ListUtils";
+import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { GostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface GostKlausurplanungReactiveState {
 	// Daten nur abhängig von dem Abiturjahrgang

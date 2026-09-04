@@ -1,8 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import type { KonfessionenDatenProps } from "~/components/schule/kataloge/konfessionen/daten/KonfessionenDatenProps";
 import { routeKonfessionen, type RouteKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const KonfessionenDaten = () => import("~/components/schule/kataloge/konfessionen/daten/KonfessionenDaten.vue");
 

@@ -1,5 +1,4 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -12,17 +11,21 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
 import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
-import type { TabData } from "@ui";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
-import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import { AppMenuGroup, ViewType } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+import type { TabData } from "@ui/ui/nav/TabData";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import { ConfigElement } from "@ui/utils/Config";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue");
 const SGostApp = () => import("~/components/gost/SGostApp.vue");
@@ -39,7 +42,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
-		], "gost", "gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
+		], "gost", String.raw`gost/:abiturjahr(-?\d+)?`, SGostApp, new RouteDataGost());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";

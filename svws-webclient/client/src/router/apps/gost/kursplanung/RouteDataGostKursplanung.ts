@@ -1,9 +1,5 @@
 
 import { computed } from "vue";
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
-	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler } from "@core";
-import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException,
-	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -12,6 +8,28 @@ import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/Rou
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
+import type { GostBlockungKursLehrer } from "@core/core/data/gost/GostBlockungKursLehrer";
+import type { GostBlockungListeneintrag } from "@core/core/data/gost/GostBlockungListeneintrag";
+import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+import type { GostBlockungSchiene } from "@core/core/data/gost/GostBlockungSchiene";
+import { GostBlockungsdaten } from "@core/core/data/gost/GostBlockungsdaten";
+import { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebnis";
+import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
+import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 

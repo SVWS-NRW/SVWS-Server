@@ -1,6 +1,5 @@
-import type { List } from "@core";
-import type { SchwerpunkteListeManager } from "@ui";
-
+import type { List } from "@core/java/util/List";
+import type { SchwerpunkteListeManager } from "@ui/ui/manager/kataloge/SchwerpunkteListeManager";
 
 export interface SchwerpunkteGruppenprozesseProps {
 	manager: () => SchwerpunkteListeManager;

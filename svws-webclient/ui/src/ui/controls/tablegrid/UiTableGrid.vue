@@ -28,8 +28,8 @@
 <script setup lang="ts" generic="T,U extends PropertyKey">
 
 	import { computed } from 'vue';
-	import type { Collection } from '../../../../../core/src/java/util/Collection';
 	import type { GridManager } from './GridManager';
+	import type { Collection } from '@core/java/util/Collection';
 
 	export interface CellFormat {
 		widths: string[];

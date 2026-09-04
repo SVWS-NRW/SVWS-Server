@@ -1,10 +1,10 @@
-import type { Schulform } from '../../../../core/src/asd/types/schule/Schulform';
-import { JavaString } from '../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { List } from '../../../../core/src/java/util/List';
-import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
-import { AuswahlManager } from '../../ui/manager/AuswahlManager';
+import type { Schuljahresabschnitt } from '@core/asd/data/schule/Schuljahresabschnitt';
+import type { Schulform } from '@core/asd/types/schule/Schulform';
+import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+import { JavaString } from '@core/java/lang/JavaString';
+import type { List } from '@core/java/util/List';
+import { AuswahlManager } from '@ui/ui/manager/AuswahlManager';
 import type { EnmManager } from './EnmManager';
 
 /**

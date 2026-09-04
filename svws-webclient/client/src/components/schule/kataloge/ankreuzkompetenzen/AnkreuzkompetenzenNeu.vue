@@ -72,12 +72,19 @@
 
 <script setup lang="ts">
 
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { Arrays } from "@core/java/util/Arrays";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import type { DataTableColumn } from "@ui/types";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { computed, ref, watch } from "vue";
 	import type { AnkreuzkompetenzenNeuProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenNeuProps";
-	import type { JahrgangsDaten, List } from "@core";
-	import { Ankreuzkompetenz, Schulgliederung, BenutzerKompetenz, Arrays } from "@core";
-	import type { DataTableColumn } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const props = defineProps<AnkreuzkompetenzenNeuProps>();

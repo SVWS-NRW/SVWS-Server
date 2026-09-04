@@ -84,8 +84,11 @@
 	import type { FachklassenDatenProps } from "~/components/schule/kataloge/fachklassen/daten/FachklassenDatenProps";
 	import { FachklassenModelProxy } from "~/components/schule/kataloge/fachklassen/modelproxy/FachklassenModelProxy";
 	import { computed } from "vue";
-	import { BenutzerKompetenz, DQRNiveau } from "@core";
-	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { DQRNiveau } from "@core/asd/types/schule/DQRNiveau";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 	const props = defineProps<FachklassenDatenProps>();
 	const schuleState = useSchuleState();

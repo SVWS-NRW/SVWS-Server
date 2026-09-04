@@ -1,9 +1,20 @@
 import type { WritableComputedRef } from "vue";
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager,
-	GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, GostBlockungsergebnisKurs, GostJahrgangsdaten,
-	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
+import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
+import type { GostBlockungKursLehrer } from "@core/core/data/gost/GostBlockungKursLehrer";
+import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+import type { GostBlockungSchiene } from "@core/core/data/gost/GostBlockungSchiene";
+import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
+import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import type { JavaSet } from "@core/java/util/JavaSet";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;

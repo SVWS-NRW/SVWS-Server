@@ -96,12 +96,20 @@
 
 
 	import { computed, ref, watch } from "vue";
-	import type { List, SchulEintrag, SchulgliederungKatalogEintrag } from "@core";
-	import { ArrayList, Jahrgaenge, SchuelerSchulbesuchSchule, Schulform, Schulgliederung } from "@core";
-	import type { DataTableColumn, SchuelerSchulbesuchManager } from "@ui";
-	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { formatToLocalDate } from "~/utils/date";
 	import { SchuelerSchulbesuchSchuleModelProxy } from "./modelProxy/SchuelerSchulbesuchSchuleModelProxy";
+	import { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
+	import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchulbesuchManager;

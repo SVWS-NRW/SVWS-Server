@@ -1,8 +1,24 @@
-import type { JahrgaengeKatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag, KAOAEbene4KatalogEintrag,
-	KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten, Schuljahresabschnitt } from "@core";
-import { Jahrgaenge, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
-import type { SchuelerKAoAManager } from "@ui";
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import type { JahrgaengeKatalogEintrag } from "@core/asd/data/jahrgang/JahrgaengeKatalogEintrag";
+import type { KAOAAnschlussoptionenKatalogEintrag } from "@core/asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag";
+import type { KAOABerufsfeldKatalogEintrag } from "@core/asd/data/kaoa/KAOABerufsfeldKatalogEintrag";
+import type { KAOAEbene4KatalogEintrag } from "@core/asd/data/kaoa/KAOAEbene4KatalogEintrag";
+import type { KAOAKategorieKatalogEintrag } from "@core/asd/data/kaoa/KAOAKategorieKatalogEintrag";
+import type { KAOAMerkmalKatalogEintrag } from "@core/asd/data/kaoa/KAOAMerkmalKatalogEintrag";
+import type { KAOAZusatzmerkmalKatalogEintrag } from "@core/asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { KAOAAnschlussoptionen } from "@core/asd/types/kaoa/KAOAAnschlussoptionen";
+import { KAOABerufsfeld } from "@core/asd/types/kaoa/KAOABerufsfeld";
+import { KAOAEbene4 } from "@core/asd/types/kaoa/KAOAEbene4";
+import { KAOAKategorie } from "@core/asd/types/kaoa/KAOAKategorie";
+import { KAOAMerkmal } from "@core/asd/types/kaoa/KAOAMerkmal";
+import { KAOAZusatzmerkmal } from "@core/asd/types/kaoa/KAOAZusatzmerkmal";
+import type { SchuelerKAoADaten } from "@core/core/data/schueler/SchuelerKAoADaten";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 
 export class SchuelerKaoaModelProxy extends ModelProxy<SchuelerKAoADaten> {

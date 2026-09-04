@@ -178,17 +178,24 @@
 
 <script setup lang="ts">
 
-	import type { Fahrschuelerart, SchulEintrag } from "@core";
-	import { BenutzerKompetenz, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache } from "@core";
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 	import { computed, ref, watch, toRefs } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
 
 	const schuleState = useSchuleState();
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
-
 	const { pendingStateManager } = toRefs(props);
 
 	const status = pendingStateManager.value().status;

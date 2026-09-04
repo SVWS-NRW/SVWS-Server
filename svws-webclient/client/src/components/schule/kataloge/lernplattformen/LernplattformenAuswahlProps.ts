@@ -1,4 +1,4 @@
+import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { LernplattformListeManager } from "@ui";
 
 export type LernplattformenAuswahlProps = RouteAuswahlListProps<LernplattformListeManager>;

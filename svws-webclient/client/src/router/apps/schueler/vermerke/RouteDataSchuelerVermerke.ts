@@ -1,9 +1,15 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
-import type { Comparator, List, SchuelerListeEintrag, SchuelerVermerke, VermerkartEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException, JavaLong, JavaString } from "@core";
 import { api } from "~/router/Api";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
+import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateSchuelerVermerke extends RouteStateInterface {

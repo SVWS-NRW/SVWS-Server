@@ -17,8 +17,8 @@
 <script setup lang="ts">
 
 	import { ref, watch } from "vue";
-	import { ENMServerConnection } from "@core";
 	import type { NotenmodulVerbindungNeuProps } from "./NotenmodulVerbindungNeuProps";
+	import { ENMServerConnection } from "@core/core/data/enm/ENMServerConnection";
 
 	const props = defineProps<NotenmodulVerbindungNeuProps>();
 

@@ -1,12 +1,14 @@
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { NotenmodulKonfigurationProps } from "~/components/notenmodul/NotenmodulKonfigurationProps";
-import { ConfigElement } from "@ui";
 import { routeError } from "~/router/error/RouteError";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ConfigElement } from "@ui/utils/Config";
 
 const NotenmodulKonfiguration = () => import("~/components/notenmodul/NotenmodulKonfiguration.vue");
 

@@ -1,4 +1,6 @@
-import type { List, ErzieherStammdaten, Erzieherart } from "@core";
+import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+import type { List } from "@core/java/util/List";
 
 export interface SchuelerErziehungsberechtigteProps {
 	data: () => List<ErzieherStammdaten>;

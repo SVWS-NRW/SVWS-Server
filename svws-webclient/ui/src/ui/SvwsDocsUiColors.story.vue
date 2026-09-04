@@ -445,8 +445,8 @@
 
 <script setup lang="ts">
 
+	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 	import { nextTick, onMounted, reactive, ref } from 'vue';
-	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
 
 	// Alle Farb-Swatches und Hintergrundfarben-Elemente zur Berechnung der Kontraste
 	const swatchDivs = ref<Map <string, HTMLElement>>(new Map());

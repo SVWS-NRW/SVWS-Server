@@ -37,8 +37,8 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { ReportingReportvorlage } from "@core";
 	import type { FaecherStundenplanProps } from "./FaecherStundenplanProps";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
 	defineProps<FaecherStundenplanProps>();
 	const show = ref(false);

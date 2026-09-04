@@ -56,9 +56,13 @@
 
 	import { ref, computed } from "vue";
 	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
-	import type { List, StundenplanListeEintrag } from "@core";
-	import { DateUtils, ReportingReportvorlage, BenutzerKompetenz } from "@core";
-	import { SelectManager, useBenutzerState } from "@ui";
+	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
 	type Action = 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
 

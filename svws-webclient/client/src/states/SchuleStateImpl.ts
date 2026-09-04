@@ -1,9 +1,14 @@
-import type { List, SchuleStammdaten, Schuljahresabschnitt } from "@core";
-import { DeveloperNotificationException, Schulform, Schulgliederung, ValidatorKontext } from "@core";
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "./AbschnittStateImpl";
-import type { SchuleState } from "@ui";
-import { StateManager } from "@ui";
+import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { List } from "@core/java/util/List";
+import type { SchuleState } from "@ui/states/SchuleState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface SchuleReactiveState {
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat

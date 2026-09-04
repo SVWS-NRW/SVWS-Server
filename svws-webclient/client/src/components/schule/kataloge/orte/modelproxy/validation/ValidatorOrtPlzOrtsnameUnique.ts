@@ -1,5 +1,6 @@
-import type { OrtKatalogEintrag } from "@core";
-import { BasicValidator, ValidatorFehlerart } from "@core";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 
 export class ValidatorOrtPlzOrtsnameUnique extends BasicValidator {
 

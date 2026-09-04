@@ -1,11 +1,13 @@
 import { RouteNode } from "~/router/RouteNode";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { ViewType } from "@ui";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import type { RouteFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import { routeFachklassen } from "~/router/apps/schule/kataloge/fachklassen/RouteFachklassen";
 import type { FachklassenGruppenprozesseProps } from "~/components/schule/kataloge/fachklassen/gruppenprozesse/FachklassenGruppenprozesseProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const FachklassenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/fachklassen/gruppenprozesse/FachklassenGruppenprozesse.vue");

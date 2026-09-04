@@ -1,7 +1,17 @@
-import type { FachklassenListeManager } from "@ui";
-import { ValidatorStringIsUniqueInList, ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { DQRNiveauKatalogEintrag, FachklasseEintrag, FachklasseKatalogEintrag, SchulgliederungKatalogEintrag } from "@core";
-import { DQRNiveau, Fachklasse, Schulgliederung } from "@core";
+import type { DQRNiveauKatalogEintrag } from "@core/asd/data/schule/DQRNiveauKatalogEintrag";
+import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import { DQRNiveau } from "@core/asd/types/schule/DQRNiveau";
+import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { FachklasseEintrag } from "@core/core/data/schule/FachklasseEintrag";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { FachklassenListeManager } from "@ui/ui/manager/kataloge/FachklassenListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 import { ValidatorFachklasseFeldDifferentFromCoreType } from "~/components/schule/kataloge/fachklassen/modelproxy/ValidatorFachklasseFeldDifferentFromCoreType";
 

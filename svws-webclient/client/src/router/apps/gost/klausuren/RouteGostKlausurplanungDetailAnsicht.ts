@@ -1,11 +1,10 @@
 import type { RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { checkHiddenKlausurplanungStundenplan, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
 import SGostKlausurplanungDetailAnsichtVue from "~/components/gost/klausuren/SGostKlausurplanungDetailAnsicht.vue";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 export class RouteGostKlausurplanungDetailAnsicht extends RouteNode<any, RouteGostKlausurplanung> {
 

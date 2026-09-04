@@ -1,8 +1,8 @@
+import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 import { inject } from 'vue';
 import type { App, InjectionKey } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import type { Router } from 'vue-router';
-import { DeveloperNotificationException } from '../../core/src/core/exceptions/DeveloperNotificationException';
 
 /**
  * Die Klasse AppContext ermöglich den Zugriff auf die jeweilige vue-App in den einzelnen Clients.

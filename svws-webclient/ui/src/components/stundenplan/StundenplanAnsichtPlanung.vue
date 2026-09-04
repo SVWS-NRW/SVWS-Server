@@ -103,12 +103,12 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
-	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
-	import { useSchuleState } from "../../states/SchuleState";
-	import { DateUtils } from "../../../../core/src/core/utils/DateUtils";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { DateUtils } from "@core/core/utils/DateUtils";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
 	const schuleState = useSchuleState();

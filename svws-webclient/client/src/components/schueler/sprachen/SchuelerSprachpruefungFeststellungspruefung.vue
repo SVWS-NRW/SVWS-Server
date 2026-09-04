@@ -83,11 +83,21 @@
 
 	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
-	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachpruefungniveau, Sprachreferenzniveau, Note } from '@core';
-	import type { List, Sprachpruefung } from '@core';
-	import { GridManager, useSchuleState, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
 	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+	import type { Sprachpruefung } from '@core/asd/data/schueler/Sprachpruefung';
+	import { Fach } from '@core/asd/types/fach/Fach';
+	import { Jahrgaenge } from '@core/asd/types/jahrgang/Jahrgaenge';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+	import SvwsUiSelect from '@ui/ui/controls/SvwsUiSelect.vue';
+	import { Sprachreferenzniveau } from '@core/asd/types/fach/Sprachreferenzniveau';
+	import { Sprachpruefungniveau } from '@core/core/types/fach/Sprachpruefungniveau';
+	import { Note } from '@core/asd/types/Note';
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;

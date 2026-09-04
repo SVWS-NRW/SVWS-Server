@@ -1,8 +1,5 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Betrieb, BetriebeAnsprechpartner, JavaSet, List, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
-import { BetriebeListeManager, ViewType } from "@ui";
 import { routeBetriebeGruppenprozesse } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeGruppenprozesse";
 import { routeBetriebeNeu } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeNeu";
 import { routeBetriebeDaten } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeDaten";
@@ -10,6 +7,15 @@ import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/Rout
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Betrieb } from "@core/core/data/schule/Betrieb";
+import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 const defaultState = {

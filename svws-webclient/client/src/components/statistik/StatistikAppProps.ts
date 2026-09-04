@@ -1,5 +1,5 @@
-import type { SchuleStammdaten } from "@core";
-import type { TabManager } from "@ui";
+import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import type { TabManager } from "@ui/ui/nav/TabManager";
 
 export interface StatistikAppProps {
 	tabManager: () => TabManager;

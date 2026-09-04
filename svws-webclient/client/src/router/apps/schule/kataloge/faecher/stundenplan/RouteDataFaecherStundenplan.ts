@@ -1,11 +1,15 @@
-import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanPausenaufsicht } from "@core";
-import { ArrayList, DeveloperNotificationException, StundenplanManager } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { routeFaecherStundenplan } from "./RouteFaecherStundenplan";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { ArrayList } from "@core/java/util/ArrayList";
 
 
 interface RouteStateFachDataStundenplan extends RouteStateInterface {

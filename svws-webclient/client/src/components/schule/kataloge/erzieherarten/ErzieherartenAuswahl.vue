@@ -34,11 +34,13 @@
 
 <script setup lang="ts">
 
+	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import { computed } from "vue";
-	import type { Erzieherart } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import type { DataTableColumn } from "@ui";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import type { ErzieherartenAuswahlProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenAuswahlProps";
 
 	const props = defineProps<ErzieherartenAuswahlProps>();

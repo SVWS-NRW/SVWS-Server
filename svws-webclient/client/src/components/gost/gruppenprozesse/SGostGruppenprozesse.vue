@@ -29,7 +29,7 @@
 
 	import { computed, ref } from "vue";
 	import type { GostGruppenprozesseProps } from "./SGostGruppenprozesseProps";
-	import type { List } from "@core";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<GostGruppenprozesseProps>();
 

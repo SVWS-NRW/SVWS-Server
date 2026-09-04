@@ -1,4 +1,5 @@
-import type { List, StundenplanListeEintrag } from "@core";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import type { List } from "@core/java/util/List";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 

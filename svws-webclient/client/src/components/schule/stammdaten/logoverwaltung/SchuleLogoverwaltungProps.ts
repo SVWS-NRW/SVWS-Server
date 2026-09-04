@@ -1,4 +1,6 @@
-import type { ApiFile, List, Logo } from "@core";
+import type { ApiFile } from "@core/api/BaseApi";
+import type { Logo } from "@core/core/data/schule/Logo";
+import type { List } from "@core/java/util/List";
 
 export interface SchuleLogoverwaltungProps {
 	logos: () => List<Logo>;

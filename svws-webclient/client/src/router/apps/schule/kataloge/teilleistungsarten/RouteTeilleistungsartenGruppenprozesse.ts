@@ -1,10 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { ViewType } from "@ui";
 import { RouteNode } from "~/router/RouteNode";
 import type { TeilleistungsartenGruppenprozesseProps } from "~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesseProps";
 import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTeilleistungsarten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const TeilleistungsartenGruppenprozesse = () => import(
 	"~/components/schule/kataloge/teilleistungsarten/gruppenprozesse/TeilleistungsartenGruppenprozesse.vue");

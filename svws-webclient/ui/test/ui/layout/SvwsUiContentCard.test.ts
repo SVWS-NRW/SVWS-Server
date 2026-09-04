@@ -1,7 +1,7 @@
 import type { VueWrapper } from '@vue/test-utils';
 import { mount } from '@vue/test-utils';
 import { test, expect, beforeEach, afterEach, describe } from 'vitest';
-import SvwsUiContentCard from '../../../src/ui/layout/SvwsUiContentCard.vue';
+import SvwsUiContentCard from '@ui/ui/layout/SvwsUiContentCard.vue';
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiContentCard>>;
 let idComponent: string;

@@ -58,10 +58,13 @@
 
 <script setup lang="ts">
 	import { computed, ref } from 'vue';
-	import type { GostKursklausur, GostKlausurtermin } from '@core';
-	import { BenutzerKompetenz, GostSchuelerklausurtermin } from '@core';
-	import { useBenutzerState, useGostKlausurplanungState } from '@ui';
 	import { useKlausurplanungPresenter } from './SGostKlausurplanungPresenter';
+	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import type { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 
 	const props = withDefaults(defineProps<{
 		kursklausur: GostKursklausur;

@@ -49,11 +49,12 @@
 
 <script setup lang="ts">
 
-	import { useBenutzerState, type DataTableColumn } from "@ui";
 	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
 	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
-	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<VermerkartenDatenProps>();
 	const benutzerState = useBenutzerState();

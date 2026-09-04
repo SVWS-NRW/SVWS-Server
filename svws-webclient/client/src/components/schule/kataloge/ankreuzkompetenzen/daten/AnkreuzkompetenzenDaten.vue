@@ -108,10 +108,17 @@
 
 	import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
 	import { computed, ref } from "vue";
-	import type { JahrgangsDaten } from "@core";
-	import { ArrayList, BenutzerKompetenz, Schulgliederung, Arrays } from "@core";
-	import { CoreTypeSelectManager, type DataTableColumn, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { Arrays } from "@core/java/util/Arrays";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import type { DataTableColumn } from "@ui/types";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<AnkreuzkompetenzenDatenProps>();
 	const benutzerState = useBenutzerState();

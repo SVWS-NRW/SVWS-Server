@@ -1,6 +1,6 @@
 import { type InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import { AppContext } from "../AppContext";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { AppContext } from "@ui/AppContext";
 
 /**
  * Die Schnittstelle für den Zustand der Auskunftinfos "Datenschutz" und "Impressum"

@@ -31,10 +31,14 @@
 
 <script setup lang="ts">
 
+	import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
+	import { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import type { FloskelgruppenNeuProps } from "./FloskelgruppenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { Floskelgruppenart, BenutzerKompetenz, Floskelgruppe } from "@core";
-	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FloskelgruppeModelProxy } from "~/components/schule/kataloge/floskelgruppen/modelproxy/FloskelgruppeModelProxy";
 
 	const props = defineProps<FloskelgruppenNeuProps>();

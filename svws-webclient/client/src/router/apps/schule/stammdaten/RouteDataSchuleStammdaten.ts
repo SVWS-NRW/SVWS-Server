@@ -1,6 +1,7 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeSchuleAdressdaten } from "~/router/apps/schule/stammdaten/adressdaten/RouteSchuleAdressdaten";
-import { ViewType } from "@ui";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
+import { routeSchuleAdressdaten } from "./adressdaten/RouteSchuleAdressdaten";
 
 type RouteStateSchuleStammdaten = RouteStateInterface;
 

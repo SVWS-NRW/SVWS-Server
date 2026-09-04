@@ -54,13 +54,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useRegionSwitch, useSchuleState } from "@ui";
-	import type { Ankreuzkompetenz, FachDaten, JahrgangsDaten } from "@core";
-	import { Schulgliederung } from "@core";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 	import type { AnkreuzkompetenzenAuswahlProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahlProps";
 	import { computed } from "vue";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<AnkreuzkompetenzenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

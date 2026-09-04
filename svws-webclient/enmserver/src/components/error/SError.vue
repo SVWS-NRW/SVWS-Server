@@ -62,7 +62,7 @@
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { OpenApiError } from "@core/api/OpenApiError";
-	import { useAuthState } from "~/states/AuthState";
+	import { useAuthState } from "@wenom/states/AuthState";
 
 	type CapturedError = {
 		id: number;

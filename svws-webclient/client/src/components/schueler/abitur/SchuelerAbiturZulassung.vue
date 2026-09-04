@@ -98,11 +98,14 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { GostBelegpruefungErgebnisFehler, List } from "@core";
-	import { ArrayList, GostAbiturMarkierungsalgorithmusErgebnis, GostBelegungsfehlerArt, GostHalbjahr } from "@core";
-
 	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
-	import { useServerState } from '@ui';
+	import { GostAbiturMarkierungsalgorithmusErgebnis } from '@core/core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
+	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useServerState } from '@ui/states/ServerState';
 
 	const props = defineProps<SchuelerAbiturZulassungProps>();
 	const serverState = useServerState();

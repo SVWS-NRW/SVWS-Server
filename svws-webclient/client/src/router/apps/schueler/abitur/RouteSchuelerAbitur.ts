@@ -1,5 +1,4 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -7,10 +6,13 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
 import { RouteDataSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteDataSchuelerAbitur";
 import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerAbiturProps";
-import type { TabData } from "@ui";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { TabData } from "@ui/ui/nav/TabData";
 
 const SchuelerAbitur = () => import("~/components/schueler/abitur/SchuelerAbitur.vue");
 

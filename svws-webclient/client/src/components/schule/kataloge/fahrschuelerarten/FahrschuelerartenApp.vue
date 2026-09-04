@@ -36,8 +36,9 @@
 <script setup lang="ts">
 
 	import type { FahrschuelerartenAppProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<FahrschuelerartenAppProps>();
 

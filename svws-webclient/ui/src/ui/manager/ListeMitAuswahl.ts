@@ -1,10 +1,10 @@
-import { HashMap } from '../../../../core/src/java/util/HashMap';
-import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-import type { Collection } from '../../../../core/src/java/util/Collection';
-import type { List } from '../../../../core/src/java/util/List';
-import { DeveloperNotificationException } from '../../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { JavaMap } from '../../../../core/src/java/util/JavaMap';
-import type { Comparator } from '../../../../core/src/java/util/Comparator';
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 /**
  * Eine Klasse für den Zugriff auf eine Liste von Attributen mit eingebauter Auswahl-Funktion,

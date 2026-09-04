@@ -1,8 +1,12 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
-import type { List, SchuelerListeEintrag, SchuelerEinwilligung, Einwilligungsart } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
+import type { SchuelerEinwilligung } from "@core/core/data/schueler/SchuelerEinwilligung";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { api } from "~/router/Api";
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
 
 
 interface RouteStateSchuelerEinwilligungen extends RouteStateInterface {

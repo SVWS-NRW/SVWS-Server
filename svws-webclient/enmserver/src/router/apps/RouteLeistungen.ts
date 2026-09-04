@@ -1,5 +1,5 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "@wenom/router/RouteNode";
+import { routeApp, type RouteApp } from "@wenom/router/apps/RouteApp";
 import type { EnmLeistungenProps } from "@ui/components/enm/EnmLeistungenProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";

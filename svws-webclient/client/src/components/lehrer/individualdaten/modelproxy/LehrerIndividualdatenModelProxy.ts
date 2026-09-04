@@ -1,14 +1,30 @@
 import { computed } from "vue";
-import type { LehrerStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ValidatorKontext } from "@core";
-import { AdressenUtils,	Geschlecht,	Nationalitaeten, PersonalTyp, ValidatorLsdLehrerStammdatenGeburtsdatum, ValidatorLsgLehrerStammdatenGeschlecht,
-	ValidatorLskLehrerStammdatenKuerzel, ValidatorLsnLehrerStammdatenNachname, ValidatorLssLehrerStammdatenStaatsangehoerigkeitID,
-	ValidatorLsvLehrerStammdatenVorname } from "@core";
-import type { LehrerListeManager, OrteState } from "@ui";
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStrasse, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
 import { ValidatorLehrerIndividualdatenKuerzel } from "./ValidatorLehrerIndividualdatenKuerzel";
 import { ValidatorLehrerIndividualdatenNachname } from "./ValidatorLehrerIndividualdatenNachname";
 import { ValidatorLehrerIndividualdatenVorname } from "./ValidatorLehrerIndividualdatenVorname";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+import { Geschlecht } from "@core/asd/types/Geschlecht";
+import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+import { ValidatorLsdLehrerStammdatenGeburtsdatum } from "@core/asd/validate/lehrer/ValidatorLsdLehrerStammdatenGeburtsdatum";
+import { ValidatorLsgLehrerStammdatenGeschlecht } from "@core/asd/validate/lehrer/ValidatorLsgLehrerStammdatenGeschlecht";
+import { ValidatorLskLehrerStammdatenKuerzel } from "@core/asd/validate/lehrer/ValidatorLskLehrerStammdatenKuerzel";
+import { ValidatorLsnLehrerStammdatenNachname } from "@core/asd/validate/lehrer/ValidatorLsnLehrerStammdatenNachname";
+import { ValidatorLssLehrerStammdatenStaatsangehoerigkeitID } from "@core/asd/validate/lehrer/ValidatorLssLehrerStammdatenStaatsangehoerigkeitID";
+import { ValidatorLsvLehrerStammdatenVorname } from "@core/asd/validate/lehrer/ValidatorLsvLehrerStammdatenVorname";
+import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import { PersonalTyp } from "@core/core/types/PersonalTyp";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { OrteState } from "@ui/states/kataloge/OrteState";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten

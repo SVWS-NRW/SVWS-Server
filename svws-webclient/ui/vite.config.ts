@@ -16,7 +16,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
+			"@ui": resolve(import.meta.dirname, './src'),
 			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+			"@core": resolve(import.meta.dirname, '../core/src'),
 			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},

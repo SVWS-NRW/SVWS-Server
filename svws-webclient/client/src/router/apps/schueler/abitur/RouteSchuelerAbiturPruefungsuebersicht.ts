@@ -1,13 +1,11 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { BenutzerKompetenz, ServerMode } from "@core";
-
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerAbitur, type RouteSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
-
 import type { SchuelerAbiturPruefungsuebersichtProps } from "~/components/schueler/abitur/SchuelerAbiturPruefungsuebersichtProps";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchueler } from "../RouteSchueler";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SchuelerAbiturPruefungsuebersicht = () => import("~/components/schueler/abitur/SchuelerAbiturPruefungsuebersicht.vue");
 
@@ -24,9 +22,6 @@ export class RouteSchuelerAbiturPruefungsuebersicht extends RouteNode<any, Route
 		this.isHidden = (params?: RouteParams) => this.parent?.hidden(params) ?? false; // TODO automatically perform parent check in hidden method in RouteNode
 		super.children = [
 		];
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerAbiturPruefungsuebersichtProps {

@@ -1,15 +1,15 @@
 import { ref, shallowRef } from "vue";
 import type { AuthState } from "./AuthState";
-import { ApiEnmServer } from "~/ApiEnmServer";
+import { ApiEnmServer } from "@wenom/ApiEnmServer";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
-import { version } from '../../version';
-import { githash } from "../../githash";
+import { version } from "@version";
+import { githash } from "@githash";
 import { OpenApiError } from "@core/api/OpenApiError";
 import { activityStateImpl } from "./ActivityStateImpl";
-import { RouteManager } from "~/router/RouteManager";
+import { RouteManager } from "@wenom/router/RouteManager";
 
 /**
  * Der Paylod from JWT-Token

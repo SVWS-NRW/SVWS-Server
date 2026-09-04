@@ -51,10 +51,18 @@
 
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
-	import { BenutzerKompetenz, ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
+	import type { EinwilligungsschluesselKatalogEintrag } from "@core/asd/data/schule/EinwilligungsschluesselKatalogEintrag";
+	import { Einwilligungsschluessel } from "@core/asd/types/schule/Einwilligungsschluessel";
+	import { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { PersonTyp } from "@core/core/types/schule/PersonTyp";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
 	const benutzerState = useBenutzerState();

@@ -21,8 +21,9 @@
 
 	import { computed, ref } from "vue";
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
-	import { BenutzerKompetenz, Raum } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { Raum } from "@core/core/data/schule/Raum";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<RaeumeAuswahlProps>();
 	const benutzerState = useBenutzerState();

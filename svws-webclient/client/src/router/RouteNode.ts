@@ -1,15 +1,19 @@
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 import type { ComputedRef, Ref } from "vue";
 import { computed, defineComponent, ref } from "vue";
-import type { Schulform } from "@core";
-import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
-import type { TabData } from "@ui";
-import { TabManager, Checkpoint, ViewType } from "@ui";
 import type { RouteData } from "./RouteData";
 import { RouteManager } from "./RouteManager";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { Checkpoint } from "@ui/ui/modal/Checkpoint";
+import type { TabData } from "@ui/ui/nav/TabData";
+import { TabManager } from "@ui/ui/nav/TabManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 /**
  * Abstrakte Basisklasse für jeden Routing-Knoten im SVWS-Client.

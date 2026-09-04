@@ -56,11 +56,11 @@
 <script setup lang="ts">
 
 	import { GridManager } from "./GridManager";
-	import type { List } from "../../../../../core/src/java/util/List";
-	import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 	import { computed, reactive, ref } from "vue";
 	import UiTableActions from "./UiTableActions.vue";
 	import type { TableActions } from "./UiTableActions.vue";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
 
 	const state = reactive({
 		add: false,

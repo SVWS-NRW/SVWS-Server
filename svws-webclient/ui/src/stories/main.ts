@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import router from './router';
 import Stories from './Stories.vue';
-import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
+import { JsonCoreTypeReaderStatic } from '@core/asd/utils/JsonCoreTypeReaderStatic';
 
 import "../assets/styles/index.css";
 import "./main.css";

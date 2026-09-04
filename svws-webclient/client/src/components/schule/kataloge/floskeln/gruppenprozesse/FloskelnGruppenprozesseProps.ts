@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { FloskelnListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
 
 export interface FloskelnGruppenprozesseProps {
 	manager: () => FloskelnListeManager;

@@ -1,5 +1,3 @@
-import type { List, FachDaten, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen, GostSchuelerklausurtermin, GostSchuelerklausur, Collection } from "@core";
-import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -10,6 +8,21 @@ import { RouteNode } from "~/router/RouteNode";
 import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
+import type { SchuelerLernabschnittBemerkungen } from "@core/asd/data/schueler/SchuelerLernabschnittBemerkungen";
+import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
+import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { SchuelerLernabschnittListeEintrag } from "@core/core/data/schueler/SchuelerLernabschnittListeEintrag";
+import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {

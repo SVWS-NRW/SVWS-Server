@@ -46,8 +46,8 @@
 
 	import { onMounted, ref, shallowRef, watch } from "vue";
 	import type { LoginProps } from "./SLoginProps";
-	import { version } from '../../version';
-	import { githash } from '../../githash';
+	import { version } from "@version";
+	import { githash } from "@githash";
 
 	const props = defineProps<LoginProps>();
 

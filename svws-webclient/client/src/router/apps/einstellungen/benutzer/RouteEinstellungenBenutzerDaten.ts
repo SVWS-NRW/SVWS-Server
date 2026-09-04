@@ -1,13 +1,11 @@
 import type { RouteLocationNormalized } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer, type RouteEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
-
 import type { BenutzerProps } from "~/components/einstellungen/benutzer/daten/SBenutzerProps";
-import { api } from "~/router/Api";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SBenutzer = () => import("~/components/einstellungen/benutzer/daten/SBenutzer.vue");
 

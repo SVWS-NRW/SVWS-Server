@@ -1,12 +1,10 @@
 import type { RouteLocationNormalized } from "vue-router";
-
-import { BenutzerKompetenz, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { SchuleDatenaustauschLaufbahnplanungProps } from "~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanungProps";
-import type { RouteApp } from "../../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeSchule } from "../../RouteSchule";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 

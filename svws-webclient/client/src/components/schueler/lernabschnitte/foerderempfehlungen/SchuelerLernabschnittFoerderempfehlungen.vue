@@ -18,8 +18,10 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, onUpdated, ref } from 'vue';
-	import { ArrayList, type SchuelerFoerderempfehlung, type Comparator } from '@core';
 	import type { SchuelerLernabschnittFoerderempfehlungenProps } from './SchuelerLernabschnittFoerderempfehlungenProps';
+	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { Comparator } from '@core/java/util/Comparator';
 
 	const props = defineProps<SchuelerLernabschnittFoerderempfehlungenProps>();
 	const selectedFoerderempfehlung = ref<SchuelerFoerderempfehlung | undefined>(undefined);

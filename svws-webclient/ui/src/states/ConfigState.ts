@@ -1,7 +1,7 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { AppContext } from "@ui/AppContext";
+import type { Config } from "@ui/utils/Config";
 import type { InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import { AppContext } from "../AppContext";
-import type { Config } from "../utils/Config";
 
 /**
  * Die Schnittstelle für den Zustand der Client-Konfiguration

@@ -22,7 +22,7 @@
 	import { ref } from "vue";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
-	import { validatorSchemaName } from "~/utils/helfer";
+	import { validatorSchemaName } from "@admin/utils/helfer";
 
 	const props = defineProps<{
 		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

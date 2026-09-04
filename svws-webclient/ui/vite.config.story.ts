@@ -7,8 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
 	resolve: { alias: {
-		"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
-		"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
+		"@icons": resolve(import.meta.dirname, "../../node_modules/remixicon/icons"),
+		"@json": resolve(import.meta.dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 	} },
 	plugins: [
 		Vue({ include: [/\.vue$/, /\.md$/] }),

@@ -40,10 +40,11 @@
 <script setup lang="ts">
 
 	import type { TelefonartenNeuProps } from "~/components/schule/kataloge/telefonarten/TelefonartenNeuProps";
-	import { BenutzerKompetenz, Telefonart } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { TelefonartenModelProxy } from "~/components/schule/kataloge/telefonarten/modelproxy/TelefonartenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { Telefonart } from "@core/core/data/schule/Telefonart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<TelefonartenNeuProps>();
 	const benutzerState = useBenutzerState();

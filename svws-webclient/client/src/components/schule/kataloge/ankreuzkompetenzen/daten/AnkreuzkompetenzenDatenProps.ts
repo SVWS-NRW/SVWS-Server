@@ -1,5 +1,6 @@
-import type { Ankreuzkompetenz, List } from "@core";
-import type { AnkreuzkompetenzenListeManager } from "@ui";
+import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+import type { List } from "@core/java/util/List";
+import type { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/AnkreuzkompetenzenListeManager";
 
 export interface AnkreuzkompetenzenDatenProps {
 	patch: (data: Partial<Ankreuzkompetenz>) => Promise<boolean>;

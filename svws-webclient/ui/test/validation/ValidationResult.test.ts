@@ -1,9 +1,9 @@
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ValidationResult } from "@ui/validation/ValidationResult";
 import { describe, expect, test } from "vitest";
-import { ValidationResult } from "../../src/validation/ValidationResult";
-import { ArrayList } from "../../../core/src/java/util/ArrayList";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
-import { ValidatorFehler } from "../../../core/src/asd/validate/ValidatorFehler";
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 
 
 describe("initialize ValidationResult", () => {

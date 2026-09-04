@@ -95,11 +95,25 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, OrganisationsformKatalogEintrag, SchuelerLernabschnittsdaten } from "@core";
-	import { BilingualeSprache, Foerderschwerpunkt, Klassenart, Schulgliederung, BenutzerKompetenz, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from '@ui';
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SchuelerLernabschnittAllgemeinProps";
 	import { SchuelerLernabschnittAllgemeinModelProxy } from "./modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+	import type { KlassenDaten } from '@core/asd/data/klassen/KlassenDaten';
+	import type { SchuelerLernabschnittsdaten } from '@core/asd/data/schueler/SchuelerLernabschnittsdaten';
+	import type { OrganisationsformKatalogEintrag } from '@core/asd/data/schule/OrganisationsformKatalogEintrag';
+	import { BilingualeSprache } from '@core/asd/types/fach/BilingualeSprache';
+	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
+	import { Klassenart } from '@core/asd/types/klassen/Klassenart';
+	import { Foerderschwerpunkt } from '@core/asd/types/schule/Foerderschwerpunkt';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
+	import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
+	import type { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
+	import type { FoerderschwerpunktEintrag } from '@core/core/data/schule/FoerderschwerpunktEintrag';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 	const benutzerState = useBenutzerState();

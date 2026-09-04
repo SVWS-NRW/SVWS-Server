@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { OrtsteileListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { OrtsteileListeManager } from "@ui/ui/manager/kataloge/OrtsteileListeManager";
 
 export interface OrtsteileGruppenprozesseProps {
 	manager: () => OrtsteileListeManager;

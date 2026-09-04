@@ -1,7 +1,7 @@
-import type { LehrerListeEintrag } from "../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
-import { JavaString } from "../../../core/src/java/lang/JavaString";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { JavaString } from "@core/java/lang/JavaString";
 
 /**
  * Ein Validator, welcher prüft, ob ein Lehrerkürzel gültig ist und nicht bereits bei einem anderen Lehrer vorhanden ist.

@@ -1,7 +1,7 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { DateManager } from "../../../core/src/asd/validate/DateManager";
-import { InvalidDateException } from "../../../core/src/asd/validate/InvalidDateException";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { DateManager } from "@core/asd/validate/DateManager";
+import { InvalidDateException } from "@core/asd/validate/InvalidDateException";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 /**
  * Ein Validator, welcher den Beginn eines Bildungsganges am Berufskolleg bei einem Schülers bei der Eingabe prüft.

@@ -1,7 +1,4 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { List, JavaMap, ENMServerConnection } from "@core";
-import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte } from "@core";
-import { WenomAuswahlListeManager, ViewType, EnmSperrManager } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
@@ -13,6 +10,22 @@ import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { OpenApiError } from "@core/api/OpenApiError";
+import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
+import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
+import { ENMServerConfigElement } from "@core/core/data/enm/ENMServerConfigElement";
+import type { ENMServerConnection } from "@core/core/data/enm/ENMServerConnection";
+import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import { UnsupportedOperationException } from "@core/java/lang/UnsupportedOperationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {

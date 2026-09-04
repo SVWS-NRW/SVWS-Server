@@ -1,6 +1,12 @@
-import type { GostKlausurplanungState } from "@ui";
-import type { GostKlausurtermin, GostKursklausur, GostSchuelerklausur, GostSchuelerklausurtermin, SchuelerListeEintrag } from "@core";
-import { DateUtils, Fach, GostHalbjahr } from "@core";
+import { Fach } from "@core/asd/types/fach/Fach";
+import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
+import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { DateUtils } from "@core/core/utils/DateUtils";
+import type { GostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 export type KlausurplanungKursBadge = {
 	text: string;

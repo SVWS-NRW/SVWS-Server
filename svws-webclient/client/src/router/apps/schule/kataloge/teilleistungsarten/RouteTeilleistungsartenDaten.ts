@@ -1,8 +1,10 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTeilleistungsarten";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized } from "vue-router";
 import type { TeilleistungsartenDatenProps } from "~/components/schule/kataloge/teilleistungsarten/daten/TeilleistungsartenDatenProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const TeilleistungsartenDaten = () =>
 	import("~/components/schule/kataloge/teilleistungsarten/daten/TeilleistungsartenDaten.vue");

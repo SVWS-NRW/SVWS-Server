@@ -1,6 +1,6 @@
 import type { GridManager } from "./GridManager";
 import { GridInput } from "./GridInput";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { Collection } from "@core/java/util/Collection";
 
 /**
  * Diese Klasse ist eine Basisklasse für Grid-Inputs, welche ihre Daten selber

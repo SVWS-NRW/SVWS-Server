@@ -1,6 +1,4 @@
 import type { RouteParams } from "vue-router";
-import type { EinwilligungsartenListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeEinwilligungsartenDaten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenDaten";
@@ -9,6 +7,10 @@ import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeEinwilligungsartenNeu } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenNeu";
 import { routeEinwilligungsartenGruppenprozesse } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenGruppenprozesse";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/EinwilligungsartenListeManager";
 
 const EinwilligungsartenAuswahl = () => import("~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenAuswahl.vue");
 const EinwilligungsartenApp = () => import("~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenApp.vue");
@@ -17,7 +19,7 @@ export class RouteEinwilligungsarten extends RouteAuswahlNode<Einwilligungsarten
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.einwilligungsarten",
-			"schule/einwilligungsarten/:id(\\d+)?", EinwilligungsartenApp, EinwilligungsartenAuswahl, new RouteDataEinwilligungsarten());
+			String.raw`schule/einwilligungsarten/:id(\d+)?`, EinwilligungsartenApp, EinwilligungsartenAuswahl, new RouteDataEinwilligungsarten());
 		super.mode = ServerMode.STABLE;
 		super.text = "Einwilligungsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

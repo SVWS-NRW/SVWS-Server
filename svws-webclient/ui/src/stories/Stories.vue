@@ -95,8 +95,8 @@
 	import type { ColorPreset } from './StoryManager';
 	import storyManager from './StoryManager';
 	import router from './router';
-	import { usePaneSplitter } from './../ui/composables/usePaneSplitter';
-	import { SelectManager } from '../ui/controls/select/manager/SelectManager';
+	import { usePaneSplitter } from '@ui/ui/composables/usePaneSplitter';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {

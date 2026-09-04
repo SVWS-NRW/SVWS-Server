@@ -1,5 +1,7 @@
-import type { ENMv2Klasse, ENMv2LeistungBemerkungen, ENMv2Lernabschnitt } from "@core";
-import type { EnmManager } from "@ui";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
+import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+import type { EnmManager } from "@ui/components/enm/EnmManager";
 
 export interface NotenmodulKlassenleitungProps {
 	enmManager: () => EnmManager;

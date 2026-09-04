@@ -1,15 +1,18 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Floskel, List, SimpleOperationResponse } from "@core";
-import { ArrayList } from "@core";
-import { ViewType, FloskelnListeManager } from "@ui";
 import { api } from "~/router/Api";
 import { routeFloskelnDaten } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnDaten";
 import { routeFloskelnGruppenprozesse } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnGruppenprozesse";
 import { routeFloskelnNeu } from "~/router/apps/schule/kataloge/floskeln/RouteFloskelnNeu";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import type { Floskel } from "@core/core/data/schule/Floskel";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

@@ -1,4 +1,9 @@
-import type { AbiturdatenManager, AbiturFachbelegung, GostBelegpruefungErgebnis, JavaMap, List, SchuelerListeEintrag } from "@core";
+import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 export interface GostAbiturZulassungProps {
 	schuelerListe: List<SchuelerListeEintrag>;

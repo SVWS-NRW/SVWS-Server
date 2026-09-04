@@ -36,10 +36,10 @@
 <script setup lang="ts">
 
 	import type { EntlassgruendeGruppenprozesseProps } from "~/components/schule/kataloge/entlassgruende/gruppenprozesse/EntlassgruendeGruppenprozesseProps";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<EntlassgruendeGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

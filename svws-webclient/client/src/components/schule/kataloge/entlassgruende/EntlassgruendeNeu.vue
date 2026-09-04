@@ -40,10 +40,11 @@
 <script setup lang="ts">
 
 	import type { EntlassgruendeNeuProps } from "~/components/schule/kataloge/entlassgruende/EntlassgruendeNeuProps";
-	import { BenutzerKompetenz, KatalogEntlassgrund } from "@core";
 	import { ref, computed, watch } from "vue";
 	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<EntlassgruendeNeuProps>();
 	const benutzerState = useBenutzerState();

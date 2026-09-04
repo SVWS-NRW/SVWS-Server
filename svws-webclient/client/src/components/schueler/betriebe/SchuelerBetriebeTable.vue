@@ -67,11 +67,17 @@
 
 <script setup lang="ts">
 
+	import type { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import type { DataTableColumn } from '@ui/types';
+	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
 	import { ref, computed } from 'vue';
 	import { formatToLocalDate } from "~/utils/date";
-	import { useBenutzerState, useSchuleState, type DataTableColumn, type SchuelerBetriebeManager } from "@ui";
-	import type { List, SchuelerBetrieb } from "@core";
-	import { Schulform, ArrayList, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
 		manager: () => SchuelerBetriebeManager,

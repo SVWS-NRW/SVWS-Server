@@ -75,11 +75,14 @@
 
 <script setup lang="ts">
 
-	import type { List, Telefonart } from "@core";
-	import { ArrayList, SchuelerTelefon } from "@core";
+	import { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+	import type { Telefonart } from "@core/core/data/schule/Telefonart";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 	import { computed, ref } from "vue";
-	import type { DataTableColumn, SchuelerSchnelleingabeManager } from "@ui";
-	import { SelectManager } from "@ui";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

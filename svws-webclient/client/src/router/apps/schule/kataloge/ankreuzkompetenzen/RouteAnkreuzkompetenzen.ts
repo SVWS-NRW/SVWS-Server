@@ -1,7 +1,5 @@
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { AnkreuzkompetenzenListeManager } from "@ui";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteParams } from "vue-router";
@@ -9,9 +7,12 @@ import { routeAnkreuzkompetenzenDaten } from "~/router/apps/schule/kataloge/ankr
 import { routeAnkreuzkompetenzenNeu } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenNeu";
 import { routeAnkreuzkompetenzenGruppenprozesse } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenGruppenprozesse";
 import { RouteDataAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteDataAnkreuzkompetenzen";
-
 import AnkreuzkompetenzenApp from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenApp.vue";
 import AnkreuzkompetenzenAuswahl from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahl.vue";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/AnkreuzkompetenzenListeManager";
 
 export class RouteAnkreuzkompetenzen extends RouteAuswahlNode<AnkreuzkompetenzenListeManager, RouteDataAnkreuzkompetenzen, RouteApp> {
 	public constructor() {

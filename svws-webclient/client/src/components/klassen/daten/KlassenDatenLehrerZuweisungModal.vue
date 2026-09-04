@@ -24,8 +24,9 @@
 
 <script setup lang="ts">
 
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import type { List } from "@core/java/util/List";
 	import { computed, ref } from "vue";
-	import type { List, LehrerListeEintrag } from "@core";
 	import type { KlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/KlassenDatenLehrerZuweisungModalProps";
 
 	const props = defineProps<KlassenDatenLehrerZuweisungModalProps>();

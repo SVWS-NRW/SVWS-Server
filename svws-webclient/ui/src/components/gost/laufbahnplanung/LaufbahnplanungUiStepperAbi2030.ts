@@ -1,15 +1,15 @@
-import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
-import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
-import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
-import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
-import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
-import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
-import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
-import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
-import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
+import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostAbiturFach } from "@core/core/types/gost/GostAbiturFach";
+import { GostFachbereich } from "@core/core/types/gost/GostFachbereich";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostKursart } from "@core/core/types/gost/GostKursart";
+import { GostFachUtils } from "@core/core/utils/gost/GostFachUtils";
+import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 import type { LaufbahnplanungUiStepper, LaufbahnplanungUiStepperMode } from "./LaufbahnplanungUiStepper";
 

@@ -1,4 +1,4 @@
+import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { ErzieherartListeManager } from "@ui";
 
 export type ErzieherartenAuswahlProps = RouteAuswahlListProps<ErzieherartListeManager>;

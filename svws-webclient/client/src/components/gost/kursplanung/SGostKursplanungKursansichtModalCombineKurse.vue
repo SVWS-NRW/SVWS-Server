@@ -13,8 +13,10 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungKurs } from '@core/core/data/gost/GostBlockungKurs';
+	import type { GostBlockungsergebnisKurs } from '@core/core/data/gost/GostBlockungsergebnisKurs';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
 	import { computed, ref } from 'vue';
-	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

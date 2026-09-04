@@ -1,16 +1,20 @@
 import { ref } from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { InitProps } from "~/components/init/SInitProps";
-import type { List, SchulenKatalogEintrag } from "@core";
-import { DatenbankVerbindungsdaten, ServerMode, ArrayList, BenutzerKompetenz, Schulform, SimpleOperationResponse, OpenApiError } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
 import { routeLogin } from "../login/RouteLogin";
-
 import SInit from "~/components/init/SInit.vue";
+import { OpenApiError } from "@core/api/OpenApiError";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DatenbankVerbindungsdaten } from "@core/core/data/schema/DatenbankVerbindungsdaten";
+import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
+import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 export class RouteInit extends RouteNode<any, any> {

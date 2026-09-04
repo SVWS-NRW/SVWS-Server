@@ -1,14 +1,10 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AppProps } from "~/components/AppProps";
-
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-
-import { RouteData } from "~/router/apps/RouteData";
-
-import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
-
-import AppLaufbahnplanung from "~/components/AppLaufbahnplanung.vue";
+import type { AppProps } from "@lupo/components/AppProps";
+import { RouteNode } from "@lupo/router/RouteNode";
+import { RouteManager } from "@lupo/router/RouteManager";
+import { RouteData } from "@lupo/router/apps/RouteData";
+import { routeLadeDaten } from "@lupo/router/apps/RouteLadeDaten";
+import AppLaufbahnplanung from "@lupo/components/AppLaufbahnplanung.vue";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 import type { TabData } from "@ui/ui/nav/TabData";
 

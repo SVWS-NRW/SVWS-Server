@@ -1,5 +1,5 @@
+import type { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/AnkreuzkompetenzenListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { AnkreuzkompetenzenListeManager } from "@ui";
 
 export type AnkreuzkompetenzenAppProps = RouteAuswahlProps<AnkreuzkompetenzenListeManager>;
 

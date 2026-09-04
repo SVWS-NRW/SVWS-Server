@@ -1,26 +1,3 @@
 {
 	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"outDir": "./dist",
-		"paths": {
-			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
-		},
-		"types": [ "vite/client" ],
-		"resolveJsonModule": true,
-	},
-	"include": [
-		"env.d.ts",
-		"vite.config*.ts",
-		"src/**/*.ts",
-		"src/**/*.vue",
-		"src/**/*.md",
-		"test/**/*.ts",
-		"test/**/*.vue",
-		"test/**/*.md",
-		"components.d.ts",
-		"../core/src/**/*.ts",
-		],
-	"exclude": [
-		"../core/src/index.ts",
-	]
 }

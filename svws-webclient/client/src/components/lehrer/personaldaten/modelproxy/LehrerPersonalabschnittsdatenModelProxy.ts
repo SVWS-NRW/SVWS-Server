@@ -1,11 +1,22 @@
+import type { LehrerBeschaeftigungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag";
+import type { LehrerEinsatzstatusKatalogEintrag } from "@core/asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag";
+import { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+import type { LehrerRechtsverhaeltnisKatalogEintrag } from "@core/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
+import { LehrerBeschaeftigungsart } from "@core/asd/types/lehrer/LehrerBeschaeftigungsart";
+import { LehrerEinsatzstatus } from "@core/asd/types/lehrer/LehrerEinsatzstatus";
+import { LehrerRechtsverhaeltnis } from "@core/asd/types/lehrer/LehrerRechtsverhaeltnis";
+import { DateManager } from "@core/asd/validate/DateManager";
+import { ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from "@core/asd/validate/lehrer/ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart";
+import { ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core/asd/validate/lehrer/ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll";
+import { ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from "@core/asd/validate/lehrer/ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis";
+import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { computed } from "vue";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import type { LehrerBeschaeftigungsartKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerRechtsverhaeltnisKatalogEintrag, ValidatorKontext } from "@core";
-import { DateManager, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis,
-	ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart, ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll,
-	ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from "@core";
-import { type LehrerListeManager, ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 
 /**
  * Der spezielle ModelProxy für die Lehrerpersonalabschnittsdaten

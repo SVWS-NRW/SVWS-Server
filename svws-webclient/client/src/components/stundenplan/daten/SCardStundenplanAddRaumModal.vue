@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import { StundenplanRaum } from "@core";
+	import { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
 	import { ref } from "vue";
 
 	const props = defineProps<{

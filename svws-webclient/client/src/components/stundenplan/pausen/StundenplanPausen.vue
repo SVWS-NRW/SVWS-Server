@@ -88,10 +88,20 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
-	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
-	import { useBenutzerState, useRegionSwitch } from "@ui";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
+	import { HashMap3D } from "@core/core/adt/map/HashMap3D";
+	import type { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
+	import type { StundenplanLehrer } from "@core/core/data/stundenplan/StundenplanLehrer";
+	import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+	import { StundenplanPausenaufsichtBereich } from "@core/core/data/stundenplan/StundenplanPausenaufsichtBereich";
+	import { StundenplanPausenaufsichtBereichUpdate } from "@core/core/data/stundenplan/StundenplanPausenaufsichtBereichUpdate";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { Wochentag } from "@core/core/types/Wochentag";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	type PausenzeitBereichTyp = { pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number };
 

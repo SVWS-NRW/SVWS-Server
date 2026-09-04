@@ -1,5 +1,4 @@
 import type { RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
@@ -9,16 +8,18 @@ import { RouteDataTeilleistungsarten } from "./RouteDataTeilleistungsarten";
 import { routeTeilleistungsartenNeu } from "./RouteTeilleistungsartenNeu";
 import { routeTeilleistungsartenDaten } from "./RouteTeilleistungsartenDaten";
 import { routeTeilleistungsartenGruppenprozesse } from "./RouteTeilleistungsartenGruppenprozesse";
-
 import TeilleistungsartenApp from "~/components/schule/kataloge/teilleistungsarten/TeilleistungsartenApp.vue";
 import TeilleistungsartenAuswahl from "~/components/schule/kataloge/teilleistungsarten/TeilleistungsartenAuswahl.vue";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 export class RouteTeilleistungsarten extends RouteAuswahlNode<TeilleistungsartenListeManager, RouteDataTeilleistungsarten, RouteApp> {
 	public constructor() {
 		super(Schulform.values(),
 			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.teilleistungsarten",
-			"schule/teilleistungsarten/:id(\\d+)?",
+			String.raw`schule/teilleistungsarten/:id(\d+)?`,
 			TeilleistungsartenApp,
 			TeilleistungsartenAuswahl,
 			new RouteDataTeilleistungsarten());

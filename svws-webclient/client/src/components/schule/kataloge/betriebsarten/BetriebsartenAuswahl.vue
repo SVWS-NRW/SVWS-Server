@@ -34,9 +34,10 @@
 </template>
 
 <script setup lang="ts">
-	import { type DataTableColumn, useRegionSwitch } from "@ui";
-	import type { Betriebsart } from "@core";
 
+	import type { Betriebsart } from '@core/core/data/schule/Betriebsart';
+	import type { DataTableColumn } from '@ui/types';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import type { BetriebsartenAuswahlProps } from './BetriebsartenAuswahlProps';
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 

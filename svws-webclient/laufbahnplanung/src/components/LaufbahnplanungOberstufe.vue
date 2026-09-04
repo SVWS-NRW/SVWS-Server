@@ -64,8 +64,8 @@
 
 	import { computed, ref } from "vue";
 	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
-	import { version } from '../../version';
-	import { githash } from '../../githash';
+	import { version } from "@version";
+	import { githash } from "@githash";
 	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";

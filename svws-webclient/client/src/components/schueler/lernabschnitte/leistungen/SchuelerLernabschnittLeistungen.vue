@@ -161,11 +161,25 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
-	import type { SchuelerLeistungsdaten, List, FachDaten, LehrerListeEintrag, SchuelerLernabschnittsdaten, Schulform } from "@core";
-	import { Note, ZulaessigeKursart, ArrayList, BenutzerKompetenz, BenutzerTyp, Jahrgaenge } from "@core";
-	import { GridManager, SelectManager, useBenutzerState, useSchuleState, useModelProxyList } from "@ui";
 	import { SchuelerLeistungsdatenModelProxy } from "~/components/schueler/lernabschnitte/leistungen/modelproxy/SchuelerLeistungsdatenModelProxy";
 	import { SchuelerLernabschnittAllgemeinModelProxy } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+	import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
+	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
+	import { Note } from "@core/asd/types/Note";
+	import type { Schulform } from "@core/asd/types/schule/Schulform";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useModelProxyList } from "@ui/model/useModelProxyList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 	const benutzerState = useBenutzerState();

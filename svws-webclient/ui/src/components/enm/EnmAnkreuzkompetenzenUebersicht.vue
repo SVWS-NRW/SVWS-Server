@@ -142,18 +142,18 @@
 
 <script setup lang="ts">
 
+	import { PairNN } from '@core/asd/adt/PairNN';
+	import { ENMv2Fach } from '@core/core/data/enm/v2/ENMv2Fach';
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+	import type { ENMv2SchuelerAnkreuzkompetenz } from '@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
-	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
-	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import { ENMv2Fach } from '../../../../core/src/core/data/enm/v2/ENMv2Fach';
-	import type { ENMv2SchuelerAnkreuzkompetenz } from '../../../../core/src/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz';
-	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { List } from '../../../../core/src/java/util/List';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { EnmAnkreuzkompetenzenUebersichtProps } from './EnmAnkreuzkompetenzenUebersichtProps';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 
 	const props = defineProps<EnmAnkreuzkompetenzenUebersichtProps>();
 

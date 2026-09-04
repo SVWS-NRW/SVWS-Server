@@ -1,4 +1,6 @@
-import { type Abteilung, BasicValidator, ValidatorFehlerart } from "@core";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { Abteilung } from "@core/core/data/schule/Abteilung";
 
 export class ValidatorAbteilungBezeichnungUniqueInFolgeAbschnitt extends BasicValidator {
 

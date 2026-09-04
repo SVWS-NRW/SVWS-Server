@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { EinwilligungsartenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/EinwilligungsartenListeManager";
 
 export interface EinwilligungsartenGruppenprozesseProps {
 	manager: () => EinwilligungsartenListeManager;

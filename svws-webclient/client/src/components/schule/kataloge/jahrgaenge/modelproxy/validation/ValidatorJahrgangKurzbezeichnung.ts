@@ -1,6 +1,9 @@
-import { BasicValidator, type JahrgangsDaten, ValidatorFehlerart } from "@core";
-import { ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import { StringPattern } from "../../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorJahrgangKurzbezeichnung extends BasicValidator {
 

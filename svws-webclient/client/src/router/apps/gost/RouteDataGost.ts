@@ -1,19 +1,25 @@
-import type { GostJahrgang, GostJahrgangsdaten, JahrgangsDaten, GostFach } from "@core";
-import { DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGost } from "~/router/apps/gost/RouteGost";
-
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import type { TabData } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostAbiturjahrUtils } from "@core/core/utils/gost/GostAbiturjahrUtils";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { TabData } from "@ui/ui/nav/TabData";
 
 interface RouteStateGost extends RouteStateInterface {
 	idSchuljahresabschnitt: number,

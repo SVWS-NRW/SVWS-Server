@@ -1,5 +1,5 @@
-import type { ENMv2Leistung } from "../../../../core/src/core/data/enm/v2/ENMv2Leistung";
-import type { ENMv2Schueler } from "../../../../core/src/core/data/enm/v2/ENMv2Schueler";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
 import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "./EnmManager";
 
 export interface EnmLeistungenUebersichtProps {

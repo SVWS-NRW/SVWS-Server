@@ -1,9 +1,8 @@
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
 import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenaustauschKurs42Blockung";
-
-import { OpenApiError, SimpleOperationResponse } from "@core";
+import { OpenApiError } from "@core/api/OpenApiError";
+import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 
 
 type RouteStateDatenaustauschKurs42 = RouteStateInterface;

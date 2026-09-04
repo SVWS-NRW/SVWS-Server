@@ -53,11 +53,13 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { VermerkartEintrag } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import type { DataTableColumn } from "@ui";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import type { VermerkartenAuswahlProps } from "./VermerkartenAuswahlProps";
+	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<VermerkartenAuswahlProps>();
 	const benutzerState = useBenutzerState();

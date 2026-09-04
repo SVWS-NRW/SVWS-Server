@@ -1,21 +1,21 @@
-import type { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
-import type { Abteilung } from '../../../../../core/src/core/data/schule/Abteilung';
-import { HashMap } from '../../../../../core/src/java/util/HashMap';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { JavaInteger } from '../../../../../core/src/java/lang/JavaInteger';
-import type { LehrerListeEintrag } from '../../../../../core/src/core/data/lehrer/LehrerListeEintrag';
-import type { AbteilungKlassenzuordnung } from '../../../../../core/src/core/data/schule/AbteilungKlassenzuordnung';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { List } from '../../../../../core/src/java/util/List';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
-import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
-import { HashSet } from "../../../../../core/src/java/util/HashSet";
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { KlassenDatenMinimal } from "../../../../../core/src/asd/data/klassen/KlassenDatenMinimal";
-import { AuswahlManager } from '../AuswahlManager';
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { Abteilung } from "@core/core/data/schule/Abteilung";
+import type { AbteilungKlassenzuordnung } from "@core/core/data/schule/AbteilungKlassenzuordnung";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
 
 export interface AbteilungenLookups {
 	schuljahresabschnitte: List<Schuljahresabschnitt>,

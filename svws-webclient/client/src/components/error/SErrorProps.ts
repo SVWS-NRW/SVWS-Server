@@ -1,4 +1,4 @@
-import type { api } from "../../router/Api";
+import type { api } from "~/router/Api";
 
 export interface ErrorProps {
 	code: number | undefined;

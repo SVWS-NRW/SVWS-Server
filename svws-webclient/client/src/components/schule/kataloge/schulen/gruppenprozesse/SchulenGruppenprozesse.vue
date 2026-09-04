@@ -37,9 +37,9 @@
 
 	import { computed, ref } from "vue";
 	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
-	import type { List } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<SchulenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

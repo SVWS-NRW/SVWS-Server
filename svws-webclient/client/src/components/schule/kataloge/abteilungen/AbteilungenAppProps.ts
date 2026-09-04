@@ -1,4 +1,4 @@
+import type { AbteilungenListeManager } from "@ui/ui/manager/kataloge/AbteilungenListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { AbteilungenListeManager } from "@ui";
 
 export type AbteilungenAppProps = RouteAuswahlProps<AbteilungenListeManager>;

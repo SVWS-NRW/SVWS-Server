@@ -21,10 +21,13 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
+	import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
 	import { computed } from "vue";
-	import type { DataTableColumn } from "@ui";
-	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@core";
-	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

@@ -1,11 +1,17 @@
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { Betrieb } from "@core/core/data/schule/Betrieb";
+import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
-import type { BetriebeListeManager } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { Betrieb, Betriebsart, OrtKatalogEintrag } from "@core";
-import { JavaInteger, AdressenUtils } from "@core";
-import { ValidatorBetriebName } from "~/components/schule/kataloge/betriebe/modelproxy/validation/ValidatorBetriebName";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
-import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
+import { ValidatorBetriebName } from "./validation/ValidatorBetriebName";
 
 export class BetriebModelProxy extends ModelProxy<Betrieb> {
 

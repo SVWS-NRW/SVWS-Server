@@ -1,5 +1,6 @@
-import type { Telefonart } from "@core";
-import type { Checkpoint, TelefonartenListeManager } from "@ui";
+import type { Telefonart } from "@core/core/data/schule/Telefonart";
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface TelefonartenNeuProps {

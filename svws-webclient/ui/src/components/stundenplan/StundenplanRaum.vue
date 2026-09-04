@@ -19,15 +19,15 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import type { List } from "@core/java/util/List";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 	import type { StundenplanRaumProps } from "./StundenplanRaumProps";
-	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import type { List } from "../../../../core/src/java/util/List";
-	import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
-	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
-	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 
 	const props = withDefaults(defineProps<StundenplanRaumProps>(), {
 		mode: 'schueler',

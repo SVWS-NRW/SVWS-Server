@@ -1,10 +1,10 @@
-import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
-import { ENMConfigKlasse } from "../../../../core/src/core/data/enm/ENMConfigKlasse";
-import type { ENMConfigKlasseSpalte } from "../../../../core/src/core/data/enm/ENMConfigKlasseSpalte";
-import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-import { HashMap } from "../../../../core/src/java/util/HashMap";
-import type { JavaMap } from "../../../../core/src/java/util/JavaMap";
-import type { List } from "../../../../core/src/java/util/List";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
+import type { ENMConfigKlasseSpalte } from "@core/core/data/enm/ENMConfigKlasseSpalte";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 /**
  * Ein Manager für die Verwaltung der Sperr-Konfiguration bei den Klassen der ENM-Daten.

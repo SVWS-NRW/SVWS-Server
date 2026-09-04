@@ -35,9 +35,10 @@
 
 <script setup lang="ts">
 
-	import { type Leitungsfunktion } from "@core";
+	import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { LeitungsfunktionenAuswahlProps } from "./LeitungsfunktionenAuswahlProps";
-	import { useRegionSwitch, type DataTableColumn } from "@ui";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	const columns: DataTableColumn[] = [

@@ -47,9 +47,15 @@
 
 <script setup lang="ts">
 
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
+	import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+	import type { List } from "@core/java/util/List";
 	import { computed } from "vue";
-	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, List } from "@core";
-	import { GostLaufbahnplanungFachkombinationTyp, GostKursart, GostHalbjahr, Fach } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

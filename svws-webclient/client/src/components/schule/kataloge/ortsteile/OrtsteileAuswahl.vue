@@ -34,10 +34,12 @@
 
 <script setup lang="ts">
 
+	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import { computed } from "vue";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
-	import type { OrtsteilKatalogEintrag } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import type { OrtsteileAuswahlProps } from "~/components/schule/kataloge/ortsteile/OrtsteileAuswahlProps";
 
 	const props = defineProps<OrtsteileAuswahlProps>();

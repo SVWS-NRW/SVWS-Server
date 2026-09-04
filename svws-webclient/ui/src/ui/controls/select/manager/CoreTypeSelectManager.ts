@@ -1,12 +1,13 @@
+import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
+import type { CoreType } from "@core/asd/types/CoreType";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { CoreTypeDataManager } from "@core/asd/utils/CoreTypeDataManager";
+import type { Class } from "@core/java/lang/Class";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { watch, toValue, triggerRef, shallowRef, type MaybeRef, isRef, toRaw } from "vue";
-import type { Class } from "../../../../../../core/src/java/lang/Class";
-import type { CoreType } from "../../../../../../core/src/asd/types/CoreType";
-import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
-import { CoreTypeDataManager } from "../../../../../../core/src/asd/utils/CoreTypeDataManager";
-import { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
-import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectManager";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import type { List } from "../../../../../../core/src/java/util/List";
+import type { BaseSelectManagerConfig } from "./BaseSelectManager";
+import { BaseSelectManager } from "./BaseSelectManager";
 
 type DisplayMode<T> = "kuerzel" | "text" | "kuerzelText" | ((option: T) => string);
 

@@ -69,10 +69,20 @@
 
 <script setup lang="ts">
 
-	import { GridManager, TabManager, useRegionSwitch, useSchuleState } from "@ui";
+	import { LehrerStatistikGesamt } from "@core/asd/data/statistik/LehrerStatistikGesamt";
+	import type { BasicValidator } from "@core/asd/validate/BasicValidator";
+	import { ValidatorLpLehrerPersonaldaten } from "@core/asd/validate/lehrer/ValidatorLpLehrerPersonaldaten";
+	import { ValidatorLsLehrerStammdaten } from "@core/asd/validate/lehrer/ValidatorLsLehrerStammdaten";
+	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+	import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import { TabManager } from "@ui/ui/nav/TabManager";
 	import type { StatistikLehrerProps } from "./StatistikLehrerProps";
-	import type { ValidatorFehler, List, BasicValidator } from "@core";
-	import { LehrerListeEintrag, LehrerStatistikGesamt, ArrayList, ValidatorLpLehrerPersonaldaten, ValidatorLsLehrerStammdaten, ListUtils } from "@core";
 	import { computed, watch } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

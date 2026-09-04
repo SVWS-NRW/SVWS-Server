@@ -1,6 +1,11 @@
-import type { SchuelerStammdaten, ErzieherStammdaten, List,
-	SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchuelerVermerke } from "@core";
-import type { SchuelerSchnelleingabeManager } from "@ui";
+import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
+import type { List } from "@core/java/util/List";
+import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 export interface SchuelerSchnelleingabeProps {
 	manager: () => SchuelerSchnelleingabeManager;

@@ -42,12 +42,20 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerSchnelleingabeManager } from "@ui";
-	import type { EinschulungsartKatalogEintrag, KlassenDaten, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerStatusKatalogEintrag,
-		SchuelerLernabschnittsdaten } from "@core";
-	import { SchuelerStatus, Schulform } from "@core";
+	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+	import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
+	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
+	import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+	import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 	import { computed } from "vue";
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState, useSchuleState } from "@ui";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

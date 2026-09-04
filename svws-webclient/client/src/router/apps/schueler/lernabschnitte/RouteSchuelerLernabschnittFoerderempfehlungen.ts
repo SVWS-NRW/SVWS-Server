@@ -1,9 +1,11 @@
 import { RouteNode } from "~/router/RouteNode";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocation, RouteLocationNormalized, RouteParams } from "vue-router";
 import type { RouteSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
 import type { SchuelerLernabschnittFoerderempfehlungenProps } from "~/components/schueler/lernabschnitte/foerderempfehlungen/SchuelerLernabschnittFoerderempfehlungenProps";
 import { RouteDataSchuelerLernabschnittFoerderempfehlungen } from "./RouteDataSchuelerLernabschnittFoerderempfehlungen";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 
 const SchuelerLernabschnittFoerderempfehlungen = () => import("~/components/schueler/lernabschnitte/foerderempfehlungen/SchuelerLernabschnittFoerderempfehlungen.vue");
 

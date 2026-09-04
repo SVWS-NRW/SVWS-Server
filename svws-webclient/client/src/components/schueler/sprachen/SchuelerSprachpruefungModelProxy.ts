@@ -1,5 +1,9 @@
-import { Jahrgaenge, Note, Sprachpruefungniveau, Sprachreferenzniveau, type Sprachpruefung } from "@core";
-import { ModelProxy } from "@ui";
+import type { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
+import { Sprachreferenzniveau } from "@core/asd/types/fach/Sprachreferenzniveau";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { Note } from "@core/asd/types/Note";
+import { Sprachpruefungniveau } from "@core/core/types/fach/Sprachpruefungniveau";
+import { ModelProxy } from "@ui/model/ModelProxy";
 import { computed } from "vue";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 

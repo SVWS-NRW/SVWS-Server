@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerNeu } from "~/router/apps/schueler/neu/RouteDataSchuelerNeu";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const SchuelerNeu = () => import("~/components/schueler/neuanlage/SchuelerNeu.vue");
 

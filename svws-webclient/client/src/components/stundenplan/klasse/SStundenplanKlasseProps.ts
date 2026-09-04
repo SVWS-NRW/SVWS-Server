@@ -1,4 +1,7 @@
-import type { List, StundenplanManager, StundenplanUnterricht, StundenplanZeitraster } from "@core";
+import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import type { List } from "@core/java/util/List";
 
 export interface StundenplanKlasseProps {
 	stundenplanManager: () => StundenplanManager;

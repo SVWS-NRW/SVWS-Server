@@ -1,6 +1,13 @@
-import { AuswahlManager } from "@ui";
-import type { Comparator, List, Schulform, Schuljahresabschnitt, Teilleistungsart } from "@core";
-import { Arrays, HashSet, JavaInteger, JavaLong, JavaString } from "@core";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashSet } from "@core/java/util/HashSet";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 
 export class TeilleistungsartenListeManager extends AuswahlManager<number, Teilleistungsart, Teilleistungsart> {
 

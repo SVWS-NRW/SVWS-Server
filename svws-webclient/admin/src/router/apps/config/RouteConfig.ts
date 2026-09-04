@@ -1,16 +1,13 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-
-import { RouteDataConfig } from "~/router/apps/config/RouteDataConfig";
-
-import type { ConfigAppProps } from "~/components/config/SConfigAppProps";
-import { api } from "~/router/Api";
+import type { ConfigAppProps } from "@admin/components/config/SConfigAppProps";
+import { api } from "@admin/router/Api";
+import { RouteNode } from "@admin/router/RouteNode";
 import { ServerMode } from "@core/core/types/ServerMode";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteApp } from "../RouteApp";
+import { routeApp } from "../RouteApp";
+import { RouteDataConfig } from "./RouteDataConfig";
 
-const SConfigApp = () => import("~/components/config/SConfigApp.vue");
+const SConfigApp = () => import("@admin/components/config/SConfigApp.vue");
 
 
 export class RouteConfig extends RouteNode<RouteDataConfig, RouteApp> {

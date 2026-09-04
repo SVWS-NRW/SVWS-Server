@@ -1,5 +1,5 @@
-import type { Fahrschuelerart } from "@core";
-import type { FahrschuelerartenListeManager } from "@ui";
+import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+import type { FahrschuelerartenListeManager } from "@ui/ui/manager/kataloge/FahrschuelerartenListeManager";
 
 export interface FahrschuelerartenDatenProps {
 	manager: () => FahrschuelerartenListeManager;

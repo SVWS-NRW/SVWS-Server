@@ -114,8 +114,18 @@
 	import { computed, ref, toRaw } from 'vue';
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core';
-	import { ArrayList, GostKursart, GostBlockungsergebnisKurs, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
+	import type { Schueler } from '@core/asd/data/schueler/Schueler';
+	import { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
+	import { GostBlockungsergebnisKurs } from '@core/core/data/gost/GostBlockungsergebnisKurs';
+	import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
+	import { GostKursart } from '@core/core/types/gost/GostKursart';
+	import { DTOUtils } from '@core/core/utils/DTOUtils';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { SetUtils } from '@core/core/utils/SetUtils';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { HashSet } from '@core/java/util/HashSet';
+	import type { List } from '@core/java/util/List';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;

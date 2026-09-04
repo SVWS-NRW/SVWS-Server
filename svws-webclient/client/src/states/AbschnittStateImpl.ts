@@ -1,9 +1,12 @@
-import type { List, SchuleStammdaten, Schuljahresabschnitt } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
-import type { AbschnittState } from "@ui";
-import { StateManager } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import { schuleStateImpl } from "./SchuleStateImpl";
+import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { AbschnittState } from "@ui/states/AbschnittState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface AbschnittReactiveState {
 	/** Eine Map mit den Schuljahresabschnitten zugeordnet zu deren IDs */

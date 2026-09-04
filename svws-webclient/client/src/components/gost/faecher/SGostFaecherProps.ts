@@ -1,4 +1,8 @@
-import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@core";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
+import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 
 export interface GostFaecherProps {
 	faecherManager: () => GostFaecherManager;

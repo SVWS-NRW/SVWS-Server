@@ -1,6 +1,7 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import { StateManager } from "@ui/ui/StateManager";
 import { ref } from "vue";
-import { DeveloperNotificationException } from "@core";
-import { StateManager, ViewType } from "@ui";
 import { type RouteNode } from "~/router/RouteNode";
 
 /**

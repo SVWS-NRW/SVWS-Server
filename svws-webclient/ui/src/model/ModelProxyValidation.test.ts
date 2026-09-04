@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
 import { ModelProxyValidation } from "./ModelProxyValidation";
 import { ref } from "vue";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 describe("ModelProxyValidation Testsuite", () => {
 	describe("ModelProxyValidation Initialisierung", () => {

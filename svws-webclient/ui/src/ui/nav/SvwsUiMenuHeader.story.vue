@@ -1,7 +1,7 @@
 <template>
 	<Story title="Sidebar/Menu Header" id="svws-ui-menu-header" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Default" id="Default">
-			<div class="w-full max-w-[80px] mx-auto">
+			<div class="w-full max-w-20 mx-auto">
 				<svws-ui-menu-header :user="state.user"
 					:schule="state.schule"
 					:schema="state.schema"
@@ -9,7 +9,7 @@
 			</div>
 		</Variant>
 		<Variant title="Mit Hinweis" id="Hint">
-			<div class="w-full max-w-[80px] mx-auto">
+			<div class="w-full max-w-20 mx-auto">
 				<svws-ui-menu-header :user="state.user"
 					:schule="state.schule"
 					:schema="state.schema"
@@ -21,9 +21,10 @@
 </template>
 
 <script setup lang="ts">
-	import { reactive } from "vue";
-	import { logEvent } from '../../stories/helper';
-	import type { HintType } from "./SvwsUiMenuHeader.vue";
+
+	import { logEvent } from '@ui/stories/helper';
+	import { reactive } from 'vue';
+	import type { HintType } from './SvwsUiMenuHeader.vue';
 
 	type HeaderType = {
 		collapsed?: boolean;

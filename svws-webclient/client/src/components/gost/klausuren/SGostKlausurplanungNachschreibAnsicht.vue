@@ -42,9 +42,10 @@
 
 <script setup lang="ts">
 	import { computed, onMounted, ref } from 'vue';
-	import { useGostKlausurplanungState, type DataTableColumn, type SortByAndOrder } from '@ui';
-	import type { GostSchuelerklausurtermin } from '@core';
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+	import type { SortByAndOrder, DataTableColumn } from '@ui/types';
 
 	const state = useGostKlausurplanungState();
 	const presenter = useKlausurplanungPresenter(state);

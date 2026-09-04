@@ -1,4 +1,9 @@
-import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@core";
+import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
+import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
+import type { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
+import type { List } from "@core/java/util/List";
 
 export interface BenutzergruppeProps {
 	auswahl: () => BenutzergruppeListeEintrag | undefined;

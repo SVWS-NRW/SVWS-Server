@@ -72,10 +72,14 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerBetrieb } from "@core";
-	import { AdressenUtils, Schulform, BenutzerKompetenz } from "@core";
-	import type { SchuelerBetriebeManager } from "@ui";
-	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 	import { computed } from "vue";
 	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 

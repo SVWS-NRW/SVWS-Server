@@ -36,9 +36,10 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { SchulenAppProps } from "./SchulenAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<SchulenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

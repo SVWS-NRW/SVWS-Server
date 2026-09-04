@@ -41,8 +41,8 @@
 
 	import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 	const props = defineProps<EmailServerProps>();
 	const benutzerState = useBenutzerState();

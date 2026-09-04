@@ -1,4 +1,6 @@
-import type { StundenplanKonfiguration, StundenplanManager, StundenplanPausenzeit } from "@core";
+import type { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface PausenzeitenAuswahlProps {

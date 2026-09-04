@@ -67,9 +67,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurtermin, GostKlausurraum } from '@core';
-	import { DateUtils } from '@core';
-	import { useGostKlausurplanungState } from '@ui';
+	import type { GostKlausurraum } from '@core/core/data/gost/klausuren/GostKlausurraum';
+	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import { DateUtils } from '@core/core/utils/DateUtils';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;

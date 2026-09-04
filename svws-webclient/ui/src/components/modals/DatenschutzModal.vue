@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 
+	import { useAuskunftState } from '@ui/states/AuskunftState';
 	import { ref } from 'vue';
-	import { useAuskunftState } from '../../states/AuskunftState';
 
 	const auskunftState = useAuskunftState();
 

@@ -32,11 +32,12 @@
 
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
 	import type { SchwerpunkteDatenProps } from './SchwerpunkteDatenProps';
 	import { SchwerpunkteModelProxy } from "~/components/schule/kataloge/schwerpunkte/modelproxy/SchwerpunkteModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<SchwerpunkteDatenProps>();
 	const benutzerState = useBenutzerState();

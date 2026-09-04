@@ -76,11 +76,19 @@
 <script setup lang="ts">
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
-	import { type DataTableColumn, ViewType, SelectManager, useAbschnittState, useBenutzerState } from "@ui";
-	import type { KlassenListeEintrag, List } from "@core";
-	import { ValidatorFehlerart, Abteilung, Arrays, BenutzerKompetenz } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
+	import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import { Abteilung } from "@core/core/data/schule/Abteilung";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { Arrays } from "@core/java/util/Arrays";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<AbteilungenNeuProps>();
 	const benutzerState = useBenutzerState();

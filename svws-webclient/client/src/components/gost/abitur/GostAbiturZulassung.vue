@@ -55,10 +55,14 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { List, GostBelegpruefungErgebnisFehler, JavaMap } from "@core";
-	import { ArrayList, HashMap, GostBelegungsfehlerArt } from "@core";
 
 	import type { GostAbiturZulassungProps } from "./GostAbiturZulassungProps";
+	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { HashMap } from '@core/java/util/HashMap';
+	import type { JavaMap } from '@core/java/util/JavaMap';
+	import type { List } from '@core/java/util/List';
 
 	const props = defineProps<GostAbiturZulassungProps>();
 

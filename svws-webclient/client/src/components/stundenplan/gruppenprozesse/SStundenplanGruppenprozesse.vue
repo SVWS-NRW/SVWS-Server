@@ -27,8 +27,9 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanGruppenprozesseProps } from "./SStundenplanGruppenprozesseProps";
-	import { BenutzerKompetenz, type List } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<StundenplanGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
@@ -50,7 +51,7 @@
 			return;
 		}
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
+		oldAction.value.open = currentAction.value !== "";
 		if (open === true) {
 			currentAction.value = newAction;
 		} else {

@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFaecher";
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");

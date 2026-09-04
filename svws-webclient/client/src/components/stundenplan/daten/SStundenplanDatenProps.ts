@@ -1,5 +1,12 @@
-import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanKonfiguration, StundenplanPausenzeit, StundenplanRaum } from "@core";
-import type { StundenplanListeManager } from "@ui";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { Raum } from "@core/core/data/schule/Raum";
+import type { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+import type { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
+import type { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+import type { List } from "@core/java/util/List";
+import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanDatenProps {

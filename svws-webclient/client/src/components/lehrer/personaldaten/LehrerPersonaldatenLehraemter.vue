@@ -140,16 +140,33 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { List, LehrerLehramtKatalogEintrag, JavaSet, LehrerLehrbefaehigungKatalogEintrag, LehrerFachrichtungKatalogEintrag,
-		LehrerFachrichtungEintrag } from "@core";
-	import { Arrays, ArrayList, HashSet, LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag,
-		LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
-	import type { LehrerListeManager, TableActions } from "@ui";
-	import { CoreTypeSelectManager, GridManager, useAbschnittState, ValidatorInputGroupRequired, ValidatorInputGroupRequiredModus } from "@ui";
 	import { LehrerLehramtEintragModelProxy } from "./modelproxy/LehrerLehramtEintragModelProxy";
 	import type { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
 	import { LehrerLehrbefaehigungEintragModelProxy } from "./modelproxy/LehrerLehrbefaehigungEintragModelProxy";
 	import { LehrerFachrichtungEintragModelProxy } from "./modelproxy/LehrerFachrichtungEintragModelProxy";
+	import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
+	import type { LehrerFachrichtungKatalogEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungKatalogEintrag";
+	import { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
+	import type { LehrerLehramtKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehramtKatalogEintrag";
+	import { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
+	import type { LehrerLehrbefaehigungKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag";
+	import { LehrerFachrichtung } from "@core/asd/types/lehrer/LehrerFachrichtung";
+	import { LehrerFachrichtungAnerkennung } from "@core/asd/types/lehrer/LehrerFachrichtungAnerkennung";
+	import { LehrerLehramt } from "@core/asd/types/lehrer/LehrerLehramt";
+	import { LehrerLehramtAnerkennung } from "@core/asd/types/lehrer/LehrerLehramtAnerkennung";
+	import { LehrerLehrbefaehigung } from "@core/asd/types/lehrer/LehrerLehrbefaehigung";
+	import { LehrerLehrbefaehigungAnerkennung } from "@core/asd/types/lehrer/LehrerLehrbefaehigungAnerkennung";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+	import { Arrays } from "@core/java/util/Arrays";
+	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import { ValidatorInputGroupRequired, ValidatorInputGroupRequiredModus } from "@ui/validation/common/ValidatorInputGroupRequired";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

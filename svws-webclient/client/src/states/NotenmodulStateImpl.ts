@@ -1,8 +1,25 @@
-import { BenutzerKompetenz, DeveloperNotificationException, ENMv2Daten, type ENMv2Klasse, BenutzerTyp, OpenApiError, type List, ArrayList, type ENMv2Leistung, type ENMv2Teilleistung, type ENMv2LeistungBemerkungen, type ENMv2Lernabschnitt, type ENMv2SchuelerAnkreuzkompetenz } from "@core";
-import { EnmManager, EnmSpaltenManager, EnmSperrManager, StateManager, type EnmLerngruppenAuswahlEintrag, type NotenmodulState } from "@ui";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
+import { OpenApiError } from "@core/api/OpenApiError";
+import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
+import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
+import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import type { EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
+import { EnmManager } from "@ui/components/enm/EnmManager";
+import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import type { NotenmodulState } from "@ui/states/NotenmodulState";
+import { StateManager } from "@ui/ui/StateManager";
 
 interface NotenmodulReactiveState {
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden

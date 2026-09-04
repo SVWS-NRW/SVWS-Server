@@ -17,11 +17,11 @@
 
 <script setup lang="ts">
 
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import { computed, onBeforeMount, ref } from 'vue';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
-	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmKlassenleitungAuswahlProps } from './EnmKlassenleitungAuswahlProps';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 
 	const props = defineProps<EnmKlassenleitungAuswahlProps>();
 

@@ -22,8 +22,9 @@
 
 <script setup lang="ts">
 
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import type { NotenmodulLeistungenAppProps } from "./NotenmodulLeistungenAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<NotenmodulLeistungenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

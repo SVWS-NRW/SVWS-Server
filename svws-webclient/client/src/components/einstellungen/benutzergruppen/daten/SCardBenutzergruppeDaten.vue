@@ -7,8 +7,9 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppeListeEintrag, BenutzergruppenManager } from "@core";
-	import { useBenutzerState } from "@ui";
+	import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
+	import type { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { computed } from "vue";
 
 	const props = defineProps<{

@@ -1,9 +1,9 @@
-import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
-import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
-import type { Floskelgruppe } from "../../../../../core/src/core/data/schule/Floskelgruppe";
-import type { List } from "../../../../../core/src/java/util/List";
-import { JavaLong } from "../../../../../core/src/java/lang/JavaLong";
-import { HashSet } from "../../../../../core/src/java/util/HashSet";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { HashSet } from "@core/java/util/HashSet";
+import type { List } from "@core/java/util/List";
 import { AuswahlManager } from "../AuswahlManager";
 
 export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgruppe, Floskelgruppe> {

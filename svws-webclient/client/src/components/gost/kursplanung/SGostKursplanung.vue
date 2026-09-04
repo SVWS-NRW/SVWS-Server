@@ -129,8 +129,21 @@
 	import { computed, ref } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, HashSet, ListUtils, ReportingFilterDefinitionGruppeFactory, ReportingReportvorlage, SetUtils, type ReportingParameter } from "@core";
-	import { useAbschnittState, useBenutzerState, useRegionSwitch, useReportingState, useServerState } from "@ui";
+	import type { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import { ReportingFilterDefinitionGruppeFactory } from "@core/core/utils/reporting/ReportingFilterDefinitionGruppeFactory";
+	import { SetUtils } from "@core/core/utils/SetUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { HashSet } from "@core/java/util/HashSet";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useReportingState } from "@ui/states/ReportingState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<GostKursplanungProps>();
 	const benutzerState = useBenutzerState();

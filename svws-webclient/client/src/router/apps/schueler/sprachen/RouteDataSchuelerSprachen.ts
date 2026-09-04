@@ -1,8 +1,13 @@
-import type { List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung } from "@core";
-import { ArrayList, DeveloperNotificationException, JavaInteger } from "@core";
-
+import type { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
+import type { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
 
 
 interface RouteStateSchuelerSprachen extends RouteStateInterface {

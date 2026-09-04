@@ -1,5 +1,6 @@
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
+import type { TabManager } from "@ui/ui/nav/TabManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { TabManager, TelefonartenListeManager } from "@ui";
 
 export interface TelefonartenAppProps extends RouteAuswahlProps<TelefonartenListeManager> {
 	tabManager: () => TabManager;

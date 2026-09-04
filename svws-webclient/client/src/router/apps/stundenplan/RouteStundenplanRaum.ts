@@ -1,13 +1,13 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
 import type { StundenplanRaumProps } from "~/components/stundenplan/raum/SStundenplanRaumProps";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "./RouteStundenplan";
 import { api } from "~/router/Api";
-import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ConfigElement } from "@ui/utils/Config";
 
 const SStundenplanRaum = () => import("~/components/stundenplan/raum/SStundenplanRaum.vue");
 

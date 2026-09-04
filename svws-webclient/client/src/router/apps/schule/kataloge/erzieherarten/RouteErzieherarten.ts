@@ -1,6 +1,4 @@
 import type { RouteParams } from "vue-router";
-import type { ErzieherartListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
@@ -9,6 +7,10 @@ import { RouteDataErzieherarten } from "~/router/apps/schule/kataloge/erzieherar
 import { routeErzieherartenDaten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenDaten";
 import { routeErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenNeu";
 import { routeErzieherartenGruppenprozesse } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenGruppenprozesse";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
 
 const ErzieherartenAuswahl = () => import("~/components/schule/kataloge/erzieherarten/ErzieherartenAuswahl.vue");
 const ErzieherartenApp = () => import("~/components/schule/kataloge/erzieherarten/ErzieherartenApp.vue");
@@ -16,7 +18,7 @@ const ErzieherartenApp = () => import("~/components/schule/kataloge/erzieherarte
 export class RouteErzieherarten extends RouteAuswahlNode<ErzieherartListeManager, RouteDataErzieherarten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.erzieherarten", "schule/erzieherarten/:id(\\d+)?", ErzieherartenApp, ErzieherartenAuswahl, new RouteDataErzieherarten());
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.erzieherarten", String.raw`schule/erzieherarten/:id(\d+)?`, ErzieherartenApp, ErzieherartenAuswahl, new RouteDataErzieherarten());
 		super.mode = ServerMode.STABLE;
 		super.text = "Erzieherarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;

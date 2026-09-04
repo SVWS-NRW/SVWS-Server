@@ -1,11 +1,11 @@
 import { computed, nextTick, ref, watch, type ComputedRef, type Ref } from 'vue';
 import type { UiSelectDropdown, UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
-import type { List } from "../../../../../../core/src/java/util/List";
 import { useElementBounding, useWindowSize } from "@vueuse/core";
 import { useUiSelectFocusHandler } from "./useUiSelectFocusHandler";
 import { useUiSelectInputHandler } from "./useUiSelectInputHandler";
 import { useUiSelectStyles } from "./useUiSelectStyles";
-import type { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import type { ArrayList } from '@core/java/util/ArrayList';
+import type { List } from '@core/java/util/List';
 
 export function useUiSelectUtils<T>(
 	state: ComputedRef<UiSelectState<T>>,

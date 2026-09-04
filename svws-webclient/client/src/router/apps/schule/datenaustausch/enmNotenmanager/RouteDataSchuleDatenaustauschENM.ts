@@ -1,5 +1,8 @@
-import type { ApiFile, List, LehrerListeEintrag } from "@core";
-import { ENMv2Daten, ArrayList } from "@core";
+import type { ApiFile } from "@core/api/BaseApi";
+import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 

@@ -1,5 +1,6 @@
-import type { SchuelerKAoADaten, SchuelerListeEintrag } from "@core";
-import type { SchuelerKAoAManager } from "@ui";
+import type { SchuelerKAoADaten } from "@core/core/data/schueler/SchuelerKAoADaten";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import type { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
 
 export interface SchuelerKAoAProps {
 	manager: () => SchuelerKAoAManager;

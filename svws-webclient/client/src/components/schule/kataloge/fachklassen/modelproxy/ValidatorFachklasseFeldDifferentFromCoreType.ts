@@ -1,5 +1,7 @@
-import type { FachklasseKatalogEintrag } from "@core";
-import { BasicValidator, Fachklasse, ValidatorFehlerart } from "@core";
+import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
+import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 export class ValidatorFachklasseFeldDifferentFromCoreType extends BasicValidator {
 

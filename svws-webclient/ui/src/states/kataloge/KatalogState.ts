@@ -1,4 +1,4 @@
-import type { List } from "../../../../core/src/java/util/List";
+import type { List } from "@core/java/util/List";
 
 /**
  * Die Schnittstelle für den Aufbau eines Kataloge States

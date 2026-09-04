@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { BetriebeListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
 
 export interface BetriebeGruppenprozesseProps {
 	manager: () => BetriebeListeManager;

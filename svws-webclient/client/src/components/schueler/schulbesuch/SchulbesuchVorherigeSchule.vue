@@ -95,12 +95,27 @@
 <script setup lang="ts">
 
 
+	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+	import { HerkunftBildungsgang } from "@core/asd/types/schueler/HerkunftBildungsgang";
+	import { Herkunftsarten } from "@core/asd/types/schueler/Herkunftsarten";
+	import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
+	import { HerkunftSonstige } from "@core/asd/types/schueler/HerkunftSonstige";
+	import { Hochschulabschluss } from "@core/asd/types/schueler/Hochschulabschluss";
+	import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
+	import { SchulabschlussAllgemeinbildend } from "@core/asd/types/schule/SchulabschlussAllgemeinbildend";
+	import { SchulabschlussBerufsbildend } from "@core/asd/types/schule/SchulabschlussBerufsbildend";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 	import { computed, ref, watch } from "vue";
-	import { ArrayList, BenutzerKompetenz, Fachklasse, HerkunftBildungsgang, Herkunftsarten, HerkunftSonstige, Jahrgaenge, SchulabschlussAllgemeinbildend,
-		SchulabschlussBerufsbildend, Schulform, HerkunftSchulform, Hochschulabschluss } from "@core";
-	import type { List, SchulEintrag, KatalogEntlassgrund } from "@core";
-	import type { SchuelerSchulbesuchManager } from "@ui";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import type { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 
 	const props = defineProps<{

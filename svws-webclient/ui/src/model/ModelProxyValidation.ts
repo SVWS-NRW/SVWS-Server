@@ -1,8 +1,8 @@
+import type { BasicValidator } from "@core/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { shallowRef } from "vue";
-import type { List } from "../../../core/src/java/util/List";
-import type { ValidatorFehler } from "../../../core/src/asd/validate/ValidatorFehler";
-import { ArrayList } from "../../../core/src/java/util/ArrayList";
-import type { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 
 /**
  * Eine interne Klasse für den Fehlerzustand der Validierung

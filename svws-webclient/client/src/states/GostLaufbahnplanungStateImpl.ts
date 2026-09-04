@@ -1,16 +1,35 @@
-import type { Abiturdaten, ApiFile, GostBeratungslehrer, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungExportV2,
-	GostSchuelerFachwahl, JavaMap, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, ArrayList, BenutzerTyp, DeveloperNotificationException, GostBelegpruefungErgebnis,
-	GostBelegpruefungsArt, GostFaecherManager, GostHalbjahr, GostJahrgang, GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten, GostSchuelerGKLWahl, HashMap, HashMap2D } from "@core";
-import type { GostLaufbahnplanungState, GostBelegpruefungsModus } from "@ui";
-import { StateManager } from "@ui";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "./ConfigStateImpl";
-import type { GostKlausurvorgabeEintrag } from "../../../ui/src/states/GostLaufbahnplanungState";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
+import type { ApiFile } from "@core/api/BaseApi";
+import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import type { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
+import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
+import type { GostBlockungListeneintrag } from "@core/core/data/gost/GostBlockungListeneintrag";
+import type { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebnis";
+import { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
+import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
+import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import type { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import type { GostKlausurvorgabeEintrag, GostLaufbahnplanungState, GostBelegpruefungsModus } from "@ui/states/GostLaufbahnplanungState";
+import { StateManager } from "@ui/ui/StateManager";
 
 
 interface GostLaufbahnplanungReactiveState {

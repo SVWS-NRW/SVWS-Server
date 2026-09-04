@@ -67,11 +67,12 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Kindergarten } from "@core";
 	import { computed, ref, watch } from "vue";
 	import type { KindergaertenNeuProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenNeuProps";
 	import { KindergaertenModelProxy } from "./modelproxy/KindergaertenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { Kindergarten } from "@core/core/data/schule/Kindergarten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<KindergaertenNeuProps>();
 	const benutzerState = useBenutzerState();

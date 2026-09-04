@@ -1,4 +1,4 @@
-import type { ApiStatus } from "~/components/ApiStatus";
+import type { ApiStatus } from "@admin/components/ApiStatus";
 import type { SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";

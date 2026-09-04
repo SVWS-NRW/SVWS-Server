@@ -1,13 +1,11 @@
 import type { RouteLocationNormalized } from "vue-router";
-
-import { BenutzerKompetenz, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { type RouteSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
-
 import type { SchuleDatenaustauschKurs42BlockungProps } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42BlockungProps";
 import { routeSchuleDatenaustauschKurs42 } from "./RouteSchuleDatenaustauschKurs42";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SSchuleDatenaustauschKurs42Blockung = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Blockung.vue");
 

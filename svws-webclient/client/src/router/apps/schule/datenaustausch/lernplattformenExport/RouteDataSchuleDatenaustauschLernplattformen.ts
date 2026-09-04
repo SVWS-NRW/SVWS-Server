@@ -1,7 +1,10 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { type Lernplattform, type List, ArrayList, LernplattformV1Export } from "@core";
 import { api } from "~/router/Api";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { LernplattformV1Export } from "@core/core/data/lernplattform/v1/LernplattformV1Export";
+import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 interface RouteStateDatenaustauschLernplattformen extends RouteStateInterface {

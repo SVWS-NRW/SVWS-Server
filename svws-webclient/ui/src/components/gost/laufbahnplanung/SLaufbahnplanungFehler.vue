@@ -31,12 +31,12 @@
 
 <script setup lang="ts">
 
+	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import type { GostBelegpruefungsArt } from '@core/core/abschluss/gost/GostBelegpruefungsArt';
+	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
 	import { computed } from 'vue';
-	import type { List } from '../../../../../core/src/java/util/List';
-	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
-	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
-	import type { GostBelegpruefungsArt } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungsArt';
 
 	const props = withDefaults(defineProps<{
 		pruefungsArt: () => GostBelegpruefungsArt;

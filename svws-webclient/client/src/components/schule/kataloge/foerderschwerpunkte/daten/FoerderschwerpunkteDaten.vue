@@ -42,11 +42,14 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Foerderschwerpunkt } from "@core";
 	import type { FoerderschwerpunkteDatenProps } from "~/components/schule/kataloge/foerderschwerpunkte/daten/FoerderschwerpunkteDatenProps";
-	import { CoreTypeSelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
 	import { computed } from "vue";
+	import { Foerderschwerpunkt } from "@core/asd/types/schule/Foerderschwerpunkt";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 	const props = defineProps<FoerderschwerpunkteDatenProps>();
 	const benutzerState = useBenutzerState();

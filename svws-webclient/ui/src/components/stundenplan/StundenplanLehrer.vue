@@ -15,13 +15,13 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import type { List } from "@core/java/util/List";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 	import type { StundenplanLehrerProps } from "./StundenplanLehrerProps";
-	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import type { List } from "../../../../core/src/java/util/List";
-	import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
-	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
 
 	const props = withDefaults(defineProps<StundenplanLehrerProps>(), {
 		mode: 'schueler',

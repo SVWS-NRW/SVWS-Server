@@ -1,8 +1,39 @@
-import { JavaObject, HashMap2D, HashMap, KlassenUtils, SchuelerUtils, ArrayList, JavaString, DeveloperNotificationException, SchuelerStatus, Schulgliederung,
-	IllegalArgumentException, GostAbiturjahrUtils, JavaInteger, LehrerUtils, JavaLong, Class, KursUtils, Arrays } from '@core';
-import type { KlassenDaten, SchuelerListeEintrag, SchuelerStatusKatalogEintrag, Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag,
-	Schuljahresabschnitt, SchuelerListe, SchulgliederungKatalogEintrag, List, SchuelerStammdaten, Comparator, GostJahrgang, JavaMap } from '@core';
-import { AuswahlManager, ListeMitAuswahl, JahrgaengeListeManager } from '@ui';
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { GostAbiturjahrUtils } from "@core/core/utils/gost/GostAbiturjahrUtils";
+import { KlassenUtils } from "@core/core/utils/klassen/KlassenUtils";
+import { KursUtils } from "@core/core/utils/kurse/KursUtils";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { SchuelerUtils } from "@core/core/utils/schueler/SchuelerUtils";
+import { Class } from "@core/java/lang/Class";
+import { IllegalArgumentException } from "@core/java/lang/IllegalArgumentException";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaObject } from "@core/java/lang/JavaObject";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { Comparator } from "@core/java/util/Comparator";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

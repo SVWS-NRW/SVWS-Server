@@ -1,8 +1,5 @@
-import type { List, SimpleOperationResponse, Einwilligungsart } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
 import { api } from "~/router/Api";
 import { routeEinwilligungsartenDaten } from "./RouteEinwilligungsartenDaten";
-import { ViewType, EinwilligungsartenListeManager } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeEinwilligungsartenGruppenprozesse } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsartenGruppenprozesse";
@@ -11,6 +8,13 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/EinwilligungsartenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

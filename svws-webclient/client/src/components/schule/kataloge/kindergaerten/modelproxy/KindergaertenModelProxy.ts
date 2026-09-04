@@ -1,16 +1,13 @@
-import {
-	ModelProxy,
-	StringPattern,
-	ValidatorInputRequired,
-	ValidatorNumberRange,
-	ValidatorStringLength,
-	ValidatorStringMatchesPattern,
-} from "@ui";
-import type { Kindergarten } from "@core";
-import { AdressenUtils } from "@core";
-import { ValidatorKindergaertenBezeichnung } from "~/components/schule/kataloge/kindergaerten/modelproxy/validation/ValidatorKindergaertenBezeichnung";
-import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
+import { ValidatorKindergaertenBezeichnung } from "./validation/ValidatorKindergaertenBezeichnung";
 
 /**
  * ModelProxy für Kindergärten.

@@ -22,9 +22,11 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungRegel } from '@core/core/data/gost/GostBlockungRegel';
+	import { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
+	import { GostKursblockungRegelTyp } from '@core/core/types/kursblockung/GostKursblockungRegelTyp';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
 	import { shallowRef } from 'vue';
-	import type { GostBlockungsdatenManager, GostBlockungRegel } from '@core';
-	import { GostBlockungRegelUpdate, GostKursblockungRegelTyp } from '@core';
 
 	const props = defineProps<{
 		manager: () => GostBlockungsdatenManager;

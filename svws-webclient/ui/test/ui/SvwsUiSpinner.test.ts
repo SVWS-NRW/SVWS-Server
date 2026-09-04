@@ -1,7 +1,7 @@
 import { beforeEach, expect, test, afterEach } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import SvwsUiSpinner from "../../src/ui/SvwsUiSpinner.vue";
+import SvwsUiSpinner from "@ui/ui/SvwsUiSpinner.vue";
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiSpinner>>;
 

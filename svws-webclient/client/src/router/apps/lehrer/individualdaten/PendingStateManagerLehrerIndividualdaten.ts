@@ -1,7 +1,6 @@
-import type { AuswahlManager } from "@ui";
-import { PendingStateManager } from "@ui";
-import type { LehrerStammdaten } from "@core";
-
+import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
+import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
 /**
  * Die Klasse `PendingStateManagerLehrerIndividualdaten` erweitert den `PendingStateManager`

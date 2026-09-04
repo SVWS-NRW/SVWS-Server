@@ -42,7 +42,8 @@
 
 	import { computed } from "vue";
 	import type { KurseAppProps } from "./SKurseAppProps";
-	import { useRegionSwitch, ViewType } from "@ui";
+	import { ViewType } from "@ui/ui/nav/ViewType";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<KurseAppProps>();
 

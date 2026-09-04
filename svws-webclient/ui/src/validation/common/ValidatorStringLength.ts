@@ -1,6 +1,6 @@
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
-import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 
 
 /**

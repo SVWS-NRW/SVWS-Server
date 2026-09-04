@@ -39,8 +39,9 @@
 </template>
 
 <script setup lang="ts">
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+	import { ViewType } from '@ui/ui/nav/ViewType';
 	import { computed } from 'vue';
-	import { useRegionSwitch, ViewType } from '@ui';
 	import type { FachklassenAppProps } from "~/components/schule/kataloge/fachklassen/FachklassenAppProps";
 
 	const props = defineProps<FachklassenAppProps>();

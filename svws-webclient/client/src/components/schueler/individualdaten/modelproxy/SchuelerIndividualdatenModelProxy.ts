@@ -1,14 +1,31 @@
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
+import { Geschlecht } from "@core/asd/types/Geschlecht";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+import { ValidatorSsdSchuelerStammdatenGeburtsdatum } from "@core/asd/validate/schueler/ValidatorSsdSchuelerStammdatenGeburtsdatum";
+import { ValidatorSsgSchuelerStammdatenGeschlecht } from "@core/asd/validate/schueler/ValidatorSsgSchuelerStammdatenGeschlecht";
+import { ValidatorSsnSchuelerStammdatenNachname } from "@core/asd/validate/schueler/ValidatorSsnSchuelerStammdatenNachname";
+import { ValidatorSsvSchuelerStammdatenVorname } from "@core/asd/validate/schueler/ValidatorSsvSchuelerStammdatenVorname";
+import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { OrteState } from "@ui/states/kataloge/OrteState";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerGeburtsdatum";
 import { computed } from "vue";
-import type { OrteState } from "@ui";
-import {
-	ValidatorStrasse, ModelProxy, StringPattern, ValidatorInputRequired, ValidatorNumberRange,
-	ValidatorSchuelerGeburtsdatum, ValidatorStringLength, ValidatorStringMatchesPattern,
-} from "@ui";
-import type { Fahrschuelerart, Haltestelle, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerStammdaten,
-	SchuelerStatusKatalogEintrag, ValidatorKontext, VerkehrsspracheKatalogEintrag } from "@core";
-import { AdressenUtils,	Geschlecht,	Nationalitaeten,	SchuelerStatus,	Verkehrssprache,
-	ValidatorSsdSchuelerStammdatenGeburtsdatum,	ValidatorSsgSchuelerStammdatenGeschlecht,
-	ValidatorSsnSchuelerStammdatenNachname,	ValidatorSsvSchuelerStammdatenVorname } from "@core";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {

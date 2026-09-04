@@ -21,9 +21,10 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanUnterricht } from '@core/core/data/stundenplan/StundenplanUnterricht';
+	import { Wochentag } from '@core/core/types/Wochentag';
+	import type { StundenplanManager } from '@core/core/utils/stundenplan/StundenplanManager';
 	import { ref, shallowRef } from 'vue';
-	import type { StundenplanManager, StundenplanUnterricht } from '@core';
-	import { Wochentag } from '@core';
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;

@@ -31,10 +31,10 @@
 <script setup lang="ts">
 
 	import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDatenProps";
-	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 	import { BeschaeftigungsartModelProxy } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/BeschaeftigungsartModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<BeschaeftigungsartenDatenProps>();
 	const benutzerState = useBenutzerState();

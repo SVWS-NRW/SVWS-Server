@@ -11,9 +11,9 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { computed } from "vue";
-	import type { GostJahrgangsdaten } from "@core";
-	import { GostHalbjahr } from "@core";
 
 	const props = defineProps<{
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr: number) => Promise<boolean>;

@@ -1,5 +1,4 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -8,6 +7,9 @@ import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schue
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausuren.vue");
 

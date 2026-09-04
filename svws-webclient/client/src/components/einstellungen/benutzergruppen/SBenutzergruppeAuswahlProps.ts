@@ -1,4 +1,4 @@
-import type { BenutzergruppeListeEintrag } from "@core";
+import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
 
 export interface BenutzergruppeAuswahlProps {
 	auswahl: () => BenutzergruppeListeEintrag | undefined;

@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
+	import { Lernplattform } from "@core/core/data/schule/Lernplattform";
 	import { computed, ref, watch } from "vue";
-	import { Lernplattform } from "@core";
 	import type { LernplattformenNeuProps } from "~/components/schule/kataloge/lernplattformen/LernplattformenNeuProps";
 	import { LernplattformenModelProxy } from "~/components/schule/kataloge/lernplattformen/modelproxy/LernplattformenModelProxy";
 

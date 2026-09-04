@@ -22,11 +22,15 @@
 
 <script setup lang="ts">
 
-	import { CoreTypeSelectManager, SelectManager, useAbschnittState } from "@ui";
-	import type { SchuelerSchnelleingabeManager } from "@ui";
+	import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+	import type { KindergartenbesuchKatalogEintrag } from "@core/asd/data/schule/KindergartenbesuchKatalogEintrag";
+	import { Kindergartenbesuch } from "@core/asd/types/schule/Kindergartenbesuch";
+	import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
 	import { computed, ref } from "vue";
-	import type { Kindergarten, KindergartenbesuchKatalogEintrag, SchuelerSchulbesuchsdaten } from "@core";
-	import { Kindergartenbesuch } from "@core";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

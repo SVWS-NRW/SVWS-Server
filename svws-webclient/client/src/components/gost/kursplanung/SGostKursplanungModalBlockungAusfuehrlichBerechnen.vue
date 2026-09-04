@@ -108,9 +108,12 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from 'vue';
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungsergebnis, List } from "@core";
-	import { ArrayList } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
+	import type { GostBlockungsergebnis } from '@core/core/data/gost/GostBlockungsergebnis';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

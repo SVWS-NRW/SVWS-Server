@@ -38,9 +38,10 @@
 <script setup lang="ts">
 	import type { OrtsteileDatenProps } from "~/components/schule/kataloge/ortsteile/daten/OrtsteileDatenProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
-	import { SelectManager, useBenutzerState } from "@ui";
 	import { OrtsteilModelProxy } from "~/components/schule/kataloge/ortsteile/modelproxy/OrtsteilModelProxy";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<OrtsteileDatenProps>();
 	const benutzerState = useBenutzerState();

@@ -54,10 +54,18 @@
 </template>
 <script setup lang="ts">
 	import { computed, watch } from "vue";
-	import type { SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
-	import { KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
-	import { CoreTypeSelectManager, type SchuelerKAoAManager, SelectManager } from "@ui";
 	import type { SchuelerKaoaModelProxy } from "./modelproxy/SchuelerKaoaModelProxy";
+	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+	import { KAOAAnschlussoptionen } from "@core/asd/types/kaoa/KAOAAnschlussoptionen";
+	import { KAOABerufsfeld } from "@core/asd/types/kaoa/KAOABerufsfeld";
+	import { KAOAEbene4 } from "@core/asd/types/kaoa/KAOAEbene4";
+	import { KAOAKategorie } from "@core/asd/types/kaoa/KAOAKategorie";
+	import { KAOAMerkmal } from "@core/asd/types/kaoa/KAOAMerkmal";
+	import { KAOAZusatzmerkmal } from "@core/asd/types/kaoa/KAOAZusatzmerkmal";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import type { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
 
 	const props = defineProps<{
 		model: SchuelerKaoaModelProxy;

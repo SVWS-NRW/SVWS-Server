@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { StatistikAppProps } from "./StatistikAppProps";
-	import { useRegionSwitch } from "@ui";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

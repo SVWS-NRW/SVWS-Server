@@ -1,13 +1,14 @@
-import type { BenutzerKompetenzGruppe, List } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import { type RouteApp } from "~/router/apps/RouteApp";
 import { routeEinstellungenBenutzer } from "./benutzer/RouteEinstellungenBenutzer";
-import { AppMenuGroup } from "@ui";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
+import type { List } from "@core/java/util/List";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 
 export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 

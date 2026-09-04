@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 
+	import { Raum } from "@core/core/data/schule/Raum";
 	import { ref } from "vue";
-	import { Raum } from "@core";
 
 	const props = defineProps<{
 		addRaum: (raum: Raum) => Promise<void>;

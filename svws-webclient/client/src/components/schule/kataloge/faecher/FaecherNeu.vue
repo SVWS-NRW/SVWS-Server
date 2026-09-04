@@ -122,11 +122,19 @@
 
 <script setup lang="ts">
 
+	import { BilingualeSprache } from "@core/asd/types/fach/BilingualeSprache";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { FachDaten } from "@core/core/data/fach/FachDaten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, JavaInteger, Schulform } from "@core";
-	import type { FaecherNeuProps } from "./FaecherNeuProps";
-	import { CoreTypeSelectManager, SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { FachModelProxy } from "~/components/schule/kataloge/faecher/modelproxy/FachModelProxy";
+	import type { FaecherNeuProps } from "./FaecherNeuProps";
+	import { JavaInteger } from "@core/java/lang/JavaInteger";
 
 	const props = defineProps<FaecherNeuProps>();
 	const benutzerState = useBenutzerState();

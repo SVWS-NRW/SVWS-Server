@@ -37,8 +37,9 @@
 
 	import { ref, computed } from "vue";
 	import type { VermerkartenGruppenprozesseProps } from "./VermerkartenGruppenprozesseProps";
-	import { BenutzerKompetenz, type List } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<VermerkartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

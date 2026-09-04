@@ -1,5 +1,12 @@
-import type { JahrgangsDaten, KatalogEntlassgrund, Kindergarten, Merkmal, SchuelerSchulbesuchMerkmal, SchuelerSchulbesuchSchule,
-	SchuelerSchulbesuchsdaten, SchulEintrag, Schuljahresabschnitt } from '../../../../../core/src/';
+import type { SchuelerSchulbesuchMerkmal } from "@core/asd/data/schueler/SchuelerSchulbesuchMerkmal";
+import type { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
+import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import type { Merkmal } from "@core/core/data/schule/Merkmal";
 
 export interface SchulbesuchLookups {
 	schulenById: Map<number, SchulEintrag>;

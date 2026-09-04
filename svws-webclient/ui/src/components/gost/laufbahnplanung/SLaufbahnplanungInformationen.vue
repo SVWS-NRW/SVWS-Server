@@ -28,11 +28,11 @@
 
 <script setup lang="ts">
 
-	import { type ComputedRef, computed } from 'vue';
-	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
-	import type { List } from '../../../../../core/src/java/util/List';
-	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
+	import { computed } from 'vue';
+	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
 
 	const props = withDefaults(defineProps<{
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
@@ -41,7 +41,7 @@
 		scroll: false,
 	});
 
-	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
+	const belegungsHinweise = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
 		for (const fehler of props.fehlerliste()) {
 			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS) {

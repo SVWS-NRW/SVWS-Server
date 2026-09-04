@@ -51,9 +51,12 @@
 
 <script setup lang="ts">
 
-	import { DateUtils, type Stundenplan, type StundenplanListeEintrag, ValidatorFehlerart } from "@core";
-	import { StundenplanListeManager, useAbschnittState } from "@ui";
-
+	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+	import type { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 	import { ref, onMounted, watch, computed } from "vue";
 	import type { StundenplanNeuProps } from "~/components/stundenplan/SStundenplanNeuProps";
 

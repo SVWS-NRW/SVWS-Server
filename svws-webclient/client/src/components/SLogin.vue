@@ -51,12 +51,16 @@
 
 	import { nextTick, onMounted, ref, shallowRef } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
+	import { version } from "@version";
+	import { githash } from "@githash";
 	import type { LoginProps } from "./SLoginProps";
-	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, UserNotificationException } from "@core";
-	import { SvwsUiTextInput, useBenutzerState } from "@ui";
-	import { version } from '../../version';
-	import { githash } from '../../githash';
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 
 	const props = defineProps<LoginProps>();
 	const benutzerState = useBenutzerState();

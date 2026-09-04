@@ -31,10 +31,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurtermin, GostKursklausur } from "@core";
 	import { computed } from "vue";
-	import { useGostKlausurplanungState } from "@ui";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 
 	defineOptions({
 		inheritAttrs: false,

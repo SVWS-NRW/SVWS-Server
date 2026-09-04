@@ -1,7 +1,4 @@
-import type { FachDaten, JavaSet, List, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
-import { FaecherListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
@@ -10,6 +7,14 @@ import { routeFaecherDaten } from "./RouteFaecherDaten";
 import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { FaecherListeManager } from "@ui/ui/manager/kataloge/FaecherListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

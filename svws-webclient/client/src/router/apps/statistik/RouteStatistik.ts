@@ -1,5 +1,3 @@
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
-import { AppMenuGroup, type TabData } from "@ui";
 import { RouteDataStatistik } from "./RouteDataStatistik";
 import type { RouteParams, RouteLocationRaw, RouteLocationNormalized } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
@@ -10,6 +8,12 @@ import { routeStatistikLehrer } from "./RouteStatistikLehrer";
 import { RouteManager } from "~/router/RouteManager";
 import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+import type { TabData } from "@ui/ui/nav/TabData";
 
 const StatistikApp = () => import("~/components/statistik/StatistikApp.vue");
 

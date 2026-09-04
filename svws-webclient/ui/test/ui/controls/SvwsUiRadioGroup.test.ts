@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { test, expect } from 'vitest';
-import SvwsUiRadioGroup from '../../../src/ui/controls/SvwsUiRadioGroup.vue';
+import SvwsUiRadioGroup from '@ui/ui/controls/SvwsUiRadioGroup.vue';
 
 test('testet den prop_row_wert auf false (Standardwert)', () => {
 	const wrapper = mount(SvwsUiRadioGroup);

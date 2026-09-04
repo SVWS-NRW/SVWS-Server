@@ -41,16 +41,16 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
-	import { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
-	import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+	import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useConfigState } from "@ui/states/ConfigState";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { useReportingState } from "@ui/states/ReportingState";
+	import { useServerState } from "@ui/states/ServerState";
 	import { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
-	import { useServerState } from "../../../states/ServerState";
-	import { useReportingState } from "../../../states/ReportingState";
-	import { ReportingReportvorlage } from "../../../../../core/src/core/types/reporting/ReportingReportvorlage";
-	import { useAbschnittState } from "../../../states/AbschnittState";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
-	import { useBenutzerState } from "../../../states/BenutzerState";
-	import { useConfigState } from "../../../states/ConfigState";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 	const benutzerState = useBenutzerState();

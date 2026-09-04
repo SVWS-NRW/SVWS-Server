@@ -1,5 +1,8 @@
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { SchuelerFoerderempfehlung } from "@core";
+import type { SchuelerFoerderempfehlung } from "@core/asd/data/schueler/SchuelerFoerderempfehlung";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 type StringNullableProps<T> = {
 	[K in keyof T]: T[K] extends string | null ? K : never

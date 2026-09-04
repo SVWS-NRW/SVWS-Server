@@ -1,4 +1,9 @@
-import type { GostKlausurraum, GostKlausurtermin, GostKursklausur, List, StundenplanZeitraster, GostSchuelerklausurtermin } from "@core";
+import type { GostKlausurraum } from "@core/core/data/gost/klausuren/GostKlausurraum";
+import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { List } from "@core/java/util/List";
 
 export interface GostNachschreiberDragData {
 	type: "nachschreiber";

@@ -74,11 +74,14 @@
 
 <script setup lang="ts">
 	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
-	import type { Erzieherart, ErzieherStammdaten } from "@core";
-	import { Nationalitaeten } from "@core";
-	import { CoreTypeSelectManager, SelectManager, useOrteState } from "@ui";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { computed } from "vue";
+	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;

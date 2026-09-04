@@ -1,6 +1,6 @@
 import type { GridManager } from "./GridManager";
 import { GridInputInnerText } from "./GridInputInnerText";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
+import type { Collection } from "@core/java/util/Collection";
 
 /**
  * Ein Grid-Input für die Schnelleingabe von Zahlen mit einer festen Anzahl an Nachkommastellen.

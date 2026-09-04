@@ -1,22 +1,19 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { routeError } from "~/router/error/RouteError";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
-
-import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
-
-import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
-import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
-import { api } from "~/router/Api";
+import type { SchemaAppProps } from "@admin/components/schema/SSchemaAppProps";
+import type { SchemaAuswahlProps } from "@admin/components/schema/SSchemaAuswahlProps";
+import { api } from "@admin/router/Api";
+import { routeError } from "@admin/router/error/RouteError";
+import { RouteManager } from "@admin/router/RouteManager";
+import { RouteNode } from "@admin/router/RouteNode";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { TabManager } from "@ui/ui/nav/TabManager";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteApp } from "../RouteApp";
+import { RouteDataSchema } from "./RouteDataSchema";
+import { routeSchemaUebersicht } from "./uebersicht/RouteSchemaUebersicht";
 
-const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue");
-const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue");
+const SSchemaAuswahl = () => import("@admin/components/schema/SSchemaAuswahl.vue");
+const SSchemaApp = () => import("@admin/components/schema/SSchemaApp.vue");
 
 
 export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {

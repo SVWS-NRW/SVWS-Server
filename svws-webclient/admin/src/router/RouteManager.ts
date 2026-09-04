@@ -1,14 +1,12 @@
 import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
-import { AppContext } from "@ui/AppContext";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
-import { routeLogin } from "~/router/login/RouteLogin";
-import { routeError } from "~/router/error/RouteError";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { api } from "./Api";
+import { routeApp } from "./apps/RouteApp";
+import { routeError } from "./error/RouteError";
+import { routeLogin } from "./login/RouteLogin";
+import { RouteNode } from "./RouteNode";
 
 interface RouteStateError {
 	code: number | undefined;

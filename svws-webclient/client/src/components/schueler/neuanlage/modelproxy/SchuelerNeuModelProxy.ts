@@ -1,7 +1,16 @@
-import type { SchuelerNeuManager } from "@ui";
-import { ModelProxy, StringPattern, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern, ValidatorNumberRange } from "@ui";
-import type { EinschulungsartKatalogEintrag, JahrgangsDaten, KlassenListeEintrag, ReligionEintrag, SchuelerNeu, Schuljahresabschnitt } from "@core";
-import { Geschlecht } from "@core";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
+import type { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { Geschlecht } from "@core/asd/types/Geschlecht";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
 
 export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {

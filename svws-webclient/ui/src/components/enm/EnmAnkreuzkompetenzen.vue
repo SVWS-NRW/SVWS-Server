@@ -9,10 +9,10 @@
 <script setup lang="ts">
 
 	import { nextTick, ref, shallowRef, useTemplateRef } from 'vue';
-	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 	import type { EnmAnkreuzkompetenzenProps } from './EnmAnkreuzkompetenzenProps';
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 
 	type AuswahlZelle = { klasse: ENMv2Klasse | null, schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null };
 

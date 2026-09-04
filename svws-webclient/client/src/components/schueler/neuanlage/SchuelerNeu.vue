@@ -80,11 +80,17 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
-	import type { Schuljahresabschnitt } from "@core";
-	import { BenutzerKompetenz, Geschlecht, SchuelerNeu, SchuelerStatus, Schulform } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
 	import { SchuelerNeuModelProxy } from "~/components/schueler/neuanlage/modelproxy/SchuelerNeuModelProxy";
+	import { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
+	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<SchuelerNeuProps>();
 	const benutzerState = useBenutzerState();

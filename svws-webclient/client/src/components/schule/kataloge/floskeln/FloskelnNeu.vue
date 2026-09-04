@@ -56,11 +56,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { FachDaten, JahrgangsDaten } from "@core";
-	import { BenutzerKompetenz, Floskel } from "@core";
-	import { SelectManager, useBenutzerState } from "@ui";
 	import type { FloskelnNeuProps } from "./FloskelnNeuProps";
 	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { Floskel } from "@core/core/data/schule/Floskel";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<FloskelnNeuProps>();
 	const benutzerState = useBenutzerState();

@@ -10,8 +10,9 @@
 
 <script setup lang="ts">
 
+	import { DateUtils } from "@core/core/utils/DateUtils";
 	import type { PausenzeitenProps } from "./SPausenzeitenProps";
-	import { Wochentag, DateUtils } from "@core";
+	import { Wochentag } from "@core/core/types/Wochentag";
 
 	const props = defineProps<PausenzeitenProps>();
 

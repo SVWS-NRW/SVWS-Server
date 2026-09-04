@@ -2,7 +2,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { type ShallowRef, shallowRef, ref } from "vue";
 
-import { type RouteNode } from "~/router/RouteNode";
+import { type RouteNode } from "@wenom/router/RouteNode";
 
 
 /**

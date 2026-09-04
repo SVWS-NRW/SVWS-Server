@@ -1,4 +1,4 @@
-import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { EnmManager } from "./EnmManager";
 
 export interface EnmAnkreuzkompetenzenAuswahlProps {

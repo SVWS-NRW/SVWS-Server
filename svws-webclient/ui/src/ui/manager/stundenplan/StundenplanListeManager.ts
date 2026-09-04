@@ -1,16 +1,16 @@
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import type { StundenplanManager } from '../../../../../core/src/core/utils/stundenplan/StundenplanManager';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-import { DateUtils } from '../../../../../core/src/core/utils/DateUtils';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { StundenplanListeEintrag } from '../../../../../core/src/core/data/stundenplan/StundenplanListeEintrag';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { List } from '../../../../../core/src/java/util/List';
-import { Class } from '../../../../../core/src/java/lang/Class';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { AuswahlManager } from '../AuswahlManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { DateUtils } from "@core/core/utils/DateUtils";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { Class } from "@core/java/lang/Class";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "../AuswahlManager";
 
 export class StundenplanListeManager extends AuswahlManager<number, StundenplanListeEintrag, StundenplanManager> {
 

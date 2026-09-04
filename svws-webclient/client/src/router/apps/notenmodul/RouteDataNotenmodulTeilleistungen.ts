@@ -1,14 +1,17 @@
-import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistungenData";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
-import { UnsupportedOperationException } from "@core";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import type { ENMv2Lerngruppe } from "@core/core/data/enm/v2/ENMv2Lerngruppe";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { UnsupportedOperationException } from "@core/java/lang/UnsupportedOperationException";
+import type { List } from "@core/java/util/List";
+import { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 interface RouteStateNotenmodulTeilleistungen extends RouteStateAuswahlInterface<EnmLerngruppenAuswahlListeManager> {

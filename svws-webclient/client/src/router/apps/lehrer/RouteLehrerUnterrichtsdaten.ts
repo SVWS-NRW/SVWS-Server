@@ -1,11 +1,10 @@
 import type { RouteLocationNormalized } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-
 import type { LehrerUnterrichtsdatenProps } from "~/components/lehrer/unterrichtsdaten/LehrerUnterrichtsdatenProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const LehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdaten/LehrerUnterrichtsdaten.vue");
 

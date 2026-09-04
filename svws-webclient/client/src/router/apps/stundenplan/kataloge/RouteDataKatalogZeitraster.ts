@@ -1,9 +1,14 @@
-import type { List, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
-import { ArrayList, DeveloperNotificationException, Stundenplan, StundenplanManager } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeStundenplan } from "../RouteStundenplan";
+import { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 interface RouteStateKatalogZeitraster extends RouteStateInterface {
 	listKatalogeintraege: List<StundenplanZeitraster>;

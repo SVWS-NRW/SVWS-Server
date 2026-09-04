@@ -82,19 +82,19 @@
 
 <script setup lang="ts">
 
+	import { PairNN } from '@core/asd/adt/PairNN';
+	import type { ENMv2Floskel } from '@core/core/data/enm/v2/ENMv2Floskel';
+	import type { ENMv2Floskelgruppe } from '@core/core/data/enm/v2/ENMv2Floskelgruppe';
+	import { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, onMounted, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
-	import type { ENMv2Floskel } from '../../../../core/src/core/data/enm/v2/ENMv2Floskel';
-	import type { ENMv2Floskelgruppe } from '../../../../core/src/core/data/enm/v2/ENMv2Floskelgruppe';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
-	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
-	import { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { List } from '../../../../core/src/java/util/List';
-	import type { EnmManager, BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag } from './EnmManager';
-	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import { SelectManager } from '../../ui/controls/select/manager/SelectManager';
+	import type { EnmManager, EnmLerngruppenAuswahlEintrag, BemerkungenHauptgruppe } from './EnmManager';
 
 	type RowType = { gruppe: ENMv2Floskelgruppe, floskel: ENMv2Floskel | null };
 	type StrOrUndef = string | undefined;

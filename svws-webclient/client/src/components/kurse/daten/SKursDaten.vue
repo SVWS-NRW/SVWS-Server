@@ -97,10 +97,21 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { useServerState, type DataTableColumn, useSchuleState, useBenutzerState } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
-	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
-	import { SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz, FachDaten, KursLehrer } from "@core";
+	import { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
+	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { KursFortschreibungsart } from "@core/core/types/KursFortschreibungsart";
 
 	const props = defineProps<KursDatenProps>();
 	const benutzerState = useBenutzerState();

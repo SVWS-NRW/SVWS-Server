@@ -1,4 +1,5 @@
-import type { AbiturdatenManager, AbiturFachbelegung } from "@core";
+import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 
 export interface SchuelerAbiturZulassungTabelleProps {
 	manager: () => AbiturdatenManager;

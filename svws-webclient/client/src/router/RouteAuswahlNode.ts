@@ -1,7 +1,4 @@
 import type { RouteComponent, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { type BenutzerKompetenz, DeveloperNotificationException, type Schulform } from "@core";
-import type { AuswahlManager } from "@ui";
-import { ConfigElement, ViewType } from "@ui";
 import type { RouteDataAuswahl, RouteStateAuswahlInterface } from "./RouteDataAuswahl";
 import { RouteNode } from "./RouteNode";
 import type { RouteTabProps } from "./RouteTabNode";
@@ -9,6 +6,12 @@ import { RouteTabNode } from "./RouteTabNode";
 import { routeError } from "./error/RouteError";
 import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
+import { ConfigElement } from "@ui/utils/Config";
 
 /**
  * Das Interface für die Properties in Bezug auf das Handling des Listenbereichs, welcher der Komponente,

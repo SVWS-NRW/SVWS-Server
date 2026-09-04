@@ -1,5 +1,5 @@
-import type { Beschaeftigungsart } from "@core";
-import type { BeschaeftigungsartenListeManager } from "@ui";
+import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
+import type { BeschaeftigungsartenListeManager } from "@ui/ui/manager/kataloge/BeschaeftigungsartenListeManager";
 
 export interface BeschaeftigungsartenDatenProps {
 	manager: () => BeschaeftigungsartenListeManager;

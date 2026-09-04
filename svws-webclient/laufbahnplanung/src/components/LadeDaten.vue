@@ -21,8 +21,8 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { version } from '../../version';
-	import { githash } from '../../githash';
+	import { version } from "@version";
+	import { githash } from "@githash";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 

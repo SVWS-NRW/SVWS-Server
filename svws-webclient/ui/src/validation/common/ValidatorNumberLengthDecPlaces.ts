@@ -1,5 +1,5 @@
-import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 
 
 /**

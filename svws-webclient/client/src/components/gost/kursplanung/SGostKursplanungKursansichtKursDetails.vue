@@ -36,8 +36,14 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungKurs } from '@core/core/data/gost/GostBlockungKurs';
+	import type { GostBlockungKursLehrer } from '@core/core/data/gost/GostBlockungKursLehrer';
+	import type { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
+	import type { GostBlockungsergebnisKurs } from '@core/core/data/gost/GostBlockungsergebnisKurs';
+	import type { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
+	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
+	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
 	import { computed } from 'vue';
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

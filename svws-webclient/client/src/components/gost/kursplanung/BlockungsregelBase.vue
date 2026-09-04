@@ -52,11 +52,15 @@
 
 <script setup lang="ts">
 
+	import { GostBlockungRegel } from "@core/core/data/gost/GostBlockungRegel";
+	import { GostKursblockungRegelTyp } from "@core/core/types/kursblockung/GostKursblockungRegelTyp";
+	import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+	import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
 	import { computed, ref } from "vue";
-	import type { DataTableColumn } from "@ui";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostBlockungsergebnisManager, GostBlockungsdatenManager, List } from "@core";
-	import { GostBlockungRegel, ArrayList, GostKursblockungRegelTyp } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;

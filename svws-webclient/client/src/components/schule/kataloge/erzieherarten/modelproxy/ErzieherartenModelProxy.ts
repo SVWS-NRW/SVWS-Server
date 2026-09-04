@@ -1,7 +1,11 @@
-import type { ErzieherartListeManager } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringIsUniqueInList, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { Erzieherart } from "@core";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 /**
  * ModelProxy für Erzieherarten

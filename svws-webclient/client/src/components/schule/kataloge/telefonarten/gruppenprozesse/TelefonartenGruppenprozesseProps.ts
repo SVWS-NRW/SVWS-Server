@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { TelefonartenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
 
 export interface TelefonartenGruppenprozesseProps {
 	manager: () => TelefonartenListeManager;

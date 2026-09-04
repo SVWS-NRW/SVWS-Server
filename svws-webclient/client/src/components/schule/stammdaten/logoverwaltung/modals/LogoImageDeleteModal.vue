@@ -34,9 +34,9 @@
 
 <script setup lang="ts">
 
+	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
 	import type { LogoModelProxy } from "../modelProxy/LogoModelProxy";
 	import { useTemplateRef } from "vue";
-	import { ReportingBildDefinition } from "@core";
 
 	const { isOpen, logoModels } = defineProps<{
 		isOpen: boolean;

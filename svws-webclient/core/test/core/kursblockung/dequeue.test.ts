@@ -1,7 +1,9 @@
 import { test, expect, describe } from "vitest";
-import { LinkedCollection, NoSuchElementException, Random } from "../../../src";
 import { TestRandomComparator } from "../../../test/shared/TestComparator";
 import { random_numbers } from "../../random_numbers1k";
+import { LinkedCollection } from "../../../src/core/adt/collection/LinkedCollection";
+import { NoSuchElementException } from "../../../src/java/util/NoSuchElementException";
+import { Random } from "../../../src/java/util/Random";
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER;
 const RND = new Random();

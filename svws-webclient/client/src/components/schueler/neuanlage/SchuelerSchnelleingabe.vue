@@ -48,9 +48,12 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Schulform } from "@core";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
 	import { computed } from "vue";
-	import { useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
 	import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 
 	const props = defineProps<SchuelerSchnelleingabeProps>();

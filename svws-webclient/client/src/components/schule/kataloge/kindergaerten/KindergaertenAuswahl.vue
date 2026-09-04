@@ -35,11 +35,13 @@
 <script setup lang="ts">
 
 	import type { KindergaertenAuswahlProps } from "~/components/schule/kataloge/kindergaerten/KindergaertenAuswahlProps";
-	import type { DataTableColumn } from "@ui";
-	import type { Kindergarten } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
 	import { computed, ref } from "vue";
+	import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<KindergaertenAuswahlProps>();
 	const benutzerState = useBenutzerState();

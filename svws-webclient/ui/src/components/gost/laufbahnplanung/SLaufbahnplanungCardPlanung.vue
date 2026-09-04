@@ -145,13 +145,13 @@
 
 <script setup lang="ts">
 
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { Collection } from "@core/java/util/Collection";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import { computed } from "vue";
-	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
-	import { GridManager } from "../../../ui/controls/tablegrid/GridManager";
-	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import type { Collection } from "../../../../../core/src/java/util/Collection";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 
 	const props = withDefaults(defineProps<{
 		manager: LaufbahnplanungUiManager;

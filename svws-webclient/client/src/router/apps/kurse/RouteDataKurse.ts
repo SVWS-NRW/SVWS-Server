@@ -1,10 +1,6 @@
-import type { KursDaten, KursLehrer, List, Schueler, SimpleOperationResponse } from "@core";
-import { DeveloperNotificationException } from "@core";
 import { KursListeManager } from "~/states/kurse/KursListeManager";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -15,6 +11,12 @@ import { routeKurseNeu } from "./RouteKurseNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import type { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { List } from "@core/java/util/List";
 
 type RouteStateKurse = RouteStateAuswahlInterface<KursListeManager>;
 

@@ -1,5 +1,6 @@
-import type { Leitungsfunktion } from "@core";
-import type { Checkpoint, LeitungsfunktionenListeManager } from "@ui";
+import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+import type { LeitungsfunktionenListeManager } from "@ui/ui/manager/kataloge/LeitungsfunktionenListeManager";
+import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface LeitungsfunktionenNeuProps {

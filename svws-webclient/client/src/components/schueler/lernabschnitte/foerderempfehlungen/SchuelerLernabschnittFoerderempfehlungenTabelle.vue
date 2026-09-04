@@ -41,9 +41,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { List, SchuelerFoerderempfehlung } from '@core';
-	import { ArrayList, DateUtils } from '@core';
-	import type { DataTableColumn } from '@ui';
+	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+	import { DateUtils } from '@core/core/utils/DateUtils';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import type { DataTableColumn } from '@ui/types';
 	import { computed, ref, watch } from 'vue';
 
 	const selectedFoerderempfehlungen = ref<SchuelerFoerderempfehlung[]>([]);

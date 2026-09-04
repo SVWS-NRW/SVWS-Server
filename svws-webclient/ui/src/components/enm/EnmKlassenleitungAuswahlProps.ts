@@ -1,5 +1,5 @@
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { EnmManager } from "./EnmManager";
-import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
 
 export interface EnmKlassenleitungAuswahlProps {
 	enmManager: () => EnmManager;

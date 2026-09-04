@@ -40,9 +40,10 @@
 </template>
 
 <script setup lang="ts">
-	import { type Teilleistungsart } from "@core";
-	import { type DataTableColumn, useRegionSwitch } from "@ui";
 
+	import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TeilleistungsartenAuswahlProps } from "./TeilleistungsartenAuswahlProps";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 

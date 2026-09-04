@@ -55,11 +55,17 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { SelectManager, useBenutzerState, useModelProxyList } from "@ui";
-	import type { List, SchuelerVermerke, VermerkartEintrag } from "@core";
-	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
 	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
 	import { SchuelerVermerkeModelProxy } from "./modelProxy/SchuelerVermerkeModelProxy";
+	import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
+	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useModelProxyList } from "@ui/model/useModelProxyList";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const props = defineProps<SchuelerVermerkeProps>();
 	const benutzerState = useBenutzerState();

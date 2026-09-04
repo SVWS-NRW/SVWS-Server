@@ -1,10 +1,10 @@
-import { ArrayList } from "@core";
-import { ENMConfigSpalte } from "../../../../../core/src/core/data/enm/ENMConfigSpalte";
-import type { ENMv2Teilleistungsart } from "../../../../../core/src/core/data/enm/v2/ENMv2Teilleistungsart";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
-import { HashMap } from "../../../../../core/src/java/util/HashMap";
-import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
-import type { List } from "../../../../../core/src/java/util/List";
+import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
+import type { ENMv2Teilleistungsart } from "@core/core/data/enm/v2/ENMv2Teilleistungsart";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 /**
  * Ein Manager zur Verwaltung der Konfiguration von sichtbaren Spalten im Notenmodul.

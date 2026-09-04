@@ -1,7 +1,12 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import type { JavaIterator } from "../../../../src";
-import { LinkedCollection, LinkedCollectionIterator, LehrerListeEintrag, ConcurrentModificationException, NoSuchElementException, ArrayList } from "../../../../src";
 import { TestMaxComparator } from "../../../../test/shared/TestComparator";
+import { LinkedCollection } from "../../../../src/core/adt/collection/LinkedCollection";
+import { LinkedCollectionIterator } from "../../../../src/core/adt/collection/LinkedCollectionIterator";
+import { LehrerListeEintrag } from "../../../../src/core/data/lehrer/LehrerListeEintrag";
+import { ArrayList } from "../../../../src/java/util/ArrayList";
+import { ConcurrentModificationException } from "../../../../src/java/util/ConcurrentModificationException";
+import type { JavaIterator } from "../../../../src/java/util/JavaIterator";
+import { NoSuchElementException } from "../../../../src/java/util/NoSuchElementException";
 
 const maxComparator = new TestMaxComparator();
 

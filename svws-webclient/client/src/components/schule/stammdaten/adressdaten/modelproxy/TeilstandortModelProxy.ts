@@ -1,7 +1,7 @@
-import { ModelProxy, ValidatorStringLength } from "@ui";
-import type { Teilstandort } from "@core";
+import type { Teilstandort } from "@core/core/data/schule/Teilstandort";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { ValidatorTeilstandortAdrMerkmal } from "~/components/schule/stammdaten/adressdaten/modelproxy/validation/ValidatorTeilstandortAdrMerkmal";
-
 
 /**
  * ModelProxy für Teilstandorte

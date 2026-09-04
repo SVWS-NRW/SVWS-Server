@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import SvwsUiDropdownList from "../../../src/ui/controls/SvwsUiDropdownList.vue";
+import SvwsUiDropdownList from "@ui/ui/controls/SvwsUiDropdownList.vue";
 import { mount, type VueWrapper } from "@vue/test-utils";
 import type { Strategy } from "@floating-ui/vue";
 
@@ -326,7 +326,7 @@ describe("Tests Funktionen/Computeds", () => {
 			.findAll(".svws-ui-dropdown-list--item")[0]
 			.trigger("click");
 
-		expect(stub).toBeCalled();
+		expect(stub).toHaveBeenCalled();
 	});
 
 	test("function->listIdPrefix liefert einen string-Wert zurück", async () => {

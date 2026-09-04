@@ -1,11 +1,7 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
-import { AppMenuGroup } from "@ui";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
@@ -29,6 +25,10 @@ import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import { Katalog } from "~/cache/Katalog";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");

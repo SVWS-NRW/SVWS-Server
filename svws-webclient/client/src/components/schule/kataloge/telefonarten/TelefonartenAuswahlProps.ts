@@ -1,4 +1,4 @@
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { TelefonartenListeManager } from "@ui";
 
 export interface TelefonartenAuswahlProps extends RouteAuswahlListProps<TelefonartenListeManager> {}

@@ -38,7 +38,8 @@
 
 	import { computed } from "vue";
 	import type { GostAppProps } from "./SGostAppProps";
-	import { useAbschnittState, useRegionSwitch } from "@ui";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	const props = defineProps<GostAppProps>();
 	const abschnittState = useAbschnittState();

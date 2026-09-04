@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { EntlassgruendeListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { EntlassgruendeListeManager } from "@ui/ui/manager/kataloge/EntlassgruendeListeManager";
 
 export interface EntlassgruendeGruppenprozesseProps {
 	manager: () => EntlassgruendeListeManager;

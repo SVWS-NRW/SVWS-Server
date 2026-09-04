@@ -34,10 +34,12 @@
 
 <script setup lang="ts">
 
+	import type { Betrieb } from "@core/core/data/schule/Betrieb";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 	import { computed } from "vue";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz } from "@core";
-	import type { Betrieb } from "@core";
 	import type { BetriebeAuswahlProps } from "~/components/schule/kataloge/betriebe/BetriebeAuswahlProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

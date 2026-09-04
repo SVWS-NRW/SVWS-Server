@@ -31,9 +31,10 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { useRegionSwitch, ViewType } from '@ui';
 	import type { NotenmodulAdministrationAuswahlProps } from './NotenmodulAdministrationAuswahlProps';
-	import type { ENMServerConnection } from '@core';
+	import type { ENMServerConnection } from '@core/core/data/enm/ENMServerConnection';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+	import { ViewType } from '@ui/ui/nav/ViewType';
 
 	const props = defineProps<NotenmodulAdministrationAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

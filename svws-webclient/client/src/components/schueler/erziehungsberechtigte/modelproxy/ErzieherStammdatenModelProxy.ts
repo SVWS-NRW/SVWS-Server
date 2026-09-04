@@ -1,10 +1,17 @@
+import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { OrteState } from "@ui/states/kataloge/OrteState";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
-import type { OrteState } from "@ui";
-import {
-	ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern, StringPattern, ValidatorStrasse,
-} from "@ui";
-import type { Erzieherart, ErzieherStammdaten, NationalitaetenKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-import { AdressenUtils, Nationalitaeten } from "@core";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten> {

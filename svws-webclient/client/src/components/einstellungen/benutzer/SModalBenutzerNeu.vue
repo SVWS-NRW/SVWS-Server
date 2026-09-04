@@ -30,8 +30,8 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { BenutzerListeEintrag } from "@core";
 	import { BenutzerModelProxy } from "./BenutzerModelProxy";
+	import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
 
 	const props = withDefaults(defineProps<{
 		showDeleteIcon?: boolean;

@@ -61,12 +61,18 @@
 
 <script setup lang="ts">
 
-	import type { GostSchuelerklausurtermin, List, JavaSet, GostKlausurtermin } from "@core";
-	import { BenutzerKompetenz, ListUtils } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { useBenutzerState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
 	import { computed, type HTMLAttributes } from "vue";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+	import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<{
 		termin?: GostKlausurtermin;

@@ -26,7 +26,7 @@ export default defineConfig(
       parserOptions: {
 				parser: typeScriptESlintParser,
         tsconfigRootDir: import.meta.dirname,
-				extraFileExtensions: [".vue"],
+				extraFileExtensions: [".vue", ".story.vue"],
         sourceType: "module",
 				programs: false,
         project: true,
@@ -44,6 +44,10 @@ export default defineConfig(
 			"@stylistic": eslintPluginStylistic,
 		},
 		rules: {
+			// import
+			"no-restricted-imports": ["error", {
+    		"patterns": ["@*/index"]
+			}],
 			// Objekte und Arrays
 			"@stylistic/object-curly-spacing": ["error", "always"],
 			"@stylistic/array-bracket-spacing": ["error", "never"],

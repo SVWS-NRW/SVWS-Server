@@ -1,6 +1,7 @@
-import type { SchuelerSchulbesuchManager } from "@ui";
-import { ModelProxy } from "@ui";
-import type { Merkmal, SchuelerSchulbesuchMerkmal } from "@core";
+import type { SchuelerSchulbesuchMerkmal } from "@core/asd/data/schueler/SchuelerSchulbesuchMerkmal";
+import type { Merkmal } from "@core/core/data/schule/Merkmal";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 import { computed } from "vue";
 
 export class SchuelerSchulbesuchMerkmaleModelProxy extends ModelProxy<SchuelerSchulbesuchMerkmal> {

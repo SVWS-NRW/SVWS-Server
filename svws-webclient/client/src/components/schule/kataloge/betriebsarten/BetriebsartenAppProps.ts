@@ -1,4 +1,4 @@
+import type { BetriebsartenListeManager } from "@ui/ui/manager/kataloge/BetriebsartenListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { BetriebsartenListeManager } from "@ui";
 
 export type BetriebsartenAppProps = RouteAuswahlProps<BetriebsartenListeManager>;

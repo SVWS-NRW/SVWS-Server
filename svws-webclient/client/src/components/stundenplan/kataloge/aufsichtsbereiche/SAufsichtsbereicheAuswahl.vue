@@ -21,8 +21,10 @@
 
 	import { computed, ref } from "vue";
 	import type { AufsichtsbereicheAuswahlProps } from "./SAufsichtsbereicheAuswahlProps";
-	import { BenutzerKompetenz, StundenplanAufsichtsbereich, type Aufsichtsbereich } from "@core";
-	import { useBenutzerState } from "@ui";
+	import type { Aufsichtsbereich } from "@core/core/data/schule/Aufsichtsbereich";
+	import { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<AufsichtsbereicheAuswahlProps>();
 	const benutzerState = useBenutzerState();

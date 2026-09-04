@@ -1,4 +1,11 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, List, GostBlockungsergebnis, GostBlockungsergebnisManager } from "@core";
+import type { GostBlockungListeneintrag } from "@core/core/data/gost/GostBlockungListeneintrag";
+import type { GostBlockungsdaten } from "@core/core/data/gost/GostBlockungsdaten";
+import type { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebnis";
+import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+import type { List } from "@core/java/util/List";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {

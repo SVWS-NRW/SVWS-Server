@@ -47,9 +47,15 @@
 
 	import { ref, computed, onMounted, watch, shallowRef } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
-	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
-	import { useSchuleState } from "@ui";
+	import { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+	import { Klassenart } from "@core/asd/types/klassen/Klassenart";
+	import { AllgemeinbildendOrganisationsformen } from "@core/asd/types/schule/AllgemeinbildendOrganisationsformen";
+	import { BerufskollegOrganisationsformen } from "@core/asd/types/schule/BerufskollegOrganisationsformen";
+	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+	import { WeiterbildungskollegOrganisationsformen } from "@core/asd/types/schule/WeiterbildungskollegOrganisationsformen";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { useSchuleState } from "@ui/states/SchuleState";
 
 	const props = defineProps<KlassenNeuProps>();
 	const schuleState = useSchuleState();

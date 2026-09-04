@@ -1,4 +1,5 @@
-import type { List, SchuelerFoerderempfehlung } from "@core";
+import type { SchuelerFoerderempfehlung } from "@core/asd/data/schueler/SchuelerFoerderempfehlung";
+import type { List } from "@core/java/util/List";
 
 export interface SchuelerLernabschnittFoerderempfehlungenProps {
 	foerderempfehlungen: () => List<SchuelerFoerderempfehlung>;

@@ -42,11 +42,12 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, Leitungsfunktion } from "@core";
 	import type { LeitungsfunktionenNeuProps } from "~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	const props = defineProps<LeitungsfunktionenNeuProps>();
 	const benutzerState = useBenutzerState();

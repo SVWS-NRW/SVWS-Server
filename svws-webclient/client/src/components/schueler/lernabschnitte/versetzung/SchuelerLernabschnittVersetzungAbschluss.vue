@@ -29,9 +29,10 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { BenutzerKompetenz, type KlassenDaten } from "@core";
 	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SchuelerLernabschnittVersetzungAbschlussProps";
-	import { useBenutzerState } from '@ui';
+	import type { KlassenDaten } from '@core/asd/data/klassen/KlassenDaten';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
 	const benutzerState = useBenutzerState();

@@ -1,4 +1,4 @@
-import type { SMTPServerKonfiguration } from "@core";
+import type { SMTPServerKonfiguration } from "@core/core/data/email/SMTPServerKonfiguration";
 
 export interface EmailServerProps {
 	smptServerKonfiguration: () => SMTPServerKonfiguration;

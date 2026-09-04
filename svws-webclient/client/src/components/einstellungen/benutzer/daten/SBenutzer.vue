@@ -84,8 +84,10 @@
 
 	import { computed, ref, shallowRef } from 'vue';
 	import type { BenutzerProps } from './SBenutzerProps';
-	import { BenutzerKompetenzGruppe, BenutzerTyp } from '@core';
-	import { useBenutzerState, useSchuleState } from '@ui';
+	import { BenutzerKompetenzGruppe } from '@core/core/types/benutzer/BenutzerKompetenzGruppe';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { BenutzerTyp } from '@core/core/types/benutzer/BenutzerTyp';
 
 	const props = defineProps<BenutzerProps>();
 	const benutzerState = useBenutzerState();

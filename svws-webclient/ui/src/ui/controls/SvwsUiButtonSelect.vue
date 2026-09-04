@@ -28,12 +28,12 @@
 
 <script lang="ts" setup>
 
-	import type { ButtonType } from '../../types';
 	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from "@vueuse/core";
 	import type { ComponentPublicInstance } from 'vue';
 	import { ref, computed, useTemplateRef } from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
+	import type { ButtonType } from "@ui/types.js";
 
 	type Item = {
 		text: string;

@@ -1,5 +1,5 @@
-import type { Raum } from "@core";
-import type { RaumListeManager } from "@ui";
+import type { Raum } from "@core/core/data/schule/Raum";
+import type { RaumListeManager } from "@ui/ui/manager/raum/RaumListeManager";
 
 export interface RaeumeAuswahlProps {
 	raumListeManager: () => RaumListeManager;

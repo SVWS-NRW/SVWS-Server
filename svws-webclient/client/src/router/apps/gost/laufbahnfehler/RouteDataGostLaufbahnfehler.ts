@@ -1,13 +1,15 @@
-import type { ApiFile, GostBelegpruefungsErgebnisse, List, ReportingParameter } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerSprachen } from "../../schueler/sprachen/RouteSchuelerSprachen";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { ApiFile } from "@core/api/BaseApi";
+import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
+import type { GostBelegpruefungsErgebnisse } from "@core/core/data/gost/GostBelegpruefungsErgebnisse";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { routeSchuelerSprachen } from "../../schueler/sprachen/RouteSchuelerSprachen";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {

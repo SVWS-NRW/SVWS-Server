@@ -1,7 +1,4 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Teilleistungsart, List, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
-import { ViewType } from "@ui";
 import { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 import { api } from "~/router/Api";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -12,6 +9,12 @@ import { routeTeilleistungsartenDaten } from "./RouteTeilleistungsartenDaten";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

@@ -1,4 +1,6 @@
-import type { List, Lernplattform, LehrerLernplattform } from "@core";
+import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
+import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
+import type { List } from "@core/java/util/List";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface LehrerLernplattformenProps {

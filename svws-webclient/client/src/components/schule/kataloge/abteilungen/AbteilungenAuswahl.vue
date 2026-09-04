@@ -34,12 +34,17 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAuswahlProps";
-	import type { DataTableColumn } from "@ui";
-	import type { Abteilung } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { useAbschnittState, useBenutzerState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
 	import { computed } from "vue";
+	import type { Abteilung } from "@core/core/data/schule/Abteilung";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<AbteilungenAuswahlProps>();
 	const benutzerState = useBenutzerState();

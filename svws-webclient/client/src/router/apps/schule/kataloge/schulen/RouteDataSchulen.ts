@@ -1,15 +1,19 @@
-import type { List, SchulEintrag, SimpleOperationResponse } from "@core";
-import { BenutzerKompetenz, ArrayList } from "@core";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { api } from "~/router/Api";
 import { routeSchulenDaten } from "./RouteSchulenDaten";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { ViewType, SchulenListeManager } from "@ui";
 import { routeSchulenGruppenprozesse } from "~/router/apps/schule/kataloge/schulen/RouteSchulenGruppenprozesse";
 import { routeSchulenNeu } from "~/router/apps/schule/kataloge/schulen/RouteSchulenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { SchulenListeManager } from "@ui/ui/manager/kataloge/SchulenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 const defaultState = {

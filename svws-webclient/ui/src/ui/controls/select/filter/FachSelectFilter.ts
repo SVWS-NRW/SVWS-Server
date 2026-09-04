@@ -1,9 +1,9 @@
 import { isRef, shallowRef, toRaw, toValue, watch, type MaybeRef, type ShallowRef } from "vue";
-import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";
-import type { FachKatalogEintrag } from "../../../../../../core/src/asd/data/fach/FachKatalogEintrag";
-import type { Fachgruppe } from "../../../../../../core/src/asd/types/fach/Fachgruppe";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
+import type { FachKatalogEintrag } from "@core/asd/data/fach/FachKatalogEintrag";
+import type { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 /**
  * Ein Filter für die UiSelect-Komponente. Er filtert Fächer auf Basis der übergebenen Fachgruppen.

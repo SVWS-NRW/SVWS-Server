@@ -1,4 +1,8 @@
-import type { GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, Schueler } from "@core";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+import type { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core/core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate";
+import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungUmwahlansichtProps {

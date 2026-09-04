@@ -1,11 +1,11 @@
-import type { KlassenListeEintrag } from "../../../../../core/src/asd/data/klassen/KlassenListeEintrag";
-import type { EinschulungsartKatalogEintrag } from "../../../../../core/src/asd/data/schueler/EinschulungsartKatalogEintrag";
-import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
-import type { JahrgangsDaten } from "../../../../../core/src/core/data/jahrgang/JahrgangsDaten";
-import type { Kindergarten } from "../../../../../core/src/core/data/schule/Kindergarten";
-import type { ReligionEintrag } from "../../../../../core/src/core/data/schule/ReligionEintrag";
-import type { List } from "../../../../../core/src/java/util/List";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 
 
 export class SchuelerNeuManager {

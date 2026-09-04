@@ -1,17 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import type { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostAbitur, type RouteGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
-
 import type { GostAbiturPruefungsuebersichtProps } from "~/components/gost/abitur/GostAbiturPruefungsuebersichtProps";
-import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeGost } from "../RouteGost";
 import { routeError } from "~/router/error/RouteError";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 
 const GostAbiturPruefungsuebersicht = () => import("~/components/gost/abitur/GostAbiturPruefungsuebersicht.vue");
 

@@ -1,5 +1,5 @@
-import type { OrtKatalogEintrag } from "@core";
-import type { OrteListeManager } from "@ui";
+import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+import type { OrteListeManager } from "@ui/ui/manager/kataloge/OrteListeManager";
 
 export interface OrteDatenProps {
 	manager: () => OrteListeManager;

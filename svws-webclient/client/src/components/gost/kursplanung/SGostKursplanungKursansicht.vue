@@ -364,11 +364,34 @@
 	import type { WritableComputedRef } from "vue";
 	import { computed, ref, toRaw } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungRegel } from "@core";
-	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, Fach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils, ArrayList, GostKursblockungRegelTyp, DeveloperNotificationException } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+	import { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
+	import type { GostBlockungKursLehrer } from "@core/core/data/gost/GostBlockungKursLehrer";
+	import type { GostBlockungRegel } from "@core/core/data/gost/GostBlockungRegel";
+	import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+	import type { GostBlockungSchiene } from "@core/core/data/gost/GostBlockungSchiene";
+	import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
+	import { GostBlockungsergebnisSchiene } from "@core/core/data/gost/GostBlockungsergebnisSchiene";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
+	import { GostStatistikFachwahlHalbjahr } from "@core/core/data/gost/GostStatistikFachwahlHalbjahr";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import { GostKursblockungRegelTyp } from "@core/core/types/kursblockung/GostKursblockungRegelTyp";
+	import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+	import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+	import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+	import { SetUtils } from "@core/core/utils/SetUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { JavaSet } from "@core/java/util/JavaSet";
+	import type { List } from "@core/java/util/List";
+	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

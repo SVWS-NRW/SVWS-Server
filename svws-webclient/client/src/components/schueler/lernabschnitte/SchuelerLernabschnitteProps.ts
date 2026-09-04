@@ -1,5 +1,6 @@
-import type { SchuelerLernabschnittListeEintrag, List } from "@core";
-import type { TabManager } from "@ui";
+import type { SchuelerLernabschnittListeEintrag } from "@core/core/data/schueler/SchuelerLernabschnittListeEintrag";
+import type { List } from "@core/java/util/List";
+import type { TabManager } from "@ui/ui/nav/TabManager";
 
 export interface SchuelerLernabschnitteProps {
 	lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;

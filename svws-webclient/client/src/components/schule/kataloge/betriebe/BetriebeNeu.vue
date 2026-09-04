@@ -103,10 +103,14 @@
 
 <script setup lang="ts">
 
+	import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
+	import { Betrieb } from "@core/core/data/schule/Betrieb";
+	import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, Betrieb, type Betriebsart, type OrtKatalogEintrag } from "@core";
 	import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
-	import { SelectManager, useBenutzerState } from "@ui";
 	import { BetriebModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebModelProxy";
 
 	const props = defineProps<BetriebeNeuProps>();

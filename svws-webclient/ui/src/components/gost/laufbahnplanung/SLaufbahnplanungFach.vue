@@ -158,20 +158,20 @@
 
 <script setup lang="ts">
 
+	import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+	import { AbiturFachbelegungHalbjahr } from "@core/core/data/gost/AbiturFachbelegungHalbjahr";
+	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+	import { GostFachbereich } from "@core/core/types/gost/GostFachbereich";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import type { Collection } from "@core/java/util/Collection";
+	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import type { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, watchEffect } from "vue";
-	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
-	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
-	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
-	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
-	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
-	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
-	import { useGostLaufbahnplanungState } from "../../../states/GostLaufbahnplanungState";
-	import type { GridManager } from "../../../ui/controls/tablegrid/GridManager";
-	import type { Collection } from "../../../../../core/src/java/util/Collection";
+	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 
 	const props = defineProps<{
 		gridManager: GridManager<string, GostFach, Collection<GostFach>>;

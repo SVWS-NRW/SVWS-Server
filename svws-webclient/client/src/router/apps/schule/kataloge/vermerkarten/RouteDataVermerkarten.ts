@@ -1,16 +1,20 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { VermerkartEintrag, List, SimpleOperationResponse } from "@core";
-import { ArrayList, BenutzerKompetenz } from "@core";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeVermerkartenDaten } from "./RouteVermerkartenDaten";
-import { ViewType, VermerkartenListeManager } from "@ui";
 import { routeVermerkartenGruppenprozesse } from "./RouteVermerkartenGruppenprozesse";
 import { routeVermerkartenNeu } from "./RouteVermerkartenNeu";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { VermerkartenListeManager } from "@ui/ui/manager/kataloge/VermerkartenListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

@@ -181,16 +181,16 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watchEffect } from 'vue';
-	import type { ENMv2Schueler } from "../../../../core/src/core/data/enm/v2/ENMv2Schueler";
 	import type { EnmKlassenleitungUebersichtProps } from './EnmKlassenleitungUebersichtProps';
-	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
-	import type { List } from '../../../../core/src/java/util/List';
-	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
-	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
-	import type { ENMv2Lernabschnitt } from '../../../../core/src/core/data/enm/v2/ENMv2Lernabschnitt';
-	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
+	import { PairNN } from '@core/asd/adt/PairNN';
+	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Lernabschnitt } from '@core/core/data/enm/v2/ENMv2Lernabschnitt';
+	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import type { GridInput } from '@ui/ui/controls/tablegrid/GridInput';
+	import type { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
 

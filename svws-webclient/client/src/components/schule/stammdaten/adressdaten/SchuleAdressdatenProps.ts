@@ -1,4 +1,6 @@
-import type { List, SchuleStammdaten, Teilstandort } from "@core";
+import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import type { Teilstandort } from "@core/core/data/schule/Teilstandort";
+import type { List } from "@core/java/util/List";
 
 export interface SchuleAdressdatenProps {
 	patch: (data: Partial<SchuleStammdaten>) => Promise<void>;

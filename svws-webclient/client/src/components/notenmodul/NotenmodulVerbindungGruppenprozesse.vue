@@ -30,8 +30,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List } from "@core";
 	import type { NotenmodulVerbindungGruppenprozesseProps } from "./NotenmodulVerbindungGruppenprozesseProps";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<NotenmodulVerbindungGruppenprozesseProps>();
 

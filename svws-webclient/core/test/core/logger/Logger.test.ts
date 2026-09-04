@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/dot-notation */
 import { describe, test, expect, beforeEach } from "vitest";
-import { LogData, Logger, LogLevel, LogConsumerList } from "../../../src";
+import { LogConsumerList } from "../../../src/core/logger/LogConsumerList";
+import { LogData } from "../../../src/core/logger/LogData";
+import { Logger } from "../../../src/core/logger/Logger";
+import { LogLevel } from "../../../src/core/logger/LogLevel";
 
 describe("Logger Class", () => {
 	test("is Logger instance", () => {

@@ -1,17 +1,10 @@
-import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, SimpleOperationResponse, Wochentag, StundenplanZeitraster } from "@core";
-import { Jahrgaenge } from "@core";
-import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
-import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
 import { routeStundenplanNeu } from "~/router/apps/stundenplan/RouteStundenplanNeu";
 import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
 import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
-
 import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
 import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -19,6 +12,32 @@ import type { RouteParamsRawGeneric } from "vue-router";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { Raum } from "@core/core/data/schule/Raum";
+import { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
+import { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
+import { StundenplanJahrgang } from "@core/core/data/stundenplan/StundenplanJahrgang";
+import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
+import { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+import { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+import type { StundenplanPausenaufsichtBereichUpdate } from "@core/core/data/stundenplan/StundenplanPausenaufsichtBereichUpdate";
+import { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+import { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
+import { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
+import { StundenplanUnterrichtListeManager } from "@ui/ui/manager/stundenplan/StundenplanUnterrichtListeManager";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 interface RouteStateStundenplan extends RouteStateAuswahlInterface<StundenplanListeManager> {
 	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;

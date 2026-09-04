@@ -1,9 +1,13 @@
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
-import type { Ankreuzkompetenz, FachDaten, SchulgliederungKatalogEintrag } from "@core";
-import { Schulgliederung } from "@core";
 import { ValidatorAnkreuzfloskelText } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/validation/ValidatorAnkreuzfloskelText";
 import { AnkreuzkompetenzAbschnitt } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzAbschnitt";
 import { computed } from "vue";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 
 type AbschnittOption = { id: AnkreuzkompetenzAbschnitt; text: string };
 

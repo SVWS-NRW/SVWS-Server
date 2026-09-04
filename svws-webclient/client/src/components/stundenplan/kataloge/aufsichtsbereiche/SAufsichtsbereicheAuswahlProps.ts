@@ -1,4 +1,5 @@
-import type { Aufsichtsbereich, StundenplanManager } from "@core";
+import type { Aufsichtsbereich } from "@core/core/data/schule/Aufsichtsbereich";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface AufsichtsbereicheAuswahlProps {

@@ -74,9 +74,15 @@
 
 	import { computed, ref } from "vue";
 	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
-	import type { List, StundenplanListeEintrag } from "@core";
-	import { BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
-	import { SelectManager, useBenutzerState, useSchuleState } from "@ui";
+	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

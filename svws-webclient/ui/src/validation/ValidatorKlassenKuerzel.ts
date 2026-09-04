@@ -1,7 +1,7 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
-import { JavaString } from "../../../core/src/java/lang/JavaString";
-import type { KlassenListeEintrag } from "../../../core/src/asd/data/klassen/KlassenListeEintrag";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
+import { BasicValidator } from "@core/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+import { JavaString } from "@core/java/lang/JavaString";
 
 /**
  * Ein Validator, welcher prüft, ob ein Klassenkürzel gültig ist und nicht bereits bei einer anderen Klasse vorhanden ist.

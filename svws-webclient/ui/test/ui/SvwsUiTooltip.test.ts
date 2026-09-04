@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import SvwsUiTooltip from "../../src/ui/SvwsUiTooltip.vue";
+import SvwsUiTooltip from "@ui/ui/SvwsUiTooltip.vue";
 
 // beforeEach und afterEach wird hier benötigt um die Teleports mit zu testen
 beforeEach(() => {

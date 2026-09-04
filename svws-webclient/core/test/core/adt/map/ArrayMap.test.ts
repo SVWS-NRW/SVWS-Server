@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import type { JavaMap } from "../../../../src";
-import { ArrayMap, ArrayMapCollection, ArrayMapEntrySet, ArrayMapKeySet, GostKursart, IllegalArgumentException } from "../../../../src";
+import { ArrayMap } from "../../../../src/core/adt/map/ArrayMap";
+import { ArrayMapCollection } from "../../../../src/core/adt/map/ArrayMapCollection";
+import { ArrayMapEntrySet } from "../../../../src/core/adt/map/ArrayMapEntrySet";
+import { ArrayMapKeySet } from "../../../../src/core/adt/map/ArrayMapKeySet";
+import { GostKursart } from "../../../../src/core/types/gost/GostKursart";
+import { IllegalArgumentException } from "../../../../src/java/lang/IllegalArgumentException";
+import type { JavaMap } from "../../../../src/java/util/JavaMap";
 
 let m: ArrayMap<unknown, unknown>;
 

@@ -145,13 +145,20 @@
 
 <script setup lang="ts">
 
-	import type { GostHalbjahr } from "@core";
-	import { BenutzerKompetenz, GostKursklausur, GostKlausurtermin, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
-	import { computed, ref, onMounted, onUnmounted } from 'vue';
+	import { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
+	import { GostKlausurterminblockungDaten } from '@core/core/data/gost/klausuren/GostKlausurterminblockungDaten';
+	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import type { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { KlausurterminblockungAlgorithmen } from '@core/core/types/gost/klausuren/KlausurterminblockungAlgorithmen';
+	import { KlausurterminblockungModusKursarten } from '@core/core/types/gost/klausuren/KlausurterminblockungModusKursarten';
+	import { KlausurterminblockungModusQuartale } from '@core/core/types/gost/klausuren/KlausurterminblockungModusQuartale';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+	import { computed, onMounted, onUnmounted, ref } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { useBenutzerState, useGostKlausurplanungState } from "@ui";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const props = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

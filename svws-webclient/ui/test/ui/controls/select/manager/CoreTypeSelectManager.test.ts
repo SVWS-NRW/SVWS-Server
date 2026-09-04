@@ -1,20 +1,20 @@
 import { nextTick, ref, type Ref } from "vue";
 import { describe, test, expect, beforeAll, vi } from "vitest";
-import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import type { List } from "../../../../../../core/src/java/util/List";
-import type { Comparator } from "../../../../../../core/src/java/util/Comparator";
-import type { SelectFilter } from "../../../../../src/ui/controls/select/filter/SelectFilter";
-import { CoreTypeSelectManager } from "../../../../../src/ui/controls/select/manager/CoreTypeSelectManager";
-import { JsonCoreTypeReaderStatic } from "../../../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
-import { Klassenart } from "../../../../../../core/src/asd/types/klassen/Klassenart";
-import { Schulform } from "../../../../../../core/src/asd/types/schule/Schulform";
-import type { CoreTypeData } from "../../../../../../core/src/asd/data/CoreTypeData";
-import type { Class } from "../../../../../../core/src/java/lang/Class";
-import type { KlassenartKatalogEintrag } from "../../../../../../core/src/asd/data/klassen/KlassenartKatalogEintrag";
-import { LehrerZugangsgrund } from "../../../../../../core/src/asd/types/lehrer/LehrerZugangsgrund";
+import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
+import type { KlassenartKatalogEintrag } from "@core/asd/data/klassen/KlassenartKatalogEintrag";
+import { Klassenart } from "@core/asd/types/klassen/Klassenart";
+import { LehrerZugangsgrund } from "@core/asd/types/lehrer/LehrerZugangsgrund";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
+import type { Class } from "@core/java/lang/Class";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
+import type { SelectFilter } from "@ui/ui/controls/select/filter/SelectFilter";
+import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 
 const reader = new JsonCoreTypeReaderStatic();
-vi.mock("../../../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/klassen/Klassenart.json", async () => ({
+vi.mock("@json/klassen/Klassenart.json", async () => ({
 	default: (await import("./Klassenart.mock.json")).default,
 }));
 
@@ -99,7 +99,7 @@ describe("UiSelect CoreTypeSelectManager Tests", () => {
 				"V - Kurzer Eintrag",
 				"T - Kurzer Eintrag",
 				"I - Kurzer Eintrag",
-				'C - Kurzer Eintrag'
+				'C - Kurzer Eintrag',
 			];
 
 			expect(manager.unfilteredOptions.size()).toBe(7);

@@ -1,8 +1,33 @@
-import type { Comparator, List, FachDaten, Schueler, Schuljahresabschnitt, SchuelerListeEintrag, SchuelerStatusKatalogEintrag,
-	Schulform, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchulgliederungKatalogEintrag } from "@core";
-import { ArrayList, Arrays, Class, JavaObject, JavaString, JavaLong, JavaInteger, DeveloperNotificationException, IllegalArgumentException,
-	HashMap2D, SchuelerUtils, Schulgliederung, SchuelerStatus, KursUtils, LehrerUtils } from "@core";
-import { AuswahlManager, ListeMitAuswahl, JahrgaengeListeManager } from '@ui';
+import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { KursUtils } from "@core/core/utils/kurse/KursUtils";
+import { LehrerUtils } from "@core/core/utils/lehrer/LehrerUtils";
+import { SchuelerUtils } from "@core/core/utils/schueler/SchuelerUtils";
+import { Class } from "@core/java/lang/Class";
+import { IllegalArgumentException } from "@core/java/lang/IllegalArgumentException";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { JavaLong } from "@core/java/lang/JavaLong";
+import { JavaObject } from "@core/java/lang/JavaObject";
+import { JavaString } from "@core/java/lang/JavaString";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
+import type { Comparator } from "@core/java/util/Comparator";
+import type { List } from "@core/java/util/List";
+import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 

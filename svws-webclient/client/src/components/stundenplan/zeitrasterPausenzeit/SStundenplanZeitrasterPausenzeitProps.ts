@@ -1,4 +1,10 @@
-import type { LehrerListeEintrag, List, StundenplanKonfiguration, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
+import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+import type { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+import type { Wochentag } from "@core/core/types/Wochentag";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
+import type { List } from "@core/java/util/List";
 
 export interface StundenplanZeitrasterPausenzeitProps {
 	stundenplanManager: () => StundenplanManager;

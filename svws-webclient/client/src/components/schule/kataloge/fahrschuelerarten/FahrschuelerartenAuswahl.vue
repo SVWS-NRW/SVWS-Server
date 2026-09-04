@@ -38,12 +38,14 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { FahrschuelerartenAuswahlProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahlProps";
-	import { useBenutzerState, useRegionSwitch, ViewType } from "@ui";
-	import type { Fahrschuelerart } from "@core";
-	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
+	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<FahrschuelerartenAuswahlProps>();
 	const benutzerState = useBenutzerState();

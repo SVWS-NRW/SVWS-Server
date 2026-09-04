@@ -1,5 +1,5 @@
-import type { List } from "@core";
-import type { FachklassenListeManager } from "@ui";
+import type { List } from "@core/java/util/List";
+import type { FachklassenListeManager } from "@ui/ui/manager/kataloge/FachklassenListeManager";
 
 export interface FachklassenGruppenprozesseProps {
 	manager: () => FachklassenListeManager;

@@ -35,10 +35,20 @@
 <script setup lang="ts">
 
 	import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
-	import type { JahrgangsDaten, FachDaten, LehrerListeEintrag, List } from "@core";
-	import { ArrayList, BenutzerKompetenz, JavaString, KursDaten, KursFortschreibungsart, ZulaessigeKursart } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { useAbschnittState, useBenutzerState, useSchuleState } from "@ui";
+	import { KursDaten } from "@core/asd/data/kurse/KursDaten";
+	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
+	import type { FachDaten } from "@core/core/data/fach/FachDaten";
+	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { KursFortschreibungsart } from "@core/core/types/KursFortschreibungsart";
+	import { JavaString } from "@core/java/lang/JavaString";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { List } from "@core/java/util/List";
+	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
 
 	const abschnittState = useAbschnittState();
 	const benutzerState = useBenutzerState();

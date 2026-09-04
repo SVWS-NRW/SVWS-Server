@@ -178,11 +178,19 @@
 
 	import type { Ref } from 'vue';
 	import { watch, computed, ref, onMounted, onUnmounted, triggerRef } from 'vue';
-	import { useBenutzerState, useGostKlausurplanungState, type DataTableColumn } from "@ui";
-	import type { Comparator, GostFach, List, ValidatorFehler } from "@core";
-	import { GostHalbjahr, BenutzerKompetenz, ArrayList, GostKlausurvorgabe } from "@core";
 	import { ValidatorGostKlausurdauer } from "./validation/ValidatorGostKlausurdauer";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
+	import type { GostFach } from '@core/core/data/gost/GostFach';
+	import { GostKlausurvorgabe } from '@core/core/data/gost/klausuren/GostKlausurvorgabe';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { Comparator } from '@core/java/util/Comparator';
+	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
+	import type { DataTableColumn } from '@ui/types';
 
 	const { gotoFach } = defineProps<{
 		gotoFach: (idFach: number) => Promise<void>;

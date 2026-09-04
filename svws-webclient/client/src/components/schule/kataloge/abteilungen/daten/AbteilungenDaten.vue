@@ -114,12 +114,18 @@
 <script setup lang="ts">
 
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
-	import type { DataTableColumn } from "@ui";
-	import { SelectManager, useBenutzerState, ViewType } from "@ui";
-	import type { AbteilungKlassenzuordnung, KlassenDatenMinimal, List } from "@core";
-	import { Arrays, BenutzerKompetenz, HashMap } from "@core";
 	import { computed, ref } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
+	import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+	import type { AbteilungKlassenzuordnung } from "@core/core/data/schule/AbteilungKlassenzuordnung";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { Arrays } from "@core/java/util/Arrays";
+	import { HashMap } from "@core/java/util/HashMap";
+	import type { List } from "@core/java/util/List";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const props = defineProps<AbteilungenDatenProps>();
 	const benutzerState = useBenutzerState();

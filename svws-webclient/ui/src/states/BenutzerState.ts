@@ -1,11 +1,11 @@
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { InjectionKey } from "vue";
-import { DeveloperNotificationException } from "../../../core/src/core/exceptions/DeveloperNotificationException";
-import { AppContext } from "../AppContext";
-import type { BenutzerDaten } from "../../../core/src/core/data/benutzer/BenutzerDaten";
-import type { BenutzerKompetenz } from "../../../core/src/core/types/benutzer/BenutzerKompetenz";
-import type { BenutzerTyp } from "../../../core/src/core/types/benutzer/BenutzerTyp";
-import type { AES } from "../utils/crypto/aes";
-import type { BenutzerEMailDaten } from "../../../core/src/core/data/benutzer/BenutzerEMailDaten";
+import type { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
+import type { BenutzerEMailDaten } from "@core/core/data/benutzer/BenutzerEMailDaten";
+import type { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+import { AppContext } from "@ui/AppContext";
+import type { AES } from "@ui/utils/crypto/aes";
 
 /**
  * Die Schnittstelle für den Zustand der Schuljahresabschnitte und des aktuell ausgewählten Abschnitts

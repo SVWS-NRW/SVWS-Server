@@ -39,9 +39,10 @@
 </template>
 
 <script setup lang="ts">
+	import { Betriebsart } from '@core/core/data/schule/Betriebsart';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import type { BetriebsartenNeuProps } from './BetriebsartenNeuProps';
-	import { BenutzerKompetenz, Betriebsart } from "@core";
-	import { useBenutzerState } from '@ui';
 	import { computed, ref, watch } from "vue";
 	import { BetriebsartenModelProxy } from "~/components/schule/kataloge/betriebsarten/modelproxy/BetriebsartenModelProxy";
 

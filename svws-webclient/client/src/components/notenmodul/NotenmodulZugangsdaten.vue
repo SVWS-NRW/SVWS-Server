@@ -204,9 +204,11 @@
 
 	import { computed, ref, triggerRef } from 'vue';
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
-	import type { List } from "@core";
-	import { ArrayList, DeveloperNotificationException, ENMv2Lehrer } from "@core";
-	import { GridManager } from '@ui';
+	import { ENMv2Lehrer } from '@core/core/data/enm/v2/ENMv2Lehrer';
+	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");

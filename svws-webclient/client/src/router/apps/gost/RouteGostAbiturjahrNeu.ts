@@ -1,11 +1,11 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "./RouteGost";
 import type { GostAbiturjahrgangNeuProps } from "~/components/gost/SGostAbiturjahrgangNeuProps";
-import { ViewType } from "@ui";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 const SGostAbiturjahrgangNeu = () => import("~/components/gost/SGostAbiturjahrgangNeu.vue");
 

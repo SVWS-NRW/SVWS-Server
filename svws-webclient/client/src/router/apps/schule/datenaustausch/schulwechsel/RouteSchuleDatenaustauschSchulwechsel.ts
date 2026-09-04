@@ -1,11 +1,13 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteTabNode } from "~/router/RouteTabNode";
-import type { RouteApp } from "../../../RouteApp";
 import { RouteDataSchuleDatenaustauschSchulwechsel } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteDataSchuleDatenaustauschSchulwechsel";
 import { routeSchuleDatenaustauschSchulwechselAbgaenge } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechselAbgaenge";
 import { routeSchuleDatenaustauschSchulwechselZugaenge } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechselZugaenge";
 import { routeSchuleDatenaustauschSchulwechselKonfiguration } from "~/router/apps/schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechselKonfiguration";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschSchulbewerbung = () => import("~/components/schule/datenaustausch/schulwechsel/SSchuleDatenaustauschSchulwechsel.vue");
 

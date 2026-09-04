@@ -1,10 +1,17 @@
-import type { BildungsstufeKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, SchulgliederungKatalogEintrag } from "@core";
-import { Bildungsstufe, Jahrgaenge, Schulgliederung } from "@core";
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 import { ValidatorJahrgangBezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangBezeichnung";
 import { ValidatorJahrgangKuerzel } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKuerzel";
 import { ValidatorJahrgangKurzbezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKurzbezeichnung";
 import { computed } from "vue";
+import type { JahrgaengeKatalogEintrag } from "@core/asd/data/jahrgang/JahrgaengeKatalogEintrag";
+import type { BildungsstufeKatalogEintrag } from "@core/asd/data/schule/BildungsstufeKatalogEintrag";
+import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
+import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
+import { Bildungsstufe } from "@core/asd/types/schule/Bildungsstufe";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 
 /**
  * ModelProxy für Jahrgangsdaten.

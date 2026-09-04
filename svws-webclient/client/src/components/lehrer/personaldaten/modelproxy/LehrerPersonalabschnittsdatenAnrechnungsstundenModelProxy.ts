@@ -1,5 +1,5 @@
-import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core";
-import { ModelProxy } from "@ui";
+import type { LehrerPersonalabschnittsdatenAnrechnungsstunden } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden";
+import { ModelProxy } from "@ui/model/ModelProxy";
 
 /**
  * Der spezielle ModelProxy für die LehrerPersonalabschnittsdatenAnrechnungsstunden

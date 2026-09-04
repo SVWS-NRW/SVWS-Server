@@ -1,14 +1,14 @@
-import type { List } from '../../../../../core/src/java/util/List';
-import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
-import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import type { SchuelerKAoADaten } from '../../../../../core/src/core/data/schueler/SchuelerKAoADaten';
-import type { SchuelerLernabschnittListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerLernabschnittListeEintrag';
-import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
-import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { HashMap } from '../../../../../core/src/java/util/HashMap';
-import { KAOAKategorie } from '../../../../../core/src/asd/types/kaoa/KAOAKategorie';
-import { StateManager } from '../../StateManager';
+import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
+import { KAOAKategorie } from "@core/asd/types/kaoa/KAOAKategorie";
+import type { SchuelerKAoADaten } from "@core/core/data/schueler/SchuelerKAoADaten";
+import type { SchuelerLernabschnittListeEintrag } from "@core/core/data/schueler/SchuelerLernabschnittListeEintrag";
+import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
+import { HashMap } from "@core/java/util/HashMap";
+import { HashSet } from "@core/java/util/HashSet";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { JavaSet } from "@core/java/util/JavaSet";
+import type { List } from "@core/java/util/List";
+import { StateManager } from "@ui/ui/StateManager";
 
 
 interface SchuelerKaoaState {

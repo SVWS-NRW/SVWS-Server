@@ -1,8 +1,15 @@
+import { GostBlockungsdaten } from "@core/core/data/gost/GostBlockungsdaten";
+import { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebnis";
+import { GostFach } from "@core/core/data/gost/GostFach";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { KursblockungAlgorithmusPermanent } from "@core/core/kursblockung/KursblockungAlgorithmusPermanent";
+import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import { GostBlockungsergebnisComparator } from "@core/core/utils/gost/GostBlockungsergebnisComparator";
+import { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { shallowRef } from "vue";
-import type { GostBlockungsdatenManager, List } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdaten, GostBlockungsergebnis, GostFach, GostBlockungsergebnisComparator, GostBlockungsergebnisManager, KursblockungAlgorithmusPermanent } from "@core";
-import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext,
-	WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
+import type { WorkerKursblockungRequestInit, WorkerKursblockungReplyInit, WorkerKursblockungRequestNext, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungReplyErgebnisse, WorkerKursblockungErrorMessage, WorkerKursblockungMessageType } from "./WorkerKursblockungMessageTypes";
 
 
 /**

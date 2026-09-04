@@ -173,26 +173,26 @@
 
 	import { computed, shallowRef } from "vue";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
-	import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
-	import type { List } from "../../../../core/src/java/util/List";
-	import type { StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
-	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht } from "../../../../core/src/core/data/stundenplan/StundenplanKlassenunterricht";
-	import { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
-	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
-	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
-	import { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import type { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
-	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
-	import { Fach } from "../../../../core/src/asd/types/fach/Fach";
-	import { ArrayList, cast_java_util_ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import { HashMap } from "../../../../core/src/java/util/HashMap";
-	import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
-	import { HashMap3D } from "../../../../core/src/core/adt/map/HashMap3D";
-	import { HashMap4D } from "../../../../core/src/core/adt/map/HashMap4D";
-	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import { ListUtils } from "../../../../core/src/core/utils/ListUtils";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+	import { HashMap3D } from "@core/core/adt/map/HashMap3D";
+	import { HashMap4D } from "@core/core/adt/map/HashMap4D";
+	import type { StundenplanKlassenunterricht } from "@core/core/data/stundenplan/StundenplanKlassenunterricht";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKlassenunterricht } from "@core/core/data/stundenplan/StundenplanKlassenunterricht";
+	import type { StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+	import { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
+	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import type { Wochentag } from "@core/core/types/Wochentag";
+	import { ListUtils } from "@core/core/utils/ListUtils";
+	import { ArrayList, cast_java_util_ArrayList } from "@core/java/util/ArrayList";
+	import { HashMap } from "@core/java/util/HashMap";
+	import type { List } from "@core/java/util/List";
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		showSchienen: false,

@@ -1,19 +1,18 @@
 import { ref } from "vue";
-
-import type { DBSchemaListeEintrag } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
 import { routeInit } from "~/router/init/RouteInit";
-
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 import type { RouteParams, RouteLocationRaw } from "vue-router";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {

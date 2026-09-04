@@ -154,11 +154,20 @@
 
 	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
-	import type { List, Sprachbelegung } from '@core';
-	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachreferenzniveau } from '@core';
-	import { GridManager, useSchuleState, useServerState, type SvwsUiSelect } from '@ui';
 	import { SchuelerSprachbelegungModelProxy } from './SchuelerSprachbelegungModelProxy';
 	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+	import type { Sprachbelegung } from '@core/asd/data/schueler/Sprachbelegung';
+	import { Fach } from '@core/asd/types/fach/Fach';
+	import { Jahrgaenge } from '@core/asd/types/jahrgang/Jahrgaenge';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useSchuleState } from '@ui/states/SchuleState';
+	import { useServerState } from '@ui/states/ServerState';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+	import { Sprachreferenzniveau } from '@core/asd/types/fach/Sprachreferenzniveau';
+	import type SvwsUiSelect from '@ui/ui/controls/SvwsUiSelect.vue';
 
 	const props = defineProps<{
 		sprachbelegungen: () => List<Sprachbelegung>;

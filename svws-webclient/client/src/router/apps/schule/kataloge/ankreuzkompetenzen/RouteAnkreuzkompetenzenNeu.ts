@@ -1,11 +1,13 @@
 import { RouteNode } from "~/router/RouteNode";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { ViewType } from "@ui";
 import type { RouteLocationNormalized } from "vue-router";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 import type { AnkreuzkompetenzenNeuProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenNeuProps";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ViewType } from "@ui/ui/nav/ViewType";
 
 
 const AnkreuzkompetenzenNeu = () => import("~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenNeu.vue");

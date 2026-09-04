@@ -1,8 +1,16 @@
-import type { AuswahlManager } from "@ui";
-import { PendingStateManager } from "@ui";
-import type { NationalitaetenKatalogEintrag, SchuelerStammdaten, SchulEintrag, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag, ReligionEintrag,
-	Fahrschuelerart, Haltestelle } from "@core";
-import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
+import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
+import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
+import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
+import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
+import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
+import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
+import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
+import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
+import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 import { computed } from "vue";
 import { routeApp } from "~/router/apps/RouteApp";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";

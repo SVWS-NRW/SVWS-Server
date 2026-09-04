@@ -1,9 +1,15 @@
-import { ValidatorInputRequired, ModelProxy, ValidatorNumberRange } from "@ui";
-import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
-import { ArrayList, Floskelgruppenart } from "@core";
 import { ValidatorFloskelKuerzel } from "~/components/schule/kataloge/floskeln/modelproxy/validation/ValidatorFloskelKuerzel";
 import { computed } from "vue";
-import type { FloskelnListeManager } from "@ui";
+import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
+import type { FachDaten } from "@core/core/data/fach/FachDaten";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+import type { Floskel } from "@core/core/data/schule/Floskel";
+import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 
 export class FloskelModelProxy extends ModelProxy<Floskel> {
 

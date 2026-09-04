@@ -122,10 +122,14 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { GridManager, useBenutzerState, useWiedervorlageState, type TableActions, useNotificationsState } from "@ui";
-	import { WiedervorlageEintrag } from "@core";
 	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
 	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
+	import { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useNotificationsState } from "@ui/states/NotificationsState";
+	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
+	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 
 	const props = defineProps<WiedervorlagenAppProps>();
 

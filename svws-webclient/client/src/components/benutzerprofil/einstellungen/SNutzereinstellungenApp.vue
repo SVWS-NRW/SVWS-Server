@@ -67,8 +67,8 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { NutzereinstellungenAppProps } from "./SNutzereinstellungenAppProps";
-	import { BenutzerTyp } from "@core";
-	import { useBenutzerState } from "@ui";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 
 	const props = defineProps<NutzereinstellungenAppProps>();
 	const benutzerState = useBenutzerState();

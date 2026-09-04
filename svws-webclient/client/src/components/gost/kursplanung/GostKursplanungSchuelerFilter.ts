@@ -1,21 +1,28 @@
-import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, GostKursart, Schueler } from "@core";
-import type { Ref } from "vue";
-import { ArrayList, Geschlecht, GostSchriftlichkeit } from "@core";
+import type { Schueler } from "@core/asd/data/schueler/Schueler";
+import { Geschlecht } from "@core/asd/types/Geschlecht";
+import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
+import type { GostFach } from "@core/core/data/gost/GostFach";
+import type { GostKursart } from "@core/core/types/gost/GostKursart";
+import { GostSchriftlichkeit } from "@core/core/types/gost/GostSchriftlichkeit";
+import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
+import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { computed, ref } from "vue";
 
 
 export class GostKursplanungSchuelerFilter {
 
-	private	kollisionen: Ref<boolean> = ref(false);
-	private	nichtwahlen: Ref<boolean> = ref(false);
-	private	kursfilter_negiert: Ref<boolean> = ref(false);
-	private _name: Ref<string> = ref("");
-	private _kurs: Ref<GostBlockungKurs | undefined> = ref(undefined);
-	private _fach: Ref<number | undefined> = ref(undefined);
-	private _kursart: Ref<GostKursart | undefined> = ref(undefined);
-	private datenmanager: GostBlockungsdatenManager;
-	private ergebnismanager: (() => GostBlockungsergebnisManager);
-	private faecher: List<GostFach>;
+	private	readonly kollisionen = ref(false);
+	private	readonly nichtwahlen = ref(false);
+	private	readonly kursfilter_negiert = ref(false);
+	private readonly _name = ref("");
+	private readonly _kurs = ref<GostBlockungKurs | undefined>();
+	private readonly _fach = ref<number | undefined>();
+	private readonly _kursart = ref<GostKursart | undefined>();
+	private readonly datenmanager: GostBlockungsdatenManager;
+	private readonly ergebnismanager: (() => GostBlockungsergebnisManager);
+	private readonly faecher: List<GostFach>;
 
 	public constructor(datenmanager: GostBlockungsdatenManager, ergebnismanager: (() => GostBlockungsergebnisManager), faecher: List<GostFach>) {
 		this.datenmanager = datenmanager;

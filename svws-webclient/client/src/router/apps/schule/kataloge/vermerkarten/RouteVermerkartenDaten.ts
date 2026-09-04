@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized } from "vue-router";
 import type { VermerkartenDatenProps } from "~/components/schule/kataloge/vermerkarten/daten/VermerkartenDatenProps";
-import type { SchuelerVermerkartZusammenfassung } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeVermerkarten, type RouteVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
 import { RouteManager } from "~/router/RouteManager";
-import { routeSchuelerVermerke } from "../../../schueler/vermerke/RouteSchuelerVermerke";
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { SchuelerVermerkartZusammenfassung } from "@core/core/data/schueler/SchuelerVermerkartZusammenfassung";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchuelerVermerke";
 
 const VermerkartenDaten = () => import("~/components/schule/kataloge/vermerkarten/daten/VermerkartenDaten.vue");
 

@@ -1,7 +1,7 @@
 import { beforeEach, expect, test, afterEach } from "vitest";
-import SvwsUiSpacing from "../../../src/ui/layout/SvwsUiSpacing.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
+import SvwsUiSpacing from "@ui/ui/layout/SvwsUiSpacing.vue";
 
 let wrapper: VueWrapper<InstanceType<typeof SvwsUiSpacing>>;
 

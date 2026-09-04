@@ -1,10 +1,16 @@
-import type { EinwilligungsartenListeManager } from "@ui";
-import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
-import type { Einwilligungsart, EinwilligungsschluesselKatalogEintrag } from "@core";
-import { Einwilligungsschluessel, PersonTyp, JavaInteger } from "@core";
-import { ValidatorEinwilligungsartBezeichnungIsUniqueInList } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/validation/ValidatorEinwilligungsartBezeichnungIsUniqueInList";
+import type { EinwilligungsschluesselKatalogEintrag } from "@core/asd/data/schule/EinwilligungsschluesselKatalogEintrag";
+import { Einwilligungsschluessel } from "@core/asd/types/schule/Einwilligungsschluessel";
+import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
+import { PersonTyp } from "@core/core/types/schule/PersonTyp";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/EinwilligungsartenListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { computed } from "vue";
-import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+import { ValidatorEinwilligungsartBezeichnungIsUniqueInList } from "./validation/ValidatorEinwilligungsartBezeichnungIsUniqueInList";
 
 
 /**

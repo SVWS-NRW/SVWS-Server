@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerListeEintrag } from "@core";
 	import { computed } from "vue";
+	import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
 
 	const props = defineProps<{
 		benutzer: BenutzerListeEintrag;

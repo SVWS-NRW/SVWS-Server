@@ -139,13 +139,17 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-	import type { TabManager, TabData } from "@ui";
-	import { useWiedervorlageState } from "@ui";
-	import { useRegionSwitch, useServerState, useSchuleState, useNotenmodulState, useBenutzerState } from "@ui";
+	import { computed, onMounted, onUnmounted, ref, version, watch } from "vue";
 	import type { AppProps } from './SAppProps';
-	import { githash } from '../../githash';
-	import { version } from '../../version';
+	import { githash } from "@githash";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useNotenmodulState } from "@ui/states/NotenmodulState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useServerState } from "@ui/states/ServerState";
+	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import type { TabData } from "@ui/ui/nav/TabData";
+	import type { TabManager } from "@ui/ui/nav/TabManager";
 
 	const props = defineProps<AppProps>();
 

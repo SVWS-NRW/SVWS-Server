@@ -1,10 +1,9 @@
+import { ServerMode } from "@core/core/types/ServerMode";
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
 import { useRoute } from "vue-router";
-
-import { api } from "~/router/Api";
-import { ServerMode } from "@core/core/types/ServerMode";
+import { api } from "./Api";
 import { RouteManager } from "./RouteManager";
 
 /**

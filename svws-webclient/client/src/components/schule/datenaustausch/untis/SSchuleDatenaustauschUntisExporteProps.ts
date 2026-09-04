@@ -1,4 +1,5 @@
-import type { GostBlockungListeneintrag, List } from "@core";
+import type { GostBlockungListeneintrag } from "@core/core/data/gost/GostBlockungListeneintrag";
+import type { List } from "@core/java/util/List";
 
 export interface SchuleDatenaustauschUntisExporteProps {
 	exportUntisKlassenGPU003: () => Promise<string[]>;

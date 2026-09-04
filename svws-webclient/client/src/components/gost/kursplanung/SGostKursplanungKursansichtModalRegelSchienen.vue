@@ -17,9 +17,11 @@
 
 <script setup lang="ts">
 
+	import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
+	import { GostBlockungSchiene } from "@core/core/data/gost/GostBlockungSchiene";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
+	import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 	import { ref, shallowRef } from "vue";
-	import type { GostBlockungRegelUpdate, GostBlockungsergebnisManager } from "@core";
-	import { GostKursart, GostBlockungSchiene } from "@core";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;

@@ -31,9 +31,9 @@
 
 	import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDatenProps";
 	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
-	import { ErzieherartenModelProxy } from "~/components/schule/kataloge/erzieherarten/modelproxy/ErzieherartenModelProxy";
-	import { useBenutzerState } from "@ui";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { ErzieherartenModelProxy } from "../modelproxy/ErzieherartenModelProxy";
 
 	const props = defineProps<ErzieherartenDatenProps>();
 	const benutzerState = useBenutzerState();

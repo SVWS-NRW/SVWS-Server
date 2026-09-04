@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 
+	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 	import { ref } from "vue";
-	import type { StundenplanManager } from "@core";
 
 	const props = defineProps<{
 		wochenTypModell: number;

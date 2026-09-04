@@ -9,7 +9,7 @@ import { Checkpoint } from "@ui/ui/modal/Checkpoint";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
-import { authStateImpl } from "~/states/AuthStateImpl";
+import { authStateImpl } from "@wenom/states/AuthStateImpl";
 import { RouteManager } from "./RouteManager";
 
 /**

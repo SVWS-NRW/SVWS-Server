@@ -1,4 +1,4 @@
+import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
 import type { RouteAuswahlProps } from "~/router/RouteAuswahlNode";
-import type { KindergaertenListeManager } from "@ui";
 
 export type KindergaertenAppProps = RouteAuswahlProps<KindergaertenListeManager>;

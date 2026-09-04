@@ -17,8 +17,9 @@
 </template>
 
 <script setup lang="ts">
+
+	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 	import { computed, onMounted, ref } from 'vue';
-	import { useGostKlausurplanungState } from '@ui';
 
 	const state = useGostKlausurplanungState();
 	const termine = computed(() => state.manager.terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));

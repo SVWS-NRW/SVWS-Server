@@ -70,8 +70,14 @@
 
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
-	import { useBenutzerState, useRegionSwitch, useSchuleState, ViewType } from "@ui";
-	import { BenutzerKompetenz, type KlassenDaten, PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform } from "@core";
+	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from "@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useSchuleState } from "@ui/states/SchuleState";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
 
 	const schuleState = useSchuleState();
 	const benutzerState = useBenutzerState();

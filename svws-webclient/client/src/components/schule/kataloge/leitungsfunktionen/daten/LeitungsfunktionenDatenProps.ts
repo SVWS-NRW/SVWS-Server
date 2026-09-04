@@ -1,5 +1,5 @@
-import type { Leitungsfunktion } from "@core";
-import type { LeitungsfunktionenListeManager } from "@ui";
+import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
+import type { LeitungsfunktionenListeManager } from "@ui/ui/manager/kataloge/LeitungsfunktionenListeManager";
 
 export interface LeitungsfunktionenDatenProps {
 	manager: () => LeitungsfunktionenListeManager;

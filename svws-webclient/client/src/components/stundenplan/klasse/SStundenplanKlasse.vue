@@ -165,11 +165,25 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, DataTableColumn } from "@ui";
-	import { useBenutzerState, useRegionSwitch } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
-	import type { List, StundenplanRaum } from "@core";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, StundenplanKlasse } from "@core";
+	import { Fach } from "@core/asd/types/fach/Fach";
+	import { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
+	import { StundenplanKlassenunterricht } from "@core/core/data/stundenplan/StundenplanKlassenunterricht";
+	import { StundenplanKurs } from "@core/core/data/stundenplan/StundenplanKurs";
+	import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+	import { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
+	import { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
+	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ArrayList } from "@core/java/util/ArrayList";
+	import { HashSet } from "@core/java/util/HashSet";
+	import type { List } from "@core/java/util/List";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui/components/stundenplan/StundenplanAnsichtProps";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import type { DataTableColumn } from "@ui/types";
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { ListUtils } from "@core/core/utils/ListUtils";
 
 	const props = defineProps<StundenplanKlasseProps>();
 	const benutzerState = useBenutzerState();

@@ -15,8 +15,10 @@
 
 
 <script setup lang="ts">
-	import { reactive } from "vue";
-	import { logEvent } from '../../stories/helper';
+
+	import { logEvent } from '@ui/stories/helper';
+	import { reactive } from 'vue';
+
 
 	const variantControlsMap = new Map([
 		['Default', reactive({ active: false, collapsed: false, disabled: false, subline: '' })],

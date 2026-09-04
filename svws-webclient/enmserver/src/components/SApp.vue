@@ -124,12 +124,12 @@
 
 	import { onMounted, onUnmounted, ref } from "vue";
 	import type { AppProps } from './SAppProps';
-	import { githash } from '../../githash';
-	import { version } from '../../version';
+	import { githash } from "@githash";
+	import { version } from "@version";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TabData } from "@ui/ui/nav/TabData";
-	import { useAuthState } from "~/states/AuthState";
-	import { useActivityState } from "~/states/ActivityState";
+	import { useAuthState } from "@wenom/states/AuthState";
+	import { useActivityState } from "@wenom/states/ActivityState";
 
 	const activityState = useActivityState();
 	const auth = useAuthState();

@@ -4,15 +4,15 @@ import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
 import { GridInputToggle } from "./GridInputToggle";
-import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { GridInputNote } from "./GridInputNote";
 import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
-import type { Collection } from "../../../../../core/src/java/util/Collection";
-import type { List } from "../../../../../core/src/java/util/List";
-import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
-import { HashMap } from "../../../../../core/src/java/util/HashMap";
-import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import { GridInputNumberFixed } from "./GridInputNumberFixed";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import type { Collection } from "@core/java/util/Collection";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
+import type { List } from "@core/java/util/List";
 
 /** Der Typ des Elements, welches als Grid-Input-Element in den Manager übergeben werden kann */
 type GridElementType = Element | ComponentPublicInstance<unknown> | null;

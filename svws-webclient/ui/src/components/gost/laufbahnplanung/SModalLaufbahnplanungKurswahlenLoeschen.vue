@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 
+	import { useGostLaufbahnplanungState } from '@ui/states/GostLaufbahnplanungState';
 	import { computed, ref } from 'vue';
-	import { useGostLaufbahnplanungState } from '../../../states/GostLaufbahnplanungState';
 
 	const props = withDefaults(defineProps<{
 		schuelerAnsicht?: boolean;

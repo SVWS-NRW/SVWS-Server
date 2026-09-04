@@ -1,4 +1,4 @@
-import type { StundenplanManager } from "@core";
+import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface StundenplanRaumProps {
