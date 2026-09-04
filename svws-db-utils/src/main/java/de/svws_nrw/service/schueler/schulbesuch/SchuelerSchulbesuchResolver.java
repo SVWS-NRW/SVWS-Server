@@ -224,9 +224,6 @@ public final class SchuelerSchulbesuchResolver {
 		if (!isOeffentlicheOderErsatzschuleInNRW(schule.schulnummerIntern) && !isSonstigeSchule(schule.schulnummerIntern)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Schulnummer %s ist ungültig".formatted(schule.schulnummerStatistik));
 		}
-		if (schule.idSchulform == null) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Schule %d ist keine Schulform zugeordnet".formatted(schule.id));
-		}
 	}
 
 	private static void patchSchulform(final DTOSchueler entity, final SchulEintrag schule) {

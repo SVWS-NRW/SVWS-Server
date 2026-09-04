@@ -10,9 +10,7 @@
 						class="contentFocusField"
 						v-model="model.selectedSchulformSonstigeSchule.value"
 						:manager="schulformSelectManager"
-						:readonly="isInternal"
-						:validation="() => model.getFehler('idSchulform')"
-						required :removable="false" />
+						:readonly="isInternal" />
 					<svws-ui-text-input placeholder="Statistik-Schulnummer"
 						:model-value="model.proxy.schulnummerStatistik"
 						readonly statistics />

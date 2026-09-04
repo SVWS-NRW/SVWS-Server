@@ -35,9 +35,7 @@
 						<ui-select label="Schulform" v-else-if="!isInternal"
 							:manager="schulformenExternSelectManager"
 							v-model="model.selectedSchulformSonstigeSchule.value"
-							:disabled="!hatKompetenzAdd"
-							:validation="() => model.getFehler('idSchulform')"
-							required />
+							:disabled="!hatKompetenzAdd" />
 						<svws-ui-text-input placeholder="Statistik-Schulnummer"
 							:model-value="model.proxy.schulnummerStatistik"
 							:disabled="!hatKompetenzAdd" readonly />
