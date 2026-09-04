@@ -18,10 +18,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		// initialize used states
-		await Promise.all([
-			wiedervorlageStateImpl.init(),
-		]);
+		// initialize states, load data etc
 	}
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {

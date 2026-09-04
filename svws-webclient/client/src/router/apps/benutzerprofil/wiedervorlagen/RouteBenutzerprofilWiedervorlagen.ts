@@ -27,10 +27,9 @@ export class RouteBenutzerprofilWiedervorlagen extends RouteNode<RouteDataBenutz
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		// initialize used states
+		// initialize states, load data etc
 		await Promise.all([
-			wiedervorlageStateImpl.init(),
-			wiedervorlageStateImpl.ladeWiedervorlagen(),
+			wiedervorlageStateImpl.updateWiedervorlagen(),
 		]);
 	}
 

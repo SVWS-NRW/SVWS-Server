@@ -17,6 +17,13 @@
 	padding: 0.25em 0.45em;
 }
 
+.badge--small {
+	font-size: 0.5em;
+	margin-top: 0.4em;
+	margin-bottom: -0.5em;
+	padding: 0.25em 0.45em;
+}
+
 .badge--error {
 	@apply bg-ui-danger;
 	@apply border-ui-danger;
@@ -51,9 +58,6 @@
 	@apply overflow-hidden relative line-clamp-1 text-ellipsis w-16 max-w-full break-all;
 }
 
-.badge--small {
-	font-size: 0.5em;
-	margin-top: 0.4em;
-	margin-bottom: -0.5em;
-	padding: 0.25em 0.45em;
+.badge--rounded {
+	@apply rounded-full;
 }

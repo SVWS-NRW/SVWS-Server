@@ -70,6 +70,7 @@ import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulA
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 import SApp from "~/components/SApp.vue";
 import { routeSchuleReportingKonfiguration } from "./schule/reporting/RouteSchuleReportingKonfiguration";
 
@@ -243,6 +244,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
+		// if route is a parent route node
+		if (to.children.length > 0) {
+			await wiedervorlageStateImpl.updateAnzahlOffeneWiedervorlagen();
+		}
+
 		try {
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist

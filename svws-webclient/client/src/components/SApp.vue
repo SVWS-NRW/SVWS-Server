@@ -3,8 +3,15 @@
 		<template #sidebar>
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
-					<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="benutzerState.benutzerdaten.anzeigename" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
+					<svws-ui-menu-header v-if="menu.benutzerprofil !== null"
+						class="cursor-pointer"
+						:user="benutzerState.benutzerdaten.anzeigename"
+						:schule="schulname"
+						:schema="schemaname"
+						:hint="userWiedervorlageHint"
+						@click="startSetApp(menu.benutzerprofil)" />
 				</template>
+
 				<template #default>
 					<template v-for="item in menu.main" :key="item.name">
 						<svws-ui-menu-item :active="menu.mainEntry.name === item.name" @click="startSetApp(item)">
@@ -27,7 +34,12 @@
 				</template>
 				<template #version>
 					<div class="flex gap-1 items-center">
-						<div>{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ serverState.mode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
+						<div>
+							{{ version }}
+							<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ serverState.mode.name() }}-Mode&nbsp;
+								<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a>
+							</span>
+						</div>
 						<div type="transparent" class="cursor-pointer icon" @click="copyToClipboard" :class="{
 							'i-ri-file-copy-line': copied === null,
 							'i-ri-error-warning-fill': copied === false,
@@ -68,7 +80,12 @@
 								<svws-ui-spinner spinning />
 								<span class="text-base font-normal">lade Daten …</span>
 							</div>
-							<svws-ui-checkbox type="toggle" v-else-if="notenmodulState.istAdminLehrer !== null" :model-value="notenmodulState.istAdminLehrer" @update:model-value="notenmodulState.toggleAdmin()">Admin</svws-ui-checkbox>
+							<svws-ui-checkbox v-else-if="notenmodulState.istAdminLehrer !== null"
+								type="toggle"
+								:model-value="notenmodulState.istAdminLehrer"
+								@update:model-value="notenmodulState.toggleAdmin()">
+								Admin
+							</svws-ui-checkbox>
 							<div v-else />
 						</div>
 					</div>
@@ -110,7 +127,9 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp"
+					class="flex flex-col w-full h-full grow overflow-hidden"
+					:class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="menu.current.name" />
 				</div>
 			</main>
@@ -122,20 +141,24 @@
 
 	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 	import type { TabManager, TabData } from "@ui";
+	import { useWiedervorlageState } from "@ui";
 	import { useRegionSwitch, useServerState, useSchuleState, useNotenmodulState, useBenutzerState } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
+
 	const benutzerState = useBenutzerState();
 	const notenmodulState = useNotenmodulState();
 	const serverState = useServerState();
-
+	const wiedervorlageState = useWiedervorlageState();
 	const schuleState = useSchuleState();
 
 	const { focusHelpVisible, focusSwitchingEnabled, enable, disable } = useRegionSwitch();
+
 	const appLayout = ref();
+
 	onMounted(() => {
 		if (props.menu.current.name === 'statistik') {
 			appLayout.value?.setSecondSidebarExpanded(false);
@@ -144,6 +167,7 @@
 		}
 		enable();
 	});
+
 	onUnmounted(() => disable());
 
 	watch(() => props.menu.current.name, (m) => {
@@ -180,6 +204,14 @@
 		}
 
 		return null;
+	});
+
+	const userWiedervorlageHint = computed<{ number: number, type: "highlight", text: string } | undefined>(() => {
+		const anzahl = wiedervorlageState.anzahlOffeneWiedervorlagen;
+		const text = anzahl === 1 ?
+			"Es liegt eine offene Wiedervorlage vor." : `Es liegen ${anzahl} offene Wiedervorlagen vor.`;
+		return anzahl > 0 ?
+			{ number: anzahl, type: "highlight", text: text } : undefined;
 	});
 
 	const pendingSetApp = ref('');

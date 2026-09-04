@@ -35,6 +35,7 @@ const routes = [
 	{ path: '/layout/Card', component: () => import('../ui/layout/UiCard.story.vue') },
 	{ path: '/modal/Modal', component: () => import('../ui/modal/SvwsUiModal.story.vue') },
 	{ path: '/navigation/Menu', component: () => import('../ui/nav/SvwsUiMenu.story.vue') },
+	{ path: '/navigation/MenuHeader', component: () => import('../ui/nav/SvwsUiMenuHeader.story.vue') },
 	{ path: '/navigation/MenuItem', component: () => import('../ui/nav/SvwsUiMenuItem.story.vue') },
 	{ path: '/navigation/TabBar', component: () => import('../ui/nav/SvwsUiTabBar.story.vue') },
 	{ path: '/navigation/AppLayout', component: () => import('../ui/nav/SvwsUiMenu.story.vue') },

@@ -13,17 +13,19 @@ export interface WiedervorlageState {
 
 	get wiedervorlagenListe(): List<WiedervorlageEintrag>;
 
+	get anzahlOffeneWiedervorlagen(): number;
+
 	init(): Promise<void>;
 
-	ladeWiedervorlagen(): Promise<void>;
+	updateWiedervorlagen(): Promise<void>;
+
+	updateAnzahlOffeneWiedervorlagen(): Promise<void>;
 
 	addWiedervorlage(data: Partial<WiedervorlageEintrag>): Promise<WiedervorlageEintrag>;
 
 	patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void>;
 
 	toggleWiedervorlageErledigung(data: WiedervorlageEintrag): Promise<boolean>;
-
-	setBenutzergruppen(): Promise<void>;
 }
 
 export const WiedervorlageStateKey: InjectionKey<WiedervorlageState> = Symbol('WiedervorlageState');

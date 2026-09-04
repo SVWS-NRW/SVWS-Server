@@ -4,18 +4,12 @@ import type { List, BenutzergruppeListeEintrag, WiedervorlageEintrag } from "@co
 import { ArrayList, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { benutzerStateImpl } from "../BenutzerStateImpl";
-
-interface BenutzerGruppen {
-	data: List<BenutzergruppeListeEintrag>
-}
-
-interface Wiedervorlagen {
-	data: List<WiedervorlageEintrag>;
-}
+import { notificationStateImpl } from "~/states/NotificationsStateImpl";
 
 interface WiedervorlageReactiveState {
-	benutzerGruppen: BenutzerGruppen;
-	wiedervorlagenListe: Wiedervorlagen;
+	anzahlOffeneWiedervorlagen: number;
+	wiedervorlagenListe: List<WiedervorlageEintrag>;
+	benutzerGruppen: List<BenutzergruppeListeEintrag>;
 }
 
 /**
@@ -25,38 +19,79 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 
 	public constructor() {
 		super({
-			benutzerGruppen: { data: new ArrayList<BenutzergruppeListeEintrag>() },
-			wiedervorlagenListe: { data: new ArrayList<WiedervorlageEintrag>() },
+			anzahlOffeneWiedervorlagen: 0,
+			wiedervorlagenListe: new ArrayList<WiedervorlageEintrag>(),
+			benutzerGruppen: new ArrayList<BenutzergruppeListeEintrag>(),
 		});
-	}
-
-	public get benutzerGruppen(): List<BenutzergruppeListeEintrag> {
-		return this.state.benutzerGruppen.data;
-	}
-
-	/** Getter für die Wiedervorlage-Liste */
-	public get wiedervorlagenListe(): List<WiedervorlageEintrag> {
-		return this.state.wiedervorlagenListe.data;
 	}
 
 	/** Initialisierung des States - lädt alle Daten */
 	public async init() {
-		await Promise.all([
-			this.setBenutzergruppen(),
-			// TODO lade wiedervorlagen anzahl
+		const [benutzerGruppen, anzahlOffeneWiedervorlagen] = await Promise.all([
+			this.ladeBenutzergruppen(),
+			this.ladeAnzahlOffenWiedervorlagen(),
 		]);
+
+		this.setPatchedDefaultState({ benutzerGruppen, anzahlOffeneWiedervorlagen });
+
+		if (this.state.anzahlOffeneWiedervorlagen > 0) {
+			const anzahl = this.state.anzahlOffeneWiedervorlagen;
+			const text = anzahl === 1 ? `Es liegt 1 offene Wiedervorlage vor.` : `Es liegen ${anzahl} offene Wiedervorlagen vor.`;
+			setTimeout(() => notificationStateImpl.warning("Hinweis", text, 5000), 3000);
+		}
+	}
+
+	/** Getter für die möglichen Benutzergruppen bei der Erstellung einer Wiedervorlage */
+	public get benutzerGruppen(): List<BenutzergruppeListeEintrag> {
+		return this.state.benutzerGruppen;
+	}
+
+	/** Getter für die Wiedervorlage-Liste */
+	public get wiedervorlagenListe(): List<WiedervorlageEintrag> {
+		return this.state.wiedervorlagenListe;
+	}
+
+	public get anzahlOffeneWiedervorlagen(): number {
+		return this.state.anzahlOffeneWiedervorlagen;
 	}
 
 	/** Lädt die kompletten Daten für Wiedervorlagen */
-	public async ladeWiedervorlagen(): Promise<void> {
+	private async ladeWiedervorlagen(): Promise<List<WiedervorlageEintrag>> {
 		let wiedervorlagenListe: List<WiedervorlageEintrag>;
 		try {
 			wiedervorlagenListe = await api.server.getWiedervorlageListe(api.schema);
 		} catch {
 			throw new DeveloperNotificationException("Das Laden der Wiedervorlagen ist fehlgeschlagen.");
 		}
-		this.setPatchedState({ wiedervorlagenListe: { data: wiedervorlagenListe } });
+		return wiedervorlagenListe;
+	}
 
+	private async ladeAnzahlOffenWiedervorlagen(): Promise<number> {
+		let anzahl: number;
+		try {
+			anzahl = await api.server.getAnzahlOffeneWiedervorlagen(api.schema);
+		} catch {
+			throw new DeveloperNotificationException("Das Laden der Wiedervorlagen ist fehlgeschlagen.");
+		}
+		return anzahl;
+	}
+
+	public async updateWiedervorlagen(): Promise<void> {
+		const [wiedervorlagenListe, anzahlOffeneWiedervorlagen] = await Promise.all([
+			this.ladeWiedervorlagen(),
+			this.ladeAnzahlOffenWiedervorlagen(),
+		]);
+
+		this.setPatchedState({ wiedervorlagenListe, anzahlOffeneWiedervorlagen });
+	}
+
+	public async updateAnzahlOffeneWiedervorlagen(): Promise<void> {
+		const anzahlOffeneWiedervorlagen = await this.ladeAnzahlOffenWiedervorlagen();
+
+		if (anzahlOffeneWiedervorlagen !== this.state.anzahlOffeneWiedervorlagen) {
+			this.setPatchedState({ anzahlOffeneWiedervorlagen });
+
+		}
 	}
 
 	/** Erstellt eine Wiedervorlage */
@@ -67,7 +102,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		} catch {
 			throw new DeveloperNotificationException("Das Anlegen der Wiedervorlage ist fehlgeschlagen.");
 		}
-		await this.ladeWiedervorlagen();
+		await this.updateWiedervorlagen();
 		return response;
 	}
 
@@ -78,7 +113,7 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		} catch {
 			throw new DeveloperNotificationException("Das Bearbeiten der Wiedervorlage ist fehlgeschlagen.");
 		}
-		await this.ladeWiedervorlagen();
+		await this.updateWiedervorlagen();
 	}
 
 	/** Wechselt den Erledigungsstatus einer Wiedervorlage */
@@ -91,12 +126,12 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		} catch {
 			throw new DeveloperNotificationException("Das Setzen des Status der Wiedervorlage ist fehlgeschlagen.");
 		}
-		await this.ladeWiedervorlagen();
+		await this.updateWiedervorlagen();
 		return !isErledigt;
 	}
 
-	/** Setzt die Benutzergruppen */
-	public async setBenutzergruppen(): Promise<void> {
+	/** Lädt die Benutzergruppen für die Erstellung einer Wiedervorlage */
+	private async ladeBenutzergruppen(): Promise<List<BenutzergruppeListeEintrag>> {
 		let data: List<BenutzergruppeListeEintrag>;
 		try {
 			if (benutzerStateImpl.istAdmin) {
@@ -110,7 +145,8 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		} catch {
 			throw new DeveloperNotificationException("Das Laden der Benutzergruppen ist fehlgeschlagen.");
 		}
-		this.setPatchedState({ benutzerGruppen: { data } });
+
+		return data;
 	}
 }
 

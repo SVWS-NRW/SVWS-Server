@@ -14,6 +14,7 @@ import type { RouteParams, RouteLocationRaw } from "vue-router";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -43,7 +44,7 @@ export class RouteLogin extends RouteNode<any, any> {
 		await api.login(schema, username, password);
 		if (benutzerStateImpl.authenticated) {
 			try {
-				await Promise.all([schuleStateImpl.init(), serverStateImpl.init()]);
+				await Promise.all([schuleStateImpl.init(), serverStateImpl.init(), wiedervorlageStateImpl.init()]);
 				// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
 				if (this.routepath !== "/") {
 					if (!this.routepath.startsWith("/" + encodeURIComponent(schema))) {
