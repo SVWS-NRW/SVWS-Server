@@ -1,6 +1,6 @@
 package de.svws_nrw.asd.export.aggregation;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
@@ -27,7 +27,6 @@ import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
-import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 
@@ -59,7 +58,7 @@ public class AggregationLehrerStatistikExport {
 	/**
 	 * Eine Liste der Fehlermeldungen zu den aufgetretenen Fehlern.
 	 */
-	private final LinkedList<String> fehlermeldungen;
+	private final List<String> fehlermeldungen;
 
 	/**
 	 * Die für den Export vorgesehenen Statistikdaten mit den Aggregaten.
@@ -80,7 +79,7 @@ public class AggregationLehrerStatistikExport {
 	 * @param statistikExport
 	 */
 	public AggregationLehrerStatistikExport(final StatistikGesamt statistikGesamt, final StatistikExport statistikExport,
-			final LinkedList<String> fehlermeldungen) {
+			final List<String> fehlermeldungen) {
 		this.statistikGesamt = statistikGesamt;
 		this.statistikExport = statistikExport;
 		this.fehlermeldungen = fehlermeldungen;
@@ -181,8 +180,7 @@ public class AggregationLehrerStatistikExport {
 			fehlermeldungen.add(e.getLocalizedMessage() + " Das Geburtsdatum des Lehrers mit folgender ID konnte nicht geparst werden " + lehrer.id);
 		}
 		lehrerExport.geschlecht = lehrer.geschlecht;
-		lehrerExport.staatsangehoerigkeit = Nationalitaeten.getDEU().equals(Nationalitaeten.data().getWertByIDOrNull(lehrer.idStaatsangehoerigkeit)) ? ""
-				: Nationalitaeten.data().getSchluesselByIDOrNull(lehrer.idStaatsangehoerigkeit);
+		lehrerExport.staatsangehoerigkeit = AggregationUtils.ermittleStaatsangehoerigkeitSchluessel(lehrer.idStaatsangehoerigkeit);
 		lehrerExport.rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getNameByIDOrNull(lehrer.idRechtsverhaeltnis);
 		lehrerExport.beschaeftigungsart = LehrerBeschaeftigungsart.data().getNameByIDOrNull(lehrer.idBeschaeftigungsart);
 		lehrerExport.einsatzstatus = LehrerEinsatzstatus.data().getSchluesselByIDOrNull(lehrer.idEinsatzstatus);
@@ -192,8 +190,6 @@ public class AggregationLehrerStatistikExport {
 		lehrerExport.pflichtstundensoll = lehrer.pflichtstundensoll == null ? 0.0 : lehrer.pflichtstundensoll;
 		lehrerExport.zuErteilenderUnterricht = ((lehrerExport.pflichtstundensoll - lehrer.anrechnungen.stream().mapToDouble(e -> e.anzahl).sum())
 				+ lehrer.mehrleistung.stream().mapToDouble(e -> e.anzahl).sum()) - lehrer.minderleistung.stream().mapToDouble(e -> e.anzahl).sum();
-		//	lehrerExport.erteilerUnterricht = lehrer.erteilerUnterricht;
-
 
 		lehrer.lehraemter.stream().forEach(lehramt -> erstellenLehraemterStatistikExport(lehramt, lehrerExport));
 		lehrer.anrechnungen.stream().forEach(anrechnung -> erstellenLehrerAnrechungenStatistikExport(anrechnung, lehrerExport));

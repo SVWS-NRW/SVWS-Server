@@ -1,7 +1,5 @@
 package de.svws_nrw.asd.export.aggregation;
 
-import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.auffuellenStellengerecht;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +27,6 @@ import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 
 /*
  * AggregationStatistikExport.java
@@ -246,8 +243,7 @@ public class AggregationUvdStatistikExport {
 				}
 			}
 
-			final String sgl = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung) == null ? ""
-					: Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
+			final String sgl = AggregationUtils.auffuellenStellengerecht(AggregationUtils.getSchulgliederungById(lernabschnitt.idSchulgliederung), 3);
 			final String jahrgangSgl = jahrgangKurseOhneKlassenverband.concat(sgl);
 
 			for (final SchuelerLeistungsdatenStatistikGesamt l : lernabschnitt.leistungsdaten) {
@@ -517,12 +513,13 @@ public class AggregationUvdStatistikExport {
 			final String jahrgangKurseImKlassenverband, final KlassenStatistikGesamt klasse) {
 
 		final FachStatistikGesamt fachObj = fachIdMap.get(schuelerLeistungsdaten.fachID);
-		final String fach = (fachObj != null) ? auffuellenStellengerecht(fachObj.kuerzelStatistik, 2) : "  ";
+		final String fach = (fachObj != null) ? AggregationUtils.auffuellenStellengerecht(fachObj.kuerzelStatistik, 2) : "  ";
 
 		final LehrerStatistikGesamt lehrerObj = lehrerIdMap.get(schuelerLeistungsdaten.lehrerID);
-		final String lehrerkuerzel = (lehrerObj != null) ? auffuellenStellengerecht(lehrerObj.kuerzel, 4) : "    ";
+		final String lehrerkuerzel = (lehrerObj != null) ? AggregationUtils.auffuellenStellengerecht(lehrerObj.kuerzel, 4) : "    ";
 
-		final String parallelitaetStr = ((klasse != null) && (klasse.parallelitaet != null)) ? auffuellenStellengerecht(klasse.parallelitaet, 2) : "  ";
+		final String parallelitaetStr =
+				((klasse != null) && (klasse.parallelitaet != null)) ? AggregationUtils.auffuellenStellengerecht(klasse.parallelitaet, 2) : "  ";
 
 		final String key = jahrgangKurseImKlassenverband.concat(parallelitaetStr)
 				.concat(lehrerkuerzel).concat(fach);

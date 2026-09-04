@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.export.aggregation;
 
-import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -10,7 +11,6 @@ import de.svws_nrw.asd.export.data.StatistikExport;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
-import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
@@ -43,7 +43,7 @@ public class AggregationSchuelerZahlenStatistikExport {
 	/**
 	 * Eine Liste der Fehlermeldungen zu den aufgetretenen Fehlern.
 	 */
-	private final LinkedList<String> fehlermeldungen;
+	private final List<String> fehlermeldungen;
 
 	/**
 	 * Die für den Export vorgesehenen Statistikdaten mit den Aggregaten.
@@ -65,6 +65,11 @@ public class AggregationSchuelerZahlenStatistikExport {
 	 */
 	private final Schulform schulform;
 
+	/**
+	 * Zuordnung der Foerderschwerpunkt-IDs der Schule zu den idFoerderschwerpunkt des Katalogs.
+	 */
+	private final Map<Long, Long> foerderschwerpunktIdMap;
+
 
 
 	/**
@@ -73,13 +78,15 @@ public class AggregationSchuelerZahlenStatistikExport {
 	 * @param statistikExport
 	 * @param aktuellesSchuljahr
 	 * @param fehlermeldungen
+	 * @param foerderschwerpunktIdMap
 	 */
 	public AggregationSchuelerZahlenStatistikExport(final StatistikGesamt statistikGesamt, final StatistikExport statistikExport, final int aktuellesSchuljahr,
-			final LinkedList<String> fehlermeldungen) {
+			final List<String> fehlermeldungen, final Map<Long, Long> foerderschwerpunktIdMap) {
 		this.statistikGesamt = statistikGesamt;
 		this.statistikExport = statistikExport;
 		this.aktuellesSchuljahr = aktuellesSchuljahr;
 		this.fehlermeldungen = fehlermeldungen;
+		this.foerderschwerpunktIdMap = foerderschwerpunktIdMap;
 		schulform = Schulform.data().getWertByBezeichner(statistikGesamt.schule.schulform);
 
 	}
@@ -116,7 +123,7 @@ public class AggregationSchuelerZahlenStatistikExport {
 			final Geschlecht geschlecht = Geschlecht.fromValue(schueler.geschlecht);
 			final boolean istWeiblich = geschlecht == Geschlecht.W;
 
-			final String schuelerStatus = SchuelerStatus.data().getNameByIDOrNull(Long.valueOf(schueler.status));
+			final String schuelerStatus = SchuelerStatus.data().getNameByIDOrNull((long) schueler.status);
 
 			//Aufsummierung: nur Aktive Schüler
 			if (schuelerStatus.equals(SchuelerStatus.AKTIV.name())) {
@@ -161,7 +168,7 @@ public class AggregationSchuelerZahlenStatistikExport {
 			export.schuelerZahlenStatistikExport.schuelerOhneAngabe++;
 		}
 
-		if (istAuslaender(schueler)) {
+		if (AggregationUtils.istAuslaender(schueler, aktuellesSchuljahr)) {
 			erhoehen(() -> export.schuelerZahlenStatistikExport.auslaenderZusammen++,
 					() -> export.schuelerZahlenStatistikExport.auslaenderWeiblich++,
 					istWeiblich);
@@ -197,8 +204,9 @@ public class AggregationSchuelerZahlenStatistikExport {
 
 
 		// über bezeichner schueler.Foerderschwerpunkt != keiner und != null
-		if ((Foerderschwerpunkt.data().getNameByIDOrNull(schueler.lernabschnitte.getLast().idFoerderschwerpunkt1) != null)
-				&& !Foerderschwerpunkt.data().getNameByIDOrNull(schueler.lernabschnitte.getLast().idFoerderschwerpunkt1).equals("KEINER")) {
+		final Long fspId = foerderschwerpunktIdMap.get(schueler.lernabschnitte.getLast().idFoerderschwerpunkt1);
+		if ((Foerderschwerpunkt.data().getWertByIDOrNull(fspId) != null)
+				&& (Foerderschwerpunkt.KEINER != Foerderschwerpunkt.data().getWertByIDOrNull(fspId))) {
 			erhoehen(() -> export.schuelerZahlenStatistikExport.foerderschwerpunktZusammen++,
 					() -> export.schuelerZahlenStatistikExport.foerderschwerpunktWeiblich++,
 					istWeiblich);
@@ -287,7 +295,7 @@ public class AggregationSchuelerZahlenStatistikExport {
 	 */
 	private boolean istZurZeitAngemeldetA13(final SchuelerStatistikGesamt schueler) {
 		final String[] sgl = { "A13", "A19" };
-		final String schuelerSgl = Schulgliederung.data().getSchluesselByID(schueler.lernabschnitte.getLast().idSchulgliederung);
+		final String schuelerSgl = Schulgliederung.data().getSchluesselByIDOrNull(schueler.lernabschnitte.getLast().idSchulgliederung);
 
 		return ArrayUtils.contains(sgl, schuelerSgl);
 	}
@@ -302,7 +310,7 @@ public class AggregationSchuelerZahlenStatistikExport {
 	private boolean istZurZeitAngemeldetA12(final SchuelerStatistikGesamt schueler) {
 
 		final String[] sgl = { "A12", "A17", "A18" };
-		final String schuelerSgl = Schulgliederung.data().getSchluesselByID(schueler.lernabschnitte.getLast().idSchulgliederung);
+		final String schuelerSgl = Schulgliederung.data().getSchluesselByIDOrNull(schueler.lernabschnitte.getLast().idSchulgliederung);
 
 		return ArrayUtils.contains(sgl, schuelerSgl);
 
@@ -316,10 +324,10 @@ public class AggregationSchuelerZahlenStatistikExport {
 	 * @return true, wenn sgl gültig ist
 	 */
 	private boolean istAuslaenderBsVollzeit(final SchuelerStatistikGesamt schueler) {
-		if (istAuslaender(schueler)) {
+		if (AggregationUtils.istAuslaender(schueler, aktuellesSchuljahr)) {
 
 			final String[] sgl = { "A12", "A17", "A18" };
-			final String schuelerSgl = Schulgliederung.data().getSchluesselByID(schueler.lernabschnitte.getLast().idSchulgliederung);
+			final String schuelerSgl = Schulgliederung.data().getSchluesselByIDOrNull(schueler.lernabschnitte.getLast().idSchulgliederung);
 
 			return ArrayUtils.contains(sgl, schuelerSgl);
 
@@ -336,10 +344,10 @@ public class AggregationSchuelerZahlenStatistikExport {
 	 */
 	private boolean istAuslaenderBsTeilzeit(final SchuelerStatistikGesamt schueler) {
 
-		if (istAuslaender(schueler)) {
+		if (AggregationUtils.istAuslaender(schueler, aktuellesSchuljahr)) {
 
 			final String[] sgl = { "A01", "A02", "A03", "A04", "A13", "A19" };
-			final String schuelerSgl = Schulgliederung.data().getSchluesselByID(schueler.lernabschnitte.getLast().idSchulgliederung);
+			final String schuelerSgl = Schulgliederung.data().getSchluesselByIDOrNull(schueler.lernabschnitte.getLast().idSchulgliederung);
 
 			return ArrayUtils.contains(sgl, schuelerSgl);
 
@@ -365,16 +373,6 @@ public class AggregationSchuelerZahlenStatistikExport {
 		if (istWeiblich) {
 			weiblich.run();
 		}
-	}
-
-	/**
-	 * Prüft, ob der Schüler ausländer ist.
-	 *
-	 * @param schueler SchuelerStatistikGesamt
-	 * @return true, schueler ausländer ist
-	 */
-	private boolean istAuslaender(final SchuelerStatistikGesamt schueler) {
-		return !schueler.idStaatsangehoerigkeit.equals(Nationalitaeten.getDEU().id(aktuellesSchuljahr));
 	}
 
 

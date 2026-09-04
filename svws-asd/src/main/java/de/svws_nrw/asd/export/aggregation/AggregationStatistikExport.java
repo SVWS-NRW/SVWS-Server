@@ -99,12 +99,12 @@ public class AggregationStatistikExport {
 	private final Map<Long, Long> religionIdMap;
 
 	/**
-	 * Zuordnung der ID eines Kurses zum zugehörigen {@link kursStatistikGesamt}-Objekt.
+	 * Zuordnung der ID eines Kurses zum zugehörigen {@link KursStatistikGesamt}-Objekt.
 	 */
 	private final Map<Long, KursStatistikGesamt> kurseIdMap;
 
 	/**
-	 * Zuordnung der ID eines Ortes zum zugehörigen {@link kursStatistikGesamt}-Objekt.
+	 * Zuordnung der ID eines Ortes zum zugehörigen {@link OrteStatistikGesamt}-Objekt.
 	 */
 	private final Map<Long, OrteStatistikGesamt> orteIdMap;
 
@@ -137,23 +137,6 @@ public class AggregationStatistikExport {
 		final Optional<Schuljahresabschnitt> optional =
 				statistikGesamt.schule.abschnitte.stream().filter(e -> e.id == statistikGesamt.schule.idSchuljahresabschnitt).findFirst();
 		aktuellesSchuljahr = optional.isPresent() ? optional.get().schuljahr : 0;
-	}
-
-	/**
-	 * Auffüllen eines Feldes auf eine bestimmte Anzahl an Stellen mit Leerzeichen.
-	 *
-	 * @param feld
-	 * @param anzahlStellen
-	 * @return mit Leerzeichen aufgefülltes Feld
-	 */
-	public static String auffuellenStellengerecht(final String feld, final int anzahlStellen) {
-		String feldFormatiert = feld;
-
-		while (feldFormatiert.toCharArray().length < anzahlStellen) {
-			feldFormatiert = feldFormatiert.concat(EIN_LEERZEICHEN);
-		}
-
-		return feldFormatiert;
 	}
 
 	/**
@@ -264,10 +247,16 @@ public class AggregationStatistikExport {
 						kurseIdMap, aktuellesSchuljahr);
 		erfolg &= aggregationUvdStatistikExport.run();
 
-		//K84
+		// K84
 		final AggregationSchuelerZahlenStatistikExport aggregationSchuelerZahlenStatistikExport =
-				new AggregationSchuelerZahlenStatistikExport(statistikGesamt, statistikExport, aktuellesSchuljahr, fehlermeldungen);
-		erfolg = aggregationSchuelerZahlenStatistikExport.run();
+				new AggregationSchuelerZahlenStatistikExport(statistikGesamt, statistikExport, aktuellesSchuljahr, fehlermeldungen, foerderschwerpunktIdMap);
+		erfolg &= aggregationSchuelerZahlenStatistikExport.run();
+
+		// SCD012 - V51 und V54
+		final AggregationAbgaengerStatistikExport aggregationScd012StatistikExport =
+				new AggregationAbgaengerStatistikExport(statistikGesamt, statistikExport, aktuellesSchuljahr, fehlermeldungen, jahrgangIdMap, klasseIdMap,
+						foerderschwerpunktIdMap);
+		erfolg &= aggregationScd012StatistikExport.run();
 
 		return erfolg;
 	}

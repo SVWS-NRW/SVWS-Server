@@ -1,7 +1,6 @@
 package de.svws_nrw.asd.export.aggregation;
 
 import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.EIN_LEERZEICHEN;
-import static de.svws_nrw.asd.export.aggregation.AggregationStatistikExport.auffuellenStellengerecht;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -292,19 +291,19 @@ public class AggregationKlassenStatistikExport {
 				}
 
 				teilklassenkuerzel = String.format("%04d%c", nummer, teilklassenZaehler);
-				teilklassenkuerzel = auffuellenStellengerecht(teilklassenkuerzel, 6);
+				teilklassenkuerzel = AggregationUtils.auffuellenStellengerecht(teilklassenkuerzel, 6);
 			} else {
 
 
 				if (anzahl == 1) {
 					// nur eine Klasse → keine Nummer
-					teilklassenkuerzel = auffuellenStellengerecht(klassenkuerzel, 6);
+					teilklassenkuerzel = AggregationUtils.auffuellenStellengerecht(klassenkuerzel, 6);
 				} else {
 					// mehrere Teilklassen → nummerieren
 					nummer = counterProKlasse.getOrDefault(klassenkuerzel, 0) + 1;
 					counterProKlasse.put(klassenkuerzel, nummer);
 
-					teilklassenkuerzel = auffuellenStellengerecht(klassenkuerzel, 6);
+					teilklassenkuerzel = AggregationUtils.auffuellenStellengerecht(klassenkuerzel, 6);
 					teilklassenkuerzel = teilklassenkuerzel.substring(0, teilklassenkuerzel.length() - 2) + String.format("%02d", nummer);
 
 				}
@@ -354,7 +353,11 @@ public class AggregationKlassenStatistikExport {
 		final Map<AltersstrukturKey, List<SchuelerStatistikGesamt>> map = schuelerStatistikGesamt.stream()
 				.collect(Collectors
 						.groupingBy(s -> {
-							final String iso3 = getNationalitaetIso3(ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2));
+							final String iso3 =
+									AggregationUtils.getNationalitaetIso3(
+											AggregationUtils.ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2,
+													aktuellesSchuljahr),
+											aktuellesSchuljahr);
 							try {
 								return new AltersstrukturKey(iso3, String.valueOf(DateManager.from(s.geburtsdatum).getJahr()));
 							} catch (final InvalidDateException e) {
@@ -377,34 +380,6 @@ public class AggregationKlassenStatistikExport {
 
 	}
 
-	/**
-	 * @param idStaatsangehoerigkeit
-	 * @param idStaatsangehoerigkeit2
-	 * @return die gültige ID zu den übergebenen Staatsangehörigkeiten des Schülers
-	 *
-	 * Wenn die 2.Staatsangehörigkeit Deutsch ist, ist der Schüler als Deutscher zu werten
-	 *
-	 */
-	private Long ermittleStaatsangehoerigkeit(final Long idStaatsangehoerigkeit, final Long idStaatsangehoerigkeit2) {
-
-		if ((idStaatsangehoerigkeit2 != null) && "DEU".equalsIgnoreCase(getNationalitaetIso3(idStaatsangehoerigkeit2))) {
-			return idStaatsangehoerigkeit2;
-		}
-
-		return idStaatsangehoerigkeit;
-
-	}
-
-	/**
-	 * @param idStaatsangehoerigkeit
-	 * @return der ISO3-Wert zur übergebenen ID
-	 */
-	private String getNationalitaetIso3(final Long idStaatsangehoerigkeit) {
-		// TODO: Nachfragen bei Methodik: Wie soll mit idStaatsangehörigkeit = null umgegangen werden?
-		return Nationalitaeten.data().getWertByIDOrNull(idStaatsangehoerigkeit) == null ? ""
-				: Nationalitaeten.data().getWertByID(idStaatsangehoerigkeit).daten(aktuellesSchuljahr).iso3;
-	}
-
 	private void erstellenKlassenNationalitaetenStatistikExport(final List<SchuelerStatistikGesamt> schuelerStatistikGesamt,
 			final KlassenStatistikExport klassenStatistikExport) {
 		final Map<String, List<SchuelerStatistikGesamt>> map =
@@ -413,7 +388,8 @@ public class AggregationKlassenStatistikExport {
 						fehlermeldungen.add("Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine StaatsangehoerigkeitID von Null: " + s.id);
 						return "";
 					}
-					final long gueltigeIdStaatsangehoerigkeit = ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2);
+					final long gueltigeIdStaatsangehoerigkeit =
+							AggregationUtils.ermittleStaatsangehoerigkeit(s.idStaatsangehoerigkeit, s.idStaatsangehoerigkeit2, aktuellesSchuljahr);
 
 					return Nationalitaeten.data().getWertByID(gueltigeIdStaatsangehoerigkeit).daten(aktuellesSchuljahr).schluessel;
 				}));
@@ -493,8 +469,7 @@ public class AggregationKlassenStatistikExport {
 			}
 			klassenStatistikExport.adresskennzeichen = e.getKey().adressmerkmal;
 			klassenStatistikExport.bildungsbereich = bauenBildungsbereich(e.getKey());
-			//TODO hier mus noch ein Json-katalog ink. Cortype vorgesehen weredn, erstazweise wird die id verwendet
-			klassenStatistikExport.fachklasse = lernabschnitt.idFachklasse == null ? null : String.valueOf(lernabschnitt.idFachklasse);
+			klassenStatistikExport.fachklasse = AggregationUtils.getFachklasseById(lernabschnitt.idFachklasse);
 			klassenStatistikExport.foerderschwerpunkt1 = e.getKey().foerderschwerp;
 			klassenStatistikExport.foerderschwerpunkt2 = e.getKey().foerderschwerp2;
 			klassenStatistikExport.hatSchwerbehinderungsNachweis = e.getKey().schwerstbeh;
@@ -506,12 +481,10 @@ public class AggregationKlassenStatistikExport {
 			//TODO: Nachfragen bei Methodik: Wie soll mit idStaatsangehörigkeit = null umgegangen werden?
 			klassenStatistikExport.schuelerAuslaendischWeiblich = (int) e.getValue().stream()
 					.filter(w -> (Geschlecht.W.id == w.geschlecht)
-							&& (Nationalitaeten.getDEU().daten(aktuellesSchuljahr).id != (w.idStaatsangehoerigkeit == null ? 0L
-									: w.idStaatsangehoerigkeit.longValue()))
+							&& AggregationUtils.istAuslaender(w, aktuellesSchuljahr)
 					).count();
 			klassenStatistikExport.schuelerAuslaendischZusammen =
-					(int) e.getValue().stream().filter(w -> Nationalitaeten.getDEU().daten(aktuellesSchuljahr).id != (w.idStaatsangehoerigkeit == null ? 0L
-							: w.idStaatsangehoerigkeit.longValue())
+					(int) e.getValue().stream().filter(w -> AggregationUtils.istAuslaender(w, aktuellesSchuljahr)
 					).count();
 			klassenStatistikExport.schuelerInsgesamt = e.getValue().size();
 			klassenStatistikExport.schuelerWeiblich = (int) e.getValue().stream().filter(w -> Geschlecht.W.id == w.geschlecht
@@ -567,10 +540,6 @@ public class AggregationKlassenStatistikExport {
 
 		schuelerAnzahlProWohnId.entrySet().forEach(e -> {
 			final KlassenWohnorteStatistikExport klassenWohnorteStatistikExport = new KlassenWohnorteStatistikExport();
-			klassenWohnorteStatistikExport.jahrgang = klassenStatistikExport.jahrgang;
-			klassenWohnorteStatistikExport.bildungsgangkennzeichen = klassenStatistikExport.bildungsgangkennzeichen;
-			klassenWohnorteStatistikExport.parallelitaet2 = klassenStatistikExport.parallelitaet2;
-			klassenWohnorteStatistikExport.teilklasse = klassenStatistikExport.teilklasse;
 
 			final OrteStatistikGesamt orteStatistikGesamt = orteIdMap.get(e.getKey());
 			if ((orteStatistikGesamt != null) && (Laender.NW.id(aktuellesSchuljahr).equals(orteStatistikGesamt.idLand))) {

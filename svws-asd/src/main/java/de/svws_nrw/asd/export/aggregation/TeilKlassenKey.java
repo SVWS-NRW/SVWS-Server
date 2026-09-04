@@ -159,8 +159,7 @@ public class TeilKlassenKey {
 		}
 
 		istJva = schueler.istJvaSchueler;
-		// TODO: Muss noch über einen CoreType in den Schlüssel umgesetzt werden
-		fachklasse = String.valueOf(lernabschnitt.idFachklasse);
+		fachklasse = AggregationUtils.getFachklasseById(lernabschnitt.idFachklasse);
 	}
 
 

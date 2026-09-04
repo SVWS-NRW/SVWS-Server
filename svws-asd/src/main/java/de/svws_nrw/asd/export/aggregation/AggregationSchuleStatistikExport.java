@@ -133,11 +133,11 @@ public class AggregationSchuleStatistikExport {
 		statistikExport.schuleStatistikExport.bezeichnung2 = statistikGesamt.schule.bezeichnung2;
 		statistikExport.schuleStatistikExport.bezeichnung3 = statistikGesamt.schule.bezeichnung3;
 		final StringBuilder strassenname = new StringBuilder();
-		strassenname.append(statistikGesamt.schule.strassenname.trim());
+		strassenname.append(statistikGesamt.schule.strassenname == null ? "" : statistikGesamt.schule.strassenname.strip());
 		strassenname.append(" ");
-		strassenname.append(statistikGesamt.schule.hausnummer.trim());
+		strassenname.append(statistikGesamt.schule.hausnummer == null ? "" : statistikGesamt.schule.hausnummer.strip());
 		strassenname.append(" ");
-		strassenname.append(statistikGesamt.schule.hausnummerZusatz.trim());
+		strassenname.append(statistikGesamt.schule.hausnummerZusatz == null ? "" : statistikGesamt.schule.hausnummerZusatz.strip());
 		statistikExport.schuleStatistikExport.strassenname = strassenname.toString();
 		statistikExport.schuleStatistikExport.plz = statistikGesamt.schule.plz;
 		statistikExport.schuleStatistikExport.ort = statistikGesamt.schule.ort;

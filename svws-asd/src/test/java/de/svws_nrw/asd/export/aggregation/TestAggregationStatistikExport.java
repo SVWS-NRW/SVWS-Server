@@ -29,6 +29,9 @@ class TestAggregationStatistikExport {
 			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_GY.json", StatistikGesamt.class);
 
 //	static final StatistikGesamt testdaten_001 =
+//			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/gesamt_Gym_neu_26-08-20.json", StatistikGesamt.class);
+
+//	static final StatistikGesamt testdaten_001 =
 //			JsonReader.fromResource("de/svws_nrw/asd/export/aggregation/StatistikGesamt_S.json", StatistikGesamt.class);
 
 //	static final StatistikGesamt testdaten_001 =

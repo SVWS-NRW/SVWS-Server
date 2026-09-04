@@ -13,22 +13,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class KlassenWohnorteStatistikExport {
 
-	/** Satzschlüssel: Der Jahrgang. */
-	@Schema(description = "satzschlüssel: der Jahrgang.", example = "05")
-	public @NotNull String jahrgang = "";
-
-	/** Satzschlüssel: 1. Stelle Parallelität / Das Bildungsgangkennzeichen. */
-	@Schema(description = "satzschlüssel: die 1. Stelle Parallelität / das Bildungsgangkennzeichen.", example = "A")
-	public @NotNull String bildungsgangkennzeichen = "";
-
-	/** Satzschlüssel: 2. Stelle Parallelität. */
-	@Schema(description = "satzschlüssel: die 2. Stelle Parallelität.", example = "A")
-	public @NotNull String parallelitaet2 = "";
-
-	/** Satzschlüssel: Die Teilklasse. */
-	@Schema(description = "satzschlüssel: die Teilklasse.", example = "02")
-	public @NotNull String teilklasse = "";
-
 	/** Satzschlüssel: Die Postleitzahl. */
 	@Schema(description = "Ssatzschlüssel: die Postleitzahl", example = "41836")
 	public @NotNull String postleitzahl = "";
