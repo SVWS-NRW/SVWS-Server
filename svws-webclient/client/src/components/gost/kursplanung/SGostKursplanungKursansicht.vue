@@ -53,7 +53,7 @@
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							<div class="flex items-center justify-between w-full">
 								<span>Schülerzahl</span>
-								<span :title="'Kursfrequenz 1 = (Summe aller Fachwahlen) / (interne Kurse) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz1AsString()
+								<span :title="'Kursfrequenz 1 = (Summe aller Fachwahlen) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz1AsString()
 									+ '\nKursfrequenz 2 = (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz2AsString()">
 									⌀ = {{ getErgebnismanager().getKursfrequenz2AsString() }}
 								</span>
