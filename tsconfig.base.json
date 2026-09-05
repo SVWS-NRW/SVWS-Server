@@ -1,27 +1,12 @@
 {
+	"extends": "@vue/tsconfig/tsconfig.json",
 	"compilerOptions": {
-		"composite": false,
-		"isolatedModules": true,
-		"skipLibCheck": true,
-		"useDefineForClassFields": true,
-		"target": "esnext",
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"strict": true,
-		"importHelpers": true,
-		"noImplicitAny": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"sourceMap": true,
-		"jsx": "preserve",
-		"declaration": true,
-		"declarationMap": true,
-		"lib": ["esnext", "dom"],
-		"allowJs": true,
-		"checkJs": true,
+		// sehr strenge Kontrolle der importierten Komponenten
+		// "exactOptionalPropertyTypes": true,
+		// deaktivieren, verhindert type Importe
+		"verbatimModuleSyntax": false,
 		"newLine": "lf",
 		"rootDir": ".",
-		"resolveJsonModule": true,
 		"types": ["vite/client"],
 		"paths": 	{
 			"~/*": ["./svws-webclient/client/src/*"],
