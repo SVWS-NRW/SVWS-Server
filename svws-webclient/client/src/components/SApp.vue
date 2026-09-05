@@ -139,7 +139,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, onUnmounted, ref, version, watch } from "vue";
+	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 	import type { AppProps } from './SAppProps';
 	import { githash } from "@githash";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
@@ -150,6 +150,7 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import type { TabManager } from "@ui/ui/nav/TabManager";
+	import { version } from "@version";
 
 	const props = defineProps<AppProps>();
 
