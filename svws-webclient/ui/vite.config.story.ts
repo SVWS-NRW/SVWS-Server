@@ -7,6 +7,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
 	resolve: { alias: {
+		"@ui": resolve(import.meta.dirname, './src'),
+		"@core": resolve(import.meta.dirname, '../core/src'),
 		"@icons": resolve(import.meta.dirname, "../../node_modules/remixicon/icons"),
 		"@json": resolve(import.meta.dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 	} },
