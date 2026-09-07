@@ -51,11 +51,13 @@
 
 <script setup lang="ts">
 
-	import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
-	import { ref, computed } from "vue";
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
 
 	const props = defineProps<TelefonartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

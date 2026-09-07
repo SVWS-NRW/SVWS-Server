@@ -179,17 +179,16 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, onMounted, type HTMLAttributes } from 'vue';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone, GostNachschreiberDragData } from "./SGostKlausurplanung";
-	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
-	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { computed, type HTMLAttributes, onMounted, ref } from 'vue';
+
 	import { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
 	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
 	import { GostNachschreibterminblockungKonfiguration } from '@core/core/data/gost/klausuren/GostNachschreibterminblockungKonfiguration';
 	import { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import type { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { DateUtils } from '@core/core/utils/DateUtils';
+	import { GostKlausurplanManager } from '@core/core/utils/gost/klausuren/GostKlausurplanManager';
 	import { ListUtils } from '@core/core/utils/ListUtils';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { HashSet } from '@core/java/util/HashSet';
@@ -198,8 +197,11 @@
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 	import type { DataTableColumn } from '@ui/types';
-	import { GostKlausurplanManager } from '@core/core/utils/gost/klausuren/GostKlausurplanManager';
-	import { DateUtils } from '@core/core/utils/DateUtils';
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone, GostNachschreiberDragData } from "./SGostKlausurplanung";
+	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
+	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const { gotoKalenderdatum, gotoNachschreiber, gotoRaumzeitTermin } = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

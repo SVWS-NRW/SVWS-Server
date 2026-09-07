@@ -41,9 +41,11 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { TeilleistungsartenAppProps } from './TeilleistungsartenAppProps';
+
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import { ViewType } from '@ui/ui/nav/ViewType';
+
+	import type { TeilleistungsartenAppProps } from './TeilleistungsartenAppProps';
 
 	const props = defineProps<TeilleistungsartenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

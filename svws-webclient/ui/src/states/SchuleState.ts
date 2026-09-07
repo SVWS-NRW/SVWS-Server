@@ -1,3 +1,5 @@
+import type { InjectionKey } from "vue";
+
 import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
@@ -6,7 +8,6 @@ import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 /**
  * Die Schnittstelle für die Daten der Schule inkl. des aktuellen Abschnitts der Schule

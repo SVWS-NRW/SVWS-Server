@@ -1,15 +1,17 @@
-import { ref, shallowRef } from "vue";
-import type { AuthState } from "./AuthState";
 import { ApiEnmServer } from "@wenom/ApiEnmServer";
+import { RouteManager } from "@wenom/router/RouteManager";
+import { ref, shallowRef } from "vue";
+
+import { OpenApiError } from "@core/api/OpenApiError";
+import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { Schulform } from "@core/asd/types/schule/Schulform";
-import { version } from "@version";
 import { githash } from "@githash";
-import { OpenApiError } from "@core/api/OpenApiError";
+import { version } from "@version";
+
 import { activityStateImpl } from "./ActivityStateImpl";
-import { RouteManager } from "@wenom/router/RouteManager";
+import type { AuthState } from "./AuthState";
 
 /**
  * Der Paylod from JWT-Token

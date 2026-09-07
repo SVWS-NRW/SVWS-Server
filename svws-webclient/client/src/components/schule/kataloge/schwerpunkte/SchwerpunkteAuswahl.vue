@@ -39,8 +39,10 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
+
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
+
+	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },

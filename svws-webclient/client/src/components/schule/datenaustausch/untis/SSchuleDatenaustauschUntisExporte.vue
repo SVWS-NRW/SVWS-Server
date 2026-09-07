@@ -95,11 +95,13 @@
 
 	import type { Ref } from 'vue';
 	import { computed, onMounted, ref, shallowRef, watch } from 'vue';
-	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
+
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { useAbschnittState } from '@ui/states/AbschnittState';
 	import { useSchuleState } from '@ui/states/SchuleState';
+
+	import type { SchuleDatenaustauschUntisExporteProps } from './SSchuleDatenaustauschUntisExporteProps';
 
 	const props = defineProps<SchuleDatenaustauschUntisExporteProps>();
 	const schuleState = useSchuleState();

@@ -1,17 +1,5 @@
 import type { RouteLocationRaw } from "vue-router";
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeGostFachwahlenAllgemein } from "./RouteGostFachwahlenAllgemein";
-import { routeGostFachwahlenAbitur } from "./RouteGostFachwahlenAbitur";
-import { routeGostFachwahlenAbiturFach } from "./RouteGostFachwahlenAbiturFach";
-import { routeGostFachwahlenFach } from "./RouteGostFachwahlenFach";
-import { routeGostFachwahlenFachHalbjahr } from "./RouteGostFachwahlenFachHalbjahr";
-import { routeGostFachwahlenHalbjahr } from "./RouteGostFachwahlenHalbjahr";
-import { routeGostFachwahlenLeistungskurse } from "./RouteGostFachwahlenLeistungskurse";
-import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse";
-import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
-import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+
 import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 import { GostJahrgangFachwahlen } from "@core/core/data/gost/GostJahrgangFachwahlen";
 import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
@@ -21,6 +9,21 @@ import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostJahrgangsFachwahlenManager } from "@core/core/utils/gost/GostJahrgangsFachwahlenManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+
+import { routeGostFachwahlenAbitur } from "./RouteGostFachwahlenAbitur";
+import { routeGostFachwahlenAbiturFach } from "./RouteGostFachwahlenAbiturFach";
+import { routeGostFachwahlenAllgemein } from "./RouteGostFachwahlenAllgemein";
+import { routeGostFachwahlenFach } from "./RouteGostFachwahlenFach";
+import { routeGostFachwahlenFachHalbjahr } from "./RouteGostFachwahlenFachHalbjahr";
+import { routeGostFachwahlenHalbjahr } from "./RouteGostFachwahlenHalbjahr";
+import { routeGostFachwahlenLeistungskurse } from "./RouteGostFachwahlenLeistungskurse";
+import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
+import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse";
 
 interface RouteStateDataGostFachwahlen extends RouteStateInterface {
 	abiturjahr: number;

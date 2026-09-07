@@ -1,7 +1,9 @@
 import { shallowRef } from "vue";
-import type { GridManager } from "./GridManager";
-import { GridInputInnerText } from "./GridInputInnerText";
+
 import type { Collection } from "@core/java/util/Collection";
+
+import { GridInputInnerText } from "./GridInputInnerText";
+import type { GridManager } from "./GridManager";
 
 /**
  * Ein Grid-Input für die Schnelleingabe von Ganzzahlen.

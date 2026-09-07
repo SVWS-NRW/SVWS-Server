@@ -1,22 +1,24 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
-import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/gost/RouteGost";
-import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
-import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { routeError } from "~/router/error/RouteError";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
+import type { GostKursplanungUmwahlansichtProps } from "~/components/gost/kursplanung/SGostKursplanungUmwahlansichtProps";
+import { api } from "~/router/Api";
+import { type RouteGostKursplanung, routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
+import { routeGost } from "~/router/apps/gost/RouteGost";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SGostKursplanungUmwahlansicht = () => import("~/components/gost/kursplanung/SGostKursplanungUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");

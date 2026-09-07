@@ -1,23 +1,25 @@
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
-import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenDaten";
-import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
 import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
-import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
 import { AbteilungKlassenzuordnung } from "@core/core/data/schule/AbteilungKlassenzuordnung";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { Arrays } from "@core/java/util/Arrays";
 import type { List } from "@core/java/util/List";
 import { AbteilungenListeManager } from "@ui/ui/manager/kataloge/AbteilungenListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenDaten";
+import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
+import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { RouteManager } from "~/router/RouteManager";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {

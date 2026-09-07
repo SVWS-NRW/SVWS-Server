@@ -103,8 +103,8 @@
 
 <script setup lang="ts">
 
-	import { computed, watchEffect, type ComponentPublicInstance } from "vue";
-	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
+	import { type ComponentPublicInstance, computed, watchEffect } from "vue";
+
 	import type { NoteKatalogEintrag } from "@core/asd/data/NoteKatalogEintrag";
 	import { RGBFarbe } from "@core/asd/data/RGBFarbe";
 	import { Fach } from "@core/asd/types/fach/Fach";
@@ -120,6 +120,8 @@
 	import { HashMap } from "@core/java/util/HashMap";
 	import type { JavaMap } from "@core/java/util/JavaMap";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
+	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
 
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
 

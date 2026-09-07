@@ -163,15 +163,18 @@
 
 <script setup lang="ts">
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime, dateToday } from "~/utils/date";
-	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
+
 	import { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
+	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useNotificationsState } from "@ui/states/NotificationsState";
 	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
-	import { ArrayList } from "@core/java/util/ArrayList";
+
+	import { dateToday, formatDateToDateTime, formatToLocalDate, getDateFromDateTime } from "~/utils/date";
+
+	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
 
 	const props = defineProps<WiedervorlagenAppProps>();
 

@@ -1,8 +1,5 @@
 import { ref } from "vue";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import { ApiExternal } from "@core/api/ApiExternal";
 import { ApiServer } from "@core/api/ApiServer";
 import { OpenApiError } from "@core/api/OpenApiError";
@@ -12,6 +9,11 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import type { List } from "@core/java/util/List";
 import type { ConfigState } from "@ui/states/ConfigState";
+
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 export class ApiConnection {
 

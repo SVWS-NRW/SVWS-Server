@@ -1,9 +1,11 @@
+import { computed } from 'vue';
+
 import { ArrayList } from "@core/java/util/ArrayList";
 import { Arrays } from "@core/java/util/Arrays";
 import type { List } from "@core/java/util/List";
+
 import type { AuswahlManager } from "../manager/AuswahlManager";
 import { StateManager } from "../StateManager";
-import { computed } from 'vue';
 
 /**
  * Schnittstelle, die den Zustand der ausstehenden Patches darstellt.

@@ -37,9 +37,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { VermerkartenAppProps } from "./VermerkartenAppProps";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { VermerkartenAppProps } from "./VermerkartenAppProps";
 
 	const props = defineProps<VermerkartenAppProps>();
 

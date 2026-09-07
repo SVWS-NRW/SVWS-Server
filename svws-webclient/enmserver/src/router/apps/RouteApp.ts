@@ -1,19 +1,21 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AppProps } from "@wenom/components/SAppProps";
-import { RouteNode } from "@wenom/router/RouteNode";
-import { RouteManager } from "@wenom/router/RouteManager";
-import { RoutingStatus } from "@wenom/router/RoutingStatus";
-import { RouteDataApp } from "@wenom/router/apps/RouteDataApp";
-import { routeError } from "@wenom/router/error/RouteError";
 import SApp from "@wenom/components/SApp.vue";
+import type { AppProps } from "@wenom/components/SAppProps";
+import { RouteDataApp } from "@wenom/router/apps/RouteDataApp";
 import { routeLeistungen } from "@wenom/router/apps/RouteLeistungen";
+import { routeError } from "@wenom/router/error/RouteError";
+import { RouteManager } from "@wenom/router/RouteManager";
+import { RouteNode } from "@wenom/router/RouteNode";
+import { RoutingStatus } from "@wenom/router/RoutingStatus";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
-import { routeTeilleistungen } from "./RouteTeilleistungen";
-import { routeKlassenleitung } from "./RouteKlassenleitung";
+
 import { routeAnkreuzkompetenzen } from "./RouteAnkreuzkompetenzen";
+import { routeKlassenleitung } from "./RouteKlassenleitung";
+import { routeTeilleistungen } from "./RouteTeilleistungen";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {

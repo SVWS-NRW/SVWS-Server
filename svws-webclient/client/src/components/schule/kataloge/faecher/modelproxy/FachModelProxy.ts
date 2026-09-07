@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { BilingualeSpracheKatalogEintrag } from "@core/asd/data/fach/BilingualeSpracheKatalogEintrag";
 import type { FachKatalogEintrag } from "@core/asd/data/fach/FachKatalogEintrag";
 import { BilingualeSprache } from "@core/asd/types/fach/BilingualeSprache";
@@ -8,8 +10,8 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { ValidatorFachBezeichnung } from "./validation/ValidatorFachBezeichnung";
 import { ValidatorFachKuerzel } from "./validation/ValidatorFachKuerzel";
 

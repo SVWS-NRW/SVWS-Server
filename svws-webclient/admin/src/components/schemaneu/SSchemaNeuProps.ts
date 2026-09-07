@@ -1,7 +1,9 @@
 import type { ApiStatus } from "@admin/components/ApiStatus";
-import type { SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
+
 import type { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+
+import type { SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 
 export interface SchemaNeuProps {
 	apiStatus: ApiStatus;

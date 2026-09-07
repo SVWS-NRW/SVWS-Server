@@ -4,7 +4,7 @@ import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/Lernplat
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 
 /**

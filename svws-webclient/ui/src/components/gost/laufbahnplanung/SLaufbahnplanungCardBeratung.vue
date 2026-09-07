@@ -16,8 +16,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref, watch } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers';
-	import { ref, computed, watch } from "vue";
+
 	import { GostLaufbahnplanungBeratungsdaten } from '@core/core/data/gost/GostLaufbahnplanungBeratungsdaten';
 	import { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
 	import { useGostLaufbahnplanungState } from '@ui/states/GostLaufbahnplanungState';

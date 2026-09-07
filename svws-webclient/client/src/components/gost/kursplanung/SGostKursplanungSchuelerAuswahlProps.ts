@@ -3,6 +3,7 @@ import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungR
 import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface KursplanungSchuelerAuswahlProps {

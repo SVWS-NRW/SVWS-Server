@@ -1,21 +1,22 @@
-import { RouteData, type RouteStateInterface } from "@wenom/router/RouteData";
 import { routeLeistungen } from "@wenom/router/apps/RouteLeistungen";
+import { RouteData, type RouteStateInterface } from "@wenom/router/RouteData";
+import { authStateImpl } from "@wenom/states/AuthStateImpl";
+import { shallowRef } from "vue";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
+import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
 import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
 import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
 import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
 import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
-import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
-import type { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { Schulform } from "@core/asd/types/schule/Schulform";
 import { EnmManager } from "@ui/components/enm/EnmManager";
 import { type EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
-import { shallowRef } from "vue";
-import { Config, ConfigElement } from "@ui/utils/Config";
-import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
-import { authStateImpl } from "@wenom/states/AuthStateImpl";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import { Config, ConfigElement } from "@ui/utils/Config";
 
 
 /**

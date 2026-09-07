@@ -23,7 +23,7 @@
 <script setup lang='ts'>
 
 	import type { SetupContext } from 'vue';
-	import { computed, useSlots, onMounted, ref, watch } from 'vue';
+	import { computed, onMounted, ref, useSlots, watch } from 'vue';
 
 	const menuLink = ref<HTMLElement>();
 

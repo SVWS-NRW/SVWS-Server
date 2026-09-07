@@ -26,13 +26,14 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
 	import { Wochentag } from "@core/core/types/Wochentag";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 	import type { List } from "@core/java/util/List";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		selected: StundenplanPausenzeit;

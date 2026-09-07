@@ -1,15 +1,19 @@
 import { createApp, defineCustomElement } from "vue";
-import SWrapper from "~/components/SWrapper.vue";
+
+import { AppContext } from "@ui/AppContext";
 import HtmlPreview from "@ui/components/reporting/HtmlPreview.ce.vue";
-import { registerStates } from "./states/registerStates";
+
+import SWrapper from "~/components/SWrapper.vue";
+
 import { RouteManager } from "./router/RouteManager";
+import { registerStates } from "./states/registerStates";
 
 import "@ui/assets/styles/index.css";
 import "./main.css";
-import { AppContext } from "@ui/AppContext";
 
 const CustomElementConstructor = defineCustomElement(HtmlPreview);
 customElements.define('html-preview', CustomElementConstructor);
+
 
 const context = AppContext.init(createApp(SWrapper));
 RouteManager.create(AppContext.instance.router);

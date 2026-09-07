@@ -194,13 +194,14 @@
 
 <script setup lang="ts">
 
+	import { computed, reactive, type Ref, ref } from 'vue';
+
 	import { BasicValidator } from '@core/asd/validate/BasicValidator';
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { logEvent } from '@ui/stories/helper';
 	import storyManager from '@ui/stories/StoryManager';
-	import { computed, ref, type Ref, reactive } from 'vue';
 
 	const activeState = computed(() => variantControlsMap.get(storyManager.variant.id) ?? defaultState);
 

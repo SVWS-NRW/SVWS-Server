@@ -1,12 +1,13 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import type { SchuelerKAoADaten } from "@core/core/data/schueler/SchuelerKAoADaten";
 import type { SchuelerLernabschnittListeEintrag } from "@core/core/data/schueler/SchuelerLernabschnittListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
 import { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 interface RouteStateSchuelerKAoA extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;

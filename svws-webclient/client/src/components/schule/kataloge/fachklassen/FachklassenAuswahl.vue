@@ -38,9 +38,8 @@
 
 <script setup lang="ts">
 
-	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
-	import type { FachklassenAuswahlProps } from "~/components/schule/kataloge/fachklassen/FachklassenAuswahlProps";
 	import { computed } from "vue";
+
 	import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { FachklasseEintrag } from "@core/core/data/schule/FachklasseEintrag";
@@ -49,6 +48,9 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+
+	import type { FachklassenAuswahlProps } from "~/components/schule/kataloge/fachklassen/FachklassenAuswahlProps";
+	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	interface FachklasseEintragListe extends FachklasseEintrag {
 		schluesselSchulgliederung: string;

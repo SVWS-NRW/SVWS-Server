@@ -87,6 +87,8 @@
 <script setup lang="ts">
 
 
+	import { computed, ref, watch } from "vue";
+
 	import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
 	import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
 	import { DQRNiveau } from "@core/asd/types/schule/DQRNiveau";
@@ -99,8 +101,9 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { computed, ref, watch } from "vue";
+
 	import type { FachklassenNeuProps } from "~/components/schule/kataloge/fachklassen/FachklassenNeuProps";
+
 	import { FachklassenModelProxy } from "./modelproxy/FachklassenModelProxy";
 
 	const props = defineProps<FachklassenNeuProps>();

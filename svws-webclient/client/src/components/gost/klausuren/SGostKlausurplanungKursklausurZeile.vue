@@ -55,12 +55,14 @@
 
 <script setup lang="ts">
 	import { computed, type HTMLAttributes } from "vue";
-	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
-	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 
 	const props = defineProps<{
 		klausur: GostKursklausur;

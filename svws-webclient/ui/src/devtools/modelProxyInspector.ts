@@ -1,7 +1,8 @@
+import { setupDevtoolsPlugin } from '@vue/devtools-api';
+import { type App, nextTick, unref, watch } from 'vue';
+
 import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 import type { JavaIterator } from '@core/java/util/JavaIterator';
-import { setupDevtoolsPlugin } from '@vue/devtools-api';
-import { type App, watch, unref, nextTick } from 'vue';
 
 /** ID für den eindeutigen Zugriff auf diesen Inspector in den Vue DevTools */
 const INSPECTOR_ID = 'svws-model-proxy-inspector';

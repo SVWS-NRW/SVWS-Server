@@ -1,18 +1,21 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { TabData } from "@ui/ui/nav/TabData";
+
+import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerAbiturProps";
+import { RouteDataSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteDataSchuelerAbitur";
+import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
+import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
-import { RouteDataSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteDataSchuelerAbitur";
-import type { SchuelerAbiturProps } from "~/components/schueler/abitur/SchuelerAbiturProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
-import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { TabData } from "@ui/ui/nav/TabData";
+
+import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
 
 const SchuelerAbitur = () => import("~/components/schueler/abitur/SchuelerAbitur.vue");
 

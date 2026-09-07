@@ -92,11 +92,13 @@
 
 	import { computed, onUnmounted, ref, watchEffect } from 'vue';
 	import type { RouteRecord } from 'vue-router';
-	import type { ColorPreset } from './StoryManager';
-	import storyManager from './StoryManager';
-	import router from './router';
+
 	import { usePaneSplitter } from '@ui/ui/composables/usePaneSplitter';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
+
+	import router from './router';
+	import type { ColorPreset } from './StoryManager';
+	import storyManager from './StoryManager';
 
 	const groups = new Map<string, RouteRecord[]>([['default', []]]);
 	for (const route of router.getRoutes()) {

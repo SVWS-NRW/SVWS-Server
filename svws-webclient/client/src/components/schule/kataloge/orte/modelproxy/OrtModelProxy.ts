@@ -1,7 +1,5 @@
-import { ValidatorOrtPlz } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtPlz";
-import { ValidatorOrtOrtsname } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtOrtsname";
-import { ValidatorOrtPlzOrtsnameUnique } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtPlzOrtsnameUnique";
 import { computed } from "vue";
+
 import type { LaenderKatalogEintrag } from "@core/asd/data/schule/LaenderKatalogEintrag";
 import { Laender } from "@core/asd/types/schule/Laender";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
@@ -9,7 +7,11 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
+import { ValidatorOrtOrtsname } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtOrtsname";
+import { ValidatorOrtPlz } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtPlz";
+import { ValidatorOrtPlzOrtsnameUnique } from "~/components/schule/kataloge/orte/modelproxy/validation/ValidatorOrtPlzOrtsnameUnique";
 
 export class OrtModelProxy extends ModelProxy<OrtKatalogEintrag> {
 	constructor(

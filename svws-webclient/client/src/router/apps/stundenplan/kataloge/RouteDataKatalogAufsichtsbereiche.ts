@@ -1,14 +1,16 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
-import { routeStundenplan } from "../RouteStundenplan";
 import type { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
 import { StundenplanKomplett } from "@core/core/data/stundenplan/StundenplanKomplett";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 import { ArrayList } from "@core/java/util/ArrayList";
+
+import { routeStundenplan } from "../RouteStundenplan";
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+
+import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
 
 interface RouteStateKatalogAufsichtsbereiche extends RouteStateInterface {
 	auswahl: StundenplanAufsichtsbereich | undefined;

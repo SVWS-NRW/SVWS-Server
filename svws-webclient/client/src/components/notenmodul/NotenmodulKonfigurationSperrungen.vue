@@ -116,10 +116,12 @@
 
 <script setup lang="ts">
 
+	import { computed } from 'vue';
+
 	import type { List } from '@core/java/util/List';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
-	import { computed } from 'vue';
+
 	import type { NotenmodulConfigManagerSperrungen, NotenmodulConfigManagerSperrungenZeile } from "~/router/apps/notenmodul/NotenmodulConfigManagerSperrungen";
 
 	const props = defineProps<{

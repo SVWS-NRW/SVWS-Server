@@ -13,6 +13,7 @@ import type { Comparator } from '@core/java/util/Comparator';
 import { HashMap } from '@core/java/util/HashMap';
 import { HashSet } from '@core/java/util/HashSet';
 import type { List } from '@core/java/util/List';
+
 import { AuswahlManager } from '../AuswahlManager';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {

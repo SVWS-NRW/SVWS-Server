@@ -21,6 +21,7 @@
 	import type { StundenplanSchiene } from "@core/core/data/stundenplan/StundenplanSchiene";
 	import type { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
 	import type { List } from "@core/java/util/List";
+
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 	import type { StundenplanKlassenProps } from "./StundenplanKlassenProps";
 

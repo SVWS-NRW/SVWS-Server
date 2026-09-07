@@ -1,8 +1,10 @@
 import type { Ref } from "vue";
-import type { BaseSelectManager } from "./BaseSelectManager";
+
 import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 import type { List } from "@core/java/util/List";
 import type { ValidationResult } from "@ui/validation/ValidationResult";
+
+import type { BaseSelectManager } from "./BaseSelectManager";
 
 export interface UiSelectProps<T> {
 	label?: string;

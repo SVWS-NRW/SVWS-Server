@@ -10,6 +10,7 @@ import { JavaString } from "@core/java/lang/JavaString";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class StundenplanListeManager extends AuswahlManager<number, StundenplanListeEintrag, StundenplanManager> {

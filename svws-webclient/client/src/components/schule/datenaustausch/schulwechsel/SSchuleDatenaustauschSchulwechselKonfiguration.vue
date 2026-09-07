@@ -8,8 +8,9 @@
 
 <script setup lang="ts">
 
-	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { reactive } from "vue";
+
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	const state = reactive({
 		searchable: false,

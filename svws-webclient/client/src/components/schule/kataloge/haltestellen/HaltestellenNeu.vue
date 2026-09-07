@@ -42,12 +42,14 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/HaltestellenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
+
 	import { Haltestelle } from "@core/core/data/schule/Haltestelle";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { HaltestellenNeuProps } from "~/components/schule/kataloge/haltestellen/HaltestellenNeuProps";
+	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
 
 	const props = defineProps<HaltestellenNeuProps>();
 	const benutzerState = useBenutzerState();

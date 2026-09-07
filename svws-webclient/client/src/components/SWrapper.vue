@@ -51,13 +51,15 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, onErrorCaptured, ref } from "vue";
+
 	import { OpenApiError } from "@core/api/OpenApiError";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { useNotificationsState } from "@ui/states/NotificationsState";
 	import { useServerState } from "@ui/states/ServerState";
-	import { ref, computed, onErrorCaptured } from "vue";
+
 	import { api } from "~/router/Api";
 
 	const serverState = useServerState();

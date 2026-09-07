@@ -1,12 +1,5 @@
-import { api } from "~/router/Api";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { routeFaecherDaten } from "./RouteFaecherDaten";
-import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
-import { routeFaecherNeu } from "./RouteFaecherNeu";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -15,6 +8,16 @@ import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
 import { FaecherListeManager } from "@ui/ui/manager/kataloge/FaecherListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeFaecherDaten } from "./RouteFaecherDaten";
+import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
+import { routeFaecherNeu } from "./RouteFaecherNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

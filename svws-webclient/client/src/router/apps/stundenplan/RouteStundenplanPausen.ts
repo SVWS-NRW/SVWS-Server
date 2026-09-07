@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
 import type { StundenplanPausenProps } from "~/components/stundenplan/pausen/StundenplanPausenProps";
 import { api } from "~/router/Api";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteNode } from "~/router/RouteNode";
 
 const StundenplanPausen = () => import("~/components/stundenplan/pausen/StundenplanPausen.vue");
 

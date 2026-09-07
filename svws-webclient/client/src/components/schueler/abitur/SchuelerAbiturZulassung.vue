@@ -98,7 +98,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
+
 	import { GostAbiturMarkierungsalgorithmusErgebnis } from '@core/core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 	import { GostBelegungsfehlerArt } from '@core/core/abschluss/gost/GostBelegungsfehlerArt';
@@ -106,6 +106,8 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useServerState } from '@ui/states/ServerState';
+
+	import type { SchuelerAbiturZulassungProps } from "./SchuelerAbiturZulassungProps";
 
 	const props = defineProps<SchuelerAbiturZulassungProps>();
 	const serverState = useServerState();

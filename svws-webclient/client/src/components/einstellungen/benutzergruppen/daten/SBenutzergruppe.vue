@@ -26,6 +26,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
+
 	import type { BenutzergruppeProps } from "./SBenutzergruppeProps";
 
 	const props = defineProps<BenutzergruppeProps>();

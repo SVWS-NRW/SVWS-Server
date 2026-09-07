@@ -51,11 +51,13 @@
 
 <script setup lang="ts">
 
-	import type { KindergaertenGruppenprozesseProps } from "~/components/schule/kataloge/kindergaerten/gruppenprozesse/KindergaertenGruppenprozesseProps";
 	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { KindergaertenGruppenprozesseProps } from "~/components/schule/kataloge/kindergaerten/gruppenprozesse/KindergaertenGruppenprozesseProps";
 
 	const props = defineProps<KindergaertenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

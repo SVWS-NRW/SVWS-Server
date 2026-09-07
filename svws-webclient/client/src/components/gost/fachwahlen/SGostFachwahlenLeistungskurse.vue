@@ -50,13 +50,15 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { GostFachwahlenLeistungskurseProps } from "./SGostFachwahlenLeistungskurseProps";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { GostStatistikFachwahl } from "@core/core/data/gost/GostStatistikFachwahl";
 	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+
+	import type { GostFachwahlenLeistungskurseProps } from "./SGostFachwahlenLeistungskurseProps";
 
 	const props = defineProps<GostFachwahlenLeistungskurseProps>();
 

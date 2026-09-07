@@ -1,13 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
+
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteDataSchuelerSchnelleingabe";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import { ViewType } from "@ui/ui/nav/ViewType";
+import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchuelerSchnelleingabe = () => import("~/components/schueler/neuanlage/SchuelerSchnelleingabe.vue");
 

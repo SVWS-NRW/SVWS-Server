@@ -1,10 +1,11 @@
+import { computed } from "vue";
+
 import type { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag";
 import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
 import type { LehrerLehrbefaehigungKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag";
 import { LehrerLehrbefaehigung } from "@core/asd/types/lehrer/LehrerLehrbefaehigung";
 import { LehrerLehrbefaehigungAnerkennung } from "@core/asd/types/lehrer/LehrerLehrbefaehigungAnerkennung";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { computed } from "vue";
 
 /**
  * Der spezielle ModelProxy für LehrerLehrbefaehigungEintrag

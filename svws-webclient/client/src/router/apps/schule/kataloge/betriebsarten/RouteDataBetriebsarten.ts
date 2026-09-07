@@ -1,13 +1,5 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { routeBetriebsartenGruppenprozesse } from "./RouteBetriebsartenGruppenprozesse";
-import { routeBetriebsartenNeu } from "./RouteBetriebsartenNeu";
-import { routeBetriebsartenDaten } from "./RouteBetriebsartenDaten";
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -15,6 +7,17 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { BetriebsartenListeManager } from "@ui/ui/manager/kataloge/BetriebsartenListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeBetriebsartenDaten } from "./RouteBetriebsartenDaten";
+import { routeBetriebsartenGruppenprozesse } from "./RouteBetriebsartenGruppenprozesse";
+import { routeBetriebsartenNeu } from "./RouteBetriebsartenNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

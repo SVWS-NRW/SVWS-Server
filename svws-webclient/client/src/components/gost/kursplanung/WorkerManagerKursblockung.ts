@@ -1,3 +1,5 @@
+import { shallowRef } from "vue";
+
 import { GostBlockungsdaten } from "@core/core/data/gost/GostBlockungsdaten";
 import { GostBlockungsergebnis } from "@core/core/data/gost/GostBlockungsergebnis";
 import { GostFach } from "@core/core/data/gost/GostFach";
@@ -8,8 +10,8 @@ import { GostBlockungsergebnisComparator } from "@core/core/utils/gost/GostBlock
 import { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
-import { shallowRef } from "vue";
-import type { WorkerKursblockungRequestInit, WorkerKursblockungReplyInit, WorkerKursblockungRequestNext, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungReplyErgebnisse, WorkerKursblockungErrorMessage, WorkerKursblockungMessageType } from "./WorkerKursblockungMessageTypes";
+
+import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 
 /**

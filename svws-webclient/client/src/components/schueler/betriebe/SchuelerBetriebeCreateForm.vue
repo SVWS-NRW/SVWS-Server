@@ -68,12 +68,14 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef } from 'vue';
-	import { SchuelerBetriebeModelProxy } from "./modelproxy/SchuelerBetriebeModelProxy";
+
 	import { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
+
+	import { SchuelerBetriebeModelProxy } from "./modelproxy/SchuelerBetriebeModelProxy";
 
 	const props = defineProps<{
 		add: (data: Partial<SchuelerBetrieb>) => Promise<SchuelerBetrieb>,

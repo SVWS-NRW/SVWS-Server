@@ -1,14 +1,16 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
 import type { RouteBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
-import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import { ViewType } from "@ui/ui/nav/ViewType";
 
 const BetriebeNeu = () => import("~/components/schule/kataloge/betriebe/BetriebeNeu.vue");
 

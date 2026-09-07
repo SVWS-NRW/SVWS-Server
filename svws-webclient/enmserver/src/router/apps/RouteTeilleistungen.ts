@@ -1,9 +1,10 @@
+import { type RouteApp, routeApp } from "@wenom/router/apps/RouteApp";
 import { RouteNode } from "@wenom/router/RouteNode";
-import { routeApp, type RouteApp } from "@wenom/router/apps/RouteApp";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { EnmTeilleistungenProps } from "@ui/components/enm/EnmTeilleistungenProps";
 import type { EnmTeilleistungenAuswahlProps } from "@ui/components/enm/EnmTeilleistungenAuswahlProps";
+import type { EnmTeilleistungenProps } from "@ui/components/enm/EnmTeilleistungenProps";
 
 const EnmTeilleistungenAuswahl = () => import("@ui/components/enm/EnmTeilleistungenAuswahl.vue");
 const EnmTeilleistungen = () => import("@ui/components/enm/EnmTeilleistungen.vue");

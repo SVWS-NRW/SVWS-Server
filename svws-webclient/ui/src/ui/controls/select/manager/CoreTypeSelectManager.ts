@@ -1,3 +1,5 @@
+import { isRef, type MaybeRef, shallowRef, toRaw, toValue, triggerRef, watch } from "vue";
+
 import type { CoreTypeData } from "@core/asd/data/CoreTypeData";
 import type { CoreType } from "@core/asd/types/CoreType";
 import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -5,7 +7,7 @@ import { CoreTypeDataManager } from "@core/asd/utils/CoreTypeDataManager";
 import type { Class } from "@core/java/lang/Class";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
-import { watch, toValue, triggerRef, shallowRef, type MaybeRef, isRef, toRaw } from "vue";
+
 import type { BaseSelectManagerConfig } from "./BaseSelectManager";
 import { BaseSelectManager } from "./BaseSelectManager";
 

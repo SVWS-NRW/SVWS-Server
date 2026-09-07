@@ -1,18 +1,21 @@
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
 import type { RouteParams } from "vue-router";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { routeBetriebsartenNeu } from "./RouteBetriebsartenNeu";
-import { routeBetriebsartenDaten } from "./RouteBetriebsartenDaten";
-import { RouteDataBetriebsarten } from "./RouteDataBetriebsarten";
-import { routeBetriebsartenGruppenprozesse } from "./RouteBetriebsartenGruppenprozesse";
-import BetriebsartenApp from "~/components/schule/kataloge/betriebsarten/BetriebsartenApp.vue";
-import BetriebsartenAuswahl from "~/components/schule/kataloge/betriebsarten/BetriebsartenAuswahl.vue";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { BetriebsartenListeManager } from "@ui/ui/manager/kataloge/BetriebsartenListeManager";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import BetriebsartenApp from "~/components/schule/kataloge/betriebsarten/BetriebsartenApp.vue";
+import BetriebsartenAuswahl from "~/components/schule/kataloge/betriebsarten/BetriebsartenAuswahl.vue";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { routeBetriebsartenDaten } from "./RouteBetriebsartenDaten";
+import { routeBetriebsartenGruppenprozesse } from "./RouteBetriebsartenGruppenprozesse";
+import { routeBetriebsartenNeu } from "./RouteBetriebsartenNeu";
+import { RouteDataBetriebsarten } from "./RouteDataBetriebsarten";
 
 export class RouteBetriebsarten extends RouteAuswahlNode<BetriebsartenListeManager, RouteDataBetriebsarten, RouteApp> {
 	public constructor() {

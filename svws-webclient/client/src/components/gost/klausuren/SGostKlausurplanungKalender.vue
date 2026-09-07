@@ -84,9 +84,8 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted, computed } from "vue";
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
+	import { computed, onMounted, ref } from "vue";
+
 	import { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
 	import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
@@ -99,6 +98,9 @@
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
 
 	const { gotoKalenderdatum, gotoRaumzeitTermin } = defineProps<{
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;

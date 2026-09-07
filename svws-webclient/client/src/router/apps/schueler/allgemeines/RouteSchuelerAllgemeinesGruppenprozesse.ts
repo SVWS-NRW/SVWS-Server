@@ -1,12 +1,14 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { api } from "~/router/Api";
-import type { SSchuelerAllgemeinesGruppenprozesseProps } from "~/components/schueler/allgemeines/SSchuelerAllgemeinesGruppenprozesseProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { SSchuelerAllgemeinesGruppenprozesseProps } from "~/components/schueler/allgemeines/SSchuelerAllgemeinesGruppenprozesseProps";
+import { api } from "~/router/Api";
+import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerAllgemeinesGruppenprozesse = () => import("~/components/schueler/allgemeines/SSchuelerAllgemeinesGruppenprozesse.vue");
 

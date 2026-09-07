@@ -1,14 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeProps";
-import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
-import { routeError } from "~/router/error/RouteError";
-import { RouteDataKatalogRaeume } from "./RouteDataKatalogRaeume";
-import { RouteStundenplan } from "../RouteStundenplan";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import { RouteStundenplan } from "../RouteStundenplan";
+import type { RaeumeAuswahlProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeAuswahlProps";
+import type { RaeumeProps } from "~/components/stundenplan/kataloge/raeume/SRaeumeProps";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataKatalogRaeume } from "./RouteDataKatalogRaeume";
 
 const SRaeumeAuswahl = () => import("~/components/stundenplan/kataloge/raeume/SRaeumeAuswahl.vue");
 const SRaeume = () => import("~/components/stundenplan/kataloge/raeume/SRaeume.vue");

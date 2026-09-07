@@ -1,15 +1,16 @@
 import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
 import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
-import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
+import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchuelerAbiturZulassung } from "~/router/apps/schueler/abitur/RouteSchuelerAbiturZulassung";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 interface RouteStateDataSchuelerAbitur extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden

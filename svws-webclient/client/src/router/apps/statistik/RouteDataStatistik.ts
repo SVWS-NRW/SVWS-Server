@@ -1,11 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { routeLehrer } from "../lehrer/RouteLehrer";
-import { routeSchueler } from "../schueler/RouteSchueler";
-import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import { StatistikGesamt } from "@core/asd/data/statistik/StatistikGesamt";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
@@ -13,6 +5,16 @@ import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerList
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+
+import { routeLehrer } from "../lehrer/RouteLehrer";
+import { routeSchueler } from "../schueler/RouteSchueler";
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
 
 interface RouteStateStatistik extends RouteStateInterface {
 	schuleStammdaten: SchuleStammdaten;

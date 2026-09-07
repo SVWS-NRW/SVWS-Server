@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { LehrerAbgangsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag";
 import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
 import type { LehrerZugangsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerZugangsgrundKatalogEintrag";
@@ -7,8 +9,8 @@ import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**

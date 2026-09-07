@@ -1,18 +1,21 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { FaecherListeManager } from "@ui/ui/manager/kataloge/FaecherListeManager";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { FaecherAuswahlProps } from "~/components/schule/kataloge/faecher/FaecherAuswahlProps";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeFaecherDaten } from "~/router/apps/schule/kataloge/faecher/RouteFaecherDaten";
-import type { FaecherAuswahlProps } from "~/components/schule/kataloge/faecher/FaecherAuswahlProps";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
 import { RouteDataFaecher } from "./RouteDataFaecher";
-import { routeFaecherStundenplan } from "./stundenplan/RouteFaecherStundenplan";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { routeFaecherGruppenprozesse } from "./RouteFaecherGruppenprozesse";
 import { routeFaecherNeu } from "./RouteFaecherNeu";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { FaecherListeManager } from "@ui/ui/manager/kataloge/FaecherListeManager";
+import { routeFaecherStundenplan } from "./stundenplan/RouteFaecherStundenplan";
 
 const FaecherAuswahl = () => import("~/components/schule/kataloge/faecher/FaecherAuswahl.vue");
 const FaecherApp = () => import("~/components/schule/kataloge/faecher/FaecherApp.vue");

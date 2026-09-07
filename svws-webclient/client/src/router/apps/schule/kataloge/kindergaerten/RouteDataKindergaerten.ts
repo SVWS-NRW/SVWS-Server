@@ -1,13 +1,5 @@
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { api } from "~/router/Api";
-import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
-import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
-import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenDaten";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -15,6 +7,16 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenDaten";
+import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
+import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

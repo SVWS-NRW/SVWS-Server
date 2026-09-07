@@ -34,6 +34,7 @@ import type { List } from "@core/java/util/List";
 import { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
 import { ListeMitAuswahl } from "@ui/ui/manager/ListeMitAuswahl";
+
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

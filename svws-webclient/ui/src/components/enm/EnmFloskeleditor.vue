@@ -82,6 +82,9 @@
 
 <script setup lang="ts">
 
+	import type { ComponentPublicInstance } from 'vue';
+	import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
+
 	import { PairNN } from '@core/asd/adt/PairNN';
 	import type { ENMv2Floskel } from '@core/core/data/enm/v2/ENMv2Floskel';
 	import type { ENMv2Floskelgruppe } from '@core/core/data/enm/v2/ENMv2Floskelgruppe';
@@ -92,9 +95,8 @@
 	import type { List } from '@core/java/util/List';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
-	import type { ComponentPublicInstance } from 'vue';
-	import { computed, onMounted, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
-	import type { EnmManager, EnmLerngruppenAuswahlEintrag, BemerkungenHauptgruppe } from './EnmManager';
+
+	import type { BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag, EnmManager } from './EnmManager';
 
 	type RowType = { gruppe: ENMv2Floskelgruppe, floskel: ENMv2Floskel | null };
 	type StrOrUndef = string | undefined;

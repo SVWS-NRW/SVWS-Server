@@ -112,7 +112,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from 'vue';
-	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
+
 	import { SchuelerStatus } from '@core/asd/types/schueler/SchuelerStatus';
 	import type { GostBelegpruefungErgebnisFehler } from '@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 	import { GostBelegpruefungsArt } from '@core/core/abschluss/gost/GostBelegpruefungsArt';
@@ -128,6 +128,8 @@
 	import { useServerState } from '@ui/states/ServerState';
 	import type { DataTableColumn, SortByAndOrder } from '@ui/types';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+
+	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 	const benutzerState = useBenutzerState();

@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { FoerderschwerpunktKatalogEintrag } from "@core/asd/data/schule/FoerderschwerpunktKatalogEintrag";
 import { Foerderschwerpunkt } from "@core/asd/types/schule/Foerderschwerpunkt";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
@@ -7,8 +9,7 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 /**
  * ModelProxy für Foerderschwerpunkte

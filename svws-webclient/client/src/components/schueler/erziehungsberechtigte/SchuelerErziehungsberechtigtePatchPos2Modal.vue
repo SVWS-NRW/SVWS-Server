@@ -15,10 +15,13 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
-	import SchuelerErziehungsberechtigteZweiterErzFelder from "./SchuelerErziehungsberechtigteZweiterErzFelder.vue";
+
 	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+
+	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
+
+	import SchuelerErziehungsberechtigteZweiterErzFelder from "./SchuelerErziehungsberechtigteZweiterErzFelder.vue";
 
 	const props = defineProps<{
 		show: boolean;

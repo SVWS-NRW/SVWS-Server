@@ -1,13 +1,15 @@
 import type { RouteComponent, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteData } from "./RouteData";
-import { RouteNode } from "./RouteNode";
-import { RouteManager } from "./RouteManager";
+
 import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { TabData } from "@ui/ui/nav/TabData";
 import type { TabManager } from "@ui/ui/nav/TabManager";
 import type { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { RouteData } from "./RouteData";
+import { RouteManager } from "./RouteManager";
+import { RouteNode } from "./RouteNode";
 
 
 /**

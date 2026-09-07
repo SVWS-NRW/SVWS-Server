@@ -1,4 +1,5 @@
 import type { List } from "@core/java/util/List";
+
 import type { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
 
 export interface TeilleistungsartenGruppenprozesseProps {

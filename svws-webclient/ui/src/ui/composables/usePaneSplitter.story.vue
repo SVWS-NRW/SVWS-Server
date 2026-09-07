@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 	import { onUnmounted } from 'vue';
+
 	import { usePaneSplitter } from './usePaneSplitter';
 
 	const { removeDragListeners, dragStart: dragStart1, thisStyle: leftStyle1, thatStyle: rightStyle1, dragger: dragger1 } = usePaneSplitter();

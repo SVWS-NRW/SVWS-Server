@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParamsRawGeneric } from "vue-router";
-import { api } from "~/router/Api";
-import { RouteNode } from "~/router/RouteNode";
-import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import type { KlassenGruppenprozesseProps } from "~/components/klassen/gruppenprozesse/KlassenGruppenprozesseProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { KlassenGruppenprozesseProps } from "~/components/klassen/gruppenprozesse/KlassenGruppenprozesseProps";
+import { api } from "~/router/Api";
+import { type RouteKlassen, routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import { RouteNode } from "~/router/RouteNode";
 
 const KlassenGruppenprozesse = () => import("~/components/klassen/gruppenprozesse/KlassenGruppenprozesse.vue");
 

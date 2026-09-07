@@ -19,6 +19,7 @@
 <script setup lang="ts">
 
 	import { onMounted, ref } from 'vue';
+
 	import type { Checkpoint } from "./Checkpoint";
 
 	const props = withDefaults(defineProps<{

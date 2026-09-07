@@ -1,14 +1,16 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import SError from "~/components/error/SError.vue";
-import type { ErrorProps } from "~/components/error/SErrorProps";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
+
 import { OpenApiError } from "@core/api/OpenApiError";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import { api } from "../Api";
+import { RouteManager } from "../RouteManager";
+import SError from "~/components/error/SError.vue";
+import type { ErrorProps } from "~/components/error/SErrorProps";
+import { RouteNode } from "~/router/RouteNode";
 
 
 export class RouteError extends RouteNode<any, any> {

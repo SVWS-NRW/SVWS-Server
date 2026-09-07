@@ -1,15 +1,5 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import { api } from "~/router/Api";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
-import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
-import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
-import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
-import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
 import { OpenApiError } from "@core/api/OpenApiError";
 import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
 import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
@@ -26,6 +16,19 @@ import type { List } from "@core/java/util/List";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
+import { NotenmodulConfigManagerSperrungen, type NotenmodulConfigManagerSperrungenGruppierung } from "./NotenmodulConfigManagerSperrungen";
+import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
+import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
 
 
 interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<WenomAuswahlListeManager> {

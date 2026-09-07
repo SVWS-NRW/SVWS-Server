@@ -1,12 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENMProps";
-import { RouteDataSchuleDatenaustauschENM } from "./RouteDataSchuleDatenaustauschENM";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { RouteApp } from "~/router/apps/RouteApp";
+
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENMProps";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataSchuleDatenaustauschENM } from "./RouteDataSchuleDatenaustauschENM";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENM.vue");
 

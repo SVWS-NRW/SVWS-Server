@@ -54,6 +54,8 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, nextTick, onBeforeMount, onUnmounted, ref, useId, useTemplateRef, watch } from 'vue';
+
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
 	import { ArrayList } from '@core/java/util/ArrayList';
@@ -61,7 +63,6 @@
 	import { ValidatorInputRequired } from '@ui/validation/common/ValidatorInputRequired';
 	import { ValidatorStringLength } from '@ui/validation/common/ValidatorStringLength';
 	import { ValidationResult } from '@ui/validation/ValidationResult';
-	import { computed, useId, useTemplateRef, onBeforeMount, nextTick, onUnmounted, watch, ref } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 

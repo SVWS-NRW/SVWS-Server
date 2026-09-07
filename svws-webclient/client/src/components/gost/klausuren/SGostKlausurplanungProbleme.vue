@@ -376,22 +376,25 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from 'vue';
-	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
-	import SGostKlausurplanungProblemCard from "./SGostKlausurplanungProblemCard.vue";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { onMounted, ref } from 'vue';
+
 	import { OpenApiError } from '@core/api/OpenApiError.js';
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart.js';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin.js';
 	import type { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur.js';
 	import type { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin.js';
 	import type { SchuelerListeEintrag } from '@core/core/data/schueler/SchuelerListeEintrag.js';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr.js';
 	import { DateUtils } from '@core/core/utils/DateUtils.js';
+	import { ListUtils } from '@core/core/utils/ListUtils.js';
 	import { useConfigState } from '@ui/states/ConfigState.js';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState.js';
 	import type { DataTableColumn } from '@ui/types.js';
-	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart.js';
-	import { ListUtils } from '@core/core/utils/ListUtils.js';
+
+	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausuren/SGostKlausurplanungVorgabenIgnoreManager";
+
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import SGostKlausurplanungProblemCard from "./SGostKlausurplanungProblemCard.vue";
 
 	type KlausurplanungProblemId =
 		| "stundenplan_fehlend"

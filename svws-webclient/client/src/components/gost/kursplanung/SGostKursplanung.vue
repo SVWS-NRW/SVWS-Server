@@ -127,8 +127,7 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import type { GostKursplanungProps } from "./SGostKursplanungProps";
-	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
+
 	import type { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -144,6 +143,9 @@
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useServerState } from "@ui/states/ServerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
+	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
+	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 
 	const props = defineProps<GostKursplanungProps>();
 	const benutzerState = useBenutzerState();

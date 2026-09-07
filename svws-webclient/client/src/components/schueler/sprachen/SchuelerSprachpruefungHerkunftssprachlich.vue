@@ -79,21 +79,24 @@
 
 	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
-	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
-	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+
 	import type { Sprachpruefung } from '@core/asd/data/schueler/Sprachpruefung';
 	import { Fach } from '@core/asd/types/fach/Fach';
+	import { Sprachreferenzniveau } from '@core/asd/types/fach/Sprachreferenzniveau';
 	import { Jahrgaenge } from '@core/asd/types/jahrgang/Jahrgaenge';
+	import { Note } from '@core/asd/types/Note';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
+	import { Sprachpruefungniveau } from '@core/core/types/fach/Sprachpruefungniveau';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useSchuleState } from '@ui/states/SchuleState';
-	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
-	import { Note } from '@core/asd/types/Note';
-	import { Sprachreferenzniveau } from '@core/asd/types/fach/Sprachreferenzniveau';
-	import { Sprachpruefungniveau } from '@core/core/types/fach/Sprachpruefungniveau';
 	import SvwsUiSelect from '@ui/ui/controls/SvwsUiSelect.vue';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+
+	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+
+	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;

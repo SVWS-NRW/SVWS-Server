@@ -1,16 +1,19 @@
 import type { RouteParams } from "vue-router";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { RouteDataAbteilungen } from "./RouteDataAbteilungen";
-import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
-import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenDaten";
-import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
-import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { AbteilungenListeManager } from "@ui/ui/manager/kataloge/AbteilungenListeManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeAbteilungenDaten } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenDaten";
+import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
+import { routeAbteilungenNeu } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenNeu";
+import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataAbteilungen } from "./RouteDataAbteilungen";
 
 const AbteilungenApp = () => import("~/components/schule/kataloge/abteilungen/AbteilungenApp.vue");
 const AbteilungenAuswahl = () => import("~/components/schule/kataloge/abteilungen/AbteilungenAuswahl.vue");

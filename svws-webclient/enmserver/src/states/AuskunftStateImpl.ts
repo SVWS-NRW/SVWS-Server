@@ -1,6 +1,7 @@
+import { ApiEnmServer } from "@wenom/ApiEnmServer";
+
 import type { AuskunftState } from "@ui/states/AuskunftState";
 import { StateManager } from "@ui/ui/StateManager";
-import { ApiEnmServer } from "@wenom/ApiEnmServer";
 
 interface AuskunftReactiveState {
 	/** Die Datenschutzauskunft */

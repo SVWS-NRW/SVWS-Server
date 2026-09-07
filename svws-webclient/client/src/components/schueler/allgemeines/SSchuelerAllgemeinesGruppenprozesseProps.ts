@@ -1,5 +1,6 @@
 import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import type { List } from "@core/java/util/List";
+
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 

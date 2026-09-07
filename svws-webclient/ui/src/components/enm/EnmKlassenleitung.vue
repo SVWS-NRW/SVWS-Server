@@ -7,12 +7,14 @@
 <script setup lang="ts">
 
 	import { nextTick, ref, shallowRef, useTemplateRef } from 'vue';
-	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import type { BemerkungenHauptgruppe } from './EnmManager';
+
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
 	import type { ENMv2LeistungBemerkungen } from '@core/core/data/enm/v2/ENMv2LeistungBemerkungen';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
+
+	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
+	import type { BemerkungenHauptgruppe } from './EnmManager';
 
 	type AuswahlZelle = { klasse: ENMv2Klasse | null, schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null };
 

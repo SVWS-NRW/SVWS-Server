@@ -101,8 +101,7 @@
 <script setup lang="ts" generic="T">
 
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
-	import { useUiSelectUtils } from './utils/useUiSelectUtils';
-	import { SelectManager } from './manager/SelectManager';
+
 	import type { BasicValidator } from '@core/asd/validate/BasicValidator';
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
@@ -112,7 +111,10 @@
 	import { ValidatorInputRequired } from '@ui/validation/common/ValidatorInputRequired';
 	import { ValidatorSelectOptionsValid } from '@ui/validation/common/ValidatorSelectOptionsValid';
 	import { ValidationResult } from '@ui/validation/ValidationResult';
-	import type { UiSelectSingleProps, UiSelectState, UiSelectHTMLElements, UiSelectSelectionMethods } from './manager/UiSelectTypes';
+
+	import { SelectManager } from './manager/SelectManager';
+	import type { UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectSingleProps, UiSelectState } from './manager/UiSelectTypes';
+	import { useUiSelectUtils } from './utils/useUiSelectUtils';
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',

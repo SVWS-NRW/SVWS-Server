@@ -34,14 +34,16 @@
 
 <script setup lang="ts">
 
-	import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteAuswahlProps";
 	import { computed, ref } from "vue";
+
 	import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteAuswahlProps";
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 	const benutzerState = useBenutzerState();

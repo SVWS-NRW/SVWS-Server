@@ -2,7 +2,7 @@ import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAns
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class BetriebeAnsprechpartnerModelProxy extends ModelProxy<BetriebeAnsprechpartner> {
 

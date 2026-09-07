@@ -1,16 +1,19 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
-import { RouteDataSchuleReporting } from "./RouteDataSchuleReporting";
-import type { SchuleReportingProps } from "~/components/schule/reporting/SchuleReportingProps";
-import { routeSchuleReportingKonfiguration } from "./RouteSchuleReportingKonfiguration";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import type { SchuleReportingProps } from "~/components/schule/reporting/SchuleReportingProps";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+
+import { RouteDataSchuleReporting } from "./RouteDataSchuleReporting";
+import { routeSchuleReportingKonfiguration } from "./RouteSchuleReportingKonfiguration";
 
 const SchuleReporting = () => import("~/components/schule/reporting/SchuleReporting.vue");
 

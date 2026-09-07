@@ -154,9 +154,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
-	import { optionalInputIsValid } from "~/util/validation/Validation";
-	import { TeilstandortModelProxy } from "~/components/schule/stammdaten/adressdaten/modelproxy/TeilstandortModelProxy";
+
 	import { Teilstandort } from "@core/core/data/schule/Teilstandort";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
@@ -167,6 +165,10 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import { TeilstandortModelProxy } from "~/components/schule/stammdaten/adressdaten/modelproxy/TeilstandortModelProxy";
+	import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
+	import { optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuleAdressdatenProps>();
 	const benutzerState = useBenutzerState();

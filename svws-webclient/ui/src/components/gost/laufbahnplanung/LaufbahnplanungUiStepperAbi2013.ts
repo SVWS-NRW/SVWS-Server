@@ -10,6 +10,7 @@ import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostKursart } from "@core/core/types/gost/GostKursart";
 import { GostFachUtils } from "@core/core/utils/gost/GostFachUtils";
 import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+
 import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
 import type { LaufbahnplanungUiStepper, LaufbahnplanungUiStepperMode } from "./LaufbahnplanungUiStepper";
 

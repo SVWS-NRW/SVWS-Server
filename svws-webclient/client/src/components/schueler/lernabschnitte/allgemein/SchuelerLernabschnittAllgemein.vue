@@ -95,8 +95,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchuelerLernabschnittAllgemeinProps } from "./SchuelerLernabschnittAllgemeinProps";
-	import { SchuelerLernabschnittAllgemeinModelProxy } from "./modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+
 	import type { KlassenDaten } from '@core/asd/data/klassen/KlassenDaten';
 	import type { SchuelerLernabschnittsdaten } from '@core/asd/data/schueler/SchuelerLernabschnittsdaten';
 	import type { OrganisationsformKatalogEintrag } from '@core/asd/data/schule/OrganisationsformKatalogEintrag';
@@ -114,6 +113,9 @@
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
+
+	import { SchuelerLernabschnittAllgemeinModelProxy } from "./modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+	import type { SchuelerLernabschnittAllgemeinProps } from "./SchuelerLernabschnittAllgemeinProps";
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
 	const benutzerState = useBenutzerState();

@@ -54,15 +54,17 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
+	import { computed, ref } from "vue";
+
 	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+
+	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 
 	type Action = 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
 

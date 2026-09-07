@@ -1,15 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
-import { RouteDataSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteDataSchuelerLernplattformen";
-import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import type { SchuelerLernplattformenProps } from "~/components/schueler/lernplattformen/SchuelerLernplattformenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchuelerLernplattformenProps } from "~/components/schueler/lernplattformen/SchuelerLernplattformenProps";
+import { api } from "~/router/Api";
+import { RouteDataSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteDataSchuelerLernplattformen";
+import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerLernplattformen = () => import("~/components/schueler/lernplattformen/SSchuelerLernplattformen.vue");
 

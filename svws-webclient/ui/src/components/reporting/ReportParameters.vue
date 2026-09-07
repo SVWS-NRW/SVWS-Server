@@ -188,14 +188,9 @@
 
 <script setup lang="ts">
 
-	import Checkbox from "@ui/ui/controls/SvwsUiCheckbox.vue";
-	import Input from "@ui/ui/controls/SvwsUiTextInput.vue";
-	import InputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
-	import Select from "@ui/ui/controls/select/UiSelect.vue";
-	import TextArea from "@ui/ui/controls/SvwsUiTextareaInput.vue";
-
 	import type { Component, ComputedRef } from "vue";
 	import { computed, ref, watch, watchEffect } from "vue";
+
 	import { ReportingFilterDefinition } from "@core/core/data/reporting/ReportingFilterDefinition";
 	import { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
 	import type { ReportingReportvorlageParameter } from "@core/core/data/reporting/ReportingReportvorlageParameter";
@@ -205,15 +200,20 @@
 	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { ReportingReportvorlageParameterTyp } from "@core/core/types/reporting/ReportingReportvorlageParameterTyp";
 	import { ReportingUIKomponentenTyp } from "@core/core/types/reporting/ReportingUIKomponentenTyp";
+	import { ListUtils } from "@core/core/utils/ListUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import type { ElementMitAnforderung } from "@ui/states/ReportingState";
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import Select from "@ui/ui/controls/select/UiSelect.vue";
+	import Checkbox from "@ui/ui/controls/SvwsUiCheckbox.vue";
+	import InputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
+	import TextArea from "@ui/ui/controls/SvwsUiTextareaInput.vue";
+	import Input from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { TabManager } from "@ui/ui/nav/TabManager";
-	import { ListUtils } from "@core/core/utils/ListUtils";
 
 	const props = defineProps<{
 		showJson?: boolean;

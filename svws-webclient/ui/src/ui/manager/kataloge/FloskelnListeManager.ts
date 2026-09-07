@@ -8,6 +8,7 @@ import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { JavaLong } from "@core/java/lang/JavaLong";
 import { JavaString } from "@core/java/lang/JavaString";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floskel> {

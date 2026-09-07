@@ -9,6 +9,7 @@ import type { Collection } from "@core/java/util/Collection";
 import type { Comparator } from "@core/java/util/Comparator";
 import { HashSet } from "@core/java/util/HashSet";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class FachklassenListeManager extends AuswahlManager<number, FachklasseEintrag, FachklasseEintrag> {

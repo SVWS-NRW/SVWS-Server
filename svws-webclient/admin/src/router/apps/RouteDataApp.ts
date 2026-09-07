@@ -1,5 +1,7 @@
 import { shallowRef } from "vue";
+
 import type { RouteNode } from "../RouteNode";
+
 import { routeApp } from "./RouteApp";
 import { routeSchema } from "./schema/RouteSchema";
 

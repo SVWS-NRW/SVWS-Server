@@ -51,6 +51,8 @@
 </template>
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 	import { ArrayList } from "@core/java/util/ArrayList";
@@ -58,7 +60,6 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

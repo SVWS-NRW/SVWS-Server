@@ -17,8 +17,9 @@
 
 <script setup lang="ts">
 
-	import { Aufsichtsbereich } from "@core/core/data/schule/Aufsichtsbereich";
 	import { ref } from "vue";
+
+	import { Aufsichtsbereich } from "@core/core/data/schule/Aufsichtsbereich";
 
 	const props = defineProps<{
 		addAufsichtsbereich: (raum: Aufsichtsbereich) => Promise<void>;

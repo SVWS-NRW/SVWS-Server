@@ -37,11 +37,13 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { GostAuswahlProps } from "./SGostAuswahlProps";
-	import { useBenutzerState } from "@ui/states/BenutzerState";
+
 	import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
+	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 
 	const props = defineProps<GostAuswahlProps>();
 	const benutzerState = useBenutzerState();

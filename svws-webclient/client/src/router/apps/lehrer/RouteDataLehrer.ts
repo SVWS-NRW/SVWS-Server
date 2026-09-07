@@ -1,17 +1,5 @@
-import { api } from "~/router/Api";
-import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
-import { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
 import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
 import type { LehrerLehrbefaehigungEintrag } from "@core/asd/data/lehrer/LehrerLehrbefaehigungEintrag";
@@ -33,6 +21,21 @@ import type { List } from "@core/java/util/List";
 import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
+
+import { api } from "~/router/Api";
+import { PendingStateManagerLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/PendingStateManagerLehrerIndividualdaten";
+import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
+import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
+
+import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
 
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;

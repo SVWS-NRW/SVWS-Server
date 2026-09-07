@@ -1,8 +1,10 @@
+import { computed } from 'vue';
+
 import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 import type { List } from '@core/java/util/List';
 import type { AuswahlManager } from '@ui/ui/manager/AuswahlManager';
 import { ViewType } from '@ui/ui/nav/ViewType';
-import { computed } from 'vue';
+
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 import { benutzerStateImpl } from '~/states/BenutzerStateImpl';
 

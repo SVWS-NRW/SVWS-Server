@@ -1,17 +1,20 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
-import { RouteDataNotenmodulKlassenleitung } from "./RouteDataNotenmodulKlassenleitung";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { RouteApp } from "../RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { EnmKlassenleitungAuswahlListeManager } from "@ui/components/enm/EnmKlassenleitungAuswahlListeManager";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { RouteApp } from "../RouteApp";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
+import { RouteDataNotenmodulKlassenleitung } from "./RouteDataNotenmodulKlassenleitung";
+import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
+import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 
 const NotenmodulKlassenleitungApp = () => import("~/components/notenmodul/NotenmodulKlassenleitungApp.vue");
 const NotenmodulKlassenleitungAuswahl = () => import("~/components/notenmodul/NotenmodulKlassenleitungAuswahl.vue");

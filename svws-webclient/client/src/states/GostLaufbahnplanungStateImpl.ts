@@ -1,8 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteNode } from "~/router/RouteNode";
-import { configStateImpl } from "./ConfigStateImpl";
-import { benutzerStateImpl } from "./BenutzerStateImpl";
 import type { ApiFile } from "@core/api/BaseApi";
 import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
@@ -28,8 +23,15 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import type { GostKlausurvorgabeEintrag, GostLaufbahnplanungState, GostBelegpruefungsModus } from "@ui/states/GostLaufbahnplanungState";
+import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import { benutzerStateImpl } from "./BenutzerStateImpl";
+import { configStateImpl } from "./ConfigStateImpl";
 
 
 interface GostLaufbahnplanungReactiveState {

@@ -106,9 +106,8 @@
 
 <script setup lang="ts">
 
-	import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
 	import { computed, ref } from "vue";
-	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
+
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -119,6 +118,9 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
+	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const props = defineProps<AnkreuzkompetenzenDatenProps>();
 	const benutzerState = useBenutzerState();

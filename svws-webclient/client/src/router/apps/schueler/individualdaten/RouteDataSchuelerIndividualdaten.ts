@@ -1,11 +1,12 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
-import { routeApp } from "~/router/apps/RouteApp";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import type { SchulformKatalogEintrag } from "@core/asd/data/schule/SchulformKatalogEintrag";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
+
+import { routeApp } from "~/router/apps/RouteApp";
+import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {

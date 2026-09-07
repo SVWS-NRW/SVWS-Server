@@ -1,6 +1,7 @@
 import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
 import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
-import type { StundenplanAnsichtDropZone, StundenplanAnsichtDragData } from "./StundenplanAnsichtProps";
+
+import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 
 export interface StundenplanFachProps {
 	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';

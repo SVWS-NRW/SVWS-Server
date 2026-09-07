@@ -1,18 +1,21 @@
-import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
-import type { RouteApp } from "../RouteApp";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteDataNotenmodulAnkreuzkompetenzen } from "./RouteDataNotenmodulAnkreuzkompetenzen";
-import { routeNotenmodulAnkreuzkompetenzenData } from "./RouteNotenmodulAnkreuzkompetenzenData";
-import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { RouteApp } from "../RouteApp";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
+import { RouteDataNotenmodulAnkreuzkompetenzen } from "./RouteDataNotenmodulAnkreuzkompetenzen";
+import { routeNotenmodulAnkreuzkompetenzenData } from "./RouteNotenmodulAnkreuzkompetenzenData";
+import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
+import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 
 const NotenmodulAnkreuzkompetenzenApp = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenApp.vue");
 const NotenmodulAnkreuzkompetenzenAuswahl = () => import("~/components/notenmodul/NotenmodulAnkreuzkompetenzenAuswahl.vue");

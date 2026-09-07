@@ -1,31 +1,34 @@
 import type { RouteParams } from "vue-router";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
-import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen";
-import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
-import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
-import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
-import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
-import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
-import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
-import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
-import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
-import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
-import { routeStundenplanRaum } from "./RouteStundenplanRaum";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { routeStundenplanNeu } from "./RouteStundenplanNeu";
-import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
-import { routeError } from "~/router/error/RouteError";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
-import { RouteNode } from "~/router/RouteNode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
+import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
+import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
+import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
+import { routeError } from "~/router/error/RouteError";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+
+import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
+import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
+import { routeKatalogZeitraster } from "./kataloge/RouteKatalogZeitraster";
+import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
+import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen";
+import { routeStundenplanNeu } from "./RouteStundenplanNeu";
+import { routeStundenplanRaum } from "./RouteStundenplanRaum";
+import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
+import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue");
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue");

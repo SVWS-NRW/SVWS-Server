@@ -51,13 +51,15 @@
 
 <script setup lang="ts">
 
+	import { computed, onMounted, ref, watch } from "vue";
+
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import type { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
 	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
-	import { ref, onMounted, watch, computed } from "vue";
+
 	import type { StundenplanNeuProps } from "~/components/stundenplan/SStundenplanNeuProps";
 
 	const abschnittState = useAbschnittState();

@@ -1,12 +1,15 @@
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { RouteDataSchuleDatenaustauschLernplattformen } from "./RouteDataSchuleDatenaustauschLernplattformen";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataSchuleDatenaustauschLernplattformen } from "./RouteDataSchuleDatenaustauschLernplattformen";
 
 const SSchuleDatenaustauschLernplattformen = () => import("~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformen.vue");
 

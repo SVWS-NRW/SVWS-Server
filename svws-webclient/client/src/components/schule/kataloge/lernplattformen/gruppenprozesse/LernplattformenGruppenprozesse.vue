@@ -54,10 +54,12 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { ref, computed } from "vue";
+
 	import type { LernplattformenGruppenprozesseProps } from "~/components/schule/kataloge/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesseProps";
 
 	const props = defineProps<LernplattformenGruppenprozesseProps>();

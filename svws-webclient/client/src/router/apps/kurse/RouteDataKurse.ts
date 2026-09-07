@@ -1,22 +1,25 @@
-import { KursListeManager } from "~/states/kurse/KursListeManager";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
-import { routeKurseNeu } from "./RouteKurseNeu";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 import type { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { RouteManager } from "~/router/RouteManager";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { KursListeManager } from "~/states/kurse/KursListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
+import { routeKurseNeu } from "./RouteKurseNeu";
 
 type RouteStateKurse = RouteStateAuswahlInterface<KursListeManager>;
 

@@ -31,9 +31,11 @@
 	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from "@vueuse/core";
 	import type { ComponentPublicInstance } from 'vue';
-	import { ref, computed, useTemplateRef } from 'vue';
-	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
+	import { computed, ref, useTemplateRef } from 'vue';
+
 	import type { ButtonType } from "@ui/types.js";
+
+	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	type Item = {
 		text: string;

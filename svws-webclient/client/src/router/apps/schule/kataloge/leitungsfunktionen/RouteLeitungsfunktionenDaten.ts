@@ -1,11 +1,14 @@
-import type { LeitungsfunktionenDatenProps } from "~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDatenProps";
 import type { RouteLocationNormalized } from "vue-router";
-import type { RouteLeitungsfunktionen } from "./RouteLeitungsfunktionen";
-import { RouteNode } from "~/router/RouteNode";
-import { routeLeitungsfunktionen } from "./RouteLeitungsfunktionen";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { LeitungsfunktionenDatenProps } from "~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDatenProps";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteLeitungsfunktionen } from "./RouteLeitungsfunktionen";
+import { routeLeitungsfunktionen } from "./RouteLeitungsfunktionen";
 
 const LeitungsfunktionenDaten = () => import("~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDaten.vue");
 

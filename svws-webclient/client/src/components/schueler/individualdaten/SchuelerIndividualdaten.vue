@@ -264,10 +264,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
-	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
-	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
-	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
+
 	import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import type { VerkehrsspracheKatalogEintrag } from "@core/asd/data/schule/VerkehrsspracheKatalogEintrag";
@@ -290,7 +287,13 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
+	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
+	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
+
+	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
 
 	// --- Setup ---
 

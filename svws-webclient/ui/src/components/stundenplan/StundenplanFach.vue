@@ -27,6 +27,7 @@
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { Wochentag } from "@core/core/types/Wochentag";
 	import type { List } from "@core/java/util/List";
+
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "./StundenplanAnsichtProps";
 	import type { StundenplanFachProps } from "./StundenplanFachProps";
 

@@ -1,15 +1,17 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
-import type { GostFachwahlenZKFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenZKFachProps";
 import { ref } from "vue";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeError } from "~/router/error/RouteError";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
+
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { GostFachwahlenZKFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenZKFachProps";
+import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
+import { type RouteGost, routeGost } from "~/router/apps/gost/RouteGost";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 
 const SGostFachwahlenZKFach = () => import("~/components/gost/fachwahlen/SGostFachwahlenZKFach.vue");

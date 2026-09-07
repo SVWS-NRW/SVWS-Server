@@ -31,13 +31,15 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed, ref } from "vue";
+
 	import type { LernplattformenAuswahlProps } from "~/components/schule/kataloge/lernplattformen/LernplattformenAuswahlProps";
 
 	const props = defineProps<LernplattformenAuswahlProps>();

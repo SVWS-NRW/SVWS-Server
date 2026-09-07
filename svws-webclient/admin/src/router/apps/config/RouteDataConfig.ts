@@ -1,7 +1,9 @@
 import { api } from "@admin/router/Api";
 import type { RouteNode } from "@admin/router/RouteNode";
-import type { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
 import { shallowRef } from "vue";
+
+import type { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
+
 import { routeSchema } from "../schema/RouteSchema";
 import { routeSchemaUebersicht } from "../schema/uebersicht/RouteSchemaUebersicht";
 

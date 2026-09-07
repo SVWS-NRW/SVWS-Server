@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
@@ -8,8 +10,8 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {

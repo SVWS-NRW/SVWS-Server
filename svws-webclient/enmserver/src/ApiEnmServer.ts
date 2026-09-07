@@ -1,14 +1,15 @@
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
+import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
 import { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
 import { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
 import { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
 import { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BaseApi } from "./BaseApi";
-import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import { BaseApi } from "./BaseApi";
 
 export interface ApiLoginData {
 	idLehrer: number;

@@ -34,8 +34,8 @@
 
 <script setup lang="ts">
 
-	import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
 	import { computed, ref, watch } from "vue";
+
 	import { KursDaten } from "@core/asd/data/kurse/KursDaten";
 	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
@@ -49,6 +49,8 @@
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
+
+	import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
 
 	const abschnittState = useAbschnittState();
 	const benutzerState = useBenutzerState();

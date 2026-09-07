@@ -31,9 +31,9 @@
 </template>
 
 <script setup lang="ts">
-	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
-	import { ref, computed, toRefs } from "vue";
+	import { arrow, autoUpdate, flip, offset, shift, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from '@vueuse/core';
+	import { computed, ref, toRefs } from "vue";
 
 	const props = withDefaults(defineProps<{
 		position?: "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "left" | "left-start" | "left-end" | "right" | "right-start" | "right-end";

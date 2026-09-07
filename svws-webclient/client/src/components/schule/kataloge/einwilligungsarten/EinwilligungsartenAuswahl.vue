@@ -35,13 +35,15 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { EinwilligungenAuswahlProps } from "./EinwilligungsartenAuswahlProps";
+
 	import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { EinwilligungenAuswahlProps } from "./EinwilligungsartenAuswahlProps";
 
 	const props = defineProps<EinwilligungenAuswahlProps>();
 	const benutzerState = useBenutzerState();

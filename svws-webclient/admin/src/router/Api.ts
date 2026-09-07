@@ -1,10 +1,11 @@
-import { ApiConnection } from "@admin/router/ApiConnection";
 import { ApiStatus } from "@admin/components/ApiStatus";
-import { version } from "@version";
-import { githash } from "@githash";
+import { ApiConnection } from "@admin/router/ApiConnection";
+
 import type { ApiPrivileged } from "@core/api/ApiPrivileged";
 import type { ApiServer } from "@core/api/ApiServer";
 import type { ServerMode } from "@core/core/types/ServerMode";
+import { githash } from "@githash";
+import { version } from "@version";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich

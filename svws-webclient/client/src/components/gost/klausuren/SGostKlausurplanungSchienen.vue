@@ -145,6 +145,8 @@
 
 <script setup lang="ts">
 
+	import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 	import { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
 	import { GostKlausurterminblockungDaten } from '@core/core/data/gost/klausuren/GostKlausurterminblockungDaten';
 	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
@@ -155,7 +157,7 @@
 	import { KlausurterminblockungModusQuartale } from '@core/core/types/gost/klausuren/KlausurterminblockungModusQuartale';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
-	import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { useKlausurplanungDragAndDrop } from "./SGostKlausurplanungDragUtils";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";

@@ -35,10 +35,12 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenAppProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAppProps";
 	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { HaltestellenAppProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAppProps";
 
 	const props = defineProps<HaltestellenAppProps>();
 

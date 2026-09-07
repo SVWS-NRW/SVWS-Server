@@ -54,7 +54,7 @@
 </template>
 <script setup lang="ts">
 	import { computed, watch } from "vue";
-	import type { SchuelerKaoaModelProxy } from "./modelproxy/SchuelerKaoaModelProxy";
+
 	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 	import { KAOAAnschlussoptionen } from "@core/asd/types/kaoa/KAOAAnschlussoptionen";
 	import { KAOABerufsfeld } from "@core/asd/types/kaoa/KAOABerufsfeld";
@@ -66,6 +66,8 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
+
+	import type { SchuelerKaoaModelProxy } from "./modelproxy/SchuelerKaoaModelProxy";
 
 	const props = defineProps<{
 		model: SchuelerKaoaModelProxy;

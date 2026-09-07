@@ -1,20 +1,23 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
-import { api } from "~/router/Api";
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { routeTeilleistungsartenGruppenprozesse } from "./RouteTeilleistungsartenGruppenprozesse";
-import { routeTeilleistungsartenNeu } from "./RouteTeilleistungsartenNeu";
-import { routeTeilleistungsartenDaten } from "./RouteTeilleistungsartenDaten";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { TeilleistungsartenListeManager } from "~/states/teilleistungsarten/TeilleistungsartenListeManager";
+
+import { routeTeilleistungsartenDaten } from "./RouteTeilleistungsartenDaten";
+import { routeTeilleistungsartenGruppenprozesse } from "./RouteTeilleistungsartenGruppenprozesse";
+import { routeTeilleistungsartenNeu } from "./RouteTeilleistungsartenNeu";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

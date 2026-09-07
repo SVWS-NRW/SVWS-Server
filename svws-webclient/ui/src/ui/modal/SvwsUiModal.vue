@@ -60,9 +60,10 @@
 
 <script setup lang='ts'>
 
-	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
-	import type { Size } from "@ui/types";
+	import { Dialog, DialogDescription, DialogTitle, TransitionChild, TransitionRoot } from "@headlessui/vue";
 	import { useId } from "vue";
+
+	import type { Size } from "@ui/types";
 
 	const props = withDefaults(defineProps<{
 		show: boolean;

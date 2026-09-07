@@ -20,9 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
 	import { computed, ref, watch } from 'vue';
+
 	import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
+
+	import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
 
 	const props = defineProps<SchuelerBetriebeProps>();
 

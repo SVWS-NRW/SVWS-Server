@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
 import { Fach } from "@core/asd/types/fach/Fach";
@@ -7,7 +9,7 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { List } from "@core/java/util/List";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { computed } from "vue";
+
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
 export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistungsdaten> {

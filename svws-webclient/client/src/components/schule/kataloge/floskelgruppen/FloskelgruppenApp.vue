@@ -36,9 +36,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FloskelgruppenAppProps } from "./FloskelgruppenAppProps";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { FloskelgruppenAppProps } from "./FloskelgruppenAppProps";
 
 	const props = defineProps<FloskelgruppenAppProps>();
 

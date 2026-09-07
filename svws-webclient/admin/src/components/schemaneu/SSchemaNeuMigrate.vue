@@ -38,11 +38,13 @@
 
 <script setup lang="ts">
 
+	import { validatorSchemaName } from "@admin/utils/helfer";
 	import { shallowRef } from "vue";
-	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
+
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
-	import { validatorSchemaName } from "@admin/utils/helfer";
+
+	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 
 	const props = defineProps<{
 		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;

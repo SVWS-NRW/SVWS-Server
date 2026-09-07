@@ -34,10 +34,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { FloskelnGruppenprozesseProps } from "./FloskelnGruppenprozesseProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { FloskelnGruppenprozesseProps } from "./FloskelnGruppenprozesseProps";
 
 	const props = defineProps<FloskelnGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

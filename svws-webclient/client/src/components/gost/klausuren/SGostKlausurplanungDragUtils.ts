@@ -1,6 +1,8 @@
 import { ref } from "vue";
-import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+
 import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+
+import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 
 export type KlausurplanungDropState = "none" | "valid" | "danger" | "disabled";
 

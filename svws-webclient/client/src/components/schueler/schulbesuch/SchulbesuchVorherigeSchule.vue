@@ -95,6 +95,8 @@
 <script setup lang="ts">
 
 
+	import { computed, ref, watch } from "vue";
+
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 	import { HerkunftBildungsgang } from "@core/asd/types/schueler/HerkunftBildungsgang";
 	import { Herkunftsarten } from "@core/asd/types/schueler/Herkunftsarten";
@@ -115,7 +117,7 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
-	import { computed, ref, watch } from "vue";
+
 	import type { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 
 	const props = defineProps<{

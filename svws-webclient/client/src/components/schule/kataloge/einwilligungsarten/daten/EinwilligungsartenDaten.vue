@@ -43,6 +43,8 @@
 
 <script setup lang="ts">
 
+	import { computed, watch } from "vue";
+
 	import type { EinwilligungsschluesselKatalogEintrag } from "@core/asd/data/schule/EinwilligungsschluesselKatalogEintrag";
 	import { Einwilligungsschluessel } from "@core/asd/types/schule/Einwilligungsschluessel";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -52,9 +54,10 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
-	import type { EinwilligungsartenDatenProps } from "./EinwilligungsartenDatenProps";
-	import { computed, watch } from "vue";
+
 	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
+
+	import type { EinwilligungsartenDatenProps } from "./EinwilligungsartenDatenProps";
 
 	const props = defineProps<EinwilligungsartenDatenProps>();
 	const benutzerState = useBenutzerState();

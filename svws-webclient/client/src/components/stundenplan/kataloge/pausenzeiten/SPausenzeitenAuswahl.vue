@@ -39,12 +39,14 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
+
 	import { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { Wochentag } from "@core/core/types/Wochentag";
 	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const benutzerState = useBenutzerState();

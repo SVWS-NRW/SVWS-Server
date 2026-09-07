@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { EinwilligungsschluesselKatalogEintrag } from "@core/asd/data/schule/EinwilligungsschluesselKatalogEintrag";
 import { Einwilligungsschluessel } from "@core/asd/types/schule/Einwilligungsschluessel";
 import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
@@ -8,8 +10,8 @@ import type { EinwilligungsartenListeManager } from "@ui/ui/manager/kataloge/Ein
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { ValidatorEinwilligungsartBezeichnungIsUniqueInList } from "./validation/ValidatorEinwilligungsartBezeichnungIsUniqueInList";
 
 

@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { type RouteJahrgaenge, routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
-import type { JahrgaengeGruppenprozesseProps } from "~/components/schule/kataloge/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesseProps";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { JahrgaengeGruppenprozesseProps } from "~/components/schule/kataloge/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesseProps";
+import { type RouteJahrgaenge, routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const JahrgaengeGruppenprozesse = () => import("~/components/schule/kataloge/jahrgaenge/gruppenprozesse/JahrgaengeGruppenprozesse.vue");
 

@@ -1,12 +1,14 @@
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteTabNode } from "~/router/RouteTabNode";
-import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
-import { routeSchuleDatenaustauschUntisExporte } from "./RouteSchuleDatenaustauschUntisExporte";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteTabNode } from "~/router/RouteTabNode";
+
+import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
+import { routeSchuleDatenaustauschUntisExporte } from "./RouteSchuleDatenaustauschUntisExporte";
+import { routeSchuleDatenaustauschUntisImporte } from "./RouteSchuleDatenaustauschUntisImporte";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
 

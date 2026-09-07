@@ -1,12 +1,15 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeTeilleistungsarten, type RouteTeilleistungsarten } from "./RouteTeilleistungsarten";
 import type { RouteLocationNormalized } from "vue-router";
-import type { TeilleistungsartenNeuProps } from "~/components/schule/kataloge/teilleistungsarten/TeilleistungsartenNeuProps";
-import { RouteManager } from "~/router/RouteManager";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { TeilleistungsartenNeuProps } from "~/components/schule/kataloge/teilleistungsarten/TeilleistungsartenNeuProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import { type RouteTeilleistungsarten, routeTeilleistungsarten } from "./RouteTeilleistungsarten";
 
 
 const TeilleistungsartenNeu = () =>

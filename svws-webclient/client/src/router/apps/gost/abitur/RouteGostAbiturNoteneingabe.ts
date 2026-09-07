@@ -1,14 +1,16 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGostAbitur, type RouteGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
-import type { GostAbiturNoteneingabeProps } from "~/components/gost/abitur/GostAbiturNoteneingabeProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeGost } from "../RouteGost";
-import { routeError } from "~/router/error/RouteError";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import { routeGost } from "../RouteGost";
+import type { GostAbiturNoteneingabeProps } from "~/components/gost/abitur/GostAbiturNoteneingabeProps";
+import { type RouteGostAbitur, routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 const GostAbiturNoteneingabe = () => import("~/components/gost/abitur/GostAbiturNoteneingabe.vue");
 

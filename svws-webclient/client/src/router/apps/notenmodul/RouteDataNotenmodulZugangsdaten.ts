@@ -1,10 +1,11 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeLehrer } from "../lehrer/RouteLehrer";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
+
+import { routeLehrer } from "../lehrer/RouteLehrer";
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
 
 
 interface RouteStateNotenmodulZugangsdaten extends RouteStateInterface {

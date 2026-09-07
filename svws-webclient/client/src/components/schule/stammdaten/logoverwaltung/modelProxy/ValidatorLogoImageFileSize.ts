@@ -1,5 +1,6 @@
 import { BasicValidator } from "@core/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
+
 import type { ImageInfo, ImageRestrictions } from "../LogoUtils";
 
 

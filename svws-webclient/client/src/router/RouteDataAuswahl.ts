@@ -1,9 +1,5 @@
 import type { RouteParamsRawGeneric } from "vue-router";
-import { RouteData, type RouteStateInterface } from "./RouteData";
-import { RouteManager } from "./RouteManager";
-import { RoutingStatus } from "./RoutingStatus";
-import type { RouteNode } from "./RouteNode";
-import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
+
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -12,6 +8,13 @@ import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
+
+import { RouteData, type RouteStateInterface } from "./RouteData";
+import { RouteManager } from "./RouteManager";
+import type { RouteNode } from "./RouteNode";
+import { RoutingStatus } from "./RoutingStatus";
 
 /**
  * Die Definition von gemeinsamen Attributen des States von Routen.

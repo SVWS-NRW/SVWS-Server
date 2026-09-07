@@ -49,13 +49,15 @@
 
 <script setup lang="ts">
 	import { computed, type HTMLAttributes } from "vue";
-	import type { KlausurplanungDropState } from "./SGostKlausurplanungDragUtils";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
-	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+
+	import type { KlausurplanungDropState } from "./SGostKlausurplanungDragUtils";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const props = withDefaults(defineProps<{
 		termin: GostKlausurtermin;

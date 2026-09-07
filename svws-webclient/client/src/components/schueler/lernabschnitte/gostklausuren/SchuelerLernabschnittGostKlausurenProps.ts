@@ -1,6 +1,7 @@
 import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
 import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
 import type { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
+
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
 
 export interface SchuelerLernabschnittGostKlausurenProps {

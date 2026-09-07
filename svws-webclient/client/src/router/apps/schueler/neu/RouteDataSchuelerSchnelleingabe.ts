@@ -1,8 +1,3 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeApp } from "~/router/apps/RouteApp";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
@@ -24,6 +19,12 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
+
+import { api } from "~/router/Api";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	manager: SchuelerSchnelleingabeManager | undefined;

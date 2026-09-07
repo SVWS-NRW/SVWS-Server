@@ -1,5 +1,3 @@
-import { EnmSperrManager } from "./EnmSperrManager";
-import { EnmSpaltenManager } from "./EnmSpaltenManager";
 import { PairNN } from "@core/asd/adt/PairNN";
 import { Note } from "@core/asd/types/Note";
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
@@ -25,6 +23,9 @@ import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
+
+import { EnmSpaltenManager } from "./EnmSpaltenManager";
+import { EnmSperrManager } from "./EnmSperrManager";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen

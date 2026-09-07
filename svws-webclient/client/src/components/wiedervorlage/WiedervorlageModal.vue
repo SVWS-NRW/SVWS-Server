@@ -59,13 +59,15 @@
 
 <script setup lang="ts">
 	import { computed, shallowRef, watch } from 'vue';
-	import { dateTodayPlus, formatDateToDateTime, getDateFromDateTime } from "~/utils/date";
-	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
-	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
+
 	import type { BenutzergruppeListeEintrag } from '@core/core/data/benutzer/BenutzergruppeListeEintrag';
 	import type { WiedervorlageEintrag } from '@core/core/data/schule/WiedervorlageEintrag';
 	import { useNotificationsState } from '@ui/states/NotificationsState';
 	import { useWiedervorlageState } from '@ui/states/WiedervorlageState';
+
+	import type { Wiedervorlage } from "~/components/wiedervorlage/Wiedervorlage";
+	import { WiedervorlageModelProxy } from "~/components/wiedervorlage/WiedervorlageModelProxy";
+	import { dateTodayPlus, formatDateToDateTime, getDateFromDateTime } from "~/utils/date";
 
 	const props = withDefaults(defineProps<{
 		mode?: "create" | "edit",

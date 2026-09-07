@@ -40,12 +40,13 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
 	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { GostKursart } from "@core/core/types/gost/GostKursart";
 	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
-	import { computed } from "vue";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

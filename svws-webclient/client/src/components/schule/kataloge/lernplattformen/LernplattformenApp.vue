@@ -36,9 +36,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { LernplattformenAppProps } from "~/components/schule/kataloge/lernplattformen/LernplattformenAppProps";
 
 	const props = defineProps<LernplattformenAppProps>();

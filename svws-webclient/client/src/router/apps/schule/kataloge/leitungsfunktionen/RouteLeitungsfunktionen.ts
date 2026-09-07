@@ -1,16 +1,19 @@
 import type { RouteParams } from "vue-router";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
-import { RouteDataLeitungsfunktionen } from "./RouteDataLeitungsfunktionen";
-import { routeLeitungsfunktionenDaten } from "./RouteLeitungsfunktionenDaten";
-import { routeLeitungsfunktionenNeu } from "./RouteLeitungsfunktionenNeu";
-import { routeLeitungsfunktionenGruppenprozesse } from "./RouteLeitungsfunktionenGruppenprozesse";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { LeitungsfunktionenListeManager } from "@ui/ui/manager/kataloge/LeitungsfunktionenListeManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataLeitungsfunktionen } from "./RouteDataLeitungsfunktionen";
+import { routeLeitungsfunktionenDaten } from "./RouteLeitungsfunktionenDaten";
+import { routeLeitungsfunktionenGruppenprozesse } from "./RouteLeitungsfunktionenGruppenprozesse";
+import { routeLeitungsfunktionenNeu } from "./RouteLeitungsfunktionenNeu";
 
 const LeitungsfunktionenApp = () => import("~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenApp.vue");
 const LeitungsfunktionenAuswahl = () => import("~/components/schule/kataloge/leitungsfunktionen/LeitungsfunktionenAuswahl.vue");

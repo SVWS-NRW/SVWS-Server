@@ -113,9 +113,8 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
 	import { computed, ref } from "vue";
-	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
+
 	import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
 	import type { AbteilungKlassenzuordnung } from "@core/core/data/schule/AbteilungKlassenzuordnung";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -126,6 +125,9 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
+	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
 	const props = defineProps<AbteilungenDatenProps>();
 	const benutzerState = useBenutzerState();

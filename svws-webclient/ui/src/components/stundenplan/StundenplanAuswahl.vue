@@ -21,13 +21,15 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { StundenplanAuswahlProps } from "./StundenplanAuswahlProps";
+
 	import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
 	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+
+	import type { StundenplanAuswahlProps } from "./StundenplanAuswahlProps";
 
 
 	const props = defineProps<StundenplanAuswahlProps>();

@@ -1,16 +1,19 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeJahrgaengeDaten } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeDaten";
-import { RouteDataJahrgaenge } from "./RouteDataJahrgaenge";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
-import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeJahrgaengeDaten } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeDaten";
+import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
+import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataJahrgaenge } from "./RouteDataJahrgaenge";
 
 const JahrgaengeAuswahl = () => import("~/components/schule/kataloge/jahrgaenge/JahrgaengeAuswahl.vue");
 const JahrgaengeApp = () => import("~/components/schule/kataloge/jahrgaenge/JahrgaengeApp.vue");

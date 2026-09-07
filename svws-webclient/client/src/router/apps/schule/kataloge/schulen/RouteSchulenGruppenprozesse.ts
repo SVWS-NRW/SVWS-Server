@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchulen, type RouteSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
-import type { SchulenGruppenprozesseProps } from "~/components/schule/kataloge/schulen/gruppenprozesse/SchulenGruppenprozesseProps";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { SchulenGruppenprozesseProps } from "~/components/schule/kataloge/schulen/gruppenprozesse/SchulenGruppenprozesseProps";
+import { type RouteSchulen, routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 const SchulenGruppenprozesse = () => import("~/components/schule/kataloge/schulen/gruppenprozesse/SchulenGruppenprozesse.vue");
 

@@ -35,9 +35,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { OrteAppProps } from "~/components/schule/kataloge/orte/OrteAppProps";
 
 	const props = defineProps<OrteAppProps>();

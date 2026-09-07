@@ -17,8 +17,10 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import type { SchuleDatenaustauschKurs42RaeumeProps } from './SSchuleDatenaustauschKurs42RaeumeProps';
+
 	import type { List } from '@core/java/util/List';
+
+	import type { SchuleDatenaustauschKurs42RaeumeProps } from './SSchuleDatenaustauschKurs42RaeumeProps';
 
 	const props = defineProps<SchuleDatenaustauschKurs42RaeumeProps>();
 

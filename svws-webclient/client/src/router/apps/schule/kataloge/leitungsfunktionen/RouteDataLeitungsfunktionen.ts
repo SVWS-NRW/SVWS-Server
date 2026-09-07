@@ -1,14 +1,6 @@
 
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { api } from "~/router/Api";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeLeitungsfunktionenDaten } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenDaten";
-import { routeLeitungsfunktionenGruppenprozesse } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenGruppenprozesse";
-import { routeLeitungsfunktionenNeu } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenNeu";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -16,6 +8,16 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { LeitungsfunktionenListeManager } from "@ui/ui/manager/kataloge/LeitungsfunktionenListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeLeitungsfunktionenDaten } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenDaten";
+import { routeLeitungsfunktionenGruppenprozesse } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenGruppenprozesse";
+import { routeLeitungsfunktionenNeu } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionenNeu";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,

@@ -112,8 +112,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, toRaw } from 'vue';
-	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
-	import type { ApiStatus } from '~/components/ApiStatus';
+
 	import type { Schueler } from '@core/asd/data/schueler/Schueler';
 	import { GostBlockungRegelUpdate } from '@core/core/data/gost/GostBlockungRegelUpdate';
 	import { GostBlockungsergebnisKurs } from '@core/core/data/gost/GostBlockungsergebnisKurs';
@@ -126,6 +125,10 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
+
+	import type { ApiStatus } from '~/components/ApiStatus';
+
+	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;

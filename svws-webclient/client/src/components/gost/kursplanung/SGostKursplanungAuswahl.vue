@@ -29,11 +29,13 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue';
-	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
+
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+
+	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 	const benutzerState = useBenutzerState();

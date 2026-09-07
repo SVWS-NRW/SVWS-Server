@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAuswahlProps";
 	import { computed } from "vue";
+
 	import type { Abteilung } from "@core/core/data/schule/Abteilung";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
@@ -45,6 +45,8 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAuswahlProps";
 
 	const props = defineProps<AbteilungenAuswahlProps>();
 	const benutzerState = useBenutzerState();

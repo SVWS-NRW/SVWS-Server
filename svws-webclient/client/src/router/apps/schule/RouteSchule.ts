@@ -1,11 +1,12 @@
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
-import { RouteNode } from "~/router/RouteNode";
+
 import { type RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 import { routeSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 

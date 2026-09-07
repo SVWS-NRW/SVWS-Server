@@ -1,4 +1,5 @@
 import { nextTick, type Slots } from "vue";
+
 import { StateManager } from "../ui/StateManager";
 
 export interface ColorPreset { label: string, color: string, contrastColor: string };

@@ -1,5 +1,3 @@
-import { RouteManager } from "~/router/RouteManager";
-import { schuleStateImpl } from "./SchuleStateImpl";
 import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -7,6 +5,10 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import type { AbschnittState } from "@ui/states/AbschnittState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { RouteManager } from "~/router/RouteManager";
+
+import { schuleStateImpl } from "./SchuleStateImpl";
 
 interface AbschnittReactiveState {
 	/** Eine Map mit den Schuljahresabschnitten zugeordnet zu deren IDs */

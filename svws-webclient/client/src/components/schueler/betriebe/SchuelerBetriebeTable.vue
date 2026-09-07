@@ -67,6 +67,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from 'vue';
+
 	import type { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
@@ -76,7 +78,7 @@
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import type { DataTableColumn } from '@ui/types';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
-	import { ref, computed } from 'vue';
+
 	import { formatToLocalDate } from "~/utils/date";
 
 	const props = defineProps<{

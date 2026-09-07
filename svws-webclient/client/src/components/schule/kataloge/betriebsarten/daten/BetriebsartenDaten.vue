@@ -32,11 +32,14 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
-	import type { BetriebsartenDatenProps } from './BetriebsartenDatenProps';
-	import { computed } from "vue";
+
 	import { BetriebsartenModelProxy } from "~/components/schule/kataloge/betriebsarten/modelproxy/BetriebsartenModelProxy";
+
+	import type { BetriebsartenDatenProps } from './BetriebsartenDatenProps';
 
 	const props = defineProps<BetriebsartenDatenProps>();
 	const benutzerState = useBenutzerState();

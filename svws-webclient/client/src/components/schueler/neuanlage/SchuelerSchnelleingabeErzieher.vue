@@ -61,6 +61,8 @@
 </template>
 <script setup lang="ts">
 
+	import { computed, ref, watch } from "vue";
+
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
@@ -68,7 +70,7 @@
 	import type { List } from "@core/java/util/List";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
-	import { computed, ref, watch } from "vue";
+
 	import { mandatoryInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<{

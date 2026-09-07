@@ -41,12 +41,13 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref, watch } from 'vue';
+
 	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
 	import { DateUtils } from '@core/core/utils/DateUtils';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import type { DataTableColumn } from '@ui/types';
-	import { computed, ref, watch } from 'vue';
 
 	const selectedFoerderempfehlungen = ref<SchuelerFoerderempfehlung[]>([]);
 	const hasSelectedFoerderempfehlungen = computed(() => selectedFoerderempfehlungen.value.length > 0);

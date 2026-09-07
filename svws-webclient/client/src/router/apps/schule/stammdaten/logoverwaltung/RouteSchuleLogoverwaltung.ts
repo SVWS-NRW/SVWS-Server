@@ -1,11 +1,13 @@
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
 import type { SchuleLogoverwaltungProps } from "~/components/schule/stammdaten/logoverwaltung/SchuleLogoverwaltungProps";
 import { RouteDataSchuleLogoverwaltung } from "~/router/apps/schule/stammdaten/logoverwaltung/RouteDataSchuleLogoverwaltung";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { RouteSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchuleLogoverwaltung = () => import("~/components/schule/stammdaten/logoverwaltung/SchuleLogoverwaltung.vue");
 

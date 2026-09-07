@@ -1,13 +1,14 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
-import { RouteManager } from "~/router/RouteManager";
-import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
 import { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
+
+import { api } from "~/router/Api";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
 
 interface RouteStateSchuelerBetriebe extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;

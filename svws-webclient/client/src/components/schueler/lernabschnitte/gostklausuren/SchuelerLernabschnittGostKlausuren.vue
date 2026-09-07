@@ -114,12 +114,14 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { SchuelerLernabschnittGostKlausurenProps } from "./SchuelerLernabschnittGostKlausurenProps";
+
 	import type { GostSchuelerklausur } from "@core/core/data/gost/klausuren/GostSchuelerklausur";
 	import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
-	import type { DataTableColumn } from "@ui/types";
 	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { DateUtils } from "@core/core/utils/DateUtils";
+	import type { DataTableColumn } from "@ui/types";
+
+	import type { SchuelerLernabschnittGostKlausurenProps } from "./SchuelerLernabschnittGostKlausurenProps";
 
 	const props = defineProps<SchuelerLernabschnittGostKlausurenProps>();
 

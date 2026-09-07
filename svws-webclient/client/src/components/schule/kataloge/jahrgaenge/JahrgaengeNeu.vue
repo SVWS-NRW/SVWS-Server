@@ -77,6 +77,8 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref, watch } from "vue";
+
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 	import { Bildungsstufe } from "@core/asd/types/schule/Bildungsstufe";
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
@@ -87,9 +89,10 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import type { JahrgaengeNeuProps } from "./JahrgaengeNeuProps";
-	import { computed, ref, watch } from "vue";
+
 	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
+
+	import type { JahrgaengeNeuProps } from "./JahrgaengeNeuProps";
 
 	const props = defineProps<JahrgaengeNeuProps>();
 	const benutzerState = useBenutzerState();

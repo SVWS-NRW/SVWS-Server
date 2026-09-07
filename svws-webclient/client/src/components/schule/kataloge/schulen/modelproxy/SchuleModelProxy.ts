@@ -1,7 +1,5 @@
-import { ValidatorSchuleKuerzel } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKuerzel";
-import { ValidatorSchuleKurzbezeichnung } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKurzbezeichnung";
-import { ValidatorSchuleSchulname } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleSchulname";
 import { computed } from "vue";
+
 import type { HerkunftSchulformKatalogEintrag } from "@core/asd/data/schueler/HerkunftSchulformKatalogEintrag";
 import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
 import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -12,7 +10,11 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
+import { ValidatorSchuleKuerzel } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKuerzel";
+import { ValidatorSchuleKurzbezeichnung } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleKurzbezeichnung";
+import { ValidatorSchuleSchulname } from "~/components/schule/kataloge/schulen/modelproxy/validation/ValidatorSchuleSchulname";
 
 export class SchuleModelProxy extends ModelProxy<SchulEintrag> {
 

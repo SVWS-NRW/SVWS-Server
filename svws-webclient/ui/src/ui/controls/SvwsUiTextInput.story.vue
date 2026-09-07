@@ -299,13 +299,15 @@
 
 <script setup lang="ts">
 
+	import { computed, type InputTypeHTMLAttribute, reactive, type Ref, ref } from "vue";
+
 	import { BasicValidator } from "@core/asd/validate/BasicValidator";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { logEvent } from "@ui/stories/helper";
 	import storyManager from "@ui/stories/StoryManager";
-	import { computed, reactive, ref, type Ref, type InputTypeHTMLAttribute } from "vue";
+
 	import { SelectManager } from "./select/manager/SelectManager";
 
 	const activeState = computed(() => variantControlsMap.get(storyManager.variant.id) ?? defaultState);

@@ -23,10 +23,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { type BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
+
 	import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
+	import { type BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

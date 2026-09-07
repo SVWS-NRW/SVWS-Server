@@ -38,13 +38,15 @@
 
 <script setup lang="ts">
 
-	import { computed, shallowRef, ref } from "vue";
-	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
+	import { computed, ref, shallowRef } from "vue";
+
 	import { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+
+	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
 
 	const props = defineProps<StundenplanRaumProps>();
 

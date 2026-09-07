@@ -1,29 +1,32 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
-import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
-import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
-import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
-import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
-import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
-import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
-import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
-import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
-import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
-import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
-import type { RouteNode } from "~/router/RouteNode";
-import { Katalog } from "~/cache/Katalog";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ConfigElement } from "@ui/utils/Config";
+
+import { Katalog } from "~/cache/Katalog";
+import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
+import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
+import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
+import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
+import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
+import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
+import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
+import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
+import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
+import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
+import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+
+import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
 const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");

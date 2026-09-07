@@ -1,6 +1,7 @@
+import { computed } from "vue";
+
 import type { SchuelerEinwilligung } from "@core/core/data/schueler/SchuelerEinwilligung";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { computed } from "vue";
 
 export class SchuelerEinwilligungenModelProxy extends ModelProxy<SchuelerEinwilligung> {
 

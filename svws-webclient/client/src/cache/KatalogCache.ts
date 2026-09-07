@@ -22,6 +22,7 @@ import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import type { List } from "@core/java/util/List";
+
 import { Katalog } from "~/cache/Katalog";
 import { api } from "~/router/Api";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";

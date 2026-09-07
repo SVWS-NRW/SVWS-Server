@@ -90,7 +90,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from "vue";
-	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
+
 	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
@@ -105,6 +105,8 @@
 	import type { SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 	const benutzerState = useBenutzerState();

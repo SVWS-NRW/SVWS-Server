@@ -54,7 +54,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
+
 	import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -64,6 +64,8 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const benutzerState = useBenutzerState();

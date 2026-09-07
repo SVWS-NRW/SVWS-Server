@@ -26,13 +26,15 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import type { SchuelerLernplattformenProps } from "./SchuelerLernplattformenProps";
-	import { SchuelerLernplattformenModelProxy } from "./modelProxy/SchuelerLernplattformenModelProxy";
+
 	import type { SchuelerLernplattform } from "@core/core/data/schueler/SchuelerLernplattform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
+
+	import { SchuelerLernplattformenModelProxy } from "./modelProxy/SchuelerLernplattformenModelProxy";
+	import type { SchuelerLernplattformenProps } from "./SchuelerLernplattformenProps";
 
 	const props = defineProps<SchuelerLernplattformenProps>();
 	const benutzerState = useBenutzerState();

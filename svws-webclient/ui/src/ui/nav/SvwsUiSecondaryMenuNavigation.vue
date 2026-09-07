@@ -34,6 +34,7 @@
 <script setup lang="ts">
 
 	import { onMounted, ref } from 'vue';
+
 	import type { TabData } from './TabData';
 	import type { TabManager } from './TabManager';
 

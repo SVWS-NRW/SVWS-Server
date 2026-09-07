@@ -92,20 +92,22 @@
 <script setup lang="ts">
 
 	import { computed, ref, useTemplateRef } from "vue";
-	import { formatToLocalDate } from "~/utils/date";
-	import { getImageRestrictions, parseBase64, readFileAsBase64, setModelImageInfo, SUPPORTED_IMAGE_TYPES } from "../LogoUtils";
-	import LogoImage from "../LogoImage.vue";
-	import type { LogoModelProxy } from "../modelProxy/LogoModelProxy";
-	import { ValidatorLogoImageFileType } from "../modelProxy/ValidatorLogoImageFileType";
-	import { ValidatorLogoImageFileSize } from "../modelProxy/ValidatorLogoImageFileSize";
-	import { ValidatorLogoImageAspectRatio } from "../modelProxy/ValidatorLogoImageAspectRatio";
-	import { ValidatorLogoImageResolution } from "../modelProxy/ValidatorLogoImageResolution";
+
 	import { OpenApiError } from "@core/api/OpenApiError";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import type { Logo } from "@core/core/data/schule/Logo";
 	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
+
+	import LogoImage from "../LogoImage.vue";
+	import { getImageRestrictions, parseBase64, readFileAsBase64, setModelImageInfo, SUPPORTED_IMAGE_TYPES } from "../LogoUtils";
+	import type { LogoModelProxy } from "../modelProxy/LogoModelProxy";
+	import { ValidatorLogoImageAspectRatio } from "../modelProxy/ValidatorLogoImageAspectRatio";
+	import { ValidatorLogoImageFileSize } from "../modelProxy/ValidatorLogoImageFileSize";
+	import { ValidatorLogoImageFileType } from "../modelProxy/ValidatorLogoImageFileType";
+	import { ValidatorLogoImageResolution } from "../modelProxy/ValidatorLogoImageResolution";
+	import { formatToLocalDate } from "~/utils/date";
 
 	const props = defineProps<{
 		isOpen: boolean;

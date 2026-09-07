@@ -3,7 +3,7 @@ import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorOrtPlz extends BasicValidator {
 	constructor(data: () => OrtKatalogEintrag) {

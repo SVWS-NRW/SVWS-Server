@@ -66,8 +66,7 @@
 
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, ref, shallowRef } from "vue";
-	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
-	import type { LehrerPersonalabschnittsdatenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenModelProxy";
+
 	import type { LehrerAnrechnungsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag";
 	import type { LehrerMehrleistungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag";
 	import type { LehrerMinderleistungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag";
@@ -84,6 +83,9 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
+	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
+	import type { LehrerPersonalabschnittsdatenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

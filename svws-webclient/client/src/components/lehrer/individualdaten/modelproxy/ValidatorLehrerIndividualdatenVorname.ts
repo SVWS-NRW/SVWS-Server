@@ -2,7 +2,7 @@ import { BasicValidator } from "@core/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorLehrerIndividualdatenVorname extends BasicValidator {
 

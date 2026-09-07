@@ -59,8 +59,9 @@
 
 <script setup lang="ts">
 
+	import { reactive, ref } from "vue";
+
 	import { logEvent } from "@ui/stories/helper";
-	import { ref, reactive } from "vue";
 
 	const state = reactive({
 		label: 'Label für die Komponente',

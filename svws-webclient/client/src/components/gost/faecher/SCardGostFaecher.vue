@@ -151,6 +151,8 @@
 	 * erlaubt.
 	 */
 
+	import { computed } from "vue";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
@@ -161,7 +163,6 @@
 	import type { List } from "@core/java/util/List";
 	import { useServerState } from "@ui/states/ServerState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

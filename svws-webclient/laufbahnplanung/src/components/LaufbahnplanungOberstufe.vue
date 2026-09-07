@@ -63,14 +63,16 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
-	import { version } from "@version";
+
 	import { githash } from "@githash";
-	import { TabManager } from "@ui/ui/nav/TabManager";
-	import type { TabData } from "@ui/ui/nav/TabData";
 	import { LaufbahnplanungUiManager } from "@ui/components/gost/laufbahnplanung/LaufbahnplanungUiManager";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { useServerState } from "@ui/states/ServerState";
+	import type { TabData } from "@ui/ui/nav/TabData";
+	import { TabManager } from "@ui/ui/nav/TabManager";
+	import { version } from "@version";
+
+	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 	const serverState = useServerState();

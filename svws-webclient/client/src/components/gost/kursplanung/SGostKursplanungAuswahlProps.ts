@@ -6,6 +6,7 @@ import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import type { List } from "@core/java/util/List";
+
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {

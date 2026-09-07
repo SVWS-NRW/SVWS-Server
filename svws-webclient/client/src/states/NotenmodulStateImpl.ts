@@ -1,6 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { benutzerStateImpl } from "./BenutzerStateImpl";
 import { OpenApiError } from "@core/api/OpenApiError";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
@@ -20,6 +17,11 @@ import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import type { NotenmodulState } from "@ui/states/NotenmodulState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 
 interface NotenmodulReactiveState {
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden

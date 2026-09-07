@@ -22,8 +22,10 @@
 
 <script setup lang="ts">
 
-	import { logEvent } from '@ui/stories/helper';
 	import { reactive } from 'vue';
+
+	import { logEvent } from '@ui/stories/helper';
+
 	import type { HintType } from './SvwsUiMenuHeader.vue';
 
 	type HeaderType = {

@@ -1,7 +1,6 @@
-import type { RouteLocationRaw } from "vue-router";
-
-import { RouteNode } from "@lupo/router/RouteNode";
 import { type RouteApp } from "@lupo/router/apps/RouteApp";
+import { RouteNode } from "@lupo/router/RouteNode";
+import type { RouteLocationRaw } from "vue-router";
 
 const LadeDaten = () => import("@lupo/components/LadeDaten.vue");
 

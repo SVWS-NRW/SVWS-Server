@@ -30,11 +30,13 @@
 
 <script setup lang="ts">
 
-	import type { EntlassgruendeDatenProps } from "~/components/schule/kataloge/entlassgruende/daten/EntlassgruendeDatenProps";
 	import { computed } from "vue";
-	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { EntlassgruendeDatenProps } from "~/components/schule/kataloge/entlassgruende/daten/EntlassgruendeDatenProps";
+	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
 
 	const props = defineProps<EntlassgruendeDatenProps>();
 	const benutzerState = useBenutzerState();

@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 	import { ref, watchEffect } from 'vue';
+
 	import type { NotenmodulConfigManagerSperrungen, NotenmodulConfigManagerSperrungenZeile } from '~/router/apps/notenmodul/NotenmodulConfigManagerSperrungen';
 
 	const props = defineProps<{

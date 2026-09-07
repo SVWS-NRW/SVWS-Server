@@ -1,11 +1,14 @@
 import type { AppProps } from "@admin/components/SAppProps";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+
 import { api } from "../Api";
 import { routeLogin } from "../login/RouteLogin";
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";
+
 import { routeConfig } from "./config/RouteConfig";
 import { RouteDataApp } from "./RouteDataApp";
 import { routeSchema } from "./schema/RouteSchema";

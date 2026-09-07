@@ -1,15 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
-import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchProps";
-import { RouteManager } from "~/router/RouteManager";
-import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchProps";
+import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
+import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
+import { routeError } from "~/router/error/RouteError";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SchuelerSchulbesuch.vue");
 

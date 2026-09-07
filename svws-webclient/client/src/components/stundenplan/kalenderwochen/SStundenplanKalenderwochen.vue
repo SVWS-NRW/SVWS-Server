@@ -23,14 +23,16 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
+	import { computed, ref } from "vue";
+
 	import type { StundenplanKalenderwochenzuordnung } from "@core/core/data/stundenplan/StundenplanKalenderwochenzuordnung";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
+	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
 	const benutzerState = useBenutzerState();

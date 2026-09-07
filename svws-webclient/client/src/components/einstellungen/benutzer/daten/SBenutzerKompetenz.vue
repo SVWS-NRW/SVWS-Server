@@ -24,9 +24,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { BenutzerManager } from "@core/core/utils/benutzer/BenutzerManager";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;

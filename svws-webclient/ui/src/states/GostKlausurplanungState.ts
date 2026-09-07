@@ -1,3 +1,5 @@
+import type { InjectionKey } from "vue";
+
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import type { GostKlausurenKlausurdaten } from "@core/core/data/gost/klausuren/GostKlausurenKlausurdaten";
@@ -15,7 +17,6 @@ import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import type { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlausurplanManager";
 import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 export const CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX = "gost.klausuren.";
 

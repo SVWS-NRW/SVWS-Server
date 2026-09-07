@@ -26,10 +26,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { StundenplanGruppenprozesseProps } from "./SStundenplanGruppenprozesseProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { StundenplanGruppenprozesseProps } from "./SStundenplanGruppenprozesseProps";
 
 	const props = defineProps<StundenplanGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

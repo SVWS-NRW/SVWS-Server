@@ -1,13 +1,15 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { OrteGruppenprozesseProps } from "~/components/schule/kataloge/orte/gruppenprozesse/OrteGruppenprozesseProps";
 import type { RouteOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
-import type { OrteGruppenprozesseProps } from "~/components/schule/kataloge/orte/gruppenprozesse/OrteGruppenprozesseProps";
+import { RouteNode } from "~/router/RouteNode";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import { ViewType } from "@ui/ui/nav/ViewType";
 
 const OrteGruppenprozesse = () => import("~/components/schule/kataloge/orte/gruppenprozesse/OrteGruppenprozesse.vue");
 

@@ -1,14 +1,17 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeNotenmodulAdministration, type RouteNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import type { NotenmodulKonfigurationProps } from "~/components/notenmodul/NotenmodulKonfigurationProps";
-import { routeError } from "~/router/error/RouteError";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { NotenmodulKonfigurationProps } from "~/components/notenmodul/NotenmodulKonfigurationProps";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+
+import { type RouteNotenmodulAdministration, routeNotenmodulAdministration } from "./RouteNotenmodulAdministration";
 
 const NotenmodulKonfiguration = () => import("~/components/notenmodul/NotenmodulKonfiguration.vue");
 

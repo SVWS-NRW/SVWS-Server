@@ -1,16 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { LehrerStundenplanProps } from "~/components/lehrer/stundenplan/LehrerStundenplanProps";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
-import { api } from "~/router/Api";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { LehrerStundenplanProps } from "~/components/lehrer/stundenplan/LehrerStundenplanProps";
+import { api } from "~/router/Api";
+import { type RouteLehrer, routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SLehrerStundenplan = () => import("~/components/lehrer/stundenplan/LehrerStundenplan.vue");
 

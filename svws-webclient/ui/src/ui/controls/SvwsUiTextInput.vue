@@ -83,6 +83,8 @@
 
 <script setup lang="ts">
 
+	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch } from "vue";
+
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { ArrayList } from "@core/java/util/ArrayList";
@@ -90,9 +92,8 @@
 	import { ValidatorDateRange } from "@ui/validation/common/ValidatorDateRange";
 	import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 	import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-	import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+	import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
-	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch } from "vue";
 
 	defineOptions({
 		inheritAttrs: false,

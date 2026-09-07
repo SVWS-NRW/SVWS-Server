@@ -2,9 +2,10 @@ import { AppContext } from "@ui/AppContext";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
 import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState";
 import { ServerStateKey } from "@ui/states/ServerState";
-import { serverStateImpl } from "./ServerStateImpl";
+
 import { auskunftStateImpl } from "./AuskunftStateImpl";
 import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
+import { serverStateImpl } from "./ServerStateImpl";
 
 export function registerStates(): void {
 	const context = AppContext.instance;

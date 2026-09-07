@@ -189,17 +189,19 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
+
 	import type { Schueler } from "@core/asd/data/schueler/Schueler";
+	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
+	import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
 	import type { GostFach } from "@core/core/data/gost/GostFach";
+	import type { GostFachwahl } from "@core/core/data/gost/GostFachwahl";
+	import { GostKursart } from "@core/core/types/gost/GostKursart";
 	import { GostKursblockungRegelTyp } from "@core/core/types/kursblockung/GostKursblockungRegelTyp";
 	import { SetUtils } from "@core/core/utils/SetUtils";
 	import type { DataTableColumn } from "@ui/types";
-	import { Geschlecht } from "@core/asd/types/Geschlecht";
-	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
-	import type { GostFachwahl } from "@core/core/data/gost/GostFachwahl";
-	import type { GostBlockungsergebnisKurs } from "@core/core/data/gost/GostBlockungsergebnisKurs";
-	import { GostKursart } from "@core/core/types/gost/GostKursart";
+
+	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 

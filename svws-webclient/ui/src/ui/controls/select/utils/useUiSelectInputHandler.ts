@@ -1,9 +1,11 @@
 // composables/useUiSelectKeyboardHandler.ts
-import { computed, ref, type ComputedRef, type Ref } from 'vue';
-import type { UiSelectDropdown, UiSelectState } from "../manager/UiSelectTypes";
-import type { BaseSelectManager } from '../manager/BaseSelectManager';
+import { computed, type ComputedRef, type Ref, ref } from 'vue';
+
 import { ArrayList } from '@core/java/util/ArrayList';
 import type { List } from '@core/java/util/List';
+
+import type { BaseSelectManager } from '../manager/BaseSelectManager';
+import type { UiSelectDropdown, UiSelectState } from "../manager/UiSelectTypes";
 
 export function useUiSelectInputHandler<T>(
 	state: ComputedRef<UiSelectState<T>>,

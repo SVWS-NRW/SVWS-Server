@@ -1,17 +1,20 @@
 import type { RouteParams } from "vue-router";
+
+import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
+import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
+
+import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
+
 import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungVorgaben } from "./RouteGostKlausurplanungVorgaben";
-import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
-import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
-import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
-import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 }

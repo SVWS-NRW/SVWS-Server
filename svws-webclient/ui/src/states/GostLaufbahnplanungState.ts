@@ -1,3 +1,5 @@
+import type { InjectionKey } from "vue";
+
 import type { ApiFile } from "@core/api/BaseApi";
 import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
@@ -14,7 +16,6 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 export type GostBelegpruefungsModus = 'ef1' | 'gesamt' | 'auto';
 

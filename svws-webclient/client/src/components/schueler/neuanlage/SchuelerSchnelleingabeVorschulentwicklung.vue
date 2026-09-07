@@ -22,6 +22,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 	import type { KindergartenbesuchKatalogEintrag } from "@core/asd/data/schule/KindergartenbesuchKatalogEintrag";
 	import { Kindergartenbesuch } from "@core/asd/types/schule/Kindergartenbesuch";
@@ -30,7 +32,6 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

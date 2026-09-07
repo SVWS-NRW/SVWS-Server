@@ -1,12 +1,15 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchwerpunkte, type RouteSchwerpunkte } from "./RouteSchwerpunkte";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { SchwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesseProps";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { SchwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesseProps";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
+import { type RouteSchwerpunkte, routeSchwerpunkte } from "./RouteSchwerpunkte";
 
 const SchwerpunkteGruppenprozesse = () => import(
 	"~/components/schule/kataloge/schwerpunkte/gruppenprozesse/SchwerpunkteGruppenprozesse.vue");

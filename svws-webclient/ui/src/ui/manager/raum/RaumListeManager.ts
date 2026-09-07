@@ -9,6 +9,7 @@ import { JavaObject } from "@core/java/lang/JavaObject";
 import { JavaString } from "@core/java/lang/JavaString";
 import { HashMap } from "@core/java/util/HashMap";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {

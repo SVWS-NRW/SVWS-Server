@@ -10,11 +10,13 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref } from 'vue';
+
 	import type { StundenplanListeEintrag } from '@core/core/data/stundenplan/StundenplanListeEintrag';
 	import type { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
 	import { DateUtils } from '@core/core/utils/DateUtils';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
-	import { computed, ref } from 'vue';
+
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

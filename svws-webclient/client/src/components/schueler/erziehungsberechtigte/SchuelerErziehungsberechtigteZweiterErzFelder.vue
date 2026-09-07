@@ -16,9 +16,11 @@
 </template>
 
 <script setup lang="ts">
+	import { computed } from "vue";
+
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
-	import { computed } from "vue";
+
 	import type { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
 
 	const props = defineProps<{

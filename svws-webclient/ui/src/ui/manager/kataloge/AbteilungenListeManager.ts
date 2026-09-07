@@ -15,6 +15,7 @@ import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export interface AbteilungenLookups {

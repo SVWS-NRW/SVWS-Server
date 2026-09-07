@@ -1,6 +1,7 @@
 import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+
 import type { ApiStatus } from "../ApiStatus";
 
 export interface GostAuswahlProps {

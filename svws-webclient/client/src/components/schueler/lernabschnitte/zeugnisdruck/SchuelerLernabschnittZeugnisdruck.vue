@@ -30,9 +30,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SchuelerLernabschnittZeugnisdruckProps } from "./SchuelerLernabschnittZeugnisdruckProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { SchuelerLernabschnittZeugnisdruckProps } from "./SchuelerLernabschnittZeugnisdruckProps";
 
 	const props = defineProps<SchuelerLernabschnittZeugnisdruckProps>();
 	const benutzerState = useBenutzerState();

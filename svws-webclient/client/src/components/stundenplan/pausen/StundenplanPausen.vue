@@ -88,7 +88,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
+
 	import { HashMap3D } from "@core/core/adt/map/HashMap3D";
 	import type { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
 	import type { StundenplanLehrer } from "@core/core/data/stundenplan/StundenplanLehrer";
@@ -102,6 +102,8 @@
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
+	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 
 	type PausenzeitBereichTyp = { pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number };
 

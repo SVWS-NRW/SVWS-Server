@@ -39,10 +39,12 @@
 
 <script setup lang="ts">
 
-	import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
 	import { computed } from "vue";
-	import { useBenutzerState } from "@ui/states/BenutzerState";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { EmailServerProps } from "~/components/einstellungen/emailserver/EmailServerProps";
 
 	const props = defineProps<EmailServerProps>();
 	const benutzerState = useBenutzerState();

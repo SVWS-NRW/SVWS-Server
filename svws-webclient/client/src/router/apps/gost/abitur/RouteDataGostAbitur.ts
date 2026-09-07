@@ -2,8 +2,8 @@ import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
 import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
-import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
+import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 import type { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
@@ -14,9 +14,10 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
+
 import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostAbiturZulassung } from "~/router/apps/gost/abitur/RouteGostAbiturZulassung";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 interface RouteStateDataGostAbitur extends RouteStateInterface {

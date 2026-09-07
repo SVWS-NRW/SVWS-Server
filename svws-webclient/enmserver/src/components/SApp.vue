@@ -122,14 +122,16 @@
 
 <script setup lang="ts">
 
+	import { useActivityState } from "@wenom/states/ActivityState";
+	import { useAuthState } from "@wenom/states/AuthState";
 	import { onMounted, onUnmounted, ref } from "vue";
-	import type { AppProps } from './SAppProps';
+
 	import { githash } from "@githash";
-	import { version } from "@version";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TabData } from "@ui/ui/nav/TabData";
-	import { useAuthState } from "@wenom/states/AuthState";
-	import { useActivityState } from "@wenom/states/ActivityState";
+	import { version } from "@version";
+
+	import type { AppProps } from './SAppProps';
 
 	const activityState = useActivityState();
 	const auth = useAuthState();

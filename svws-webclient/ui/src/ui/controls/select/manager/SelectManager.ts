@@ -1,4 +1,5 @@
-import { isRef, shallowRef, triggerRef, watch, type MaybeRef } from "vue";
+import { isRef, type MaybeRef, shallowRef, triggerRef, watch } from "vue";
+
 import { BaseSelectManager, type BaseSelectManagerConfig } from "./BaseSelectManager";
 
 /**

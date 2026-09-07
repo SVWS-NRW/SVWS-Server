@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { OrteListeManager } from "@ui/ui/manager/kataloge/OrteListeManager";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { RouteDataOrte } from "~/router/apps/schule/kataloge/orte/RouteDataOrte";
 import { routeOrteDaten } from "~/router/apps/schule/kataloge/orte/RouteOrteDaten";
 import { routeOrteGruppenprozesse } from "~/router/apps/schule/kataloge/orte/RouteOrteGruppenprozesse";
 import { routeOrteNeu } from "~/router/apps/schule/kataloge/orte/RouteOrteNeu";
-import { RouteDataOrte } from "~/router/apps/schule/kataloge/orte/RouteDataOrte";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { OrteListeManager } from "@ui/ui/manager/kataloge/OrteListeManager";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const OrteAuswahl = () => import("~/components/schule/kataloge/orte/OrteAuswahl.vue");
 const OrteApp = () => import("~/components/schule/kataloge/orte/OrteApp.vue");

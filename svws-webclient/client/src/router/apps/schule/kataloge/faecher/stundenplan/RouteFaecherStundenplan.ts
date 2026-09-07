@@ -1,16 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeFaecher, type RouteFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
-import { RouteDataFaecherStundenplan } from "~/router/apps/schule/kataloge/faecher/stundenplan/RouteDataFaecherStundenplan";
-import { api } from "~/router/Api";
-import type { FaecherStundenplanProps } from "~/components/schule/kataloge/faecher/stundenplan/FaecherStundenplanProps";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { FaecherStundenplanProps } from "~/components/schule/kataloge/faecher/stundenplan/FaecherStundenplanProps";
+import { api } from "~/router/Api";
+import { type RouteFaecher, routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
+import { RouteDataFaecherStundenplan } from "~/router/apps/schule/kataloge/faecher/stundenplan/RouteDataFaecherStundenplan";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SFaecherStundenplan = () => import("~/components/schule/kataloge/faecher/stundenplan/FaecherStundenplan.vue");
 

@@ -56,13 +56,15 @@
 
 <script setup lang="ts">
 
+	import { useAuthState } from "@wenom/states/AuthState";
 	import { computed, ref } from "vue";
-	import type { ErrorProps } from "./SErrorProps";
+
+	import { OpenApiError } from "@core/api/OpenApiError";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
-	import { OpenApiError } from "@core/api/OpenApiError";
-	import { useAuthState } from "@wenom/states/AuthState";
+
+	import type { ErrorProps } from "./SErrorProps";
 
 	type CapturedError = {
 		id: number;

@@ -1,15 +1,17 @@
 
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
-import { routeStundenplan } from "../RouteStundenplan";
 import { StundenplanKomplett } from "@core/core/data/stundenplan/StundenplanKomplett";
 import { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 import { ArrayList } from "@core/java/util/ArrayList";
+
+import { routeStundenplan } from "../RouteStundenplan";
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+
+import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 
 interface RouteStateKatalogPausenzeiten extends RouteStateInterface {
 	auswahl: StundenplanPausenzeit | undefined;

@@ -4,8 +4,9 @@ import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/Foerdersc
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
-import type { RoutingStatus } from "~/router/RoutingStatus";
+
 import type { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
+import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenGruppenprozesseProps {

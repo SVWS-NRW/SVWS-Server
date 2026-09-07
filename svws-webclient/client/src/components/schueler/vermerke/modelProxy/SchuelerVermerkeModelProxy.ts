@@ -1,8 +1,9 @@
+import { computed } from "vue";
+
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class SchuelerVermerkeModelProxy extends ModelProxy<SchuelerVermerke> {
 

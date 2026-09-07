@@ -1,10 +1,11 @@
+import { computed } from "vue";
+
 import type { LehrerFachrichtungAnerkennungKatalogEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag";
 import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
 import type { LehrerFachrichtungKatalogEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungKatalogEintrag";
 import { LehrerFachrichtung } from "@core/asd/types/lehrer/LehrerFachrichtung";
 import { LehrerFachrichtungAnerkennung } from "@core/asd/types/lehrer/LehrerFachrichtungAnerkennung";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { computed } from "vue";
 
 /**
  * Der spezielle ModelProxy für LehrerFachrichtungEintrag

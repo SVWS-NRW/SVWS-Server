@@ -27,6 +27,7 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
+
 	import type { SSchuleDatenaustauschSchulwechselZugaengeProps } from "~/components/schule/datenaustausch/schulwechsel/SSchuleDatenaustauschSchulwechselZugaengeProps";
 
 	const props = defineProps<SSchuleDatenaustauschSchulwechselZugaengeProps>();

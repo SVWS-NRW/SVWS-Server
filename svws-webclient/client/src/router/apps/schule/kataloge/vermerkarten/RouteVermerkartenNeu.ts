@@ -1,13 +1,16 @@
 import type { RouteLocationNormalized } from "vue-router";
-import type { VermerkartenNeuProps } from "~/components/schule/kataloge/vermerkarten/VermerkartenNeuProps";
-import type { RouteVermerkarten } from "./RouteVermerkarten";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { routeVermerkarten } from "./RouteVermerkarten";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { VermerkartenNeuProps } from "~/components/schule/kataloge/vermerkarten/VermerkartenNeuProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteVermerkarten } from "./RouteVermerkarten";
+import { routeVermerkarten } from "./RouteVermerkarten";
 
 const VermerkartenNeu = () => import("~/components/schule/kataloge/vermerkarten/VermerkartenNeu.vue");
 

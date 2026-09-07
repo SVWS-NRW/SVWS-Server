@@ -1,4 +1,5 @@
 import { ref } from "vue";
+
 import type { ActivityState } from "./ActivityState";
 
 /**

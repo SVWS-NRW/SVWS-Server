@@ -53,7 +53,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
+
 	import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -65,6 +65,8 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
 
 	const props = defineProps<FloskelnAuswahlProps>();
 	const benutzerState = useBenutzerState();

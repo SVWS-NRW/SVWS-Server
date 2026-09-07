@@ -1,4 +1,5 @@
 import { type InjectionKey } from "vue";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "@ui/AppContext";
 

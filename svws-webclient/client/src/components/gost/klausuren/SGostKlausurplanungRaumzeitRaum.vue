@@ -91,9 +91,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import { computed } from 'vue';
-	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
+
 	import type { GostKlausurraum } from '@core/core/data/gost/klausuren/GostKlausurraum';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
 	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
@@ -103,6 +102,9 @@
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 	import type { DataTableColumn } from '@ui/types';
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
 
 	const props = defineProps<{
 		raum: GostKlausurraum;

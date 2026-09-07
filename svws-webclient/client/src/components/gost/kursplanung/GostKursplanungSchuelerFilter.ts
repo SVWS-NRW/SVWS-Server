@@ -1,3 +1,5 @@
+import { computed, ref } from "vue";
+
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import { Geschlecht } from "@core/asd/types/Geschlecht";
 import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
@@ -8,7 +10,6 @@ import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlocku
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
-import { computed, ref } from "vue";
 
 
 export class GostKursplanungSchuelerFilter {

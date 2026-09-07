@@ -27,12 +27,13 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, reactive } from "vue";
+
 	import { BasicValidator } from "@core/asd/validate/BasicValidator";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
-	import { computed, reactive } from "vue";
 
 	const state = reactive({
 		disabled: false,

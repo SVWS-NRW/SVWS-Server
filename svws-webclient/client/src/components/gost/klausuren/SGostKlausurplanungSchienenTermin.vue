@@ -34,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, type HTMLAttributes } from 'vue';
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
 	import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
@@ -42,7 +44,7 @@
 	import { Arrays } from "@core/java/util/Arrays";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
-	import { computed, type HTMLAttributes } from 'vue';
+
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
 	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";

@@ -75,13 +75,8 @@
 </template>
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, type ShallowRef, watch } from "vue";
-	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
-	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
-	import LogoImage from "./LogoImage.vue";
-	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
-	import LogoImageUploadModal from "./modals/LogoImageUploadModal.vue";
-	import LogoImageDeleteModal from "./modals/LogoImageDeleteModal.vue";
+	import { computed, ref, type ShallowRef, shallowRef, watch } from "vue";
+
 	import type { ApiFile } from "@core/api/BaseApi";
 	import type { Logo } from "@core/core/data/schule/Logo";
 	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
@@ -91,6 +86,13 @@
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
+
+	import LogoImage from "./LogoImage.vue";
+	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
+	import LogoImageDeleteModal from "./modals/LogoImageDeleteModal.vue";
+	import LogoImageUploadModal from "./modals/LogoImageUploadModal.vue";
+	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
+	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
 
 	const LOGO_PREVIEW_HEIGHT_REM = 5.5;
 	const props = defineProps<SchuleLogoverwaltungProps>();

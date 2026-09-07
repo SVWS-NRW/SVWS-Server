@@ -45,9 +45,8 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, onMounted, watch, shallowRef } from "vue";
-	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
-	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
+	import { computed, onMounted, ref, shallowRef, watch } from "vue";
+
 	import { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 	import { Klassenart } from "@core/asd/types/klassen/Klassenart";
 	import { AllgemeinbildendOrganisationsformen } from "@core/asd/types/schule/AllgemeinbildendOrganisationsformen";
@@ -56,6 +55,10 @@
 	import { WeiterbildungskollegOrganisationsformen } from "@core/asd/types/schule/WeiterbildungskollegOrganisationsformen";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import { useSchuleState } from "@ui/states/SchuleState";
+
+	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
+
+	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
 	const schuleState = useSchuleState();

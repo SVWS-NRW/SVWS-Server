@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
 import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
@@ -23,9 +25,9 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerGeburtsdatum";
-import { computed } from "vue";
+
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {

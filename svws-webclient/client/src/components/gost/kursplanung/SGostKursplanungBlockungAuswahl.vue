@@ -86,6 +86,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from 'vue';
+
 	import type { GostBlockungListeneintrag } from '@core/core/data/gost/GostBlockungListeneintrag';
 	import type { GostBlockungsdaten } from '@core/core/data/gost/GostBlockungsdaten';
 	import type { GostBlockungsergebnis } from '@core/core/data/gost/GostBlockungsergebnis';
@@ -96,7 +98,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
-	import { computed, ref } from 'vue';
+
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

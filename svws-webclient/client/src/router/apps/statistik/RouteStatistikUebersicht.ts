@@ -1,11 +1,14 @@
-import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized } from "vue-router";
-import type { StatistikUebersichtProps } from "~/components/statistik/StatistikUebersichtProps";
-import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { StatistikUebersichtProps } from "~/components/statistik/StatistikUebersichtProps";
+import { RouteNode } from "~/router/RouteNode";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { type RouteStatistik, routeStatistik } from "./RouteStatistik";
 
 const StatistikUebersicht = () => import("~/components/statistik/StatistikUebersicht.vue");
 

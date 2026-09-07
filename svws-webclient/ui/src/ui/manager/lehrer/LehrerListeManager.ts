@@ -18,6 +18,7 @@ import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 import { ListeMitAuswahl } from "../ListeMitAuswahl";
 

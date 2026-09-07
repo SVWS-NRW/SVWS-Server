@@ -1,13 +1,6 @@
 
 import { computed } from "vue";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
-import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
-import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
 import type { GostBlockungKursLehrer } from "@core/core/data/gost/GostBlockungKursLehrer";
@@ -30,6 +23,15 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
+
+import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
+import { api } from "~/router/Api";
+import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
+import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 type BlockungstabelleStates = 'nichts' | 'alles' | 'schienen';
 

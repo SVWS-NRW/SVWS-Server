@@ -1,17 +1,19 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeApp } from "~/router/apps/RouteApp";
-import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
-import { routeError } from "~/router/error/RouteError";
-import { serverStateImpl } from "~/states/ServerStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { type SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
+import { routeApp } from "~/router/apps/RouteApp";
+import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
+import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
 

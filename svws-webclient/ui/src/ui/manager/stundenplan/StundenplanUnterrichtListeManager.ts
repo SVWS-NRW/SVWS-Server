@@ -16,6 +16,7 @@ import { Class } from "@core/java/lang/Class";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { Arrays } from "@core/java/util/Arrays";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 import { ListeMitAuswahl } from "../ListeMitAuswahl";
 

@@ -1,6 +1,5 @@
 import type { WritableComputedRef } from "vue";
-import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-import type { ApiStatus } from "~/components/ApiStatus";
+
 import type { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
 import type { GostBlockungKursLehrer } from "@core/core/data/gost/GostBlockungKursLehrer";
 import type { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
@@ -15,6 +14,10 @@ import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlocku
 import type { GostBlockungsergebnisManager } from "@core/core/utils/gost/GostBlockungsergebnisManager";
 import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import type { JavaSet } from "@core/java/util/JavaSet";
+
+import type { ApiStatus } from "~/components/ApiStatus";
+
+import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;

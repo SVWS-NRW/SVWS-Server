@@ -55,8 +55,7 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
-	import { SchuelerVermerkeModelProxy } from "./modelProxy/SchuelerVermerkeModelProxy";
+
 	import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -66,6 +65,9 @@
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import { SchuelerVermerkeModelProxy } from "./modelProxy/SchuelerVermerkeModelProxy";
+	import type { SchuelerVermerkeProps } from "./SSchuelerVermerkeProps";
 
 	const props = defineProps<SchuelerVermerkeProps>();
 	const benutzerState = useBenutzerState();

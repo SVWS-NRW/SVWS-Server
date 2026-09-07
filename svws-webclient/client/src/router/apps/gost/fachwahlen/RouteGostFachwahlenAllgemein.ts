@@ -1,14 +1,16 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
-import type { GostFachwahlenAllgemeinProps } from "~/components/gost/fachwahlen/SGostFachwahlenAllgemeinProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeError } from "~/router/error/RouteError";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { GostFachwahlenAllgemeinProps } from "~/components/gost/fachwahlen/SGostFachwahlenAllgemeinProps";
+import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
+import { type RouteGost, routeGost } from "~/router/apps/gost/RouteGost";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 
 const SGostFachwahlenAllgemein = () => import("~/components/gost/fachwahlen/SGostFachwahlenAllgemein.vue");

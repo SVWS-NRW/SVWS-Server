@@ -1,5 +1,6 @@
 import type { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
-import type { EnmManager, EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
+import type { EnmLerngruppenAuswahlEintrag, EnmManager } from "@ui/components/enm/EnmManager";
+
 import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
 
 export interface NotenmodulLeistungenAuswahlProps extends RouteAuswahlListProps<EnmLerngruppenAuswahlListeManager> {

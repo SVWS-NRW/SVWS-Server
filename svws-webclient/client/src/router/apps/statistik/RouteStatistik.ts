@@ -1,19 +1,22 @@
-import { RouteDataStatistik } from "./RouteDataStatistik";
-import type { RouteParams, RouteLocationRaw, RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "../RouteApp";
-import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
-import { routeStatistikSchueler } from "./RouteStatistikSchueler";
-import { routeStatistikLehrer } from "./RouteStatistikLehrer";
-import { RouteManager } from "~/router/RouteManager";
-import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps";
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import type { TabData } from "@ui/ui/nav/TabData";
+
+import type { RouteApp } from "../RouteApp";
+import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+
+import { RouteDataStatistik } from "./RouteDataStatistik";
+import { routeStatistikLehrer } from "./RouteStatistikLehrer";
+import { routeStatistikSchueler } from "./RouteStatistikSchueler";
+import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
 
 const StatistikApp = () => import("~/components/statistik/StatistikApp.vue");
 

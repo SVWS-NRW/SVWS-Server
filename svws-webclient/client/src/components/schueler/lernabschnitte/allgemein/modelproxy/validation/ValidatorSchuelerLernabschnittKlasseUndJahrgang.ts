@@ -3,6 +3,7 @@ import { BasicValidator } from "@core/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
 export class ValidatorSchuelerLernabschnittKlasseUndJahrgang extends BasicValidator {

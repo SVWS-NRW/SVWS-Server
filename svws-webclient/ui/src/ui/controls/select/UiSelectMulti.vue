@@ -111,9 +111,7 @@
 <script setup lang="ts" generic="T">
 
 	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
-	import { useUiSelectUtils } from './utils/useUiSelectUtils';
-	import { SelectManager } from './manager/SelectManager';
-	import type { UiSelectHTMLElements, UiSelectMultiProps, UiSelectSelectionMethods, UiSelectState } from './manager/UiSelectTypes';
+
 	import type { BasicValidator } from '@core/asd/validate/BasicValidator';
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
@@ -124,6 +122,10 @@
 	import { ValidatorSelectMultiOptionsRange } from '@ui/validation/common/ValidatorSelectMultiOptionsRange';
 	import { ValidatorSelectOptionsValid } from '@ui/validation/common/ValidatorSelectOptionsValid';
 	import { ValidationResult } from '@ui/validation/ValidationResult';
+
+	import { SelectManager } from './manager/SelectManager';
+	import type { UiSelectHTMLElements, UiSelectMultiProps, UiSelectSelectionMethods, UiSelectState } from './manager/UiSelectTypes';
+	import { useUiSelectUtils } from './utils/useUiSelectUtils';
 
 	const props = withDefaults(defineProps<UiSelectMultiProps<T>>(), {
 		label: '',

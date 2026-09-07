@@ -1,4 +1,5 @@
 import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
+
 import type { LogoModelProxy } from "~/components/schule/stammdaten/logoverwaltung/modelProxy/LogoModelProxy";
 
 export const SUPPORTED_IMAGE_TYPES = [

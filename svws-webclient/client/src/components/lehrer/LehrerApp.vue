@@ -52,11 +52,13 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerAppProps } from "./LehrerAppProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { LehrerAppProps } from "./LehrerAppProps";
 
 	const props = defineProps<LehrerAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

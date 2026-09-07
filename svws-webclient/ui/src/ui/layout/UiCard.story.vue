@@ -147,7 +147,9 @@
 <script setup lang="ts">
 
 	import { reactive } from 'vue';
+
 	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
+
 	import Docs from './UiCard.story.md';
 
 	const onEdit = () => alert("Bearbeiten");

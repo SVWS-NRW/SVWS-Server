@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { FloskelgruppenListeManager } from "@ui/ui/manager/kataloge/FloskelgruppenListeManager";
+
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import { RouteDataFloskelgruppen } from "~/router/apps/schule/kataloge/floskelgruppen/RouteDataFloskelgruppen";
 import { routeFloskelgruppenDaten } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenDaten";
-import { routeFloskelgruppenNeu } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenNeu";
 import { routeFloskelgruppenGruppenprozesse } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenGruppenprozesse";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { FloskelgruppenListeManager } from "@ui/ui/manager/kataloge/FloskelgruppenListeManager";
+import { routeFloskelgruppenNeu } from "~/router/apps/schule/kataloge/floskelgruppen/RouteFloskelgruppenNeu";
+import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const FloskelgruppenApp = () => import("~/components/schule/kataloge/floskelgruppen/FloskelgruppenApp.vue");
 const FloskelgruppenAuswahl = () => import("~/components/schule/kataloge/floskelgruppen/FloskelgruppenAuswahl.vue");

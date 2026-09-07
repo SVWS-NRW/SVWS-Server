@@ -28,6 +28,7 @@
 
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
 	import type { SchuleStammdatenProps } from "~/components/schule/stammdaten/SchuleStammdatenProps";
 
 	defineProps<SchuleStammdatenProps>();

@@ -52,14 +52,17 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { computed } from "vue";
+
 	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
+
 	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
 
 	const props = defineProps<FloskelnDatenProps>();

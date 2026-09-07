@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
-import { routeEinstellungenBenutzergruppe, type RouteEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
-import type { BenutzergruppeProps } from "~/components/einstellungen/benutzergruppen/daten/SBenutzergruppeProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { BenutzergruppeProps } from "~/components/einstellungen/benutzergruppen/daten/SBenutzergruppeProps";
+import { type RouteEinstellungenBenutzergruppe, routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
+import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
+import { RouteNode } from "~/router/RouteNode";
 
 const SBenutzergruppe = () => import("~/components/einstellungen/benutzergruppen/daten/SBenutzergruppe.vue");
 

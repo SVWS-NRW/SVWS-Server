@@ -45,14 +45,16 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed } from "vue";
-	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useServerState } from "@ui/states/ServerState";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+
+	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
 
 	type Action = 'druckKursListeSchuelerKontaktdatenErzieher' | 'druckKursListeSchuelerFotos' | 'druckKursListeSchuelerLeistungsdaten' | 'delete' | '';
 

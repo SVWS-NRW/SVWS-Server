@@ -18,10 +18,12 @@
 <script setup lang="ts">
 
 	import { computed, onBeforeMount, ref } from 'vue';
-	import type { EnmLerngruppenAuswahlEintrag } from './EnmManager';
-	import type { EnmTeilleistungenAuswahlProps } from './EnmTeilleistungenAuswahlProps';
+
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+
+	import type { EnmLerngruppenAuswahlEintrag } from './EnmManager';
+	import type { EnmTeilleistungenAuswahlProps } from './EnmTeilleistungenAuswahlProps';
 
 	const props = defineProps<EnmTeilleistungenAuswahlProps>();
 

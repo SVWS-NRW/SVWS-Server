@@ -43,11 +43,14 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import type { TeilleistungsartenNeuProps } from './TeilleistungsartenNeuProps';
-	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
+
 	import { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
+
+	import type { TeilleistungsartenNeuProps } from './TeilleistungsartenNeuProps';
 
 	const props = defineProps<TeilleistungsartenNeuProps>();
 	const benutzerState = useBenutzerState();

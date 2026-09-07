@@ -1,24 +1,26 @@
 import { computed } from "vue";
-import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
+import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
+import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 import { Klassenart } from "@core/asd/types/klassen/Klassenart";
 import { AllgemeinbildendOrganisationsformen } from "@core/asd/types/schule/AllgemeinbildendOrganisationsformen";
 import { BerufskollegOrganisationsformen } from "@core/asd/types/schule/BerufskollegOrganisationsformen";
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import { WeiterbildungskollegOrganisationsformen } from "@core/asd/types/schule/WeiterbildungskollegOrganisationsformen";
+import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ArrayList } from "@core/java/util/ArrayList";
+import type { List } from "@core/java/util/List";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { ValidatorKlassenKuerzel } from "@ui/validation/ValidatorKlassenKuerzel";
-import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
-import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
-import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
-import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
-import type { List } from "@core/java/util/List";
+
+import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
  * Der spezielle ModelProxy für die Klassen-Daten

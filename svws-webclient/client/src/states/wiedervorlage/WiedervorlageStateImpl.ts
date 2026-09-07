@@ -1,5 +1,3 @@
-import { api } from "~/router/Api";
-import { benutzerStateImpl } from "../BenutzerStateImpl";
 import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
 import type { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -7,7 +5,10 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import type { WiedervorlageState } from "@ui/states/WiedervorlageState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { benutzerStateImpl } from "../BenutzerStateImpl";
 import { notificationStateImpl } from "../NotificationsStateImpl";
+import { api } from "~/router/Api";
 
 interface BenutzerGruppen {
 	data: List<BenutzergruppeListeEintrag>

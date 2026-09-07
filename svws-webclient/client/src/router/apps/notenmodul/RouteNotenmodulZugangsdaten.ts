@@ -1,16 +1,19 @@
-import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
-import type { RouteApp } from "../RouteApp";
-import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { NotenmodulZugangsdatenProps } from "~/components/notenmodul/NotenmodulZugangsdatenProps";
-import { RouteDataNotenmodulZugangsdaten } from "./RouteDataNotenmodulZugangsdaten";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
-import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
-import { routeError } from "~/router/error/RouteError";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { RouteApp } from "../RouteApp";
+import type { NotenmodulZugangsdatenProps } from "~/components/notenmodul/NotenmodulZugangsdatenProps";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
+import { RouteDataNotenmodulZugangsdaten } from "./RouteDataNotenmodulZugangsdaten";
+import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
+import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
 
 const NotenmodulZugangsdaten = () => import("~/components/notenmodul/NotenmodulZugangsdaten.vue");
 

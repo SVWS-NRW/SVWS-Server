@@ -1,10 +1,12 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchulen, type RouteSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
-import type { SchulenDatenProps } from "~/components/schule/kataloge/schulen/daten/SchulenDatenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchulenDatenProps } from "~/components/schule/kataloge/schulen/daten/SchulenDatenProps";
+import { type RouteSchulen, routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchulenDaten = () => import("~/components/schule/kataloge/schulen/daten/SchulenDaten.vue");
 

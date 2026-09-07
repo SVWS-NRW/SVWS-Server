@@ -47,6 +47,8 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { GostFach } from "@core/core/data/gost/GostFach";
 	import type { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
@@ -55,7 +57,6 @@
 	import { GostLaufbahnplanungFachkombinationTyp } from "@core/core/types/gost/GostLaufbahnplanungFachkombinationTyp";
 	import type { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 	import type { List } from "@core/java/util/List";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

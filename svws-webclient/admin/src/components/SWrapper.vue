@@ -24,12 +24,13 @@
 
 <script setup lang="ts">
 
+	import { api } from '@admin/router/Api';
 	import { onErrorCaptured, ref } from 'vue';
+
+	import { OpenApiError } from '@core/api/OpenApiError';
 	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';
-	import { OpenApiError } from '@core/api/OpenApiError';
-	import { api } from '@admin/router/Api';
 
 	type CapturedError = {
 		id: number;

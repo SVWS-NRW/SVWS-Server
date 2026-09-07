@@ -60,11 +60,13 @@
 <script setup lang="ts">
 
 	import { computed, type HTMLAttributes } from "vue";
-	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;

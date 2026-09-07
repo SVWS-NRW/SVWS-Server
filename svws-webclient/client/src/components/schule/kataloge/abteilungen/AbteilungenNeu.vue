@@ -75,9 +75,8 @@
 
 <script setup lang="ts">
 
-	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
+
 	import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { Abteilung } from "@core/core/data/schule/Abteilung";
@@ -89,6 +88,9 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
+	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
 	const props = defineProps<AbteilungenNeuProps>();
 	const benutzerState = useBenutzerState();

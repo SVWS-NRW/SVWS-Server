@@ -178,10 +178,11 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
-	import { computed, ref, watch, toRefs } from "vue";
+	import { computed, ref, toRefs, watch } from "vue";
+
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
+	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
 	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
@@ -190,7 +191,8 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { Schulform } from "@core/asd/types/schule/Schulform";
+
+	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 
 	const schuleState = useSchuleState();
 

@@ -10,6 +10,7 @@ import { JavaString } from "@core/java/lang/JavaString";
 import type { Comparator } from "@core/java/util/Comparator";
 import { HashSet } from "@core/java/util/HashSet";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrieb> {

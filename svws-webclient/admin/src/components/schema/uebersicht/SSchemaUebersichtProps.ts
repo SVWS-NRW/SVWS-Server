@@ -1,3 +1,5 @@
+import type { ApiStatus } from "@admin/components/ApiStatus";
+
 import type { ApiFile } from "@core/api/BaseApi";
 import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
@@ -7,8 +9,8 @@ import type { SchuleInfo } from "@core/core/data/schule/SchuleInfo";
 import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { List } from "@core/java/util/List";
+
 import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
-import type { ApiStatus } from "@admin/components/ApiStatus";
 
 export interface SchemaUebersichtProps {
 	data: () => SchemaListeEintrag | undefined;

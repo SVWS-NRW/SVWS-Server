@@ -35,10 +35,12 @@
 
 <script setup lang="ts">
 
-	import type { FoerderschwerpunkteAppProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteAppProps";
 	import { computed } from "vue";
-	import { ViewType } from "@ui/ui/nav/ViewType";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { FoerderschwerpunkteAppProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteAppProps";
 
 	const props = defineProps<FoerderschwerpunkteAppProps>();
 

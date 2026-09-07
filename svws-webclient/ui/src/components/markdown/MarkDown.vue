@@ -4,8 +4,8 @@
 </template>
 
 <script setup lang="ts">
-	import { computed } from 'vue';
 	import { createMarkdownExit } from 'markdown-exit';
+	import { computed } from 'vue';
 
 	const md = createMarkdownExit();
 

@@ -16,8 +16,9 @@
 
 <script setup lang="ts">
 
-	import { logEvent } from '@ui/stories/helper';
 	import { reactive } from 'vue';
+
+	import { logEvent } from '@ui/stories/helper';
 
 
 	const variantControlsMap = new Map([

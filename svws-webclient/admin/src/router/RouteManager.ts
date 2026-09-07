@@ -1,7 +1,9 @@
 import { reactive } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
+import type { NavigationFailure, RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
+
 import { api } from "./Api";
 import { routeApp } from "./apps/RouteApp";
 import { routeError } from "./error/RouteError";

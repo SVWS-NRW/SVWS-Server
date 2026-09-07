@@ -1,9 +1,10 @@
-import type { EnmKlassenleitungProps } from "@ui/components/enm/EnmKlassenleitungProps";
+import { type RouteApp, routeApp } from "@wenom/router/apps/RouteApp";
 import { RouteNode } from "@wenom/router/RouteNode";
-import { routeApp, type RouteApp } from "@wenom/router/apps/RouteApp";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { EnmKlassenleitungAuswahlProps } from "@ui/components/enm/EnmKlassenleitungAuswahlProps";
+import type { EnmKlassenleitungProps } from "@ui/components/enm/EnmKlassenleitungProps";
 
 const EnmKlassenleitungAuswahl = () => import("@ui/components/enm/EnmKlassenleitungAuswahl.vue");
 const EnmKlassenleitung = () => import("@ui/components/enm/EnmKlassenleitung.vue");

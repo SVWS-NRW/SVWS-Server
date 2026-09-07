@@ -61,14 +61,16 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
+
 	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn, SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { DateUtils } from "@core/core/utils/DateUtils";
+
+	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
 
 	const props = defineProps<StundenplanAuswahlProps>();
 	const benutzerState = useBenutzerState();

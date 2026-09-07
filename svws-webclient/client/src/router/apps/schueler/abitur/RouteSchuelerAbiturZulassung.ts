@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchuelerAbitur, type RouteSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
-import type { SchuelerAbiturZulassungProps } from "~/components/schueler/abitur/SchuelerAbiturZulassungProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeSchueler } from "../RouteSchueler";
-import { ServerMode } from "@core/core/types/ServerMode";
+
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import { routeSchueler } from "../RouteSchueler";
+import type { SchuelerAbiturZulassungProps } from "~/components/schueler/abitur/SchuelerAbiturZulassungProps";
+import { type RouteSchuelerAbitur, routeSchuelerAbitur } from "~/router/apps/schueler/abitur/RouteSchuelerAbitur";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchuelerAbiturZulassung = () => import("~/components/schueler/abitur/SchuelerAbiturZulassung.vue");
 

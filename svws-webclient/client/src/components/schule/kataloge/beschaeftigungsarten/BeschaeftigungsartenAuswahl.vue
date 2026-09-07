@@ -38,14 +38,16 @@
 
 <script setup lang="ts">
 
-	import type { BeschaeftigungsartenAuswahlProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAuswahlProps";
 	import { computed } from "vue";
+
 	import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { BeschaeftigungsartenAuswahlProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAuswahlProps";
 
 	const props = defineProps<BeschaeftigungsartenAuswahlProps>();
 	const benutzerState = useBenutzerState();

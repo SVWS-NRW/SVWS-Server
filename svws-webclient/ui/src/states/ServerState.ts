@@ -1,7 +1,8 @@
+import type { InjectionKey } from "vue";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { ServerMode } from "@core/core/types/ServerMode";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 /**
  * Die Schnittstelle für den Zustand des Servers

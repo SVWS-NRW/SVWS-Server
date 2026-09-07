@@ -1,31 +1,34 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
-import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
-import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
-import { routeGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
-import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
-import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
-import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
-import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
-import type { GostAppProps } from "~/components/gost/SGostAppProps";
-import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeError } from "~/router/error/RouteError";
-import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
-import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { GostAppProps } from "~/components/gost/SGostAppProps";
+import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
+import { api } from "~/router/Api";
+import { routeGostAbitur } from "~/router/apps/gost/abitur/RouteGostAbitur";
+import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
+import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
+import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
+import { routeGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
+import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
+import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
+import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+
+import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
+import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue");
 const SGostApp = () => import("~/components/gost/SGostApp.vue");

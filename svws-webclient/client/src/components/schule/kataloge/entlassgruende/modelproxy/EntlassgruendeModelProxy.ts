@@ -2,6 +2,7 @@ import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlas
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+
 import { ValidatorEntlassgrundBezeichnung } from "~/components/schule/kataloge/entlassgruende/modelproxy/validation/ValidatorEntlassgrundBezeichnung";
 
 /**

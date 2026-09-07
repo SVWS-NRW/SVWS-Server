@@ -1,15 +1,18 @@
 import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
-import { RouteNode } from "~/router/RouteNode";
-import { checkHiddenKlausurplanungStundenplan, routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeError } from "~/router/error/RouteError";
-import { routeGostKlausurplanungVorgaben } from "./RouteGostKlausurplanungVorgaben";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { DateUtils } from "@core/core/utils/DateUtils";
+
+import { checkHiddenKlausurplanungStundenplan, type RouteGostKlausurplanung, routeGostKlausurplanung } from "~/router/apps/gost/klausuren/RouteGostKlausurplanung";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { gostKlausurplanungStateImpl } from "~/states/GostKlausurplanungStateImpl";
+
+import { routeGostKlausurplanungVorgaben } from "./RouteGostKlausurplanungVorgaben";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausuren/SGostKlausurplanungKalender.vue");
 

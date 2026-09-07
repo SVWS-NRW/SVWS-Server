@@ -38,8 +38,10 @@
 	import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { LeitungsfunktionenAuswahlProps } from "./LeitungsfunktionenAuswahlProps";
+
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
+
+	import type { LeitungsfunktionenAuswahlProps } from "./LeitungsfunktionenAuswahlProps";
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },

@@ -52,6 +52,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import { GostBlockungRegel } from "@core/core/data/gost/GostBlockungRegel";
 	import { GostKursblockungRegelTyp } from "@core/core/types/kursblockung/GostKursblockungRegelTyp";
 	import type { GostBlockungsdatenManager } from "@core/core/utils/gost/GostBlockungsdatenManager";
@@ -59,7 +61,7 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import type { DataTableColumn } from "@ui/types";
-	import { computed, ref } from "vue";
+
 	import type { ApiStatus } from "~/components/ApiStatus";
 
 	const props = defineProps<{

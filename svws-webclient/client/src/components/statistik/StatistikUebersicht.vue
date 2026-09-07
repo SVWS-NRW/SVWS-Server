@@ -17,13 +17,15 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 	import type { List } from "@core/java/util/List";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
 	import type { StatistikUebersichtProps } from "./StatistikUebersichtProps";
-	import { computed } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

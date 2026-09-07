@@ -1,6 +1,7 @@
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+
 import type { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
 
 export interface KlassenDatenProps {

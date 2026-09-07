@@ -54,7 +54,8 @@
 </template>
 
 <script setup lang='ts'>
-	import { ref, computed, onUnmounted, onMounted } from "vue";
+	import { computed, onMounted, onUnmounted, ref } from "vue";
+
 	import imageFile from "../assets/img/avatar_placeholder.svg";
 
 	const props = withDefaults(defineProps<{

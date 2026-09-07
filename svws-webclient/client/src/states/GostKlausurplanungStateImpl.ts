@@ -1,7 +1,3 @@
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import { GostKlausurenAlleKlausurdaten } from "@core/core/data/gost/klausuren/GostKlausurenAlleKlausurdaten";
@@ -26,6 +22,11 @@ import type { List } from "@core/java/util/List";
 import type { GostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 import { CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX } from "@ui/states/GostKlausurplanungState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { api } from "~/router/Api";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface GostKlausurplanungReactiveState {
 	// Daten nur abhängig von dem Abiturjahrgang

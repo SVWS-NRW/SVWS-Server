@@ -1,6 +1,3 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { configStateImpl } from "~/states/ConfigStateImpl";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
@@ -10,6 +7,10 @@ import { JavaString } from "@core/java/lang/JavaString";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { configStateImpl } from "~/states/ConfigStateImpl";
 
 
 interface RouteStateSchuelerVermerke extends RouteStateInterface {

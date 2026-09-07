@@ -67,17 +67,19 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
+	import { computed, ref } from "vue";
+
 	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+
+	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 
 	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
 

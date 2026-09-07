@@ -39,11 +39,14 @@
 
 <script setup lang="ts">
 
-	import type { ErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenNeuProps";
 	import { computed, ref, watch } from "vue";
+
 	import { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { ErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenNeuProps";
+
 	import { ErzieherartenModelProxy } from "./modelproxy/ErzieherartenModelProxy";
 
 	const props = defineProps<ErzieherartenNeuProps>();

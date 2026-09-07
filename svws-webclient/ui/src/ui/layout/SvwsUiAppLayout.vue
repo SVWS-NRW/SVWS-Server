@@ -54,7 +54,7 @@
 
 <script setup lang='ts'>
 
-	import { onBeforeUnmount, onMounted, ref, computed } from "vue";
+	import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 	const props = withDefaults(defineProps<{
 		fullwidthContent?: boolean;

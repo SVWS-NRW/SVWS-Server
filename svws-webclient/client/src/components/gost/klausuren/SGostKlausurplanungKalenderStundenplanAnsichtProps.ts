@@ -5,6 +5,7 @@ import type { StundenplanZeitraster } from "@core/core/data/stundenplan/Stundenp
 import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import type { Wochentag } from "@core/core/types/Wochentag";
 import type { List } from "@core/java/util/List";
+
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {

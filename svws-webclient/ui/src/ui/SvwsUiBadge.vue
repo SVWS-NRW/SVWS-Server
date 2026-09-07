@@ -8,8 +8,9 @@
 
 <script setup lang='ts'>
 
-	import type { Size, Type } from '@ui/types';
 	import { computed } from 'vue';
+
+	import type { Size, Type } from '@ui/types';
 
 	const props = withDefaults(defineProps<{
 		/** Bestimmt die Farbe bzw. Erscheinung des Badges. */

@@ -1,13 +1,14 @@
-import { reactive } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
-import { RouteNode } from "@wenom/router/RouteNode";
 import { routeApp } from "@wenom/router/apps/RouteApp";
-import { routeLogin } from "@wenom/router/RouteLogin";
 import { routeError } from "@wenom/router/error/RouteError";
+import { routeLogin } from "@wenom/router/RouteLogin";
+import { RouteNode } from "@wenom/router/RouteNode";
 import { RoutingStatus } from "@wenom/router/RoutingStatus";
+import { authStateImpl } from "@wenom/states/AuthStateImpl";
+import { reactive } from "vue";
+import type { NavigationFailure, RouteLocationNormalized, RouteLocationRaw, RouteParams, Router } from "vue-router";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { authStateImpl } from "@wenom/states/AuthStateImpl";
 import { AppContext } from "@ui/AppContext";
 
 interface RouteStateError {

@@ -1,7 +1,9 @@
+import type { LoginProps } from "@admin/components/SLoginProps";
 import { ref } from "vue";
 import type { RouteLocationRaw } from "vue-router";
+
 import { ServerMode } from "@core/core/types/ServerMode";
-import type { LoginProps } from "@admin/components/SLoginProps";
+
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";

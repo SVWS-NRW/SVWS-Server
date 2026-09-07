@@ -61,9 +61,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { computed, type HTMLAttributes } from "vue";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -73,6 +72,9 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
 	import type { DataTableColumn } from "@ui/types";
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const props = defineProps<{
 		termin?: GostKlausurtermin;

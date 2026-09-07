@@ -119,6 +119,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref, watch } from "vue";
+
 	import { LehrerStammdaten } from '@core/asd/data/lehrer/LehrerStammdaten';
 	import type { NationalitaetenKatalogEintrag } from '@core/asd/data/schule/NationalitaetenKatalogEintrag';
 	import { Geschlecht } from '@core/asd/types/Geschlecht';
@@ -131,9 +133,10 @@
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
-	import type { LehrerNeuProps } from './LehrerNeuProps';
-	import { computed, ref, watch } from "vue";
+
 	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
+
+	import type { LehrerNeuProps } from './LehrerNeuProps';
 
 	const props = defineProps<LehrerNeuProps>();
 	const benutzerState = useBenutzerState();

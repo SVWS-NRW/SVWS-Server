@@ -1,17 +1,20 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
+
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeKonfessionenDaten } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenDaten";
-import { RouteDataKonfessionen } from "./RouteDataKonfessionen";
-import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { routeKonfessionenGruppenprozesse } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenGruppenprozesse";
 import { routeKonfessionenNeu } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionenNeu";
-import type { KonfessionenAuswahlProps } from "~/components/schule/kataloge/konfessionen/KonfessionenAuswahlPops";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { KonfessionenListeManager } from "@ui/ui/manager/kataloge/KonfessionenListeManager";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { RouteDataKonfessionen } from "./RouteDataKonfessionen";
 
 const KonfessionenAuswahl = () => import("~/components/schule/kataloge/konfessionen/KonfessionenAuswahl.vue");
 const KonfessionenApp = () => import("~/components/schule/kataloge/konfessionen/KonfessionenApp.vue");

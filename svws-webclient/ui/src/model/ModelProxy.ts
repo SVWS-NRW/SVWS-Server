@@ -1,9 +1,11 @@
 
+import type { ComputedRef, Ref, ShallowRef } from "vue";
+import { computed, ref, shallowRef, watch } from "vue";
+
 import type { BasicValidator } from "@core/asd/validate/BasicValidator";
 import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 import type { List } from "@core/java/util/List";
-import type { ComputedRef, Ref, ShallowRef } from "vue";
-import { computed, ref, shallowRef, watch } from "vue";
+
 import { ModelProxyHandler } from "./ModelProxyHandler";
 import { ModelProxyValidation } from "./ModelProxyValidation";
 

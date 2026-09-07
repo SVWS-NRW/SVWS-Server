@@ -72,6 +72,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref, watch } from "vue";
+
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
@@ -83,7 +85,7 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { computed, ref, watch } from "vue";
+
 	import type { AnkreuzkompetenzenNeuProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenNeuProps";
 	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 

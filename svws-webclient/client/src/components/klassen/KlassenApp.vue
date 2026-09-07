@@ -37,10 +37,12 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { KlassenAppProps } from "./KlassenAppProps";
 	import { computed } from "vue";
+
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { KlassenAppProps } from "./KlassenAppProps";
 
 	const props = defineProps<KlassenAppProps>();
 

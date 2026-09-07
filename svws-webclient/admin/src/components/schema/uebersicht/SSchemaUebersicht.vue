@@ -88,10 +88,12 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
+
 	import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
 	import type { List } from "@core/java/util/List";
 	import type { DataTableColumn } from "@ui/types";
+
+	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
 
 	const props = defineProps<SchemaUebersichtProps>();
 

@@ -56,9 +56,11 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { ConfigAppProps } from "./SConfigAppProps";
+
 	import { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
 	import { ArrayList } from "@core/java/util/ArrayList";
+
+	import type { ConfigAppProps } from "./SConfigAppProps";
 
 	const props = defineProps<ConfigAppProps>();
 

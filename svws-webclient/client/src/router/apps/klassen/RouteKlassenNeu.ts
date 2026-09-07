@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
-import { RouteManager } from "~/router/RouteManager";
-import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
+import { type RouteKlassen, routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 const KlassenNeu = () => import("~/components/klassen/KlassenNeu.vue");
 

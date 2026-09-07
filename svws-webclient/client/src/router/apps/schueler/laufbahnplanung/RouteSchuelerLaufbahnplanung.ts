@@ -1,16 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { SchuelerLaufbahnplanungProps } from "@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanungProps";
 import { ConfigElement } from "@ui/utils/Config";
+
+import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 
 const SSchuelerLaufbahnplanung = () => import("@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 

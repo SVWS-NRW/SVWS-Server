@@ -93,13 +93,15 @@
 
 <script setup lang="ts">
 
+	import { ref } from 'vue';
+
 	import type { GostBlockungsergebnis } from '@core/core/data/gost/GostBlockungsergebnis';
 	import type { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
 	import type { GostBlockungsergebnisManager } from '@core/core/utils/gost/GostBlockungsergebnisManager';
 	import type { List } from '@core/java/util/List';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
-	import { ref } from 'vue';
+
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

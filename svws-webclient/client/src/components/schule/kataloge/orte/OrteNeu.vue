@@ -51,15 +51,17 @@
 
 <script setup lang="ts">
 
-	import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
+
 	import { Laender } from "@core/asd/types/schule/Laender";
 	import { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
+
+	import { OrtModelProxy } from "~/components/schule/kataloge/orte/modelproxy/OrtModelProxy";
+	import type { OrteNeuProps } from "~/components/schule/kataloge/orte/OrteNeuProps";
 
 	const props = defineProps<OrteNeuProps>();
 	const benutzerState = useBenutzerState();

@@ -176,8 +176,9 @@
 
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
-	import type { DataTableColumn, SortByAndOrder, InputType } from "@ui/types";
-	import { computed, toRef, toRaw, ref, watch, nextTick, onMounted } from "vue";
+	import { computed, nextTick, onMounted, ref, toRaw, toRef, watch } from "vue";
+
+	import type { DataTableColumn, InputType, SortByAndOrder } from "@ui/types";
 
 	type DataTableColumnSource = DataTableColumn | string;
 

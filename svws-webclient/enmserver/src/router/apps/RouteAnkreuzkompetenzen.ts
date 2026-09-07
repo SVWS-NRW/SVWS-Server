@@ -1,11 +1,13 @@
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ServerMode } from "@core/core/types/ServerMode";
+import EnmAnkreuzkompetenzen from "@ui/components/enm/EnmAnkreuzkompetenzen.vue";
+import EnmAnkreuzkompetenzenAuswahl from "@ui/components/enm/EnmAnkreuzkompetenzenAuswahl.vue";
 import type { EnmAnkreuzkompetenzenAuswahlProps } from "@ui/components/enm/EnmAnkreuzkompetenzenAuswahlProps";
 import type { EnmAnkreuzkompetenzenProps } from "@ui/components/enm/EnmAnkreuzkompetenzenProps";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import EnmAnkreuzkompetenzen from "@ui/components/enm/EnmAnkreuzkompetenzen.vue";
+
 import { RouteNode } from "../RouteNode";
-import { routeApp, type RouteApp } from "./RouteApp";
-import { ServerMode } from "@core/core/types/ServerMode";
-import EnmAnkreuzkompetenzenAuswahl from "@ui/components/enm/EnmAnkreuzkompetenzenAuswahl.vue";
+
+import { type RouteApp, routeApp } from "./RouteApp";
 
 
 export class RouteAnkreuzkompetenzen extends RouteNode<any, RouteApp> {

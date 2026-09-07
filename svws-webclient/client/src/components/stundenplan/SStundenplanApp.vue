@@ -44,11 +44,13 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { StundenplanAppProps } from "./SStundenplanAppProps";
-	import { computed } from "vue";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 
 	const props = defineProps<StundenplanAppProps>();
 

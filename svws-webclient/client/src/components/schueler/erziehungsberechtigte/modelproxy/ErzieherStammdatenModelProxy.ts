@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
@@ -10,8 +12,8 @@ import type { OrteState } from "@ui/states/kataloge/OrteState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten> {

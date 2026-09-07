@@ -115,8 +115,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { SchulenNeuProps } from "./SchulenNeuProps";
-	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
+
 	import type { HerkunftsschulnummerKatalogEintrag } from "@core/asd/data/schule/HerkunftsschulnummerKatalogEintrag";
 	import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
 	import { Herkunftsschulnummer } from "@core/asd/types/schule/Herkunftsschulnummer";
@@ -129,6 +128,10 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
+
+	import type { SchulenNeuProps } from "./SchulenNeuProps";
 
 	const props = defineProps<SchulenNeuProps>();
 	const benutzerState = useBenutzerState();

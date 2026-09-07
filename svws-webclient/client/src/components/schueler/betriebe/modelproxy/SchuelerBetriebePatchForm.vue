@@ -72,6 +72,8 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -80,7 +82,7 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
-	import { computed } from "vue";
+
 	import { SchuelerBetriebeModelProxy } from "~/components/schueler/betriebe/modelproxy/SchuelerBetriebeModelProxy";
 
 	const props = defineProps<{

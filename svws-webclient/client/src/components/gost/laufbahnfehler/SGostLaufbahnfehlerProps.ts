@@ -3,6 +3,7 @@ import type { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegp
 import type { GostBelegpruefungsErgebnisse } from "@core/core/data/gost/GostBelegpruefungsErgebnisse";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import type { List } from "@core/java/util/List";
+
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 

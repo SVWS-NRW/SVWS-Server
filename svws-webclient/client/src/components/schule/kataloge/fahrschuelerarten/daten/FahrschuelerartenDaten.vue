@@ -32,11 +32,13 @@
 
 <script setup lang="ts">
 
-	import type { FahrschuelerartenDatenProps } from "~/components/schule/kataloge/fahrschuelerarten/daten/FahrschuelerartenDatenProps";
-	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
 	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { FahrschuelerartenDatenProps } from "~/components/schule/kataloge/fahrschuelerarten/daten/FahrschuelerartenDatenProps";
+	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
 
 	const props = defineProps<FahrschuelerartenDatenProps>();
 	const benutzerState = useBenutzerState();

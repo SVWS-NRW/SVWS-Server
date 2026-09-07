@@ -94,6 +94,7 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
+
 	import type { TabData } from "../nav/TabData";
 	import { TabManager } from "../nav/TabManager";
 

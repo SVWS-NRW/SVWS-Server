@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
@@ -5,8 +7,8 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { ValidatorKindergaertenBezeichnung } from "./validation/ValidatorKindergaertenBezeichnung";
 
 /**

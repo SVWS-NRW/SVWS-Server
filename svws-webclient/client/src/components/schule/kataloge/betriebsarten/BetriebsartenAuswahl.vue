@@ -38,8 +38,10 @@
 	import type { Betriebsart } from '@core/core/data/schule/Betriebsart';
 	import type { DataTableColumn } from '@ui/types';
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
-	import type { BetriebsartenAuswahlProps } from './BetriebsartenAuswahlProps';
+
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
+
+	import type { BetriebsartenAuswahlProps } from './BetriebsartenAuswahlProps';
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },

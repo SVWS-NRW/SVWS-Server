@@ -7,6 +7,7 @@ import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { List } from "@core/java/util/List";
+
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerIndividualdatenProps {

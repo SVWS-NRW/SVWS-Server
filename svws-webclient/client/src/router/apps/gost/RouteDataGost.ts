@@ -1,14 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeGost } from "~/router/apps/gost/RouteGost";
-import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
-import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
 import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import type { GostFach } from "@core/core/data/gost/GostFach";
@@ -20,6 +9,19 @@ import { GostAbiturjahrUtils } from "@core/core/utils/gost/GostAbiturjahrUtils";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { TabData } from "@ui/ui/nav/TabData";
+
+import { api } from "~/router/Api";
+import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
+import { routeGost } from "~/router/apps/gost/RouteGost";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
+import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
 interface RouteStateGost extends RouteStateInterface {
 	idSchuljahresabschnitt: number,

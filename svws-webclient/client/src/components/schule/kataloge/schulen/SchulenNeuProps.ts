@@ -1,6 +1,7 @@
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchulenListeManager } from "@ui/ui/manager/kataloge/SchulenListeManager";
 import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
+
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface SchulenNeuProps {

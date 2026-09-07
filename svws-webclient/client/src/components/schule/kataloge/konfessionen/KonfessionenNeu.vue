@@ -51,15 +51,18 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref, watch } from "vue";
+
 	import { Religion } from "@core/asd/types/schule/Religion";
 	import { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
-	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
-	import { computed, ref, watch } from "vue";
+
 	import { KonfessionModelProxy } from "~/components/schule/kataloge/konfessionen/modelproxy/KonfessionModelProxy";
+
+	import type { KonfessionenNeuProps } from "./KonfessionenNeuProps";
 
 	const props = defineProps<KonfessionenNeuProps>();
 	const benutzerState = useBenutzerState();

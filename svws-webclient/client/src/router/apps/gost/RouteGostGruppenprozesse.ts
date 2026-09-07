@@ -1,12 +1,15 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteGost } from "./RouteGost";
-import { routeGost } from "./RouteGost";
-import type { GostGruppenprozesseProps } from "~/components/gost/gruppenprozesse/SGostGruppenprozesseProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { GostGruppenprozesseProps } from "~/components/gost/gruppenprozesse/SGostGruppenprozesseProps";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteGost } from "./RouteGost";
+import { routeGost } from "./RouteGost";
 
 const SGostGruppenprozesse = () => import("~/components/gost/gruppenprozesse/SGostGruppenprozesse.vue");
 

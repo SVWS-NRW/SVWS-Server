@@ -1,10 +1,12 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "@wenom/router/RouteNode";
 import SError from "@wenom/components/error/SError.vue";
 import type { ErrorProps } from "@wenom/components/error/SErrorProps";
+import { RouteNode } from "@wenom/router/RouteNode";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
+
 import { RouteManager } from "../RouteManager";
 
 

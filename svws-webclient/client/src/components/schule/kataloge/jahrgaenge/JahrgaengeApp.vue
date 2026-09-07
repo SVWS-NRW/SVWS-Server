@@ -35,10 +35,12 @@
 
 <script setup lang="ts">
 
-	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { JahrgaengeAppProps } from "./JahrgaengeAppProps";
 	import { computed } from "vue";
+
+	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { JahrgaengeAppProps } from "./JahrgaengeAppProps";
 
 	const props = defineProps<JahrgaengeAppProps>();
 

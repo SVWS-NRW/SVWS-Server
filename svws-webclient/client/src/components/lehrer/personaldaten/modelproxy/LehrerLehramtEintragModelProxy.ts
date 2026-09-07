@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { LehrerLehramtAnerkennungKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag";
 import type { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
 import type { LehrerLehramtKatalogEintrag } from "@core/asd/data/lehrer/LehrerLehramtKatalogEintrag";
@@ -5,7 +7,6 @@ import { LehrerLehramt } from "@core/asd/types/lehrer/LehrerLehramt";
 import { LehrerLehramtAnerkennung } from "@core/asd/types/lehrer/LehrerLehramtAnerkennung";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
-import { computed } from "vue";
 
 /**
  * Der spezielle ModelProxy für LehrerLehramtEintrag

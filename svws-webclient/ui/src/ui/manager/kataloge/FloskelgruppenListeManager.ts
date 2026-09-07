@@ -4,6 +4,7 @@ import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import { JavaLong } from "@core/java/lang/JavaLong";
 import { HashSet } from "@core/java/util/HashSet";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class FloskelgruppenListeManager extends AuswahlManager<number, Floskelgruppe, Floskelgruppe> {

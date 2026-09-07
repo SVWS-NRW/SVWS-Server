@@ -85,11 +85,13 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { ValidationResult } from "../validation/ValidationResult";
+
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+
+	import type { ValidationResult } from "../validation/ValidationResult";
 
 	const props = defineProps<{
 		validationResult: ValidationResult;

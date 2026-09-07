@@ -31,11 +31,13 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
+
 	import type { BetriebsartenGruppenprozesseProps } from './BetriebsartenGruppenprozesseProps';
-	import { computed, ref } from "vue";
 
 	const props = defineProps<BetriebsartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

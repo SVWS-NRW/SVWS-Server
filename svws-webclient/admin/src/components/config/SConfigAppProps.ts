@@ -1,6 +1,7 @@
 import type { ApiFile } from "@core/api/BaseApi";
-import type { ApiStatus } from "../ApiStatus";
 import type { TLSCertificateInfo } from "@core/core/data/TLSCertificateInfo";
+
+import type { ApiStatus } from "../ApiStatus";
 
 export interface ConfigAppProps {
 	getCert: () => Promise<ApiFile>;

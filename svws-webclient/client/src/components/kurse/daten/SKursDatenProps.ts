@@ -2,6 +2,7 @@ import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 import type { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { List } from "@core/java/util/List";
+
 import type { KursListeManager } from "~/states/kurse/KursListeManager";
 
 export interface KursDatenProps {

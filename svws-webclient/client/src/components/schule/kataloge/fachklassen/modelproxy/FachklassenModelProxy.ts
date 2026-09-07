@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { DQRNiveauKatalogEintrag } from "@core/asd/data/schule/DQRNiveauKatalogEintrag";
 import type { FachklasseKatalogEintrag } from "@core/asd/data/schule/FachklasseKatalogEintrag";
 import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
@@ -11,8 +13,8 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { ValidatorFachklasseFeldDifferentFromCoreType } from "~/components/schule/kataloge/fachklassen/modelproxy/ValidatorFachklasseFeldDifferentFromCoreType";
 
 export class FachklassenModelProxy extends ModelProxy<FachklasseEintrag> {

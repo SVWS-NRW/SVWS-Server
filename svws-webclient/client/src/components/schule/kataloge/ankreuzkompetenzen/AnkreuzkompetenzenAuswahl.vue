@@ -54,9 +54,8 @@
 </template>
 
 <script setup lang="ts">
-	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
-	import type { AnkreuzkompetenzenAuswahlProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahlProps";
 	import { computed } from "vue";
+
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -65,6 +64,9 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import type { AnkreuzkompetenzenAuswahlProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahlProps";
+	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	const props = defineProps<AnkreuzkompetenzenAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

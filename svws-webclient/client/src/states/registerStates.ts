@@ -1,16 +1,3 @@
-import { abschnittStateImpl } from "./AbschnittStateImpl";
-import { auskunftStateImpl } from "./AuskunftStateImpl";
-import { configStateImpl } from "./ConfigStateImpl";
-import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
-import { gostKlausurplanungStateImpl } from "./GostKlausurplanungStateImpl";
-import { reportingStateImpl } from "./ReportingStateImpl";
-import { schuleStateImpl } from "./SchuleStateImpl";
-import { serverStateImpl } from "./ServerStateImpl";
-import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
-import { notenmodulStateImpl } from "./NotenmodulStateImpl";
-import { benutzerStateImpl } from "./BenutzerStateImpl";
-import { notificationStateImpl } from "~/states/NotificationsStateImpl";
-import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { AppContext } from "@ui/AppContext";
 import { AbschnittStateKey } from "@ui/states/AbschnittState";
 import { AuskunftStateKey } from "@ui/states/AuskunftState";
@@ -25,6 +12,21 @@ import { ReportingStateKey } from "@ui/states/ReportingState";
 import { SchuleStateKey } from "@ui/states/SchuleState";
 import { ServerStateKey } from "@ui/states/ServerState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
+
+import { notificationStateImpl } from "~/states/NotificationsStateImpl";
+
+import { abschnittStateImpl } from "./AbschnittStateImpl";
+import { auskunftStateImpl } from "./AuskunftStateImpl";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
+import { configStateImpl } from "./ConfigStateImpl";
+import { gostKlausurplanungStateImpl } from "./GostKlausurplanungStateImpl";
+import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
+import { orteStateImpl } from "./kataloge/OrteStateImpl";
+import { notenmodulStateImpl } from "./NotenmodulStateImpl";
+import { reportingStateImpl } from "./ReportingStateImpl";
+import { schuleStateImpl } from "./SchuleStateImpl";
+import { serverStateImpl } from "./ServerStateImpl";
+import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
 
 
 export function registerStates(): void {

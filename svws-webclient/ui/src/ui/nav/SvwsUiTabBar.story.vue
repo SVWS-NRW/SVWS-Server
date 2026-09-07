@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 
 	import { ref } from "vue";
+
 	import type { TabData } from "./TabData";
 	import { TabManager } from "./TabManager";
 

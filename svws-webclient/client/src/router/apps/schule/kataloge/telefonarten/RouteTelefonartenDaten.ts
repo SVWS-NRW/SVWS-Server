@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { TelefonartenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/TelefonartenDatenProps";
 import type { RouteTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
-import type { TelefonartenDatenProps } from "~/components/schule/kataloge/telefonarten/daten/TelefonartenDatenProps";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { RouteNode } from "~/router/RouteNode";
 
 const TelefonartenDaten = () => import("~/components/schule/kataloge/telefonarten/daten/TelefonartenDaten.vue");
 

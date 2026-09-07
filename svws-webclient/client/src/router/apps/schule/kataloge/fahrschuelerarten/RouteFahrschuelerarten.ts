@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { FahrschuelerartenListeManager } from "@ui/ui/manager/kataloge/FahrschuelerartenListeManager";
+
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import { RouteDataFahrschuelerarten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteDataFahrschuelerarten";
 import { routeFahrschuelerartenDaten } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenDaten";
-import { routeFahrschuelerartenNeu } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenNeu";
 import { routeFahrschuelerartenGruppenprozesse } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenGruppenprozesse";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { FahrschuelerartenListeManager } from "@ui/ui/manager/kataloge/FahrschuelerartenListeManager";
+import { routeFahrschuelerartenNeu } from "~/router/apps/schule/kataloge/fahrschuelerarten/RouteFahrschuelerartenNeu";
+import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const FahrschuelerartenApp = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenApp.vue");
 const FahrschuelerartenAuswahl = () => import("~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenAuswahl.vue");

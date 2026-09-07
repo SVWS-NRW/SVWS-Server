@@ -69,10 +69,12 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { KindergaertenDatenProps } from "~/components/schule/kataloge/kindergaerten/daten/KindergaertenDatenProps";
-	import { KindergaertenModelProxy } from "../modelproxy/KindergaertenModelProxy";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import { KindergaertenModelProxy } from "../modelproxy/KindergaertenModelProxy";
+	import type { KindergaertenDatenProps } from "~/components/schule/kataloge/kindergaerten/daten/KindergaertenDatenProps";
 
 	const props = defineProps<KindergaertenDatenProps>();
 	const benutzerState = useBenutzerState();

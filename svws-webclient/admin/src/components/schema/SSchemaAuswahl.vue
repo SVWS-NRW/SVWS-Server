@@ -55,8 +55,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SchemaAuswahlProps } from "./SSchemaAuswahlProps";
+
 	import type { SchemaListeEintrag } from "@core/core/data/db/SchemaListeEintrag";
+
+	import type { SchemaAuswahlProps } from "./SSchemaAuswahlProps";
 
 	const props = defineProps<SchemaAuswahlProps>();
 

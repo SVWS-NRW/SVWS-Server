@@ -1,17 +1,19 @@
-import { type RouteApp } from "~/router/apps/RouteApp";
-import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
-import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
-import { routeKurseNeu } from "./RouteKurseNeu";
-import type { KursListeManager } from "~/states/kurse/KursListeManager";
-import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
-import { configStateImpl } from "~/states/ConfigStateImpl";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
+import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
+import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
+import { type RouteApp } from "~/router/apps/RouteApp";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import type { KursListeManager } from "~/states/kurse/KursListeManager";
+
+import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
+import { routeKurseNeu } from "./RouteKurseNeu";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue");

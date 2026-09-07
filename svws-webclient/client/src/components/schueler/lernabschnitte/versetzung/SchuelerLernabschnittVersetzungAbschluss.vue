@@ -29,10 +29,12 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SchuelerLernabschnittVersetzungAbschlussProps";
+
 	import type { KlassenDaten } from '@core/asd/data/klassen/KlassenDaten';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
+
+	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SchuelerLernabschnittVersetzungAbschlussProps";
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
 	const benutzerState = useBenutzerState();

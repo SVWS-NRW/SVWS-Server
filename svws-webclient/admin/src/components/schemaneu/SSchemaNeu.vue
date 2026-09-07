@@ -38,9 +38,11 @@
 <script setup lang="ts">
 
 	import { ref, shallowRef } from "vue";
-	import type { SchemaNeuProps } from "./SSchemaNeuProps";
+
 	import type { List } from "@core/java/util/List";
 	import { TabManager } from "@ui/ui/nav/TabManager";
+
+	import type { SchemaNeuProps } from "./SSchemaNeuProps";
 
 	const props = defineProps<SchemaNeuProps>();
 

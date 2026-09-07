@@ -1,3 +1,5 @@
+import { toRaw } from "vue";
+
 import { CoreTypeData } from "@core/asd/data/CoreTypeData";
 import { CoreTypeDataNurSchulformen } from "@core/asd/data/CoreTypeDataNurSchulformen";
 import { CoreTypeDataNurSchulformenUndSchulgliederungen } from "@core/asd/data/CoreTypeDataNurSchulformenUndSchulgliederungen";
@@ -9,7 +11,6 @@ import { JavaObject } from "@core/java/lang/JavaObject";
 import type { List } from "@core/java/util/List";
 import type { BaseSelectManager } from "@ui/ui/controls/select/manager/BaseSelectManager";
 import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
-import { toRaw } from "vue";
 
 /**
  * Ein Validator, welcher prüft, ob die Selektion eine Selects noch gültig ist.

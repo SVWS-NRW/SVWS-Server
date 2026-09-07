@@ -1,15 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
-import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
-import { routeError } from "~/router/error/RouteError";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ConfigElement } from "@ui/utils/Config";
+
+import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
+import { type RouteGost, routeGost } from "~/router/apps/gost/RouteGost";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
 
 const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 

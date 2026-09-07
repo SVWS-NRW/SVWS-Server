@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { FloskelnDatenProps } from "~/components/schule/kataloge/floskeln/daten/FloskelnDatenProps";
 import type { RouteFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
 import { routeFloskeln } from "~/router/apps/schule/kataloge/floskeln/RouteFloskeln";
-import type { FloskelnDatenProps } from "~/components/schule/kataloge/floskeln/daten/FloskelnDatenProps";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { RouteNode } from "~/router/RouteNode";
 
 const FloskelnDaten = () => import("~/components/schule/kataloge/floskeln/daten/FloskelnDaten.vue");
 

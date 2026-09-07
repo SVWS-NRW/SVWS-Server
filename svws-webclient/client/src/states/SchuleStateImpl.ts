@@ -1,5 +1,3 @@
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "./AbschnittStateImpl";
 import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -9,6 +7,10 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import type { List } from "@core/java/util/List";
 import type { SchuleState } from "@ui/states/SchuleState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { api } from "~/router/Api";
+
+import { abschnittStateImpl } from "./AbschnittStateImpl";
 
 interface SchuleReactiveState {
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat

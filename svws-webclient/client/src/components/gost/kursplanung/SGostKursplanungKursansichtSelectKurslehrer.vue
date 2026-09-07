@@ -17,6 +17,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from 'vue';
+
 	import type { GostBlockungKurs } from '@core/core/data/gost/GostBlockungKurs';
 	import type { GostBlockungKursLehrer } from '@core/core/data/gost/GostBlockungKursLehrer';
 	import { LehrerListeEintrag } from '@core/core/data/lehrer/LehrerListeEintrag';
@@ -24,7 +26,7 @@
 	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
-	import { computed, ref } from 'vue';
+
 	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<{

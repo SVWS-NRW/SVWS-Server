@@ -2,6 +2,7 @@ import type { SchuelerSchwerpunkt } from "@core/core/data/kataloge/SchuelerSchwe
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+
 import { ValidatorSchwerpunktBezeichnung } from "~/components/schule/kataloge/schwerpunkte/modelproxy/validation/ValidatorSchwerpunktBezeichnung";
 
 /**

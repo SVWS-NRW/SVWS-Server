@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
+
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import { RouteDataKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteDataKindergaerten";
 import { routeKindergaertenDaten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenDaten";
-import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
 import { routeKindergaertenGruppenprozesse } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenGruppenprozesse";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { KindergaertenListeManager } from "@ui/ui/manager/kataloge/KindergaertenListeManager";
+import { routeKindergaertenNeu } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaertenNeu";
+import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 
 const KindergartenApp = () => import("~/components/schule/kataloge/kindergaerten/KindergaertenApp.vue");

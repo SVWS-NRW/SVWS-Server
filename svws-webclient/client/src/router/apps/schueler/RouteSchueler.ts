@@ -1,34 +1,38 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+
+import { Katalog } from "~/cache/Katalog";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
-import type { RouteNode } from "~/router/RouteNode";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteSchuelerBetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
+import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
+import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
+import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
-import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
-import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
-import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
-import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
-import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
-import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
-import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
-import { Katalog } from "~/cache/Katalog";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
-import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
+import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
+import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
+
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");

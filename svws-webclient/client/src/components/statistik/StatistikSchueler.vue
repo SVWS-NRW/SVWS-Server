@@ -67,6 +67,8 @@
 
 <script setup lang="ts">
 
+	import { computed, watch } from "vue";
+
 	import { SchuelerStatistikGesamt } from "@core/asd/data/statistik/SchuelerStatistikGesamt";
 	import { ValidatorSsSchuelerStammdaten } from "@core/asd/validate/schueler/ValidatorSsSchuelerStammdaten";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
@@ -77,8 +79,8 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import { TabManager } from "@ui/ui/nav/TabManager";
+
 	import type { StatistikSchuelerProps } from "./StatistikSchuelerProps";
-	import { computed, watch } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

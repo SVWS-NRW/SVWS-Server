@@ -1,4 +1,4 @@
-import { shallowRef, triggerRef, type ShallowRef } from "vue";
+import { type ShallowRef, shallowRef, triggerRef } from "vue";
 
 /**
  * Abstrakte Basisklasse zur reaktiven Zustandsverwaltung.

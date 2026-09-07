@@ -61,11 +61,12 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { Ref } from "vue";
-	import { computed, nextTick, ref, watch, onMounted, shallowRef, toRaw, useId } from "vue";
-	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
-	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
+	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
+	import type { Ref } from "vue";
+	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, useId, watch } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	const props = withDefaults(defineProps<{

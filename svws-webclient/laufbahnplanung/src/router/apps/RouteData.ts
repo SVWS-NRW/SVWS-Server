@@ -1,8 +1,7 @@
-import { shallowRef } from "vue";
-
-import type { RouteNode } from "@lupo/router/RouteNode";
 import { routeApp } from "@lupo/router/apps/RouteApp";
 import { routeLadeDaten } from "@lupo/router/apps/RouteLadeDaten";
+import type { RouteNode } from "@lupo/router/RouteNode";
+import { shallowRef } from "vue";
 
 import { RouteManager } from "../RouteManager";
 

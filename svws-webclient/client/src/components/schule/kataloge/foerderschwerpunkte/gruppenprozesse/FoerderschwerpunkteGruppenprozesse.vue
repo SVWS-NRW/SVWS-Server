@@ -34,10 +34,12 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { computed, ref } from "vue";
+
 	import type { FoerderschwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesseProps";
 
 	const props = defineProps<FoerderschwerpunkteGruppenprozesseProps>();

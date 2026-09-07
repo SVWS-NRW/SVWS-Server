@@ -188,12 +188,14 @@
 <script setup lang="ts">
 
 	import { onMounted, ref, shallowRef } from 'vue';
-	import type { SchuleDatenaustauschUntisImporteProps } from './SSchuleDatenaustauschUntisImporteProps';
-	import { UntisGPP002Csv, UntisGPU001Csv, UntisGPU002Csv, UntisGPU014Csv } from './UntisGPU';
+
 	import type { Schuljahresabschnitt } from '@core/asd/data/schule/Schuljahresabschnitt';
 	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
 	import { StundenplanListeEintragMinimal } from '@core/core/data/stundenplan/StundenplanListeEintragMinimal';
 	import { useAbschnittState } from '@ui/states/AbschnittState';
+
+	import type { SchuleDatenaustauschUntisImporteProps } from './SSchuleDatenaustauschUntisImporteProps';
+	import { UntisGPP002Csv, UntisGPU001Csv, UntisGPU002Csv, UntisGPU014Csv } from './UntisGPU';
 
 	const props = defineProps<SchuleDatenaustauschUntisImporteProps>();
 	const abschnittState = useAbschnittState();

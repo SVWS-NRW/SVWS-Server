@@ -254,6 +254,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from 'vue';
+
 	import type { Schueler } from '@core/asd/data/schueler/Schueler';
 	import { GostBlockungKurs } from '@core/core/data/gost/GostBlockungKurs';
 	import { GostBlockungRegel } from '@core/core/data/gost/GostBlockungRegel';
@@ -268,7 +270,7 @@
 	import { SetUtils } from '@core/core/utils/SetUtils';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
-	import { computed, ref } from 'vue';
+
 	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{

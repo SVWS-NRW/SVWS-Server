@@ -21,10 +21,11 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { version } from "@version";
-	import { githash } from "@githash";
+
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
+	import { githash } from "@githash";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+	import { version } from "@version";
 
 	const status = ref<string | null | undefined>(undefined);
 	const loading = ref<boolean>(false);

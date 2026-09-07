@@ -188,7 +188,7 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watchEffect } from 'vue';
-	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
+
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
@@ -199,6 +199,8 @@
 	import type { GridInput } from '@ui/ui/controls/tablegrid/GridInput';
 	import type { GridInputIntegerDiv } from '@ui/ui/controls/tablegrid/GridInputIntegerDiv';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+
+	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 

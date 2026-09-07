@@ -1,6 +1,7 @@
+import type { InjectionKey } from "vue";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 /** Erlaubte Notification-Typen, analog zu {@link SvwsUiNotification} */
 export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'bug';

@@ -1,15 +1,18 @@
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausurenProps";
-import { schulformenGymOb } from "~/router/RouteHelper";
-import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausurenProps";
+import { type RouteSchuelerLernabschnitte, routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteNode } from "~/router/RouteNode";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
+import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 
 const SchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausuren.vue");
 

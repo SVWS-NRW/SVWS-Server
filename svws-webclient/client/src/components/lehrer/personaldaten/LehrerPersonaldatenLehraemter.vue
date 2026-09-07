@@ -140,10 +140,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, watch } from "vue";
-	import { LehrerLehramtEintragModelProxy } from "./modelproxy/LehrerLehramtEintragModelProxy";
-	import type { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
-	import { LehrerLehrbefaehigungEintragModelProxy } from "./modelproxy/LehrerLehrbefaehigungEintragModelProxy";
-	import { LehrerFachrichtungEintragModelProxy } from "./modelproxy/LehrerFachrichtungEintragModelProxy";
+
 	import type { LehrerFachrichtungEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungEintrag";
 	import type { LehrerFachrichtungKatalogEintrag } from "@core/asd/data/lehrer/LehrerFachrichtungKatalogEintrag";
 	import { LehrerLehramtEintrag } from "@core/asd/data/lehrer/LehrerLehramtEintrag";
@@ -157,16 +154,21 @@
 	import { LehrerLehrbefaehigung } from "@core/asd/types/lehrer/LehrerLehrbefaehigung";
 	import { LehrerLehrbefaehigungAnerkennung } from "@core/asd/types/lehrer/LehrerLehrbefaehigungAnerkennung";
 	import { ArrayList } from "@core/java/util/ArrayList";
+	import { Arrays } from "@core/java/util/Arrays";
 	import { HashSet } from "@core/java/util/HashSet";
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import type { List } from "@core/java/util/List";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
-	import { Arrays } from "@core/java/util/Arrays";
 	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 	import { ValidatorInputGroupRequired, ValidatorInputGroupRequiredModus } from "@ui/validation/common/ValidatorInputGroupRequired";
+
+	import { LehrerFachrichtungEintragModelProxy } from "./modelproxy/LehrerFachrichtungEintragModelProxy";
+	import { LehrerLehramtEintragModelProxy } from "./modelproxy/LehrerLehramtEintragModelProxy";
+	import { LehrerLehrbefaehigungEintragModelProxy } from "./modelproxy/LehrerLehrbefaehigungEintragModelProxy";
+	import type { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

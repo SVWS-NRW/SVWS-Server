@@ -42,8 +42,10 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import type { SchuleDatenaustauschKurs42BlockungProps } from './SSchuleDatenaustauschKurs42BlockungProps';
+
 	import type { List } from '@core/java/util/List';
+
+	import type { SchuleDatenaustauschKurs42BlockungProps } from './SSchuleDatenaustauschKurs42BlockungProps';
 
 	const props = defineProps<SchuleDatenaustauschKurs42BlockungProps>();
 

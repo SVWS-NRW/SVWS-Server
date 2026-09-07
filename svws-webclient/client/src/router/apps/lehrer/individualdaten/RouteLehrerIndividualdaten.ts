@@ -1,12 +1,14 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenProps";
-import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenProps";
+import { type RouteLehrer, routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 const LehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/LehrerIndividualdaten.vue");
 

@@ -20,9 +20,10 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { List } from "@core/java/util/List";
+
 	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import type { List } from "@core/java/util/List";
 
 	const props = defineProps<{
 		addExistingSchemaToConfig: ((data: BenutzerKennwort, schema: string) => Promise<void>);

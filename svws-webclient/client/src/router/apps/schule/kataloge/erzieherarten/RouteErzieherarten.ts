@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
+
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteDataErzieherarten";
 import { routeErzieherartenDaten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenDaten";
-import { routeErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenNeu";
 import { routeErzieherartenGruppenprozesse } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenGruppenprozesse";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
+import { routeErzieherartenNeu } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherartenNeu";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const ErzieherartenAuswahl = () => import("~/components/schule/kataloge/erzieherarten/ErzieherartenAuswahl.vue");
 const ErzieherartenApp = () => import("~/components/schule/kataloge/erzieherarten/ErzieherartenApp.vue");

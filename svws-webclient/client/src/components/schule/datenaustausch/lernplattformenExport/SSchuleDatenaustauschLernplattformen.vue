@@ -25,12 +25,14 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { computed, ref } from "vue";
+
 	import type { SchuleDatenaustauschLernplattformenProps } from "~/components/schule/datenaustausch/lernplattformenExport/SSchuleDatenaustauschLernplattformenProps";
 
 	const props = defineProps<SchuleDatenaustauschLernplattformenProps>();

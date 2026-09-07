@@ -1,4 +1,4 @@
-import { computed, ref, type Ref } from 'vue';
+import { computed, type Ref, ref } from 'vue';
 
 export interface PaneSplitterConfig {
 	defaultSplit?: number;

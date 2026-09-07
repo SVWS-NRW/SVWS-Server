@@ -1,6 +1,7 @@
 import type { AppMenuManager } from "@ui/ui/nav/AppMenuManager";
 import type { TabData } from "@ui/ui/nav/TabData";
 import type { TabManager } from "@ui/ui/nav/TabManager";
+
 import type { ApiStatus } from "./ApiStatus";
 
 export interface AppProps {

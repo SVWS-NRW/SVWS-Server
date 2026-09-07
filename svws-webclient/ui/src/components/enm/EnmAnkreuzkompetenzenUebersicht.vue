@@ -142,6 +142,9 @@
 
 <script setup lang="ts">
 
+	import type { ComponentPublicInstance } from 'vue';
+	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
+
 	import { PairNN } from '@core/asd/adt/PairNN';
 	import { ENMv2Fach } from '@core/core/data/enm/v2/ENMv2Fach';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
@@ -151,8 +154,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
-	import type { ComponentPublicInstance } from 'vue';
-	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
+
 	import type { EnmAnkreuzkompetenzenUebersichtProps } from './EnmAnkreuzkompetenzenUebersichtProps';
 
 	const props = defineProps<EnmAnkreuzkompetenzenUebersichtProps>();

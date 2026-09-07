@@ -1,9 +1,11 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
 import type { SchuelerFoerderempfehlung } from "@core/asd/data/schueler/SchuelerFoerderempfehlung";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+
+import { routeSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
 
 
 interface RouteStateDataSchuelerLernabschnittFoerderempfehlungen extends RouteStateInterface {

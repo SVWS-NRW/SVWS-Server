@@ -28,11 +28,12 @@
 
 <script setup lang="ts">
 
+	import { computed, shallowRef } from "vue";
+
 	import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
 	import type { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
 	import type { List } from "@core/java/util/List";
-	import { computed, shallowRef } from "vue";
 
 	const props = defineProps<{
 		manager: () => BenutzergruppenManager;

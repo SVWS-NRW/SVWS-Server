@@ -111,9 +111,8 @@
 
 <script setup lang="ts">
 
-	import { computed, shallowRef, watchEffect, type ComponentPublicInstance } from "vue";
+	import { type ComponentPublicInstance, computed, shallowRef, watchEffect } from "vue";
 
-	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 	import type { NoteKatalogEintrag } from "@core/asd/data/NoteKatalogEintrag";
 	import { RGBFarbe } from "@core/asd/data/RGBFarbe";
@@ -136,6 +135,8 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
+	import type { GostAbiturNoteneingabeProps } from "./GostAbiturNoteneingabeProps";
 
 	const props = defineProps<GostAbiturNoteneingabeProps>();
 	const serverState = useServerState();

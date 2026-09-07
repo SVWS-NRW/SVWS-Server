@@ -3,7 +3,7 @@ import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorSchuleKuerzel extends BasicValidator {
 

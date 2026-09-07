@@ -1,13 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
-import { routeSchueler } from "../RouteSchueler";
-import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
-import { RouteNode } from "~/router/RouteNode";
-import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
 import type { SchuelerLernabschnittBemerkungen } from "@core/asd/data/schueler/SchuelerLernabschnittBemerkungen";
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
@@ -23,6 +13,18 @@ import { GostKlausurplanManager } from "@core/core/utils/gost/klausuren/GostKlau
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Collection } from "@core/java/util/Collection";
 import type { List } from "@core/java/util/List";
+
+import { routeSchueler } from "../RouteSchueler";
+import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
+import { api } from "~/router/Api";
+import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {

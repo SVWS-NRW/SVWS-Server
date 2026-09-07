@@ -263,8 +263,8 @@
 
 <script setup lang="ts">
 
-	import { computed, reactive, ref, type Ref } from "vue";
-	import { FachSelectFilter } from "./filter/FachSelectFilter";
+	import { computed, reactive, type Ref, ref } from "vue";
+
 	import type { LehrerRechtsverhaeltnisKatalogEintrag } from "@core/asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
@@ -275,6 +275,8 @@
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import type { List } from "@core/java/util/List";
 	import storyManager from "@ui/stories/StoryManager";
+
+	import { FachSelectFilter } from "./filter/FachSelectFilter";
 	import { CoreTypeSelectManager } from "./manager/CoreTypeSelectManager";
 	import { SelectManager } from "./manager/SelectManager";
 	import Docs from "./UiSelectMulti.story.md";

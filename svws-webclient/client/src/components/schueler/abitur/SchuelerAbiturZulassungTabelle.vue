@@ -107,7 +107,7 @@
 
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, watchEffect } from "vue";
-	import type { SchuelerAbiturZulassungTabelleProps } from "./SchuelerAbiturZulassungTabelleProps";
+
 	import { RGBFarbe } from "@core/asd/data/RGBFarbe";
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
@@ -118,6 +118,8 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
+	import type { SchuelerAbiturZulassungTabelleProps } from "./SchuelerAbiturZulassungTabelleProps";
 
 	const props = defineProps<SchuelerAbiturZulassungTabelleProps>();
 

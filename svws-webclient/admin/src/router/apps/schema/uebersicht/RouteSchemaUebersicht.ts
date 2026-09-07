@@ -1,8 +1,10 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { ServerMode } from "@core/core/types/ServerMode";
 import type { SchemaUebersichtProps } from "@admin/components/schema/uebersicht/SSchemaUebersichtProps";
 import { api } from "@admin/router/Api";
 import { RouteNode } from "@admin/router/RouteNode";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+
+import { ServerMode } from "@core/core/types/ServerMode";
+
 import type { RouteSchema } from "../RouteSchema";
 import { routeSchema } from "../RouteSchema";
 

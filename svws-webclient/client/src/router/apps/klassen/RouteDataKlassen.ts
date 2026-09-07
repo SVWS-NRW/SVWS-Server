@@ -1,31 +1,34 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
-import type { RouteNode } from "~/router/RouteNode";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 import type { KlassenDatenMinimal } from "@core/asd/data/klassen/KlassenDatenMinimal";
 import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 import type { Schueler } from "@core/asd/data/schueler/Schueler";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
-import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
+import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { RouteManager } from "~/router/RouteManager";
+import type { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { KlassenListeManager } from "~/states/klassen/KlassenListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;

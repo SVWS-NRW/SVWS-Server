@@ -112,8 +112,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { KlassenDatenProps } from "./KlassenDatenProps";
-	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
+
 	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 	import type { Klassenart } from "@core/asd/types/klassen/Klassenart";
@@ -130,6 +129,10 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import type { DataTableColumn } from "@ui/types";
+
+	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
+
+	import type { KlassenDatenProps } from "./KlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
 	const benutzerState = useBenutzerState();

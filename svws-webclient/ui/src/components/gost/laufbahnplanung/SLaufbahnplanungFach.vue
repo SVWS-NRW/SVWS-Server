@@ -158,6 +158,10 @@
 
 <script setup lang="ts">
 
+	import type { ComponentPublicInstance } from "vue";
+	import { computed, watchEffect } from "vue";
+
+	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 	import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 	import { AbiturFachbelegungHalbjahr } from "@core/core/data/gost/AbiturFachbelegungHalbjahr";
 	import type { GostFach } from "@core/core/data/gost/GostFach";
@@ -168,10 +172,8 @@
 	import type { Collection } from "@core/java/util/Collection";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import type { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { ComponentPublicInstance } from "vue";
-	import { computed, watchEffect } from "vue";
+
 	import type { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
-	import { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 
 	const props = defineProps<{
 		gridManager: GridManager<string, GostFach, Collection<GostFach>>;

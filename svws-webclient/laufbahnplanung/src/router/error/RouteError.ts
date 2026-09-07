@@ -1,10 +1,8 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-
-import { RouteNode } from "@lupo/router/RouteNode";
-
 import SError from "@lupo/components/error/SError.vue";
 import type { ErrorProps } from "@lupo/components/error/SErrorProps";
 import { RouteManager } from "@lupo/router/RouteManager";
+import { RouteNode } from "@lupo/router/RouteNode";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 
 export class RouteError extends RouteNode<unknown, any> {

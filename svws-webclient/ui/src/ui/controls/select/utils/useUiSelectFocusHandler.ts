@@ -1,4 +1,5 @@
-import { ref, type ComputedRef, type Ref } from "vue";
+import { type ComputedRef, type Ref, ref } from "vue";
+
 import type { UiSelectDropdown, UiSelectHTMLElements, UiSelectState } from "../manager/UiSelectTypes";
 
 export function useUiSelectFocusHandler<T>(

@@ -84,10 +84,13 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { InitProps } from "./SInitProps";
-	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
+
 	import type { SchulenKatalogEintrag } from "@core/core/data/schule/SchulenKatalogEintrag";
 	import type { List } from "@core/java/util/List";
+
+	import { filterSchulenKatalogEintraege } from "~/utils/helfer";
+
+	import type { InitProps } from "./SInitProps";
 
 	const props = defineProps<InitProps>();
 	const schule = ref<SchulenKatalogEintrag>();

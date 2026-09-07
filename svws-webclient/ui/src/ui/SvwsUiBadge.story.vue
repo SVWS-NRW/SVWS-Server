@@ -76,6 +76,7 @@
 
 <script setup lang="ts">
 	import { computed, reactive } from "vue";
+
 	import storyManager from '../stories/StoryManager';
 
 	type BadgeType = 'light' | 'primary' | 'success' | 'error' | 'highlight';

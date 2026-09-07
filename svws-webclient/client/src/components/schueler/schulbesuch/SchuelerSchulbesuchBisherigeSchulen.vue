@@ -96,8 +96,7 @@
 
 
 	import { computed, ref, watch } from "vue";
-	import { formatToLocalDate } from "~/utils/date";
-	import { SchuelerSchulbesuchSchuleModelProxy } from "./modelProxy/SchuelerSchulbesuchSchuleModelProxy";
+
 	import { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
 	import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/SchulgliederungKatalogEintrag";
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
@@ -110,6 +109,10 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
+
+	import { formatToLocalDate } from "~/utils/date";
+
+	import { SchuelerSchulbesuchSchuleModelProxy } from "./modelProxy/SchuelerSchulbesuchSchuleModelProxy";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchulbesuchManager;

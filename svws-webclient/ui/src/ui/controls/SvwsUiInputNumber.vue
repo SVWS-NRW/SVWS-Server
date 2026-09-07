@@ -71,6 +71,8 @@
 
 <script setup lang="ts">
 
+	import { computed, onBeforeMount, ref, useId, useTemplateRef, watch } from "vue";
+
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -79,7 +81,6 @@
 	import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 	import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
-	import { ref, computed, watch, useId, onBeforeMount, useTemplateRef } from "vue";
 
 	defineOptions({
 		inheritAttrs: false,

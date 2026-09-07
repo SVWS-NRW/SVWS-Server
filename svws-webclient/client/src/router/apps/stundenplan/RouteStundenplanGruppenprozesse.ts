@@ -1,11 +1,13 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-import type { StundenplanGruppenprozesseProps } from "~/components/stundenplan/gruppenprozesse/SStundenplanGruppenprozesseProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { StundenplanGruppenprozesseProps } from "~/components/stundenplan/gruppenprozesse/SStundenplanGruppenprozesseProps";
+import { type RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteNode } from "~/router/RouteNode";
 
 const SStundenplanGruppenprozesse = () => import("~/components/stundenplan/gruppenprozesse/SStundenplanGruppenprozesse.vue");
 

@@ -41,7 +41,7 @@
 <script setup lang="ts" generic="Item">
 
 	import type { Strategy } from "@floating-ui/vue";
-	import { ref, shallowRef, computed, useId } from "vue";
+	import { computed, ref, shallowRef, useId } from "vue";
 
 	const props = withDefaults(defineProps<{
 		statistics?: boolean;

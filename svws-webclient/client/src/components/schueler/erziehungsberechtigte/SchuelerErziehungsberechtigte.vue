@@ -37,12 +37,14 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import type { SchuelerErziehungsberechtigteProps } from "./SchuelerErziehungsberechtigteProps";
+
 	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { SchuelerErziehungsberechtigteProps } from "./SchuelerErziehungsberechtigteProps";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 	const benutzerState = useBenutzerState();

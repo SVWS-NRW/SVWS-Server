@@ -21,9 +21,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SchuelerLernabschnittKonferenzProps } from "./SchuelerLernabschnittKonferenzProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { SchuelerLernabschnittKonferenzProps } from "./SchuelerLernabschnittKonferenzProps";
 
 	const props = defineProps<SchuelerLernabschnittKonferenzProps>();
 	const benutzerState = useBenutzerState();

@@ -20,10 +20,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
+
 	import { Raum } from "@core/core/data/schule/Raum";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
 
 	const props = defineProps<RaeumeAuswahlProps>();
 	const benutzerState = useBenutzerState();

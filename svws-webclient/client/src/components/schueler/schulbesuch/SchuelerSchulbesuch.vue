@@ -170,6 +170,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
 	import { Einschulungsart } from '@core/asd/types/schueler/Einschulungsart';
 	import { Uebergangsempfehlung } from '@core/asd/types/schueler/Uebergangsempfehlung';
@@ -186,10 +188,11 @@
 	import { useServerState } from '@ui/states/ServerState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
-	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
-	import { computed, ref } from "vue";
+
 	import { SchuelerSchulbesuchModelProxy } from "~/components/schueler/schulbesuch/modelProxy/SchuelerSchulbesuchModelProxy";
 	import SchulbesuchVorherigeSchule from "~/components/schueler/schulbesuch/SchulbesuchVorherigeSchule.vue";
+
+	import type { SchuelerSchulbesuchProps } from './SchuelerSchulbesuchProps';
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 	const benutzerState = useBenutzerState();

@@ -1,18 +1,20 @@
-import type { Ref, ShallowRef, WritableComputedRef, ComponentPublicInstance } from "vue";
+import type { ComponentPublicInstance, Ref, ShallowRef, WritableComputedRef } from "vue";
 import { ref, shallowRef, triggerRef } from "vue";
-import type { GridInput } from "./GridInput";
-import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
-import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
-import { GridInputToggle } from "./GridInputToggle";
-import { GridInputNote } from "./GridInputNote";
-import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
-import { GridInputNumberFixed } from "./GridInputNumberFixed";
+
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Collection } from "@core/java/util/Collection";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
+
+import type { GridInput } from "./GridInput";
+import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
+import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
+import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
+import { GridInputNote } from "./GridInputNote";
+import { GridInputNumberFixed } from "./GridInputNumberFixed";
+import { GridInputToggle } from "./GridInputToggle";
 
 /** Der Typ des Elements, welches als Grid-Input-Element in den Manager übergeben werden kann */
 type GridElementType = Element | ComponentPublicInstance<unknown> | null;

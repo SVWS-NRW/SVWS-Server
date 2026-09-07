@@ -38,14 +38,16 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAuswahlProps";
 	import { computed } from "vue";
+
 	import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAuswahlProps";
 
 	const props = defineProps<HaltestellenAuswahlProps>();
 	const benutzerState = useBenutzerState();

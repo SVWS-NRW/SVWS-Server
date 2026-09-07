@@ -1,13 +1,16 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { FaecherNeuProps } from "~/components/schule/kataloge/faecher/FaecherNeuProps";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { routeFaecher, type RouteFaecher } from "./RouteFaecher";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import type { FaecherNeuProps } from "~/components/schule/kataloge/faecher/FaecherNeuProps";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+
+import { type RouteFaecher, routeFaecher } from "./RouteFaecher";
 
 const FaecherNeu = () => import("~/components/schule/kataloge/faecher/FaecherNeu.vue");
 

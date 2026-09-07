@@ -165,7 +165,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
 	import { StundenplanKlassenunterricht } from "@core/core/data/stundenplan/StundenplanKlassenunterricht";
@@ -175,6 +175,8 @@
 	import { StundenplanUnterricht } from "@core/core/data/stundenplan/StundenplanUnterricht";
 	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { Wochentag } from "@core/core/types/Wochentag";
+	import { ListUtils } from "@core/core/utils/ListUtils";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { HashSet } from "@core/java/util/HashSet";
 	import type { List } from "@core/java/util/List";
@@ -182,8 +184,8 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import { Wochentag } from "@core/core/types/Wochentag";
-	import { ListUtils } from "@core/core/utils/ListUtils";
+
+	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 
 	const props = defineProps<StundenplanKlasseProps>();
 	const benutzerState = useBenutzerState();

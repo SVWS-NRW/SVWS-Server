@@ -97,7 +97,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+
 	import { GostKlausurraumblockungKonfiguration } from '@core/core/data/gost/klausuren/GostKlausurraumblockungKonfiguration';
 	import { GostKlausurraumRich } from '@core/core/data/gost/klausuren/GostKlausurraumRich';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
@@ -105,13 +105,15 @@
 	import type { GostSchuelerklausurterminRich } from '@core/core/data/gost/klausuren/GostSchuelerklausurterminRich';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
+	import { DateUtils } from '@core/core/utils/DateUtils';
 	import { KlausurraumblockungAlgorithmus } from '@core/core/utils/gost/klausuren/KlausurraumblockungAlgorithmus';
 	import { ListUtils } from '@core/core/utils/ListUtils';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
-	import { DateUtils } from '@core/core/utils/DateUtils';
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;

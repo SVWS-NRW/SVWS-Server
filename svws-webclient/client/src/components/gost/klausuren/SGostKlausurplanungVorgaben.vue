@@ -177,9 +177,8 @@
 <script setup lang="ts">
 
 	import type { Ref } from 'vue';
-	import { watch, computed, ref, onMounted, onUnmounted, triggerRef } from 'vue';
-	import { ValidatorGostKlausurdauer } from "./validation/ValidatorGostKlausurdauer";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { computed, onMounted, onUnmounted, ref, triggerRef, watch } from 'vue';
+
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import type { GostFach } from '@core/core/data/gost/GostFach';
 	import { GostKlausurvorgabe } from '@core/core/data/gost/klausuren/GostKlausurvorgabe';
@@ -191,6 +190,9 @@
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 	import type { DataTableColumn } from '@ui/types';
+
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { ValidatorGostKlausurdauer } from "./validation/ValidatorGostKlausurdauer";
 
 	const { gotoFach } = defineProps<{
 		gotoFach: (idFach: number) => Promise<void>;

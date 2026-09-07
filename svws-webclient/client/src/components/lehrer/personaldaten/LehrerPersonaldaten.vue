@@ -105,9 +105,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
-	import { LehrerPersonalabschnittsdatenModelProxy } from "~/components/lehrer/personaldaten/modelproxy/LehrerPersonalabschnittsdatenModelProxy";
-	import { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
+
 	import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
 	import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
 	import { LehrerBeschaeftigungsart } from "@core/asd/types/lehrer/LehrerBeschaeftigungsart";
@@ -123,6 +121,11 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+
+	import { LehrerPersonalabschnittsdatenModelProxy } from "~/components/lehrer/personaldaten/modelproxy/LehrerPersonalabschnittsdatenModelProxy";
+
+	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
+	import { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 	const benutzerState = useBenutzerState();

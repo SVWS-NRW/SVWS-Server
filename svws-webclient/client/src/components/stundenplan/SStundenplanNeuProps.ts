@@ -4,6 +4,7 @@ import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/Stunde
 import type { ArrayList } from "@core/java/util/ArrayList";
 import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
+
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanNeuProps {

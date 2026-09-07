@@ -1,4 +1,5 @@
-import { shallowRef, triggerRef, type ShallowRef } from "vue";
+import { type ShallowRef, shallowRef, triggerRef } from "vue";
+
 import type { TabData } from "./TabData";
 
 /**

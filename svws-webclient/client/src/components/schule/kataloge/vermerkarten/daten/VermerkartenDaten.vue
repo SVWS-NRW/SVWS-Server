@@ -49,12 +49,15 @@
 
 <script setup lang="ts">
 
-	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
-	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
 	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
+
+	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
+
+	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
 
 	const props = defineProps<VermerkartenDatenProps>();
 	const benutzerState = useBenutzerState();

@@ -2,6 +2,7 @@ import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
+
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 

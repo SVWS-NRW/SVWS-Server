@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
 import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
@@ -10,8 +12,7 @@ import type { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuMana
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 

@@ -1,9 +1,11 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { routeFaecher } from "./kataloge/faecher/RouteFaecher";
 import { OpenApiError } from "@core/api/OpenApiError";
 import { SMTPServerKonfiguration } from "@core/core/data/email/SMTPServerKonfiguration";
 import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+
+import { api } from "~/router/Api";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+
+import { routeFaecher } from "./kataloge/faecher/RouteFaecher";
 
 
 interface RouteStateSchule extends RouteStateInterface {

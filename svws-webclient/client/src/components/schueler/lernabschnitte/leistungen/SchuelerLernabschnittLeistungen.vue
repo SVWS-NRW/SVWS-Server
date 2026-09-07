@@ -160,9 +160,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
-	import { SchuelerLeistungsdatenModelProxy } from "~/components/schueler/lernabschnitte/leistungen/modelproxy/SchuelerLeistungsdatenModelProxy";
-	import { SchuelerLernabschnittAllgemeinModelProxy } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+
 	import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
 	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
@@ -180,6 +178,11 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+
+	import { SchuelerLernabschnittAllgemeinModelProxy } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
+	import { SchuelerLeistungsdatenModelProxy } from "~/components/schueler/lernabschnitte/leistungen/modelproxy/SchuelerLeistungsdatenModelProxy";
+
+	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 	const benutzerState = useBenutzerState();

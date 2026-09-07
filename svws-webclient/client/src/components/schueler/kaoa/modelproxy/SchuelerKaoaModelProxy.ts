@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { JahrgaengeKatalogEintrag } from "@core/asd/data/jahrgang/JahrgaengeKatalogEintrag";
 import type { KAOAAnschlussoptionenKatalogEintrag } from "@core/asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag";
 import type { KAOABerufsfeldKatalogEintrag } from "@core/asd/data/kaoa/KAOABerufsfeldKatalogEintrag";
@@ -18,8 +20,7 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import type { SchuelerKAoAManager } from "@ui/ui/manager/schueler/SchuelerKAoAManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class SchuelerKaoaModelProxy extends ModelProxy<SchuelerKAoADaten> {
 

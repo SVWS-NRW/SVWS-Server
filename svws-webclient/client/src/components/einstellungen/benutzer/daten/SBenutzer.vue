@@ -83,11 +83,13 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from 'vue';
-	import type { BenutzerProps } from './SBenutzerProps';
+
 	import { BenutzerKompetenzGruppe } from '@core/core/types/benutzer/BenutzerKompetenzGruppe';
+	import { BenutzerTyp } from '@core/core/types/benutzer/BenutzerTyp';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useSchuleState } from '@ui/states/SchuleState';
-	import { BenutzerTyp } from '@core/core/types/benutzer/BenutzerTyp';
+
+	import type { BenutzerProps } from './SBenutzerProps';
 
 	const props = defineProps<BenutzerProps>();
 	const benutzerState = useBenutzerState();

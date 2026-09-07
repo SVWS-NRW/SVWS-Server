@@ -7,10 +7,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
 	import type { BenutzergruppenManager } from "@core/core/utils/benutzer/BenutzergruppenManager";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		manager: () => BenutzergruppenManager;

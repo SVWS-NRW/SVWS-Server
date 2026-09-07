@@ -23,8 +23,9 @@
 <script setup lang="ts">
 
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { NotenmodulAnkreuzkompetenzenAppProps } from "./NotenmodulAnkreuzkompetenzenAppProps";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { NotenmodulAnkreuzkompetenzenAppProps } from "./NotenmodulAnkreuzkompetenzenAppProps";
 
 	const props = defineProps<NotenmodulAnkreuzkompetenzenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

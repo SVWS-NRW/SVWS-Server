@@ -1,14 +1,16 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { routeApp } from "~/router/apps/RouteApp";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { RouteDataSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteDataSchuelerErziehungsberechtigte";
-import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigteProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigteProps";
+import { routeApp } from "~/router/apps/RouteApp";
+import { RouteDataSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteDataSchuelerErziehungsberechtigte";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
 
 const SchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SchuelerErziehungsberechtigte.vue");
 

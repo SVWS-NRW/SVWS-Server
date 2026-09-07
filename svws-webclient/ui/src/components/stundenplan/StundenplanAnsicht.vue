@@ -172,7 +172,7 @@
 <script setup lang="ts">
 
 	import { computed, shallowRef } from "vue";
-	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 	import { HashMap3D } from "@core/core/adt/map/HashMap3D";
@@ -193,6 +193,8 @@
 	import { ArrayList, cast_java_util_ArrayList } from "@core/java/util/ArrayList";
 	import { HashMap } from "@core/java/util/HashMap";
 	import type { List } from "@core/java/util/List";
+
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		showSchienen: false,

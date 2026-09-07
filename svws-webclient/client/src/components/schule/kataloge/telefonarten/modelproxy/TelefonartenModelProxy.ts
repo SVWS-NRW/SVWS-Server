@@ -2,6 +2,7 @@ import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+
 import { ValidatorTelefonartBezeichnung } from "~/components/schule/kataloge/telefonarten/modelproxy/validation/ValidatorTelefonartBezeichnung";
 
 /**

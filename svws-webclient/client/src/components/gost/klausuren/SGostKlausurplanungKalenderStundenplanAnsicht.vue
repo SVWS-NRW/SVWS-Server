@@ -124,8 +124,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { StundenplanPausenaufsicht } from "@core/core/data/stundenplan/StundenplanPausenaufsicht";
 	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
@@ -137,6 +136,9 @@
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 

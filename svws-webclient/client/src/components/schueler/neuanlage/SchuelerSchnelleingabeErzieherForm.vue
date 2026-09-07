@@ -63,8 +63,7 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { optionalInputIsValid } from "~/util/validation/Validation";
+
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
@@ -75,6 +74,9 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
+
+	import { optionalInputIsValid } from "~/util/validation/Validation";
+	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

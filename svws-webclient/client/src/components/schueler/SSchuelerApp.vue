@@ -69,7 +69,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { SchuelerAppProps } from "./SSchuelerAppProps";
+
 	import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from "@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -78,6 +78,8 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 
 	const schuleState = useSchuleState();
 	const benutzerState = useBenutzerState();

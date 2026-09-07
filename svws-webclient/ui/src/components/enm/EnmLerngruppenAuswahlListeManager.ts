@@ -5,6 +5,7 @@ import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperN
 import { JavaString } from '@core/java/lang/JavaString';
 import type { List } from '@core/java/util/List';
 import { AuswahlManager } from '@ui/ui/manager/AuswahlManager';
+
 import type { EnmManager } from './EnmManager';
 
 /**

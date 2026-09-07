@@ -21,11 +21,12 @@
 </template>
 
 <script setup lang="ts">
+	import { ref } from "vue";
+
 	import { OpenApiError } from "@core/api/OpenApiError";
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
-	import { ref } from "vue";
 
 	type CapturedError = {
 		id: number;

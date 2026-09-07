@@ -1,13 +1,5 @@
-import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
-import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
-import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
-import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -15,6 +7,17 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { JahrgaengeListeManager } from "@ui/ui/manager/kataloge/JahrgaengeListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeJahrgaengeGruppenprozesse } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeGruppenprozesse";
+import { routeJahrgaengeNeu } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaengeNeu";
+import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeJahrgaengeDaten } from "./RouteJahrgaengeDaten";
 
 
 const defaultState = {

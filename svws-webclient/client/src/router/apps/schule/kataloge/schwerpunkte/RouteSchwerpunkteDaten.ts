@@ -1,10 +1,13 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeSchwerpunkte, type RouteSchwerpunkte } from "./RouteSchwerpunkte";
 import type { RouteLocationNormalized } from "vue-router";
-import type { SchwerpunkteDatenProps } from "~/components/schule/kataloge/schwerpunkte/daten/SchwerpunkteDatenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { SchwerpunkteDatenProps } from "~/components/schule/kataloge/schwerpunkte/daten/SchwerpunkteDatenProps";
+import { RouteNode } from "~/router/RouteNode";
+
+import { type RouteSchwerpunkte, routeSchwerpunkte } from "./RouteSchwerpunkte";
 
 const SchwerpunkteDaten = () => import("~/components/schule/kataloge/schwerpunkte/daten/SchwerpunkteDaten.vue");
 

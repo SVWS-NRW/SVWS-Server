@@ -34,9 +34,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LeitungsfunktionenAppProps } from "./LeitungsfunktionenAppProps";
-	import { ViewType } from "@ui/ui/nav/ViewType";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { LeitungsfunktionenAppProps } from "./LeitungsfunktionenAppProps";
 
 	const props = defineProps<LeitungsfunktionenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 	import { computed, ref } from "vue";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+
 	import type { PairNN } from "@core/asd/adt/PairNN";
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
@@ -106,6 +106,8 @@
 	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 	import type { List } from "@core/java/util/List";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	type KlausurplanungTerminkonflikt = {
 		key: string;

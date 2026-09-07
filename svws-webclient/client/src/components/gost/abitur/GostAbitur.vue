@@ -11,6 +11,7 @@
 <script setup lang="ts">
 
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+
 	import type { GostAbiturProps } from "./GostAbiturProps";
 
 	const props = defineProps<GostAbiturProps>();

@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
+
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteDataLernplattformen";
 import { routeLernplattformenDaten } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenDaten";
-import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenNeu";
 import { routeLernplattformenGruppenprozesse } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenGruppenprozesse";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { LernplattformListeManager } from "@ui/ui/manager/kataloge/LernplattformListeManager";
+import { routeLernplattformenNeu } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformenNeu";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const LernplattformenAuswahl = () =>
 	import("~/components/schule/kataloge/lernplattformen/LernplattformenAuswahl.vue");

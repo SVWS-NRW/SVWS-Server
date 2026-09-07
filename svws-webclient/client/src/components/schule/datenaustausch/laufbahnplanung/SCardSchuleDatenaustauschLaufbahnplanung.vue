@@ -33,9 +33,10 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		setGostLupoImportMDBFuerJahrgang: (formData: FormData, mode: 'none' | 'schueler' | 'all') => Promise<SimpleOperationResponse>;

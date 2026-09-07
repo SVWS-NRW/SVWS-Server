@@ -36,9 +36,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { TelefonartenAppProps } from "~/components/schule/kataloge/telefonarten/TelefonartenAppProps";
 
 	const props = defineProps<TelefonartenAppProps>();

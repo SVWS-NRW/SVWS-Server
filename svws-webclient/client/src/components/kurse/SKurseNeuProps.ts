@@ -1,7 +1,8 @@
-import type { KursListeManager } from "~/states/kurse/KursListeManager";
-import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 import type { Checkpoint } from "@ui/ui/modal/Checkpoint";
+
+import type { RoutingStatus } from "~/router/RoutingStatus";
+import type { KursListeManager } from "~/states/kurse/KursListeManager";
 
 export interface KurseNeuProps {
 	manager: () => KursListeManager;

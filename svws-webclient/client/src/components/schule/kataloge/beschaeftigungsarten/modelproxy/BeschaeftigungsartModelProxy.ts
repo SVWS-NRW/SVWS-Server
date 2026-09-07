@@ -3,6 +3,7 @@ import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+
 import { ValidatorBeschaeftigungsartBezeichnung } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/ValidatorBeschaeftigungsartBezeichnung";
 
 export class BeschaeftigungsartModelProxy extends ModelProxy<Beschaeftigungsart> {

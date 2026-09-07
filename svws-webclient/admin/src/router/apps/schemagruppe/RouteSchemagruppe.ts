@@ -2,8 +2,10 @@ import type { SchemaAuswahlProps } from "@admin/components/schema/SSchemaAuswahl
 import type { SchemagruppeProps } from "@admin/components/schemagruppe/SSchemagruppeProps";
 import { api } from "@admin/router/Api";
 import { RouteNode } from "@admin/router/RouteNode";
-import { ServerMode } from "@core/core/types/ServerMode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { ServerMode } from "@core/core/types/ServerMode";
+
 import type { RouteApp } from "../RouteApp";
 import { routeSchema } from "../schema/RouteSchema";
 

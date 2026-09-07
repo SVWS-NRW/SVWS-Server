@@ -1,7 +1,8 @@
-import type { JavaIterator } from '@core/java/util/JavaIterator';
 import { setupDevtoolsPlugin } from '@vue/devtools-api';
 import type { App, ShallowRef } from 'vue';
 import { watch } from 'vue';
+
+import type { JavaIterator } from '@core/java/util/JavaIterator';
 
 const INSPECTOR_ID = 'svws-state-inspector';
 

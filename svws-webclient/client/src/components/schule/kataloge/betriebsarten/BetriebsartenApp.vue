@@ -38,10 +38,12 @@
 </template>
 
 	<script setup lang="ts">
-	import { ViewType } from '@ui/ui/nav/ViewType';
-	import type { BetriebsartenAppProps } from './BetriebsartenAppProps';
 	import { computed } from 'vue';
+
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+	import { ViewType } from '@ui/ui/nav/ViewType';
+
+	import type { BetriebsartenAppProps } from './BetriebsartenAppProps';
 
 
 	const props = defineProps<BetriebsartenAppProps>();

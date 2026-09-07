@@ -4,11 +4,14 @@ import { api } from "@admin/router/Api";
 import { routeError } from "@admin/router/error/RouteError";
 import { RouteManager } from "@admin/router/RouteManager";
 import { RouteNode } from "@admin/router/RouteNode";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { TabManager } from "@ui/ui/nav/TabManager";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
 import type { RouteApp } from "../RouteApp";
+
 import { RouteDataSchema } from "./RouteDataSchema";
 import { routeSchemaUebersicht } from "./uebersicht/RouteSchemaUebersicht";
 

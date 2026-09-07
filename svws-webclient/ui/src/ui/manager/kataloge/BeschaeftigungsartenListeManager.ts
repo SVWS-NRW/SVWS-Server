@@ -8,6 +8,7 @@ import type { Comparator } from "@core/java/util/Comparator";
 import { HashSet } from "@core/java/util/HashSet";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
+
 import { AuswahlManager } from "../AuswahlManager";
 
 export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Beschaeftigungsart, Beschaeftigungsart> {

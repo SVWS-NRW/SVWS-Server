@@ -1,8 +1,10 @@
+import { computed } from "vue";
+
 import type { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
 import { Sprachreferenzniveau } from "@core/asd/types/fach/Sprachreferenzniveau";
 import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { computed } from "vue";
+
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 /**

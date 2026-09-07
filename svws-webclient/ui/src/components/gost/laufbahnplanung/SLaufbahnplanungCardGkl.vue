@@ -71,6 +71,9 @@
 
 <script setup lang="ts">
 
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { GostFach } from "@core/core/data/gost/GostFach";
 	import { GostFachbereich } from "@core/core/types/gost/GostFachbereich";
@@ -85,8 +88,6 @@
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 

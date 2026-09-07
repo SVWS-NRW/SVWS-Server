@@ -24,10 +24,11 @@
 
 <script setup lang="ts">
 
+	import { validatorSchemaName } from "@admin/utils/helfer";
 	import { ref } from "vue";
+
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
-	import { validatorSchemaName } from "@admin/utils/helfer";
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;

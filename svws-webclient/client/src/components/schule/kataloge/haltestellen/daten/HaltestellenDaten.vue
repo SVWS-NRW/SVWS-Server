@@ -36,11 +36,13 @@
 
 <script setup lang="ts">
 
-	import type { HaltestellenDatenProps } from "~/components/schule/kataloge/haltestellen/daten/HaltestellenDatenProps";
-	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
 	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { HaltestellenDatenProps } from "~/components/schule/kataloge/haltestellen/daten/HaltestellenDatenProps";
+	import { HaltestellenModelProxy } from "~/components/schule/kataloge/haltestellen/modelproxy/HaltestellenModelProxy";
 
 	const props = defineProps<HaltestellenDatenProps>();
 	const benutzerState = useBenutzerState();

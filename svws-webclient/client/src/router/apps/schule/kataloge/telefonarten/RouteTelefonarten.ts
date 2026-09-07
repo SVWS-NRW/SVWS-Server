@@ -1,16 +1,18 @@
 import type { RouteParams } from "vue-router";
-import type { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
+
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteDataTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteDataTelefonarten";
 import { routeTelefonartenDaten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenDaten";
 import { routeTelefonartenGruppenprozesse } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenGruppenprozesse";
 import { routeTelefonartenNeu } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonartenNeu";
-import { RouteDataTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteDataTelefonarten";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import type { TelefonartenListeManager } from "@ui/ui/manager/kataloge/TelefonartenListeManager";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import type { RouteNode } from "~/router/RouteNode";
 
 const TelefonartenAuswahl = () => import("~/components/schule/kataloge/telefonarten/TelefonartenAuswahl.vue");
 const TelefonartenApp = () => import("~/components/schule/kataloge/telefonarten/TelefonartenApp.vue");

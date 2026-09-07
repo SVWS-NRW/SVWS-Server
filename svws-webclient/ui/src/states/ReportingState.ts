@@ -1,3 +1,5 @@
+import type { InjectionKey } from "vue";
+
 import type { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
 import type { ReportingReportvorlageParameter } from "@core/core/data/reporting/ReportingReportvorlageParameter";
 import type { ReportingReportvorlageParameterGruppe } from "@core/core/data/reporting/ReportingReportvorlageParameterGruppe";
@@ -6,7 +8,6 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import type { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
-import type { InjectionKey } from "vue";
 
 /** Ein Element (Parameter oder Gruppe) mit Anforderungen an ServerMode und Benutzerkompetenzen. */
 export type ElementMitAnforderung = { uiIstSichtbar: boolean; uiErforderlicherServerMode: string; uiErforderlicheKompetenzen: List<number> };

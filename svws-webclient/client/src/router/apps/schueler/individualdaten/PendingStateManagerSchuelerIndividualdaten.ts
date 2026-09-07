@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
 import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
@@ -11,7 +13,7 @@ import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
-import { computed } from "vue";
+
 import { routeApp } from "~/router/apps/RouteApp";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

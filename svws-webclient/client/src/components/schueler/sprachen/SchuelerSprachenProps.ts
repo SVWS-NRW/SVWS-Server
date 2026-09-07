@@ -1,6 +1,7 @@
 import type { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
 import type { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
 import type { List } from "@core/java/util/List";
+
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerSprachenProps {

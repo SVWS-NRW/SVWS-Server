@@ -7,6 +7,7 @@ import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/Stundenp
 import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
 import type { List } from "@core/java/util/List";
 import type { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
+
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanDatenProps {

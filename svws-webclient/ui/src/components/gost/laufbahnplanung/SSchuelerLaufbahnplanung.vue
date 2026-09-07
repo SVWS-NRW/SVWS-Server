@@ -40,7 +40,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
+
 	import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
@@ -50,7 +50,9 @@
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useServerState } from "@ui/states/ServerState";
+
 	import { LaufbahnplanungUiManager } from "./LaufbahnplanungUiManager";
+	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 	const benutzerState = useBenutzerState();

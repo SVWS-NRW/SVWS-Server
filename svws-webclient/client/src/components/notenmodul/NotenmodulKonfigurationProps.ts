@@ -1,5 +1,5 @@
-import type { NotenmodulConfigManagerSperrungen } from "~/router/apps/notenmodul/NotenmodulConfigManagerSperrungen";
 import type { NotenmodulConfigManagerSichtbareSpalten } from "~/router/apps/notenmodul/NotenmodulConfigManagerSichtbareSpalten";
+import type { NotenmodulConfigManagerSperrungen } from "~/router/apps/notenmodul/NotenmodulConfigManagerSperrungen";
 
 export interface NotenmodulKonfigurationProps {
 	istLokal: boolean;

@@ -1,8 +1,9 @@
-import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { InjectionKey } from "vue";
+
 import type { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
 import type { BenutzerEMailDaten } from "@core/core/data/benutzer/BenutzerEMailDaten";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import type { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import { AppContext } from "@ui/AppContext";
 import type { AES } from "@ui/utils/crypto/aes";

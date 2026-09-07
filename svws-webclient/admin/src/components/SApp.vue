@@ -73,9 +73,11 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { AppProps } from './SAppProps';
+
 	import type { TabData } from '@ui/ui/nav/TabData';
 	import { version } from "@version";
+
+	import type { AppProps } from './SAppProps';
 
 	const props = defineProps<AppProps>();
 

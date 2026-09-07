@@ -1,9 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
-import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
-import { RouteNode } from "~/router/RouteNode";
 import { BenutzergruppeDaten } from "@core/core/data/benutzer/BenutzergruppeDaten";
 import { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
 import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
@@ -14,6 +8,13 @@ import { BenutzergruppenManager } from "@core/core/utils/benutzer/Benutzergruppe
 import { ArrayList } from "@core/java/util/ArrayList";
 import { Arrays } from "@core/java/util/Arrays";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
+import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 interface RoutStateEinstellungenBenutzergruppe extends RouteStateInterface {
 	auswahl: BenutzergruppeListeEintrag | undefined;

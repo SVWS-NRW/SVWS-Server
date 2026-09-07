@@ -1,19 +1,21 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
-import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
-import { RouteDataEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteDataEinstellungenBenutzer";
-import type { BenutzerAppProps } from "~/components/einstellungen/benutzer/SBenutzerAppProps";
-import type { BenutzerAuswahlProps } from "~/components/einstellungen/benutzer/SBenutzerAuswahlProps";
-import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
-import { routeError } from "~/router/error/RouteError";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
 import type { TabData } from "@ui/ui/nav/TabData";
+
+import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
+import type { BenutzerAppProps } from "~/components/einstellungen/benutzer/SBenutzerAppProps";
+import type { BenutzerAuswahlProps } from "~/components/einstellungen/benutzer/SBenutzerAuswahlProps";
+import { RouteDataEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteDataEinstellungenBenutzer";
+import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
+import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeError } from "~/router/error/RouteError";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 const SBenutzerAuswahl = () => import("~/components/einstellungen/benutzer/SBenutzerAuswahl.vue");
 const SBenutzerApp = () => import("~/components/einstellungen/benutzer/SBenutzerApp.vue");

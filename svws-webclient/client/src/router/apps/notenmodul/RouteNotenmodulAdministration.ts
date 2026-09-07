@@ -1,21 +1,23 @@
-import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
-import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import type { RouteApp } from "../RouteApp";
-import { RouteDataNotenmodulAdministration } from "./RouteDataNotenmodulAdministration";
-import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
-import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation";
-import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
-import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
-import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
-import { routeNotenmodulMail } from "./RouteNotenmodulMail";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
-import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
-import { routeError } from "~/router/error/RouteError";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
+
+import type { RouteApp } from "../RouteApp";
+import { routeError } from "~/router/error/RouteError";
+import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
+import { RouteDataNotenmodulAdministration } from "./RouteDataNotenmodulAdministration";
+import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
+import { routeNotenmodulKonfiguration } from "./RouteNotenmodulKonfiguration";
+import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
+import { routeNotenmodulMail } from "./RouteNotenmodulMail";
+import { RouteNotenmodulMenuGroup } from "./RouteNotenmodulMenuGroup";
+import { routeNotenmodulSynchronisation } from "./RouteNotenmodulSynchronisation";
+import { routeNotenmodulVerbindung } from "./RouteNotenmodulVerbindung";
+import { routeNotenmodulVerbindungNeu } from "./RouteNotenmodulVerbindungNeu";
 
 const NotenmodulAdministrationApp = () => import("~/components/notenmodul/NotenmodulAdministrationApp.vue");
 const NotenmodulAdministrationAuswahl = () => import("~/components/notenmodul/NotenmodulAdministrationAuswahl.vue");

@@ -2,6 +2,8 @@ import type { SchemaMigrationQuelle } from "@admin/components/schema/SchemaMigra
 import { api } from "@admin/router/Api";
 import { RouteManager } from "@admin/router/RouteManager";
 import type { RouteNode } from "@admin/router/RouteNode";
+import { type Ref, ref, shallowRef } from "vue";
+
 import type { ApiFile } from "@core/api/BaseApi";
 import { OpenApiError } from "@core/api/OpenApiError";
 import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
@@ -17,8 +19,9 @@ import { JavaString } from "@core/java/lang/JavaString";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
-import { type Ref, ref, shallowRef } from "vue";
+
 import { routeApp } from "../RouteApp";
+
 import { routeSchema } from "./RouteSchema";
 import { routeSchemaUebersicht } from "./uebersicht/RouteSchemaUebersicht";
 

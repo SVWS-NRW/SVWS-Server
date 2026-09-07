@@ -1,11 +1,11 @@
-import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { AppContext } from "@ui/AppContext";
-import { reactive } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
-
-import { RouteNode } from "@lupo/router/RouteNode";
 import { routeApp } from "@lupo/router/apps/RouteApp";
 import { routeError } from "@lupo/router/error/RouteError";
+import { RouteNode } from "@lupo/router/RouteNode";
+import { reactive } from "vue";
+import type { NavigationFailure, RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
+
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { AppContext } from "@ui/AppContext";
 
 interface RouteStateError {
 	code: number | undefined;

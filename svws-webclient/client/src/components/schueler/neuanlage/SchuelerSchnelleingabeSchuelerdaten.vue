@@ -129,8 +129,7 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import { orte_sort, ortsteilSort } from "~/utils/helfer";
-	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+
 	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
@@ -146,6 +145,9 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
+
+	import { emailIsValid, mandatoryInputIsValid, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<{
 		manager: () => SchuelerSchnelleingabeManager;

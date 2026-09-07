@@ -25,10 +25,12 @@
 </template>
 <script setup lang="ts">
 
-	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 
 	const props = defineProps<LehrerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

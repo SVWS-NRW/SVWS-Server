@@ -1,10 +1,12 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeEinwilligungsarten, type RouteEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
-import type { EinwilligungsartenDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/EinwilligungsartenDatenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { EinwilligungsartenDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/EinwilligungsartenDatenProps";
+import { type RouteEinwilligungsarten, routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
+import { RouteNode } from "~/router/RouteNode";
 
 const EinwilligungsartenDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/EinwilligungsartenDaten.vue");
 

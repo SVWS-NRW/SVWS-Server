@@ -1,14 +1,12 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-
-import { RouteNode } from "@lupo/router/RouteNode";
-import { routeApp, type RouteApp } from "@lupo/router/apps/RouteApp";
-import { routeError } from "@lupo/router/error/RouteError";
-
-import { routeLadeDaten } from "./RouteLadeDaten";
-
 import LaufbahnplanungOberstufe from "@lupo/components/LaufbahnplanungOberstufe.vue";
 import type { LaufbahnplanungOberstufeProps } from "@lupo/components/LaufbahnplanungOberstufeProps";
+import { type RouteApp, routeApp } from "@lupo/router/apps/RouteApp";
+import { routeError } from "@lupo/router/error/RouteError";
+import { RouteNode } from "@lupo/router/RouteNode";
 import { gostLaufbahnplanungStateImpl } from "@lupo/states/GostLaufbahnplanungStateImpl";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { routeLadeDaten } from "./RouteLadeDaten";
 
 
 export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {

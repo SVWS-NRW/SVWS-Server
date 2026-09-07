@@ -86,8 +86,10 @@
 
 <script setup lang="ts">
 
-	import { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
 	import { computed, ref } from 'vue';
+
+	import { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+
 	import { SchuelerFoerderempfehlungModelProxy } from "~/components/schueler/lernabschnitte/foerderempfehlungen/modelproxy/SchuelerFoerderempfehlungModelProxy";
 
 	const props = defineProps<{

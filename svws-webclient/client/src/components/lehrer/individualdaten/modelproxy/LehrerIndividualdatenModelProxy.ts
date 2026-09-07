@@ -1,8 +1,5 @@
 import { computed } from "vue";
-import { ValidatorLehrerIndividualdatenKuerzel } from "./ValidatorLehrerIndividualdatenKuerzel";
-import { ValidatorLehrerIndividualdatenNachname } from "./ValidatorLehrerIndividualdatenNachname";
-import { ValidatorLehrerIndividualdatenVorname } from "./ValidatorLehrerIndividualdatenVorname";
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+
 import type { LehrerStammdaten } from "@core/asd/data/lehrer/LehrerStammdaten";
 import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 import { Geschlecht } from "@core/asd/types/Geschlecht";
@@ -24,7 +21,13 @@ import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManage
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+
+import { ValidatorLehrerIndividualdatenKuerzel } from "./ValidatorLehrerIndividualdatenKuerzel";
+import { ValidatorLehrerIndividualdatenNachname } from "./ValidatorLehrerIndividualdatenNachname";
+import { ValidatorLehrerIndividualdatenVorname } from "./ValidatorLehrerIndividualdatenVorname";
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten

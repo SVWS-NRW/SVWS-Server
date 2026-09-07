@@ -68,13 +68,15 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { ErrorProps } from "./SErrorProps";
+
 	import { OpenApiError } from "@core/api/OpenApiError";
 	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useServerState } from "@ui/states/ServerState";
+
+	import type { ErrorProps } from "./SErrorProps";
 
 	type CapturedError = {
 		id: number;

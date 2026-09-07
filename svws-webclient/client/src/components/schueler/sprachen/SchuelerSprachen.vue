@@ -9,9 +9,11 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
+
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
+
+	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
 
 	const props = defineProps<SchuelerSprachenProps>();
 	const benutzerState = useBenutzerState();

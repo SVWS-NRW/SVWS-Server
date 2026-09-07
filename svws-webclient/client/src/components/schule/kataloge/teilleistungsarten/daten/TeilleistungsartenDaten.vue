@@ -35,10 +35,13 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
-	import type { TeilleistungsartenDatenProps } from './TeilleistungsartenDatenProps';
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import { TeilleistungsartenModelProxy } from "~/components/schule/kataloge/teilleistungsarten/modelproxy/TeilleistungsartenModelProxy";
+
+	import type { TeilleistungsartenDatenProps } from './TeilleistungsartenDatenProps';
 
 	const props = defineProps<TeilleistungsartenDatenProps>();
 	const benutzerState = useBenutzerState();

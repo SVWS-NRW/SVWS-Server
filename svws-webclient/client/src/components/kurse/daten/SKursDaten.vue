@@ -97,7 +97,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { KursDatenProps } from "./SKursDatenProps";
+
 	import { KursLehrer } from "@core/asd/data/kurse/KursLehrer";
 	import { ZulaessigeKursart } from "@core/asd/types/kurse/ZulaessigeKursart";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
@@ -105,13 +105,15 @@
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+	import { KursFortschreibungsart } from "@core/core/types/KursFortschreibungsart";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useServerState } from "@ui/states/ServerState";
 	import type { DataTableColumn } from "@ui/types";
-	import { KursFortschreibungsart } from "@core/core/types/KursFortschreibungsart";
+
+	import type { KursDatenProps } from "./SKursDatenProps";
 
 	const props = defineProps<KursDatenProps>();
 	const benutzerState = useBenutzerState();

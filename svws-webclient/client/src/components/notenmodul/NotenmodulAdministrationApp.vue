@@ -32,9 +32,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { NotenmodulAdministrationAppProps } from "./NotenmodulAdministrationAppProps";
-	import { ViewType } from "@ui/ui/nav/ViewType";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { NotenmodulAdministrationAppProps } from "./NotenmodulAdministrationAppProps";
 
 	const props = defineProps<NotenmodulAdministrationAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

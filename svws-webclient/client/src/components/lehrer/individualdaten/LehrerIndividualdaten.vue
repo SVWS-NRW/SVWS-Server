@@ -197,9 +197,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
-	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
-	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
+
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import { Schulleitung } from "@core/asd/data/schule/Schulleitung";
 	import { Geschlecht } from "@core/asd/types/Geschlecht";
@@ -208,6 +206,7 @@
 	import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { PersonalTyp } from "@core/core/types/PersonalTyp";
+	import { ServerMode } from "@core/core/types/ServerMode";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
@@ -218,7 +217,11 @@
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
-	import { ServerMode } from "@core/core/types/ServerMode";
+
+	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
+
+	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
+	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 	const benutzerState = useBenutzerState();

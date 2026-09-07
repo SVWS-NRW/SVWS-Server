@@ -16,10 +16,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import type { StundenplanKonfiguration } from "@core/core/data/stundenplan/StundenplanKonfiguration";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		manager: () => StundenplanManager;

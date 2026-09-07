@@ -13,7 +13,8 @@
 
 <script setup lang="ts">
 	import { computed } from 'vue';
-	import { QrCode, Ecc } from './qrcode';
+
+	import { Ecc, QrCode } from './qrcode';
 
 	const props = defineProps<{
 		uri: string | URL;

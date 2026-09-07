@@ -28,8 +28,10 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { GostGruppenprozesseProps } from "./SGostGruppenprozesseProps";
+
 	import type { List } from "@core/java/util/List";
+
+	import type { GostGruppenprozesseProps } from "./SGostGruppenprozesseProps";
 
 	const props = defineProps<GostGruppenprozesseProps>();
 

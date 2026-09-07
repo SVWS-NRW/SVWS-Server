@@ -8,6 +8,7 @@ import type { Comparator } from "@core/java/util/Comparator";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
+
 import type { AuswahlManagerSortierOrdnung } from "./AuswahlManagerSortierOrdnung";
 import { ListeMitAuswahl } from './ListeMitAuswahl';
 

@@ -1,5 +1,5 @@
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 export interface RouteStateApp extends RouteStateInterface {
 	view: any;

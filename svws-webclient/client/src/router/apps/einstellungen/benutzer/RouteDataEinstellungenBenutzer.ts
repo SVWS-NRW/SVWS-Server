@@ -1,9 +1,3 @@
-import { api } from "~/router/Api";
-import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
-import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
-import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
-import { RouteNode } from "~/router/RouteNode";
 import { BenutzerAllgemeinCredentials } from "@core/core/data/benutzer/BenutzerAllgemeinCredentials";
 import { BenutzerDaten } from "@core/core/data/benutzer/BenutzerDaten";
 import type { BenutzergruppeListeEintrag } from "@core/core/data/benutzer/BenutzergruppeListeEintrag";
@@ -15,6 +9,13 @@ import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import { BenutzerManager } from "@core/core/utils/benutzer/BenutzerManager";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
+import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
+import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 
 
 interface RouteStateEinstellungenBenutzer extends RouteStateInterface {

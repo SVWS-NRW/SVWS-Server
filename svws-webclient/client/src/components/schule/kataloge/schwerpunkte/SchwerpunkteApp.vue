@@ -41,9 +41,11 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { SchwerpunkteAppProps } from './SchwerpunkteAppProps';
+
 	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
 	import { ViewType } from '@ui/ui/nav/ViewType';
+
+	import type { SchwerpunkteAppProps } from './SchwerpunkteAppProps';
 
 	const props = defineProps<SchwerpunkteAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

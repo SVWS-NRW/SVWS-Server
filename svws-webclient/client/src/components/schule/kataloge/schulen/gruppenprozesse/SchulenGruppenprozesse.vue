@@ -36,10 +36,12 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
 
 	const props = defineProps<SchulenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

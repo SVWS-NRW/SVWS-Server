@@ -138,9 +138,8 @@
 </template>
 
 <script setup lang="ts">
-
 	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-	import type { AppProps } from './SAppProps';
+
 	import { githash } from "@githash";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useNotenmodulState } from "@ui/states/NotenmodulState";
@@ -151,6 +150,8 @@
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import type { TabManager } from "@ui/ui/nav/TabManager";
 	import { version } from "@version";
+
+	import type { AppProps } from './SAppProps';
 
 	const props = defineProps<AppProps>();
 

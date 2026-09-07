@@ -363,9 +363,7 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed, ref, toRaw } from "vue";
-	import type { ApiStatus } from "~/components/ApiStatus";
-	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import { lehrer_filter } from "~/utils/helfer";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 	import { GostBlockungKurs } from "@core/core/data/gost/GostBlockungKurs";
@@ -392,6 +390,11 @@
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import type { List } from "@core/java/util/List";
 	import type { DataTableColumn } from "@ui/types";
+
+	import type { ApiStatus } from "~/components/ApiStatus";
+	import { lehrer_filter } from "~/utils/helfer";
+
+	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

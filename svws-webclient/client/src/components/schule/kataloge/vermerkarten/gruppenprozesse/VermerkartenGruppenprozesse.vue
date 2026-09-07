@@ -35,11 +35,13 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { VermerkartenGruppenprozesseProps } from "./VermerkartenGruppenprozesseProps";
+	import { computed, ref } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { VermerkartenGruppenprozesseProps } from "./VermerkartenGruppenprozesseProps";
 
 	const props = defineProps<VermerkartenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();

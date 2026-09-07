@@ -203,12 +203,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, triggerRef } from 'vue';
-	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
+
 	import { ENMv2Lehrer } from '@core/core/data/enm/v2/ENMv2Lehrer';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+
+	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");

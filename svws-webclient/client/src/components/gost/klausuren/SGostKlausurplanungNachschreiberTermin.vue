@@ -43,11 +43,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
-	import { computed, ref, type HTMLAttributes } from 'vue';
-	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+	import { computed, type HTMLAttributes, ref } from 'vue';
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
 	import { GostSchuelerklausurtermin } from "@core/core/data/gost/klausuren/GostSchuelerklausurtermin";
@@ -56,6 +53,11 @@
 	import { Arrays } from "@core/java/util/Arrays";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import { isGostNachschreiberDragData } from "./SGostKlausurplanung";
+	import { klausurplanungDropState } from "./SGostKlausurplanungDragUtils";
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	const props = defineProps<{
 		termin: () => GostKlausurtermin;

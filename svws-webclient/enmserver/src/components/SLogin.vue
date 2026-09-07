@@ -95,11 +95,13 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, watch, watchEffect } from "vue";
-	import type { LoginProps } from "./SLoginProps";
-	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import { useAuthState } from "@wenom/states/AuthState";
+	import { computed, nextTick, onMounted, ref, watch, watchEffect } from "vue";
+
 	import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
+	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
+
+	import type { LoginProps } from "./SLoginProps";
 
 	const props = defineProps<LoginProps>();
 	const auth = useAuthState();

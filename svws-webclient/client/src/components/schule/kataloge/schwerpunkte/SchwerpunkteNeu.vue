@@ -43,11 +43,14 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { SchwerpunkteNeuProps } from './SchwerpunkteNeuProps';
-	import { SchwerpunkteModelProxy } from "~/components/schule/kataloge/schwerpunkte/modelproxy/SchwerpunkteModelProxy";
+
 	import { SchuelerSchwerpunkt } from "@core/core/data/kataloge/SchuelerSchwerpunkt";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import { SchwerpunkteModelProxy } from "~/components/schule/kataloge/schwerpunkte/modelproxy/SchwerpunkteModelProxy";
+
+	import type { SchwerpunkteNeuProps } from './SchwerpunkteNeuProps';
 
 	const props = defineProps<SchwerpunkteNeuProps>();
 	const benutzerState = useBenutzerState();

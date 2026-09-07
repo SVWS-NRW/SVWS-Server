@@ -32,12 +32,13 @@
 <script setup lang="ts">
 
 	import { onErrorCaptured, ref } from 'vue';
-	import { githash } from "@githash";
-	import { version } from "@version";
+
+	import { OpenApiError } from '@core/api/OpenApiError';
 	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
 	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';
-	import { OpenApiError } from '@core/api/OpenApiError';
+	import { githash } from "@githash";
+	import { version } from "@version";
 
 	type CapturedError = {
 		id: number;

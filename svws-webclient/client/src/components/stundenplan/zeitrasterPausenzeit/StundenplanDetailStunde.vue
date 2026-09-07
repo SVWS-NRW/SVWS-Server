@@ -19,14 +19,15 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, ref, watch } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+
 	import type { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
 	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
 	import type { Wochentag } from "@core/core/types/Wochentag";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import type { StundenplanManager } from "@core/core/utils/stundenplan/StundenplanManager";
 	import { ArrayList } from "@core/java/util/ArrayList";
-	import { computed, ref, watch } from "vue";
-	import type { ComponentExposed } from "vue-component-type-helpers";
 	import SvwsUiInputNumber from "@ui/ui/controls/SvwsUiInputNumber.vue";
 
 	const props = defineProps<{

@@ -101,8 +101,10 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
 	import { ref } from 'vue';
+
+	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+
 	import { SchuelerFoerderempfehlungModelProxy } from "~/components/schueler/lernabschnitte/foerderempfehlungen/modelproxy/SchuelerFoerderempfehlungModelProxy";
 
 	const props = defineProps<{

@@ -73,8 +73,10 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import type { NotenmodulSynchronisationProps } from './NotenmodulSynchronisationProps';
+
 	import type { SimpleOperationResponse } from '@core/core/data/SimpleOperationResponse';
+
+	import type { NotenmodulSynchronisationProps } from './NotenmodulSynchronisationProps';
 
 	const props = defineProps<NotenmodulSynchronisationProps>();
 

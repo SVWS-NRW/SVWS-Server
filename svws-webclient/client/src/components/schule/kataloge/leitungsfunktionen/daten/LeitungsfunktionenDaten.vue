@@ -30,11 +30,14 @@
 
 <script setup lang="ts">
 
-	import type { LeitungsfunktionenDatenProps } from "./LeitungsfunktionenDatenProps";
-	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
 	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import { LeitungsfunktionenModelProxy } from "~/components/schule/kataloge/leitungsfunktionen/modelproxy/LeitungsfunktionenModelProxy";
+
+	import type { LeitungsfunktionenDatenProps } from "./LeitungsfunktionenDatenProps";
 
 	const props = defineProps<LeitungsfunktionenDatenProps>();
 	const benutzerState = useBenutzerState();

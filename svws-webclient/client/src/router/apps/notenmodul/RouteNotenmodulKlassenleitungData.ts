@@ -1,11 +1,14 @@
-import { RouteNode } from "~/router/RouteNode";
-import { routeNotenmodulKlassenleitung, type RouteNotenmodulKlassenleitung } from "./RouteNotenmodulKlassenleitung";
 import type { RouteLocationNormalized } from "vue-router";
-import type { NotenmodulKlassenleitungProps } from "~/components/notenmodul/NotenmodulKlassenleitungProps";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { NotenmodulKlassenleitungProps } from "~/components/notenmodul/NotenmodulKlassenleitungProps";
+import { RouteNode } from "~/router/RouteNode";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
+import { type RouteNotenmodulKlassenleitung, routeNotenmodulKlassenleitung } from "./RouteNotenmodulKlassenleitung";
 
 const NotenmodulKlassenleitung = () => import("~/components/notenmodul/NotenmodulKlassenleitung.vue");
 

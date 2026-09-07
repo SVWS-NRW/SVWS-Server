@@ -36,9 +36,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { EinwilligungsartenAppProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenAppProps";
 
 	const props = defineProps<EinwilligungsartenAppProps>();

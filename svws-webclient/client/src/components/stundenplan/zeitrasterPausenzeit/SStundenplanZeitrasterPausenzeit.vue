@@ -12,10 +12,11 @@
 
 <script setup lang="ts">
 
-	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
-	import type { StundenplanZeitrasterPausenzeitProps } from "./SStundenplanZeitrasterPausenzeitProps";
 	import { StundenplanPausenzeit } from "@core/core/data/stundenplan/StundenplanPausenzeit";
+	import { StundenplanZeitraster } from "@core/core/data/stundenplan/StundenplanZeitraster";
 	import { Wochentag } from "@core/core/types/Wochentag";
+
+	import type { StundenplanZeitrasterPausenzeitProps } from "./SStundenplanZeitrasterPausenzeitProps";
 
 	const props = defineProps<StundenplanZeitrasterPausenzeitProps>();
 

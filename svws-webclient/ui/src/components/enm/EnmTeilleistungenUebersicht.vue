@@ -118,7 +118,7 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watch } from 'vue';
-	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
+
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
@@ -129,6 +129,8 @@
 	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+
+	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
 
 	type LocalElement = Element | ComponentPublicInstance<unknown> | null;
 	const props = defineProps<EnmTeilleistungenProps>();

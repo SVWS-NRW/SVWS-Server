@@ -43,6 +43,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
+
 	import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -53,9 +55,10 @@
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { useServerState } from "@ui/states/ServerState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import { computed, ref } from "vue";
-	import type { GostBeratungProps } from "./SGostBeratungProps";
+
 	import { lehrer_filter } from "~/utils/helfer";
+
+	import type { GostBeratungProps } from "./SGostBeratungProps";
 
 	const props = defineProps<GostBeratungProps>();
 	const serverState = useServerState();

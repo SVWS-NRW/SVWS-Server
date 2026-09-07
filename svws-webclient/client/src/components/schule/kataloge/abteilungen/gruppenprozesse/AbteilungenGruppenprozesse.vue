@@ -29,11 +29,13 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { List } from "@core/java/util/List";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
 
 	const abschnittState = useAbschnittState();
 	const props = defineProps<AbteilungenGruppenprozesseProps>();

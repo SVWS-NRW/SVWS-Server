@@ -1,6 +1,8 @@
 import { ModelProxy } from "@ui/model/ModelProxy";
+
 import type { ImageInfo, TableLogo } from "../LogoUtils";
 import { getImageRestrictions } from "../LogoUtils";
+
 import { ValidatorLogoImage } from "./ValidatorLogoImage";
 
 export class LogoModelProxy extends ModelProxy<TableLogo> {

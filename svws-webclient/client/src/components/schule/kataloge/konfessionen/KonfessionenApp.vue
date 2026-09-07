@@ -34,9 +34,11 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { KonfessionenAppProps } from "./KonfessionenAppProps";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { KonfessionenAppProps } from "./KonfessionenAppProps";
 
 	const props = defineProps<KonfessionenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

@@ -3,7 +3,7 @@ import { ValidatorFehlerart } from "@core/asd/validate/ValidatorFehlerart";
 import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class ValidatorLehrerIndividualdatenNachname extends BasicValidator {
 

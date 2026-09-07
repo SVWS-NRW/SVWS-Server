@@ -1,11 +1,13 @@
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-import { ConfigElement } from "@ui/utils/Config";
 import type { RouteLocationNormalized, RouteParams } from "vue-router";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+import { ConfigElement } from "@ui/utils/Config";
+
 import type { StundenplanKlasseProps } from "~/components/stundenplan/klasse/SStundenplanKlasseProps";
-import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 
 const SStundenplanKlasse = () => import("~/components/stundenplan/klasse/SStundenplanKlasse.vue");

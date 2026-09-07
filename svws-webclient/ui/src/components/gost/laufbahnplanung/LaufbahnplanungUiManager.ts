@@ -1,3 +1,5 @@
+import { computed, ref } from "vue";
+
 import { RGBFarbe } from "@core/asd/data/RGBFarbe";
 import type { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
 import type { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
@@ -24,7 +26,7 @@ import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import type { Config } from "@ui/utils/Config";
-import { computed, ref } from "vue";
+
 import type { LaufbahnplanungUiStepper, LaufbahnplanungUiStepperMode } from "./LaufbahnplanungUiStepper";
 import { LaufbahnplanungUiStepperAbi2013 } from "./LaufbahnplanungUiStepperAbi2013";
 import { LaufbahnplanungUiStepperAbi2030 } from "./LaufbahnplanungUiStepperAbi2030";

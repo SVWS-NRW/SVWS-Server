@@ -1,6 +1,8 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { ServerMode } from "@core/core/types/ServerMode";
 import type { ErrorProps } from "@admin/components/error/SErrorProps";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
+import { ServerMode } from "@core/core/types/ServerMode";
+
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";
 

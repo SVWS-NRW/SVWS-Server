@@ -1,8 +1,3 @@
-import { api } from "~/router/Api";
-import { abschnittStateImpl } from "./AbschnittStateImpl";
-import { serverStateImpl } from "./ServerStateImpl";
-import { configStateImpl } from "./ConfigStateImpl";
-import { schuleStateImpl } from "./SchuleStateImpl";
 import type { ApiFile } from "@core/api/BaseApi";
 import { ReportingEinstellungenBenutzerVorlage } from "@core/core/data/reporting/ReportingEinstellungenBenutzerVorlage";
 import { ReportingEinstellungenBenutzerVorlageGruppe } from "@core/core/data/reporting/ReportingEinstellungenBenutzerVorlageGruppe";
@@ -17,8 +12,15 @@ import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingRepo
 import { ServerMode } from "@core/core/types/ServerMode";
 import { ReportingReportvorlageUtils } from "@core/core/utils/reporting/ReportingReportvorlageUtils";
 import type { List } from "@core/java/util/List";
-import type { ReportingState, ElementMitAnforderung } from "@ui/states/ReportingState";
+import type { ElementMitAnforderung, ReportingState } from "@ui/states/ReportingState";
 import { StateManager } from "@ui/ui/StateManager";
+
+import { api } from "~/router/Api";
+
+import { abschnittStateImpl } from "./AbschnittStateImpl";
+import { configStateImpl } from "./ConfigStateImpl";
+import { schuleStateImpl } from "./SchuleStateImpl";
+import { serverStateImpl } from "./ServerStateImpl";
 
 interface ReportingReactiveState {
 }

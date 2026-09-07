@@ -60,13 +60,16 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { SchuelerTelefonnummernProps } from "./SchuelerTelefonnummernProps";
-	import { phoneNumberIsValid } from "~/util/validation/Validation";
+
 	import { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 	import type { Telefonart } from "@core/core/data/schule/Telefonart";
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { DataTableColumn } from "@ui/types";
+
+	import { phoneNumberIsValid } from "~/util/validation/Validation";
+
+	import type { SchuelerTelefonnummernProps } from "./SchuelerTelefonnummernProps";
 
 	const props = defineProps<SchuelerTelefonnummernProps>();
 

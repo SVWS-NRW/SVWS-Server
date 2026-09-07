@@ -1,15 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
-import { api } from "~/router/Api";
-import { RouteDataLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteDataLehrerLernplattformen";
-import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
+import { api } from "~/router/Api";
+import { RouteDataLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteDataLehrerLernplattformen";
+import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeError } from "~/router/error/RouteError";
+import { RouteNode } from "~/router/RouteNode";
 
 const LehrerLernplattformen = () => import("~/components/lehrer/lernplattformen/LehrerLernplattformen.vue");
 

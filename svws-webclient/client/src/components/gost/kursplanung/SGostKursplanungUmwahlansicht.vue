@@ -153,7 +153,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { GostBlockungRegel } from "@core/core/data/gost/GostBlockungRegel";
 	import { GostBlockungRegelUpdate } from "@core/core/data/gost/GostBlockungRegelUpdate";
@@ -166,6 +166,8 @@
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import type { DataTableColumn } from "@ui/types";
+
+	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 

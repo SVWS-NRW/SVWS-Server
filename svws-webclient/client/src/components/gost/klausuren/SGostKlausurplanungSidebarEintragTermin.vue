@@ -32,10 +32,12 @@
 
 <script setup lang="ts">
 	import { computed } from "vue";
-	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
+
 	import type { GostKlausurtermin } from "@core/core/data/gost/klausuren/GostKlausurtermin";
 	import type { GostKursklausur } from "@core/core/data/gost/klausuren/GostKursklausur";
 	import { useGostKlausurplanungState } from "@ui/states/GostKlausurplanungState";
+
+	import { useKlausurplanungPresenter } from "./SGostKlausurplanungPresenter";
 
 	defineOptions({
 		inheritAttrs: false,

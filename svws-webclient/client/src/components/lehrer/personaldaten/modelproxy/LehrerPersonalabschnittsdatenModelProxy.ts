@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { LehrerBeschaeftigungsartKatalogEintrag } from "@core/asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag";
 import type { LehrerEinsatzstatusKatalogEintrag } from "@core/asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag";
 import { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
@@ -14,7 +16,7 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
-import { computed } from "vue";
+
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 

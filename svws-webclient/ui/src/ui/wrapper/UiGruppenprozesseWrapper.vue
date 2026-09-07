@@ -36,10 +36,12 @@
 
 <script setup lang='ts' generic="T">
 
-	import { ref, computed } from 'vue';
-	import type { PendingStateManager } from './PendingStateManager';
+	import { computed, ref } from 'vue';
+
 	import { HashMap } from '@core/java/util/HashMap';
 	import type { JavaMap } from '@core/java/util/JavaMap';
+
+	import type { PendingStateManager } from './PendingStateManager';
 
 	const props = withDefaults(defineProps<{
 		pendingStateManager: () => PendingStateManager<any>,

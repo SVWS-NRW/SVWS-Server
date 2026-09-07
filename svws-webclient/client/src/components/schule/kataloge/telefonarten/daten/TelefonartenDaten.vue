@@ -32,11 +32,14 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import type { TelefonartenDatenProps } from "./TelefonartenDatenProps";
-	import { computed } from "vue";
+
 	import { TelefonartenModelProxy } from "~/components/schule/kataloge/telefonarten/modelproxy/TelefonartenModelProxy";
+
+	import type { TelefonartenDatenProps } from "./TelefonartenDatenProps";
 
 	const props = defineProps<TelefonartenDatenProps>();
 	const benutzerState = useBenutzerState();

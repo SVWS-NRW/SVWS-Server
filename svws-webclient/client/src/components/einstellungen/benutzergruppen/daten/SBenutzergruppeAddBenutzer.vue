@@ -17,6 +17,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
+
 	import type { BenutzerListeEintrag } from "@core/core/data/benutzer/BenutzerListeEintrag";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";

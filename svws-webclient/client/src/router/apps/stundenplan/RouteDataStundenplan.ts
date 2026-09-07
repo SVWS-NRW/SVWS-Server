@@ -1,22 +1,10 @@
-import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
-import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { routeStundenplanNeu } from "~/router/apps/stundenplan/RouteStundenplanNeu";
-import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
-import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
-import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
-import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
+
 import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
-import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { Raum } from "@core/core/data/schule/Raum";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { Stundenplan } from "@core/core/data/stundenplan/Stundenplan";
 import { StundenplanAufsichtsbereich } from "@core/core/data/stundenplan/StundenplanAufsichtsbereich";
 import { StundenplanJahrgang } from "@core/core/data/stundenplan/StundenplanJahrgang";
@@ -38,6 +26,21 @@ import type { List } from "@core/java/util/List";
 import { StundenplanListeManager } from "@ui/ui/manager/stundenplan/StundenplanListeManager";
 import { StundenplanUnterrichtListeManager } from "@ui/ui/manager/stundenplan/StundenplanUnterrichtListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { api } from "~/router/Api";
+import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { routeStundenplanNeu } from "~/router/apps/stundenplan/RouteStundenplanNeu";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { RouteManager } from "~/router/RouteManager";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
+import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
+import { routeStundenplanDaten } from "./RouteStundenplanDaten";
+import { routeStundenplanGruppenprozesse } from "./RouteStundenplanGruppenprozesse";
 
 interface RouteStateStundenplan extends RouteStateAuswahlInterface<StundenplanListeManager> {
 	stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager | undefined;

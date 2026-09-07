@@ -1,28 +1,30 @@
-import { api } from "~/router/Api";
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
-import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
-import { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+
 import type { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
-import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
+import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
+
+import { api } from "~/router/Api";
+import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
+import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+import { serverStateImpl } from "~/states/ServerStateImpl";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {

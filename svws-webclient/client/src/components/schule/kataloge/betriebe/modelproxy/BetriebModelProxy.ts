@@ -1,3 +1,5 @@
+import { computed } from "vue";
+
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
@@ -9,8 +11,8 @@ import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequ
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
-import { ValidatorStringMatchesPattern, StringPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-import { computed } from "vue";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
 import { ValidatorBetriebName } from "./validation/ValidatorBetriebName";
 
 export class BetriebModelProxy extends ModelProxy<Betrieb> {

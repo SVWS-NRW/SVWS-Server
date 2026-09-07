@@ -41,8 +41,8 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
+	import { computed, ref } from "vue";
+
 	import type { KursDaten } from "@core/asd/data/kurse/KursDaten";
 	import type { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
@@ -57,6 +57,8 @@
 	import type { DataTableColumn, SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 
 	const props = defineProps<KurseAuswahlProps>();
 	const benutzerState = useBenutzerState();

@@ -76,6 +76,8 @@
 
 <script setup lang="ts">
 
+	import { computed, ref, shallowRef } from "vue";
+
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
 	import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
 	import { ArrayList } from "@core/java/util/ArrayList";
@@ -83,7 +85,6 @@
 	import type { List } from "@core/java/util/List";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import { computed, ref, shallowRef } from "vue";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;

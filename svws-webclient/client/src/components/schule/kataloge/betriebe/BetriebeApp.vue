@@ -35,9 +35,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { BetriebeAppProps } from "~/components/schule/kataloge/betriebe/BetriebeAppProps";
 
 	const props = defineProps<BetriebeAppProps>();

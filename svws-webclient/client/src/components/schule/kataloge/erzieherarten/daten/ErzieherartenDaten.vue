@@ -29,11 +29,13 @@
 
 <script setup lang="ts">
 
-	import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDatenProps";
 	import { computed } from "vue";
+
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
 	import { ErzieherartenModelProxy } from "../modelproxy/ErzieherartenModelProxy";
+	import type { ErzieherartenDatenProps } from "~/components/schule/kataloge/erzieherarten/daten/ErzieherartenDatenProps";
 
 	const props = defineProps<ErzieherartenDatenProps>();
 	const benutzerState = useBenutzerState();

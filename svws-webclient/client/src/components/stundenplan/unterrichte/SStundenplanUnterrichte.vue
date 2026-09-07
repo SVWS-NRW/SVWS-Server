@@ -120,7 +120,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
+
 	import { Fach } from "@core/asd/types/fach/Fach";
 	import type { StundenplanFach } from "@core/core/data/stundenplan/StundenplanFach";
 	import type { StundenplanKlasse } from "@core/core/data/stundenplan/StundenplanKlasse";
@@ -136,6 +136,8 @@
 	import { ListUtils } from "@core/core/utils/ListUtils";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+
+	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 

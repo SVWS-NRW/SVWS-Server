@@ -35,9 +35,11 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
-	import { computed } from "vue";
+
 	import type { BeschaeftigungsartenAppProps } from "~/components/schule/kataloge/beschaeftigungsarten/BeschaeftigungsartenAppProps";
 
 	const props = defineProps<BeschaeftigungsartenAppProps>();

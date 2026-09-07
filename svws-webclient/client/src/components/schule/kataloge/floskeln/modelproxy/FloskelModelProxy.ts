@@ -1,5 +1,5 @@
-import { ValidatorFloskelKuerzel } from "~/components/schule/kataloge/floskeln/modelproxy/validation/ValidatorFloskelKuerzel";
 import { computed } from "vue";
+
 import { Floskelgruppenart } from "@core/asd/types/schule/Floskelgruppenart";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -10,6 +10,8 @@ import { ModelProxy } from "@ui/model/ModelProxy";
 import type { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+
+import { ValidatorFloskelKuerzel } from "~/components/schule/kataloge/floskeln/modelproxy/validation/ValidatorFloskelKuerzel";
 
 export class FloskelModelProxy extends ModelProxy<Floskel> {
 

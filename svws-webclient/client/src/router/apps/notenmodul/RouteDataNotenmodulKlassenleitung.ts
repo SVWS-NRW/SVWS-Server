@@ -1,16 +1,19 @@
-import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
-import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
 import type { RouteParamsRawGeneric } from "vue-router";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+
 import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 import { UnsupportedOperationException } from "@core/java/lang/UnsupportedOperationException";
 import type { List } from "@core/java/util/List";
 import { EnmKlassenleitungAuswahlListeManager } from "@ui/components/enm/EnmKlassenleitungAuswahlListeManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
+
+import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { configStateImpl } from "~/states/ConfigStateImpl";
+import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
+
+import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
 
 
 interface RouteStateNotenmodulKlassenleitung extends RouteStateAuswahlInterface<EnmKlassenleitungAuswahlListeManager> {

@@ -46,10 +46,12 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
-	import type { SchemagruppeProps } from "./SSchemagruppeProps";
+	import { computed, ref } from "vue";
+
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+
+	import type { SchemagruppeProps } from "./SSchemagruppeProps";
 
 	type Action = 'delete' | 'backup';
 

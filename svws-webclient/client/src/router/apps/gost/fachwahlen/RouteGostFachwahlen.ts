@@ -1,26 +1,29 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
+
+import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+import { ServerMode } from "@core/core/types/ServerMode";
+
+import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
+import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { RouteDataGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteDataGostFachwahlen";
-import { routeGostFachwahlenAllgemein } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAllgemein";
 import { routeGostFachwahlenAbitur } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAbitur";
 import { routeGostFachwahlenAbiturFach } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAbiturFach";
+import { routeGostFachwahlenAllgemein } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAllgemein";
 import { routeGostFachwahlenFach } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenFach";
 import { routeGostFachwahlenFachHalbjahr } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenFachHalbjahr";
 import { routeGostFachwahlenHalbjahr } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenHalbjahr";
 import { routeGostFachwahlenLeistungskurse } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenLeistungskurse";
 import { routeGostFachwahlenZusatzkurse } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenZusatzkurse";
-import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
-import { RouteManager } from "~/router/RouteManager";
-import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { schulformenGymOb } from "~/router/RouteHelper";
+import { type RouteGost, routeGost } from "~/router/apps/gost/RouteGost";
 import { routeError } from "~/router/error/RouteError";
-import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
-import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
-import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+
+import { routeGostFachwahlenLKFach } from "./RouteGostFachwahlenLKFach";
+import { routeGostFachwahlenZKFach } from "./RouteGostFachwahlenZKFach";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");

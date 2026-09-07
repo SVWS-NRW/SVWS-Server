@@ -1,23 +1,31 @@
+import { RouteManager } from "@lupo/router/RouteManager";
+
 import type { ApiFile } from "@core/api/BaseApi";
 import { Sprachbelegung } from "@core/asd/data/schueler/Sprachbelegung";
 import { Sprachpruefung } from "@core/asd/data/schueler/Sprachpruefung";
 import { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
+import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
 import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
+import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
 import { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
 import { AbiturFachbelegungHalbjahr } from "@core/core/data/gost/AbiturFachbelegungHalbjahr";
 import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
+import { GostFach } from "@core/core/data/gost/GostFach";
 import { GostJahrgang } from "@core/core/data/gost/GostJahrgang";
 import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
+import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
+import { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
 import { GostLaufbahnplanungExportV1 } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1";
 import { GostLaufbahnplanungExportV1Fachbelegung } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Fachbelegung";
 import { GostLaufbahnplanungExportV1Schueler } from "@core/core/data/gost/laufbahnplanung/v1/GostLaufbahnplanungExportV1Schueler";
 import { GostLaufbahnplanungExportV2 } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2";
 import { GostLaufbahnplanungExportV2Fach } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Fach";
+import { GostLaufbahnplanungExportV2GKL } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2GKL";
 import { GostLaufbahnplanungExportV2Schueler } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2Schueler";
 import { GostLaufbahnplanungExportV2SchuelerFachbelegung } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2SchuelerFachbelegung";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
@@ -28,19 +36,12 @@ import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostKursart } from "@core/core/types/gost/GostKursart";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "@core/java/util/ArrayList";
+import { HashMap } from "@core/java/util/HashMap";
+import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import { StateManager } from "@ui/ui/StateManager";
 import { Config, ConfigElement } from "@ui/utils/Config";
-import { RouteManager } from "@lupo/router/RouteManager";
-import { HashMap2D } from "@core/core/adt/map/HashMap2D";
-import { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
-import { HashMap } from "@core/java/util/HashMap";
-import type { JavaMap } from "@core/java/util/JavaMap";
-import { GostFach } from "@core/core/data/gost/GostFach";
-import { GostLaufbahnplanungExportV2GKL } from "@core/core/data/gost/laufbahnplanung/v2/GostLaufbahnplanungExportV2GKL";
-import { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
-import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 
 
 interface GostLaufbahnplanungReactiveState {

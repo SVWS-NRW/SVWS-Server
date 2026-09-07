@@ -86,14 +86,17 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
+
 	import { HerkunftSchulform } from "@core/asd/types/schueler/HerkunftSchulform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
-	import type { SchulenDatenProps } from "./SchulenDatenProps";
-	import { computed } from "vue";
+
 	import { SchuleModelProxy } from "~/components/schule/kataloge/schulen/modelproxy/SchuleModelProxy";
+
+	import type { SchulenDatenProps } from "./SchulenDatenProps";
 
 	const props = defineProps<SchulenDatenProps>();
 	const benutzerState = useBenutzerState();

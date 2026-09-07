@@ -39,6 +39,7 @@
 <script lang="ts" setup>
 
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
+
 	import type { TabManager } from './TabManager';
 
 	const props = withDefaults(defineProps<{

@@ -43,7 +43,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
+
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import type { PersonalTyp } from "@core/core/types/PersonalTyp";
@@ -52,6 +52,8 @@
 	import type { SortByAndOrder } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
+
+	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
 	const benutzerState = useBenutzerState();

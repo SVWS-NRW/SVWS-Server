@@ -44,8 +44,10 @@
 	import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import type { TeilleistungsartenAuswahlProps } from "./TeilleistungsartenAuswahlProps";
+
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
+
+	import type { TeilleistungsartenAuswahlProps } from "./TeilleistungsartenAuswahlProps";
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },

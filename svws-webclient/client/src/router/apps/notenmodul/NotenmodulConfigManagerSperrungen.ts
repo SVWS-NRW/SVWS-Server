@@ -1,5 +1,5 @@
-import { computed, ref, shallowRef, triggerRef, type ComputedRef } from "vue";
-import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
+import { computed, type ComputedRef, ref, shallowRef, triggerRef } from "vue";
+
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
 import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
 import { ENMConfigKlasseSpalte } from "@core/core/data/enm/ENMConfigKlasseSpalte";
@@ -16,6 +16,8 @@ import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 import type { GridColumn } from "@ui/ui/controls/tablegrid/GridManager";
+
+import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
 
 /** Der Typ für die einzelnen Einträge in der Liste der Klassen bzw. Klassengruppen */
 export type NotenmodulConfigManagerSperrungenZeile = ENMConfigKlasse | NotenmodulConfigManagerSperrungenGruppe;

@@ -1,11 +1,12 @@
-import type { RouteStateInterface } from "~/router/RouteData";
-import { RouteData } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
 import type { SchuleStammdaten } from "@core/asd/data/schule/SchuleStammdaten";
 import type { Teilstandort } from "@core/core/data/schule/Teilstandort";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+
+import { api } from "~/router/Api";
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 interface RouteStateSchuleAdressdaten extends RouteStateInterface {
 	listTeilstandorte: List<Teilstandort>;

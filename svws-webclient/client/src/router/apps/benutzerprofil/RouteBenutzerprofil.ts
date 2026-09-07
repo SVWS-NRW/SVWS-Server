@@ -1,14 +1,15 @@
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { BenutzerKompetenzGruppe } from "@core/core/types/benutzer/BenutzerKompetenzGruppe";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { List } from "@core/java/util/List";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
+
+import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 export class RouteBenutzerprofil extends RouteNode<any, RouteApp> {
 

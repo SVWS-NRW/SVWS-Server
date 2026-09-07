@@ -1,9 +1,10 @@
-import type { RouteStateInterface } from "~/router/RouteData";
-import { RouteData } from "~/router/RouteData";
-import { api } from "~/router/Api";
-import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 import { SMTPServerKonfiguration } from "@core/core/data/email/SMTPServerKonfiguration";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
+
+import { api } from "~/router/Api";
+import type { RouteStateInterface } from "~/router/RouteData";
+import { RouteData } from "~/router/RouteData";
+import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 
 
 interface RouteStateEmailServer extends RouteStateInterface {

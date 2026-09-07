@@ -1,12 +1,15 @@
-import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized } from "vue-router";
-import type { StatistikLehrerProps } from "~/components/statistik/StatistikLehrerProps";
-import { routeStatistik, type RouteStatistik } from "./RouteStatistik";
-import { routeLehrer } from "../lehrer/RouteLehrer";
-import { routeApp } from "../RouteApp";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+
+import { routeLehrer } from "../lehrer/RouteLehrer";
+import { routeApp } from "../RouteApp";
+import type { StatistikLehrerProps } from "~/components/statistik/StatistikLehrerProps";
+import { RouteNode } from "~/router/RouteNode";
+
+import { type RouteStatistik, routeStatistik } from "./RouteStatistik";
 
 const StatistikLehrer = () => import("~/components/statistik/StatistikLehrer.vue");
 export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
