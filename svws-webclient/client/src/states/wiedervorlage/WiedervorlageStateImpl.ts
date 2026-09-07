@@ -117,6 +117,26 @@ export class WiedervorlageStateImpl extends StateManager<WiedervorlageReactiveSt
 		return response;
 	}
 
+	/** Löscht eine Wiedervorlage */
+	public async deleteWiedervorlage(id: number): Promise<void> {
+		try {
+			await api.server.deleteWiedervorlageEintrag(api.schema, id);
+		} catch {
+			throw new DeveloperNotificationException("Das Löschen der Wiedervorlage ist fehlgeschlagen.");
+		}
+		await this.updateWiedervorlagen();
+	}
+
+	/** Löscht mehrere Wiedervorlagen */
+	public async deleteWiedervorlageEintraege(data: List<number>): Promise<void> {
+		try {
+			await api.server.deleteWiedervorlageEintraege(data, api.schema);
+		} catch {
+			throw new DeveloperNotificationException("Das Löschen der Wiedervorlagen ist fehlgeschlagen.");
+		}
+		await this.updateWiedervorlagen();
+	}
+
 	/** Patcht eine Wiedervorlage */
 	public async patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void> {
 		try {

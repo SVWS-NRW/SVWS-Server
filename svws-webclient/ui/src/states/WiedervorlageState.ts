@@ -23,6 +23,10 @@ export interface WiedervorlageState {
 
 	addWiedervorlage(data: Partial<WiedervorlageEintrag>): Promise<WiedervorlageEintrag>;
 
+	deleteWiedervorlage(id: number): Promise<void>;
+
+	deleteWiedervorlageEintraege(data: List<number>): Promise<void>;
+
 	patchWiedervorlage(data: Partial<WiedervorlageEintrag>, id: number): Promise<void>;
 
 	toggleWiedervorlageErledigung(data: WiedervorlageEintrag): Promise<boolean>;

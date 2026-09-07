@@ -37,22 +37,30 @@
 
 		<!--	Table	-->
 		<ui-table-grid name="Wiedervorlagen" :manager="() => gridManager" class="pb-6 select-text">
+			<!-- Table Header -->
 			<template #header>
 				<template v-for="column in gridColumns" :key="`header-${column.kuerzel}`">
 					<th v-if="column.kuerzel === 'auswahl'" class="flex items-start justify-center">
-						<svws-ui-checkbox :model-value="bulkChecked" disabled title="Alle Wiedervorlagen an-/abwählen" />
+						<svws-ui-checkbox :model-value="alleAusgewaehlt"
+							title="Alle Wiedervorlagen an-/abwählen"
+							@update:model-value="() => toggleSelectionAll()" />
 					</th>
 					<th v-else-if="column.kuerzel === 'rowActions'" />
 					<th v-else class="text-left">{{ column.name }}</th>
 				</template>
 			</template>
+			<!-- Table Body -->
 			<template #default="{ row }">
 				<td class="flex items-start justify-center">
-					<svws-ui-checkbox :model-value="selection.includes(row)" disabled title="Wiedervorlage an-/abwählen" />
+					<svws-ui-checkbox :model-value="selection.has(row.id)"
+						title="Wiedervorlage an-/abwählen"
+						@update:model-value="() => toggleSelection(row)" />
 				</td>
 				<td class="text-left">
 					<template v-if="row.tsWiedervorlage !== null">
-						{{ formatToLocalDate(getDateFromDateTime(row.tsWiedervorlage) ?? null) }}
+						<span :class="{ 'text-ui-warning': isDateTimeBeforeOrToday(row.tsWiedervorlage) }">
+							{{ formatToLocalDate(getDateFromDateTime(row.tsWiedervorlage) ?? null) }}
+						</span>
 					</template>
 				</td>
 				<td class="text-left">
@@ -94,9 +102,10 @@
 					<ui-table-actions :actions="rowActions(row)" :items="row" />
 				</td>
 			</template>
+			<!-- Table Footer -->
 			<template #footer>
 				<td class="col-span-full my-1">
-					<ui-table-actions :actions="bulkActions" :items="selection" always-visible />
+					<ui-table-actions :actions="bulkActions" :items="[...selection.values()]" always-visible />
 				</td>
 			</template>
 		</ui-table-grid>
@@ -104,6 +113,12 @@
 		<!--  Texthinweise - leere Tabellen -->
 		<template v-if="!hasWiedervorlagen">
 			<div class="mb-6">Es liegen noch keine Wiedervorlagen vor.</div>
+			<div class="mt-6 mb-8">
+				<svws-ui-button size="small" @click="openModalAllgemeineWiedervorlage">
+					<span class="icon icon-lg i-ri-add-line" />
+					Allgemeine Wiedervorlage anlegen
+				</svws-ui-button>
+			</div>
 		</template>
 		<template v-else-if="gridManager.daten.length === 0">
 			<div>Mit den gesetzten Filter liegen keine Wiedervorlagen vor.</div>
@@ -114,15 +129,41 @@
 		</template>
 	</div>
 
+	<!-- Modal zum Erstellen oder Bearbeiten -->
 	<wiedervorlage-modal v-model="modal.visible"
 		type="allgemein"
 		:mode="modal.status ?? undefined"
 		:data="modal.data" />
+
+	<!-- Modal zum Löschen -->
+	<svws-ui-modal :show="loeschenModal.visible" type="danger" size="medium"
+		@update:show="loeschenModal.visible = $event">
+		<template #modalTitle>
+			Wiedervorlage{{ loeschenModal.anzahl > 1 ? 'n' : '' }} löschen
+		</template>
+		<template #modalDescription>
+			<template v-if="loeschenModal.anzahl === 1">
+				Soll die gewählte Wiedervorlage wirklich gelöscht werden?
+			</template>
+			<template v-else>
+				Sollen die gewählten {{ loeschenModal.anzahl }} Wiedervorlagen wirklich gelöscht werden?
+			</template>
+			<br><br>Diese Aktion kann nicht rückgängig gemacht werden.
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="loeschenModal.visible = false">
+				Abbrechen
+			</svws-ui-button>
+			<svws-ui-button type="danger" @click="confirmedDelete">
+				Löschen
+			</svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
-	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime } from "~/utils/date";
+	import { computed, ref, shallowRef, toRaw, watch } from "vue";
+	import { getDateFromDateTime, formatToLocalDate, formatDateToDateTime, dateToday } from "~/utils/date";
 	import type { WiedervorlagenAppProps } from "./WiedervorlagenAppProps";
 	import { WiedervorlageEintrag } from "@core/core/data/schule/WiedervorlageEintrag";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
@@ -130,6 +171,7 @@
 	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import { ArrayList } from "@core/java/util/ArrayList";
 
 	const props = defineProps<WiedervorlagenAppProps>();
 
@@ -139,6 +181,7 @@
 
 	const hasWiedervorlagen = computed(() => wiedervorlageState.wiedervorlagenListe.size() > 0);
 
+	/** Gibt die lesbare Bezeichnung des Persontyps zurück. */
 	function getPerson(personID: null | number) {
 		switch (personID) {
 			case 1:
@@ -164,7 +207,7 @@
 		{ kuerzel: "idBenutzerErledigt", name: "Erledigt von", width: "minmax(8rem, 0.5fr)", hideable: false },
 		{ kuerzel: "tsErledigt", name: "Erledigt am", width: "minmax(7rem, 0.25fr)", hideable: false },
 		{ kuerzel: "automatischErledigt", name: "Automatisch löschen", width: "7rem", hideable: false },
-		{ kuerzel: "rowActions", name: "Row-Actions", width: '7em' },
+		{ kuerzel: "rowActions", name: "Row-Actions", width: "7em" },
 	];
 
 	/** Prüft, ob ein Suchbegriff dem Inhalt der Felder "bemerkung" oder "namePerson" von Wiedervorlagen entspricht */
@@ -182,6 +225,15 @@
 		}
 
 		return wiedervorlage.tsWiedervorlage <= dateAsDateTime;
+	}
+
+	/** Prüft, ob ein Datum vor bzw gleich dem heutigen Datum ist */
+	function isDateTimeBeforeOrToday(dateTime: string): boolean {
+		const datePart = getDateFromDateTime(dateTime);
+		if (datePart === undefined) {
+			return false;
+		}
+		return datePart <= dateToday();
 	}
 
 	const gridManager = new GridManager<string, WiedervorlageEintrag, WiedervorlageEintrag[]>({
@@ -225,36 +277,56 @@
 	type modalType = {
 		visible: boolean,
 		status: null | "create" | "edit",
-		id: null | number,
 		data: WiedervorlageEintrag
 	};
 
 	const modal = ref<modalType>({
 		visible: false,
 		status: null,
-		id: null,
 		data: new WiedervorlageEintrag(),
 	});
 
-	/* currently only implemented as readonly checkboxes and action buttons	 */
-	const selection = ref<WiedervorlageEintrag[]>([]);
+	/** Die Auswahl der aktuell gefilterten Einträge (gridManager.daten) */
+	const selection = shallowRef<Map<number, WiedervorlageEintrag>>(new Map());
 
-	const bulkChecked = computed(() => selection.value.length > 0);
+	/** Gibt an, ob alle aktuell gefilterten Einträge (gridManager.daten) ausgewählt sind. */
+	const alleAusgewaehlt = computed<boolean>(() => {
+		const daten = gridManager.daten;
+		return daten.length > 0 && daten.every(row => selection.value.has(row.id));
+	});
+
+	/** Gibt an, ob keine Einträge ausgewählt sind – für disabled-Logik */
+	const keineAusgewaehlt = computed<boolean>(() => selection.value.size === 0);
+
+	/** Actions für den Tabellenfooter */
 	const bulkActions = computed(() => {
 		return [
 			{
 				label: "Allgemeine Wiedervorlage anlegen",
-				action: () => modal.value = { visible: true, status: "create", id: null, data: new WiedervorlageEintrag() },
+				action: () => openModalAllgemeineWiedervorlage(),
 				iconClasses: "i-ri-add-line",
 			},
 			{
 				label: "Ausgewählte Wiedervorlagen löschen",
-				action: () => {},
+				action: () => deleteSelectedWiedervorlagen(),
 				iconClasses: "i-ri-delete-bin-line icon-ui-danger",
-				disabled: true },
+				disabled: keineAusgewaehlt.value },
 		];
 	});
 
+	/** Entfernt durch Filterung nicht mehr sichtbare oder gelöschte Einträge aus der Auswahl. */
+	watch(
+		() => gridManager.daten,
+		(daten) => {
+			const sichtbareIds = new Set(daten.map(row => row.id));
+			const next = new Map<number, WiedervorlageEintrag>(
+				[...selection.value.entries()].filter(([id]) => sichtbareIds.has(id))
+			);
+			selection.value = next;
+		}
+	);
+
+	/** Übergibt die Actions für die Tabellenzeile */
 	function rowActions(row: WiedervorlageEintrag): TableActions<WiedervorlageEintrag>[] {
 		const isErledigt = row.tsErledigt !== null;
 
@@ -266,14 +338,48 @@
 			},
 			{
 				label: "Wiedervorlage bearbeiten",
-				action: () => modal.value = { visible: true, status: "edit", id: row.id, data: row },
+				action: () => {
+					modal.value = { visible: true, status: "edit", data: row };
+				},
 				iconClasses: "i-ri-edit-2-line",
 				disabled: row.tsErledigt !== null,
 			},
-			{ label: "Wiedervorlage löschen", action: () => { }, iconClasses: "i-ri-delete-bin-line icon-ui-danger", disabled: true },
+			{
+				label: "Wiedervorlage löschen",
+				action: () => deleteWiedervorlage(row),
+				iconClasses: "i-ri-delete-bin-line icon-ui-danger",
+			},
 		];
 	}
 
+	/** Öffnet das Modal zum Anlegen einer allgemeinen Wiedervorlage. */
+	function openModalAllgemeineWiedervorlage(): void {
+		modal.value = { visible: true, status: "create", data: new WiedervorlageEintrag() };
+	}
+
+	/** Wählt einen einzelnen Eintrag an oder ab, je nach aktuellem Zustand. */
+	function toggleSelection(row: WiedervorlageEintrag): void {
+		const next = new Map<number, WiedervorlageEintrag>(selection.value);
+
+		if (next.has(row.id)) {
+			next.delete(row.id);
+		} else {
+			next.set(row.id, toRaw(row));
+		}
+		selection.value = next;
+	}
+
+	/** Wählt alle aktuell gefilterten Einträge an oder alle ab – falls bereits alle ausgewählt sind. */
+	function toggleSelectionAll(): void {
+		if (alleAusgewaehlt.value) {
+			selection.value = new Map();
+		} else {
+			selection.value = new Map(gridManager.daten.map(row => [row.id, toRaw(row)]));
+		}
+	}
+	//# endregion
+
+	//# region ----------------------- Erledigung ------------------------
 	async function setWiedervorlageErledigung(row: WiedervorlageEintrag) {
 		const erledigungStatus = await wiedervorlageState.toggleWiedervorlageErledigung(row);
 		const erledigtText = erledigungStatus === true ? "erledigt" : "unerledigt";
@@ -283,5 +389,58 @@
 			: `Wiedervorlage als erledigt markiert: "${row.bemerkung}"`;
 		notificationState.success("Gespeichert", text);
 	}
+	//# endregion
+
+	//# region ----------------------- Löschen ------------------------
+
+	type LoeschenModalType = {
+		visible: boolean,
+		anzahl: number,
+		onConfirm: () => Promise<void>,
+	};
+
+	const loeschenModal = ref<LoeschenModalType>({
+		visible: false,
+		anzahl: 0,
+		onConfirm: async () => {},
+	});
+
+	/** Öffnet das Bestätigungsmodal und speichert die auszuführende Löschaktion. */
+	function openLoeschenModal(anzahl: number, onConfirm: () => Promise<void>): void {
+		loeschenModal.value = { visible: true, anzahl, onConfirm };
+	}
+
+	/** Führt die gespeicherte Löschaktion aus und schließt das Modal. */
+	async function confirmedDelete(): Promise<void> {
+		loeschenModal.value.visible = false;
+		await loeschenModal.value.onConfirm();
+	}
+
+	/** Löscht eine Wiedervorlage */
+	function deleteWiedervorlage(row: WiedervorlageEintrag): void {
+		openLoeschenModal(1, async () => {
+			await wiedervorlageState.deleteWiedervorlage(row.id);
+			const text = row.namePerson !== null ?
+				`Wiedervorlage für "${row.namePerson}" wurde gelöscht: "${row.bemerkung}"`
+				: `Wiedervorlage wurde gelöscht: "${row.bemerkung}"`;
+			notificationState.success("Gelöscht", text);
+		});
+	}
+
+	/** Löscht die ausgewählten Wiedervorlagen */
+	function deleteSelectedWiedervorlagen(): void {
+		const anzahl = selection.value.size;
+		openLoeschenModal(anzahl, async () => {
+			const ids = new ArrayList<number>();
+			for (const id of selection.value.keys()) {
+				ids.add(id);
+			}
+			await wiedervorlageState.deleteWiedervorlageEintraege(ids);
+			const text = anzahl === 1 ?
+				"Wiedervorlage wurde gelöscht." : `${anzahl} Wiedervorlagen wurden gelöscht.`;
+			notificationState.success("Gelöscht", text);
+		});
+	}
+
 	//# endregion
 </script>
