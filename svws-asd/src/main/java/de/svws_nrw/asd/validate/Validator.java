@@ -1,6 +1,7 @@
 package de.svws_nrw.asd.validate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -202,5 +203,40 @@ public abstract class Validator extends BasicValidator {
 		return _kontext.getValidatorManager().getFehlercodePraefixBySchuljahrAndValidatorClass(_kontext.getSchuljahr(), this.getClass());
 	}
 
+
+	/**
+	 * Erstellt zu der übergebenen Liste von Validatoren die zugehörige Liste der Validator-Fehler, die
+	 * durch diese erzeugt wurden.
+	 *
+	 * @param validatoren   die Liste der zu berücksichtigenden Validatoren
+	 *
+	 * @return die Liste aller Fehler, welche bei den Validatoren der Liste aufgetreten sind
+	 */
+	public static @NotNull List<ValidatorFehler> getFehlerOfListe(final @NotNull Collection<Validator> validatoren) {
+		final @NotNull List<ValidatorFehler> result = new ArrayList<>();
+		for (final Validator v : validatoren) {
+			result.addAll(v.getFehler());
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erstellt zu den übergebenen Listen von Validatoren die zugehörige Liste der Validator-Fehler, die
+	 * durch Validatoren aus diesen Listen erzeugt wurden.
+	 *
+	 * @param lists   mehrere Listen mit zu berücksichtigenden Validatoren
+	 *
+	 * @return die Liste aller Fehler, welche bei den Validatoren der Listen aufgetreten sind
+	 */
+	public static @NotNull List<ValidatorFehler> getFehlerOfListen(final @NotNull Collection<List<Validator>> lists) {
+		final @NotNull List<ValidatorFehler> result = new ArrayList<>();
+		for (final List<Validator> e : lists) {
+			for (final Validator v : e) {
+				result.addAll(v.getFehler());
+			}
+		}
+		return result;
+	}
 
 }

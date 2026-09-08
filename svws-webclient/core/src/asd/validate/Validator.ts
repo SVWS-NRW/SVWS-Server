@@ -5,6 +5,7 @@ import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { DateManager } from '../../asd/validate/DateManager';
 import { NullPointerException } from '../../java/lang/NullPointerException';
+import type { Collection } from '../../java/util/Collection';
 import type { Supplier } from '../../java/util/function/Supplier';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
@@ -182,6 +183,40 @@ export abstract class Validator extends BasicValidator {
 	 */
 	public getFehlercodePraefix(): string {
 		return this._kontext.getValidatorManager().getFehlercodePraefixBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
+	}
+
+	/**
+	 * Erstellt zu der übergebenen Liste von Validatoren die zugehörige Liste der Validator-Fehler, die
+	 * durch diese erzeugt wurden.
+	 *
+	 * @param validatoren   die Liste der zu berücksichtigenden Validatoren
+	 *
+	 * @return die Liste aller Fehler, welche bei den Validatoren der Liste aufgetreten sind
+	 */
+	public static getFehlerOfListe(validatoren: Collection<Validator>): List<ValidatorFehler> {
+		const result: List<ValidatorFehler> = new ArrayList<ValidatorFehler>();
+		for (const v of validatoren) {
+			result.addAll(v.getFehler());
+		}
+		return result;
+	}
+
+	/**
+	 * Erstellt zu den übergebenen Listen von Validatoren die zugehörige Liste der Validator-Fehler, die
+	 * durch Validatoren aus diesen Listen erzeugt wurden.
+	 *
+	 * @param lists   mehrere Listen mit zu berücksichtigenden Validatoren
+	 *
+	 * @return die Liste aller Fehler, welche bei den Validatoren der Listen aufgetreten sind
+	 */
+	public static getFehlerOfListen(lists: Collection<List<Validator>>): List<ValidatorFehler> {
+		const result: List<ValidatorFehler> = new ArrayList<ValidatorFehler>();
+		for (const e of lists) {
+			for (const v of e) {
+				result.addAll(v.getFehler());
+			}
+		}
+		return result;
 	}
 
 	transpilerCanonicalName(): string {

@@ -1,7 +1,9 @@
 package de.svws_nrw.asd.validate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
@@ -50,6 +52,19 @@ public final class ValidatorGesamt extends Validator {
 	/** Die Daten des Validators */
 	protected final @NotNull Supplier<StatistikGesamt> daten;
 
+	/** Eine Map mit allen Sub-Validatoren, welche direkt auf Schülerdatensätzen arbeiten, zugeordnet zu ihrer ID */
+	protected final @NotNull Map<Long, List<Validator>> mapValidatorenSchueler = new HashMap<>();
+
+	/** Eine Map mit allen Sub-Validatoren, welche direkt auf Lehrerdatensätzen arbeiten, zugeordnet zu ihrer ID */
+	protected final @NotNull Map<Long, List<Validator>> mapValidatorenLehrer = new HashMap<>();
+
+	/** Eine Map mit allen Sub-Validatoren, welche direkt auf Klassendatensätzen arbeiten, zugeordnet zu ihrer ID */
+	protected final @NotNull Map<Long, List<Validator>> mapValidatorenKlassen = new HashMap<>();
+
+	/** Eine Map mit allen Sub-Validatoren, welche direkt auf Kursdatensätzen arbeiten, zugeordnet zu ihrer ID */
+	protected final @NotNull Map<Long, List<Validator>> mapValidatorenKurse = new HashMap<>();
+
+
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
@@ -59,27 +74,30 @@ public final class ValidatorGesamt extends Validator {
 	public ValidatorGesamt(final @NotNull Supplier<StatistikGesamt> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-
 		validatoren.add(new ValidatorSssSchuleStammdatenSchulform(() -> daten.get().schule.schulform, kontext));
-
-		validatoren.add(new ValidatorGlGesamtLehrerdaten(() -> daten.get().lehrer, kontext));
-
-		validatoren.add(new ValidatorGsGesamtSchuelerdaten(() -> daten.get().schueler, kontext));
 	}
 
-	@Override
-	protected boolean pruefe() {
-		_validatoren.clear();
-		_validatoren.addAll(validatoren);
 
-		final @NotNull StatistikGesamt gesamt = daten.get();
+	/**
+	 * Fügt die Subvalidatoren für die Lehrerdatensätze hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit den Lehrerdatensätzen
+	 */
+	private void addSubvalidatorenLehrer(final @NotNull StatistikGesamt gesamt) {
+		// Leere zunächst die Map für die Lehrervalidatoren
+		mapValidatorenLehrer.clear();
 
-		// =====================
-		// LEHRER
-		// =====================
+		// Ergänze die allgemeinen Validatoren unter der ID -1
+		final @NotNull List<Validator> allgemein = new ArrayList<>();
+		allgemein.add(new ValidatorGlGesamtLehrerdaten(() -> gesamt.lehrer, this.kontext()));
+		_validatoren.addAll(allgemein);
+		mapValidatorenLehrer.put(-1L, allgemein);
 
+		// Durchwandere die Lehrerdatensätze und ergänze die Subvalidatoren für die Lehrer
 		for (final LehrerStatistikGesamt lehrer : gesamt.lehrer) {
-			_validatoren.add(new ValidatorLsLehrerStammdaten(
+			// Erzeuge die Liste der Subvalidatoren für den Lehrer
+			final @NotNull List<Validator> list = new ArrayList<>();
+			list.add(new ValidatorLsLehrerStammdaten(
 					() -> lehrer.nachname,
 					() -> lehrer.vorname,
 					() -> lehrer.geburtsdatum,
@@ -87,7 +105,7 @@ public final class ValidatorGesamt extends Validator {
 					() -> lehrer.kuerzel,
 					() -> lehrer.idRechtsverhaeltnis,
 					this.kontext()));
-			_validatoren.add(new ValidatorLpLehrerPersonaldaten(
+			list.add(new ValidatorLpLehrerPersonaldaten(
 					() -> lehrer.id,
 					() -> gesamt.schule.idSchuljahresabschnitt,
 					() -> lehrer.idStaatsangehoerigkeit,
@@ -104,20 +122,39 @@ public final class ValidatorGesamt extends Validator {
 
 			for (final LehrerLehramtEintrag lehraemter : lehrer.lehraemter) {
 				for (final LehrerLehrbefaehigungEintrag lehrbefaehigungen : lehraemter.lehrbefaehigungen) {
-							_validatoren.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(
-									() -> lehrbefaehigungen.idLehrbefaehigung,
-									() -> LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt),
-									this.kontext()));
+					list.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(
+							() -> lehrbefaehigungen.idLehrbefaehigung,
+							() -> LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt),
+							this.kontext()));
 				}
 			}
+
+			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für den Lehrer
+			_validatoren.addAll(list);
+			mapValidatorenLehrer.put(lehrer.id, list);
 		}
+	}
 
-		// =====================
-		// SCHÜLER
-		// =====================
+	/**
+	 * Fügt die Subvalidatoren für die Schülerdatensätze hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit den Schülerdatensätzen
+	 */
+	private void addSubvalidatorenSchueler(final @NotNull StatistikGesamt gesamt) {
+		// Leere zunächst die Map für die Schülervalidatoren
+		mapValidatorenSchueler.clear();
 
+		// Ergänze die allgemeinen Validatoren unter der ID -1
+		final @NotNull List<Validator> allgemein = new ArrayList<>();
+		allgemein.add(new ValidatorGsGesamtSchuelerdaten(() -> gesamt.schueler, this.kontext()));
+		_validatoren.addAll(allgemein);
+		mapValidatorenSchueler.put(-1L, allgemein);
+
+		// Durchwandere die Schülerdatensätze und ergänze die Subvalidatoren für die Schüler
 		for (final SchuelerStatistikGesamt schueler : gesamt.schueler) {
-			_validatoren.add(new ValidatorSsSchuelerStammdaten(
+			// Erzeuge die Liste der Subvalidatoren für den Schüler
+			final @NotNull List<Validator> list = new ArrayList<>();
+			list.add(new ValidatorSsSchuelerStammdaten(
 					() -> schueler.geschlecht,
 					() -> schueler.geburtsdatum,
 					() -> schueler.idGeburtsland,
@@ -128,52 +165,114 @@ public final class ValidatorGesamt extends Validator {
 					() -> schueler.idStaatsangehoerigkeit2,
 					this.kontext()));
 			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
-				_validatoren.add(new ValidatorSlSchuelerLernabschnittsdaten(
+				list.add(new ValidatorSlSchuelerLernabschnittsdaten(
 						() -> lernabschnitt.idKlassenart,
 						() -> lernabschnitt.idEpJahre,
 						this.kontext()));
 			}
+
+			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für den Schüler
+			_validatoren.addAll(list);
+			mapValidatorenSchueler.put(schueler.id, list);
 		}
+	}
 
-		// =====================
-		// KLASSEN
-		// =====================
 
-		_validatoren.add(new ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet(
+	/**
+	 * Fügt die Subvalidatoren für die Klassendatensätze hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit den Klassendatensätzen
+	 */
+	private void addSubvalidatorenKlassen(final @NotNull StatistikGesamt gesamt) {
+		// Leere zunächst die Map für die Klassenvalidatoren
+		mapValidatorenKlassen.clear();
+
+		// Ergänze die allgemeinen Validatoren unter der ID -1
+		final @NotNull List<Validator> allgemein = new ArrayList<>();
+		allgemein.add(new ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet(
 				() -> gesamt.klassen,
 				this.kontext()));
+		_validatoren.addAll(allgemein);
+		mapValidatorenKlassen.put(-1L, allgemein);
 
+		// Durchwandere die Klassendatensätze und ergänze die Subvalidatoren für die Klassen
 		for (final KlassenStatistikGesamt klasse : gesamt.klassen) {
-			_validatoren.add(new ValidatorKkKlassenKlassenart(
+			// Erzeuge die Liste der Subvalidatoren für die Klasse
+			final @NotNull List<Validator> list = new ArrayList<>();
+
+			list.add(new ValidatorKkKlassenKlassenart(
 					() -> null, //hier muss die idKlassenart hin -> gibt es in den daten noch nicht
 					this.kontext()));
-			_validatoren.add(new ValidatorKlKlassenKlassenleitung(
+			list.add(new ValidatorKlKlassenKlassenleitung(
 					() -> klasse.klassenLeitungen,
 					this.kontext()));
-			_validatoren.add(new ValidatorKoKlassenOrganisationsform(
+			list.add(new ValidatorKoKlassenOrganisationsform(
 					() -> null, //hier muss die idallgemeinbildungsorganisationsform hin -> gibt es in den daten noch nicht
 					() -> null, //hier muss die idweiterbildungsorganisationsform hin    -> gibt es in den daten noch nicht
 					() -> null, //hier muss die idberufsbildungsorganisationsform hin    -> gibt es in den daten noch nicht
 					this.kontext()));
-			_validatoren.add(new ValidatorKsKlassenSchulgliederung(
+			list.add(new ValidatorKsKlassenSchulgliederung(
 					() -> null, //hier muss die idSchulgliederung hin -> gibt es in den daten noch nicht,
 					this.kontext()));
+
+			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für die Klasse
+			_validatoren.addAll(list);
+			mapValidatorenKlassen.put(klasse.id, list);
 		}
+	}
 
-		// =====================
-		// RELIGIONEN
-		// =====================
 
-		for (final ReligionStatistikGesamt religion : gesamt.religionen) {
-			_validatoren.add(new ValidatorIkaIntKatalogKonfessionenAsdKatalog(
-					() -> religion.idKatalog,
+	/**
+	 * Fügt die Subvalidatoren für die Kursdatensätze hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit den Kursdatensätzen
+	 */
+	private void addSubvalidatorenKurse(final @NotNull StatistikGesamt gesamt) {
+		// Leere zunächst die Map für die Kursvalidatoren
+		mapValidatorenKurse.clear();
+
+		// Ergänze die allgemeinen Validatoren unter der ID -1
+		final @NotNull List<Validator> allgemein = new ArrayList<>();
+		// hier ggf. allgemeine Kurs-Validierung
+		_validatoren.addAll(allgemein);
+		mapValidatorenKurse.put(-1L, allgemein);
+
+		// Durchwandere die Kursdatensätze und ergänze die Subvalidatoren für die Kurse
+		for (final KursStatistikGesamt kurs : gesamt.kurse) {
+			// Erzeuge die Liste der Subvalidatoren für die Kurse
+			final @NotNull List<Validator> list = new ArrayList<>();
+
+			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach(
+					() -> kurs.idFach,
 					this.kontext()));
+			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft(
+					() -> kurs.lehrer,
+					() -> gesamt.lehrer,
+					this.kontext()));
+			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden(
+					() -> (double) kurs.wochenstunden,
+					this.kontext()));
+			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(
+					() -> kurs.weitereLehrer,
+					() -> gesamt.lehrer,
+					this.kontext()));
+			list.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden(
+					() -> kurs.wochenstundenLehrer,
+					this.kontext()));
+
+			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für die Kurse
+			_validatoren.addAll(list);
+			mapValidatorenKurse.put(kurs.id, list);
 		}
+	}
 
-		// =====================
-		// ORTE
-		// =====================
 
+	/**
+	 * Fügt die Subvalidatoren für den Katalog der Orte hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit dem Katalog der Orte
+	 */
+	private void addSubvalidatorenKatalogOrte(final @NotNull StatistikGesamt gesamt) {
 		for (final OrteStatistikGesamt ort : gesamt.orte) {
 			_validatoren.add(new ValidatorIolIntKatalogOrteLand(
 					() -> ort.idLand,
@@ -189,30 +288,188 @@ public final class ValidatorGesamt extends Validator {
 					() -> ort.idLand,
 					this.kontext()));
 		}
+	}
 
-		// =====================
-		// KURSE / UNTERRICHTSVERTEILUNG
-		// =====================
 
-		for (final KursStatistikGesamt kurs : gesamt.kurse) {
-			_validatoren.add(new ValidatorUfUnterrichtsverteilungsdatenFach(
-					() -> kurs.idFach,
-					this.kontext()));
-			_validatoren.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft(
-					() -> kurs.lehrer,
-					() -> gesamt.lehrer,
-					this.kontext()));
-			_validatoren.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden(
-					() -> (double) kurs.wochenstunden,
-					this.kontext()));
-			_validatoren.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft(
-					() -> kurs.weitereLehrer,
-					() -> gesamt.lehrer,
-					this.kontext()));
-			_validatoren.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden(
-					() -> kurs.wochenstundenLehrer,
+	/**
+	 * Fügt die Subvalidatoren für den Katalog der Religionen hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit dem Katalog der Religionen
+	 */
+	private void addSubvalidatorenKatalogReligion(final @NotNull StatistikGesamt gesamt) {
+		for (final ReligionStatistikGesamt religion : gesamt.religionen) {
+			_validatoren.add(new ValidatorIkaIntKatalogKonfessionenAsdKatalog(
+					() -> religion.idKatalog,
 					this.kontext()));
 		}
+	}
+
+
+	/**
+	 * Gibt die Liste der Validatoren für den Schüler mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID des Schülers
+	 *
+	 * @return die Liste der Validatoren
+	 */
+	public @NotNull List<Validator> getBySchuelerID(final long id) {
+		final List<Validator> result = mapValidatorenSchueler.get(id);
+		if (result == null) {
+			return new ArrayList<>();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Liste der Validatoren für den Lehrer mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID des Lehrers
+	 *
+	 * @return die Liste der Validatoren
+	 */
+	public @NotNull List<Validator> getByLehrerID(final long id) {
+		final List<Validator> result = mapValidatorenLehrer.get(id);
+		if (result == null) {
+			return new ArrayList<>();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Liste der Validatoren für die Klasse mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die Liste der Validatoren
+	 */
+	public @NotNull List<Validator> getByKlassenID(final long id) {
+		final List<Validator> result = mapValidatorenKlassen.get(id);
+		if (result == null) {
+			return new ArrayList<>();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Liste der Validatoren für die Kurse mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID der Kurse
+	 *
+	 * @return die Liste der Validatoren
+	 */
+	public @NotNull List<Validator> getByKursID(final long id) {
+		final List<Validator> result = mapValidatorenKurse.get(id);
+		if (result == null) {
+			return new ArrayList<>();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Liste der Validator-Fehler für den Schüler mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID des Schülers
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerBySchuelerID(final long id) {
+		return Validator.getFehlerOfListe(this.getBySchuelerID(id));
+	}
+
+
+	/**
+	 * Gibt die Liste der Validator-Fehler für den Lehrer mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID des Lehrers
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerByLehrerID(final long id) {
+		return Validator.getFehlerOfListe(this.getByLehrerID(id));
+	}
+
+
+	/**
+	 * Gibt die Liste der Validator-Fehler für die Klasse mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerByKlassenID(final long id) {
+		return Validator.getFehlerOfListe(this.getByKlassenID(id));
+	}
+
+
+	/**
+	 * Gibt die Liste der Validator-Fehler für die Kurse mit der übergebenen ID zurück.
+	 *
+	 * @param id   die ID der Kurse
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerByKursID(final long id) {
+		return Validator.getFehlerOfListe(this.getByKursID(id));
+	}
+
+
+	/**
+	 * Gibt die Liste aller Validator-Fehler für den Bereich Schüler zurück.
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerSchueler() {
+		return Validator.getFehlerOfListen(mapValidatorenSchueler.values());
+	}
+
+
+	/**
+	 * Gibt die Liste aller Validator-Fehler für den Bereich Lehrer zurück.
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerLehrer() {
+		return Validator.getFehlerOfListen(mapValidatorenLehrer.values());
+	}
+
+
+	/**
+	 * Gibt die Liste aller Validator-Fehler für den Bereich Klassen zurück.
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerKlassen() {
+		return Validator.getFehlerOfListen(mapValidatorenKlassen.values());
+	}
+
+
+	/**
+	 * Gibt die Liste aller Validator-Fehler für den Bereich Kurse zurück.
+	 *
+	 * @return die Liste der Fehler
+	 */
+	public @NotNull List<ValidatorFehler> getFehlerKurse() {
+		return Validator.getFehlerOfListen(mapValidatorenKurse.values());
+	}
+
+
+	@Override
+	protected boolean pruefe() {
+		_validatoren.clear();
+		_validatoren.addAll(validatoren);
+
+		// Erzeuge dynamisch Subvalidatoren anhand der übergebenen Daten zur späteren Ausführung in diesem Validator
+		final @NotNull StatistikGesamt gesamt = daten.get();
+		this.addSubvalidatorenLehrer(gesamt);
+		this.addSubvalidatorenSchueler(gesamt);
+		this.addSubvalidatorenKlassen(gesamt);
+		this.addSubvalidatorenKatalogReligion(gesamt);
+		this.addSubvalidatorenKatalogOrte(gesamt);
+		this.addSubvalidatorenKurse(gesamt);
 
 		return true;
 	}
