@@ -54,7 +54,7 @@ export class FachModelProxy extends ModelProxy<FachDaten> {
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnungUeberweisungszeugnis, null, 255), 'bezeichnungUeberweisungszeugnis');
 		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.maxZeichenInFachbemerkungen, 0, JavaInteger.MAX_VALUE), 'maxZeichenInFachbemerkungen');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), 'sortierung');
 	}
 
 	selectedFach = computed<FachKatalogEintrag | null>({

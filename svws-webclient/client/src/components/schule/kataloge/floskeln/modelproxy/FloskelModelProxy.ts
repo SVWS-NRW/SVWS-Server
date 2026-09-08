@@ -5,6 +5,7 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { Floskel } from "@core/core/data/schule/Floskel";
 import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { FloskelnListeManager } from "@ui/ui/manager/kataloge/FloskelnListeManager";
@@ -35,7 +36,7 @@ export class FloskelModelProxy extends ModelProxy<Floskel> {
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.text), 'text');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idFloskelgruppe), 'idFloskelgruppe');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	hatFloskelgruppeArtFach = computed<boolean>(() => {

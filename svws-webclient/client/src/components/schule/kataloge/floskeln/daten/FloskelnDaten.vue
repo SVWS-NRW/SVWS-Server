@@ -42,7 +42,7 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@change="model.patch"
-						:min="0" :max="32000" required />
+						:min="0" required />
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>

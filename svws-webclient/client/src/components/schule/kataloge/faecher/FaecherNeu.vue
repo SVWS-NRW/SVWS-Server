@@ -98,7 +98,7 @@
 						v-model="model.proxy.sortierung"
 						@change="model.patch"
 						:validation="() => model.getFehler('sortierung')"
-						:min="0" :max="32000"
+						:min="0"
 						:disabled
 						:removable="false" required />
 					<svws-ui-spacing />

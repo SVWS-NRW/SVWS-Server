@@ -3,6 +3,7 @@ import { computed } from "vue";
 import type { FoerderschwerpunktKatalogEintrag } from "@core/asd/data/schule/FoerderschwerpunktKatalogEintrag";
 import { Foerderschwerpunkt } from "@core/asd/types/schule/Foerderschwerpunkt";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -50,7 +51,7 @@ export class FoerderschwerpunkteModelProxy extends ModelProxy<Foerderschwerpunkt
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// sortierung
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.sortierung), "sortierung");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	foerderschwerpunkt = computed<FoerderschwerpunktKatalogEintrag | null>({
