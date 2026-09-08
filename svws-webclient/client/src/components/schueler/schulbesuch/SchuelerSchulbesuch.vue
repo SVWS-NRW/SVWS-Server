@@ -73,16 +73,13 @@
 				<svws-ui-button type="transparent"
 					@click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)"
 					:disabled="manager().daten.idAufnehmendeSchule === null"
+					class="self-end"
 					:readonly>
-					<span class="icon i-ri-link" />Zur Schule
+					<span class="icon i-ri-link" /> Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="Wechseldatum" type="date"
-					:model-value="manager().daten.wechseldatumAufnehmendeSchule"
-					readonly />
-				<ui-select label="Wechselgrund"
-					v-if="serverState.hasDev"
-					:manager="schulwechselGrundSelectManager"
-					:disabled="!wechselBevorstehend" :readonly />
+					v-model="model.proxy.wechseldatumAufnehmendeSchule"
+					:readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 
