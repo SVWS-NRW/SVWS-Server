@@ -2,6 +2,7 @@ import { computed } from "vue";
 
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { OrtsteileListeManager } from "@ui/ui/manager/kataloge/OrtsteileListeManager";
@@ -10,7 +11,6 @@ import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange
 import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-
 
 /**
  * ModelProxy für OrtsteilKatalogEintrag
@@ -56,7 +56,7 @@ export class OrtsteilModelProxy extends ModelProxy<OrtsteilKatalogEintrag> {
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idOrt), 'idOrt');
 		// sortierung
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	filteredOrte = computed<Iterable<OrtKatalogEintrag>>(() => {

@@ -86,7 +86,7 @@
 							<svws-ui-input-number placeholder="Sortierung"
 								v-model="model.proxy.sortierung"
 								:validation="() => model.getFehler('sortierung')"
-								:min="0" :max="32000" :disabled="schuleAlreadyCreated || !hatKompetenzAdd" :removable="false" required />
+								:min="0" :disabled="schuleAlreadyCreated || !hatKompetenzAdd" :removable="false" required />
 							<svws-ui-spacing />
 							<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="schuleAlreadyCreated || !hatKompetenzAdd">
 								Sichtbar
