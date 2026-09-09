@@ -34,7 +34,7 @@
 						@change="model.patch"
 						:validation="() => model.getFehler('sortierung')"
 						:readonly="!hatKompetenzUpdate"
-						:min="0" :max="32000"
+						:min="0"
 						:removable="false" required />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly="!hatKompetenzUpdate">

@@ -139,7 +139,7 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "kurzbezeichnung" -> dto.Kurzbezeichnung =
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Jahrgaenge.col_Spaltentitel.datenlaenge(), name);
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, 32001, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, null, name);
 			case "idSchulgliederung" -> updateKuerzelSchulgliederung(dto, value, name);
 			case "idFolgejahrgang" -> updateIdFolgejahrgang(dto, value, name);
 			case "anzahlRestabschnitte" -> dto.AnzahlRestabschnitte = JSONMapper.convertToIntegerInRange(value, true, 0, 41, name);
