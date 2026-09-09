@@ -321,7 +321,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					if (schuljahresabschnitt == null) {
 						continue;
 					}
-					final int abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
+					final Integer abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByIDOrNull(s.idSchulgliederung),
 							schuljahresabschnitt.Jahr, s.jahrgang);
 					// Es wird nicht geprüft, ob es sich um Abgänger oder ähnliches handelt, da die Daten der Kurs-Schüler-Zuordnung sonst nicht mehr zugreifbar sind
 					schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, abiturjahrgang));
