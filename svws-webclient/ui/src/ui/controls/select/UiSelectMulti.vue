@@ -146,6 +146,7 @@
 
 
 	// model mit der aktuellen Selektion
+	// eslint-disable-next-line vue/require-default-prop
 	const model = defineModel<Iterable<T> | null>();
 	const modelArray = computed(() => Array.from(toRaw(model.value) ?? []));
 

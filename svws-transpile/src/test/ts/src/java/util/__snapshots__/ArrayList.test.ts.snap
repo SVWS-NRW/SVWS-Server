@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`java.util.ArrayList, getestet mit 'Number' > toArray: returns given array with elements 1`] = `
+exports[`java.util.ArrayList, getestet mit Number > toArray: returns given array with elements 1`] = `
 [
   1,
   2,
@@ -8,7 +8,7 @@ exports[`java.util.ArrayList, getestet mit 'Number' > toArray: returns given arr
 ]
 `;
 
-exports[`java.util.ArrayList, getestet mit 'String' > toArray: returns given array with elements 1`] = `
+exports[`java.util.ArrayList, getestet mit String > toArray: returns given array with elements 1`] = `
 [
   "a",
   2,
@@ -16,7 +16,7 @@ exports[`java.util.ArrayList, getestet mit 'String' > toArray: returns given arr
 ]
 `;
 
-exports[`java.util.ArrayList, getestet mit 'TestPerson' > toArray: returns given array with elements 1`] = `
+exports[`java.util.ArrayList, getestet mit TestPerson > toArray: returns given array with elements 1`] = `
 [
   TestPerson {
     "id": 1,

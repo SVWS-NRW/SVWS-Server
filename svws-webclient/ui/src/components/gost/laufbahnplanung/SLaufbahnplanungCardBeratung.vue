@@ -33,8 +33,11 @@
 	}>();
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
+	// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 	const refLehrer = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
+	// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 	const refBeratungsdatum = ref<ComponentExposed<typeof SvwsUiTextInput>>();
+	// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
 	const beratungsdatum = computed<string>(() => gostLaufbahnplanungState.gostLaufbahnBeratungsdaten.beratungsdatum ?? new Date().toISOString().slice(0, -14));
 

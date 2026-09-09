@@ -194,7 +194,7 @@ export function registerEndpunkteTests() {
 
 	describe("Das Bearbeiten der Config", async () => {
 
-		test.sequential("Ein Wert in der Config kann neu angelegt werden", async () => {
+		test("Ein Wert in der Config kann neu angelegt werden", { concurrent: false }, async () => {
 			// Setze den Wert
 			await apiServiceAuth.setClientConfigUserKey("Zitroneneis", "Lieblingseis");
 
@@ -209,7 +209,7 @@ export function registerEndpunkteTests() {
 			expect(item.value).toBe("Zitroneneis");
 		});
 
-		test.sequential("Ein Wert in der Config kann geändert werden", async () => {
+		test("Ein Wert in der Config kann geändert werden", { concurrent: false }, async () => {
 			// Lade die Konfiguration und bestimme das erste Element
 			const config = await apiServiceAuth.getClientConfig();
 			const datum = config.user.getFirst();
@@ -226,7 +226,7 @@ export function registerEndpunkteTests() {
 			expect(datumNeu.value).toBe(neuerWert);
 		});
 
-		test.sequential("Ein Wert in der Config kann gelöscht werden", async () => {
+		test("Ein Wert in der Config kann gelöscht werden", { concurrent: false }, async () => {
 			// Lade die Konfiguration und bestimme das erste Element
 			const config = await apiServiceAuth.getClientConfig();
 			const datum = config.user.getFirst();

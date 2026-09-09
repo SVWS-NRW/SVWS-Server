@@ -107,6 +107,7 @@
 
 	const methodsTextField = shallowRef<{ focus: () => void } | undefined>(undefined);
 
+	// eslint-disable-next-line @typescript-eslint/no-generated-empty-object-type
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null | undefined>(null);
 
 	const showList = ref(false);

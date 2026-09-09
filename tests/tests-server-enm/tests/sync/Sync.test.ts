@@ -12,12 +12,12 @@ const api = new ApiServer(targetUrlSVWSAppServer, 'Admin', '');
 
 describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Server zur Initialisierung, Konfiguration und Synchronisation", () => {
 
-	test.sequential("Bestimme die Liste der WeNoM-Verbindungen auf dem SVWS-Server.", async () => {
+	test("Bestimme die Liste der WeNoM-Verbindungen auf dem SVWS-Server.", { concurrent: false }, async () => {
 		const responseGet = await api.getENMServerConnections(targetDB);
 		expect(responseGet).toBeInstanceOf(ArrayList);
 	});
 
-	test.sequential("Die WeNoM-Verbindung kann erstellt werden", async () => {
+	test("Die WeNoM-Verbindung kann erstellt werden", { concurrent: false }, async () => {
 		const createBody = {
 			url: targetUrlENMServerFORSvwsApp,
 			bezeichnung: "Neue Verbindung",
@@ -28,7 +28,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 		expect(conn.clientID).toBe("1");
 	});
 
-	test.sequential("Die aktuelle WeNoM-Verbindung kann gepatcht werden", async () => {
+	test("Die aktuelle WeNoM-Verbindung kann gepatcht werden", { concurrent: false }, async () => {
 		const patchBody = {
 			url: targetUrlENMServerFORSvwsApp,
 			clientSecret: CLIENT_SECRET,
@@ -36,7 +36,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 		await api.patchENMServerConnection(patchBody, targetDB, idConnection);
 	});
 
-	test.sequential("Es kann ein Setup für eine WeNoM-Verbindug ausgeführt werden > 200", async () => {
+	test("Es kann ein Setup für eine WeNoM-Verbindug ausgeführt werden > 200", { concurrent: false }, async () => {
 		try {
 			await api.setupENMServer(targetDB, idConnection);
 		} catch {
@@ -46,37 +46,37 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 		}
 	});
 
-	test.sequential("Ein Get auf die WeNoM-Verbindung enthält erwartete Secret Informationen inklusive TLS", async () => {
+	test("Ein Get auf die WeNoM-Verbindung enthält erwartete Secret Informationen inklusive TLS", { concurrent: false }, async () => {
 		const secretData = await api.getENMServerConnection(targetDB, idConnection);
 		expect(secretData.clientSecret).toBe(CLIENT_SECRET);
 		expect(secretData.serverTLSCert).toBeTruthy();
 	});
 
-	test.sequential("Eine Check über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
+	test("Eine Check über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
 		const res = await api.checkENMServer(targetDB, idConnection);
 		expect(res.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
-	test.sequential("Eine Synchronisation der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
+	test("Eine Synchronisation der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
 		const res = api.synchronizeENMDaten(targetDB, idConnection);
 		expect((await res).success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
-	test.sequential("Ein Upload der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
+	test("Ein Upload der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
 		const responseGetUpload = await api.uploadENMDaten(targetDB, idConnection);
 		expect(responseGetUpload.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
-	test.sequential("Ein Download der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", async () => {
+	test("Ein Download der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
 		const responseGetDownload = await api.downloadENMDaten(targetDB, idConnection);
 		expect(responseGetDownload.success).toBeTruthy();
 	});
 
 	// Diese Test dient der Initialisierung des ENM-Servers mit einer Konfiguration für die Sperrungen bei Klassen
-	test.sequential("Das Setzen der Konfiguration für die Sperrung der Noteneingabe über die WeNoM-Verbindung ist erfolgreich > 204", async () => {
+	test("Das Setzen der Konfiguration für die Sperrung der Noteneingabe über die WeNoM-Verbindung ist erfolgreich > 204", { concurrent: false }, async () => {
 		const configKlasse = {
 			"istFehlstundenEingabeKlassenweise": false,
 			"spalten": [

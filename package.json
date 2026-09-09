@@ -14,7 +14,7 @@
 		"admin:ci": "npm run ci --workspace=svws-webclient/admin && npm run ci --workspace=svws-webclient/ui",
 		"client:ci": "npm run ci --workspace=svws-webclient/client && npm run ci --workspace=svws-webclient/ui",
 		"enmserver:ci": "npm run ci --workspace=svws-webclient/enmserver && npm run ci --workspace=svws-webclient/ui",
-		"laufbahnplanung:ci":"npm run ci --workspace=svws-webclient/laufbahnplanung && npm run ci --workspace=svws-webclient/ui",
+		"laufbahnplanung:ci": "npm run ci --workspace=svws-webclient/laufbahnplanung && npm run ci --workspace=svws-webclient/ui",
 		"ui:ci": "npm run ci --workspace=svws-webclient/ui"
 	},
 	"dependencies": {
@@ -34,7 +34,7 @@
 		"@typescript-eslint/parser": "^8.0.0-alpha.30",
 		"@vitejs/plugin-basic-ssl": "^2.3.0",
 		"@vitejs/plugin-vue": "^6.0.0",
-		"@vitest/coverage-v8": "^4.0.1",
+		"@vitest/coverage-v8": "^5.0.0",
 		"@vue/devtools-api": "^8.1.2",
 		"@vue/test-utils": "^2.4.6",
 		"@vue/tsconfig": "^0.9.0",
@@ -52,7 +52,7 @@
 		"unplugin-vue-components": "^32.0.0",
 		"unplugin-vue-markdown": "^32.0.0",
 		"vite": "^8.0.0",
-		"vitest": "^4.0.1",
+		"vitest": "^5.0.0",
 		"vue-component-type-helpers": "^3.1.5",
 		"vue-tsc": "^3.3.3"
 	},
