@@ -2,6 +2,7 @@
 	<div class="flex flex-col w-full h-full overflow-hidden">
 		<svws-ui-header>
 			<span class="inline-block mr-3">Lehrer-Zugangsdaten verwalten</span>
+			<div v-if="!manager().daten.lehrer.isEmpty()"><svws-ui-button-select :dropdown-actions /></div>
 			<ul v-if="lehrerEmailProbleme !== 0" class="text-base mt-2 text-ui-danger">
 				<li v-if="lehrerOhneEmail > 1">{{ lehrerOhneEmail }} fehlende Adressen</li>
 				<li v-if="lehrerOhneEmail === 1">{{ lehrerOhneEmail }} fehlende Adresse</li>
@@ -215,6 +216,46 @@
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
 	const auswahl = ref<ENMv2Lehrer[]>([]);
+
+	const dropdownActions = [
+		{ key: 1, text: "CSV Export", action: () => exportieren("csv") },
+		{ key: 1, text: "JSON Export", action: () => exportieren("json") },
+	];
+
+	function exportieren(type: 'csv' | 'json') {
+		const arr = [];
+		if (type === 'csv') {
+			arr.push("kuerzel;initialPasswort");
+		}
+		for (const l of gridManager.daten) {
+			if (type === 'json') {
+				const o: { kuerzel: string | null, initialPasswort: string | null } = {
+					kuerzel: l.kuerzel,
+					initialPasswort: props.mapEnmInitialKennwoerter().get(l.id),
+				};
+				arr.push(JSON.stringify(o));
+			} else {
+				arr.push(`${l.kuerzel};${props.mapEnmInitialKennwoerter().get(l.id)}`);
+			}
+		}
+		let blob;
+		if (type === 'json') {
+			blob = new Blob(['[' + arr.toString() + ']'], {
+				type: "application/json",
+			});
+		} else {
+			blob = new Blob([arr.join("\n")], {
+				type: "application/csv",
+			});
+		}
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = `WeNoMInitialPasswoerter.${type === 'json' ? 'json' : 'csv'}`;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
 
 	function toggleSelection(row: ENMv2Lehrer) {
 		const idx = auswahl.value.indexOf(row);
