@@ -69,7 +69,7 @@ public class FachklasseEintragCreateRequest {
 
 	/** Die Sortierung */
 	@Schema(description = "Die Sortierung", example = "32000")
-	@Max(32000)
+	@Max(Integer.MAX_VALUE)
 	public Integer sortierung;
 
 }

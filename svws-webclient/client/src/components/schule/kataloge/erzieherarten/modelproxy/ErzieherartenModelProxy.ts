@@ -1,4 +1,5 @@
 import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { ErzieherartListeManager } from "@ui/ui/manager/kataloge/ErzieherartListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -40,7 +41,7 @@ export class ErzieherartenModelProxy extends ModelProxy<Erzieherart> {
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 		// sortierung
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 }

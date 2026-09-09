@@ -7,6 +7,7 @@ import { DQRNiveau } from "@core/asd/types/schule/DQRNiveau";
 import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import type { FachklasseEintrag } from "@core/core/data/schule/FachklasseEintrag";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { FachklassenListeManager } from "@ui/ui/manager/kataloge/FachklassenListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -79,7 +80,7 @@ export class FachklassenModelProxy extends ModelProxy<FachklasseEintrag> {
 		this.addBlockingValidator(new ValidatorInputRequired((): number | null => this.proxy.idFachklasse), 'idFachklasse');
 
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 

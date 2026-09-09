@@ -1,4 +1,5 @@
 import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -14,7 +15,7 @@ export class EntlassgruendeModelProxy extends ModelProxy<KatalogEntlassgrund> {
 	 * ModelProxy für Entlassgründe
 	 *
 	 * @param data Lambda für den Zugriff auf Original-Daten
-	 * @param liste Lambda zur Liste aller Entlassgründe
+	 * @param alleEntlassgruende Lambda zur Liste aller Entlassgründe
 	 * @param patch Methode zum Patchen einzelner Attribute
 	 */
 	constructor(
@@ -32,6 +33,6 @@ export class EntlassgruendeModelProxy extends ModelProxy<KatalogEntlassgrund> {
 	private addValidatoren(liste: () => Iterable<KatalogEntlassgrund>) {
 		this.addBlockingValidator(new ValidatorEntlassgrundBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 }
