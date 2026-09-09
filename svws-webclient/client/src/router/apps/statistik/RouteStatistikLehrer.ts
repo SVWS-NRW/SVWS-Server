@@ -25,10 +25,6 @@ export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
 		return {
 			// statistik
 			zeigeAlles: false,
-			statistikGesamt: routeStatistik.data.statistikGesamt,
-			mapLehrer: routeStatistik.data.mapLehrer,
-			lehrerListeManager: () => routeStatistik.data.managerLehrer,
-			setAuswahl: routeStatistik.data.updateDatenLehrer,
 			gotoLehrer: routeStatistik.data.gotoLehrer,
 			// lehrer
 			patch: routeLehrer.data.patch,

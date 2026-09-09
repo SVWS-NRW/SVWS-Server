@@ -12,6 +12,7 @@ import type { StatistikAppProps } from "~/components/statistik/StatistikAppProps
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
 
 import { RouteDataStatistik } from "./RouteDataStatistik";
 import { routeStatistikLehrer } from "./RouteStatistikLehrer";
@@ -39,7 +40,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await Promise.all([orteStateImpl.init(), this.data.ladeDaten()]);
+			await Promise.all([orteStateImpl.init(), statistikStateImpl.init()]);
 		}
 		if (to === this) {
 			return this.getRouteDefaultChild();
@@ -49,7 +50,6 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 	public getProps(to: RouteLocationNormalized): StatistikAppProps {
 		return {
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
-			schuleStammdaten: this.data.schuleStammdaten,
 		};
 	}
 

@@ -152,6 +152,17 @@ export class TabManager {
 	}
 
 	/**
+	 * Gibt an, ob der Tab mit dem übergebenen Namen existiert
+	 *
+	 * @param name   der Name des angefragten Tabs
+	 *
+	 * @returns true, wenn der Tab existiert
+	 */
+	public existsTab(name: string): boolean {
+		return this._mapName.get(name) !== undefined;
+	}
+
+	/**
 	 * Gibt zurück, ob das Tab mit dem übergenenen Namen versteckt ist oder nicht.
 	 *
 	 * @param name   der Name des Tabs

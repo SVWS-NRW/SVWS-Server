@@ -11,9 +11,8 @@ import { NotificationsStateKey } from "@ui/states/NotificationsState";
 import { ReportingStateKey } from "@ui/states/ReportingState";
 import { SchuleStateKey } from "@ui/states/SchuleState";
 import { ServerStateKey } from "@ui/states/ServerState";
+import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
-
-import { notificationStateImpl } from "~/states/NotificationsStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -25,10 +24,13 @@ import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { KlassenStateKey } from "./klassen/KlassenState";
 import { klassenStateImpl } from "./klassen/KlassenStateImpl";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
+import { notificationStateImpl } from "./NotificationsStateImpl";
 import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
+import { statistikStateImpl } from "./statistik/StatistikStateImpl";
 import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
+
 
 
 export function registerStates(): void {
@@ -48,4 +50,5 @@ export function registerStates(): void {
 	context.provide(NotenmodulStateKey, notenmodulStateImpl);
 	context.provide(NotificationsStateKey, notificationStateImpl);
 	context.provide(OrteStateKey, orteStateImpl);
+	context.provide(StatistikStateKey, statistikStateImpl);
 }

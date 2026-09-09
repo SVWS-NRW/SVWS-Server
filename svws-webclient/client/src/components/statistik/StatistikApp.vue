@@ -3,13 +3,13 @@
 		<div class="svws-ui-header--title">
 			<div class="svws-headline-wrapper">
 				<h2 class="svws-headline">
-					{{ schuleStammdaten.bezeichnung1 }}
+					{{ schuleState.stammdaten.bezeichnung1 }}
 					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-						{{ schuleStammdaten.schulNr }}
+						{{ schuleState.stammdaten.schulNr }}
 					</svws-ui-badge>
 				</h2>
 				<span class="svws-subline">
-					{{ schuleStammdaten.schulform }}
+					{{ schuleState.stammdaten.schulform }}
 				</span>
 			</div>
 		</div>
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 
+	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 
 	import type { StatistikAppProps } from "./StatistikAppProps";
@@ -30,5 +31,6 @@
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const props = defineProps<StatistikAppProps>();
+	const schuleState = useSchuleState();
 
 </script>

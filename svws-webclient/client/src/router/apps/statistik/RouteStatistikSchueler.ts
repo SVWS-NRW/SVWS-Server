@@ -1,4 +1,3 @@
-import type { RouteLocationNormalized } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -18,17 +17,13 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "statistik.schueler", "schueler", StatistikSchueler);
 		super.mode = ServerMode.DEV;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = () => this.getProps();
 		super.text = "Schüler";
 	}
 
-	public getProps(to: RouteLocationNormalized): StatistikSchuelerProps {
+	public getProps(): StatistikSchuelerProps {
 		return {
 			// statistik
-			statistikGesamt: routeStatistik.data.statistikGesamt,
-			mapSchueler: routeStatistik.data.mapSchueler,
-			schuelerListeManager: () => routeStatistik.data.managerSchueler,
-			setAuswahl: routeStatistik.data.updateDatenSchueler,
 			gotoSchueler: routeStatistik.data.gotoSchueler,
 			zeigeAlles: false,
 			// schueler

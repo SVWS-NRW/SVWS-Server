@@ -3,63 +3,46 @@
 		<svws-ui-modal-hilfe> <hilfe-statistik-lehrer /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page flex gap-8">
-		<ui-table-grid :manager="() => gridManager" class="flex-1">
-			<!-- <template #header>
-					<template v-for="col of gridManager.cols.values()" :key="col.name">
-						<th v-if="col.kuerzel === 'Auswahl'" class="flex items-center justify-center">
-							<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.size()) && (auswahl.length > 0)"
-								:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.size())"
-								@update:model-value="value => auswahl = value ? [...gridManager.daten] : []" />
-						</th>
-						<th v-else class="flex justify-center" :class="[col.kuerzel === '2FA' ? 'text-center' : 'text-left']">
-							{{ col.kuerzel }}
-						</th>
-					</template>
-				</template> -->
-			<template #default="{ row: [key, lehrerEintrag, _lehrerStatistik, list] }">
-				<template v-if="key !== null">
-					<td class="col-span-2 text-left bg-ui-50">{{ key }}</td>
+		<ui-table-grid :manager="() => gridManager" class="w-fit">
+			<template #default="{ row: [lehrer, fehler, anzahl] }">
+				<template v-if="(fehler === null) && (lehrer === null)">
+					<td class="text-left bg-ui-50">
+						—
+					</td>
+					<td class="flex flex-row justify-between text-left bg-ui-50">
+						<div>Allgemein</div>
+						<div>{{ anzahl }} Fehler</div>
+					</td>
 				</template>
-				<template v-else>
-					<!-- <td class="flex items-center justify-center">
-							<svws-ui-checkbox :model-value="auswahl.includes(lehrer)" @update:model-value="toggleSelection(lehrer)" />
-						</td> -->
-					<td>
-						<div class="text-left">
-							{{ lehrerEintrag.nachname }}, {{ lehrerEintrag.vorname }}
-							<!-- <svws-ui-tooltip>
-									<span v-if="lehrer.art2FA > 0" class="icon-sm i-ri-verified-badge-fill icon-ui-success" />
-									<span v-else class="icon-sm i-ri-alert-fill icon-ui-danger" />
-									<template #content>
-										<span v-if="lehrer.art2FA > 0">Es wurde eine Zwei-Faktor-Authentifizierung eingerichtet ({{ lehrer.art2FA === 1 ? 'TOTP' : 'EMail' }}).</span>
-										<span v-else>Es wurde keine Zwei-Faktor-Authentifizierung eingerichtet.</span>
-									</template>
-								</svws-ui-tooltip> -->
+				<template v-else-if="(fehler === null) && (lehrer !== null)">
+					<td class="text-left bg-ui-50">
+						{{ lehrer.kuerzel }}
+					</td>
+					<td class="flex flex-row justify-between text-left bg-ui-50">
+						<div>{{ lehrer.nachname }}, {{ lehrer.vorname }}</div>
+						<div>{{ anzahl }} Fehler</div>
+					</td>
+				</template>
+				<template v-else-if="fehler !== null">
+					<td class="text-left p-1">
+						<div class="flex flex-row gap-2 justify-between items-center">
+							<span class="max-w-fit px-1 bg-ui-selected border-ui-selected text-ui-onselected border font-mono text-xs rounded-sm">{{ fehler.getFehlercode() }}</span>
+							<span class="icon" :class="getIconClass(fehler.getFehlerart())" />
 						</div>
 					</td>
-					<td class="text-left flex flex-col">
-						<div v-for="fehler of list" class="" :key="fehler.getFehlercode()">
-							{{ fehler.getFehlermeldung() }}
-							<!-- <svws-ui-tooltip>
-									<span v-if="lehrer.art2FA > 0" class="icon-sm i-ri-verified-badge-fill icon-ui-success" />
-									<span v-else class="icon-sm i-ri-alert-fill icon-ui-danger" />
-									<template #content>
-										<span v-if="lehrer.art2FA > 0">Es wurde eine Zwei-Faktor-Authentifizierung eingerichtet ({{ lehrer.art2FA === 1 ? 'TOTP' : 'EMail' }}).</span>
-										<span v-else>Es wurde keine Zwei-Faktor-Authentifizierung eingerichtet.</span>
-									</template>
-								</svws-ui-tooltip> -->
-						</div>
+					<td class="text-left">
+						{{ fehler.getFehlermeldung() }}
 					</td>
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="lehrerListeManager().auswahlID() !== null" class="flex-1">
-			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(lehrerListeManager().auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ lehrerListeManager().auswahl().nachname }}, {{ lehrerListeManager().auswahl().vorname }}</div>
+		<div v-if="statistikState.lehrerListeManager.auswahlID() !== null">
+			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(statistikState.lehrerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.lehrerListeManager.auswahl().nachname }}, {{ statistikState.lehrerListeManager.auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
-				<lehrer-individualdaten v-if="tabManager.tab.name === 'Stammdaten'" :zeige-alles="false" :add-leitungsfunktion :delete-leitungsfunktionen
-					:get-list-leitungsfunktionen :map-leitungsfunktionen :patch-leitungsfunktion :lehrer-liste-manager :patch />
-				<lehrer-personaldaten v-if="tabManager.tab.name === 'Personaldaten'" :add-anrechnung :add-fachrichtung :add-lehramt :add-lehrbefaehigung :add-lehrer-unterrichtsfach
-					:add-mehrleistung :add-minderleistung :lehrer-liste-manager :lehrer-unterrichtsfaecher :map-faecher
+				<lehrer-individualdaten v-if="tabManager.tab.name === 'LS'" :zeige-alles="false" :add-leitungsfunktion :delete-leitungsfunktionen
+					:get-list-leitungsfunktionen :map-leitungsfunktionen :patch-leitungsfunktion :lehrer-liste-manager="() => statistikState.lehrerListeManager" :patch />
+				<lehrer-personaldaten v-if="tabManager.tab.name === 'LP'" :add-anrechnung :add-fachrichtung :add-lehramt :add-lehrbefaehigung :add-lehrer-unterrichtsfach
+					:add-mehrleistung :add-minderleistung :lehrer-liste-manager="() => statistikState.lehrerListeManager" :lehrer-unterrichtsfaecher :map-faecher
 					:map-schulen :patch-abschnittsdaten :patch-anrechnungen :patch-fachrichtung :patch-lehramt :patch-lehrbefaehigung :patch-lehrer-unterrichtsfach :patch-mehrleistung :patch-minderleistung :patch-personaldaten
 					:remove-anrechnung :remove-fachrichtungen :remove-lehraemter :remove-lehrbefaehigungen :remove-lehrer-unterrichtsfach :remove-mehrleistung :remove-minderleistung />
 			</svws-ui-tab-bar>
@@ -68,89 +51,65 @@
 </template>
 
 <script setup lang="ts">
+	import { computed, watch } from 'vue';
 
-	import { computed, watch } from "vue";
+	import type { LehrerStatistikGesamt } from '@core/asd/data/statistik/LehrerStatistikGesamt';
+	import type { Validator } from '@core/asd/validate/Validator';
+	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
+	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart';
+	import { ArrayList } from '@core/java/util/ArrayList';
+	import type { List } from '@core/java/util/List';
+	import { useStatistikState } from '@ui/states/statistik/StatistikState';
+	import { useRegionSwitch } from '@ui/ui/composables/useRegionSwitch';
+	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
+	import { TabManager } from '@ui/ui/nav/TabManager';
 
-	import { LehrerStatistikGesamt } from "@core/asd/data/statistik/LehrerStatistikGesamt";
-	import type { BasicValidator } from "@core/asd/validate/BasicValidator";
-	import { ValidatorLpLehrerPersonaldaten } from "@core/asd/validate/lehrer/ValidatorLpLehrerPersonaldaten";
-	import { ValidatorLsLehrerStammdaten } from "@core/asd/validate/lehrer/ValidatorLsLehrerStammdaten";
-	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
-	import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
-	import { ListUtils } from "@core/core/utils/ListUtils";
-	import { ArrayList } from "@core/java/util/ArrayList";
-	import type { List } from "@core/java/util/List";
-	import { useSchuleState } from "@ui/states/SchuleState";
-	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
-	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import { TabManager } from "@ui/ui/nav/TabManager";
-
-	import type { StatistikLehrerProps } from "./StatistikLehrerProps";
+	import type { StatistikLehrerProps } from './StatistikLehrerProps';
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const props = defineProps<StatistikLehrerProps>();
+	const statistikState = useStatistikState();
 
-	const schuleState = useSchuleState();
-
-	class MappedFehlerGenerator<Eintrag, Stat> {
-
-		private _mapFehler = new Map<string, List<readonly [Eintrag, Stat, List<ValidatorFehler>]>>();
-
-		get mapFehler() {
-			return this._mapFehler;
-		}
-
-		addFehlerByKey(key: string, eintrag: Eintrag, stat: Stat, validator: BasicValidator) {
-			validator.run();
-			const list = validator.getFehler();
-			if (list.isEmpty()) {
-				return;
-			}
-			let listByKey = this._mapFehler.get(key);
-			const arr = [eintrag, stat, list] as const;
-			if (listByKey === undefined) {
-				listByKey = ListUtils.create1(arr);
-			} else {
-				listByKey.add(arr);
-			}
-			this._mapFehler.set(key, listByKey);
-		}
+	function getIconClass(fehler: ValidatorFehlerart) {
+		return {
+			'i-ri-alert-fill': (fehler.ordinal() === ValidatorFehlerart.MUSS.ordinal()),
+			'icon-ui-danger': (fehler.ordinal() === ValidatorFehlerart.MUSS.ordinal()),
+			'i-ri-error-warning-fill': (fehler.ordinal() === ValidatorFehlerart.KANN.ordinal()),
+			'icon-ui-caution': (fehler.ordinal() === ValidatorFehlerart.KANN.ordinal()),
+			'i-ri-question-fill': (fehler.ordinal() === ValidatorFehlerart.HINWEIS.ordinal()),
+			'icon-ui-warning': (fehler.ordinal() === ValidatorFehlerart.HINWEIS.ordinal()),
+		};
 	}
 
-
-	const tuples = computed(() => {
-		const gesamt = props.statistikGesamt;
-		const genValidatorFehler = new MappedFehlerGenerator<LehrerListeEintrag, LehrerStatistikGesamt>();
-		for (const lehrer of props.statistikGesamt.lehrer) {
-			const l = props.mapLehrer.get(lehrer.id);
-			if (l === undefined) {
-				continue;
-			}
-			genValidatorFehler.addFehlerByKey("Stammdaten", l, lehrer, new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, schuleState.validatorKontext));
-			genValidatorFehler.addFehlerByKey("Personaldaten", l, lehrer, new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, schuleState.validatorKontext));
-		}
-		return genValidatorFehler.mapFehler;
-	});
-
-	const gridManager = new GridManager<string, readonly [string | null, LehrerListeEintrag, LehrerStatistikGesamt, List<ValidatorFehler>], List<readonly [string | null, LehrerListeEintrag, LehrerStatistikGesamt, List<ValidatorFehler>]>>({
+	const gridManager = new GridManager<string, readonly [LehrerStatistikGesamt | null, ValidatorFehler | null, number], List<readonly [LehrerStatistikGesamt | null, ValidatorFehler | null, number]>>({
 		daten: computed(() => {
-			const liste = new ArrayList<readonly [string | null, LehrerListeEintrag, LehrerStatistikGesamt, List<ValidatorFehler>]>();
-			for (const [key, values] of tuples.value.entries()) {
-				liste.add([key, new LehrerListeEintrag(), new LehrerStatistikGesamt(), new ArrayList()]);
-				for (const value of values) {
-					liste.add([null, ...value]);
+			const liste = new ArrayList<readonly [LehrerStatistikGesamt | null, ValidatorFehler | null, number]>();
+			const allgFehler = statistikState.validatorGesamt.getFehlerByLehrerID(-1);
+			if (!allgFehler.isEmpty()) {
+				liste.add([null, null, allgFehler.size()]);
+				for (let i = 0; i < allgFehler.size(); i++) {
+					liste.add([null, allgFehler.get(i), i]);
+				}
+			}
+			for (const lehrer of statistikState.statistikGesamt.lehrer) {
+				const fehlerListe = statistikState.validatorGesamt.getFehlerByLehrerID(lehrer.id);
+				if (!fehlerListe.isEmpty()) {
+					liste.add([lehrer, null, fehlerListe.size()]);
+					for (let i = 0; i < fehlerListe.size(); i++) {
+						liste.add([lehrer, fehlerListe.get(i), i]);
+					}
 				}
 			}
 			return liste;
 		}),
-		getRowKey: row => `ID_${row[0] === null ? row[0] : row[1].id}`,
+		getRowKey: row => `ID_${row[0] === null ? 'allgemein' : row[0].id}_${row[2]}`,
 		allowEmptyRowSelection: true,
 		columns: [
 			// { kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
-			{ kuerzel: "Name", name: "Name", width: '1fr' },
+			{ kuerzel: "Name", name: "Name", width: '6rem' },
 			// { kuerzel: "Validator", name: "Validator", width: '1fr' },
-			{ kuerzel: "Fehlermeldung", name: "Fehlermeldung", width: '4fr' },
+			{ kuerzel: "Fehlermeldung", name: "Fehlermeldung", width: '32rem' },
 		],
 	});
 
@@ -158,25 +117,25 @@
 		if (gridManager.focusRow === null) {
 			return null;
 		}
-		const eintrag = gridManager.daten.get(gridManager.focusRow)[1];
-		await props.setAuswahl(eintrag.id);
-		let tab: string | null = null;
-		let index = 0;
-		for (const eintrag of gridManager.daten) {
-			if (eintrag[0] !== null) {
-				tab = eintrag[0];
-			}
-			if ((index === gridManager.focusRow) && (tab !== null)) {
-				await tabManager.setTab(tabManager.getTab(tab));
-				break;
-			}
-			index++;
+		const [lehrer, fehler] = gridManager.daten.get(gridManager.focusRow);
+		if (lehrer === null) {
+			return null;
 		}
+		await statistikState.setLehrer(lehrer.id);
+		let tab = tabManager.getTab("LS");
+		if (fehler !== null) {
+			const validator = fehler.getValidator() as Validator;
+			const key = validator.getFehlercodePraefix().slice(0, 2);
+			if (tabManager.existsTab(key)) {
+				tab = tabManager.getTab(key);
+			}
+		}
+		await tabManager.setTab(tab);
 	});
 
 	const tabs = [
-		{ name: "Stammdaten", text: "Stammdaten" },
-		{ name: "Personaldaten", text: "Personaldaten" },
+		{ name: "LS", text: "Stammdaten" },
+		{ name: "LP", text: "Personaldaten" },
 	];
 
 	const tabManager = new TabManager(tabs, tabs[0], async () => void 0);
