@@ -7,7 +7,6 @@ import type { ApiStatus } from "~/components/ApiStatus";
 export interface KlassenStundenplanProps {
 	apiStatus: ApiStatus;
 	ignoreEmpty?: boolean;
-	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	gotoStundenplan: (value: StundenplanListeEintrag) => Promise<void>;

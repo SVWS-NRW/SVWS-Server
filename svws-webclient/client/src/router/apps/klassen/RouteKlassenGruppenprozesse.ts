@@ -7,8 +7,9 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 
 import type { KlassenGruppenprozesseProps } from "~/components/klassen/gruppenprozesse/KlassenGruppenprozesseProps";
 import { api } from "~/router/Api";
-import { type RouteKlassen, routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import type { RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { RouteNode } from "~/router/RouteNode";
+import { useKlassenState } from "~/states/klassen/KlassenState";
 
 const KlassenGruppenprozesse = () => import("~/components/klassen/gruppenprozesse/KlassenGruppenprozesse.vue");
 
@@ -24,7 +25,8 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 	}
 
 	protected async update(): Promise<void | Error | RouteLocationRaw> {
-		await routeKlassen.data.updateMapStundenplaene();
+		const klassenState = useKlassenState();
+		await klassenState.updateMapStundenplaene();
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
@@ -34,9 +36,6 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 	public getProps(to: RouteLocationNormalized): KlassenGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			mapStundenplaene: routeKlassen.data.mapStundenplaene,
-			manager: () => routeKlassen.data.manager,
-			deleteKlassen: routeKlassen.data.delete,
 		};
 	}
 

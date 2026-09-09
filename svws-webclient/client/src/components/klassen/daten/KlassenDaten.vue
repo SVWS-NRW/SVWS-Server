@@ -56,7 +56,7 @@
 						<span class="icon i-ri-group-line" />
 					</template>
 					<template #cell(linkToLehrer)="{rowData}">
-						<svws-ui-button type="icon" @click="gotoLehrer(rowData)">
+						<svws-ui-button type="icon" @click="klassenState.gotoLehrer(rowData)">
 							<span class="icon i-ri-link" />
 						</svws-ui-button>
 					</template>
@@ -71,7 +71,7 @@
 					</template>
 					<template #footer v-if="hatKompetenzUpdate">
 						<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-							<div v-if="manager().getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
+							<div v-if="klassenState.manager.getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
 								<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge">
 									<span class="icon i-ri-arrow-up-line" />
 								</svws-ui-button>
@@ -80,7 +80,7 @@
 								</svws-ui-button>
 							</div>
 							<div style="display: flex; justify-content: flex-end">
-								<klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :manager :add-klassenleitung>
+								<klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}">
 									<svws-ui-button type="icon" @click="openModal"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 								</klassen-daten-lehrer-zuweisung-modal>
 							</div>
@@ -90,9 +90,9 @@
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Klassenliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="manager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenState.manager.schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-spacing />
-			<svws-ui-table :columns="colsSchueler" :items="manager().getSchuelerListe()" count>
+			<svws-ui-table :columns="colsSchueler" :items="klassenState.manager.getSchuelerListe()" count>
 				<template #cell(status)="{ value } : { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text ?? "—" }}</span>
 				</template>
@@ -100,7 +100,7 @@
 					<span class="icon i-ri-group-line" />
 				</template>
 				<template #cell(linkToSchueler)="{ rowData }">
-					<button type="button" @click.stop="gotoSchueler(rowData)" class="button button--icon" title="Schüler ansehen">
+					<button type="button" @click.stop="klassenState.gotoSchueler(rowData)" class="button button--icon" title="Schüler ansehen">
 						<span class="icon i-ri-link" />
 					</button>
 				</template>
@@ -131,37 +131,36 @@
 	import type { DataTableColumn } from "@ui/types";
 
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
+	import { useKlassenState } from "~/states/klassen/KlassenState";
 
-	import type { KlassenDatenProps } from "./KlassenDatenProps";
-
-	const props = defineProps<KlassenDatenProps>();
+	const klassenState = useKlassenState();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
 
 	const listAndereKlassen = computed(() => {
 		const arr = [];
-		for (const k of props.manager().liste.list()) {
-			if (k.id !== props.manager().auswahlID()) {
+		for (const k of klassenState.manager.liste.list()) {
+			if (k.id !== klassenState.manager.auswahlID()) {
 				arr.push(k);
 			}
 		}
 		return arr;
 	});
 
-	const dataNotPatched = () => props.manager().daten();
+	const dataNotPatched = () => klassenState.manager.daten();
 	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
 		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
 	const modelProxy = new KlassenDatenModelProxy(
 		() => dataNotPatched(),
 		() => listAndereKlassen.value,
-		props.manager,
+		() => klassenState.manager,
 		listOfAutopatchProps,
-		props.patch
+		(p) => klassenState.patch(p)
 	);
 
-	watch(() => props.manager().daten().klassenLeitungen, () => {
+	watch(() => klassenState.manager.daten().klassenLeitungen, () => {
 		klassenleitungClicked.value = null;
 	});
 
@@ -192,7 +191,7 @@
 	const klassenleitungClicked = ref<LehrerListeEintrag | null>(null);
 
 	function setKlassenleitungClicked(value: LehrerListeEintrag | null) {
-		props.manager().setAuswahlKlassenLeitung(value);
+		klassenState.manager.setAuswahlKlassenLeitung(value);
 		klassenleitungClicked.value = value;
 	}
 
@@ -269,7 +268,7 @@
 	}
 
 	async function removeKlassenleitungHandler(rowData: LehrerListeEintrag): Promise<void> {
-		await props.removeKlassenleitung(rowData);
+		await klassenState.removeKlassenleitung(rowData);
 		if ((klassenleitungClicked.value !== null) && (klassenleitungClicked.value.id === rowData.id)) {
 			klassenleitungClicked.value = null;
 		}
@@ -279,31 +278,31 @@
 		if (!klassenleitungClicked.value) {
 			return;
 		}
-		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
+		await klassenState.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
 	}
 
 	async function reduziereReihenfolge(): Promise<void> {
 		if (!klassenleitungClicked.value) {
 			return;
 		}
-		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
+		await klassenState.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
 	}
 
 	const filterSchuelerStatus = computed<SchuelerStatus[]>({
-		get: () => [...props.manager().schuelerstatus.auswahl()],
+		get: () => [...klassenState.manager.schuelerstatus.auswahl()],
 		set: (value) => {
-			props.manager().schuelerstatus.auswahlClear();
+			klassenState.manager.schuelerstatus.auswahlClear();
 			for (const v of value) {
-				props.manager().schuelerstatus.auswahlAdd(v);
+				klassenState.manager.schuelerstatus.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void klassenState.setFilter();
 		},
 	});
 
 	const listeKlassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const a: LehrerListeEintrag[] = [];
-		for (const klassenLeitung of props.manager().daten().klassenLeitungen) {
-			const lehrer: LehrerListeEintrag | null = props.manager().lehrer.get(klassenLeitung);
+		for (const klassenLeitung of klassenState.manager.daten().klassenLeitungen) {
+			const lehrer: LehrerListeEintrag | null = klassenState.manager.lehrer.get(klassenLeitung);
 			if (lehrer !== null) {
 				a.push(lehrer);
 			}

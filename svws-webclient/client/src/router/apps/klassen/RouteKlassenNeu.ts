@@ -6,7 +6,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
 import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
-import { type RouteKlassen, routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import type { RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -29,10 +29,7 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 
 	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
 		return {
-			manager: () => routeKlassen.data.manager,
-			add: routeKlassen.data.add,
-			gotoDefaultView: routeKlassen.data.gotoDefaultView,
-			checkpoint: this.checkpoint,
+			checkpoint: () => this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}

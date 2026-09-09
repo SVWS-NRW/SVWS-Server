@@ -39,7 +39,7 @@
 				</div>
 			</svws-ui-content-card>
 		</div>
-		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+		<svws-ui-checkpoint-modal :checkpoint="checkpoint()" :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
@@ -57,18 +57,21 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 
 	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
+	import { useKlassenState } from "~/states/klassen/KlassenState";
 
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
+
+	const klassenState = useKlassenState();
 	const schuleState = useSchuleState();
 
 	const dataNotPatched = shallowRef(new KlassenDaten());
 
 	const modelProxy = new KlassenDatenModelProxy(
 		() => dataNotPatched.value,
-		() => props.manager().liste.list(),
-		props.manager
+		() => klassenState.manager.liste.list(),
+		() => klassenState.manager
 	);
 
 	onMounted(() => {
@@ -76,7 +79,7 @@
 		initWithDefaults(proxy);
 		modelProxy.validate();
 
-		watch(() => modelProxy.pending, () => props.checkpoint.active = true);
+		watch(() => modelProxy.pending, () => props.checkpoint().active = true);
 	});
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
@@ -127,8 +130,8 @@
 	const isLoading = ref<boolean>(false);
 
 	async function cancel() {
-		props.checkpoint.active = false;
-		await props.gotoDefaultView(null);
+		props.checkpoint().active = false;
+		await klassenState.gotoDefaultView(null);
 	}
 
 	async function addKlasse() {
@@ -137,7 +140,7 @@
 		}
 
 		isLoading.value = true;
-		props.checkpoint.active = false;
+		props.checkpoint().active = false;
 		// Erstelle einen create-patch, der die erforderten Attribute zusätzlich zum Pending-State beinhaltet
 		const result: Partial<KlassenDaten> = {
 			idSchuljahresabschnitt: modelProxy.proxy.idSchuljahresabschnitt,
@@ -145,7 +148,7 @@
 			idJahrgang: modelProxy.proxy.idJahrgang,
 			...modelProxy.pending,
 		};
-		await props.add(result);
+		await klassenState.add(result);
 		isLoading.value = false;
 	}
 

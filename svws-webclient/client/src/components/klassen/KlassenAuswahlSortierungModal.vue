@@ -17,9 +17,9 @@
 
 	import { ref } from "vue";
 
-	const props = defineProps<{
-		setzeDefaultSortierung: () => Promise<void>;
-	}>();
+	import { useKlassenState } from "~/states/klassen/KlassenState";
+
+	const klassenState = useKlassenState();
 
 	const show = ref<boolean>(false);
 
@@ -29,7 +29,7 @@
 
 	async function sortiere() {
 		show.value = false;
-		await props.setzeDefaultSortierung();
+		await klassenState.setzeDefaultSortierung();
 	}
 
 </script>

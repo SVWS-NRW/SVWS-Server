@@ -6,17 +6,17 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
-				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!klassenState.manager.liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => klassenState.gotoDefaultView(klassendaten.id)"
+				:items="rowsFiltered" :model-value="[...klassenState.manager.liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection
 				:focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="textSchulgliederung" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="klassenState.manager.jahrgaenge.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenState.manager.lehrer.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenState.manager.schulgliederungen.list()" :item-text="textSchulgliederung" />
 				</template>
 				<template #cell(anzahlZugeordneteSchueler)="{value}"> {{ value }} </template>
 				<template #cell(idsKlassenleitungen)="{value}">
@@ -24,8 +24,8 @@
 				</template>
 				<template #actions v-if="hatKompetenzAendern">
 					<div class="flex gap-5">
-						<template v-if="manager().liste.size() > 0">
-							<klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
+						<template v-if="klassenState.manager.liste.size() > 0">
+							<klassen-auswahl-sortierung-modal v-slot="{ openModal }">
 								<svws-ui-tooltip position="bottom">
 									<svws-ui-button type="secondary" @click="openModal">
 										Standardsortierung anwenden&nbsp;...
@@ -37,7 +37,7 @@
 							</klassen-auswahl-sortierung-modal>
 						</template>
 						<svws-ui-tooltip position="bottom">
-							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
+							<svws-ui-button :disabled="klassenState.activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="klassenState.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>
@@ -65,9 +65,9 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
-	import type { KlassenAuswahlProps } from "./KlassenAuswahlProps";
+	import { useKlassenState } from "~/states/klassen/KlassenState";
 
-	const props = defineProps<KlassenAuswahlProps>();
+	const klassenState = useKlassenState();
 	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 
@@ -100,35 +100,35 @@
 	}
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.manager().schulgliederungen.auswahl()],
+		get: () => [...klassenState.manager.schulgliederungen.auswahl()],
 		set: (value) => {
-			props.manager().schulgliederungen.auswahlClear();
+			klassenState.manager.schulgliederungen.auswahlClear();
 			for (const v of value) {
-				props.manager().schulgliederungen.auswahlAdd(v);
+				klassenState.manager.schulgliederungen.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void klassenState.setFilter();
 		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.manager().jahrgaenge.auswahl()],
+		get: () => [...klassenState.manager.jahrgaenge.auswahl()],
 		set: (value) => {
-			props.manager().jahrgaenge.auswahlClear();
+			klassenState.manager.jahrgaenge.auswahlClear();
 			for (const v of value) {
-				props.manager().jahrgaenge.auswahlAdd(v);
+				klassenState.manager.jahrgaenge.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void klassenState.setFilter();
 		},
 	});
 
 	const filterLehrer = computed<LehrerListeEintrag[]>({
-		get: () => [...props.manager().lehrer.auswahl()],
+		get: () => [...klassenState.manager.lehrer.auswahl()],
 		set: (value) => {
-			props.manager().lehrer.auswahlClear();
+			klassenState.manager.lehrer.auswahlClear();
 			for (const v of value) {
-				props.manager().lehrer.auswahlAdd(v);
+				klassenState.manager.lehrer.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void klassenState.setFilter();
 		},
 	});
 
@@ -136,7 +136,7 @@
 
 	const rowsFiltered = computed<KlassenListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of props.manager().filtered()) {
+		for (const e of klassenState.manager.filtered()) {
 			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
 				arr.push(e);
 			}
@@ -146,44 +146,44 @@
 	});
 
 	async function filterReset() {
-		props.manager().schulgliederungen.auswahlClear();
-		props.manager().lehrer.auswahlClear();
-		props.manager().jahrgaenge.auswahlClear();
-		await props.setFilter();
+		klassenState.manager.schulgliederungen.auswahlClear();
+		klassenState.manager.lehrer.auswahlClear();
+		klassenState.manager.jahrgaenge.auswahlClear();
+		await klassenState.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.manager().schulgliederungen.auswahlExists()
-			|| props.manager().lehrer.auswahlExists()
-			|| props.manager().jahrgaenge.auswahlExists());
+		return (klassenState.manager.schulgliederungen.auswahlExists()
+			|| klassenState.manager.lehrer.auswahlExists()
+			|| klassenState.manager.jahrgaenge.auswahlExists());
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
+		if ((klassenState.activeViewType === ViewType.GRUPPENPROZESSE) || (klassenState.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
 		}
-		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+		return klassenState.manager.hasDaten() ? klassenState.manager.auswahl() : null;
 	});
 
 	async function setAuswahl(items: KlassenListeEintrag[]) {
-		props.manager().liste.auswahlClear();
+		klassenState.manager.liste.auswahlClear();
 		for (const item of items) {
-			if (props.manager().liste.hasValue(item)) {
-				props.manager().liste.auswahlAdd(item);
+			if (klassenState.manager.liste.hasValue(item)) {
+				klassenState.manager.liste.auswahlAdd(item);
 			}
 		}
-		if (props.manager().liste.auswahlExists()) {
-			await props.gotoGruppenprozessView(true);
+		if (klassenState.manager.liste.auswahlExists()) {
+			await klassenState.gotoGruppenprozessView(true);
 		} else {
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+			await klassenState.gotoDefaultView(klassenState.manager.getVorherigeAuswahl()?.id);
 		}
 	}
 
 	function lehrerkuerzel(list: number[]) {
 		let s = '';
-		if (props.manager().hasDaten()) {
+		if (klassenState.manager.hasDaten()) {
 			for (const id of list) {
-				const lehrer = props.manager().lehrer.get(id);
+				const lehrer = klassenState.manager.lehrer.get(id);
 				if (lehrer !== null) {
 					if (s.length > 0) {
 						s += `, ${lehrer.kuerzel}`;

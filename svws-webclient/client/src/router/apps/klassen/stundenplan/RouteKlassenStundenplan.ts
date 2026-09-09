@@ -75,7 +75,6 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 	public getProps(to: RouteLocationNormalized): KlassenStundenplanProps {
 		return {
 			apiStatus: api.status,
-			id: routeKlassen.data.manager.daten().id,
 			ignoreEmpty: this.data.ganzerStundenplan,
 			stundenplan: () => (this.data.mapStundenplaene.size === 0) ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,

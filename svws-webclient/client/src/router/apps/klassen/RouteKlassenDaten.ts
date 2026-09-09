@@ -1,11 +1,10 @@
-import type { RouteLocationNormalized } from "vue-router";
+import type { RouteLocationNormalizedGeneric } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
-import type { KlassenDatenProps } from "~/components/klassen/daten/KlassenDatenProps";
-import { type RouteKlassen, routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import { type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { RouteNode } from "~/router/RouteNode";
 
 const KlassenDaten = () => import("~/components/klassen/daten/KlassenDaten.vue");
@@ -15,21 +14,8 @@ export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN], "klassen.daten", "daten", KlassenDaten);
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = (route) => <RouteLocationNormalizedGeneric>{};
 		super.text = "Klasse";
-	}
-
-	public getProps(to: RouteLocationNormalized): KlassenDatenProps {
-		return {
-			patch: routeKlassen.data.patch,
-			manager: () => routeKlassen.data.manager,
-			setFilter: routeKlassen.data.setFilter,
-			gotoSchueler: routeKlassen.data.gotoSchueler,
-			gotoLehrer: routeKlassen.data.gotoLehrer,
-			addKlassenleitung: routeKlassen.data.addKlassenleitung,
-			removeKlassenleitung: routeKlassen.data.removeKlassenleitung,
-			updateReihenfolgeKlassenleitung: routeKlassen.data.updateReihenfolgeKlassenleitung,
-		};
 	}
 
 }

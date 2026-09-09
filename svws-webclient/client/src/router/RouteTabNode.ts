@@ -55,7 +55,7 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 
 		super(schulformen, kompetenzen, name, path, component, data);
 		super.propHandler = (route) => this.getProps({
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
+			tabManager: (viewType?: ViewType) => this.createTabManagerByChildren(this.data.view.name, this.setTab, viewType ?? this.data.activeViewType),
 			activeViewType: this.data.activeViewType,
 		});
 	}

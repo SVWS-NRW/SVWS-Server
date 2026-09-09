@@ -209,7 +209,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * Die Methode kann überschrieben werden und kümmert sich um das Nachladen von Daten, wenn in der
 	 * Auswahl mehrere Eintrag gleichzeitig ausgewählt werden.
 	 *
-	 * @param auswahlList   die neu Auswahl oder null
+	 * @param auswahlList   die neue Auswahl oder null
 	 * @param state     der State, bei welchem die Daten angepasst werden
 	 *
 	 * @returns die geladenen Daten oder null

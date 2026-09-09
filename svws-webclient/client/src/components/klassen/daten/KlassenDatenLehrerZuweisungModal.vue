@@ -29,19 +29,19 @@
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import type { List } from "@core/java/util/List";
 
-	import type { KlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/KlassenDatenLehrerZuweisungModalProps";
+	import { useKlassenState } from "~/states/klassen/KlassenState";
 
-	const props = defineProps<KlassenDatenLehrerZuweisungModalProps>();
+	const klassenState = useKlassenState();
 
 	const clickedRow = ref<LehrerListeEintrag | undefined>(undefined);
 
 	const search = ref<string>("");
 
-	const klassenleitungen = computed<List<number>>(() => props.manager().daten().klassenLeitungen);
+	const klassenleitungen = computed<List<number>>(() => klassenState.manager.daten().klassenLeitungen);
 
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
-		for (const e of props.manager().lehrer.list()) {
+		for (const e of klassenState.manager.lehrer.list()) {
 			if (!e.istAktiv) {
 				continue;
 			}
@@ -70,8 +70,8 @@
 	}
 
 	async function add() {
-		const klassenId = props.manager().auswahl().id;
-		await props.addKlassenleitung(clickedRow.value!.id, klassenId);
+		const klassenId = klassenState.manager.auswahl().id;
+		await klassenState.addKlassenleitung(clickedRow.value!.id, klassenId);
 		closeModal();
 	}
 

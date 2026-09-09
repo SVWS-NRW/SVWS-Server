@@ -7,35 +7,35 @@
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerKontaktdatenErzieher', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER"
-					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerFotos'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerFotos', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN"
-					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdaten', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN"
-					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" :title="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdatenDetailliert'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdatenDetailliert', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT" :server-mode
-					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT"
+					:ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (klassenState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseStundenplan'" @update:is-open="isOpen => setCurrentAction('druckKlasseStundenplan', isOpen)">
 				<div class="flex flex-col">
 					<div>
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
 					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Klassen werden gelöscht."
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="manager().getKlassenIDsMitSchuelern().size() === manager().liste.auswahlSize() || loading"
+					<svws-ui-button :disabled="klassenState.manager.getKlassenIDsMitSchuelern().size() === klassenState.manager.liste.auswahlSize() || loading"
 						:title="leereKlassenVorhanden ? 'Leere Klassen löschen' : 'Löschen'" @click="entferneKlassen" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
@@ -79,11 +79,14 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
+	import { useKlassenState } from "~/states/klassen/KlassenState";
+
 	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 
 	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
+	const klassenState = useKlassenState();
 	const benutzerState = useBenutzerState();
 
 	const serverMode = useServerState().mode;
@@ -102,20 +105,20 @@
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const alleKlassenLeer = computed(() => (currentAction.value === 'delete') && props.manager().getKlassenIDsMitSchuelern().isEmpty());
+	const alleKlassenLeer = computed(() => (currentAction.value === 'delete') && klassenState.manager.getKlassenIDsMitSchuelern().isEmpty());
 
 	const nichtAlleKlassenLeer = computed(() => {
 		const errorLog: List<string> = new ArrayList<string>();
 		if (!alleKlassenLeer.value) {
-			for (const klasse of props.manager().getKlassenIDsMitSchuelern()) {
-				errorLog.add(`Klasse ${props.manager().liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
+			for (const klasse of klassenState.manager.getKlassenIDsMitSchuelern()) {
+				errorLog.add(`Klasse ${klassenState.manager.liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
 			}
 		}
 		return errorLog;
 	});
 
 	const leereKlassenVorhanden = computed(() =>
-		!alleKlassenLeer.value && (props.manager().getKlassenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
+		!alleKlassenLeer.value && (klassenState.manager.getKlassenIDsMitSchuelern().size() !== klassenState.manager.liste.auswahlSize()));
 
 	function setCurrentAction(newAction: Action, open: boolean) {
 		if (newAction !== currentAction.value && !open) {
@@ -133,7 +136,7 @@
 	async function entferneKlassen() {
 		loading.value = true;
 
-		const [delStatus, logMessages] = await props.deleteKlassen();
+		const [delStatus, logMessages] = await klassenState.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
 		currentAction.value = '';
@@ -145,8 +148,8 @@
 	const stundenplanModel = computed({
 		get: () => {
 			if (stundenplanAuswahl.value === undefined) {
-				if (props.mapStundenplaene.size > 0) {
-					const [first] = props.mapStundenplaene.values();
+				if (klassenState.mapStundenplaene.size > 0) {
+					const [first] = klassenState.mapStundenplaene.values();
 					return first;
 				}
 			}
@@ -155,7 +158,7 @@
 		set: value => stundenplanAuswahl.value = value,
 	});
 
-	const stundenplanOptions = computed(() => props.mapStundenplaene.values());
+	const stundenplanOptions = computed(() => klassenState.mapStundenplaene.values());
 	const stundenplanSelectManager = new SelectManager({
 		options: stundenplanOptions.value,
 		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
