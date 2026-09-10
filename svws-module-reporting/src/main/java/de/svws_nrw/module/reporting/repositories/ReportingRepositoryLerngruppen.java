@@ -328,7 +328,8 @@ public class ReportingRepositoryLerngruppen {
 	 *
 	 * @param idKurs Die ID des Kurses.
 	 *
-	 * @return Map Lehrer-ID → Wochenstundenanteil. Leere Map, falls keine zusätzlichen Kurslehrer existieren.
+	 * @return Map Lehrer-ID → Wochenstundenanteil. Ein in der Datenbank leerer Anteil zählt als 0.0.
+	 *         Leere Map, falls keine zusätzlichen Kurslehrer existieren.
 	 */
 	public Map<Long, Double> kurslehrerWochenstunden(final long idKurs) {
 		return mapKurslehrerWochenstunden.computeIfAbsent(idKurs, id -> {
@@ -337,9 +338,10 @@ public class ReportingRepositoryLerngruppen {
 			if (dtoKursLehrer.isEmpty()) {
 				return new LinkedHashMap<>();
 			}
+			// Die Spalte Anteil erlaubt leere Werte. Ein leerer Anteil wird zu 0.0, damit die Lehrkraft in der Ausgabe bleibt.
 			return dtoKursLehrer.stream()
 					.filter(Objects::nonNull)
-					.collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil, (a, b) -> a, LinkedHashMap::new));
+					.collect(Collectors.toMap(k -> k.Lehrer_ID, k -> (k.Anteil == null) ? 0.0 : k.Anteil, (a, b) -> a, LinkedHashMap::new));
 		});
 	}
 }
