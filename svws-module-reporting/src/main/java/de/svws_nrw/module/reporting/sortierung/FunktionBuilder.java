@@ -29,7 +29,7 @@ public final class FunktionBuilder {
 	 * auswahlLernabschnitt → klasse → kuerzel). Ist das Eingabeobjekt null, liefert der Pfad null als Sortierschlüssel, wodurch der Comparator
 	 * (z. B. nullsLast) das finale Verhalten bestimmt.
 	 * Beispiel:
-	 * Comparator<ReportingSchueler> cmp = Comparator.comparing(Sortierungsfunktion.start(Schueler::auswahlLernabschnitt).then(Lernabschnitt::klasse).then(Klasse::kuerzel).toFunction(), Comparator.nullsLast(deutscherCollator));
+	 * {@code Comparator<ReportingSchueler> cmp = Comparator.comparing(Sortierungsfunktion.start(Schueler::auswahlLernabschnitt).then(Lernabschnitt::klasse).then(Klasse::kuerzel).toFunction(), Comparator.nullsLast(deutscherCollator));}
 	 *
 	 * @param <T> Der Typ des Eingabeobjekts der Transformation
 	 * @param <A> Der Typ des Ausgabeobjekts nach der Transformations

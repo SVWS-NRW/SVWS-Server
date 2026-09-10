@@ -18,7 +18,7 @@ import de.svws_nrw.module.reporting.utils.ReportingTypesUtils.SerializableFuncti
  * für die Sortierung von Reporting-Objekten.
  * Mit dieser KLasse können Attributnamen (z. B. "nachname" oder "auswahlLernabschnitt.klasse.kuerzel") registriert werden
  * und sie ordnet ihnen typsichere Wertermittlungsfunktionen (Extraktorfunktionen) zu.
- * Zudem liefert sie für einen angefragten Attributnamen einen Comparator<T> in gewünschter Richtung,
+ * Zudem liefert sie für einen angefragten Attributnamen einen {@code Comparator<T>} in gewünschter Richtung,
  * basierend auf String-/Comparable-Vergleich (inkl. Null-Handling über Comparators).
  * Die Namen werden beim Registrieren und Suchen normalisiert (trim + toLowerCase), Zugriff ist case-insensitiv.
  * Hinweis: Sortierreihenfolgen werden über typsichere Funktionen (z. B. mit Sortierungsfunktion.start(...).then(...)) aufgebaut.

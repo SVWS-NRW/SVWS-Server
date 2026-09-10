@@ -461,7 +461,7 @@ public class ReportingRepositoryGostKlausurplanung {
 
 	/**
 	 * Ordnet die Cache-Maps für Klausurtermine, Kursklausuren und Schülerklausuren gemäß SORTIERUNG-Companion neu an,
-	 * damit nachgelagerte Iterationen über die LinkedHashMaps (z. B. {@link #verteileSchuelerklausurenAufSchueler()})
+	 * damit nachgelagerte Iterationen über die LinkedHashMaps (z. B. {@link #verteileSchuelerklausuren()})
 	 * eine deterministische Reihenfolge erhalten. Default-Verhalten siehe Klassen-JavaDoc.
 	 */
 	private void sortiereMaps() {

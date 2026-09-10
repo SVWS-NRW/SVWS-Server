@@ -90,7 +90,7 @@ public abstract class ReportBuilder<T> {
 	/**
 	 * Generiert das gewünschte Objekt basierend auf der Implementierung im konkreten Report-Builder.
 	 *
-	 * @return eine Instanz des generierten Objekts vom generischen Typ <T>
+	 * @return eine Instanz des generierten Objekts vom generischen Typ {@code T}
 	 */
 	public abstract T generate() throws ApiOperationException;
 
