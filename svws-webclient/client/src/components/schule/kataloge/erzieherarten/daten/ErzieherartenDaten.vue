@@ -14,6 +14,7 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
+						@change="model.patch"
 						:min="0"
 						:readonly="!hatKompetenzUpdate"
 						:removable="false" required />
