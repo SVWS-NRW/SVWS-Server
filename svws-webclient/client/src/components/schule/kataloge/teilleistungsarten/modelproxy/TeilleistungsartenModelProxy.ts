@@ -1,4 +1,5 @@
 import type { Teilleistungsart } from "@core/core/data/kataloge/Teilleistungsart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -34,6 +35,6 @@ export class TeilleistungsartenModelProxy extends ModelProxy<Teilleistungsart> {
 	private addValidatoren(liste: () => Iterable<Teilleistungsart>) {
 		this.addBlockingValidator(new ValidatorTeilleistungsartBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 }

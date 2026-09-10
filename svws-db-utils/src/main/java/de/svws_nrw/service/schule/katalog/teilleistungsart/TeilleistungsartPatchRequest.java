@@ -19,7 +19,7 @@ public class TeilleistungsartPatchRequest {
 	 * Json Nullable Repräsentation der Sortierung
 	 */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Teilleistungsart an", example = "1")
-	public JsonNullable<@Max(32000) Integer> sortierung = JsonNullable.undefined();
+	public JsonNullable<@Max(Integer.MAX_VALUE) Integer> sortierung = JsonNullable.undefined();
 
 	/**
 	 * Json Nullable Repräsentation der Sichtbarkeit

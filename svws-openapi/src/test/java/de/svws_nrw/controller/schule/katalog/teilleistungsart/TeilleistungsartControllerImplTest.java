@@ -67,18 +67,6 @@ class TeilleistungsartControllerImplTest {
 	}
 
 	@Test
-	@DisplayName("create | Failed - Sortierung invalid")
-	void testCreateFailedSortierungInvalid() {
-		final var restInput = createRest("bezeichnung", 32001);
-
-		final var throwable = catchThrowable(() -> teilLeistungsartControllerImpl.create(restInput));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("delete | Erfolg")
 	void testDeleteSuccess() {
 		final List<Long> idsToDelete = List.of(1L);

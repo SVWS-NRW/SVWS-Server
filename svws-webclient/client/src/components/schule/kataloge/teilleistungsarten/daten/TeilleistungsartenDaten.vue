@@ -20,7 +20,7 @@
 						v-model="modelProxy.proxy.sortierung"
 						:validation="() => modelProxy.getFehler('sortierung')"
 						@change="modelProxy.patch"
-						:min="0" :max="32000"
+						:min="0"
 						:readonly
 						:removable="false" required />
 					<svws-ui-spacing />

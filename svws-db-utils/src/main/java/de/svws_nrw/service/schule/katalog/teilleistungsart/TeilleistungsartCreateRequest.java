@@ -17,7 +17,7 @@ public class TeilleistungsartCreateRequest {
 	 * Die Sortierung des Teilleistungsart.
 	 */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Teilleistungsart an", example = "1")
-	public @Max(32000) int sortierung;
+	public @Max(Integer.MAX_VALUE) int sortierung;
 
 	/**
 	 * Gibt an, ob der Teilleistungsarten in der UI sichtbar ist.

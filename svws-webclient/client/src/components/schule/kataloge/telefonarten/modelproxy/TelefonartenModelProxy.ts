@@ -1,4 +1,5 @@
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -31,6 +32,6 @@ export class TelefonartenModelProxy extends ModelProxy<Telefonart> {
 	private addValidatoren(liste: () => Iterable<Telefonart>) {
 		this.addBlockingValidator(new ValidatorTelefonartBezeichnung((): Telefonart => this.proxy, liste), "bezeichnung");
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
-		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 }
