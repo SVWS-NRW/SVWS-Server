@@ -21,6 +21,7 @@ import { ReportingFilterVerknuepfung, cast_de_svws_nrw_core_types_reporting_Repo
 import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
 import { ReportingReportvorlageParameterTyp, cast_de_svws_nrw_core_types_reporting_ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
 import { ReportingUIKomponentenTyp, cast_de_svws_nrw_core_types_reporting_ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
+import { PersonalTyp } from '../../../core/types/PersonalTyp';
 import { ReportingFilterEintrag } from '../../../core/data/reporting/ReportingFilterEintrag';
 import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
 import { Class } from '../../../java/lang/Class';
@@ -457,7 +458,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			const optionen: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
 			const vorauswahl: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
 			for (const status of SchuelerStatus.values()) {
-				const definition: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
+				const definition: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereEnumBezeichnung(status.name()), "ReportingSchueler", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
 				optionen.add(definition);
 				if ((status as unknown === SchuelerStatus.AKTIV as unknown) || (status as unknown === SchuelerStatus.EXTERN as unknown)) {
 					vorauswahl.add(definition);
@@ -468,14 +469,28 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	}
 
 	/**
-	 * Normalisiert den technischen Namen eines {@link SchuelerStatus} für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
+	 * Erstellt die Filter-Definition-Gruppe "Personaltyp" für den Reporting-Typ "ReportingLehrer". Als Optionen werden alle Werte des
+	 * {@link PersonalTyp} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt ist keiner, so dass ohne Auswahl keine Filterung erfolgt.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Personaltyp
+	 */
+	public static erzeugeLehrerPersonaltypfilterGruppe(): ReportingFilterDefinitionGruppe {
+		const optionen: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
+		for (const personalTyp of PersonalTyp.values()) {
+			optionen.add(ReportingFilterDefinitionFactory.definition(ReportingReportvorlageUtils.normalisiereEnumBezeichnung(personalTyp.name()), "ReportingLehrer", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("personalTyp", personalTyp.name()))));
+		}
+		return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Personaltyp", "ReportingLehrer", true, true, ReportingFilterVerknuepfung.OR, optionen);
+	}
+
+	/**
+	 * Normalisiert den technischen Namen einer Enum-Konstante für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
 	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
 	 *
-	 * @param name Der technische Name (Enum-Name) des Status
+	 * @param name Der technische Name (Enum-Name)
 	 *
 	 * @return Die normalisierte Bezeichnung für die Anzeige
 	 */
-	private static normalisiereSchuelerStatusBezeichnung(name: string): string {
+	private static normalisiereEnumBezeichnung(name: string): string {
 		if (JavaString.isEmpty(name)) {
 			return name;
 		}

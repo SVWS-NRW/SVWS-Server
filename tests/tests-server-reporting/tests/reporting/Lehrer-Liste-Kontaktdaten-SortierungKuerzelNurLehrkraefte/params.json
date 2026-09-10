@@ -1,0 +1,451 @@
+{
+	"idSchuljahresabschnitt": 1,
+	"ausgabeformatOptionen": [
+		1,
+		2
+	],
+	"ausgabeformat": 1,
+	"reportvorlage": "Lehrer-Liste-Kontaktdaten",
+	"idHauptdatenObjekt": -1,
+	"idsHauptdaten": [
+		40,
+		41,
+		42,
+		1,
+		2,
+		3,
+		4,
+		5,
+		7,
+		6,
+		8,
+		19,
+		18,
+		17,
+		12,
+		53,
+		54,
+		55,
+		33,
+		34,
+		36,
+		37,
+		38,
+		39,
+		25,
+		26
+	],
+	"idsDetaildaten": [
+		0
+	],
+	"reportvorlageParameterGruppen": [
+		{
+			"name": "Benutzerweite Einstellungen",
+			"beschreibung": "Benutzerweite Parameter, für Testdeterminismus explizit gesetzt (überlagern die gespeicherte Benutzer-Config).",
+			"uiIstSichtbar": false,
+			"uiAnzahlSpalten": 1,
+			"uiErforderlicherServerMode": "",
+			"uiErforderlicheKompetenzen": [],
+			"reportvorlageParameter": [
+				{
+					"name": "mitExternerSchuleKuerzel",
+					"bezeichnung": "mit Schulkürzel bei externen Schülern",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "dateinameMitZeitstempel",
+					"bezeichnung": "Datum und Uhrzeit an Dateinamen anhängen",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				}
+			]
+		},
+		{
+			"name": "Inhaltsoptionen",
+			"beschreibung": "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"uiErforderlicheKompetenzen": [],
+			"reportvorlageParameter": [
+				{
+					"name": "ueberschrift",
+					"bezeichnung": "Überschrift (Standard: Lehrerliste)",
+					"typ": 2,
+					"wert": "Lehrerliste",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 2,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "bemerkung",
+					"bezeichnung": "Bemerkung",
+					"typ": 2,
+					"wert": "Bitte die Angaben prüfen und abzeichnen. Danke.",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 2,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerAmtsbezeichnung",
+					"bezeichnung": "mit Amtsbezeichnung",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitFoto",
+					"bezeichnung": "mit Foto",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerGeschlecht",
+					"bezeichnung": "mit Geschlecht",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 2,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerGebDat",
+					"bezeichnung": "mit Geburtsdatum",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerStaat",
+					"bezeichnung": "mit Staatsangehörigkeit",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 2,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerAnschrift",
+					"bezeichnung": "mit Anschrift",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerTelefon",
+					"bezeichnung": "mit Telefon",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerTelefonMobil",
+					"bezeichnung": "mit Mobiltelefon",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerEmailDienstlich",
+					"bezeichnung": "mit E-Mail (dienstlich)",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitLehrerEmailPrivat",
+					"bezeichnung": "mit E-Mail (privat)",
+					"typ": 1,
+					"wert": "true",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 2,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitSpalteLehrerLehraemter",
+					"bezeichnung": "mit Lehrämtern",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": false,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "mitSpalteLehrerBeschaeftigung",
+					"bezeichnung": "mit Beschäftigung",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": false,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 3,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				}
+			]
+		},
+		{
+			"name": "Ausgabeoptionen",
+			"beschreibung": "Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.",
+			"uiIstSichtbar": true,
+			"uiAnzahlSpalten": 3,
+			"uiErforderlicherServerMode": "",
+			"uiErforderlicheKompetenzen": [],
+			"reportvorlageParameter": [
+				{
+					"name": "einzelausgabeDaten",
+					"bezeichnung": "Daten in einzelne Dateien ausgeben",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": false,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				},
+				{
+					"name": "duplexdruck",
+					"bezeichnung": "Duplexdruck",
+					"typ": 1,
+					"wert": "false",
+					"uiIstSichtbar": true,
+					"uiKomponentenTyp": 1,
+					"uiAnzahlSpalten": 1,
+					"uiErforderlicherServerMode": "",
+					"uiErforderlicheKompetenzen": []
+				}
+			]
+		}
+	],
+	"sortierungDefinitionenGruppen": [
+		{
+			"bezeichnung": "Lehrersortierung",
+			"typ": "ReportingLehrer",
+			"uiIstSichtbar": true,
+			"uiErforderlicherServerMode": "",
+			"uiErforderlicheKompetenzen": [],
+			"sortierungDefinitionenOptionen": [
+				{
+					"bezeichnung": "Sortierung nach Name und Vorname (Standard)",
+					"typ": "ReportingLehrer",
+					"verwendeStandardsortierung": true,
+					"attribute": []
+				},
+				{
+					"bezeichnung": "Sortierung nach Kürzel",
+					"typ": "ReportingLehrer",
+					"verwendeStandardsortierung": false,
+					"attribute": [
+						"kuerzel",
+						"nachname",
+						"vorname"
+					]
+				}
+			],
+			"sortierungDefinitionen": [
+				{
+					"bezeichnung": "Sortierung nach Kürzel",
+					"typ": "ReportingLehrer",
+					"verwendeStandardsortierung": false,
+					"attribute": [
+						"kuerzel",
+						"nachname",
+						"vorname"
+					]
+				}
+			]
+		}
+	],
+	"filterDefinitionenGruppen": [
+		{
+			"bezeichnung": "Personaltyp",
+			"typ": "ReportingLehrer",
+			"uiIstSichtbar": true,
+			"uiIstFilterMultiselect": true,
+			"uiFilterMultiselectVerknuepfung": 2,
+			"uiErforderlicherServerMode": "",
+			"uiErforderlicheKompetenzen": [],
+			"filterDefinitionenOptionen": [
+				{
+					"bezeichnung": "Lehrkraft",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"LEHRKRAFT"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				},
+				{
+					"bezeichnung": "Sekretariat",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"SEKRETARIAT"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				},
+				{
+					"bezeichnung": "Personal",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"PERSONAL"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				},
+				{
+					"bezeichnung": "Extern",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"EXTERN"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				},
+				{
+					"bezeichnung": "Sonstige",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"SONSTIGE"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				}
+			],
+			"filterDefinitionen": [
+				{
+					"bezeichnung": "Lehrkraft",
+					"typ": "ReportingLehrer",
+					"kriterien": [
+						{
+							"verknuepfung": 1,
+							"eintraege": [
+								{
+									"attribut": "personalTyp",
+									"operation": 1,
+									"werte": [
+										"LEHRKRAFT"
+									]
+								}
+							],
+							"unterkriterien": [],
+							"nicht": false
+						}
+					]
+				}
+			]
+		}
+	],
+	"eMailDaten": {
+		"empfaengerTyp": 0,
+		"istPrivateEmailAlternative": false,
+		"betreff": "",
+		"text": ""
+	}
+}

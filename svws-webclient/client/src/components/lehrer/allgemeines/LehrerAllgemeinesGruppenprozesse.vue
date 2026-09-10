@@ -1,6 +1,11 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper class="flex flex-col gap-4">
+			<ui-card v-if="hatKompetenzDruckenLehrerdaten" icon="i-ri-printer-line" title="Lehrerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Lehrkräfte."
+				:is-open="currentAction === 'druckLehrerListeKontaktdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeKontaktdaten', isOpen)">
+				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_KONTAKTDATEN"
+					:ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
 				:is-open="currentAction === 'druckLehrerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplan', isOpen)">
 				<div>
@@ -66,7 +71,7 @@
 
 	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 
-	type Action = 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
+	type Action = 'druckLehrerListeKontaktdaten' | 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
 
 	const props = defineProps<LehrerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
@@ -74,6 +79,7 @@
 	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenLehrerdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);

@@ -1,0 +1,6 @@
+{
+	"beschreibung": "Lehrerliste mit Foto und Anschrift (Sortierung Standard)",
+	"schema": "ReportingGymAbi",
+	"pruefeDateinamen": true,
+	"pruefeDefaults": true
+}

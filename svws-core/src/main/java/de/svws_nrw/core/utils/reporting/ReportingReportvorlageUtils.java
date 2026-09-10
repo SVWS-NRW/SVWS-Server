@@ -16,6 +16,7 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
+import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
@@ -430,7 +431,7 @@ public final class ReportingReportvorlageUtils {
 		final List<ReportingFilterDefinition> vorauswahl = new ArrayList<>();
 		for (final SchuelerStatus status : SchuelerStatus.values()) {
 			final ReportingFilterDefinition definition = ReportingFilterDefinitionFactory.definition(
-					normalisiereSchuelerStatusBezeichnung(status.name()), "ReportingSchueler",
+					normalisiereEnumBezeichnung(status.name()), "ReportingSchueler",
 					ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("status", status.name())));
 			optionen.add(definition);
 			if ((status == SchuelerStatus.AKTIV) || (status == SchuelerStatus.EXTERN)) {
@@ -442,14 +443,30 @@ public final class ReportingReportvorlageUtils {
 	}
 
 	/**
-	 * Normalisiert den technischen Namen eines {@link SchuelerStatus} für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
+	 * Erstellt die Filter-Definition-Gruppe "Personaltyp" für den Reporting-Typ "ReportingLehrer". Als Optionen werden alle Werte des
+	 * {@link PersonalTyp} angeboten (Multiselect, OR-Verknüpfung); vorausgewählt ist keiner, so dass ohne Auswahl keine Filterung erfolgt.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Personaltyp
+	 */
+	public static @NotNull ReportingFilterDefinitionGruppe erzeugeLehrerPersonaltypfilterGruppe() {
+		final List<ReportingFilterDefinition> optionen = new ArrayList<>();
+		for (final PersonalTyp personalTyp : PersonalTyp.values()) {
+			optionen.add(ReportingFilterDefinitionFactory.definition(
+					normalisiereEnumBezeichnung(personalTyp.name()), "ReportingLehrer",
+					ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("personalTyp", personalTyp.name()))));
+		}
+		return erzeugeFilterDefinitionGruppe("Personaltyp", "ReportingLehrer", true, true, ReportingFilterVerknuepfung.OR, optionen);
+	}
+
+	/**
+	 * Normalisiert den technischen Namen einer Enum-Konstante für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
 	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
 	 *
-	 * @param name Der technische Name (Enum-Name) des Status
+	 * @param name Der technische Name (Enum-Name)
 	 *
 	 * @return Die normalisierte Bezeichnung für die Anzeige
 	 */
-	private static @NotNull String normalisiereSchuelerStatusBezeichnung(final @NotNull String name) {
+	private static @NotNull String normalisiereEnumBezeichnung(final @NotNull String name) {
 		if (name.isEmpty()) {
 			return name;
 		}

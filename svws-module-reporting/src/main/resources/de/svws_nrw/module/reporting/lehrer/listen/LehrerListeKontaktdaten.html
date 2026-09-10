@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck},
+				   querformat = ${VorlageParameter.get('mitSpalteLehrerBeschaeftigung') && (VorlageParameter.get('mitLehrerTelefon') || VorlageParameter.get('mitLehrerTelefonMobil') || VorlageParameter.get('mitLehrerEmailDienstlich') || VorlageParameter.get('mitLehrerEmailPrivat') || VorlageParameter.get('mitSpalteLehrerLehraemter'))}">
+	               <!-- querformat verwenden, wenn die Beschäftigung plus eine weitere Datenart (Telefon, EMail, Lehrämter) dargestellt werden sollen. -->
+	<!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<!--/* @thymesVar id="#icon" type="de.svws_nrw.module.reporting.html.dialects.IconExpressionHelper" */-->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Lehrerliste mit Kontaktdaten',
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4' + (${querformat} ? '-quer' : '-hoch') + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt() != null ? Schule.auswahlSchuljahresabschnitt().schuljahr() : 0},
+				   ueberschrift = ${(VorlageParameter.get('ueberschrift') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('ueberschrift')))},
+				   standardUeberschrift = ${'Lehrerliste'},
+				   anzeigeUeberschrift = ${#strings.isEmpty(ueberschrift) ? standardUeberschrift : ueberschrift},
+				   anzeigeUeberschriftFinal = ${(#strings.length(anzeigeUeberschrift) > 45) ? anzeigeUeberschrift.substring(0,45) : anzeigeUeberschrift},
+				   bemerkung = ${(VorlageParameter.get('bemerkung') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('bemerkung')))},
+				   mitFoto = ${VorlageParameter.get('mitFoto')},
+	               mitLehrerAmtsbezeichnung = ${VorlageParameter.get('mitLehrerAmtsbezeichnung')},
+	               mitSpalteAmtsbezeichnung = ${!mitFoto && mitLehrerAmtsbezeichnung},
+	               mitLehrerGeschlecht = ${VorlageParameter.get('mitLehrerGeschlecht')},
+	               mitLehrerGebDat = ${VorlageParameter.get('mitLehrerGebDat')},
+	               mitLehrerStaat = ${VorlageParameter.get('mitLehrerStaat')},
+	               mitLehrerAnschrift = ${VorlageParameter.get('mitLehrerAnschrift')},
+	               mitLehrerTelefon = ${VorlageParameter.get('mitLehrerTelefon')},
+	               mitLehrerTelefonMobil = ${VorlageParameter.get('mitLehrerTelefonMobil')},
+	               mitLehrerTelefonZeile = ${mitLehrerTelefon || mitLehrerTelefonMobil},
+	               mitLehrerEmailDienstlich = ${VorlageParameter.get('mitLehrerEmailDienstlich')},
+	               mitLehrerEmailPrivat = ${VorlageParameter.get('mitLehrerEmailPrivat')},
+	               mitLehrerEMail = ${mitLehrerEmailDienstlich || mitLehrerEmailPrivat},
+	               mitSpalteLehrerKontaktdaten = ${mitLehrerTelefonZeile || mitLehrerEMail},
+	               mitSpalteLehrerLehraemter = ${VorlageParameter.get('mitSpalteLehrerLehraemter')},
+	               mitSpalteLehrerBeschaeftigung = ${VorlageParameter.get('mitSpalteLehrerBeschaeftigung')},
+	               notwendigeSpaltenFlag = ${(mitSpalteLehrerKontaktdaten ? 1 : 0 ) + (mitSpalteLehrerLehraemter ? 2 : 0) + (mitSpalteLehrerBeschaeftigung ? 4 : 0)},
+	               fallNurBasisdaten = ${!mitLehrerAnschrift && !mitSpalteLehrerKontaktdaten && !mitSpalteLehrerLehraemter && !mitSpalteLehrerBeschaeftigung},
+	               fallNurAnschriftUndTelefonOderEmail = ${mitLehrerAnschrift && !mitSpalteLehrerLehraemter && !mitSpalteLehrerBeschaeftigung && !(mitLehrerTelefonZeile && mitLehrerEMail) && (mitLehrerTelefonZeile || mitLehrerEMail)}">
+
+	<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+	<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+	<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+		headerRight='Lehrerliste')}">
+	</th:block>
+	<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+	<table class="fixed-100 mp-0">
+		<colgroup>
+			<col th:style="${'width: ' + (mitFoto ? '22mm' : '11mm') + ';'}" />    <!-- Kürzel, mit Foto steht darunter zusätzlich die Amtsbezeichnung -->
+			<col th:if="${mitFoto}" style="width: 12mm;" />  <!-- Lehrkraft: Foto -->
+			<col th:if="${mitSpalteAmtsbezeichnung}" style="width: 23mm;" />  <!-- Amtsbezeichnung: eigene Spalte anstelle des Fotos -->
+			<col th:style="${'width: ' + ((mitFoto || mitSpalteAmtsbezeichnung) ? '50mm' : '75mm') + ';'}" />    <!-- Lehrkraft: Name, Angaben, Anschrift -->
+			<col style="width: 49mm;" />    <!-- Lehrkraft: E-Mail und Telefon -->
+			<col style="width: 48mm;" />    <!-- Lehrämter -->
+			<col />          				<!-- Füllt auf 100% der Breite auf. Ist leer im Hochformat oder nimmt die Beschäftigung auf. -->
+		</colgroup>
+		<thead>
+		<tr>
+			<th th:colspan="${(mitFoto || mitSpalteAmtsbezeichnung) ? 6 : 5}">
+				<table class="fixed-100 mp-0">
+					<tr>
+						<th class="ta-lb" style="width: 35%; font-size: 13pt; font-weight: bold;"
+							th:text="${anzeigeUeberschriftFinal}">
+							Lehrerliste
+						</th>
+						<th class="f-bold ta-rb" style="width: 65%;"></th>
+					</tr>
+					<tr>
+						<td colspan="2" class="ta-lb bo-t-grey" style="height: 2mm"></td>
+					</tr>
+					<th:block th:if="${!#strings.isEmpty(bemerkung)}">
+						<tr>
+							<td colspan="2" class="ta-l" style="font-size: 9pt; font-weight: normal" th:text="${bemerkung}">Bemerkung</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+						</tr>
+					</th:block>
+				</table>
+			</th>
+		</tr>
+		<tr>
+			<!-- ###### Die Spaltenüberschriften dienen nur der groben Orientierung. Da die Spalten dynamische genutzt werden, um eine möglich geringe Zeilenhöhe zu haben, wird die Beschriftung entsprechend erstellt. -->
+			<td class="head-small-grey" th:text="${(mitFoto && mitLehrerAmtsbezeichnung) ? 'Kürzel, Amtsbez.' : 'Kürzel'}">Kürzel</td>
+			<td class="head-small-grey ta-c" th:if="${mitFoto}">Foto</td>
+			<td class="head-small-grey" th:if="${mitSpalteAmtsbezeichnung}">Amtsbez.</td>
+			<td class="head-small-grey">Name, ggf. weitere Angaben</td>
+			<th:block th:if="${fallNurAnschriftUndTelefonOderEmail}">
+				<!-- Wenn neben der Anschrift der Lehrkraft nur deren Telefon ODER E-Mail gewünscht ist, dann setze Name und Anschrift zweispaltig und damit Telefon oder E-Mail in die letzte Spalte. -->
+				<td class="head-small-grey"></td>
+				<td class="head-small-grey">Telefon und E-Mail</td>
+			</th:block>
+			<th:block th:if="${!fallNurAnschriftUndTelefonOderEmail}">
+				<!-- Regelfall: Negierung des Falles zuvor. -->
+				<td class="head-small-grey" th:text="${mitSpalteLehrerKontaktdaten ? 'Telefon und E-Mail' : (mitSpalteLehrerLehraemter ? 'Lehrämter' : (mitSpalteLehrerBeschaeftigung ? 'Beschäftigung' : '' ))}">Telefon und E-Mail</td>
+				<td class="head-small-grey" th:text="${(mitSpalteLehrerKontaktdaten && mitSpalteLehrerLehraemter) ? 'Lehrämter' : (((mitSpalteLehrerKontaktdaten || mitSpalteLehrerLehraemter) && mitSpalteLehrerBeschaeftigung) ? 'Beschäftigung' : '')}">Lehrämter</td>
+			</th:block>
+			<td class="head-small-grey" th:text="${(mitSpalteLehrerKontaktdaten && mitSpalteLehrerLehraemter && mitSpalteLehrerBeschaeftigung) ? 'Beschäftigung' : ''}">Beschäftigung</td>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr th:each="lehrer,iterationVarLehrer : ${Lehrer}"
+			th:with="geschlechtIcon = ${lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))},
+					 lehrerName = ${lehrer.nachnameMitTitel() + (lehrer.vorname().isEmpty() ? '' : (', ' + lehrer.vorname()))},
+					 lehrerGebDatStaat = ${'' + (mitLehrerGebDat ? #convert.toDateDE(lehrer.geburtsdatum()) : '') + ((mitLehrerGebDat && mitLehrerStaat) ? ', ' : '') + (mitLehrerStaat && (lehrer.staatsangehoerigkeit() != null) && (lehrer.staatsangehoerigkeit().daten(schuljahr) != null) ? lehrer.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}"
+			th:classappend="${iterationVarLehrer.even} ? 'bg-lightgrey'">
+			<!-- Spalte für das Kürzel, bei aktivem Foto steht die Amtsbezeichnung darunter, sonst in der eigenen Spalte anstelle des Fotos -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt">
+				<div th:text="${lehrer.kuerzel()}">MUS</div>
+				<div th:if="${mitFoto && mitLehrerAmtsbezeichnung && !lehrer.amtsbezeichnung().isEmpty()}" th:text="${lehrer.amtsbezeichnung()}">OStR' a. P. i. E.</div>
+			</td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-c foto-zelle" th:if="${mitFoto}">
+				<div class="foto-container foto-container-klein">
+					<img th:if="${!lehrer.fotoHtmlSource().isEmpty()}"
+						 th:src="${lehrer.fotoHtmlSource()}"
+						 th:alt="${'Foto von ' + lehrer.vorname() + ' ' + lehrer.nachname()}"
+						 class="foto-bild" />
+					<div th:unless="${!lehrer.fotoHtmlSource().isEmpty()}"
+						 class="foto-placeholder foto-placeholder-klein"></div>
+				</div>
+			</td>
+			<td class="p-tb-05 p-lr-1 bo-b-grey ta-lt" th:if="${mitSpalteAmtsbezeichnung}" th:text="${lehrer.amtsbezeichnung()}">OStR' a. P. i. E.</td>
+
+			<!-- ###### Es werden nun die drei (Hochformat) bzw. vier Datenspalten (Querformat) gefüllt. ###### -->
+			<!-- ### SONDERFALL: Anschrift und nur Telefon ODER E-Mail. Daher zweispaltige Angabe für Lehrkraft und Anschrift und letzte Spalte Telefon oder E-Mail. ### -->
+			<th:block th:if="${fallNurAnschriftUndTelefonOderEmail}">
+				<td class="p-tb-05 p-lr-1 bo-b-grey">
+					<table class="auto-100 mp-0">
+						<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+						<tr>
+							<td class="mp-0 ta-lt" th:text="${lehrerName}">
+								Dr. Mustermann, Erika
+							</td>
+							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+						</tr>
+						<tr th:if="${!fallNurBasisdaten && (mitLehrerGebDat || mitLehrerStaat)}" >
+							<td colspan="2" class="mp-0 bo-t-grey"
+								th:text="${lehrerGebDatStaat}">
+								12.08.1980, deutsch
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td class="p-tb-05 p-lr-1 bo-b-grey" th:utext="${mitLehrerAnschrift ? lehrer.strassennameHausnummer() + '<br/>' + lehrer.plzOrt() : ''}">
+					Hauptstraße 13a<br/>12345 Musterstadt
+				</td>
+				<td class="p-tb-05 p-lr-1 bo-b-grey">
+					<table class="auto-100 mp-0">
+						<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
+						<tr th:if="${mitLehrerTelefonZeile}">
+							<td	th:utext="${(mitLehrerTelefon ? lehrer.telefonPrivat() : '') + ((mitLehrerTelefon && !lehrer.telefonPrivat().isEmpty() && mitLehrerTelefonMobil && !lehrer.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + (mitLehrerTelefonMobil ? lehrer.telefonPrivatMobil() : '')}">
+								01234/567890<br/>0123/4567890
+							</td>
+						</tr>
+						<tr th:if="${mitLehrerEMail}">
+							<td	th:utext="${(mitLehrerEmailDienstlich ? (lehrer.emailSchule() + ((!lehrer.emailSchule().isEmpty() && mitLehrerEmailPrivat && !lehrer.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitLehrerEmailPrivat ? lehrer.emailPrivat() : '')}">
+								erika.mustermann@deineschule.de<br/>erika.musti@birne.com
+							</td>
+						</tr>
+					</table>
+				</td>
+			</th:block>
+
+			<!-- ###### Regelfall wird bearbeitet ####### -->
+			<th:block th:if="${!fallNurAnschriftUndTelefonOderEmail}">
+				<!-- ### Es werden nur Daten der Lehrkraft gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
+				<th:block th:if="${!mitSpalteLehrerKontaktdaten && !mitSpalteLehrerLehraemter && !mitSpalteLehrerBeschaeftigung}">
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+							<tr>
+								<td class="mp-0 ta-lt" th:text="${lehrerName}">
+									Dr. Mustermann, Erika
+								</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+							</tr>
+							<tr th:if="${!fallNurBasisdaten && (mitLehrerGebDat || mitLehrerStaat)}" >
+								<td colspan="2" class="mp-0 bo-t-grey"
+									th:text="${lehrerGebDatStaat}">
+									12.08.1980, deutsch
+								</td>
+							</tr>
+						</table>
+					</td>
+					<th:block th:if="${fallNurBasisdaten}">
+						<td colspan="2"  class="mp-0 bo-b-grey"
+							th:text="${lehrerGebDatStaat}">
+							12.08.1980, deutsch
+						</td>
+					</th:block>
+					<th:block th:if="${!fallNurBasisdaten}">
+						<td class="p-tb-05 p-lr-1 bo-b-grey" th:text="${mitLehrerAnschrift ? lehrer.strassennameHausnummer() : ''}">
+							Hauptstraße 13a
+						</td>
+						<td class="p-tb-05 p-lr-1 bo-b-grey"  th:text="${mitLehrerAnschrift ? lehrer.plzOrt() : ''}">
+							12345 Musterstadt
+						</td>
+					</th:block>
+				</th:block>
+
+				<!-- ### Es wird mindestens eine weitere Datenart gefordert und es ist NICHT der Sonderfall zuvor. Lege die Spalte für die Lehrerdaten für alle folgenden Fälle an.  -->
+				<th:block th:if="${mitSpalteLehrerKontaktdaten || mitSpalteLehrerLehraemter || mitSpalteLehrerBeschaeftigung}">
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="auto-100 mp-0">
+							<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
+							<tr>
+								<td class="mp-0 ta-lt" th:text="${lehrerName}">
+									Dr. Mustermann, Erika
+								</td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+							</tr>
+							<tr th:if="${mitLehrerGebDat || mitLehrerStaat}" >
+								<td colspan="2" class="mp-0 bo-t-grey"
+									th:text="${lehrerGebDatStaat}">
+									12.08.1980, deutsch
+								</td>
+							</tr>
+							<tr th:if="${mitLehrerAnschrift}">
+								<td colspan="2" class="mp-0 bo-t-grey" th:utext="${lehrer.strassennameHausnummer() + '<br/>' + lehrer.plzOrt()}">
+									Hauptstraße 13a<br/>12345 Musterstadt
+								</td>
+							</tr>
+						</table>
+					</td>
+				</th:block>
+
+				<!-- ### Es werden Telefon und E-Mail der Lehrkraft gefordert -->
+				<th:block th:if="${mitSpalteLehrerKontaktdaten}">
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
+							<tr th:if="${mitLehrerTelefonZeile}">
+								<td class="mp-0" th:utext="${(mitLehrerTelefon ? lehrer.telefonPrivat() : '') + ((mitLehrerTelefon && !lehrer.telefonPrivat().isEmpty() && mitLehrerTelefonMobil && !lehrer.telefonPrivatMobil().isEmpty()) ? '<br/>' : '') + (mitLehrerTelefonMobil ? lehrer.telefonPrivatMobil() : '')}">
+									01234/567890<br/>0123/4567890
+								</td>
+							</tr>
+							<!-- Wenn keine weiteren Daten gefordert werden, schiebe die E-Adressen in die nächste Spalte -->
+							<tr th:if="${!mitLehrerTelefonZeile || (mitLehrerTelefonZeile && (notwendigeSpaltenFlag != 1))}">
+								<td class="mp-0" th:utext="${(mitLehrerEmailDienstlich ? (lehrer.emailSchule() + ((!lehrer.emailSchule().isEmpty() && mitLehrerEmailPrivat && !lehrer.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitLehrerEmailPrivat ? lehrer.emailPrivat() : '')}">
+									erika.mustermann@deineschule.de<br/>erika.musti@birne.com
+								</td>
+							</tr>
+						</table>
+					</td>
+				</th:block>
+
+				<!-- ### Es werden Telefon und E-Mail der Lehrkraft gefordert, ohne das noch weitere Daten gefordert werden. -->
+				<th:block th:if="${mitSpalteLehrerKontaktdaten && mitLehrerTelefonZeile && (notwendigeSpaltenFlag == 1)}">
+					<td class="p-tb-05 p-lr-1 bo-b-grey">
+						<table class="fixed-100 mp-0">
+							<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th></tr></thead>
+							<tr>
+								<td class="mp-0" th:utext="${(mitLehrerEmailDienstlich ? (lehrer.emailSchule() + ((!lehrer.emailSchule().isEmpty() && mitLehrerEmailPrivat && !lehrer.emailPrivat().isEmpty()) ? '<br/>' : '')) : '') + (mitLehrerEmailPrivat ? lehrer.emailPrivat() : '')}">
+									erika.mustermann@deineschule.de<br/>erika.musti@birne.com
+								</td>
+							</tr>
+						</table>
+					</td>
+				</th:block>
+
+				<!-- ### Es werden die Lehrämter der Lehrkraft gefordert. Platzhalter: Die Daten stehen im Reporting noch nicht zur Verfügung. -->
+				<th:block th:if="${mitSpalteLehrerLehraemter}">
+					<td class="p-tb-05 p-lr-1 bo-b-grey"></td>
+				</th:block>
+
+				<!-- ### Es werden die Beschäftigungsdaten der Lehrkraft gefordert. Platzhalter: Die Daten stehen im Reporting noch nicht zur Verfügung. -->
+				<th:block th:if="${mitSpalteLehrerBeschaeftigung}">
+					<!-- Wenn vorher zwei Spalten nicht genutzt werden, dann nutze die für die Beschäftigung und man kann im Hochformat bleiben. -->
+					<td th:colspan="${(mitSpalteLehrerKontaktdaten && mitSpalteLehrerLehraemter) ? 1 : 2}" class="p-tb-05 p-lr-1 bo-b-grey"></td>
+				</th:block>
+			</th:block>
+
+			<!-- ### Fülle die Tabelle mit leeren Spalten auf.  -->
+			<td class="p-tb-05 p-lr-1 bo-b-grey" th:if="${(notwendigeSpaltenFlag < 4)}"></td>
+		</tr>
+		</tbody>
+	</table>
+	</body>
+</html>

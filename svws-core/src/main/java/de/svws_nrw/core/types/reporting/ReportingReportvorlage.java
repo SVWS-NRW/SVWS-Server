@@ -217,6 +217,18 @@ public enum ReportingReportvorlage {
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten()
 	),
 
+	/** Report-Vorlage: Lehrer - Liste - Kontaktdaten */
+	LEHRER_V_LISTE_KONTAKTDATEN("Lehrer-Liste-Kontaktdaten",
+			"Lehrerliste mit Kontaktdaten",
+			"Eine Liste mit den Kontaktdaten der ausgewählten Lehrkräfte erzeugen.",
+			ReportingReportvorlageDatenContext.LEHRER,
+			"lehrer/listen/LehrerListeKontaktdaten.html",
+			"Lehrer-Liste-Kontaktdaten",
+			List.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN),
+			List.of(),
+			ReportingReportvorlageKonfigurationLehrer.getLehrerVListeKontaktdaten()
+	),
+
 	/** Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten */
 	LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN("Lehrer-Liste-Schueler-Leistungsdaten",
 			"Leistungsdaten der Lerngruppen",
