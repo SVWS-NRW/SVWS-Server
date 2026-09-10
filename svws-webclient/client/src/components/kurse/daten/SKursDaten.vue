@@ -2,7 +2,7 @@
 	<div v-if="manager().hasDaten()" class="page page-grid-cards">
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
-				<template #actions>
+				<template v-if="zeigeAlles" #actions>
 					<svws-ui-checkbox v-model="istSichtbar" :readonly focus-class-content> Ist sichtbar </svws-ui-checkbox>
 				</template>
 				<svws-ui-input-wrapper :grid="2">

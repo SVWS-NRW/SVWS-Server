@@ -12,6 +12,9 @@ import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { StateManager } from "@ui/ui/StateManager";
 
 import { abschnittStateImpl } from "../AbschnittStateImpl";
+import type { KlassenListeManager } from "../klassen/KlassenListeManager";
+import { klassenStateImpl } from "../klassen/KlassenStateImpl";
+import { KursListeManager } from "../kurse/KursListeManager";
 import { SchuelerListeManager } from "../schueler/SchuelerListeManager";
 import { schuleStateImpl } from "../SchuleStateImpl";
 import { api } from "~/router/Api";
@@ -23,6 +26,8 @@ interface StatistikReactiveState {
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	lehrerListeManager: LehrerListeManager;
 	schuelerListeManager: SchuelerListeManager | undefined;
+	kursListeManager: KursListeManager | undefined;
+	klassenListeManager: KlassenListeManager | undefined;
 }
 
 /**
@@ -37,15 +42,24 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 			mapSchueler: new Map<number, SchuelerListeEintrag>(),
 			lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 			schuelerListeManager: undefined, // new SchuelerListeManager(Schulform.BK, new SchuelerListe(), new ArrayList(), new ArrayList(), -1),
+			kursListeManager: undefined,
+			klassenListeManager: undefined,
 		});
 	}
 
 	public async init(): Promise<void> {
 		const statistikGesamt = await api.server.getStatistikGesamt(api.schema);
 		const listeSchueler = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
+		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 		const listeLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const listFaecher = await api.server.getFaecher(api.schema);
 		const lehrerListeManager = new LehrerListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listeLehrer);
 		const schuelerListeManager = new SchuelerListeManager(schuleStateImpl.schulform, listeSchueler, listeLehrer, abschnittStateImpl.alle, schuleStateImpl.abschnitt.id);
+		const kursListeManager = new KursListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listKurse, listSchueler, listJahrgaenge, listeLehrer, listFaecher);
+		await klassenStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		const klassenListeManager = klassenStateImpl.manager;
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listeSchueler.schueler) {
@@ -55,7 +69,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 			mapLehrer.set(l.id, l);
 		}
 
-		this.setPatchedState({ mapLehrer, mapSchueler, lehrerListeManager, schuelerListeManager, statistikGesamt });
+		this.setPatchedState({ mapLehrer, mapSchueler, lehrerListeManager, schuelerListeManager, kursListeManager, klassenListeManager, statistikGesamt });
 	}
 
 	public get statistikGesamt(): StatistikGesamt {
@@ -74,6 +88,20 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		return this.state.lehrerListeManager;
 	}
 
+	public get kursListeManager(): KursListeManager {
+		if (this.state.kursListeManager === undefined) {
+			throw new DeveloperNotificationException("Der Manager wurde noch nicht initialisiert, es besteht keine Verbindung zum Server");
+		}
+		return this.state.kursListeManager;
+	}
+
+	public get klassenListeManager(): KlassenListeManager {
+		if (this.state.klassenListeManager === undefined) {
+			throw new DeveloperNotificationException("Der Manager wurde noch nicht initialisiert, es besteht keine Verbindung zum Server");
+		}
+		return this.state.klassenListeManager;
+	}
+
 	public get schuelerListeManager(): SchuelerListeManager {
 		if (this.state.schuelerListeManager === undefined) {
 			throw new DeveloperNotificationException("Der Manager wurde noch nicht initialisiert, es besteht keine Verbindung zum Server");
@@ -81,7 +109,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		return this.state.schuelerListeManager;
 	}
 
-	private _validatorGesamt = computed<ValidatorGesamt>(() => {
+	private readonly _validatorGesamt = computed<ValidatorGesamt>(() => {
 		const v = new ValidatorGesamt({ get: () => this.statistikGesamt }, schuleStateImpl.validatorKontext);
 		v.run();
 		return v;
@@ -105,6 +133,20 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const daten = await api.server.getSchuelerStammdaten(api.schema, id);
 		schuelerListeManager.setDaten(daten);
 		this.setPatchedState({ schuelerListeManager });
+	};
+
+	public setKurs = async (id: number) => {
+		const kursListeManager = this.kursListeManager;
+		const daten = await api.server.getKurs(api.schema, id);
+		kursListeManager.setDaten(daten);
+		this.setPatchedState({ kursListeManager });
+	};
+
+	public setKlasse = async (id: number) => {
+		const klassenListeManager = this.klassenListeManager;
+		const daten = await api.server.getKlasse(api.schema, id);
+		klassenListeManager.setDaten(daten);
+		this.setPatchedState({ klassenListeManager });
 	};
 }
 

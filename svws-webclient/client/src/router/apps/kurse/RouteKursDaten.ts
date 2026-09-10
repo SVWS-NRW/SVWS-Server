@@ -28,6 +28,7 @@ export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 			addKursLehrer: routeKurse.data.addKurLehrer,
 			patchKursLehrer: routeKurse.data.patchKursLehrer,
 			deleteKursLehrer: routeKurse.data.deleteKursLehrer,
+			zeigeAlles: true,
 		};
 	}
 

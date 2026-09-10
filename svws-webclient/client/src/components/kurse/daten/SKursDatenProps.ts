@@ -13,4 +13,5 @@ export interface KursDatenProps {
 	addKursLehrer: (data: Partial<KursLehrer>, idKurs: number) => Promise<void>;
 	patchKursLehrer: (data: Partial<KursLehrer>, idKurs: number, idLehrer: number) => Promise<void>;
 	deleteKursLehrer: (lehrerIds: List<number>, idKurs: number) => Promise<void>;
+	zeigeAlles: boolean;
 }

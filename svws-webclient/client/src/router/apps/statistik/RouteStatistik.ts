@@ -15,6 +15,8 @@ import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
 
 import { RouteDataStatistik } from "./RouteDataStatistik";
+import { routeStatistikKlassen } from "./RouteStatistikKlassen";
+import { routeStatistikKurse } from "./RouteStatistikKurse";
 import { routeStatistikLehrer } from "./RouteStatistikLehrer";
 import { routeStatistikSchueler } from "./RouteStatistikSchueler";
 import { routeStatistikUebersicht } from "./RouteStatistikUebersicht";
@@ -33,6 +35,8 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 			routeStatistikUebersicht,
 			routeStatistikSchueler,
 			routeStatistikLehrer,
+			routeStatistikKurse,
+			routeStatistikKlassen,
 		];
 		super.defaultChild = routeStatistikUebersicht;
 		super.icon = "i-ri-bar-chart-2-line";
