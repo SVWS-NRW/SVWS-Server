@@ -14,7 +14,7 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 
 
 	private static readonly _eintragToId = (l: ENMServerConnection) => l.id;
-	private readonly _mapAvailability = new Map<number, SimpleOperationResponse | null>();
+	private _mapAvailability = new Map<number, SimpleOperationResponse | null>();
 	private readonly _mapSetupResponse = new Map<number, boolean | null>();
 
 	/** Ein Default-Comparator für den Vergleich von Servereinträgen. */
@@ -49,6 +49,7 @@ export class WenomAuswahlListeManager extends AuswahlManager<number, ENMServerCo
 
 	public setConnectionResponse(id: number, res: SimpleOperationResponse) {
 		this._mapAvailability.set(id, res);
+		this._mapAvailability = new Map(this._mapAvailability);
 	}
 
 	public setAuswahlConnectionResponse(res: SimpleOperationResponse) {

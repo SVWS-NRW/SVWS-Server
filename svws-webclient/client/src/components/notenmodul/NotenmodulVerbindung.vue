@@ -3,31 +3,34 @@
 		<div class="min-w-fit flex flex-col gap-8">
 			<div class="min-w-148 max-w-196">
 				<div class="text-headline-md mb-4 flex flex-row items-center gap-2">
-					<svws-ui-tooltip autosize>
+					<svws-ui-tooltip autosize v-if="manager().getAuswahlSetupResponse() !== null">
 						<span v-if="manager().auswahl().serverTLSCertIsTrusted" class="icon-lg i-ri-verified-badge-fill icon-ui-success" />
 						<span v-else class="icon-lg i-ri-error-warning-fill icon-ui-danger" />
 						<template #content v-if="manager().auswahl().serverTLSCertIsTrusted && (validCert !== null)">
-							<div>Diese Verbindung ist sicher</div>
+							<div>Diesem Server wird vertraut, eine Verbindung ist sicher</div>
 							<div>Das verwendete Zertifikat wurde ausgestellt von <span class="font-bold">{{ validCert.issuer }}</span></div>
 							<div>Inhaberin dieses Zertifikats ist <span class="font-bold">{{ validCert.subject }}</span></div>
 							<div>Es ist gütig von {{ validCert.validSince }} bis {{ validCert.validUntil }}</div>
 						</template>
 						<template #content v-else>
-							<div>Diese Verbindung ist nicht sicher</div>
+							<div>Diesem Server wird noch nicht vertraut, eine Verbindung ist nicht sicher</div>
 							Bitte prüfen Sie, ob diesem Zertifikat vertraut werden kann.
 						</template>
 					</svws-ui-tooltip>
 					<span class="">{{ manager().auswahl().url }}</span>
-					<div><a :href="manager().auswahl().url" target="_blank" rel="noopener noreferrer"><span class="icon i-ri-link cursor-pointer" /></a></div>
+					<a :href="manager().auswahl().url" target="_blank" rel="noopener noreferrer" class="leading-0"><span class="icon i-ri-link cursor-pointer" /></a>
 				</div>
-				<svws-ui-input-wrapper v-if="!manager().auswahl().serverTLSCertIsTrusted">
+				<div v-if="manager().getAuswahlConnectionResponse()?.log.contains('Fehler beim TLS-Handshake.')" class="bg-ui-danger rounded-md p-2 text-ui-ondanger">
+					Der WeNoM-Server ist nicht erreichbar.
+				</div>
+				<svws-ui-input-wrapper v-if="!manager().auswahl().serverTLSCertIsTrusted && manager().getAuswahlSetupResponse() !== null">
 					<div v-if="cert === null">Kein Zertifikat angegeben.</div>
 					<div v-else class="flex flex-col gap-2 mb-4">
 						<div>
 							<div class="font-bold">Unbekanntes Zertifikat</div>
-							<div><span class="font-bold">Inhaber:</span> {{ cert.subject }}</div>
-							<div><span class="font-bold">Aussteller:</span> {{ cert.issuer }}</div>
-							<div><span class="font-bold">Gültigkeit:</span> {{ }} bis {{ cert.validUntil !== null ? DateUtils.gibDatumGermanFormat(cert.validUntil) : 'Fehler' }}</div>
+							<div><span class="font-bold">Inhaber:</span> {{ cert.subject ?? 'Fehlt' }}</div>
+							<div><span class="font-bold">Aussteller:</span> {{ cert.issuer ?? 'Fehlt' }}</div>
+							<div><span class="font-bold">Gültigkeit:</span> {{ cert.validSince !== null ? DateUtils.gibDatumGermanFormat(cert.validSince) : 'Fehlt' }} bis {{ cert.validUntil !== null ? DateUtils.gibDatumGermanFormat(cert.validUntil) : 'Fehlt' }}</div>
 						</div>
 						<div class="bg-ui-warning rounded-md p-2 text-ui-onwarning">
 							Achtung, Sie können nur fortfahren mit der Einrichtung des WebNotenManagers, wenn Sie diesem Zertifikat vertrauen.
@@ -38,7 +41,7 @@
 						<svws-ui-button @click="trustCertificate(true)"> Zertifikat vertrauen </svws-ui-button>
 					</div>
 				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper v-if="manager().auswahl().serverTLSCertIsTrusted">
+				<svws-ui-input-wrapper v-if="manager().auswahl().serverTLSCertIsTrusted && manager().getAuswahlSetupResponse() !== null">
 					<div v-if="manager().getAuswahlConnectionResponse()?.success === false" class="bg-ui-warning rounded-md p-2">
 						Um Daten mit dem ENM-Server austauschen zu können, muss das auf dem Webspace abgelegte Secret ausgelesen und in das unten angegebene Feld eingefügt werden.
 						<br>Standardmäßig befindet sich das Secret in der Datei <span class="font-mono">db/client.sec</span> ihres Webspace.
@@ -89,7 +92,7 @@
 		const subjectArr = cert.value.subject?.split(',') ?? [];
 		const c = {
 			issuer: issuerArr.find(i => i.startsWith('O='))?.slice(2) ?? 'Fehler',
-			subject: subjectArr.find(i => i.startsWith('CN=') || i.startsWith('O='))?.slice(3) ?? 'Fehler',
+			subject: subjectArr.find(i => i.startsWith('CN=') || i.startsWith('O='))?.slice(2) ?? 'Fehler',
 			validSince: cert.value.validSince === null ? 'Fehler' : DateUtils.gibDatumGermanFormat(cert.value.validSince),
 			validUntil: cert.value.validUntil === null ? 'Fehler' : DateUtils.gibDatumGermanFormat(cert.value.validUntil),
 		};

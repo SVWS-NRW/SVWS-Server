@@ -441,10 +441,15 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 						res.log.add('Dem Server-Zertifikat wird aktuell nicht vertraut.');
 						return res;
 					}
+					const text = await e.response.text();
 					try {
-						const json = await e.response.text();
-						return SimpleOperationResponse.transpilerFromJSON(json);
-					} catch { /* */ }
+						return SimpleOperationResponse.transpilerFromJSON(text);
+					} catch {
+						const sor = new SimpleOperationResponse();
+						sor.success = false;
+						sor.log.add(text);
+						return sor;
+					}
 				}
 				const res = new SimpleOperationResponse();
 				res.success = false;
