@@ -196,7 +196,7 @@
 
 .text-input--readonly .text-input--control {
 	@apply pointer-events-auto cursor-default select-none;
-	padding-top: 3px;
+	padding-top: 5px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -211,6 +211,7 @@
 	top: 0.5em;
 	left: 0.7em;
 	line-height: 1.33;
+	height: 1.2rem;
 }
 
 .text-input-component:not(.text-input--filled):not(:focus-within) .text-input--placeholder {
