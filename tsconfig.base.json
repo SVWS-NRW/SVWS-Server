@@ -20,5 +20,5 @@
 			"@githash": ["./svws-webclient/client/githash.ts"],
 		}
 	},
-	"include": ["./svws-webclient/**/*/*.ts", "./svws-webclient/**/*/*.vue"],
+	"include": ["./svws-webclient/**/*/*.ts", "./svws-webclient/**/*/*.vue", "eslint.config.js", "tsconfig.base.json"],
 }
