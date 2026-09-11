@@ -220,7 +220,8 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		for (const f of faecher) {
 			mapFaecher.set(f.id, f);
 		}
-		this.setPatchedState({ mapSchulen, mapFaecher });
+		const lehrerUnterrichtsfaecher = await api.server.getLehrerUnterrichtsfaecher(api.schema, this.manager.auswahl().id);
+		this.setPatchedState({ mapSchulen, mapFaecher, lehrerUnterrichtsfaecher });
 	}
 
 	public async unloadPersonaldaten() {
@@ -489,7 +490,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Unterrichtsfächer können nur hinzugefügt werden, wenn gültige Personaldaten geladen sind.");
 		}
-		const result = await api.server.addLehrerUnterrichtsfach(eintrag, api.schema);
+		const result = await api.server.addLehrerUnterrichtsfach({ ...eintrag, idLehrer: this.manager.auswahl().id }, api.schema);
 		this._state.value.lehrerUnterrichtsfaecher.add(result);
 		this.commit();
 	};

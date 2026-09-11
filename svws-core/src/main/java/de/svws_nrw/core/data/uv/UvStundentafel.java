@@ -20,7 +20,7 @@ public class UvStundentafel {
 
     /** Die ID des zugehörigen Jahrgangs. */
     @Schema(description = "die ID des zugehörigen Jahrgangs", example = "12")
-    public long jahrgangId = -1;
+    public long idJahrgang = -1;
 
 	/** Die optionale Bezeichnung der Stundentafel. */
 	@Schema(description = "die optionale Bezeichnung der Stundentafel.", example = "Stundentafel für Jahrgang 12")
@@ -38,18 +38,32 @@ public class UvStundentafel {
     @Schema(description = "die optionale Beschreibung oder Kommentar zur Stundentafel.", example = "Eine Beschreibung oder Kommentar zu dieser Stundentafel")
     public String beschreibung = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvStundentafel() {
+		// leer
+	}
+
     /**
-     * Default-Konstruktor
+     * Gibt eine String-Repräsentation des UvStundentafel-Objekts zurück.
      */
-    public UvStundentafel() {
-        super();
+    @Override
+    public String toString() {
+		return "UvStundentafel{id=" + id
+				+ ", jahrgangId=" + idJahrgang
+				+ ", bezeichnung=" + bezeichnung
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ ", beschreibung=" + beschreibung
+				+ "}";
     }
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
     @Override
     public boolean equals(final Object another) {
@@ -57,21 +71,13 @@ public class UvStundentafel {
     }
 
     /**
-     * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+     * Erzeugt den Hashcode zum Objekt auf Basis des id-Attributs.
      *
-     * @return den HashCode
+     * @return den Hashcode zum Objekt auf Basis des id-Attributs.
      */
     @Override
     public int hashCode() {
         return Long.hashCode(id);
-    }
-
-    /**
-     * Returns a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return id + "-" + jahrgangId + "-" + gueltigVon;
     }
 
 }

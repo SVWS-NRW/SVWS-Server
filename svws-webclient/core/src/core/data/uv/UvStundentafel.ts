@@ -12,7 +12,7 @@ export class UvStundentafel extends JavaObject {
 	/**
 	 * Die ID des zugehörigen Jahrgangs.
 	 */
-	public jahrgangId: number = -1;
+	public idJahrgang: number = -1;
 
 	/**
 	 * Die optionale Bezeichnung der Stundentafel.
@@ -36,36 +36,36 @@ export class UvStundentafel extends JavaObject {
 
 
 	/**
-	 * Default-Konstruktor
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Gibt eine String-Repräsentation des UvStundentafel-Objekts zurück.
+	 */
+	public toString(): string | null {
+		return "UvStundentafel{id=" + this.id + ", jahrgangId=" + this.idJahrgang + ", bezeichnung=" + this.bezeichnung + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + ", beschreibung=" + this.beschreibung + "}";
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
 		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.uv.UvStundentafel')))) && (this.id === (another as unknown as UvStundentafel).id);
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+	 * Erzeugt den Hashcode zum Objekt auf Basis des id-Attributs.
 	 *
-	 * @return den HashCode
+	 * @return den Hashcode zum Objekt auf Basis des id-Attributs.
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Returns a string representation of the object.
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.jahrgangId + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {
@@ -84,9 +84,9 @@ export class UvStundentafel extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.jahrgangId === undefined)
-			throw new Error('invalid json format, missing attribute jahrgangId');
-		result.jahrgangId = obj.jahrgangId;
+		if (obj.idJahrgang === undefined)
+			throw new Error('invalid json format, missing attribute idJahrgang');
+		result.idJahrgang = obj.idJahrgang;
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
@@ -101,7 +101,7 @@ export class UvStundentafel extends JavaObject {
 	public static transpilerToJSON(obj: UvStundentafel): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"jahrgangId" : ' + obj.jahrgangId.toString() + ',';
+		result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
@@ -116,8 +116,8 @@ export class UvStundentafel extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.jahrgangId !== undefined) {
-			result += '"jahrgangId" : ' + obj.jahrgangId.toString() + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';

@@ -58,6 +58,30 @@ public class UvKurs {
 	public long idSchuelergruppe;
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvKurs() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvKurs-Objekts zurück.
+	 *
+	 * @return eine lesbare Beschreibung des Objekts
+	 */
+	@Override
+	public String toString() {
+		return "UvKurs{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", idSchuljahresabschnitt=" + idSchuljahresabschnitt
+				+ ", idFach=" + idFach
+				+ ", kursart=" + kursart
+				+ ", kursnummer=" + kursnummer
+				+ ", idSchuelergruppe=" + idSchuelergruppe
+				+ "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -78,20 +102,4 @@ public class UvKurs {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return eine lesbare Beschreibung des Objekts
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idFach + "-" + kursart + "-" + kursnummer;
-	}
-
-	/**
-	 * Default-Konstruktor.
-	 */
-	public UvKurs() {
-		super();
-	}
 }

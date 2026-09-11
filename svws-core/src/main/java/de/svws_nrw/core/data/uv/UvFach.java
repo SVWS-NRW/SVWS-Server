@@ -31,6 +31,27 @@ public class UvFach {
 	public String gueltigBis;
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvFach() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvFach-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des UV-Fachs
+	 */
+	@Override
+	public String toString() {
+		return "UvFach{id=" + id
+				+ ", idFach=" + idFach
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -42,7 +63,7 @@ public class UvFach {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Erzeugt den Hashcode des Objekts auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */
@@ -51,20 +72,4 @@ public class UvFach {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des UV-Fachs
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idFach + "-" + gueltigVon;
-	}
-
-	/**
-	 * Default-Konstruktor
-	 */
-	public UvFach() {
-		super();
-	}
 }

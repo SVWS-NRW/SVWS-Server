@@ -9,6 +9,11 @@ export class LehrerUnterrichtsfach extends JavaObject {
 	public id: number = -1;
 
 	/**
+	 * Gibt an, ob die zugehörige Lehrkraft im Lehrer-Katalog enthalten ist.
+	 */
+	public istKLehrer: boolean = true;
+
+	/**
 	 * Die ID des Lehrers.
 	 */
 	public idLehrer: number = -1;
@@ -64,6 +69,9 @@ export class LehrerUnterrichtsfach extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.istKLehrer === undefined)
+			throw new Error('invalid json format, missing attribute istKLehrer');
+		result.istKLehrer = obj.istKLehrer;
 		if (obj.idLehrer === undefined)
 			throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
@@ -85,6 +93,7 @@ export class LehrerUnterrichtsfach extends JavaObject {
 	public static transpilerToJSON(obj: LehrerUnterrichtsfach): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"istKLehrer" : ' + obj.istKLehrer.toString() + ',';
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"idFach" : ' + obj.idFach.toString() + ',';
 		result += '"istSek1" : ' + obj.istSek1.toString() + ',';
@@ -101,6 +110,9 @@ export class LehrerUnterrichtsfach extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.istKLehrer !== undefined) {
+			result += '"istKLehrer" : ' + obj.istKLehrer.toString() + ',';
 		}
 		if (obj.idLehrer !== undefined) {
 			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';

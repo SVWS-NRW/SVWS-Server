@@ -61,10 +61,19 @@ export class UvKlasse extends JavaObject {
 
 
 	/**
-	 * Default-Konstruktor.
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvKlasse-Objekts zurück.
+	 *
+	 * @return eine String-Repräsentation
+	 */
+	public toString(): string | null {
+		return "UvLerngruppenLehrer{id=" + this.id + ", idPlanungsabschnitt=" + this.idPlanungsabschnitt + ", idSchuljahresabschnitt=" + this.idSchuljahresabschnitt + ", bezeichnung=" + this.bezeichnung + ", kuerzel=" + this.kuerzel + ", parallelitaet=" + this.parallelitaet + ", idStundentafel=" + this.idStundentafel + ", idSchuelergruppe=" + this.idSchuelergruppe + ", orgFormKrz=" + this.orgFormKrz + ", idFachklasse=" + this.idFachklasse + ", asdSchulformNr=" + this.asdSchulformNr + "}";
 	}
 
 	/**
@@ -84,15 +93,6 @@ export class UvKlasse extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return eine lesbare Beschreibung des Objekts
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idPlanungsabschnitt + "-" + this.kuerzel;
 	}
 
 	transpilerCanonicalName(): string {

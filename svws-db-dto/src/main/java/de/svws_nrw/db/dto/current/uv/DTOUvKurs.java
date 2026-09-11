@@ -1,25 +1,15 @@
 package de.svws_nrw.db.dto.current.uv;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.converter.current.gost.GOStKursartConverter;
-
-import de.svws_nrw.core.types.gost.GostKursart;
-
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterSerializer;
-import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
-
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle UV_Kurse.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
@@ -106,13 +96,10 @@ public final class DTOUvKurs {
 	@JsonProperty
 	public long Fach_ID;
 
-	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
+	/** Kürzel der Kursart */
 	@Column(name = "Kursart")
 	@JsonProperty
-	@Convert(converter = GOStKursartConverter.class)
-	@JsonSerialize(using = GOStKursartConverterSerializer.class)
-	@JsonDeserialize(using = GOStKursartConverterDeserializer.class)
-	public GostKursart Kursart;
+	public String Kursart;
 
 	/** Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert) */
 	@Column(name = "Kursnummer")
@@ -141,7 +128,7 @@ public final class DTOUvKurs {
 	 * @param Kursnummer   der Wert für das Attribut Kursnummer
 	 * @param Schuelergruppe_ID   der Wert für das Attribut Schuelergruppe_ID
 	 */
-	public DTOUvKurs(final long ID, final long Planungsabschnitt_ID, final long Schuljahresabschnitts_ID, final long Fach_ID, final GostKursart Kursart, final int Kursnummer, final long Schuelergruppe_ID) {
+	public DTOUvKurs(final long ID, final long Planungsabschnitt_ID, final long Schuljahresabschnitts_ID, final long Fach_ID, final String Kursart, final int Kursnummer, final long Schuelergruppe_ID) {
 		this.ID = ID;
 		this.Planungsabschnitt_ID = Planungsabschnitt_ID;
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;

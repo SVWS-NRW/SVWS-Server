@@ -36,8 +36,7 @@ public class UvLehrerAnrechnungsstunden {
 
 	/** Das Datum, bis wann die Anrechnungsstunde gültig ist. */
 	@Schema(description = "das Datum, bis wann die Anrechnungsstunde gültig ist", example = "2026-07-31")
-	public @NotNull String gueltigBis = "";
-
+	public String gueltigBis = null;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -46,6 +45,21 @@ public class UvLehrerAnrechnungsstunden {
 		// leer
 	}
 
+	/**
+	 * Liefert eine String-Repräsentation des UvLehrerAnrechnungsstunden-Objekts.
+	 *
+	 * @return die String-Repräsentation des Objekts
+	 */
+	@Override
+	public String toString() {
+		return "UvLehrerAnrechnungsstunden{id=" + id
+				+ ", idLehrer=" + idLehrer
+				+ ", anrechnungsgrundKrz=" + anrechnungsgrundKrz
+				+ ", anzahlStunden=" + anzahlStunden
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht dieses Objekt mit einem anderen auf Gleichheit.
@@ -60,7 +74,6 @@ public class UvLehrerAnrechnungsstunden {
 				&& (this.id == other.id);
 	}
 
-
 	/**
 	 * Erzeugt einen Hashcode auf Basis der ID.
 	 *
@@ -71,14 +84,4 @@ public class UvLehrerAnrechnungsstunden {
 		return Long.hashCode(id);
 	}
 
-
-	/**
-	 * Konvertiert das Objekt in eine kompakte String-Darstellung.
-	 *
-	 * @return die String-Repräsentation des Objekts
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idLehrer + "-" + anrechnungsgrundKrz + "-" + gueltigVon;
-	}
 }

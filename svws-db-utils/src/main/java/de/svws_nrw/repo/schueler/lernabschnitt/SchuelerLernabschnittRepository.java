@@ -14,6 +14,15 @@ import de.svws_nrw.repo.Repository;
 public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerLernabschnittsdaten> {
 
 	/**
+	 * Ermittelt die Lernabschnittsdaten einer Klasse in einem Schuljahresabschnitt.
+	 *
+	 * @param idKlasse die Schild-Klasse
+	 * @param idSchuljahresabschnitt der Schuljahresabschnitt
+	 * @return die zugehörigen Lernabschnittsdaten
+	 */
+	List<DTOSchuelerLernabschnittsdaten> findListByKlasseAndSchuljahresabschnitt(long idKlasse, long idSchuljahresabschnitt);
+
+	/**
 	 * Bestimmt die Zuordnung der Schüler-IDs zu den Klassen mit den übergebenen IDs.
 	 *
 	 * @param idsKlassen   die IDs der Klassen

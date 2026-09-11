@@ -1,6 +1,4 @@
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
@@ -26,17 +24,21 @@ export class UvUnterricht extends JavaObject {
 	 */
 	public idLerngruppe: number = -1;
 
-	/**
-	 * Ein Array mit den IDs der Räume des Unterrichts.
-	 */
-	public idsRaeume: List<number> = new ArrayList<number>();
-
 
 	/**
-	 *Leerer Standardkonstruktor.
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvUnterricht-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	public toString(): string | null {
+		return "UvUnterricht{id=" + this.id + ", idPlanungsabschnitt=" + this.idPlanungsabschnitt + ", idZeitrasterEintrag=" + this.idZeitrasterEintrag + ", idLerngruppe=" + this.idLerngruppe + "}";
 	}
 
 	/**
@@ -56,15 +58,6 @@ export class UvUnterricht extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idPlanungsabschnitt + "-" + this.idLerngruppe + "-" + (this.idZeitrasterEintrag !== null ? this.idZeitrasterEintrag : "");
 	}
 
 	transpilerCanonicalName(): string {
@@ -90,11 +83,6 @@ export class UvUnterricht extends JavaObject {
 		if (obj.idLerngruppe === undefined)
 			throw new Error('invalid json format, missing attribute idLerngruppe');
 		result.idLerngruppe = obj.idLerngruppe;
-		if (obj.idsRaeume !== undefined) {
-			for (const elem of obj.idsRaeume) {
-				result.idsRaeume.add(elem);
-			}
-		}
 		return result;
 	}
 
@@ -104,14 +92,6 @@ export class UvUnterricht extends JavaObject {
 		result += '"idPlanungsabschnitt" : ' + obj.idPlanungsabschnitt.toString() + ',';
 		result += '"idZeitrasterEintrag" : ' + ((obj.idZeitrasterEintrag === null) ? 'null' : obj.idZeitrasterEintrag.toString()) + ',';
 		result += '"idLerngruppe" : ' + obj.idLerngruppe.toString() + ',';
-		result += '"idsRaeume" : [ ';
-		for (let i = 0; i < obj.idsRaeume.size(); i++) {
-			const elem = obj.idsRaeume.get(i);
-			result += elem.toString();
-			if (i < obj.idsRaeume.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -130,16 +110,6 @@ export class UvUnterricht extends JavaObject {
 		}
 		if (obj.idLerngruppe !== undefined) {
 			result += '"idLerngruppe" : ' + obj.idLerngruppe.toString() + ',';
-		}
-		if (obj.idsRaeume !== undefined) {
-			result += '"idsRaeume" : [ ';
-			for (let i = 0; i < obj.idsRaeume.size(); i++) {
-				const elem = obj.idsRaeume.get(i);
-				result += elem.toString();
-				if (i < obj.idsRaeume.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

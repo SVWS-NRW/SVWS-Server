@@ -33,6 +33,15 @@ export class UvZeitraster extends JavaObject {
 	}
 
 	/**
+	 * Gibt eine String-Repräsentation des UvZeitraster-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	public toString(): string | null {
+		return "UvZeitraster{id=" + this.id + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + ", bezeichnung=" + this.bezeichnung + "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -49,15 +58,6 @@ export class UvZeitraster extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {

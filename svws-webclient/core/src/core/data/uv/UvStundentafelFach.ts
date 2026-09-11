@@ -36,10 +36,19 @@ export class UvStundentafelFach extends JavaObject {
 
 
 	/**
-	 * Default-Konstruktor
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvStundentafelFach-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Fach-Eintrags der Stundentafel
+	 */
+	public toString(): string | null {
+		return "UvStundentafelFach{id=" + this.id + ", idStundentafel=" + this.idStundentafel + ", abschnitt=" + this.abschnitt + ", idFach=" + this.idFach + ", wochenstunden=" + this.wochenstunden + ", davonErgaenzungsstunden=" + this.davonErgaenzungsstunden + "}";
 	}
 
 	/**
@@ -61,15 +70,6 @@ export class UvStundentafelFach extends JavaObject {
 		let result: number = JavaLong.hashCode((this.idStundentafel));
 		result = 31 * result + JavaLong.hashCode((this.idFach));
 		return result;
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Fach-Eintrags der Stundentafel
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idStundentafel + "-" + this.abschnitt + "-" + this.idFach;
 	}
 
 	transpilerCanonicalName(): string {

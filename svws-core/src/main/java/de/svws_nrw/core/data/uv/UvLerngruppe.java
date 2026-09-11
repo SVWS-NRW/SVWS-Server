@@ -1,12 +1,7 @@
 package de.svws_nrw.core.data.uv;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.transpiler.TranspilerDTO;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,9 +49,31 @@ public class UvLerngruppe {
 	@Schema(description = "die Anzahl der externen Schüler von Koop-Schulen", example = "2")
 	public int koopAnzahlExterne = 0;
 
-	/** Ein Array mit den IDs der UV-Schienen der Lerngruppe. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der UV-Schienen der Lerngruppe."))
-	public @NotNull List<Long> idsSchienen = new ArrayList<>();
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvLerngruppe() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLerngruppe-Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Lerngruppe
+	 */
+	@Override
+	public String toString() {
+		return "UvLerngruppe{id=" + id
+				+ ", idKlasse=" + idKlasse
+				+ ", idFach=" + idFach
+				+ ", idKurs=" + idKurs
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", wochenstunden=" + wochenstunden
+				+ ", wochenstundenUnterrichtet=" + wochenstundenUnterrichtet
+				+ ", koopSchulNr=" + koopSchulNr
+				+ ", koopAnzahlExterne=" + koopAnzahlExterne
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -79,20 +96,4 @@ public class UvLerngruppe {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Lerngruppe
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + (idKlasse != null ? idKlasse : "") + "-" + (idKurs != null ? idKurs : "");
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvLerngruppe() {
-		// leer
-	}
 }

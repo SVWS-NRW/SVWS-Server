@@ -86,4 +86,13 @@ public final class GostRepositoryFactory extends RepositoryFactory {
 		return getOrCreate(GostSchuelerFachbelegungenRepository.class, () -> new GostSchuelerFachbelegungenRepositoryImpl(conn));
 	}
 
+	/**
+	 * Erstellt ein neues Repository für den Import aus Gost-Kursblockungen.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public GostKursblockungImportRepository getGostKursblockungImportRepository() {
+		return getOrCreate(GostKursblockungImportRepository.class, () -> new GostKursblockungImportRepositoryImpl(conn));
+	}
+
 }

@@ -3,5 +3,6 @@ export interface TabData {
 	text: string;
 	tabgroup?: string;
 	image?: string;
-	hide?: boolean
+	hide?: boolean;
+	tabContentHatAuswahl?: boolean
 };

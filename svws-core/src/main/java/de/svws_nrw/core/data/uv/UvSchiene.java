@@ -38,9 +38,30 @@ public class UvSchiene {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der erlaubten Jahrgänge."))
 	public @NotNull List<Long> idsJahrgaengeErlaubt = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvSchiene() {
+		// leer
+	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Gibt eine String-Repräsentation des Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Schiene
+	 */
+	@Override
+	public String toString() {
+		return "UvSchiene{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", nummer=" + nummer
+				+ ", bezeichnung=" + bezeichnung
+				+ ", idsJahrgaengeErlaubt=" + idsJahrgaengeErlaubt
+				+ "}";
+	}
+
+	/**
+	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
 	 *
 	 * @return der HashCode
 	 */
@@ -60,20 +81,4 @@ public class UvSchiene {
 		return (obj instanceof final UvSchiene other) && (this.id == other.id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Schiene
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idPlanungsabschnitt + "-" + nummer;
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvSchiene() {
-		// leer
-	}
 }

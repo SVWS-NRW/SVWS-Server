@@ -90,7 +90,6 @@
 		hatUpdateKompetenz: boolean;
 		lehrerUnterrichtsfaecher: () => List<LehrerUnterrichtsfach>;
 		mapFaecher: () => Map<number, FachDaten>;
-		idLehrer: () => number;
 		patchLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>) => Promise<void>;
 		addLehrerUnterrichtsfach: (eintrag: Partial<LehrerUnterrichtsfach>) => Promise<void>;
 		removeLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach) => Promise<void>;
@@ -166,7 +165,6 @@
 			return;
 		}
 		await props.addLehrerUnterrichtsfach({
-			idLehrer: props.idLehrer(),
 			idFach: auswahlFachNeu.value.id,
 			istSek1: neuIstSek1.value,
 			istSek2: neuIstSek2.value,

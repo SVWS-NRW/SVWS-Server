@@ -234,6 +234,7 @@
 			case "i-ri-graduation-cap-line":
 			case "i-ri-bar-chart-2-line":
 			case "i-ri-calendar-event-line":
+			case "i-ri-calendar-2-line":
 			case "i-ri-settings-3-line":
 				return menu.image;
 			default: return "";

@@ -42,6 +42,29 @@ public class UvLerngruppenLehrer {
 	@Schema(description = "die Anzahl der Wochenstunden, die auf das Deputat angerechnet werden", example = "2.0")
 	public double wochenstundenAngerechnet = 0.0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvLerngruppenLehrer() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLerngruppenLehrer-Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Lehrer-Lerngruppen-Zuordnung
+	 */
+	@Override
+	public String toString() {
+		return "UvLerngruppenLehrer{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", idLerngruppe=" + idLerngruppe
+				+ ", idLehrer=" + idLehrer
+				+ ", reihenfolge=" + reihenfolge
+				+ ", wochenstunden=" + wochenstunden
+				+ ", wochenstundenAngerechnet=" + wochenstundenAngerechnet
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -65,20 +88,4 @@ public class UvLerngruppenLehrer {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Lehrer-Lerngruppen-Zuordnung
-	 */
-	@Override
-	public String toString() {
-		return idLerngruppe + "-" + idLehrer;
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvLerngruppenLehrer() {
-		// leer
-	}
 }

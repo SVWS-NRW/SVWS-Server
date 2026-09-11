@@ -81,6 +81,34 @@ public class UvKlasse {
 	public String asdSchulformNr;
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvKlasse() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvKlasse-Objekts zurück.
+	 *
+	 * @return eine String-Repräsentation
+	 */
+	@Override
+	public String toString() {
+		return "UvLerngruppenLehrer{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", idSchuljahresabschnitt=" + idSchuljahresabschnitt
+				+ ", bezeichnung=" + bezeichnung
+				+ ", kuerzel=" + kuerzel
+				+ ", parallelitaet=" + parallelitaet
+				+ ", idStundentafel=" + idStundentafel
+				+ ", idSchuelergruppe=" + idSchuelergruppe
+				+ ", orgFormKrz=" + orgFormKrz
+				+ ", idFachklasse=" + idFachklasse
+				+ ", asdSchulformNr=" + asdSchulformNr
+				+ "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -101,20 +129,4 @@ public class UvKlasse {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return eine lesbare Beschreibung des Objekts
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idPlanungsabschnitt + "-" + kuerzel;
-	}
-
-	/**
-	 * Default-Konstruktor.
-	 */
-	public UvKlasse() {
-		super();
-	}
 }

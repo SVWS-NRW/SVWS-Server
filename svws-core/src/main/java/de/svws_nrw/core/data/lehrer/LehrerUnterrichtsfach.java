@@ -17,6 +17,10 @@ public class LehrerUnterrichtsfach {
 	@Schema(description = "die ID des Eintrags", example = "4711")
 	public long id = -1;
 
+	/** Gibt an, ob die zugehörige Lehrkraft im Lehrer-Katalog enthalten ist. */
+	@Schema(description = "gibt an, ob die zugehörige Lehrkraft im Lehrer-Katalog enthalten ist", example = "true")
+	public boolean istKLehrer = true;
+
 	/** Die ID des Lehrers. */
 	@Schema(description = "die ID des Lehrers", example = "42")
 	public long idLehrer = -1;

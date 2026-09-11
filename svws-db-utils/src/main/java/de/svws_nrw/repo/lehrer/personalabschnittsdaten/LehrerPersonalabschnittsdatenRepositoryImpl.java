@@ -34,4 +34,12 @@ public final class LehrerPersonalabschnittsdatenRepositoryImpl extends Repositor
 		return conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2",
 				DTOLehrerAbschnittsdaten.class, idsLehrer, idSchuljahresabschnitt);
 	}
+
+	@Override
+	public List<DTOLehrerAbschnittsdaten> getListByLehrerIds(final Collection<Long> idsLehrer) {
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN ?1", DTOLehrerAbschnittsdaten.class, idsLehrer);
+	}
 }

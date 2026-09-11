@@ -16,6 +16,11 @@ export class LongPair extends JavaObject {
 
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public constructor();
+
+	/**
 	 * Erzeugt ein neues LongPair-Objekt mit den übergebenen Werten.
 	 *
 	 * @param a der erste long-Wert
@@ -24,23 +29,27 @@ export class LongPair extends JavaObject {
 	public constructor(a: number, b: number);
 
 	/**
-	 * Default-Konstruktor für JSON-Serialisierung
-	 */
-	public constructor();
-
-	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
 	public constructor(__param0?: number, __param1?: number) {
 		super();
-		if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number")) {
+		if ((__param0 === undefined) && (__param1 === undefined)) {
+			// empty method body
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const a: number = __param0 as number;
 			const b: number = __param1 as number;
 			this.a = a;
 			this.b = b;
-		} else if ((__param0 === undefined) && (__param1 === undefined)) {
-			// empty method body
 		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des Objekts zurück.
+	 *
+	 * @return eine lesbare Beschreibung des Objekts
+	 */
+	public toString(): string | null {
+		return this.a + "-" + this.b;
 	}
 
 	/**
@@ -54,21 +63,12 @@ export class LongPair extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
+	 * Erzeugt den Hashcode des Objekts basierend auf den beiden Werten.
 	 *
 	 * @return den Hashcode
 	 */
 	public hashCode(): number {
 		return (31 * JavaLong.hashCode((this.a))) + JavaLong.hashCode((this.b));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return eine lesbare Beschreibung des Objekts
-	 */
-	public toString(): string | null {
-		return this.a + "-" + this.b;
 	}
 
 	transpilerCanonicalName(): string {

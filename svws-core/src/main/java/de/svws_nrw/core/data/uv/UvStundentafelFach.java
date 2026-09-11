@@ -38,6 +38,29 @@ public class UvStundentafelFach {
 	public double davonErgaenzungsstunden = 0.0;
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvStundentafelFach() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvStundentafelFach-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Fach-Eintrags der Stundentafel
+	 */
+	@Override
+	public String toString() {
+		return "UvStundentafelFach{id=" + id
+				+ ", idStundentafel=" + idStundentafel
+				+ ", abschnitt=" + abschnitt
+				+ ", idFach=" + idFach
+				+ ", wochenstunden=" + wochenstunden
+				+ ", davonErgaenzungsstunden=" + davonErgaenzungsstunden
+				+ "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -63,20 +86,4 @@ public class UvStundentafelFach {
 		return result;
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Fach-Eintrags der Stundentafel
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idStundentafel + "-" + abschnitt + "-" + idFach;
-	}
-
-	/**
-	 * Default-Konstruktor
-	 */
-	public UvStundentafelFach() {
-		super();
-	}
 }

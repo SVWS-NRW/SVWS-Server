@@ -558,6 +558,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			}
 			newTab.tabgroup = node.menugroup;
 			newTab.image = node.icon;
+			newTab.tabContentHatAuswahl = node.hasView("auswahl");
 			tabs.push(newTab);
 			if (node.name === tabname) {
 				tab = newTab;

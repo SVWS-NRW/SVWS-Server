@@ -32,13 +32,28 @@ public class UvLehrerPflichtstundensoll {
 
 	/** Das Datum, bis zu dem dieses Pflichtstundensoll gültig ist (ISO-Format yyyy-MM-dd). */
 	@Schema(description = "Das Datum, bis zu dem dieses Pflichtstundensoll gültig ist (ISO-Format yyyy-MM-dd).")
-	public @NotNull String gueltigBis = "";
+	public String gueltigBis = null;
 
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
 	public UvLehrerPflichtstundensoll() {
 		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLehrerPflichtstundensoll-Objektes zurück.
+	 *
+	 * @return eine String-Repräsentation
+	 */
+	@Override
+	public String toString() {
+		return "UvLehrerPflichtstundensoll{id=" + id
+				+ ", idLehrer=" + idLehrer
+				+ ", pflichtstdSoll=" + pflichtstdSoll
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ "}";
 	}
 
 	/**
@@ -64,13 +79,4 @@ public class UvLehrerPflichtstundensoll {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation dieses Objektes zurück.
-	 *
-	 * @return eine kurze textuelle Darstellung mit ID, Lehrer-ID, Pflichtstundensoll und Gültigkeitsbeginn
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idLehrer + "-" + gueltigVon;
-	}
 }

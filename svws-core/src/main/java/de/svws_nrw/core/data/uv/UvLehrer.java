@@ -2,6 +2,7 @@ package de.svws_nrw.core.data.uv;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,7 +24,7 @@ public class UvLehrer {
 
 	/** Das Lehrer-Kürzel für eine eindeutige Identifikation. */
 	@Schema(description = "das Lehrer-Kürzel für eine eindeutige Identifikation", example = "ABC")
-	public String kuerzel = null;
+	public @NotNull String kuerzel = "";
 
 	/** Der Nachname des Lehrers. */
 	@Schema(description = "der Nachname des Lehrers", example = "Mustermann")
@@ -32,6 +33,35 @@ public class UvLehrer {
 	/** Der Vorname (bzw. Rufname) des Lehrers. */
 	@Schema(description = "der Vorname (bzw. Rufname) des Lehrers", example = "Max")
 	public String vorname = null;
+
+	/** Das Datum, wann der Lehrer an die Schule gekommen ist. */
+	@Schema(description = "das Datum, wann der Lehrer an die Schule gekommen ist.", example = "2000-11-11")
+	public String datumZugang = null;
+
+	/** Das Datum, wann der Lehrer die Schule verlassen hat. */
+	@Schema(description = "das Datum, wann der Lehrer die Schule verlassen hat.", example = "2026-07-31")
+	public String datumAbgang = null;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvLehrer() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLehrer-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Lehrers
+	 */
+	@Override
+	public String toString() {
+		return "UvLehrer{id=" + id
+				+ ", idKLehrer=" + idKLehrer
+				+ ", kuerzel=" + kuerzel
+				+ ", nachname=" + nachname
+				+ ", vorname=" + vorname
+				+ "}";	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -45,7 +75,7 @@ public class UvLehrer {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */
@@ -54,20 +84,4 @@ public class UvLehrer {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Lehrers
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + (kuerzel != null ? kuerzel : "") + " (" + (nachname != null ? nachname : "") + ", " + (vorname != null ? vorname : "") + ")";
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvLehrer() {
-		// leer
-	}
 }

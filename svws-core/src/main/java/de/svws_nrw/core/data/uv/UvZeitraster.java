@@ -30,6 +30,26 @@ public class UvZeitraster {
 	@Schema(description = "die Bezeichnung des Zeitrasters", example = "Zeitraster Schuljahr 2025/26")
 	public String bezeichnung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvZeitraster() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvZeitraster-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	@Override
+	public String toString() {
+		return "UvZeitraster{id=" + id
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ ", bezeichnung=" + bezeichnung
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -53,20 +73,4 @@ public class UvZeitraster {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + gueltigVon;
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvZeitraster() {
-		// leer
-	}
 }

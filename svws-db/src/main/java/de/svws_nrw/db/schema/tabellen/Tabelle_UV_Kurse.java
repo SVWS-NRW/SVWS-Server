@@ -1,7 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.asd.adt.Pair;
-import de.svws_nrw.db.converter.current.gost.GOStKursartConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -40,8 +39,7 @@ public class Tabelle_UV_Kurse extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 			.setDefault("GK")
 			.setNotNull()
-			.setConverter(GOStKursartConverter.class)
-			.setJavaComment("ID der Kursart (siehe ID des Core-Types GostKursart)");
+			.setJavaComment("Kürzel der Kursart");
 
 	/** Die Definition der Tabellenspalte Kursnummer */
 	public final SchemaTabelleSpalte col_Kursnummer = add("Kursnummer", SchemaDatentypen.INT, false)

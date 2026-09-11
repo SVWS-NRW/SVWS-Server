@@ -17,7 +17,7 @@ export class UvLehrer extends JavaObject {
 	/**
 	 * Das Lehrer-Kürzel für eine eindeutige Identifikation.
 	 */
-	public kuerzel: string | null = null;
+	public kuerzel: string = "";
 
 	/**
 	 * Der Nachname des Lehrers.
@@ -29,12 +29,31 @@ export class UvLehrer extends JavaObject {
 	 */
 	public vorname: string | null = null;
 
+	/**
+	 * Das Datum, wann der Lehrer an die Schule gekommen ist.
+	 */
+	public datumZugang: string | null = null;
+
+	/**
+	 * Das Datum, wann der Lehrer die Schule verlassen hat.
+	 */
+	public datumAbgang: string | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLehrer-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Lehrers
+	 */
+	public toString(): string | null {
+		return "UvLehrer{id=" + this.id + ", idKLehrer=" + this.idKLehrer + ", kuerzel=" + this.kuerzel + ", nachname=" + this.nachname + ", vorname=" + this.vorname + "}";
 	}
 
 	/**
@@ -48,21 +67,12 @@ export class UvLehrer extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Lehrers
-	 */
-	public toString(): string | null {
-		return this.id + "-" + (this.kuerzel !== null ? this.kuerzel : "") + " (" + (this.nachname !== null ? this.nachname : "") + ", " + (this.vorname !== null ? this.vorname : "") + ")";
 	}
 
 	transpilerCanonicalName(): string {
@@ -82,9 +92,13 @@ export class UvLehrer extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.idKLehrer = (obj.idKLehrer === undefined) ? null : obj.idKLehrer === null ? null : obj.idKLehrer;
-		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		if (obj.kuerzel === undefined)
+			throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
+		result.datumZugang = (obj.datumZugang === undefined) ? null : obj.datumZugang === null ? null : obj.datumZugang;
+		result.datumAbgang = (obj.datumAbgang === undefined) ? null : obj.datumAbgang === null ? null : obj.datumAbgang;
 		return result;
 	}
 
@@ -92,9 +106,11 @@ export class UvLehrer extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idKLehrer" : ' + ((obj.idKLehrer === null) ? 'null' : obj.idKLehrer.toString()) + ',';
-		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"datumZugang" : ' + ((obj.datumZugang === null) ? 'null' : JSON.stringify(obj.datumZugang)) + ',';
+		result += '"datumAbgang" : ' + ((obj.datumAbgang === null) ? 'null' : JSON.stringify(obj.datumAbgang)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -109,13 +125,19 @@ export class UvLehrer extends JavaObject {
 			result += '"idKLehrer" : ' + ((obj.idKLehrer === null) ? 'null' : obj.idKLehrer.toString()) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
 		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		}
+		if (obj.datumZugang !== undefined) {
+			result += '"datumZugang" : ' + ((obj.datumZugang === null) ? 'null' : JSON.stringify(obj.datumZugang)) + ',';
+		}
+		if (obj.datumAbgang !== undefined) {
+			result += '"datumAbgang" : ' + ((obj.datumAbgang === null) ? 'null' : JSON.stringify(obj.datumAbgang)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

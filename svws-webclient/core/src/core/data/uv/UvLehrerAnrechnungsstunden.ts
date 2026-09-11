@@ -32,7 +32,7 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 	/**
 	 * Das Datum, bis wann die Anrechnungsstunde gültig ist.
 	 */
-	public gueltigBis: string = "";
+	public gueltigBis: string | null = null;
 
 
 	/**
@@ -40,6 +40,15 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation des UvLehrerAnrechnungsstunden-Objekts.
+	 *
+	 * @return die String-Repräsentation des Objekts
+	 */
+	public toString(): string | null {
+		return "UvLehrerAnrechnungsstunden{id=" + this.id + ", idLehrer=" + this.idLehrer + ", anrechnungsgrundKrz=" + this.anrechnungsgrundKrz + ", anzahlStunden=" + this.anzahlStunden + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + "}";
 	}
 
 	/**
@@ -60,15 +69,6 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Konvertiert das Objekt in eine kompakte String-Darstellung.
-	 *
-	 * @return die String-Repräsentation des Objekts
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idLehrer + "-" + this.anrechnungsgrundKrz + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {
@@ -99,9 +99,7 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 		if (obj.gueltigVon === undefined)
 			throw new Error('invalid json format, missing attribute gueltigVon');
 		result.gueltigVon = obj.gueltigVon;
-		if (obj.gueltigBis === undefined)
-			throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = obj.gueltigBis;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -112,7 +110,7 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 		result += '"anrechnungsgrundKrz" : ' + JSON.stringify(obj.anrechnungsgrundKrz) + ',';
 		result += '"anzahlStunden" : ' + obj.anzahlStunden.toString() + ',';
 		result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -136,7 +134,7 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 			result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

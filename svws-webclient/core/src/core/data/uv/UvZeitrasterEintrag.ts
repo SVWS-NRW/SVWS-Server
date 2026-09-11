@@ -15,9 +15,9 @@ export class UvZeitrasterEintrag extends JavaObject {
 	public idZeitraster: number = -1;
 
 	/**
-	 * Der Wochentag (z. B. 1 = Montag).
+	 * Der {@link Wochentag} an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 */
-	public tag: number = -1;
+	public wochentag: number = -1;
 
 	/**
 	 * Die Stunde (z. B. 1 = erste Stunde).
@@ -36,10 +36,19 @@ export class UvZeitrasterEintrag extends JavaObject {
 
 
 	/**
-	 *Leerer Standardkonstruktor.
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvZeitrasterEintrag-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	public toString(): string | null {
+		return "UvZeitrasterEintrag{id=" + this.id + ", idZeitraster=" + this.idZeitraster + ", tag=" + this.wochentag + ", stunde=" + this.stunde + ", beginn=" + this.beginn + ", ende=" + this.ende + "}";
 	}
 
 	/**
@@ -61,15 +70,6 @@ export class UvZeitrasterEintrag extends JavaObject {
 		return JavaLong.hashCode((this.id));
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.tag + "-" + this.stunde + "-" + this.beginn + "-" + this.ende;
-	}
-
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.data.uv.UvZeitrasterEintrag';
 	}
@@ -89,9 +89,9 @@ export class UvZeitrasterEintrag extends JavaObject {
 		if (obj.idZeitraster === undefined)
 			throw new Error('invalid json format, missing attribute idZeitraster');
 		result.idZeitraster = obj.idZeitraster;
-		if (obj.tag === undefined)
-			throw new Error('invalid json format, missing attribute tag');
-		result.tag = obj.tag;
+		if (obj.wochentag === undefined)
+			throw new Error('invalid json format, missing attribute wochentag');
+		result.wochentag = obj.wochentag;
 		if (obj.stunde === undefined)
 			throw new Error('invalid json format, missing attribute stunde');
 		result.stunde = obj.stunde;
@@ -108,7 +108,7 @@ export class UvZeitrasterEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
-		result += '"tag" : ' + obj.tag.toString() + ',';
+		result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		result += '"stunde" : ' + obj.stunde.toString() + ',';
 		result += '"beginn" : ' + obj.beginn.toString() + ',';
 		result += '"ende" : ' + obj.ende.toString() + ',';
@@ -125,8 +125,8 @@ export class UvZeitrasterEintrag extends JavaObject {
 		if (obj.idZeitraster !== undefined) {
 			result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
 		}
-		if (obj.tag !== undefined) {
-			result += '"tag" : ' + obj.tag.toString() + ',';
+		if (obj.wochentag !== undefined) {
+			result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		}
 		if (obj.stunde !== undefined) {
 			result += '"stunde" : ' + obj.stunde.toString() + ',';

@@ -1,10 +1,6 @@
 package de.svws_nrw.core.data.uv;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.transpiler.TranspilerDTO;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -42,15 +38,32 @@ public class UvPlanungsabschnitt {
 	@Schema(description = "die optionale Beschreibung oder Kommentar zum Planungsabschnitt.", example = "Weggang Q2")
 	public String beschreibung = null;
 
-	/** Ein Array mit den IDs der Lehrer des Planungsabschnitts. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der Lehrer des Planungsabschnitts."))
-	public @NotNull List<Long> idsLehrer = new ArrayList<>();
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvPlanungsabschnitt() {
+		// leer
+	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Gibt eine String-Repräsentation des UvPlanungsabschnitt-Objekts zurück.
+	 */
+	@Override
+	public String toString() {
+		return "UvPlanungsabschnitt{id=" + id
+				+ ", schuljahr=" + schuljahr
+				+ ", aktiv=" + aktiv
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ ", beschreibung=" + beschreibung
+				+ "}";
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
@@ -58,28 +71,13 @@ public class UvPlanungsabschnitt {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der id.
 	 *
 	 * @return den HashCode
 	 */
 	@Override
 	public int hashCode() {
 		return Long.hashCode(id);
-	}
-
-	/**
-	 * Returns a string representation of the object.
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + schuljahr + "-" + (aktiv ? 1 : 0) + "-" + gueltigVon;
-	}
-
-	/**
-	 * Default-Konstruktor
-	 */
-	public UvPlanungsabschnitt() {
-		super();
 	}
 
 }

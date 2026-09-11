@@ -1,5 +1,6 @@
 package de.svws_nrw.core.data.uv;
 
+import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -21,9 +22,9 @@ public class UvZeitrasterEintrag {
 	@Schema(description = "die ID des übergeordneten Zeitrasters", example = "1001")
 	public long idZeitraster = -1;
 
-	/** Der Wochentag (z. B. 1 = Montag). */
-	@Schema(description = "der Wochentag (z. B. 1 = Montag)", example = "1")
-	public int tag = -1;
+	/** Der {@link Wochentag} an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
+	@Schema(description = "der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
+	public int wochentag = -1;
 
 	/** Die Stunde (z. B. 1 = erste Stunde). */
 	@Schema(description = "die Stunde (z. B. 1 = erste Stunde)", example = "1")
@@ -37,6 +38,28 @@ public class UvZeitrasterEintrag {
 	@Schema(description = "Ende der Stunde (als Minuten seit Mitternacht)", example = "525")
 	public int ende = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvZeitrasterEintrag() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvZeitrasterEintrag-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	@Override
+	public String toString() {
+		return "UvZeitrasterEintrag{id=" + id
+				+ ", idZeitraster=" + idZeitraster
+				+ ", tag=" + wochentag
+				+ ", stunde=" + stunde
+				+ ", beginn=" + beginn
+				+ ", ende=" + ende
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -60,18 +83,4 @@ public class UvZeitrasterEintrag {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + tag + "-" + stunde + "-" + beginn + "-" + ende;
-	}
-
-	/** Leerer Standardkonstruktor. */
-	public UvZeitrasterEintrag() {
-		// leer
-	}
 }

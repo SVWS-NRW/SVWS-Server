@@ -1,6 +1,4 @@
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
@@ -51,17 +49,21 @@ export class UvLerngruppe extends JavaObject {
 	 */
 	public koopAnzahlExterne: number = 0;
 
-	/**
-	 * Ein Array mit den IDs der UV-Schienen der Lerngruppe.
-	 */
-	public idsSchienen: List<number> = new ArrayList<number>();
-
 
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLerngruppe-Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Lerngruppe
+	 */
+	public toString(): string | null {
+		return "UvLerngruppe{id=" + this.id + ", idKlasse=" + this.idKlasse + ", idFach=" + this.idFach + ", idKurs=" + this.idKurs + ", idPlanungsabschnitt=" + this.idPlanungsabschnitt + ", wochenstunden=" + this.wochenstunden + ", wochenstundenUnterrichtet=" + this.wochenstundenUnterrichtet + ", koopSchulNr=" + this.koopSchulNr + ", koopAnzahlExterne=" + this.koopAnzahlExterne + "}";
 	}
 
 	/**
@@ -81,15 +83,6 @@ export class UvLerngruppe extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Lerngruppe
-	 */
-	public toString(): string | null {
-		return this.id + "-" + (this.idKlasse !== null ? this.idKlasse : "") + "-" + (this.idKurs !== null ? this.idKurs : "");
 	}
 
 	transpilerCanonicalName(): string {
@@ -124,11 +117,6 @@ export class UvLerngruppe extends JavaObject {
 		if (obj.koopAnzahlExterne === undefined)
 			throw new Error('invalid json format, missing attribute koopAnzahlExterne');
 		result.koopAnzahlExterne = obj.koopAnzahlExterne;
-		if (obj.idsSchienen !== undefined) {
-			for (const elem of obj.idsSchienen) {
-				result.idsSchienen.add(elem);
-			}
-		}
 		return result;
 	}
 
@@ -143,14 +131,6 @@ export class UvLerngruppe extends JavaObject {
 		result += '"wochenstundenUnterrichtet" : ' + obj.wochenstundenUnterrichtet.toString() + ',';
 		result += '"koopSchulNr" : ' + ((obj.koopSchulNr === null) ? 'null' : JSON.stringify(obj.koopSchulNr)) + ',';
 		result += '"koopAnzahlExterne" : ' + obj.koopAnzahlExterne.toString() + ',';
-		result += '"idsSchienen" : [ ';
-		for (let i = 0; i < obj.idsSchienen.size(); i++) {
-			const elem = obj.idsSchienen.get(i);
-			result += elem.toString();
-			if (i < obj.idsSchienen.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -184,16 +164,6 @@ export class UvLerngruppe extends JavaObject {
 		}
 		if (obj.koopAnzahlExterne !== undefined) {
 			result += '"koopAnzahlExterne" : ' + obj.koopAnzahlExterne.toString() + ',';
-		}
-		if (obj.idsSchienen !== undefined) {
-			result += '"idsSchienen" : [ ';
-			for (let i = 0; i < obj.idsSchienen.size(); i++) {
-				const elem = obj.idsSchienen.get(i);
-				result += elem.toString();
-				if (i < obj.idsSchienen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

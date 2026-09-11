@@ -56,6 +56,7 @@ import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
+import { routeUv } from "~/router/apps/unterrichtsverteilung/RouteUv";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
@@ -178,6 +179,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
+			routeUv,
 			routeEinstellungen,
 		];
 		this._menuBenutzerprofil = [

@@ -48,6 +48,15 @@ export class UvLerngruppenLehrer extends JavaObject {
 	}
 
 	/**
+	 * Gibt eine String-Repräsentation des UvLerngruppenLehrer-Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Lehrer-Lerngruppen-Zuordnung
+	 */
+	public toString(): string | null {
+		return "UvLerngruppenLehrer{id=" + this.id + ", idPlanungsabschnitt=" + this.idPlanungsabschnitt + ", idLerngruppe=" + this.idLerngruppe + ", idLehrer=" + this.idLehrer + ", reihenfolge=" + this.reihenfolge + ", wochenstunden=" + this.wochenstunden + ", wochenstundenAngerechnet=" + this.wochenstundenAngerechnet + "}";
+	}
+
+	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another das zu vergleichende Objekt
@@ -64,15 +73,6 @@ export class UvLerngruppenLehrer extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Lehrer-Lerngruppen-Zuordnung
-	 */
-	public toString(): string | null {
-		return this.idLerngruppe + "-" + this.idLehrer;
 	}
 
 	transpilerCanonicalName(): string {

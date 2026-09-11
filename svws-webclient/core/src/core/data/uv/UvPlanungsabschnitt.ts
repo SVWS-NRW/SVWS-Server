@@ -1,6 +1,4 @@
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
@@ -36,43 +34,38 @@ export class UvPlanungsabschnitt extends JavaObject {
 	 */
 	public beschreibung: string | null = null;
 
-	/**
-	 * Ein Array mit den IDs der Lehrer des Planungsabschnitts.
-	 */
-	public idsLehrer: List<number> = new ArrayList<number>();
-
 
 	/**
-	 * Default-Konstruktor
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Gibt eine String-Repräsentation des UvPlanungsabschnitt-Objekts zurück.
+	 */
+	public toString(): string | null {
+		return "UvPlanungsabschnitt{id=" + this.id + ", schuljahr=" + this.schuljahr + ", aktiv=" + this.aktiv + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + ", beschreibung=" + this.beschreibung + "}";
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
 		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.uv.UvPlanungsabschnitt')))) && (this.id === (another as unknown as UvPlanungsabschnitt).id);
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der id.
 	 *
 	 * @return den HashCode
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Returns a string representation of the object.
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.schuljahr + "-" + (this.aktiv ? 1 : 0) + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {
@@ -102,11 +95,6 @@ export class UvPlanungsabschnitt extends JavaObject {
 		result.gueltigVon = obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		if (obj.idsLehrer !== undefined) {
-			for (const elem of obj.idsLehrer) {
-				result.idsLehrer.add(elem);
-			}
-		}
 		return result;
 	}
 
@@ -118,14 +106,6 @@ export class UvPlanungsabschnitt extends JavaObject {
 		result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		result += '"idsLehrer" : [ ';
-		for (let i = 0; i < obj.idsLehrer.size(); i++) {
-			const elem = obj.idsLehrer.get(i);
-			result += elem.toString();
-			if (i < obj.idsLehrer.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -150,16 +130,6 @@ export class UvPlanungsabschnitt extends JavaObject {
 		}
 		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		}
-		if (obj.idsLehrer !== undefined) {
-			result += '"idsLehrer" : [ ';
-			for (let i = 0; i < obj.idsLehrer.size(); i++) {
-				const elem = obj.idsLehrer.get(i);
-				result += elem.toString();
-				if (i < obj.idsLehrer.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

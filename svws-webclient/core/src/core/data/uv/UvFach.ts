@@ -26,10 +26,19 @@ export class UvFach extends JavaObject {
 
 
 	/**
-	 * Default-Konstruktor
+	 * Leerer Standardkonstruktor.
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvFach-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des UV-Fachs
+	 */
+	public toString(): string | null {
+		return "UvFach{id=" + this.id + ", idFach=" + this.idFach + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + "}";
 	}
 
 	/**
@@ -43,21 +52,12 @@ export class UvFach extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Erzeugt den Hashcode des Objekts auf Basis der ID.
 	 *
 	 * @return den HashCode
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des UV-Fachs
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idFach + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {

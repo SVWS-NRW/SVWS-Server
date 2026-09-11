@@ -27,7 +27,7 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 	/**
 	 * Das Datum, bis zu dem dieses Pflichtstundensoll gültig ist (ISO-Format yyyy-MM-dd).
 	 */
-	public gueltigBis: string = "";
+	public gueltigBis: string | null = null;
 
 
 	/**
@@ -35,6 +35,15 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvLehrerPflichtstundensoll-Objektes zurück.
+	 *
+	 * @return eine String-Repräsentation
+	 */
+	public toString(): string | null {
+		return "UvLehrerPflichtstundensoll{id=" + this.id + ", idLehrer=" + this.idLehrer + ", pflichtstdSoll=" + this.pflichtstdSoll + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + "}";
 	}
 
 	/**
@@ -56,15 +65,6 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 	 */
 	public hashCode(): number {
 		return JavaLong.hashCode((this.id));
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation dieses Objektes zurück.
-	 *
-	 * @return eine kurze textuelle Darstellung mit ID, Lehrer-ID, Pflichtstundensoll und Gültigkeitsbeginn
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idLehrer + "-" + this.gueltigVon;
 	}
 
 	transpilerCanonicalName(): string {
@@ -92,9 +92,7 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 		if (obj.gueltigVon === undefined)
 			throw new Error('invalid json format, missing attribute gueltigVon');
 		result.gueltigVon = obj.gueltigVon;
-		if (obj.gueltigBis === undefined)
-			throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = obj.gueltigBis;
+		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -104,7 +102,7 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"pflichtstdSoll" : ' + obj.pflichtstdSoll.toString() + ',';
 		result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -125,7 +123,7 @@ export class UvLehrerPflichtstundensoll extends JavaObject {
 			result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

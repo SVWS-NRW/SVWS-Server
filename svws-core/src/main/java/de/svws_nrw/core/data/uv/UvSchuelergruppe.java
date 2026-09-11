@@ -11,10 +11,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu einem UV-Planungsabschnitt-Schüler.
+ * Sie liefert die Informationen zu einer UV-Planungsabschnitt-Schülergruppe.
  */
 @XmlRootElement
-@Schema(description = "die Informationen zu einem UV-Planungsabschnitt-Schüler.")
+@Schema(description = "die Informationen zu einer UV-Planungsabschnitt-Schülergruppe.")
 @TranspilerDTO
 public class UvSchuelergruppe {
 
@@ -30,17 +30,33 @@ public class UvSchuelergruppe {
 	@Schema(description = "die Bezeichnung der Schülergruppe.", example = "Religion 5ab")
 	public @NotNull String bezeichnung = "";
 
-	/** Ein Array mit den IDs der Schüler der Gruppe. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der Schüler der Gruppe."))
-	public @NotNull List<Long> idsSchueler = new ArrayList<>();
-
 	/** Ein Array mit den IDs der erlaubten Jahrgänge. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der erlaubten Jahrgänge."))
 	public @NotNull List<Long> idsJahrgaengeErlaubt = new ArrayList<>();
 
-	/** Ein Array mit den IDs der Schüler der Gruppe. */
+	/** Ein Array mit den IDs der erlaubten Gruppen. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein Array mit den IDs der erlaubten Gruppen."))
 	public @NotNull List<Long> idsGruppenErlaubt = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvSchuelergruppe() {
+		// leer
+	}
+
+    /**
+     * Gibt eine String-Repräsentation des UvSchuelergruppe-Objekts zurück.
+     */
+    @Override
+    public String toString() {
+		return "UvSchuelergruppe{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", bezeichnung=" + bezeichnung
+				+ ", idsJahrgaengeErlaubt=" + idsJahrgaengeErlaubt
+				+ ", idsGruppenErlaubt=" + idsGruppenErlaubt
+				+ "}";
+    }
 
     /**
      * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -54,27 +70,13 @@ public class UvSchuelergruppe {
     }
 
     /**
-     * Erzeugt den Hashcode zu Objekt auf Basis der idVorgabe.
+     * Erzeugt den Hashcode zum Objekt auf Basis des id-Attributs.
      *
-     * @return den HashCode
+     * @return den HashCode zum Objekt auf Basis des id-Attributs.
      */
     @Override
     public int hashCode() {
         return Long.hashCode(id);
     }
 
-    /**
-     * Gibt eine String-Repräsentation des Objekts zurück.
-     */
-    @Override
-    public String toString() {
-        return id + "-" + idPlanungsabschnitt;
-    }
-
-    /**
-     * Default-Konstruktor
-     */
-    public UvSchuelergruppe() {
-        super();
-    }
 }

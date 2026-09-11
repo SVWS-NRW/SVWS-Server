@@ -39,6 +39,16 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Überprüft, ob eine Bedingung nicht erfüllt ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param pBeschreibung Die Beschreibung der Bedingung.
+	 * @param pErfuellt     Falls FALSE, wird eine DeveloperNotificationException geworfen.
+	 */
+	public static ifFalse(pBeschreibung: string, pErfuellt: boolean): void {
+		DeveloperNotificationException.ifTrue(pBeschreibung, !pErfuellt);
+	}
+
+	/**
 	 * Überprüft, ob eine Variable eine ungültige (negative) ID hat.
 	 *
 	 * @param pVariablenname Der Name der Variablen.

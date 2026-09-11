@@ -12,7 +12,10 @@ import { ReportingStateKey } from "@ui/states/ReportingState";
 import { SchuleStateKey } from "@ui/states/SchuleState";
 import { ServerStateKey } from "@ui/states/ServerState";
 import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
+import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
+
+import { uvStateImpl } from "~/states/UvStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -47,6 +50,7 @@ export function registerStates(): void {
 	context.provide(KlassenStateKey, klassenStateImpl);
 	context.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
 	context.provide(GostKlausurplanungStateKey, gostKlausurplanungStateImpl);
+	context.provide(UvStateKey, uvStateImpl);
 	context.provide(NotenmodulStateKey, notenmodulStateImpl);
 	context.provide(NotificationsStateKey, notificationStateImpl);
 	context.provide(OrteStateKey, orteStateImpl);

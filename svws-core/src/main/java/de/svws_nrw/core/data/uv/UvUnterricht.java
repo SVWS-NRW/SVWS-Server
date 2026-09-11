@@ -1,12 +1,7 @@
 package de.svws_nrw.core.data.uv;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.transpiler.TranspilerDTO;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,14 +29,25 @@ public class UvUnterricht {
 	@Schema(description = "die ID der Lerngruppe", example = "3101")
 	public long idLerngruppe = -1;
 
-	/** Ein Array mit den IDs der Räume des Unterrichts. */
-	@ArraySchema(schema = @Schema(implementation = Long.class, description = "ein rray mit den IDs der Räume des Unterrichts."))
-	public @NotNull List<Long> idsRaeume = new ArrayList<>();
-
-
-	/** Leerer Standardkonstruktor. */
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public UvUnterricht() {
 		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvUnterricht-Objekts zurück.
+	 *
+	 * @return die String-Darstellung
+	 */
+	@Override
+	public String toString() {
+		return "UvUnterricht{id=" + id
+				+ ", idPlanungsabschnitt=" + idPlanungsabschnitt
+				+ ", idZeitrasterEintrag=" + idZeitrasterEintrag
+				+ ", idLerngruppe=" + idLerngruppe
+				+ "}";
 	}
 
 	/**
@@ -65,14 +71,4 @@ public class UvUnterricht {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + idPlanungsabschnitt + "-" + idLerngruppe
-				+ "-" + (idZeitrasterEintrag != null ? idZeitrasterEintrag : "");
-	}
 }

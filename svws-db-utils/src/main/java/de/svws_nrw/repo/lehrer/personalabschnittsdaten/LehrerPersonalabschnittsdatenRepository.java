@@ -27,4 +27,14 @@ public interface LehrerPersonalabschnittsdatenRepository extends Repository<DTOL
 	 */
 	List<DTOLehrerAbschnittsdaten> getListByLehrerIdsAndSchuljahresabschnitt(Collection<Long> idsLehrer, long idSchuljahresabschnitt);
 
+	/**
+	 * Bestimmt alle Lehrer-Abschnittsdaten-Datenbank-Objekte für die übergebenen Lehrer-IDs
+	 * über alle Schuljahresabschnitte hinweg.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 *
+	 * @return die Liste mit den Abschnittsdaten-DB-DTOs
+	 */
+	List<DTOLehrerAbschnittsdaten> getListByLehrerIds(Collection<Long> idsLehrer);
+
 }

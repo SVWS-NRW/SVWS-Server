@@ -40,7 +40,16 @@ export class UvSchiene extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der ID.
+	 * Gibt eine String-Repräsentation des Objekts zurück.
+	 *
+	 * @return die String-Darstellung der Schiene
+	 */
+	public toString(): string | null {
+		return "UvSchiene{id=" + this.id + ", idPlanungsabschnitt=" + this.idPlanungsabschnitt + ", nummer=" + this.nummer + ", bezeichnung=" + this.bezeichnung + ", idsJahrgaengeErlaubt=" + this.idsJahrgaengeErlaubt + "}";
+	}
+
+	/**
+	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
 	 *
 	 * @return der HashCode
 	 */
@@ -56,15 +65,6 @@ export class UvSchiene extends JavaObject {
 	 */
 	public equals(obj: unknown | null): boolean {
 		return (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.uv.UvSchiene')))) && (this.id === (obj as unknown as UvSchiene).id);
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung der Schiene
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.idPlanungsabschnitt + "-" + this.nummer;
 	}
 
 	transpilerCanonicalName(): string {

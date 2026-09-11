@@ -88,8 +88,7 @@
 		<svws-ui-content-card v-if="serverState.hasDev" title="Unterrichtsfächer">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly"
-					:lehrer-unterrichtsfaecher :map-faecher :id-lehrer="() => personaldatenModelProxy.proxy.id"
-					:add-lehrer-unterrichtsfach :patch-lehrer-unterrichtsfach :remove-lehrer-unterrichtsfach />
+					:lehrer-unterrichtsfaecher :map-faecher :add-lehrer-unterrichtsfach :patch-lehrer-unterrichtsfach :remove-lehrer-unterrichtsfach />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">

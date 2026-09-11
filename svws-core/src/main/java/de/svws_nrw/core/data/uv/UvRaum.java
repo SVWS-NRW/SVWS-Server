@@ -14,13 +14,25 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class UvRaum {
 
-	/** Die eindeutige ID des Raums (planungsspezifisch). */
-	@Schema(description = "die eindeutige ID des Raums (planungsspezifisch)", example = "4711")
+	/** Die eindeutige ID des Raums. */
+	@Schema(description = "die eindeutige ID des Raums", example = "4711")
 	public long id = -1;
 
 	/** Das Kürzel des Raums. */
 	@Schema(description = "das Kürzel des Raums", example = "R204")
 	public @NotNull String kuerzel = "";
+
+	/** Die Beschreibung des Raumes. */
+	@Schema(description = "die Beschreibung des Raumes", example = "Klassenraum der Klasse 07b")
+	public String beschreibung = "";
+
+	/** Die Größe des Raumes an Arbeitsplätzen für Schüler. */
+	@Schema(description = "die Größe des Raumes an Arbeitsplätzen für Schüler", example = "30")
+	public int groesse = -1;
+
+	/** Die ID der Raumgruppe, falls der Raum zu einer solchen gehört. */
+	@Schema(description = "die ID der Raumgruppe, falls der Raum zu einer solchen gehört", example = "102")
+	public Long idRaumgruppe = null;
 
 	/** Das Datum, ab dem der Raum gültig ist. */
 	@Schema(description = "das Datum, ab dem der Raum gültig ist", example = "2025-08-01")
@@ -29,6 +41,27 @@ public class UvRaum {
 	/** Das Datum, bis wann der Raum gültig ist. Ist kein Datum gesetzt, gilt der Raum unbegrenzt weiter. */
 	@Schema(description = "das Datum, bis wann der Raum gültig ist. Ist kein Datum gesetzt, gilt der Raum unbegrenzt weiter.", example = "2026-07-31")
 	public String gueltigBis = null;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UvRaum() {
+		// leer
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvRaum-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Raums
+	 */
+	@Override
+	public String toString() {
+		return "UvRaum{id=" + id
+				+ ", kuerzel=" + kuerzel
+				+ ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis
+				+ "}";
+	}
 
 	/**
 	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
@@ -51,20 +84,4 @@ public class UvRaum {
 		return Long.hashCode(id);
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Raums
-	 */
-	@Override
-	public String toString() {
-		return id + "-" + kuerzel + "-" + gueltigVon;
-	}
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public UvRaum() {
-		// leer
-	}
 }

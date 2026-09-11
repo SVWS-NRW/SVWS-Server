@@ -5,7 +5,7 @@ import { Class } from '../../../java/lang/Class';
 export class UvRaum extends JavaObject {
 
 	/**
-	 * Die eindeutige ID des Raums (planungsspezifisch).
+	 * Die eindeutige ID des Raums.
 	 */
 	public id: number = -1;
 
@@ -13,6 +13,21 @@ export class UvRaum extends JavaObject {
 	 * Das Kürzel des Raums.
 	 */
 	public kuerzel: string = "";
+
+	/**
+	 * Die Beschreibung des Raumes.
+	 */
+	public beschreibung: string | null = "";
+
+	/**
+	 * Die Größe des Raumes an Arbeitsplätzen für Schüler.
+	 */
+	public groesse: number = -1;
+
+	/**
+	 * Die ID der Raumgruppe, falls der Raum zu einer solchen gehört.
+	 */
+	public idRaumgruppe: number | null = null;
 
 	/**
 	 * Das Datum, ab dem der Raum gültig ist.
@@ -30,6 +45,15 @@ export class UvRaum extends JavaObject {
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt eine String-Repräsentation des UvRaum-Objekts zurück.
+	 *
+	 * @return die String-Darstellung des Raums
+	 */
+	public toString(): string | null {
+		return "UvRaum{id=" + this.id + ", kuerzel=" + this.kuerzel + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + "}";
 	}
 
 	/**
@@ -51,15 +75,6 @@ export class UvRaum extends JavaObject {
 		return JavaLong.hashCode((this.id));
 	}
 
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return die String-Darstellung des Raums
-	 */
-	public toString(): string | null {
-		return this.id + "-" + this.kuerzel + "-" + this.gueltigVon;
-	}
-
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.data.uv.UvRaum';
 	}
@@ -79,6 +94,11 @@ export class UvRaum extends JavaObject {
 		if (obj.kuerzel === undefined)
 			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		if (obj.groesse === undefined)
+			throw new Error('invalid json format, missing attribute groesse');
+		result.groesse = obj.groesse;
+		result.idRaumgruppe = (obj.idRaumgruppe === undefined) ? null : obj.idRaumgruppe === null ? null : obj.idRaumgruppe;
 		if (obj.gueltigVon === undefined)
 			throw new Error('invalid json format, missing attribute gueltigVon');
 		result.gueltigVon = obj.gueltigVon;
@@ -90,6 +110,9 @@ export class UvRaum extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		result += '"groesse" : ' + obj.groesse.toString() + ',';
+		result += '"idRaumgruppe" : ' + ((obj.idRaumgruppe === null) ? 'null' : obj.idRaumgruppe.toString()) + ',';
 		result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : JSON.stringify(obj.gueltigBis)) + ',';
 		result = result.slice(0, -1);
@@ -104,6 +127,15 @@ export class UvRaum extends JavaObject {
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		}
+		if (obj.groesse !== undefined) {
+			result += '"groesse" : ' + obj.groesse.toString() + ',';
+		}
+		if (obj.idRaumgruppe !== undefined) {
+			result += '"idRaumgruppe" : ' + ((obj.idRaumgruppe === null) ? 'null' : obj.idRaumgruppe.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
 			result += '"gueltigVon" : ' + JSON.stringify(obj.gueltigVon) + ',';

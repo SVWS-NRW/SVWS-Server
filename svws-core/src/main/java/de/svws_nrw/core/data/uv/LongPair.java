@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert ein Paar aus zwei long-Werten.
  */
 @XmlRootElement
-@Schema(description = "ein Paar aus Zwei long-Werten.")
+@Schema(description = "ein Paar aus zwei long-Werten.")
 @TranspilerDTO
 public class LongPair {
 
@@ -26,34 +26,10 @@ public class LongPair {
 	public long b;
 
 	/**
-	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
-	 *
-	 * @param another das zu vergleichende Objekt
-	 * @return true, falls die Objekte identisch sind, sonst false
+	 * Leerer Standardkonstruktor.
 	 */
-	@Override
-	public boolean equals(final Object another) {
-		return (another instanceof final LongPair ano) && (this.a == ano.a) && (this.b == ano.b);
-	}
-
-	/**
-	 * Erzeugt den Hashcode zum Objekt auf Basis der ID.
-	 *
-	 * @return den Hashcode
-	 */
-	@Override
-	public int hashCode() {
-		return (31 * Long.hashCode(a)) + Long.hashCode(b);
-	}
-
-	/**
-	 * Gibt eine String-Repräsentation des Objekts zurück.
-	 *
-	 * @return eine lesbare Beschreibung des Objekts
-	 */
-	@Override
-	public String toString() {
-		return a + "-" + b;
+	public LongPair() {
+		// leer
 	}
 
 	/**
@@ -68,10 +44,34 @@ public class LongPair {
 	}
 
 	/**
-	 * Default-Konstruktor für JSON-Serialisierung
+	 * Gibt eine String-Repräsentation des Objekts zurück.
+	 *
+	 * @return eine lesbare Beschreibung des Objekts
 	 */
-	public LongPair() {
-		super();
+	@Override
+	public String toString() {
+		return a + "-" + b;
+	}
+
+	/**
+	 * Vergleicht, ob das aktuelle Objekt dasselbe ist wie ein anderes übergebenes Objekt.
+	 *
+	 * @param another das zu vergleichende Objekt
+	 * @return true, falls die Objekte identisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return (another instanceof final LongPair ano) && (this.a == ano.a) && (this.b == ano.b);
+	}
+
+	/**
+	 * Erzeugt den Hashcode des Objekts basierend auf den beiden Werten.
+	 *
+	 * @return den Hashcode
+	 */
+	@Override
+	public int hashCode() {
+		return (31 * Long.hashCode(a)) + Long.hashCode(b);
 	}
 
 }
