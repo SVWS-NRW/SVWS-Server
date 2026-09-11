@@ -50,7 +50,7 @@ public final class DTOSchuelerZuweisung {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Kursart */
 	public static final String QUERY_LIST_BY_KURSART = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart IN ?1";
 
-	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
+	/** LernabschnittsID der Zuweisung (E G Kurse GE und PS SK) */
 	@Id
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty

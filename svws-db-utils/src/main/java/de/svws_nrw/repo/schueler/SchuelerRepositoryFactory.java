@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.schueler;
 
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
@@ -18,6 +19,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungs
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungen;
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepository;
 import de.svws_nrw.repo.schueler.abitur.SchuelerAbiturFachRepositoryImpl;
@@ -35,6 +37,10 @@ import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestamps
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepositoryImpl;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenTimestampsRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenTimestampsRepositoryImpl;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepositoryImpl;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
@@ -168,6 +174,26 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerLernabschnittBemerkungRepository getSchuelerLernabschnittBemerkungenRepository() {
 		return getOrCreate(SchuelerLernabschnittBemerkungRepository.class, () -> new SchuelerLernabschnittBemerkungRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerZuweisung}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerLernabschnittKursartZuweisungenRepository getSchuelerLernabschnittKursartZuweisungenRepository() {
+		return getOrCreate(SchuelerLernabschnittKursartZuweisungenRepository.class, () -> new SchuelerLernabschnittKursartZuweisungenRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOTimestampsSchuelerZuweisungen}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerLernabschnittKursartZuweisungenTimestampsRepository getSchuelerLernabschnittKursartZuweisungenTimestampsRepository() {
+		return getOrCreate(SchuelerLernabschnittKursartZuweisungenTimestampsRepository.class, () -> new SchuelerLernabschnittKursartZuweisungenTimestampsRepositoryImpl(conn));
 	}
 
 

@@ -127,6 +127,7 @@ public final class NotenmodulServiceFactory {
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittKursartZuweisungenRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository(),
 				schuelerRepositoryFactory.getSchuelerAnkreuzkompetenzenRepository(),
@@ -213,6 +214,8 @@ public final class NotenmodulServiceFactory {
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittKursartZuweisungenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittKursartZuweisungenTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository(),
@@ -244,11 +247,15 @@ public final class NotenmodulServiceFactory {
 	 * @return der Service
 	 */
 	public EnmV2ImportService getEnmV2ImportService() {
-		return new EnmV2ImportService(lehrerRepositoryFactory.getLehrerRepository(),
+		return new EnmV2ImportService(
+				eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				lehrerRepositoryFactory.getLehrerRepository(),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittKursartZuweisungenRepository(),
+				schuelerRepositoryFactory.getSchuelerLernabschnittKursartZuweisungenTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository(),

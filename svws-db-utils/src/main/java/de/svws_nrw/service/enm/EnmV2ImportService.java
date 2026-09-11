@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.enm.v2.ENMv2Daten;
 import de.svws_nrw.core.data.enm.v2.ENMv2Lehrer;
 import de.svws_nrw.core.data.enm.v2.ENMv2Leistung;
@@ -20,6 +22,7 @@ import de.svws_nrw.core.data.enm.v2.ENMv2Schueler;
 import de.svws_nrw.core.data.enm.v2.ENMv2SchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistung;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -32,6 +35,8 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzko
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungenPK;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.TimestampUtils;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
@@ -42,17 +47,23 @@ import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimest
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenTimestampsRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepository;
+import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Ein Service für den Import von ENM-Daten
  */
 public class EnmV2ImportService {
+
+	/** Das Repository für den Zugriff auf die Schuldaten */
+	private final EigeneSchuleRepository eigeneSchuleRepository;
 
 	/** Das Repository für den Zugriff auf die Lehrerdaten */
 	private final LehrerRepository lehrerRepository;
@@ -68,6 +79,12 @@ public class EnmV2ImportService {
 
 	/** Das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern */
 	private final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository;
+
+	/** Das Repository für den Zugriff auf die Schüler-Kursart-Zuweisungen */
+	private final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository;
+
+	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-Kursart-Zuweisungen */
+	private final SchuelerLernabschnittKursartZuweisungenTimestampsRepository schuelerLernabschnittKursartZuweisungenTimestampsRepository;
 
 	/** Das Repository für den Zugriff auf die Schüler-Leistungsdaten */
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
@@ -97,26 +114,32 @@ public class EnmV2ImportService {
 	/**
 	 * Erstellt einen neuen Service.
 	 *
+	 * @param eigeneSchuleRepository                           das Repository für den Zugriff auf die Schuldaten
 	 * @param lehrerRepository                                 das Repository für den Zugriff auf die Lehrerdaten
 	 * @param schuelerRepository                               das Repository für den Zugriff auf die Schüler
 	 * @param schuelerLernabschnittRepository                  das Repository für den Zugriff auf die Schüler-Lernabschnitte
-	 * @param schuelerLernabschnittTimestampRepository        das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte
-	 * @param schuelerLernabschnittBemerkungRepository       das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern
+	 * @param schuelerLernabschnittTimestampRepository         das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte
+	 * @param schuelerLernabschnittBemerkungRepository         das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern
+	 * @param schuelerLernabschnittKursartZuweisungenRepository   das Repository für den Zugriff auf die Schüler-Kursart-Zuweisungen
+	 * @param schuelerLernabschnittKursartZuweisungenTimestampsRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Kursart-Zuweisungen
 	 * @param schuelerLeistungsdatenRepository                 das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param schuelerLeistungsdatenTimestampsRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Leistungsdaten
-	 * @param schuelerTeilleistungRepository                 das Repository für den Zugriff auf die Schüler-Teilleistungen
-	 * @param schuelerTeilleistungTimestampRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Teilleistungen
-	 * @param schuelerAnkreuzkompetenzRepository             das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen
-	 * @param schuelerAnkreuzkompetenzTimestampRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen
+	 * @param schuelerTeilleistungRepository                   das Repository für den Zugriff auf die Schüler-Teilleistungen
+	 * @param schuelerTeilleistungTimestampRepository          das Repository für den Zugriff auf die Zeitstempel für die Schüler-Teilleistungen
+	 * @param schuelerAnkreuzkompetenzRepository               das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen
+	 * @param schuelerAnkreuzkompetenzTimestampRepository      das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen
 	 * @param notenmodulCredentialsRepository                  das Repository für den Zugriff auf die Credentials der Lehrer für das Notenmodul
 	 * @param notenmodulCredentialsTimestampsRepository        das Repository für den Zugriff auf die Zeitstempel für die Credentials
 	 *                                                         der Lehrer für das Notenmodul
 	 */
-	public EnmV2ImportService(final LehrerRepository lehrerRepository,
+	public EnmV2ImportService(final EigeneSchuleRepository eigeneSchuleRepository,
+			final LehrerRepository lehrerRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository,
 			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
+			final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository,
+			final SchuelerLernabschnittKursartZuweisungenTimestampsRepository schuelerLernabschnittKursartZuweisungenTimestampsRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository,
 			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
@@ -125,11 +148,14 @@ public class EnmV2ImportService {
 			final SchuelerAnkreuzkompetenzTimestampRepository schuelerAnkreuzkompetenzTimestampRepository,
 			final NotenmodulCredentialsRepository notenmodulCredentialsRepository,
 			final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository) {
+		this.eigeneSchuleRepository = eigeneSchuleRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLernabschnittTimestampRepository = schuelerLernabschnittTimestampRepository;
 		this.schuelerLernabschnittBemerkungRepository = schuelerLernabschnittBemerkungRepository;
+		this.schuelerLernabschnittKursartZuweisungenRepository = schuelerLernabschnittKursartZuweisungenRepository;
+		this.schuelerLernabschnittKursartZuweisungenTimestampsRepository = schuelerLernabschnittKursartZuweisungenTimestampsRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerLeistungsdatenTimestampsRepository = schuelerLeistungsdatenTimestampsRepository;
 		this.schuelerTeilleistungRepository = schuelerTeilleistungRepository;
@@ -184,6 +210,8 @@ public class EnmV2ImportService {
 
 
 	private class EnmKontextdaten {
+		private final Schulform schulform;
+
 		// Maps mit den Daten aus den DTOs
 		private final Map<Long, DTOLehrer> mapLehrer;
 		private final Map<Long, DTONotenmodulCredentials> mapLehrerCreds;
@@ -192,6 +220,8 @@ public class EnmV2ImportService {
 		private final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte;
 		private final Map<Long, DTOTimestampsSchuelerLernabschnittsdaten> mapLernabschnitteTimestamps;
 		private final Map<Long, DTOSchuelerPSFachBemerkungen> mapLernabschnittsbemerkungen;
+		private final HashMap2D<Long, Long, DTOSchuelerZuweisung> mapSchuelerKursartZuweisungen;
+		private final HashMap2D<Long, Long, DTOTimestampsSchuelerZuweisungen> mapTimestampsSchuelerKursartZuweisungen;
 		private final Map<Long, DTOSchuelerLeistungsdaten> mapLeistungen;
 		private final Map<Long, DTOTimestampsSchuelerLeistungsdaten> mapLeistungenTimestamps;
 		private final Map<Long, DTOSchuelerTeilleistung> mapTeilleistungen;
@@ -204,6 +234,8 @@ public class EnmV2ImportService {
 		private final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungen = new HashSet<>();
 		private final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungenNeu = new HashSet<>();
 		private final Set<DTOTimestampsSchuelerLernabschnittsdaten> setLernabschnitteTimestamps = new HashSet<>();
+		private final Set<DTOSchuelerZuweisung> setSchuelerKursartZuweisungen = new HashSet<>();
+		private final Set<DTOTimestampsSchuelerZuweisungen> setTimestampsSchuelerKursartZuweisungen = new HashSet<>();
 		private final Set<DTOSchuelerLeistungsdaten> setLeistungen = new HashSet<>();
 		private final Set<DTOTimestampsSchuelerLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
 		private final Set<DTOSchuelerTeilleistung> setTeilleistungen = new HashSet<>();
@@ -238,6 +270,7 @@ public class EnmV2ImportService {
 			}
 
 			// Lade die Daten aus den Repositories
+			schulform = Schulform.data().getWertByKuerzel(eigeneSchuleRepository.getFirst().SchulformKuerzel);
 			mapLehrer = lehrerRepository.findMapByIds(idsLehrer);
 			mapLehrerCreds = notenmodulCredentialsRepository.findMapByIds(idsLehrer);
 			mapLehrerCredsTimestamps = notenmodulCredentialsTimestampsRepository.findMapByIds(idsLehrer);
@@ -245,6 +278,8 @@ public class EnmV2ImportService {
 			mapLernabschnitte = schuelerLernabschnittRepository.findMapByIds(idsLernabschnitte);
 			mapLernabschnitteTimestamps = schuelerLernabschnittTimestampRepository.findMapByIds(idsLernabschnitte);
 			mapLernabschnittsbemerkungen = schuelerLernabschnittBemerkungRepository.findMapByLernabschnittID(idsLernabschnitte);
+			mapSchuelerKursartZuweisungen = schuelerLernabschnittKursartZuweisungenRepository.getMapByLernabschnitte(idsLernabschnitte);
+			mapTimestampsSchuelerKursartZuweisungen = schuelerLernabschnittKursartZuweisungenTimestampsRepository.getMapByLernabschnitte(idsLernabschnitte);
 			mapLeistungen = schuelerLeistungsdatenRepository.findMapByIds(idsLeistungen);
 			mapLeistungenTimestamps = schuelerLeistungsdatenTimestampsRepository.findMapByIds(idsLeistungen);
 			mapTeilleistungen = schuelerTeilleistungRepository.findMapByIds(idsTeilleistungen);
@@ -282,7 +317,8 @@ public class EnmV2ImportService {
 			}
 
 			// Prüfe, ob alle Leistungsdaten aus der Datenbank geladen wurden
-			final List<ENMv2Leistung> enmLeistungen = daten.schueler.stream().<ENMv2Leistung>mapMulti((s, consumer) -> s.leistungsdaten.forEach(consumer)).toList();
+			final List<ENMv2Leistung> enmLeistungen =
+					daten.schueler.stream().<ENMv2Leistung>mapMulti((s, consumer) -> s.leistungsdaten.forEach(consumer)).toList();
 			if (this.mapLeistungen.size() != enmLeistungen.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Leistungsdaten aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
 			}
@@ -352,10 +388,11 @@ public class EnmV2ImportService {
 		final DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = kontext.mapLernabschnittsbemerkungen.getOrDefault(enmSchueler.lernabschnitt.id,
 				new DTOSchuelerPSFachBemerkungen(idNeueFachbemerkung, enmSchueler.lernabschnitt.id));
 
-		boolean updatedBemerkungen = updateIfNewerOr(enmSchueler.bemerkungen.tsASV, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsASV), neuBemerkungen, () -> {
-			lernabschnittsbemerkungen.ASV = enmSchueler.bemerkungen.ASV;
-			lernabschnittTS.tsASV = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsASV);
-		});
+		boolean updatedBemerkungen =
+				updateIfNewerOr(enmSchueler.bemerkungen.tsASV, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsASV), neuBemerkungen, () -> {
+					lernabschnittsbemerkungen.ASV = enmSchueler.bemerkungen.ASV;
+					lernabschnittTS.tsASV = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsASV);
+				});
 		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsAUE, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsAUE), neuBemerkungen, () -> {
 			lernabschnittsbemerkungen.AUE = enmSchueler.bemerkungen.AUE;
 			lernabschnittTS.tsAUE = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsAUE);
@@ -364,15 +401,18 @@ public class EnmV2ImportService {
 			lernabschnittsbemerkungen.LELS = enmSchueler.bemerkungen.LELS;
 			lernabschnittTS.tsLELS = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsLELS);
 		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsSchulformEmpf, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsESF), neuBemerkungen, () -> {
-			lernabschnittsbemerkungen.ESF = enmSchueler.bemerkungen.schulformEmpf;
-			lernabschnittTS.tsESF = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsSchulformEmpf);
-		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsFoerderbemerkungen, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungFSP), neuBemerkungen, () -> {
-			lernabschnittsbemerkungen.BemerkungFSP = enmSchueler.bemerkungen.foerderbemerkungen;
-			lernabschnittTS.tsBemerkungFSP = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsFoerderbemerkungen);
-		});
-		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungVersetzung),
+		updatedBemerkungen |=
+				updateIfNewerOr(enmSchueler.bemerkungen.tsSchulformEmpf, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsESF), neuBemerkungen, () -> {
+					lernabschnittsbemerkungen.ESF = enmSchueler.bemerkungen.schulformEmpf;
+					lernabschnittTS.tsESF = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsSchulformEmpf);
+				});
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsFoerderbemerkungen, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungFSP),
+				neuBemerkungen, () -> {
+					lernabschnittsbemerkungen.BemerkungFSP = enmSchueler.bemerkungen.foerderbemerkungen;
+					lernabschnittTS.tsBemerkungFSP = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsFoerderbemerkungen);
+				});
+		updatedBemerkungen |= updateIfNewerOr(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen,
+				TimestampUtils.convertUtcToLocal(lernabschnittTS.tsBemerkungVersetzung),
 				neuBemerkungen, () -> {
 					lernabschnittsbemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
 					lernabschnittTS.tsBemerkungVersetzung = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen);
@@ -382,14 +422,16 @@ public class EnmV2ImportService {
 			lernabschnitt.ZeugnisBem = enmSchueler.bemerkungen.ZB;
 			lernabschnittTS.tsZeugnisBem = TimestampUtils.convertLocalToUtc(enmSchueler.bemerkungen.tsZB);
 		});
-		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamt, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStd), () -> {
-			lernabschnitt.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
-			lernabschnittTS.tsSumFehlStd = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamt);
-		});
-		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStdU), () -> {
-			lernabschnitt.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
-			lernabschnittTS.tsSumFehlStdU = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt);
-		});
+		updatedLernabschnitt |=
+				updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamt, TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStd), () -> {
+					lernabschnitt.SumFehlStd = enmSchueler.lernabschnitt.fehlstundenGesamt;
+					lernabschnittTS.tsSumFehlStd = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamt);
+				});
+		updatedLernabschnitt |= updateIfNewer(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt,
+				TimestampUtils.convertUtcToLocal(lernabschnittTS.tsSumFehlStdU), () -> {
+					lernabschnitt.SumFehlStdU = enmSchueler.lernabschnitt.fehlstundenGesamtUnentschuldigt;
+					lernabschnittTS.tsSumFehlStdU = TimestampUtils.convertLocalToUtc(enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt);
+				});
 
 		if (updatedBemerkungen && !neuBemerkungen) {
 			kontext.setLernabschnittsbemerkungen.add(lernabschnittsbemerkungen);
@@ -412,14 +454,15 @@ public class EnmV2ImportService {
 			final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz = kontext.mapAnkreuzkompetenzen.get(enmAnkreuzkompetenz.id);
 			final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTS = kontext.mapAnkreuzkompetenzenTimestamps.get(enmAnkreuzkompetenz.id);
 
-			final boolean updatedAnkreuzkompetenz = updateIfNewer(enmAnkreuzkompetenz.tsStufe, TimestampUtils.convertUtcToLocal(ankreuzkompetenzTS.tsStufe), () -> {
-				ankreuzkompetenz.Stufe1 = enmAnkreuzkompetenz.stufen[0];
-				ankreuzkompetenz.Stufe2 = enmAnkreuzkompetenz.stufen[1];
-				ankreuzkompetenz.Stufe3 = enmAnkreuzkompetenz.stufen[2];
-				ankreuzkompetenz.Stufe4 = enmAnkreuzkompetenz.stufen[3];
-				ankreuzkompetenz.Stufe5 = enmAnkreuzkompetenz.stufen[4];
-				ankreuzkompetenzTS.tsStufe = TimestampUtils.convertLocalToUtc(enmAnkreuzkompetenz.tsStufe);
-			});
+			final boolean updatedAnkreuzkompetenz =
+					updateIfNewer(enmAnkreuzkompetenz.tsStufe, TimestampUtils.convertUtcToLocal(ankreuzkompetenzTS.tsStufe), () -> {
+						ankreuzkompetenz.Stufe1 = enmAnkreuzkompetenz.stufen[0];
+						ankreuzkompetenz.Stufe2 = enmAnkreuzkompetenz.stufen[1];
+						ankreuzkompetenz.Stufe3 = enmAnkreuzkompetenz.stufen[2];
+						ankreuzkompetenz.Stufe4 = enmAnkreuzkompetenz.stufen[3];
+						ankreuzkompetenz.Stufe5 = enmAnkreuzkompetenz.stufen[4];
+						ankreuzkompetenzTS.tsStufe = TimestampUtils.convertLocalToUtc(enmAnkreuzkompetenz.tsStufe);
+					});
 
 			if (updatedAnkreuzkompetenz) {
 				kontext.setAnkreuzkompetenzen.add(ankreuzkompetenz);
@@ -458,6 +501,35 @@ public class EnmV2ImportService {
 		}
 	}
 
+
+	private static void pruefeKurszuweisung(final ENMv2Leistung enmLeistung, final DTOSchuelerLeistungsdaten leistung, final EnmKontextdaten kontext) {
+		// Prüfe die Schulform und ob überhaupt ein Zeitstempel bei den empfangenen Daten vorhanden ist
+		if (((kontext.schulform != Schulform.GE) && (kontext.schulform != Schulform.PS) && (kontext.schulform != Schulform.SK))
+				|| (enmLeistung.tsNeueZuweisungKursart == null)) {
+			return;
+		}
+
+		DTOSchuelerZuweisung zuweisung = kontext.mapSchuelerKursartZuweisungen.getOrNull(leistung.Abschnitt_ID, leistung.Fach_ID);
+		DTOTimestampsSchuelerZuweisungen zuweisungTS = kontext.mapTimestampsSchuelerKursartZuweisungen.getOrNull(leistung.Abschnitt_ID, leistung.Fach_ID);
+		final boolean updateZuweisung = ((zuweisung == null) && (zuweisungTS == null))
+				|| isTimestampAfter(enmLeistung.tsNeueZuweisungKursart, TimestampUtils.convertUtcToLocal(zuweisungTS.tsKursart));
+		if (!updateZuweisung) {
+			return;
+		}
+
+		if ((zuweisung == null) || (zuweisungTS == null)) {
+			zuweisung = new DTOSchuelerZuweisung(leistung.Abschnitt_ID, leistung.Fach_ID);
+			zuweisung.Kursart = enmLeistung.neueZuweisungKursart;
+			zuweisungTS = new DTOTimestampsSchuelerZuweisungen(leistung.Abschnitt_ID, leistung.Fach_ID, enmLeistung.tsNeueZuweisungKursart);
+		} else {
+			zuweisung.Kursart = enmLeistung.neueZuweisungKursart;
+			zuweisungTS.tsKursart = enmLeistung.tsNeueZuweisungKursart;
+		}
+		kontext.setSchuelerKursartZuweisungen.add(zuweisung);
+		kontext.setTimestampsSchuelerKursartZuweisungen.add(zuweisungTS);
+	}
+
+
 	private static void pruefeLeistungsdaten(final ENMv2Schueler enmSchueler, final EnmKontextdaten kontext) {
 		for (final ENMv2Leistung enmLeistung : enmSchueler.leistungsdaten) {
 			final DTOSchuelerLeistungsdaten leistung = kontext.mapLeistungen.get(enmLeistung.id);
@@ -493,6 +565,8 @@ public class EnmV2ImportService {
 				kontext.setLeistungenTimestamps.add(leistungTS);
 			}
 
+			pruefeKurszuweisung(enmLeistung, leistung, kontext);
+
 			pruefeTeilleistungen(enmLeistung, kontext);
 		}
 	}
@@ -517,6 +591,9 @@ public class EnmV2ImportService {
 		if (!kontext.setAnkreuzkompetenzen.isEmpty()) {
 			schuelerAnkreuzkompetenzRepository.update(kontext.setAnkreuzkompetenzen);
 		}
+		if (!kontext.setSchuelerKursartZuweisungen.isEmpty()) {
+			schuelerLernabschnittKursartZuweisungenRepository.update(kontext.setSchuelerKursartZuweisungen);
+		}
 		schuelerRepository.flush();
 
 		if (!kontext.setLernabschnitteTimestamps.isEmpty()) {
@@ -530,6 +607,15 @@ public class EnmV2ImportService {
 		}
 		if (!kontext.setAnkreuzkompetenzenTimestamps.isEmpty()) {
 			schuelerAnkreuzkompetenzTimestampRepository.update(kontext.setAnkreuzkompetenzenTimestamps);
+		}
+		if (!kontext.setTimestampsSchuelerKursartZuweisungen.isEmpty()) {
+			for (final DTOTimestampsSchuelerZuweisungen tmpTsZuw : kontext.setTimestampsSchuelerKursartZuweisungen) {
+				final DTOTimestampsSchuelerZuweisungen tsZuw = schuelerLernabschnittKursartZuweisungenTimestampsRepository
+						.findById(new DTOTimestampsSchuelerZuweisungenPK(tmpTsZuw.Abschnitt_ID, tmpTsZuw.Fach_ID))
+						.orElseThrow(() -> new IllegalArgumentException());
+				tsZuw.tsKursart = tmpTsZuw.tsKursart;
+				schuelerLernabschnittKursartZuweisungenTimestampsRepository.update(tsZuw);
+			}
 		}
 		schuelerRepository.flush();
 	}

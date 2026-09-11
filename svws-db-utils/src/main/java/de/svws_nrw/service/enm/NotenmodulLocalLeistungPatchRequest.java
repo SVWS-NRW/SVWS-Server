@@ -5,6 +5,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * Die Informationenen zur Aktualisierung eines Leistungseintrages von Leistungsdaten im lokalen Notenmodul
@@ -43,5 +44,10 @@ public class NotenmodulLocalLeistungPatchRequest {
 	/** Gibt an, ob ein Fach gemahnt wurde oder nicht. */
 	@Schema(description = "Gibt an, ob ein Fach gemahnt wurde oder nicht.", example = "true")
 	public JsonNullable<Boolean> istGemahnt = JsonNullable.undefined();
+
+	/** Ggf. eine neue Kurs-Zuweisung (E- oder G-Kurs an den Schulformen GE, PS und SK). */
+	@Schema(description = "Ggf. eine neue Kurs-Zuweisung (E- oder G-Kurs an den Schulformen GE, PS und SK).", example = "E")
+	public JsonNullable<@Pattern(regexp = "^[EG]$", message = "Die Zuweisung muss entweder null, 'E' oder 'G' sein.") String> neueZuweisungKursart =
+			JsonNullable.undefined();
 
 }

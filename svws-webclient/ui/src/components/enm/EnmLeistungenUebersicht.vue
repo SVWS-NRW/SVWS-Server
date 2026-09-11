@@ -43,6 +43,13 @@
 													<li>Kleiner/gleich FS</li>
 												</ul>
 											</template>
+											<template v-else-if="col.kuerzel === 'Zuw.'">
+												<ul>
+													<li>Keine</li>
+													<li>G</li>
+													<li>E</li>
+												</ul>
+											</template>
 										</template>
 									</svws-ui-tooltip>
 								</template>
@@ -135,30 +142,41 @@
 						</td>
 					</template>
 				</template>
-				<template v-if="gridManager.isColVisible('FS') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
-						:ref="inputFehlstunden(pair, 9, index)" class="ui-table-grid-input"
+				<template v-if="gridManager.isColVisible('Zuw.')">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)
+							&& enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')
+							&& enmManager().leistungGetKursartZulaessigFuerZuweisung(pair.a)"
+						:ref="inputZuweisungKursart(pair, 9, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 9),
 							'contentFocusField': gridManager.isFocusLast(9, index),
+						}" />
+					<td v-else>{{ pair.a.neueZuweisungKursart ?? "—" }}</td>
+				</template>
+				<template v-if="gridManager.isColVisible('FS') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
+						:ref="inputFehlstunden(pair, 10, index)" class="ui-table-grid-input"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 10),
+							'contentFocusField': gridManager.isFocusLast(10, index),
 						}" />
 					<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('FSU') ?? true">
 					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
-						:ref="inputFehlstundenUnendschuldigt(pair, 10, index)" class="ui-table-grid-input"
+						:ref="inputFehlstundenUnendschuldigt(pair, 11, index)" class="ui-table-grid-input"
 						:class="{
-							'bg-ui-selected': (gridManager.focusColumn === 10),
-							'contentFocusField': gridManager.isFocusLast(10, index),
+							'bg-ui-selected': (gridManager.focusColumn === 11),
+							'contentFocusField': gridManager.isFocusLast(11, index),
 						}" />
 					<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
 					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'FB')"
-						:ref="inputBemerkung(pair, 11, index)" class="ui-table-grid-button"
+						:ref="inputBemerkung(pair, 12, index)" class="ui-table-grid-button"
 						:class="{
-							'bg-ui-selected': (gridManager.focusColumn === 11),
-							'contentFocusField': gridManager.isFocusLast(11, index),
+							'bg-ui-selected': (gridManager.focusColumn === 12),
+							'contentFocusField': gridManager.isFocusLast(12, index),
 						}">
 						<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
 							<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
@@ -187,10 +205,11 @@
 <script setup lang="ts">
 
 	import type { ComponentPublicInstance } from 'vue';
-	import { computed, watchEffect } from 'vue';
+	import { computed, watch, watchEffect } from 'vue';
 
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
+	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
@@ -204,7 +223,10 @@
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 
-	const colsValidationTooltip = new Set(["Quartal", "Note", "FS", "FSU"]);
+	const colsValidationTooltip = new Set(["Quartal", "Note", "FS", "FSU", "Zuw."]);
+
+	const setSchulformenMitZuweisung = new Set([Schulform.GE, Schulform.SK, Schulform.PS]);
+	const zeigeZuweisungKursart = computed(() => setSchulformenMitZuweisung.has(Schulform.data().getWertByKuerzel(props.enmManager().daten.schulform ?? 'G') ?? Schulform.G));
 
 	const gridManager = new GridManager<string, PairNN<ENMv2Leistung, ENMv2Schueler>, List<PairNN<ENMv2Leistung, ENMv2Schueler>>>({
 		daten: computed<List<PairNN<ENMv2Leistung, ENMv2Schueler>>>(() => {
@@ -230,6 +252,7 @@
 			{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true },
 			{ kuerzel: "Note", name: "Note", width: "6rem", hideable: true },
 			{ kuerzel: "Mahnung", name: "Mahnung", width: "5rem", hideable: true },
+			{ kuerzel: "Zuw.", name: "Neue Kursart-Zuweisung", width: "4rem", hideable: true },
 			{ kuerzel: "FS", name: "Fehlstunden", width: "4rem", hideable: true },
 			{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem", hideable: true },
 			{ kuerzel: "FB", name: "Fachbezogene Bemerkungen", width: "16rem", hideable: true },
@@ -248,6 +271,8 @@
 		void props.focusFloskelEditor(pair.b, pair.a, input.row, false);
 	};
 	defineExpose({ gridManager });
+
+	watch(zeigeZuweisungKursart, () => gridManager.setColVisibility('Zuw.', zeigeZuweisungKursart.value), { immediate: true });
 
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
@@ -269,6 +294,17 @@
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
 			if (input !== null) {
 				gridManager.update(key, pair.a.note);
+			}
+		};
+	}
+
+	function inputZuweisungKursart(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
+		const key = 'ZuweisungKursart_' + pair.a.id + "_" + pair.b.id;
+		const setter = (value: string | null) => void props.patchLeistung(pair.a, { neueZuweisungKursart: value });
+		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputZuweisungKursart(key, col, index, element, setter);
+			if (input !== null) {
+				gridManager.update(key, pair.a.neueZuweisungKursart);
 			}
 		};
 	}

@@ -17,6 +17,7 @@ import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung
 import type { ENMv2Teilleistungsart } from "@core/core/data/enm/v2/ENMv2Teilleistungsart";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
+import { Arrays } from "@core/java/util/Arrays";
 import type { Comparator } from "@core/java/util/Comparator";
 import { HashMap } from "@core/java/util/HashMap";
 import { HashSet } from "@core/java/util/HashSet";
@@ -137,6 +138,9 @@ export class EnmManager {
 
 	/** Die Liste aller Klassen eines Lehrers, sortiert nach Jahrgängen und nur mit Ankreuzkompetenzen */
 	readonly listKlassenMitAnkreuzkompetenzen: List<ENMv2Klasse> = new ArrayList<ENMv2Klasse>();
+
+	/** Das Set der zulässigen Kursarten, die an einer Gesamtschule neu zugewiesen werden können */
+	readonly setKursartenZulaessigFuerNeuzuweisung: JavaSet<string> = new HashSet<string>(Arrays.asList(['DK', 'G', 'E']));
 
 	/** Der Manager für die Konfiguration der Sperrung der Noteneingabe */
 	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]");
@@ -733,7 +737,16 @@ export class EnmManager {
 		// Bestimme die Lerngruppe zu der Leistung
 		const lerngruppe = this.mapLerngruppen.get(leistung.lerngruppenID);
 		if ((lerngruppe === null) || ((lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))) {
-			return '';
+			switch (lerngruppe?.kursartKuerzel) {
+				case 'G':
+					return 'G';
+				case 'E':
+					return 'E';
+				case 'DK':
+					return leistung.istDifferenzierungkursErweitert ? 'G' : 'E';
+				default:
+					return '';
+			}
 		}
 		let kuerzel = lerngruppe.kursartKuerzel;
 		// Bei einem Differenzierungskurs muss die spezielle Differenzierung beim Schüler für die Ausgabe beachtet werden
@@ -760,6 +773,17 @@ export class EnmManager {
 			}
 		}
 		return ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach);
+	}
+
+	/**
+	 * Gibt zurück, ob die Kursart für eine Neuzuweisung der Kursart zulässig ist
+	 *
+	 * @param leistung   die Leistung
+	 *
+	 * @returns true, wenn die Kursart für eine neue Zuweisung der Kursart erlaubt ist
+	 */
+	public leistungGetKursartZulaessigFuerZuweisung(leistung: ENMv2Leistung): boolean {
+		return this.setKursartenZulaessigFuerNeuzuweisung.contains(this.leistungGetKursartAsString(leistung));
 	}
 
 	/**

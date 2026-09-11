@@ -1,13 +1,13 @@
-package de.svws_nrw.db.dto.current.schild.berufskolleg;
+package de.svws_nrw.db.dto.current.svws.timestamps;
 
 import java.io.Serializable;
 
 /**
- * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle SchuelerZuweisungen.
+ * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle TimestampsSchuelerZuweisungen.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public final class DTOSchuelerZuweisungPK implements Serializable {
+public final class DTOTimestampsSchuelerZuweisungenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -19,18 +19,18 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 	public long Fach_ID;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchuelerZuweisungPK ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerZuweisungenPK ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOSchuelerZuweisungPK() {
+	private DTOTimestampsSchuelerZuweisungenPK() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchuelerZuweisungPK.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerZuweisungenPK.
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOSchuelerZuweisungPK(final long Abschnitt_ID, final long Fach_ID) {
+	public DTOTimestampsSchuelerZuweisungenPK(final long Abschnitt_ID, final long Fach_ID) {
 		this.Abschnitt_ID = Abschnitt_ID;
 		this.Fach_ID = Fach_ID;
 	}
@@ -47,7 +47,7 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		DTOSchuelerZuweisungPK other = (DTOSchuelerZuweisungPK) obj;
+		DTOTimestampsSchuelerZuweisungenPK other = (DTOTimestampsSchuelerZuweisungenPK) obj;
 		if (Abschnitt_ID != other.Abschnitt_ID) {
 			return false;
 		}

@@ -158,7 +158,7 @@ class ImportManager {
     protected function writeENMSchueler(): void {
         $this->conn->beginTransaction();
         $stmtSchueler = $this->conn->prepareStatement("INSERT INTO Schueler(id, ts, idJahrgang, idKlasse, daten, tsFehlstundenGesamt, tsFehlstundenGesamtUnentschuldigt, tsASV, tsAUE, tsZB, tsLELS, tsSchulformEmpf, tsIndividuelleVersetzungsbemerkungen, tsFoerderbemerkungen) VALUES (:id, :ts, :idJahrgang, :idKlasse, :daten, :tsFehlstundenGesamt, :tsFehlstundenGesamtUnentschuldigt, :tsASV, :tsAUE, :tsZB, :tsLELS, :tsSchulformEmpf, :tsIndividuelleVersetzungsbemerkungen, :tsFoerderbemerkungen)");
-        $stmtLeistung = $this->conn->prepareStatement("INSERT INTO Leistungsdaten(id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt) VALUES (:id, :ts, :idSchueler, :idLerngruppe, :daten, :tsNote, :tsNoteQuartal, :tsFehlstundenFach, :tsFehlstundenUnentschuldigtFach, :tsFachbezogeneBemerkungen, :tsIstGemahnt)");
+        $stmtLeistung = $this->conn->prepareStatement("INSERT INTO Leistungsdaten(id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt, tsNeueZuweisungKursart) VALUES (:id, :ts, :idSchueler, :idLerngruppe, :daten, :tsNote, :tsNoteQuartal, :tsFehlstundenFach, :tsFehlstundenUnentschuldigtFach, :tsFachbezogeneBemerkungen, :tsIstGemahnt, :tsNeueZuweisungKursart)");
         $stmtTeilleistung = $this->conn->prepareStatement("INSERT INTO Teilleistungen(id, ts, idLeistung, daten, tsArtID, tsDatum, tsBemerkung, tsNote) VALUES (:id, :ts, :idLeistung, :daten, :tsArtID, :tsDatum, :tsBemerkung, :tsNote)");
         $stmtAnkreuzkomp = $this->conn->prepareStatement("INSERT INTO Ankreuzkompetenzen(id, ts, idSchueler, idKompetenz, daten, tsStufe) VALUES (:id, :ts, :idSchueler, :idKompetenz, :daten, :tsStufe)");
         $stmtSprachenfolge = $this->conn->prepareStatement("INSERT INTO Sprachenfolge(id, sprache, ts, idSchueler, daten) VALUES (:id, :sprache, :ts, :idSchueler, :daten)");
@@ -203,6 +203,7 @@ class ImportManager {
                 $this->conn->bindStatementValue($stmtLeistung, ":tsFehlstundenUnentschuldigtFach", $leistung->tsFehlstundenUnentschuldigtFach, PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmtLeistung, ":tsFachbezogeneBemerkungen", $leistung->tsFachbezogeneBemerkungen, PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmtLeistung, ":tsIstGemahnt", $leistung->tsIstGemahnt, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtLeistung, ":tsNeueZuweisungKursart", $leistung->tsNeueZuweisungKursart, PDO::PARAM_STR);
                 $this->conn->executeStatement($stmtLeistung);
                 // ... mit den Teilleistungen
                 foreach ($leistung->teilleistungen as $teilleistung) {
@@ -412,6 +413,9 @@ class ImportManager {
         if ($alt->tsIstGemahnt > $neu->tsIstGemahnt) {
             $sql .= "tsIstGemahnt=:tsIstGemahnt,";
         }
+        if (($alt->tsNeueZuweisungKursart !== null) && (($neu->tsNeueZuweisungKursart === null) || ($alt->tsNeueZuweisungKursart > $neu->tsNeueZuweisungKursart))) {
+            $sql .= "tsNeueZuweisungKursart=:tsNeueZuweisungKursart,";
+        }
         $sql .= "daten=:daten WHERE id=:id and ts=:ts";
         return $this->conn->prepareStatement($sql);
     }
@@ -450,6 +454,11 @@ class ImportManager {
             $jsonNeu->istGemahnt = $jsonAlt->istGemahnt;
             $jsonNeu->tsIstGemahnt = $jsonAlt->tsIstGemahnt;
         }
+        if (($alt->tsNeueZuweisungKursart !== null) && (($neu->tsNeueZuweisungKursart === null) || ($alt->tsNeueZuweisungKursart > $neu->tsNeueZuweisungKursart))) {
+            $this->conn->bindStatementValue($stmt, ":tsNeueZuweisungKursart", $alt->tsNeueZuweisungKursart, PDO::PARAM_STR);
+            $jsonNeu->neueZuweisungKursart = $jsonAlt->neueZuweisungKursart;
+            $jsonNeu->tsNeueZuweisungKursart = $jsonAlt->tsNeueZuweisungKursart;
+        }
         $this->conn->bindStatementValue($stmt, ":daten", json_encode($jsonNeu, JSON_UNESCAPED_SLASHES), PDO::PARAM_STR);
         $this->conn->bindStatementValue($stmt, ":id", $neu->id, PDO::PARAM_INT);
         $this->conn->bindStatementValue($stmt, ":ts", $neu->ts, PDO::PARAM_INT);
@@ -463,9 +472,9 @@ class ImportManager {
      */
     protected function importDiffLeistungen(int $ts): void {
         // Entferne zunächst alle alten Leistungsdaten-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
-        $this->conn->dropFrom('Leistungsdaten', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Leistungsdaten a JOIN Leistungsdaten b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsNote <> b.tsNote OR a.tsNoteQuartal <> b.tsNoteQuartal OR a.tsFehlstundenFach <> b.tsFehlstundenFach OR a.tsFehlstundenUnentschuldigtFach <> b.tsFehlstundenUnentschuldigtFach OR a.tsFachbezogeneBemerkungen <> b.tsFachbezogeneBemerkungen OR a.tsIstGemahnt <> b.tsIstGemahnt))");
+        $this->conn->dropFrom('Leistungsdaten', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Leistungsdaten a JOIN Leistungsdaten b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsNote <> b.tsNote OR a.tsNoteQuartal <> b.tsNoteQuartal OR a.tsFehlstundenFach <> b.tsFehlstundenFach OR a.tsFehlstundenUnentschuldigtFach <> b.tsFehlstundenUnentschuldigtFach OR a.tsFachbezogeneBemerkungen <> b.tsFachbezogeneBemerkungen OR a.tsIstGemahnt <> b.tsIstGemahnt OR a.tsNeueZuweisungKursart IS NOT b.tsNeueZuweisungKursart))");
         // Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
-        $diffsOld = $this->conn->queryAllOrNull("SELECT id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt FROM Leistungsdaten WHERE ts < $ts");
+        $diffsOld = $this->conn->queryAllOrNull("SELECT id, ts, idSchueler, idLerngruppe, daten, tsNote, tsNoteQuartal, tsFehlstundenFach, tsFehlstundenUnentschuldigtFach, tsFachbezogeneBemerkungen, tsIstGemahnt, tsNeueZuweisungKursart FROM Leistungsdaten WHERE ts < $ts");
         if ($diffsOld === null) {
             return;
         }
@@ -489,7 +498,8 @@ class ImportManager {
                 || ($alt->tsFehlstundenFach > $neu->tsFehlstundenFach)
                 || ($alt->tsFehlstundenUnentschuldigtFach > $neu->tsFehlstundenUnentschuldigtFach)
                 || ($alt->tsFachbezogeneBemerkungen > $neu->tsFachbezogeneBemerkungen)
-                || ($alt->tsIstGemahnt > $neu->tsIstGemahnt));
+                || ($alt->tsIstGemahnt > $neu->tsIstGemahnt)
+                || (($alt->tsNeueZuweisungKursart !== null) && (($neu->tsNeueZuweisungKursart === null) || ($alt->tsNeueZuweisungKursart > $neu->tsNeueZuweisungKursart))));
             if ($needUpdate > 0) {
                 $stmt = $this->importUpdateLeistungenGeneratePreparedStatement($alt, $neu);
                 $this->importUpdateLeistungenBindStatementVariables($stmt, $alt, $neu);

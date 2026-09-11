@@ -27,6 +27,7 @@ import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistung;
 import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistungsart;
 import de.svws_nrw.core.data.enm.v2.ENMv2ZP10;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -35,6 +36,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungen;
 import de.svws_nrw.db.utils.TimestampUtils;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.validation.constraints.NotNull;
@@ -648,12 +650,15 @@ public class EnmV2DatenManager {
 	 * @param istDifferenzierungkursErweitert   gibt an, ob es sich um einen Erweiterungskurs handelt oder nicht
 	 * @param istGemahnt                        gibt an, ob ein Fach gemahnt wurde oder nicht
 	 * @param mahndatum                         das Mahndatum bei erfolgter Mahnung
+	 * @param neueZuweisungKursart              die Informationen zu einer neuen Kursart-Zuweisung
+	 * @param tsNeueZuweisungKursart            die Zeitstempel zu einer neuen Kursart-Zuweisung
 	 *
 	 * @return die neue ENM-Leistung
 	 */
 	public @NotNull ENMv2Leistung addSchuelerLeistungsdaten(final @NotNull ENMv2Schueler schueler, final long lerngruppenID,
 			final DTOSchuelerLeistungsdaten leistung, final DTOTimestampsSchuelerLeistungsdaten tsLeistung, final boolean istSchriftlich,
-			final Integer abiturfach, final boolean istDifferenzierungkursErweitert, final boolean istGemahnt, final String mahndatum) {
+			final Integer abiturfach, final boolean istDifferenzierungkursErweitert, final boolean istGemahnt, final String mahndatum,
+			final DTOSchuelerZuweisung neueZuweisungKursart, final DTOTimestampsSchuelerZuweisungen tsNeueZuweisungKursart) {
 		final @NotNull ENMv2Leistung enmLeistung = new ENMv2Leistung();
 		enmLeistung.id = leistung.ID;
 		enmLeistung.lerngruppenID = lerngruppenID;
@@ -675,6 +680,10 @@ public class EnmV2DatenManager {
 		enmLeistung.istGemahnt = istGemahnt;
 		enmLeistung.tsIstGemahnt = TimestampUtils.convertUtcToLocal(tsLeistung.tsWarnung);
 		enmLeistung.mahndatum = mahndatum;
+		if ((tsNeueZuweisungKursart != null) && (("E".equals(neueZuweisungKursart.Kursart)) || ("G".equals(neueZuweisungKursart.Kursart)))) {
+			enmLeistung.neueZuweisungKursart = neueZuweisungKursart.Kursart;
+			enmLeistung.tsNeueZuweisungKursart = TimestampUtils.convertUtcToLocal(tsNeueZuweisungKursart.tsKursart);
+		}
 		schueler.leistungsdaten.add(enmLeistung);
 		return enmLeistung;
 	}

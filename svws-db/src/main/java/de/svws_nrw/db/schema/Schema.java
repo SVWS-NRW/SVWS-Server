@@ -246,6 +246,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerZP10;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerZuweisungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Klassen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Klassen_Lehrer;
@@ -1214,6 +1215,11 @@ public final class Schema {
 
 	/** Tabelle Logo */
 	public static final Tabelle_Logo tab_Logo = add(new Tabelle_Logo());
+
+	/** Tabelle TimestampsSchuelerZuweisungen */
+	public static final Tabelle_TimestampsSchuelerZuweisungen tab_TimestampsSchuelerZuweisungen =
+			add(new Tabelle_TimestampsSchuelerZuweisungen());
+
 
 	/**
 	 * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern

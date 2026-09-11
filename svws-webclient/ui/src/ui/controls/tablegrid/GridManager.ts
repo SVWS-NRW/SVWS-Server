@@ -12,6 +12,8 @@ import type { GridInput } from "./GridInput";
 import { GridInputAbiturNotenpunkte } from "./GridInputAbiturNotenpunkte";
 import { GridInputAbiturPruefungsreihenfolge } from "./GridInputAbiturPruefungsreihenfolge";
 import { GridInputIntegerDiv } from "./GridInputIntegerDiv";
+import type { ZulaessigeKursartWerte } from "./GridInputKurszuweisung";
+import { GridInputKurszuweisung } from "./GridInputKurszuweisung";
 import { GridInputNote } from "./GridInputNote";
 import { GridInputNumberFixed } from "./GridInputNumberFixed";
 import { GridInputToggle } from "./GridInputToggle";
@@ -868,6 +870,22 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | DATA[]> {
 	public applyInputAbiturPruefungsreihenfolge(key: KEY, col: number, row: number, elem: GridElementType,
 		setter: (value: number | null) => void): GridInputAbiturPruefungsreihenfolge<KEY> | null {
 		return this.applyInput(key, col, row, elem, e => new GridInputAbiturPruefungsreihenfolge(this, key, col, row, e, setter));
+	}
+
+	/**
+	 * Fügt oder entfernt ein HTML-Element für den übergebenen Schlüssel hinzu
+	 *
+	 * @param key      der Schlüssel, welcher den Input-Manager identifiziert
+	 * @param col      die Nummer der Spalte im Grid
+	 * @param row      die Nummer der Zeile im Grid
+	 * @param elem     das HTML-Element, welches zum Manager hinzugefügt werden soll, oder null, falls es entfernt werden soll
+	 * @param setter   ein Setter für das Speichern der Daten des Input-Managers
+	 *
+	 * @returns das Input oder null
+	 */
+	public applyInputZuweisungKursart(key: KEY, col: number, row: number, elem: GridElementType,
+		setter: (value: ZulaessigeKursartWerte) => void): GridInputKurszuweisung<KEY> | null {
+		return this.applyInput(key, col, row, elem, e => new GridInputKurszuweisung(this, key, col, row, e, setter));
 	}
 
 

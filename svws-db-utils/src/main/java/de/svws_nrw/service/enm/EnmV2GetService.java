@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
@@ -28,6 +27,7 @@ import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistungsart;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
@@ -46,6 +46,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungs
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.TimestampUtils;
 import jakarta.ws.rs.core.Response.Status;
@@ -222,37 +223,19 @@ public final class EnmV2GetService {
 
 
 	/**
-	 * Hilfsmethode zum Bestimmen der allgemeinen Kursart für die übergeben Kursart
-	 *
-	 * @param kursart   die Kursart
-	 *
-	 * @return die allgemeine Kursart
-	 */
-	private String getKursartAllg(final ZulaessigeKursart kursart) {
-		if (kursart == null) {
-			return null;
-		}
-		final ZulaessigeKursartKatalogEintrag kursartEintrag = kursart.daten(kontext.getSchuljahr());
-		if ((kursartEintrag.kuerzelAllg == null) || "".equals(kursartEintrag.kuerzelAllg)) {
-			return kursartEintrag.kuerzel;
-		}
-		return kursartEintrag.kuerzelAllg;
-	}
-
-
-	/**
 	 * Liefert die ENM-Daten zur Lerngruppe aus dem Manager. Fügt die Lerngruppe zu den ENM-Daten hinzu,
 	 * sofern sie nicht bereits in den Daten existiert
 	 *
 	 * @param lernabschnitt   der aktuelle Lernabschnitt
 	 * @param leistung        die aktuellen Leistungsdaten
 	 * @param kursart         die Kursart zu den aktuellen Leistungsdaten
+	 * @param kursartAllg     die allgemeine Kursart
 	 * @param enmKlasse       die Klassendaten aus den ENM-Daten
 	 *
 	 * @return die Daten der ENM-Lerngruppe
 	 */
 	private ENMv2Lerngruppe addLerngruppeIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final DTOSchuelerLeistungsdaten leistung,
-			final ZulaessigeKursart kursart, final ENMv2Klasse enmKlasse) {
+			final ZulaessigeKursart kursart, final String kursartAllg, final ENMv2Klasse enmKlasse) {
 
 		// Erstelle eine temporäre LerngruppenID: Dient zur Kurs- und Klassenübergreifenden Identifikation der Lerngruppe
 		final String strLerngruppenID = (leistung.Kurs_ID == null)
@@ -270,7 +253,6 @@ public final class EnmV2GetService {
 		kontext.manager.addFach(fach);
 
 		// Unterscheidung zwischen den beiden Lerngruppen-Typen und füge die Lerngruppe hinzu...
-		final String kursartAllg = getKursartAllg(kursart);
 		if (leistung.Kurs_ID == null) {  // es ist eine Klasse
 			kontext.manager.addLerngruppe(strLerngruppenID, enmKlasse.id, leistung.Fach_ID, null, fach.Kuerzel, kursartAllg,
 					fach.Unterrichtssprache, (leistung.Wochenstunden == null) ? 0 : leistung.Wochenstunden);
@@ -393,10 +375,17 @@ public final class EnmV2GetService {
 		final String mahndatum = leistung.Warndatum;
 		final DTOTimestampsSchuelerLeistungsdaten tsLeistung = kontext.getLeistungsdatenTimestamps(leistung.ID);
 
-		// TODO neueZuweisungKursart + tsNeueZuweisungKursart
+		// E- und G-Kursart-Zuweisungen an Gesamtschulen, etc.
+		DTOSchuelerZuweisung neueZuweisungKursart = null;
+		DTOTimestampsSchuelerZuweisungen tsNeueZuweisungKursart = null;
+		final Schulform sf = kontext.getSchulform();
+		if ((sf == Schulform.GE) || (sf == Schulform.PS) || (sf == Schulform.SK)) {
+			neueZuweisungKursart = kontext.getKursartZuweisung(leistung.Abschnitt_ID, leistung.Fach_ID);
+			tsNeueZuweisungKursart = kontext.getKursartZuweisungTimestamp(leistung.Abschnitt_ID, leistung.Fach_ID);
+		}
 
 		return kontext.manager.addSchuelerLeistungsdaten(enmSchueler, enmLerngruppe.id, leistung, tsLeistung,
-				istSchriftlich, abiFach, istDifferenzierungkursErweitert, istGemahnt, mahndatum);
+				istSchriftlich, abiFach, istDifferenzierungkursErweitert, istGemahnt, mahndatum, neueZuweisungKursart, tsNeueZuweisungKursart);
 	}
 
 
@@ -424,7 +413,9 @@ public final class EnmV2GetService {
 			}
 
 			final ZulaessigeKursart kursart = (leistung.Kurs_ID == null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
-			final ENMv2Lerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, enmKlasse);
+			final var tmpKursart = ZulaessigeKursart.getByAllgemeinerKursart(kontext.getSchuljahr(), leistung.KursartAllg);
+			final String kursartAllg = (tmpKursart == null) ? "PUK" : leistung.KursartAllg;
+			final ENMv2Lerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, kursartAllg, enmKlasse);
 
 			if (kontext.istLehrerSpezifisch() && (leistung.Fachlehrer_ID == kontext.getLehrerSpezfisch().ID)) {
 				leistungenFachIDs.add(lerngruppe.fachID);

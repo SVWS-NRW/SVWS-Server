@@ -17,7 +17,7 @@ public class Tabelle_SchuelerZuweisungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public final SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK)");
+			.setJavaComment("LernabschnittsID der Zuweisung (E G Kurse GE und PS SK)");
 
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public final SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, true)

@@ -428,6 +428,15 @@ class PatchManager {
             $daten->istGemahnt = $patch->istGemahnt;
             $daten->tsIstGemahnt = $ts;
         }
+        if (property_exists($patch, 'neueZuweisungKursart') && PatchManager::diffStringNullable($patch->neueZuweisungKursart, $daten->neueZuweisungKursart) && (($daten->tsNeueZuweisungKursart === null) || ($ts > $daten->tsNeueZuweisungKursart))) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Note');
+            if (($patch->neueZuweisungKursart !== null) && ($patch->neueZuweisungKursart !== "E") && ($patch->neueZuweisungKursart !== "G")) {
+                Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Kursart-Zuweisung übergeben.");
+            }
+            $update .= "tsNeueZuweisungKursart='$ts',";
+            $daten->neueZuweisungKursart = $patch->neueZuweisungKursart;
+            $daten->tsNeueZuweisungKursart = $ts;
+        }
         if (strlen($update) > 0) {
             // Stelle sicher in der Datenbanktabelle nicht Objekte auftauchen die woanders in der Datenbank gespeichert werden
             $daten->teilleistungen = [];

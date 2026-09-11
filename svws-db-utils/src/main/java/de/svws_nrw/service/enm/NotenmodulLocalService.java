@@ -25,6 +25,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisungPK;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -39,6 +41,7 @@ import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzReposit
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
@@ -59,6 +62,7 @@ public class NotenmodulLocalService {
 	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittRepository schuelerLernabschnittRepository;
 	private final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository;
+	private final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 	private final SchuelerTeilleistungRepository schuelerTeilleistungRepository;
 	private final SchuelerAnkreuzkompetenzRepository schuelerAnkreuzkompetenzRepository;
@@ -71,17 +75,19 @@ public class NotenmodulLocalService {
 	 * @param notenmodulKonfigurationServerRepository      das Repository für den Zugriff auf die lokale Server-Konfiguration des Notenmoduls
 	 * @param schuelerRepository                           das Repository für den Zugriff auf die Schüler
 	 * @param schuelerLernabschnittRepository              das Repository für den Zugriff auf die Schüler-Lernabschnitte
-	 * @param schuelerLernabschnittBemerkungRepository   das Repository für den Zugriff auf die Bemerkungen zu den Schüler-Lernabschnitten
+	 * @param schuelerLernabschnittBemerkungRepository     das Repository für den Zugriff auf die Bemerkungen zu den Schüler-Lernabschnitten
+	 * @param schuelerLernabschnittKursartZuweisungenRepository   das Repository für den Zugriff auf die neuen Kurszuweisungen zu den Schüler-Lernabschnitten
 	 * @param schuelerLeistungsdatenRepository             das Repository für den Zugriff auf die Schüler-Leistungsdaten
-	 * @param schuelerTeilleistungRepository             das Repository für den Zugriff auf die Schüler-Teilleistungen
-	 * @param schuelerAnkreuzkompetenzRepository         das Repository für den Zugriff auf die Schüler-Ankreuzkompetenten
-	 * @param ankreuzkompetenzRepository                 das Repository für den Zugriff auf die Ankreuzkompetenzen
+	 * @param schuelerTeilleistungRepository               das Repository für den Zugriff auf die Schüler-Teilleistungen
+	 * @param schuelerAnkreuzkompetenzRepository           das Repository für den Zugriff auf die Schüler-Ankreuzkompetenten
+	 * @param ankreuzkompetenzRepository                   das Repository für den Zugriff auf die Ankreuzkompetenzen
 	 */
 	public NotenmodulLocalService(final NotenmodulKonfigurationClientRepository notenmodulKonfigurationClientRepository,
 			final NotenmodulKonfigurationServerRepository notenmodulKonfigurationServerRepository,
 			final SchuelerRepository schuelerRepository,
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
+			final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
 			final SchuelerAnkreuzkompetenzRepository schuelerAnkreuzkompetenzRepository,
@@ -91,6 +97,7 @@ public class NotenmodulLocalService {
 		this.schuelerRepository = schuelerRepository;
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLernabschnittBemerkungRepository = schuelerLernabschnittBemerkungRepository;
+		this.schuelerLernabschnittKursartZuweisungenRepository = schuelerLernabschnittKursartZuweisungenRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerTeilleistungRepository = schuelerTeilleistungRepository;
 		this.schuelerAnkreuzkompetenzRepository = schuelerAnkreuzkompetenzRepository;
@@ -493,6 +500,17 @@ public class NotenmodulLocalService {
 
 			schuelerLeistungsdatenRepository.update(leistung);
 			schuelerLeistungsdatenRepository.flush();
+
+			// ggf. neue Kursart-Zuweisung setzen
+			patch.neueZuweisungKursart.ifPresent(val -> {
+				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Note");
+				final DTOSchuelerZuweisung z =
+						schuelerLernabschnittKursartZuweisungenRepository.findById(new DTOSchuelerZuweisungPK(leistung.Abschnitt_ID, leistung.Fach_ID))
+								.orElse(new DTOSchuelerZuweisung(leistung.Abschnitt_ID, leistung.Fach_ID));
+				z.Kursart = val;
+				schuelerLernabschnittKursartZuweisungenRepository.update(z);
+				schuelerLernabschnittKursartZuweisungenRepository.flush();
+			});
 		});
 	}
 

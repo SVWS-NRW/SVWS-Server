@@ -17,7 +17,7 @@ class Database {
     public $conn;
 
     // Die Revision des Datenbank-Schema. Muss bei jeder strukturellen Änderung um eins erhöht werden.
-    public const SCHEMA_REVISION = 3;
+    public const SCHEMA_REVISION = 4;
 
     /**
      * Definiert das Soll-Schema: Tabelle => Spalten-Definitionen
@@ -86,6 +86,7 @@ class Database {
             'tsFehlstundenUnentschuldigtFach' => 'TEXT',
             'tsFachbezogeneBemerkungen' => 'TEXT',
             'tsIstGemahnt' => 'TEXT',
+            'tsNeueZuweisungKursart' => 'TEXT',
             'PRIMARY KEY(id, ts)'
         ],
         'Teilleistungen' => [

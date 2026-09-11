@@ -54,6 +54,7 @@ import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.Revision71Updates;
 import de.svws_nrw.db.schema.revisionen.Revision72Updates;
 import de.svws_nrw.db.schema.revisionen.Revision74Updates;
+import de.svws_nrw.db.schema.revisionen.Revision77Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -365,21 +366,24 @@ public enum SchemaRevisionen {
 	REV_75(75, "2026-09-01"),
 
 	/** Entfernt überflüssige Spalten aus der Tabelle Logo */
-	REV_76(76, "2026-09-01");
+	REV_76(76, "2026-09-01"),
+
+	/** Ergänze Tabelle TimestampsSchuelerZuweisungen */
+	REV_77(77, "2026-09-10");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_76;
+	public static final SchemaRevisionen maxRevision = REV_77;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_76;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_77;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -491,6 +495,7 @@ public enum SchemaRevisionen {
 				case REV_71 -> new Revision71Updates();
 				case REV_72 -> new Revision72Updates();
 				case REV_74 -> new Revision74Updates();
+				case REV_77 -> new Revision77Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

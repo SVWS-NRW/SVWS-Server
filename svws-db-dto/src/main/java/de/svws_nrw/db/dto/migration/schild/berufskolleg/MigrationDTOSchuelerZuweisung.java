@@ -56,7 +56,7 @@ public final class MigrationDTOSchuelerZuweisung {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
 	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.SchulnrEigner IN ?1";
 
-	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
+	/** LernabschnittsID der Zuweisung (E G Kurse GE und PS SK) */
 	@Id
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty

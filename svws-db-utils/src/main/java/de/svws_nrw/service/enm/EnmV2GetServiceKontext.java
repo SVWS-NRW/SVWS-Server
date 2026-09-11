@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
@@ -42,38 +45,41 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungs
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
-import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
-import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
-import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzJahrgangRepository;
-import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzKonfigurationRepository;
-import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
-import de.svws_nrw.repo.schule.kataloge.floskel.FloskelJahrgangRepository;
-import de.svws_nrw.repo.schule.kataloge.floskel.FloskelRepository;
-import de.svws_nrw.repo.schule.kataloge.floskelgruppe.FloskelgruppeRepository;
-import de.svws_nrw.repo.schule.kataloge.foerderschwerpunkt.FoerderschwerpunktRepository;
-import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.klassen.KlassenleitungenRepository;
 import de.svws_nrw.repo.kurse.KurseRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
+import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenTimestampsRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
-import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepository;
 import de.svws_nrw.repo.schueler.zp10.SchuelerZP10Repository;
 import de.svws_nrw.repo.schueler.zp10.SchuelerZP10TimestampsRepository;
-import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepository;
-import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungenRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
+import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepository;
+import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungenRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzJahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzKonfigurationRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
+import de.svws_nrw.repo.schule.kataloge.floskel.FloskelJahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.floskel.FloskelRepository;
+import de.svws_nrw.repo.schule.kataloge.floskelgruppe.FloskelgruppeRepository;
+import de.svws_nrw.repo.schule.kataloge.foerderschwerpunkt.FoerderschwerpunktRepository;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
+import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -117,6 +123,12 @@ public final class EnmV2GetServiceKontext {
 
 	/** Das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern */
 	private final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository;
+
+	/** Das Repository für den Zugriff auf die Schüler-Kursart-Zuweisungen */
+	private final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository;
+
+	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-Kursart-Zuweisungen */
+	private final SchuelerLernabschnittKursartZuweisungenTimestampsRepository schuelerLernabschnittKursartZuweisungenTimestampsRepository;
 
 	/** Das Repository für den Zugriff auf die Schüler-Leistungsdaten */
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
@@ -188,6 +200,9 @@ public final class EnmV2GetServiceKontext {
 	/** Die Informationen zur Schule */
 	private DTOEigeneSchule schule;
 
+	/** Die Schulform der Schule */
+	private Schulform schulform;
+
 	/** Die ID der Schulleitung in der Lehrer-Tabelle */
 	private Long idSchulleitung;
 
@@ -257,6 +272,12 @@ public final class EnmV2GetServiceKontext {
 	/** Eine Map mit den Zeitstempeln der Schüler-Lernabschnittsdaten zugeordnet zu der ID der Lernabschnitte */
 	private Map<Long, DTOTimestampsSchuelerLernabschnittsdaten> mapTimestampsLernabschnitte;
 
+	/** Eine Map mit neuen Kursart-Zuweisungen für Schüler zugeordnet zu der ID des Lernabschnittes und der ID des Faches */
+	private HashMap2D<Long, Long, DTOSchuelerZuweisung> mapSchuelerKursartZuweisungen;
+
+	/** Eine Map mit den Zeitstempeln von neuen Schüler-Kursart-Zuweisungen zugeordnet zu der ID des Lernabschnittes und der ID des Faches */
+	private HashMap2D<Long, Long, DTOTimestampsSchuelerZuweisungen> mapTimestampsSchuelerKursartZuweisungen;
+
 	/** Eine Map mit den Schüler-Leistungsdaten zugeordnet zu deren ID */
 	private Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungen;
 
@@ -302,6 +323,8 @@ public final class EnmV2GetServiceKontext {
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository,
 			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
+			final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository,
+			final SchuelerLernabschnittKursartZuweisungenTimestampsRepository schuelerLernabschnittKursartZuweisungenTimestampsRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository,
 			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
@@ -335,6 +358,8 @@ public final class EnmV2GetServiceKontext {
 		this.schuelerLernabschnittRepository = schuelerLernabschnittRepository;
 		this.schuelerLernabschnittTimestampRepository = schuelerLernabschnittTimestampRepository;
 		this.schuelerLernabschnittBemerkungRepository = schuelerLernabschnittBemerkungRepository;
+		this.schuelerLernabschnittKursartZuweisungenRepository = schuelerLernabschnittKursartZuweisungenRepository;
+		this.schuelerLernabschnittKursartZuweisungenTimestampsRepository = schuelerLernabschnittKursartZuweisungenTimestampsRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerLeistungsdatenTimestampsRepository = schuelerLeistungsdatenTimestampsRepository;
 		this.schuelerTeilleistungRepository = schuelerTeilleistungRepository;
@@ -373,6 +398,8 @@ public final class EnmV2GetServiceKontext {
 	 * @param schuelerLernabschnittRepository                  das Repository für den Zugriff auf die Schüler-Lernabschnitte
 	 * @param schuelerLernabschnittTimestampRepository        das Repository für den Zugriff auf die Zeitstempel für die Schüler-Lernabschnitte
 	 * @param schuelerLernabschnittBemerkungRepository       das Repository für den Zugriff auf die Lernabschnittbezogenen Bemerkungen zu Schülern
+	 * @param schuelerLernabschnittKursartZuweisungenRepository   das Repository für den Zugriff auf die Schüler-Kursart-Zuweisungen
+	 * @param schuelerLernabschnittKursartZuweisungenTimestampsRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Kursart-Zuweisungen
 	 * @param schuelerLeistungsdatenRepository                 das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param schuelerLeistungsdatenTimestampsRepository       das Repository für den Zugriff auf die Zeitstempel für die Schüler-Leistungsdaten
 	 * @param schuelerTeilleistungRepository                 das Repository für den Zugriff auf die Schüler-Teilleistungen
@@ -410,6 +437,8 @@ public final class EnmV2GetServiceKontext {
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLernabschnittTimestampRepository schuelerLernabschnittTimestampRepository,
 			final SchuelerLernabschnittBemerkungRepository schuelerLernabschnittBemerkungRepository,
+			final SchuelerLernabschnittKursartZuweisungenRepository schuelerLernabschnittKursartZuweisungenRepository,
+			final SchuelerLernabschnittKursartZuweisungenTimestampsRepository schuelerLernabschnittKursartZuweisungenTimestampsRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
 			final SchuelerLeistungsdatenTimestampsRepository schuelerLeistungsdatenTimestampsRepository,
 			final SchuelerTeilleistungRepository schuelerTeilleistungRepository,
@@ -435,6 +464,7 @@ public final class EnmV2GetServiceKontext {
 		return new EnmV2GetServiceKontext(eigeneSchuleRepository, schulleitungRepository, schuljahresabschnitteRepository,
 				abteilungenRepository, abteilungKlasseRepository, lehrerRepository, fachRepository,
 				schuelerRepository, schuelerLernabschnittRepository, schuelerLernabschnittTimestampRepository, schuelerLernabschnittBemerkungRepository,
+				schuelerLernabschnittKursartZuweisungenRepository, schuelerLernabschnittKursartZuweisungenTimestampsRepository,
 				schuelerLeistungsdatenRepository, schuelerLeistungsdatenTimestampsRepository,
 				schuelerTeilleistungRepository, schuelerTeilleistungTimestampRepository,
 				schuelerAnkreuzkompetenzRepository, schuelerAnkreuzkompetenzTimestampRepository,
@@ -574,10 +604,8 @@ public final class EnmV2GetServiceKontext {
 				.filter(l -> (l.LeitungsfunktionID == 1) || (l.LeitungsfunktionID == 2))
 				.filter(l -> {
 					try {
-						final DateManager von = (l.Von
-								== null) ? DateManager.fromValues(1900, 1, 1) : DateManager.from(l.Von);
-						final DateManager bis = (l.Bis
-								== null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
+						final DateManager von = (l.Von == null) ? DateManager.fromValues(1900, 1, 1) : DateManager.from(l.Von);
+						final DateManager bis = (l.Bis == null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
 						return (von.compareTo(abschnittBis) <= 0) && (bis.compareTo(abschnittVon) >= 0);
 					} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 						return false;
@@ -642,6 +670,7 @@ public final class EnmV2GetServiceKontext {
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
 		this.schule = eigeneSchuleRepository.getFirst();
+		this.schulform = Schulform.data().getWertByKuerzel(this.schule.SchulformKuerzel);
 		this.mapLehrerPWHash = notenmodulCredentialGeneratorService.generateMissingCredentials();
 		this.mapLehrerPWHashTimestamps = notenmodulCredentialsTimestampsRepository.getMap();
 		this.ankreuzkompetenzenKonfiguration = ankreuzkompetenzKonfigurationRepository.findFirst();
@@ -666,6 +695,16 @@ public final class EnmV2GetServiceKontext {
 		this.mapJahrgangIdsByFloskelIds = floskelJahrgangRepository.getAll().stream()
 				.collect(Collectors.groupingBy(fj -> fj.Floskel_ID, Collectors.mapping(f -> f.Jahrgang_ID, Collectors.toList())));
 		this.listFloskeln = floskelRepository.getAll();
+
+		// Bestimme die neuen Kursart-Zuweisungen bei Schülern (z.B. E- und G-Kurse an Gesamtschulen, etc.)
+		if ((this.schulform == Schulform.GE) || (this.schulform == Schulform.PS) || (this.schulform == Schulform.SK)) {
+			this.mapSchuelerKursartZuweisungen = schuelerLernabschnittKursartZuweisungenRepository.getMapByLernabschnitte(mapLernabschnitte.keySet());
+			this.mapTimestampsSchuelerKursartZuweisungen =
+					schuelerLernabschnittKursartZuweisungenTimestampsRepository.getMapByLernabschnitte(mapLernabschnitte.keySet());
+		} else {
+			this.mapSchuelerKursartZuweisungen = new HashMap2D<>();
+			this.mapTimestampsSchuelerKursartZuweisungen = new HashMap2D<>();
+		}
 	}
 
 
@@ -676,6 +715,16 @@ public final class EnmV2GetServiceKontext {
 	 */
 	public DTOEigeneSchule getSchuldaten() {
 		return this.schule;
+	}
+
+
+	/**
+	 * Gibt die Schulform der Schule zurück.
+	 *
+	 * @return die Schulform
+	 */
+	public Schulform getSchulform() {
+		return this.schulform;
 	}
 
 
@@ -971,6 +1020,39 @@ public final class EnmV2GetServiceKontext {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
 		}
 		return this.mapTimestampsLernabschnitte.get(idLernabschnitt);
+	}
+
+
+	/**
+	 * Gibt die neue Kursart-Zuweisung von Schülern für den Lernabschnitt und das Fach mit den angegebenen IDs zurück.
+	 *
+	 * @param idLernabschnitt   die ID des Lernabschnittes
+	 * @param idFach            die ID des Faches
+	 *
+	 * @return die Kursart-Zuweisung
+	 */
+	public DTOSchuelerZuweisung getKursartZuweisung(final long idLernabschnitt, final long idFach) {
+		if (this.mapSchuelerKursartZuweisungen == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
+		}
+		return this.mapSchuelerKursartZuweisungen.getOrNull(idLernabschnitt, idFach);
+	}
+
+
+	/**
+	 * Gibt die Zeitstempel für die neue Kursart-Zuweisung von Schülern für den Lernabschnitt und das Fach
+	 * mit den angegebenen IDs zurück.
+	 *
+	 * @param idLernabschnitt   die ID des Lernabschnittes
+	 * @param idFach            die ID des Faches
+	 *
+	 * @return die Zeitstempel für die Kursart-Zuweisung
+	 */
+	public DTOTimestampsSchuelerZuweisungen getKursartZuweisungTimestamp(final long idLernabschnitt, final long idFach) {
+		if (this.mapTimestampsSchuelerKursartZuweisungen == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
+		}
+		return this.mapTimestampsSchuelerKursartZuweisungen.getOrNull(idLernabschnitt, idFach);
 	}
 
 

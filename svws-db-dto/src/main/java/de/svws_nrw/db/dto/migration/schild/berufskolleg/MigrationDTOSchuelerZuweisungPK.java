@@ -12,7 +12,7 @@ public final class MigrationDTOSchuelerZuweisungPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
+	/** LernabschnittsID der Zuweisung (E G Kurse GE und PS SK) */
 	public Long Abschnitt_ID;
 
 	/** FachID der Zuweisung */
