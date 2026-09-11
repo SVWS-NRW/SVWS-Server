@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config";
 import { resolve } from 'node:path';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
 	test: {
@@ -11,7 +11,9 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			"~": resolve(__dirname, "src"),
+			"@testUtils": resolve(import.meta.dirname, "../utils"),
+			"@testDav": resolve(import.meta.dirname, "./tests"),
+			"@core": resolve(import.meta.dirname, '../../svws-webclient/core/src'),
 		},
 	},
 });

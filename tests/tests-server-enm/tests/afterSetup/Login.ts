@@ -1,4 +1,4 @@
-import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
+import { ApiEnmServerTest } from "@testWenom/utils/ApiEnmServerTest";
 
 export const apiEmpty = new ApiEnmServerTest('', '');
 export const apiGehring = new ApiEnmServerTest('M.Gehring@lmail.de', 'uTdNE7EUIb');

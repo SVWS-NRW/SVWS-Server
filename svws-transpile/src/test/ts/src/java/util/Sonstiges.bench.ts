@@ -1,9 +1,12 @@
-import { bench, describe } from 'vitest';
+import { describe, test } from 'vitest';
 
 describe('Sonstige Benchmarks', () => {
-	const a = "Tom";
-	const b = "Hawk";
+	test('benches laufen', async ({ bench }) => {
 
-	bench('string concat', () => void (a + 'A' + b));
-	bench('template String', () => void `${a}A${b}`);
+		const a = "Tom";
+		const b = "Hawk";
+
+		bench('string concat', () => (a + 'A' + b));
+		bench('template String', () => `${a}A${b}`);
+	});
 });

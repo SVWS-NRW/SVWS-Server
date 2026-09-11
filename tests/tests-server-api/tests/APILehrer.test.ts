@@ -1,7 +1,8 @@
+import { privilegedApiServer } from "@testUtils/APIUtils";
 import { describe, expect, test } from "vitest";
-import { privilegedApiServer } from "../../utils/APIUtils";
-import type { LehrerListeEintrag } from "../../../svws-webclient/core/src/core/data/lehrer/LehrerListeEintrag";
-import type { List } from "../../../svws-webclient/core/src/java/util/List";
+
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { List } from "@core/java/util/List";
 
 describe("Lehrer Tests ", () => {
 	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {

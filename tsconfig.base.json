@@ -2,13 +2,15 @@
 	"extends": "@vue/tsconfig/tsconfig.json",
 	"compilerOptions": {
 		// sehr strenge Kontrolle der importierten Komponenten
-		// "exactOptionalPropertyTypes": true,
+		"exactOptionalPropertyTypes": false,
 		// deaktivieren, verhindert type Importe
 		"verbatimModuleSyntax": false,
 		"newLine": "lf",
 		"rootDir": ".",
 		"types": ["vite/client"],
 		"paths": 	{
+			"@version": ["./svws-webclient/client/version.ts"],
+			"@githash": ["./svws-webclient/client/githash.ts"],
 			"~/*": ["./svws-webclient/client/src/*"],
 			"@admin/*": ["./svws-webclient/admin/src/*"],
 			"@wenom/*": ["./svws-webclient/enmserver/src/*"],
@@ -16,9 +18,14 @@
 			"@ui/*": ["./svws-webclient/ui/src/*"],
 			"@core/*": ["./svws-webclient/core/src/*"],
 			"@json/*": ["./svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
-			"@version": ["./svws-webclient/client/version.ts"],
-			"@githash": ["./svws-webclient/client/githash.ts"],
+			"@transpile/*": ["./svws-transpile/src/test/ts/src/*"],
+			"@testReporting/*": ["./tests/tests-server-reporting/tests/*"],
+			"@testWenom/*": ["./tests/tests-server-enm/tests/*"],
+			"@testDav/*": ["./tests/tests-server-dav/tests*"],
+			"@testStable/*": ["./tests/tests-e2e-stablemode/tests/*"],
+			"@testDev/*": ["./tests/tests-e2e-devmode/tests/*"],
+			"@testUtils/*": ["./tests/utils/*"],
 		}
 	},
-	"include": ["./svws-webclient/**/*/*.ts", "./svws-webclient/**/*/*.vue", "eslint.config.js", "tsconfig.base.json"],
+	"include": ["./svws-webclient/**/*/*.ts", "./svws-webclient/**/*/*.vue", "tsconfig.base.json"],
 }

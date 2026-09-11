@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-import { frontendURL } from "../../../../../utils/APIUtils";
+import { useLoginUtilsClient } from '@testDev/client/utils/LoginUtils';
+import { frontendURL } from '@testUtils/APIUtils';
 
 test.use({
 	ignoreHTTPSErrors: true,
@@ -9,7 +9,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Smoke-Test - Basic', async ({ page }) => {
-	const { loginBISZ, logout } = useLoginUtils(targetHost, page);
+	const { loginBISZ, logout } = useLoginUtilsClient(targetHost, page);
 
 	await loginBISZ();
 

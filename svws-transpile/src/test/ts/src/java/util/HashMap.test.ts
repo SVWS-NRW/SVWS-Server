@@ -1,6 +1,8 @@
-import { describe, test, expect, beforeEach } from "vitest";
-import { l, n, s } from "../../shared/TestObjects";
-import { HashMap } from "../../../../../main/resources/typescript/java/util/HashMap";
+import { l, n, s } from "@transpile/shared/TestObjects";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { HashMap } from "@core/java/util/HashMap";
+
 
 let v: HashMap<unknown, unknown>;
 

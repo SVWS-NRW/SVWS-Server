@@ -1,5 +1,5 @@
-import { LehrerListeEintrag } from "../../src/core/data/lehrer/LehrerListeEintrag";
-import type { Comparator } from "../../src/java/util/Comparator";
+import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { Comparator } from "@core/java/util/Comparator";
 
 type ComPres = 1 | -1 | 0;
 

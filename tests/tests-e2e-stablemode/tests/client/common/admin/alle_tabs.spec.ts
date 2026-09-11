@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-import { frontendURL } from '../../../../../utils/APIUtils';
+import { useLoginUtilsClient } from '@testStable/client/utils/LoginUtilsClient';
+import { frontendURL } from '@testUtils/APIUtils';
 
 test.use({
 	ignoreHTTPSErrors: true,
@@ -9,7 +9,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 
 	await expect(page.getByRole('heading', { name: 'Schüler' })).toBeVisible();
@@ -81,7 +81,7 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({ p
 });
 
 test('Admins können entsprechende Bereiche bei den Lehrern im STABLE Mode sehen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();
 	await expect(page.locator('header').first()).toContainText('ALBE');
@@ -103,13 +103,13 @@ test('Admins können entsprechende Bereiche bei den Lehrern im STABLE Mode sehen
 });
 
 test('Admins können Oberstufe bearbeiten', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', { name: 'Oberstufe' })).toBeVisible();
 });
 
 test('Admins können Einstellung vornehmen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', { name: 'Einstellungen' })).toBeVisible();
 });

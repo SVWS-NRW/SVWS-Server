@@ -1,5 +1,7 @@
-import { ApiServer } from "../../svws-webclient/core/src/api/ApiServer";
-import { OpenApiError } from "../../svws-webclient/core/src/api/OpenApiError";
+
+import { ApiServer } from "@core/api/ApiServer";
+import { OpenApiError } from "@core/api/OpenApiError";
+
 import { loadConfig } from "./ConfigUtils";
 
 export interface Result<T> {

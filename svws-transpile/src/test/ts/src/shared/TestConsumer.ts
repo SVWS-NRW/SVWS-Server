@@ -1,4 +1,5 @@
-import type { Consumer } from "../../../../main/resources/typescript/java/util/function/Consumer";
+import type { Consumer } from "@core/java/util/function/Consumer";
+
 import type { TestPerson } from "./TestPerson";
 
 type TypeAlias = string | number | TestPerson;

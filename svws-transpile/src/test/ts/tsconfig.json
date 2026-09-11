@@ -1,17 +1,4 @@
 {
 	"extends": "../../../../tsconfig.base.json",
-	"compilerOptions": {
-		"isolatedModules": false,
-		"outDir": "./dist",
-		"paths": {
-			"~/*": ["./src/*"],
-		}
-	},
-	"include": [
-		"./vitest.config.ts",
-		"./src/**/*.ts",
-		"../../../src/main/resources/typescript/*.ts",
-		"../../../src/main/resources/typescript/**/*.ts",
-		"./src/java/util/__snapshots__/*.snap"
-	],
+	"include": ["../../../../svws-webclient/**/*/*.ts", "./src/**/*/*.ts"],
 }

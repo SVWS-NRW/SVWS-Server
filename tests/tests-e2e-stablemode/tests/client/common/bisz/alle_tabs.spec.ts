@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-import { frontendURL } from '../../../../../utils/APIUtils';
+import { useLoginUtilsClient } from '@testStable/client/utils/LoginUtilsClient';
+import { frontendURL } from '@testUtils/APIUtils';
+
+
 
 test.use({
 	ignoreHTTPSErrors: true,
@@ -9,7 +11,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im STABLE Mode einsehen', async ({ page }) => {
-	const { loginBISZ } = useLoginUtils(targetHost, page);
+	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 
 	await expect(page.getByRole('heading', { name: 'Schüler' })).toBeVisible();
@@ -60,7 +62,7 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im STABLE Mo
 });
 
 test('Nicht privilegierte Nutzer können nur entsprechende Bereiche bei den Lehrern im STABLE Mode sehen', async ({ page }) => {
-	const { loginBISZ } = useLoginUtils(targetHost, page);
+	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();
 	await expect(page.locator('header').first()).toContainText('ALBE');
@@ -84,14 +86,14 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche bei den Lehr
 
 test('Nicht privilegierter User können Oberstufe nicht bearbeiten', async ({ page }) => {
 	test.setTimeout(60_000);
-	const { loginBISZ } = useLoginUtils(targetHost, page);
+	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 	await expect(page.getByRole('link', { name: 'Oberstufe' })).not.toBeVisible();
 });
 
 test('Nicht privilegierter User können Einstellung nicht vornehmen', async ({ page }) => {
 	test.setTimeout(60_000);
-	const { loginBISZ } = useLoginUtils(targetHost, page);
+	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 	await expect(page.getByRole('link', { name: 'Einstellung' })).not.toBeVisible();
 });

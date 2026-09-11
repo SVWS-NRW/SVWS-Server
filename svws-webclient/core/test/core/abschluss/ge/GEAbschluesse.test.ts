@@ -1,12 +1,13 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, test, expect } from "vitest";
-import { AbschlussManager } from "../../../../src/core/abschluss/AbschlussManager";
-import { ServicePrognose } from "../../../../src/core/abschluss/ge/ServicePrognose";
-import { AbschlussErgebnis } from "../../../../src/core/data/abschluss/AbschlussErgebnis";
-import { GEAbschlussFaecher } from "../../../../src/core/data/abschluss/GEAbschlussFaecher";
+import { describe, expect, test } from "vitest";
 
-const test_dir = resolve(__dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/ge/test");
+import { AbschlussManager } from "@core/core/abschluss/AbschlussManager";
+import { ServicePrognose } from "@core/core/abschluss/ge/ServicePrognose";
+import { AbschlussErgebnis } from "@core/core/data/abschluss/AbschlussErgebnis";
+import { GEAbschlussFaecher } from "@core/core/data/abschluss/GEAbschlussFaecher";
+
+const test_dir = resolve(import.meta.dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/ge/test");
 const files = readdirSync(test_dir);
 
 describe.each(files)("Testfall %s", (file) => {

@@ -1,6 +1,7 @@
-import { describe, test, expect } from 'vitest';
-import { privilegedApiServer, handleRequest } from "../../utils/APIUtils";
-import { ArrayList } from '../../../svws-webclient/core/src/java/util/ArrayList';
+import { handleRequest, privilegedApiServer } from '@testUtils/APIUtils';
+import { describe, expect, test } from 'vitest';
+
+import { ArrayList } from '@core/java/util/ArrayList';
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests';
 

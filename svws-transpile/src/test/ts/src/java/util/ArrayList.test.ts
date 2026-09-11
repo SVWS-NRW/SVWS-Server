@@ -1,13 +1,15 @@
-import { describe, test, expect, beforeEach } from "vitest";
-import { l, n, s } from "../../shared/TestObjects";
-import { TestConsumer } from "../../shared/TestConsumer";
-import { TestMaxComparator } from "../../shared/TestComparator";
-import { ArrayIndexOutOfBoundsException } from "../../../../../main/resources/typescript/java/lang/ArrayIndexOutOfBoundsException";
-import { NullPointerException } from "../../../../../main/resources/typescript/java/lang/NullPointerException";
-import { ArrayList } from "../../../../../main/resources/typescript/java/util/ArrayList";
-import { ArrayListEnumerator } from "../../../../../main/resources/typescript/java/util/ArrayListEnumerator";
-import { NoSuchElementException } from "../../../../../main/resources/typescript/java/util/NoSuchElementException";
-import { Collections } from "../../../../../main/resources/typescript/java/util/Collections";
+import { TestMaxComparator } from "@transpile/shared/TestComparator";
+import { TestConsumer } from "@transpile/shared/TestConsumer";
+import { l, n, s } from "@transpile/shared/TestObjects";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { ArrayIndexOutOfBoundsException } from "@core/java/lang/ArrayIndexOutOfBoundsException";
+import { NullPointerException } from "@core/java/lang/NullPointerException";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ArrayListEnumerator } from "@core/java/util/ArrayListEnumerator";
+import { Collections } from "@core/java/util/Collections";
+import { NoSuchElementException } from "@core/java/util/NoSuchElementException";
+
 
 const maxComparator = new TestMaxComparator();
 

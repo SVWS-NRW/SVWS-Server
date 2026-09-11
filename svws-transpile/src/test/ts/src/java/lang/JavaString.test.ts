@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { JavaString } from "../../../../../main/resources/typescript/java/lang/JavaString";
+
+import { JavaString } from "@core/java/lang/JavaString";
+
 
 describe("java.util.StringBuilder", () => {
 	test("contains: detects a substring", () => {

@@ -1,22 +1,22 @@
-import { bench, describe } from "vitest";
+import { describe, test } from "vitest";
 
-describe(
-	"java.lang.StringBuilder.reverse testen",
-	() => {
+describe("java.lang.StringBuilder.reverse testen", () => {
+	test('Benches', async ({ bench }) => {
+
 		const value = "test";
 		bench("reverse implementiert", () => {
-			void value.split("").reverse().join("");
+			const _ = value.split("").reverse().join("");
 		});
 		bench("for loop", () => {
 			const a: string[] = [];
 			for (const s of value) {
 				a.unshift(s);
 			}
-			void a.join();
+			const _ = a.join();
 		});
 		bench("destructure", () => {
 			// eslint-disable-next-line @typescript-eslint/no-misused-spread
-			void [...value].reverse().join();
+			const _ = [...value].reverse().join();
 		});
 		bench("concat und charAt", () => {
 			let a = "";
@@ -31,4 +31,5 @@ describe(
 			}
 		});
 	}
-);
+	);
+});

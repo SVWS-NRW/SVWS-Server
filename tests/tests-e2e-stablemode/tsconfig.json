@@ -1,14 +1,3 @@
 {
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"types": ["node"],
-		"paths": {
-			"~/*": ["./src/*"],
-			"@core": ["../core/src/index.ts"]
-		}
-	},
-	"include": [
-		"*.ts",
-		"./tests/**/*.ts"
-	]
+	"extends": "../tsconfig.test-base.json",
 }

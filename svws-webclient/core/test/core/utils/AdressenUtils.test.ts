@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-
 import { describe, expect, it } from "vitest";
-import { AdressenUtils } from "../../../src/core/utils/AdressenUtils";
+
+import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 
 
-const test_dir = resolve(__dirname, "../../../../../svws-core/src/test/resources/de/svws_nrw/core/utils/");
+const test_dir = resolve(import.meta.dirname, "../../../../../svws-core/src/test/resources/de/svws_nrw/core/utils/");
 
 describe('AdressenUtils', () => {
 	it('splitStrasse', () => {

@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
+import { useLoginUtilsClient } from "../../utils/LoginUtils";
 import { frontendURL } from "../../../../../utils/APIUtils";
 
 test.use({
@@ -9,7 +9,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Smoke-Test - Basic', async ({ page }) => {
-	const { loginAdmin, logout } = useLoginUtils(targetHost, page);
+	const { loginAdmin, logout } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 

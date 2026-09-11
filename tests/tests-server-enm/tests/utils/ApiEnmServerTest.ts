@@ -1,8 +1,10 @@
+import { enmURL } from "@testUtils/APIUtils";
+import type { ApiLoginData } from "@wenom/ApiEnmServer";
+import { ApiEnmServer } from "@wenom/ApiEnmServer";
+import { assert, expect } from "vitest";
+
 import { OpenApiError } from "@core/api/OpenApiError";
 import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
-import { ApiEnmServer, type ApiLoginData } from "@enm/ApiEnmServer";
-import { enmURL } from "../../utils/APIUtils";
-import { assert, expect } from "vitest";
 
 export class ApiEnmServerTest extends ApiEnmServer {
 

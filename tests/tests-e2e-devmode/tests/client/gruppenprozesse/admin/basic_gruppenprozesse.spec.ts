@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-import { getResetButton, getSaveButton, startGruppenprozessMitSchuelern } from "../../utils/SchuelerGruppenprozesseUtils";
-import { frontendURL } from "../../../../../utils/APIUtils";
+import { useLoginUtilsClient } from '@testDev/client/utils/LoginUtils';
+import { getResetButton, getSaveButton, startGruppenprozessMitSchuelern } from '@testDev/client/utils/SchuelerGruppenprozesseUtils';
+import { frontendURL } from '@testUtils/APIUtils';
 
 test.use({
 	ignoreHTTPSErrors: true,
@@ -10,7 +10,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Smoke Test Gruppenprozesse', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	// locators
 	const headlineLocator = page.locator('.svws-headline');

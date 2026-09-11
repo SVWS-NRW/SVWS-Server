@@ -1,12 +1,15 @@
-import { describe, test, expect, beforeEach } from "vitest";
-import { TestMaxComparator } from "../../../../test/shared/TestComparator";
-import { LinkedCollection } from "../../../../src/core/adt/collection/LinkedCollection";
-import { LinkedCollectionIterator } from "../../../../src/core/adt/collection/LinkedCollectionIterator";
-import { LehrerListeEintrag } from "../../../../src/core/data/lehrer/LehrerListeEintrag";
-import { ArrayList } from "../../../../src/java/util/ArrayList";
-import { ConcurrentModificationException } from "../../../../src/java/util/ConcurrentModificationException";
-import type { JavaIterator } from "../../../../src/java/util/JavaIterator";
-import { NoSuchElementException } from "../../../../src/java/util/NoSuchElementException";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { LinkedCollection } from "@core/core/adt/collection/LinkedCollection";
+import { LinkedCollectionIterator } from "@core/core/adt/collection/LinkedCollectionIterator";
+import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { ArrayList } from "@core/java/util/ArrayList";
+import { ConcurrentModificationException } from "@core/java/util/ConcurrentModificationException";
+import type { JavaIterator } from "@core/java/util/JavaIterator";
+import { NoSuchElementException } from "@core/java/util/NoSuchElementException";
+
+import { TestMaxComparator } from "../../../shared/TestComparator";
+
 
 const maxComparator = new TestMaxComparator();
 
@@ -165,13 +168,13 @@ describe.each([l])("LinkedCollection mit $name", ({ data, data2 }: { data: Array
 	test("toArray: returns an array", () => {
 		const result: Array<unknown> = coll.toArray();
 		expect(result).toBeInstanceOf(Array);
-		expect(result.length).toBe(data.length);
+		expect(result).toHaveLength(data.length);
 		expect(result).toEqual(data);
 	});
 	test("toArray: returns an array with the correct length when used with Array<T>", () => {
 		const result: Array<unknown> = coll2.toArray(coll.toArray());
 		expect(result).toBeInstanceOf(Array);
-		expect(result.length).toBe(coll.size());
+		expect(result).toHaveLength(coll.size());
 	});
 	test("retainAll: returns false when used with empty collection", () => {
 		expect(empty.retainAll(coll)).toBeFalsy();

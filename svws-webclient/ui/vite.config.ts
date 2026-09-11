@@ -1,10 +1,10 @@
 /// <reference types="vitest/config" />
-import { defineConfig, searchForWorkspaceRoot } from "vite";
+import tailwindcss from '@tailwindcss/vite';
+import Vue from "@vitejs/plugin-vue";
 import { resolve } from "node:path";
 import Components from "unplugin-vue-components/vite";
-import Vue from "@vitejs/plugin-vue";
 import Markdown from 'unplugin-vue-markdown/vite';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, searchForWorkspaceRoot } from "vite";
 
 export default defineConfig({
 	server: { fs: { allow: [searchForWorkspaceRoot(process.cwd())] } },
@@ -17,9 +17,9 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@ui": resolve(import.meta.dirname, './src'),
-			"@icons": resolve(__dirname, "../../node_modules/remixicon/icons"),
+			"@icons": resolve(import.meta.dirname, "../../node_modules/remixicon/icons"),
 			"@core": resolve(import.meta.dirname, '../core/src'),
-			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
+			"@json": resolve(import.meta.dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},
 	plugins: [
@@ -30,7 +30,7 @@ export default defineConfig({
 	],
 	build: {
 		lib: {
-			entry: resolve(__dirname, "src/index.ts"),
+			entry: resolve(import.meta.dirname, "src/index.ts"),
 			formats: ['es'],
 			name: "SvwsUI",
 		},

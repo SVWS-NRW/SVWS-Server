@@ -1,4 +1,4 @@
-import { JavaObject } from "../../../../main/resources/typescript/java/lang/JavaObject";
+import { JavaObject } from "@core/java/lang/JavaObject";
 
 export class TestPerson extends JavaObject {
 

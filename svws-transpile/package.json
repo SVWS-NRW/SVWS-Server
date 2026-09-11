@@ -1,6 +1,0 @@
-{
-  "scripts": {
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache --max-warnings=0",
-		"test:ts": "vue-tsc --noEmit"
-	}
-}

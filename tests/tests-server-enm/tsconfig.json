@@ -1,13 +1,3 @@
 {
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"types": ["node"],
-		"outDir": "./dist",
-		"paths": {
-			"@core/*": ["../../svws-webclient/core/src/*"],
-			"@enm/*": ["../../svws-webclient/enmserver/src/*"]
-		}
-	},
-	"include": ["./*.ts", "utils/**/*", "tests/**/*", "../../svws-webclient/enmserver/src/*.ts"],
-	"exclude": ["../../svws-webclient/**/index.ts"],
+	"extends": "../tsconfig.test-base.json",
 }

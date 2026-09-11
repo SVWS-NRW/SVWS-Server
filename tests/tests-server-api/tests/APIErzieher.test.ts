@@ -1,7 +1,8 @@
-import { describe, test, expect } from 'vitest';
-import { privilegedApiServer } from "../../utils/APIUtils";
-import { ErzieherListeEintrag } from '../../../svws-webclient/core/src/core/data/erzieher/ErzieherListeEintrag';
-import { Erzieherart } from '../../../svws-webclient/core/src/core/data/erzieher/Erzieherart';
+import { privilegedApiServer } from '@testUtils/APIUtils';
+import { describe, expect, test } from 'vitest';
+
+import { Erzieherart } from '@core/core/data/erzieher/Erzieherart';
+import { ErzieherListeEintrag } from '@core/core/data/erzieher/ErzieherListeEintrag';
 
 describe("Erzieher Tests", () => {
 	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
@@ -13,7 +14,7 @@ describe("Erzieher Tests", () => {
 		});
 
 		test('GET: Ein ErzieherStammdaten Objekt, das nicht existiert', async () => {
-			await expect(api.getErzieherStammdaten(schema, 99999)).rejects.toThrowError(`Fetch failed for GET: /db/${schema}/erzieher/99999/stammdaten`);
+			await expect(api.getErzieherStammdaten(schema, 99999)).rejects.toThrow(`Fetch failed for GET: /db/${schema}/erzieher/99999/stammdaten`);
 		});
 
 		// TODO: Fix me

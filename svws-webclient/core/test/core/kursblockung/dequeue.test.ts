@@ -1,9 +1,11 @@
-import { test, expect, describe } from "vitest";
-import { TestRandomComparator } from "../../../test/shared/TestComparator";
+import { describe, expect, test } from "vitest";
+
+import { LinkedCollection } from "@core/core/adt/collection/LinkedCollection";
+import { NoSuchElementException } from "@core/java/util/NoSuchElementException";
+import { Random } from "@core/java/util/Random";
+
 import { random_numbers } from "../../random_numbers1k";
-import { LinkedCollection } from "../../../src/core/adt/collection/LinkedCollection";
-import { NoSuchElementException } from "../../../src/java/util/NoSuchElementException";
-import { Random } from "../../../src/java/util/Random";
+import { TestRandomComparator } from "../../shared/TestComparator";
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER;
 const RND = new Random();
@@ -158,8 +160,8 @@ describe("TestDequeRandom", () => {
 						test("testPollFirst", () => {
 							expect(d1.size()).toBe(d2.size());
 							if (d1.size() === 0) {
-								expect(d1.pollFirst()).toBe(null);
-								expect(d2.pollFirst()).toBe(null);
+								expect(d1.pollFirst()).toBeNull();
+								expect(d2.pollFirst()).toBeNull();
 							} else {
 								expect(d1.pollFirst()).toBe(d2.pollFirst());
 							}
@@ -169,8 +171,8 @@ describe("TestDequeRandom", () => {
 						test("testPollLast", () => {
 							expect(d1.size()).toBe(d2.size());
 							if (d1.size() === 0) {
-								expect(d1.pollLast()).toBe(null);
-								expect(d2.pollLast()).toBe(null);
+								expect(d1.pollLast()).toBeNull();
+								expect(d2.pollLast()).toBeNull();
 							} else {
 								expect(d1.pollLast()).toBe(d2.pollLast());
 							}
@@ -406,7 +408,7 @@ describe("TestDequeRandom", () => {
 							const o1 = d1.toArray();
 							const o2 = d2.toArray();
 
-							expect(o1.length).toBe(o2.length);
+							expect(o1).toHaveLength(o2.length);
 
 							for (let i = 0; i < o1.length; i++) {
 								expect(o1[i] === o2[i]).toBeTruthy();
@@ -430,7 +432,7 @@ describe("TestDequeRandom", () => {
 							const o1 = d1.toArray();
 							const o2 = d2.toArray();
 
-							expect(o1.length).toBe(o2.length);
+							expect(o1).toHaveLength(o2.length);
 
 							for (let i = 0; i < o1.length; i++) {
 								expect(o1[i] === o2[i]).toBeTruthy();
@@ -468,9 +470,9 @@ describe("TestDequeRandom", () => {
 						});
 						break;
 					case 15:
-						test("testSpecialIndex", () => {
+						test("testSpecialIndex", ({ skip }) => {
 							if (d1.isEmpty() === true) {
-								return;
+								skip();
 							}
 
 							const temp1 = new LinkedCollection(d1);

@@ -1,5 +1,6 @@
-import { describe, test, expect } from "vitest";
-import { privilegedApiServer } from "../../utils/APIUtils";
+import { privilegedApiServer } from "@testUtils/APIUtils";
+import { describe, expect, test } from "vitest";
+
 
 describe("Server Tests2 ", () => {
 	describe.each([{ schema: "GymAbi01" }])('gegen %s', () => {

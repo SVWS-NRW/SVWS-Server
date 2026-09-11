@@ -1,7 +1,0 @@
-{
-	"extends": "../tsconfig.base.json",
-	"compilerOptions": {
-		"rootDir": "./src/main/resources/typescript"
-	},
-	"include": ["./src/main/resources/typescript/**/*.ts"]
-}

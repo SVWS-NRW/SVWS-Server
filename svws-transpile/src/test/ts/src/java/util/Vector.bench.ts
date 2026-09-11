@@ -1,12 +1,12 @@
-import { bench, describe } from "vitest";
-import { l, n, s } from "../../shared/TestObjects";
-import { Vector } from "../../../../../main/resources/typescript/java/util/Vector";
+import { l, n, s } from "@transpile/shared/TestObjects";
+import { describe, test } from "vitest";
+
+import { Vector } from "@core/java/util/Vector";
 
 let v: Vector<unknown>;
 
-describe.each([s, n, l])(
-	"java.util.Vector, getestet mit $name",
-	({ a, b, c, d, e }) => {
+describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, e }) => {
+	test('Run benchmarks', async ({ bench }) => {
 		v = new Vector();
 		v.add(a);
 		v.add(b);
@@ -20,19 +20,20 @@ describe.each([s, n, l])(
 			v.toArray(new Array<typeof a>());
 		});
 		bench("[...v] destructure", () => {
-			void [...v];
+			const _ = [...v];
 		});
 		bench("for of loop", () => {
-			const arr = [];
+			const _ = [];
 			for (const e of v) {
-				arr.push(e);
+				_.push(e);
 			}
 		});
 		bench("for loop", () => {
-			const arr = [];
+			const _ = [];
 			for (let i = 0; i < v.size(); i++) {
-				arr.push(v.get(i));
+				_.push(v.get(i));
 			}
 		});
-	}
-);
+	});
+});
+

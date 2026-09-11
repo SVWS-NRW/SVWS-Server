@@ -1,7 +1,7 @@
-import path from "node:path";
+import assert from 'node:assert';
 import { existsSync } from "node:fs";
 import { readFile } from 'node:fs/promises';
-import assert from 'node:assert';
+import path from "node:path";
 
 // Pfad zur primären Konfigurationsdatei
 const configPath = '../../config/tests/config.json';

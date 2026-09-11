@@ -1,5 +1,6 @@
 import { beforeAll } from "vitest";
-import { JsonCoreTypeReaderStatic } from "../src/asd/utils/JsonCoreTypeReaderStatic";
+
+import { JsonCoreTypeReaderStatic } from "@core/asd/utils/JsonCoreTypeReaderStatic";
 
 const reader = new JsonCoreTypeReaderStatic();
 

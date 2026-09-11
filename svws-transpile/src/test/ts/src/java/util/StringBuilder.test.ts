@@ -1,7 +1,8 @@
-import { describe, test, expect, beforeEach } from "vitest";
-import { StringBuilder } from "../../../../../main/resources/typescript/java/lang/StringBuilder";
-import { IndexOutOfBoundsException } from "../../../../../main/resources/typescript/java/lang/IndexOutOfBoundsException";
-import { StringIndexOutOfBoundsException } from "../../../../../main/resources/typescript/java/lang/StringIndexOutOfBoundsException";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { IndexOutOfBoundsException } from "@core/java/lang/IndexOutOfBoundsException";
+import { StringBuilder } from "@core/java/lang/StringBuilder";
+import { StringIndexOutOfBoundsException } from "@core/java/lang/StringIndexOutOfBoundsException";
 
 let s: StringBuilder;
 

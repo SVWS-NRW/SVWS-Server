@@ -1,9 +1,10 @@
 // main.test.ts
 import { beforeAll, describe } from "vitest";
-import { ensureLogin } from "./Login";
-import { registerEndpunkteTests } from "./Endpunkte";
-import { registerSQLInjectionTests } from "./SQLInjection";
+
 import { registerAuthTests } from "./Auth";
+import { registerEndpunkteTests } from "./Endpunkte";
+import { ensureLogin } from "./Login";
+import { registerSQLInjectionTests } from "./SQLInjection";
 import { registerTimeBasedTests } from "./TimeBased";
 
 describe("Teste die WeNoM-Client-API", () => {

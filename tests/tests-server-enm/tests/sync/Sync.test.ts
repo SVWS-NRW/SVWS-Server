@@ -1,7 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { ENMServerConfigElement } from "../../../../svws-webclient/core/src/core/data/enm/ENMServerConfigElement";
-import { ArrayList } from "@core/java/util/ArrayList";
+
 import { ApiServer } from "@core/api/ApiServer";
+import { ENMServerConfigElement } from "@core/core/data/enm/ENMServerConfigElement";
+import { ArrayList } from "@core/java/util/ArrayList";
+
 
 const targetUrlSVWSAppServer: string = process.env.VITE_APP_targetHost ?? "X";
 const targetUrlENMServerFORSvwsApp: string = process.env.VITE_ENM_FOR_SVWS_targetHost ?? 'X';

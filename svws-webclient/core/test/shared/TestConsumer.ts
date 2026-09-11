@@ -1,4 +1,4 @@
-import type { Consumer } from "../../src/java/util/function/Consumer";
+import type { Consumer } from "@core/java/util/function/Consumer";
 
 export class TestConsumer<T> implements Consumer<T> {
 	public value: (T)[] = [];

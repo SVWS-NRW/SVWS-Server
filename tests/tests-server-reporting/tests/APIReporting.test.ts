@@ -1,14 +1,15 @@
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { backendURL, privilegedApiServer } from "@testUtils/APIUtils";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import path from "node:path";
 import { describe, expect, test } from "vitest";
-import { ApiServer } from "../../../svws-webclient/core/src/api/ApiServer";
-import { backendURL, privilegedApiServer } from "../../utils/APIUtils";
-import { ReportingParameter } from "../../../svws-webclient/core/src/core/data/reporting/ReportingParameter";
-import { ReportingAusgabeformat } from "../../../svws-webclient/core/src/core/types/reporting/ReportingAusgabeformat";
-import { ReportingReportvorlage } from "../../../svws-webclient/core/src/core/types/reporting/ReportingReportvorlage";
-import { ReportingReportvorlageKonfigurationBenutzerweit }
-	from "../../../svws-webclient/core/src/core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationBenutzerweit";
+
+import { ApiServer } from "@core/api/ApiServer";
+import { ReportingParameter } from "@core/core/data/reporting/ReportingParameter";
+import { ReportingAusgabeformat } from "@core/core/types/reporting/ReportingAusgabeformat";
+import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+import { ReportingReportvorlageKonfigurationBenutzerweit } from "@core/core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationBenutzerweit";
+
 
 /** Konfiguration eines Reporting-Testfalls (config.json je Fall-Ordner). */
 interface ReportingTestConfig {
@@ -37,14 +38,14 @@ interface ReportingTestConfig {
 
 // Wurzelverzeichnis der Reporting-Testfälle. Jeder Unterordner mit einer params.json und einer
 // config.json bildet einen eigenen Testfall; der HTML-Snapshot wird daneben als snapshot.html abgelegt.
-const reportingDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "reporting");
+const reportingDir = resolve(dirname(fileURLToPath(import.meta.url)), "reporting");
 
 const faelle = readdirSync(reportingDir, { withFileTypes: true })
 	.filter((eintrag) => eintrag.isDirectory())
 	.map((eintrag) => eintrag.name)
-	.filter((name) => existsSync(path.join(reportingDir, name, "params.json")) && existsSync(path.join(reportingDir, name, "config.json")))
+	.filter((name) => existsSync(join(reportingDir, name, "params.json")) && existsSync(join(reportingDir, name, "config.json")))
 	.map((ordner) => {
-		const config = JSON.parse(readFileSync(path.join(reportingDir, ordner, "config.json"), "utf-8")) as ReportingTestConfig;
+		const config = JSON.parse(readFileSync(join(reportingDir, ordner, "config.json"), "utf-8")) as ReportingTestConfig;
 		return { ordner, beschreibung: config.beschreibung, schema: config.schema, benutzer: config.benutzer, passwort: config.passwort,
 			pruefeDateinamen: config.pruefeDateinamen === true, pruefeDefaults: config.pruefeDefaults === true };
 	});
@@ -99,7 +100,7 @@ function istPruefbar(beschreibung: string, schema: string): boolean {
 
 /** Die Bezeichnung der Reportvorlage eines Testfalls aus dessen params.json. */
 function reportvorlageVonFall(ordner: string): string | undefined {
-	const json = JSON.parse(readFileSync(path.join(reportingDir, ordner, "params.json"), "utf-8")) as { reportvorlage?: string };
+	const json = JSON.parse(readFileSync(join(reportingDir, ordner, "params.json"), "utf-8")) as { reportvorlage?: string };
 	return json.reportvorlage;
 }
 
@@ -115,7 +116,7 @@ function reportvorlageVonFall(ordner: string): string | undefined {
  * @returns die Reporting-Parameter für den Aufruf mit Katalog-Defaults
  */
 function ladeParameterAusKatalog(ordner: string): ReportingParameter {
-	const json = JSON.parse(readFileSync(path.join(reportingDir, ordner, "params.json"), "utf-8")) as
+	const json = JSON.parse(readFileSync(join(reportingDir, ordner, "params.json"), "utf-8")) as
 		{ reportvorlage: string, idSchuljahresabschnitt: number, idHauptdatenObjekt: number,
 			idsHauptdaten: Array<number> | null, idsDetaildaten: Array<number> | null };
 	const vorlage = ReportingReportvorlage.getByBezeichnung(json.reportvorlage);
@@ -147,7 +148,7 @@ function ladeParameterAusKatalog(ordner: string): ReportingParameter {
  * @returns die Reporting-Parameter für den PDF-Aufruf
  */
 function ladeParameterFuerPdf(ordner: string, nurErsteId: boolean): ReportingParameter {
-	const json = JSON.parse(readFileSync(path.join(reportingDir, ordner, "params.json"), "utf-8")) as
+	const json = JSON.parse(readFileSync(join(reportingDir, ordner, "params.json"), "utf-8")) as
 		{ ausgabeformat: number, idsHauptdaten: Array<number> | null };
 	json.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 	if (nurErsteId && (json.idsHauptdaten !== null) && (json.idsHauptdaten.length > 1)) {
@@ -197,14 +198,14 @@ describe("Reporting Tests ", () => {
 			}
 			const api = (benutzer !== undefined) ? new ApiServer(backendURL, benutzer, passwort ?? "") : privilegedApiServer;
 			const html = await api.htmlReport(ladeParameterAusKatalog(ordner), schema);
-			await expect(html).toMatchFileSnapshot(path.join(reportingDir, ordner, "snapshot-defaults.html"));
+			await expect(html).toMatchFileSnapshot(join(reportingDir, ordner, "snapshot-defaults.html"));
 		});
 
 	// Ein Test, der sicherstellt, dass zu jeder Reportvorlage mindestens ein Snapshot-Testfall definiert ist (reine Datei-/Enum-Prüfung).
 	// Schlägt der Test fehl, so listet er die noch fehlenden Vorlagen auf.
 	test("Vollständigkeit: jede Reportvorlage ist durch mindestens einen Snapshot-Testfall abgedeckt", () => {
 		const abgedeckt = new Set(faelle.map((fall) =>
-			(JSON.parse(readFileSync(path.join(reportingDir, fall.ordner, "params.json"), "utf-8")) as { reportvorlage?: string }).reportvorlage));
+			(JSON.parse(readFileSync(join(reportingDir, fall.ordner, "params.json"), "utf-8")) as { reportvorlage?: string }).reportvorlage));
 		const fehlend = ReportingReportvorlage.values()
 			.map((vorlage) => vorlage.getBezeichnung())
 			.filter((bezeichnung) => !abgedeckt.has(bezeichnung))
@@ -220,10 +221,10 @@ describe("Reporting Tests ", () => {
 		// Standardmäßig der privilegierte Admin-Zugang; nur wenn die config.json einen Benutzer setzt,
 		// wird ein fallspezifischer ApiServer mit den dort hinterlegten Zugangsdaten verwendet.
 		const api = (benutzer !== undefined) ? new ApiServer(backendURL, benutzer, passwort ?? "") : privilegedApiServer;
-		const json = readFileSync(path.join(reportingDir, ordner, "params.json"), "utf-8");
+		const json = readFileSync(join(reportingDir, ordner, "params.json"), "utf-8");
 		const params = ReportingParameter.transpilerFromJSON(json);
 		const html = await api.htmlReport(params, schema);
-		await expect(html).toMatchFileSnapshot(path.join(reportingDir, ordner, "snapshot.html"));
+		await expect(html).toMatchFileSnapshot(join(reportingDir, ordner, "snapshot.html"));
 	});
 
 	// Ein Test, der sicherstellt, dass jede Reportvorlage durch mindestens einen Fall mit Dateinamen-Prüfung
@@ -251,10 +252,10 @@ describe("Reporting Tests ", () => {
 		const api = (benutzer !== undefined) ? new ApiServer(backendURL, benutzer, passwort ?? "") : privilegedApiServer;
 
 		const alle = await api.pdfReport(ladeParameterFuerPdf(ordner, false), schema);
-		await expect(alle.name).toMatchFileSnapshot(path.join(reportingDir, ordner, "dateiname-alle.txt"));
+		await expect(alle.name).toMatchFileSnapshot(join(reportingDir, ordner, "dateiname-alle.txt"));
 
 		const einzeln = await api.pdfReport(ladeParameterFuerPdf(ordner, true), schema);
-		await expect(einzeln.name).toMatchFileSnapshot(path.join(reportingDir, ordner, "dateiname-einzeln.txt"));
+		await expect(einzeln.name).toMatchFileSnapshot(join(reportingDir, ordner, "dateiname-einzeln.txt"));
 	});
 
 	// Abschluss: Ein übersprungener Fall ist in der vitest-Ausgabe nicht von einem bestandenen zu unterscheiden.

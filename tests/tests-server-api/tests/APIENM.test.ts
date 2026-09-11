@@ -1,16 +1,17 @@
+import { privilegedApiServer } from "@testUtils/APIUtils";
 import { describe, expect, test } from "vitest";
-import { privilegedApiServer } from "../../utils/APIUtils";
-import { ArrayList } from "../../../svws-webclient/core/src/java/util/ArrayList";
-import type { ENMv1Note } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Note";
-import type { ENMv1Foerderschwerpunkt } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Foerderschwerpunkt";
-import type { ENMv1Jahrgang } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Jahrgang";
-import type { ENMv1Klasse } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Klasse";
-import type { ENMv1Floskelgruppe } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Floskelgruppe";
-import type { ENMv1Lehrer } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Lehrer";
-import type { ENMv1Fach } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Fach";
-import type { ENMv1Teilleistungsart } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Teilleistungsart";
-import type { ENMv1Lerngruppe } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Lerngruppe";
-import type { ENMv1Schueler } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Schueler";
+
+import type { ENMv1Fach } from "@core/core/data/enm/v1/ENMv1Fach";
+import type { ENMv1Floskelgruppe } from "@core/core/data/enm/v1/ENMv1Floskelgruppe";
+import type { ENMv1Foerderschwerpunkt } from "@core/core/data/enm/v1/ENMv1Foerderschwerpunkt";
+import type { ENMv1Jahrgang } from "@core/core/data/enm/v1/ENMv1Jahrgang";
+import type { ENMv1Klasse } from "@core/core/data/enm/v1/ENMv1Klasse";
+import type { ENMv1Lehrer } from "@core/core/data/enm/v1/ENMv1Lehrer";
+import type { ENMv1Lerngruppe } from "@core/core/data/enm/v1/ENMv1Lerngruppe";
+import type { ENMv1Note } from "@core/core/data/enm/v1/ENMv1Note";
+import type { ENMv1Schueler } from "@core/core/data/enm/v1/ENMv1Schueler";
+import type { ENMv1Teilleistungsart } from "@core/core/data/enm/v1/ENMv1Teilleistungsart";
+import { ArrayList } from "@core/java/util/ArrayList";
 
 describe("APIENM Tests", () => {
 	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {

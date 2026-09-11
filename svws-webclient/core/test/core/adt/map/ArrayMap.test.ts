@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { ArrayMap } from "../../../../src/core/adt/map/ArrayMap";
-import { ArrayMapCollection } from "../../../../src/core/adt/map/ArrayMapCollection";
-import { ArrayMapEntrySet } from "../../../../src/core/adt/map/ArrayMapEntrySet";
-import { ArrayMapKeySet } from "../../../../src/core/adt/map/ArrayMapKeySet";
-import { GostKursart } from "../../../../src/core/types/gost/GostKursart";
-import { IllegalArgumentException } from "../../../../src/java/lang/IllegalArgumentException";
-import type { JavaMap } from "../../../../src/java/util/JavaMap";
+
+import { ArrayMap } from "@core/core/adt/map/ArrayMap";
+import { ArrayMapCollection } from "@core/core/adt/map/ArrayMapCollection";
+import { ArrayMapEntrySet } from "@core/core/adt/map/ArrayMapEntrySet";
+import { ArrayMapKeySet } from "@core/core/adt/map/ArrayMapKeySet";
+import { GostKursart } from "@core/core/types/gost/GostKursart";
+import { IllegalArgumentException } from "@core/java/lang/IllegalArgumentException";
+import type { JavaMap } from "@core/java/util/JavaMap";
+
 
 let m: ArrayMap<unknown, unknown>;
 
@@ -31,11 +33,11 @@ describe("ArrayMap", () => {
 	test("getNumberOfKeys: gibt die Anzahl der möglichen Schlüsselwerte zurück", () => {
 		expect(m.getNumberOfKeys()).toEqual(5);
 	});
-	test("size: gibt die Anzahl der hinterlegten Entries zurück", () => {
+	test("size: gibt die Anzahl der hinterlegten Entries zurück, 1", () => {
 		m.put(GostKursart.LK, 1);
 		expect(m.size()).toEqual(1);
 	});
-	test("size: gibt die Anzahl der hinterlegten Entries zurück", () => {
+	test("size: gibt die Anzahl der hinterlegten Entries zurück, 0", () => {
 		expect(m.size()).toEqual(0);
 	});
 	test("isEmpty: zeigt an, ob das ArrayMap leer ist, nein", () => {
@@ -50,24 +52,24 @@ describe("ArrayMap", () => {
 		expect(m.getKeyAt(0)).toEqual(GostKursart.LK);
 	});
 	test("getKey: holt den Schlüssel vom Index nicht, wenn der Index nicht passt", () => {
-		expect(m.getKeyAt(9)).toEqual(null);
+		expect(m.getKeyAt(9)).toBeNull();
 	});
-	test("getEntryByIndex: ermittelt den Entry vom index", () => {
+	test("getEntryByIndex: ermittelt den Entry vom index, 1", () => {
 		m.put(GostKursart.LK, 1);
 		expect(m.getEntryByIndex(0)?.getValue()).toEqual(1);
 	});
-	test("getEntryByIndex: ermittelt den Entry vom index", () => {
-		expect(m.getEntryByIndex(0)).toEqual(null);
+	test("getEntryByIndex: ermittelt den Entry vom index, null", () => {
+		expect(m.getEntryByIndex(0)).toBeNull();
 	});
 	test("getEntry: ermittelt den Entry nach Key", () => {
 		m.put(GostKursart.LK, 1);
 		expect(m.getEntry(GostKursart.LK)?.getValue()).toEqual(1);
 	});
-	test("containsKey: Prüft, ob der Schlüssel gültig ist", () => {
+	test("containsKey: Prüft, ob der Schlüssel gültig ist, true", () => {
 		m.put(GostKursart.LK, 1);
 		expect(m.containsKey(GostKursart.LK)).toBeTruthy();
 	});
-	test("containsKey: Prüft, ob der Schlüssel gültig ist", () => {
+	test("containsKey: Prüft, ob der Schlüssel gültig ist, false", () => {
 		expect(m.containsKey(GostKursart.GK)).toBeFalsy();
 	});
 	test("containsValue: Prüft, ob Entry vorhanden ist", () => {

@@ -1,9 +1,11 @@
-import { describe, test, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { MinHeap } from "@core/core/adt/tree/MinHeap";
+import { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import { IllegalArgumentException } from "@core/java/lang/IllegalArgumentException";
+import { NoSuchElementException } from "@core/java/util/NoSuchElementException";
+
 import { TestMinComparator } from "../../../shared/TestComparator";
-import { MinHeap } from "../../../../src/core/adt/tree/MinHeap";
-import { LehrerListeEintrag } from "../../../../src/core/data/lehrer/LehrerListeEintrag";
-import { IllegalArgumentException } from "../../../../src/java/lang/IllegalArgumentException";
-import { NoSuchElementException } from "../../../../src/java/util/NoSuchElementException";
 
 const minComparator = new TestMinComparator();
 

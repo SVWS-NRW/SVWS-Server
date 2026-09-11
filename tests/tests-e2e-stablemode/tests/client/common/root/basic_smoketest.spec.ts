@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { frontendURL } from "../../../../../utils/APIUtils";
+import { frontendURL } from '@testUtils/APIUtils';
+
 
 test.use({
 	ignoreHTTPSErrors: true,

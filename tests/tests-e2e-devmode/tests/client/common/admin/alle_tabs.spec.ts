@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-
-import { frontendURL } from '../../../../../utils/APIUtils';
+import { useLoginUtilsClient } from '@testDev/client/utils/LoginUtils';
+import { frontendURL } from '@testUtils/APIUtils';
 
 
 test.use({
@@ -11,7 +10,7 @@ test.use({
 const targetHost = frontendURL;
 
 test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 
 	await expect(page.getByRole('heading', { name: 'Schüler' })).toBeVisible();
@@ -125,7 +124,7 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page
 });
 
 test('Admins können entsprechende Bereiche bei den Lehrern im DEV Mode sehen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();
 	await expect(page.locator('header').first()).toContainText('ALBE');
@@ -162,14 +161,14 @@ test('Admins können entsprechende Bereiche bei den Lehrern im DEV Mode sehen', 
 
 test('Admins können Oberstufe bearbeiten', async ({ page }) => {
 	test.setTimeout(60_000);
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', { name: 'Oberstufe' })).toBeVisible();
 });
 
 test('Admins können Einstellung vornehmen', async ({ page }) => {
 	test.setTimeout(60_000);
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await expect(page.getByRole('link', { name: 'Einstellungen' })).toBeVisible();
 });

@@ -1,4 +1,5 @@
-import type { Comparator } from "../../../../main/resources/typescript/java/util/Comparator";
+import type { Comparator } from "@core/java/util/Comparator";
+
 import { TestPerson } from "./TestPerson";
 
 type CompRes = 1 | -1 | 0;

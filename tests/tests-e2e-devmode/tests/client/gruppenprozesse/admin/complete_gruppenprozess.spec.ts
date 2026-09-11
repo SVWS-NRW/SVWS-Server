@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { useLoginUtils } from "../../utils/LoginUtils";
-import { getContentOfActiveTooltip, getResetButton, startGruppenprozessMitSchuelern } from "../../utils/SchuelerGruppenprozesseUtils";
-import { frontendURL } from "../../../../../utils/APIUtils";
+import { useLoginUtilsClient } from '@testDev/client/utils/LoginUtils';
+import { getContentOfActiveTooltip, getResetButton, startGruppenprozessMitSchuelern } from '@testDev/client/utils/SchuelerGruppenprozesseUtils';
+import { frontendURL } from '@testUtils/APIUtils';
 
 const targetHost = frontendURL;
 
@@ -14,7 +14,7 @@ test.use({
 });
 
 test('Weitere Felder zu Migrationshintergrund nur aktiv, wenn Migrationshintergrund vorhanden', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -37,7 +37,7 @@ test.skip('Gruppenänderung findet sich bei einzelnem Schüler wieder', async ({
 });
 
 test('Beim Zurücksetzen der Änderungen wird die Auswahl der Schüler reaktiviert', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -52,7 +52,7 @@ test('Beim Zurücksetzen der Änderungen wird die Auswahl der Schüler reaktivie
 });
 
 test('Bei ausstehenden Änderungen wird die Auswahl der Schüler deaktiviert', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -65,7 +65,7 @@ test('Bei ausstehenden Änderungen wird die Auswahl der Schüler deaktiviert', a
 });
 
 test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zurückgesetzt', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -89,7 +89,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zur�
 });
 
 test('Modal bei Routenwechsel wird aktiv, bei Abbrechen werden Pending States behalten und angezeigt', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -110,7 +110,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Abbrechen werden Pending States be
 });
 
 test('Clear Button ist disabled, wenn keine Daten vorhanden sind', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -121,7 +121,7 @@ test('Clear Button ist disabled, wenn keine Daten vorhanden sind', async ({ page
 });
 
 test('Clear Button ist enabled, wenn Daten vorhanden sind', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -130,7 +130,7 @@ test('Clear Button ist enabled, wenn Daten vorhanden sind', async ({ page }) => 
 });
 
 test('Clear Button ist enabled, wenn Daten für mindestens einen Schüler vorhanden sind', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -139,7 +139,7 @@ test('Clear Button ist enabled, wenn Daten für mindestens einen Schüler vorhan
 });
 
 test('Während des Hoverns des Tooltips, wird ein X im Button angezeigt', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -160,7 +160,7 @@ test('Während des Hoverns des Tooltips, wird ein X im Button angezeigt', async 
 });
 
 test('Auswahl aufheben (Ja), schließt Gruppenprozess und reaktiviert Schülerauswahl', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -190,7 +190,7 @@ test('Auswahl aufheben (Ja), schließt Gruppenprozess und reaktiviert Schülerau
 });
 
 test('Auswahl aufheben (Nein), bleibt in Gruppenprozess und aktuelle Änderungen bleiben bestehen', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -220,7 +220,7 @@ test('Auswahl aufheben (Nein), bleibt in Gruppenprozess und aktuelle Änderungen
 });
 
 test('Button Zurücksetzen, setzt Pending State bei allen Feldern zurück', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -252,7 +252,7 @@ test('Button Zurücksetzen, setzt Pending State bei allen Feldern zurück', asyn
 });
 
 test('Änderung wird vorgenommen, anschließend kann Pending State zurückgesetzt werden', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -266,7 +266,7 @@ test('Änderung wird vorgenommen, anschließend kann Pending State zurückgesetz
 });
 
 test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Tooltip', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 
@@ -383,7 +383,7 @@ test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Toolt
 
 // Destruktiver Test derzeit noch nicht möglich
 test.skip('Mehrere Schüler auswählen und Staatsangehörigkeit ändern und anschließend speichern, beide Schüler haben geänderten Wert.', async ({ page }) => {
-	const { loginAdmin } = useLoginUtils(targetHost, page);
+	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 
 	await loginAdmin();
 

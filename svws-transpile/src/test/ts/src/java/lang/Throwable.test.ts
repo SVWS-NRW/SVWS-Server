@@ -1,5 +1,6 @@
-import { describe, test, expect } from "vitest";
-import { NullPointerException } from "../../../../../main/resources/typescript/java/lang/NullPointerException";
+import { describe, expect, test } from "vitest";
+
+import { NullPointerException } from "@core/java/lang/NullPointerException";
 
 describe("Different cases of Throwable Errors", () => {
 	const e = new NullPointerException();

@@ -1,4 +1,4 @@
-import { backendURL } from "../../../utils/APIUtils";
+import { backendURL } from "@testUtils/APIUtils";
 
 // Deaktiviert die Überprüfung von TLS-Zertifikaten. Dies sollte nur in Entwicklungsumgebungen verwendet werden.
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -21,7 +21,7 @@ class DavApiService {
 
 	private async request(endpoint: string, options: RequestInit = {}) {
 		// Berechnet die Länge des Inhalts, wenn ein Body vorhanden ist.
-		let contentLength = 0
+		let contentLength = 0;
 		if (options.body !== null) {
 			contentLength = new TextEncoder().encode(options.body as string).length;
 		}
@@ -39,35 +39,35 @@ class DavApiService {
 					'content-length': `${contentLength}`,
 				},
 				body: options.body,
-			})
+			});
 		} catch (e) {
 			// Fehlerbehandlung für fehlgeschlagene Anfragen.
-			console.log("Request fehlgeschlagen: ", e)
+			console.log("Request fehlgeschlagen: ", e);
 		}
 	}
 
 	// Methode für PROPFIND-Anfragen.
 	public async propfind(endpoint: string, options: RequestInit = {}) {
-		return this.request(endpoint, {method: 'PROPFIND', body: options.body ?? this.xmlData, headers: options.headers});
+		return this.request(endpoint, { method: 'PROPFIND', body: options.body ?? this.xmlData, headers: options.headers });
 	}
 
 	// Methode für REPORT-Anfragen.
 	public async report(endpoint: string, options: RequestInit = {}) {
-		return this.request(endpoint, {method: 'REPORT', body: options.body ?? this.xmlData});
+		return this.request(endpoint, { method: 'REPORT', body: options.body ?? this.xmlData });
 	}
 
 	// Methode für PUT-Anfragen.
 	public async put(endpoint: string, options: RequestInit = {}) {
-		return this.request(endpoint, {method: 'PUT', body: this.xmlData, headers: options.headers});
+		return this.request(endpoint, { method: 'PUT', body: this.xmlData, headers: options.headers });
 	}
 
 	// Methode für DELETE-Anfragen.
 	public async delete(endpoint: string, options: RequestInit = {}) {
-		return this.request(endpoint, {method: 'DELETE', body: this.xmlData, headers: options.headers});
+		return this.request(endpoint, { method: 'DELETE', body: this.xmlData, headers: options.headers });
 	}
 }
 
 // Funktion zum Erstellen einer neuen Instanz von ApiService.
 export function getApiService(username: string, password: string) {
-	return new DavApiService(username, password)
+	return new DavApiService(username, password);
 }

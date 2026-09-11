@@ -1,7 +1,10 @@
+import { ApiEnmServerTest } from "@testWenom/utils/ApiEnmServerTest";
 import { describe, expect, test } from "vitest";
-import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
+
 import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+
 import { apiGehring, apiGiesen } from "./Login";
+
 
 const apiServiceAuth = apiGiesen;
 const apiServiceAuthInjected = apiGehring;

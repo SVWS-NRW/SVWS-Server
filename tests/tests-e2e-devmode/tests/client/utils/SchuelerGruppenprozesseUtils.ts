@@ -1,4 +1,4 @@
-import { type Page, expect } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 export async function startGruppenprozessMitSchuelern(page: Page, schuelerNames: Array<string>) {
 	for (let i = 0; i < schuelerNames.length; i++) {

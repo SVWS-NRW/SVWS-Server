@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-import { frontendURL } from "../utils/APIUtils";
+import { frontendURL } from '@testUtils/APIUtils';
+
 
 export default defineConfig({
 	// Look for test files in the "tests" directory, relative to this configuration file.

@@ -1,8 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { getApiService } from "./utils/RequestBuilder.js"
+
+import { getApiService } from "./utils/RequestBuilder.js";
 
 describe("Adressbuch Dav", () => {
-	const apiService = getApiService('Admin', '')
+	const apiService = getApiService('Admin', '');
 
 	// Verschiedene Bodies die bei Webdav anfragen verwendet werden
 	const bodyDataDav: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -19,7 +20,7 @@ describe("Adressbuch Dav", () => {
 			"\t\t<A:calendar-color/>\n" +
 			"\t\t<C:calendar-home-set/>\n" +
 			"\t</D:prop>\n" +
-			"</D:propfind>\n"
+			"</D:propfind>\n";
 
 	const bodyDataAdressbuecher: string = "<propfind xmlns=\"DAV:\"\n" +
 			"\t\t  xmlns:card='urn:ietf:params:xml:ns:carddav'>\n" +
@@ -28,7 +29,7 @@ describe("Adressbuch Dav", () => {
 			"\t\t<displayname/>\n" +
 			"\t\t<card:supported-address-data/>\n" +
 			"\t</prop>\n" +
-			"</propfind>"
+			"</propfind>";
 
 	const bodyDataAdressbuchSchueler: string = "<propfind xmlns=\"DAV:\"\n" +
 			"\txmlns:card=\"urn:ietf:params:xml:ns:carddav\"\n" +
@@ -38,7 +39,7 @@ describe("Adressbuch Dav", () => {
 			"\t\t<getetag />\n" +
 			"\t\t<cs:getctag />\n" +
 			"\t</prop>\n" +
-			"</propfind>\n"
+			"</propfind>\n";
 
 	const bodyreportDataAdressbuchSchueler: string = "<card:addressbook-multiget\n" +
 			"\txmlns:card=\"urn:ietf:params:xml:ns:carddav\"\n" +
@@ -50,7 +51,7 @@ describe("Adressbuch Dav", () => {
 			"\t</d:prop>\n" +
 			"\t<d:href>/dav/gymabi/adressbuecher/schueler/Schueler_1001.vcf</d:href>\n" +
 			"\t<d:href>/dav/gymabi/adressbuecher/schueler/Schueler_1002.vcf</d:href>\n" +
-			"</card:addressbook-multiget>\n"
+			"</card:addressbook-multiget>\n";
 
 	const bodySyncCollection: string = "<sync-collection xmlns=\"DAV:\" xmlns:card=\"urn:ietf:params:xml:ns:carddav\" xmlns:cs=\"http://calendarserver.org/ns/\" xmlns:d=\"DAV:\">\n" +
 			"<sync-token>0</sync-token>\n" +
@@ -59,7 +60,7 @@ describe("Adressbuch Dav", () => {
 			"<getetag/>\n" +
 			"<card:address-data/>\n" +
 			"</prop>\n" +
-			"</sync-collection>"
+			"</sync-collection>";
 
 	const bodyAdressbuecherErzieherIssue1283 = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
 			"<C:addressbook-multiget xmlns:D=\"DAV:\"\n" +
@@ -81,54 +82,54 @@ describe("Adressbuch Dav", () => {
 			"\t<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2295.vcf</D:href>\n" +
 			"\t<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2298.vcf</D:href>\n" +
 			"\t<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2307.vcf</D:href>\n" +
-			"</C:addressbook-multiget>\n"
+			"</C:addressbook-multiget>\n";
 
-	describe.each([{schema: "GymAbiDav01"}])('Adressbücher Dav Tests gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbiDav01" }])('Adressbücher Dav Tests gegen %s', ({ schema }) => {
 		test("Prüft das XML Format gleich geblieben ist.", async () => {
-			const response = await apiService.propfind(`/dav/${schema}`, {body: bodyDataDav})
-			const xmlAsString = await response!.text()
+			const response = await apiService.propfind(`/dav/${schema}`, { body: bodyDataDav });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 
 		test("Prüft das XML Format für Adressbücher gleich geblieben ist.", async () => {
-			const response = await apiService.propfind(`/dav/${schema}/adressbuecher`, {body: bodyDataAdressbuecher})
-			const xmlAsString = await response!.text()
+			const response = await apiService.propfind(`/dav/${schema}/adressbuecher`, { body: bodyDataAdressbuecher });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 
 		// Derzeit deaktiviert da sehr großes Output in den Snapshots
 		test.skip("Prüft das XML Format für Adressbücher der Schüler gleich geblieben ist.", async () => {
-			const response = await apiService.propfind(`/dav/${schema}/adressbuecher/schueler`, {body: bodyDataAdressbuchSchueler})
-			const xmlAsString = await response!.text()
+			const response = await apiService.propfind(`/dav/${schema}/adressbuecher/schueler`, { body: bodyDataAdressbuchSchueler });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 
 		test("Testet Report-Anfrage auf notwendige Informationen.", async () => {
-			const response = await apiService.report(`/dav/${schema}/adressbuecher/schueler`, {body: bodyreportDataAdressbuchSchueler})
-			const xmlAsString = await response!.text()
+			const response = await apiService.report(`/dav/${schema}/adressbuecher/schueler`, { body: bodyreportDataAdressbuchSchueler });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 
 		// Derzeit deaktiviert da sehr großes Output in den Snapshots
 		test.skip("Prüft das XML Format für Sync-Collection-Anfrage.", async () => {
-			const response = await apiService.report(`/dav/${schema}/adressbuecher/schueler`, {body: bodySyncCollection})
-			const xmlAsString = await response!.text()
+			const response = await apiService.report(`/dav/${schema}/adressbuecher/schueler`, { body: bodySyncCollection });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 
 		/**
@@ -137,18 +138,18 @@ describe("Adressbuch Dav", () => {
 		 */
 		// Dieser Test schlägt fehl
 		test.skip("Issue 1283 - Unmarshalling funktionierte nicht", async () => {
-			const response = await apiService.propfind(`/dav/${schema}/adressbuecher/schueler`, {body: bodyAdressbuecherErzieherIssue1283})
-			const xmlAsString = await response!.text()
+			const response = await apiService.propfind(`/dav/${schema}/adressbuecher/schueler`, { body: bodyAdressbuecherErzieherIssue1283 });
+			const xmlAsString = await response!.text();
 
 			expect(response).toBeDefined();
 			expect(response!.status).toBe(207);
-			expect(xmlAsString).toMatchSnapshot()
+			expect(xmlAsString).toMatchSnapshot();
 		});
 	});
 
 	describe("Kalender Dav", () => {
-		const apiServiceAnde = getApiService('Ande', '')
-		const apiServiceBagi = getApiService('BAGI', '')
+		const apiServiceAnde = getApiService('Ande', '');
+		const apiServiceBagi = getApiService('BAGI', '');
 
 		const bodyDataDavCalCollection: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<D:propfind xmlns:D='DAV:'\n" +
@@ -159,7 +160,7 @@ describe("Adressbuch Dav", () => {
 				"\t\t<D:current-user-privilege-set />\n" +
 				"\t\t<A:calendar-color />\n" +
 				"\t</D:prop>\n" +
-				"</D:propfind>\n"
+				"</D:propfind>\n";
 
 		const bodyDataDavCal: string = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<D:propfind\n" +
@@ -175,34 +176,34 @@ describe("Adressbuch Dav", () => {
 				"\t\t<C:supported-calendar-component-set/>\n" +
 				"\t\t<CS:getctag/>\n" +
 				"\t</D:prop>\n" +
-				"</D:propfind>\n"
+				"</D:propfind>\n";
 
-		describe.each([{schema: "GymAbiDav01"}])('Kalender Dav Tests gegen %s', ({schema}) => {
+		describe.each([{ schema: "GymAbiDav01" }])('Kalender Dav Tests gegen %s', ({ schema }) => {
 			test("Testet Property-Suche auf die Liste von  mit Account Ande", async () => {
-				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender`, {body: bodyDataDavCalCollection})
-				const xmlAsString = await response!.text()
+				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender`, { body: bodyDataDavCalCollection });
+				const xmlAsString = await response!.text();
 
 				expect(response).toBeDefined();
 				expect(response!.status).toBe(207);
-				expect(xmlAsString).toMatchSnapshot()
+				expect(xmlAsString).toMatchSnapshot();
 			});
 
 			test("Testet Property-Suche auf die Liste von Kalendern mit Account Bagi", async () => {
-				const response = await apiServiceBagi.propfind(`/dav/${schema}/kalender`, {body: bodyDataDavCalCollection})
-				const xmlAsString = await response!.text()
+				const response = await apiServiceBagi.propfind(`/dav/${schema}/kalender`, { body: bodyDataDavCalCollection });
+				const xmlAsString = await response!.text();
 
 				expect(response).toBeDefined();
 				expect(response!.status).toBe(207);
-				expect(xmlAsString).toMatchSnapshot()
+				expect(xmlAsString).toMatchSnapshot();
 			});
 
 			test("Ruft ein Propfind auf den Gemeinsamen Kalender auf.", async () => {
-				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender/oeffentlich_1`, {body: bodyDataDavCal})
-				const xmlAsString = await response!.text()
+				const response = await apiServiceAnde.propfind(`/dav/${schema}/kalender/oeffentlich_1`, { body: bodyDataDavCal });
+				const xmlAsString = await response!.text();
 
 				expect(response).toBeDefined();
 				expect(response!.status).toBe(207);
-				expect(xmlAsString).toMatchSnapshot()
+				expect(xmlAsString).toMatchSnapshot();
 			});
 		});
 	});

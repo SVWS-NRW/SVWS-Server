@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { describe, test, expect, beforeEach } from "vitest";
-import { LogConsumerList } from "../../../src/core/logger/LogConsumerList";
-import { LogData } from "../../../src/core/logger/LogData";
-import { Logger } from "../../../src/core/logger/Logger";
-import { LogLevel } from "../../../src/core/logger/LogLevel";
+import { beforeEach, describe, expect, test } from "vitest";
+
+import { LogConsumerList } from "@core/core/logger/LogConsumerList";
+import { LogData } from "@core/core/logger/LogData";
+import { Logger } from "@core/core/logger/Logger";
+import { LogLevel } from "@core/core/logger/LogLevel";
+
 
 describe("Logger Class", () => {
 	test("is Logger instance", () => {
@@ -37,7 +39,7 @@ describe("LogConsumerList: Working with Consumers", () => {
 	});
 	test.todo("getLogData: empty", () => {
 		const logConsumer3 = new LogConsumerList();
-		expect(logConsumer3.getLogData()).toEqual(null);
+		expect(logConsumer3.getLogData()).toBeNull();
 	});
 	test("getStrings: without parameter", () => {
 		logConsumer.append(logConsumer2);

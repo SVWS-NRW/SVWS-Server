@@ -1,14 +1,17 @@
+import { ApiEnmServerTest } from "@testWenom/utils/ApiEnmServerTest";
 import { describe, expect, test } from "vitest";
-import { ApiEnmServerTest } from "../../utils/ApiEnmServerTest";
+
+import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfigElement } from "@core/core/data/benutzer/BenutzerConfigElement";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
-import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
 import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
-import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
 import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
-import { Schulform } from "@core/asd/types/schule/Schulform";
+import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
+import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { apiGiesen, apiBerthold } from "./Login";
+
+import { apiBerthold, apiGiesen } from "./Login";
+
 
 const apiServiceAuth = apiGiesen;
 const apiServiceAuthWrongTeacher = apiBerthold;

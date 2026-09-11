@@ -9,9 +9,9 @@
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"scripts": {
-		"test": "vitest",
+		"test:ts": "vitest",
 		"test:coverage": "vitest run --coverage",
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache --max-warnings=0",
-		"build": "tsc"
+		"ci": "npm run test:ts",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache --max-warnings=0"
 	}
 }

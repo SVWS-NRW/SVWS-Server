@@ -1,19 +1,19 @@
-import { readFileSync, readdirSync } from "node:fs";
-import { resolve, basename } from "node:path";
-import { describe, test, expect } from "vitest";
-import { AbiturdatenManager } from "../../../../src/core/abschluss/gost/AbiturdatenManager";
-import { GostBelegpruefungErgebnis } from "../../../../src/core/abschluss/gost/GostBelegpruefungErgebnis";
-import type { GostBelegpruefungErgebnisFehler } from "../../../../src/core/abschluss/gost/GostBelegpruefungErgebnisFehler";
-import { GostBelegpruefungsArt } from "../../../../src/core/abschluss/gost/GostBelegpruefungsArt";
-import { Abiturdaten } from "../../../../src/core/data/gost/Abiturdaten";
-import { GostFach } from "../../../../src/core/data/gost/GostFach";
-import { GostJahrgangFachkombination } from "../../../../src/core/data/gost/GostJahrgangFachkombination";
-import { GostJahrgangsdaten } from "../../../../src/core/data/gost/GostJahrgangsdaten";
-import { GostFaecherManager } from "../../../../src/core/utils/gost/GostFaecherManager";
-import { ArrayList } from "../../../../src/java/util/ArrayList";
+import { readdirSync, readFileSync } from "node:fs";
+import { basename, resolve } from "node:path";
+import { describe, expect, test } from "vitest";
 
+import { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
+import { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
+import type { GostBelegpruefungErgebnisFehler } from "@core/core/abschluss/gost/GostBelegpruefungErgebnisFehler";
+import { GostBelegpruefungsArt } from "@core/core/abschluss/gost/GostBelegpruefungsArt";
+import { Abiturdaten } from "@core/core/data/gost/Abiturdaten";
+import { GostFach } from "@core/core/data/gost/GostFach";
+import { GostJahrgangFachkombination } from "@core/core/data/gost/GostJahrgangFachkombination";
+import { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
+import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { ArrayList } from "@core/java/util/ArrayList";
 
-const test_dir = resolve(__dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test");
+const test_dir = resolve(import.meta.dirname, "../../../../../../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test");
 const files = readdirSync(test_dir);
 
 const jahrgaenge: Record<string, GostJahrgangsdaten> = {};

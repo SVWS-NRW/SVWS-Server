@@ -1,38 +1,40 @@
-import { bench, describe } from "vitest";
-import { l, n, s } from "../../shared/TestObjects";
-import { ArrayList } from "../../../../../main/resources/typescript/java/util/ArrayList";
+import { l, n, s } from "@transpile/shared/TestObjects";
+import { describe, test } from "vitest";
+
+import { ArrayList } from "@core/java/util/ArrayList";
 
 let v: ArrayList<unknown>;
 
 describe.each([s, n, l])(
-	"java.util.ArrayList, getestet mit $name",
-	({ a, b, c, d, e }) => {
-		v = new ArrayList();
-		v.add(a);
-		v.add(b);
-		v.add(c);
-		v.add(d);
-		v.add(e);
-		bench("Array from", () => {
-			Array.from(v);
-		});
-		bench("toArray", () => {
-			v.toArray(new Array<typeof a>());
-		});
-		bench("[...v] destructure", () => {
-			void [...v];
-		});
-		bench("for of loop", () => {
-			const arr = [];
-			for (const e of v) {
-				arr.push(e);
-			}
-		});
-		bench("for loop", () => {
-			const arr = [];
-			for (let i = 0; i < v.size(); i++) {
-				arr.push(v.get(i));
-			}
+	"java.util.ArrayList, getestet mit $name", ({ a, b, c, d, e }) => {
+		test('Run benchmarks', async ({ bench }) => {
+			v = new ArrayList();
+			v.add(a);
+			v.add(b);
+			v.add(c);
+			v.add(d);
+			v.add(e);
+			bench("Array from", () => {
+				Array.from(v);
+			});
+			bench("toArray", () => {
+				v.toArray(new Array<typeof a>());
+			});
+			bench("[...v] destructure", () => {
+				const _ = [...v];
+			});
+			bench("for of loop", () => {
+				const _ = [];
+				for (const e of v) {
+					_.push(e);
+				}
+			});
+			bench("for loop", () => {
+				const _ = [];
+				for (let i = 0; i < v.size(); i++) {
+					_.push(v.get(i));
+				}
+			});
 		});
 	}
 );

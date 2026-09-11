@@ -1,6 +1,7 @@
-import { Base45 } from '../../../../src/core/utils/encoding/Base45';
-import { IllegalArgumentException } from '../../../../src/java/lang/IllegalArgumentException';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
+import { Base45 } from '@core/core/utils/encoding/Base45';
+import { IllegalArgumentException } from '@core/java/lang/IllegalArgumentException';
 
 describe('Base45 Tests (RFC 9285)', () => {
 

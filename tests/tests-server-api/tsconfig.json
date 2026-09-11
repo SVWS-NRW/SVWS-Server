@@ -1,11 +1,3 @@
 {
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"outDir": "./dist",
-	},
-	"include": [
-		"./*.ts",
-		"./tests/**/*",
-		"../../svws-webclient/core/src/**/*"
-	]
+	"extends": "../tsconfig.test-base.json",
 }

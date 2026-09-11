@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-export function useLoginUtils(targetHost: string, page: Page) {
+export function useLoginUtilsClient(targetHost: string, page: Page) {
 
 	const loginAdmin = async () => {
 		await page.goto(targetHost);

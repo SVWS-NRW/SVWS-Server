@@ -1,6 +1,7 @@
+import { privilegedApiServer } from "@testUtils/APIUtils";
 import { describe, expect, test } from "vitest";
-import { privilegedApiServer } from "../../utils/APIUtils";
-import { DBSchemaListeEintrag } from "../../../svws-webclient/core/src/core/data/db/DBSchemaListeEintrag";
+
+import { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
 
 const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests';
 
