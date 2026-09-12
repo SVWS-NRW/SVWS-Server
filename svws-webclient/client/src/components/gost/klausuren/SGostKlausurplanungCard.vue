@@ -1,9 +1,9 @@
 <template>
 	<div class="flex flex-col"
 		:class="{
-			'bg-ui-100 shadow-[2px_3px_6px_rgb(0_0_0_/_14%)] border border-[rgb(0_0_0_/_18%)] hover:border-[rgb(0_0_0_/_28%)] rounded-lg': !unstyled,
+			'bg-ui shadow-md shadow-ui-25 border border-ui hover:border-ui-hover rounded-lg': !unstyled,
 			'cursor-pointer': interactive && !unstyled,
-			'border-ui-brand bg-ui-brand/5 ring-2 ring-ui-brand/30 shadow-[2px_4px_10px_rgb(0_0_0_/_20%)]': selected && !unstyled,
+			'border-ui-brand bg-ui-brand/5 ring-2 ring-ui-brand/30 shadow-lg shadow-ui-25': selected && !unstyled,
 			'border-dashed border-ui-brand ring-4 ring-ui-brand/25': (dropState === 'valid') && !unstyled,
 			'bg-ui-danger/5 ring-4 ring-ui-danger/10': (dropState === 'danger') && !unstyled,
 			'bg-ui-danger/5 ring-2 ring-ui-danger/10': (dropState === 'disabled') && !unstyled,

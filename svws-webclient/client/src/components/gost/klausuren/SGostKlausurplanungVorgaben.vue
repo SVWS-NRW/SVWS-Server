@@ -108,14 +108,17 @@
 				<template v-else>
 					<div class="flex flex-col gap-4">
 						<svws-ui-input-wrapper>
-							<svws-ui-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" :model-value="activeVorgabe.idFach !== -1 ? state.manager.fachOrNullByVorgabe(activeVorgabe) ?? undefined : undefined" @update:model-value="fach => activeVorgabe.idFach = fach?.id ?? -1" title="Fach" :disabled="activeVorgabe.id !== 0" />
+							<svws-ui-select v-if="activeVorgabe.id === 0" :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" :model-value="activeVorgabe.idFach !== -1 ? state.manager.fachOrNullByVorgabe(activeVorgabe) ?? undefined : undefined" @update:model-value="fach => activeVorgabe.idFach = fach?.id ?? -1" title="Fach" />
+							<svws-ui-text-input v-else placeholder="Fach" :model-value="fachBezeichnungByVorgabe(activeVorgabe)" readonly />
 							<span v-if="(activeVorgabe.id > 0) && (state.manager.fachOrNullByVorgabe(activeVorgabe) === null)" class="text-ui-danger text-sm leading-tight">{{ fachFehltText(activeVorgabe) }}</span>
-							<svws-ui-radio-group id="rbgKursart" :row="true">
-								<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.id !== 0" />
+							<svws-ui-radio-group v-if="activeVorgabe.id === 0" id="rbgKursart" :row="true">
+								<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 							</svws-ui-radio-group>
-							<svws-ui-radio-group id="rbgQuartal" :row="true">
-								<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal" name="formQuartale" :label="quartal+'. Quartal'" v-model="activeVorgabe.quartal" :disabled="activeVorgabe.id !== 0" />
+							<svws-ui-text-input v-else placeholder="Kursart" :model-value="activeVorgabe.kursart" readonly />
+							<svws-ui-radio-group v-if="activeVorgabe.id === 0" id="rbgQuartal" :row="true">
+								<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal" name="formQuartale" :label="quartal+'. Quartal'" v-model="activeVorgabe.quartal" />
 							</svws-ui-radio-group>
+							<svws-ui-text-input v-else placeholder="Quartal" :model-value="`${activeVorgabe.quartal}. Quartal`" readonly />
 							<svws-ui-spacing />
 							<div class="flex items-start gap-1">
 								<svws-ui-input-number class="flex-1" placeholder="Dauer (Minuten)" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.id !== 0 ? state.patchKlausurvorgabe({ dauer: dauer! }, activeVorgabe.id) : activeVorgabe.dauer = dauer!" :validation="validiereDauer" :disabled="activeVorgabe.id < 0" />

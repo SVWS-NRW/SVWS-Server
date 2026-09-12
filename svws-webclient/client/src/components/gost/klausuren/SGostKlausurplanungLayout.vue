@@ -6,7 +6,7 @@
 				@dragover="onSidebarDragover"
 				@drop="onSidebarDrop">
 				<div v-if="sidebarDropEnabled" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6 text-center">
-					<div class="rounded-lg border border-ui-danger/40 bg-white px-5 py-3 text-headline-md font-bold text-ui-danger shadow-md ring-4 ring-white/80">
+					<div class="rounded-lg border border-ui-danger/40 bg-ui px-5 py-3 text-headline-md font-bold text-ui-danger shadow-md shadow-ui-25 ring-4 ring-ui">
 						Zum Aufheben der Zuweisung hierher zurücklegen.
 					</div>
 				</div>

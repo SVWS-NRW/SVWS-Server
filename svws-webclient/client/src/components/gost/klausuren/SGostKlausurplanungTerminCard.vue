@@ -9,7 +9,7 @@
 		@drop="emit('drop', $event)">
 		<div class="text-headline-md leading-none px-3 pt-3 pb-2">
 			<div class="flex gap-2 w-full mb-1">
-				<svws-ui-text-input :disabled="titleDisabled" :placeholder="titlePlaceholder" :model-value="termin.bezeichnung" @change="bezeichnung => state.patchKlausurtermin(termin.id, { bezeichnung })" headless />
+				<svws-ui-text-input :readonly="titleDisabled" :placeholder="titlePlaceholder" :model-value="termin.bezeichnung" @change="bezeichnung => state.patchKlausurtermin(termin.id, { bezeichnung })" headless />
 				<span v-if="conflictCount > 0" class="inline-flex items-center shrink-0 text-ui-danger font-bold text-headline-md -my-1">
 					<span class="icon i-ri-alert-line icon-ui-caution" />
 					<span>{{ conflictCount }}</span>

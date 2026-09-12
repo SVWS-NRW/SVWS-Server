@@ -7,15 +7,15 @@
 		@drop="onDrop(raum)">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
-				<svws-ui-select :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
+				<svws-ui-select v-if="hatKompetenzUpdate" :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
 					:model-value="raum.idStundenplanRaum === null ? undefined : state.manager.stundenplanraumGetByKlausurraum(raum)"
-					:disabled="!hatKompetenzUpdate"
 					headless
 					no-items-text="Keine Räume im Stundenplan gefunden"
 					class="grow"
 					@update:model-value="(value) => void state.patchKlausurraum(raum.id, { idStundenplanRaum: ((value !== undefined) && (value !== null)) ? value.id : null })"
 					:item-text="(item) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 					:items="raeumeVerfuegbar" />
+				<svws-ui-text-input v-else :placeholder="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'" :model-value="raumBezeichnung" readonly headless class="grow" />
 				<span class="inline-flex items-center shrink-0">
 					<svws-ui-tooltip class="text-ui-danger font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
@@ -71,7 +71,7 @@
 				</template>
 			</svws-ui-table>
 			<div class="mt-3">
-				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :disabled="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => state.patchKlausurraum(raum.id, {bemerkung})" @drop.prevent
+				<svws-ui-textarea-input class="text-sm" :headless="(raum.bemerkung === null) || (raum.bemerkung.trim().length === 0)" :rows="1" resizeable="none" autoresize placeholder="Bemerkungen zum Raum" :readonly="!hatKompetenzUpdate" :model-value="raum.bemerkung" @change="bemerkung => state.patchKlausurraum(raum.id, {bemerkung})" @drop.prevent
 					@dragover.prevent />
 			</div>
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
@@ -121,6 +121,13 @@
 	const state = useGostKlausurplanungState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const raumBezeichnung = computed<string>(() => {
+		if (props.raum.idStundenplanRaum === null) {
+			return "";
+		}
+		const stundenplanraum = state.manager.stundenplanraumGetByKlausurraum(props.raum);
+		return `${stundenplanraum.kuerzel} (${stundenplanraum.groesse} Plätze, ${stundenplanraum.beschreibung})`;
+	});
 
 	const raumHatFehler = () => ((props.raum.idStundenplanRaum !== null) && (anzahlSuS() > state.manager.stundenplanraumGetByKlausurraum(props.raum).groesse)) || (props.raum.idStundenplanRaum === null);
 

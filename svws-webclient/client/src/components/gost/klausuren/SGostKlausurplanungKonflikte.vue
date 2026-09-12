@@ -129,12 +129,14 @@
 	const props = withDefaults(defineProps<{
 		termine?: GostKlausurtermin[];
 		kontext: "termin" | "woche";
+		jahr?: number;
 		kw?: number;
 		highlight?: boolean;
 		pendingKursklausurDrop?: PendingKursklausurDrop;
 		pendingTerminDrop?: PendingTerminDrop;
 	}>(), {
 		termine: () => [],
+		jahr: undefined,
 		kw: undefined,
 		highlight: false,
 		pendingKursklausurDrop: undefined,
@@ -183,8 +185,8 @@
 		if (props.pendingKursklausurDrop !== undefined) {
 			return [...state.manager.klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(props.pendingKursklausurDrop.termin, props.pendingKursklausurDrop.kursklausur, threshold)];
 		}
-		if ((props.kontext === "woche") && (props.kw !== undefined)) {
-			return [...state.manager.klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(props.kw, state.jahrgangsdaten.abiturjahr, threshold, false)];
+		if ((props.kontext === "woche") && (props.jahr !== undefined) && (props.kw !== undefined)) {
+			return [...state.manager.klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndThreshold(props.jahr, props.kw, state.jahrgangsdaten.abiturjahr, threshold, false)];
 		}
 		return props.termine.length === 0
 			? []

@@ -45,7 +45,7 @@ export function useKlausurplanungPresenter(state: GostKlausurplanungState) {
 
 	function fachFarbeByKuerzel(kuerzel: string | null): string {
 		if (kuerzel === null) {
-			return "rgb(220,220,220)";
+			return "var(--color-bg-uistatic)";
 		}
 		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(state.jahrgangsdaten.abiturjahr - 1, 1);
 	}

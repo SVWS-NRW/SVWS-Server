@@ -77,7 +77,7 @@
 		if (badge.value.farbe === null) {
 			return "";
 		}
-		return `color: var(--color-text); background-color: color-mix(in srgb, ${badge.value.farbe} 22%, white); border-color: color-mix(in srgb, ${badge.value.farbe} 55%, white);`;
+		return `color: var(--color-text-uistatic); background-color: color-mix(in srgb, ${badge.value.farbe} 22%, var(--color-bg-uistatic)); border-color: color-mix(in srgb, ${badge.value.farbe} 55%, var(--color-bg-uistatic));`;
 	});
 	const badgeClass = computed(() => props.light ? "border border-ui-25" : "");
 

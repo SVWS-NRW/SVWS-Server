@@ -97,7 +97,7 @@
 				<div class="flex flex-wrap items-center gap-2 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate || (state.abschnitt === undefined)" @click="state.erzeugeKlausurtermin(state.quartal, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken = true" :disabled="!hatKompetenzUpdate || (state.manager.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal).size() === 0)"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="state.setSelectedTermin(undefined); state.loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
+					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="showModalAlleTermineLoeschen = true" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grow overflow-auto grid gap-4 pt-2 -mt-2" style="grid-template-columns: repeat(auto-fill,minmax(22rem,1fr));">
@@ -141,6 +141,7 @@
 	</s-gost-klausurplanung-layout>
 	<s-gost-klausurplanung-modal v-model:show="modalVorgaben" :text="modalError" :jump-to="props.gotoVorgaben" jump-to-text="Zu den Klausurvorgaben" abbrechen-text="OK" />
 	<s-gost-klausurplanung-modal v-model:show="modalKlausurHatRaeume" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
+	<s-gost-klausurplanung-modal v-model:show="showModalAlleTermineLoeschen" text="Wirklich alle Termine löschen? Alle Raumzuordnungen werden dabei ebenfalls gelöscht." :weiter="loescheAlleTermine" weiter-text="Alle löschen" />
 </template>
 
 <script setup lang="ts">
@@ -174,6 +175,7 @@
 	const presenter = useKlausurplanungPresenter(state);
 
 	const showModalAutomatischBlocken = ref<boolean>(false);
+	const showModalAlleTermineLoeschen = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const loading = ref<boolean>(false);
@@ -294,6 +296,11 @@
 	}
 
 	const termine = computed(() => state.manager.terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
+
+	async function loescheAlleTermine(): Promise<void> {
+		state.setSelectedTermin(undefined);
+		await state.loescheKlausurtermine(termine.value);
+	}
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);

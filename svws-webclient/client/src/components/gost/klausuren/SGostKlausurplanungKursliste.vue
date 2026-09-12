@@ -36,7 +36,7 @@
 					</div>
 					<div v-if="hatKompetenzUpdate && (termin !== undefined) && !schreibtTermin(s)" class="mt-1 grid grid-cols-[8.25rem_minmax(0,1fr)] items-center gap-2">
 						<span class="self-end pb-1 text-base leading-tight opacity-60">Versäumnisgrund:</span>
-						<svws-ui-text-input :disabled="!hatKompetenzUpdate" class="min-w-0 text-base" :model-value="s.bemerkung" @change="bemerkung => state.patchKlausur(s, {bemerkung})" />
+						<svws-ui-text-input :readonly="!hatKompetenzUpdate" class="min-w-0 text-base" :model-value="s.bemerkung" @change="bemerkung => state.patchKlausur(s, {bemerkung})" />
 					</div>
 				</div>
 				<svws-ui-tooltip v-if="hatKompetenzUpdate && (termin !== undefined) && schreibtTermin(s)">
@@ -50,7 +50,7 @@
 			</div>
 			<div class="grid grid-cols-[8.25rem_minmax(0,1fr)] items-start gap-2 py-3">
 				<div class="self-start pt-2 text-base font-medium leading-tight opacity-70">Bemerkungen zum Kurs:</div>
-				<svws-ui-textarea-input resizeable="none" autoresize :disabled="!hatKompetenzUpdate" :model-value="kursklausur.bemerkung" @change="bemerkung => state.patchKlausur(kursklausur, {bemerkung})" />
+				<svws-ui-textarea-input resizeable="none" autoresize :readonly="!hatKompetenzUpdate" :model-value="kursklausur.bemerkung" @change="bemerkung => state.patchKlausur(kursklausur, {bemerkung})" />
 			</div>
 		</div>
 	</div>

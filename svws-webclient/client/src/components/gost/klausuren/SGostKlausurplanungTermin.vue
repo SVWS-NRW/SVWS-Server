@@ -43,7 +43,7 @@
 			<slot name="nachschreiberSummary" />
 			<div class="mt-3">
 				<svws-ui-textarea-input class="text-sm" :headless="(termin.bemerkung === null) || (termin.bemerkung.trim().length === 0)" :rows="1"
-					resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :disabled="!hatKompetenzUpdate" :model-value="termin.bemerkung"
+					resizeable="none" autoresize placeholder="Bemerkungen zum Termin" :readonly="!hatKompetenzUpdate" :model-value="termin.bemerkung"
 					@change="bemerkung => state.patchKlausurtermin(termin.id, {bemerkung})" @click="$event.stopPropagation()" @drop.prevent @dragover.prevent />
 			</div>
 			<span class="flex w-full justify-between items-center gap-1 text-sm mt-auto pr-2" :class="{'pl-3': inTooltip}">

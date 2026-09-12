@@ -15,7 +15,7 @@ import de.svws_nrw.asd.adt.PairNN;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.adt.map.HashMap3D;
+import de.svws_nrw.core.adt.map.HashMap4D;
 import de.svws_nrw.core.adt.map.HashMap5D;
 import de.svws_nrw.core.adt.map.ListMap2DLongKeys;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
@@ -50,7 +50,7 @@ import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.KursManager;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
-import de.svws_nrw.core.utils.Map3DUtils;
+import de.svws_nrw.core.utils.Map4DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
@@ -367,8 +367,8 @@ public class GostKlausurplanManager {
 	private @NotNull ListMap2DLongKeys<GostSchuelerklausurtermin> _schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin = new ListMap2DLongKeys<>();
 	private @NotNull ListMap2DLongKeys<GostSchuelerklausurtermin> _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur =
 			new ListMap2DLongKeys<>();
-	private final @NotNull HashMap3D<Integer, Integer, Long, List<GostSchuelerklausurtermin>> _schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId =
-			new HashMap3D<>();
+	private final @NotNull HashMap4D<Integer, Integer, Integer, Long, List<GostSchuelerklausurtermin>> _schuelerklausurterminaktuellmenge_by_abijahr_and_jahr_and_kw_and_schuelerId =
+			new HashMap4D<>();
 
 	// GostKlausurraum
 	private final @NotNull Map<Long, GostKlausurraum> _raum_by_id = new HashMap<>();
@@ -1171,7 +1171,7 @@ public class GostKlausurplanManager {
 		update_schuelerklausurterminmenge_by_idTermin();
 		update_schuelerklausurterminmenge_by_idKursklausur();
 		update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur(); // benötigt _schuelerklausurterminaktuell_by_idSchuelerklausur
-		update_schuelerklausurterminaktuellmenge_by_kw_and_abijahr_and_schuelerId(); // benötigt _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
+		update_schuelerklausurterminaktuellmenge_by_jahr_and_kw_and_abijahr_and_schuelerId(); // benötigt _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
 		update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal(); // benötigt _schuelerklausurterminaktuell_by_idSchuelerklausur
 		update_schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin(); // benötigt _raumstundenmenge_by_idSchuelerklausurtermin
 		update_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausurtermin
@@ -1271,8 +1271,8 @@ public class GostKlausurplanManager {
 		}
 	}
 
-	private void update_schuelerklausurterminaktuellmenge_by_kw_and_abijahr_and_schuelerId() {
-		_schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.clear();
+	private void update_schuelerklausurterminaktuellmenge_by_jahr_and_kw_and_abijahr_and_schuelerId() {
+		_schuelerklausurterminaktuellmenge_by_abijahr_and_jahr_and_kw_and_schuelerId.clear();
 		for (final long idTermin : _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.keySet1()) {
 			if (idTermin == _ID_OHNE_ZUORDNUNG) {
 				continue;
@@ -1281,11 +1281,12 @@ public class GostKlausurplanManager {
 			if (termin.datum == null) {
 				continue;
 			}
+			final int jahr = DateUtils.gibKwJahrDesDatumsISO8601(termin.datum);
 			final int kw = DateUtils.gibKwDesDatumsISO8601(termin.datum);
 			for (final @NotNull GostSchuelerklausurtermin skt : _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get1(idTermin)) {
 				final @NotNull GostSchuelerklausur sk = schuelerklausurBySchuelerklausurtermin(skt);
-				Map3DUtils.getOrCreateArrayList(_schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId,
-						vorgabeBySchuelerklausur(sk).abiturjahrgang, kw, sk.idSchueler).add(skt);
+				Map4DUtils.getOrCreateArrayList(_schuelerklausurterminaktuellmenge_by_abijahr_and_jahr_and_kw_and_schuelerId,
+						vorgabeBySchuelerklausur(sk).abiturjahrgang, jahr, kw, sk.idSchueler).add(skt);
 			}
 		}
 	}
@@ -4094,8 +4095,9 @@ public class GostKlausurplanManager {
 		if (termin.datum == null) {
 			return new ArrayList<>();
 		}
+		final int jahr = DateUtils.gibKwJahrDesDatumsISO8601(termin.datum);
 		final int kw = DateUtils.gibKwDesDatumsISO8601(termin.datum);
-		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndAddmengeAndThreshold(kw, termin.abiturjahrgang, null, threshold, false);
+		return klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(jahr, kw, termin.abiturjahrgang, null, threshold, false);
 	}
 
 	/**
@@ -4115,8 +4117,9 @@ public class GostKlausurplanManager {
 		if (termin.datum == null) {
 			return new ArrayList<>();
 		}
+		final int jahr = DateUtils.gibKwJahrDesDatumsISO8601(termin.datum);
 		final int kw = DateUtils.gibKwDesDatumsISO8601(termin.datum);
-		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndAddmengeAndThreshold(kw, termin.abiturjahrgang,
+		return klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(jahr, kw, termin.abiturjahrgang,
 				schuelerklausurterminGetMengeByKursklausur(klausur), threshold, false);
 	}
 
@@ -4136,16 +4139,17 @@ public class GostKlausurplanManager {
 	public @NotNull List<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(
 			final @NotNull GostKlausurtermin termin, final @NotNull String datum, final int threshold,
 			final boolean thresholdOnly) {
+		final int jahrDatum = DateUtils.gibKwJahrDesDatumsISO8601(datum);
 		final int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndAddmengeAndThreshold(kwDatum, termin.abiturjahrgang,
+		return klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(jahrDatum, kwDatum, termin.abiturjahrgang,
 				schuelerklausurterminAktuellGetMengeByTermin(termin), threshold, thresholdOnly);
 	}
 
-	private @NotNull List<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndAddmengeAndThreshold(
-			final int kw, final int abiturjahrgang, final List<GostSchuelerklausurtermin> addMenge, final int threshold, final boolean thresholdOnly) {
+	private @NotNull List<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(
+			final int jahr, final int kw, final int abiturjahrgang, final List<GostSchuelerklausurtermin> addMenge, final int threshold, final boolean thresholdOnly) {
 
 		final Map<Long, List<GostSchuelerklausurtermin>> schuelerklausurterminaktuellmenge_by_schuelerId =
-				_schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.getMap3OrNull(abiturjahrgang, kw);
+				_schuelerklausurterminaktuellmenge_by_abijahr_and_jahr_and_kw_and_schuelerId.getMap4OrNull(abiturjahrgang, jahr, kw);
 		if (schuelerklausurterminaktuellmenge_by_schuelerId == null) {
 			return new ArrayList<>();
 		}
@@ -4186,9 +4190,10 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, eine Kalenderwoche und ein Abiturjahr eine Liste mit Schülern und zugehörigen {@link GostSchuelerklausurtermin}en für Schüler, die in der den Termin
+	 * Liefert für einen Schwellwert, ein Kalenderwochenjahr, eine Kalenderwoche und ein Abiturjahr eine Liste mit Schülern und zugehörigen {@link GostSchuelerklausurtermin}en für Schüler, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurtermin}e.
 	 *
+	 * @param jahr          das Kalenderwochenjahr, für das die Klausuranzahl geprüft wird
 	 * @param kw            die Kalenderwoche, für die die Klausuranzahl geprüft wird
 	 * @param abiturjahrgang       das Abiturjahr der gesuchten Konflikt-Schüler
 	 * @param threshold     der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die
@@ -4198,9 +4203,9 @@ public class GostKlausurplanManager {
 	 * @return die Liste mit Schülern und zugehörigen {@link GostSchuelerklausurtermin}en für Schüler, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurtermin}e.
 	 */
-	public @NotNull List<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(
-			final int kw, final int abiturjahrgang, final int threshold, final boolean thresholdOnly) {
-		return klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndAddmengeAndThreshold(kw, abiturjahrgang, null, threshold, thresholdOnly);
+	public @NotNull List<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndThreshold(
+			final int jahr, final int kw, final int abiturjahrgang, final int threshold, final boolean thresholdOnly) {
+		return klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(jahr, kw, abiturjahrgang, null, threshold, thresholdOnly);
 	}
 
 	/**
@@ -4219,29 +4224,31 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull List<PairNN<PairNN<Integer, SchuelerListeEintrag>, List<GostSchuelerklausurtermin>>> klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(
 			final int abiturjahrgang, final @NotNull GostHalbjahr halbjahr, final int quartal, final int threshold, final int thresholdMinus) {
-		final Map<Integer, Map<Long, List<GostSchuelerklausurtermin>>> schuelerklausurterminaktuellmenge_by_schuelerId =
-				_schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId.getMap2OrNull(abiturjahrgang);
+		final Map<Integer, Map<Integer, Map<Long, List<GostSchuelerklausurtermin>>>> schuelerklausurterminaktuellmenge_by_jahr_and_kw_and_schuelerId =
+				_schuelerklausurterminaktuellmenge_by_abijahr_and_jahr_and_kw_and_schuelerId.getMap2OrNull(abiturjahrgang);
 		final @NotNull List<PairNN<PairNN<Integer, SchuelerListeEintrag>, List<GostSchuelerklausurtermin>>> ergebnis = new ArrayList<>();
-		if (schuelerklausurterminaktuellmenge_by_schuelerId == null) {
+		if (schuelerklausurterminaktuellmenge_by_jahr_and_kw_and_schuelerId == null) {
 			return ergebnis;
 		}
 
-		for (final @NotNull Entry<Integer, Map<Long, List<GostSchuelerklausurtermin>>> kwEntry : schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
-			for (final @NotNull Entry<Long, List<GostSchuelerklausurtermin>> schuelerEntry : kwEntry.getValue().entrySet()) {
-				final List<GostSchuelerklausurtermin> activeSkts = new ArrayList<>();
-				for (final GostSchuelerklausurtermin skt : schuelerEntry.getValue()) {
-					if (schuelerklausurBySchuelerklausurtermin(skt).aktiv) {
-						activeSkts.add(skt);
+		for (final @NotNull Entry<Integer, Map<Integer, Map<Long, List<GostSchuelerklausurtermin>>>> jahrEntry : schuelerklausurterminaktuellmenge_by_jahr_and_kw_and_schuelerId.entrySet()) {
+			for (final @NotNull Entry<Integer, Map<Long, List<GostSchuelerklausurtermin>>> kwEntry : jahrEntry.getValue().entrySet()) {
+				for (final @NotNull Entry<Long, List<GostSchuelerklausurtermin>> schuelerEntry : kwEntry.getValue().entrySet()) {
+					final @NotNull List<GostSchuelerklausurtermin> activeSkts = new ArrayList<>();
+					for (final @NotNull GostSchuelerklausurtermin skt : schuelerEntry.getValue()) {
+						if (schuelerklausurBySchuelerklausurtermin(skt).aktiv) {
+							activeSkts.add(skt);
+						}
 					}
-				}
-				if ((activeSkts.size() >= threshold) && ((thresholdMinus < 0) || (activeSkts.size() < thresholdMinus))) {
-					for (final @NotNull GostSchuelerklausurtermin skt : activeSkts) {
-						final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(skt);
-						if ((vorgabe.abiturjahrgang == abiturjahrgang) && (vorgabe.halbjahr == halbjahr.id) && ((quartal == 0) || (vorgabe.quartal == quartal))
-								&& !((vorgabe.halbjahr == 5) && (vorgabe.quartal == 2))) {
-							activeSkts.sort(_compSchuelerklausurterminWochenkonflikt);
-							ergebnis.add(new PairNN<>(new PairNN<>(kwEntry.getKey(), schuelerGetByIdOrException(schuelerEntry.getKey())), activeSkts));
-							break;
+					if ((activeSkts.size() >= threshold) && ((thresholdMinus < 0) || (activeSkts.size() < thresholdMinus))) {
+						for (final @NotNull GostSchuelerklausurtermin skt : activeSkts) {
+							final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(skt);
+							if ((vorgabe.abiturjahrgang == abiturjahrgang) && (vorgabe.halbjahr == halbjahr.id) && ((quartal == 0) || (vorgabe.quartal == quartal))
+									&& !((vorgabe.halbjahr == 5) && (vorgabe.quartal == 2))) {
+								activeSkts.sort(_compSchuelerklausurterminWochenkonflikt);
+								ergebnis.add(new PairNN<>(new PairNN<>(kwEntry.getKey(), schuelerGetByIdOrException(schuelerEntry.getKey())), activeSkts));
+								break;
+							}
 						}
 					}
 				}

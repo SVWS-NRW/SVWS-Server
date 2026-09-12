@@ -72,6 +72,7 @@
 			<template #aside>
 				<s-gost-klausurplanung-konflikte :termine="termineDerAusgewaehltenKalenderwoche"
 					kontext="woche"
+					:jahr="kalenderwoche().jahr"
 					:kw="kalenderwoche().kw"
 					:highlight="pendingTerminDrop !== undefined"
 					:pending-termin-drop
@@ -270,21 +271,3 @@
 	});
 
 </script>
-
-<!-- <style lang="postcss">
-
-	@reference "../../../../../ui/src/assets/styles/index.css"
-
-	.svws-kw-auswahl {
-		@apply bg-ui-brand text-white rounded-md h-7 -my-1;
-
-		.text-input--headless {
-			@apply !px-4 !text-button;
-		}
-
-		.svws-dropdown-icon {
-			@apply !hidden;
-		}
-	}
-
-</style> -->

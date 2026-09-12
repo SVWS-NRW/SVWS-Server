@@ -95,7 +95,7 @@
 							:draggable="(termin.abiturjahrgang === state.jahrgangsdaten.abiturjahr) && hatKompetenzUpdate"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
-							<div class="bg-ui-caution text-ui-oncaution border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
+							<div class="bg-ui-caution text-uistatic border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
 								:class="{
 									'bg-ui-neutral border-ui-25': dragData !== undefined,
 									'shadow-sm border-ui-10': dragData === undefined,
@@ -105,7 +105,7 @@
 								<span v-if="state.zeigeAlleJahrgaenge" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abiturjahrgang, abschnittState.auswahl.schuljahr, state.halbjahr.halbjahr)?.jahrgang }}</span>
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abiturjahrgang === state.jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abiturjahrgang !== state.jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
-										<span class="line-clamp-4 text-ui" :class="dragData && (dragData() !== undefined) ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
+										<span class="line-clamp-4 text-uistatic" :class="dragData && (dragData() !== undefined) ? 'opacity-0' : ''">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
 										<s-gost-klausurplanung-termin :termin in-tooltip />
@@ -302,10 +302,10 @@
 
 	function getBgColors(termin: GostKlausurtermin) {
 		if (termin.abiturjahrgang !== state.jahrgangsdaten.abiturjahr) {
-			return "#f2f4f5";
+			return "var(--color-bg-uistatic)";
 		}
 
-		const colors = [...state.manager.kursklausurGetMengeByTermin(termin)].map(klausur => presenter.kursBadge(klausur).farbe ?? "#f2f4f5");
+		const colors = [...state.manager.kursklausurGetMengeByTermin(termin)].map(klausur => presenter.kursBadge(klausur).farbe ?? "var(--color-bg-uistatic)");
 
 		let gradient = '';
 
@@ -313,7 +313,7 @@
 
 		for (let i = 0; i < colors.length; i++) {
 			if (i > 0) {
-				gradient += `radial-gradient(farthest-side at ${gradientPositions[i % 2]}% ${gradientPositions[i % 3]}%, ${colors[i]}, ${colors[i].replace('1)', '0)')}),`;
+				gradient += `radial-gradient(farthest-side at ${gradientPositions[i % 2]}% ${gradientPositions[i % 3]}%, ${colors[i]}, color-mix(in srgb, ${colors[i]} 0%, transparent)),`;
 			}
 		}
 
