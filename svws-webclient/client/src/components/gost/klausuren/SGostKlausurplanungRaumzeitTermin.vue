@@ -99,17 +99,11 @@
 	import { computed, ref } from 'vue';
 
 	import { GostKlausurraumblockungKonfiguration } from '@core/core/data/gost/klausuren/GostKlausurraumblockungKonfiguration';
-	import { GostKlausurraumRich } from '@core/core/data/gost/klausuren/GostKlausurraumRich';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
-	import type { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin';
-	import type { GostSchuelerklausurterminRich } from '@core/core/data/gost/klausuren/GostSchuelerklausurterminRich';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { DateUtils } from '@core/core/utils/DateUtils';
 	import { KlausurraumblockungAlgorithmus } from '@core/core/utils/gost/klausuren/KlausurraumblockungAlgorithmus';
-	import { ListUtils } from '@core/core/utils/ListUtils';
-	import { ArrayList } from '@core/java/util/ArrayList';
-	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState';
 
@@ -149,35 +143,27 @@
 
 	let nichtVerteilt = 0;
 
-	function mapIDs(skts: List<GostSchuelerklausurtermin | GostSchuelerklausurterminRich>) {
-		const numList = new ArrayList<number>();
-		for (const skt of skts) {
-			numList.add(skt.id);
-		}
-		return numList;
-	}
-
 	async function verteilen() {
 		loading.value = true;
-		config._regel_forciere_selbe_kursklausur_im_selben_raum = true;
-		state.setConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", config._regel_forciere_selbe_klausurdauer_pro_raum ? "true" : "false").catch(() => {});
-		state.setConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum", config._regel_forciere_selben_klausurstart_pro_raum ? "true" : "false").catch(() => {});
-		state.setConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume ? "true" : "false").catch(() => {});
-		state.setConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", config._regel_optimiere_blocke_in_moeglichst_wenig_raeume ? "true" : "false").catch(() => {});
-		config.schuelerklausurtermine = state.manager.enrichSchuelerklausurtermine(state.manager.schuelerklausurterminaktuellGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
-		config.raeume = state.manager.enrichKlausurraeume(state.manager.raumGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
-		const algo = new KlausurraumblockungAlgorithmus();
-		const raumAlleSkts = new GostKlausurraumRich();
-		raumAlleSkts.idsSchuelerklausurtermine = mapIDs(config.schuelerklausurtermine);
-		algo.berechne(config);
-		nichtVerteilt = config.schuelerklausurtermine.size();
-		await state.setzeRaumZuSchuelerklausuren(ListUtils.create1(raumAlleSkts), true);
-		await state.setzeRaumZuSchuelerklausuren(config.raeume, false);
-		loading.value = false;
-		if (nichtVerteilt > 0) {
-			showModalNichtVerteilt.value = true;
+		try {
+			config._regel_forciere_selbe_kursklausur_im_selben_raum = true;
+			state.setConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", config._regel_forciere_selbe_klausurdauer_pro_raum ? "true" : "false").catch(() => {});
+			state.setConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum", config._regel_forciere_selben_klausurstart_pro_raum ? "true" : "false").catch(() => {});
+			state.setConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume ? "true" : "false").catch(() => {});
+			state.setConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", config._regel_optimiere_blocke_in_moeglichst_wenig_raeume ? "true" : "false").catch(() => {});
+			config.schuelerklausurtermine = state.manager.enrichSchuelerklausurtermine(state.manager.schuelerklausurterminaktuellGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
+			config.raeume = state.manager.enrichKlausurraeume(state.manager.raumGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
+			const algo = new KlausurraumblockungAlgorithmus();
+			algo.berechne(config);
+			nichtVerteilt = config.schuelerklausurtermine.size();
+			await state.ersetzeRaumzuweisungenFuerSchuelerklausurtermine(config.raeume);
+			if (nichtVerteilt > 0) {
+				showModalNichtVerteilt.value = true;
+			}
+			_showModalAutomatischVerteilen.value = false;
+		} finally {
+			loading.value = false;
 		}
-		_showModalAutomatischVerteilen.value = false;
 	}
 
 </script>

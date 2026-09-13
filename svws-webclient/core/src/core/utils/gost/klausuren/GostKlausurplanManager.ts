@@ -1905,6 +1905,10 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private terminRemoveOhneUpdateById(idTermin: number): void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._termin_by_id, idTermin);
+		const raeumeZuTermin: List<GostKlausurraum> | null = this._raummenge_by_idTermin.get(idTermin);
+		if (raeumeZuTermin !== null) {
+			this.raumRemoveAllOhneUpdate(raeumeZuTermin);
+		}
 		const kursklausurenZuTermin: List<GostKursklausur> | null = this._kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3(idTermin);
 		for (const k of kursklausurenZuTermin) {
 			k.idTermin = null;
@@ -2358,6 +2362,12 @@ export class GostKlausurplanManager extends JavaObject {
 		this._raum_by_id.remove(idRaum);
 	}
 
+	private raumRemoveAllOhneUpdate(listRaum: List<GostKlausurraum>): void {
+		for (const raum of listRaum) {
+			this.raumRemoveOhneUpdateById(raum.id);
+		}
+	}
+
 	/**
 	 * Entfernt ein existierendes {@link GostKlausurraum}-Objekt.
 	 *
@@ -2387,9 +2397,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *                 {@link StundenplanRaum}-Objekte.
 	 */
 	public raumRemoveAll(listRaum: List<GostKlausurraum>): void {
-		for (const raum of listRaum) {
-			this.raumRemoveOhneUpdateById(raum.id);
-		}
+		this.raumRemoveAllOhneUpdate(listRaum);
 		this.update_all();
 	}
 
@@ -5995,6 +6003,9 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public terminPatchAttributesAndSetzeRaumZuSchuelerklausuren(termin: GostKlausurtermin, raumData: GostKlausurenPatchResponseData): void {
 		this.setzeRaumZuSchuelerklausurenOhneUpdate(raumData);
+		for (const kursklausur of raumData.kursklausurenPatched) {
+			this.kursklausurPatchAttributesOhneUpdate(kursklausur);
+		}
 		for (const skt of raumData.schuelerklausurterminePatched) {
 			this.schuelerklausurterminPatchAttributesOhneUpdate(skt);
 		}

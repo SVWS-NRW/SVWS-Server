@@ -127,6 +127,29 @@ public final class GostKlausurenRaumzuweisungService {
 		return transactional(() -> setzeRaumzuweisungenFuerSchuelerklausurtermineInTransaction(raumSchuelerZuteilung));
 	}
 
+	/**
+	 * Ersetzt alle Raumzuweisungen der angegebenen Räume durch die übergebenen Zielzuweisungen.
+	 *
+	 * @param raumSchuelerZuteilung die Zielzuweisungen für die Räume
+	 *
+	 * @return die geänderten Raumdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public GostKlausurenPatchResponseData ersetzeRaumzuweisungenFuerSchuelerklausurtermine(final List<GostKlausurraumRich> raumSchuelerZuteilung)
+			throws ApiOperationException {
+		return transactional(() -> {
+			final List<Long> schuelerklausurterminIds = new ArrayList<>();
+			for (final GostKlausurraumRich raum : raumSchuelerZuteilung) {
+				schuelerklausurterminIds.addAll(getSchuelerklausurterminraumstundenZuRaumid(raum.klausurraum.id).stream()
+						.map(zuordnung -> zuordnung.idSchuelerklausurtermin).toList());
+			}
+			final GostKlausurenPatchResponseData result = loescheRaumzuweisungenFuerSchuelerklausurtermineInTransaction(schuelerklausurterminIds);
+			result.addAll(setzeRaumzuweisungenFuerSchuelerklausurtermineInTransaction(raumSchuelerZuteilung));
+			return result;
+		});
+	}
+
 	private GostKlausurenPatchResponseData setzeRaumzuweisungenFuerSchuelerklausurtermineInTransaction(
 			final List<GostKlausurraumRich> raumSchuelerZuteilung) {
 		if (raumSchuelerZuteilung.isEmpty()) {
@@ -167,13 +190,53 @@ public final class GostKlausurenRaumzuweisungService {
 		return transactional(() -> updateRaeumeZuSchuelerklausurterminenInTransaction(schuelerklausurtermine));
 	}
 
+	/**
+	 * Aktualisiert Raumstunden und Zuordnungen für die Räume der Schülerklausurtermine zu den angegebenen Klausurvorgaben.
+	 *
+	 * @param vorgabeIds die IDs der Klausurvorgaben
+	 *
+	 * @return die geänderten Raumdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public GostKlausurenPatchResponseData updateRaeumeZuKlausurvorgaben(final Collection<Long> vorgabeIds) throws ApiOperationException {
+		return transactional(() -> updateRaeumeZuKlausurvorgabenInTransaction(vorgabeIds));
+	}
+
+	private GostKlausurenPatchResponseData updateRaeumeZuKlausurvorgabenInTransaction(final Collection<Long> vorgabeIds) {
+		final List<GostKursklausur> kursklausuren = kursklausurService.getListByVorgabeIds(vorgabeIds);
+		if (kursklausuren.isEmpty()) {
+			return new GostKlausurenPatchResponseData();
+		}
+		final List<GostSchuelerklausur> schuelerklausuren =
+				schuelerklausurService.getListByKursklausurIds(kursklausuren.stream().map(klausur -> klausur.id).toList());
+		if (schuelerklausuren.isEmpty()) {
+			return new GostKlausurenPatchResponseData();
+		}
+		final List<GostSchuelerklausurtermin> schuelerklausurtermine =
+				schuelerklausurterminService.getListBySchuelerklausurIds(schuelerklausuren.stream().map(klausur -> klausur.id).toList());
+		if (schuelerklausurtermine.isEmpty()) {
+			return new GostKlausurenPatchResponseData();
+		}
+		return updateRaeumeZuSchuelerklausurterminenInTransaction(schuelerklausurtermine);
+	}
+
 	private GostKlausurenPatchResponseData updateRaeumeZuSchuelerklausurterminenInTransaction(final List<GostSchuelerklausurtermin> schuelerklausurtermine) {
 		if (schuelerklausurtermine.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
 		final GostKlausurenPatchResponseData result = new GostKlausurenPatchResponseData();
-		final GostKlausurplanManager manager = createKlausurplanManagerMitStundenplan(null, schuelerklausurtermine, null);
-		final Set<GostKlausurraum> raeume = schuelerklausurtermine.stream()
+		final Set<Long> idsMitRaumzuweisung = schuelerklausurterminraumstundeService
+				.getListBySchuelerklausurterminIds(schuelerklausurtermine.stream().map(skt -> skt.id).toList()).stream()
+				.map(zuordnung -> zuordnung.idSchuelerklausurtermin).collect(Collectors.toSet());
+		if (idsMitRaumzuweisung.isEmpty()) {
+			return result;
+		}
+		// Unverplante Klausuren dürfen keine zusätzliche Stundenplanabhängigkeit erzeugen.
+		final List<GostSchuelerklausurtermin> verplanteSchuelerklausurtermine = schuelerklausurtermine.stream()
+				.filter(skt -> idsMitRaumzuweisung.contains(skt.id)).toList();
+		final GostKlausurplanManager manager = createKlausurplanManagerMitStundenplan(null, verplanteSchuelerklausurtermine, null);
+		final Set<GostKlausurraum> raeume = verplanteSchuelerklausurtermine.stream()
 				.map(manager::raumGetBySchuelerklausurtermin)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toSet());
@@ -504,6 +567,10 @@ public final class GostKlausurenRaumzuweisungService {
 					aktiveStundenplaene = stundenplanDataRepository.getStundenplaeneAktiv(idSchuljahresabschnitt);
 				}
 				final StundenplanListeEintrag stundenplan = StundenplanListUtils.get(aktiveStundenplaene, termin.datum);
+				if (stundenplan == null) {
+					throw new ApiOperationException(Status.CONFLICT,
+							"Für den Klausurtermin %d am %s ist kein aktiver Stundenplan verfügbar.".formatted(termin.id, termin.datum));
+				}
 				manager.stundenplanManagerAdd(stundenplanDataRepository.getStundenplanManager(stundenplan.id));
 			}
 		}
@@ -625,10 +692,11 @@ public final class GostKlausurenRaumzuweisungService {
 		private List<StundenplanZeitraster> getZeitrasterZuSchuelerklausurtermin(final GostSchuelerklausurtermin schuelerklausurtermin,
 				final LocalDate klausurdatum) {
 			final int startzeit = manager.startzeitByKlausurraumAndSchuelerklausurterminOrException(raum.klausurraum, schuelerklausurtermin);
+			final GostKlausurvorgabe vorgabe = manager.vorgabeBySchuelerklausurtermin(schuelerklausurtermin);
 			final List<StundenplanZeitraster> zeitrasterSk =
 					manager.stundenplanManagerGetByTerminOrException(termin).getZeitrasterByWochentagStartVerstrichen(
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
-							startzeit, manager.vorgabeBySchuelerklausurtermin(schuelerklausurtermin).dauer);
+							startzeit, vorgabe.dauer + vorgabe.auswahlzeit);
 			if (zeitrasterSk.isEmpty()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
 			}

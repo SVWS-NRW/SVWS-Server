@@ -52,7 +52,8 @@ public final class GostKlausurenControllerFactory {
 	 * @return der Controller
 	 */
 	public GostKlausurenVorgabeController getGostKlausurenVorgabeController() {
-		return new GostKlausurenVorgabeControllerImpl(gostKlausurenServiceFactory.getGostKlausurenVorgabeService());
+		return new GostKlausurenVorgabeControllerImpl(gostKlausurenServiceFactory.getGostKlausurenVorgabeService(),
+				gostKlausurenServiceFactory.getGostKlausurenVorgabePatchService());
 	}
 
 	/**

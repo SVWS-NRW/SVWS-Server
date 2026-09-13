@@ -83,6 +83,19 @@ public final class GostKlausurenSchuelerklausurterminService {
 	}
 
 	/**
+	 * Ermittelt Haupttermin-Schülerklausurtermine zu den angegebenen Kursklausuren.
+	 *
+	 * @param kursklausurIds die IDs der Kursklausuren
+	 *
+	 * @return die Liste der Haupttermin-Schülerklausurtermine
+	 */
+	public List<GostSchuelerklausurtermin> getListHaupttermineByKursklausurIds(final Collection<Long> kursklausurIds) {
+		return repository.getListHaupttermineByKursklausurIds(kursklausurIds).stream()
+				.map(GostKlausurenSchuelerklausurterminService::toApi)
+				.toList();
+	}
+
+	/**
 	 * Ermittelt Schülerklausurtermine zu den angegebenen Klausurterminen.
 	 *
 	 * @param terminIds die IDs der Klausurtermine
@@ -96,7 +109,7 @@ public final class GostKlausurenSchuelerklausurterminService {
 	}
 
 	List<GostSchuelerklausurtermin> removeTerminFromNachschreiberByTerminId(final long idTermin) {
-		final List<DTOGostKlausurenSchuelerklausurenTermine> dtos = repository.getListByTerminIds(List.of(idTermin)).stream()
+		final List<DTOGostKlausurenSchuelerklausurenTermine> dtos = repository.getListByGesetztenTerminIds(List.of(idTermin)).stream()
 				.filter(dto -> dto.Folge_Nr > 0)
 				.toList();
 		for (final DTOGostKlausurenSchuelerklausurenTermine dto : dtos) {

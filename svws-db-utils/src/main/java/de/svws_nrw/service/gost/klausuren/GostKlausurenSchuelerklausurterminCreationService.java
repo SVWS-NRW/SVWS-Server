@@ -3,6 +3,7 @@ package de.svws_nrw.service.gost.klausuren;
 import java.util.Comparator;
 import java.util.List;
 
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenPatchResponseData;
 import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurtermin;
 import de.svws_nrw.db.dto.current.gost.klausuren.DTOGostKlausurenSchuelerklausurenTermine;
 
@@ -33,21 +34,26 @@ public final class GostKlausurenSchuelerklausurterminCreationService {
 	 *
 	 * @param createRequest die Create-Daten
 	 *
-	 * @return der neue Schülerklausurtermin
+	 * @return die Änderung des Schülerklausurtermins und der bereinigten Raumdaten
 	 */
-	public GostSchuelerklausurtermin create(final GostKlausurenSchuelerklausurterminCreateRequest createRequest) {
+	public GostKlausurenPatchResponseData create(final GostKlausurenSchuelerklausurterminCreateRequest createRequest) {
 		return transactional(() -> {
 			final List<DTOGostKlausurenSchuelerklausurenTermine> vorhandeneTermine =
 					schuelerklausurterminService.getListBySchuelerklausurId(createRequest.idSchuelerklausur);
-			loescheRaumzuweisungDesLetztenTermins(vorhandeneTermine);
-			return schuelerklausurterminService.create(createRequest, GostKlausurenSchuelerklausurterminService.getNaechsteFolgeNr(vorhandeneTermine));
+			final GostKlausurenPatchResponseData result = loescheRaumzuweisungDesLetztenTermins(vorhandeneTermine);
+			final GostSchuelerklausurtermin schuelerklausurtermin =
+					schuelerklausurterminService.create(createRequest, GostKlausurenSchuelerklausurterminService.getNaechsteFolgeNr(vorhandeneTermine));
+			result.schuelerklausurterminePatched.add(schuelerklausurtermin);
+			return result;
 		});
 	}
 
-	private void loescheRaumzuweisungDesLetztenTermins(final List<DTOGostKlausurenSchuelerklausurenTermine> vorhandeneTermine) {
-		vorhandeneTermine.stream()
+	private GostKlausurenPatchResponseData loescheRaumzuweisungDesLetztenTermins(
+			final List<DTOGostKlausurenSchuelerklausurenTermine> vorhandeneTermine) {
+		return vorhandeneTermine.stream()
 				.max(Comparator.comparingInt(dto -> dto.Folge_Nr))
-				.ifPresent(dto -> raumzuweisungService.loescheRaumzuweisungenFuerSchuelerklausurtermine(List.of(dto.ID)));
+				.map(dto -> raumzuweisungService.loescheRaumzuweisungenFuerSchuelerklausurtermine(List.of(dto.ID)))
+				.orElseGet(GostKlausurenPatchResponseData::new);
 	}
 
 }

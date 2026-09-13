@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -101,6 +103,24 @@ public final class GostKlausurenVorgabeService {
 			throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgaben zu angegebenen IDs nicht gefunden.");
 		}
 		return vorgaben.stream().map(GostKlausurenVorgabeService::toApi).toList();
+	}
+
+	/**
+	 * Ermittelt die Klausurvorgaben zu den angegebenen IDs als Map.
+	 *
+	 * @param ids die IDs der Klausurvorgaben
+	 *
+	 * @return die Klausurvorgaben, zugeordnet nach ID
+	 */
+	public Map<Long, GostKlausurvorgabe> getMapByIds(final Collection<Long> ids) {
+		if (ids == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Für die Suche nach Klausurvorgaben müssen IDs angegeben werden. Null ist nicht zulässig.");
+		}
+		final Map<Long, DTOGostKlausurenVorgaben> vorgaben = repository.findMapByIds(ids);
+		if (vorgaben.isEmpty() && !ids.isEmpty()) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgaben zu angegebenen IDs nicht gefunden.");
+		}
+		return vorgaben.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> toApi(entry.getValue())));
 	}
 
 	/**

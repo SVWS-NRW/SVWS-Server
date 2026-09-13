@@ -276,8 +276,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	createSchuelerklausurtermin = async (skt: Partial<GostSchuelerklausurtermin>) => {
 		delete skt.id;
 		delete skt.folgeNr;
-		const skNeu = await api.server.createGostKlausurenSchuelerklausurtermin(skt, api.schema);
-		this.klausurManager.schuelerklausurterminAdd(skNeu);
+		const result = await api.server.createGostKlausurenSchuelerklausurtermin(skt, api.schema);
+		// Dieser Manager enthält keine Raumdaten; die Raumlöschungen betreffen nur die vollständige Klausurplanung.
+		this.klausurManager.schuelerklausurterminAddAll(result.schuelerklausurterminePatched);
 		this.commit();
 	};
 

@@ -69,7 +69,31 @@ public final class GostKlausurenKursklausurService {
 	 * @return die gepatchte Kursklausur
 	 */
 	GostKursklausur patch(final GostKlausurenKursklausurPatchRequest patchRequest) {
-		final DTOGostKlausurenKursklausuren dto = repository.getById(patchRequest.id);
+		return patchMultiple(List.of(patchRequest)).getFirst();
+	}
+
+	/**
+	 * Patcht mehrere Kursklausuren ohne fachliche Querprüfungen und ohne Raumdaten-Seiteneffekte.
+	 *
+	 * @param patchRequests die Patch-Daten
+	 *
+	 * @return die gepatchten Kursklausuren
+	 */
+	public List<GostKursklausur> patchMultiple(final Collection<GostKlausurenKursklausurPatchRequest> patchRequests) {
+		final List<DTOGostKlausurenKursklausuren> dtos = new ArrayList<>();
+		for (final GostKlausurenKursklausurPatchRequest patchRequest : patchRequests) {
+			final DTOGostKlausurenKursklausuren dto = repository.getById(patchRequest.id);
+			applyPatchAttributes(dto, patchRequest);
+			dtos.add(dto);
+		}
+		if (!dtos.isEmpty()) {
+			repository.update(dtos);
+			repository.flush();
+		}
+		return dtos.stream().map(GostKlausurenKursklausurService::toApi).toList();
+	}
+
+	private static void applyPatchAttributes(final DTOGostKlausurenKursklausuren dto, final GostKlausurenKursklausurPatchRequest patchRequest) {
 		if (patchRequest.idTermin.isPresent()) {
 			applyTermin(dto, patchRequest.idTermin.get());
 		}
@@ -80,9 +104,6 @@ public final class GostKlausurenKursklausurService {
 			dto.Bemerkungen = StringUtils.trimToNull(de.svws_nrw.data.JSONMapper.convertToString(patchRequest.bemerkung.get(), true, true,
 					Schema.tab_Gost_Klausuren_Kursklausuren.col_Bemerkungen.datenlaenge(), "bemerkung"));
 		}
-		repository.update(dto);
-		repository.flush();
-		return toApi(dto);
 	}
 
 	private static void applyTermin(final DTOGostKlausurenKursklausuren dto, final Long newTerminId) {

@@ -2,14 +2,19 @@
 	<div>
 		<svws-ui-modal v-model:show="showModalTerminLoeschen" size="small" class="hidden">
 			<template #modalTitle>
-				Klausurtermin löschen
+				{{ termin().istHaupttermin ? "Nachschreiber entplanen" : "Klausurtermin löschen" }}
 			</template>
 			<template #modalContent>
-				Diesem Termin sind Nachschreiber zugewiesen. Soll er wirklich gelöscht werden?
+				<template v-if="termin().istHaupttermin">
+					Diesem Haupttermin sind {{ state.manager.schuelerklausurterminNtGetMengeByTermin(termin()).size() }} Nachschreiber zugewiesen. Beim Entfernen der Nachschreiber-Zulassung werden sie entplant. Fortfahren?
+				</template>
+				<template v-else>
+					Diesem Termin sind Nachschreiber zugewiesen. Soll er wirklich gelöscht werden?
+				</template>
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="showModalTerminLoeschen = false">Abbrechen</svws-ui-button>
-				<svws-ui-button type="primary" @click="loescheTerminBestaetigt">Löschen</svws-ui-button>
+				<svws-ui-button type="primary" @click="loescheTerminBestaetigt">{{ termin().istHaupttermin ? "Entplanen" : "Löschen" }}</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 		<s-gost-klausurplanung-termin-card :termin="termin()"

@@ -29,6 +29,11 @@ public final class GostKlausurenRaumzuweisungControllerImpl implements GostKlaus
 	}
 
 	@Override
+	public Response ersetzeRaumzuweisungenFuerSchuelerklausurtermine(final List<GostKlausurraumRich> raumSchuelerZuteilung) {
+		return Responses.ok(service.ersetzeRaumzuweisungenFuerSchuelerklausurtermine(raumSchuelerZuteilung));
+	}
+
+	@Override
 	public Response loescheRaumzuweisungenFuerSchuelerklausurtermine(final List<Long> schuelerklausurterminIds) {
 		return Responses.ok(service.loescheRaumzuweisungenFuerSchuelerklausurtermine(schuelerklausurterminIds));
 	}

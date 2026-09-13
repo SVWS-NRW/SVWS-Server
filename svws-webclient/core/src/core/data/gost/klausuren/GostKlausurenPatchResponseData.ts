@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKursklausur } from '../../../../core/data/gost/klausuren/GostKursklausur';
+import { GostKlausurvorgabe } from '../../../../core/data/gost/klausuren/GostKlausurvorgabe';
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausuren/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
@@ -12,9 +13,14 @@ import { GostKlausurtermin } from '../../../../core/data/gost/klausuren/GostKlau
 export class GostKlausurenPatchResponseData extends JavaObject {
 
 	/**
-	 * Die gepatchte Kursklausur.
+	 * Die gepatchten Klausurvorgaben.
 	 */
-	public kursklausurPatched: GostKursklausur | null = null;
+	public vorgabenPatched: List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
+
+	/**
+	 * Die gepatchten Kursklausuren.
+	 */
+	public kursklausurenPatched: List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
 	/**
 	 * Der gepatchte Klausurtermin.
@@ -22,7 +28,7 @@ export class GostKlausurenPatchResponseData extends JavaObject {
 	public terminPatched: GostKlausurtermin | null = null;
 
 	/**
-	 * Ein Array mit den gepatchten Schülerklausurterminen.
+	 * Ein Array mit den erstellten oder gepatchten Schülerklausurterminen.
 	 */
 	public schuelerklausurterminePatched: List<GostSchuelerklausurtermin> = new ArrayList<GostSchuelerklausurtermin>();
 
@@ -54,9 +60,8 @@ export class GostKlausurenPatchResponseData extends JavaObject {
 	 * @param data die zu hinzuzufügenden Daten
 	 */
 	public addAll(data: GostKlausurenPatchResponseData): void {
-		if (data.kursklausurPatched !== null) {
-			this.kursklausurPatched = data.kursklausurPatched;
-		}
+		this.vorgabenPatched.addAll(data.vorgabenPatched);
+		this.kursklausurenPatched.addAll(data.kursklausurenPatched);
 		if (data.terminPatched !== null) {
 			this.terminPatched = data.terminPatched;
 		}
@@ -79,7 +84,16 @@ export class GostKlausurenPatchResponseData extends JavaObject {
 	public static transpilerFromJSON(json: string): GostKlausurenPatchResponseData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenPatchResponseData>;
 		const result = new GostKlausurenPatchResponseData();
-		result.kursklausurPatched = ((obj.kursklausurPatched === undefined) || (obj.kursklausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursklausurPatched));
+		if (obj.vorgabenPatched !== undefined) {
+			for (const elem of obj.vorgabenPatched) {
+				result.vorgabenPatched.add(GostKlausurvorgabe.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.kursklausurenPatched !== undefined) {
+			for (const elem of obj.kursklausurenPatched) {
+				result.kursklausurenPatched.add(GostKursklausur.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		result.terminPatched = ((obj.terminPatched === undefined) || (obj.terminPatched === null)) ? null : GostKlausurtermin.transpilerFromJSON(JSON.stringify(obj.terminPatched));
 		if (obj.schuelerklausurterminePatched !== undefined) {
 			for (const elem of obj.schuelerklausurterminePatched) {
@@ -104,7 +118,22 @@ export class GostKlausurenPatchResponseData extends JavaObject {
 
 	public static transpilerToJSON(obj: GostKlausurenPatchResponseData): string {
 		let result = '{';
-		result += '"kursklausurPatched" : ' + ((obj.kursklausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursklausurPatched)) + ',';
+		result += '"vorgabenPatched" : [ ';
+		for (let i = 0; i < obj.vorgabenPatched.size(); i++) {
+			const elem = obj.vorgabenPatched.get(i);
+			result += GostKlausurvorgabe.transpilerToJSON(elem);
+			if (i < obj.vorgabenPatched.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kursklausurenPatched" : [ ';
+		for (let i = 0; i < obj.kursklausurenPatched.size(); i++) {
+			const elem = obj.kursklausurenPatched.get(i);
+			result += GostKursklausur.transpilerToJSON(elem);
+			if (i < obj.kursklausurenPatched.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"terminPatched" : ' + ((obj.terminPatched === null) ? 'null' : GostKlausurtermin.transpilerToJSON(obj.terminPatched)) + ',';
 		result += '"schuelerklausurterminePatched" : [ ';
 		for (let i = 0; i < obj.schuelerklausurterminePatched.size(); i++) {
@@ -138,8 +167,25 @@ export class GostKlausurenPatchResponseData extends JavaObject {
 
 	public static transpilerToJSONPatch(obj: Partial<GostKlausurenPatchResponseData>): string {
 		let result = '{';
-		if (obj.kursklausurPatched !== undefined) {
-			result += '"kursklausurPatched" : ' + ((obj.kursklausurPatched === null) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursklausurPatched)) + ',';
+		if (obj.vorgabenPatched !== undefined) {
+			result += '"vorgabenPatched" : [ ';
+			for (let i = 0; i < obj.vorgabenPatched.size(); i++) {
+				const elem = obj.vorgabenPatched.get(i);
+				result += GostKlausurvorgabe.transpilerToJSON(elem);
+				if (i < obj.vorgabenPatched.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kursklausurenPatched !== undefined) {
+			result += '"kursklausurenPatched" : [ ';
+			for (let i = 0; i < obj.kursklausurenPatched.size(); i++) {
+				const elem = obj.kursklausurenPatched.get(i);
+				result += GostKursklausur.transpilerToJSON(elem);
+				if (i < obj.kursklausurenPatched.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.terminPatched !== undefined) {
 			result += '"terminPatched" : ' + ((obj.terminPatched === null) ? 'null' : GostKlausurtermin.transpilerToJSON(obj.terminPatched)) + ',';

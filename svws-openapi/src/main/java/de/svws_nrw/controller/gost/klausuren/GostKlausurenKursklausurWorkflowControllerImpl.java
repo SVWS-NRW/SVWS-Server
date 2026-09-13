@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.gost.klausuren;
 
+import java.util.Collection;
+
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurterminblockungDaten;
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenKursklausurBlockungService;
@@ -35,6 +37,11 @@ public final class GostKlausurenKursklausurWorkflowControllerImpl implements Gos
 	@Override
 	public Response patch(final GostKlausurenKursklausurPatchRequest patchRequest) {
 		return Responses.ok(patchService.patch(patchRequest));
+	}
+
+	@Override
+	public Response patchMultiple(final Collection<GostKlausurenKursklausurPatchRequest> patchRequests) {
+		return Responses.ok(patchService.patchMultiple(patchRequests));
 	}
 
 	@Override

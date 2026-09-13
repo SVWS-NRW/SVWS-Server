@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.gost.klausuren;
 
+import java.util.Collection;
+
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurterminblockungDaten;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenKursklausurPatchRequest;
 import jakarta.ws.rs.core.Response;
@@ -17,6 +19,15 @@ public interface GostKlausurenKursklausurWorkflowController {
 	 * @return die Response
 	 */
 	Response patch(GostKlausurenKursklausurPatchRequest patchRequest);
+
+	/**
+	 * Patcht mehrere Kursklausuren.
+	 *
+	 * @param patchRequests die Patch-Daten
+	 *
+	 * @return die Response
+	 */
+	Response patchMultiple(Collection<GostKlausurenKursklausurPatchRequest> patchRequests);
 
 	/**
 	 * Erzeugt Kursklausuren für Jahrgang, Halbjahr und Quartal.

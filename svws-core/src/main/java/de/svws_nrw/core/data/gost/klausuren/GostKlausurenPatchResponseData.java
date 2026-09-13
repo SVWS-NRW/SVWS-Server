@@ -20,19 +20,24 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostKlausurenPatchResponseData {
 
-	/** Die gepatchte Kursklausur. */
-	@Schema(implementation = GostKursklausur.class,
-			description = "Die gepatchte Kursklausur.")
-	public GostKursklausur kursklausurPatched = null;
+	/** Die gepatchten Klausurvorgaben. */
+	@ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class,
+			description = "Ein Array mit den gepatchten Klausurvorgaben."))
+	public @NotNull List<GostKlausurvorgabe> vorgabenPatched = new ArrayList<>();
+
+	/** Die gepatchten Kursklausuren. */
+	@ArraySchema(schema = @Schema(implementation = GostKursklausur.class,
+			description = "Ein Array mit den gepatchten Kursklausuren."))
+	public @NotNull List<GostKursklausur> kursklausurenPatched = new ArrayList<>();
 
 	/** Der gepatchte Klausurtermin. */
 	@Schema(implementation = GostKlausurtermin.class,
 			description = "Der gepatchte Klausurtermin.")
 	public GostKlausurtermin terminPatched = null;
 
-	/** Ein Array mit den gepatchten Schülerklausurterminen. */
+	/** Ein Array mit den erstellten oder gepatchten Schülerklausurterminen. */
 	@ArraySchema(schema = @Schema(implementation = GostSchuelerklausurtermin.class,
-			description = "Ein Array mit den gepatchten Schülerklausurterminen."))
+			description = "Ein Array mit den erstellten oder gepatchten Schülerklausurterminen."))
 	public @NotNull List<GostSchuelerklausurtermin> schuelerklausurterminePatched = new ArrayList<>();
 
 	/** Die enthaltenen Raumdaten werden durch die Veränderung neu erzeugt. */
@@ -62,9 +67,8 @@ public class GostKlausurenPatchResponseData {
 	 * @param data die zu hinzuzufügenden Daten
 	 */
 	public void addAll(final @NotNull GostKlausurenPatchResponseData data) {
-		if (data.kursklausurPatched != null) {
-			kursklausurPatched = data.kursklausurPatched;
-		}
+		vorgabenPatched.addAll(data.vorgabenPatched);
+		kursklausurenPatched.addAll(data.kursklausurenPatched);
 		if (data.terminPatched != null) {
 			terminPatched = data.terminPatched;
 		}

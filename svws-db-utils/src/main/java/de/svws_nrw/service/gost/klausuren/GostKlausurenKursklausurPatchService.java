@@ -1,5 +1,6 @@
 package de.svws_nrw.service.gost.klausuren;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +20,6 @@ public final class GostKlausurenKursklausurPatchService {
 	private final GostKlausurenKursklausurService kursklausurService;
 	private final GostKlausurenTerminService terminService;
 	private final GostKlausurenVorgabeService vorgabeService;
-	private final GostKlausurenSchuelerklausurService schuelerklausurService;
 	private final GostKlausurenSchuelerklausurterminService schuelerklausurterminService;
 	private final GostKlausurenRaumzuweisungService raumzuweisungService;
 
@@ -29,20 +29,17 @@ public final class GostKlausurenKursklausurPatchService {
 	 * @param kursklausurService der Service für Kursklausuren
 	 * @param terminService der Service für Klausurtermine
 	 * @param vorgabeService der Service für Klausurvorgaben
-	 * @param schuelerklausurService der Service für Schülerklausuren
 	 * @param schuelerklausurterminService der Service für Schülerklausurtermine
 	 * @param raumzuweisungService der Service für Raumzuweisungen
 	 */
 	public GostKlausurenKursklausurPatchService(final GostKlausurenKursklausurService kursklausurService,
 			final GostKlausurenTerminService terminService,
 			final GostKlausurenVorgabeService vorgabeService,
-			final GostKlausurenSchuelerklausurService schuelerklausurService,
 			final GostKlausurenSchuelerklausurterminService schuelerklausurterminService,
 			final GostKlausurenRaumzuweisungService raumzuweisungService) {
 		this.kursklausurService = kursklausurService;
 		this.terminService = terminService;
 		this.vorgabeService = vorgabeService;
-		this.schuelerklausurService = schuelerklausurService;
 		this.schuelerklausurterminService = schuelerklausurterminService;
 		this.raumzuweisungService = raumzuweisungService;
 	}
@@ -60,12 +57,33 @@ public final class GostKlausurenKursklausurPatchService {
 		return transactional(() -> patchInTransaction(patchRequest));
 	}
 
+	/**
+	 * Patcht mehrere Kursklausuren.
+	 *
+	 * @param patchRequests die Patch-Daten
+	 *
+	 * @return die geänderten Raumdaten
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public GostKlausurenPatchResponseData patchMultiple(final Collection<GostKlausurenKursklausurPatchRequest> patchRequests)
+			throws ApiOperationException {
+		return transactional(() -> {
+			final GostKlausurenPatchResponseData result = new GostKlausurenPatchResponseData();
+			for (final GostKlausurenKursklausurPatchRequest patchRequest : patchRequests) {
+				final GostKlausurenPatchResponseData patchResult = patchInTransaction(patchRequest);
+				result.addAll(patchResult);
+			}
+			return result;
+		});
+	}
+
 	private GostKlausurenPatchResponseData patchInTransaction(final GostKlausurenKursklausurPatchRequest patchRequest) {
 		final GostKursklausur before = kursklausurService.get(patchRequest.id);
 		validateTerminQuartal(before, patchRequest);
 		final GostKursklausur after = kursklausurService.patch(patchRequest);
 		final GostKlausurenPatchResponseData result = handleRaumdatenChanges(before, after);
-		result.kursklausurPatched = after;
+		result.kursklausurenPatched.add(after);
 		return result;
 	}
 
@@ -85,17 +103,18 @@ public final class GostKlausurenKursklausurPatchService {
 
 	private GostKlausurenPatchResponseData handleRaumdatenChanges(final GostKursklausur before, final GostKursklausur after) {
 		if (!Objects.equals(before.idTermin, after.idTermin)) {
-			return raumzuweisungService.loescheRaumzuweisungenFuerSchuelerklausurtermine(getSchuelerklausurtermine(after).stream().map(skt -> skt.id).toList());
+			final List<Long> hauptterminSchuelerklausurterminIds = schuelerklausurterminService
+					.getListHaupttermineByKursklausurIds(List.of(after.id)).stream().map(skt -> skt.id).toList();
+			return raumzuweisungService.loescheRaumzuweisungenFuerSchuelerklausurtermine(
+					hauptterminSchuelerklausurterminIds);
 		}
 		if (!Objects.equals(before.startzeit, after.startzeit)) {
-			return raumzuweisungService.updateRaeumeZuSchuelerklausurterminen(getSchuelerklausurtermine(after));
+			final List<GostSchuelerklausurtermin> hauptterminSchuelerklausurtermine =
+					schuelerklausurterminService.getListHaupttermineByKursklausurIds(List.of(after.id));
+			return raumzuweisungService.updateRaeumeZuSchuelerklausurterminen(
+					hauptterminSchuelerklausurtermine);
 		}
 		return new GostKlausurenPatchResponseData();
-	}
-
-	private List<GostSchuelerklausurtermin> getSchuelerklausurtermine(final GostKursklausur klausur) {
-		return schuelerklausurterminService.getListBySchuelerklausurIds(
-				schuelerklausurService.getListByKursklausurIds(List.of(klausur.id)).stream().map(sk -> sk.id).toList());
 	}
 
 }

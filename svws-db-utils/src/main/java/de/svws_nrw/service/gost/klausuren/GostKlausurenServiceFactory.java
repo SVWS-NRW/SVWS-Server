@@ -46,6 +46,15 @@ public final class GostKlausurenServiceFactory {
 	}
 
 	/**
+	 * Erzeugt eine Instanz des {@link GostKlausurenVorgabePatchService}.
+	 *
+	 * @return eine Instanz des {@link GostKlausurenVorgabePatchService}
+	 */
+	public GostKlausurenVorgabePatchService getGostKlausurenVorgabePatchService() {
+		return new GostKlausurenVorgabePatchService(getGostKlausurenVorgabeService(), getGostKlausurenRaumzuweisungService());
+	}
+
+	/**
 	 * Erzeugt eine Instanz des {@link GostKlausurenVorgabeVorlagenService}.
 	 *
 	 * @return eine Instanz des {@link GostKlausurenVorgabeVorlagenService}
@@ -199,7 +208,6 @@ public final class GostKlausurenServiceFactory {
 		return new GostKlausurenKursklausurPatchService(getGostKlausurenKursklausurService(),
 				getGostKlausurenTerminService(),
 				getGostKlausurenVorgabeService(),
-				getGostKlausurenSchuelerklausurService(),
 				getGostKlausurenSchuelerklausurterminService(),
 				getGostKlausurenRaumzuweisungService());
 	}
@@ -211,6 +219,7 @@ public final class GostKlausurenServiceFactory {
 	 */
 	public GostKlausurenTerminPatchService getGostKlausurenTerminPatchService() {
 		return new GostKlausurenTerminPatchService(getGostKlausurenTerminService(),
+				getGostKlausurenKursklausurService(),
 				getGostKlausurenSchuelerklausurterminService(),
 				getGostKlausurenRaumzuweisungService());
 	}

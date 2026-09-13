@@ -137,7 +137,7 @@ public class APIGostKlausuren {
 	@Operation(summary = "Patcht eine Gost-Klausurvorgabe.", description = "Patcht eine Gost-Klausurvorgabe."
 			+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Klausurvorgabe besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Klausurvorgabe integriert.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Klausurvorgabe-Eintrag mit der angegebenen ID gefunden")
@@ -166,8 +166,7 @@ public class APIGostKlausuren {
 	@Operation(summary = "Patcht mehrere Gost-Klausurvorgaben.", description = "Patcht mehrere Gost-Klausurvorgaben."
 			+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Klausurvorgaben besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Patches wurden erfolgreich in die Klausurvorgaben integriert.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = GostKlausurvorgabe.class))))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
 	@ApiResponse(responseCode = "400", description = "Die Patches sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Mindestens ein Klausurvorgabe-Eintrag mit der angegebenen ID wurde nicht gefunden")
@@ -318,6 +317,30 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenKursklausurWorkflowController().patch(patchRequest);
+	}
+
+	/**
+	 * Patcht mehrere {@link GostKursklausur}en.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param patchRequests die Patch-Daten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/kursklausuren/multiple")
+	@Operation(summary = "Patcht mehrere Gost-Kursklausuren und gibt die daraufhin geänderten Raumdaten zurück.",
+			description = "Patcht mehrere Gost-Kursklausuren und gibt die daraufhin geänderten Raumdaten zurück."
+					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Kursklausuren besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Patches wurden erfolgreich in die Kursklausuren integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
+	public Response patchGostKlausurenKursklausurenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Patches für die Kursklausur-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class)))) @Valid final List<GostKlausurenKursklausurPatchRequest> patchRequests,
+			@Context final HttpServletRequest request) {
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenKursklausurWorkflowController().patchMultiple(patchRequests);
 	}
 
 	/**
@@ -777,6 +800,29 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Ersetzt die Raumzuweisungen aller in den {@link GostKlausurraumRich}-Objekten enthaltenen Räume atomar.
+	 *
+	 * @param schema das Datenbankschema
+	 * @param raumSchuelerZuteilung die Zielzuweisungen für die Räume
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die geänderten Raumdaten
+	 */
+	@POST
+	@Path("/schuelerklausuren/termine/raumzuweisungen/ersetzen")
+	@Operation(summary = "Ersetzt Raumzuweisungen für Gost-Schülerklausurtermine atomar.",
+			description = "Löscht die bisherigen Raumzuweisungen der übergebenen Räume und speichert die Zielzuweisungen in einer Transaktion.")
+	@ApiResponse(responseCode = "200", description = "Die Raumzuweisungen wurden erfolgreich ersetzt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
+	public Response ersetzeGostSchuelerklausurtermineZuRaum(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Zielzuweisungen für die Klausurräume.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
+			@Context final HttpServletRequest request) {
+		return GostKlausurenControllerFactory.withWriteAccess(request)
+				.getGostKlausurenRaumzuweisungController().ersetzeRaumzuweisungenFuerSchuelerklausurtermine(raumSchuelerZuteilung);
+	}
+
+	/**
 	 * Löscht die Raumzuweisungen für alle übergebenen IDs von {@link GostSchuelerklausurtermin}en.
 	 *
 	 * @param schema                  das Datenbankschema
@@ -894,7 +940,7 @@ public class APIGostKlausuren {
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 * @param createRequest JSON-Objekt mit den Daten
 	 *
-	 * @return die HTTP-Antwort mit dem neuen {@link GostSchuelerklausurtermin}
+	 * @return die HTTP-Antwort mit dem neuen {@link GostSchuelerklausurtermin} und den bereinigten Raumdaten
 	 */
 	@POST
 	@Path("/schuelerklausuren/termine")
@@ -902,7 +948,7 @@ public class APIGostKlausuren {
 			description = "Erstellt einen neuen GostSchuelerklausurtermin."
 					+ " Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines GostSchuelerklausurtermins " + "besitzt.")
 	@ApiResponse(responseCode = "201", description = "GostSchuelerklausurtermin wurde erfolgreich angelegt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerklausurtermin.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
 	@ApiResponse(responseCode = "400", description = "Die Daten sind fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen GostSchuelerklausurtermin anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")

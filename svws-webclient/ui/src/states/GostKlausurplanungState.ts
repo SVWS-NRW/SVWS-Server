@@ -70,6 +70,7 @@ export interface GostKlausurplanungState {
 	loescheKlausurraum(id: number): Promise<boolean>;
 	patchKlausurraum(id: number, raum: Partial<GostKlausurraum>): Promise<boolean>;
 	setzeRaumZuSchuelerklausuren(rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<void>;
+	ersetzeRaumzuweisungenFuerSchuelerklausurtermine(rRaeume: List<GostKlausurraumRich>): Promise<void>;
 	blockenKursklausuren(blockungDaten: GostKlausurterminblockungDaten): Promise<void>;
 	blockenNachschreiber(config: GostNachschreibterminblockungKonfiguration): Promise<void>;
 	createSchuelerklausurtermin(skt: Partial<GostSchuelerklausurtermin>): Promise<void>;

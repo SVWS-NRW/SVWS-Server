@@ -1996,6 +1996,10 @@ public class GostKlausurplanManager {
 
 	private void terminRemoveOhneUpdateById(final long idTermin) {
 		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, idTermin);
+		final List<GostKlausurraum> raeumeZuTermin = _raummenge_by_idTermin.get(idTermin);
+		if (raeumeZuTermin != null) {
+			raumRemoveAllOhneUpdate(raeumeZuTermin);
+		}
 		final List<GostKursklausur> kursklausurenZuTermin = _kursklausurmenge_by_abijahr_and_halbjahr_and_idTermin_and_quartal.get3(idTermin);
 		for (final @NotNull GostKursklausur k : kursklausurenZuTermin) {
 			k.idTermin = null;
@@ -2505,6 +2509,12 @@ public class GostKlausurplanManager {
 		_raum_by_id.remove(idRaum);
 	}
 
+	private void raumRemoveAllOhneUpdate(final @NotNull List<GostKlausurraum> listRaum) {
+		for (final @NotNull GostKlausurraum raum : listRaum) {
+			raumRemoveOhneUpdateById(raum.id);
+		}
+	}
+
 	/**
 	 * Entfernt ein existierendes {@link GostKlausurraum}-Objekt.
 	 *
@@ -2535,10 +2545,7 @@ public class GostKlausurplanManager {
 	 *                 {@link StundenplanRaum}-Objekte.
 	 */
 	public void raumRemoveAll(final @NotNull List<GostKlausurraum> listRaum) {
-		for (final @NotNull GostKlausurraum raum : listRaum) {
-			raumRemoveOhneUpdateById(raum.id);
-		}
-
+		raumRemoveAllOhneUpdate(listRaum);
 		update_all();
 	}
 
@@ -6372,6 +6379,9 @@ public class GostKlausurplanManager {
 	public void terminPatchAttributesAndSetzeRaumZuSchuelerklausuren(final @NotNull GostKlausurtermin termin,
 			final @NotNull GostKlausurenPatchResponseData raumData) {
 		setzeRaumZuSchuelerklausurenOhneUpdate(raumData);
+		for (final @NotNull GostKursklausur kursklausur : raumData.kursklausurenPatched) {
+			kursklausurPatchAttributesOhneUpdate(kursklausur);
+		}
 		for (final @NotNull GostSchuelerklausurtermin skt : raumData.schuelerklausurterminePatched) {
 			schuelerklausurterminPatchAttributesOhneUpdate(skt);
 		}

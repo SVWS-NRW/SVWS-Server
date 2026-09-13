@@ -106,29 +106,8 @@ public final class GostKlausurenNachschreibterminBlockungService {
 		private List<GostSchuelerklausurtermin> getManagerSchuelerklausurtermine() {
 			final List<GostSchuelerklausurtermin> result = new ArrayList<>();
 			result.addAll(config.schuelerklausurtermine);
-			result.addAll(getSchuelerklausurtermineZuTerminIds(config.termine.stream().map(t -> t.id).toList(), true));
+			result.addAll(schuelerklausurterminService.getListByTerminIds(config.termine.stream().map(t -> t.id).toList()));
 			return result;
-		}
-
-		private List<GostSchuelerklausurtermin> getSchuelerklausurtermineZuTerminIds(final List<Long> terminIds, final boolean includeAbwesend) {
-			if (terminIds.isEmpty()) {
-				return new ArrayList<>();
-			}
-			final List<GostKursklausur> kursklausuren = getKursklausurenZuTerminIds(terminIds);
-			final List<GostSchuelerklausur> schuelerklausuren = getSchuelerklausurenZuKursklausuren(kursklausuren);
-			final List<Long> kursSchuelerklausurIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-			final Map<Long, List<GostSchuelerklausurtermin>> termineBySchuelerklausur =
-					schuelerklausurterminService.getListBySchuelerklausurIds(kursSchuelerklausurIds).stream()
-							.collect(Collectors.groupingBy(skt -> skt.idSchuelerklausur));
-			final Map<Long, GostSchuelerklausurtermin> result = new HashMap<>();
-			schuelerklausurterminService.getListByTerminIds(terminIds).forEach(skt -> result.put(skt.id, skt));
-			for (final List<GostSchuelerklausurtermin> termine : termineBySchuelerklausur.values()) {
-				final boolean hatNachschreiber = termine.stream().anyMatch(skt -> skt.folgeNr > 0);
-				termine.stream().filter(skt -> skt.folgeNr == 0).findFirst()
-						.filter(skt -> includeAbwesend || !hatNachschreiber)
-						.ifPresent(skt -> result.put(skt.id, skt));
-			}
-			return new ArrayList<>(result.values());
 		}
 
 		private GostKlausurplanManager createKlausurplanManager(final List<GostSchuelerklausurtermin> schuelerklausurtermine) {
@@ -136,20 +115,6 @@ public final class GostKlausurenNachschreibterminBlockungService {
 			final List<GostKursklausur> kursklausuren = getKursklausurenZuSchuelerklausuren(schuelerklausuren);
 			return new GostKlausurplanManager(vorgabeService.getListByIds(kursklausuren.stream().map(k -> k.idVorgabe).toList()),
 					kursklausuren, config.termine, schuelerklausuren, schuelerklausurtermine);
-		}
-
-		private List<GostKursklausur> getKursklausurenZuTerminIds(final List<Long> terminIds) {
-			if (terminIds.isEmpty()) {
-				return new ArrayList<>();
-			}
-			return kursklausurService.getListByTerminIds(terminIds);
-		}
-
-		private List<GostSchuelerklausur> getSchuelerklausurenZuKursklausuren(final List<GostKursklausur> kursklausuren) {
-			if (kursklausuren.isEmpty()) {
-				return new ArrayList<>();
-			}
-			return schuelerklausurService.getListByKursklausurIds(kursklausuren.stream().map(kk -> kk.id).toList());
 		}
 
 		private List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final List<GostSchuelerklausurtermin> termine) {

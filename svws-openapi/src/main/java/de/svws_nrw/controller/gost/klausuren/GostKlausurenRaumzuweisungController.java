@@ -20,6 +20,15 @@ public interface GostKlausurenRaumzuweisungController {
 	Response setzeRaumzuweisungenFuerSchuelerklausurtermine(List<GostKlausurraumRich> raumSchuelerZuteilung);
 
 	/**
+	 * Ersetzt Raumzuweisungen.
+	 *
+	 * @param raumSchuelerZuteilung die Zielzuweisungen für die Räume
+	 *
+	 * @return die Response
+	 */
+	Response ersetzeRaumzuweisungenFuerSchuelerklausurtermine(List<GostKlausurraumRich> raumSchuelerZuteilung);
+
+	/**
 	 * Löscht Raumzuweisungen.
 	 *
 	 * @param schuelerklausurterminIds die IDs der Schülerklausurtermine

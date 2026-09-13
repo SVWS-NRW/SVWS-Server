@@ -6859,6 +6859,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenKursklausurenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/multiple
+	 *
+	 * Patcht mehrere Gost-Kursklausuren und gibt die daraufhin geänderten Raumdaten zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen von Gost-Kursklausuren besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Patches wurden erfolgreich in die Kursklausuren integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
+	 *
+	 * @param {List<Partial<GostKursklausur>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Patches wurden erfolgreich in die Kursklausuren integriert.
+	 */
+	public async patchGostKlausurenKursklausurenMultiple(data: List<Partial<GostKursklausur>>, schema: string): Promise<GostKlausurenPatchResponseData> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<GostKursklausur>).map(d => GostKursklausur.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der DELETE-Methode deleteGostKlausurenKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/multiple
 	 *
 	 * Löscht mehrere GostKursklausuren. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen von GostKursklausuren besitzt.
@@ -7108,7 +7133,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: GostSchuelerklausurtermin wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostSchuelerklausurtermin
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
 	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen GostSchuelerklausurtermin anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -7118,13 +7143,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns GostSchuelerklausurtermin wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenSchuelerklausurtermin(data: Partial<GostSchuelerklausurtermin>, schema: string): Promise<GostSchuelerklausurtermin> {
+	public async createGostKlausurenSchuelerklausurtermin(data: Partial<GostSchuelerklausurtermin>, schema: string): Promise<GostKlausurenPatchResponseData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = GostSchuelerklausurtermin.transpilerToJSONPatch(data);
 		const result: string = await super.postJSON(path, body);
 		const text = result;
-		return GostSchuelerklausurtermin.transpilerFromJSON(text);
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
 	}
 
 
@@ -7300,6 +7325,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode ersetzeGostSchuelerklausurtermineZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/raumzuweisungen/ersetzen
+	 *
+	 * Löscht die bisherigen Raumzuweisungen der übergebenen Räume und speichert die Zielzuweisungen in einer Transaktion.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Raumzuweisungen wurden erfolgreich ersetzt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
+	 *
+	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Raumzuweisungen wurden erfolgreich ersetzt.
+	 */
+	public async ersetzeGostSchuelerklausurtermineZuRaum(data: List<GostKlausurraumRich>, schema: string): Promise<GostKlausurenPatchResponseData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/raumzuweisungen/ersetzen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine
 	 *
 	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
@@ -7427,7 +7477,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich in die Klausurvorgabe integriert.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurvorgabe
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.
 	 *   Code 404: Kein Klausurvorgabe-Eintrag mit der angegebenen ID gefunden
@@ -7439,13 +7489,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Klausurvorgabe integriert.
 	 */
-	public async patchGostKlausurenVorgabe(data: Partial<GostKlausurvorgabe>, schema: string): Promise<GostKlausurvorgabe> {
+	public async patchGostKlausurenVorgabe(data: Partial<GostKlausurvorgabe>, schema: string): Promise<GostKlausurenPatchResponseData> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		const result: string = await super.patchJSONWithResponse(path, body);
 		const text = result;
-		return GostKlausurvorgabe.transpilerFromJSON(text);
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
 	}
 
 
@@ -7518,7 +7568,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Patches wurden erfolgreich in die Klausurvorgaben integriert.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
+	 *     - Rückgabe-Typ: GostKlausurenPatchResponseData
 	 *   Code 400: Die Patches sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurvorgaben zu ändern.
 	 *   Code 404: Mindestens ein Klausurvorgabe-Eintrag mit der angegebenen ID wurde nicht gefunden
@@ -7530,18 +7580,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Patches wurden erfolgreich in die Klausurvorgaben integriert.
 	 */
-	public async patchGostKlausurenVorgabenMultiple(data: List<Partial<GostKlausurvorgabe>>, schema: string): Promise<List<GostKlausurvorgabe>> {
+	public async patchGostKlausurenVorgabenMultiple(data: List<Partial<GostKlausurvorgabe>>, schema: string): Promise<GostKlausurenPatchResponseData> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<GostKlausurvorgabe>).map(d => GostKlausurvorgabe.transpilerToJSONPatch(d)).join() + "]";
 		const result: string = await super.patchJSONWithResponse(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurvorgabe>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(GostKlausurvorgabe.transpilerFromJSON(text));
-		});
-		return ret;
+		const text = result;
+		return GostKlausurenPatchResponseData.transpilerFromJSON(text);
 	}
 
 
