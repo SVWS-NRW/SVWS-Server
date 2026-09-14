@@ -258,8 +258,9 @@ public final class EnmV2GetService {
 					fach.Unterrichtssprache, (leistung.Wochenstunden == null) ? 0 : leistung.Wochenstunden);
 		} else {  // es ist ein Kurs
 			final DTOKurs kurs = kontext.getKurs(leistung.Kurs_ID);
+			final var tmpKursartEintrag = (kursart == null) ? null : kursart.daten(kontext.getSchuljahr());
 			kontext.manager.addLerngruppe(strLerngruppenID, leistung.Kurs_ID, leistung.Fach_ID,
-					(kursart == null) ? -1 : Integer.parseInt(kursart.daten(kontext.getSchuljahr()).nummer), kurs.KurzBez, kursartAllg,
+					(tmpKursartEintrag == null) ? -1 : Integer.parseInt(tmpKursartEintrag.nummer), kurs.KurzBez, kursartAllg,
 					fach.Unterrichtssprache, kurs.WochenStd);
 		}
 		lerngruppe = kontext.manager.getLerngruppe(strLerngruppenID);
