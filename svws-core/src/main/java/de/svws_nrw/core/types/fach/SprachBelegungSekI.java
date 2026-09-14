@@ -22,7 +22,7 @@ public enum SprachBelegungSekI {
 
 
 
-	/** Die Dauer der Sprachbelegung in der SekI - der Wert kann von der realen Belegung abweichen, da nur die relevante Dauer angeben ist und im Falle des Jahrgangs 5 abweichen kann, falls der G8-Bildungsgang vorliegt */
+	/** Die Dauer der Sprachbelegung in der Sek I - der Wert kann von der realen Belegung abweichen, da nur die relevante Dauer angegeben ist und diese im Falle des Jahrgangs 5 abweichen kann, falls der G8-Bildungsgang vorliegt */
 	public final int dauer;
 
 
@@ -41,7 +41,7 @@ public enum SprachBelegungSekI {
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *
-	 * @param kuerzel   der Statistik-Jahrgang in welchem mit der Sprache begonnen wurde
+	 * @param kuerzel   der Statistik-Jahrgang, in welchem mit der Sprache begonnen wurde
 	 *
 	 * @return die Sprachbelegung in der Sek I
 	 */
@@ -77,7 +77,7 @@ public enum SprachBelegungSekI {
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static @NotNull SprachBelegungSekI getByDauer(final int dauer) {
-		if (dauer <= 0) {
+		if (dauer < 2) {
 			return NICHT_BELEGT;
 		}
 		if (dauer <= 3) {
