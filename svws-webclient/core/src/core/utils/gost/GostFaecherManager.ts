@@ -369,7 +369,7 @@ export class GostFaecherManager extends JavaObject {
 		const faecherSchriftlichMoeglich: List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this.listFaecher) {
 			const zf: Fach | null = Fach.getBySchluesselOrDefault(f.kuerzel);
-			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown)) {
+			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown) || (zf as unknown === Fach.LI as unknown)) {
 				continue;
 			}
 			faecherSchriftlichMoeglich.add(f);

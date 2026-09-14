@@ -356,7 +356,7 @@ public class GostFaecherManager {
 		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : listFaecher) {
 			final Fach zf = Fach.getBySchluesselOrDefault(f.kuerzel);
-			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN)) {
+			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN) || (zf == Fach.LI)) {
 				continue;
 			}
 			faecherSchriftlichMoeglich.add(f);
