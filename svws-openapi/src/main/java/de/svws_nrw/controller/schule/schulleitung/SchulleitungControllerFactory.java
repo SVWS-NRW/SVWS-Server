@@ -38,7 +38,7 @@ public final class SchulleitungControllerFactory {
 	/**
 	 * Erstellt eine Factory-Instanz mit Leseberechtigung.
 	 * <p>
-	 * Erfordert die Kompetenz {@link BenutzerKompetenz#LEHRER_PERSONALDATEN_ANSEHEN}.
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#LEHRERDATEN_ANSEHEN}.
 	 * </p>
 	 *
 	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
@@ -51,7 +51,7 @@ public final class SchulleitungControllerFactory {
 	/**
 	 * Erstellt eine Factory-Instanz mit Schreibberechtigung.
 	 * <p>
-	 * Erfordert die Kompetenz {@link BenutzerKompetenz#LEHRER_PERSONALDATEN_AENDERN}.
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#LEHRERDATEN_AENDERN}.
 	 * </p>
 	 *
 	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
