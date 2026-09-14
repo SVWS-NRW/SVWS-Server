@@ -17,10 +17,10 @@ public class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 	final int maxKurse;
 
 	/**
-	 * erstellt eine Regel zur Markierung weitere Kurse zur Erreichung der geforderten
+	 * erstellt eine Regel zur Markierung weiterer Kurse zur Erreichung der geforderten
 	 * Anzahl an Punkten in Block I.
 	 *
-	 * @param minPunkte      die geforderte Anzahl an Kursen
+	 * @param minPunkte      die geforderte Punktzahl
 	 * @param maxKurse       die maximale Anzahl von Kursen
 	 * @param regelkuerzel   das eindeutige Kürzel dieser Regel
 	 * @param hinweis        Hinweis für das log
@@ -46,7 +46,7 @@ public class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 		// weitere Kurse markieren
 		final int vorherMarkiert = variante.anzahlEingebrachteKurse();
 		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
-				markierung -> (markierung != null) && (minPunkte < variante.getPunktzahlBlockI());
+				markierung -> (markierung != null) && (variante.getPunktzahlBlockI() < minPunkte);
 		variante.markiereKursanzahl(maxKurse - vorherMarkiert, bedingung);
 		if (variante.getPunktzahlBlockI() < minPunkte) {
 			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
@@ -54,6 +54,6 @@ public class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 			return;
 		}
 		variante.addLogEintrag(1, "Durch das Markieren von " + (variante.anzahlEingebrachteKurse() - vorherMarkiert)
-					+ "weiteren Kursen konnte die Mindestpunktzahl erreicht werden.");
+					+ " weiteren Kursen konnte die Mindestpunktzahl erreicht werden.");
 	}
 }

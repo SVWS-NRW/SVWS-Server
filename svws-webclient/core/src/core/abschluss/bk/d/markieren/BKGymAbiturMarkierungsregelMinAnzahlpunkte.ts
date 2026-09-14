@@ -18,10 +18,10 @@ export class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 
 
 	/**
-	 * erstellt eine Regel zur Markierung weitere Kurse zur Erreichung der geforderten
+	 * erstellt eine Regel zur Markierung weiterer Kurse zur Erreichung der geforderten
 	 * Anzahl an Punkten in Block I.
 	 *
-	 * @param minPunkte      die geforderte Anzahl an Kursen
+	 * @param minPunkte      die geforderte Punktzahl
 	 * @param maxKurse       die maximale Anzahl von Kursen
 	 * @param regelkuerzel   das eindeutige Kürzel dieser Regel
 	 * @param hinweis        Hinweis für das log
@@ -42,14 +42,14 @@ export class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 			return;
 		}
 		const vorherMarkiert: number = variante.anzahlEingebrachteKurse();
-		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (this.minPunkte < variante.getPunktzahlBlockI()) };
+		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (variante.getPunktzahlBlockI() < this.minPunkte) };
 		variante.markiereKursanzahl(this.maxKurse - vorherMarkiert, bedingung);
 		if (variante.getPunktzahlBlockI() < this.minPunkte) {
 			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
 			variante.setHatZulassung(false);
 			return;
 		}
-		variante.addLogEintrag(1, "Durch das Markieren von " + (variante.anzahlEingebrachteKurse() - vorherMarkiert) + "weiteren Kursen konnte die Mindestpunktzahl erreicht werden.");
+		variante.addLogEintrag(1, "Durch das Markieren von " + (variante.anzahlEingebrachteKurse() - vorherMarkiert) + " weiteren Kursen konnte die Mindestpunktzahl erreicht werden.");
 	}
 
 	transpilerCanonicalName(): string {
