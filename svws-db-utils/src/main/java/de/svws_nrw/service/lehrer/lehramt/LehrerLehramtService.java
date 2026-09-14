@@ -68,7 +68,7 @@ public final class LehrerLehramtService {
 	 * @return die Zuordnung
 	 */
 	public @NotNull Map<Long, List<LehrerLehramtEintrag>> getMapByLehrer(final Collection<Long> idsLehrer) {
-		final var listLehraemter = lehramtRepository.findListByIds(idsLehrer);
+		final var listLehraemter = lehramtRepository.getMapByLehrerID(idsLehrer).values().stream().flatMap(List::stream).toList();
 		final var idsLehraemter = listLehraemter.stream().map(la -> la.ID).toList();
 		final var mapFachrichtungen = lehrerFachrichtungenService.getLehrerFachrichtungenByIdLehramt(idsLehraemter);
 		final var mapLehrbefaehigungen = lehrerLehrbefaehigungenService.getLehrerLehrbefaehigungByIdLehramt(idsLehraemter);

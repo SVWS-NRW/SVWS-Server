@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -52,7 +54,7 @@ class LehrerLehramtServiceTest {
 		final long lehramtId = 1001L;
 		final DTOLehrerPersonaldatenLehramt dto = new DTOLehrerPersonaldatenLehramt(lehramtId, lehrerId);
 		dto.Lehramt_Katalog_ID = 10L;
-		when(repoLehramt.findListByIds(anyCollection())).thenReturn(List.of(dto));
+		when(repoLehramt.getMapByLehrerID(anyCollection())).thenReturn(Map.of(lehrerId, List.of(dto)));
 
 		// Die Daten zu den Fachrichtungen aus dem einen Service
 		final LehrerFachrichtungEintrag fachrichtung = new LehrerFachrichtungEintrag();
@@ -94,5 +96,38 @@ class LehrerLehramtServiceTest {
 		// Prüfe, ob die beiden Services mit der korrekten Lehramt-ID aufgerufen wurden
 		verify(serviceFachrichtungen).getLehrerFachrichtungenByIdLehramt(argThat(c -> c.contains(lehramtId)));
 		verify(serviceLehrbefaehigungen).getLehrerLehrbefaehigungByIdLehramt(argThat(c -> c.contains(lehramtId)));
+
+		// Prüfe, ob die Lehrämter über die Lehrer-IDs geladen wurden (und nicht über die Lehramt-PKs)
+		verify(repoLehramt).getMapByLehrerID(argThat(c -> c.contains(lehrerId)));
+		verify(repoLehramt, never()).findListByIds(anyCollection());
+	}
+
+	@Test
+	@DisplayName("Test: getMapByLehrer gruppiert mehrere Lehrämter korrekt zu den Lehrern")
+	void testGetMapByLehrerMehrereLehrer() {
+		final long lehrerId1 = 42L;
+		final long lehrerId2 = 43L;
+		final DTOLehrerPersonaldatenLehramt dto1 = new DTOLehrerPersonaldatenLehramt(1001L, lehrerId1);
+		dto1.Lehramt_Katalog_ID = 10L;
+		final DTOLehrerPersonaldatenLehramt dto2 = new DTOLehrerPersonaldatenLehramt(1002L, lehrerId2);
+		dto2.Lehramt_Katalog_ID = 10L;
+		final DTOLehrerPersonaldatenLehramt dto3 = new DTOLehrerPersonaldatenLehramt(1003L, lehrerId2);
+		dto3.Lehramt_Katalog_ID = 11L;
+		when(repoLehramt.getMapByLehrerID(anyCollection()))
+				.thenReturn(Map.of(lehrerId1, List.of(dto1), lehrerId2, List.of(dto2, dto3)));
+		when(serviceFachrichtungen.getLehrerFachrichtungenByIdLehramt(anyList())).thenReturn(Map.of());
+		when(serviceLehrbefaehigungen.getLehrerLehrbefaehigungByIdLehramt(anyList())).thenReturn(Map.of());
+
+		final Map<Long, List<LehrerLehramtEintrag>> result = service.getMapByLehrer(List.of(lehrerId1, lehrerId2));
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(1, result.get(lehrerId1).size());
+		assertEquals(1001L, result.get(lehrerId1).getFirst().id);
+		assertEquals(2, result.get(lehrerId2).size());
+		assertEquals(List.of(1002L, 1003L), result.get(lehrerId2).stream().map(la -> la.id).toList());
+
+		verify(repoLehramt).getMapByLehrerID(argThat(c -> c.containsAll(List.of(lehrerId1, lehrerId2))));
+		verify(repoLehramt, never()).findListByIds(anyCollection());
 	}
 }
