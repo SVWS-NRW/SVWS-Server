@@ -42,9 +42,8 @@ public class BKGymAbiturMarkierungsalgorithmusErgebnis {
 	@Schema(description = "Facharbeit einbringen.", example = "true")
 	public boolean facharbeitEinbringen = false;
 
-	/** eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen*/
-	@ArraySchema(schema = @Schema(implementation = BKGymAbiturMarkierungsalgorithmusMarkierung.class,
-			description = "eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen."))
+	/** eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen */
+	@ArraySchema(schema = @Schema(description = "eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen."))
 	public @NotNull List<String> fehlerLog = new ArrayList<>();
 
 	/** eine Liste der vorgenommenen Markierungen von Halbjahres-Belegungen in der Qualifikationsphase */
