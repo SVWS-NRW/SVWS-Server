@@ -3,6 +3,8 @@
 	"compilerOptions": {
 		// sehr strenge Kontrolle der importierten Komponenten
 		"exactOptionalPropertyTypes": false,
+		// verbietet, dass .ts Extensions bei Importen erlaubt sind
+		"allowImportingTsExtensions": false,
 		// deaktivieren, verhindert type Importe
 		"verbatimModuleSyntax": false,
 		"newLine": "lf",
