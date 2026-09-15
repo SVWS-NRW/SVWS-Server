@@ -34,42 +34,37 @@
 			<template #modalContent>
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Anrede"
-						v-model="data.proxy.anrede"
-						:validation="() => data.getFehler('anrede')"
-						@change="data.patch"
-						skip-default-validation
+						v-model="model.proxy.anrede"
+						:validation="() => model.getFehler('anrede')"
+						@change="model.patch"
 						:max-len="10" :readonly />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Rufname"
-						v-model="data.proxy.rufname"
-						:validation="() => data.getFehler('rufname')"
-						@change="data.patch"
-						skip-default-validation
+						v-model="model.proxy.rufname"
+						:validation="() => model.getFehler('rufname')"
+						@change="model.patch"
 						:max-len="80" :readonly />
 					<svws-ui-text-input placeholder="Name"
-						v-model="data.proxy.name"
-						:validation="() => data.getFehler('name')"
-						@change="data.patch"
-						skip-default-validation
+						v-model="model.proxy.name"
+						:validation="() => model.getFehler('name')"
+						@change="model.patch"
 						:max-len="120" :readonly required />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
-						v-model="data.proxy.telefon"
-						:validation="() => data.getFehler('telefon')"
-						@change="data.patch"
-						skip-default-validation
+						v-model="model.proxy.telefon"
+						:validation="() => model.getFehler('telefon')"
+						@change="model.patch"
 						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="Email" type="email"
-						v-model="data.proxy.eMail"
-						:validation="() => data.getFehler('eMail')"
-						@change="data.patch"
-						skip-default-validation
+						v-model="model.proxy.eMail"
+						:validation="() => model.getFehler('eMail')"
+						@change="model.patch"
 						:max-len="100" :readonly />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="closeEditingModal">
 						Abbrechen
 					</svws-ui-button>
-					<svws-ui-button @click="sendRequest(currentMode)" :disabled="!isValid">
+					<svws-ui-button @click="sendRequest(currentMode)" :disabled="model.hatBlockierendeFehler()">
 						Speichern
 					</svws-ui-button>
 				</div>
@@ -98,15 +93,14 @@
 		patchAnsprechpartner: (data: Partial<BetriebeAnsprechpartner>) => Promise<boolean>;
 	}>();
 
-	let data = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
-	const isValid = computed<boolean>(() => data.getAlleFehler().isEmpty());
-	const readonly = !props.hatKompetenzUpdate;
+	let model = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
+	const readonly = computed<boolean>(() => !props.hatKompetenzUpdate);
 
 	function resetData(): void {
-		data = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
+		model = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
 		const idBetrieb = props.manager().auswahlID();
 		if (idBetrieb !== null) {
-			data.proxy.idBetrieb = props.manager().auswahlID() ?? -1;
+			model.proxy.idBetrieb = props.manager().auswahlID() ?? -1;
 		}
 	}
 
@@ -145,7 +139,7 @@
 	function patchEntry(ansprechpartner: BetriebeAnsprechpartner) {
 		setMode(Mode.PATCH);
 		resetData();
-		data = new BetriebeAnsprechpartnerModelProxy(() => ansprechpartner);
+		model = new BetriebeAnsprechpartnerModelProxy(() => ansprechpartner);
 		openEditingModal();
 	}
 
@@ -153,11 +147,10 @@
 
 	async function sendRequest(type: Mode) {
 		if (type === Mode.ADD) {
-			const { id, referenziertInAnderenTabellen, ...partial } = data.proxy;
+			const { id, referenziertInAnderenTabellen, ...partial } = model.proxy;
 			await props.addAnsprechpartner(partial);
-		}
-		if (type === Mode.PATCH) {
-			const { referenziertInAnderenTabellen, ...partial } = data.proxy;
+		} else if (type === Mode.PATCH) {
+			const { referenziertInAnderenTabellen, ...partial } = model.proxy;
 			await props.patchAnsprechpartner(partial);
 		}
 		setMode(Mode.DEFAULT);
