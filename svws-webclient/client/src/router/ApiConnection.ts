@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { ApiExternal } from "@core/api/ApiExternal";
 import { ApiServer } from "@core/api/ApiServer";
 import { OpenApiError } from "@core/api/OpenApiError";
+import { Schulform } from "@core/asd/types/schule/Schulform";
 import { JsonCoreTypeReader } from "@core/asd/utils/JsonCoreTypeReader";
 import type { DBSchemaListeEintrag } from "@core/core/data/db/DBSchemaListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -83,10 +84,14 @@ export class ApiConnection {
 			const schemata = await api.getConfigDBSchemata();
 
 			// Lese die Daten für die Initialisierung der Core-Types ein
-			const reader = new JsonCoreTypeReader(this._url);
-			await reader.loadAll();
-			reader.readAll();
-			this._mapCoreTypeData.value = reader.mapCoreTypeData;
+			try {
+				Schulform.data();
+			} catch (e) {
+				const reader = new JsonCoreTypeReader(this._url);
+				await reader.loadAll();
+				reader.readAll();
+				this._mapCoreTypeData.value = reader.mapCoreTypeData;
+			}
 
 			// ... und gib die Schemata zurück
 			return schemata;
