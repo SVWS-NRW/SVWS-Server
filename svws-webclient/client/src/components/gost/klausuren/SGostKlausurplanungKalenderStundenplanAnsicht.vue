@@ -163,21 +163,43 @@
 	const terminBezeichnung = (termin: GostKlausurtermin) => presenter.terminTitel(termin);
 
 	const beginn = computed(() => {
-		if (props.ignoreEmpty) {
-			return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
+		let zeit = props.ignoreEmpty
+			? stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMinOhneLeere()
+			: stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMin();
+		for (const zeiten of klausurzeiten.value) {
+			zeit = Math.min(zeit, zeiten.beginn);
 		}
-		return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMin();
+		return Math.floor(zeit / 5) * 5;
 	});
 
 	const ende = computed(() => {
-		if (props.ignoreEmpty) {
-			return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
+		let zeit = props.ignoreEmpty
+			? stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere()
+			: stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMax();
+		for (const zeiten of klausurzeiten.value) {
+			zeit = Math.max(zeit, zeiten.ende, zeiten.beginn + 45);
 		}
-		return stundenplanManagerAktuell().pausenzeitUndZeitrasterGetMinutenMax();
+		return Math.ceil(zeit / 5) * 5;
 	});
 
 	const wochentagRange = computed(() => {
 		return DateUtils.gibDatenDerWochentageOfJahrAndKalenderwoche(props.kalenderwoche().jahr, props.kalenderwoche().kw, stundenplanManagerAktuell().zeitrasterGetWochentageAlsEnumRange());
+	});
+
+	const klausurzeiten = computed(() => {
+		const result: { beginn: number; ende: number }[] = [];
+		for (const tag of wochentagRange.value) {
+			for (const gruppe of state.manager.terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(
+				tag.b, state.zeigeAlleJahrgaenge ? null : state.jahrgangsdaten.abiturjahr)) {
+				for (const termin of gruppe) {
+					const zeiten = zeitenByKlausurtermin(termin);
+					if (zeiten !== undefined) {
+						result.push(zeiten);
+					}
+				}
+			}
+		}
+		return result;
 	});
 
 	const zeitrasterRange = computed(() => {
@@ -204,8 +226,12 @@
 
 	const zeitrasterRows = computed(() => {
 		// Für alle 5 Minuten eine Grid Row
-		return Math.round(gesamtzeit.value / 5);
+		return Math.ceil(gesamtzeit.value / 5);
 	});
+
+	const gridRowStartByZeit = (zeit: number): number => Math.max(0, Math.floor((zeit - beginn.value) / 5));
+
+	const gridRowEndByZeit = (zeit: number): number => Math.max(1, Math.ceil((zeit - beginn.value) / 5));
 
 	function aufsichtsbereiche(pausenaufsicht: StundenplanPausenaufsicht): string {
 		let result = "";
@@ -254,8 +280,8 @@
 				}
 			}
 		}
-		const rowStart = (zbeginn - beginn.value) / 5;
-		const rowEnd = (zende - beginn.value) / 5;
+		const rowStart = gridRowStartByZeit(zbeginn);
+		const rowEnd = gridRowEndByZeit(zende);
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
@@ -264,15 +290,13 @@
 		let rowStart = 0;
 		let rowEnd = 10;
 		if ((pzeit.beginn !== null) && (pzeit.ende !== null)) {
-			rowStart = (pzeit.beginn - beginn.value) / 5;
-			rowEnd = (pzeit.ende - beginn.value) / 5;
+			rowStart = gridRowStartByZeit(pzeit.beginn);
+			rowEnd = gridRowEndByZeit(pzeit.ende);
 		}
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
-	function posKlausurtermin(termin: GostKlausurtermin): string {
-		let rowStart = 0;
-		let rowEnd = 10;
+	function zeitenByKlausurtermin(termin: GostKlausurtermin): { beginn: number; ende: number } | undefined {
 		const terminBeginn = (termin.startzeit === null) ? -1 : state.manager.minKlausurstartzeitByTermin(termin, true);
 		let terminEnde = -1;
 		if (terminBeginn !== -1) {
@@ -281,15 +305,21 @@
 				if (dauer === 0) {
 					dauer = GostHalbjahr.fromIDorException(termin.halbjahr).istEinfuehrungsphase() ? 90 : 135;
 				}
-				terminEnde = Math.ceil((terminBeginn + dauer) / 5) * 5;
+				terminEnde = terminBeginn + dauer;
 			} else {
-				terminEnde = Math.ceil(state.manager.maxKlausurendzeitByTermin(termin, true) / 5) * 5;
+				terminEnde = state.manager.maxKlausurendzeitByTermin(termin, true);
 			}
 		}
-		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
-			rowStart = (terminBeginn - beginn.value) / 5;
-			rowEnd = (terminEnde - beginn.value) / 5;
+		if ((terminBeginn === -1) || (terminEnde === -1)) {
+			return undefined;
 		}
+		return { beginn: terminBeginn, ende: terminEnde };
+	}
+
+	function posKlausurtermin(termin: GostKlausurtermin): string {
+		const zeiten = zeitenByKlausurtermin(termin);
+		const rowStart = zeiten === undefined ? 0 : gridRowStartByZeit(zeiten.beginn);
+		let rowEnd = zeiten === undefined ? 10 : gridRowEndByZeit(zeiten.ende);
 		// Workaround für zu kurze Terminzeiten
 		rowEnd += rowEnd - rowStart > 9 ? 0 : (9 - (rowEnd - rowStart));
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";

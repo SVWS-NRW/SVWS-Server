@@ -6,9 +6,8 @@ import de.svws_nrw.core.data.gost.klausuren.GostNachschreibterminblockungKonfigu
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenNachschreibterminBlockungService;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminCreateRequest;
-import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminCreationService;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminPatchRequest;
-import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminPatchService;
+import de.svws_nrw.service.gost.klausuren.GostKlausurenSchuelerklausurterminWorkflowService;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -16,38 +15,34 @@ import jakarta.ws.rs.core.Response;
  */
 public final class GostKlausurenSchuelerklausurterminWorkflowControllerImpl implements GostKlausurenSchuelerklausurterminWorkflowController {
 
-	private final GostKlausurenSchuelerklausurterminCreationService creationService;
-	private final GostKlausurenSchuelerklausurterminPatchService patchService;
+	private final GostKlausurenSchuelerklausurterminWorkflowService workflowService;
 	private final GostKlausurenNachschreibterminBlockungService blockungService;
 
 	/**
 	 * Erstellt eine neue Controller-Instanz.
 	 *
-	 * @param creationService der Creation-Service
-	 * @param patchService der Patch-Service
+	 * @param workflowService der gemeinsame Create-/Patch-Workflow
 	 * @param blockungService der Blockungs-Service
 	 */
-	public GostKlausurenSchuelerklausurterminWorkflowControllerImpl(final GostKlausurenSchuelerklausurterminCreationService creationService,
-			final GostKlausurenSchuelerklausurterminPatchService patchService,
+	public GostKlausurenSchuelerklausurterminWorkflowControllerImpl(final GostKlausurenSchuelerklausurterminWorkflowService workflowService,
 			final GostKlausurenNachschreibterminBlockungService blockungService) {
-		this.creationService = creationService;
-		this.patchService = patchService;
+		this.workflowService = workflowService;
 		this.blockungService = blockungService;
 	}
 
 	@Override
 	public Response create(final GostKlausurenSchuelerklausurterminCreateRequest createRequest) {
-		return Responses.created(creationService.create(createRequest));
+		return Responses.created(workflowService.create(createRequest));
 	}
 
 	@Override
 	public Response patch(final GostKlausurenSchuelerklausurterminPatchRequest patchRequest) {
-		return Responses.ok(patchService.patch(patchRequest));
+		return Responses.ok(workflowService.patch(patchRequest));
 	}
 
 	@Override
 	public Response patchMultiple(final List<GostKlausurenSchuelerklausurterminPatchRequest> patchRequests) {
-		return Responses.ok(patchService.patchMultiple(patchRequests));
+		return Responses.ok(workflowService.patchMultiple(patchRequests));
 	}
 
 	@Override

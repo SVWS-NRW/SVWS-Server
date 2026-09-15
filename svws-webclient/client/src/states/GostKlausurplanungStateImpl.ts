@@ -286,74 +286,89 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {
 		api.status.start();
-		const terminNeu: Partial<GostKlausurtermin> = new GostKlausurtermin();
-		terminNeu.idSchuljahresabschnitt = this.abschnittOrException.id;
-		terminNeu.abiturjahrgang = this.abiturjahr;
-		terminNeu.halbjahr = this.halbjahr.id;
-		terminNeu.quartal = quartal;
-		terminNeu.istHaupttermin = ht;
-		delete terminNeu.id;
-		const termin = await api.server.createGostKlausurenKlausurtermin(terminNeu, api.schema);
-		this.manager.terminAdd(termin);
-		this.commit();
-		api.status.stop();
-		return termin;
+		try {
+			const terminNeu: Partial<GostKlausurtermin> = new GostKlausurtermin();
+			terminNeu.idSchuljahresabschnitt = this.abschnittOrException.id;
+			terminNeu.abiturjahrgang = this.abiturjahr;
+			terminNeu.halbjahr = this.halbjahr.id;
+			terminNeu.quartal = quartal;
+			terminNeu.istHaupttermin = ht;
+			delete terminNeu.id;
+			const termin = await api.server.createGostKlausurenKlausurtermin(terminNeu, api.schema);
+			this.manager.terminAdd(termin);
+			this.commit();
+			return termin;
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	loescheKlausurtermine = async (termine: List<GostKlausurtermin>) => {
 		api.status.start();
-		const terminIds = new ArrayList<number>();
-		for (const termin of termine) {
-			terminIds.add(termin.id);
+		try {
+			const terminIds = new ArrayList<number>();
+			for (const termin of termine) {
+				terminIds.add(termin.id);
+			}
+			await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
+			this.manager.terminRemoveAll(termine);
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
-		this.manager.terminRemoveAll(termine);
-		this.commit();
-		api.status.stop();
 	};
 
 	loescheKursklausuren = async (klausuren: List<GostKursklausur> | GostKursklausur[]) => {
 		api.status.start();
-		const klausurIds = new ArrayList<number>();
-		for (const klausur of klausuren) {
-			klausurIds.add(klausur.id);
-		}
-		await api.server.deleteGostKlausurenKursklausuren(klausurIds, api.schema);
-		const klausListe = new ArrayList<GostKursklausur>();
-		if (Array.isArray(klausuren)) {
+		try {
+			const klausurIds = new ArrayList<number>();
 			for (const klausur of klausuren) {
-				klausListe.add(klausur);
+				klausurIds.add(klausur.id);
 			}
-		} else {
-			klausListe.addAll(klausuren);
+			await api.server.deleteGostKlausurenKursklausuren(klausurIds, api.schema);
+			const klausListe = new ArrayList<GostKursklausur>();
+			if (Array.isArray(klausuren)) {
+				for (const klausur of klausuren) {
+					klausListe.add(klausur);
+				}
+			} else {
+				klausListe.addAll(klausuren);
+			}
+			this.manager.kursklausurRemoveAll(klausListe);
+			await this.reloadFehlendData();
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		this.manager.kursklausurRemoveAll(klausListe);
-		await this.reloadFehlendData();
-		this.commit();
-		api.status.stop();
 	};
 
 	erzeugeSchuelerklausuren = async (klausuren: List<Partial<GostSchuelerklausur>>) => {
 		api.status.start();
-		for (const klausur of klausuren) {
-			delete klausur.id;
+		try {
+			for (const klausur of klausuren) {
+				delete klausur.id;
+			}
+			const dtos = await api.server.createGostKlausurenSchuelerklausuren(klausuren, api.schema);
+			this.manager.addKlausurData(dtos);
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		const dtos = await api.server.createGostKlausurenSchuelerklausuren(klausuren, api.schema);
-		this.manager.addKlausurData(dtos);
-		this.commit();
-		api.status.stop();
 	};
 
 	loescheSchuelerklausuren = async (klausuren: List<GostSchuelerklausur>) => {
 		api.status.start();
-		const ids = new ArrayList<number>();
-		for (const klausur of klausuren) {
-			ids.add(klausur.id);
+		try {
+			const ids = new ArrayList<number>();
+			for (const klausur of klausuren) {
+				ids.add(klausur.id);
+			}
+			await api.server.deleteGostKlausurenSchuelerklausuren(ids, api.schema);
+			this.manager.schuelerklausurRemoveAll(klausuren);
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		await api.server.deleteGostKlausurenSchuelerklausuren(ids, api.schema);
-		this.manager.schuelerklausurRemoveAll(klausuren);
-		this.commit();
-		api.status.stop();
 	};
 
 	patchKlausur = async (klausur: GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin, patch: Partial<GostKursklausur | GostSchuelerklausur | GostSchuelerklausurtermin>): Promise<void> => {
@@ -373,8 +388,8 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 				const result = await api.server.patchGostKlausurenSchuelerklausur(patch, api.schema);
 				this.manager.schuelerklausurPatchAttributes(Object.assign(klausur, result));
 			}
-		} finally {
 			this.commit();
+		} finally {
 			api.status.stop();
 		}
 	};
@@ -394,27 +409,33 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 				this.manager.schuelerklausurterminPatchAttributes(Object.assign(klausur, patch));
 			}
 			this.manager.setzeRaumZuSchuelerklausuren(result);
-		} finally {
 			this.commit();
+		} finally {
 			api.status.stop();
 		}
 	};
 
 	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
 		api.status.start();
-		const neueVorgaben = await api.server.createMissingGostKlausurenVorgabenVorlagen(api.schema, this.halbjahr.id, quartal);
-		this.manager.vorgabeAddAll(neueVorgaben);
-		this.commit();
-		api.status.stop();
+		try {
+			const neueVorgaben = await api.server.createMissingGostKlausurenVorgabenVorlagen(api.schema, this.halbjahr.id, quartal);
+			this.manager.vorgabeAddAll(neueVorgaben);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	erzeugeKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>) => {
 		api.status.start();
-		delete vorgabe.id;
-		vorgabe.abiturjahrgang = this.abiturjahr;
-		vorgabe.halbjahr = this.halbjahr.id;
 		try {
-			const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
+			const request: Partial<GostKlausurvorgabe> = {
+				...vorgabe,
+				abiturjahrgang: this.abiturjahr,
+				halbjahr: this.halbjahr.id,
+			};
+			delete request.id;
+			const neueVorgabe = await api.server.createGostKlausurenVorgabe(request, api.schema);
 			this.manager.vorgabeAdd(neueVorgabe);
 			await this.reloadFehlendData();
 		} finally {
@@ -447,16 +468,19 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 
 	loescheKlausurvorgaben = async (vorgaben: List<GostKlausurvorgabe>) => {
 		api.status.start();
-		const vorgabeIds = new ArrayList<number>();
-		for (const vorgabe of vorgaben) {
-			vorgabeIds.add(vorgabe.id);
+		try {
+			const vorgabeIds = new ArrayList<number>();
+			for (const vorgabe of vorgaben) {
+				vorgabeIds.add(vorgabe.id);
+			}
+			await api.server.deleteGostKlausurenVorgabenMultiple(vorgabeIds, api.schema);
+			this.manager.vorgabeRemoveAll(vorgaben);
+			vorgaben.clear();
+			await this.reloadFehlendData();
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		await api.server.deleteGostKlausurenVorgabenMultiple(vorgabeIds, api.schema);
-		this.manager.vorgabeRemoveAll(vorgaben);
-		vorgaben.clear();
-		await this.reloadFehlendData();
-		this.commit();
-		api.status.stop();
 	};
 
 	erzeugeKursklausurenAusVorgaben = async (quartal: number) => {
@@ -464,9 +488,9 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		try {
 			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
 			this.manager.addKlausurData(result);
+			this.commit();
 			return result;
 		} finally {
-			this.commit();
 			api.status.stop();
 		}
 	};
@@ -478,8 +502,8 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 			termin.id = id;
 			const raumDataChanged = await api.server.patchGostKlausurenKlausurtermin(termin, api.schema);
 			this.manager.terminPatchAttributesAndSetzeRaumZuSchuelerklausuren(raumDataChanged.terminPatched ?? Object.assign(oldTtermin, termin), raumDataChanged);
-		} finally {
 			this.commit();
+		} finally {
 			api.status.stop();
 		}
 	};
@@ -498,30 +522,39 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 
 	createKlausurraum = async (raum: Partial<GostKlausurraum>) => {
 		api.status.start();
-		const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
-		this.manager.raumAdd(neuerRaum);
-		this.commit();
-		api.status.stop();
+		try {
+			const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
+			this.manager.raumAdd(neuerRaum);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	loescheKlausurraum = async (id: number): Promise<boolean> => {
 		api.status.start();
-		await api.server.deleteGostKlausurenRaum(api.schema, id);
-		this.manager.raumRemoveById(id);
-		this.commit();
-		api.status.stop();
-		return true;
+		try {
+			await api.server.deleteGostKlausurenRaum(api.schema, id);
+			this.manager.raumRemoveById(id);
+			this.commit();
+			return true;
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>): Promise<boolean> => {
 		api.status.start();
-		const oldRaum: GostKlausurraum = this.manager.raumGetByIdOrException(id);
-		raum.id = id;
-		await api.server.patchGostKlausurenRaum(raum, api.schema);
-		this.manager.raumPatchAttributes(Object.assign(oldRaum, raum));
-		this.commit();
-		api.status.stop();
-		return true;
+		try {
+			const oldRaum: GostKlausurraum = this.manager.raumGetByIdOrException(id);
+			raum.id = id;
+			await api.server.patchGostKlausurenRaum(raum, api.schema);
+			this.manager.raumPatchAttributes(Object.assign(oldRaum, raum));
+			this.commit();
+			return true;
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<void> => {
@@ -529,19 +562,22 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 			return;
 		}
 		api.status.start();
-		let patchResponseData;
-		if (deleteFromRaeume) {
-			const ids = new ArrayList<number>();
-			for (const raum of rRaeume) {
-				ids.addAll(raum.idsSchuelerklausurtermine);
+		try {
+			let patchResponseData;
+			if (deleteFromRaeume) {
+				const ids = new ArrayList<number>();
+				for (const raum of rRaeume) {
+					ids.addAll(raum.idsSchuelerklausurtermine);
+				}
+				patchResponseData = await api.server.loescheGostSchuelerklausurtermineAusRaum(ids, api.schema);
+			} else {
+				patchResponseData = await api.server.setzeGostSchuelerklausurtermineZuRaum(rRaeume, api.schema);
 			}
-			patchResponseData = await api.server.loescheGostSchuelerklausurtermineAusRaum(ids, api.schema);
-		} else {
-			patchResponseData = await api.server.setzeGostSchuelerklausurtermineZuRaum(rRaeume, api.schema);
+			this.manager.setzeRaumZuSchuelerklausuren(patchResponseData);
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		this.manager.setzeRaumZuSchuelerklausuren(patchResponseData);
-		this.commit();
-		api.status.stop();
 	};
 
 	ersetzeRaumzuweisungenFuerSchuelerklausurtermine = async (rRaeume: List<GostKlausurraumRich>): Promise<void> => {
@@ -560,33 +596,42 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 
 	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten) => {
 		api.status.start();
-		const blockung = await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
-		this.manager.terminAddAll(blockung.termine);
-		this.manager.kursklausurMengePatchAttributes(blockung.kursklausuren);
-		this.commit();
-		api.status.stop();
+		try {
+			const blockung = await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
+			this.manager.terminAddAll(blockung.termine);
+			this.manager.kursklausurMengePatchAttributes(blockung.kursklausuren);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	};
 
 	blockenNachschreiber = async (config: GostNachschreibterminblockungKonfiguration) => {
 		api.status.start();
-		const blockungDaten = await api.server.blockenGostSchuelerklausurtermine(config, api.schema);
-		this.manager.terminAddAll(blockungDaten.termine);
-		for (const skt of blockungDaten.schuelerklausurtermine) {
-			this.manager.schuelerklausurterminPatchAttributes(skt);
+		try {
+			const blockungDaten = await api.server.blockenGostSchuelerklausurtermine(config, api.schema);
+			this.manager.terminAddAll(blockungDaten.termine);
+			for (const skt of blockungDaten.schuelerklausurtermine) {
+				this.manager.schuelerklausurterminPatchAttributes(skt);
+			}
+			this.commit();
+		} finally {
+			api.status.stop();
 		}
-		this.commit();
-		api.status.stop();
 	};
 
 	createSchuelerklausurtermin = async (skt: Partial<GostSchuelerklausurtermin>) => {
 		api.status.start();
-		delete skt.id;
-		delete skt.folgeNr;
-		const result = await api.server.createGostKlausurenSchuelerklausurtermin(skt, api.schema);
-		this.manager.setzeRaumZuSchuelerklausuren(result);
-		this.manager.schuelerklausurterminAddAll(result.schuelerklausurterminePatched);
-		this.commit();
-		api.status.stop();
+		try {
+			delete skt.id;
+			delete skt.folgeNr;
+			const result = await api.server.createGostKlausurenSchuelerklausurtermin(skt, api.schema);
+			this.manager.setzeRaumZuSchuelerklausuren(result);
+			this.manager.schuelerklausurterminAddAll(result.schuelerklausurterminePatched);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	};
 
 }

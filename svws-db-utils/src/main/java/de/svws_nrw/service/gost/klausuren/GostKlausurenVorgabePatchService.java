@@ -41,11 +41,8 @@ public final class GostKlausurenVorgabePatchService {
 	 * @param patches die Patch-Daten
 	 *
 	 * @return die gepatchten Vorgaben und Raumdaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public GostKlausurenPatchResponseData patchMultiple(final Collection<GostKlausurenVorgabePatchRequest> patches)
-			throws ApiOperationException {
+	public GostKlausurenPatchResponseData patchMultiple(final Collection<GostKlausurenVorgabePatchRequest> patches) {
 		return transactional(() -> patchMultipleInTransaction(patches));
 	}
 

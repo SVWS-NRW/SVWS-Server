@@ -1,6 +1,7 @@
 package de.svws_nrw.service.gost.klausuren;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,6 +23,7 @@ public class GostKlausurenVorgabeCreateRequest {
 	/** Das Quartal. */
 	@Schema(description = "das Quartal")
 	@NotNull(message = "Das Quartal muss gesetzt werden.")
+	@Min(value = 0, message = "Das Quartal darf nicht negativ sein.")
 	public Integer quartal;
 
 	/** Die Fach-ID. */
@@ -36,10 +38,12 @@ public class GostKlausurenVorgabeCreateRequest {
 
 	/** Die Klausurdauer. */
 	@Schema(description = "die Klausurdauer")
+	@Min(value = 0, message = "Die Klausurdauer darf nicht negativ sein.")
 	public Integer dauer;
 
 	/** Die Auswahlzeit. */
 	@Schema(description = "die Auswahlzeit")
+	@Min(value = 0, message = "Die Auswahlzeit darf nicht negativ sein.")
 	public Integer auswahlzeit;
 
 	/** Gibt an, ob eine GKL möglich ist. */

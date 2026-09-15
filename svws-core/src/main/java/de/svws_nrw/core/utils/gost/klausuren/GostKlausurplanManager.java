@@ -3903,8 +3903,9 @@ public class GostKlausurplanManager {
 
 	/**
 	 * Prüft, ob die übergebenen {@link GostSchuelerklausurtermin}e fachlich gemeinsam in den übergebenen Nachschreibtermin passen.
-	 * Die Schülerklausurtermine passen, wenn der Termin für alle Quartale gilt oder dem Quartal der jeweiligen Vorgabe entspricht
-	 * und für keinen Schüler im Zieltermin oder in der übergebenen Menge ein weiterer Schülerklausurtermin existiert.
+	 * Die Schülerklausurtermine passen, wenn der Termin für Nachschreiber zugelassen ist, für alle Quartale gilt oder dem Quartal der
+	 * jeweiligen Vorgabe entspricht und für keinen Schüler im Zieltermin oder in der übergebenen Menge ein weiterer Schülerklausurtermin
+	 * existiert.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param schuelerklausurtermine die zu prüfenden {@link GostSchuelerklausurtermin}e
@@ -3913,6 +3914,9 @@ public class GostKlausurplanManager {
 	 */
 	public boolean schuelerklausurterminePassenInNachschreibtermin(final @NotNull GostKlausurtermin termin,
 			final @NotNull List<GostSchuelerklausurtermin> schuelerklausurtermine) {
+		if (termin.istHaupttermin && !termin.nachschreiberZugelassen) {
+			return false;
+		}
 		for (final @NotNull GostSchuelerklausurtermin schuelerklausurtermin : schuelerklausurtermine) {
 			if ((termin.quartal != 0) && (termin.quartal != vorgabeBySchuelerklausurtermin(schuelerklausurtermin).quartal)) {
 				return false;
@@ -3922,13 +3926,14 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert eine Liste mit {@link GostKursklausur} und den zugehörigen Schülern, die bereits existierende Konflikte in jeder
-	 * {@link GostKursklausur} des übergebenen {@link GostKlausurtermin}s enthält.
+	 * Liefert eine Liste mit {@link GostKursklausur}en und den zugehörigen Schülern, die bereits existierende Konflikte im
+	 * übergebenen {@link GostKlausurtermin} enthält. Bei Konflikten zwischen Nachschreibern werden deren zugehörige
+	 * Kursklausuren aufgeführt.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 *
-	 * @return die Liste mit {@link GostKursklausur} und den zugehörigen Schülern, die bereits existierende Konflikte in jeder
-	 * {@link GostKursklausur} des übergebenen {@link GostKlausurtermin}s enthält
+	 * @return die Liste mit {@link GostKursklausur}en und den zugehörigen Schülern, die bereits existierende Konflikte im
+	 * übergebenen {@link GostKlausurtermin} enthält
 	 */
 	public @NotNull List<PairNN<GostKursklausur, List<SchuelerListeEintrag>>> konflikteKursklausurSchuelerByTermin(final @NotNull GostKlausurtermin termin) {
 		return toKursklausurSchuelerKonflikte(konflikteMapByTermin(termin));
@@ -3946,9 +3951,19 @@ public class GostKlausurplanManager {
 	}
 
 	private @NotNull Map<GostKursklausur, Set<Long>> konflikteMapByTermin(final @NotNull GostKlausurtermin termin) {
-		final List<GostKursklausur> klausuren = kursklausurGetMengeByTermin(termin);
-		return berechneKonflikte(klausuren, klausuren,
-				getSchuelerIDsFromSchuelerklausurterminen(schuelerklausurterminAktuellNtGetMengeByTermin(termin)));
+		final @NotNull List<GostSchuelerklausurtermin> schuelerklausurtermine = schuelerklausurterminAktuellGetMengeByTermin(termin);
+		return konflikteMapByKonfliktpaaren(konfliktPaarSchuelerklausurtermineGetMenge(schuelerklausurtermine, schuelerklausurtermine));
+	}
+
+	private @NotNull Map<GostKursklausur, Set<Long>> konflikteMapByKonfliktpaaren(
+			final @NotNull List<PairNN<GostSchuelerklausurtermin, GostSchuelerklausurtermin>> konflikte) {
+		final @NotNull Map<GostKursklausur, Set<Long>> result = new HashMap<>();
+		for (final @NotNull PairNN<GostSchuelerklausurtermin, GostSchuelerklausurtermin> konflikt : konflikte) {
+			final long idSchueler = schuelerklausurBySchuelerklausurtermin(konflikt.a).idSchueler;
+			MapUtils.getOrCreateHashSet(result, kursklausurBySchuelerklausurtermin(konflikt.a)).add(idSchueler);
+			MapUtils.getOrCreateHashSet(result, kursklausurBySchuelerklausurtermin(konflikt.b)).add(idSchueler);
+		}
+		return result;
 	}
 
 	/**
@@ -3981,10 +3996,55 @@ public class GostKlausurplanManager {
 		return countKonflikte(konflikteNeuMapByTerminAndKursklausur(termin, kursklausur));
 	}
 
+	private @NotNull List<GostSchuelerklausurtermin> aktuelleHauptversucheByKursklausur(final @NotNull GostKursklausur kursklausur) {
+		final @NotNull List<GostSchuelerklausurtermin> result = new ArrayList<>();
+		for (final @NotNull GostSchuelerklausurtermin skt : schuelerklausurterminAktuellByKursklausur(kursklausur)) {
+			if (skt.folgeNr == 0) {
+				result.add(skt);
+			}
+		}
+		return result;
+	}
+
 	private @NotNull Map<GostKursklausur, Set<Long>> konflikteNeuMapByTerminAndKursklausur(final @NotNull GostKlausurtermin termin,
 			final @NotNull GostKursklausur kursklausur) {
-		final Map<GostKursklausur, Set<Long>> result = berechneKonflikte(kursklausurGetMengeByTermin(termin), ListUtils.create1(kursklausur), null);
-		addNachschreiberKonflikteByKursklausur(result, kursklausur, termin);
+		if ((kursklausur.idTermin != null) && (kursklausur.idTermin == termin.id)) {
+			return new HashMap<>();
+		}
+		return konflikteMapByKonfliktpaaren(konfliktPaarSchuelerklausurtermineGetMenge(
+				schuelerklausurterminAktuellGetMengeByTermin(termin), aktuelleHauptversucheByKursklausur(kursklausur)));
+	}
+
+	/**
+	 * Liefert alle Konflikte des Zieltermins nach dem angenommenen Hinzufügen einer Kursklausur.
+	 *
+	 * @param kursklausur die hinzuzufügende Kursklausur
+	 * @param termin der Zieltermin
+	 * @return die betroffenen Kursklausuren mit den jeweils betroffenen Schülern
+	 */
+	public @NotNull List<PairNN<GostKursklausur, List<SchuelerListeEintrag>>> konflikteNachZuweisungByKursklausurZuTermin(
+			final @NotNull GostKursklausur kursklausur, final @NotNull GostKlausurtermin termin) {
+		return toKursklausurSchuelerKonflikte(konflikteNachZuweisungMapByKursklausurZuTermin(kursklausur, termin));
+	}
+
+	/**
+	 * Zählt die unterschiedlichen betroffenen Schüler am Zieltermin nach der angenommenen Kursklausur-Zuweisung.
+	 *
+	 * @param kursklausur die hinzuzufügende Kursklausur
+	 * @param termin der Zieltermin
+	 * @return die Anzahl der betroffenen Schüler
+	 */
+	public int konflikteAnzahlNachZuweisungByKursklausurZuTermin(
+			final @NotNull GostKursklausur kursklausur, final @NotNull GostKlausurtermin termin) {
+		return countKonflikte(konflikteNachZuweisungMapByKursklausurZuTermin(kursklausur, termin));
+	}
+
+	private @NotNull Map<GostKursklausur, Set<Long>> konflikteNachZuweisungMapByKursklausurZuTermin(
+			final @NotNull GostKursklausur kursklausur, final @NotNull GostKlausurtermin termin) {
+		final @NotNull Map<GostKursklausur, Set<Long>> result = konflikteMapByTermin(termin);
+		for (final @NotNull Entry<GostKursklausur, Set<Long>> konflikt : konflikteNeuMapByTerminAndKursklausur(termin, kursklausur).entrySet()) {
+			MapUtils.getOrCreateHashSet(result, konflikt.getKey()).addAll(konflikt.getValue());
+		}
 		return result;
 	}
 
@@ -4127,7 +4187,7 @@ public class GostKlausurplanManager {
 		final int jahr = DateUtils.gibKwJahrDesDatumsISO8601(termin.datum);
 		final int kw = DateUtils.gibKwDesDatumsISO8601(termin.datum);
 		return klausurenProSchueleridExceedingKWThresholdByJahrAndKwAndAbijahrAndAddmengeAndThreshold(jahr, kw, termin.abiturjahrgang,
-				schuelerklausurterminGetMengeByKursklausur(klausur), threshold, false);
+				aktuelleHauptversucheByKursklausur(klausur), threshold, false);
 	}
 
 	/**

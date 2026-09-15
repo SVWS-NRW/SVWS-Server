@@ -48,7 +48,7 @@
 						</template>
 						<template #zusatz>
 							<div class="svws-ui-td">
-								<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, false)" />
+								<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :readonly="!hatKompetenzUpdate" :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, false)" />
 							</div>
 						</template>
 					</s-gost-klausurplanung-kursklausur-zeile>
@@ -64,7 +64,7 @@
 						</template>
 						<template #zusatz>
 							<div class="svws-ui-td">
-								<svws-ui-text-input :model-value="state.manager.schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(state.manager.schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit!) : ''" headless :placeholder="DateUtils.getStringOfUhrzeitFromMinuten(termin().startzeit!) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, true)" />
+								<svws-ui-text-input :model-value="state.manager.schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(state.manager.schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit!) : ''" headless :readonly="!hatKompetenzUpdate" :placeholder="DateUtils.getStringOfUhrzeitFromMinuten(termin().startzeit!) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, true)" />
 							</div>
 						</template>
 					</s-gost-klausurplanung-kursklausur-zeile>
@@ -96,6 +96,7 @@
 	import type { GostKlausurraum } from '@core/core/data/gost/klausuren/GostKlausurraum';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin';
 	import { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur';
+	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { DateUtils } from '@core/core/utils/DateUtils';
@@ -168,15 +169,17 @@
 	}));
 
 	async function patchKlausurbeginn(event: string | null, klausur: GostKursklausur, nk: boolean) {
-		if (event === null) {
+		if ((event === null) || !hatKompetenzUpdate.value) {
 			return;
 		}
-		const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
+		const zeit = event.trim();
+		if ((zeit.length > 0) && !/^([01]?\d|2[0-3])\s*[:.]\s*([0-5]?\d)$/.test(zeit)) {
+			throw new UserNotificationException("Bitte geben Sie eine gültige Startzeit zwischen 00:00 und 23:59 ein, zum Beispiel 08:30. Ein leeres Feld übernimmt die Startzeit des Termins.");
+		}
+		const startzeit = zeit.length > 0 ? DateUtils.gibMinutenOfZeitAsString(zeit.replace('.', ':')) : null;
 		if (nk === true) {
 			const nachschreiberSkts = state.manager.schuelerklausurterminGetMengeByRaumAndKursklausur(props.raum, klausur);
-			for (const nachSkt of nachschreiberSkts) {
-				await state.patchKlausur(nachSkt, { startzeit });
-			}
+			await state.patchSchuelerklausurtermine(nachschreiberSkts, { startzeit });
 		} else {
 			await state.patchKlausur(klausur, { startzeit });
 		}

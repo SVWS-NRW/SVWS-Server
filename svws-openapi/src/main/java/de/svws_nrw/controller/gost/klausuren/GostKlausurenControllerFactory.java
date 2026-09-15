@@ -179,8 +179,7 @@ public final class GostKlausurenControllerFactory {
 	 */
 	public GostKlausurenSchuelerklausurterminWorkflowController getGostKlausurenSchuelerklausurterminWorkflowController() {
 		return new GostKlausurenSchuelerklausurterminWorkflowControllerImpl(
-				gostKlausurenServiceFactory.getGostKlausurenSchuelerklausurterminCreationService(),
-				gostKlausurenServiceFactory.getGostKlausurenSchuelerklausurterminPatchService(),
+				gostKlausurenServiceFactory.getGostKlausurenSchuelerklausurterminWorkflowService(),
 				gostKlausurenServiceFactory.getGostKlausurenNachschreibterminBlockungService());
 	}
 

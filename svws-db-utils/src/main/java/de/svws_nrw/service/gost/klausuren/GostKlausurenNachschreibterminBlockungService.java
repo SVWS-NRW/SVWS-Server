@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenKlausurdaten;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausuren.GostNachschreibterminblockungKonfiguration;
@@ -95,56 +96,60 @@ public final class GostKlausurenNachschreibterminBlockungService {
 		}
 
 		private GostKlausurenKlausurdaten execute() {
-			final List<GostSchuelerklausurtermin> managerSchuelerklausurtermine = getManagerSchuelerklausurtermine();
-			klausurplanManager = createKlausurplanManager(managerSchuelerklausurtermine);
+			// Fachliche Eigenschaften kommen aus der Datenbank, nicht aus den übergebenen Anzeigeobjekten.
 			nachschreiberById = getNachschreiberById();
-			verarbeiteZuordnungen(new KlausurblockungNachschreiberAlgorithmus().berechne(config, klausurplanManager));
+			config.schuelerklausurtermine = nachschreiberById.values().stream().map(GostKlausurenSchuelerklausurterminService::toApi).toList();
+			klausurplanManager = createKlausurplanManager(getManagerSchuelerklausurtermine());
+			config.termine = config.termine.stream().map(t -> t.id).distinct().map(klausurplanManager::terminGetByIdOrException).toList();
+			config.schuelerklausurtermine = config.schuelerklausurtermine.stream()
+					.map(skt -> klausurplanManager.schuelerklausurterminGetByIdOrException(skt.id)).toList();
+			for (final GostSchuelerklausurtermin skt : config.schuelerklausurtermine) {
+				if ((skt.folgeNr <= 0) || (skt.idTermin != null) || !klausurplanManager.istSchuelerklausurterminAktuell(skt)) {
+					throw new ApiOperationException(Status.CONFLICT, "Die Auswahl enthält bereits verplante oder nicht mehr aktuelle Nachschreibversuche. Aktualisieren Sie die Auswahl.");
+				}
+			}
+			for (final Pair<GostSchuelerklausurtermin, Long> zuordnung : new KlausurblockungNachschreiberAlgorithmus().berechne(config, klausurplanManager)) {
+				verarbeiteZuordnung(zuordnung);
+			}
 			persistiereBlockung();
 			return createResponse();
 		}
 
 		private List<GostSchuelerklausurtermin> getManagerSchuelerklausurtermine() {
-			final List<GostSchuelerklausurtermin> result = new ArrayList<>();
-			result.addAll(config.schuelerklausurtermine);
+			final List<GostSchuelerklausurtermin> result = new ArrayList<>(config.schuelerklausurtermine);
 			result.addAll(schuelerklausurterminService.getListByTerminIds(config.termine.stream().map(t -> t.id).toList()));
-			return result;
+			return schuelerklausurterminService.getListBySchuelerklausurIds(
+					result.stream().map(skt -> skt.idSchuelerklausur).distinct().toList());
 		}
 
 		private GostKlausurplanManager createKlausurplanManager(final List<GostSchuelerklausurtermin> schuelerklausurtermine) {
-			final List<GostSchuelerklausur> schuelerklausuren = getSchuelerklausurenZuSchuelerklausurterminen(schuelerklausurtermine);
-			final List<GostKursklausur> kursklausuren = getKursklausurenZuSchuelerklausuren(schuelerklausuren);
-			return new GostKlausurplanManager(vorgabeService.getListByIds(kursklausuren.stream().map(k -> k.idVorgabe).toList()),
-					kursklausuren, config.termine, schuelerklausuren, schuelerklausurtermine);
-		}
-
-		private List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final List<GostSchuelerklausurtermin> termine) {
-			if (termine.isEmpty()) {
-				return new ArrayList<>();
-			}
-			final List<GostSchuelerklausur> schuelerklausuren =
-					schuelerklausurService.getListByIds(termine.stream().map(sk -> sk.idSchuelerklausur).toList());
-			if (schuelerklausuren.isEmpty()) {
+			final List<GostSchuelerklausur> schuelerklausuren = schuelerklausurService.getListByIds(
+					schuelerklausurtermine.stream().map(skt -> skt.idSchuelerklausur).distinct().toList());
+			if (!schuelerklausurtermine.isEmpty() && schuelerklausuren.isEmpty()) {
 				throw new ApiOperationException(Status.CONFLICT, "Schülerklausuren zu Schülerklausurterminen nicht gefunden.");
 			}
-			return schuelerklausuren;
-		}
-
-		private List<GostKursklausur> getKursklausurenZuSchuelerklausuren(final List<GostSchuelerklausur> schuelerklausuren) {
-			if (schuelerklausuren.isEmpty()) {
-				return new ArrayList<>();
+			final List<GostKursklausur> kursklausuren = kursklausurService.getListByIds(
+					schuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct().toList());
+			final List<Long> terminIds = new ArrayList<>(config.termine.stream().map(t -> t.id).toList());
+			terminIds.addAll(kursklausuren.stream().map(k -> k.idTermin).filter(Objects::nonNull).toList());
+			terminIds.addAll(schuelerklausurtermine.stream().map(skt -> skt.idTermin).filter(Objects::nonNull).toList());
+			final List<Long> eindeutigeTerminIds = terminIds.stream().distinct().toList();
+			final List<GostKlausurtermin> termine = terminRepository.findListByIds(eindeutigeTerminIds).stream()
+					.map(GostKlausurenTerminService::toApi).toList();
+			if (termine.size() != eindeutigeTerminIds.size()) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Mindestens ein Klausurtermin wurde nicht gefunden.");
 			}
-			return kursklausurService.getListByIds(schuelerklausuren.stream().map(sk -> sk.idKursklausur).toList());
+			return new GostKlausurplanManager(vorgabeService.getListByIds(kursklausuren.stream().map(k -> k.idVorgabe).toList()),
+					kursklausuren, termine, schuelerklausuren, schuelerklausurtermine);
 		}
 
 		private Map<Long, DTOGostKlausurenSchuelerklausurenTermine> getNachschreiberById() {
-			return schuelerklausurterminRepository.findListByIds(config.schuelerklausurtermine.stream().map(skt -> skt.id).toList())
-					.stream().collect(Collectors.toMap(skt -> skt.ID, skt -> skt));
-		}
-
-		private void verarbeiteZuordnungen(final List<Pair<GostSchuelerklausurtermin, Long>> zuordnungen) {
-			for (final Pair<GostSchuelerklausurtermin, Long> zuordnung : zuordnungen) {
-				verarbeiteZuordnung(zuordnung);
+			final List<Long> ids = config.schuelerklausurtermine.stream().map(skt -> skt.id).distinct().toList();
+			final Map<Long, DTOGostKlausurenSchuelerklausurenTermine> result = schuelerklausurterminRepository.findMapByIds(ids);
+			if (result.size() != ids.size()) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Mindestens ein Schülerklausurtermin wurde nicht gefunden.");
 			}
+			return result;
 		}
 
 		private void verarbeiteZuordnung(final Pair<GostSchuelerklausurtermin, Long> zuordnung) {
@@ -175,7 +180,7 @@ public final class GostKlausurenNachschreibterminBlockungService {
 			final GostHalbjahr gostHalbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
 			final DTOSchuljahresabschnitte schuljahresabschnitt = schuljahresabschnitteRepository
 					.findBySchuljahrAndAbschnitt(gostHalbjahr.getSchuljahrFromAbiturjahr(vorgabe.abiturjahrgang), (vorgabe.halbjahr % 2) + 1)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert."));
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Für dieses Halbjahr fehlt der Schuljahresabschnitt. Legen Sie diesen zuerst an."));
 			return new DTOGostKlausurenTermine(-1L, schuljahresabschnitt.ID, vorgabe.abiturjahrgang,
 					gostHalbjahr, vorgabe.quartal, false, true);
 		}

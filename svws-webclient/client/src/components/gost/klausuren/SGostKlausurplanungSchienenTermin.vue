@@ -83,7 +83,7 @@
 		}
 		const termin = props.termin();
 		const canDrop = state.manager.kursklausurPasstInTermin(termin, data);
-		const conflictCount = canDrop ? state.manager.konflikteAnzahlZuTerminGetByTerminAndKursklausur(termin, data) : 0;
+		const conflictCount = canDrop ? state.manager.konflikteAnzahlNachZuweisungByKursklausurZuTermin(data, termin) : state.manager.konflikteAnzahlGetByTermin(termin);
 		return { canDrop, conflictCount };
 	});
 

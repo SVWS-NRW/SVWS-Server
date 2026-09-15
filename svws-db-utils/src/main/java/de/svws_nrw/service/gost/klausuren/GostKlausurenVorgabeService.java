@@ -136,7 +136,7 @@ public final class GostKlausurenVorgabeService {
 					-1L,
 					createRequest.abiturjahrgang,
 					GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr),
-					GostKlausurenValidationUtils.checkQuartal(createRequest.quartal),
+					createRequest.quartal,
 					createRequest.idFach,
 					checkKursart(createRequest.kursart),
 					(createRequest.dauer == null) ? 0 : createRequest.dauer,

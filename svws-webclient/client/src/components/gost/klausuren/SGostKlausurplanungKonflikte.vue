@@ -168,7 +168,7 @@
 	function terminkonflikteByTermin(termin: GostKlausurtermin): KlausurplanungTerminkonflikt[] {
 		const pending = props.pendingKursklausurDrop;
 		const konflikte = ((pending !== undefined) && (pending.termin.id === termin.id))
-			? state.manager.konflikteNeuKursklausurSchuelerByTerminAndKursklausur(termin, pending.kursklausur)
+			? state.manager.konflikteNachZuweisungByKursklausurZuTermin(pending.kursklausur, termin)
 			: state.manager.konflikteKursklausurSchuelerByTermin(termin);
 		return [...konflikte].map(konflikt => ({
 			key: `${termin.id}-${konflikt.a.id}`,
@@ -194,7 +194,7 @@
 	}
 
 	function wochenkonfliktKlausurDatumText(klausur: GostSchuelerklausurtermin): string {
-		if ((props.pendingKursklausurDrop !== undefined) && (state.manager.schuelerklausurBySchuelerklausurtermin(klausur).idKursklausur === props.pendingKursklausurDrop.kursklausur.id)) {
+		if ((props.pendingKursklausurDrop !== undefined) && (klausur.folgeNr === 0) && (state.manager.schuelerklausurBySchuelerklausurtermin(klausur).idKursklausur === props.pendingKursklausurDrop.kursklausur.id)) {
 			return presenter.terminDatumKurzText(props.pendingKursklausurDrop.termin);
 		}
 		const termin = state.manager.terminOrNullBySchuelerklausurtermin(klausur);

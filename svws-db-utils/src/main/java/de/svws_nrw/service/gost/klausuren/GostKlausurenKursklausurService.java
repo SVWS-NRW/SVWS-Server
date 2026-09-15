@@ -98,7 +98,7 @@ public final class GostKlausurenKursklausurService {
 			applyTermin(dto, patchRequest.idTermin.get());
 		}
 		if (patchRequest.startzeit.isPresent()) {
-			dto.Startzeit = de.svws_nrw.data.JSONMapper.convertToIntegerInRange(patchRequest.startzeit.get(), true, 0, 1440, "startzeit");
+			dto.Startzeit = patchRequest.startzeit.get();
 		}
 		if (patchRequest.bemerkung.isPresent()) {
 			dto.Bemerkungen = StringUtils.trimToNull(de.svws_nrw.data.JSONMapper.convertToString(patchRequest.bemerkung.get(), true, true,

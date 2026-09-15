@@ -132,7 +132,7 @@ public final class GostKlausurenTerminService {
 					createRequest.idSchuljahresabschnitt,
 					createRequest.abiturjahrgang,
 					GostKlausurenValidationUtils.checkHalbjahr(createRequest.halbjahr),
-					GostKlausurenValidationUtils.checkQuartal(createRequest.quartal),
+					createRequest.quartal,
 					(createRequest.istHaupttermin == null) ? true : createRequest.istHaupttermin,
 					(createRequest.nachschreiberZugelassen == null) ? false : createRequest.nachschreiberZugelassen);
 			applyCreateAttributes(dto, createRequest);
@@ -198,7 +198,7 @@ public final class GostKlausurenTerminService {
 			}
 		}
 		if (createRequest.startzeit.isPresent()) {
-			dto.Startzeit = JSONMapper.convertToIntegerInRange(createRequest.startzeit.get(), true, 0, 1440, "startzeit");
+			dto.Startzeit = createRequest.startzeit.get();
 		}
 		if (createRequest.bezeichnung.isPresent()) {
 			dto.Bezeichnung = StringUtils.trimToNull(JSONMapper.convertToString(createRequest.bezeichnung.get(), true, true,
@@ -212,7 +212,7 @@ public final class GostKlausurenTerminService {
 
 	private static void applyPatch(final DTOGostKlausurenTermine dto, final GostKlausurenTerminPatchRequest patchRequest) {
 		if (patchRequest.quartal.isPresent()) {
-			dto.Quartal = GostKlausurenValidationUtils.checkQuartal(patchRequest.quartal.get());
+			dto.Quartal = patchRequest.quartal.get();
 		}
 		if (patchRequest.datum.isPresent()) {
 			dto.Datum = JSONMapper.convertToString(patchRequest.datum.get(), true, false, null, "datum");
@@ -221,7 +221,7 @@ public final class GostKlausurenTerminService {
 			}
 		}
 		if (patchRequest.startzeit.isPresent()) {
-			dto.Startzeit = JSONMapper.convertToIntegerInRange(patchRequest.startzeit.get(), true, 0, 1440, "startzeit");
+			dto.Startzeit = patchRequest.startzeit.get();
 		}
 		if (patchRequest.bezeichnung.isPresent()) {
 			dto.Bezeichnung = StringUtils.trimToNull(JSONMapper.convertToString(patchRequest.bezeichnung.get(), true, true,

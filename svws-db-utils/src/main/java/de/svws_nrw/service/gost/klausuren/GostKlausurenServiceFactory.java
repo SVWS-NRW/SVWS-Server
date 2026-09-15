@@ -190,14 +190,6 @@ public final class GostKlausurenServiceFactory {
 				klausurenRepositoryFactory.getGostKlausurenSchuelerklausurterminRepository());
 	}
 
-	/**
-	 * Erzeugt eine Instanz des {@link GostKlausurenSchuelerklausurterminCreationService}.
-	 *
-	 * @return eine Instanz des {@link GostKlausurenSchuelerklausurterminCreationService}
-	 */
-	public GostKlausurenSchuelerklausurterminCreationService getGostKlausurenSchuelerklausurterminCreationService() {
-		return new GostKlausurenSchuelerklausurterminCreationService(getGostKlausurenSchuelerklausurterminService(), getGostKlausurenRaumzuweisungService());
-	}
 
 	/**
 	 * Erzeugt eine Instanz des {@link GostKlausurenKursklausurPatchService}.
@@ -224,14 +216,7 @@ public final class GostKlausurenServiceFactory {
 				getGostKlausurenRaumzuweisungService());
 	}
 
-	/**
-	 * Erzeugt eine Instanz des {@link GostKlausurenSchuelerklausurterminPatchService}.
-	 *
-	 * @return eine Instanz des {@link GostKlausurenSchuelerklausurterminPatchService}
-	 */
-	public GostKlausurenSchuelerklausurterminPatchService getGostKlausurenSchuelerklausurterminPatchService() {
-		return new GostKlausurenSchuelerklausurterminPatchService(getGostKlausurenSchuelerklausurterminService(), getGostKlausurenRaumzuweisungService());
-	}
+
 
 	/**
 	 * Erzeugt eine Instanz des {@link GostKlausurenSchuelerKlausurdatenService}.
@@ -292,6 +277,17 @@ public final class GostKlausurenServiceFactory {
 				getGostKlausurenSchuelerklausurterminService(),
 				klausurenRepositoryFactory.getGostKlausurenSchuelerklausurterminRepository(),
 				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository());
+	}
+
+	/**
+	 * Erzeugt den gemeinsamen Workflow für Schülerklausurtermine.
+	 *
+	 * @return der Workflow-Service
+	 */
+	public GostKlausurenSchuelerklausurterminWorkflowService getGostKlausurenSchuelerklausurterminWorkflowService() {
+		return new GostKlausurenSchuelerklausurterminWorkflowService(getGostKlausurenSchuelerklausurterminService(),
+				getGostKlausurenSchuelerklausurService(), getGostKlausurenKursklausurService(), getGostKlausurenVorgabeService(),
+				getGostKlausurenTerminService(), getGostKlausurenRaumzuweisungService());
 	}
 
 }

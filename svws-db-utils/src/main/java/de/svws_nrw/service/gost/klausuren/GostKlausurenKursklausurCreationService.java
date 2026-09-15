@@ -156,13 +156,13 @@ public final class GostKlausurenKursklausurCreationService {
 		private void loadCreationContext() {
 			vorgaben = vorgabeService.getListByAbiturjahr(abiturjahr, halbjahr, false);
 			if (vorgaben.isEmpty()) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
+				throw new ApiOperationException(Status.NOT_FOUND, "Für dieses Halbjahr fehlen Klausurvorgaben. Legen Sie diese zuerst in der Vorgabenansicht an.");
 			}
 			klausurplanManager = new GostKlausurplanManager(vorgaben);
 			kursklausurenByKursAndVorgabe = getExistingKursklausurenByKursAndVorgabe();
 			schuljahresabschnitt = schuljahresabschnitteRepository
 					.findBySchuljahrAndAbschnitt(gostHalbjahr.getSchuljahrFromAbiturjahr(abiturjahr), (gostHalbjahr.id % 2) + 1)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert."));
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Für dieses Halbjahr fehlt der Schuljahresabschnitt. Legen Sie diesen zuerst an."));
 			kurse = kurseRepository.getListBySchuljahresabschnittAndJahrgang(schuljahresabschnitt.ID, gostHalbjahr.jahrgang);
 		}
 

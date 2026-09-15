@@ -153,7 +153,7 @@ public final class GostKlausurenRaumzuweisungService {
 	private GostKlausurenPatchResponseData setzeRaumzuweisungenFuerSchuelerklausurtermineInTransaction(
 			final List<GostKlausurraumRich> raumSchuelerZuteilung) {
 		if (raumSchuelerZuteilung.isEmpty()) {
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die Raumzuweisung muss mindestens ein Klausurraum angegeben werden.");
 		}
 
 		final GostKlausurenPatchResponseData result = new GostKlausurenPatchResponseData();
@@ -223,7 +223,7 @@ public final class GostKlausurenRaumzuweisungService {
 
 	private GostKlausurenPatchResponseData updateRaeumeZuSchuelerklausurterminenInTransaction(final List<GostSchuelerklausurtermin> schuelerklausurtermine) {
 		if (schuelerklausurtermine.isEmpty()) {
-			throw new ApiOperationException(Status.NOT_FOUND);
+			throw new ApiOperationException(Status.NOT_FOUND, "Für die Aktualisierung der Raumzuweisungen wurden keine Schülerklausurtermine gefunden.");
 		}
 		final GostKlausurenPatchResponseData result = new GostKlausurenPatchResponseData();
 		final Set<Long> idsMitRaumzuweisung = schuelerklausurterminraumstundeService
@@ -266,8 +266,16 @@ public final class GostKlausurenRaumzuweisungService {
 		}
 
 		final List<GostKlausurraum> raeume = raumService.getListByTerminIds(List.of(termin.id));
-		final GostKlausurplanManager manager = createKlausurplanManagerMitStundenplan(List.of(termin), null, null);
 		final GostKlausurenPatchResponseData result = new GostKlausurenPatchResponseData();
+		if (raeume.isEmpty()) {
+			return result;
+		}
+		final List<GostKlausurraumstunde> raumstunden = raumstundeService.getListByRaumIds(raeume.stream().map(raum -> raum.id).toList());
+		if (raumstunden.isEmpty() || schuelerklausurterminraumstundeService
+				.getListByRaumstundeIds(raumstunden.stream().map(raumstunde -> raumstunde.id).toList()).isEmpty()) {
+			return result;
+		}
+		final GostKlausurplanManager manager = createKlausurplanManagerMitStundenplan(List.of(termin), null, null);
 
 		for (final GostKlausurraum raum : raeume) {
 			if (manager.schuelerklausurterminGetMengeByRaum(raum).isEmpty()) {
@@ -569,7 +577,7 @@ public final class GostKlausurenRaumzuweisungService {
 				final StundenplanListeEintrag stundenplan = StundenplanListUtils.get(aktiveStundenplaene, termin.datum);
 				if (stundenplan == null) {
 					throw new ApiOperationException(Status.CONFLICT,
-							"Für den Klausurtermin %d am %s ist kein aktiver Stundenplan verfügbar.".formatted(termin.id, termin.datum));
+							"Die Raumplanung benötigt einen aktiven Stundenplan für den Klausurtermin am %s. Legen Sie diesen zuerst an.".formatted(termin.datum));
 				}
 				manager.stundenplanManagerAdd(stundenplanDataRepository.getStundenplanManager(stundenplan.id));
 			}
@@ -622,7 +630,9 @@ public final class GostKlausurenRaumzuweisungService {
 					stundenplanManager.getZeitrasterByWochentagStartVerstrichen(
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart, maxEnd - minStart);
 			if (zeitrasterRaum.isEmpty()) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Für die Raumplanung am %s gibt es im aktiven Stundenplan kein passendes Zeitraster. Prüfen Sie die Startzeiten und die Dauer der Klausuren."
+								.formatted(termin.datum));
 			}
 			return zeitrasterRaum;
 		}
@@ -698,7 +708,9 @@ public final class GostKlausurenRaumzuweisungService {
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
 							startzeit, vorgabe.dauer + vorgabe.auswahlzeit);
 			if (zeitrasterSk.isEmpty()) {
-				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Für die Raumplanung am %s gibt es im aktiven Stundenplan kein passendes Zeitraster. Prüfen Sie die Startzeit und Dauer der Klausur."
+								.formatted(termin.datum));
 			}
 			return zeitrasterSk;
 		}

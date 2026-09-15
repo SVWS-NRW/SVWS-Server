@@ -146,7 +146,7 @@ public final class GostKlausurenSchuelerklausurterminService {
 	/**
 	 * Patcht ausschließlich den Schülerklausurtermin selbst ohne fachliche Querprüfungen und ohne Raumdaten-Seiteneffekte.
 	 *
-	 * Package-private, damit REST-Workflows den höherwertigen {@link GostKlausurenSchuelerklausurterminPatchService} verwenden und diese Seiteneffekte
+	 * Package-private, damit REST-Workflows den höherwertigen {@link GostKlausurenSchuelerklausurterminWorkflowService} verwenden und diese Seiteneffekte
 	 * nicht umgehen.
 	 *
 	 * @param patchRequest die Patch-Daten
@@ -160,7 +160,7 @@ public final class GostKlausurenSchuelerklausurterminService {
 	/**
 	 * Patcht ausschließlich mehrere Schülerklausurtermine selbst ohne fachliche Querprüfungen und ohne Raumdaten-Seiteneffekte.
 	 *
-	 * Package-private, damit REST-Workflows den höherwertigen {@link GostKlausurenSchuelerklausurterminPatchService} verwenden und diese Seiteneffekte
+	 * Package-private, damit REST-Workflows den höherwertigen {@link GostKlausurenSchuelerklausurterminWorkflowService} verwenden und diese Seiteneffekte
 	 * nicht umgehen.
 	 *
 	 * @param patchRequests die Patch-Daten
@@ -185,7 +185,7 @@ public final class GostKlausurenSchuelerklausurterminService {
 			dto.Termin_ID = JSONMapper.convertToLong(patchRequest.idTermin.get(), true, "idTermin");
 		}
 		if (patchRequest.startzeit.isPresent()) {
-			dto.Startzeit = JSONMapper.convertToIntegerInRange(patchRequest.startzeit.get(), true, 0, 1440, "startzeit");
+			dto.Startzeit = patchRequest.startzeit.get();
 		}
 		if (patchRequest.bemerkung.isPresent()) {
 			dto.Bemerkungen = StringUtils.trimToNull(JSONMapper.convertToString(patchRequest.bemerkung.get(), true, true,
@@ -221,7 +221,7 @@ public final class GostKlausurenSchuelerklausurterminService {
 			dto.Termin_ID = JSONMapper.convertToLong(createRequest.idTermin.get(), true, "idTermin");
 		}
 		if (createRequest.startzeit.isPresent()) {
-			dto.Startzeit = JSONMapper.convertToIntegerInRange(createRequest.startzeit.get(), true, 0, 1440, "startzeit");
+			dto.Startzeit = createRequest.startzeit.get();
 		}
 		if (createRequest.bemerkung.isPresent()) {
 			dto.Bemerkungen = StringUtils.trimToNull(JSONMapper.convertToString(createRequest.bemerkung.get(), true, true,

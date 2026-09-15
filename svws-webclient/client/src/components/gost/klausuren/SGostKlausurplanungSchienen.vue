@@ -312,15 +312,18 @@
 
 	const blocken = async () => {
 		loading.value = true;
-		showModalAutomatischBlocken.value = false;
-		const daten = new GostKlausurterminblockungDaten();
-		daten.kursklausuren = state.manager.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
-		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
-		daten.konfiguration.algorithmus = algMode.value.id;
-		daten.konfiguration.modusKursarten = lkgkMode.value.id;
-		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
-		await state.blockenKursklausuren(daten);
-		loading.value = false;
+		try {
+			showModalAutomatischBlocken.value = false;
+			const daten = new GostKlausurterminblockungDaten();
+			daten.kursklausuren = state.manager.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal);
+			daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
+			daten.konfiguration.algorithmus = algMode.value.id;
+			daten.konfiguration.modusKursarten = lkgkMode.value.id;
+			daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
+			await state.blockenKursklausuren(daten);
+		} finally {
+			loading.value = false;
+		}
 	};
 
 	const klausurCssClasses = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {

@@ -3,6 +3,7 @@ package de.svws_nrw.service.gost.klausuren;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -18,11 +19,15 @@ public class GostKlausurenVorgabePatchRequest {
 
 	/** Die Klausurdauer. */
 	@Schema(description = "die Klausurdauer")
-	public JsonNullable<Integer> dauer = JsonNullable.undefined();
+	public JsonNullable<
+			@NotNull(message = "Die Klausurdauer darf nicht null sein.")
+			@Min(value = 0, message = "Die Klausurdauer darf nicht negativ sein.") Integer> dauer = JsonNullable.undefined();
 
 	/** Die Auswahlzeit. */
 	@Schema(description = "die Auswahlzeit")
-	public JsonNullable<Integer> auswahlzeit = JsonNullable.undefined();
+	public JsonNullable<
+			@NotNull(message = "Die Auswahlzeit darf nicht null sein.")
+			@Min(value = 0, message = "Die Auswahlzeit darf nicht negativ sein.") Integer> auswahlzeit = JsonNullable.undefined();
 
 	/** Gibt an, ob eine GKL möglich ist. */
 	@Schema(description = "gibt an, ob eine GKL möglich ist")

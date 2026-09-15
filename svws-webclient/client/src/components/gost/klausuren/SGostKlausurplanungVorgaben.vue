@@ -169,7 +169,7 @@
 					<div v-if="activeVorgabe.id === 0" class="flex gap-1 flex-wrap justify-start mt-9">
 						<div v-if="(activeVorgabe.idFach === -1) || (activeVorgabe.kursart === '') || (activeVorgabe.quartal === -1)" class="mb-3 leading-tight opacity-50"><span class="icon i-ri-information-line inline align-text-top mr-0.5" />Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 						<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="saveKlausurvorgabe" :disabled="(activeVorgabe.idFach === -1) || (activeVorgabe.kursart === '') || (activeVorgabe.quartal === -1)">Speichern</svws-ui-button>
+						<svws-ui-button @click="saveKlausurvorgabe" :disabled="isSaving || (activeVorgabe.idFach === -1) || (activeVorgabe.kursart === '') || (activeVorgabe.quartal === -1)">Speichern</svws-ui-button>
 					</div>
 				</template>
 			</template>
@@ -185,6 +185,7 @@
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
 	import type { GostFach } from '@core/core/data/gost/GostFach';
 	import { GostKlausurvorgabe } from '@core/core/data/gost/klausuren/GostKlausurvorgabe';
+	import { UserNotificationException } from '@core/core/exceptions/UserNotificationException';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr';
 	import { ArrayList } from '@core/java/util/ArrayList';
@@ -202,6 +203,7 @@
 	}>();
 	const state = useGostKlausurplanungState();
 	const benutzerState = useBenutzerState();
+	const isSaving = ref(false);
 	const presenter = useKlausurplanungPresenter(state);
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
@@ -243,20 +245,14 @@
 	const istGklMoeglich = computed<boolean>({
 		get: () => activeVorgabe.value.istGklMoeglich,
 		set: (value) => {
-			activeVorgabe.value.istGklMoeglich = value;
-			if (activeVorgabe.value.id !== 0) {
-				void state.patchKlausurvorgabe({ istGklMoeglich: value }, activeVorgabe.value.id);
-			}
+			void setVorgabeBoolean(activeVorgabe.value, 'istGklMoeglich', value);
 		},
 	});
 
 	const istMdlPruefung = computed<boolean>({
 		get: () => activeVorgabe.value.istMdlPruefung,
 		set: (value) => {
-			activeVorgabe.value.istMdlPruefung = value;
-			if (activeVorgabe.value.id !== 0) {
-				void state.patchKlausurvorgabe({ istMdlPruefung: value }, activeVorgabe.value.id);
-			}
+			void setVorgabeBoolean(activeVorgabe.value, 'istMdlPruefung', value);
 		},
 	});
 
@@ -330,33 +326,35 @@
 	const istAudioNotwendig = computed<boolean>({
 		get: () => activeVorgabe.value.istAudioNotwendig,
 		set: (value) => {
-			activeVorgabe.value.istAudioNotwendig = value;
-			if (activeVorgabe.value.id !== 0) {
-				void state.patchKlausurvorgabe({ istAudioNotwendig: value }, activeVorgabe.value.id);
-			}
+			void setVorgabeBoolean(activeVorgabe.value, 'istAudioNotwendig', value);
 		},
 	});
 
 	const istVideoNotwendig = computed<boolean>({
 		get: () => activeVorgabe.value.istVideoNotwendig,
 		set: (value) => {
-			activeVorgabe.value.istVideoNotwendig = value;
-			if (activeVorgabe.value.id !== 0) {
-				void state.patchKlausurvorgabe({ istVideoNotwendig: value }, activeVorgabe.value.id);
-			}
+			void setVorgabeBoolean(activeVorgabe.value, 'istVideoNotwendig', value);
 		},
 	});
 
+	async function setVorgabeBoolean(vorgabe: GostKlausurvorgabe,
+		key: 'istGklMoeglich' | 'istMdlPruefung' | 'istAudioNotwendig' | 'istVideoNotwendig', value: boolean) {
+			if (!hatKompetenzUpdate.value) {
+				return;
+			}
+			if (vorgabe.id === 0) {
+				vorgabe[key] = value;
+				triggerRef(activeVorgabe);
+				return;
+			}
+			await state.patchKlausurvorgabe({ [key]: value }, vorgabe.id);
+			if (activeVorgabe.value.id === vorgabe.id) {
+				activeVorgabe.value = state.manager.vorgabeGetByIdOrException(vorgabe.id);
+			}
+		}
+
 	function toggleVorgabeBoolean(vorgabe: GostKlausurvorgabe, key: 'istGklMoeglich' | 'istMdlPruefung') {
-		if (!hatKompetenzUpdate.value) {
-			return;
-		}
-		const value = !vorgabe[key];
-		vorgabe[key] = value;
-		if (activeVorgabe.value.id === vorgabe.id) {
-			triggerRef(activeVorgabe);
-		}
-		void state.patchKlausurvorgabe({ [key]: value }, vorgabe.id);
+		void setVorgabeBoolean(vorgabe, key, !vorgabe[key]);
 	}
 
 	const neueVorgabe = () => {
@@ -364,17 +362,18 @@
 	};
 
 	const saveKlausurvorgabe = async () => {
-		if ((activeVorgabe.value.idFach === -1) || (activeVorgabe.value.kursart === "") || (activeVorgabe.value.quartal === -1)) {
-			console.log("Eingabefehler");
+		if (isSaving.value || !hatKompetenzUpdate.value || (activeVorgabe.value.id !== 0)) {
 			return;
 		}
-		if (activeVorgabe.value.id === 0) {
-			try {
-				await state.erzeugeKlausurvorgabe(activeVorgabe.value);
-				activeVorgabe.value = new GostKlausurvorgabe();
-			} catch (error) {
-				console.log("Vorgabe konnte nicht erzeugt werden, wahrscheinlich existiert sie schon.", activeVorgabe.value);
-			}
+		if ((activeVorgabe.value.idFach === -1) || (activeVorgabe.value.kursart === "") || (activeVorgabe.value.quartal === -1)) {
+			throw new UserNotificationException("Bitte wählen Sie Fach, Kursart und Quartal aus.");
+		}
+		isSaving.value = true;
+		try {
+			await state.erzeugeKlausurvorgabe(activeVorgabe.value);
+			activeVorgabe.value = new GostKlausurvorgabe();
+		} finally {
+			isSaving.value = false;
 		}
 	};
 

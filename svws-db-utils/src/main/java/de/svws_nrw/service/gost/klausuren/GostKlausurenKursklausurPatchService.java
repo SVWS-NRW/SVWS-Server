@@ -96,7 +96,7 @@ public final class GostKlausurenKursklausurPatchService {
 			final int terminQuartal = terminService.get(newTerminId).quartal;
 			final int vorgabeQuartal = vorgabeService.get(before.idVorgabe).quartal;
 			if ((terminQuartal != 0) && !Objects.equals(terminQuartal, vorgabeQuartal)) {
-				throw new ApiOperationException(Status.CONFLICT, "Klausur-Quartal entspricht nicht Termin-Quartal.");
+				throw new ApiOperationException(Status.CONFLICT, "Die Klausur gehört zu einem anderen Quartal. Wählen Sie einen Termin für ihr Quartal oder für alle Quartale.");
 			}
 		}
 	}

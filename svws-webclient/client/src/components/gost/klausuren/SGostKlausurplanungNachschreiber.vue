@@ -232,15 +232,18 @@
 	async function blocken() {
 		showModalAutomatischBlocken.value = false;
 		loading.value = true;
-		const config = new GostNachschreibterminblockungKonfiguration();
-		config.termine = termine.value;
-		selectedNachschreiber.value.retainAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
-		config.schuelerklausurtermine = new ArrayList<GostSchuelerklausurtermin>(selectedNachschreiber.value);
-		config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
-		config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
-		await state.blockenNachschreiber(config);
-		selectedNachschreiber.value.clear();
-		loading.value = false;
+		try {
+			const config = new GostNachschreibterminblockungKonfiguration();
+			config.termine = termine.value;
+			selectedNachschreiber.value.retainAll(state.manager.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(state.jahrgangsdaten.abiturjahr, state.halbjahr, state.quartal));
+			config.schuelerklausurtermine = new ArrayList<GostSchuelerklausurtermin>(selectedNachschreiber.value);
+			config._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = nachschreiber_der_selben_klausur_auf_selbe_termine.value;
+			config._regel_gleiche_fachart_auf_selbe_termine_verteilen = gleiche_fachart_auf_selbe_termine.value;
+			await state.blockenNachschreiber(config);
+			selectedNachschreiber.value.clear();
+		} finally {
+			loading.value = false;
+		}
 	}
 
 	function draggable(data: GostKlausurplanungDragData) {
