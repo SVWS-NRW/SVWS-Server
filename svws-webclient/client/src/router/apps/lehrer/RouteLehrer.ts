@@ -7,7 +7,6 @@ import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManage
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ConfigElement } from "@ui/utils/Config";
 
-import { Katalog } from "~/cache/Katalog";
 import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
 import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
@@ -20,10 +19,10 @@ import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { leitungsfunktionStateImpl } from "~/states/kataloge/LeitungsfunktionStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
@@ -69,7 +68,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await Promise.all([orteStateImpl.init(), routeApp.cache.refreshKataloge(Katalog.LEITUNGSFUNKTIONEN)]);
+			await Promise.all([orteStateImpl.init(), leitungsfunktionStateImpl.init()]);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

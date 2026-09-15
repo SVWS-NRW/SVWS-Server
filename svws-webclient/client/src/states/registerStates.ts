@@ -5,6 +5,7 @@ import { BenutzerStateKey } from "@ui/states/BenutzerState";
 import { ConfigStateKey } from "@ui/states/ConfigState";
 import { GostKlausurplanungStateKey } from "@ui/states/GostKlausurplanungState";
 import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState";
+import { LeitungsfunktionStateKey } from "@ui/states/kataloge/LeitungsfunktionState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
 import { NotificationsStateKey } from "@ui/states/NotificationsState";
@@ -15,6 +16,7 @@ import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
 import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
+import { leitungsfunktionStateImpl } from "~/states/kataloge/LeitungsfunktionStateImpl";
 import { uvStateImpl } from "~/states/UvStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
@@ -54,5 +56,6 @@ export function registerStates(): void {
 	context.provide(NotenmodulStateKey, notenmodulStateImpl);
 	context.provide(NotificationsStateKey, notificationStateImpl);
 	context.provide(OrteStateKey, orteStateImpl);
+	context.provide(LeitungsfunktionStateKey, leitungsfunktionStateImpl);
 	context.provide(StatistikStateKey, statistikStateImpl);
 }

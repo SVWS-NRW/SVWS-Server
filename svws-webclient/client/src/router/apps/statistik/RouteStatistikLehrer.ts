@@ -5,7 +5,6 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
 import { routeLehrer } from "../lehrer/RouteLehrer";
-import { routeApp } from "../RouteApp";
 import type { StatistikLehrerProps } from "~/components/statistik/StatistikLehrerProps";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -29,7 +28,6 @@ export class RouteStatistikLehrer extends RouteNode<any, RouteStatistik> {
 			// lehrer
 			patch: routeLehrer.data.patch,
 			// lehrer: leitungsfunktionen
-			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
 			getListLeitungsfunktionen: () => routeLehrer.data.getListLeitungsfunktionen,
 			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,
 			patchLeitungsfunktion: routeLehrer.data.patchLeitungsfunktion,

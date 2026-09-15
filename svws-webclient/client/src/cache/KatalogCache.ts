@@ -14,7 +14,6 @@ import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
-import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import type { Merkmal } from "@core/core/data/schule/Merkmal";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
@@ -56,7 +55,6 @@ export class KatalogCache {
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 	private _telefonartenById: Map<number, Telefonart> = new Map();
 	private _vermerkartenById: Map<number, VermerkartEintrag> = new Map();
-	private _leitungsfunktionenById: Map<number, Leitungsfunktion> = new Map();
 
 	public constructor() {
 		this.initializeCacheUpdater();
@@ -168,10 +166,6 @@ export class KatalogCache {
 			return { merkmaleById: this.convertToMap(result) };
 		});
 
-		this._katalogCacheUpdater.set(Katalog.LEITUNGSFUNKTIONEN, async () => {
-			const result = await api.server.getLeitungsfunktionen(api.schema);
-			return { leitungsfunktionenById: this.convertToMap(result) };
-		});
 	}
 
 	private convertToMap<T extends { id: number }>(list: List<T>): Map<number, T> {
@@ -359,11 +353,4 @@ export class KatalogCache {
 		this._merkmaleById = value;
 	}
 
-	get leitungsfunktionenById(): Map<number, Leitungsfunktion> {
-		return this._leitungsfunktionenById;
-	}
-
-	set leitungsfunktionenById(value: Map<number, Leitungsfunktion>) {
-		this._leitungsfunktionenById = value;
-	}
 }

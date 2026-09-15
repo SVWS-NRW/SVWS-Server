@@ -6,9 +6,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 
 import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenProps";
 import { type RouteLehrer, routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 const LehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/LehrerIndividualdaten.vue");
 
@@ -33,7 +31,6 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,
 			patchLeitungsfunktion: routeLehrer.data.patchLeitungsfunktion,
 			deleteLeitungsfunktionen: routeLehrer.data.deleteLeitungsfunktionen,
-			mapLeitungsfunktionen: routeApp.cache.kataloge.leitungsfunktionenById,
 			zeigeAlles: true,
 		};
 	}
