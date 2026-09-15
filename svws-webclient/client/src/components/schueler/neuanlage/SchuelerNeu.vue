@@ -84,11 +84,13 @@
 	import { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
 	import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
+	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { SchuelerNeuModelProxy } from "~/components/schueler/neuanlage/modelproxy/SchuelerNeuModelProxy";
@@ -111,7 +113,6 @@
 
 	const abschnitteFiltered = computed(() => manager().schuljahresabschnitteFilteredById.values());
 	const jahrgaenge = computed(() => Array.from(manager().jahrgaengeById.values()));
-	const einschulungsarten = computed(() => manager().einschulungsartenById.values());
 	const religionen = computed(() => manager().religionenById.values());
 
 	const initialData = ref<SchuelerNeu>(Object.assign(new SchuelerNeu(), { status: statusNeuaufnahme?.id ?? -1 }));
@@ -139,8 +140,10 @@
 		selectionDisplayText: k => k.kuerzel ?? "",
 	});
 
-	const einschulungsartManager = new SelectManager({
-		options: einschulungsarten,
+	const einschulungsartManager = new CoreTypeSelectManager({
+		clazz: Einschulungsart.class,
+		schulformen: schuleState.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
 		optionDisplayText: i => i.text,
 		selectionDisplayText: i => i.text,
 	});

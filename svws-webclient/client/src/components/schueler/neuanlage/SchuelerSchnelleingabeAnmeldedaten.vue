@@ -50,6 +50,7 @@
 	import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 	import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 	import type { SchuelerStatusKatalogEintrag } from "@core/asd/data/schueler/SchuelerStatusKatalogEintrag";
+	import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
@@ -73,7 +74,6 @@
 	const schulenMitBKoderSK = computed(() => (schuleState.schulform === Schulform.BK) || (schuleState.schulform === Schulform.SK));
 	const jahrgaenge = computed(() => Array.from(props.manager().jahrgaengeById.values()));
 	const schuljahresabschnitte = computed(() => Array.from(props.manager().schuljahresabschnitte));
-	const einschulungsarten = computed(() => props.manager().einschulungsartenById.values());
 
 	const klassen = computed(() => {
 		return [...props.manager().klassenAktuell]
@@ -96,8 +96,7 @@
 		return `${abschnitt.schuljahr}/${(abschnitt.schuljahr + 1) % 100}.${abschnitt.abschnitt}`;
 	});
 
-	const jahrgang = computed<string | null>(
-		() => jahrgaenge.value.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
+	const jahrgang = computed<string | null>(() => jahrgaenge.value.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
 
 	const klasse = computed<KlassenDaten | null>({
 		get: () => klassen.value.find(i => i.id === (manager().lernabschnittsdaten.klassenID)) ?? null,
@@ -108,7 +107,7 @@
 	});
 
 	const einschulungsart = computed({
-		get: () => props.manager().einschulungsartenById.get(props.manager().schulbesuchsdaten.idEinschulungsartGrundschule ?? -1) ?? null,
+		get: () => Einschulungsart.data().getEintragByID(props.manager().schulbesuchsdaten.idEinschulungsartGrundschule ?? -1),
 		set: (value: EinschulungsartKatalogEintrag) => {
 			props.manager().schulbesuchsdaten.idEinschulungsartGrundschule = value.id;
 			void props.patchSchulbesuchsdaten({ idEinschulungsartGrundschule: value.id }, manager().stammdaten.id);
@@ -128,8 +127,10 @@
 		selectionDisplayText: i => i.kuerzel ?? '',
 	});
 
-	const einschulungsartManager = new SelectManager({
-		options: einschulungsarten,
+	const einschulungsartManager = new CoreTypeSelectManager({
+		clazz: Einschulungsart.class,
+		schulformen: schuleState.schulform,
+		schuljahr: schuleState.abschnitt.schuljahr,
 		optionDisplayText: i => i.text,
 		selectionDisplayText: i => i.text,
 	});

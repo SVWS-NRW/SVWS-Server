@@ -1,5 +1,4 @@
 import type { KlassenDaten } from "@core/asd/data/klassen/KlassenDaten";
-import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
@@ -25,7 +24,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _lernabschnittsdaten: SchuelerLernabschnittsdaten;
 	private readonly _schuelerliste: SchuelerListe;
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
-	private readonly _einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>;
 	private readonly _erzieherartenById: Map<number, Erzieherart>;
 	private readonly _faecherById: Map<number, FachDaten>;
 	private readonly _fahrschuelerartenById: Map<number, Fahrschuelerart>;
@@ -46,7 +44,6 @@ export class SchuelerSchnelleingabeManager {
 		lernabschnittsdaten: SchuelerLernabschnittsdaten,
 		schuelerliste: SchuelerListe,
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
-		einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>,
 		erzieherartenById: Map<number, Erzieherart>,
 		faecherById: Map<number, FachDaten>,
 		fahrschuelerartenById: Map<number, Fahrschuelerart>,
@@ -63,7 +60,6 @@ export class SchuelerSchnelleingabeManager {
 		this._lernabschnittsdaten = lernabschnittsdaten;
 		this._schuelerliste = schuelerliste;
 		this._schuljahresabschnitte = schuljahresabschnitte;
-		this._einschulungsartenById = einschulungsartenById;
 		this._erzieherartenById = erzieherartenById;
 		this._faecherById = faecherById;
 		this._fahrschuelerartenById = fahrschuelerartenById;
@@ -112,10 +108,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get schuelerliste(): SchuelerListe {
 		return this._schuelerliste;
-	}
-
-	get einschulungsartenById(): Map<number, EinschulungsartKatalogEintrag> {
-		return this._einschulungsartenById;
 	}
 
 	get erzieherartenById(): Map<number, Erzieherart> {

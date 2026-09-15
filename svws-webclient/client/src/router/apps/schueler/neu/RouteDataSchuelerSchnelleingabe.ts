@@ -1,4 +1,3 @@
-import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
@@ -68,7 +67,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
 		}
 		const schuljahresabschnitte = abschnittStateImpl.alle;
-		const einschulungsartenById: Map<number, EinschulungsartKatalogEintrag> = routeApp.cache.kataloge.einschulungsartenById;
 		const erzieherartenById: Map<number, Erzieherart> = routeApp.cache.kataloge.erzieherartenById;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
 		const fahrschuelerartenById: Map<number, Fahrschuelerart> = routeApp.cache.kataloge.fahrschuelerartenById;
@@ -80,7 +78,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
 		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
 
-		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte, einschulungsartenById,
+		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte,
 			erzieherartenById, faecherById, fahrschuelerartenById, haltestellenById, jahrgaengeById, kindergaertenById, religionenById,
 			schulenById, telefonartenById, vermerkartenById);
 	}

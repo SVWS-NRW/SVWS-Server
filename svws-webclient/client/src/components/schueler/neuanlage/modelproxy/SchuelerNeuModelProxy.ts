@@ -5,6 +5,7 @@ import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/Eins
 import type { SchuelerNeu } from "@core/asd/data/schueler/SchuelerNeu";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import { Geschlecht } from "@core/asd/types/Geschlecht";
+import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
@@ -97,7 +98,7 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	});
 
 	einschulungsart = computed<EinschulungsartKatalogEintrag | null>({
-		get: () => this._manager().einschulungsartenById.get(this.proxy.idGrundschuleEinschulungsart ?? -1) ?? null,
+		get: () => Einschulungsart.data().getEintragByID(this.proxy.idGrundschuleEinschulungsart ?? -1),
 		set: (value: EinschulungsartKatalogEintrag | null) => this.proxy.idGrundschuleEinschulungsart = value?.id ?? null,
 	});
 

@@ -1,5 +1,4 @@
 import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEintrag";
-import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
@@ -11,7 +10,6 @@ import type { List } from "@core/java/util/List";
 export class SchuelerNeuManager {
 
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
-	private readonly _einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>;
 	private readonly _klassenByIdAbschnitt: Map<number, List<KlassenListeEintrag>>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _religionenById: Map<number, ReligionEintrag>;
@@ -23,7 +21,6 @@ export class SchuelerNeuManager {
 	 * Erzeugt einen neuen SchuelerNeuManager
 	 *
 	 * @param kindergaertenById			kindergaertenById
-	 * @param einschulungsartenById		einschulungsartenById
 	 * @param jahrgaengeById			jahrgaengeById
 	 * @param religionenById			religionenById
 	 * @param schuljahresabschnitte		schuljahresabschnitte
@@ -32,7 +29,6 @@ export class SchuelerNeuManager {
 	 */
 	constructor(
 		kindergaertenById: Map<number, Kindergarten>,
-		einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		religionenById: Map<number, ReligionEintrag>,
 		schuljahresabschnitte: Iterable<Schuljahresabschnitt>,
@@ -40,7 +36,6 @@ export class SchuelerNeuManager {
 		aktuellerAbschnitt: Schuljahresabschnitt
 	) {
 		this._kindergaertenById = kindergaertenById;
-		this._einschulungsartenById = einschulungsartenById;
 		this._klassenByIdAbschnitt = klassenByIdAbschnitt;
 		this._jahrgaengeById = jahrgaengeById;
 		this._religionenById = religionenById;
@@ -68,10 +63,6 @@ export class SchuelerNeuManager {
 
 	get kindergaertenById(): Map<number, Kindergarten> {
 		return this._kindergaertenById;
-	}
-
-	get einschulungsartenById(): Map<number, EinschulungsartKatalogEintrag> {
-		return this._einschulungsartenById;
 	}
 
 	get klassenByIdAbschnitt(): Map<number, List<KlassenListeEintrag>> {

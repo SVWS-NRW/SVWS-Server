@@ -1,4 +1,3 @@
-import type { EinschulungsartKatalogEintrag } from "@core/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -40,7 +39,6 @@ export class KatalogCache {
 	private _beschaeftigungsartenById: Map<number, Beschaeftigungsart> = new Map();
 	private _betriebeById: Map<number, Betrieb> = new Map();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
-	private _einschulungsartenById: Map<number, EinschulungsartKatalogEintrag> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
 	private _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
 	private _erzieherartenById: Map<number, Erzieherart> = new Map();
@@ -83,11 +81,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.BETRIEBSARTEN, async () => {
 			const result = await api.server.getBetriebsarten(api.schema);
 			return { betriebsartenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.EINSCHULUNGSARTEN, async () => {
-			const result = await api.server.getEinschulungsarten(api.schema);
-			return { einschulungsartenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.EINWILLIGUNGSARTEN, async () => {
@@ -228,14 +221,6 @@ export class KatalogCache {
 
 	set betriebsartenById(value: Map<number, Betriebsart>) {
 		this._betriebsartenById = value;
-	}
-
-	get einschulungsartenById(): Map<number, EinschulungsartKatalogEintrag> {
-		return this._einschulungsartenById;
-	}
-
-	set einschulungsartenById(value: Map<number, EinschulungsartKatalogEintrag>) {
-		this._einschulungsartenById = value;
 	}
 
 	get einwilligungsartenById(): Map<number, Einwilligungsart> {
