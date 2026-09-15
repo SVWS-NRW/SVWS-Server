@@ -350,7 +350,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Ein Default-Pfad, in welchem die Client-Dateien gesucht werden, falls in der Konfigurationsdatei keiner angegeben ist. */
-	public static final String default_webclient_path = "webclient";
+	public static final String default_webclient_path = "client";
 
 	/**
 	 * Gibt den Pfad zu den Webclient-Dateien zurück.
