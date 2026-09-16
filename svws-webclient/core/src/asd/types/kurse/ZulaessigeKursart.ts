@@ -504,17 +504,18 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	 *
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
-	public static getByAllgemeinerKursart(schuljahr: number, allgKursart: string): List<ZulaessigeKursart> {
-		if (JavaObject.equalsTranspiler("E", (allgKursart)) || JavaObject.equalsTranspiler("G", (allgKursart))) {
+	public static getByAllgemeinerKursart(schuljahr: number, allgKursart: string | null): List<ZulaessigeKursart> {
+		const tmpAllgKursart: string = (allgKursart === null) ? "PUK" : allgKursart;
+		if (JavaObject.equalsTranspiler("E", (tmpAllgKursart)) || JavaObject.equalsTranspiler("G", (tmpAllgKursart))) {
 			const result: List<ZulaessigeKursart> | null = new ArrayList<ZulaessigeKursart>();
-			result.add(JavaObject.equalsTranspiler("E", (allgKursart)) ? ZulaessigeKursart.E : ZulaessigeKursart.G);
+			result.add(JavaObject.equalsTranspiler("E", (tmpAllgKursart)) ? ZulaessigeKursart.E : ZulaessigeKursart.G);
 			return result;
 		}
 		const mapByAllgemeinerKursart: JavaMap<string, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<string, List<ZulaessigeKursart>>() });
 		if (mapByAllgemeinerKursart === null) {
 			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		}
-		let result: List<ZulaessigeKursart> | null = mapByAllgemeinerKursart.get(allgKursart);
+		let result: List<ZulaessigeKursart> | null = mapByAllgemeinerKursart.get(tmpAllgKursart);
 		if (result === null) {
 			result = new ArrayList();
 			const kursarten: List<ZulaessigeKursart> | null = ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr);
@@ -523,11 +524,11 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 				if (zkke === null) {
 					continue;
 				}
-				if ((JavaObject.equalsTranspiler("", (allgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzelAllg))) || ((zkke.kuerzelAllg === null) && (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzel))))) {
+				if ((JavaObject.equalsTranspiler("", (tmpAllgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(tmpAllgKursart, (zkke.kuerzelAllg))) || ((zkke.kuerzelAllg === null) && (JavaObject.equalsTranspiler(tmpAllgKursart, (zkke.kuerzel))))) {
 					result.add(kursart);
 				}
 			}
-			mapByAllgemeinerKursart.put(allgKursart, result);
+			mapByAllgemeinerKursart.put(tmpAllgKursart, result);
 		}
 		return result;
 	}

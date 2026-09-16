@@ -6450,8 +6450,12 @@ public class StundenplanManager {
 	private static void schuelerCheckAttributes(final @NotNull StundenplanSchueler schueler) {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + schuelerInfo(schueler),
 				schueler.id);
+		DeveloperNotificationException.ifNull("Nachname " + schuelerInfo(schueler),
+				schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("Ungültiger Nachname bei " + schuelerInfo(schueler),
 				schueler.nachname);
+		DeveloperNotificationException.ifNull("Vorname " + schuelerInfo(schueler),
+				schueler.vorname);
 		DeveloperNotificationException.ifStringIsBlank("Ungültiger Vorname bei " + schuelerInfo(schueler),
 				schueler.vorname);
 		// schueler.idKlasse nicht nötig, ein Schüler kann auch keine Klasse haben. Die Zuordnung erfolgt über StundenplanKlasse.

@@ -5771,7 +5771,9 @@ export class StundenplanManager extends JavaObject {
 
 	private static schuelerCheckAttributes(schueler: StundenplanSchueler): void {
 		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.schuelerInfo(schueler), schueler.id);
+		DeveloperNotificationException.ifNull("Nachname " + StundenplanManager.schuelerInfo(schueler), schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("Ungültiger Nachname bei " + StundenplanManager.schuelerInfo(schueler), schueler.nachname);
+		DeveloperNotificationException.ifNull("Vorname " + StundenplanManager.schuelerInfo(schueler), schueler.vorname);
 		DeveloperNotificationException.ifStringIsBlank("Ungültiger Vorname bei " + StundenplanManager.schuelerInfo(schueler), schueler.vorname);
 	}
 
