@@ -25,6 +25,7 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/Rou
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteNode } from "~/router/RouteNode";
+import { beschaeftigungsartStateImpl } from "~/states/kataloge/BeschaeftigungsartStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
@@ -77,9 +78,10 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await Promise.all([orteStateImpl.init(), routeApp.cache.refreshKataloge(Katalog.BETRIEBE, Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ENTLASSGRUENDE,
-				Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
-				Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
+			await Promise.all([orteStateImpl.init(), beschaeftigungsartStateImpl.init(),
+				routeApp.cache.refreshKataloge(Katalog.BETRIEBE, Katalog.EINSCHULUNGSARTEN, Katalog.ENTLASSGRUENDE,
+					Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
+					Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

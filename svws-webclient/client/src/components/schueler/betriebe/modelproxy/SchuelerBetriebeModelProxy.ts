@@ -7,6 +7,7 @@ import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsa
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
 import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
@@ -16,6 +17,7 @@ import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
+	private readonly _beschaeftigungsartState = useBeschaeftigungsartState();
 	private readonly manager: () => SchuelerBetriebeManager;
 
 	constructor(
@@ -45,7 +47,7 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 	});
 
 	beschaeftigungsart = computed<Beschaeftigungsart | null>({
-		get: () => this.manager().beschaeftigungsartenById.get(this.proxy.idBeschaeftigungsart ?? -1) ?? null,
+		get: () => this._beschaeftigungsartState.beschaeftigungsarten.byId.get(this.proxy.idBeschaeftigungsart ?? -1) ?? null,
 		set: (v: Beschaeftigungsart | null) => this.proxy.idBeschaeftigungsart = v?.id ?? null,
 	});
 

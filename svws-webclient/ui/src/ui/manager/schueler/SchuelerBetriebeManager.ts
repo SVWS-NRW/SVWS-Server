@@ -1,7 +1,6 @@
 import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
-import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import type { List } from "@core/java/util/List";
@@ -24,22 +23,19 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 	private readonly _ansprechpartnerById: Map<number, BetriebeAnsprechpartner>;
 	private readonly _lehrerById: Map<number, LehrerListeEintrag>;
 	private readonly _betriebeById: Map<number, Betrieb>;
-	private readonly _beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 
 	constructor(
 		idSchueler: number,
 		schuelerBetriebe: List<SchuelerBetrieb>,
 		ansprechpartner: List<BetriebeAnsprechpartner>,
 		lehrer: List<LehrerListeEintrag>,
-		betriebeById: Map<number, Betrieb>,
-		beschaeftigungsartenById: Map<number, Beschaeftigungsart>) {
+		betriebeById: Map<number, Betrieb>) {
 		super(createDefaultState());
 		this._idSchueler = idSchueler;
 		this._state.value.schuelerBetriebeById = this.mapSchuelerBetriebe(schuelerBetriebe);
 		this._ansprechpartnerById = this.mapAnsprechpartner(ansprechpartner);
 		this._lehrerById = this.mapLehrer(lehrer);
 		this._betriebeById = betriebeById;
-		this._beschaeftigungsartenById = beschaeftigungsartenById;
 	}
 
 	private mapAnsprechpartner(ansprechpartnerList: List<BetriebeAnsprechpartner>): Map<number, BetriebeAnsprechpartner> {
@@ -72,10 +68,6 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 
 	get lehrerById(): Map<number, LehrerListeEintrag> {
 		return this._lehrerById;
-	}
-
-	get beschaeftigungsartenById(): Map<number, Beschaeftigungsart> {
-		return this._beschaeftigungsartenById;
 	}
 
 	get schuelerBetriebeById(): Map<number, SchuelerBetrieb> {

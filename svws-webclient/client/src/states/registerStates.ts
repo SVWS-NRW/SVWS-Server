@@ -5,6 +5,7 @@ import { BenutzerStateKey } from "@ui/states/BenutzerState";
 import { ConfigStateKey } from "@ui/states/ConfigState";
 import { GostKlausurplanungStateKey } from "@ui/states/GostKlausurplanungState";
 import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState";
+import { BeschaeftigungsartStateKey } from "@ui/states/kataloge/BeschaeftigungsartState";
 import { LeitungsfunktionStateKey } from "@ui/states/kataloge/LeitungsfunktionState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
@@ -16,15 +17,14 @@ import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
 import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
-import { leitungsfunktionStateImpl } from "~/states/kataloge/LeitungsfunktionStateImpl";
-import { uvStateImpl } from "~/states/UvStateImpl";
-
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
 import { benutzerStateImpl } from "./BenutzerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
 import { gostKlausurplanungStateImpl } from "./GostKlausurplanungStateImpl";
 import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
+import { beschaeftigungsartStateImpl } from "./kataloge/BeschaeftigungsartStateImpl";
+import { leitungsfunktionStateImpl } from "./kataloge/LeitungsfunktionStateImpl";
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { KlassenStateKey } from "./klassen/KlassenState";
 import { klassenStateImpl } from "./klassen/KlassenStateImpl";
@@ -34,8 +34,8 @@ import { reportingStateImpl } from "./ReportingStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { statistikStateImpl } from "./statistik/StatistikStateImpl";
+import { uvStateImpl } from "./UvStateImpl";
 import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
-
 
 
 export function registerStates(): void {
@@ -57,5 +57,6 @@ export function registerStates(): void {
 	context.provide(NotificationsStateKey, notificationStateImpl);
 	context.provide(OrteStateKey, orteStateImpl);
 	context.provide(LeitungsfunktionStateKey, leitungsfunktionStateImpl);
+	context.provide(BeschaeftigungsartStateKey, beschaeftigungsartStateImpl);
 	context.provide(StatistikStateKey, statistikStateImpl);
 }

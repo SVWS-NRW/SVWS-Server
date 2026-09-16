@@ -19,7 +19,7 @@
 				{{ manager().betriebeById.get(value)?.name }}
 			</template>
 			<template #cell(idBeschaeftigungsart)="{ value }" v-if="istBK">
-				{{ manager().beschaeftigungsartenById.get(value)?.bezeichnung }}
+				{{ beschaeftigungsartState.beschaeftigungsarten.byId.get(value)?.bezeichnung }}
 			</template>
 			<template #cell(vertragsbeginn)="{ value }">
 				{{ formatToLocalDate(value, "—") }}
@@ -75,6 +75,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import type { DataTableColumn } from '@ui/types';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
@@ -88,6 +89,7 @@
 	}>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const beschaeftigungsartState = useBeschaeftigungsartState();
 
 	const emit = defineEmits<{
 		(e: 'update:selectedBetrieb', value: SchuelerBetrieb | null): void;

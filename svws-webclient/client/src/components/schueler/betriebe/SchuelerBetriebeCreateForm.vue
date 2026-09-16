@@ -14,7 +14,7 @@
 							v-model="model.betrieb.value"
 							:manager="betriebeManager"
 							:validation="() => model.getFehler('idBetrieb')"
-							searchable required :removable="false" />
+							required :removable="false" />
 						<div class="flex">
 							<svws-ui-text-input placeholder="Vertragsbeginn" type="date"
 								v-model="model.proxy.vertragsbeginn" />
@@ -25,20 +25,17 @@
 						<ui-select label="Betreuende Lehrkraft"
 							v-model="model.betreuendeLehrkraft.value"
 							:manager="lehrerManager"
-							:deep-search-attributes="['kuerzel']"
-							searchable />
+							:deep-search-attributes="['kuerzel']" />
 						<ui-select label="Ansprechpartner im Betrieb"
 							v-model="model.ansprechpartner.value"
-							:manager="ansprechpartnerManager"
-							searchable />
+							:manager="ansprechpartnerManager" />
 						<svws-ui-text-input placeholder="Betreuer/Ausbilder"
 							v-model="model.proxy.nameAusbilder"
 							:validation="() => model.getFehler('nameAusbilder')"
 							:max-len="30" />
 						<ui-select label="Beschäftigungsart" v-if="istBK"
 							v-model="model.beschaeftigungsart.value"
-							:manager="beschaeftigungsartenManager"
-							searchable />
+							:manager="beschaeftigungsartenManager" />
 						<div v-if="!istBK" />
 						<svws-ui-spacing :size="2" />
 						<svws-ui-checkbox v-model="model.proxy.erhaeltAnschreiben" class="mt-3">
@@ -71,6 +68,7 @@
 
 	import { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
+	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
@@ -83,6 +81,7 @@
 		createModalIsOpen: boolean;
 	}>();
 	const schuleState = useSchuleState();
+	const beschaeftigungsartState = useBeschaeftigungsartState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
@@ -93,7 +92,7 @@
 	const model = shallowRef<SchuelerBetriebeModelProxy>(createModel());
 	const formIsValid = computed(() => model.value.getAlleFehler().isEmpty());
 	const betriebe = computed(() => props.manager().betriebeById.values());
-	const beschaeftigungsarten = computed(() => props.manager().beschaeftigungsartenById.values());
+	const beschaeftigungsarten = computed(() => beschaeftigungsartState.beschaeftigungsarten.list);
 	const lehrer = computed(() => props.manager().lehrerById.values());
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());
 

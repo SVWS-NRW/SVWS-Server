@@ -4,7 +4,6 @@ import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
-import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsart";
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
@@ -35,7 +34,6 @@ export class KatalogCache {
 	 */
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
 	private _abteilungenById: Map<number, Abteilung> = new Map();
-	private _beschaeftigungsartenById: Map<number, Beschaeftigungsart> = new Map();
 	private _betriebeById: Map<number, Betrieb> = new Map();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
@@ -64,11 +62,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.ABTEILUNGEN, async () => {
 			const result = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 			return { abteilungenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.BESCHAEFTIGUNGSARTEN, async () => {
-			const result = await api.server.getBeschaeftigungsarten(api.schema);
-			return { beschaeftigungsartenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.BETRIEBE, async () => {
@@ -191,14 +184,6 @@ export class KatalogCache {
 
 	set abteilungenById(value: Map<number, Abteilung>) {
 		this._abteilungenById = value;
-	}
-
-	get beschaeftigungsartenById(): Map<number, Beschaeftigungsart> {
-		return this._beschaeftigungsartenById;
-	}
-
-	set beschaeftigungsartenById(value: Map<number, Beschaeftigungsart>) {
-		this._beschaeftigungsartenById = value;
 	}
 
 	get betriebeById(): Map<number, Betrieb> {

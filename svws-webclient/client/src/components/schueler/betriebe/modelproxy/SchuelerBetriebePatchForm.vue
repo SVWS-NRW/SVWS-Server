@@ -19,7 +19,7 @@
 				<ui-select label="Beschäftigungsart" v-if="istBK"
 					v-model="model.beschaeftigungsart.value"
 					:manager="beschaeftigungsartenManager"
-					searchable :readonly="!hatKompetenzBearbeiten" />
+					:readonly="!hatKompetenzBearbeiten" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-spacing :size="2" />
@@ -79,6 +79,7 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
@@ -93,6 +94,7 @@
 	}>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const beschaeftigungsartState = useBeschaeftigungsartState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
@@ -101,7 +103,7 @@
 	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
 	const hatKompetenzBearbeiten = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const lehrer = computed(() => props.manager().lehrerById.values());
-	const beschaeftigungsarten = computed(() => props.manager().beschaeftigungsartenById.values());
+	const beschaeftigungsarten = computed(() => beschaeftigungsartState.beschaeftigungsarten.list);
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());
 	const model = new SchuelerBetriebeModelProxy(() => props.selectedBetrieb, props.manager, (data) => props.patch(props.selectedBetrieb.id, data));
 

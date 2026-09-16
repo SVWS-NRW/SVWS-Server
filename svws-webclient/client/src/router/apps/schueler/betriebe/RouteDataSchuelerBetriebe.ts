@@ -44,8 +44,7 @@ export class RouteDataSchuelerBetriebe extends RouteData<RouteStateSchuelerBetri
 			schuelerBetriebe,
 			ansprechpartner,
 			lehrer,
-			routeApp.cache.kataloge.betriebeById,
-			routeApp.cache.kataloge.beschaeftigungsartenById
+			routeApp.cache.kataloge.betriebeById
 		);
 		this.setPatchedState({ auswahl, manager });
 	}
