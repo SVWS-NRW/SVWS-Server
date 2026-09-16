@@ -351,11 +351,12 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 	 *
 	 * @return die Liste der möglichen speziellen Kursarten
 	 */
-	public static @NotNull List<ZulaessigeKursart> getByAllgemeinerKursart(final int schuljahr, final @NotNull String allgKursart) {
+	public static @NotNull List<ZulaessigeKursart> getByAllgemeinerKursart(final int schuljahr, final String allgKursart) {
+		final @NotNull String tmpAllgKursart = (allgKursart == null) ? "PUK" : allgKursart;
 		// TODO Aktueller Fix für E- und G-Kurse an Gesamtschulen
-		if ("E".equals(allgKursart) || "G".equals(allgKursart)) {
+		if ("E".equals(tmpAllgKursart) || "G".equals(tmpAllgKursart)) {
 			final List<ZulaessigeKursart> result = new ArrayList<>();
-			result.add("E".equals(allgKursart) ? ZulaessigeKursart.E : ZulaessigeKursart.G);
+			result.add("E".equals(tmpAllgKursart) ? ZulaessigeKursart.E : ZulaessigeKursart.G);
 			return result;
 		}
 		// Normaler Aufruf
@@ -364,7 +365,7 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 		if (mapByAllgemeinerKursart == null) {
 			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		}
-		List<ZulaessigeKursart> result = mapByAllgemeinerKursart.get(allgKursart);
+		List<ZulaessigeKursart> result = mapByAllgemeinerKursart.get(tmpAllgKursart);
 		if (result == null) {
 			result = new ArrayList<>();
 			final List<ZulaessigeKursart> kursarten = ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr);
@@ -373,12 +374,12 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 				if (zkke == null) {
 					continue;
 				}
-				if (("".equals(allgKursart) && (zkke.kuerzel == null)) || (allgKursart.equals(zkke.kuerzelAllg))
-						|| ((zkke.kuerzelAllg == null) && (allgKursart.equals(zkke.kuerzel)))) {
+				if (("".equals(tmpAllgKursart) && (zkke.kuerzel == null)) || (tmpAllgKursart.equals(zkke.kuerzelAllg))
+						|| ((zkke.kuerzelAllg == null) && (tmpAllgKursart.equals(zkke.kuerzel)))) {
 					result.add(kursart);
 				}
 			}
-			mapByAllgemeinerKursart.put(allgKursart, result);
+			mapByAllgemeinerKursart.put(tmpAllgKursart, result);
 		}
 		return result;
 	}
