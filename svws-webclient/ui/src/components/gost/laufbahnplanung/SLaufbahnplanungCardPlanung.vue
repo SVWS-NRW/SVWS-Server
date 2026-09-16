@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
 	<ui-table-grid name="Laufbahnplanung" :header-count="2" :footer-count="3" :manager="() => gridManager">
 		<template #header="params">
@@ -75,8 +76,7 @@
 					<svws-ui-tooltip>
 						<span class="icon-sm i-ri-question-line mx-1" />
 						<template #content>
-							{{ manager.getTooltipWochenstunden() }}
-							Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.
+							<span v-html="manager.getTooltipWochenstunden()" />
 						</template>
 					</svws-ui-tooltip>
 				</td>
@@ -157,7 +157,7 @@
 
 	const props = withDefaults(defineProps<{
 		manager: LaufbahnplanungUiManager;
-		title?: string | undefined;
+		title?: string;
 		hatUpdateKompetenz?: boolean;
 	}>(), {
 		title: undefined,
