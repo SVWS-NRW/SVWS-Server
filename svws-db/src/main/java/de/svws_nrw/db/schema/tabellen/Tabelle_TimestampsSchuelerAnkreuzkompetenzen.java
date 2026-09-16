@@ -57,7 +57,7 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 			.setRevision(SchemaRevisionen.REV_67);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen_UNTIL_REV70 = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen_UNTIL_REV78 = addTrigger(
 			"t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen",
 			DBDriver.MARIA_DB,
 			"""
@@ -73,7 +73,7 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 			END
 			""",
 			Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
-			.setVeraltet(SchemaRevisionen.REV_70);
+			.setVeraltet(SchemaRevisionen.REV_78);
 
 	/** Trigger t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerAnkreuzkompetenzen = addTrigger(
@@ -82,14 +82,14 @@ public class Tabelle_TimestampsSchuelerAnkreuzkompetenzen extends SchemaTabelle 
 			"""
 			AFTER UPDATE ON SchuelerAnkreuzfloskeln FOR EACH ROW
 			BEGIN
-			    IF NOT (OLD.Stufe1 <=> NEW.Stufe1) AND (OLD.Stufe2 <=> NEW.Stufe2) AND (OLD.Stufe3 <=> NEW.Stufe3) AND
-			       (OLD.Stufe4 <=> NEW.Stufe4) AND (OLD.Stufe5 <=> NEW.Stufe5) THEN
+			    IF NOT ((OLD.Stufe1 <=> NEW.Stufe1) AND (OLD.Stufe2 <=> NEW.Stufe2) AND (OLD.Stufe3 <=> NEW.Stufe3) AND
+			       (OLD.Stufe4 <=> NEW.Stufe4) AND (OLD.Stufe5 <=> NEW.Stufe5)) THEN
 			        UPDATE TimestampsSchuelerAnkreuzkompetenzen SET tsStufe = UTC_TIMESTAMP(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerAnkreuzfloskeln, Schema.tab_TimestampsSchuelerAnkreuzkompetenzen)
-			.setRevision(SchemaRevisionen.REV_70);
+			.setRevision(SchemaRevisionen.REV_78);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerAnkreuzkompetenzen.
