@@ -9,6 +9,7 @@ AllgAdr;Adresse_ID;Name1;S;;;AllgAdrName1;SELECT AllgAdrName1 FROM K_AllgAdresse
 AllgAdr;Adresse_ID;Name2;S;;;AllgAdrName2;SELECT AllgAdrName2 FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Ortsname;S;;;Bezeichnung;SELECT O.Bezeichnung FROM K_Ort O, K_AllgAdresse AA WHERE O.ID=AA.AllgAdrOrt_ID AND AA.ID=%;ALLE
 AllgAdr;Adresse_ID;Postleitzahl;S;;;AllgAdrPLZ;SELECT O.PLZ FROM K_Ort O, K_AllgAdresse AA WHERE O.ID=AA.AllgAdrOrt_ID AND AA.ID=%;ALLE
+AllgAdr;Adresse_ID;Sichtbar;S;;;Sichtbar;SELECT Sichtbar FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Straße;S;;;AllgAdrStrasse;SELECT CONCAT(IFNULL(AllgAdrStrassenname,''), ' ', IFNULL(AllgAdrHausNr,'')) AS AllgAdrStrasse  FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Telefon-Nr. 1;S;;;AllgAdrTelefon1;SELECT AllgAdrTelefon1 FROM K_AllgAdresse WHERE ID=%;ALLE
 AllgAdr;Adresse_ID;Telefon-Nr. 2;S;;;AllgAdrTelefon2;SELECT AllgAdrTelefon2 FROM K_AllgAdresse WHERE ID=%;ALLE
@@ -17,7 +18,6 @@ AllgAdr;Adresse_ID;Zusatz2;S;;;AllgAdrZusatz2;SELECT AllgAdrZusatz2 FROM K_AllgA
 AllgAdr;Praktikum;Praktikum;B;;;;;ALLE
 AllgAdr;Schueler_ID;Schüler-Nachname;S;;;Name;SELECT Name FROM Schueler WHERE ID=%;ALLE
 AllgAdr;Schueler_ID;Schüler-Vorname;S;;;Vorname;SELECT Vorname FROM Schueler WHERE ID=%;ALLE
-AllgAdr;Sichtbar;Sichtbar;S;;;;;ALLE
 AllgAdr;Vertragsart_ID;Vertragsart;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Beschaeftigungsart WHERE ID=%;ALLE
 AllgAdr;Vertragsbeginn;Vertragsbeginn;D;;;;;ALLE
 AllgAdr;Vertragsende;Vertragsende;D;;;;;ALLE
@@ -32,7 +32,7 @@ ErzAdr;ErzEMail;1. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzEMail2;2. Person: E-Mail;S;;;;;ALLE
 ErzAdr;ErzOrt_ID;Ortsname;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Ort WHERE ID=%;ALLE
 ErzAdr;ErzOrt_ID;Postleitzahl;S;;;PLZ;SELECT PLZ FROM K_Ort WHERE ID=%;ALLE
-ErzAdr;ErzStrasse;Straße;S;;;;SELECT CONCAT(IFNULL(ErzStrassenname,''), ' ', IFNULL(ErzHausNr,''),IFNULL(ErzHausnrZusatz,'')) AS ErzStrasse  FROM SchuelerErzAdr WHERE Schueler_ID=%;ALLE
+ErzAdr;ID;Straße;S;;;;SELECT CONCAT(IFNULL(ErzStrassenname,''), ' ', IFNULL(ErzHausNr,''),IFNULL(ErzHausnrZusatz,'')) AS ErzStrasse  FROM SchuelerErzAdr WHERE ID=%;ALLE
 ErzAdr;Name1;1. Person: Nachname;S;;;;;ALLE
 ErzAdr;Name2;2. Person: Nachname;S;;;;;ALLE
 ErzAdr;Schueler_ID;Schüler-Jahrgang;S;;;InternKrz;SELECT J.InternKrz FROM EigeneSchule_Jahrgaenge J WHERE J.ID=(SELECT A.Jahrgang_ID from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0);ALLE
@@ -77,7 +77,7 @@ Lehrer;ID;Minderleistungsstunden;S;;;EntlastungStd;select LA.EntlastungStd from 
 Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;;AnrechnungStd;select LA.AnrechnungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;Reststunden;S;;;RestStd;select LA.RestStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
 Lehrer;ID;schulinterne Funktion;S;;;Bezeichnung;SELECT F.Bezeichnung FROM K_Schulfunktionen F, LehrerFunktionen LF, LehrerAbschnittsdaten LA, EigeneSchule ES WHERE LA.ID=LF.Abschnitt_ID AND LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID AND F.ID=LF.Funktion_ID;ALLE
-Lehrer;ID;Initialkennwort für Notenmodul;S;;;Initialkennwort;SELECT Initialkennwort FROM notenmodul_credentials WHERE idLehrer=%;ALLE
+Lehrer;ID;Initialkennwort für Notenmodul;S;;;Initialkennwort;SELECT initialkennwort FROM Notenmodul_Credentials WHERE idLehrer=%;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
 Schueler;ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0;ALLE
@@ -159,7 +159,7 @@ Schueler;ID;Erzieher 2: E-Mail;S;;;ErzEMail2;SELECT ErzEMail2 FROM SchuelerErzAd
 Schueler;ID;Erzieher 2: Nachname;S;;;Name2;SELECT Name2 FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Erzieher 2: Titel;S;;;Titel2;SELECT Titel2 FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Erzieher 2: Vorname;S;;;Vorname2;SELECT Vorname2 FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
-Schueler;ID;Erzieher: Art (Klartext);S;;;Bezeichnung;SELECT K_Erzieherart.Bezeichnung, SchuelerErzAdr.ID FROM K_Erzieherart, SchuelerErzAdr WHERE K_Erzieherart.ID=SchuelerErzAdr.Erzieherart_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
+Schueler;ID;Erzieher: Art (Klartext);S;;;Bezeichnung;SELECT K_ErzieherArt.Bezeichnung, SchuelerErzAdr.ID FROM K_ErzieherArt, SchuelerErzAdr WHERE K_ErzieherArt.ID=SchuelerErzAdr.ErzieherArt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Erhält Anschreiben;B;;;ErzAnschreiben;SELECT ErzAnschreiben FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Erzieher: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, SchuelerErzAdr.ID FROM K_Ort O, SchuelerErzAdr WHERE O.ID=SchuelerErzAdr.ErzOrt_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
 Schueler;ID;Erzieher: Ortsteil;S;;;Bezeichnung;SELECT K_Ortsteil.Bezeichnung, SchuelerErzAdr.ID FROM K_Ortsteil, SchuelerErzAdr WHERE K_Ortsteil.ID=SchuelerErzAdr.ErzOrtsteil_ID AND SchuelerErzAdr.Schueler_ID=% ORDER BY SchuelerErzAdr.Sortierung;ALLE
@@ -178,10 +178,10 @@ Schueler;ID;Stv. Klassenlehrer: Titel;S;;;Titel;SELECT L.Titel FROM Schueler S, 
 Schueler;ID;Stv. Klassenlehrer: Anrede;S;;;Anrede;SELECT L.Anrede FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
 Schueler;ID;Stv. Klassenlehrer: Kürzel;S;;;Kuerzel;SELECT L.Kuerzel FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
 Schueler;ID;Stv. Klassenlehrer: Amtsbezeichnung;S;;;Amtsbezeichnung;SELECT L.Amtsbezeichnung FROM Schueler S, SchuelerLernabschnittsdaten A, KlassenLehrer KL, K_Lehrer L WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND KL.Klassen_ID=A.Klassen_ID AND KL.Reihenfolge=2 AND L.ID=KL.Lehrer_ID;ALLE
-Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_Telefonart T, SchuelerTelefone ST WHERE T.ID=ST.Telefonart_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
+Schueler;ID;Telefon-Nummern: Anschluss-Art;S;;;Bezeichnung;SELECT T.Bezeichnung FROM K_TelefonArt T, SchuelerTelefone ST WHERE T.ID=ST.TelefonArt_ID and ST.Schueler_ID=% ORDER BY ST.Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Bemerkung;S;;;Bemerkung;SELECT Bemerkung FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Telefon-Nummern: Telefon-Nummer;S;;;Telefonnummer;SELECT Telefonnummer FROM SchuelerTelefone WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
-Schueler;ID;Versetzung;S;;;StatistikKrz;SELECT LA.VersetzungKrz FROM SchuelerLernabschnittsdaten LA, Schueler S WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0;ALLE
+Schueler;ID;Versetzung;S;;;VersetzungKrz;SELECT LA.VersetzungKrz FROM SchuelerLernabschnittsdaten LA, Schueler S WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0;ALLE
 Schueler;ID;bes. Merkmal;S;;;Kurztext;select SM1.Kurztext from SchuelerMerkmale SM1 where SM1.Schueler_ID=% order by SM1.DatumVon desc;ALLE
 Schueler;IDExt;Externe ID-Nummer;S;;;;;ALLE
 Schueler;JahrZuzug;Zuzugsjahr;I;;;;;ALLE
@@ -223,7 +223,7 @@ Schueler;Status;Status;I;;;;;ALLE
 Schueler;ID;Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''), ' ', IFNULL(HausNr,''),IFNULL(HausNrZusatz,'')) AS Strasse FROM Schueler WHERE ID=%;ALLE
 Schueler;Telefon;Telefon-Nr.;S;;;;;ALLE
 Schueler;Uebergangsempfehlung_JG5;Übergangsempfehlung;S;;;;;ALLE
-Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie;S;;;mtblVerkehrssprachen.bezeichnung;kuerzel=%;ALLE
+Schueler;VerkehrsspracheFamilie;Verkehrssprache in der Familie (Kürzel);S;;;;;ALLE
 Schueler;Volljaehrig;Volljährig;B;;;;;ALLE
 Schueler;Vorname;Rufname;S;;;;;ALLE
 Schueler;ID;Vorname;S;;;Vname;SELECT COALESCE(NULLIF(Zusatz, ''), Vorname) AS VName FROM Schueler WHERE ID=%;ALLE
@@ -231,7 +231,7 @@ Schueler;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
 Tel;Bemerkung;Bemerkung;S;;;;;ALLE
 Tel;Schueler_ID;Schüler-Nachname;S;;;Name;SELECT Name FROM Schueler WHERE ID=%;ALLE
 Tel;Schueler_ID;Schüler-Vorname;S;;;Vorname;SELECT Vorname FROM Schueler WHERE ID=%;ALLE
-Tel;Telefonart_ID;Anschluss-Art;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Telefonart WHERE ID=%;ALLE
+Tel;TelefonArt_ID;Anschluss-Art;S;;;Bezeichnung;SELECT Bezeichnung FROM K_TelefonArt WHERE ID=%;ALLE
 Tel;Telefonnummer;Telefon-Nummer;S;;;;;ALLE
 Schueler;ID;Klasse;S;;;Klasse;SELECT K.Klasse FROM SchuelerLernabschnittsdaten LA, Schueler S, Klassen K WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND K.ID=LA.Klassen_ID;ALLE
 Schueler;ID;Jahrgang;S;;;ASDJahrgang;SELECT J.ASDJahrgang FROM SchuelerLernabschnittsdaten LA, Schueler S, EigeneSchule_Jahrgaenge J WHERE S.ID=% and LA.Schueler_ID=S.ID AND LA.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID and LA.WechselNr=0 AND J.ID=LA.Jahrgang_ID;ALLE
