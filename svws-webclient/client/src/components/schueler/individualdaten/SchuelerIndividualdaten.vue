@@ -217,11 +217,7 @@
 		<schueler-telefonnummern v-if="serverState.hasDev && hatKompetenzAnsehen && zeigeAlles"
 			:readonly
 			:id-schueler="model.proxy.id"
-			:map-telefon-arten="props.mapTelefonArten"
-			:get-list-schueler-telefoneintraege="props.getListSchuelerTelefoneintraege"
-			:add-schueler-telefoneintrag="props.addSchuelerTelefoneintrag"
-			:patch-schueler-telefoneintrag="props.patchSchuelerTelefoneintrag"
-			:delete-schueler-telefoneintrage="props.deleteSchuelerTelefoneintrage" />
+			:map-telefon-arten="props.mapTelefonArten" />
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
 				<svws-ui-checkbox :readonly class="mt-3 xl:mt-0" v-model="model.proxy.hatMigrationshintergrund" statistics focus-class-content>
@@ -291,6 +287,7 @@
 	import { SchuelerIndividualdatenModel } from "~/components/schueler/individualdaten/modelproxy/SchuelerIndividualdatenModelProxy";
 	import SchuelerTelefonnummern from "~/components/schueler/individualdaten/telefonnummern/SchuelerTelefonnummern.vue";
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 	import { orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	import type { SchuelerIndividualdatenProps } from "./SchuelerIndividualdatenProps";
@@ -301,17 +298,18 @@
 	const reportingState = useReportingState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
+	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
 
 	const model = new SchuelerIndividualdatenModel(
-		() => props.schuelerListeManager().daten(),
+		() => schuelerAuswahlState.manager.daten(),
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
 		() => props.religionenById,
 		() => props.fahrschuelerartenById,
 		() => props.haltestellenById,
-		props.patch
+		(data) => schuelerAuswahlState.patch(data)
 	);
 	const benutzerState = useBenutzerState();
 
@@ -450,7 +448,7 @@
 	async function downloadPDF() {
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getReportingParameter();
 		ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.setReportingParameterVorlageparameter(reportingParameter, "mitSchullogo", "true");
-		reportingParameter.idsHauptdaten.add(props.schuelerListeManager().auswahlID());
+		reportingParameter.idsHauptdaten.add(schuelerAuswahlState.manager.auswahlID());
 		loading.value = true;
 		await reportingState.createPDFReport(reportingParameter);
 		loading.value = false;

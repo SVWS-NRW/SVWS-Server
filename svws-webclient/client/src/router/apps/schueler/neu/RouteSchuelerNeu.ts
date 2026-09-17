@@ -32,11 +32,8 @@ export class RouteSchuelerNeu extends RouteNode<RouteDataSchuelerNeu, RouteSchue
 	public getProps(to: RouteLocationNormalized): SchuelerNeuProps {
 		return {
 			manager: () => this.data.manager,
-			gotoDefaultView: routeSchueler.data.gotoDefaultView,
-			add: routeSchueler.data.add,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			gotToSchnelleingabe: this.data.goToSchnelleingabe,
 		};
 	}
 

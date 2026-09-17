@@ -10,6 +10,7 @@ import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteS
 import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SchuelerSprachen = () => import("~/components/schueler/sprachen/SchuelerSprachen.vue");
 
@@ -32,7 +33,8 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 				return await this.data.auswahlSchueler(null);
 			}
 			try {
-				await this.data.auswahlSchueler(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.auswahlSchueler(schuelerAuswahlState.manager.liste.get(id));
 			} catch {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}
@@ -55,7 +57,6 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			patchSprachpruefung: this.data.patchSprachpruefung,
 			addSprachpruefung: this.data.addSprachpruefung,
 			removeSprachpruefung: this.data.removeSprachpruefung,
-			schuelerListeManager: () => routeSchueler.data.manager,
 		};
 	}
 

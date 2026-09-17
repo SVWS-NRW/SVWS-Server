@@ -13,6 +13,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { gostLaufbahnplanungStateImpl } from "~/states/GostLaufbahnplanungStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SSchuelerLaufbahnplanung = () => import("@ui/components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 
@@ -39,11 +40,12 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
-			if (!routeSchueler.data.manager.hasDaten()) {
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			if (!schuelerAuswahlState.manager.hasDaten()) {
 				return false;
 			}
-			const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
-			if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
+			const abiturjahr = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
+			if (((abiturjahr !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
 						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
@@ -57,13 +59,14 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
+			const schuelerAuswahlState = useSchuelerAuswahlState();
 			if (isEntering) {
 				// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
 				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false) {
-					for (const e of routeSchueler.data.manager.jahrgaenge.list()) {
-						if (e.id === routeSchueler.data.manager.auswahl().idJahrgang) {
-							routeSchueler.data.manager.jahrgaenge.auswahlAdd(e);
-							await routeSchueler.data.setFilter();
+					for (const e of schuelerAuswahlState.manager.jahrgaenge.list()) {
+						if (e.id === schuelerAuswahlState.manager.auswahl().idJahrgang) {
+							schuelerAuswahlState.manager.jahrgaenge.auswahlAdd(e);
+							await schuelerAuswahlState.setFilter();
 							break;
 						}
 					}
@@ -75,7 +78,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<any, RouteSchueler> 
 				return;
 			}
 			try {
-				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(routeSchueler.data.manager.liste.get(id));
+				await gostLaufbahnplanungStateImpl.ladeSchuelerDaten(schuelerAuswahlState.manager.liste.get(id));
 			} catch {
 				return routeSchueler.getRoute({ id });
 			}

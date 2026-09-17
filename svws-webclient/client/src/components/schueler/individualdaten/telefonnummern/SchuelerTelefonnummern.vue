@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Weitere Telefonnummern">
 		<svws-ui-table class="max-h-72! w-full"
 			v-model="selectedTelefonnummern"
-			:items="getListSchuelerTelefoneintraege()"
+			:items="schuelerAuswahlState.listTelefoneintraege"
 			:clicked="clickedTelefonnummer"
 			@update:clicked="tel => patchTelefonnummer(tel)"
 			:columns="telefonnummernTableColumns"
@@ -67,11 +67,13 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { DataTableColumn } from "@ui/types";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 	import { phoneNumberIsValid } from "~/util/validation/Validation";
 
 	import type { SchuelerTelefonnummernProps } from "./SchuelerTelefonnummernProps";
 
 	const props = defineProps<SchuelerTelefonnummernProps>();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	// --- State ---
 
@@ -160,13 +162,13 @@
 		if (currentTelefonnummernMode.value === Mode.ADD) {
 			// Workaround: Der erste Eintrag wird vor dem Anlegen eines neuen SchuelerTelefons ausgewählt,
 			// damit anschließend das Scrollen zum letzten angelegten Element in der Tabelle funktioniert
-			if (!props.getListSchuelerTelefoneintraege().isEmpty()) {
-				clickedTelefonnummer.value = props.getListSchuelerTelefoneintraege().getFirst();
+			if (!schuelerAuswahlState.listTelefoneintraege.isEmpty()) {
+				clickedTelefonnummer.value = schuelerAuswahlState.listTelefoneintraege.getFirst();
 			}
-			await props.addSchuelerTelefoneintrag(partialDataWithoutId, props.idSchueler);
-			clickedTelefonnummer.value = props.getListSchuelerTelefoneintraege().getLast();
+			await schuelerAuswahlState.addTelefoneintrag(partialDataWithoutId, props.idSchueler);
+			clickedTelefonnummer.value = schuelerAuswahlState.listTelefoneintraege.getLast();
 		} else if (currentTelefonnummernMode.value === Mode.PATCH) {
-			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, telefonnummernEntry.value.id);
+			await schuelerAuswahlState.patchTelefoneintrag(partialDataWithoutId, telefonnummernEntry.value.id);
 		}
 		enterDefaultMode();
 	}
@@ -179,7 +181,7 @@
 		for (const s of selectedTelefonnummern.value) {
 			ids.add(s.id);
 		}
-		await props.deleteSchuelerTelefoneintrage(ids);
+		await schuelerAuswahlState.deleteTelefoneintrage(ids);
 		selectedTelefonnummern.value = [];
 	}
 

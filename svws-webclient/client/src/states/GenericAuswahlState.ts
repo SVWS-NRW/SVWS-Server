@@ -20,6 +20,11 @@ export interface GenericAuswahlState<TAuswahlManager extends AuswahlManager<numb
 	get manager(): TAuswahlManager;
 
 	/**
+	 * Führt ein Commit auf dem State aus, d.h. die Reaktivität wird getriggert.
+	 */
+	commit(): void;
+
+	/**
 	 * Führt ein Reset des States durch, indem der State in den Default-State zurück gesetzt wird
 	 */
 	reset(): void;

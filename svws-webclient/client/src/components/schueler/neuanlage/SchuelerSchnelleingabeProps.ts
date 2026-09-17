@@ -9,8 +9,6 @@ import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/Schu
 
 export interface SchuelerSchnelleingabeProps {
 	manager: () => SchuelerSchnelleingabeManager;
-	gotoDefaultView: (idEintrag?: number | null) => Promise<void>;
-	gotoSchuelerNeuView: (navigate: boolean) => Promise<void>;
 	patchSchueler: (data: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
 	getErzieher: () => List<ErzieherStammdaten>;
 	addErzieher: (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number) => Promise<ErzieherStammdaten>;

@@ -7,7 +7,6 @@ import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/Schuele
 export interface SchuelerSchulbesuchProps {
 	manager: () => SchuelerSchulbesuchManager;
 	goToSchule: (idSchule: number) => Promise<void>;
-	autofocus: boolean;
 	patch: (idSchulbesuch: number, data: Partial<SchuelerSchulbesuchsdaten>) => Promise<boolean>;
 	addBisherigeSchule: (data: Partial<SchuelerSchulbesuchSchule>) => Promise<void>;
 	patchBisherigeSchule: (data: Partial<SchuelerSchulbesuchSchule>) => Promise<void>;

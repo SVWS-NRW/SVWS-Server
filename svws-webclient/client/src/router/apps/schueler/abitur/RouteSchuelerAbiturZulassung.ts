@@ -31,7 +31,6 @@ export class RouteSchuelerAbiturZulassung extends RouteNode<any, RouteSchuelerAb
 
 	public getProps(to: RouteLocationNormalized): SchuelerAbiturZulassungProps {
 		return {
-			schueler: routeSchueler.data.manager.auswahl(),
 			managerLaufbahnplanung: () => routeSchuelerAbitur.data.managerLaufbahnplanung,
 			ergebnisBelegpruefung: () => routeSchuelerAbitur.data.ergebnisBelegpruefung,
 			managerAbitur: () => routeSchuelerAbitur.data.managerAbitur,

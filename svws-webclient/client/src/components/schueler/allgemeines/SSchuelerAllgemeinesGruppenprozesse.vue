@@ -7,21 +7,21 @@
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schülerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Schülerinnen und Schüler."
 				:is-open="currentAction === 'druckSchuelerListeKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckSchuelerListeKontaktdatenErzieher', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER"
-					:ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schulbescheinigung drucken" subtitle="Drucke eine Schulbescheinigung für die ausgewählten Schülerinnen und Schüler."
 				:is-open="currentAction === 'druckSchuelerSchulbescheinigung'" @update:is-open="isOpen => setCurrentAction('druckSchuelerSchulbescheinigung', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG"
-					:ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Schüler."
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (schuelerAuswahlState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Schüler."
 				:is-open="currentAction === 'druckSchuelerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckSchuelerStundenplan', isOpen)">
 				<div>
 					<div class="flex flex-col">
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
 					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
@@ -62,12 +62,15 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 
 	type Action = 'druckSchuelerListeKontaktdatenErzieher' | 'druckSchuelerSchulbescheinigung' | 'druckSchuelerStundenplan' | 'delete' | '';
 
 	const props = defineProps<SSchuelerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
@@ -75,17 +78,17 @@
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
 
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.schuelerListeManager().liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
-	const deleteCheckErrors = computed<List<string>>(() => props.deleteSchuelerCheck()[1]);
-	const selectedAllowedToDelete = computed(() => props.deleteSchuelerCheck()[0]);
-	const isDeleteConditionSectionVisible = computed<boolean>(() => (props.schuelerListeManager().liste.auswahlExists() || (statusAction.value === undefined)));
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !schuelerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const deleteCheckErrors = computed<List<string>>(() => schuelerAuswahlState.deleteSchuelerCheck()[1]);
+	const selectedAllowedToDelete = computed(() => schuelerAuswahlState.deleteSchuelerCheck()[0]);
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (schuelerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 	const stundenplanModel = computed({
 		get: () => {
 			if (stundenplanAuswahl.value === undefined) {
-				if (props.mapStundenplaene.size > 0) {
-					const [first] = props.mapStundenplaene.values();
+				if (schuelerAuswahlState.mapStundenplaene.size > 0) {
+					const [first] = schuelerAuswahlState.mapStundenplaene.values();
 					return first;
 				}
 			}
@@ -94,7 +97,7 @@
 		set: value => stundenplanAuswahl.value = value,
 	});
 
-	const stundenplanOptions = computed(() => props.mapStundenplaene.values());
+	const stundenplanOptions = computed(() => schuelerAuswahlState.mapStundenplaene.values());
 	const stundenplanSelectManager = new SelectManager({
 		options: stundenplanOptions.value,
 		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
@@ -118,7 +121,7 @@
 
 	async function entferneSchueler() {
 		loading.value = true;
-		[statusAction.value, logs.value] = await props.deleteSchueler();
+		[statusAction.value, logs.value] = await schuelerAuswahlState.delete();
 		loading.value = false;
 	}
 

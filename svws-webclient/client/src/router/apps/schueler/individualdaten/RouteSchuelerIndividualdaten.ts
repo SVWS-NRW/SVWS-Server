@@ -9,7 +9,6 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
 import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import { wiedervorlageStateImpl } from "~/states/wiedervorlage/WiedervorlageStateImpl";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SchuelerIndividualdaten.vue");
 
@@ -32,19 +31,12 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
-			patch: routeSchueler.data.patch,
-			schuelerListeManager: () => routeSchueler.data.manager,
 			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,
 			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
-			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
-			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
-			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
-			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: this.data.mapSchulen,
-			autofocus: routeSchueler.data.autofocus,
 			zeigeAlles: true,
 		};
 	}

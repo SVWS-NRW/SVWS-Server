@@ -24,6 +24,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	manager: SchuelerSchnelleingabeManager | undefined;
@@ -46,15 +47,16 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 	}
 
 	public async ladeDaten() {
-		const idSchueler = routeSchueler.data.manager.auswahlID() ?? -1;
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		const idSchueler = schuelerAuswahlState.manager.auswahlID() ?? -1;
 		const manager = await this.createManager(idSchueler);
 		await this.createListen(idSchueler);
 		this.setPatchedState({ manager });
 	}
 
 	private async createManager(idSchueler: number) {
-
-		const idSchuljahresabschnitt = routeSchueler.data.manager.auswahl().idSchuljahresabschnitt;
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		const idSchuljahresabschnitt = schuelerAuswahlState.manager.auswahl().idSchuljahresabschnitt;
 		const [stammdaten, schulbesuchsdaten, lernabschnitte, schuelerListe] =
 			await Promise.all([
 				api.server.getSchuelerStammdaten(api.schema, idSchueler),

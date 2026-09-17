@@ -15,7 +15,8 @@ import { abschnittStateImpl } from "../AbschnittStateImpl";
 import type { KlassenListeManager } from "../klassen/KlassenListeManager";
 import { klassenStateImpl } from "../klassen/KlassenStateImpl";
 import { KursListeManager } from "../kurse/KursListeManager";
-import { SchuelerListeManager } from "../schueler/SchuelerListeManager";
+import { schuelerAuswahlStateImpl } from "../schueler/SchuelerAuswahlStateImpl";
+import type { SchuelerListeManager } from "../schueler/SchuelerListeManager";
 import { schuleStateImpl } from "../SchuleStateImpl";
 import { api } from "~/router/Api";
 
@@ -55,11 +56,21 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listFaecher = await api.server.getFaecher(api.schema);
+
+		// Lehrer-State
 		const lehrerListeManager = new LehrerListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listeLehrer);
-		const schuelerListeManager = new SchuelerListeManager(schuleStateImpl.schulform, listeSchueler, listeLehrer, abschnittStateImpl.alle, schuleStateImpl.abschnitt.id);
+
+		// Schüler-State
+		await schuelerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		const schuelerListeManager = schuelerAuswahlStateImpl.manager;
+
+		// Kurse-State
 		const kursListeManager = new KursListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listKurse, listSchueler, listJahrgaenge, listeLehrer, listFaecher);
+
+		// Klassen-State
 		await klassenStateImpl.init(schuleStateImpl.abschnitt.id, false);
 		const klassenListeManager = klassenStateImpl.manager;
+
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listeSchueler.schueler) {
@@ -133,6 +144,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const daten = await api.server.getSchuelerStammdaten(api.schema, id);
 		schuelerListeManager.setDaten(daten);
 		this.setPatchedState({ schuelerListeManager });
+		schuelerAuswahlStateImpl.commit();
 	};
 
 	public setKurs = async (id: number) => {

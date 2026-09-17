@@ -9,9 +9,9 @@ import { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchu
 
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 interface RouteStateDataSchuelerSchulbesuch extends RouteStateInterface {
 	schueler: SchuelerListeEintrag | undefined;
@@ -37,8 +37,9 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 	}
 
 	private async createManager() {
-		const idSchueler = routeSchueler.data.manager.auswahlID() ?? -1;
-		const idSchuljahresabschnitt = routeSchueler.data.manager.auswahl().idSchuljahresabschnitt;
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		const idSchueler = schuelerAuswahlState.manager.auswahlID() ?? -1;
+		const idSchuljahresabschnitt = schuelerAuswahlState.manager.auswahl().idSchuljahresabschnitt;
 		const data: SchuelerSchulbesuchsdaten = await api.server.getSchuelerSchulbesuch(api.schema, idSchueler);
 		return new SchuelerSchulbesuchManager(
 			data,

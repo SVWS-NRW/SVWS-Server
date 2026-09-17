@@ -9,9 +9,9 @@ import type { SchuelerLernplattformenProps } from "~/components/schueler/lernpla
 import { api } from "~/router/Api";
 import { RouteDataSchuelerLernplattformen } from "~/router/apps/schueler/lernplattformen/RouteDataSchuelerLernplattformen";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SSchuelerLernplattformen = () => import("~/components/schueler/lernplattformen/SSchuelerLernplattformen.vue");
 
@@ -33,7 +33,8 @@ export class RouteSchuelerLernplattformen extends RouteNode<RouteDataSchuelerLer
 			if (id === undefined) {
 				await this.data.ladeDaten(null);
 			} else {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

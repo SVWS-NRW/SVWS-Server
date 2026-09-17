@@ -5,7 +5,6 @@ import { ServerMode } from "@core/core/types/ServerMode";
 
 import { routeApp } from "../RouteApp";
 import { routeSchuelerIndividualdaten } from "../schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { routeSchueler } from "../schueler/RouteSchueler";
 import type { StatistikSchuelerProps } from "~/components/statistik/StatistikSchuelerProps";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -27,18 +26,12 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			gotoSchueler: routeStatistik.data.gotoSchueler,
 			zeigeAlles: false,
 			// schueler
-			patch: routeSchueler.data.patch,
 			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,
 			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
-			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
-			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
-			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,
-			deleteSchuelerTelefoneintrage: routeSchueler.data.deleteSchuelerTelefoneintrage,
 			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
-			autofocus: routeSchueler.data.autofocus,
 		};
 	}
 }

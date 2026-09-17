@@ -111,6 +111,7 @@
 	import type { Fachgruppe } from "@core/asd/types/fach/Fachgruppe";
 	import { Note } from "@core/asd/types/Note";
 	import type { AbiturFachbelegung } from "@core/core/data/gost/AbiturFachbelegung";
+	import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { GostBesondereLernleistung } from "@core/core/types/gost/GostBesondereLernleistung";
 	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
@@ -121,9 +122,16 @@
 	import type { JavaMap } from "@core/java/util/JavaMap";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+
 	import type { SchuelerAbiturPruefungsuebersichtTabelleProps } from "./SchuelerAbiturPruefungsuebersichtTabelleProps";
 
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const props = defineProps<SchuelerAbiturPruefungsuebersichtTabelleProps>();
+
+	const schueler = computed<SchuelerListeEintrag>(() => {
+		return schuelerAuswahlState.manager.auswahl();
+	});
 
 	const abiBelegungen = computed<JavaMap<number, AbiturFachbelegung>>(() => {
 		const tmp = new ArrayList<AbiturFachbelegung>();

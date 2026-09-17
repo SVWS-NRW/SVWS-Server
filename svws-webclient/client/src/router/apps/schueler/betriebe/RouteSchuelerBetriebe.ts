@@ -7,9 +7,10 @@ import { ServerMode } from "@core/core/types/ServerMode";
 
 import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
 import { RouteDataSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteDataSchuelerBetriebe";
-import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SchuelerBetriebe = () => import("~/components/schueler/betriebe/SchuelerBetriebe.vue");
 
@@ -28,7 +29,8 @@ export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, 
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined) {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

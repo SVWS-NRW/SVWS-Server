@@ -1,25 +1,25 @@
 <template>
-	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
+	<template v-if="(schuelerAuswahlState.manager.hasDaten() && (schuelerAuswahlState.activeViewType === ViewType.DEFAULT)) || (schuelerAuswahlState.activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="((activeViewType === ViewType.DEFAULT) || (activeViewType === ViewType.NEU))">
+				<template v-if="((schuelerAuswahlState.activeViewType === ViewType.DEFAULT) || (schuelerAuswahlState.activeViewType === ViewType.NEU))">
 					<svws-ui-avatar :src="fotoSrc"
 						:alt="fotoSrcAlt"
-						@image:base64="foto => patch({ foto })"
+						@image:base64="foto => schuelerAuswahlState.patch({ foto })"
 						:upload="!readonly"
 						:capture="!readonly"
 						:removable="!readonly" />
-					<div v-if="manager().hasDaten()" class="svws-headline-wrapper">
+					<div v-if="schuelerAuswahlState.manager.hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID: {{ manager().daten().id }}
+								ID: {{ schuelerAuswahlState.manager.daten().id }}
 							</svws-ui-badge>
 						</h2>
 						<span v-if="klasse !== null" class="svws-subline">{{ klasse.kuerzel }}&nbsp;
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								<template v-for="l of klasse.klassenLeitungen">
-									{{ manager().lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
+									{{ schuelerAuswahlState.manager.lehrer.get(l)?.kuerzel ?? '—' }}&nbsp;
 								</template>
 							</svws-ui-badge>
 							<svws-ui-badge v-if="epJahre !== null" type="light" title="EP-Jahre" class="font-mono ml-2" size="small">
@@ -27,13 +27,13 @@
 							</svws-ui-badge>
 						</span>
 					</div>
-					<div v-if="manager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
+					<div v-if="schuelerAuswahlState.manager.daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-ui-danger i-ri-alert-line" />
 						<span class="text-ui-danger content-center"> Keine Auskunft an Dritte </span>
 					</div>
 				</template>
 
-				<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
+				<template v-else-if="schuelerAuswahlState.activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>Neuen Schüler anlegen...</span>
@@ -41,11 +41,11 @@
 					</div>
 				</template>
 
-				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
+				<template v-else-if="schuelerAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<div class="flex flex-row gap-3">
 							<h2 class="svws-headline text-ui-brand">Mehrfachauswahl</h2>
-							<svws-ui-button v-if="manager().liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
+							<svws-ui-button v-if="schuelerAuswahlState.manager.liste.auswahlExists()" size="normal" type="danger" @click="resetSelection">
 								Auswahl aufheben
 							</svws-ui-button>
 						</div>
@@ -56,7 +56,7 @@
 			<div class="svws-ui-header--actions print:hidden!" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager="() => tabManager(schuelerAuswahlState.activeViewType)" :focus-switching-enabled :focus-help-visible>
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
@@ -77,14 +77,19 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import type { TabManager } from "@ui/ui/nav/TabManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
-	import type { SchuelerAppProps } from "./SSchuelerAppProps";
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	const schuleState = useSchuleState();
 	const benutzerState = useBenutzerState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const props = defineProps<SchuelerAppProps>();
+	const props = defineProps<{
+		tabManager: (viewType: ViewType) => TabManager;
+		activeViewType: ViewType;
+	}>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -93,12 +98,12 @@
 	);
 
 	const readonly = computed<boolean>(() => !benutzerState.kompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
-	const primarstufe = computed<boolean>(() => primarschulformen.has(props.schulform));
+	const primarstufe = computed<boolean>(() => primarschulformen.has(schuleState.schulform));
 	const epJahre = computed<string | null>(() => {
 		if (!primarstufe.value) {
 			return null;
 		}
-		const ep = props.manager().auswahl().epJahre;
+		const ep = schuelerAuswahlState.manager.auswahl().epJahre;
 		if (ep === null) {
 			return null;
 		}
@@ -106,7 +111,7 @@
 	});
 
 	const schuelerSubline = computed(() => {
-		const auswahlSchuelerList = props.manager().liste.auswahlSorted();
+		const auswahlSchuelerList = schuelerAuswahlState.manager.liste.auswahlSorted();
 		if (auswahlSchuelerList.isEmpty()) {
 			return 'Keine Schüler ausgewählt';
 		}
@@ -117,25 +122,25 @@
 	});
 
 	const fotoSrc = computed<string | undefined>(() => {
-		const base64Payload = props.manager().daten().foto;
+		const base64Payload = schuelerAuswahlState.manager.daten().foto;
 		if (base64Payload !== null) {
 			return `data:image/png;base64, ${base64Payload}`;
 		}
 		return undefined;
 	});
 	const fotoSrcAlt = computed<string>(() => (fotoSrc.value !== undefined) ? `Foto von ${vorname.value} ${nachname.value}` : '');
-	const nachname = computed<string>(() => props.manager().daten().nachname);
-	const vorname = computed<string>(() => props.manager().daten().vorname);
+	const nachname = computed<string>(() => schuelerAuswahlState.manager.daten().nachname);
+	const vorname = computed<string>(() => schuelerAuswahlState.manager.daten().vorname);
 
 	const klasse = computed<KlassenDaten | null>(() => {
-		if (!props.manager().hasDaten()) {
+		if (!schuelerAuswahlState.manager.hasDaten()) {
 			return null;
 		}
-		return props.manager().klassen.get(props.manager().auswahl().idKlasse);
+		return schuelerAuswahlState.manager.klassen.get(schuelerAuswahlState.manager.auswahl().idKlasse);
 	});
 
 	async function resetSelection() {
-		await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		await schuelerAuswahlState.gotoDefaultView(schuelerAuswahlState.manager.getVorherigeAuswahl()?.id);
 	}
 
 </script>

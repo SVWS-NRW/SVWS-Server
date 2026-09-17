@@ -13,5 +13,4 @@ export interface SchuelerSprachenProps {
 	patchSprachpruefung: (data: Partial<Sprachpruefung>, id: number) => Promise<void>;
 	addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 	removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
-	schuelerListeManager: () => SchuelerListeManager;
 }

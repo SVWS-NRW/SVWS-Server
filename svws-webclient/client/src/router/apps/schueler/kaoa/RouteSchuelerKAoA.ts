@@ -11,6 +11,7 @@ import { RouteDataSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteDataSchu
 import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const SchuelerKaoa = () => import("~/components/schueler/kaoa/SchuelerKaoa.vue");
@@ -30,9 +31,10 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	protected checkHidden(params: RouteParams = {}) {
 		try {
 			const { id } = RouteNode.getIntParams(params, ["id"]);
-			const auswahl = routeSchueler.data.manager.auswahl();
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			const auswahl = schuelerAuswahlState.manager.auswahl();
 			const schuljahr = schuleStateImpl.schuljahr;
-			if (!routeSchueler.data.manager.hasDaten()
+			if (!schuelerAuswahlState.manager.hasDaten()
 					|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
 					|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)
 					|| !this.isJahrgangEligible(auswahl.jahrgang)) {
@@ -48,7 +50,8 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (id !== undefined) {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

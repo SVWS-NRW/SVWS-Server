@@ -8,9 +8,9 @@
 			<slot name="header" />
 		</div>
 		<div class="secondary-menu--content">
-			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!manager().liste.auswahlExists()"
-				:clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
-				:items="rowsFiltered" :model-value="[...manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!schuelerAuswahlState.manager.liste.auswahlExists()"
+				:clicked="clickedEintrag" @update:clicked="schueler => schuelerAuswahlState.gotoDefaultView(schueler.id)"
+				:items="rowsFiltered" :model-value="[...schuelerAuswahlState.manager.liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
@@ -18,34 +18,34 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-if="abschnittState.istSchuljahresabschnittAktuell()" v-model="filterStatus" title="Status"
-						:items="manager().schuelerstatus.list()" :item-text="status => status.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" class="col-span-full" />
+						:items="schuelerAuswahlState.manager.schuelerstatus.list()" :item-text="status => status.daten(abschnittState.auswahl.schuljahr)?.text ?? '—'" class="col-span-full" />
 					<div v-else class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurMitLernabschitt">nur mit Lernabschnitt</svws-ui-checkbox>
 					</div>
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="manager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''"
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerAuswahlState.manager.klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''"
 						:item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()"
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerAuswahlState.manager.jahrgaenge.list()"
 						:item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="manager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()"
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerAuswahlState.manager.kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerAuswahlState.manager.schulgliederungen.list()"
 						:item-text="textSchulgliederung" />
 				</template>
 				<template #cell(idKlasse)="{ rowData, value }">
-					{{ value === null ? "–" : (manager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
-					<svws-ui-tooltip v-if="!manager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
+					{{ value === null ? "–" : (schuelerAuswahlState.manager.klasseGetOrNull(value)?.kuerzel) ?? "–" }}
+					<svws-ui-tooltip v-if="!schuelerAuswahlState.manager.schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
 						<span v-if="abschnittState.auswahl.id === schuleState.abschnitt.id"
 							class="icon icon-ui-danger i-ri-alert-line" />
 						<span v-else class="icon icon-ui-brand i-ri-information-line" />
 						<template #content>
 							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in
-							{{ manager().schuelerSchuljahresabschnittAsString(rowData.id) }}
+							{{ schuelerAuswahlState.manager.schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>
 					</svws-ui-tooltip>
 				</template>
 				<!-- <template v-if="primarstufe" #cell(epJahre)="{ rowData }"> {{ rowData.jahrgang }} </template> -->
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="showSchnelleingabe">
-						<svws-ui-button :disabled="((activeViewType === ViewType.NEU) || (activeViewType === ViewType.HINZUFUEGEN))" type="icon" @click="startQuickCreationMode"
+						<svws-ui-button :disabled="((schuelerAuswahlState.activeViewType === ViewType.NEU) || (schuelerAuswahlState.activeViewType === ViewType.HINZUFUEGEN))" type="icon" @click="startQuickCreationMode"
 							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-edit-2-line" />
 						</svws-ui-button>
@@ -54,7 +54,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
-						<svws-ui-button :disabled="((activeViewType === ViewType.HINZUFUEGEN) || (activeViewType === ViewType.NEU))" type="icon" @click="startCreationMode"
+						<svws-ui-button :disabled="((schuelerAuswahlState.activeViewType === ViewType.HINZUFUEGEN) || (schuelerAuswahlState.activeViewType === ViewType.NEU))" type="icon" @click="startCreationMode"
 							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -106,6 +106,8 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
@@ -113,43 +115,34 @@
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
-	// const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
-	// const primarstufe = computed(() => primarschulformen.has(props.schulform));
-
-	// function getEpJahre(ep: number | null) {
-	// 	if (!primarstufe.value || (ep === null))
-	// 		return null;
-	// 	const schuljahr = schuleState.schuljahr;
-	// 	return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertBySchluesselOrException(ep.toString()).daten(schuljahr)?.kuerzel ?? null;
-	// }
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const showModalGruppenaktionen = ref<boolean>(false);
 
-	const showSchnelleingabe = computed(() => serverState.hasDev && props.manager().hasDaten()
-		&& (props.manager().auswahl().status === SchuelerStatus.NEUAUFNAHME.daten(abschnittState.auswahl.schuljahr)?.id)
+	const showSchnelleingabe = computed(() => serverState.hasDev && schuelerAuswahlState.manager.hasDaten()
+		&& (schuelerAuswahlState.manager.auswahl().status === SchuelerStatus.NEUAUFNAHME.daten(abschnittState.auswahl.schuljahr)?.id)
 		&& hatKompetenzAendern.value);
 
 	const search = ref<string>("");
 
 	async function startCreationMode(): Promise<void> {
-		props.manager().schuelerstatus.auswahlClear();
-		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
-		await props.setFilter();
-		await props.gotoHinzufuegenView(true);
+		schuelerAuswahlState.manager.schuelerstatus.auswahlClear();
+		schuelerAuswahlState.manager.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
+		await schuelerAuswahlState.setFilter();
+		await schuelerAuswahlState.gotoHinzufuegenView(true);
 	}
 
 	async function startQuickCreationMode(): Promise<void> {
-		await props.gotoSchnelleingabeView(true, props.manager().auswahl().id);
+		await schuelerAuswahlState.gotoSchnelleingabeView(true, schuelerAuswahlState.manager.auswahl().id);
 	}
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const { field, ascending } of props.manager().orderGet()) {
+		for (const { field, ascending } of schuelerAuswahlState.manager.orderGet()) {
 			map.set(field === "klassen" ? "idKlasse" : field, ascending);
 		}
 		return map;
@@ -157,7 +150,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.manager().orderGet();
+			const list = schuelerAuswahlState.manager.orderGet();
 			if (list.length === 0) {
 				return undefined;
 			} else {
@@ -170,8 +163,8 @@
 				return;
 			}
 			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
-			props.manager().orderUpdate(key, value.order);
-			void props.setFilter();
+			schuelerAuswahlState.manager.orderUpdate(key, value.order);
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
@@ -187,9 +180,9 @@
 
 	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {
 		const arr = [];
-		const searchValueIsNumber = /^[0-9]+$/.test(search.value.trim());
+		const searchValueIsNumber = /^\d+$/.test(search.value.trim());
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
-		for (const e of props.manager().filtered()) {
+		for (const e of schuelerAuswahlState.manager.filtered()) {
 			if ((searchValueIsNumber && e.id.toString().includes(search.value))
 				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase))) {
 				arr.push(e);
@@ -199,96 +192,96 @@
 	});
 
 	const filterNurMitLernabschitt = computed<boolean>({
-		get: () => props.manager().filterNurMitLernabschitt(),
+		get: () => schuelerAuswahlState.manager.filterNurMitLernabschitt(),
 		set: (value) => {
-			props.manager().setFilterNurMitLernabschitt(value);
-			void props.setFilter();
+			schuelerAuswahlState.manager.setFilterNurMitLernabschitt(value);
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({
-		get: () => [...props.manager().schuelerstatus.auswahl()],
+		get: () => [...schuelerAuswahlState.manager.schuelerstatus.auswahl()],
 		set: (value) => {
-			props.manager().schuelerstatus.auswahlClear();
+			schuelerAuswahlState.manager.schuelerstatus.auswahlClear();
 			for (const v of value) {
-				props.manager().schuelerstatus.auswahlAdd(v);
+				schuelerAuswahlState.manager.schuelerstatus.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.manager().schulgliederungen.auswahl()],
+		get: () => [...schuelerAuswahlState.manager.schulgliederungen.auswahl()],
 		set: (value) => {
-			props.manager().schulgliederungen.auswahlClear();
+			schuelerAuswahlState.manager.schulgliederungen.auswahlClear();
 			for (const v of value) {
-				props.manager().schulgliederungen.auswahlAdd(v);
+				schuelerAuswahlState.manager.schulgliederungen.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.manager().jahrgaenge.auswahl()],
+		get: () => [...schuelerAuswahlState.manager.jahrgaenge.auswahl()],
 		set: (value) => {
-			props.manager().jahrgaenge.auswahlClear();
+			schuelerAuswahlState.manager.jahrgaenge.auswahlClear();
 			for (const v of value) {
-				props.manager().jahrgaenge.auswahlAdd(v);
+				schuelerAuswahlState.manager.jahrgaenge.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	const filterKlassen = computed<KlassenDaten[]>({
-		get: () => [...props.manager().klassen.auswahl()],
+		get: () => [...schuelerAuswahlState.manager.klassen.auswahl()],
 		set: (value) => {
-			props.manager().klassen.auswahlClear();
+			schuelerAuswahlState.manager.klassen.auswahlClear();
 			for (const v of value) {
-				props.manager().klassen.auswahlAdd(v);
+				schuelerAuswahlState.manager.klassen.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	const filterKurse = computed<KursDaten[]>({
-		get: () => [...props.manager().kurse.auswahl()],
+		get: () => [...schuelerAuswahlState.manager.kurse.auswahl()],
 		set: (value) => {
-			props.manager().kurse.auswahlClear();
+			schuelerAuswahlState.manager.kurse.auswahlClear();
 			for (const v of value) {
-				props.manager().kurse.auswahlAdd(v);
+				schuelerAuswahlState.manager.kurse.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void schuelerAuswahlState.setFilter();
 		},
 	});
 
 	async function filterReset() {
-		props.manager().schulgliederungen.auswahlClear();
-		props.manager().schuelerstatus.auswahlClear();
-		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
-		props.manager().schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		props.manager().jahrgaenge.auswahlClear();
-		props.manager().klassen.auswahlClear();
-		props.manager().kurse.auswahlClear();
-		await props.setFilter();
+		schuelerAuswahlState.manager.schulgliederungen.auswahlClear();
+		schuelerAuswahlState.manager.schuelerstatus.auswahlClear();
+		schuelerAuswahlState.manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+		schuelerAuswahlState.manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		schuelerAuswahlState.manager.jahrgaenge.auswahlClear();
+		schuelerAuswahlState.manager.klassen.auswahlClear();
+		schuelerAuswahlState.manager.kurse.auswahlClear();
+		await schuelerAuswahlState.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		if (props.manager().schulgliederungen.auswahlExists()
-			|| props.manager().jahrgaenge.auswahlExists()
-			|| props.manager().klassen.auswahlExists()
-			|| props.manager().kurse.auswahlExists()) {
+		if (schuelerAuswahlState.manager.schulgliederungen.auswahlExists()
+			|| schuelerAuswahlState.manager.jahrgaenge.auswahlExists()
+			|| schuelerAuswahlState.manager.klassen.auswahlExists()
+			|| schuelerAuswahlState.manager.kurse.auswahlExists()) {
 			return true;
 		}
-		return (!(props.manager().schuelerstatus.auswahlSize() === 2
-			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
-			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)));
+		return (!(schuelerAuswahlState.manager.schuelerstatus.auswahlSize() === 2
+			&& schuelerAuswahlState.manager.schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
+			&& schuelerAuswahlState.manager.schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)));
 	}
 
 	function textKurs(kurs: KursDaten): string {
 		let jahrgaenge = "";
 		let index = 0;
 		for (const j of kurs.idJahrgaenge) {
-			const jg = props.manager().jahrgaenge.get(j);
+			const jg = schuelerAuswahlState.manager.jahrgaenge.get(j);
 			if (jg === null) {
 				continue;
 			}
@@ -328,25 +321,25 @@
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
 
 	async function setAuswahl(schuelerEintraege: SchuelerListeEintrag[]) {
-		props.manager().liste.auswahlClear();
+		schuelerAuswahlState.manager.liste.auswahlClear();
 		for (const schueler of schuelerEintraege) {
-			if (props.manager().liste.hasValue(schueler)) {
-				props.manager().liste.auswahlAdd(schueler);
+			if (schuelerAuswahlState.manager.liste.hasValue(schueler)) {
+				schuelerAuswahlState.manager.liste.auswahlAdd(schueler);
 			}
 		}
 
-		if (props.manager().liste.auswahlExists()) {
-			await props.gotoGruppenprozessView(true);
+		if (schuelerAuswahlState.manager.liste.auswahlExists()) {
+			await schuelerAuswahlState.gotoGruppenprozessView(true);
 		} else {
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+			await schuelerAuswahlState.gotoDefaultView(schuelerAuswahlState.manager.getVorherigeAuswahl()?.id);
 		}
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
+		if ((schuelerAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE) || (schuelerAuswahlState.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
 		}
-		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+		return schuelerAuswahlState.manager.hasDaten() ? schuelerAuswahlState.manager.auswahl() : null;
 	});
 
 </script>

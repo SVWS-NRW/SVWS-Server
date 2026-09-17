@@ -98,7 +98,7 @@
 	import SvwsUiSelect from '@ui/ui/controls/SvwsUiSelect.vue';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
-	import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
+	import { useSchuelerAuswahlState } from '~/states/schueler/SchuelerAuswahlState';
 
 	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
 
@@ -107,15 +107,15 @@
 		patchSprachpruefung: (data: Partial<Sprachpruefung>, id: number) => Promise<void>;
 		addSprachpruefung: (data: Partial<Sprachpruefung>) => Promise<Sprachpruefung | null>;
 		removeSprachpruefung: (data: Sprachpruefung) => Promise<Sprachpruefung>;
-		schuelerListeManager: () => SchuelerListeManager;
 		readonly: boolean;
 	}>();
 	const schuleState = useSchuleState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
+	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
 	const auswahl = ref<Sprachpruefung[]>([]);
 	const selectSprachpruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(props.schuelerListeManager().auswahl().idSchulgliederung));
+	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByIDOrNull(schuelerAuswahlState.manager.auswahl().idSchulgliederung));
 	const hatSpaltenJahrgang = computed(() => {
 		const istBKoderSB = [Schulform.BK, Schulform.SB].includes(schuleState.schulform);
 		const istSpezielleGliederung = (schulgliederung.value !== null) && [Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung.value);
@@ -130,7 +130,7 @@
 					await props.patchSprachpruefung(proxy, sprachpruefung.id);
 					return true;
 				};
-				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, props.schuelerListeManager, patchMethod);
+				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, () => schuelerAuswahlState.manager, patchMethod);
 				list.add(modelProxy);
 			}
 		}
@@ -195,7 +195,7 @@
 	});
 
 	const sprachJahrgaenge = computed(() => {
-		const schulform = props.schuelerListeManager().schulform();
+		const schulform = schuelerAuswahlState.manager.schulform();
 		if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE);
 		}
@@ -218,9 +218,9 @@
 		}
 		const data: Partial<Sprachpruefung> = {};
 		data.sprache = sprache;
-		const schulform = props.schuelerListeManager().schulform();
+		const schulform = schuelerAuswahlState.manager.schulform();
 		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
-			data.jahrgang = Jahrgaenge.data().getEintragByID(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzel;
+			data.jahrgang = Jahrgaenge.data().getEintragByID(schuelerAuswahlState.manager.auswahl().idJahrgang)?.kuerzel;
 		}
 		data.istHSUPruefung = hsu;
 		data.istFeststellungspruefung = !hsu;

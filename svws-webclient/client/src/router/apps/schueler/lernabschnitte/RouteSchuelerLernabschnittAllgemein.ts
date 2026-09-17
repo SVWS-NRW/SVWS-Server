@@ -24,7 +24,6 @@ export class RouteSchuelerLernabschnittAllgemein extends RouteNode<any, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittAllgemeinProps {
 		return {
-			schuelerListeManager: () => routeSchueler.data.manager,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 		};

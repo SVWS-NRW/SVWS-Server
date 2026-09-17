@@ -6,7 +6,7 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchProps";
-import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { routeError } from "~/router/error/RouteError";
@@ -42,7 +42,6 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
 			manager: () => this.data.manager,
-			autofocus: routeSchueler.data.autofocus,
 			patch: routeSchuelerSchulbesuch.data.patch,
 			goToSchule: this.goToSchule,
 			addBisherigeSchule: this.data.addBisherigeSchule,

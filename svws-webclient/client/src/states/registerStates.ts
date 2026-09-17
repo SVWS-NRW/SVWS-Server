@@ -31,6 +31,8 @@ import { klassenStateImpl } from "./klassen/KlassenStateImpl";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
 import { notificationStateImpl } from "./NotificationsStateImpl";
 import { reportingStateImpl } from "./ReportingStateImpl";
+import { SchuelerAuswahlStateKey } from "./schueler/SchuelerAuswahlState";
+import { schuelerAuswahlStateImpl } from "./schueler/SchuelerAuswahlStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
 import { statistikStateImpl } from "./statistik/StatistikStateImpl";
@@ -45,6 +47,7 @@ export function registerStates(): void {
 	context.provide(ConfigStateKey, configStateImpl);
 	context.provide(AbschnittStateKey, abschnittStateImpl);
 	context.provide(SchuleStateKey, schuleStateImpl);
+	context.provide(SchuelerAuswahlStateKey, schuelerAuswahlStateImpl);
 	context.provide(ServerStateKey, serverStateImpl);
 	context.provide(ReportingStateKey, reportingStateImpl);
 	context.provide(WiedervorlageStateKey, wiedervorlageStateImpl);

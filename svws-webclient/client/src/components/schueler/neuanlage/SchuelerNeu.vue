@@ -95,10 +95,12 @@
 
 	import { SchuelerNeuModelProxy } from "~/components/schueler/neuanlage/modelproxy/SchuelerNeuModelProxy";
 	import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	const props = defineProps<SchuelerNeuProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const manager = () => props.manager();
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
@@ -172,14 +174,14 @@
 		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const result = await props.add(model.proxy);
+		const result = await schuelerAuswahlState.add(model.proxy);
 		isLoading.value = false;
-		await props.gotToSchnelleingabe(result.id);
+		await schuelerAuswahlState.gotoSchnelleingabeView(true, result.id);
 	}
 
 	function cancel() {
 		props.checkpoint.active = false;
-		void props.gotoDefaultView(null);
+		void schuelerAuswahlState.gotoDefaultView();
 	}
 
 	watch(() => model.proxy, async () => {

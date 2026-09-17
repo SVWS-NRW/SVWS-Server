@@ -46,6 +46,13 @@ export abstract class GenericAuswahlStateImpl<TAuswahlManager extends AuswahlMan
 
 
 	/**
+	 * Erlaubt das manuelle Triggern der Reaktität auch von außen.
+	 */
+	public commit(): void {
+		super.commit();
+	}
+
+	/**
 	 * Gibt zurück, ob der State aktuell mit einer gültigen initialisiert und verfügbar ist.
 	 */
 	public get isAvailable(): boolean {

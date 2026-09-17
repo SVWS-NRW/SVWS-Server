@@ -11,7 +11,6 @@ export interface SchuelerVermerkeProps {
 	add: () => Promise<void>;
 	remove: (idVermerk: number) => Promise<void>;
 	apiStatus: ApiStatus;
-	autofocus: boolean;
 	filterNurSichtbare: boolean,
 	setFilterNurSichtbare: (value: boolean) => Promise<void>,
 }

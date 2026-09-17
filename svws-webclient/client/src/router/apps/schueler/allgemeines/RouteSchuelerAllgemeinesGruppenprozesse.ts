@@ -7,8 +7,9 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 
 import type { SSchuelerAllgemeinesGruppenprozesseProps } from "~/components/schueler/allgemeines/SSchuelerAllgemeinesGruppenprozesseProps";
 import { api } from "~/router/Api";
-import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SSchuelerAllgemeinesGruppenprozesse = () => import("~/components/schueler/allgemeines/SSchuelerAllgemeinesGruppenprozesse.vue");
 
@@ -24,16 +25,13 @@ export class RouteSchuelerAllgemeinesGruppenprozesse extends RouteNode<any, Rout
 	}
 
 	protected async update(): Promise<void | Error | RouteLocationRaw> {
-		await routeSchueler.data.updateMapStundenplaene();
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		await schuelerAuswahlState.updateMapStundenplaene();
 	}
 
 	public getProps(to: RouteLocationNormalized): SSchuelerAllgemeinesGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
-			mapStundenplaene: routeSchueler.data.mapStundenplaene,
-			schuelerListeManager: () => routeSchueler.data.manager,
-			deleteSchueler: routeSchueler.data.delete,
-			deleteSchuelerCheck: routeSchueler.data.deleteSchuelerCheck,
 		};
 	}
 

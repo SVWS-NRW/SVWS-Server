@@ -54,15 +54,12 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	public getProps(_: RouteLocationNormalized): SchuelerIndividualdatenGruppenprozesseProps {
 		return {
-			schuelerListeManager: () => routeSchueler.data.manager,
 			pendingStateManager: () => this.data.pendingStateManager,
 			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,
 			mapSchulen: this.data.mapSchulen,
-			autofocus: routeSchueler.data.autofocus,
-			patchMultiple: () => routeSchueler.data.patchMultiple(this.data.pendingStateManager),
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

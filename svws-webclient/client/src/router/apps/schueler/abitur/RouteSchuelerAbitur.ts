@@ -14,6 +14,7 @@ import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 import { routeSchuelerAbiturPruefungsuebersicht } from "./RouteSchuelerAbiturPruefungsuebersicht";
 
@@ -43,11 +44,12 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : { id: undefined };
-			if (!routeSchueler.data.manager.hasDaten()) {
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			if (!schuelerAuswahlState.manager.hasDaten()) {
 				return false;
 			}
-			const auswahl = routeSchueler.data.manager.auswahl();
-			if (((auswahl.abiturjahrgang !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(auswahl.abiturjahrgang))
+			const auswahl = schuelerAuswahlState.manager.auswahl();
+			if (((auswahl.abiturjahrgang !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(auswahl.abiturjahrgang))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)
 						&& benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(auswahl.abiturjahrgang)))
@@ -66,7 +68,8 @@ export class RouteSchuelerAbitur extends RouteNode<RouteDataSchuelerAbitur, Rout
 			if (id === undefined) {
 				throw new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben.");
 			}
-			const schueler = routeSchueler.data.manager.liste.get(id);
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			const schueler = schuelerAuswahlState.manager.liste.get(id);
 			if (schueler === null) {
 				return routeSchueler.getRoute({ id });
 			}

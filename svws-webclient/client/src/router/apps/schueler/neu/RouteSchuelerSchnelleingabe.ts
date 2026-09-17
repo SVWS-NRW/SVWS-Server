@@ -31,8 +31,6 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 	public getProps(to: RouteLocationNormalized): SchuelerSchnelleingabeProps {
 		return {
 			manager: () => this.data.manager,
-			gotoDefaultView: routeSchueler.data.gotoDefaultView,
-			gotoSchuelerNeuView: routeSchueler.data.gotoHinzufuegenView,
 			patchSchueler: routeSchuelerSchnelleingabe.data.patchSchueler,
 			getErzieher: () => routeSchuelerSchnelleingabe.data.getErzieher,
 			addErzieher: routeSchuelerSchnelleingabe.data.addErzieher,

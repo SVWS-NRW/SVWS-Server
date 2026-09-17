@@ -5,10 +5,8 @@ import { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
 
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 import type { RouteStateInterface } from "~/router/RouteData";
 import { RouteData } from "~/router/RouteData";
-import { RouteManager } from "~/router/RouteManager";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 
 
@@ -61,9 +59,5 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 		}
 		return this._state.value.manager;
 	}
-
-	goToSchnelleingabe = async (idSchueler: number): Promise<void> => {
-		await RouteManager.doRoute(routeSchuelerSchnelleingabe.getRoute({ id: idSchueler }));
-	};
 
 }

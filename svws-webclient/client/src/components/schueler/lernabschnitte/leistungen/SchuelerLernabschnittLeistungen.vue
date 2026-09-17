@@ -181,12 +181,14 @@
 
 	import { SchuelerLernabschnittAllgemeinModelProxy } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/SchuelerLernabschnittAllgemeinModelProxy";
 	import { SchuelerLeistungsdatenModelProxy } from "~/components/schueler/lernabschnitte/leistungen/modelproxy/SchuelerLeistungsdatenModelProxy";
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	import type { SchuelerLernabschnittLeistungenProps } from "./SchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const selectedLeistungenIds = ref<Set<number>>(new Set());
 	const lernabschnittsdaten = computed<SchuelerLernabschnittsdaten>(() => props.manager().lernabschnittGet());
@@ -194,7 +196,7 @@
 	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
 	const schulform = computed<Schulform>(() => schuleState.schulform);
 	const leistungen = computed<List<SchuelerLeistungsdaten>>(() => props.manager().leistungGetMengeAsListSortedByFach());
-	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(props.schuelerListeManager().auswahl().jahrgang)?.istGymOb() ?? false);
+	const istGymOb = computed<boolean>(() => Jahrgaenge.data().getWertBySchluessel(schuelerAuswahlState.manager.auswahl().jahrgang)?.istGymOb() ?? false);
 	const lernbereichsnote1Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote1Bezeichnung());
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || (lernbereichsnote2Bezeichnung.value !== null));
@@ -291,7 +293,7 @@
 			return false;
 		}
 		// Wenn er keine funktionsbezogenen Rechte auf die Klasse hat, dann hat er keine allgemeine Update-Kompetenz
-		if (!benutzerState.kompetenzenKlasse.has(props.schuelerListeManager().auswahl().idKlasse)) {
+		if (!benutzerState.kompetenzenKlasse.has(schuelerAuswahlState.manager.auswahl().idKlasse)) {
 			return false;
 		}
 		// Wenn der Lernabschnitt nicht der aktuelle der Schule ist oder in der Zukunft liegt, dann hat er keine allgemeine Update-Kompetenz

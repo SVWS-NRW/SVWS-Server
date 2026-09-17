@@ -1,8 +1,5 @@
-import type { Schulform } from "@core/asd/types/schule/Schulform";
+import type { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 
-import type { RouteAuswahlListProps } from "~/router/RouteAuswahlNode";
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
-
-export interface SchuelerAuswahlProps extends RouteAuswahlListProps<SchuelerListeManager> {
-	schulform: Schulform;
+export interface SchuelerAuswahlProps {
+	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }

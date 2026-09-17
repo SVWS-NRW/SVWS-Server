@@ -6,11 +6,11 @@ import { ServerMode } from "@core/core/types/ServerMode";
 
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostklausuren/SchuelerLernabschnittGostKlausurenProps";
 import { type RouteSchuelerLernabschnitte, routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeError } from "~/router/error/RouteError";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 
@@ -39,9 +39,10 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			if ((id === undefined) || (abschnitt === undefined) || (wechselNr === undefined)) {
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			}
-			if (routeSchueler.data.manager.hasDaten()) {
-				const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
-				if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			if (schuelerAuswahlState.manager.hasDaten()) {
+				const abiturjahr = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
+				if (((abiturjahr !== null) && schuelerAuswahlState.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
 					|| (benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && benutzerStateImpl.kompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 					if (routeSchuelerLernabschnitte.data.hatGymOb) {

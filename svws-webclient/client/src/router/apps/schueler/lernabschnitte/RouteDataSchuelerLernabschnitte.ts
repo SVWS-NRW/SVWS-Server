@@ -14,7 +14,6 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { Collection } from "@core/java/util/Collection";
 import type { List } from "@core/java/util/List";
 
-import { routeSchueler } from "../RouteSchueler";
 import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 import { api } from "~/router/Api";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
@@ -22,6 +21,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
@@ -144,14 +144,15 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				api.server.getLehrerFuerAbschnitt(api.schema, found.schuljahresabschnitt),
 			]);
 		}
-		const schueler = routeSchueler.data.manager.auswahl();
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		const schueler = schuelerAuswahlState.manager.auswahl();
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(daten.schuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
 		}
 		const manager = new SchuelerLernabschnittManager(schuleStateImpl.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
 		let klausurManager = undefined;
-		const abiturjahrgang = routeSchueler.data.manager.auswahl().abiturjahrgang;
+		const abiturjahrgang = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {

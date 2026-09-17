@@ -1,6 +1,6 @@
 <template>
 	<Teleport to=".svws-ui-header--actions" defer>
-		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" v-slot="{ openModal }" :map-stundenplaene :api-status :ids-hauptdaten="[id]">
+		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" v-slot="{ openModal }" :map-stundenplaene :api-status :ids-hauptdaten="[schuelerAuswahlState.manager.daten().id]">
 			<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
 		</stundenplan-drucken-modal>
 		<svws-ui-modal-hilfe> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
@@ -16,7 +16,7 @@
 			<hr>
 			<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp
 				:kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan autofocus />
-			<stundenplan-schueler :id :ignore-empty :manager :wochentyp :kalenderwoche />
+			<stundenplan-schueler :id="schuelerAuswahlState.manager.daten().id" :ignore-empty :manager :wochentyp :kalenderwoche />
 		</template>
 	</div>
 </template>
@@ -25,8 +25,11 @@
 
 	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
+
 	import type { SchuelerStundenplanProps } from "./SSchuelerStundenplanProps";
 
 	defineProps<SchuelerStundenplanProps>();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 </script>

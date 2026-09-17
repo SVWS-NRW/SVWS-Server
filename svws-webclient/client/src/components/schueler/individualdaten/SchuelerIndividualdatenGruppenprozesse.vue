@@ -193,11 +193,13 @@
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
+	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	const schuleState = useSchuleState();
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
+	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const { pendingStateManager } = toRefs(props);
 
 	const status = pendingStateManager.value().status;
@@ -232,7 +234,7 @@
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
 	const schuljahr = computed(() => schuleState.schuljahr);
-	const schulform = computed(() => props.schuelerListeManager().schulform());
+	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
 	const religionen = computed(() => props.religionenById.values());
 	const fahrschuelerArten = computed(() => props.fahrschuelerartenById.values());
 	const haltestellen = computed(() => props.haltestellenById.values());
@@ -326,7 +328,7 @@
 
 	async function patchPendingStates() {
 		loading.value = true;
-		await props.patchMultiple();
+		await schuelerAuswahlState.patchMultiple(props.pendingStateManager());
 		loading.value = false;
 	}
 

@@ -8,9 +8,10 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import type { SchuelerEinwilligungenProps } from "~/components/schueler/einwilligungen/SchuelerEinwilligungenProps";
 import { api } from "~/router/Api";
 import { RouteDataSchuelerEinwilligungen } from "~/router/apps/schueler/einwilligungen/RouteDataSchuelerEinwilligungen";
-import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 const SchuelerEinwilligungen = () => import("~/components/schueler/einwilligungen/SchuelerEinwilligungen.vue");
 
@@ -32,7 +33,8 @@ export class RouteSchuelerEinwilligungen extends RouteNode<RouteDataSchuelerEinw
 			if (id === undefined) {
 				await this.data.ladeDaten(null);
 			} else {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

@@ -3,10 +3,8 @@ import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/Schuel
 import type { Collection } from "@core/java/util/Collection";
 
 import type { SchuelerLernabschnittManager } from "../SchuelerLernabschnittManager";
-import type { SchuelerListeManager } from "~/states/schueler/SchuelerListeManager";
 
 export interface SchuelerLernabschnittLeistungenProps {
-	schuelerListeManager: () => SchuelerListeManager;
 	manager: () => SchuelerLernabschnittManager;
 	patch: (data: Partial<SchuelerLernabschnittsdaten>) => Promise<void>;
 	patchLeistung: (data: Partial<SchuelerLeistungsdaten>, id: number) => Promise<void>;

@@ -13,6 +13,7 @@ import { RouteDataSchuelerVermerke } from "~/router/apps/schueler/vermerke/Route
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 
 const SSchuelerVermerke = () => import("~/components/schueler/vermerke/SSchuelerVermerke.vue");
@@ -38,7 +39,8 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			if (id === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			}
-			return routeSchueler.data.manager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
+			const schuelerAuswahlState = useSchuelerAuswahlState();
+			return schuelerAuswahlState.manager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
@@ -53,7 +55,8 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			if (id === undefined) {
 				await this.data.ladeDaten(null);
 			} else {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+				const schuelerAuswahlState = useSchuelerAuswahlState();
+				await this.data.ladeDaten(schuelerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -68,7 +71,6 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			add: this.data.add,
 			remove: this.data.remove,
 			apiStatus: api.status,
-			autofocus: routeSchueler.data.autofocus,
 			filterNurSichtbare: this.data.filterNurSichtbare,
 			setFilterNurSichtbare: this.data.setFilterNurSichtbare,
 		};

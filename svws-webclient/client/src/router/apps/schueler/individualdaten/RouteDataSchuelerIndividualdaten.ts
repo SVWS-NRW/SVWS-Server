@@ -6,6 +6,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
@@ -25,8 +26,9 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 
 	get pendingStateManager(): PendingStateManagerSchuelerIndividualdaten {
 		if (this._state.value.pendingStateManager === undefined) {
+			const schuelerAuswahlState = useSchuelerAuswahlState();
 			this._state.value.pendingStateManager = new PendingStateManagerSchuelerIndividualdaten('id',
-				() => routeSchueler.data.manager, this._state.value.mapSchulen);
+				() => schuelerAuswahlState.manager, this._state.value.mapSchulen);
 			routeSchueler.data.pendingStateManagerRegistry.addPendingStateManager(this._state.value.pendingStateManager);
 		}
 		return this._state.value.pendingStateManager;
