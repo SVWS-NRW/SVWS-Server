@@ -680,7 +680,7 @@ public class EnmV2DatenManager {
 		enmLeistung.istGemahnt = istGemahnt;
 		enmLeistung.tsIstGemahnt = TimestampUtils.convertUtcToLocal(tsLeistung.tsWarnung);
 		enmLeistung.mahndatum = mahndatum;
-		if ((tsNeueZuweisungKursart != null) && (("E".equals(neueZuweisungKursart.Kursart)) || ("G".equals(neueZuweisungKursart.Kursart)))) {
+		if ((neueZuweisungKursart != null) && (tsNeueZuweisungKursart != null) && ((neueZuweisungKursart.Kursart == null) || ("E".equals(neueZuweisungKursart.Kursart)) || ("G".equals(neueZuweisungKursart.Kursart)))) {
 			enmLeistung.neueZuweisungKursart = neueZuweisungKursart.Kursart;
 			enmLeistung.tsNeueZuweisungKursart = TimestampUtils.convertUtcToLocal(tsNeueZuweisungKursart.tsKursart);
 		}

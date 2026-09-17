@@ -42,6 +42,7 @@ import de.svws_nrw.db.utils.TimestampUtils;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
@@ -51,7 +52,6 @@ import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuwei
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenTimestampsRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittTimestampRepository;
-import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungTimestampRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepository;
@@ -511,18 +511,19 @@ public class EnmV2ImportService {
 
 		DTOSchuelerZuweisung zuweisung = kontext.mapSchuelerKursartZuweisungen.getOrNull(leistung.Abschnitt_ID, leistung.Fach_ID);
 		DTOTimestampsSchuelerZuweisungen zuweisungTS = kontext.mapTimestampsSchuelerKursartZuweisungen.getOrNull(leistung.Abschnitt_ID, leistung.Fach_ID);
-		final boolean updateZuweisung = ((zuweisung == null) && (zuweisungTS == null))
+		final boolean updateZuweisung = (zuweisungTS == null)
 				|| isTimestampAfter(enmLeistung.tsNeueZuweisungKursart, TimestampUtils.convertUtcToLocal(zuweisungTS.tsKursart));
 		if (!updateZuweisung) {
 			return;
 		}
 
-		if ((zuweisung == null) || (zuweisungTS == null)) {
+		if (zuweisung == null) {
 			zuweisung = new DTOSchuelerZuweisung(leistung.Abschnitt_ID, leistung.Fach_ID);
-			zuweisung.Kursart = enmLeistung.neueZuweisungKursart;
+		}
+		zuweisung.Kursart = enmLeistung.neueZuweisungKursart;
+		if (zuweisungTS == null) {
 			zuweisungTS = new DTOTimestampsSchuelerZuweisungen(leistung.Abschnitt_ID, leistung.Fach_ID, enmLeistung.tsNeueZuweisungKursart);
 		} else {
-			zuweisung.Kursart = enmLeistung.neueZuweisungKursart;
 			zuweisungTS.tsKursart = enmLeistung.tsNeueZuweisungKursart;
 		}
 		kontext.setSchuelerKursartZuweisungen.add(zuweisung);
