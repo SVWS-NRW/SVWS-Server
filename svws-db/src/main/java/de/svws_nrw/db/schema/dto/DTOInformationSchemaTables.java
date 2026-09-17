@@ -118,7 +118,7 @@ public final class DTOInformationSchemaTables {
 			case MSSQL -> conn.queryNamed("DTOInformationSchemaTables.mssql", String.class)
 					.setParameter(1, schemaName)
 					.getResultList();
-			case SQLITE -> ((schemaName == null) || (!"".equalsIgnoreCase(schemaName)) || (!"master".equalsIgnoreCase(schemaName)))
+			case SQLITE -> ((schemaName == null) || ((!"".equalsIgnoreCase(schemaName)) && (!"master".equalsIgnoreCase(schemaName))))
 					? Collections.emptyList()
 					: conn.queryNamed("DTOInformationSchemaTables.sqlite", String.class).getResultList();
 			default -> new ArrayList<>();
