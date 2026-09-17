@@ -18,6 +18,7 @@ import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingRepo
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationLehrer;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationSchueler;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationStundenplanung;
+import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageSchulformen;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -51,7 +52,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Klausurplanung-Klausurtermine-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen()
 	),
 
@@ -64,7 +65,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Klausurplanung-Schueler-Klausuren",
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren()
 	),
 
@@ -77,7 +78,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Kurs-Schueler",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern()
 	),
 
@@ -90,7 +91,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Kurse-Statistikwerte",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten()
 	),
 
@@ -103,7 +104,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Schueler-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen()
 	),
 
@@ -116,7 +117,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen()
 	),
 
@@ -129,7 +130,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken()
 	),
 
@@ -260,7 +261,7 @@ public enum ReportingReportvorlage {
 			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html",
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4()
 	),
 
@@ -271,7 +272,7 @@ public enum ReportingReportvorlage {
 			"schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html",
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3()
 	),
 
@@ -284,7 +285,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Pruefungsergebnisse",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht()
 	),
 
@@ -297,7 +298,7 @@ public enum ReportingReportvorlage {
 			"GOSt-Laufbahnplanung-Wahlboegen",
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
-			List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF),
+			ReportingReportvorlageSchulformen.GOST,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen()
 	),
 

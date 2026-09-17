@@ -16,6 +16,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
+import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageSchulformen;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -251,20 +252,10 @@ class TestReportingReportvorlage {
 		assertFalse(reportvorlage.giltFuerSchulform(null));
 	}
 
-	/**
-	 * Bindet die im Quelltext genannten Schulformen an den Katalog: Jede Vorlage, die Schulformen nennt, ist eine GOSt-Vorlage und muss die Schulformen
-	 * führen, für die {@code SchulformKatalogEintrag.hatGymOb} gilt. Kommt eine Vorlage mit anderer Bindung hinzu, ist der Test zu erweitern.
-	 */
+	/** Bindet die im Quelltext genannten GOSt-Schulformen an den Katalog: Die Liste führt genau die Schulformen, für die {@code hatGymOb} gilt. */
 	@Test
-	void testDieGenanntenSchulformenEntsprechenDemKatalog() {
-		final Set<Schulform> mitGymnasialerOberstufe = Set.copyOf(Schulform.getListAllMitGymOb());
-
-		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
-			final List<Schulform> schulformen = reportvorlage.getSchulformen();
-			if (!schulformen.isEmpty()) {
-				assertEquals(mitGymnasialerOberstufe, Set.copyOf(schulformen), reportvorlage.name());
-			}
-		}
+	void testDieGostSchulformenEntsprechenDemKatalog() {
+		assertEquals(Set.copyOf(Schulform.getListAllMitGymOb()), Set.copyOf(ReportingReportvorlageSchulformen.GOST));
 	}
 
 	/**
