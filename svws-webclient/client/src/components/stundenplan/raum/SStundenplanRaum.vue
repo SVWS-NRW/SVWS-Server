@@ -40,7 +40,7 @@
 
 	import { computed, ref, shallowRef } from "vue";
 
-	import { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
+	import type { StundenplanRaum } from "@core/core/data/stundenplan/StundenplanRaum";
 	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
