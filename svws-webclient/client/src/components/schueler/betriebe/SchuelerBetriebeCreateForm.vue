@@ -69,6 +69,7 @@
 	import { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+	import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
@@ -82,6 +83,7 @@
 	}>();
 	const schuleState = useSchuleState();
 	const beschaeftigungsartState = useBeschaeftigungsartState();
+	const betriebeState = useBetriebeState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
@@ -91,7 +93,6 @@
 	const idSchueler = computed(() => props.manager().idSchueler);
 	const model = shallowRef<SchuelerBetriebeModelProxy>(createModel());
 	const formIsValid = computed(() => model.value.getAlleFehler().isEmpty());
-	const betriebe = computed(() => props.manager().betriebeById.values());
 	const beschaeftigungsarten = computed(() => beschaeftigungsartState.beschaeftigungsarten.list);
 	const lehrer = computed(() => props.manager().lehrerById.values());
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());
@@ -114,7 +115,7 @@
 	}
 
 	const betriebeManager = new SelectManager({
-		options: betriebe,
+		options: computed(() => betriebeState.betriebe.list),
 		optionDisplayText: v => v.name ?? '—',
 		selectionDisplayText: v => v.name ?? '—',
 	});

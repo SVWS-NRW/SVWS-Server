@@ -8,15 +8,18 @@ import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
+import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
+	private readonly _betriebeState = useBetriebeState();
 	private readonly _beschaeftigungsartState = useBeschaeftigungsartState();
 	private readonly manager: () => SchuelerBetriebeManager;
 
@@ -42,7 +45,7 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 	}
 
 	betrieb = computed<Betrieb | null>({
-		get: () => this.manager().betriebeById.get(this.proxy.idBetrieb ?? -1) ?? null,
+		get: () => this._betriebeState.betriebe.byId.get(this.proxy.idBetrieb ?? -1) ?? null,
 		set: (v: Betrieb | null) => this.proxy.idBetrieb = v?.id ?? -1,
 	});
 

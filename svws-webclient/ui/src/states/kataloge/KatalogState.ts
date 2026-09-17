@@ -6,7 +6,7 @@ import type { List } from "@core/java/util/List";
 export interface KatalogState<T> {
 	readonly list: List<T>;
 	readonly byId: Map<number, T>;
-	update(): Promise<void>;
+	update(initial?: boolean): Promise<void>;
 	add(data: Partial<T>): Promise<T>;
 	patch(id: number, data: Partial<T>): Promise<void>;
 	delete(id: number): Promise<void>;

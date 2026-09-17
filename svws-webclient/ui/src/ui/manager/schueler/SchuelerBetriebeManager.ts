@@ -1,7 +1,6 @@
 import type { SchuelerBetrieb } from "@core/asd/data/schueler/SchuelerBetrieb";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
-import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import type { List } from "@core/java/util/List";
 import { StateManager } from "@ui/ui/StateManager";
@@ -22,20 +21,17 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 	private readonly _idSchueler: number;
 	private readonly _ansprechpartnerById: Map<number, BetriebeAnsprechpartner>;
 	private readonly _lehrerById: Map<number, LehrerListeEintrag>;
-	private readonly _betriebeById: Map<number, Betrieb>;
 
 	constructor(
 		idSchueler: number,
 		schuelerBetriebe: List<SchuelerBetrieb>,
 		ansprechpartner: List<BetriebeAnsprechpartner>,
-		lehrer: List<LehrerListeEintrag>,
-		betriebeById: Map<number, Betrieb>) {
+		lehrer: List<LehrerListeEintrag>) {
 		super(createDefaultState());
 		this._idSchueler = idSchueler;
 		this._state.value.schuelerBetriebeById = this.mapSchuelerBetriebe(schuelerBetriebe);
 		this._ansprechpartnerById = this.mapAnsprechpartner(ansprechpartner);
 		this._lehrerById = this.mapLehrer(lehrer);
-		this._betriebeById = betriebeById;
 	}
 
 	private mapAnsprechpartner(ansprechpartnerList: List<BetriebeAnsprechpartner>): Map<number, BetriebeAnsprechpartner> {
@@ -60,10 +56,6 @@ export class SchuelerBetriebeManager extends StateManager<SchuelerBetriebeState>
 			lehrerById.set(lehrer.id, lehrer);
 		}
 		return lehrerById;
-	}
-
-	get betriebeById(): Map<number, Betrieb> {
-		return this._betriebeById;
 	}
 
 	get lehrerById(): Map<number, LehrerListeEintrag> {

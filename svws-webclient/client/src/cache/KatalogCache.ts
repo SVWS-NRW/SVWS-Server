@@ -4,7 +4,6 @@ import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
-import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
 import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
@@ -34,7 +33,6 @@ export class KatalogCache {
 	 */
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
 	private _abteilungenById: Map<number, Abteilung> = new Map();
-	private _betriebeById: Map<number, Betrieb> = new Map();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
 	private _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
@@ -62,11 +60,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.ABTEILUNGEN, async () => {
 			const result = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 			return { abteilungenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.BETRIEBE, async () => {
-			const result = await api.server.getBetriebe(api.schema);
-			return { betriebeById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.BETRIEBSARTEN, async () => {
@@ -184,14 +177,6 @@ export class KatalogCache {
 
 	set abteilungenById(value: Map<number, Abteilung>) {
 		this._abteilungenById = value;
-	}
-
-	get betriebeById(): Map<number, Betrieb> {
-		return this._betriebeById;
-	}
-
-	set betriebeById(value: Map<number, Betrieb>) {
-		this._betriebeById = value;
 	}
 
 	get betriebsartenById(): Map<number, Betriebsart> {

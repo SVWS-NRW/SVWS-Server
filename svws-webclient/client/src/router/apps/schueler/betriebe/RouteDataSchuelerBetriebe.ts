@@ -5,7 +5,6 @@ import type { List } from "@core/java/util/List";
 import { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
@@ -43,8 +42,7 @@ export class RouteDataSchuelerBetriebe extends RouteData<RouteStateSchuelerBetri
 			auswahl.id,
 			schuelerBetriebe,
 			ansprechpartner,
-			lehrer,
-			routeApp.cache.kataloge.betriebeById
+			lehrer
 		);
 		this.setPatchedState({ auswahl, manager });
 	}

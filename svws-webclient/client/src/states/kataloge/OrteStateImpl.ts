@@ -4,6 +4,7 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import type { KatalogState } from "@ui/states/kataloge/KatalogState";
+import { createKatalogState, toMap } from "@ui/states/kataloge/katalogStateUtils";
 import type { OrteState, OrtsteileKatalogState } from "@ui/states/kataloge/OrteState";
 import { StateManager } from "@ui/ui/StateManager";
 
@@ -30,111 +31,38 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 			ortsteileById: new Map(),
 		});
 
-		this._orte = this.createOrteState();
-		this._ortsteile = this.createOrtsteileState();
-	}
-
-	/** Lädt alle adressbezogenen Kataloge vom Server. */
-	public async init(): Promise<void> {
-		try {
-			const [orte, ortsteile] = await Promise.all([
-				api.server.getOrte(api.schema),
-				api.server.getOrtsteile(api.schema),
-			]);
-
-			this.setPatchedDefaultState({
-				orte,
-				orteById: this.toMap(orte),
-				ortsteile,
-				ortsteileById: this.toMap(ortsteile),
-			});
-		} catch {
-			this.reset();
-			throw new DeveloperNotificationException(
-				"Die adressbezogenen Kataloge konnten nicht geladen werden."
-			);
-		}
-	}
-
-
-	/** Konvertiert eine Core-List in eine Map<id, T> */
-	private toMap<T extends { id: number }>(list: Iterable<T>): Map<number, T> {
-		const map = new Map<number, T>();
-		for (const item of list) {
-			map.set(item.id, item);
-		}
-		return map;
-	}
-
-
-	private createOrteState(): KatalogState<OrtKatalogEintrag> {
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
-		const self = this;
-
-		return {
-			get list() {
-				// "self" wird als explizite Referenz auf die Klasseninstanz im Getter benötigt
-				return self.state.orte;
-			},
-			get byId() {
-				// "self" wird als explizite Referenz auf die Klasseninstanz im Getter benötigt
-				return self.state.orteById;
-			},
-			update: async () => {
-				try {
-					const orte = await api.server.getOrte(api.schema);
-					this.setPatchedState({
-						orte,
-						orteById: this.toMap(orte),
-					});
-				} catch {
-					throw new DeveloperNotificationException(`Das Laden der Orte ist fehlgeschlagen.`);
-				}
-			},
-			add: async (data) => {
-				let ort: OrtKatalogEintrag;
-				try {
-					ort = await api.server.addOrt(data, api.schema);
-				} catch {
-					throw new DeveloperNotificationException(`Das Hinzufügen des Orts ist fehlgeschlagen.`);
-				}
-				await this.orte.update();
-				return ort;
-			},
-			patch: async (id, data) => {
-				try {
-					await api.server.patchOrt(data, api.schema, id);
-				} catch {
-					throw new DeveloperNotificationException("Das Bearbeiten des Orts ist fehlgeschlagen.");
-				}
-				await this.orte.update();
-			},
-			delete: async (id) => {
+		this._orte = createKatalogState({
+			katalogLabel: 'Betriebe',
+			getList: () => this.state.orte,
+			getById: () => this.state.orteById,
+			updateState: (list, byId) => this.setPatchedState({ orte: list, orteById: byId }),
+			updateDefaultState: (list, byId) => this.setPatchedDefaultState({ orte: list, orteById: byId }),
+			apiGet: () => api.server.getOrte(api.schema),
+			apiAdd: (data) => api.server.addOrt(data, api.schema),
+			apiPatch: (id, data) => api.server.patchOrt(data, api.schema, id),
+			apiDelete: async (id) => {
 				const ids = new ArrayList<number>();
 				ids.add(id);
-				try {
-					await api.server.deleteOrte(ids, api.schema);
-				} catch {
-					throw new DeveloperNotificationException("Das Löschen des Orts ist fehlgeschlagen.");
-				}
-				await this.orte.update();
+				await api.server.deleteOrte(ids, api.schema);
 			},
-		};
-	}
+		});
 
-	private createOrtsteileState(): OrtsteileKatalogState {
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
-		const self = this;
-
-		return {
-			get list() {
-				// "self" wird als explizite Referenz auf die Klasseninstanz im Getter benötigt
-				return self.state.ortsteile;
-			},
-			get byId() {
-				// "self" wird als explizite Referenz auf die Klasseninstanz im Getter benötigt
-				return self.state.ortsteileById;
-			},
+		this._ortsteile = {
+			...createKatalogState({
+				katalogLabel: 'Betriebe',
+				getList: () => this.state.ortsteile,
+				getById: () => this.state.ortsteileById,
+				updateState: (list, byId) => this.setPatchedState({ ortsteile: list, ortsteileById: byId }),
+				updateDefaultState: (list, byId) => this.setPatchedDefaultState({ ortsteile: list, ortsteileById: byId }),
+				apiGet: () => api.server.getOrtsteile(api.schema),
+				apiAdd: (data) => api.server.addOrtsteil(data, api.schema),
+				apiPatch: (id, data) => api.server.patchOrtsteil(data, api.schema, id),
+				apiDelete: async (id) => {
+					const ids = new ArrayList<number>();
+					ids.add(id);
+					await api.server.deleteOrtsteile(ids, api.schema);
+				},
+			}),
 			listByOrtId(idOrt: number | null): List<OrtsteilKatalogEintrag> {
 				const result = new ArrayList<OrtsteilKatalogEintrag>();
 				if (idOrt === null) {
@@ -159,46 +87,31 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 				}
 				return result;
 			},
-			update: async () => {
-				try {
-					const ortsteile = await api.server.getOrtsteile(api.schema);
-					this.setPatchedState({
-						ortsteile,
-						ortsteileById: this.toMap(ortsteile),
-					});
-				} catch {
-					throw new DeveloperNotificationException(`Das Laden der Orte ist fehlgeschlagen.`);
-				}
-			},
-			add: async (data) => {
-				let ortsteil: OrtsteilKatalogEintrag;
-				try {
-					ortsteil = await api.server.addOrtsteil(data, api.schema);
-				} catch {
-					throw new DeveloperNotificationException("Das Hinzufügen des Ortsteils ist fehlgeschlagen.");
-				}
-				await this.ortsteile.update();
-				return ortsteil;
-			},
-			patch: async (id, data) => {
-				try {
-					await api.server.patchOrtsteil(data, api.schema, id);
-				} catch {
-					throw new DeveloperNotificationException("Das Bearbeiten des Ortsteils ist fehlgeschlagen.");
-				}
-				await this.ortsteile.update();
-			},
-			delete: async (id) => {
-				const ids = new ArrayList<number>();
-				ids.add(id);
-				try {
-					await api.server.deleteOrtsteile(ids, api.schema);
-				} catch {
-					throw new DeveloperNotificationException("Das Löschen des Ortsteils ist fehlgeschlagen.");
-				}
-				await this.ortsteile.update();
-			},
 		};
+	}
+
+	/** Lädt alle adressbezogenen Kataloge vom Server. */
+	public async init(): Promise<void> {
+		try {
+			// paralleles Laden aller Kataloge
+			const [orte, ortsteile] = await Promise.all([
+				api.server.getOrte(api.schema),
+				api.server.getOrtsteile(api.schema),
+			]);
+
+			// bevor einmalig der Defaultstate gesetzt wird
+			this.setPatchedDefaultState({
+				orte,
+				orteById: toMap(orte),
+				ortsteile,
+				ortsteileById: toMap(ortsteile),
+			});
+		} catch {
+			this.reset();
+			throw new DeveloperNotificationException(
+				"Die adressbezogenen Kataloge konnten nicht geladen werden."
+			);
+		}
 	}
 
 	public get orte(): KatalogState<OrtKatalogEintrag> {

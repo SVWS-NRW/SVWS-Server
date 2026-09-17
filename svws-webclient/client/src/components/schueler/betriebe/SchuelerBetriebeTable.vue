@@ -16,7 +16,7 @@
 				</svws-ui-tooltip>
 			</template>
 			<template #cell(idBetrieb)="{ value }">
-				{{ manager().betriebeById.get(value)?.name }}
+				{{ betriebeState.betriebe.byId.get(value)?.name }}
 			</template>
 			<template #cell(idBeschaeftigungsart)="{ value }" v-if="istBK">
 				{{ beschaeftigungsartState.beschaeftigungsarten.byId.get(value)?.bezeichnung }}
@@ -76,6 +76,7 @@
 	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+	import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import type { DataTableColumn } from '@ui/types';
 	import type { SchuelerBetriebeManager } from '@ui/ui/manager/schueler/SchuelerBetriebeManager';
@@ -90,6 +91,7 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const beschaeftigungsartState = useBeschaeftigungsartState();
+	const betriebeState = useBetriebeState();
 
 	const emit = defineEmits<{
 		(e: 'update:selectedBetrieb', value: SchuelerBetrieb | null): void;
