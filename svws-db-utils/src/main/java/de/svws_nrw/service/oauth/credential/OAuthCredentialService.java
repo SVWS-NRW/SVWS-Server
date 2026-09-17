@@ -9,6 +9,7 @@ import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.oauth.OAuthCredentialMapper;
 import de.svws_nrw.mapper.oauth.OAuthDomainMapper;
+import de.svws_nrw.oauth.internal.CredentialStore;
 import de.svws_nrw.oauth.internal.Credentials;
 import de.svws_nrw.oauth.internal.OAuthDomain;
 import de.svws_nrw.repo.oauth.credential.OAuthCredentialRepository;
@@ -16,8 +17,10 @@ import jakarta.ws.rs.core.Response;
 
 /**
  * Service zur Verwaltung von OAuth-Zugangsdaten.
+ *
+ * <p>Dient ueber {@link CredentialStore} zugleich als Credential-Quelle des OAuth-Token-Flows.
  */
-public class OAuthCredentialService {
+public class OAuthCredentialService implements CredentialStore {
 
 	private final OAuthCredentialRepository repository;
 	private final OAuthCredentialMapper mapper;
@@ -73,6 +76,19 @@ public class OAuthCredentialService {
 	 */
 	public Optional<Credentials> get(final long id) {
 		return repository.findById(id)
+				.map(mapper::fromDomain);
+	}
+
+	/**
+	 * Gibt die Zugangsdaten zur uebergebenen Domaene zurueck, falls vorhanden.
+	 *
+	 * @param domain die Domaene
+	 *
+	 * @return die Zugangsdaten der Domaene, sofern vorhanden
+	 */
+	@Override
+	public Optional<Credentials> get(final OAuthDomain domain) {
+		return repository.findByServiceDomain(oAuthDomainMapper.toDomain(domain))
 				.map(mapper::fromDomain);
 	}
 

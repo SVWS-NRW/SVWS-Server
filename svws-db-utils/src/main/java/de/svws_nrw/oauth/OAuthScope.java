@@ -3,7 +3,11 @@ package de.svws_nrw.oauth;
 public enum OAuthScope {
 
 	/** DEFAULT */
-	DEFAULT("default");
+	DEFAULT("default"),
+	/**
+	 * Signierdienst
+	 */
+	IT_NRW_SIGNIER_DIENST("svwp:signierdienst");
 
 	private final String text;
 

@@ -92,6 +92,27 @@ class OAuthCredentialServiceTest {
 	}
 
 	@Test
+	@DisplayName("get(domain) | gibt gemappte Credentials zurueck wenn vorhanden")
+	void getByDomainSuccess() {
+		final var dto = buildEntity(3L, OAuthServiceDomain.IT_NRW);
+		when(repository.findByServiceDomain(OAuthServiceDomain.IT_NRW)).thenReturn(Optional.of(dto));
+
+		final var result = cut.get(OAuthDomain.IT_NRW);
+
+		assertThat(result).contains(mapper.fromDomain(dto));
+	}
+
+	@Test
+	@DisplayName("get(domain) | gibt leeres Optional zurueck wenn keine Credentials existieren")
+	void getByDomainNotFound() {
+		when(repository.findByServiceDomain(OAuthServiceDomain.IT_NRW)).thenReturn(Optional.empty());
+
+		final var result = cut.get(OAuthDomain.IT_NRW);
+
+		assertThat(result).isEmpty();
+	}
+
+	@Test
 	@DisplayName("get | gibt gemappte Credentials zurueck wenn vorhanden")
 	void getSuccess() {
 		final var dto = buildEntity(3L, OAuthServiceDomain.IT_NRW);

@@ -1,34 +1,20 @@
 package de.svws_nrw.oauth.internal;
 
-import de.svws_nrw.oauth.Schema;
+import java.util.Optional;
 
 /**
- * Store fuer schema-spezifische OAuth-Credentials.
+ * Store fuer domaenenspezifische OAuth-Credentials.
  *
- * <p>Definiert die Naht zwischen Token-Verwaltung und Credential-Beschaffung.
- * Die konkrete Implementierung ist austauschbar (z.B. In-Memory, JDBC, Vault).
+ * <p>Implementiert wird von {@link de.svws_nrw.service.oauth.credential.OAuthCredentialService};
+ * verdrahtet wird er in der {@link de.svws_nrw.oauth.CredentialStoreFactory}.
  */
 public interface CredentialStore {
 
 	/**
-	 * Liefert die Credentials fuer ein Schema.
+	 * Sucht die Credentials fuer eine Domaene.
 	 *
-	 * @param schema DB-Schema / Mandant
-	 * @return Credentials fuer das Schema
-	 * @throws UnknownSchemaException wenn fuer das Schema keine Credentials hinterlegt sind
+	 * @param domain die OAuth-Domaene
+	 * @return die Credentials, sofern hinterlegt
 	 */
-	Credentials forSchema(Schema schema);
-
-	/**
-	 * Wird geworfen wenn keine Credentials fuer ein Schema registriert sind.
-	 */
-	final class UnknownSchemaException extends RuntimeException {
-		/**
-		 * Konstruktor
-		 * @param schema {@link Schema}
-		 */
-		public UnknownSchemaException(final Schema schema) {
-			super(String.format("No credentials registered for schema: %s", ((schema == null) ? "<null>" : schema.name())));
-		}
-	}
+	Optional<Credentials> get(OAuthDomain domain);
 }

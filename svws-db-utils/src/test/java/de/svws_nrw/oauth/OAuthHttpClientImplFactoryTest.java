@@ -1,5 +1,6 @@
 package de.svws_nrw.oauth;
 
+import de.svws_nrw.oauth.internal.OAuthDomain;
 import de.svws_nrw.utils.DbConnectionProviderStaticMockTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class OAuthHttpClientImplFactoryTest extends DbConnectionProviderStaticMockTest 
 	@DisplayName("getClient | returns non-null client")
 	void getClientReturnsNonNullClient() {
 		final OAuthHttpClientFactory factory = OAuthHttpClientFactory.getNewInstance();
-		final OAuthHttpClientImpl client = factory.getClient();
+		final OAuthHttpClient client = factory.getClient(OAuthDomain.IT_NRW);
 		assertNotNull(client);
 	}
 }

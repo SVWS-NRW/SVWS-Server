@@ -26,7 +26,7 @@ public final class OAuthCredentialControllerFactory {
 	 * @return {@link OAuthCredentialControllerFactory}
 	 */
 	public static OAuthCredentialControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
-		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
+		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, benutzerKompetenz);
 		final var repositoryFactory = OAuthCredentialRepositoryFactory.getNewInstance();
 		final var serviceFactory = OAuthCredentialServiceFactory.getNewInstance(repositoryFactory);
 		return new OAuthCredentialControllerFactory(serviceFactory);

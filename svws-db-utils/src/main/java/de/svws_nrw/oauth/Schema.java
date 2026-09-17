@@ -11,7 +11,7 @@ public record Schema(String name) {
 
 	/**
 	 * Konstruktor
-	 * @param value value
+	 * @param name name
 	 */
 	public Schema {
 		if (StringUtils.isBlank(name)) {

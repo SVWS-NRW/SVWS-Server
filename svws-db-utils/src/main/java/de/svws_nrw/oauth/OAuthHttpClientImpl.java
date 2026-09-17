@@ -1,5 +1,6 @@
 package de.svws_nrw.oauth;
 
+import de.svws_nrw.oauth.internal.OAuthDomain;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -17,13 +18,6 @@ import org.eclipse.jetty.http.HttpHeader;
 /**
  * HTTP-Client fuer OAuth-gesicherte Endpunkte.
  *
- * <p>Kapselt die gesamte OAuth-Logik transparent: Das aktive Schema wird automatisch
- * ueber den {@link SchemaService} aufgeloest, der Bearer-Token wird fuer jede Anfrage
- * gesetzt. Bei HTTP 401 wird der gecachte Token einmalig invalidiert und der Request
- * wiederholt, um serverseitig revozierte oder abgelaufene Tokens abzufangen.
- *
- * <p>Services kennen weder Credentials noch Token-Lifecycle -- sie rufen nur {@link #send} auf.
- *
  * @see TokenProvider
  * @see SchemaService
  */
@@ -34,18 +28,21 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 	private final HttpClient delegate;
 	private final TokenProvider tokenProvider;
 	private final SchemaService schemaService;
+	private final OAuthDomain domain;
 
 	/**
 	 * Konstruktor.
 	 *
 	 * @param delegate      der zugrundeliegende {@link HttpClient} fuer die eigentliche HTTP-Kommunikation
-	 * @param tokenProvider liefert gueltige Bearer-Tokens pro Schema und Scope
+	 * @param tokenProvider liefert gueltige Bearer-Tokens pro Schema, Domaene und Scope
 	 * @param schemaService liefert das aktive DB-Schema des aktuellen Requests
+	 * @param domain        die OAuth-Domaene, an die diese Instanz gebunden ist
 	 */
-	public OAuthHttpClientImpl(final HttpClient delegate, final TokenProvider tokenProvider, final SchemaService schemaService) {
+	public OAuthHttpClientImpl(final HttpClient delegate, final TokenProvider tokenProvider, final SchemaService schemaService, final OAuthDomain domain) {
 		this.delegate = Objects.requireNonNull(delegate);
 		this.tokenProvider = Objects.requireNonNull(tokenProvider);
-		this.schemaService = schemaService;
+		this.schemaService = Objects.requireNonNull(schemaService);
+		this.domain = Objects.requireNonNull(domain);
 	}
 
 	@Override
@@ -63,7 +60,7 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 		HttpResponse<T> response = sendWithToken(baseRequest, schema, scope, bodyHandler);
 
 		if (response.statusCode() == 401) {
-			tokenProvider.invalidate(schema, scope);
+			tokenProvider.invalidate(schema, domain, scope);
 			response = sendWithToken(baseRequest, schema, scope, bodyHandler);
 		}
 		return response;
@@ -89,7 +86,7 @@ public final class OAuthHttpClientImpl implements OAuthHttpClient {
 
 	private <T> HttpResponse<T> sendWithToken(final HttpRequest baseRequest, final Schema schema, final OAuthScope scope,
 			final HttpResponse.BodyHandler<T> bodyHandler) {
-		final AccessToken token = tokenProvider.getToken(schema, scope);
+		final AccessToken token = tokenProvider.getToken(schema, domain, scope);
 		final HttpRequest authedRequest = HttpRequest.newBuilder(baseRequest, (k, v) -> true)
 				.setHeader(HttpHeader.AUTHORIZATION.name(), token.asAuthorizationHeader())
 				.build();

@@ -5,6 +5,7 @@ import java.net.URI;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
+import de.svws_nrw.oauth.internal.OAuthDomain;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import jakarta.ws.rs.core.Response;
@@ -50,7 +51,7 @@ public final class SignatureServiceFactory {
 	 */
 	public SignatureService getSignatureService() {
 		return new SignatureServiceImpl(
-				httpClientFactory.getClient(),
+				httpClientFactory.getClient(OAuthDomain.IT_NRW),
 				eigeneSchuleServiceFactory.getSchuleService(),
 				benutzerServiceFactory.getBenutzerKompetenzService(),
 				new ObjectMapper(),
@@ -58,7 +59,7 @@ public final class SignatureServiceFactory {
 		);
 	}
 
-	// TODO: Das hier ist nur eine unschöne Zwischenlösung
+	//Zwischenloesung - Die Endpunkte müssen ein folge PR behandelt werden
 	URI getSignatureServiceURI() {
 		final String signatureServiceUrl = System.getenv(ENV_PROPERTY_SIGNATURE_SERVICE_URL);
 		if (signatureServiceUrl == null) {

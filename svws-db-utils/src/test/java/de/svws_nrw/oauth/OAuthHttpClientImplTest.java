@@ -9,11 +9,12 @@ import java.nio.charset.StandardCharsets;
 
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.oauth.internal.AccessToken;
+import de.svws_nrw.oauth.internal.OAuthDomain;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -46,8 +47,12 @@ class OAuthHttpClientImplTest {
 	@Mock
 	private SchemaService schemaService;
 
-	@InjectMocks
 	private OAuthHttpClientImpl cut;
+
+	@BeforeEach
+	void setup() {
+		cut = new OAuthHttpClientImpl(delegate, tokenProvider, schemaService, OAuthDomain.IT_NRW);
+	}
 
 	@Test
 	@DisplayName("send | sets authorization header")
@@ -55,7 +60,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthDomain.IT_NRW), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		final HttpResponse<String> response = mock(HttpResponse.class);
 		when(response.statusCode()).thenReturn(200);
@@ -77,7 +82,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthDomain.IT_NRW), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		final HttpResponse<String> response401 = mock(HttpResponse.class);
 		when(response401.statusCode()).thenReturn(401);
@@ -94,7 +99,7 @@ class OAuthHttpClientImplTest {
 		verify(delegate, times(2)).send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class));
 
 		final ArgumentCaptor<Schema> schemaCaptor = ArgumentCaptor.forClass(Schema.class);
-		verify(tokenProvider, times(1)).invalidate(schemaCaptor.capture(), eq(OAuthScope.DEFAULT));
+		verify(tokenProvider, times(1)).invalidate(schemaCaptor.capture(), eq(OAuthDomain.IT_NRW), eq(OAuthScope.DEFAULT));
 		assertEquals("tenant_schema_a", schemaCaptor.getValue().name());
 	}
 
@@ -104,7 +109,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), isNull())).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthDomain.IT_NRW), isNull())).thenReturn(token);
 
 		final ArgumentCaptor<HttpResponse.BodyHandler<Object>> handlerCaptor = ArgumentCaptor.forClass(HttpResponse.BodyHandler.class);
 
@@ -151,7 +156,7 @@ class OAuthHttpClientImplTest {
 		when(schemaService.getActiveSchema()).thenReturn("tenant_schema_a");
 		final AccessToken token = mock(AccessToken.class);
 		when(token.asAuthorizationHeader()).thenReturn("Bearer test-token");
-		when(tokenProvider.getToken(any(Schema.class), eq(OAuthScope.DEFAULT))).thenReturn(token);
+		when(tokenProvider.getToken(any(Schema.class), eq(OAuthDomain.IT_NRW), eq(OAuthScope.DEFAULT))).thenReturn(token);
 
 		when(delegate.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
 				.thenThrow(new IOException("io boom"));

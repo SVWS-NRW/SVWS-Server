@@ -4,6 +4,7 @@ import java.net.URI;
 
 import de.svws_nrw.oauth.OAuthHttpClientFactory;
 import de.svws_nrw.oauth.OAuthHttpClientImpl;
+import de.svws_nrw.oauth.internal.OAuthDomain;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -37,7 +39,7 @@ class SignatureServiceFactoryTest {
 
 	@BeforeEach
 	void setUp() {
-		lenient().when(authHttpClientFactory.getClient()).thenReturn(mock(OAuthHttpClientImpl.class));
+		lenient().when(authHttpClientFactory.getClient(any(OAuthDomain.class))).thenReturn(mock(OAuthHttpClientImpl.class));
 	}
 
 	// -------------------------------------------------------------------------
@@ -151,7 +153,7 @@ class SignatureServiceFactoryTest {
 
 			cut.getSignatureService();
 
-			verify(SignatureServiceFactoryTest.this.authHttpClientFactory, times(1)).getClient();
+			verify(SignatureServiceFactoryTest.this.authHttpClientFactory, times(1)).getClient(OAuthDomain.IT_NRW);
 		}
 
 		@Test
@@ -164,7 +166,7 @@ class SignatureServiceFactoryTest {
 			cut.getSignatureService();
 			cut.getSignatureService();
 
-			verify(SignatureServiceFactoryTest.this.authHttpClientFactory, times(3)).getClient();
+			verify(SignatureServiceFactoryTest.this.authHttpClientFactory, times(3)).getClient(OAuthDomain.IT_NRW);
 		}
 	}
 }

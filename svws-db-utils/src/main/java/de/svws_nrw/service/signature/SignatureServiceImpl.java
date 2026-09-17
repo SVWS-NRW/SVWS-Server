@@ -93,7 +93,7 @@ public final class SignatureServiceImpl implements SignatureService {
 	}
 
 	private HttpResponse<SignBatchResponse> sendBatchRequest(final HttpRequest request) {
-		return httpClient.send(request, OAuthScope.DEFAULT, SignBatchResponse.class);
+		return httpClient.send(request, OAuthScope.IT_NRW_SIGNIER_DIENST, SignBatchResponse.class);
 	}
 
 	private static Map<Long, Signature> handleResponse(final HttpResponse<SignBatchResponse> response) {

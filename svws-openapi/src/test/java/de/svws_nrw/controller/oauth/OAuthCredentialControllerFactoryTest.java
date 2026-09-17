@@ -31,7 +31,7 @@ class OAuthCredentialControllerFactoryTest {
 
 			final var factory = OAuthCredentialControllerFactory.getNewInstance(request, BenutzerKompetenz.ADMIN);
 
-			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.ADMIN)), times(1));
+			dbUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.ADMIN)), times(1));
 			assertNotNull(factory);
 
 			final var controller = factory.getCredentialController();
