@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchuelerSchulbescheinigung0004;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchuelerSchulbescheinigung0004;
 
 public final class SchulbescheinigungService {
 

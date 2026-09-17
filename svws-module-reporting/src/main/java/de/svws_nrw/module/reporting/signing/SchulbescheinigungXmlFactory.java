@@ -5,7 +5,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.schulbescheinigung.SchulbescheinigungBuilder;
 import de.svws_nrw.schulbescheinigung.SchulbescheinigungSerializer;
 import de.svws_nrw.schulbescheinigung.SchulbescheinigungService;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchuelerSchulbescheinigung0004;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchuelerSchulbescheinigung0004;
 
 /**
  * Anti-Corruption-Layer zwischen den Reporting-Typen und dem xschule-Builder. Liest aus {@link ReportingSchueler}

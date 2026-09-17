@@ -4,19 +4,19 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import de.xbildung.def.xbildung._1_1.xsd.XBildungCodeLanguage;
-import de.xbildung.def.xbildung._1_1.xsd.XBildungDokument;
-import de.xbildung.def.xbildung._1_1.xsd.XBildungOrtsangabe;
-import de.xbildung.def.xbildung._1_1.xsd.XBildungStringLocalized;
-import de.xbildung.def.xbildung._1_1.xsd.XBildungTeilbekanntesDatum;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleAllgemeinerName;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleGeburt;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleNameNatuerlichePerson;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleNameOrganisation;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchueler;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchuelerSchulbescheinigung0004;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchule;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleZeitraum;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungCodeLanguage;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungDokument;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungOrtsangabe;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungStringLocalized;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungTeilbekanntesDatum;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleAllgemeinerName;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleGeburt;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleNameNatuerlichePerson;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleNameOrganisation;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchueler;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchuelerSchulbescheinigung0004;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchule;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleZeitraum;
 
 public final class XSchuleMapper {
 

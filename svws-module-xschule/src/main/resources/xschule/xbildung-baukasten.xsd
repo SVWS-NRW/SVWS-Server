@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xbd="http://xbildung.de/def/xbildung/1.1/xsd"
+           xmlns:xbd="http://xbildung.de/def/xbildung/1.2/xsd"
            xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"
            xmlns:xoev-code="http://xoev.de/schemata/code/1_0"
-           targetNamespace="http://xbildung.de/def/xbildung/1.1/xsd"
-           version="1.1"
+           targetNamespace="http://xbildung.de/def/xbildung/1.2/xsd"
+           version="1.2"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
    <xs:annotation>
@@ -14,14 +14,15 @@
             <nameKurz>XBildung</nameKurz>
             <nameTechnisch>xbildung</nameTechnisch>
             <kennung>urn:xoev-de:xbildung-de:def:standard:xbildung</kennung>
-            <beschreibung>XBildung</beschreibung>
+            <beschreibung>XBildung ist ein föderaler IT-Standard, der für die Erstellung von elektronischen Bildungsnachweisen sowie den Datenaustausch im Bildungswesen entwickelt wird. XBildung bildet eine inhaltliche Klammer um die Teilmodule XSchule, XHochschule und XBerufsbildung und regelt diejenigen Aspekte, die für die Teilmodule übergreifend relevant sind. Konkret definiert er semantische und fachlich übergreifende Bausteine zur Wiederverwendung.</beschreibung>
          </standard>
          <versionStandard>
-            <version>1.1</version>
-            <versionXOEVProfil>3.0.1</versionXOEVProfil>
-            <versionXOEVHandbuch>3.0.0</versionXOEVHandbuch>
+            <version>1.2</version>
+            <beschreibung>Diese Version 1.2 des Standards XBildung beinhaltet die zur XÖV-Zertifizierung notwendigen Anpassungen am Modell und an weiteren standardbezogenen Artefakten.</beschreibung>
+            <versionXOEVProfil>3.0.3</versionXOEVProfil>
+            <versionXOEVHandbuch>3.0.2</versionXOEVHandbuch>
             <versionXGenerator>3.1.1</versionXGenerator>
-            <versionModellierungswerkzeug>19.0 SP 3</versionModellierungswerkzeug>
+            <versionModellierungswerkzeug>19.0 SP 4</versionModellierungswerkzeug>
             <nameModellierungswerkzeug>MagicDraw</nameModellierungswerkzeug>
          </versionStandard>
       </xs:appinfo>
@@ -138,6 +139,14 @@
                </xs:sequence>
             </xs:complexType>
          </xs:element>
+         <xs:element name="beschreibung"
+                     minOccurs="0"
+                     type="xbd:String.Localized"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld soll genutzt werden, um unstrukturierte Informationen über die Note zu übermitteln.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="Code.AmtlicherGemeindeschluessel">
@@ -146,7 +155,7 @@
             <codeliste>
                <nameLang>Gemeinden, dargestellt durch den Amtlichen Gemeindeschlüssel (AGS) des Statistischen Bundesamtes</nameLang>
                <nameKurz>AGS</nameKurz>
-               <nameTechnisch>ags</nameTechnisch>
+               <nameTechnisch>AGS</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:ags</kennung>
                <beschreibung>Diese Codeliste stellt alle Gemeinden Deutschlands durch den Amtlichen Gemeindeschlüssel (AGS) dar, wie im Gemeindeverzeichnis des Statistischen Bundesamtes enthalten. Darüber hinaus enthält die Codeliste für die Stadtstaaten Hamburg, Bremen und Berlin Einträge für Stadt-/Ortsteile bzw. Stadtbezirke. Diese Einträge sind mit einem entsprechenden Hinweis versehen. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:ags Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 01001000 Kiel, Landeshauptstadt : 01002000 Lübeck, Hansestadt : 01003000</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -244,6 +253,7 @@
                <description-de-DE>
                   <spaltennameLang>Prüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -251,6 +261,7 @@
                <description-en-GB>
                   <spaltennameLang>Type of Exam</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>en-GB</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -392,12 +403,12 @@
                <nameKurz>Art des Schulabschlusses</nameKurz>
                <nameTechnisch>ArtDesSchulabschlusses-Codes</nameTechnisch>
                <kennung>urn:xbildung-de:destatis:codeliste:artdesschulabschlusses</kennung>
-               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf der Fachserie 11, Reihe 1, 2009/10.</beschreibung>
+               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf dem Merkmal Schulabschlüsse (BILAG1) des Statistischen Bundesamtes (Destatis), abgerufen am 28.10.2025. Die Liste wurde um die Werte "Wert nicht bekannt" und "Wert nicht in Liste" erweitert.</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
                <herausgebernameKurz>DESTATIS</herausgebernameKurz>
             </codeliste>
             <versionCodeliste>
-               <version>1.0</version>
+               <version>2025-10-28</version>
                <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
             </versionCodeliste>
             <codelistenspalten>
@@ -440,7 +451,7 @@
             <xs:attribute name="listVersionID"
                           type="xs:normalizedString"
                           use="optional"
-                          fixed="1.0"/>
+                          fixed="2025-10-28"/>
          </xs:restriction>
       </xs:complexContent>
    </xs:complexType>
@@ -508,7 +519,7 @@
             <codeliste>
                <nameLang>Bezirke bzw. Regierungsbezirke der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
                <nameKurz>Bezirk</nameKurz>
-               <nameTechnisch>bezirk</nameTechnisch>
+               <nameTechnisch>Bezirk</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bezirk</kennung>
                <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke bzw. Regierungsbezirke. Diese Codeliste stellt alle Bezirke nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bezirk Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Bezirk Hamburg-Mitte : 021 Statistische Region Hannover : 032 Mittelfranken : 095</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -535,7 +546,7 @@
             <codeliste>
                <nameLang>Die deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
                <nameKurz>Bundesland</nameKurz>
-               <nameTechnisch>bundesland</nameTechnisch>
+               <nameTechnisch>Bundesland</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bundesland</kennung>
                <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke. Diese Codeliste stellt die deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bundesland Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Schleswig-Holstein : 01 Hamburg : 02 Niedersachsen : 03</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -633,18 +644,18 @@
       <xs:annotation>
          <xs:appinfo>
             <codeliste>
-               <nameLang>Erreichbarkeit</nameLang>
+               <nameLang>Kommunikationskanal / Erreichbarkeit</nameLang>
                <nameKurz>Erreichbarkeit</nameKurz>
-               <nameTechnisch>Erreichbarkeit-Codes</nameTechnisch>
+               <nameTechnisch>erreichbarkeit</nameTechnisch>
                <kennung>urn:de:xoev:codeliste:erreichbarkeit</kennung>
                <beschreibung>Eine Liste der Kommunikationsmedien und -kanäle, über die man eine Person oder Institution erreichen kann. Link zur Webseite: https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "code". Beispiele: (Element : Code) E-Mail : 01 Telefon Festnetz : 02 Telefon mobil : 03</beschreibung>
                <herausgebernameLang>Koordinierungsstelle für IT-Standards</herausgebernameLang>
                <herausgebernameKurz>KoSIT</herausgebernameKurz>
             </codeliste>
             <versionCodeliste>
-               <version>3</version>
-               <bezugsort>https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit_3#version</bezugsort>
-               <datumGueltigkeitAb>2018-05-03</datumGueltigkeitAb>
+               <version>4.1</version>
+               <bezugsort>https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit_4.1#version</bezugsort>
+               <datumGueltigkeitAb>2025-02-03</datumGueltigkeitAb>
                <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
             </versionCodeliste>
             <codelistenspalten/>
@@ -662,7 +673,7 @@
             <xs:attribute name="listVersionID"
                           type="xs:normalizedString"
                           use="optional"
-                          fixed="3"/>
+                          fixed="4.1"/>
          </xs:restriction>
       </xs:complexContent>
    </xs:complexType>
@@ -709,8 +720,8 @@
          <xs:appinfo>
             <codeliste>
                <nameLang>DSMeld Gesetzlicher Vertreter (DSMeld-Blatt 0001)</nameLang>
-               <nameKurz>Gesetzlicher Vertreter</nameKurz>
-               <nameTechnisch>DSMeld-GesetzlicherVertreter</nameTechnisch>
+               <nameKurz>DSMeld Gesetzlicher Vertreter (DSMeld-Blatt 0001)</nameKurz>
+               <nameTechnisch>gesetzlicher.vertreter</nameTechnisch>
                <kennung>urn:de:dsmeld:schluesseltabelle:gesetzlicher.vertreter</kennung>
                <beschreibung>Mit dieser Schlüsseltabelle wird die Art der gesetzlichen Vertretung abgebildet. Siehe Blatt 0001 des DSMeld. Codeliste DSMeld Gesetzlicher Vertreter im XRepository: https://www.xrepository.de/details/​urn​:de​:dsmeld​:schluesseltabelle​:gesetzlicher​.vertreter Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "key". Beispiele: (Element : Code) Vater, Elternteil : 1 Mutter, Elternteil : 2 anderer gesetzlicher Vertreter (natürliche Person) : 3 anderer gesetzlicher Vertreter (juristische Person) : 4</beschreibung>
                <herausgebernameLang>Koordindierungsstelle für IT-Standards</herausgebernameLang>
@@ -817,7 +828,7 @@
             <codeliste>
                <nameLang>Die Kreise der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
                <nameKurz>Kreis</nameKurz>
-               <nameTechnisch>kreis</nameTechnisch>
+               <nameTechnisch>Kreis</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:kreis</kennung>
                <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke. Diese Codeliste stellt die Kreise der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:kreis Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 01001 Kiel, Landeshauptstadt : 01002 Lübeck, Hansestadt : 01003</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -939,8 +950,8 @@
          <xs:appinfo>
             <codeliste>
                <nameLang>Gemeinden, dargestellt durch den Amtlichen Regionalschlüssel (ARS) des Statistischen Bundesamtes</nameLang>
-               <nameKurz>Regionalschüssel</nameKurz>
-               <nameTechnisch>rs</nameTechnisch>
+               <nameKurz>Regionalschlüssel</nameKurz>
+               <nameTechnisch>Regionalschlüssel</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:rs</kennung>
                <beschreibung>Diese Codeliste stellt alle Gemeinden Deutschlands durch den Amtlichen Regionalschlüssel (ARS) dar, wie im Gemeindeverzeichnis des Statistischen Bundesamtes enthalten. Darüber hinaus enthält die Codeliste für die Stadtstaaten Hamburg, Bremen und Berlin Einträge für Stadt-/Ortsteile bzw. Stadtbezirke. Diese Einträge sind mit einem entsprechenden Hinweis versehen. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:rs Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 010010000000 Kiel, Landeshauptstadt : 010020000000 Lübeck, Hansestadt : 010030000000</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -966,8 +977,8 @@
          <xs:appinfo>
             <codeliste>
                <nameLang>Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes</nameLang>
-               <nameKurz>Staatsangehörigkeit</nameKurz>
-               <nameTechnisch>staatsangehoerigkeit</nameTechnisch>
+               <nameKurz>DESTATIS Staatsangehörigkeit</nameKurz>
+               <nameTechnisch>Staatsangehoerigkeit</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</kennung>
                <beschreibung>Tabelle von Staaten und Staatsangehörigkeiten. Enthält alle Einträge der Codeliste Staat (eigenständige, von Deutschland diplomatisch anerkannte derzeitige Staaten) und zusätzlich Einträge für ehemalige Staaten sowie Ersatzwerte. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -996,8 +1007,8 @@
          <xs:appinfo>
             <codeliste>
                <nameLang>Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes</nameLang>
-               <nameKurz>Staatsangehörigkeit</nameKurz>
-               <nameTechnisch>staatsangehoerigkeit</nameTechnisch>
+               <nameKurz>DESTATIS Staatsangehörigkeit</nameKurz>
+               <nameTechnisch>Staatsangehoerigkeit</nameTechnisch>
                <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</kennung>
                <beschreibung>Tabelle von Staaten und Staatsangehörigkeiten. Enthält alle Einträge der Codeliste Staat (eigenständige, von Deutschland diplomatisch anerkannte derzeitige Staaten) und zusätzlich Einträge für ehemalige Staaten sowie Ersatzwerte. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
@@ -1153,12 +1164,12 @@
       <xs:sequence>
          <xs:element name="beginn" minOccurs="0" type="xs:date">
             <xs:annotation>
-               <xs:documentation>Der Beginn eines Zeitraums beschreibt den Zeitpunkt, ab dem ein Sachverhalt eintritt bzw. rechtskräftig wirksam ist. Der Beginn ist immer Teil der Dauer des Zeitraumes. Anmerkung: Bei der Ableitung von Fachkomponenten sollten zusätzliche Festlegungen getroffen werden wie der Beginn des Zeitraums zu interpretieren ist. z.B.: "Wird ein Monat als Beginn angegeben, dann gilt der erste Tag des Monats als Beginn des Zeitraums" Beispiel: identisch mit *Fristbeginn (BKA) *Wirksamkeitsdatum der Änderung des Familiennamens (Personenstand) *Eheschließungsdatum (Personenstand)</xs:documentation>
+               <xs:documentation>Der Beginn eines Zeitraums beschreibt den Zeitpunkt, ab dem ein Sachverhalt eintritt bzw. rechtskräftig wirksam ist. Der Beginn ist immer Teil der Dauer des Zeitraumes. Wird ein Monat als Beginn angegeben, dann gilt der erste Tag des Monats als Beginn des Zeitraums.</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="ende" minOccurs="0" type="xs:date">
             <xs:annotation>
-               <xs:documentation>Das Ende eines Zeitraumes beschreibt den Zeitpunkt, ab dem ein Sachverhalt endet bzw. nicht mehr rechtskräftig ist. Das Ende ist Teil der Dauer des Zeitraumes. Anmerkung: Bei der Ableitung von Fachkomponenten sollten zusätzliche Festlegungen getroffen werden wie das Ende des Zeitraums zu interpretieren ist. z.B.: "Wird ein Monat als Ende angegeben, dann gilt der letzte Tag des Monats als Ende des Zeitraums" Beispiel: identisch mit *Fristdatum (Bau) *Ablaufdatum (Finanz) *Faelligkeitsdatum (Finanz) *Wirksamkeitsdatum der Aufhebung/Scheidung der Ehe (Personenstand)</xs:documentation>
+               <xs:documentation>Das Ende eines Zeitraumes beschreibt den Zeitpunkt, ab dem ein Sachverhalt endet bzw. nicht mehr rechtskräftig ist. Das Ende ist Teil der Dauer des Zeitraumes.Wird ein Monat als Ende angegeben, dann gilt der letzte Tag des Monats als Ende des Zeitraums.</xs:documentation>
             </xs:annotation>
          </xs:element>
          <xs:element name="zusatz" minOccurs="0" type="din91379:datatypeC">
@@ -1544,12 +1555,12 @@
                <nameKurz>Art des Schulabschlusses</nameKurz>
                <nameTechnisch>ArtDesSchulabschlusses-Codes</nameTechnisch>
                <kennung>urn:xbildung-de:destatis:codeliste:artdesschulabschlusses</kennung>
-               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf der Fachserie 11, Reihe 1, 2009/10.</beschreibung>
+               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf dem Merkmal Schulabschlüsse (BILAG1) des Statistischen Bundesamtes (Destatis), abgerufen am 28.10.2025. Die Liste wurde um die Werte "Wert nicht bekannt" und "Wert nicht in Liste" erweitert.</beschreibung>
                <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
                <herausgebernameKurz>DESTATIS</herausgebernameKurz>
             </codeliste>
             <versionCodeliste>
-               <version>1.0</version>
+               <version>2025-10-28</version>
                <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
             </versionCodeliste>
             <codelistenspalten>
@@ -1578,15 +1589,23 @@
          </xs:appinfo>
       </xs:annotation>
       <xs:restriction base="xs:token">
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/allgemeine_hochschulreife">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/allgemeine_hochschulreife">
             <xs:annotation>
                <xs:appinfo>
                   <mapping-ISCED2011L>3</mapping-ISCED2011L>
-                  <description-de-DE>allgemeine Hochschulreife</description-de-DE>
+                  <description-de-DE>Allgemeine Hochschulreife</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/fachhochschulreife">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/erster_schulabschluss">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>2</mapping-ISCED2011L>
+                  <description-de-DE>Erster Schulabschluss</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/fachhochschulreife">
             <xs:annotation>
                <xs:appinfo>
                   <mapping-ISCED2011L>3</mapping-ISCED2011L>
@@ -1594,38 +1613,30 @@
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/hauptschulabschluss">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/mittlerer_schulabschluss">
             <xs:annotation>
                <xs:appinfo>
                   <mapping-ISCED2011L>2</mapping-ISCED2011L>
-                  <description-de-DE>Hauptschulabschluss bzw. entsprechendem Abschluss</description-de-DE>
+                  <description-de-DE>Mittlerer Schulabschluss</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/ohne_hauptschulabschluss">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/ohne_ersten_schulabschluss">
             <xs:annotation>
                <xs:appinfo>
                   <mapping-ISCED2011L>2</mapping-ISCED2011L>
-                  <description-de-DE>ohne Hauptschulabschluss; einschl. Abschluss der Förderschule mit Förderschwerpunkt Lernen und Abschluss der Förderschule mit Förderschwerpunkt geistige Entwicklunng</description-de-DE>
+                  <description-de-DE>Ohne Ersten Schulabschluss</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/realschulabschluss">
-            <xs:annotation>
-               <xs:appinfo>
-                  <mapping-ISCED2011L>2</mapping-ISCED2011L>
-                  <description-de-DE>Realschulabschluss (Mittlerer Abschluss)</description-de-DE>
-               </xs:appinfo>
-            </xs:annotation>
-         </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/~wert_nicht_bekannt">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/~wert_nicht_bekannt">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Wert nicht bekannt</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/~wert_nicht_in_liste">
+         <xs:enumeration value="http://xbildung.de/def/destatis/2025-10-28/code/artdesschulabschlusses/~wert_nicht_in_liste">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Wert nicht in Liste</description-de-DE>
@@ -1660,6 +1671,7 @@
                <description-de-DE>
                   <spaltennameLang>Prüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1667,6 +1679,7 @@
                <description-en-GB>
                   <spaltennameLang>Type of Exam</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>en-GB</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>

@@ -3,12 +3,12 @@ package de.svws_nrw.schulbescheinigung;
 import java.util.Objects;
 
 import de.svws_nrw.mapping.XSchuleMapper;
-import de.xbildung.def.xbildung._1_1.xsd.XBildungDokument;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleGeburt;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleNameNatuerlichePerson;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleNameOrganisation;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleSchuelerSchulbescheinigung0004;
-import digital.xschule.def.xschule._1_1.xsd.XSchuleZeitraum;
+import de.xbildung.def.xbildung._1_2.xsd.XBildungDokument;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleGeburt;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleNameNatuerlichePerson;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleNameOrganisation;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleSchuelerSchulbescheinigung0004;
+import digital.xschule.def.xschule._1_2.xsd.XSchuleZeitraum;
 
 /**
  * Builder für {@link XSchuleSchuelerSchulbescheinigung0004}.

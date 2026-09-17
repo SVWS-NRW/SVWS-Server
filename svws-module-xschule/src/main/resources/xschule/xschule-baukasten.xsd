@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsc="http://xschule.digital/def/xschule/1.1/xsd"
+           xmlns:xsc="http://xschule.digital/def/xschule/1.2/xsd"
            xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"
-           xmlns:xbd="http://xbildung.de/def/xbildung/1.1/xsd"
+           xmlns:xbd="http://xbildung.de/def/xbildung/1.2/xsd"
            xmlns:xoev-code="http://xoev.de/schemata/code/1_0"
-           targetNamespace="http://xschule.digital/def/xschule/1.1/xsd"
-           version="1.1"
+           targetNamespace="http://xschule.digital/def/xschule/1.2/xsd"
+           version="1.2"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
    <xs:annotation>
@@ -15,23 +15,24 @@
             <nameKurz>XSchule</nameKurz>
             <nameTechnisch>xschule</nameTechnisch>
             <kennung>urn:xoev-de:xschule-digital:def:standard:xschule</kennung>
-            <beschreibung>XSchule</beschreibung>
+            <beschreibung>XSchule ist ein föderaler IT-Standard, der für die Erstellung von elektronischen Bildungsnachweisen sowie den Datenaustausch im Schulwesen entwickelt wird. Er ist Teil der Standard-Familie XBildung. </beschreibung>
          </standard>
          <versionStandard>
-            <version>1.1</version>
-            <versionXOEVProfil>3.0.1</versionXOEVProfil>
-            <versionXOEVHandbuch>3.0.0</versionXOEVHandbuch>
+            <version>1.2</version>
+            <beschreibung>Diese Version 1.2 des Standards XSchule beinhaltet die zur XÖV-Zertifizierung notwendigen Anpassungen am Modell und an weiteren standardbezogenen Artefakten. Im Rahmen der Pilotierung wurden Anpassungen am Bildungsnachweis "Abiturzeugnis" vorgenommen. Besonders betroffen war der allgemeine Teil, der überarbeitet wurde, um die Anforderungen aus der praktischen Erprobung besser abzubilden und die Verständlichkeit sowie Nachvollziehbarkeit zu erhöhen.</beschreibung>
+            <versionXOEVProfil>3.0.3</versionXOEVProfil>
+            <versionXOEVHandbuch>3.0.2</versionXOEVHandbuch>
             <versionXGenerator>3.1.1</versionXGenerator>
-            <versionModellierungswerkzeug>19.0 SP 3</versionModellierungswerkzeug>
+            <versionModellierungswerkzeug>19.0 SP 4</versionModellierungswerkzeug>
             <nameModellierungswerkzeug>MagicDraw</nameModellierungswerkzeug>
          </versionStandard>
       </xs:appinfo>
    </xs:annotation>
-	<xs:import schemaLocation="xbildung-baukasten.xsd"
-              namespace="http://xbildung.de/def/xbildung/1.1/xsd"/>
-	<xs:import schemaLocation="xoev-code.xsd"
+   <xs:import schemaLocation="xbildung-baukasten.xsd"
+              namespace="http://xbildung.de/def/xbildung/1.2/xsd"/>
+   <xs:import schemaLocation="xoev-code.xsd"
               namespace="http://xoev.de/schemata/code/1_0"/>
-	<xs:import schemaLocation="din-norm-91379-datatypes.xsd"
+   <xs:import schemaLocation="din-norm-91379-datatypes.xsd"
               namespace="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"/>
    <xs:complexType name="AllgemeinerName">
       <xs:annotation>
@@ -226,6 +227,7 @@
                <description-de-DE>
                   <spaltennameLang>Reihenfolge</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -292,6 +294,7 @@
                <description-de-DE>
                   <spaltennameLang>Schulart / Prüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -349,6 +352,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Schulaufnahme</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -399,6 +403,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Unterrichtsteilnahme</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -451,6 +456,7 @@
                <description-de-DE>
                   <spaltennameLang>Art weiterer Sprachkenntnisse</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -503,6 +509,7 @@
                <description-de-DE>
                   <spaltennameLang>Aufgabenfeld</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -530,7 +537,7 @@
    <xs:complexType name="Code.Auskunftssperre"/>
    <xs:complexType name="Code.Fach">
       <xs:annotation>
-         <xs:documentation>Wie im Kapitel beschrieben wird, kann diese Eigenschaft mit anwendungsfall- oder bundeslandspezifischen Codelisten verwendet werden. Welche verwendet wird, muss bei Erstellung des Dokuments festgelegt werden. Dazu muss im XML sowohl das Attribut listURI als auch listVersionID verwendet werden. XSchule stellt die Codelisten und zur Verfügung.</xs:documentation>
+         <xs:documentation>Wie im Kapitel beschrieben wird, kann diese Eigenschaft mit anwendungsfall- oder bundeslandspezifischen Codelisten verwendet werden. Welche verwendet wird, muss bei Erstellung des Dokuments festgelegt werden. Dazu muss im XML sowohl das Attribut listURI als auch listVersionID verwendet werden. XSchule stellt die Codelisten , und zur Verfügung.</xs:documentation>
       </xs:annotation>
       <xs:complexContent>
          <xs:restriction base="xoev-code:Code">
@@ -582,6 +589,7 @@
                <description-de-DE>
                   <spaltennameLang>Zeitraum</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -632,6 +640,7 @@
                <description-de-DE>
                   <spaltennameLang>Impfschutz</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -682,6 +691,7 @@
                <description-de-DE>
                   <spaltennameLang>Jahrgangsstufe</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -746,6 +756,7 @@
                <description-de-DE>
                   <spaltennameLang>Krankheit</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -796,6 +807,7 @@
                <description-de-DE>
                   <spaltennameLang>Status</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -854,6 +866,7 @@
                <description-de-DE>
                   <spaltennameLang>Laufbahnempfehlung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -904,6 +917,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Nachprüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -954,6 +968,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Nachweisperiode</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1004,6 +1019,7 @@
                <description-de-DE>
                   <spaltennameLang>Beschreibung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1056,6 +1072,7 @@
                <description-de-DE>
                   <spaltennameLang>Verpflichtungsgrad</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1093,7 +1110,7 @@
                <herausgebernameKurz>XSchule</herausgebernameKurz>
             </codeliste>
             <versionCodeliste>
-               <version>1.0</version>
+               <version>2025-11-13</version>
                <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
             </versionCodeliste>
             <codelistenspalten>
@@ -1106,6 +1123,7 @@
                <description-de-DE>
                   <spaltennameLang>Versetzungstyp</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1126,7 +1144,7 @@
             <xs:attribute name="listVersionID"
                           type="xs:normalizedString"
                           use="optional"
-                          fixed="1.0"/>
+                          fixed="2025-11-13"/>
          </xs:restriction>
       </xs:complexContent>
    </xs:complexType>
@@ -1156,6 +1174,7 @@
                <description-de-DE>
                   <spaltennameLang>Zeugnisart</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -1216,19 +1235,29 @@
          </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="Fehltage">
+   <xs:complexType name="Fehlzeiten">
       <xs:annotation>
-         <xs:documentation>Hier können die Angaben zur Erfassung von Fehltagen gemacht werden. Der relevante Zeitraum, auf den sich die Angaben beziehen, ergibt sich aus dem Kontext in dem die Klasse verwendet wird.</xs:documentation>
+         <xs:documentation>Hier können die Angaben zur Erfassung von Fehlzeiten gemacht werden. Der relevante Zeitraum, auf den sich die Angaben beziehen, ergibt sich aus dem Kontext in dem die Klasse verwendet wird.</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="anzahlGesamt" type="xs:decimal">
+         <xs:element name="tageGesamt" minOccurs="0" type="xs:decimal">
             <xs:annotation>
                <xs:documentation>Hier ist die gesamte Anzahl der Fehltage einzutragen.</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="davonEntschuldigt" minOccurs="0" type="xs:decimal">
+         <xs:element name="tageEntschuldigt" minOccurs="0" type="xs:decimal">
             <xs:annotation>
                <xs:documentation>Hier ist die Anzahl der entschuldigten Fehltage einzutragen.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="stundenGesamt" minOccurs="0" type="xs:decimal">
+            <xs:annotation>
+               <xs:documentation>Hier ist die gesamte Anzahl der Fehlstunden einzutragen.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="stundenEntschuldigt" minOccurs="0" type="xs:decimal">
+            <xs:annotation>
+               <xs:documentation>Hier ist die Anzahl der entschuldigten Fehlstunden einzutragen.</xs:documentation>
             </xs:annotation>
          </xs:element>
       </xs:sequence>
@@ -1707,6 +1736,25 @@
                <xs:documentation>Dieses Feld beinhaltet den Namen des Faches, in dem die Abiturprüfung abgelegt wurde.</xs:documentation>
             </xs:annotation>
          </xs:element>
+         <xs:element name="aufgabenfeld" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld beinhaltet die Aufgabenfelder, denen die Prüfung zugeordnet werden kann.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="code" type="xsc:Code.Aufgabenfeld">
+                     <xs:annotation>
+                        <xs:documentation>Wert aus der Codeliste.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="nichtGelisteterWert" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Freitext-Angabe, wenn der Wert ~wert_nicht_in_liste ausgewählt wurde.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
          <xs:element name="anforderungsniveau"
                      minOccurs="0"
                      type="xsc:Code.Anforderungsniveau">
@@ -1751,6 +1799,11 @@
                   </xs:element>
                </xs:sequence>
             </xs:complexType>
+         </xs:element>
+         <xs:element name="berechnungsgrundlage" minOccurs="0" type="xs:boolean">
+            <xs:annotation>
+               <xs:documentation>Gibt an, ob diese Leistung in die Berechnung eingebracht werden soll. Die genaue Auswirkung hängt vom jeweiligen fachlichen Kontext ab.</xs:documentation>
+            </xs:annotation>
          </xs:element>
       </xs:sequence>
    </xs:complexType>
@@ -2344,7 +2397,7 @@
                <xs:documentation>Hier können die Angaben zur Kurswahl im Wahlpflichtbereich gemacht werden.</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element name="fehltage" minOccurs="0" type="xsc:Fehltage">
+         <xs:element name="fehlzeiten" minOccurs="0" type="xsc:Fehlzeiten">
             <xs:annotation>
                <xs:documentation>Hier können die Angaben zur Erfassung von Fehltagen im laufenden bzw. vergangenen Schuljahr gemacht werden.</xs:documentation>
             </xs:annotation>
@@ -2819,6 +2872,7 @@
                <description-de-DE>
                   <spaltennameLang>Reihenfolge</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -2897,6 +2951,7 @@
                <description-de-DE>
                   <spaltennameLang>Schulart / Prüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3220,6 +3275,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Schulaufnahme</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3340,6 +3396,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Unterrichtsteilnahme</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3404,6 +3461,7 @@
                <description-de-DE>
                   <spaltennameLang>Art weiterer Sprachkenntnisse</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3483,6 +3541,7 @@
                <description-de-DE>
                   <spaltennameLang>Aufgabenfeld</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3554,6 +3613,7 @@
                <description-de-DE>
                   <spaltennameLang>Zeitraum</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3611,6 +3671,7 @@
                <description-de-DE>
                   <spaltennameLang>Impfschutz</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3682,6 +3743,7 @@
                <description-de-DE>
                   <spaltennameLang>Jahrgangsstufe</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -3977,6 +4039,7 @@
                <description-de-DE>
                   <spaltennameLang>Krankheit</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4020,6 +4083,7 @@
                <description-de-DE>
                   <spaltennameLang>Status</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>optional</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4104,6 +4168,7 @@
                <description-de-DE>
                   <spaltennameLang>Laufbahnempfehlung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4238,6 +4303,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Nachprüfung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4302,6 +4368,7 @@
                <description-de-DE>
                   <spaltennameLang>Art der Nachweisperiode</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4373,6 +4440,7 @@
                <description-de-DE>
                   <spaltennameLang>Beschreibung</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4444,6 +4512,7 @@
                <description-de-DE>
                   <spaltennameLang>Verpflichtungsgrad</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4537,7 +4606,7 @@
                <herausgebernameKurz>XSchule</herausgebernameKurz>
             </codeliste>
             <versionCodeliste>
-               <version>1.0</version>
+               <version>2025-11-13</version>
                <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
             </versionCodeliste>
             <codelistenspalten>
@@ -4550,6 +4619,7 @@
                <description-de-DE>
                   <spaltennameLang>Versetzungstyp</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
@@ -4558,105 +4628,126 @@
          </xs:appinfo>
       </xs:annotation>
       <xs:restriction base="xs:token">
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/aufruecken">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/aufruecken">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Aufrücken</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/freiwillige_wiederholung_rueckversetzung">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/freiwillige_wiederholung_rueckversetzung">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>freiwillige Wiederholung (Rückversetzung)</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/keine_versetzung">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/keine_versetzung">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>keine Versetzung</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/keine_versetzung_und_keine_nachpruefung_mehr">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/keine_versetzung_und_keine_nachpruefung_mehr">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Keine Versetzung und keine Nachprüfung mehr</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/schulformwechsel_ohne_versetzung">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/naechsthoeherer_schuljargang_ohne_versetzung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Besuch des nächsthöheren Schuljahrgangs ohne Versetzung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/naechsthoeherer_schuljargang_ohne_versetzung_mit_notenschutz">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Besuch des nächsthöheren Schuljahrgangs ohne Versetzung mit Notenschutz</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/naechsthoeherer_schuljargang_ohne_versetzung_ohne_notenschutz">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Besuch des nächsthöheren Schuljahrgangs ohne Versetzung ohne Notenschutz</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/schulformwechsel_ohne_versetzung">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Schulformwechsel ohne Versetzung</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_auf_probe">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_auf_probe">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung auf Probe</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_durch_konferenzbeschluss">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_durch_konferenzbeschluss">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung durch Konferenzbeschluss</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_mit_nachpruefung">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_mit_nachpruefung">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung mit Nachprüfung</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_mit_notenschutz">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_mit_notenschutz">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung mit Notenschutz</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_mit_schulformwechsel">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_mit_schulformwechsel">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung mit Schulformwechsel</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/versetzung_mit_ueberspringen_einer_klasse">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/versetzung_mit_ueberspringen_einer_klasse">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Versetzung mit Überspringen einer Klasse</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/~wert_nicht_bekannt">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/~wert_nicht_bekannt">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Wert nicht bekannt</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/~wert_nicht_in_liste">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/~wert_nicht_in_liste">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Wert nicht in Liste</description-de-DE>
                </xs:appinfo>
             </xs:annotation>
          </xs:enumeration>
-         <xs:enumeration value="http://xschule.digital/def/xschule/1.0/code/versetzungstyp/~wert_nicht_uebermittelbar_rechtliche_gruende">
+         <xs:enumeration value="http://xschule.digital/def/xschule/2025-11-13/code/versetzungstyp/~wert_nicht_uebermittelbar_rechtliche_gruende">
             <xs:annotation>
                <xs:appinfo>
                   <description-de-DE>Wert liegt grundsätzlich vor, darf aber aus rechtlichen Gründen nicht übermittelt werden</description-de-DE>
@@ -4691,6 +4782,7 @@
                <description-de-DE>
                   <spaltennameLang>Zeugnisart</spaltennameLang>
                   <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
                   <codeSpalte>false</codeSpalte>
                   <verwendung>required</verwendung>
                   <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
