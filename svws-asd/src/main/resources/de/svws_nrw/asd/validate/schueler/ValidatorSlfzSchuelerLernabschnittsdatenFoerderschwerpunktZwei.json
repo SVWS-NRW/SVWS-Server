@@ -1,0 +1,20 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfzSchuelerLernabschnittsdatenFoerderschwerpunktZwei",
+    "historie" : [ {
+      "praefix" : "SLFZ",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Foerderschwerpunkt-Zwei",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "Feld 'Weiterer Förderschwerpunkt'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "R", "PS", "SK", "GE", "FW", "HI", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
