@@ -7,7 +7,8 @@
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
 						@change="model.patch"
-						:max-len="30" :readonly />
+						:max-len="30"
+						:readonly required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />

@@ -5,7 +5,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 						:model-value="model.proxy.bezeichnung"
-						readonly />
+						readonly required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
