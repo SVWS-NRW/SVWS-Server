@@ -96,9 +96,12 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 */
 	public append(ziffer: string): boolean {
 		const len = this._noteTemp.value.length;
-		const tmp = this._noteTemp.value + ziffer;
-		const note = Note.fromKuerzel(tmp);
-		if (((len === 0) && !this._firstChars.has(ziffer)) || ((len > 0) && (note === Note.KEINE))) {
+		let tmp = this._noteTemp.value + ziffer;
+		let note = Note.fromKuerzel(tmp);
+		if ((this._note.value !== Note.KEINE) && (note === Note.KEINE) && this._firstChars.has(ziffer)) {
+			tmp = ziffer;
+			note = Note.fromKuerzel(tmp);
+		} else	if (((len === 0) && !this._firstChars.has(ziffer)) || ((len > 0) && (note === Note.KEINE))) {
 			return false;
 		}
 		this._noteTemp.value = tmp;
@@ -153,7 +156,7 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 			}
 			return true;
 		}
-		// Prüfe, ob eine Zeichen eingegeben wurde
+		// Prüfe, ob ein Zeichen eingegeben wurde
 		if (event.key.length !== 1) {
 			return false;
 		} // Keine erfolgreiche Eingabe...
