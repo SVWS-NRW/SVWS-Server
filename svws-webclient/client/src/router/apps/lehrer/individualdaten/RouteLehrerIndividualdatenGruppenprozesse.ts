@@ -31,9 +31,6 @@ export class RouteLehrerIndividualdatenGruppenprozesse extends RouteNode<any, Ro
 
 	public getProps(_: RouteLocationNormalized): LehrerIndividualdatenGruppenprozesseProps {
 		return {
-			lehrerListeManager: () => routeLehrer.data.manager,
-			autofocus: routeLehrer.data.autofocus,
-			patchMultiple: () => routeLehrer.data.patchMultiple(this.data.pendingStateManager),
 			pendingStateManager: () => routeLehrer.data.pendingStateManager,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

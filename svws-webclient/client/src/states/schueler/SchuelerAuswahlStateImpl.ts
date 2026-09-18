@@ -80,9 +80,9 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 	 *
 	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
 	 *
-	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im KlassenState
+	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im reaktiven State
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<SchuelerAuswahlState>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<SchuelerAuswahlReactiveState>> {
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
@@ -191,9 +191,9 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 	};
 
 	/**
-	 * Führt eine LöscheOperation auf dem Server für die Klassen mit den übergebenen IDs aus.
+	 * Führt eine LöscheOperation auf dem Server für die Schüler mit den übergebenen IDs aus.
 	 *
-	 * @param ids   die IDs der Klassen
+	 * @param ids   die IDs der Schüler
 	 *
 	 * @returns eine Promise mit dem Ergebis der Lösch-Operation
 	 */

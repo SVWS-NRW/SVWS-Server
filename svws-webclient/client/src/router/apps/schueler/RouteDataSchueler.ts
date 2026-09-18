@@ -1,5 +1,3 @@
-import type { RouteParamsRawGeneric } from "vue-router";
-
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { PendingStateManagerRegistry } from "~/router/PendingStateManagerRegistry";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -19,10 +17,6 @@ export class RouteDataSchueler extends RouteData<RouteStateInterface> {
 
 	get pendingStateManagerRegistry(): PendingStateManagerRegistry {
 		return this._pendingStateManagerRegistry;
-	}
-
-	public addID(param: RouteParamsRawGeneric, id: number): void {
-		param.id = id;
 	}
 
 }

@@ -39,12 +39,8 @@
 		<div v-if="statistikState.lehrerListeManager.auswahlID() !== null">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(statistikState.lehrerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.lehrerListeManager.auswahl().nachname }}, {{ statistikState.lehrerListeManager.auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
-				<lehrer-individualdaten v-if="tabManager.tab.name === 'LS'" :zeige-alles="false" :add-leitungsfunktion :delete-leitungsfunktionen
-					:get-list-leitungsfunktionen :patch-leitungsfunktion :lehrer-liste-manager="() => statistikState.lehrerListeManager" :patch />
-				<lehrer-personaldaten v-if="tabManager.tab.name === 'LP'" :add-anrechnung :add-fachrichtung :add-lehramt :add-lehrbefaehigung :add-lehrer-unterrichtsfach
-					:add-mehrleistung :add-minderleistung :lehrer-liste-manager="() => statistikState.lehrerListeManager" :lehrer-unterrichtsfaecher :map-faecher
-					:map-schulen :patch-abschnittsdaten :patch-anrechnungen :patch-fachrichtung :patch-lehramt :patch-lehrbefaehigung :patch-lehrer-unterrichtsfach :patch-mehrleistung :patch-minderleistung :patch-personaldaten
-					:remove-anrechnung :remove-fachrichtungen :remove-lehraemter :remove-lehrbefaehigungen :remove-lehrer-unterrichtsfach :remove-mehrleistung :remove-minderleistung />
+				<lehrer-individualdaten v-if="tabManager.tab.name === 'LS'" :zeige-alles="false" />
+				<lehrer-personaldaten v-if="tabManager.tab.name === 'LP'" :lehrer-liste-manager="() => statistikState.lehrerListeManager" />
 			</svws-ui-tab-bar>
 		</div>
 	</div>

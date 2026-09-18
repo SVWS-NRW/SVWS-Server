@@ -7,7 +7,6 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 
 import type { LehrerNeuProps } from "~/components/lehrer/LehrerNeuProps";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -30,9 +29,6 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerNeuProps {
 		return {
-			lehrerListeManager: () => routeLehrer.data.manager,
-			add: routeLehrer.data.add,
-			gotoDefaultView: routeLehrer.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

@@ -9,9 +9,9 @@ import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattfo
 import { api } from "~/router/Api";
 import { RouteDataLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteDataLehrerLernplattformen";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
+import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 const LehrerLernplattformen = () => import("~/components/lehrer/lernplattformen/LehrerLernplattformen.vue");
 
@@ -33,7 +33,8 @@ export class RouteLehrerLernplattformen extends RouteNode<RouteDataLehrerLernpla
 			if (id === undefined) {
 				await this.data.ladeDaten(null);
 			} else {
-				await this.data.ladeDaten(routeLehrer.data.manager.liste.get(id));
+				const lehrerAuswahlState = useLehrerAuswahlState();
+				await this.data.ladeDaten(lehrerAuswahlState.manager.liste.get(id));
 			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

@@ -8,7 +8,6 @@ import { ViewType } from "@ui/ui/nav/ViewType";
 import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
 import { RouteDataSchuelerNeu } from "~/router/apps/schueler/neu/RouteDataSchuelerNeu";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 

@@ -40,8 +40,7 @@
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoSchueler(statistikState.schuelerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.schuelerListeManager.auswahl().nachname }}, {{ statistikState.schuelerListeManager.auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'" :zeige-alles="false" :fahrschuelerarten-by-id
-					:foerderschwerpunkte-by-id :haltestellen-by-id :map-schulen :map-telefon-arten
-					:religionen-by-id :schueler-liste-manager="() => statistikState.schuelerListeManager" autofocus />
+					:foerderschwerpunkte-by-id :haltestellen-by-id :map-schulen :map-telefon-arten :religionen-by-id />
 			</svws-ui-tab-bar>
 		</div>
 	</div>

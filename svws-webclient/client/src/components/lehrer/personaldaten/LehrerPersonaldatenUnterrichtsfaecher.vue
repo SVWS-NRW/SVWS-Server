@@ -13,22 +13,22 @@
 			</td>
 			<td class="text-center">
 				<svws-ui-checkbox v-if="hatUpdateKompetenz" :model-value="row.data.istSek1"
-					@update:model-value="value => patchLehrerUnterrichtsfach(row.data, { istSek1: value })" />
+					@update:model-value="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { istSek1: value })" />
 				<span v-else>{{ row.data.istSek1 ? 'Ja' : 'Nein' }}</span>
 			</td>
 			<td class="text-center">
 				<svws-ui-checkbox v-if="hatUpdateKompetenz" :model-value="row.data.istSek2"
-					@update:model-value="value => patchLehrerUnterrichtsfach(row.data, { istSek2: value })" />
+					@update:model-value="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { istSek2: value })" />
 				<span v-else>{{ row.data.istSek2 ? 'Ja' : 'Nein' }}</span>
 			</td>
 			<td class="text-left">
 				<svws-ui-text-input v-if="hatUpdateKompetenz" :model-value="row.data.bemerkung ?? ''"
-					@change="value => patchLehrerUnterrichtsfach(row.data, { bemerkung: value || null })" headless />
+					@change="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { bemerkung: value || null })" headless />
 				<span v-else>{{ row.data.bemerkung ?? '' }}</span>
 			</td>
 			<td>
 				<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
-					<svws-ui-button @click="removeLehrerUnterrichtsfach(row.data)" type="trash" />
+					<svws-ui-button @click="lehrerAuswahlState.removeLehrerUnterrichtsfach(row.data)" type="trash" />
 				</div>
 			</td>
 		</template>
@@ -86,21 +86,20 @@
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
-		lehrerUnterrichtsfaecher: () => List<LehrerUnterrichtsfach>;
-		mapFaecher: () => Map<number, FachDaten>;
-		patchLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>) => Promise<void>;
-		addLehrerUnterrichtsfach: (eintrag: Partial<LehrerUnterrichtsfach>) => Promise<void>;
-		removeLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach) => Promise<void>;
 	}>();
+
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	type Eintrag = { data: LehrerUnterrichtsfach };
 
 	const gridManager = new GridManager<string, Eintrag, List<Eintrag>>({
 		daten: computed<List<Eintrag>>(() => {
 			const result = new ArrayList<Eintrag>();
-			for (const fach of props.lehrerUnterrichtsfaecher()) {
+			for (const fach of lehrerAuswahlState.lehrerUnterrichtsfaecher) {
 				result.add({ data: fach });
 			}
 			return result;
@@ -116,7 +115,7 @@
 	});
 
 	function getFachText(eintrag: LehrerUnterrichtsfach): string {
-		const fach = props.mapFaecher().get(eintrag.idFach);
+		const fach = lehrerAuswahlState.mapFaecher.get(eintrag.idFach);
 		return fach ? `${fach.kuerzel} - ${fach.bezeichnung}` : '—';
 	}
 
@@ -128,7 +127,7 @@
 
 	const faecherVorhanden = computed(() => {
 		const vorhanden = new HashSet<number>();
-		for (const fach of props.lehrerUnterrichtsfaecher()) {
+		for (const fach of lehrerAuswahlState.lehrerUnterrichtsfaecher) {
 			vorhanden.add(fach.idFach);
 		}
 		return vorhanden;
@@ -136,7 +135,7 @@
 
 	const faecherVerfuegbar = computed<FachDaten[]>(() => {
 		const result: FachDaten[] = [];
-		for (const fach of props.mapFaecher().values()) {
+		for (const fach of lehrerAuswahlState.mapFaecher.values()) {
 			if (!faecherVorhanden.value.contains(fach.id)) {
 				result.push(fach);
 			}
@@ -164,7 +163,7 @@
 		if (auswahlFachNeu.value === null || faecherVorhanden.value.contains(auswahlFachNeu.value.id)) {
 			return;
 		}
-		await props.addLehrerUnterrichtsfach({
+		await lehrerAuswahlState.addLehrerUnterrichtsfach({
 			idFach: auswahlFachNeu.value.id,
 			istSek1: neuIstSek1.value,
 			istSek2: neuIstSek2.value,

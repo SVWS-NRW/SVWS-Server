@@ -8,16 +8,16 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!manager().liste.auswahlExists()"
-				:clicked="clickedEintrag" @update:clicked="lehrerDaten => gotoDefaultView(lehrerDaten.id)" :items="rowsFiltered"
-				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns selectable count
+			<svws-ui-table :lock-selectable="pendingStateManagerRegistry().pendingStateExists()" :clickable="!lehrerAuswahlState.manager.liste.auswahlExists()"
+				:clicked="clickedEintrag" @update:clicked="lehrerDaten => lehrerAuswahlState.gotoDefaultView(lehrerDaten.id)" :items="rowsFiltered"
+				:model-value="[...lehrerAuswahlState.manager.liste.auswahl()]" @update:model-value="items => setAuswahl(items)" :columns selectable count
 				:filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll v-model:sort-by-and-order="sortByAndOrder"
 				:sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="manager().personaltypen.list()" :item-text="textPersonaltyp"
+					<svws-ui-multi-select v-model="filterPersonaltyp" title="Personaltyp" :items="lehrerAuswahlState.manager.personaltypen.list()" :item-text="textPersonaltyp"
 						class="col-span-full" />
 					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
@@ -26,7 +26,7 @@
 				</template>
 				<template #actions>
 					<svws-ui-tooltip v-if="serverState.hasDev && hatKompetenzAendern" position="bottom">
-						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)"
+						<svws-ui-button :disabled="lehrerAuswahlState.activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="lehrerAuswahlState.gotoHinzufuegenView(true)"
 							:has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -53,11 +53,14 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
 	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
@@ -74,37 +77,37 @@
 	}
 
 	const filterNurSichtbar = computed<boolean>({
-		get: () => props.manager().filterNurSichtbar(),
+		get: () => lehrerAuswahlState.manager.filterNurSichtbar(),
 		set: (value) => {
-			props.manager().setFilterNurSichtbar(value);
-			void props.setFilter();
-			void props.setFilterNurSichtbar(value);
+			lehrerAuswahlState.manager.setFilterNurSichtbar(value);
+			void lehrerAuswahlState.setFilter();
+			void lehrerAuswahlState.setFilterNurSichtbar(value);
 		},
 	});
 
 	const filterNurStatistikrelevant = computed<boolean>({
-		get: () => props.manager().filterNurStatistikRelevant(),
+		get: () => lehrerAuswahlState.manager.filterNurStatistikRelevant(),
 		set: (value) => {
-			props.manager().setFilterNurStatistikRelevant(value);
-			void props.setFilter();
-			void props.setFilterNurStatistikrelevant(value);
+			lehrerAuswahlState.manager.setFilterNurStatistikRelevant(value);
+			void lehrerAuswahlState.setFilter();
+			void lehrerAuswahlState.setFilterNurStatistikrelevant(value);
 		},
 	});
 
 	const filterPersonaltyp = computed<PersonalTyp[]>({
-		get: () => [...props.manager().personaltypen.auswahl()],
+		get: () => [...lehrerAuswahlState.manager.personaltypen.auswahl()],
 		set: (value) => {
-			props.manager().personaltypen.auswahlClear();
+			lehrerAuswahlState.manager.personaltypen.auswahlClear();
 			for (const v of value) {
-				props.manager().personaltypen.auswahlAdd(v);
+				lehrerAuswahlState.manager.personaltypen.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void lehrerAuswahlState.setFilter();
 		},
 	});
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const { field, ascending } of props.manager().orderGet()) {
+		for (const { field, ascending } of lehrerAuswahlState.manager.orderGet()) {
 			map.set(field, ascending);
 		}
 		return map;
@@ -112,7 +115,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.manager().orderGet();
+			const list = lehrerAuswahlState.manager.orderGet();
 			if (list.length === 0) {
 				return undefined;
 			} else {
@@ -124,8 +127,8 @@
 			if ((value === undefined) || (value.key === null)) {
 				return;
 			}
-			props.manager().orderUpdate(value.key, value.order);
-			void props.setFilter();
+			lehrerAuswahlState.manager.orderUpdate(value.key, value.order);
+			void lehrerAuswahlState.setFilter();
 		},
 	});
 
@@ -134,8 +137,8 @@
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
 		const locale = search.value.toLocaleLowerCase();
-		const searchValueIsNumber = /^[0-9]+$/.test(locale.trim());
-		for (const e of props.manager().filtered()) {
+		const searchValueIsNumber = /^\d+$/.test(locale.trim());
+		for (const e of lehrerAuswahlState.manager.filtered()) {
 			if ((searchValueIsNumber && e.id.toString().includes(locale))
 				|| e.nachname.toLocaleLowerCase().includes(locale)
 				|| e.vorname.toLocaleLowerCase().includes(locale)
@@ -147,34 +150,34 @@
 	});
 
 	async function filterReset() {
-		props.manager().personaltypen.auswahlClear();
-		props.manager().setFilterNurSichtbar(true);
-		props.manager().setFilterNurStatistikRelevant(true);
-		await props.setFilter();
+		lehrerAuswahlState.manager.personaltypen.auswahlClear();
+		lehrerAuswahlState.manager.setFilterNurSichtbar(true);
+		lehrerAuswahlState.manager.setFilterNurStatistikRelevant(true);
+		await lehrerAuswahlState.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.manager().personaltypen.auswahlExists());
+		return (lehrerAuswahlState.manager.personaltypen.auswahlExists());
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
+		if ((lehrerAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE) || (lehrerAuswahlState.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
 		}
-		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+		return lehrerAuswahlState.manager.hasDaten() ? lehrerAuswahlState.manager.auswahl() : null;
 	});
 
 	async function setAuswahl(items: LehrerListeEintrag[]) {
-		props.manager().liste.auswahlClear();
+		lehrerAuswahlState.manager.liste.auswahlClear();
 		for (const item of items) {
-			if (props.manager().liste.hasValue(item)) {
-				props.manager().liste.auswahlAdd(item);
+			if (lehrerAuswahlState.manager.liste.hasValue(item)) {
+				lehrerAuswahlState.manager.liste.auswahlAdd(item);
 			}
 		}
-		if (props.manager().liste.auswahlExists()) {
-			await props.gotoGruppenprozessView(true);
+		if (lehrerAuswahlState.manager.liste.auswahlExists()) {
+			await lehrerAuswahlState.gotoGruppenprozessView(true);
 		} else {
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+			await lehrerAuswahlState.gotoDefaultView(lehrerAuswahlState.manager.getVorherigeAuswahl()?.id);
 		}
 	}
 

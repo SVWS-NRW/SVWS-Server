@@ -80,22 +80,18 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<lehrer-personaldaten-lehraemter :personaldaten-model-proxy="() => personaldatenModelProxy" :hat-update-kompetenz="!readonly"
-					:lehrer-liste-manager :patch-lehramt :add-lehramt :remove-lehraemter :patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
-					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen />
+				<lehrer-personaldaten-lehraemter :personaldaten-model-proxy="() => personaldatenModelProxy" :hat-update-kompetenz="!readonly" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card v-if="serverState.hasDev" title="Unterrichtsfächer">
 			<svws-ui-input-wrapper>
-				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly"
-					:lehrer-unterrichtsfaecher :map-faecher :add-lehrer-unterrichtsfach :patch-lehrer-unterrichtsfach :remove-lehrer-unterrichtsfach />
+				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-anrechnungen :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
-					:hat-update-kompetenz="!readonly" :add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung
-					:remove-minderleistung :add-anrechnung :patch-anrechnungen :remove-anrechnung />
+					:hat-update-kompetenz="!readonly" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -106,6 +102,7 @@
 	import { computed } from "vue";
 
 	import type { LehrerPersonalabschnittsdaten } from "@core/asd/data/lehrer/LehrerPersonalabschnittsdaten";
+	import { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonaldaten";
 	import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
 	import { LehrerBeschaeftigungsart } from "@core/asd/types/lehrer/LehrerBeschaeftigungsart";
 	import { LehrerEinsatzstatus } from "@core/asd/types/lehrer/LehrerEinsatzstatus";
@@ -122,11 +119,11 @@
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { LehrerPersonalabschnittsdatenModelProxy } from "~/components/lehrer/personaldaten/modelproxy/LehrerPersonalabschnittsdatenModelProxy";
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
-	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
 	import { LehrerPersonaldatenModelProxy } from "./modelproxy/LehrerPersonaldatenModelProxy";
 
-	const props = defineProps<LehrerPersonaldatenProps>();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const schuleState = useSchuleState();
@@ -136,25 +133,25 @@
 	const eigeneSchulnummer = computed<string>(() => `${schuleState.validatorKontext.getSchulnummer()}`);
 
 	async function patchMethodLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>): Promise<boolean> {
-		const id = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.id ?? null;
+		const id = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id)?.id ?? null;
 		if (id !== null) {
-			await props.patchAbschnittsdaten(data, id);
+			await lehrerAuswahlState.patchPersonalAbschnittsdaten(data, id);
 		}
 		return true;
 	}
-	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id), () => schuleState.validatorKontext, () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
+	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id), () => schuleState.validatorKontext, () => lehrerAuswahlState.manager, patchMethodLehrerPersonalabschnittsdaten);
 	const personaldatenModelProxy = computed(() =>
 		new LehrerPersonaldatenModelProxy(
-			() => props.lehrerListeManager().personalDaten(),
+			() => lehrerAuswahlState.manager.hasPersonalDaten() ? lehrerAuswahlState.manager.personalDaten() : new LehrerPersonaldaten(),
 			() => schuleState.validatorKontext,
-			() => props.lehrerListeManager(),
-			props.patchPersonaldaten
+			() => lehrerAuswahlState.manager,
+			(data) => lehrerAuswahlState.patchPersonaldaten(data)
 		)
 	);
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
 		const result = new HashSet<string>();
-		for (const schule of props.mapSchulen().values()) {
+		for (const schule of lehrerAuswahlState.mapSchulen.values()) {
 			if (schule.schulnummerStatistik !== null) {
 				result.add(schule.schulnummerStatistik);
 			}
@@ -162,7 +159,7 @@
 		// Ergänze die eigene Schule, sofern diese nicht bereits im Katalog enthalten ist
 		result.add(eigeneSchulnummer.value);
 		// Ergänze ggf. noch den Eintrag aus der Datenbank
-		const daten = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id);
+		const daten = lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id);
 		if ((daten === null) || (daten.stammschulnummer === null)) {
 			return result;
 		}
@@ -218,7 +215,7 @@
 	// --- util ---
 
 	function getSchulnummerText(schulnummer: string): string {
-		const eintrag = props.mapSchulen().get(schulnummer);
+		const eintrag = lehrerAuswahlState.mapSchulen.get(schulnummer);
 
 		const schulePrefix = (eigeneSchulnummer.value === schulnummer) ? 'Eigene Schule - ' : '';
 		const kuerzel = eintrag ? eintrag.kuerzel + ' - ' : '';

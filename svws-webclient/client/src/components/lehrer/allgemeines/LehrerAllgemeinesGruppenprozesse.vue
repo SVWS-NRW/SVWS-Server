@@ -4,7 +4,7 @@
 			<ui-card v-if="hatKompetenzDruckenLehrerdaten" icon="i-ri-printer-line" title="Lehrerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Lehrkräfte."
 				:is-open="currentAction === 'druckLehrerListeKontaktdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeKontaktdaten', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_KONTAKTDATEN"
-					:ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
 				:is-open="currentAction === 'druckLehrerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplan', isOpen)">
@@ -13,7 +13,7 @@
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
 					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Kombinierten Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Lehrkräfte in einer kombinierten Ansicht."
@@ -23,13 +23,13 @@
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
 					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte drucken"
 				:is-open="currentAction === 'druckLehrerListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeSchuelerLeistungsdaten', isOpen)">
 				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN"
-					:ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
@@ -69,12 +69,15 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
 	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 
 	type Action = 'druckLehrerListeKontaktdaten' | 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
 
 	const props = defineProps<LehrerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
@@ -82,19 +85,19 @@
 	const hatKompetenzDruckenLehrerdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
 
-	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
-	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
-	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
-	const isDeleteConditionSectionVisible = computed<boolean>(() => (props.lehrerListeManager().liste.auswahlExists() || (statusAction.value === undefined)));
+	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
+	const deleteCheckErrors = computed<Iterable<string>>(() => lehrerAuswahlState.deleteCheck()[1]);
+	const selectedAllowedToDelete = computed<boolean>(() => lehrerAuswahlState.deleteCheck()[0]);
+	const isDeleteConditionSectionVisible = computed<boolean>(() => (lehrerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
 
-	const stundenplanOptions = computed(() => props.mapStundenplaene.values());
+	const stundenplanOptions = computed(() => lehrerAuswahlState.mapStundenplaene.values());
 	const stundenplanModel = computed({
 		get: () => {
 			if (stundenplanAuswahl.value === undefined) {
-				if (props.mapStundenplaene.size > 0) {
-					const [first] = props.mapStundenplaene.values();
+				if (lehrerAuswahlState.mapStundenplaene.size > 0) {
+					const [first] = lehrerAuswahlState.mapStundenplaene.values();
 					return first;
 				}
 				return undefined;
@@ -127,7 +130,7 @@
 
 	async function entferneLehrer() {
 		loading.value = true;
-		[statusAction.value, logs.value] = await props.deleteLehrer();
+		[statusAction.value, logs.value] = await lehrerAuswahlState.delete();
 		loading.value = false;
 	}
 

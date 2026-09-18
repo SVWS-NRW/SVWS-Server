@@ -118,14 +118,14 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 	 * @returns die Routing-Parameter mit der ID.
 	 */
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
-		const params = {};
+		const params = <RouteParamsRawGeneric>{};
 		const klassenState = useKlassenState();
 		if (!klassenState.isAvailable) {
 			return params;
 		}
 		const id = klassenState.manager.auswahlID();
 		if (id !== null) {
-			this.data.addID(params, id);
+			params.id = id;
 		}
 		return params;
 	}

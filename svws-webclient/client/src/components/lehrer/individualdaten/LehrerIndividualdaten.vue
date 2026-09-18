@@ -2,8 +2,8 @@
 	<Teleport v-if="zeigeAlles" to=".svws-ui-header--actions" defer>
 		<wiedervorlage-modal type="lehrkraft" mode="create"
 			:data="{
-				idPerson: lehrerListeManager().daten().id,
-				namePerson: `${lehrerListeManager().daten().vorname} ${lehrerListeManager().daten().nachname}`
+				idPerson: lehrerAuswahlState.manager.daten().id,
+				namePerson: `${lehrerAuswahlState.manager.daten().vorname} ${lehrerAuswahlState.manager.daten().nachname}`
 			}">
 			<template #default="{openModal}">
 				<svws-ui-button @click="openModal" type="secondary">
@@ -134,7 +134,7 @@
 		<svws-ui-content-card title="Leitungsfunktionen" v-if="serverState.mode === ServerMode.DEV">
 			<svws-ui-table class="max-h-72! w-full"
 				v-model="selectedLeitungsfunktionen"
-				:items="getListLeitungsfunktionen()"
+				:items="lehrerAuswahlState.leitungsfunktionen"
 				:clicked="clickedLeitungsfunktion"
 				@update:clicked="lf => patchLeitungsfunktionModal(lf)"
 				:columns="leitungsfunktionenTableColumns"
@@ -220,6 +220,7 @@
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import WiedervorlageModal from "~/components/wiedervorlage/WiedervorlageModal.vue";
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import { LehrerIndividualdatenModelProxy } from "./modelproxy/LehrerIndividualdatenModelProxy";
@@ -229,11 +230,16 @@
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
 	const orteState = useOrteState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 	const leitungsfunktionState = useLeitungsfunktionState();
 
-	const manager = () => props.lehrerListeManager();
-	const dataNotPatched = () => props.lehrerListeManager().daten();
-	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => schuleState.validatorKontext, manager, props.patch);
+	const dataNotPatched = () => lehrerAuswahlState.manager.daten();
+	const modelProxy = new LehrerIndividualdatenModelProxy(
+		dataNotPatched,
+		() => schuleState.validatorKontext,
+		() => lehrerAuswahlState.manager,
+		(data) => lehrerAuswahlState.patch(data)
+	);
 
 	const readonly = computed<boolean>(() => !benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 	const selectedLeitungsfunktionen = ref<Schulleitung[]>([]);
@@ -324,14 +330,14 @@
 		const { id, ...partialDataWithoutId } = leitungsfunktionEntry.value;
 
 		if (currentLeitungsfunktionMode.value === LeitungsfunktionMode.ADD) {
-			if (!props.getListLeitungsfunktionen().isEmpty()) {
-				clickedLeitungsfunktion.value = props.getListLeitungsfunktionen().getFirst();
+			if (!lehrerAuswahlState.leitungsfunktionen.isEmpty()) {
+				clickedLeitungsfunktion.value = lehrerAuswahlState.leitungsfunktionen.getFirst();
 			}
 
-			await props.addLeitungsfunktion(partialDataWithoutId, dataNotPatched().id);
+			await lehrerAuswahlState.addLeitungsfunktion(partialDataWithoutId, dataNotPatched().id);
 
-			if (!props.getListLeitungsfunktionen().isEmpty()) {
-				clickedLeitungsfunktion.value = props.getListLeitungsfunktionen().getLast();
+			if (!lehrerAuswahlState.leitungsfunktionen.isEmpty()) {
+				clickedLeitungsfunktion.value = lehrerAuswahlState.leitungsfunktionen.getLast();
 			}
 
 			closeModalLeitungsfunktion();
@@ -343,7 +349,7 @@
 				return;
 			}
 
-			await props.patchLeitungsfunktion(partialDataWithoutId, leitungsfunktionEntry.value.id);
+			await lehrerAuswahlState.patchLeitungsfunktion(partialDataWithoutId, leitungsfunktionEntry.value.id);
 			closeModalLeitungsfunktion();
 		}
 	}
@@ -358,7 +364,7 @@
 			ids.add(s.id);
 		}
 
-		await props.deleteLeitungsfunktionen(ids);
+		await lehrerAuswahlState.deleteLeitungsfunktionen(ids);
 		selectedLeitungsfunktionen.value = [];
 	}
 

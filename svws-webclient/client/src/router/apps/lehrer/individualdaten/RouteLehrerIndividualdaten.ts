@@ -5,7 +5,7 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
 import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenProps";
-import { type RouteLehrer, routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { RouteNode } from "~/router/RouteNode";
 
 const LehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/LehrerIndividualdaten.vue");
@@ -25,12 +25,6 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
-			patch: routeLehrer.data.patch,
-			lehrerListeManager: () => routeLehrer.data.manager,
-			getListLeitungsfunktionen: () => routeLehrer.data.getListLeitungsfunktionen,
-			addLeitungsfunktion: routeLehrer.data.addLeitungsfunktion,
-			patchLeitungsfunktion: routeLehrer.data.patchLeitungsfunktion,
-			deleteLeitungsfunktionen: routeLehrer.data.deleteLeitungsfunktionen,
 			zeigeAlles: true,
 		};
 	}

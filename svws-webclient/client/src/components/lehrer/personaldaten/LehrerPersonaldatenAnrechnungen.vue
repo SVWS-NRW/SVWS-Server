@@ -84,24 +84,18 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
 	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
 	import type { LehrerPersonalabschnittsdatenModelProxy } from "./modelproxy/LehrerPersonalabschnittsdatenModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
 		personalabschnittsdatenModelProxy: () => LehrerPersonalabschnittsdatenModelProxy,
-		addMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
-		patchMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
-		removeMehrleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
-		addMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
-		patchMinderleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
-		removeMinderleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
-		addAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
-		patchAnrechnungen: (data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>) => Promise<void>;
-		removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	}>();
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	type Eintrag = { typ: 'mehrleistung' | 'minderleistung' | 'anrechnung', data: LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy };
 
@@ -144,7 +138,7 @@
 			// Füge Mehrleistungen, Minderleistung und Anrechnungen hinzu
 			for (const data of abschnittsdaten.mehrleistung) {
 				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await props.patchMehrleistung(proxy, data.id);
+					await lehrerAuswahlState.patchMehrleistung(proxy, data.id);
 					return true;
 				};
 				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
@@ -152,7 +146,7 @@
 			}
 			for (const data of abschnittsdaten.minderleistung) {
 				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await props.patchMinderleistung(proxy, data.id);
+					await lehrerAuswahlState.patchMinderleistung(proxy, data.id);
 					return true;
 				};
 				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
@@ -160,7 +154,7 @@
 			}
 			for (const data of abschnittsdaten.anrechnungen) {
 				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await props.patchAnrechnungen(ArrayList.of({ ...proxy, id: data.id }));
+					await lehrerAuswahlState.patchAnrechnungen(ArrayList.of({ ...proxy, id: data.id }));
 					return true;
 				};
 				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
@@ -199,11 +193,11 @@
 
 	async function removeDaten(row: Eintrag): Promise<void> {
 		if (row.typ === 'mehrleistung') {
-			await props.removeMehrleistung(row.data.data);
+			await lehrerAuswahlState.removeMehrleistung(row.data.data);
 		} else if (row.typ === 'minderleistung') {
-			await props.removeMinderleistung(row.data.data);
+			await lehrerAuswahlState.removeMinderleistung(row.data.data);
 		} else {
-			await props.removeAnrechnung(row.data.data);
+			await lehrerAuswahlState.removeAnrechnung(row.data.data);
 		}
 	}
 
@@ -323,19 +317,19 @@
 		for (const eintrag of auswahlMehrleistungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!mehrleistungenVorhanden.value.contains(eintrag.id)) {
-				await props.addMehrleistung(data);
+				await lehrerAuswahlState.addMehrleistung(data);
 			}
 		}
 		for (const eintrag of auswahlMinderleistungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!minderleistungenVorhanden.value.contains(eintrag.id)) {
-				await props.addMinderleistung(data);
+				await lehrerAuswahlState.addMinderleistung(data);
 			}
 		}
 		for (const eintrag of auswahlAnrechnungenNeu.value) {
 			data.idGrund = eintrag.id;
 			if (!anrechnungenVorhanden.value.contains(eintrag.id)) {
-				await props.addAnrechnung(data);
+				await lehrerAuswahlState.addAnrechnung(data);
 			}
 		}
 		showHinzufuegen.value = false;

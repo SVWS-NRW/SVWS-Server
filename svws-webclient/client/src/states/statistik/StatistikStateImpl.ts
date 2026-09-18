@@ -8,13 +8,14 @@ import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerList
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { StatistikState } from "@ui/states/statistik/StatistikState";
-import { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
+import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { StateManager } from "@ui/ui/StateManager";
 
 import { abschnittStateImpl } from "../AbschnittStateImpl";
 import type { KlassenListeManager } from "../klassen/KlassenListeManager";
 import { klassenStateImpl } from "../klassen/KlassenStateImpl";
 import { KursListeManager } from "../kurse/KursListeManager";
+import { lehrerAuswahlStateImpl } from "../lehrer/LehrerAuswahlStateImpl";
 import { schuelerAuswahlStateImpl } from "../schueler/SchuelerAuswahlStateImpl";
 import type { SchuelerListeManager } from "../schueler/SchuelerListeManager";
 import { schuleStateImpl } from "../SchuleStateImpl";
@@ -25,7 +26,7 @@ interface StatistikReactiveState {
 	statistikGesamt: StatistikGesamt;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
-	lehrerListeManager: LehrerListeManager;
+	lehrerListeManager: LehrerListeManager | undefined;
 	schuelerListeManager: SchuelerListeManager | undefined;
 	kursListeManager: KursListeManager | undefined;
 	klassenListeManager: KlassenListeManager | undefined;
@@ -41,8 +42,8 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 			statistikGesamt: new StatistikGesamt(),
 			mapLehrer: new Map<number, LehrerListeEintrag>(),
 			mapSchueler: new Map<number, SchuelerListeEintrag>(),
-			lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-			schuelerListeManager: undefined, // new SchuelerListeManager(Schulform.BK, new SchuelerListe(), new ArrayList(), new ArrayList(), -1),
+			lehrerListeManager: undefined,
+			schuelerListeManager: undefined,
 			kursListeManager: undefined,
 			klassenListeManager: undefined,
 		});
@@ -58,7 +59,8 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const listFaecher = await api.server.getFaecher(api.schema);
 
 		// Lehrer-State
-		const lehrerListeManager = new LehrerListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listeLehrer);
+		await lehrerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		const lehrerListeManager = lehrerAuswahlStateImpl.manager;
 
 		// Schüler-State
 		await schuelerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
@@ -96,6 +98,9 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 	}
 
 	public get lehrerListeManager(): LehrerListeManager {
+		if (this.state.lehrerListeManager === undefined) {
+			throw new DeveloperNotificationException("Der Manager wurde noch nicht initialisiert, es besteht keine Verbindung zum Server");
+		}
 		return this.state.lehrerListeManager;
 	}
 

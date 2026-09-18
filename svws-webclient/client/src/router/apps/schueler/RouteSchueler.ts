@@ -154,14 +154,14 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 	 * @returns die Routing-Parameter mit der ID.
 	 */
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
-		const params = {};
+		const params = <RouteParamsRawGeneric>{};
 		const schuelerAuswahlState = useSchuelerAuswahlState();
 		if (!schuelerAuswahlState.isAvailable) {
 			return params;
 		}
 		const id = schuelerAuswahlState.manager.auswahlID();
 		if (id !== null) {
-			this.data.addID(params, id);
+			params.id = id;
 		}
 		return params;
 	}

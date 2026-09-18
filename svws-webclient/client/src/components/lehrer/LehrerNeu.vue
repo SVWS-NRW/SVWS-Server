@@ -135,12 +135,14 @@
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
 
 	import { LehrerIndividualdatenModelProxy } from "~/components/lehrer/individualdaten/modelproxy/LehrerIndividualdatenModelProxy";
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 	import type { LehrerNeuProps } from './LehrerNeuProps';
 
 	const props = defineProps<LehrerNeuProps>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 	const orteState = useOrteState();
 
 	const isLoading = ref<boolean>(false);
@@ -157,7 +159,7 @@
 			} as Partial<LehrerStammdaten>
 		),
 		() => schuleState.validatorKontext,
-		props.lehrerListeManager
+		() => lehrerAuswahlState.manager
 	);
 
 	const personaltypManger = new SelectManager({
@@ -224,13 +226,13 @@
 		isLoading.value = true;
 		props.checkpoint.active = false;
 		const { id, ...partialData } = model.proxy;
-		await props.add(partialData);
+		await lehrerAuswahlState.add(partialData);
 		isLoading.value = false;
 	}
 
 	async function cancel() {
 		props.checkpoint.active = false;
-		await props.gotoDefaultView(null);
+		await lehrerAuswahlState.gotoDefaultView(null);
 	}
 
 	watch(() => model.pending, () => {

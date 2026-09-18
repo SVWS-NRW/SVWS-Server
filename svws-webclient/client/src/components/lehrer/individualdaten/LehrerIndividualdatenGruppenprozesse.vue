@@ -31,9 +31,11 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 
 	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
+	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 	const props = defineProps<LehrerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
+	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const loading = ref<boolean>(false);
 
@@ -42,7 +44,7 @@
 
 	async function patchPendingStates() {
 		loading.value = true;
-		await props.patchMultiple();
+		await lehrerAuswahlState.patchMultiple(props.pendingStateManager());
 		loading.value = false;
 	}
 

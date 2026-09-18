@@ -84,7 +84,7 @@ export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManage
 	 *
 	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im KlassenState
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KlassenState>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KlassenReactiveState>> {
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
