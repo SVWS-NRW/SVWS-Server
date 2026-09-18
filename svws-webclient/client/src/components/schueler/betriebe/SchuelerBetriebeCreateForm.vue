@@ -68,7 +68,7 @@
 
 	import { SchuelerBetrieb } from '@core/asd/data/schueler/SchuelerBetrieb';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
-	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+	import { useBeschaeftigungsartenState } from "@ui/states/kataloge/BeschaeftigungsartenState";
 	import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { SelectManager } from '@ui/ui/controls/select/manager/SelectManager';
@@ -82,7 +82,7 @@
 		createModalIsOpen: boolean;
 	}>();
 	const schuleState = useSchuleState();
-	const beschaeftigungsartState = useBeschaeftigungsartState();
+	const beschaeftigungsartState = useBeschaeftigungsartenState();
 	const betriebeState = useBetriebeState();
 
 	const istBK = computed(() => {

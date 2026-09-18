@@ -75,7 +75,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
-	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+	import { useBeschaeftigungsartenState } from "@ui/states/kataloge/BeschaeftigungsartenState";
 	import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import type { DataTableColumn } from '@ui/types';
@@ -90,7 +90,7 @@
 	}>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
-	const beschaeftigungsartState = useBeschaeftigungsartState();
+	const beschaeftigungsartState = useBeschaeftigungsartenState();
 	const betriebeState = useBetriebeState();
 
 	const emit = defineEmits<{

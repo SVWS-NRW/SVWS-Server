@@ -9,7 +9,7 @@ import type { KatalogState } from "./KatalogState";
 /**
  * Die Schnittstelle für den Zustand des LeistungsfunktionState
  */
-export interface LeitungsfunktionState {
+export interface LeitungsfunktionenState {
 	readonly leitungsfunktionen: KatalogState<Leitungsfunktion>;
 
 	init(): Promise<void>;
@@ -17,12 +17,12 @@ export interface LeitungsfunktionState {
 	reset(): void;
 }
 
-export const LeitungsfunktionStateKey: InjectionKey<LeitungsfunktionState> = Symbol('LeitungsfunktionState');
+export const LeitungsfunktionenStateKey: InjectionKey<LeitungsfunktionenState> = Symbol('LeitungsfunktionenState');
 
-export function useLeitungsfunktionState(): LeitungsfunktionState {
-	const state = AppContext.instance.inject(LeitungsfunktionStateKey);
+export function useLeitungsfunktionenState(): LeitungsfunktionenState {
+	const state = AppContext.instance.inject(LeitungsfunktionenStateKey);
 	if (state === undefined) {
-		throw new DeveloperNotificationException("Es wurden keine Informationen des LeitungsfunktionState über provide in der main.ts eingebunden");
+		throw new DeveloperNotificationException("Es wurden keine Informationen des LeitungsfunktionenState über provide in der main.ts eingebunden");
 	}
 	return state;
 }

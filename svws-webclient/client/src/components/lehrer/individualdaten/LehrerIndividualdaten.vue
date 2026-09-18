@@ -211,7 +211,7 @@
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { useLeitungsfunktionState } from "@ui/states/kataloge/LeitungsfunktionState";
+	import { useLeitungsfunktionenState } from "@ui/states/kataloge/LeitungsfunktionenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useServerState } from "@ui/states/ServerState";
@@ -231,7 +231,7 @@
 	const serverState = useServerState();
 	const orteState = useOrteState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
-	const leitungsfunktionState = useLeitungsfunktionState();
+	const leitungsfunktionenState = useLeitungsfunktionenState();
 
 	const dataNotPatched = () => lehrerAuswahlState.manager.daten();
 	const modelProxy = new LehrerIndividualdatenModelProxy(
@@ -252,7 +252,7 @@
 	const showModalLeitungsfunktion = ref<boolean>(false);
 
 	function getBezeichnungLeitungsfunktion(idLeitungsfunktion: number): string {
-		return leitungsfunktionState.leitungsfunktionen.byId.get(idLeitungsfunktion)?.bezeichnung ?? '-';
+		return leitungsfunktionenState.leitungsfunktionen.byId.get(idLeitungsfunktion)?.bezeichnung ?? '-';
 	}
 
 	function formatDatum(value: string | null): string {
@@ -267,13 +267,13 @@
 	];
 
 	const leitungsfunktionManager = new SelectManager({
-		options: computed(() => [...leitungsfunktionState.leitungsfunktionen.list]),
+		options: computed(() => [...leitungsfunktionenState.leitungsfunktionen.list]),
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,
 	});
 
 	const selectedFunktion = computed<Leitungsfunktion | null>({
-		get: () => leitungsfunktionState.leitungsfunktionen.byId.get(leitungsfunktionEntry.value.idLeitungsfunktion) ?? null,
+		get: () => leitungsfunktionenState.leitungsfunktionen.byId.get(leitungsfunktionEntry.value.idLeitungsfunktion) ?? null,
 		set: (selected) => leitungsfunktionEntry.value.idLeitungsfunktion = selected?.id ?? -1,
 	});
 

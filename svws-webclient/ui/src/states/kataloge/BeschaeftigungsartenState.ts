@@ -9,18 +9,18 @@ import type { KatalogState } from "./KatalogState";
 /**
  * Die Schnittstelle für den Zustand des OrteStates
  */
-export interface BeschaeftigungsartState {
+export interface BeschaeftigungsartenState {
 	readonly beschaeftigungsarten: KatalogState<Beschaeftigungsart>;
 	init(): Promise<void>;
 	reset(): void;
 }
 
-export const BeschaeftigungsartStateKey: InjectionKey<BeschaeftigungsartState> = Symbol('BeschaeftigungsartState');
+export const BeschaeftigungsartenStateKey: InjectionKey<BeschaeftigungsartenState> = Symbol('BeschaeftigungsartenState');
 
-export function useBeschaeftigungsartState(): BeschaeftigungsartState {
-	const state = AppContext.instance.inject(BeschaeftigungsartStateKey);
+export function useBeschaeftigungsartenState(): BeschaeftigungsartenState {
+	const state = AppContext.instance.inject(BeschaeftigungsartenStateKey);
 	if (state === undefined) {
-		throw new DeveloperNotificationException("Es wurden keine Informationen des BeschaeftigungsartState über provide in der main.ts eingebunden");
+		throw new DeveloperNotificationException("Es wurden keine Informationen des BeschaeftigungsartenState über provide in der main.ts eingebunden");
 	}
 	return state;
 }

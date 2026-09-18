@@ -4,7 +4,7 @@ import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { useLeitungsfunktionState } from "@ui/states/kataloge/LeitungsfunktionState";
+import { useLeitungsfunktionenState } from "@ui/states/kataloge/LeitungsfunktionenState";
 import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ViewType } from "@ui/ui/nav/ViewType";
@@ -66,8 +66,8 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
 			const orteState = useOrteState();
-			const leitungsfunktionState = useLeitungsfunktionState();
-			await Promise.all([orteState.init(), leitungsfunktionState.init()]);
+			const leitungsfunktionenState = useLeitungsfunktionenState();
+			await Promise.all([orteState.init(), leitungsfunktionenState.init()]);
 		}
 		try {
 			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);

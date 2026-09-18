@@ -79,7 +79,7 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+	import { useBeschaeftigungsartenState } from "@ui/states/kataloge/BeschaeftigungsartenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
@@ -94,7 +94,7 @@
 	}>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
-	const beschaeftigungsartState = useBeschaeftigungsartState();
+	const beschaeftigungsartState = useBeschaeftigungsartenState();
 
 	const istBK = computed(() => {
 		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];

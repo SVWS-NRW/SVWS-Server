@@ -28,7 +28,7 @@ import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { beschaeftigungsartStateImpl } from "~/states/kataloge/BeschaeftigungsartStateImpl";
+import { beschaeftigungsartenStateImpl } from "~/states/kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -78,7 +78,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await Promise.all([orteStateImpl.init(), beschaeftigungsartStateImpl.init(), betriebeStateImpl.init(),
+			await Promise.all([orteStateImpl.init(), beschaeftigungsartenStateImpl.init(), betriebeStateImpl.init(),
 				routeApp.cache.refreshKataloge(Katalog.EINSCHULUNGSARTEN, Katalog.ENTLASSGRUENDE,
 					Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
 					Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);

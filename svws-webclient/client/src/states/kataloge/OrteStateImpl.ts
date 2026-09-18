@@ -90,7 +90,7 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 		};
 	}
 
-	/** Lädt alle adressbezogenen Kataloge vom Server. */
+	/** Initialisiert den State und lädt Daten der Kataloge */
 	public async init(): Promise<void> {
 		try {
 			// paralleles Laden aller Kataloge

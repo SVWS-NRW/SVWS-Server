@@ -7,7 +7,7 @@ import type { Beschaeftigungsart } from "@core/core/data/schule/Beschaeftigungsa
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import { ModelProxy } from "@ui/model/ModelProxy";
-import { useBeschaeftigungsartState } from "@ui/states/kataloge/BeschaeftigungsartState";
+import { useBeschaeftigungsartenState } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
 import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -20,7 +20,7 @@ import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
 	private readonly _betriebeState = useBetriebeState();
-	private readonly _beschaeftigungsartState = useBeschaeftigungsartState();
+	private readonly _beschaeftigungsartState = useBeschaeftigungsartenState();
 	private readonly manager: () => SchuelerBetriebeManager;
 
 	constructor(
