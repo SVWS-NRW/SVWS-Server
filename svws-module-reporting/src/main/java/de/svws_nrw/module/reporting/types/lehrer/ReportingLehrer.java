@@ -56,36 +56,36 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 *
-	 * @param amtsbezeichnung Ggf. die Amtsbezeichnung des Lehrers.
-	 * @param anrede Die Anrede des Lehrers.
-	 * @param emailPrivat Private E-Mail-Adresse des Lehrers.
-	 * @param emailSchule Schulische E-Mail-Adresse des Lehrers.
-	 * @param faxSchule Die schulische Faxnummer des Lehrers.
-	 * @param foto Ggf. das Foto des Lehrers (jpg, Base64-kodiert.)
-	 * @param geburtsdatum Das Geburtsdatum des Lehrers.
-	 * @param geburtsland Das Geburtsland des Lehrers.
-	 * @param geburtsname Der Geburtsname des Lehrers.
-	 * @param geburtsort Der Geburtsort des Lehrers.
-	 * @param geschlecht Das Geschlecht des Lehrers.
-	 * @param hausnummer Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
-	 * @param hausnummerZusatz Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
-	 * @param id Die ID des Lehrers.
-	 * @param kuerzel Das Kürzel des Lehrers.
-	 * @param leitungsfunktionen Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt.
-	 * @param nachname Der Name des Lehrers.
-	 * @param personalTyp Die Bezeichnung des Personals-Typs des Lehrers.
-	 * @param staatsangehoerigkeit Die Staatsangehörigkeit des Lehrers.
-	 * @param staatsangehoerigkeit2 Die ggf. zweite Staatsangehörigkeit des Lehrers.
-	 * @param strassenname Ggf. der Straßenname im Wohnort des Lehrers.
-	 * @param telefonPrivat Die private Telefonnummer des Lehrers.
-	 * @param telefonPrivatMobil Die private Mobilfunk-Telefonnummer des Lehrers.
-	 * @param telefonSchule Die schulische Telefonnummer des Lehrers.
-	 * @param telefonSchuleMobil Die schulische Mobilfunk-Telefonnummer des Lehrers.
-	 * @param titel Die Titel des Lehrers.
-	 * @param vorname Der Vorname des Lehrers.
-	 * @param vornamen Alle Vornamen des Lehrers
-	 * @param wohnort Der Wohnort des Lehrers.
-	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Lehrers.
+	 * @param amtsbezeichnung         Ggf. die Amtsbezeichnung des Lehrers.
+	 * @param anrede                  Die Anrede des Lehrers.
+	 * @param emailPrivat             Private E-Mail-Adresse des Lehrers.
+	 * @param emailSchule             Schulische E-Mail-Adresse des Lehrers.
+	 * @param faxSchule               Die schulische Faxnummer des Lehrers.
+	 * @param foto                    Ggf. das Foto des Lehrers (jpg, Base64-kodiert.)
+	 * @param geburtsdatum            Das Geburtsdatum des Lehrers.
+	 * @param geburtsland             Das Geburtsland des Lehrers.
+	 * @param geburtsname             Der Geburtsname des Lehrers.
+	 * @param geburtsort              Der Geburtsort des Lehrers.
+	 * @param geschlecht              Das Geschlecht des Lehrers.
+	 * @param hausnummer              Ggf. die Hausnummer zur Straße im Wohnort des Lehrers.
+	 * @param hausnummerZusatz        Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers.
+	 * @param id                      Die ID des Lehrers.
+	 * @param kuerzel                 Das Kürzel des Lehrers.
+	 * @param leitungsfunktionen      Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt.
+	 * @param nachname                Der Name des Lehrers.
+	 * @param personalTyp             Die Bezeichnung des Personals-Typs des Lehrers.
+	 * @param staatsangehoerigkeit    Die Staatsangehörigkeit des Lehrers.
+	 * @param staatsangehoerigkeit2   Die ggf. zweite Staatsangehörigkeit des Lehrers.
+	 * @param strassenname            Ggf. der Straßenname im Wohnort des Lehrers.
+	 * @param telefonPrivat           Die private Telefonnummer des Lehrers.
+	 * @param telefonPrivatMobil      Die private Mobilfunk-Telefonnummer des Lehrers.
+	 * @param telefonSchule           Die schulische Telefonnummer des Lehrers.
+	 * @param telefonSchuleMobil      Die schulische Mobilfunk-Telefonnummer des Lehrers.
+	 * @param titel                   Die Titel des Lehrers.
+	 * @param vorname                 Der Vorname des Lehrers.
+	 * @param vornamen                Alle Vornamen des Lehrers.
+	 * @param wohnort                 Der Wohnort des Lehrers.
+	 * @param wohnortsteil            Ggf. der Ortsteil des Wohnortes des Lehrers.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingLehrer(final String amtsbezeichnung, final String anrede, final String emailPrivat, final String emailSchule, final String faxSchule,
@@ -120,7 +120,7 @@ public class ReportingLehrer extends ReportingPerson {
 
 	/**
 	 * Equals der Klasse
-	 * @param obj Das Vergleichsobjekt
+	 * @param obj   Das Vergleichsobjekt
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	@Override
@@ -151,8 +151,8 @@ public class ReportingLehrer extends ReportingPerson {
 
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld.
-	 * @param mitVornameKurz     Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
-	 * @param mitAmtsbezeichnung Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
+	 * @param mitVornameKurz       Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
+	 * @param mitAmtsbezeichnung   Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
 	 *
 	 * @return Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung
 	 */
@@ -160,7 +160,7 @@ public class ReportingLehrer extends ReportingPerson {
 		return ("%s %s %s%s")
 				.formatted(
 						this.titel(),
-						mitVornameKurz ? (this.vorname().charAt(0) + ".") : this.vorname(),
+						mitVornameKurz ? (this.vorname().isEmpty() ? "" : this.vorname().charAt(0) + ".") : this.vorname(),
 						this.nachname(),
 						mitAmtsbezeichnung ? (", " + this.amtsbezeichnung()) : "")
 				.trim().translateEscapes();
@@ -169,9 +169,9 @@ public class ReportingLehrer extends ReportingPerson {
 	/**
 	 * Erzeugt eine Beschriftung für ein Unterschriftsfeld.
 	 *
-	 * @param mitVornameKurz     Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
-	 * @param mitAmtsbezeichnung Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
-	 * @param zusatzUnterschrift Zusatz, der an die Unterschrift angehängt werden soll. Evtl. Zeilenumbruch kann eingefügt werden.
+	 * @param mitVornameKurz       Gibt an, ob nur der erste Buchstabe des Vornamens ausgegeben werden soll.
+	 * @param mitAmtsbezeichnung   Gibt an, ob die Amtsbezeichnung hinzugefügt werden soll.
+	 * @param zusatzUnterschrift   Zusatz, der an die Unterschrift angehängt werden soll. Evtl. Zeilenumbruch kann eingefügt werden.
 	 *
 	 * @return Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung_ZusatzUnterschrift
 	 */
