@@ -86,7 +86,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0",
-				DTOSchuelerLernabschnittsdaten.class, idStundenplan, klassenIDs);
+				DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klassenIDs);
 		final Map<Long, List<Long>> mapKlasseSchuelerIDs = lernabschnitte.stream()
 				.collect(Collectors.groupingBy(la -> la.Klassen_ID, Collectors.mapping(la -> la.Schueler_ID, Collectors.toList())));
 		// Erstelle die Core-DTOs
@@ -117,9 +117,9 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 	/**
 	 * Ermittelt die Informationen zu der angegebenen Klasse für den angegebenen Stundenplan.
 	 *
-	 * @param conn             die Datenbank-Verbindung
-	 * @param idStundenplan    die ID des Stundenplans
-	 * @param idKlasse         die ID der Klasse
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param idKlasse        die ID der Klasse
 	 *
 	 * @return die Informationen zu der angegebenen Klasse für den angegebenen Stundenplan
 	 *
@@ -136,7 +136,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		}
 		if (klasse.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
+					"Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschnitt %d bei dem Stundenplan mit der ID %d überein."
 							.formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		}
 		// Jahrgänge bestimmen
@@ -149,7 +149,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0",
-				DTOSchuelerLernabschnittsdaten.class, idStundenplan, klasse.ID);
+				DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klasse.ID);
 		final List<Long> schuelerIDs = lernabschnitte.stream().map(la -> la.Schueler_ID).distinct().toList();
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);
@@ -174,14 +174,14 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 	}
 
 	/**
-	 * Erstellt eine Map, in der Klassen den gegebenen UnterrichtIds eines
+	 * Erstellt eine Map, in der Klassen den gegebenen Unterricht-IDs eines
 	 * Stundenplans zugeordnet werden.
 	 *
 	 * @param conn            die Datenbankverbindung
 	 * @param idStundenplan   die ID des Stundenplans
-	 * @param unterrichtIds   die unterrichte, denen die Klassen zugeordnet werden sollen
+	 * @param unterrichtIds   die Unterrichte, denen die Klassen zugeordnet werden sollen
 	 *
-	 * @return eine Map, in der allen UnterrichtsIds die Klassen zugeordnet werden
+	 * @return eine Map, in der allen Unterricht-IDs die Klassen zugeordnet werden
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
