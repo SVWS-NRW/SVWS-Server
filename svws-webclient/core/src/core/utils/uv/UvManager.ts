@@ -258,6 +258,43 @@ export class UvManager extends JavaObject {
 
 	private readonly compRaum: Comparator<UvRaum> = { compare: (a: UvRaum, b: UvRaum) => JavaString.compareTo(a.kuerzel, b.kuerzel) };
 
+	private readonly compStundentafel: Comparator<UvStundentafel> = { compare: (a: UvStundentafel, b: UvStundentafel) => {
+		const jahrgangA: JahrgangsDaten | null = (this.jahrgangById === null) ? null : this.jahrgangById.get(a.idJahrgang);
+		const jahrgangB: JahrgangsDaten | null = (this.jahrgangById === null) ? null : this.jahrgangById.get(b.idJahrgang);
+		let result: number;
+		if ((jahrgangA !== null) && (jahrgangB !== null)) {
+			result = JavaInteger.compare(jahrgangA.sortierung, jahrgangB.sortierung);
+		} else
+			if (jahrgangA !== null) {
+				result = -1;
+			} else
+				if (jahrgangB !== null) {
+					result = 1;
+				} else {
+					result = JavaLong.compare(a.idJahrgang, b.idJahrgang);
+				}
+		if (result !== 0) {
+			return result;
+		}
+		result = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (result !== 0) {
+			return result;
+		}
+		if ((a.gueltigBis === null) && (b.gueltigBis !== null)) {
+			return -1;
+		}
+		if ((a.gueltigBis !== null) && (b.gueltigBis === null)) {
+			return 1;
+		}
+		if ((a.gueltigBis !== null) && (b.gueltigBis !== null)) {
+			result = JavaString.compareTo(b.gueltigBis, a.gueltigBis);
+		}
+		if (result !== 0) {
+			return result;
+		}
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly compFach: Comparator<UvFach> = { compare: (a: UvFach, b: UvFach) => {
 		const fdA: FachDaten = this.fachdatenGetByFach(a);
 		const fdB: FachDaten = this.fachdatenGetByFach(b);
@@ -1889,6 +1926,7 @@ export class UvManager extends JavaObject {
 	private updateStundentafelMenge(): void {
 		this.stundentafelMenge.clear();
 		this.stundentafelMenge.addAll(this.stundentafelById.values());
+		this.stundentafelMenge.sort(this.compStundentafel);
 	}
 
 	/**

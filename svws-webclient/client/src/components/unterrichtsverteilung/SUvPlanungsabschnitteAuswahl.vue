@@ -12,6 +12,7 @@
 			@update:model-value="items => setAuswahl(items)"
 			v-model:sort-by-and-order="sortByAndOrder"
 			:columns
+			:unselectable
 			selectable
 			count
 			:filter-open="true"
@@ -93,6 +94,10 @@
 		}
 		return arr;
 	});
+
+	const unselectable = computed<Set<UvPlanungsabschnitt>>(() =>
+		new Set(rowsFiltered.value.filter(planungsabschnitt => planungsabschnitt.id === -1))
+	);
 
 	const filterNurAktiv = computed<boolean>({
 		get: () => manager().filterNurAktiv(),

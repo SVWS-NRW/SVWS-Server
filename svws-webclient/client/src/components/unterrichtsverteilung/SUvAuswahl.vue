@@ -1,6 +1,6 @@
 <template>
 	<div class="flex h-full min-h-0 flex-col">
-		<div class="shrink-0 pb-4 text-xl leading-6">
+		<div class="shrink-0 text-headline">
 			<slot name="title" />
 		</div>
 		<div v-if="$slots.header" class="shrink-0">

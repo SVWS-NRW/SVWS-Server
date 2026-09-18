@@ -68,7 +68,7 @@
 	});
 
 	const columnsLehrer = [
-		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.3 },
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.4 },
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "vorname", label: "Vorname", sortable: true },
 	];

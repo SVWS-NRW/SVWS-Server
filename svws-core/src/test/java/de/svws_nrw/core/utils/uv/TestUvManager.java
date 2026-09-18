@@ -994,9 +994,47 @@ class TestUvManager {
 	}
 
 	@Test
+	@DisplayName("stundentafelGetMengeAsList sortiert nach Jahrgang, Bezeichnung und Gültigkeitsende")
+	void testStundentafelGetMengeAsListSortsByJahrgangBezeichnungAndGueltigBis() {
+		final JahrgangsDaten ef = createJahrgang(11L, "EF");
+		ef.sortierung = 11;
+		final JahrgangsDaten q1 = createJahrgang(12L, "Q1");
+		q1.sortierung = 12;
+		final UvManager manager = new UvManager(List.of(q1, ef), List.of());
+		final UvStundentafel efAUnbegrenzt = createStundentafel(81L, 11L);
+		efAUnbegrenzt.bezeichnung = "A";
+		efAUnbegrenzt.gueltigBis = null;
+		final UvStundentafel efABefristet = createStundentafel(82L, 11L);
+		efABefristet.bezeichnung = "A";
+		efABefristet.gueltigBis = "2026-07-31";
+		final UvStundentafel efB = createStundentafel(83L, 11L);
+		efB.bezeichnung = "B";
+		efB.gueltigBis = "2027-07-31";
+		final UvStundentafel q1A = createStundentafel(84L, 12L);
+		q1A.bezeichnung = "A";
+		q1A.gueltigBis = "2028-07-31";
+
+		manager.stundentafelAddAll(List.of(q1A, efB, efABefristet, efAUnbegrenzt));
+
+		assertEquals(List.of(efAUnbegrenzt, efABefristet, efB, q1A), manager.stundentafelGetMengeAsList());
+	}
+
+	@Test
+	@DisplayName("stundentafelGetMengeAsList sortiert auch bei unbekannten Jahrgängen")
+	void testStundentafelGetMengeAsListHandlesUnknownJahrgang() {
+		final UvManager manager = createManagerWithMinimalBasis();
+		final UvStundentafel stundentafel = createStundentafel(81L, 12L);
+
+		manager.stundentafelAdd(stundentafel);
+
+		assertEquals(List.of(stundentafel), manager.stundentafelGetMengeAsList());
+	}
+
+	@Test
 	@DisplayName("stundentafelAddAll, Patch und Remove-Varianten arbeiten konsistent")
 	void testStundentafelBulkPatchAndRemove() {
-		final UvManager manager = createManagerWithMinimalBasis();
+		final UvManager manager = new UvManager(List.of(createJahrgang(11L, "EF"), createJahrgang(12L, "Q1")),
+				List.of(createFachdaten(21L, "M", "Mathematik")));
 		final UvStundentafel tafelA = createStundentafel(81L, 11L);
 		final UvStundentafel tafelB = createStundentafel(82L, 11L);
 		final UvStundentafel tafelC = createStundentafel(83L, 11L);

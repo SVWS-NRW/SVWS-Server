@@ -60,7 +60,7 @@ export function useUvPresenter(manager: UvManager) {
 		}
 		if (lerngruppe.idKlasse !== null) {
 			const klasse = manager.klasseGetByIdOrNull(lerngruppe.idKlasse);
-			return klasse === null ? `Klasse-ID: ${lerngruppe.idKlasse}` : klasse.kuerzel + klasse.parallelitaet;
+			return klasse === null ? `Klasse-ID: ${lerngruppe.idKlasse}` : klasse.kuerzel;
 		}
 		return `ID: ${lerngruppe.id}`;
 	}
@@ -92,7 +92,7 @@ export function useUvPresenter(manager: UvManager) {
 			return '-';
 		}
 		const klasse = manager.klasseGetByIdOrNull(idKlasse);
-		return klasse === null ? `ID: ${idKlasse}` : klasse.kuerzel + klasse.parallelitaet;
+		return klasse === null ? `ID: ${idKlasse}` : klasse.kuerzel;
 	}
 
 	function lerngruppeBezeichnungByLerngruppenSchiene(schiene: UvLerngruppenSchiene): string {
@@ -106,7 +106,7 @@ export function useUvPresenter(manager: UvManager) {
 		if (lerngruppe.idKlasse !== null) {
 			const klasse = manager.klasseGetByIdOrNull(lerngruppe.idKlasse);
 			if (klasse !== null) {
-				return klasse.bezeichnung ?? klasse.kuerzel + klasse.parallelitaet;
+				return klasse.bezeichnung ?? klasse.kuerzel;
 			}
 		}
 		return `Lerngruppe ID${lerngruppe.id}`;

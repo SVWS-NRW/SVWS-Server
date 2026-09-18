@@ -271,6 +271,42 @@ public class UvManager {
 	private final @NotNull Comparator<UvRaum> compRaum =
 			(final @NotNull UvRaum a, final @NotNull UvRaum b) -> a.kuerzel.compareTo(b.kuerzel);
 
+	private final @NotNull Comparator<UvStundentafel> compStundentafel =
+			(final @NotNull UvStundentafel a, final @NotNull UvStundentafel b) -> {
+				final JahrgangsDaten jahrgangA = (jahrgangById == null) ? null : jahrgangById.get(a.idJahrgang);
+				final JahrgangsDaten jahrgangB = (jahrgangById == null) ? null : jahrgangById.get(b.idJahrgang);
+				int result;
+				if ((jahrgangA != null) && (jahrgangB != null)) {
+					result = Integer.compare(jahrgangA.sortierung, jahrgangB.sortierung);
+				} else if (jahrgangA != null) {
+					result = -1;
+				} else if (jahrgangB != null) {
+					result = 1;
+				} else {
+					result = Long.compare(a.idJahrgang, b.idJahrgang);
+				}
+				if (result != 0) {
+					return result;
+				}
+				result = a.bezeichnung.compareTo(b.bezeichnung);
+				if (result != 0) {
+					return result;
+				}
+				if ((a.gueltigBis == null) && (b.gueltigBis != null)) {
+					return -1;
+				}
+				if ((a.gueltigBis != null) && (b.gueltigBis == null)) {
+					return 1;
+				}
+				if ((a.gueltigBis != null) && (b.gueltigBis != null)) {
+					result = b.gueltigBis.compareTo(a.gueltigBis);
+				}
+				if (result != 0) {
+					return result;
+				}
+				return Long.compare(a.id, b.id);
+			};
+
 	private final @NotNull Comparator<UvFach> compFach =
 			(final @NotNull UvFach a, final @NotNull UvFach b) -> {
 				final @NotNull FachDaten fdA = fachdatenGetByFach(a);
@@ -2024,6 +2060,7 @@ public class UvManager {
 	private void updateStundentafelMenge() {
 		stundentafelMenge.clear();
 		stundentafelMenge.addAll(stundentafelById.values());
+		stundentafelMenge.sort(compStundentafel);
 	}
 
 	/**

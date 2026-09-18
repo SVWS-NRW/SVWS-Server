@@ -53,7 +53,9 @@
 				</template>
 				<template v-else>
 					<p>{{ importDaten?.kurse.size() ?? 0 }} Kurse können importiert werden.</p>
-					<svws-ui-table :items="vorschauKurse" :columns="vorschauColumns" scroll count no-data-text="Aus dieser Quelle können keine Kurse übernommen werden." />
+					<div class="max-h-[50vh] overflow-y-auto">
+						<svws-ui-table :items="vorschauKurse" :columns="vorschauColumns" scroll count no-data-text="Aus dieser Quelle können keine Kurse übernommen werden." />
+					</div>
 					<p class="text-sm text-ui-secondary">Die Vorschau prüft die Verfügbarkeit von Fächern, Lehrkräften und Schülern. Die Daten werden erst mit „Kurse importieren“ übernommen.</p>
 					<details v-if="fehlendeFaecher.size() > 0" class="rounded-md border border-ui-caution/40 bg-ui-caution/5">
 						<summary class="cursor-pointer px-3 py-2 text-sm text-ui-caution">
@@ -93,7 +95,6 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="show = false" :disabled="loading">Abbrechen</svws-ui-button>
-			<svws-ui-button v-if="importManager !== undefined" type="secondary" @click="zurueckZurQuelle" :disabled="loading">Zurück zur Quelle</svws-ui-button>
 			<svws-ui-button v-if="importManager === undefined" type="primary" @click="createVorschau" :disabled="!canImport || loading" :is-loading="loading">Vorschau prüfen</svws-ui-button>
 			<svws-ui-button v-else type="primary" @click="doImport" :disabled="loading || !hatKompetenzAendern || importFehlgeschlagen || !importDaten?.kurse.size()" :is-loading="loading">Kurse importieren</svws-ui-button>
 		</template>
@@ -309,13 +310,6 @@
 			}
 		}
 	});
-
-	function zurueckZurQuelle() {
-		importFehlgeschlagen.value = false;
-		importManager.value = undefined;
-		importDaten.value = undefined;
-		error.value = '';
-	}
 
 	function istVorschauAktuell(id: number): boolean {
 		return show.value && state.planungsabschnitt?.id === id;

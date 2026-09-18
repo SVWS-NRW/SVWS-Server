@@ -75,7 +75,7 @@ export class RouteDataUv extends RouteDataAuswahl<UvPlanungsabschnitteListeManag
 
 	public addAsCopy = async (partial: Partial<UvPlanungsabschnitt>, idFromUvPlanungsabschnitt?: number): Promise<UvPlanungsabschnitt> => {
 		const neu = await uvStateImpl.addAsCopy(partial, idFromUvPlanungsabschnitt);
-		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true, true);
 		return neu;
 	};
 
