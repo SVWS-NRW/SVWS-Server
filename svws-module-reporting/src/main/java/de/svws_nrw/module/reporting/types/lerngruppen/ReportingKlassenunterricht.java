@@ -36,16 +36,16 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 	/**
 	 * Erstellt einen Klassenunterricht aus einer Klasse und Fachinformationen.
 	 *
-	 * @param klasse Die Klasse, in der der Unterricht stattfindet
-	 * @param fach Das unterrichtete Fach
-	 * @param bewertenderLehrer Der Lehrer, der diesen Unterricht bewertet.
-	 * @param fachlehrer Liste der Fachlehrer des Klassenunterrichts.
-	 * @param wochenstundenFachlehrer Map der Wochenstunden pro Lehrer
-	 * @param schueler Die Liste der Schüler, die dem Unterricht zugeordnet werden sollen. Ist die Liste null/empty, dann werden alle Schüler der Klasse gesetzt.
-	 * @param wochenstundenSchueler Wochenstunden für die Schüler
-	 * @param mapSchuelerLeistungsdaten Eine Map, die die Leistungsdaten zu diesem Unterricht zur ID des Schülers speichert
+	 * @param klasse                      Die Klasse, in der der Unterricht stattfindet
+	 * @param fach                        Das unterrichtete Fach
+	 * @param bewertenderLehrer           Der Lehrer, der diesen Unterricht bewertet.
+	 * @param fachlehrer                  Liste der Fachlehrer des Klassenunterrichts.
+	 * @param wochenstundenFachlehrer     Map der Wochenstunden pro Lehrer
+	 * @param schueler                    Die Liste der Schüler, die dem Unterricht zugeordnet werden sollen. Ist die Liste null/empty, dann werden alle Schüler der Klasse gesetzt.
+	 * @param wochenstundenSchueler       Wochenstunden für die Schüler
+	 * @param mapSchuelerLeistungsdaten   Eine Map, die die Leistungsdaten zu diesem Unterricht zur ID des Schülers speichert
 	 */
-	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refactored (Stand 2026-04).
 	public ReportingKlassenunterricht(final @NotNull ReportingKlasse klasse, final @NotNull ReportingFach fach, final ReportingLehrer bewertenderLehrer,
 			final List<ReportingLehrer> fachlehrer, final Map<Long, Double> wochenstundenFachlehrer, final List<ReportingSchueler> schueler,
 			final int wochenstundenSchueler, final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
@@ -59,9 +59,10 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 			this.mapSchuelerLeistungsdaten.putAll(mapSchuelerLeistungsdaten);
 		}
 
+		final long idBewertenderLehrer = (bewertenderLehrer == null) ? -1 : bewertenderLehrer.id(); // "-1" ist sicher beim Methodenaufruf.
 		this.schueler().forEach(s -> this.mapSchuelerLeistungsdaten.computeIfAbsent(s.id(),
 				id -> s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt())
-						.leistungsdatenKlassenunterrichtZurIdFachIdLehrer(bewertenderLehrer.id(), fach.id())));
+						.leistungsdatenKlassenunterrichtZurIdFachIdLehrer(fach.id(), idBewertenderLehrer)));
 
 		final List<Long> idsSchueler = this.schueler().stream().map(ReportingSchueler::id).toList();
 		this.mapSchuelerLeistungsdaten.keySet().removeIf(id -> !idsSchueler.contains(id));
@@ -99,9 +100,9 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 	/**
 	 * Liefert die Leistungsdaten eines Schülers anhand der übergebenen Schüler-ID zurück.
 	 *
-	 * @param idSchueler Die eindeutige ID des Schülers, dessen Leistungsdaten abgefragt werden sollen. Wenn null übergeben wird, wird null zurückgegeben.
+	 * @param idSchueler   Die eindeutige ID des Schülers, dessen Leistungsdaten abgefragt werden sollen. Wenn null übergeben wird, wird null zurückgegeben.
 	 *
-	 * @return Die Leistungsdaten des Schülers als {@link ReportingSchuelerLeistungsdaten} oder null wenn keine Daten vorhanden sind oder null übergeben wurde.
+	 * @return Die Leistungsdaten des Schülers als {@link ReportingSchuelerLeistungsdaten} oder null, wenn keine Daten vorhanden sind oder null übergeben wurde.
 	 */
 	@Override
 	public ReportingSchuelerLeistungsdaten leistungsdatenBySchueler(final Long idSchueler) {
@@ -124,7 +125,7 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 
 	/**
 	 * Equals der Klasse
-	 * @param obj Das Vergleichsobjekt
+	 * @param obj   Das Vergleichsobjekt
 	 * @return    Ergibt true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	@Override
