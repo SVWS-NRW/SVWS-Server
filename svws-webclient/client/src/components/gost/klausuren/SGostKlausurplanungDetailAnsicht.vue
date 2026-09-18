@@ -69,7 +69,7 @@
 
 </script>
 
-<style>
+<style scoped>
 	.klausurplanung-detail-druckansicht {
 		display: none;
 	}
