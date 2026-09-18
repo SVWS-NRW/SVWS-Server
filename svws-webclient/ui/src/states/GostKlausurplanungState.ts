@@ -29,6 +29,8 @@ export interface GostKlausurplanungState {
 	get halbjahr(): GostHalbjahr;
 	get manager(): GostKlausurplanManager;
 	get zeigeAlleJahrgaenge(): boolean;
+	get zeigeBetroffeneUnterrichte(): boolean;
+	get betroffeneUnterrichteAnwesenheitsschwelle(): number;
 	get kalenderdatum(): string | undefined;
 	get kalenderdatumOrException(): string;
 	get selectedTermin(): GostKlausurtermin | undefined;
@@ -44,6 +46,8 @@ export interface GostKlausurplanungState {
 	getConfigNumberValue(key: string): number;
 	setConfigValue(key: string, value: string | number): Promise<void>;
 	setZeigeAlleJahrgaenge(value: boolean): void;
+	setZeigeBetroffeneUnterrichte(value: boolean): void;
+	setBetroffeneUnterrichteAnwesenheitsschwelle(value: number | null): void;
 	setRaumTermin(termin: GostKlausurtermin | null): void;
 	setKalenderdatum(value: string | undefined): void;
 	setSelectedTermin(value: GostKlausurtermin | undefined): void;

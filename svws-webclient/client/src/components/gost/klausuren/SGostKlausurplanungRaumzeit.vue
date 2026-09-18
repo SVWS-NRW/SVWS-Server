@@ -1,7 +1,7 @@
 <template>
 	<template v-if="(state.abschnitt !== undefined) && state.manager.stundenplanManagerGeladenByAbschnitt(state.abschnitt.id)">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
+			<svws-ui-modal-hilfe class="ml-auto print:hidden!"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 			<s-gost-klausurplanung-quartal-auswahl show-alle-jahrgaenge />

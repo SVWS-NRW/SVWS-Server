@@ -1,7 +1,7 @@
 <template>
 	<template v-if="hatKalenderKontext">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
+			<svws-ui-modal-hilfe class="ml-auto print:hidden!"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 			<s-gost-klausurplanung-quartal-auswahl show-alle-jahrgaenge />

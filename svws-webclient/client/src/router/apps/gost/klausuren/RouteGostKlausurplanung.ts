@@ -67,6 +67,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		configStateImpl.config.addElements([
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "quartal", "user", "0"),
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "zeigeAlleJahrgaenge", "user", "false"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "zeigeBetroffeneUnterrichte", "user", "false"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "betroffeneUnterrichteAnwesenheitsschwelle", "user", "50"),
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "kwWarnLimit", "user", "3"),
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "kwErrorLimit", "user", "4"),
 			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_PREFIX + "raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),

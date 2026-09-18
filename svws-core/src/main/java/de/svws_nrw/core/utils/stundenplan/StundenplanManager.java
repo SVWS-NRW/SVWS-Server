@@ -7544,6 +7544,28 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert die Kurse mit Unterricht im übergebenen Zeitraster und Wochentyp.
+	 *
+	 * @param zeitraster das Zeitraster des Unterrichts
+	 * @param wochentyp  der Wochentyp
+	 *
+	 * @return die sortierte Liste der Kurse mit Unterricht im Zeitraster
+	 */
+	public @NotNull List<StundenplanKurs> kursGetMengeByZeitrasterAndWochentyp(final @NotNull StundenplanZeitraster zeitraster,
+			final int wochentyp) {
+		final @NotNull List<StundenplanKurs> result = new ArrayList<>();
+		final @NotNull Set<Long> idsKurs = new HashSet<>();
+		for (final @NotNull StundenplanUnterricht unterricht : unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(
+				zeitraster.id, wochentyp, true)) {
+			if ((unterricht.idKurs != null) && idsKurs.add(unterricht.idKurs)) {
+				result.add(kursGetByIdOrException(unterricht.idKurs));
+			}
+		}
+		result.sort(_compKurs);
+		return result;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 *
 	 * @param wochentag  Der {@link Wochentag}-ENUM.
@@ -8832,6 +8854,44 @@ public class StundenplanManager {
 	 */
 	public StundenplanZeitraster zeitrasterGetByWochentagAndStundeOrNull(final int wochentag, final int stunde) {
 		return _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+	}
+
+	/**
+	 * Liefert die Zeitraster eines Wochentags, die den übergebenen Zeitbereich schneiden.
+	 *
+	 * @param wochentag der Wochentag
+	 * @param beginn    der Beginn des Zeitbereichs in Minuten
+	 * @param ende      das Ende des Zeitbereichs in Minuten
+	 *
+	 * @return die sortierte Liste der den Zeitbereich schneidenden Zeitraster
+	 */
+	public @NotNull List<StundenplanZeitraster> zeitrasterGetMengeByWochentagAndZeitbereich(final @NotNull Wochentag wochentag,
+			final int beginn, final int ende) {
+		final @NotNull List<StundenplanZeitraster> result = new ArrayList<>();
+		for (final @NotNull StundenplanZeitraster zeitraster : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, wochentag.id)) {
+			if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)
+					&& zeitrasterGetSchneidenSich(beginn, ende, zeitraster.stundenbeginn, zeitraster.stundenende)) {
+				result.add(zeitraster);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die Zeitraster zu den übergebenen IDs in der Stundenplan-Sortierung.
+	 *
+	 * @param idsZeitraster die IDs der Zeitraster
+	 *
+	 * @return die sortierte Liste der Zeitraster
+	 */
+	public @NotNull List<StundenplanZeitraster> zeitrasterGetMengeByIds(final @NotNull Set<Long> idsZeitraster) {
+		final @NotNull List<StundenplanZeitraster> result = new ArrayList<>();
+		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermenge) {
+			if (idsZeitraster.contains(zeitraster.id)) {
+				result.add(zeitraster);
+			}
+		}
+		return result;
 	}
 
 	/**

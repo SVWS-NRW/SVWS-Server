@@ -5,6 +5,7 @@ import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager
 import { HashMap } from '../../../../java/util/HashMap';
 import { GostSchuelerklausurterminRich } from '../../../../core/data/gost/klausuren/GostSchuelerklausurterminRich';
 import { ArrayList } from '../../../../java/util/ArrayList';
+import { StundenplanKurs } from '../../../../core/data/stundenplan/StundenplanKurs';
 import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { DateUtils } from '../../../../core/utils/DateUtils';
@@ -2850,6 +2851,148 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Stundenplan-Zeitraster, deren Zeitbereiche durch den übergebenen Klausurtermin überlappt werden.
+	 *
+	 * @param termin der Klausurtermin
+	 *
+	 * @return die vom Klausurtermin überlappten Stundenplan-Zeitraster
+	 */
+	public zeitrasterGetMengeByTermin(termin: GostKlausurtermin): List<StundenplanZeitraster> {
+		if (termin.datum === null) {
+			return new ArrayList();
+		}
+		const stundenplanManager: StundenplanManager = this.stundenplanManagerGetByTerminOrException(termin);
+		const wochentag: Wochentag = Wochentag.fromIDorException(DateUtils.gibWochentagDesDatumsISO8601(termin.datum));
+		const idsZeitraster: JavaSet<number> = new HashSet<number>();
+		for (const schuelerklausurtermin of this.schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			const startzeit: number | null = this.startzeitBySchuelerklausurterminOrNull(schuelerklausurtermin);
+			if (startzeit === null) {
+				continue;
+			}
+			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurtermin(schuelerklausurtermin);
+			const endzeit: number = startzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+			for (const zeitraster of stundenplanManager.zeitrasterGetMengeByWochentagAndZeitbereich(wochentag, startzeit, endzeit)) {
+				idsZeitraster.add(zeitraster.id);
+			}
+		}
+		return stundenplanManager.zeitrasterGetMengeByIds(idsZeitraster);
+	}
+
+	/**
+	 * Liefert die vom Klausurtermin überlappten Zeitraster mit den darin jeweils stattfindenden Unterrichtskursen.
+	 *
+	 * @param termin der Klausurtermin
+	 *
+	 * @return die vom Klausurtermin überlappten Zeitraster mit ihren Unterrichtskursen
+	 */
+	public stundenplankursGetMengeByTermin(termin: GostKlausurtermin): List<PairNN<StundenplanZeitraster, List<StundenplanKurs>>> {
+		const result: List<PairNN<StundenplanZeitraster, List<StundenplanKurs>>> = new ArrayList<PairNN<StundenplanZeitraster, List<StundenplanKurs>>>();
+		if (termin.datum === null) {
+			return result;
+		}
+		const stundenplanManager: StundenplanManager = this.stundenplanManagerGetByTerminOrException(termin);
+		const wochentyp: number = stundenplanManager.kalenderwochenzuordnungGetByDatum(termin.datum).wochentyp;
+		for (const zeitraster of this.zeitrasterGetMengeByTermin(termin)) {
+			const kurse: List<StundenplanKurs> = new ArrayList<StundenplanKurs>();
+			for (const kurs of stundenplanManager.kursGetMengeByZeitrasterAndWochentyp(zeitraster, wochentyp)) {
+				if (!this.schuelerGetMengeMitKlausurByTerminAndZeitrasterAndStundenplankurs(termin, zeitraster, kurs).isEmpty()) {
+					kurse.add(kurs);
+				}
+			}
+			if (!kurse.isEmpty()) {
+				result.add(new PairNN<StundenplanZeitraster, List<StundenplanKurs>>(zeitraster, kurse));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die im Klausurplan bekannten Schüler eines Stundenplankurses.
+	 *
+	 * @param kurs der Stundenplankurs
+	 *
+	 * @return die Schüler des Stundenplankurses
+	 */
+	public schuelerGetMengeByStundenplankurs(kurs: StundenplanKurs): List<SchuelerListeEintrag> {
+		const result: List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
+		for (const idSchueler of kurs.schueler) {
+			const schueler: SchuelerListeEintrag | null = this._schuelerlisteeintrag_by_id.get(idSchueler);
+			if (schueler !== null) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die Schüler eines Stundenplankurses, die während des übergebenen Zeitrasters eine aktuelle Schülerklausur schreiben.
+	 *
+	 * @param termin     der Klausurtermin
+	 * @param zeitraster das Zeitraster des Unterrichts
+	 * @param kurs       der Stundenplankurs
+	 *
+	 * @return die Schüler des Stundenplankurses mit Klausur während des Zeitrasters
+	 */
+	public schuelerGetMengeMitKlausurByTerminAndZeitrasterAndStundenplankurs(termin: GostKlausurtermin, zeitraster: StundenplanZeitraster, kurs: StundenplanKurs): List<SchuelerListeEintrag> {
+		const idsKlausurschreiber: JavaSet<number> = this.schuelerIdsMitKlausurByTerminAndZeitraster(termin, zeitraster);
+		const result: List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
+		for (const schueler of this.schuelerGetMengeByStundenplankurs(kurs)) {
+			if (idsKlausurschreiber.contains(schueler.id)) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die Schüler eines Stundenplankurses, die während des übergebenen Zeitrasters keine aktuelle Schülerklausur schreiben.
+	 *
+	 * @param termin     der Klausurtermin
+	 * @param zeitraster das Zeitraster des Unterrichts
+	 * @param kurs       der Stundenplankurs
+	 *
+	 * @return die beim Unterricht verbleibenden Schüler des Stundenplankurses
+	 */
+	public schuelerGetMengeVerbleibendByTerminAndZeitrasterAndStundenplankurs(termin: GostKlausurtermin, zeitraster: StundenplanZeitraster, kurs: StundenplanKurs): List<SchuelerListeEintrag> {
+		const idsKlausurschreiber: JavaSet<number> = this.schuelerIdsMitKlausurByTerminAndZeitraster(termin, zeitraster);
+		const result: List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
+		for (const schueler of this.schuelerGetMengeByStundenplankurs(kurs)) {
+			if (!idsKlausurschreiber.contains(schueler.id)) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	private schuelerIdsMitKlausurByTerminAndZeitraster(termin: GostKlausurtermin, zeitraster: StundenplanZeitraster): JavaSet<number> {
+		const idsKlausurschreiber: JavaSet<number> = new HashSet<number>();
+		for (const schuelerklausurtermin of this.schuelerklausurterminAktuellGetMengeByTerminAndZeitraster(termin, zeitraster)) {
+			idsKlausurschreiber.add(this.schuelerklausurBySchuelerklausurtermin(schuelerklausurtermin).idSchueler);
+		}
+		return idsKlausurschreiber;
+	}
+
+	private schuelerklausurterminAktuellGetMengeByTerminAndZeitraster(termin: GostKlausurtermin, zeitraster: StundenplanZeitraster): List<GostSchuelerklausurtermin> {
+		const result: List<GostSchuelerklausurtermin> = new ArrayList<GostSchuelerklausurtermin>();
+		if ((zeitraster.stundenbeginn === null) || (zeitraster.stundenende === null)) {
+			return result;
+		}
+		const stundenplanManager: StundenplanManager = this.stundenplanManagerGetByTerminOrException(termin);
+		for (const schuelerklausurtermin of this.schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			const startzeit: number | null = this.startzeitBySchuelerklausurterminOrNull(schuelerklausurtermin);
+			if (startzeit === null) {
+				continue;
+			}
+			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurtermin(schuelerklausurtermin);
+			const endzeit: number = startzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+			if (stundenplanManager.zeitrasterGetSchneidenSich(startzeit, endzeit, zeitraster.stundenbeginn, zeitraster.stundenende)) {
+				result.add(schuelerklausurtermin);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Liefert eine Liste von {@link GostKlausurtermin}en zum übergebenen Datum
 	 *
 	 * @param datum das Datum der {@link GostKlausurtermin}e im Format <code>YYYY-MM-DD</code>
@@ -4269,16 +4412,26 @@ export class GostKlausurplanManager extends JavaObject {
 
 	/**
 	 * Gibt die Startzeit des übergebenen {@link GostSchuelerklausurtermin}s aus. Falls keine individuelle Zeit
-	 * gesetzt ist, wird die Zeit der {@link GostKursklausur} zurückgegeben, sonst die des {@link GostKlausurtermin}s. Sollte kein {@link GostKlausurtermin} gesetzt
-	 * sein oder der {@link GostKlausurtermin} keine Startzeit definiert haben, wird <code>null</code>
-	 * zurückgegeben.
+	 * gesetzt ist, wird bei einem regulären Schülerklausurtermin die Zeit der {@link GostKursklausur}, bei einem
+	 * Nachschreibertermin die Zeit des zugeordneten {@link GostKlausurtermin}s zurückgegeben. Sollte keine
+	 * Startzeit definiert sein, wird <code>null</code> zurückgegeben.
 	 *
 	 * @param skt der {@link GostSchuelerklausurtermin}, dessen Startzeit gesucht wird.
 	 *
 	 * @return die Startzeit des {@link GostSchuelerklausurtermin}s oder <code>null</code>
 	 */
 	public startzeitBySchuelerklausurterminOrNull(skt: GostSchuelerklausurtermin): number | null {
-		return (skt.startzeit !== null) ? skt.startzeit : this.startzeitByKursklausurOrNull(this.kursklausurBySchuelerklausurtermin(skt));
+		if (skt.startzeit !== null) {
+			return skt.startzeit;
+		}
+		if (skt.folgeNr === 0) {
+			return this.startzeitByKursklausurOrNull(this.kursklausurBySchuelerklausurtermin(skt));
+		}
+		if (skt.idTermin === null) {
+			return null;
+		}
+		const termin: GostKlausurtermin | null = this.terminGetByIdOrNull(skt.idTermin);
+		return (termin === null) ? null : termin.startzeit;
 	}
 
 	/**

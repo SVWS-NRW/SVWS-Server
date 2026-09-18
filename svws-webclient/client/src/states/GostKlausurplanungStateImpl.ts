@@ -284,6 +284,26 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 		void this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false");
 	};
 
+	get zeigeBetroffeneUnterrichte(): boolean {
+		return this.getConfigValue('zeigeBetroffeneUnterrichte') === 'true';
+	}
+
+	setZeigeBetroffeneUnterrichte = (value: boolean) => {
+		void this.setConfigValue('zeigeBetroffeneUnterrichte', value ? 'true' : 'false');
+	};
+
+	get betroffeneUnterrichteAnwesenheitsschwelle(): number {
+		const value = this.getConfigNumberValue('betroffeneUnterrichteAnwesenheitsschwelle');
+		return Number.isFinite(value) ? value : 50;
+	}
+
+	setBetroffeneUnterrichteAnwesenheitsschwelle = (value: number | null) => {
+		if (value === null) {
+			return;
+		}
+		void this.setConfigValue('betroffeneUnterrichteAnwesenheitsschwelle', Math.max(0, Math.min(100, value)));
+	};
+
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {
 		api.status.start();
 		try {

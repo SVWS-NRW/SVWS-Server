@@ -40,6 +40,7 @@ import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -1131,7 +1132,6 @@ public class GostKlausurplanManager {
 	}
 
 	private void update_all() {
-
 		update_schuelermenge_by_abijahr();
 
 		update_vorgabemenge();
@@ -3049,6 +3049,156 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert die Stundenplan-Zeitraster, deren Zeitbereiche durch den übergebenen Klausurtermin überlappt werden.
+	 *
+	 * @param termin der Klausurtermin
+	 *
+	 * @return die vom Klausurtermin überlappten Stundenplan-Zeitraster
+	 */
+	public @NotNull List<StundenplanZeitraster> zeitrasterGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
+		if (termin.datum == null) {
+			return new ArrayList<>();
+		}
+		final @NotNull StundenplanManager stundenplanManager = stundenplanManagerGetByTerminOrException(termin);
+		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(DateUtils.gibWochentagDesDatumsISO8601(termin.datum));
+		final @NotNull Set<Long> idsZeitraster = new HashSet<>();
+		for (final @NotNull GostSchuelerklausurtermin schuelerklausurtermin : schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			final Integer startzeit = startzeitBySchuelerklausurterminOrNull(schuelerklausurtermin);
+			if (startzeit == null) {
+				continue;
+			}
+			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(schuelerklausurtermin);
+			final int endzeit = startzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+			for (final @NotNull StundenplanZeitraster zeitraster : stundenplanManager.zeitrasterGetMengeByWochentagAndZeitbereich(wochentag,
+					startzeit, endzeit)) {
+				idsZeitraster.add(zeitraster.id);
+			}
+		}
+		return stundenplanManager.zeitrasterGetMengeByIds(idsZeitraster);
+	}
+
+	/**
+	 * Liefert die vom Klausurtermin überlappten Zeitraster mit den darin jeweils stattfindenden Unterrichtskursen.
+	 *
+	 * @param termin der Klausurtermin
+	 *
+	 * @return die vom Klausurtermin überlappten Zeitraster mit ihren Unterrichtskursen
+	 */
+	public @NotNull List<PairNN<StundenplanZeitraster, List<StundenplanKurs>>> stundenplankursGetMengeByTermin(
+			final @NotNull GostKlausurtermin termin) {
+		final @NotNull List<PairNN<StundenplanZeitraster, List<StundenplanKurs>>> result = new ArrayList<>();
+		if (termin.datum == null) {
+			return result;
+		}
+		final @NotNull StundenplanManager stundenplanManager = stundenplanManagerGetByTerminOrException(termin);
+		final int wochentyp = stundenplanManager.kalenderwochenzuordnungGetByDatum(termin.datum).wochentyp;
+		for (final @NotNull StundenplanZeitraster zeitraster : zeitrasterGetMengeByTermin(termin)) {
+			final @NotNull List<StundenplanKurs> kurse = new ArrayList<>();
+			for (final @NotNull StundenplanKurs kurs : stundenplanManager.kursGetMengeByZeitrasterAndWochentyp(zeitraster, wochentyp)) {
+				if (!schuelerGetMengeMitKlausurByTerminAndZeitrasterAndStundenplankurs(termin, zeitraster, kurs).isEmpty()) {
+					kurse.add(kurs);
+				}
+			}
+			if (!kurse.isEmpty()) {
+				result.add(new PairNN<>(zeitraster, kurse));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die im Klausurplan bekannten Schüler eines Stundenplankurses.
+	 *
+	 * @param kurs der Stundenplankurs
+	 *
+	 * @return die Schüler des Stundenplankurses
+	 */
+	public @NotNull List<SchuelerListeEintrag> schuelerGetMengeByStundenplankurs(final @NotNull StundenplanKurs kurs) {
+		final @NotNull List<SchuelerListeEintrag> result = new ArrayList<>();
+		for (final long idSchueler : kurs.schueler) {
+			final SchuelerListeEintrag schueler = _schuelerlisteeintrag_by_id.get(idSchueler);
+			if (schueler != null) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die Schüler eines Stundenplankurses, die während des übergebenen Zeitrasters eine aktuelle Schülerklausur schreiben.
+	 *
+	 * @param termin     der Klausurtermin
+	 * @param zeitraster das Zeitraster des Unterrichts
+	 * @param kurs       der Stundenplankurs
+	 *
+	 * @return die Schüler des Stundenplankurses mit Klausur während des Zeitrasters
+	 */
+	public @NotNull List<SchuelerListeEintrag> schuelerGetMengeMitKlausurByTerminAndZeitrasterAndStundenplankurs(
+			final @NotNull GostKlausurtermin termin, final @NotNull StundenplanZeitraster zeitraster, final @NotNull StundenplanKurs kurs) {
+		final @NotNull Set<Long> idsKlausurschreiber = schuelerIdsMitKlausurByTerminAndZeitraster(termin, zeitraster);
+		final @NotNull List<SchuelerListeEintrag> result = new ArrayList<>();
+		for (final @NotNull SchuelerListeEintrag schueler : schuelerGetMengeByStundenplankurs(kurs)) {
+			if (idsKlausurschreiber.contains(schueler.id)) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die Schüler eines Stundenplankurses, die während des übergebenen Zeitrasters keine aktuelle Schülerklausur schreiben.
+	 *
+	 * @param termin     der Klausurtermin
+	 * @param zeitraster das Zeitraster des Unterrichts
+	 * @param kurs       der Stundenplankurs
+	 *
+	 * @return die beim Unterricht verbleibenden Schüler des Stundenplankurses
+	 */
+	public @NotNull List<SchuelerListeEintrag> schuelerGetMengeVerbleibendByTerminAndZeitrasterAndStundenplankurs(
+			final @NotNull GostKlausurtermin termin, final @NotNull StundenplanZeitraster zeitraster, final @NotNull StundenplanKurs kurs) {
+		final @NotNull Set<Long> idsKlausurschreiber = schuelerIdsMitKlausurByTerminAndZeitraster(termin, zeitraster);
+		final @NotNull List<SchuelerListeEintrag> result = new ArrayList<>();
+		for (final @NotNull SchuelerListeEintrag schueler : schuelerGetMengeByStundenplankurs(kurs)) {
+			if (!idsKlausurschreiber.contains(schueler.id)) {
+				result.add(schueler);
+			}
+		}
+		return result;
+	}
+
+	/* Ermittelt die IDs der Schüler mit aktueller Schülerklausur während des übergebenen Zeitrasters. */
+	private @NotNull Set<Long> schuelerIdsMitKlausurByTerminAndZeitraster(final @NotNull GostKlausurtermin termin,
+			final @NotNull StundenplanZeitraster zeitraster) {
+		final @NotNull Set<Long> idsKlausurschreiber = new HashSet<>();
+		for (final @NotNull GostSchuelerklausurtermin schuelerklausurtermin : schuelerklausurterminAktuellGetMengeByTerminAndZeitraster(termin, zeitraster)) {
+			idsKlausurschreiber.add(schuelerklausurBySchuelerklausurtermin(schuelerklausurtermin).idSchueler);
+		}
+		return idsKlausurschreiber;
+	}
+
+	/* Liefert die aktuellen Schülerklausurtermine während des übergebenen Zeitrasters. */
+	private @NotNull List<GostSchuelerklausurtermin> schuelerklausurterminAktuellGetMengeByTerminAndZeitraster(final @NotNull GostKlausurtermin termin,
+			final @NotNull StundenplanZeitraster zeitraster) {
+		final @NotNull List<GostSchuelerklausurtermin> result = new ArrayList<>();
+		if ((zeitraster.stundenbeginn == null) || (zeitraster.stundenende == null)) {
+			return result;
+		}
+		final @NotNull StundenplanManager stundenplanManager = stundenplanManagerGetByTerminOrException(termin);
+		for (final @NotNull GostSchuelerklausurtermin schuelerklausurtermin : schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			final Integer startzeit = startzeitBySchuelerklausurterminOrNull(schuelerklausurtermin);
+			if (startzeit == null) {
+				continue;
+			}
+			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(schuelerklausurtermin);
+			final int endzeit = startzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+			if (stundenplanManager.zeitrasterGetSchneidenSich(startzeit, endzeit, zeitraster.stundenbeginn, zeitraster.stundenende)) {
+				result.add(schuelerklausurtermin);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Liefert eine Liste von {@link GostKlausurtermin}en zum übergebenen Datum
 	 *
 	 * @param datum das Datum der {@link GostKlausurtermin}e im Format <code>YYYY-MM-DD</code>
@@ -4582,16 +4732,26 @@ public class GostKlausurplanManager {
 
 	/**
 	 * Gibt die Startzeit des übergebenen {@link GostSchuelerklausurtermin}s aus. Falls keine individuelle Zeit
-	 * gesetzt ist, wird die Zeit der {@link GostKursklausur} zurückgegeben, sonst die des {@link GostKlausurtermin}s. Sollte kein {@link GostKlausurtermin} gesetzt
-	 * sein oder der {@link GostKlausurtermin} keine Startzeit definiert haben, wird <code>null</code>
-	 * zurückgegeben.
+	 * gesetzt ist, wird bei einem regulären Schülerklausurtermin die Zeit der {@link GostKursklausur}, bei einem
+	 * Nachschreibertermin die Zeit des zugeordneten {@link GostKlausurtermin}s zurückgegeben. Sollte keine
+	 * Startzeit definiert sein, wird <code>null</code> zurückgegeben.
 	 *
 	 * @param skt der {@link GostSchuelerklausurtermin}, dessen Startzeit gesucht wird.
 	 *
 	 * @return die Startzeit des {@link GostSchuelerklausurtermin}s oder <code>null</code>
 	 */
 	public Integer startzeitBySchuelerklausurterminOrNull(final @NotNull GostSchuelerklausurtermin skt) {
-		return (skt.startzeit != null) ? skt.startzeit : startzeitByKursklausurOrNull(kursklausurBySchuelerklausurtermin(skt));
+		if (skt.startzeit != null) {
+			return skt.startzeit;
+		}
+		if (skt.folgeNr == 0) {
+			return startzeitByKursklausurOrNull(kursklausurBySchuelerklausurtermin(skt));
+		}
+		if (skt.idTermin == null) {
+			return null;
+		}
+		final GostKlausurtermin termin = terminGetByIdOrNull(skt.idTermin);
+		return (termin == null) ? null : termin.startzeit;
 	}
 
 	/**
