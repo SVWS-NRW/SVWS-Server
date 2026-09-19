@@ -328,7 +328,7 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 		}
 
 		for (final long idObjekt : idsObjekteNonNull) {
-			if (inklusiveWochentyp0) {
+			if (inklusiveWochentyp0 && (wochentyp != 0)) {
 				result.addAll(listMapUnterrichte.get12(idObjekt, 0));
 			}
 			result.addAll(listMapUnterrichte.get12(idObjekt, wochentyp));

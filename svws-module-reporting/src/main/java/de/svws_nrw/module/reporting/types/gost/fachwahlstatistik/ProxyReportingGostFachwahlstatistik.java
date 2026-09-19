@@ -36,7 +36,8 @@ public class ProxyReportingGostFachwahlstatistik extends ReportingGostFachwahlst
 		// werden. Fachwahlen können für Jahrgänge vorliegen, deren EF1 die Schule noch nicht angelegt hat; dann wird ein virtueller Abschnitt verwendet,
 		// der die Fächer des Schuljahres unverändert liefert.
 		final ReportingSchuljahresabschnitt abschnittEF1 =
-				reportingContext.repositorySchule().schuljahresabschnittOderVirtuell(gostStatistikFachwahl.abiturjahr - 4, 1);
+				reportingContext.repositorySchule().schuljahresabschnittOderVirtuell(
+						GostHalbjahr.EF1.getSchuljahrFromAbiturjahr(gostStatistikFachwahl.abiturjahr), 1);
 		super.fach = abschnittEF1.fach(gostStatistikFachwahl.id);
 
 		final List<ReportingGostFachwahlstatistikHalbjahr> reportingGostFachwahlstatistiken = new ArrayList<>();

@@ -64,7 +64,7 @@ public class ReportingRepositoryLehrer {
 					+ "AND a.WechselNr = 0 "
 					+ "AND ld.Kurs_ID IN (SELECT k.ID FROM DTOKurs k, DTOKursLehrer kl WHERE k.ID = kl.Kurs_ID "
 					+ "AND k.Schuljahresabschnitts_ID = ?1 AND kl.Lehrer_ID = ?2) "
-					+ "AND ld.Fachlehrer_ID = ?2";
+					+ "AND ld.Fachlehrer_ID <> ?2";
 
 	private final ReportingContext reportingContext;
 
@@ -340,8 +340,9 @@ public class ReportingRepositoryLehrer {
 	}
 
 	/**
-	 * Gibt die Leistungsdaten zurück, in denen der übergebene Lehrer als Zusatzlehrer eines Kurses geführt wird,
-	 * für die er gleichzeitig als Fachlehrer eingetragen ist, im übergebenen Schuljahresabschnitt.
+	 * Gibt die Leistungsdaten der Kurse zurück, in denen der übergebene Lehrer als zusätzliche Lehrkraft eingetragen ist,
+	 * im übergebenen Schuljahresabschnitt. Leistungsdaten, die er selbst als Fachlehrer bewertet, fehlen, weil sie bereits
+	 * im Kursunterricht als Fachlehrer enthalten sind.
 	 *
 	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnitts.
 	 * @param idLehrer               Die ID des Lehrers.

@@ -208,7 +208,7 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 			return result;
 		}
 
-		if (inklusiveWochentyp0) {
+		if (inklusiveWochentyp0 && (wochentyp != 0)) {
 			result.addAll(listMapPausenaufsichten.get14(id, 0));
 		}
 		result.addAll(listMapPausenaufsichten.get14(id, wochentyp));
@@ -252,7 +252,7 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 		}
 
 		for (final long idLehrkraft : idsLehrkraefte) {
-			if (inklusiveWochentyp0) {
+			if (inklusiveWochentyp0 && (wochentyp != 0)) {
 				result.addAll(listMapPausenaufsichten.get24(idLehrkraft, 0));
 			}
 			result.addAll(listMapPausenaufsichten.get24(idLehrkraft, wochentyp));
@@ -278,10 +278,10 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 			return result;
 		}
 
-		if (inklusiveWochentyp0) {
+		if (inklusiveWochentyp0 && (wochentyp != 0)) {
 			result.addAll(listMapPausenaufsichten.get34(idAufsichtsbereich, 0));
 		}
-		result.addAll(listMapPausenaufsichten.get24(idAufsichtsbereich, wochentyp));
+		result.addAll(listMapPausenaufsichten.get34(idAufsichtsbereich, wochentyp));
 
 		return result;
 	}

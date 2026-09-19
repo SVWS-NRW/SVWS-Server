@@ -157,10 +157,11 @@ public class ReportingLehrer extends ReportingPerson {
 	 * @return Beschriftung gemäß Parametern: Titel Vorname Nachname, Amtsbezeichnung
 	 */
 	public String unterschriftfeld(final boolean mitVornameKurz, final boolean mitAmtsbezeichnung) {
+		final String vornameKurz = this.vorname().isEmpty() ? "" : (this.vorname().charAt(0) + ".");
 		return ("%s %s %s%s")
 				.formatted(
 						this.titel(),
-						mitVornameKurz ? (this.vorname().isEmpty() ? "" : this.vorname().charAt(0) + ".") : this.vorname(),
+						mitVornameKurz ? vornameKurz : this.vorname(),
 						this.nachname(),
 						mitAmtsbezeichnung ? (", " + this.amtsbezeichnung()) : "")
 				.trim().translateEscapes();
