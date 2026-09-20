@@ -76,7 +76,7 @@ public class GostFachwahlService {
 	 * @param schuelerRepository                     das Repository für den Zugriff auf Schülerdaten
 	 * @param schuelerLernabschnittRepository        das Repository für den Zugriff auf die Schüler-Lernabschnittsdaten
 	 * @param schuelerLeistungsdatenRepository       das Repository für den Zugriff auf die Schüler-Leistungsdaten
-	 * @param jahrgangRepository                   das Repository für den Zugriff auf Jahrgänge
+	 * @param jahrgangRepository                     das Repository für den Zugriff auf Jahrgänge
 	 * @param fachRepository                         das Repository für den Zugriff auf Fächerdaten
 	 * @param gostSchuelerRepository                 das Repository für den Zugriff auf die Schüler-Informationen zur Gymnasialen Oberstufe
 	 * @param gostSchuelerFachbelegungenRepository   das Repository für den Zugriff auf die Schüler-Fachbelegungen
@@ -174,10 +174,10 @@ public class GostFachwahlService {
 	/**
 	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten passt. Ist dies nicht der Fall, so wird eine Exception generiert.
 	 *
-	 * @param leistungen    die Leistungen die geprüft werden
-	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
-	 * @param istSP         gibt an, ob das Fach für die Leistungsdaten Sport ist
-	 * @param fw            der Wert für die Fachwahl
+	 * @param leistungen   die Leistungen die geprüft werden
+	 * @param halbjahr     das Halbjahr, auf welches sich der Patch bezieht
+	 * @param istSP        gibt an, ob das Fach für die Leistungsdaten Sport ist
+	 * @param fw           der Wert für die Fachwahl
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -225,10 +225,10 @@ public class GostFachwahlService {
 	/**
 	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten passt. Ist dies nicht der Fall, so wird eine Exception generiert.
 	 *
-	 * @param leistungen    die Leistungen die geprüft werden
-	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
-	 * @param istSP         gibt an, ob das Fach für die Leistungsdaten Sport ist
-	 * @param fw            der Wert für die Fachwahl
+	 * @param leistungen   die Leistungen die geprüft werden
+	 * @param halbjahr     das Halbjahr, auf welches sich der Patch bezieht
+	 * @param istSP        gibt an, ob das Fach für die Leistungsdaten Sport ist
+	 * @param fw           der Wert für die Fachwahl
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -278,17 +278,17 @@ public class GostFachwahlService {
 	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten in den Lernabschnitten passt.
 	 * Ist dies nicht der Fall, so wird eine Exception generiert.
 	 *
-	 * @param schueler      der Schüler, für welchen die Fachwahl angepasst wird
-	 * @param abiturjahr    das Jahr des Abiturjahrgangs des Schülers
-	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
-	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
-	 * @param fw            der Wert für die Fachwahl
+	 * @param schueler     der Schüler, für welchen die Fachwahl angepasst wird
+	 * @param abiturjahr   das Jahr des Abiturjahrgangs des Schülers
+	 * @param halbjahr     das Halbjahr, auf welches sich der Patch bezieht
+	 * @param fach         das Fach, für welches die Fachwahl angepasst werden soll
+	 * @param fw           der Wert für die Fachwahl
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	private void patchFachwahlHalbjahrCheckLernabschnitt(final DTOSchueler schueler, final int abiturjahr, final GostHalbjahr halbjahr, final DTOFach fach,
 			final String fw) throws ApiOperationException {
-		// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
+		// Prüfe, ob die eingegebene Fachwahl den Leistungsdaten entspricht
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte =
 				schuelerLernabschnittRepository.getGewerteteAbschnittInASDJahrgang(schueler.ID, halbjahr.jahrgang);
 		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
@@ -357,7 +357,7 @@ public class GostFachwahlService {
 		if (!valid) {
 			throw new ApiOperationException(Status.CONFLICT, "Die angegebene Fachwahl ist ungültig.");
 		}
-		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
+		// Prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
 		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0)) {
 			patchFachwahlHalbjahrCheckLernabschnitt(schueler, abiturjahr, halbjahr, fach, fw);
 			return fw;
@@ -402,7 +402,7 @@ public class GostFachwahlService {
 
 			// Ermittle den aktuellen Schüler-Lernabschnitt
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findAktuellBySchuelerID(idSchueler)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Es konnte kein aktueller Lernabschnitt für den schüler bestimmt werden."));
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Es konnte kein aktueller Lernabschnitt für den Schüler bestimmt werden."));
 			final DTOJahrgang dtoJahrgang = jahrgangRepository.findById(lernabschnitt.Jahrgang_ID)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang des aktuellen Lernabschnittes des Schülers ist ungültig."));
 			if (dtoJahrgang.ASDJahrgang == null) {
@@ -462,7 +462,7 @@ public class GostFachwahlService {
 						if (idReferenzfach == null) {
 							fachbelegung.Referenzfach_ID = null;
 						} else {
-							fachRepository.findById(idReferenzfach).orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Wahl des Referentfaches ist ungültig."));
+							fachRepository.findById(idReferenzfach).orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Wahl des Referenzfaches ist ungültig."));
 							fachbelegung.Referenzfach_ID = idReferenzfach;
 						}
 					}
@@ -478,7 +478,7 @@ public class GostFachwahlService {
 	 * Setzt die Fachwahlen der angegebenen Schüler mit den Vorgabe-Fachwahlen des Abiturjahrgangs zurück.
 	 * Es werden die existierenden Fachwahlen entfernt und die Fachwahlen aus dem Abiturjahrgang übernommen.
 	 *
-	 * @param abijahr      der Abiturjahrgang
+	 * @param abijahr       der Abiturjahrgang
 	 * @param idsSchueler   die IDs der Schüler
 	 */
 	private void resetAbijahrgangSchuelerInternal(final Integer abijahr, final Collection<Long> idsSchueler) {
@@ -514,7 +514,7 @@ public class GostFachwahlService {
 				fw.EF1_Kursart = dto.EF1_Kursart;
 				fw.EF2_Kursart = dto.EF2_Kursart;
 				fw.Q11_Kursart = dto.Q11_Kursart;
-				fw.Q12_Kursart = dto.Q11_Kursart;
+				fw.Q12_Kursart = dto.Q12_Kursart;
 				fw.Q21_Kursart = dto.Q21_Kursart;
 				fw.Q22_Kursart = dto.Q22_Kursart;
 				fw.AbiturFach = dto.AbiturFach;
@@ -528,7 +528,7 @@ public class GostFachwahlService {
 	/**
 	 * Setzt die Fachwahlen für den angegebenen Schüler zurück.
 	 * Liegen bereits bewertete Halbjahre vor, so werden die zukünftigen Fachwahlen entfernt.
-	 * Ansonsten wir die Vorlage für die Fachwahlen des Abiturjahrgangs übernommen.
+	 * Ansonsten wird die Vorlage für die Fachwahlen des Abiturjahrgangs übernommen.
 	 *
 	 * @param idSchueler   die ID des Schülers
 	 */
