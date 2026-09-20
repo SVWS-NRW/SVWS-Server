@@ -6,8 +6,8 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :clickable="!manager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => gotoDefaultView(kursDaten.id)"
-				:items="rowsFiltered" :model-value="[...props.manager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!kurseAuswahlState.manager.liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="kursDaten => kurseAuswahlState.gotoDefaultView(kursDaten.id)"
+				:items="rowsFiltered" :model-value="[...kurseAuswahlState.manager.liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection :focus-switching-enabled :focus-help-visible>
 				<template #search>
@@ -15,18 +15,18 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbar">Nur Sichtbare</svws-ui-checkbox>
-					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="manager().schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" autocomplete />
-					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="manager().faecher.list()" :item-text="text" :item-filter="find" autocomplete />
-					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="manager().lehrer.list()" :item-text="text" :item-filter="find" autocomplete />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="manager().jahrgaenge.list()" :item-text="text" :item-filter="find" autocomplete />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="manager().schulgliederungen.list()" :item-text="text_schulgliederung" autocomplete />
+					<svws-ui-multi-select v-model="filterSchueler" title="Schüler" :items="kurseAuswahlState.manager.schueler.list()" :item-text="textSchueler" :item-filter="findSchueler" autocomplete />
+					<svws-ui-multi-select v-model="filterFaecher" title="Fach" :items="kurseAuswahlState.manager.faecher.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterLehrer" title="Fachlehrer" :items="kurseAuswahlState.manager.lehrer.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="kurseAuswahlState.manager.jahrgaenge.list()" :item-text="text" :item-filter="find" autocomplete />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="kurseAuswahlState.manager.schulgliederungen.list()" :item-text="text_schulgliederung" autocomplete />
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 				<template #actions v-if="serverState.hasDev && hatKompetenzAendern">
 					<svws-ui-tooltip position="bottom">
-						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
+						<svws-ui-button :disabled="kurseAuswahlState.activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="kurseAuswahlState.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -58,12 +58,12 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
-	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
+	import { useKurseAuswahlState } from "~/states/kurse/KurseAuswahlState";
 
-	const props = defineProps<KurseAuswahlProps>();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const abschnittState = useAbschnittState();
+	const kurseAuswahlState = useKurseAuswahlState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
@@ -77,7 +77,7 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const { field, ascending } of props.manager().orderGet()) {
+		for (const { field, ascending } of kurseAuswahlState.manager.orderGet()) {
 			map.set(field === "kuerzel" ? "kurse" : field, ascending);
 		}
 		return map;
@@ -85,7 +85,7 @@
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
-			const list = props.manager().orderGet();
+			const list = kurseAuswahlState.manager.orderGet();
 			if (list.length === 0) {
 				return undefined;
 			} else {
@@ -97,8 +97,8 @@
 			if ((value === undefined) || (value.key === null)) {
 				return;
 			}
-			props.manager().orderUpdate(value.key, value.order);
-			void props.setFilter();
+			kurseAuswahlState.manager.orderUpdate(value.key, value.order);
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
@@ -141,66 +141,66 @@
 	}
 
 	const filterNurSichtbar = computed<boolean>({
-		get: () => props.manager().filterNurSichtbar(),
+		get: () => kurseAuswahlState.manager.filterNurSichtbar(),
 		set: (value) => {
-			props.manager().setFilterNurSichtbar(value);
-			void props.setFilter();
-			void props.setFilterNurSichtbar(value);
+			kurseAuswahlState.manager.setFilterNurSichtbar(value);
+			void kurseAuswahlState.setFilter();
+			void kurseAuswahlState.setFilterNurSichtbar(value);
 		},
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.manager().schulgliederungen.auswahl()],
+		get: () => [...kurseAuswahlState.manager.schulgliederungen.auswahl()],
 		set: (value) => {
-			props.manager().schulgliederungen.auswahlClear();
+			kurseAuswahlState.manager.schulgliederungen.auswahlClear();
 			for (const v of value) {
-				props.manager().schulgliederungen.auswahlAdd(v);
+				kurseAuswahlState.manager.schulgliederungen.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => [...props.manager().jahrgaenge.auswahl()],
+		get: () => [...kurseAuswahlState.manager.jahrgaenge.auswahl()],
 		set: (value) => {
-			props.manager().jahrgaenge.auswahlClear();
+			kurseAuswahlState.manager.jahrgaenge.auswahlClear();
 			for (const v of value) {
-				props.manager().jahrgaenge.auswahlAdd(v);
+				kurseAuswahlState.manager.jahrgaenge.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
 	const filterFaecher = computed<FachDaten[]>({
-		get: () => [...props.manager().faecher.auswahl()],
+		get: () => [...kurseAuswahlState.manager.faecher.auswahl()],
 		set: (value) => {
-			props.manager().faecher.auswahlClear();
+			kurseAuswahlState.manager.faecher.auswahlClear();
 			for (const v of value) {
-				props.manager().faecher.auswahlAdd(v);
+				kurseAuswahlState.manager.faecher.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
 	const filterLehrer = computed<LehrerListeEintrag[]>({
-		get: () => [...props.manager().lehrer.auswahl()],
+		get: () => [...kurseAuswahlState.manager.lehrer.auswahl()],
 		set: (value) => {
-			props.manager().lehrer.auswahlClear();
+			kurseAuswahlState.manager.lehrer.auswahlClear();
 			for (const v of value) {
-				props.manager().lehrer.auswahlAdd(v);
+				kurseAuswahlState.manager.lehrer.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
 	const filterSchueler = computed<SchuelerListeEintrag[]>({
-		get: () => [...props.manager().schueler.auswahl()],
+		get: () => [...kurseAuswahlState.manager.schueler.auswahl()],
 		set: (value) => {
-			props.manager().schueler.auswahlClear();
+			kurseAuswahlState.manager.schueler.auswahlClear();
 			for (const v of value) {
-				props.manager().schueler.auswahlAdd(v);
+				kurseAuswahlState.manager.schueler.auswahlAdd(v);
 			}
-			void props.setFilter();
+			void kurseAuswahlState.setFilter();
 		},
 	});
 
@@ -209,7 +209,7 @@
 
 	const rowsFiltered = computed<KursDaten[]>(() => {
 		const arr = [];
-		for (const e of props.manager().filtered()) {
+		for (const e of kurseAuswahlState.manager.filtered()) {
 			if (e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
 				arr.push(e);
 			}
@@ -219,46 +219,46 @@
 
 
 	async function filterReset() {
-		props.manager().schulgliederungen.auswahlClear();
-		props.manager().lehrer.auswahlClear();
-		props.manager().schueler.auswahlClear();
-		props.manager().jahrgaenge.auswahlClear();
-		props.manager().setFilterNurSichtbar(true);
-		await props.setFilter();
+		kurseAuswahlState.manager.schulgliederungen.auswahlClear();
+		kurseAuswahlState.manager.lehrer.auswahlClear();
+		kurseAuswahlState.manager.schueler.auswahlClear();
+		kurseAuswahlState.manager.jahrgaenge.auswahlClear();
+		kurseAuswahlState.manager.setFilterNurSichtbar(true);
+		await kurseAuswahlState.setFilter();
 	}
 
 	function filterChanged(): boolean {
-		return (props.manager().schulgliederungen.auswahlExists()
-			|| props.manager().lehrer.auswahlExists()
-			|| props.manager().schueler.auswahlExists()
-			|| props.manager().jahrgaenge.auswahlExists());
+		return (kurseAuswahlState.manager.schulgliederungen.auswahlExists()
+			|| kurseAuswahlState.manager.lehrer.auswahlExists()
+			|| kurseAuswahlState.manager.schueler.auswahlExists()
+			|| kurseAuswahlState.manager.jahrgaenge.auswahlExists());
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
+		if ((kurseAuswahlState.activeViewType === ViewType.GRUPPENPROZESSE) || (kurseAuswahlState.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
 		}
-		return props.manager().hasDaten() ? props.manager().auswahl() : null;
+		return kurseAuswahlState.manager.hasDaten() ? kurseAuswahlState.manager.auswahl() : null;
 	});
 
 	async function setAuswahl(items: KursDaten[]) {
-		props.manager().liste.auswahlClear();
+		kurseAuswahlState.manager.liste.auswahlClear();
 		for (const item of items) {
-			if (props.manager().liste.hasValue(item)) {
-				props.manager().liste.auswahlAdd(item);
+			if (kurseAuswahlState.manager.liste.hasValue(item)) {
+				kurseAuswahlState.manager.liste.auswahlAdd(item);
 			}
 		}
-		if (props.manager().liste.auswahlExists()) {
-			await props.gotoGruppenprozessView(true);
+		if (kurseAuswahlState.manager.liste.auswahlExists()) {
+			await kurseAuswahlState.gotoGruppenprozessView(true);
 		} else {
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+			await kurseAuswahlState.gotoDefaultView(kurseAuswahlState.manager.getVorherigeAuswahl()?.id);
 		}
 	}
 
 
 	// TODO komma-separierte Liste mit Zusatzkräften
 	function getLehrerKuerzel(idLehrer: number) {
-		const lehrer = props.manager().lehrer.get(idLehrer);
+		const lehrer = kurseAuswahlState.manager.lehrer.get(idLehrer);
 		if (lehrer === null) {
 			return "---";
 		}
@@ -272,7 +272,7 @@
 	 * @param jahrgaengeIds   die Liste von Jahrgangs-IDs
 	 */
 	function getJahrgangsKuerzel(jahrgaengeIds: List<number>): string {
-		return [...jahrgaengeIds].map(jgId => props.manager().jahrgaenge.get(jgId)?.kuerzel)
+		return [...jahrgaengeIds].map(jgId => kurseAuswahlState.manager.jahrgaenge.get(jgId)?.kuerzel)
 			.filter(jgKuerzel => (jgKuerzel !== undefined) && (jgKuerzel !== ''))
 			.join(',');
 	}

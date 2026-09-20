@@ -30,6 +30,8 @@ import { leitungsfunktionenStateImpl } from "./kataloge/LeitungsfunktionenStateI
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { KlassenStateKey } from "./klassen/KlassenState";
 import { klassenStateImpl } from "./klassen/KlassenStateImpl";
+import { KurseAuswahlStateKey } from "./kurse/KurseAuswahlState";
+import { kurseAuswahlStateImpl } from "./kurse/KurseAuswahlStateImpl";
 import { LehrerAuswahlStateKey } from "./lehrer/LehrerAuswahlState";
 import { lehrerAuswahlStateImpl } from "./lehrer/LehrerAuswahlStateImpl";
 import { notenmodulStateImpl } from "./NotenmodulStateImpl";
@@ -58,6 +60,7 @@ export function registerStates(): void {
 	context.provide(WiedervorlageStateKey, wiedervorlageStateImpl);
 	context.provide(AuskunftStateKey, auskunftStateImpl);
 	context.provide(KlassenStateKey, klassenStateImpl);
+	context.provide(KurseAuswahlStateKey, kurseAuswahlStateImpl);
 	context.provide(GostLaufbahnplanungStateKey, gostLaufbahnplanungStateImpl);
 	context.provide(GostKlausurplanungStateKey, gostKlausurplanungStateImpl);
 	context.provide(UvStateKey, uvStateImpl);

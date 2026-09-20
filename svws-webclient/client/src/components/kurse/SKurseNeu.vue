@@ -7,9 +7,9 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel" required :min-len="1" :max-len="20" :disabled v-model="data.kuerzel"
 					:valid="fieldIsValid('kuerzel')" />
-				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="manager().lehrer.list()"
+				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="kurseAuswahlState.manager.lehrer.list()"
 					:item-text="l => l.vorname + ' ' + l.nachname" removable statistics />
-				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="manager().faecher.list()"
+				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="kurseAuswahlState.manager.faecher.list()"
 					:item-text="f => f.bezeichnung" statistics />
 				<svws-ui-select title="Kursart" :disabled removable statistics :items="kursarten.keys()" v-model="data.kursartAllg" required
 					:item-text="k => k + ' (' + (kursarten.get(k) ?? '???') + ')'" />
@@ -51,10 +51,12 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 
 	import type { KurseNeuProps } from "~/components/kurse/SKurseNeuProps";
+	import { useKurseAuswahlState } from "~/states/kurse/KurseAuswahlState";
 
 	const abschnittState = useAbschnittState();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const kurseAuswahlState = useKurseAuswahlState();
 
 	const props = defineProps<KurseNeuProps>();
 	const data = ref<KursDaten>(Object.assign(new KursDaten(), { wochenstunden: 0, istSichtbar: true }));
@@ -64,12 +66,12 @@
 	const isLoading = ref<boolean>(false);
 
 	const idLehrer = computed({
-		get: () => props.manager().lehrer.get(data.value.lehrer ?? -1),
+		get: () => kurseAuswahlState.manager.lehrer.get(data.value.lehrer ?? -1),
 		set: (v: LehrerListeEintrag | null) => data.value.lehrer = v?.id ?? null,
 	});
 
 	const idFach = computed({
-		get: () => props.manager().faecher.get(data.value.idFach),
+		get: () => kurseAuswahlState.manager.faecher.get(data.value.idFach),
 		set: (v: FachDaten) => data.value.idFach = v.id,
 	});
 
@@ -77,7 +79,7 @@
 		get: () => {
 			const result = [];
 			for (const id of data.value.idJahrgaenge) {
-				const jahrgang = props.manager().jahrgaenge.get(id);
+				const jahrgang = kurseAuswahlState.manager.jahrgaenge.get(id);
 				if (jahrgang !== null) {
 					result.push(jahrgang);
 				}
@@ -142,7 +144,7 @@
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list()) {
+		for (const jg of kurseAuswahlState.manager.jahrgaenge.list()) {
 			result.add(jg);
 		}
 		return result;
@@ -169,7 +171,7 @@
 		if (JavaString.isBlank(data.value.kuerzel) || data.value.kuerzel.length > 20) {
 			return false;
 		}
-		for (const kurs of props.manager().liste.list()) {
+		for (const kurs of kurseAuswahlState.manager.liste.list()) {
 			if (JavaString.equalsIgnoreCase(data.value.kuerzel, kurs.kuerzel)) {
 				return false;
 			}
@@ -202,13 +204,13 @@
 		isLoading.value = true;
 		data.value.idSchuljahresabschnitt = abschnittState.auswahl.id;
 		const { id, weitereLehrer, wochenstundenLehrer, schueler, ...partialData } = data.value;
-		await props.add(partialData);
+		await kurseAuswahlState.add(partialData);
 		isLoading.value = false;
 	}
 
 	function cancel() {
 		props.checkpoint.active = false;
-		void props.goToDefaultView(null);
+		void kurseAuswahlState.gotoDefaultView(null);
 	}
 
 	watch(() => data.value, async () => {

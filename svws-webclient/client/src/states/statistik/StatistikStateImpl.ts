@@ -6,15 +6,14 @@ import { ValidatorGesamt } from "@core/asd/validate/ValidatorGesamt";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
-import { ArrayList } from "@core/java/util/ArrayList";
 import type { StatistikState } from "@ui/states/statistik/StatistikState";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { StateManager } from "@ui/ui/StateManager";
 
-import { abschnittStateImpl } from "../AbschnittStateImpl";
 import type { KlassenListeManager } from "../klassen/KlassenListeManager";
 import { klassenStateImpl } from "../klassen/KlassenStateImpl";
-import { KursListeManager } from "../kurse/KursListeManager";
+import { kurseAuswahlStateImpl } from "../kurse/KurseAuswahlStateImpl";
+import type { KursListeManager } from "../kurse/KursListeManager";
 import { lehrerAuswahlStateImpl } from "../lehrer/LehrerAuswahlStateImpl";
 import { schuelerAuswahlStateImpl } from "../schueler/SchuelerAuswahlStateImpl";
 import type { SchuelerListeManager } from "../schueler/SchuelerListeManager";
@@ -52,11 +51,7 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 	public async init(): Promise<void> {
 		const statistikGesamt = await api.server.getStatistikGesamt(api.schema);
 		const listeSchueler = await api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
-		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 		const listeLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
-		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listFaecher = await api.server.getFaecher(api.schema);
 
 		// Lehrer-State
 		await lehrerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
@@ -67,7 +62,8 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const schuelerListeManager = schuelerAuswahlStateImpl.manager;
 
 		// Kurse-State
-		const kursListeManager = new KursListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, listKurse, listSchueler, listJahrgaenge, listeLehrer, listFaecher);
+		await kurseAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		const kursListeManager = kurseAuswahlStateImpl.manager;
 
 		// Klassen-State
 		await klassenStateImpl.init(schuleStateImpl.abschnitt.id, false);

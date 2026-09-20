@@ -30,12 +30,8 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KurseNeuProps {
 		return {
-			manager: () => routeKurse.data.manager,
-			add: routeKurse.data.add,
-			gotoDefaultView: routeKurse.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			goToDefaultView: routeKurse.data.gotoDefaultView,
 		};
 	}
 }
