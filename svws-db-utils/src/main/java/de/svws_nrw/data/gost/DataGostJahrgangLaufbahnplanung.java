@@ -103,10 +103,10 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	/**
 	 * Führt den Fachwahl-Patch für das angegebene Halbjahr aus, sofern dieser gültig ist.
 	 *
-	 * @param fwDB          der Wert für die Fachwahl aus der DB
-	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
-	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
-	 * @param fw            der Wert für die Fachwahl
+	 * @param fwDB       der Wert für die Fachwahl aus der DB
+	 * @param halbjahr   das Halbjahr, auf welches sich der Patch bezieht
+	 * @param fach       das Fach, für welches die Fachwahl angepasst werden soll
+	 * @param fw         der Wert für die Fachwahl
 	 *
 	 * @return der zu übertragende Wert
 	 *
@@ -132,7 +132,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 
 
 	/**
-	 * Passt die Fachwahl für die gymnasiale Oberstufe zu einem Fach bei der Vorlage des angebenenen
+	 * Passt die Fachwahl für die gymnasiale Oberstufe zu einem Fach bei der Vorlage des angegebenen
 	 * Abiturjahrgangs an.
 	 *
 	 * @param abijahr   der Abiturjahrgang
@@ -151,7 +151,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			if (jahrgang == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
 			}
-			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
+			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachbelegung in der DB, um den Patch zu speichern
 			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
 			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach)) {
 				throw new ApiOperationException(Status.NOT_FOUND);
@@ -195,7 +195,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					case "idReferenzfach" -> {
 						final Long idFach = JSONMapper.convertToLong(value, true, "idReferenzfach");
 						if (idFach != null) {
-							throw new ApiOperationException(Status.CONFLICT, "In der Vorlage für den Jahrgang kann ich keine gewähltes Referenzfach gesetzt werden.");
+							throw new ApiOperationException(Status.CONFLICT, "In der Vorlage für den Jahrgang kann kein gewähltes Referenzfach gesetzt werden.");
 						}
 					}
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -280,7 +280,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			fw.EF1_Kursart = dto.EF1_Kursart;
 			fw.EF2_Kursart = dto.EF2_Kursart;
 			fw.Q11_Kursart = dto.Q11_Kursart;
-			fw.Q12_Kursart = dto.Q11_Kursart;
+			fw.Q12_Kursart = dto.Q12_Kursart;
 			fw.Q21_Kursart = dto.Q21_Kursart;
 			fw.Q22_Kursart = dto.Q22_Kursart;
 			fw.AbiturFach = dto.AbiturFach;
@@ -322,7 +322,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	/**
 	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.
 	 * Handelt es sich um den Vorlage-Abiturjahrgang, so werden alle Fachwahlen entfernt.
-	 * Ansonsten werden die Faten aus dem Vorlage-Abiturjahrgang übernommen.
+	 * Ansonsten werden die Daten aus dem Vorlage-Abiturjahrgang übernommen.
 	 *
 	 * @param abijahr   der Abiturjahrgang
 	 *
