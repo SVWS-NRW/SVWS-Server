@@ -64,7 +64,7 @@ public class ReportingRepositoryLehrer {
 					+ "AND a.WechselNr = 0 "
 					+ "AND ld.Kurs_ID IN (SELECT k.ID FROM DTOKurs k, DTOKursLehrer kl WHERE k.ID = kl.Kurs_ID "
 					+ "AND k.Schuljahresabschnitts_ID = ?1 AND kl.Lehrer_ID = ?2) "
-					+ "AND ld.Fachlehrer_ID <> ?2";
+					+ "AND ((ld.Fachlehrer_ID IS NULL) OR (ld.Fachlehrer_ID <> ?2))";
 
 	private final ReportingContext reportingContext;
 
