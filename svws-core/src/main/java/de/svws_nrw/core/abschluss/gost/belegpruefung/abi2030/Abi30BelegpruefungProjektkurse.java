@@ -170,8 +170,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 			return;
 		}
 		// Prüfe nun, ob genau ein Leitfach/Referenzfach belegt wurde
-		final AbiturFachbelegung referenzfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-		final AbiturFachbelegung referenzfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+		final AbiturFachbelegung referenzfach1 = manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
+		final AbiturFachbelegung referenzfach2 = manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
 		if ((referenzfach1 == null) && (referenzfach2 == null)) {
 			addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;

@@ -277,11 +277,11 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				return;
 			}
 			const leitfaecher: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-			const leitfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			const leitfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
 			if (leitfach1 !== null) {
 				leitfaecher.add(leitfach1);
 			}
-			const leitfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			const leitfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
 			if (leitfach2 !== null) {
 				leitfaecher.add(leitfach2);
 			}

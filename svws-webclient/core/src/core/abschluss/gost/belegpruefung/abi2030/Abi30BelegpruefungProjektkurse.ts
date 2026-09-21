@@ -132,8 +132,8 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (fach === null) {
 			return;
 		}
-		const referenzfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-		const referenzfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+		const referenzfach1: AbiturFachbelegung | null = this.manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
+		const referenzfach2: AbiturFachbelegung | null = this.manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
 		if ((referenzfach1 === null) && (referenzfach2 === null)) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_22);
 			return;

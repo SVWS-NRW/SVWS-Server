@@ -316,11 +316,11 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				return;
 			}
 			final @NotNull List<AbiturFachbelegung> leitfaecher = new ArrayList<>();
-			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByID(fach.projektKursLeitfach1ID);
 			if (leitfach1 != null) {
 				leitfaecher.add(leitfach1);
 			}
-			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByID(fach.projektKursLeitfach2ID);
 			if (leitfach2 != null) {
 				leitfaecher.add(leitfach2);
 			}
