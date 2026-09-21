@@ -85,7 +85,7 @@ public class APIPrivilegedSchema {
 
 	/**
 	 * Erzeugt eine einfache Antwort mit der Angabe, ob die Operation erfolgreich war und
-	 * mit dem Log derOperation.
+	 * mit dem Log der Operation.
 	 *
 	 * @param status    der Status der zu erzeugenden HTTP-Response
 	 * @param success   gibt an, ob die Operation erfolgreich war oder nicht
@@ -133,7 +133,7 @@ public class APIPrivilegedSchema {
 	 */
 	@GET
 	@Path("/api/schema/liste/alle")
-	@Operation(summary = "Liefert eine Liste der Schems.",
+	@Operation(summary = "Liefert eine Liste der Schemas.",
 			description = "Liefert eine Liste der Schemas. Hierfür werden root-Rechte auf der Datenbank benötigt.")
 	@ApiResponse(responseCode = "200", description = "Die Liste mit allen sichtbaren Schemas in der Datenbank",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchemaListeEintrag.class))))
@@ -169,18 +169,18 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Informationen eines SVWS-Schema bezüglich
+	 * Die OpenAPI-Methode für die Abfrage der Informationen eines SVWS-Schemas bezüglich
 	 * der Schule.
 	 *
-	 * @param schemaname   der Name des SVWS-Schema
+	 * @param schemaname   der Name des SVWS-Schemas
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return          die Informationen zur Schule
 	 */
 	@GET
 	@Path("/api/schema/liste/info/{schema}/schule")
-	@Operation(summary = "Liefert die Informationen zu einer Schule eines SVWS-Schema.",
-			description = "Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
+	@Operation(summary = "Liefert die Informationen zu einer Schule eines SVWS-Schemas.",
+			description = "Liefert die Informationen zu einer Schule eines SVWS-Schemas. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
 	@ApiResponse(responseCode = "200", description = "Die Informationen zur Schule",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
 	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein SVWS-Schema")
@@ -196,7 +196,7 @@ public class APIPrivilegedSchema {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der administrativen Benutzer in einem aktuellen SVWS-Schema.
 	 *
-	 * @param schemaname   der Name des SVWS-Schema
+	 * @param schemaname   der Name des SVWS-Schemas
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return          die Liste der administrativen Benutzer
@@ -276,7 +276,7 @@ public class APIPrivilegedSchema {
 	@Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
 			description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
 	@ApiResponse(responseCode = "200",
-			description = "true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.",
+			description = "true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf das Datenbankschema erlauben.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403",
 			description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
@@ -303,7 +303,7 @@ public class APIPrivilegedSchema {
 	@Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
 			description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
 	@ApiResponse(responseCode = "200",
-			description = "true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.",
+			description = "true, wenn das Kennwort und der Benutzername korrekt sind und der privilegierte Zugriff auf die Datenbank erlaubt.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403",
 			description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
@@ -329,7 +329,7 @@ public class APIPrivilegedSchema {
 	@POST
 	@Path("/api/schema/root/create/{schema}/{revision : \\d+}")
 	@Operation(summary = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen.",
-			description = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls keine Schema mit dem angebenen Namen bereits existiert.")
+			description = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls kein Schema mit dem angegebenen Namen bereits existiert.")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Anlegen des Schemas",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein nicht erlaubter Schema-Name, Benutzername oder eine ungültige Revision angegeben.")
@@ -406,7 +406,7 @@ public class APIPrivilegedSchema {
 	@POST
 	@Path("/api/schema/root/create/{schema}")
 	@Operation(summary = "Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen.",
-			description = "Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen, falls keines mit dem angebenen Namen bereits existiert.")
+			description = "Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen, falls keines mit dem angegebenen Namen bereits existiert.")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Anlegen des Schemas",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein nicht erlaubter Schema-Name oder Benutzername angegeben.")
@@ -461,7 +461,7 @@ public class APIPrivilegedSchema {
 
 	/**
 	 * Die OpenAPI-Methode für das Setzen des Flags, ob ein Schema deaktiviert wurde oder nicht.
-	 * Der angemeldete Datenbankbenutzer muss dafür priviligierte Rechte für die Bearbeitung der
+	 * Der angemeldete Datenbankbenutzer muss dafür privilegierte Rechte für die Bearbeitung der
 	 * SVWS-Konfiguration haben.
 	 *
 	 * @param schemaname    der Name des Schemas, dessen Flag angepasst werden soll
@@ -473,15 +473,15 @@ public class APIPrivilegedSchema {
 	@POST
 	@Path("/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}")
 	@Operation(summary = "Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist.",
-			description = "Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, der angemeldete Benutzer"
+			description = "Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, insofern der angemeldete Benutzer"
 					+ " die benötigten Rechte besitzt.")
-	@ApiResponse(responseCode = "204", description = "Das Flags des Schemas wurde erfolgreich angepasst.")
+	@ApiResponse(responseCode = "204", description = "Das Flag des Schemas wurde erfolgreich angepasst.")
 	@ApiResponse(responseCode = "400", description = "Der Schema-Name darf nicht null oder leer sein.")
 	@ApiResponse(responseCode = "403", description = "Das Flag des Schemas darf nicht angepasst werden.")
 	public Response deactivateSchema(@PathParam("schema") final String schemaname, @PathParam("state") final int state,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
+			// Prüfe, ob der Datenbank-Benutzer privilegiert ist
 			if (!conn.isPrivilegedDatabaseUser()) {
 				throw new ApiOperationException(Status.FORBIDDEN);
 			}
@@ -494,8 +494,8 @@ public class APIPrivilegedSchema {
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final boolean success = (state == 1)
-					? config.activateSchema(schemaname)
-					: config.deactivateSchema(schemaname);
+					? config.deactivateSchema(schemaname)
+					: config.activateSchema(schemaname);
 			if (!success) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Status konnte nicht angepasst werden.");
 			}
@@ -717,7 +717,7 @@ public class APIPrivilegedSchema {
 	/**
 	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in ein Schema mit angegebenen Namen.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MariaDB, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MariaDB, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 *
@@ -747,7 +747,7 @@ public class APIPrivilegedSchema {
 	 * in ein Schema mit angegebenen Namen, wobei nur Daten für die angegebene Schulnummer
 	 * übertragen werden.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MariaDB, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MariaDB, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
@@ -776,7 +776,7 @@ public class APIPrivilegedSchema {
 	/**
 	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL in ein Schema mit angegebenen Namen.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MySQL, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MySQL, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 *
@@ -806,7 +806,7 @@ public class APIPrivilegedSchema {
 	 * in ein Schema mit angegebenen Namen, wobei nur Daten für die angegebene Schulnummer
 	 * übertragen werden.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MySQL, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MySQL, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
@@ -835,7 +835,7 @@ public class APIPrivilegedSchema {
 	/**
 	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MSSQL in ein Schema mit angegebenen Namen.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MSSQL, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MSSQL, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 *
@@ -866,7 +866,7 @@ public class APIPrivilegedSchema {
 	 * in ein Schema mit angegebenen Namen, wobei nur Daten für die angegebene Schulnummer
 	 * übertragen werden.
 	 *
-	 * @param dbMigrationInfos   Zugangsdaten zur MSSQL, Name des Schema, das angelegt werden soll, Schmea-Username und Passwort
+	 * @param dbMigrationInfos   Zugangsdaten zur MSSQL, Name des Schemas, das angelegt werden soll, Schema-Username und Passwort
 	 * @param schemaname         Name des Schemas, in das hinein migriert werden soll
 	 * @param request            die Informationen zur HTTP-Anfrage
 	 * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
@@ -894,7 +894,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Führt eine Migration in das angegebene Ziel-Schema mit den übergebenen Migrations-Informtionen durch.
+	 * Führt eine Migration in das angegebene Ziel-Schema mit den übergebenen Migrations-Informationen durch.
 	 *
 	 * @param schemaname         der Name des Ziel-Schemas, in welches migriert wird
 	 * @param srcDbDriver        das DBMS der Quell-Datenbank
@@ -1022,7 +1022,7 @@ public class APIPrivilegedSchema {
 	@Path("/api/schema/import/{schema}/sqlite")
 	@Operation(summary = "Importiert die übergebene Datenbank in dieses Schema.",
 			description = "Importiert die übergebene Datenbank in dieses Schema. Das "
-					+ "Schema wird dabei zunächst geleert und vorhanden Daten gehen dabei verloren.")
+					+ "Schema wird dabei zunächst geleert und vorhandene Daten gehen dabei verloren.")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Importieren der SQLite-Datenbank",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Fehler beim Importieren mit dem Log des fehlgeschlagenen Imports.",
@@ -1055,7 +1055,7 @@ public class APIPrivilegedSchema {
 	@Path("/api/schema/migrate/{schema}/mdb")
 	@Operation(summary = "Migriert die übergebene Datenbank in das angegebene Schema.",
 			description = "Migriert die übergebene Datenbank in das angegebene Schema. Das "
-					+ "Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.")
+					+ "Schema wird dabei geleert und vorhandene Daten gehen dabei verloren.")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der Access-MDB-Datenbank",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
@@ -1088,7 +1088,7 @@ public class APIPrivilegedSchema {
 	@Path("/api/schema/migrate/{schema}/mdb/v2")
 	@Operation(summary = "Migriert die übergebene Datenbank in das angegebene Schema.",
 			description = "Migriert die übergebene Datenbank in das angegebene Schema. Das "
-					+ "Schema wird dabei geleert und vorhanden Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.")
+					+ "Schema wird dabei geleert und vorhandene Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.")
 	@ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der Access-MDB-Datenbank",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
@@ -1144,7 +1144,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in das angebenene Schema,
+	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in das angegebene Schema,
 	 * wobei nur Daten für die angegebene Schulnummer übertragen werden.
 	 * Die existierenden Daten in diesem Schema werden dabei entfernt.
 	 * Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
@@ -1181,7 +1181,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angebenene Schema.
+	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angegebene Schema.
 	 * Die existierenden Daten in diesem Schema werden dabei entfernt.
 	 * Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
 	 *
@@ -1215,7 +1215,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angebene Schema,
+	 * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angegebene Schema,
 	 * wobei nur Daten für die angegebene Schulnummer übertragen werden.
 	 * Die existierenden Daten in diesem Schema werden dabei entfernt.
 	 * Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
@@ -1323,7 +1323,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Anlegen eines SVWSM-Schemas in der angegebenen Revision in dem Schema mit angegebenem Namen.
+	 * Die OpenAPI-Methode für das Anlegen eines SVWS-Schemas in der angegebenen Revision in dem Schema mit angegebenem Namen.
 	 * Der zur Authentifizierung verwendete Datenbank-Benutzer muss die nötigen Rechte haben.
 	 *
 	 * @param schemaname    der Name des Schemas, das angelegt werden soll
@@ -1379,7 +1379,7 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Anlegen eines SVWSM-Schemas in der aktuellen Revision in dem Schema mit angegebenem Namen.
+	 * Die OpenAPI-Methode für das Anlegen eines SVWS-Schemas in der aktuellen Revision in dem Schema mit angegebenem Namen.
 	 * Der zur Authentifizierung verwendete Datenbank-Benutzer muss die nötigen Rechte haben.
 	 *
 	 * @param schemaname    der Name des Schemas, das angelegt werden soll
@@ -1422,12 +1422,12 @@ public class APIPrivilegedSchema {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner Server-Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision,
 			@Context final HttpServletRequest request) {
 		try {
-			// Bestimme den angemeldeten priviligierten Benutzer ...
+			// Bestimme den angemeldeten privilegierten Benutzer ...
 			final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 			final LogConsumerList log;
 			try (DBEntityManager conn = user.getEntityManager()) {
@@ -1466,7 +1466,7 @@ public class APIPrivilegedSchema {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner Server-Fehler aufgetreten.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return updateSchema(schemaname, -1, request);
@@ -1527,7 +1527,7 @@ public class APIPrivilegedSchema {
 	@ApiResponse(responseCode = "204", description = "Das Schema wurde erfolgreich hinzugefügt")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Schema hinzuzufügen oder der "
 			+ "angegebene Benutzer hat nicht ausreichend Rechte, um auf das Schema zuzugreifen.")
-	@ApiResponse(responseCode = "404", description = "Keine Schema mit dem angebenen Namen gefunden")
+	@ApiResponse(responseCode = "404", description = "Kein Schema mit dem angegebenen Namen gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response importExistingSchema(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Benutzername und das Kennwort für den DB-Zugriff auf das Schema", required = true,
@@ -1540,7 +1540,7 @@ public class APIPrivilegedSchema {
 				final DBSchemaStatus status = DBSchemaStatus.read(conn, schema);
 				if (status == null) {
 					throw new ApiOperationException(Status.NOT_FOUND,
-							"Ein Schema mit dem Namen %s konnte in den Datenbank nicht gefunden werden.".formatted(schema));
+							"Ein Schema mit dem Namen %s konnte in der Datenbank nicht gefunden werden.".formatted(schema));
 				}
 				// Prüfe, ob das Schema bereits in der Konfiguration vorhanden ist
 				final SVWSKonfiguration config = SVWSKonfiguration.get();
@@ -1571,6 +1571,8 @@ public class APIPrivilegedSchema {
 					}
 					return Response.status(Status.NO_CONTENT).build();
 				}
+			} catch (final ApiOperationException e) {
+				throw e;
 			} catch (final Exception e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 			}

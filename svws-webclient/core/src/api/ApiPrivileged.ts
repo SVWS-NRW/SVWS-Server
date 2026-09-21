@@ -284,7 +284,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode importSQLiteInto für den Zugriff auf die URL https://{hostname}/api/schema/import/{schema}/sqlite
 	 *
-	 * Importiert die übergebene Datenbank in dieses Schema. Das Schema wird dabei zunächst geleert und vorhanden Daten gehen dabei verloren.
+	 * Importiert die übergebene Datenbank in dieses Schema. Das Schema wird dabei zunächst geleert und vorhandene Daten gehen dabei verloren.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Importieren der SQLite-Datenbank
@@ -368,7 +368,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSchuleInfo für den Zugriff auf die URL https://{hostname}/api/schema/liste/info/{schema}/schule
 	 *
-	 * Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.
+	 * Liefert die Informationen zu einer Schule eines SVWS-Schemas. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Informationen zur Schule
@@ -507,7 +507,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode migrateMDBInto für den Zugriff auf die URL https://{hostname}/api/schema/migrate/{schema}/mdb
 	 *
-	 * Migriert die übergebene Datenbank in das angegebene Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.
+	 * Migriert die übergebene Datenbank in das angegebene Schema. Das Schema wird dabei geleert und vorhandene Daten gehen dabei verloren.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
@@ -535,7 +535,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode migrateMDBIntoPayload für den Zugriff auf die URL https://{hostname}/api/schema/migrate/{schema}/mdb/v2
 	 *
-	 * Migriert die übergebene Datenbank in das angegebene Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.
+	 * Migriert die übergebene Datenbank in das angegebene Schema. Das Schema wird dabei geleert und vorhandene Daten gehen dabei verloren. Es wird ein Octet-Stream verwendet.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
@@ -688,7 +688,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createSchemaCurrent für den Zugriff auf die URL https://{hostname}/api/schema/root/create/{schema}
 	 *
-	 * Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen, falls keines mit dem angebenen Namen bereits existiert.
+	 * Erstellt ein neues Schema der aktuellen Revision mit dem angegebenen Namen, falls keines mit dem angegebenen Namen bereits existiert.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Anlegen des Schemas
@@ -717,7 +717,7 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createSchema für den Zugriff auf die URL https://{hostname}/api/schema/root/create/{schema}/{revision : \d+}
 	 *
-	 * Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls keine Schema mit dem angebenen Namen bereits existiert.
+	 * Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls kein Schema mit dem angegebenen Namen bereits existiert.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Anlegen des Schemas
@@ -799,7 +799,7 @@ export class ApiPrivileged extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Das Schema wurde erfolgreich hinzugefügt
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Schema hinzuzufügen oder der angegebene Benutzer hat nicht ausreichend Rechte, um auf das Schema zuzugreifen.
-	 *   Code 404: Keine Schema mit dem angebenen Namen gefunden
+	 *   Code 404: Kein Schema mit dem angegebenen Namen gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
@@ -1086,10 +1086,10 @@ export class ApiPrivileged extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode deactivateSchema für den Zugriff auf die URL https://{hostname}/api/schema/root/schema/{schema}/deactivated/{state: [0-1]}
 	 *
-	 * Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, der angemeldete Benutzer die benötigten Rechte besitzt.
+	 * Setzt das Flag, ob das Schema mit dem angegebenen Namen in der SVWS-Konfiguration deaktiviert ist, insofern der angemeldete Benutzer die benötigten Rechte besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Das Flags des Schemas wurde erfolgreich angepasst.
+	 *   Code 204: Das Flag des Schemas wurde erfolgreich angepasst.
 	 *   Code 400: Der Schema-Name darf nicht null oder leer sein.
 	 *   Code 403: Das Flag des Schemas darf nicht angepasst werden.
 	 *
@@ -1135,14 +1135,14 @@ export class ApiPrivileged extends BaseApi {
 	 * Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.
+	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf das Datenbankschema erlauben.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Boolean
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
 	 *
 	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
 	 *
-	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.
+	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf das Datenbankschema erlauben.
 	 */
 	public async checkDBPassword(data: BenutzerKennwort): Promise<boolean> {
 		const path = "/api/schema/root/user/checkpwd";
@@ -1159,14 +1159,14 @@ export class ApiPrivileged extends BaseApi {
 	 * Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.
+	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und der privilegierte Zugriff auf die Datenbank erlaubt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Boolean
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
 	 *
 	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
 	 *
-	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.
+	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und der privilegierte Zugriff auf die Datenbank erlaubt.
 	 */
 	public async checkDBPrivPassword(data: BenutzerKennwort): Promise<boolean> {
 		const path = "/api/schema/root/user/checkrootprivs";
@@ -1192,7 +1192,7 @@ export class ApiPrivileged extends BaseApi {
 	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *   Code 500: Es ist ein interner Server-Fehler aufgetreten.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
@@ -1224,7 +1224,7 @@ export class ApiPrivileged extends BaseApi {
 	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *   Code 500: Es ist ein interner Server-Fehler aufgetreten.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
