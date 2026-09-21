@@ -659,6 +659,9 @@ export class GostKlausurplanungStateImpl extends StateManager<GostKlausurplanung
 	};
 
 	public async init(): Promise<void> {
+		if (this._state.value.abiturjahr !== undefined) {
+			return;
+		}
 		this.setPatchedDefaultState({ manager: new GostKlausurplanManager() });
 	}
 
