@@ -5715,7 +5715,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanraumGetBySchuelerklausurtermin(skt: GostSchuelerklausurtermin): StundenplanRaum | null {
 		const raum: GostKlausurraum | null = this.raumGetBySchuelerklausurtermin(skt);
-		return ((raum === null) || (raum.idStundenplanRaum === null)) ? null : this.stundenplanManagerGetByTerminOrException(this.terminOrExceptionBySchuelerklausurtermin(skt)).raumGetByIdOrException(raum.idStundenplanRaum);
+		return (raum === null) ? null : this.stundenplanraumGetByKlausurraumOrNull(raum);
 	}
 
 	/**
@@ -5811,8 +5811,9 @@ export class GostKlausurplanManager extends JavaObject {
 	public anzahlPlaetzeAlleRaeumeByTermin(termin: GostKlausurtermin, fremdTermine: boolean): number {
 		let kapazitaet: number = 0;
 		for (const raum of this.raumGetMengeByTerminIncludingFremdtermine(termin, fremdTermine)) {
-			if (raum.idStundenplanRaum !== null) {
-				kapazitaet += this.stundenplanManagerGetByTerminOrException(termin).raumGetByIdOrException(raum.idStundenplanRaum).groesse;
+			const stundenplanraum: StundenplanRaum | null = this.stundenplanraumGetByKlausurraumOrNull(raum);
+			if (stundenplanraum !== null) {
+				kapazitaet += stundenplanraum.groesse;
 			}
 		}
 		return kapazitaet;
@@ -5885,14 +5886,21 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den {@link StundenplanRaum} zu einem übergebenen {@link GostKlausurraum}. Falls kein {@link StundenplanRaum} zugeordnet ist, wird eine <code>DeveloperNotificationException</code> geworfen.
+	 * Liefert den {@link StundenplanRaum} zu einem übergebenen {@link GostKlausurraum} oder <code>null</code>, falls kein zugehöriger Raum vorhanden ist.
 	 *
 	 * @param raum der {@link GostKlausurraum}
 	 *
-	 * @return der zugehörige {@link StundenplanRaum}
+	 * @return der zugehörige {@link StundenplanRaum} oder <code>null</code>
 	 */
 	public stundenplanraumGetByKlausurraumOrNull(raum: GostKlausurraum): StundenplanRaum | null {
-		return (raum.idStundenplanRaum === null) ? null : this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(raum.idStundenplanRaum);
+		if (raum.idStundenplanRaum === null) {
+			return null;
+		}
+		const stundenplanManager: StundenplanManager | null = this.stundenplanManagerGetByTerminOrNull(this.terminGetByIdOrException(raum.idTermin));
+		if (stundenplanManager === null) {
+			return null;
+		}
+		return stundenplanManager.raumGetByIdOrNull(raum.idStundenplanRaum);
 	}
 
 	/**
@@ -5906,7 +5914,10 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public alleRaeumeHabenStundenplanRaumByTermin(termin: GostKlausurtermin, fremdTermine: boolean, nurVerwendet: boolean): boolean {
 		for (const raum of this.raumGetMengeByTerminIncludingFremdtermine(termin, fremdTermine)) {
-			if ((raum.idStundenplanRaum === null) && (!nurVerwendet || !this.schuelerklausurterminGetMengeByRaum(raum).isEmpty())) {
+			if (nurVerwendet && this.schuelerklausurterminGetMengeByRaum(raum).isEmpty()) {
+				continue;
+			}
+			if (this.stundenplanraumGetByKlausurraumOrNull(raum) === null) {
 				return false;
 			}
 		}
@@ -5938,7 +5949,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return <code>true</code>, falls der übergebene {@link GostKlausurraum} ausreichend Platzkapazität hat.
 	 */
 	public raumHatAusreichendKapazitaetByRaum(raum: GostKlausurraum): boolean {
-		return ((raum.idStundenplanRaum === null) || (this.schuelerklausurterminGetMengeByRaum(raum).size() <= this.stundenplanraumGetByKlausurraum(raum).groesse));
+		const stundenplanraum: StundenplanRaum | null = this.stundenplanraumGetByKlausurraumOrNull(raum);
+		return (stundenplanraum === null) || (this.schuelerklausurterminGetMengeByRaum(raum).size() <= stundenplanraum.groesse);
 	}
 
 	/**

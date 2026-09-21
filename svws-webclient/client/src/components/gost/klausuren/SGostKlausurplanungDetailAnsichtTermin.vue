@@ -20,11 +20,8 @@
 						:class="{
 							'border-b': id < state.manager.raumGetMengeByTermin(termin).size() - 1,
 						}">
-						<td v-if="raum.idStundenplanRaum !== null" class="align-top border-r text-center border-ui-25">
-							{{ state.manager.stundenplanraumGetByKlausurraum(raum).kuerzel }}
-						</td>
-						<td v-else class="align-top border-r text-ui-danger text-center border-ui-25">
-							N.N.
+						<td class="align-top border-r text-center border-ui-25" :class="{ 'text-ui-danger': state.manager.stundenplanraumGetByKlausurraumOrNull(raum) === null }">
+							{{ state.manager.stundenplanraumGetByKlausurraumOrNull(raum)?.kuerzel ?? "N.N." }}
 						</td>
 						<template v-if="state.manager.kursklausurGetMengeByRaum(raum, false).size() > 0">
 							<td class="align-top border-ui-25 border-r" :colspan="kursInfoColspan(raum)">
@@ -48,7 +45,7 @@
 							<div>
 								<div v-for="r in state.manager.raumGetMengeByTermin(termin)" :key="r.id">
 									<template v-if="(r.bemerkung !== null) && (r.bemerkung.trim().length > 0)">
-										<span class="font-bold">Raum {{ state.manager.stundenplanraumGetByKlausurraumOrNull(r) !== null ? state.manager.stundenplanraumGetByKlausurraum(r).kuerzel : "N.N." }}:</span>
+										<span class="font-bold">Raum {{ state.manager.stundenplanraumGetByKlausurraumOrNull(r)?.kuerzel ?? "N.N." }}:</span>
 										{{ r.bemerkung }}
 									</template>
 								</div>

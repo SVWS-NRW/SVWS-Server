@@ -8,7 +8,7 @@
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
 				<svws-ui-select v-if="hatKompetenzUpdate" :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
-					:model-value="raum.idStundenplanRaum === null ? undefined : state.manager.stundenplanraumGetByKlausurraum(raum)"
+					:model-value="stundenplanraum() ?? undefined"
 					headless
 					no-items-text="Keine Räume im Stundenplan gefunden"
 					class="grow"
@@ -20,7 +20,8 @@
 					<svws-ui-tooltip class="text-ui-danger font-bold text-headline-md" v-if="raumHatFehler()">
 						<template #content>
 							<template v-if="!raum.idStundenplanRaum">Keine Raumnummer zugeordnet</template>
-							<template v-else-if="anzahlSuS() > state.manager.stundenplanraumGetByKlausurraum(raum).groesse">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
+							<template v-else-if="stundenplanraum() === null">Zugeordnete Raumnummer ist im Stundenplan nicht vorhanden</template>
+							<template v-else-if="raumHatUeberbelegung()">Derzeitige Raumbelegung überschreitet die Raumkapazität</template>
 						</template>
 						<span class="icon icon-ui-danger i-ri-alert-fill" />
 					</svws-ui-tooltip>
@@ -77,8 +78,7 @@
 			<span class="mt-auto -mb-3 flex w-full items-center justify-between gap-1 text-sm">
 				<div class="py-3" :class="{'opacity-50': klausurenImRaum().size() === 0}">
 					<span class="font-bold">
-						<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > state.manager.stundenplanraumGetByKlausurraum(raum).groesse ? 'text-ui-danger' : ''">{{ anzahlSuS() }}/{{ state.manager.stundenplanraumGetByKlausurraum(raum).groesse }} belegt, </span>
-						<span v-else>{{ anzahlSuS() }} Plätze, </span>
+						<span :class="{ 'text-ui-danger': raumHatUeberbelegung() }">{{ raumBelegungText() }}</span>
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
 				</div>
@@ -122,15 +122,26 @@
 	const state = useGostKlausurplanungState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+	const stundenplanraum = () => state.manager.stundenplanraumGetByKlausurraumOrNull(props.raum);
 	const raumBezeichnung = computed<string>(() => {
-		if (props.raum.idStundenplanRaum === null) {
-			return "";
+		const raum = stundenplanraum();
+		if (raum === null) {
+			return props.raum.idStundenplanRaum === null ? "" : "N.N.";
 		}
-		const stundenplanraum = state.manager.stundenplanraumGetByKlausurraum(props.raum);
-		return `${stundenplanraum.kuerzel} (${stundenplanraum.groesse} Plätze, ${stundenplanraum.beschreibung})`;
+		return `${raum.kuerzel} (${raum.groesse} Plätze, ${raum.beschreibung})`;
 	});
 
-	const raumHatFehler = () => ((props.raum.idStundenplanRaum !== null) && (anzahlSuS() > state.manager.stundenplanraumGetByKlausurraum(props.raum).groesse)) || (props.raum.idStundenplanRaum === null);
+	const raumHatUeberbelegung = () => {
+		const raum = stundenplanraum();
+		return (raum !== null) && (anzahlSuS() > raum.groesse);
+	};
+
+	const raumHatFehler = () => (stundenplanraum() === null) || raumHatUeberbelegung();
+
+	const raumBelegungText = () => {
+		const raum = stundenplanraum();
+		return raum === null ? `${anzahlSuS()} Plätze, ` : `${anzahlSuS()}/${raum.groesse} belegt, `;
+	};
 
 	const klausurenImRaum = () => state.manager.kursklausurGetMengeByRaum(props.raum, false);
 	const nachschreiberImRaum = () => state.manager.nachschreiberGetMengeByRaum(props.raum);
@@ -150,8 +161,9 @@
 
 	const raeumeVerfuegbar = computed(() => {
 		const raeume = state.manager.stundenplanraumVerfuegbarGetMengeByTermin(termin(), props.multijahrgang());
-		if (props.raum.idStundenplanRaum !== null) {
-			raeume.add(0, state.manager.stundenplanraumGetByKlausurraum(props.raum));
+		const raum = stundenplanraum();
+		if (raum !== null) {
+			raeume.add(0, raum);
 		}
 		return raeume;
 	});

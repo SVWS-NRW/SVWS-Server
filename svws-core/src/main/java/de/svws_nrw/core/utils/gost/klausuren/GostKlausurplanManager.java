@@ -6077,8 +6077,7 @@ public class GostKlausurplanManager {
 	 */
 	public StundenplanRaum stundenplanraumGetBySchuelerklausurtermin(final @NotNull GostSchuelerklausurtermin skt) {
 		final GostKlausurraum raum = raumGetBySchuelerklausurtermin(skt);
-		return ((raum == null) || (raum.idStundenplanRaum == null)) ? null
-				: stundenplanManagerGetByTerminOrException(terminOrExceptionBySchuelerklausurtermin(skt)).raumGetByIdOrException(raum.idStundenplanRaum);
+		return (raum == null) ? null : stundenplanraumGetByKlausurraumOrNull(raum);
 	}
 
 	/**
@@ -6175,8 +6174,9 @@ public class GostKlausurplanManager {
 	public int anzahlPlaetzeAlleRaeumeByTermin(final @NotNull GostKlausurtermin termin, final boolean fremdTermine) {
 		int kapazitaet = 0;
 		for (final @NotNull GostKlausurraum raum : raumGetMengeByTerminIncludingFremdtermine(termin, fremdTermine)) {
-			if (raum.idStundenplanRaum != null) {
-				kapazitaet += stundenplanManagerGetByTerminOrException(termin).raumGetByIdOrException(raum.idStundenplanRaum).groesse;
+			final StundenplanRaum stundenplanraum = stundenplanraumGetByKlausurraumOrNull(raum);
+			if (stundenplanraum != null) {
+				kapazitaet += stundenplanraum.groesse;
 			}
 		}
 		return kapazitaet;
@@ -6251,15 +6251,21 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert den {@link StundenplanRaum} zu einem übergebenen {@link GostKlausurraum}. Falls kein {@link StundenplanRaum} zugeordnet ist, wird eine <code>DeveloperNotificationException</code> geworfen.
+	 * Liefert den {@link StundenplanRaum} zu einem übergebenen {@link GostKlausurraum} oder <code>null</code>, falls kein zugehöriger Raum vorhanden ist.
 	 *
 	 * @param raum der {@link GostKlausurraum}
 	 *
-	 * @return der zugehörige {@link StundenplanRaum}
+	 * @return der zugehörige {@link StundenplanRaum} oder <code>null</code>
 	 */
 	public StundenplanRaum stundenplanraumGetByKlausurraumOrNull(final @NotNull GostKlausurraum raum) {
-		return (raum.idStundenplanRaum == null) ? null
-				: stundenplanManagerGetByTerminOrException(terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(raum.idStundenplanRaum);
+		if (raum.idStundenplanRaum == null) {
+			return null;
+		}
+		final StundenplanManager stundenplanManager = stundenplanManagerGetByTerminOrNull(terminGetByIdOrException(raum.idTermin));
+		if (stundenplanManager == null) {
+			return null;
+		}
+		return stundenplanManager.raumGetByIdOrNull(raum.idStundenplanRaum);
 	}
 
 	/**
@@ -6273,7 +6279,10 @@ public class GostKlausurplanManager {
 	 */
 	public boolean alleRaeumeHabenStundenplanRaumByTermin(final @NotNull GostKlausurtermin termin, final boolean fremdTermine, final boolean nurVerwendet) {
 		for (final @NotNull GostKlausurraum raum : raumGetMengeByTerminIncludingFremdtermine(termin, fremdTermine)) {
-			if ((raum.idStundenplanRaum == null) && (!nurVerwendet || !schuelerklausurterminGetMengeByRaum(raum).isEmpty())) {
+			if (nurVerwendet && schuelerklausurterminGetMengeByRaum(raum).isEmpty()) {
+				continue;
+			}
+			if (stundenplanraumGetByKlausurraumOrNull(raum) == null) {
 				return false;
 			}
 		}
@@ -6305,7 +6314,8 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, falls der übergebene {@link GostKlausurraum} ausreichend Platzkapazität hat.
 	 */
 	public boolean raumHatAusreichendKapazitaetByRaum(final @NotNull GostKlausurraum raum) {
-		return ((raum.idStundenplanRaum == null) || (schuelerklausurterminGetMengeByRaum(raum).size() <= stundenplanraumGetByKlausurraum(raum).groesse));
+		final StundenplanRaum stundenplanraum = stundenplanraumGetByKlausurraumOrNull(raum);
+		return (stundenplanraum == null) || (schuelerklausurterminGetMengeByRaum(raum).size() <= stundenplanraum.groesse);
 	}
 
 	/**

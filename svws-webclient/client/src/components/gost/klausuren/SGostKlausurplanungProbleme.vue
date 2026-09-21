@@ -98,6 +98,12 @@
 					{{ state.manager.vorgabeBySchuelerklausur(rowData).quartal }}
 				</template>
 			</svws-ui-table>
+			<template #buttonFooterLeft>
+				<svws-ui-button title="Alle Abweichungen beheben" @click="behebeAlleSchuelerklausuren" class="mt-2" :disabled="isAwaiting">
+					<span class="icon i-ri-check-line" />
+					Alle beheben
+				</svws-ui-button>
+			</template>
 		</s-gost-klausurplanung-problem-card>
 
 		<s-gost-klausurplanung-problem-card problem-id="kursklausuren_fehlend" v-model:current-action="currentAction" :show="!kursklausuren().isEmpty()"
@@ -382,11 +388,13 @@
 	import { ValidatorFehlerart } from '@core/asd/validate/ValidatorFehlerart.js';
 	import type { GostKlausurtermin } from '@core/core/data/gost/klausuren/GostKlausurtermin.js';
 	import type { GostKursklausur } from '@core/core/data/gost/klausuren/GostKursklausur.js';
+	import type { GostSchuelerklausur } from '@core/core/data/gost/klausuren/GostSchuelerklausur.js';
 	import type { GostSchuelerklausurtermin } from '@core/core/data/gost/klausuren/GostSchuelerklausurtermin.js';
 	import type { SchuelerListeEintrag } from '@core/core/data/schueler/SchuelerListeEintrag.js';
 	import { GostHalbjahr } from '@core/core/types/gost/GostHalbjahr.js';
 	import { DateUtils } from '@core/core/utils/DateUtils.js';
 	import { ListUtils } from '@core/core/utils/ListUtils.js';
+	import { ArrayList } from '@core/java/util/ArrayList.js';
 	import { useConfigState } from '@ui/states/ConfigState.js';
 	import { useGostKlausurplanungState } from '@ui/states/GostKlausurplanungState.js';
 	import type { DataTableColumn } from '@ui/types.js';
@@ -447,6 +455,32 @@
 
 	const currentAction = ref<KlausurplanungProblemId | "">('');
 	const isAwaiting = ref(false);
+
+	async function behebeAlleSchuelerklausuren(): Promise<void> {
+		if (isAwaiting.value) {
+			return;
+		}
+		const zuErzeugen = new ArrayList<Partial<GostSchuelerklausur>>();
+		const zuLoeschen = new ArrayList<GostSchuelerklausur>();
+		for (const klausur of schuelerklausuren()) {
+			if (klausur.id === -1) {
+				zuErzeugen.add(klausur);
+			} else {
+				zuLoeschen.add(klausur);
+			}
+		}
+		isAwaiting.value = true;
+		try {
+			if (!zuErzeugen.isEmpty()) {
+				await state.erzeugeSchuelerklausuren(zuErzeugen);
+			}
+			if (!zuLoeschen.isEmpty()) {
+				await state.loescheSchuelerklausuren(zuLoeschen);
+			}
+		} finally {
+			isAwaiting.value = false;
+		}
+	}
 
 	const isMounted = ref(false);
 	onMounted(() => {

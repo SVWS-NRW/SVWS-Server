@@ -109,6 +109,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
+			if (isEntering) {
+				await gostKlausurplanungStateImpl.init();
+			}
 			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			const { datum } = RouteNode.getStringParams(to_params, ["datum"]);
 			// Prüfe das Abiturjahr
