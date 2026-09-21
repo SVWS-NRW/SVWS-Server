@@ -81,8 +81,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		if (isEntering) {
 			await Promise.all([orteStateImpl.init(), beschaeftigungsartenStateImpl.init(), betriebeStateImpl.init(),
 				entlassgruendeStateImpl.init(),
-				routeApp.cache.refreshKataloge(Katalog.EINSCHULUNGSARTEN,
-					Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
+				routeApp.cache.refreshKataloge(Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
 					Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
 		}
 		try {
