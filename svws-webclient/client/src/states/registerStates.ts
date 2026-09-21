@@ -7,6 +7,7 @@ import { GostKlausurplanungStateKey } from "@ui/states/GostKlausurplanungState";
 import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState";
 import { BeschaeftigungsartenStateKey } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
+import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
 import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/LeitungsfunktionenState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
@@ -26,6 +27,7 @@ import { gostKlausurplanungStateImpl } from "./GostKlausurplanungStateImpl";
 import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
 import { beschaeftigungsartenStateImpl } from "./kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "./kataloge/BetriebeStateImpl";
+import { entlassgruendeStateImpl } from "./kataloge/EntlassgruendeStateImpl";
 import { leitungsfunktionenStateImpl } from "./kataloge/LeitungsfunktionenStateImpl";
 import { orteStateImpl } from "./kataloge/OrteStateImpl";
 import { KlassenStateKey } from "./klassen/KlassenState";
@@ -70,5 +72,6 @@ export function registerStates(): void {
 	context.provide(LeitungsfunktionenStateKey, leitungsfunktionenStateImpl);
 	context.provide(BeschaeftigungsartenStateKey, beschaeftigungsartenStateImpl);
 	context.provide(BetriebeStateKey, betriebeStateImpl);
+	context.provide(EntlassgruendeStateKey, entlassgruendeStateImpl);
 	context.provide(StatistikStateKey, statistikStateImpl);
 }

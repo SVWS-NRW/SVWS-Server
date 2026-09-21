@@ -1,7 +1,6 @@
 import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
-import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
@@ -35,7 +34,6 @@ export class KatalogCache {
 	private _abteilungenById: Map<number, Abteilung> = new Map();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
-	private _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
 	private _erzieherartenById: Map<number, Erzieherart> = new Map();
 	private _fahrschuelerartenById: Map<number, Fahrschuelerart> = new Map();
 	private _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
@@ -70,11 +68,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.EINWILLIGUNGSARTEN, async () => {
 			const result = await api.server.getEinwilligungsarten(api.schema);
 			return { einwilligungsartenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.ENTLASSGRUENDE, async () => {
-			const result = await api.server.getEntlassgruende(api.schema);
-			return { entlassgruendeById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.ERZIEHERARTEN, async () => {
@@ -193,14 +186,6 @@ export class KatalogCache {
 
 	set einwilligungsartenById(value: Map<number, Einwilligungsart>) {
 		this._einwilligungsartenById = value;
-	}
-
-	get entlassgruendeById(): Map<number, KatalogEntlassgrund> {
-		return this._entlassgruendeById;
-	}
-
-	set entlassgruendeById(value: Map<number, KatalogEntlassgrund>) {
-		this._entlassgruendeById = value;
 	}
 
 	get erzieherartenById(): Map<number, Erzieherart> {

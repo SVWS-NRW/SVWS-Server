@@ -181,6 +181,7 @@
 	import type { Kindergarten } from '@core/core/data/schule/Kindergarten';
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
+	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { useServerState } from '@ui/states/ServerState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
@@ -195,6 +196,7 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
+	const entlassgruendeState = useEntlassgruendeState();
 
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
@@ -250,7 +252,7 @@
 	});
 
 	const entlassgrundManager = new SelectManager<KatalogEntlassgrund>({
-		options: computed(() => props.manager().entlassgruendeById.values()),
+		options: computed(() => entlassgruendeState.entlassgruende.list),
 		optionDisplayText: s => s.bezeichnung,
 		selectionDisplayText: s => s.bezeichnung,
 	});
@@ -300,12 +302,6 @@
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
-	});
-
-	const schulwechselGrundSelectManager = new SelectManager({
-		options: computed(() => props.manager().entlassgruendeById.values()),
-		optionDisplayText: (option) => option.bezeichnung,
-		selectionDisplayText: (option) => option.bezeichnung,
 	});
 
 	function bezeichnungSchule(s: SchulEintrag) {

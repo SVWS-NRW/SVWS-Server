@@ -93,8 +93,6 @@
 </template>
 
 <script setup lang="ts">
-
-
 	import { computed, ref, watch } from "vue";
 
 	import { Jahrgaenge } from "@core/asd/types/jahrgang/Jahrgaenge";
@@ -113,6 +111,7 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -128,6 +127,8 @@
 	}>();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
+	const entlassgruendeState = useEntlassgruendeState();
+
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const disabled = computed(() => !updateKompetenz.value);
 	const schuljahr = computed(() => props.manager().schuljahr);
@@ -284,7 +285,7 @@
 	});
 
 	const vorherigerEntlassgrundManager = new SelectManager<KatalogEntlassgrund>({
-		options: computed(() => props.manager().entlassgruendeById.values()),
+		options: computed(() => entlassgruendeState.entlassgruende.list),
 		optionDisplayText: s => s.bezeichnung,
 		selectionDisplayText: s => s.bezeichnung,
 	});

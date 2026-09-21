@@ -34,11 +34,14 @@ import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlas
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
 import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
+
+	private readonly _entlassgruendeState = useEntlassgruendeState();
 
 	private readonly manager: () => SchuelerSchulbesuchManager;
 
@@ -145,7 +148,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	idEntlassgrundVorherigeSchule = computed<KatalogEntlassgrund | null>({
-		get: () => this.manager().entlassgruendeById.get(this.proxy.idEntlassgrundVorherigeSchule ?? -1) ?? null,
+		get: () => this._entlassgruendeState.entlassgruende.byId.get(this.proxy.idEntlassgrundVorherigeSchule ?? -1) ?? null,
 		set: (v: KatalogEntlassgrund | null) => this.proxy.idEntlassgrundVorherigeSchule = v?.id ?? null,
 	});
 
@@ -175,7 +178,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	idEntlassgrundDieseSchule = computed<KatalogEntlassgrund | null>({
-		get: () => this.manager().entlassgruendeById.get(this.proxy.idEntlassgrundDieseSchule ?? -1) ?? null,
+		get: () => this._entlassgruendeState.entlassgruende.byId.get(this.proxy.idEntlassgrundDieseSchule ?? -1) ?? null,
 		set: (v: KatalogEntlassgrund | null) => this.proxy.idEntlassgrundDieseSchule = v?.id ?? null,
 	});
 

@@ -93,8 +93,6 @@
 </template>
 
 <script setup lang="ts">
-
-
 	import { computed, ref, watch } from "vue";
 
 	import { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
@@ -105,6 +103,7 @@
 	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -122,6 +121,8 @@
 		deleteBisherigeSchulen: (idsEintraege: List<number>) => Promise<void>;
 		updateKompetenz: boolean;
 	}>();
+
+	const entlassgruendeState = useEntlassgruendeState();
 
 	const selectedEntries = ref<SchuelerSchulbesuchSchule[]>([]);
 	let model = new SchuelerSchulbesuchSchuleModelProxy(() => new SchuelerSchulbesuchSchule(), () => props.manager());
@@ -251,7 +252,7 @@
 	}
 
 	function bezeichnungEntlassgrund(schule: SchuelerSchulbesuchSchule): string {
-		return props.manager().entlassgruendeById.get(schule.idEntlassgrund ?? -1)?.bezeichnung ?? '-';
+		return entlassgruendeState.entlassgruende.byId.get(schule.idEntlassgrund ?? -1)?.bezeichnung ?? '-';
 	}
 
 	const columns: DataTableColumn[] = [

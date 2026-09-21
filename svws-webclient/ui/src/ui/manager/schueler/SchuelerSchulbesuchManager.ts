@@ -3,7 +3,6 @@ import type { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/Schueler
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
-import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Merkmal } from "@core/core/data/schule/Merkmal";
@@ -11,7 +10,6 @@ import type { Merkmal } from "@core/core/data/schule/Merkmal";
 export interface SchulbesuchLookups {
 	schulenById: Map<number, SchulEintrag>;
 	merkmaleById: Map<number, Merkmal>;
-	entlassgruendeById: Map<number, KatalogEntlassgrund>;
 	kindergaertenById: Map<number, Kindergarten>;
 	jahrgaengeById: Map<number, JahrgangsDaten>;
 	abschnitteById: Map<number, Schuljahresabschnitt>;
@@ -27,7 +25,6 @@ export class SchuelerSchulbesuchManager {
 	private readonly _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
 	private readonly _schulenById: Map<number, SchulEintrag> = new Map();
 	private readonly _merkmaleById: Map<number, Merkmal> = new Map();
-	private readonly _entlassgruendeById: Map<number, KatalogEntlassgrund> = new Map();
 	private readonly _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 
@@ -41,7 +38,6 @@ export class SchuelerSchulbesuchManager {
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this._schulenById = lookups.schulenById;
 		this._merkmaleById = lookups.merkmaleById;
-		this._entlassgruendeById = lookups.entlassgruendeById;
 		this._kindergaertenById = lookups.kindergaertenById;
 		this._jahrgaengeById = lookups.jahrgaengeById;
 		this._schuljahresabschnitteById = lookups.abschnitteById;
@@ -140,10 +136,6 @@ export class SchuelerSchulbesuchManager {
 
 	get merkmaleById(): Map<number, Merkmal> {
 		return this._merkmaleById;
-	}
-
-	get entlassgruendeById(): Map<number, KatalogEntlassgrund> {
-		return this._entlassgruendeById;
 	}
 
 	get kindergaertenById(): Map<number, Kindergarten> {
