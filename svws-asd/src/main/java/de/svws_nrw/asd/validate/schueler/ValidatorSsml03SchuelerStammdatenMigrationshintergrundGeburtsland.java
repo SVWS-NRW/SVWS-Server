@@ -43,12 +43,11 @@ public final class ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburts
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
 		final @NotNull Boolean hatMigrationshintergrund = hatMigrationshintergrundZwisch == null ? false : hatMigrationshintergrundZwisch;
 
-		if (!hatMigrationshintergrund) {
-			if (idGeburtsland != -1L) {
-				addFehler(0, FEHLERTEXT);
-				return false;
-			}
+		if (!hatMigrationshintergrund && (idGeburtsland != -1L)) {
+			addFehler(0, FEHLERTEXT);
+			return false;
 		}
+
 		return true;
 	}
 }

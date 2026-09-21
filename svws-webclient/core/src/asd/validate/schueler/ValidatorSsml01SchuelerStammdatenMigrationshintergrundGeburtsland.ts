@@ -24,16 +24,17 @@ export class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland e
 	public constructor(idGeburtsland: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idGeburtsland = idGeburtsland;
-		this._validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const idGeburtsland: number = this._idGeburtsland.get();
 		const nat: Nationalitaeten | null = Nationalitaeten.data().getWertByIDOrNull(idGeburtsland);
+		this._validatoren.clear();
 		if (nat === null) {
 			this.addFehler(0, ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland.FEHLERTEXT);
 			return false;
 		}
+		this._validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(this._idGeburtsland, this.kontext()));
 		return true;
 	}
 

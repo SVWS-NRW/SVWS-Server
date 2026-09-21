@@ -31,19 +31,21 @@ export class ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland e
 		super(kontext);
 		this._idGeburtsland = idGeburtsland;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(idGeburtsland), kontext));
-		this._validatoren.add(new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(idGeburtsland), hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const idGeburtsland: number | null = this._idGeburtsland.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = hatMigrationshintergrundZwisch === null ? false : hatMigrationshintergrundZwisch;
+		this._validatoren.clear();
 		if (hatMigrationshintergrund) {
 			if (idGeburtsland === null) {
 				this.addFehler(0, ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland.FEHLERTEXT);
 				return false;
 			}
+			this._validatoren.add(new ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(this._idGeburtsland), this.kontext()));
+		} else {
+			this._validatoren.add(new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(this._idGeburtsland), this._hatMigrationshintergrund, this.kontext()));
 		}
 		return true;
 	}

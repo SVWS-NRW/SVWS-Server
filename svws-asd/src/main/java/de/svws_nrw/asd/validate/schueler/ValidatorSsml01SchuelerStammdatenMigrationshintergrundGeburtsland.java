@@ -29,10 +29,6 @@ public final class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburts
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idGeburtsland = idGeburtsland;
-
-		_validatoren.add(
-				new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(idGeburtsland, kontext));
-
 	}
 
 	@Override
@@ -41,11 +37,13 @@ public final class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburts
 		final @NotNull Long idGeburtsland = _idGeburtsland.get();
 		final @AllowNull Nationalitaeten nat = Nationalitaeten.data().getWertByIDOrNull(idGeburtsland);
 
+		this._validatoren.clear();
 		if (nat == null) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}
 
+		_validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(_idGeburtsland, this.kontext()));
 		return true;
 	}
 }

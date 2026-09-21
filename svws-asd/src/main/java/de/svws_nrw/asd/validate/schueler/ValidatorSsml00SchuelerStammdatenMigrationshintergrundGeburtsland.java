@@ -32,11 +32,6 @@ public final class ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburts
 		super(kontext);
 		_idGeburtsland = idGeburtsland;
 		_hatMigrationshintergrund = hatMigrationshintergrund;
-
-		_validatoren.add(
-				new ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(getNotNullSupplierLong(idGeburtsland), kontext));
-		_validatoren.add(
-				new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(getNotNullSupplierLong(idGeburtsland), hatMigrationshintergrund, kontext));
 	}
 
 
@@ -47,11 +42,17 @@ public final class ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburts
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
 		final @NotNull Boolean hatMigrationshintergrund = hatMigrationshintergrundZwisch == null ? false : hatMigrationshintergrundZwisch;
 
+		_validatoren.clear();
 		if (hatMigrationshintergrund) {
 			if (idGeburtsland == null) {
 				addFehler(0, FEHLERTEXT);
 				return false;
 			}
+			_validatoren.add(
+					new ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(getNotNullSupplierLong(_idGeburtsland), this.kontext()));
+		} else {
+			_validatoren.add(
+					new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(getNotNullSupplierLong(_idGeburtsland), _hatMigrationshintergrund, this.kontext()));
 		}
 		return true;
 	}
