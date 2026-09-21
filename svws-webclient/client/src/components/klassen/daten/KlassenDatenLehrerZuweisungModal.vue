@@ -29,9 +29,9 @@
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import type { List } from "@core/java/util/List";
 
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 
 	const clickedRow = ref<LehrerListeEintrag | undefined>(undefined);
 

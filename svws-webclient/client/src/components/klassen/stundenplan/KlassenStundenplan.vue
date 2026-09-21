@@ -25,11 +25,11 @@
 
 	import { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
 
-	import { useKlassenState } from '~/states/klassen/KlassenState';
+	import { useKlassenAuswahlState } from '~/states/klassen/KlassenAuswahlState';
 
 	import type { KlassenStundenplanProps } from './KlassenStundenplanProps';
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 
 	defineProps<KlassenStundenplanProps>();
 

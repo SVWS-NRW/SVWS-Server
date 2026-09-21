@@ -16,7 +16,7 @@ import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { useKlassenState } from "~/states/klassen/KlassenState";
+import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
@@ -64,7 +64,7 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			}
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
-			const klassenState = useKlassenState();
+			const klassenState = useKlassenAuswahlState();
 			const idNeu = await klassenState.init(idSchuljahresabschnitt, isEntering);
 			if ((idNeu !== null) && (idNeu !== id)) {
 				return this.data.defaultView.getRoute({ id: idNeu });
@@ -101,7 +101,7 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
-		const klassenState = useKlassenState();
+		const klassenState = useKlassenAuswahlState();
 		if (klassenState.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;
 		}
@@ -119,7 +119,7 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 	 */
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const params = <RouteParamsRawGeneric>{};
-		const klassenState = useKlassenState();
+		const klassenState = useKlassenAuswahlState();
 		if (!klassenState.isAvailable) {
 			return params;
 		}
@@ -132,7 +132,7 @@ export class RouteKlassen extends RouteTabNode<RouteDataKlassen, RouteApp> {
 
 
 	protected doUpdateIfTarget = async (from: RouteNode<any, any> | undefined) => {
-		const klassenState = useKlassenState();
+		const klassenState = useKlassenAuswahlState();
 		if (!klassenState.manager.hasDaten()) {
 			return;
 		}

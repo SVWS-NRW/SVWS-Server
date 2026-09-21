@@ -127,7 +127,6 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 			this._selectedChild.value = undefined;
 		}
 		this.data.reset();
-		lehrerAuswahlState.reset();
 		const { id } = RouteNode.getStringParams(from_params, ['id']);
 		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
 	}

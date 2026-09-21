@@ -79,14 +79,14 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
 	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 
 	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 	const benutzerState = useBenutzerState();
 
 	const serverMode = useServerState().mode;

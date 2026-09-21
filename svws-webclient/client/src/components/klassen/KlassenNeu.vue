@@ -57,13 +57,13 @@
 	import { useSchuleState } from "@ui/states/SchuleState";
 
 	import type { KlassenNeuProps } from "~/components/klassen/KlassenNeuProps";
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 	const schuleState = useSchuleState();
 
 	const dataNotPatched = shallowRef(new KlassenDaten());

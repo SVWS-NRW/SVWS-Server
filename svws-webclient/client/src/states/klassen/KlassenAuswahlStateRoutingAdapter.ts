@@ -3,7 +3,7 @@ import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeKlasseGruppenprozesse } from "~/router/apps/klassen/RouteKlassenGruppenprozesse";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 
-export const klassenStateRoutingAdapter = new GenericAuswahlStateRoutingAdapter({
+export const klassenAuswahlStateRoutingAdapter = new GenericAuswahlStateRoutingAdapter({
 	route: routeKlassen.data,
 	gruppenprozesse: routeKlasseGruppenprozesse,
 	hinzufuegen: routeKlassenNeu,

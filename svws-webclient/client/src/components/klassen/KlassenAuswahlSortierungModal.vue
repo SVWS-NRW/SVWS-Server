@@ -17,9 +17,9 @@
 
 	import { ref } from "vue";
 
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 
 	const show = ref<boolean>(false);
 

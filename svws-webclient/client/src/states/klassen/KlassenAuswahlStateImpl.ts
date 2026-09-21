@@ -23,18 +23,18 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager } from "~/router/RouteManager";
 
+import type { KlassenAuswahlState } from "./KlassenAuswahlState";
+import { klassenAuswahlStateRoutingAdapter } from "./KlassenAuswahlStateRoutingAdapter";
 import { KlassenListeManager } from "./KlassenListeManager";
-import type { KlassenState } from "./KlassenState";
-import { klassenStateRoutingAdapter } from "./KlassenStateRoutingAdapter";
 
-interface KlassenReactiveState extends GenericAuswahlReactiveState<KlassenListeManager> {
+interface KlassenAuswahlReactiveState extends GenericAuswahlReactiveState<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 }
 
 /**
  * Der State für die Auswahlliste der Klassen
  */
-export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManager, KlassenReactiveState> implements KlassenState {
+export class KlassenAuswahlStateImpl extends GenericAuswahlStateImpl<KlassenListeManager, KlassenAuswahlReactiveState> implements KlassenAuswahlState {
 
 	public constructor() {
 		super({
@@ -42,7 +42,7 @@ export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManage
 			manager: undefined,
 			mapStundenplaene: new Map(),
 			activeViewType: ViewType.DEFAULT,
-		}, klassenStateRoutingAdapter);
+		}, klassenAuswahlStateRoutingAdapter);
 	}
 
 	/**
@@ -84,7 +84,7 @@ export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManage
 	 *
 	 * @returns Eine Promise mit den Anpassungen für den Manager und dessen Daten im KlassenState
 	 */
-	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KlassenReactiveState>> {
+	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<KlassenAuswahlReactiveState>> {
 		const schuljahresabschnitt = abschnittStateImpl.getOrNull(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
@@ -161,7 +161,7 @@ export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManage
 		return await api.server.getKlasse(api.schema, auswahl.id);
 	}
 
-	public async ladeDatenMultiple(auswahlList: List<KlassenListeEintrag>, state: Partial<KlassenReactiveState>): Promise<List<KlassenDaten> | null> {
+	public async ladeDatenMultiple(auswahlList: List<KlassenListeEintrag>, state: Partial<KlassenAuswahlReactiveState>): Promise<List<KlassenDaten> | null> {
 		if (auswahlList.isEmpty()) {
 			return null;
 		}
@@ -306,4 +306,4 @@ export class KlassenStateImpl extends GenericAuswahlStateImpl<KlassenListeManage
 
 }
 
-export const klassenStateImpl = new KlassenStateImpl();
+export const klassenAuswahlStateImpl = new KlassenAuswahlStateImpl();

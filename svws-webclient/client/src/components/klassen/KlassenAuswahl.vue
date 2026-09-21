@@ -65,9 +65,9 @@
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 	const benutzerState = useBenutzerState();
 	const abschnittState = useAbschnittState();
 

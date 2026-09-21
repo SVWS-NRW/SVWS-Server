@@ -43,14 +43,14 @@
 	import type { TabManager } from "@ui/ui/nav/TabManager";
 	import { ViewType } from "@ui/ui/nav/ViewType";
 
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
 	const props = defineProps<{
 		tabManager: (viewType: ViewType) => TabManager;
 		activeViewType: ViewType;
 	}>();
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 

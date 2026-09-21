@@ -14,7 +14,7 @@ import type { KlassenListeManager } from "./KlassenListeManager";
 /**
  * Das Interface für den State für die Auswahlliste der Klassen
  */
-export interface KlassenState extends GenericAuswahlState<KlassenListeManager> {
+export interface KlassenAuswahlState extends GenericAuswahlState<KlassenListeManager> {
 
 	/**
 	 * Initialisiert den State für den ausgewählten Schuljahresabschnitt. Es werden die Daten für diesen Abschnitt geladen.
@@ -106,10 +106,10 @@ export interface KlassenState extends GenericAuswahlState<KlassenListeManager> {
 	get mapStundenplaene(): Map<number, StundenplanListeEintrag>;
 }
 
-export const KlassenStateKey: InjectionKey<KlassenState> = Symbol('KlassenState');
+export const KlassenAuswahlStateKey: InjectionKey<KlassenAuswahlState> = Symbol('KlassenAuswahlState');
 
-export function useKlassenState(): KlassenState {
-	const state = AppContext.instance.inject(KlassenStateKey);
+export function useKlassenAuswahlState(): KlassenAuswahlState {
+	const state = AppContext.instance.inject(KlassenAuswahlStateKey);
 	if (state === undefined) {
 		throw new DeveloperNotificationException("Es wurde keine Instanz des KlassenState über provide in der main.ts eingebunden");
 	}

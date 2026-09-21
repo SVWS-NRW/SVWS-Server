@@ -131,9 +131,9 @@
 	import type { DataTableColumn } from "@ui/types";
 
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
-	import { useKlassenState } from "~/states/klassen/KlassenState";
+	import { useKlassenAuswahlState } from "~/states/klassen/KlassenAuswahlState";
 
-	const klassenState = useKlassenState();
+	const klassenState = useKlassenAuswahlState();
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();

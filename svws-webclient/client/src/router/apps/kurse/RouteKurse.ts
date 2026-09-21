@@ -107,7 +107,6 @@ export class RouteKurse extends RouteTabNode<RouteDataKurse, RouteApp> {
 			this._selectedChild.value = undefined;
 		}
 		this.data.reset();
-		kurseAuswahlState.reset();
 		const { id } = RouteNode.getStringParams(from_params, ['id']);
 		await configStateImpl.nonPersistentConfig.setValue(`${this.name}.auswahl.id`, id ?? "");
 	}

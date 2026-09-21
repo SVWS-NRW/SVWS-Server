@@ -10,8 +10,8 @@ import type { StatistikState } from "@ui/states/statistik/StatistikState";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { StateManager } from "@ui/ui/StateManager";
 
+import { klassenAuswahlStateImpl } from "../klassen/KlassenAuswahlStateImpl";
 import type { KlassenListeManager } from "../klassen/KlassenListeManager";
-import { klassenStateImpl } from "../klassen/KlassenStateImpl";
 import { kurseAuswahlStateImpl } from "../kurse/KurseAuswahlStateImpl";
 import type { KursListeManager } from "../kurse/KursListeManager";
 import { lehrerAuswahlStateImpl } from "../lehrer/LehrerAuswahlStateImpl";
@@ -54,20 +54,20 @@ export class StatistikStateImpl extends StateManager<StatistikReactiveState> imp
 		const listeLehrer = await api.server.getLehrerFuerAbschnitt(api.schema, schuleStateImpl.abschnitt.id);
 
 		// Lehrer-State
-		await lehrerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		await lehrerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, true);
 		const lehrerListeManager = lehrerAuswahlStateImpl.manager;
 
 		// Schüler-State
-		await schuelerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		await schuelerAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, true);
 		const schuelerListeManager = schuelerAuswahlStateImpl.manager;
 
 		// Kurse-State
-		await kurseAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, false);
+		await kurseAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, true);
 		const kursListeManager = kurseAuswahlStateImpl.manager;
 
 		// Klassen-State
-		await klassenStateImpl.init(schuleStateImpl.abschnitt.id, false);
-		const klassenListeManager = klassenStateImpl.manager;
+		await klassenAuswahlStateImpl.init(schuleStateImpl.abschnitt.id, true);
+		const klassenListeManager = klassenAuswahlStateImpl.manager;
 
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
