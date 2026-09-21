@@ -89,7 +89,11 @@
 		if (fws.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
 		}
-		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		const f = Fach.getBySchluesselOrDefault(fws.kuerzelStatistik);
+		if (istAbi2030.value && ((f === Fach.IN) || (f === Fach.VO))) {
+			return "rgb(240, 240, 240)";
+		}
+		return f.getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	async function selectData(row: GostStatistikFachwahl | undefined, bereich: string) {

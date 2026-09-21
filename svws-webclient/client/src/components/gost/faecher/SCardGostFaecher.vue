@@ -175,7 +175,11 @@
 	const schuljahr = computed<number>(() => props.faecherManager().getSchuljahr());
 
 	function getFachfarbe(fach: GostFach): string {
-		return Fach.getBySchluesselOrDefault(fach.kuerzel).getHMTLFarbeRGB(schuljahr.value);
+		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
+		if (AbiturdatenManager.istAbitur2030(props.abiturjahr) && ((f === Fach.IN) || (f === Fach.VO))) {
+			return "rgb(240, 240, 240)";
+		}
+		return f.getHMTLFarbeRGB(schuljahr.value);
 	}
 
 	function istPJK(fach: GostFach): boolean {
