@@ -247,7 +247,7 @@ public class RSA {
 			// Signiere das Zertifikat mit SHA256
 			final ContentSigner signer = new JcaContentSignerBuilder("SHA256WithRSA").build(keypair.getPrivate());
 			return new JcaX509CertificateConverter().getCertificate(certBuilder.build(signer));
-		} catch (CertificateException | OperatorCreationException | CertIOException e) {
+		} catch (CertificateException | OperatorCreationException | CertIOException | IllegalStateException e) {
 			throw new RSAException("Fehler beim Erzeugen des Zertifikats", e);
 		}
 	}

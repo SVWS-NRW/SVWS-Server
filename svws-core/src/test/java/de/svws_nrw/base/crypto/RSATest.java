@@ -129,7 +129,7 @@ class RSATest {
 		assertThatThrownBy(() -> RSA.createSelfSignedCert(keypair, leeresDn, sans))
 				.isInstanceOf(RSAException.class)
 				.hasMessageContaining("Fehler beim Erzeugen des Zertifikats")
-				.hasRootCauseInstanceOf(java.security.cert.CertificateParsingException.class);
+				.hasRootCauseInstanceOf(IllegalStateException.class);
 	}
 
 	@Test

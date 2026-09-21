@@ -20,7 +20,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 	void addCrypto() {
 		def versionJCCrypt = '0.4.7';
-		def versionBouncyCastle = '1.84';
+		def versionBouncyCastle = '1.86';
 		project.configurations.create('crypto');
 		project.dependencies.add('crypto', 'de.svws-nrw.ext:jbcrypt:' + versionJCCrypt);
 		project.dependencies.add('crypto', 'org.bouncycastle:bcprov-jdk18on:' + versionBouncyCastle);
