@@ -181,7 +181,7 @@ public final class DBMigrationManager {
 	// Eine Liste der Abschnitt, die in den Abschnittsdaten angelegt wurden als String (z.B. 1905.1)
 	private final HashSet<String> lehrerAbschnitte = new HashSet<>();
 
-	// Eine Liste zum Zwischenspeichern der Adress-IDs, um Datensätze direkten entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
+	// Eine Liste zum Zwischenspeichern der Adress-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> adressIDs = new HashSet<>();
 
 	// Eine Liste zum Zwischenspeichern der Personengruppen-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
@@ -312,7 +312,7 @@ public final class DBMigrationManager {
 
 	/**
 	 * Diese Methode führt eine Migration von der durch srcConfig beschriebene Schild2-Datenbank in die durch tgtConfig beschriebene
-	 * SVWS-Server-Datenbank durch. Das Ziel-Schema muss dabei bereits exitistieren.
+	 * SVWS-Server-Datenbank durch. Das Ziel-Schema muss dabei bereits existieren.
 	 *
 	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
@@ -342,6 +342,7 @@ public final class DBMigrationManager {
 			logger.logLn("[OK]");
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtConn, true, logger);
 			if (!tgtManager.dropSVWSSchema()) {
+				srcManager.getConnection().close();
 				return false;
 			}
 			final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
@@ -385,6 +386,7 @@ public final class DBMigrationManager {
 		}
 		// Erstelle das Ziel-Schema
 		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger)) {
+			srcManager.getConnection().close();
 			return false;
 		}
 		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
@@ -399,7 +401,7 @@ public final class DBMigrationManager {
 	 *
 	 * @param cfg     die Datenbank-Konfiguration
 	 * @param user    der Datenbank-Benutzer
-	 * @param isSrc   gibt für evtl. Fehlermeldungen an, ob es sich um die Verbidung zur Quell- oder Zieldatenbank handelt.
+	 * @param isSrc   gibt für evtl. Fehlermeldungen an, ob es sich um die Verbindung zur Quell- oder Zieldatenbank handelt.
 	 * @param logger  der Logger
 	 *
 	 * @return der Schema-Manager
@@ -490,7 +492,7 @@ public final class DBMigrationManager {
 				// Entferne das Schema aus der svwsconfig.json, damit es nicht mehr beim Start berücksichtigt wird.
 				// Entferne es aber nicht aus der SVWS-DB, damit eine Fehleranalyse noch möglich ist.
 				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
-				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
+				logger.logLn("   Das Schema ist in einem inkonsistenten Zustand und wird nicht beim Start angezeigt.");
 				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
 				try {
 					SVWSKonfiguration.get().removeSchema(tgtSchema);
@@ -502,7 +504,7 @@ public final class DBMigrationManager {
 				// Entferne das Schema aus der svwsconfig.json, damit es nicht mehr beim Start berücksichtigt wird.
 				// Entferne es aber nicht aus der SVWS-DB, damit eine Fehleranalyse noch möglich ist.
 				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
-				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
+				logger.logLn("   Das Schema ist in einem inkonsistenten Zustand und wird nicht beim Start angezeigt.");
 				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
 				try {
 					SVWSKonfiguration.get().removeSchema(tgtSchema);
@@ -520,7 +522,7 @@ public final class DBMigrationManager {
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn(strFehler);
-					throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
+					throw new DBException("Fehler beim Aktualisieren der Ziel-DB");
 				}
 				logger.logLn(strOK);
 			}
@@ -535,8 +537,10 @@ public final class DBMigrationManager {
 			SVWSKonfiguration.get().deactivateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 			success = false;
 		} finally {
-			tgtManager.getConnection().close();
-			tgtManager = null;
+			if (tgtManager != null) {
+				tgtManager.getConnection().close();
+				tgtManager = null;
+			}
 			srcManager.getConnection().close();
 			srcManager = null;
 			System.gc();
@@ -826,7 +830,7 @@ public final class DBMigrationManager {
 
 
 	/**
-	 * Prüft, ob die Tabelle "EigeneSchule" nur einen gültige Datensatz einer Schule beinhaltet.
+	 * Prüft, ob die Tabelle "EigeneSchule" nur einen gültigen Datensatz einer Schule beinhaltet.
 	 * Ist dies nicht der Fall, wo wird diese Tabelle ggf. aufgeräumt.
 	 * Bei unterschiedlichen Schulnummern wird die Migration mit einer Fehlermeldung beendet.
 	 *
@@ -1056,7 +1060,7 @@ public final class DBMigrationManager {
 			final MigrationDTOSchuelerIndividuelleGruppeSchueler daten = entities.get(i);
 			if ((daten.Liste_ID == null) || (!schuelerListenIDs.contains(daten.Liste_ID))) {
 				logger.logLn(LogLevel.ERROR,
-						"Entferne ungültigen Datensatz: Es gibt keine Schülerliste mit der angebenen ID %d in der Datenbank.".formatted(daten.Liste_ID));
+						"Entferne ungültigen Datensatz: Es gibt keine Schülerliste mit der angegebenen ID %d in der Datenbank.".formatted(daten.Liste_ID));
 				entities.remove(i);
 			}
 		}
@@ -1252,7 +1256,7 @@ public final class DBMigrationManager {
 			}
 			if (daten.Abschnitt > schuleAnzahlAbschnitte) {
 				logger.logLn(LogLevel.ERROR,
-						"Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitt (%d) liegen."
+						"Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitte (%d) liegen."
 								.formatted(daten.ID, schuleAnzahlAbschnitte));
 				entities.remove(i);
 				continue;
@@ -1632,7 +1636,7 @@ public final class DBMigrationManager {
 				} else {
 					other.AnrechnungStd += daten.AnrechnungStd;
 					logger.logLn(LogLevel.ERROR,
-							"Entferne ungültigen Datensatz (ID %d): Ein Anrechungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Anrechnungsstunden auf den vorigen Eintrag mit der ID %d."
+							"Entferne ungültigen Datensatz (ID %d): Ein Anrechnungsgrund darf nur einmal in den Abschnittsdaten vorkommen. Addiere die Anrechnungsstunden auf den vorigen Eintrag mit der ID %d."
 									.formatted(daten.ID, other.ID));
 					entities.remove(i);
 				}
@@ -2099,7 +2103,7 @@ public final class DBMigrationManager {
 			final MigrationDTOSchuelerGrundschuldaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
 				logger.logLn(LogLevel.ERROR,
-						"Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank."
+						"Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angegebenen ID (%d) in der Datenbank."
 								.formatted(daten.Schueler_ID));
 				entities.remove(i);
 			}
@@ -2121,12 +2125,12 @@ public final class DBMigrationManager {
 			final MigrationDTOSchuelerKAoADaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
 				logger.logLn(LogLevel.ERROR,
-						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank."
+						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Schüler mit der angegebenen ID (%d) in der Datenbank."
 								.formatted(daten.id, daten.Schueler_ID));
 				entities.remove(i);
 				continue;
 			}
-			if ((daten.idLernabschnitt == null) || (!schuelerLeistungsdatenIDs.contains(daten.idLernabschnitt))) {
+			if ((daten.idLernabschnitt == null) || (!schuelerLernabschnittsIDs.contains(daten.idLernabschnitt))) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Lernabschnitt mit der ID %d in der Datenbank."
 								.formatted(daten.id, daten.idLernabschnitt));
