@@ -280,7 +280,6 @@ class PatchManager {
      * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
      *   datum, bemerkung, note
      *
-     * @param Database $db     das Datenbank-Objekt
      * @param object $lehrer   der angemeldete Lehrer
      * @param object $patch    der Patch
      */
@@ -312,7 +311,6 @@ class PatchManager {
      * Folgende Werte und Zeitstempel können durch das Patch Objekt überschrieben werden:
      *   Stufen
      *
-     * @param Database $db     das Datenbank-Objekt
      * @param object $lehrer   der angemeldete Lehrer
      * @param object $patch    der Patch
      */
@@ -646,7 +644,11 @@ class PatchManager {
         $ts = TimeUtils::now();
         $update = "";
         if (property_exists($patch, 'stufen') && PatchManager::diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
-            $this->pruefeSperrungSpalte($idKlasse, 'Note');
+            if ($this->enmManager->istAnkreuzkompetenzASV($daten)) {
+                $this->pruefeSperrungSpalte($idKlasse, 'ASV');
+            } else {
+                $this->pruefeSperrungSpalte($idKlasse, 'Note');
+            }
             foreach ($patch->stufen as $index=>$stufe) {
                 if (!is_bool($stufe)) {
                     Http::exit500("Fehler beim Ausführen des Patch-Statements. Stufe mit Index ".$index." in der Ankreuzkompetenz ist kein Boolean-Wert. Patch wurde abgebrochen.");

@@ -371,6 +371,28 @@ class ENMDatenManager {
         return $map->schueler[$idSchueler]->klasseID;
     }
 
+    /**
+     * Prüft, ob die Ankreuzkompetenz dem Bereich ASV zugeordnet ist
+     *
+     * @param object $ankreuzkompetenz   die Ankreuzkompetenz des Schülers
+     *
+     * @return bool   true, wenn die Ankreuzkompetenz ASV ist
+     */
+    public function istAnkreuzkompetenzASV(object $ankreuzkompetenz): bool {
+        $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
+        $kompetenz = $mapAnkreuzkompetenzen[$ankreuzkompetenz->kompetenzID];
+        return $kompetenz->fachID === null;
+    }
+
+    /**
+     * Prüft, ob der Fachlehrer die Kompetenz zum Anpassen der Ankreuzkompetenz besitzt
+     *
+     * @param object $lehrer             der Fachlehrer
+     * @param object $schueler           der Schüler (für den Zugriff auf dessen Leistungsdaten)
+     * @param object $ankreuzkompetenz   die Ankreuzkompetenz des Schülers
+     *
+     * @return bool   true, wenn der Lehrer Fachlehrer für die Ankreuzkompetenz ist
+     */
     public function istAnkreuzkompetenzFachlehrer(object $lehrer, object $schueler, object $ankreuzkompetenz): bool {
         $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
         $mapLerngruppen = $this->getMapLerngruppen();
