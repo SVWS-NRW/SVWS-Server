@@ -14,6 +14,9 @@ $path = ltrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $parts = explode('/', $path);
 $base = $parts[0] ?? '';
 
+// Daten von der API sollen grundsätzlich nicht im Cache vorgehalten werden
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+
 // Zuordnung des Request zu einer der der API-Schnittstellen
 try {
     if (($base === 'oauth') && isset($parts[1])) {
