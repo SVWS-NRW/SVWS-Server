@@ -17,6 +17,8 @@ interface OrteReactiveState {
 	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 }
 
+const KATALOG_LABEL = "Orte";
+
 /** Implementierung des States für den Ortekatalog */
 export class OrteStateImpl extends StateManager<OrteReactiveState> implements OrteState {
 
@@ -32,7 +34,7 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 		});
 
 		this._orte = createKatalogState({
-			katalogLabel: 'Betriebe',
+			katalogLabel: KATALOG_LABEL,
 			getList: () => this.state.orte,
 			getById: () => this.state.orteById,
 			updateState: (list, byId) => this.setPatchedState({ orte: list, orteById: byId }),
@@ -109,7 +111,7 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
-				"Die adressbezogenen Kataloge konnten nicht geladen werden."
+				`Das Laden der Kataloge '${KATALOG_LABEL}' ist fehlgeschlagen.`
 			);
 		}
 	}

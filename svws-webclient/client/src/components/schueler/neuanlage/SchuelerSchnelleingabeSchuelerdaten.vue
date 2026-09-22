@@ -143,6 +143,7 @@
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
@@ -160,9 +161,9 @@
 	const abschnittState = useAbschnittState();
 	const orteState = useOrteState();
 	const fahrschuelerartenState = useFahrschuelerartenState();
+	const religionenState = useReligionenState();
 
 	const manager = () => props.manager();
-	const religionen = computed(() => props.manager().religionenById.values());
 	const externeSchulnummern = computed(() => props.manager().schulenById.values());
 	const haltestellen = computed(() => props.manager().haltestellenById.values());
 
@@ -210,7 +211,7 @@
 	});
 
 	const religion = computed({
-		get: () => props.manager().religionenById.get(props.manager().stammdaten.religionID ?? -1),
+		get: () => religionenState.religionen.byId.get(props.manager().stammdaten.religionID ?? -1),
 		set: (value) => {
 			props.manager().stammdaten.religionID = value?.id ?? -1;
 			void props.patchSchueler({ religionID: value?.id ?? null }, manager().stammdaten.id);
@@ -322,7 +323,7 @@
 	});
 
 	const religionManager = new SelectManager({
-		options: religionen,
+		options: computed(() => religionenState.religionen.list),
 		optionDisplayText: i => i.bezeichnungZeugnis ?? '',
 		selectionDisplayText: i => i.bezeichnungZeugnis ?? '',
 	});

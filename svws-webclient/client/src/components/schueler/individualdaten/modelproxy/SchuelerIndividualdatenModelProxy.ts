@@ -21,8 +21,8 @@ import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
-import type { OrteState } from "@ui/states/kataloge/OrteState";
 import { useOrteState } from "@ui/states/kataloge/OrteState";
+import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
@@ -33,18 +33,17 @@ import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerG
 export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {
 
 	/* Kataloge States */
-	private readonly _orteState: OrteState = useOrteState();
+	private readonly _orteState = useOrteState();
 	private readonly _fahrschuelerartenState = useFahrschuelerartenState();
+	private readonly religionenState = useReligionenState();
 
 	private readonly schuljahr: () => number;
-	private readonly religionenById: () => Map<number, ReligionEintrag>;
 	private readonly haltestellenById: () => Map<number, Haltestelle>;
 
 	constructor(
 		data: () => SchuelerStammdaten,
 		validatorKontext: () => ValidatorKontext,
 		schuljahr: () => number,
-		religionenById: () => Map<number, ReligionEintrag>,
 		haltestellenById: () => Map<number, Haltestelle>,
 		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>
 	) {
@@ -57,7 +56,6 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		super({ data, patch, listOfAutopatchProps });
 
 		this.schuljahr = schuljahr;
-		this.religionenById = religionenById;
 		this.haltestellenById = haltestellenById;
 		this.addAsdValidatoren(validatorKontext());
 		this.addUiValidatoren();
@@ -154,7 +152,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	});
 
 	religionID = computed<ReligionEintrag | null>({
-		get: () => this.proxy.religionID === null ? null : this.religionenById().get(this.proxy.religionID) ?? null,
+		get: () => this.proxy.religionID === null ? null : this.religionenState.religionen.byId.get(this.proxy.religionID) ?? null,
 		set: (v: ReligionEintrag | null) => this.proxy.religionID = v?.id ?? null,
 	});
 

@@ -33,6 +33,7 @@ import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
 import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
@@ -81,10 +82,11 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
 			await Promise.all([orteStateImpl.init(), beschaeftigungsartenStateImpl.init(), betriebeStateImpl.init(),
-				entlassgruendeStateImpl.init(), fahrschuelerartenStateImpl.init(),
+				religionenStateImpl.init(), entlassgruendeStateImpl.init(), fahrschuelerartenStateImpl.init(),
 				routeApp.cache.refreshKataloge(Katalog.ERZIEHERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
-					Katalog.MERKMALE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
+					Katalog.MERKMALE, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
 		}
+
 		try {
 			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined) {

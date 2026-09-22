@@ -49,7 +49,7 @@ export class LeitungsfunktionenStateImpl extends StateManager<Leitungsfunktionen
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
-				`Das Laden der Kataloge 'Leitungsfunktionen' ist fehlgeschlagen.`
+				`Das Laden des Katalogs 'Leitungsfunktionen' ist fehlgeschlagen.`
 			);
 		}
 	}

@@ -279,6 +279,7 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
+	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useServerState } from "@ui/states/ServerState";
@@ -300,6 +301,7 @@
 	const reportingState = useReportingState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
+	const religionenState = useReligionenState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
@@ -308,7 +310,6 @@
 		() => schuelerAuswahlState.manager.daten(),
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
-		() => props.religionenById,
 		() => props.haltestellenById,
 		(data) => schuelerAuswahlState.patch(data)
 	);
@@ -379,7 +380,7 @@
 	// --- Karte "Staatsangehörigkeit und Konfession" ---
 
 	const religionManager = new SelectManager<ReligionEintrag>({
-		options: computed(() => props.religionenById.values()),
+		options: computed(() => religionenState.religionen.list),
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,
 	});

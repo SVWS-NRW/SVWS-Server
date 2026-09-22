@@ -52,7 +52,7 @@ export class EntlassgruendeStateImpl extends StateManager<EntlassgruendeReactive
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
-				`Das Laden der Kataloge '${KATALOG_LABEL}' ist fehlgeschlagen.`
+				`Das Laden des Katalogs '${KATALOG_LABEL}' ist fehlgeschlagen.`
 			);
 		}
 	}

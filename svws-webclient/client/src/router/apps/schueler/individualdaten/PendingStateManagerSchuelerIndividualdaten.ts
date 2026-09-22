@@ -12,6 +12,7 @@ import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
@@ -26,7 +27,8 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 export class PendingStateManagerSchuelerIndividualdaten extends PendingStateManager<SchuelerStammdaten> {
 
 	/* Katalog States */
-	private readonly _fahschuelerartenState = useFahrschuelerartenState();
+	private readonly _fahrschuelerartenState = useFahrschuelerartenState();
+	private readonly _religionenState = useReligionenState();
 
 	/** Maps, die Schulnummern zu entsprechenden Schuleinträgen zuordnet. */
 	private readonly _mapSchulen: Map<string, SchulEintrag>;
@@ -51,10 +53,10 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 */
 	private initializeAttributeDisplayMappers() {
 		this._attributeDisplayMappers.set('status', (value: any) => SchuelerStatus.data().getWertByKuerzel('' + value)?.daten(schuleStateImpl.schuljahr)?.text);
-		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => this._fahschuelerartenState.fahrschuelerarten.byId.get(value)?.bezeichnung);
+		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => this._fahrschuelerartenState.fahrschuelerarten.byId.get(value)?.bezeichnung);
 		this._attributeDisplayMappers.set('idStaatsangehoerigkeit', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
 		this._attributeDisplayMappers.set('idStaatsangehoerigkeit2', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
-		this._attributeDisplayMappers.set('religionID', (value: any) => routeApp.cache.kataloge.religionenById.get(Number(value))?.bezeichnung);
+		this._attributeDisplayMappers.set('religionID', (value: any) => this._religionenState.religionen.byId.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('haltestelleID', (value: any) => routeApp.cache.kataloge.haltestellenById.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('idVerkehrspracheFamilie', (value: any) => Verkehrssprache.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
 		this._attributeDisplayMappers.set('idGeburtsland', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
@@ -93,7 +95,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut konfession als computed value.
 	 */
 	public konfession = this.genComputed<ReligionEintrag | null>('religionID', null,
-		(id: number) => routeApp.cache.kataloge.religionenById.get(id) ?? null,
+		(id: number) => this._religionenState.religionen.byId.get(id) ?? null,
 		(value: ReligionEintrag | null) => value?.id
 	);
 
@@ -154,7 +156,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut fahrschuelerArtID als computed value.
 	 */
 	public fahrschuelerArtID = this.genComputed<Fahrschuelerart | null>('fahrschuelerArtID', null,
-		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : this._fahschuelerartenState.fahrschuelerarten.byId.get(value) ?? null,
+		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : this._fahrschuelerartenState.fahrschuelerarten.byId.get(value) ?? null,
 		(value: Fahrschuelerart | null) => value?.id ?? null
 	);
 

@@ -49,7 +49,7 @@ export class BeschaeftigungsartenStateImpl extends StateManager<Beschaeftigungsa
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
-				`Das Laden der Kataloge 'Beschäftigungsarten' ist fehlgeschlagen.`
+				`Das Laden des Katalogs 'Beschäftigungsarten' ist fehlgeschlagen.`
 			);
 		}
 	}

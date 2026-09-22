@@ -12,7 +12,6 @@ import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import type { Merkmal } from "@core/core/data/schule/Merkmal";
-import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import type { List } from "@core/java/util/List";
@@ -43,7 +42,6 @@ export class KatalogCache {
 	private _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 	private _merkmaleById: Map<number, Merkmal> = new Map();
-	private _religionenById: Map<number, ReligionEintrag> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 	private _telefonartenById: Map<number, Telefonart> = new Map();
 	private _vermerkartenById: Map<number, VermerkartEintrag> = new Map();
@@ -111,11 +109,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.LERNPLATTFORMEN, async () => {
 			const result = await api.server.getLernplattformen(api.schema);
 			return { lernplattformenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.RELIGIONEN, async () => {
-			const result = await api.server.getReligionen(api.schema);
-			return { religionenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.SCHULEN, async () => {
@@ -251,14 +244,6 @@ export class KatalogCache {
 
 	set lernplattformenById(value: Map<number, Lernplattform>) {
 		this._lernplattformenById = value;
-	}
-
-	get religionenById(): Map<number, ReligionEintrag> {
-		return this._religionenById;
-	}
-
-	set religionenById(value: Map<number, ReligionEintrag>) {
-		this._religionenById = value;
 	}
 
 	get schulenById(): Map<number, SchulEintrag> {

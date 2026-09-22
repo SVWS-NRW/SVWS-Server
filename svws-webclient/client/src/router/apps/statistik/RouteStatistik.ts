@@ -17,6 +17,7 @@ import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateIm
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
 import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
+import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
 import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
 
 import { RouteDataStatistik } from "./RouteDataStatistik";
@@ -50,7 +51,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
 			await Promise.all([beschaeftigungsartenStateImpl.init(), betriebeStateImpl.init(), leitungsfunktionenStateImpl.init(), orteStateImpl.init(),
-				fahrschuelerartenStateImpl.init(), statistikStateImpl.init(), entlassgruendeStateImpl.init()]);
+				religionenStateImpl.init(), fahrschuelerartenStateImpl.init(), statistikStateImpl.init(), entlassgruendeStateImpl.init()]);
 		}
 		if (to === this) {
 			return this.getRouteDefaultChild();

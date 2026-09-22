@@ -9,6 +9,7 @@ import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -17,6 +18,7 @@ import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/com
 
 export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 
+	private readonly _religionenState = useReligionenState();
 	private readonly _manager: () => SchuelerNeuManager;
 
 	/**
@@ -108,7 +110,7 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	});
 
 	religion = computed<ReligionEintrag | null>({
-		get: () => this._manager().religionenById.get(this.proxy.idReligion ?? -1) ?? null,
+		get: () => this._religionenState.religionen.byId.get(this.proxy.idReligion ?? -1) ?? null,
 		set: (value: ReligionEintrag | null) => this.proxy.idReligion = value?.id ?? null,
 	});
 

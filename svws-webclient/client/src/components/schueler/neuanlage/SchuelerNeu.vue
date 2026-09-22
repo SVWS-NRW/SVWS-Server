@@ -89,6 +89,7 @@
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -101,6 +102,7 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
+	const religionenState = useReligionenState();
 
 	const manager = () => props.manager();
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
@@ -115,7 +117,6 @@
 
 	const abschnitteFiltered = computed(() => manager().schuljahresabschnitteFilteredById.values());
 	const jahrgaenge = computed(() => Array.from(manager().jahrgaengeById.values()));
-	const religionen = computed(() => manager().religionenById.values());
 
 	const initialData = ref<SchuelerNeu>(Object.assign(new SchuelerNeu(), { status: statusNeuaufnahme?.id ?? -1 }));
 	const model = new SchuelerNeuModelProxy(() => initialData.value, () => manager());
@@ -157,7 +158,7 @@
 	});
 
 	const religionManager = new SelectManager({
-		options: religionen,
+		options: computed(() => religionenState.religionen.list),
 		optionDisplayText: r => r.bezeichnung,
 		selectionDisplayText: r => r.bezeichnung,
 	});

@@ -25,7 +25,7 @@ export interface KatalogStateConfig<T extends { id: number }, S extends object> 
 	/** API-Calls für CRUD */
 	apiGet: () => Promise<List<T>>;
 	apiAdd: (data: Partial<T>) => Promise<T>;
-	apiPatch: (id: number, data: Partial<T>) => Promise<void>;
+	apiPatch: (id: number, data: Partial<T>) => Promise<void | T>;
 	apiDelete: (id: number) => Promise<void>;
 }
 

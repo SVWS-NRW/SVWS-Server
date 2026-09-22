@@ -2,7 +2,6 @@ import type { KlassenListeEintrag } from "@core/asd/data/klassen/KlassenListeEin
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
-import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 
@@ -12,7 +11,6 @@ export class SchuelerNeuManager {
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
 	private readonly _klassenByIdAbschnitt: Map<number, List<KlassenListeEintrag>>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
-	private readonly _religionenById: Map<number, ReligionEintrag>;
 	private readonly _schuljahresabschnitte: Iterable<Schuljahresabschnitt>;
 	private readonly _aktuellerAbschnitt: Schuljahresabschnitt;
 	private readonly _schuljahresabschnitteFilteredById: Map<number, Schuljahresabschnitt>;
@@ -22,7 +20,6 @@ export class SchuelerNeuManager {
 	 *
 	 * @param kindergaertenById			kindergaertenById
 	 * @param jahrgaengeById			jahrgaengeById
-	 * @param religionenById			religionenById
 	 * @param schuljahresabschnitte		schuljahresabschnitte
 	 * @param klassenByIdAbschnitt		klassenByIdAbschnitt
 	 * @param aktuellerAbschnitt		aktuellerAbschnitt
@@ -30,7 +27,6 @@ export class SchuelerNeuManager {
 	constructor(
 		kindergaertenById: Map<number, Kindergarten>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
-		religionenById: Map<number, ReligionEintrag>,
 		schuljahresabschnitte: Iterable<Schuljahresabschnitt>,
 		klassenByIdAbschnitt: Map<number, List<KlassenListeEintrag>>,
 		aktuellerAbschnitt: Schuljahresabschnitt
@@ -38,7 +34,6 @@ export class SchuelerNeuManager {
 		this._kindergaertenById = kindergaertenById;
 		this._klassenByIdAbschnitt = klassenByIdAbschnitt;
 		this._jahrgaengeById = jahrgaengeById;
-		this._religionenById = religionenById;
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._aktuellerAbschnitt = aktuellerAbschnitt;
 		this._schuljahresabschnitteFilteredById = this.filterSchuljahresabschnitte();
@@ -71,10 +66,6 @@ export class SchuelerNeuManager {
 
 	get jahrgaengeById(): Map<number, JahrgangsDaten> {
 		return this._jahrgaengeById;
-	}
-
-	get religionenById(): Map<number, ReligionEintrag> {
-		return this._religionenById;
 	}
 
 	get aktuellerAbschnitt(): Schuljahresabschnitt {

@@ -33,7 +33,6 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 		return {
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
-			religionenById: routeApp.cache.kataloge.religionenById,
 			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
 			mapSchulen: this.data.mapSchulen,
 			zeigeAlles: true,

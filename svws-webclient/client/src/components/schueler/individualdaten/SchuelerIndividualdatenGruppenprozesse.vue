@@ -188,6 +188,7 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -195,12 +196,13 @@
 	import type { SchuelerIndividualdatenGruppenprozesseProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesseProps";
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
+	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const schuleState = useSchuleState();
 	const fahrschuelerartenState = useFahrschuelerartenState();
-
-	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
+	const religionenState = useReligionenState();
+
 	const { pendingStateManager } = toRefs(props);
 
 	const status = pendingStateManager.value().status;
@@ -236,7 +238,6 @@
 
 	const schuljahr = computed(() => schuleState.schuljahr);
 	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
-	const religionen = computed(() => props.religionenById.values());
 	const haltestellen = computed(() => props.haltestellenById.values());
 	const schulen = computed(() => props.mapSchulen.values());
 
@@ -254,8 +255,9 @@
 		clazz: SchuelerStatus.class, schuljahr: schuljahr, schulformen: schulform,
 	});
 	const konfessionSelectManager = new SelectManager({
-		options: religionen,
-		optionDisplayText: selected => selected.bezeichnung, selectionDisplayText: selected => selected.bezeichnung,
+		options: computed(() => religionenState.religionen.list),
+		optionDisplayText: selected => selected.bezeichnung,
+		selectionDisplayText: selected => selected.bezeichnung,
 	});
 	const fahrschuelerSelectManager = new SelectManager({
 		options: computed(() => fahrschuelerartenState.fahrschuelerarten.byId.values()),

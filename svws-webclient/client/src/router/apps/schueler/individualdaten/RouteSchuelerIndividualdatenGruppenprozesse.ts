@@ -57,7 +57,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 			pendingStateManager: () => this.data.pendingStateManager,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
-			religionenById: routeApp.cache.kataloge.religionenById,
 			mapSchulen: this.data.mapSchulen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

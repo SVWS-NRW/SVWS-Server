@@ -50,7 +50,7 @@ export class BetriebeStateImpl extends StateManager<BetriebeReactiveState> imple
 		} catch {
 			this.reset();
 			throw new DeveloperNotificationException(
-				`Das Laden der Kataloge 'Betrieb' ist fehlgeschlagen.`
+				`Das Laden des Katalogs 'Betriebe' ist fehlgeschlagen.`
 			);
 		}
 	}
