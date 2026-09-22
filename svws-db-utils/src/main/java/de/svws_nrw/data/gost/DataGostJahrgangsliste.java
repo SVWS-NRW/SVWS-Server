@@ -51,7 +51,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
-	/** Der Schuljahresabschnitts, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen */
+	/** Der Schuljahresabschnitt, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen */
 	private final Schuljahresabschnitt schuljahresabschnitt;
 
 	/**
@@ -67,7 +67,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		super(conn);
 		this.schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
 		if (this.schuljahresabschnitt == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Die ID %d für den Schuljahresabschnitt ist nicht gültig.");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Die ID %d für den Schuljahresabschnitt ist nicht gültig.".formatted(idSchuljahresabschnitt));
 		}
 	}
 
@@ -87,7 +88,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
 		}
 
-		// Bestimme die Jahrgaenge der Schule
+		// Bestimme die Jahrgänge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty())) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Jahrgänge gefunden werden.");
@@ -175,7 +176,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 * werden die Daten des Jahrgangs mit der übergebenen ID als Grundlage
 	 * verwendet.
 	 *
-	 * @param jahrgang_id die ID des Jahrgangs
+	 * @param jahrgang_id   die ID des Jahrgangs
 	 *
 	 * @return die HTTP-Response, im Erfolgsfall mit dem Abiturjahrgang
 	 *
@@ -340,7 +341,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 									abifachHalbjahr[abifachNr - 1] = halbjahr;
 								}
 							} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-								// kein gültiges Abbiturfach bei dem Lernabschnitt angegeben
+								// kein gültiges Abiturfach bei dem Lernabschnitt angegeben
 							}
 							// Setze Fachwahl für das Halbjahr
 							switch (halbjahr) {
@@ -425,7 +426,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				return switch (kursart) {
 					case LK -> "LK";
 					case GK -> ((zulkursart == ZulaessigeKursart.GKS)
-							|| ((zulkursart == ZulaessigeKursart.AB3) || ((zulkursart == ZulaessigeKursart.AB3) && (halbjahr != GostHalbjahr.Q22)))) ? "S"
+							|| (zulkursart == ZulaessigeKursart.AB3)
+							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))) ? "S"
 									: "M";
 					case ZK -> "ZK";
 					case PJK -> "M";
