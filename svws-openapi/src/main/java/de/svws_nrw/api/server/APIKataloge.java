@@ -111,8 +111,8 @@ public class APIKataloge {
 	 */
 	@GET
 	@Path("/orte")
-	@Operation(summary = "Gibt eine Übersicht alle Orte im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Orte unter Angabe der ID, der PLZ, des Ortes, "
+	@Operation(summary = "Gibt eine Übersicht aller Orte im Katalog zurück.",
+			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Orte unter Angabe der ID, der PLZ, des Ortes, "
 					+ "ggf. des Kreises, dem Bundesland, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Orts-Katalog-Einträgen",
@@ -208,7 +208,7 @@ public class APIKataloge {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return KatalogControllerFactory
-				.withWriteAccessStable(request)
+				.withDeleteAccessStable(request)
 				.getOrtController()
 				.delete(ids);
 	}
@@ -225,7 +225,7 @@ public class APIKataloge {
 	@Path("/ortsteile")
 	@Operation(summary = "Gibt eine Übersicht aller Ortsteile im Katalog zurück.",
 			description = "Gibt die Ortsteile im Katalog zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Ortsteile",
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Ortsteilen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrtsteilKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
@@ -263,7 +263,7 @@ public class APIKataloge {
 							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final OrtsteilPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return KatalogControllerFactory
-				.withReadAccessStable(request)
+				.withWriteAccessStable(request)
 				.getOrtsteilController()
 				.patch(id, patch);
 	}
@@ -291,7 +291,7 @@ public class APIKataloge {
 							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final OrtsteilCreateRequest create,
 			@Context final HttpServletRequest request) {
 		return KatalogControllerFactory
-				.withReadAccessStable(request)
+				.withWriteAccessStable(request)
 				.getOrtsteilController()
 				.create(create);
 	}
@@ -318,7 +318,7 @@ public class APIKataloge {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return KatalogControllerFactory
-				.withReadAccessStable(request)
+				.withDeleteAccessStable(request)
 				.getOrtsteilController()
 				.delete(ids);
 	}
@@ -379,10 +379,10 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Hinzufügen eines Entlassgrundes.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Entlassgründe
+	 * @param is           der Input-Stream mit den Daten des Entlassgrundes
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit den erstellen Entlassgründe
+	 * @return die HTTP-Antwort mit dem erstellten Entlassgrund
 	 */
 	@POST
 	@Path("/entlassgruende/create")
@@ -513,7 +513,7 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Merkmale.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param ids        die Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -572,7 +572,7 @@ public class APIKataloge {
 			description = "Erstellt einen neuen Kindergarten, insofern die notwendigen Berechtigungen vorliegen")
 	@ApiResponse(responseCode = "201", description = "Kindergarten wurde erfolgreich angelegt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Kindergarten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Kindergarten anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKindergarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Kindergartens ohne ID, da diese automatisch generiert wird", required = true,
@@ -623,7 +623,7 @@ public class APIKataloge {
 	@DELETE
 	@Path("/kindergaerten/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Kindergärten.",
-			description = "Entfernt mehrere Kindergärten, insofern, die notwendigen Berechtigungen vorhanden sind.")
+			description = "Entfernt mehrere Kindergärten, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Kindergärten wurden erfolgreich entfernt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
@@ -648,7 +648,7 @@ public class APIKataloge {
 	@GET
 	@Path("/foerderschwerpunkte")
 	@Operation(summary = "Gibt den Katalog der Förderschwerpunkte zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte unter Angabe der ID, eines Kürzels und der Bezeichnung. "
+			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Förderschwerpunkte unter Angabe der ID, eines Kürzels und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Förderschwerpunkte-Katalog-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FoerderschwerpunktEintrag.class))))
@@ -730,7 +730,7 @@ public class APIKataloge {
 	@DELETE
 	@Path("/foerderschwerpunkte/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Förderschwerpunkte.",
-			description = "Entfernt mehrere Förderschwerpunkte, insofern, die notwendigen Berechtigungen vorhanden sind.")
+			description = "Entfernt mehrere Förderschwerpunkte, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Förderschwerpunkte wurden erfolgreich entfernt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
@@ -834,7 +834,7 @@ public class APIKataloge {
 	 */
 	@POST
 	@Path("/haltestellen/create")
-	@Operation(summary = "Erstellt einer neue Haltestelle und gibt das erstellte Objekt zurück.",
+	@Operation(summary = "Erstellt eine neue Haltestelle und gibt das erstellte Objekt zurück.",
 			description = "Erstellt eine neue Haltestelle, insofern die notwendigen Berechtigungen vorliegen")
 	@ApiResponse(responseCode = "201", description = "Die Haltestelle wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Haltestelle.class)))
@@ -880,7 +880,7 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Anlegen eines Schwerpunktes
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des Orts
+	 * @param is           der Input-Stream mit den Daten des Schwerpunktes
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
@@ -891,7 +891,7 @@ public class APIKataloge {
 			description = "Erstellt einen neuen Schüler-Schwerpunkt und gibt das erstellte Objekt zurück.")
 	@ApiResponse(responseCode = "201", description = "Der Schwerpunkt wurde erfolgreich erstellt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchwerpunkt.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Orte anzulegen.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schüler-Schwerpunkte anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
 	public Response addSchuelerSchwerpunkt(@PathParam("schema") final String schema,
 			@RequestBody(description = "Payload des zu erstellenden Schwerpunktes", required = true,
@@ -956,7 +956,7 @@ public class APIKataloge {
 	 *
 	 * @param schema       das Datenbankschema
 	 * @param id der Identifier des Objektes
-	 * @param is           der Input-Stream mit den Daten des Orts
+	 * @param is           der Input-Stream mit den Daten des Schwerpunktes
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
@@ -981,7 +981,7 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Löschen von Schulschwerpunkten
 	 * wie z.B. RS (Realschule), BK (Berufskolleg) und SB (Förderberufskolleg)
 	 * @param schema das Datenbankschema
-	 * @param is die Schwerpunkt ids as Inputstream.
+	 * @param is die IDs der zu löschenden Schüler-Schwerpunkte als InputStream.
 	 * @param request HTTP Request
 	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
 	 */
@@ -1127,7 +1127,7 @@ public class APIKataloge {
 	@GET
 	@Path("/teilleistungsarten")
 	@Operation(summary = "Gibt eine Liste der Teilleistungsarten im Katalog zurück.",
-			description = "Gibt die im System vorhanden Teilleistungsarten zurück.")
+			description = "Gibt die im System vorhandenen Teilleistungsarten zurück.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste der Teilleistungsarten.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Teilleistungsart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigte Berechtigung.")
@@ -1199,7 +1199,7 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilleistungsarten.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param ids        die Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -1309,7 +1309,7 @@ public class APIKataloge {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Fachklassen.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids       der InputStream, mit der Liste der zu löschenden IDs
+	 * @param ids       die Liste der zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen

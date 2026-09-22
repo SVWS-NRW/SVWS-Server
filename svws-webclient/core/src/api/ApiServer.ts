@@ -4055,7 +4055,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogFoerderschwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/foerderschwerpunkte
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte unter Angabe der ID, eines Kürzels und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Förderschwerpunkte unter Angabe der ID, eines Kürzels und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Förderschwerpunkte-Katalog-Einträgen
@@ -4138,7 +4138,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteKatalogFoerderschwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/foerderschwerpunkte/delete/multiple
 	 *
-	 * Entfernt mehrere Förderschwerpunkte, insofern, die notwendigen Berechtigungen vorhanden sind.
+	 * Entfernt mehrere Förderschwerpunkte, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Förderschwerpunkte wurden erfolgreich entfernt.
@@ -8847,7 +8847,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteKindergaerten für den Zugriff auf die URL https://{hostname}/db/{schema}/kindergaerten/delete/multiple
 	 *
-	 * Entfernt mehrere Kindergärten, insofern, die notwendigen Berechtigungen vorhanden sind.
+	 * Entfernt mehrere Kindergärten, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Kindergärten wurden erfolgreich entfernt.
@@ -8912,7 +8912,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Kindergarten wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Kindergarten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kindergarten anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Kindergarten>} data - der Request-Body für die HTTP-Methode
@@ -12402,7 +12402,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/orte
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Orte unter Angabe der ID, der PLZ, des Ortes, ggf. des Kreises, dem Bundesland, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte unter Angabe der ID, der PLZ, des Ortes, ggf. des Kreises, dem Bundesland, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Orts-Katalog-Einträgen
@@ -12521,7 +12521,7 @@ export class ApiServer extends BaseApi {
 	 * Gibt die Ortsteile im Katalog zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Ortsteile
+	 *   Code 200: Eine Liste von Ortsteilen
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<OrtsteilKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
@@ -12529,7 +12529,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Ortsteile
+	 * @returns Eine Liste von Ortsteilen
 	 */
 	public async getOrtsteile(schema: string): Promise<List<OrtsteilKatalogEintrag>> {
 		const path = "/db/{schema}/ortsteile"
@@ -15298,7 +15298,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 201: Der Schwerpunkt wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerSchwerpunkt
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Orte anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schüler-Schwerpunkte anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
 	 *
 	 * @param {Partial<SchuelerSchwerpunkt>} data - der Request-Body für die HTTP-Methode
@@ -21605,7 +21605,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getTeilleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/teilleistungsarten
 	 *
-	 * Gibt die im System vorhanden Teilleistungsarten zurück.
+	 * Gibt die im System vorhandenen Teilleistungsarten zurück.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste der Teilleistungsarten.
