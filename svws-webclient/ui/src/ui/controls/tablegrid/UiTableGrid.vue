@@ -1,5 +1,5 @@
 <template>
-	<table class="ui-table-grid" :aria-label="name">
+	<table ref="tableRef" class="ui-table-grid" :aria-label="name">
 		<thead>
 			<template v-for="i in headerCount" :key="i">
 				<tr>
@@ -7,7 +7,7 @@
 				</tr>
 			</template>
 		</thead>
-		<tbody>
+		<tbody ref="tbodyRef">
 			<template v-for="(row, index) in manager().daten" :key="manager().getRowKey(row)">
 				<tr :class="[{ 'hover:bg-ui-hover': showRowHighlight,'bg-ui-selected': !hideSelection && (manager().focusRow === index) }, 'group']"
 					@click="rowClicked(row, index)">
@@ -27,7 +27,7 @@
 
 <script setup lang="ts" generic="T,U extends PropertyKey">
 
-	import { computed } from 'vue';
+	import { computed, onMounted, onUnmounted, useTemplateRef } from 'vue';
 
 	import type { Collection } from '@core/java/util/Collection';
 
@@ -57,6 +57,38 @@
 	});
 
 	const gridTemplateColumnsComputed = computed<string>(() => props.manager().getGridTemplateColumns());
+
+	//# region ----------------------- Scrollbar-Fix ------------------------
+
+	const tableRef = useTemplateRef<HTMLTableElement>('tableRef');
+	const tbodyRef = useTemplateRef<HTMLTableSectionElement>('tbodyRef');
+
+	let resizeObserver: ResizeObserver | null = null;
+
+	/** Setzt die CSS-Variable, um die Scrollbarbreite bei Overflow von tbody, in thead und tfoot kompensieren. */
+	function updateScrollbarOffset(): void {
+		const tbody = tbodyRef.value;
+		const table = tableRef.value;
+		if ((tbody === null) || (table === null)) {
+			return;
+		}
+		const scrollbarWidth = tbody.offsetWidth - tbody.clientWidth;
+		table.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+	}
+
+	onMounted(() => {
+		updateScrollbarOffset();
+		resizeObserver = new ResizeObserver(updateScrollbarOffset);
+		if (tbodyRef.value !== null) {
+			resizeObserver.observe(tbodyRef.value);
+		}
+	});
+
+	onUnmounted(() => {
+		resizeObserver?.disconnect();
+		resizeObserver = null;
+	});
+	//# endregion
 
 </script>
 

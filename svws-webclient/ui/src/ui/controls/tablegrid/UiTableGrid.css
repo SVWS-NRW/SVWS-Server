@@ -17,6 +17,7 @@
 	}
 
 	table.ui-table-grid {
+		--scrollbar-width: 0px; /* Initialwert; wird per JS überschrieben */
 		display: flex;
 		flex-direction: column;
 		user-select: none;
@@ -29,6 +30,7 @@
 		tfoot {
 			@apply bg-ui text-ui border-ui;
 			display: block;
+			padding-right: var(--scrollbar-width, 0px); /* Kompensation für tbody y-Scrollbar */
 		}
 
 		tbody {
@@ -85,7 +87,7 @@
 		}
 
 		& > tfoot > tr:last-child > td {
-			border-bottom: 0px;
+			border-bottom: 0;
 		}
 
 	}
