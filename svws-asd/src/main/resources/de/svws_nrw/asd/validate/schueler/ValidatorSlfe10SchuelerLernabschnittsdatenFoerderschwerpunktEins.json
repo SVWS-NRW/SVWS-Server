@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfe10SchuelerLernabschnittsdatenFoerderschwerpunktEins",
+    "historie" : [ {
+      "praefix" : "SLFE10",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Foerderschwerpunkt-Eins",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "Feld 'Förderschwerpunkt'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLFE01"],
+      "muss" : ["G", "H", "V", "R", "PS", "SK", "GE", "FW", "HI", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Förderschwerpunkt des Schülers: Der erste und der zweite Förderschwerpunkt dürfen nicht identisch sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.foerderschwerpunkt1ID =  SchuelerLernabschnittsdaten.foerderschwerpunkt2ID",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
