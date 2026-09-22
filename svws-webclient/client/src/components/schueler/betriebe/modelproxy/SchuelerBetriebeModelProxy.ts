@@ -9,16 +9,15 @@ import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAns
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useBeschaeftigungsartenState } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { useBetriebeState } from "@ui/states/kataloge/BetriebeState";
+import { useOrteState } from "@ui/states/kataloge/OrteState";
 import type { SchuelerBetriebeManager } from "@ui/ui/manager/schueler/SchuelerBetriebeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
-import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
-
 export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 
+	private readonly _orteState = useOrteState();
 	private readonly _betriebeState = useBetriebeState();
 	private readonly _beschaeftigungsartState = useBeschaeftigungsartenState();
 	private readonly manager: () => SchuelerBetriebeManager;
@@ -64,6 +63,6 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 		set: (v: BetriebeAnsprechpartner | null) => this.proxy.idAnsprechpartner = v?.id ?? null,
 	});
 
-	ort = computed<OrtKatalogEintrag | null>(() => orteStateImpl.orte.byId.get(this.betrieb.value?.idOrt ?? -1) ?? null);
+	ort = computed<OrtKatalogEintrag | null>(() => this._orteState.orte.byId.get(this.betrieb.value?.idOrt ?? -1) ?? null);
 
 }

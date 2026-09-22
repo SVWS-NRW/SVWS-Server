@@ -185,9 +185,9 @@
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
 	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
-	import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -196,6 +196,7 @@
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	const schuleState = useSchuleState();
+	const fahrschuelerartenState = useFahrschuelerartenState();
 
 	const props = defineProps<SchuelerIndividualdatenGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
@@ -236,7 +237,6 @@
 	const schuljahr = computed(() => schuleState.schuljahr);
 	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
 	const religionen = computed(() => props.religionenById.values());
-	const fahrschuelerArten = computed(() => props.fahrschuelerartenById.values());
 	const haltestellen = computed(() => props.haltestellenById.values());
 	const schulen = computed(() => props.mapSchulen.values());
 
@@ -258,11 +258,13 @@
 		optionDisplayText: selected => selected.bezeichnung, selectionDisplayText: selected => selected.bezeichnung,
 	});
 	const fahrschuelerSelectManager = new SelectManager({
-		options: fahrschuelerArten,
-		optionDisplayText: (selected: Fahrschuelerart) => selected.bezeichnung ?? '', selectionDisplayText: selected => selected.bezeichnung ?? '',
+		options: computed(() => fahrschuelerartenState.fahrschuelerarten.byId.values()),
+		optionDisplayText: selected => selected.bezeichnung ?? '',
+		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
 	const haltestelleSelectManager = new SelectManager({
-		options: haltestellen, optionDisplayText: selected => selected.bezeichnung ?? '',
+		options: haltestellen,
+		optionDisplayText: selected => selected.bezeichnung ?? '',
 		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
 	const stammschuleSelectManager = new SelectManager({

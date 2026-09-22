@@ -8,7 +8,6 @@ import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
-import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
@@ -21,7 +20,6 @@ import { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerS
 
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -71,7 +69,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const schuljahresabschnitte = abschnittStateImpl.alle;
 		const erzieherartenById: Map<number, Erzieherart> = routeApp.cache.kataloge.erzieherartenById;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
-		const fahrschuelerartenById: Map<number, Fahrschuelerart> = routeApp.cache.kataloge.fahrschuelerartenById;
 		const haltestellenById: Map<number, Haltestelle> = routeApp.cache.kataloge.haltestellenById;
 		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
 		const kindergaertenById: Map<number, Kindergarten> = routeApp.cache.kataloge.kindergaertenById;
@@ -81,7 +78,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
 
 		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte,
-			erzieherartenById, faecherById, fahrschuelerartenById, haltestellenById, jahrgaengeById, kindergaertenById, religionenById,
+			erzieherartenById, faecherById, haltestellenById, jahrgaengeById, kindergaertenById, religionenById,
 			schulenById, telefonartenById, vermerkartenById);
 	}
 

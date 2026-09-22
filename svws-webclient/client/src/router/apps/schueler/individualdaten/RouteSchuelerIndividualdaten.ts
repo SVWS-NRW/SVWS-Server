@@ -7,7 +7,7 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SchuelerIndividualdatenProps";
 import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteDataSchuelerIndividualdaten";
-import { type RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SchuelerIndividualdaten.vue");
@@ -31,7 +31,6 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
-			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,

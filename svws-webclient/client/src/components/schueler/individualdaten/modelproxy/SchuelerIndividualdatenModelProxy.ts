@@ -20,7 +20,9 @@ import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 import type { OrteState } from "@ui/states/kataloge/OrteState";
+import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
@@ -28,15 +30,14 @@ import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLeng
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 import { ValidatorSchuelerGeburtsdatum } from "@ui/validation/ValidatorSchuelerGeburtsdatum";
 
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
-
 export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten> {
 
-	private readonly orteState: OrteState = orteStateImpl;
+	/* Kataloge States */
+	private readonly _orteState: OrteState = useOrteState();
+	private readonly _fahrschuelerartenState = useFahrschuelerartenState();
 
 	private readonly schuljahr: () => number;
 	private readonly religionenById: () => Map<number, ReligionEintrag>;
-	private readonly fahrschuelerartenById: () => Map<number, Fahrschuelerart>;
 	private readonly haltestellenById: () => Map<number, Haltestelle>;
 
 	constructor(
@@ -44,7 +45,6 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 		validatorKontext: () => ValidatorKontext,
 		schuljahr: () => number,
 		religionenById: () => Map<number, ReligionEintrag>,
-		fahrschuelerartenById: () => Map<number, Fahrschuelerart>,
 		haltestellenById: () => Map<number, Haltestelle>,
 		patch?: (data: Partial<SchuelerStammdaten>) => Promise<boolean>
 	) {
@@ -58,7 +58,6 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 
 		this.schuljahr = schuljahr;
 		this.religionenById = religionenById;
-		this.fahrschuelerartenById = fahrschuelerartenById;
 		this.haltestellenById = haltestellenById;
 		this.addAsdValidatoren(validatorKontext());
 		this.addUiValidatoren();
@@ -160,7 +159,7 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	});
 
 	fahrschuelerArtID = computed<Fahrschuelerart | null>({
-		get: () => this.proxy.fahrschuelerArtID === null ? null : this.fahrschuelerartenById().get(this.proxy.fahrschuelerArtID) ?? null,
+		get: () => this.proxy.fahrschuelerArtID === null ? null : this._fahrschuelerartenState.fahrschuelerarten.byId.get(this.proxy.fahrschuelerArtID) ?? null,
 		set: (v: Fahrschuelerart | null) => this.proxy.fahrschuelerArtID = v?.id ?? null,
 	});
 
@@ -200,15 +199,15 @@ export class SchuelerIndividualdatenModel extends ModelProxy<SchuelerStammdaten>
 	});
 
 	selectedOrt = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this._orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (value: OrtKatalogEintrag | null) => this.setAndPatchOrtAndOrtsteil(value?.id ?? null, null),
 	});
 
 	selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this._orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			const v = value;
-			const wohnortId = (v === null) ? this.proxy.wohnortID : (this.orteState.orte.byId.get(v.idOrt ?? -1)?.id ?? null);
+			const wohnortId = (v === null) ? this.proxy.wohnortID : (this._orteState.orte.byId.get(v.idOrt ?? -1)?.id ?? null);
 			const ortsteilId = (v === null || wohnortId === null) ? null : v.id;
 			this.setAndPatchOrtAndOrtsteil(wohnortId, ortsteilId);
 		},

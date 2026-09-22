@@ -277,6 +277,7 @@
 	import { HashSet } from "@core/java/util/HashSet";
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useReportingState } from "@ui/states/ReportingState";
 	import { useSchuleState } from "@ui/states/SchuleState";
@@ -295,6 +296,7 @@
 	// --- Setup ---
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
+	const fahrschuelerartenState = useFahrschuelerartenState();
 	const reportingState = useReportingState();
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
@@ -307,7 +309,6 @@
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
 		() => props.religionenById,
-		() => props.fahrschuelerartenById,
 		() => props.haltestellenById,
 		(data) => schuelerAuswahlState.patch(data)
 	);
@@ -340,7 +341,7 @@
 	});
 
 	const fahrschuelerartManager = new SelectManager<Fahrschuelerart>({
-		options: computed(() => props.fahrschuelerartenById.values()),
+		options: computed(() => fahrschuelerartenState.fahrschuelerarten.list),
 		optionDisplayText: i => i.bezeichnung ?? '',
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});

@@ -17,13 +17,12 @@ import { PersonalTyp } from "@core/core/types/PersonalTyp";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { OrteState } from "@ui/states/kataloge/OrteState";
+import { useOrteState } from "@ui/states/kataloge/OrteState";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
-
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 
 import { ValidatorLehrerIndividualdatenKuerzel } from "./ValidatorLehrerIndividualdatenKuerzel";
 import { ValidatorLehrerIndividualdatenNachname } from "./ValidatorLehrerIndividualdatenNachname";
@@ -34,7 +33,7 @@ import { ValidatorLehrerIndividualdatenVorname } from "./ValidatorLehrerIndividu
  */
 export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten> {
 
-	private readonly orteState: OrteState = orteStateImpl;
+	private readonly _orteState: OrteState = useOrteState();
 
 	protected readonly schuljahr: number;
 	protected readonly manager: () => LehrerListeManager;
@@ -135,12 +134,12 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this._orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (val) => this.proxy.wohnortID = val?.id ?? null,
 	});
 
 	ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this._orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (val) => this.proxy.ortsteilID = val?.id ?? null,
 	});
 

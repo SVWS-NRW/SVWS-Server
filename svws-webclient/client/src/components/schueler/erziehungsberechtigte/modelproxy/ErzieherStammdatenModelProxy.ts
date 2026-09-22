@@ -9,16 +9,15 @@ import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKa
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { OrteState } from "@ui/states/kataloge/OrteState";
+import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStrasse } from "@ui/validation/common/ValidatorStrasse";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
-import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
-
 export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten> {
 
-	private readonly orteState: OrteState = orteStateImpl;
+	private readonly _orteState: OrteState = useOrteState();
 
 	private readonly _erzieherartenById: () => Map<number, Erzieherart>;
 	private readonly _schuljahr: () => number;
@@ -86,7 +85,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this.orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
+		get: () => this._orteState.orte.byId.get(this.proxy.wohnortID ?? -1) ?? null,
 		set: (v: OrtKatalogEintrag | null) => {
 			this.proxy.wohnortID = v?.id ?? null;
 			this.proxy.ortsteilID = null;
@@ -94,7 +93,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	});
 
 	ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => this.orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
+		get: () => this._orteState.ortsteile.byId.get(this.proxy.ortsteilID ?? -1) ?? null,
 		set: (v: OrtsteilKatalogEintrag | null) => this.proxy.ortsteilID = v?.id ?? null,
 	});
 

@@ -26,7 +26,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			gotoSchueler: routeStatistik.data.gotoSchueler,
 			zeigeAlles: false,
 			// schueler
-			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,

@@ -141,6 +141,7 @@
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -158,12 +159,12 @@
 
 	const abschnittState = useAbschnittState();
 	const orteState = useOrteState();
+	const fahrschuelerartenState = useFahrschuelerartenState();
 
 	const manager = () => props.manager();
 	const religionen = computed(() => props.manager().religionenById.values());
 	const externeSchulnummern = computed(() => props.manager().schulenById.values());
 	const haltestellen = computed(() => props.manager().haltestellenById.values());
-	const fahrschuelerarten = computed(() => props.manager().fahrschuelerartenById.values());
 
 	const geschlecht = computed<Geschlecht | null>({
 		get: () => Geschlecht.fromValue(manager().stammdaten.geschlecht),
@@ -262,7 +263,7 @@
 	});
 
 	const fahrschuelerart = computed({
-		get: () => props.manager().fahrschuelerartenById.get(props.manager().stammdaten.fahrschuelerArtID ?? -1) ?? null,
+		get: () => fahrschuelerartenState.fahrschuelerarten.byId.get(props.manager().stammdaten.fahrschuelerArtID ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? null;
 			props.manager().stammdaten.fahrschuelerArtID = id;
@@ -341,7 +342,7 @@
 	});
 
 	const fahrschuelerartManager = new SelectManager({
-		options: fahrschuelerarten,
+		options: computed(() => fahrschuelerartenState.fahrschuelerarten.list),
 		optionDisplayText: i => i.bezeichnung ?? '',
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});

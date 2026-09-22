@@ -8,7 +8,6 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
-import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
@@ -26,7 +25,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
 	private readonly _erzieherartenById: Map<number, Erzieherart>;
 	private readonly _faecherById: Map<number, FachDaten>;
-	private readonly _fahrschuelerartenById: Map<number, Fahrschuelerart>;
 	private readonly _haltestellenById: Map<number, Haltestelle>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
@@ -46,7 +44,6 @@ export class SchuelerSchnelleingabeManager {
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		erzieherartenById: Map<number, Erzieherart>,
 		faecherById: Map<number, FachDaten>,
-		fahrschuelerartenById: Map<number, Fahrschuelerart>,
 		haltestellenById: Map<number, Haltestelle>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		kindergaertenById: Map<number, Kindergarten>,
@@ -62,7 +59,6 @@ export class SchuelerSchnelleingabeManager {
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._erzieherartenById = erzieherartenById;
 		this._faecherById = faecherById;
-		this._fahrschuelerartenById = fahrschuelerartenById;
 		this._haltestellenById = haltestellenById;
 		this._jahrgaengeById = jahrgaengeById;
 		this._kindergaertenById = kindergaertenById;
@@ -116,10 +112,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get faecherById(): Map<number, FachDaten> {
 		return this._faecherById;
-	}
-
-	get fahrschuelerartenById(): Map<number, Fahrschuelerart> {
-		return this._fahrschuelerartenById;
 	}
 
 	get haltestellenById(): Map<number, Haltestelle> {

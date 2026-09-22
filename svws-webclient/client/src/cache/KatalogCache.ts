@@ -5,7 +5,6 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
-import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Floskel } from "@core/core/data/schule/Floskel";
 import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
@@ -35,7 +34,6 @@ export class KatalogCache {
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
 	private _erzieherartenById: Map<number, Erzieherart> = new Map();
-	private _fahrschuelerartenById: Map<number, Fahrschuelerart> = new Map();
 	private _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
 	private _floskelnById: Map<number, Floskel> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
@@ -78,11 +76,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.FAECHER, async () => {
 			const result = await api.server.getFaecher(api.schema);
 			return { faecherById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.FAHRSCHUELERARTEN, async () => {
-			const result = await api.server.getFahrschuelerarten(api.schema);
-			return { fahrschuelerartenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.FLOSKELGRUPPEN, async () => {
@@ -194,14 +187,6 @@ export class KatalogCache {
 
 	set erzieherartenById(value: Map<number, Erzieherart>) {
 		this._erzieherartenById = value;
-	}
-
-	get fahrschuelerartenById(): Map<number, Fahrschuelerart> {
-		return this._fahrschuelerartenById;
-	}
-
-	set fahrschuelerartenById(value: Map<number, Fahrschuelerart>) {
-		this._fahrschuelerartenById = value;
 	}
 
 	get floskelgruppenById(): Map<number, Floskelgruppe> {
