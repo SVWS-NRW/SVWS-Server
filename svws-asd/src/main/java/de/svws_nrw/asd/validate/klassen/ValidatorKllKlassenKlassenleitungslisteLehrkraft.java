@@ -10,23 +10,22 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Validator Kl: Prüft die Klassenleitungen.
  */
-public final class ValidatorKlKlassenKlassenleitung extends Validator {
+public final class ValidatorKllKlassenKlassenleitungslisteLehrkraft extends Validator {
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
 	 * @param klassenLeitungen   Klassenleitungen
-	 * @param idListLehrer       die Lehrer der Schule
+	 * @param listLehrer         Liste der Lehrer
 	 * @param kontext            der Kontext des Validators
 	 */
-	public ValidatorKlKlassenKlassenleitung(
+	public ValidatorKllKlassenKlassenleitungslisteLehrkraft(
 			final @NotNull Supplier<@NotNull List<Long>> klassenLeitungen,
-			final @NotNull Supplier<@NotNull List<Long>> idListLehrer,
+			final @NotNull Supplier<@NotNull List<Long>> listLehrer,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
-		_validatoren.add(new ValidatorKl10KlassenKlassenleitung(klassenLeitungen, kontext));
-		_validatoren.add(new ValidatorKllKlassenKlassenleitungslisteLehrkraft(klassenLeitungen, idListLehrer, kontext));
+		_validatoren.add(new ValidatorKll10KlassenKlassenleitungslisteLehrkraft(klassenLeitungen, listLehrer, kontext));
 	}
 
 	@Override

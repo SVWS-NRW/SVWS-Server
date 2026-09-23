@@ -136,13 +136,17 @@ export class ValidatorGesamt extends Validator {
 	 */
 	private addSubvalidatorenKlassen(gesamt: StatistikGesamt): void {
 		this.mapValidatorenKlassen.clear();
+		const idListLehrer: List<number> = new ArrayList<number>();
+		for (const lehrer of gesamt.lehrer) {
+			idListLehrer.add(lehrer.id);
+		}
 		const allgemein: List<Validator> = new ArrayList<Validator>();
 		allgemein.add(new ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet({ get: () => gesamt.klassen }, this.kontext()));
 		this._validatoren.addAll(allgemein);
 		this.mapValidatorenKlassen.put(-1, allgemein);
 		for (const klasse of gesamt.klassen) {
 			const list: List<Validator> = new ArrayList<Validator>();
-			list.add(new ValidatorKlKlassenKlassenleitung({ get: () => klasse.klassenLeitungen }, this.kontext()));
+			list.add(new ValidatorKlKlassenKlassenleitung({ get: () => klasse.klassenLeitungen }, { get: () => idListLehrer }, this.kontext()));
 			this._validatoren.addAll(list);
 			this.mapValidatorenKlassen.put(klasse.id, list);
 		}

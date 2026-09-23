@@ -1,6 +1,7 @@
 import { ValidatorKl10KlassenKlassenleitung } from '../../../asd/validate/klassen/ValidatorKl10KlassenKlassenleitung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
+import { ValidatorKllKlassenKlassenleitungslisteLehrkraft } from '../../../asd/validate/klassen/ValidatorKllKlassenKlassenleitungslisteLehrkraft';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -12,11 +13,13 @@ export class ValidatorKlKlassenKlassenleitung extends Validator {
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem Kontext.
 	 *
 	 * @param klassenLeitungen   Klassenleitungen
+	 * @param idListLehrer       die Lehrer der Schule
 	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(klassenLeitungen: Supplier<List<number>>, kontext: ValidatorKontext) {
+	public constructor(klassenLeitungen: Supplier<List<number>>, idListLehrer: Supplier<List<number>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorKl10KlassenKlassenleitung(klassenLeitungen, kontext));
+		this._validatoren.add(new ValidatorKllKlassenKlassenleitungslisteLehrkraft(klassenLeitungen, idListLehrer, kontext));
 	}
 
 	protected pruefe(): boolean {

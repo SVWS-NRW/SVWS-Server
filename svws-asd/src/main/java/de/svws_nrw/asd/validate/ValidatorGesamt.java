@@ -198,6 +198,13 @@ public final class ValidatorGesamt extends Validator {
 		// Leere zunächst die Map für die Klassenvalidatoren
 		mapValidatorenKlassen.clear();
 
+		// Id-Liste der Lehrer
+		final @NotNull List<Long> idListLehrer = new ArrayList<Long>();
+
+		for (final LehrerStatistikGesamt lehrer: gesamt.lehrer) {
+			idListLehrer.add(lehrer.id);
+		}
+
 		// Ergänze die allgemeinen Validatoren unter der ID -1
 		final @NotNull List<Validator> allgemein = new ArrayList<>();
 		allgemein.add(new ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet(
@@ -217,6 +224,7 @@ public final class ValidatorGesamt extends Validator {
 //					this.kontext()));
 			list.add(new ValidatorKlKlassenKlassenleitung(
 					() -> klasse.klassenLeitungen,
+					() -> idListLehrer,
 					this.kontext()));
 			// Validatoren KO* laufen nur an der Oberfläche
 //			list.add(new ValidatorKoKlassenOrganisationsform(
