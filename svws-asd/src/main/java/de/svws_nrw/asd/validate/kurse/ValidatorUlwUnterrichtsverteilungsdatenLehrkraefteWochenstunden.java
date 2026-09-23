@@ -18,7 +18,7 @@ public final class ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstund
 	 * @param wochenstundenLehrer     die Wochenstunden der Lehrkraft
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden(final @NotNull Supplier<@AllowNull Integer> wochenstundenLehrer, final @NotNull ValidatorKontext kontext) {
+	public ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden(final @NotNull Supplier<@AllowNull Double> wochenstundenLehrer, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden(wochenstundenLehrer, kontext));
 	}

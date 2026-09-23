@@ -19,7 +19,7 @@ export class ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(idAnerkennungsgrund: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idAnerkennungsgrund: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idAnerkennungsgrund = idAnerkennungsgrund;
 		this._validatoren.add(new ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(idAnerkennungsgrund, kontext));
@@ -27,9 +27,6 @@ export class ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 
 	protected pruefe(): boolean {
 		const idAnerkennungsgrund: number | null = this._idAnerkennungsgrund.get();
-		if (idAnerkennungsgrund === null) {
-			return true;
-		}
 		if (LehrerLehramtAnerkennung.data().getWertByIDOrNull(idAnerkennungsgrund) === null) {
 			this.addFehler(0, "Das Feld 'Anerkennungsgrund Lehramt' muss zulässig besetzt sein.");
 			return false;

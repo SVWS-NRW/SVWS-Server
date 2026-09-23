@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,7 +20,7 @@ public final class ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerke
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(
-			final @NotNull Supplier<Long> idAnerkennungsgrund,
+			final @NotNull Supplier<@AllowNull Long> idAnerkennungsgrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(idAnerkennungsgrund, kontext));

@@ -27,7 +27,7 @@ public final class ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAner
 		super(kontext);
 		_idAnerkennungsgrund = idAnerkennungsgrund;
 
-		_validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(idAnerkennungsgrund, kontext));
+		_validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(getNotNullSupplierLong(idAnerkennungsgrund), kontext));
 	}
 
 	@Override

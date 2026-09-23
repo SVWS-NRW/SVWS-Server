@@ -44,7 +44,7 @@ class TestValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden {
 	@DisplayName("ULW10: Test der Wochenstunden für Lehrkräfte")
 	@ParameterizedTest(name = "wochenstunden={0} -> erwartet {1}")
 	@CsvSource(textBlock = ULW10_TESTDATEN, nullValues = { "null" })
-	void testValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(final Integer wochenstunden, final boolean result) {
+	void testValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(final Double wochenstunden, final boolean result) {
 		final ValidatorKontext kontext = new ValidatorKontext(
 				testdaten_001.schule.schulNr,
 				Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),

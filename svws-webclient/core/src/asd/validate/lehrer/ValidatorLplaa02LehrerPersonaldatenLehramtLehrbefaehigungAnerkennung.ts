@@ -25,9 +25,6 @@ export class ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 
 	protected pruefe(): boolean {
 		const idAnerkennungsgrund: number | null = this._idAnerkennungsgrund.get();
-		if (idAnerkennungsgrund === null) {
-			return true;
-		}
 		const schuljahr: number = this.kontext().getSchuljahr();
 		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, schuljahr)) {
 			this.addFehler(0, "Der eingetragene Wert für das Feld 'Anerkennung Lehramt' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");

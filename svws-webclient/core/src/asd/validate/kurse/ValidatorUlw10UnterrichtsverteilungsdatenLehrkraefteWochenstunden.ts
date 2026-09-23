@@ -1,7 +1,7 @@
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { JavaDouble } from '../../../java/lang/JavaDouble';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden extends Validator {
@@ -22,7 +22,7 @@ export class ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden e
 
 	protected pruefe(): boolean {
 		const wochenstunden: number | null = this.wochenstundenLehrer.get();
-		if (JavaInteger.compare(wochenstunden, 0) < 0) {
+		if (JavaDouble.compare(wochenstunden, 0) < 0) {
 			this.addFehler(0, "Wochenstunden der Lehrkraft: Es sind nur Werte >= 0 erlaubt");
 			return false;
 		}

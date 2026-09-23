@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
+import de.svws_nrw.asd.data.statistik.FoerderschwerpunktStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.KursStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
@@ -19,22 +21,23 @@ import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
 import de.svws_nrw.asd.validate.gesamt.ValidatorGsGesamtSchuelerdaten;
+import de.svws_nrw.asd.validate.intKataloge.ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIkaIntKatalogKonfessionenAsdKatalog;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIolIntKatalogOrteLand;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIooIntKatalogOrteOrtsname;
 import de.svws_nrw.asd.validate.intKataloge.ValidatorIopIntKatalogOrtePlz;
 import de.svws_nrw.asd.validate.klassen.ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet;
-import de.svws_nrw.asd.validate.klassen.ValidatorKkKlassenKlassenart;
 import de.svws_nrw.asd.validate.klassen.ValidatorKlKlassenKlassenleitung;
-import de.svws_nrw.asd.validate.klassen.ValidatorKoKlassenOrganisationsform;
-import de.svws_nrw.asd.validate.klassen.ValidatorKsKlassenSchulgliederung;
 import de.svws_nrw.asd.validate.kurse.ValidatorUfUnterrichtsverteilungsdatenFach;
 import de.svws_nrw.asd.validate.kurse.ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft;
+import de.svws_nrw.asd.validate.kurse.ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden;
 import de.svws_nrw.asd.validate.kurse.ValidatorUwUnterrichtsverteilungsdatenWochenstunden;
 import de.svws_nrw.asd.validate.kurse.ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft;
 import de.svws_nrw.asd.validate.kurse.ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLplfLehrerPersonaldatenLehramtFachrichtung;
 import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSlSchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.validate.schueler.ValidatorSsSchuelerStammdaten;
@@ -126,6 +129,14 @@ public final class ValidatorGesamt extends Validator {
 							() -> lehrbefaehigungen.idLehrbefaehigung,
 							() -> LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt),
 							this.kontext()));
+					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(
+							() -> lehrbefaehigungen.idAnerkennungsgrund,
+							this.kontext()));
+				}
+				for (final LehrerFachrichtungEintrag fachrichtungen : lehraemter.fachrichtungen) {
+					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung(
+							() -> fachrichtungen.idFachrichtung,
+							this.kontext()));
 				}
 			}
 
@@ -200,20 +211,23 @@ public final class ValidatorGesamt extends Validator {
 			// Erzeuge die Liste der Subvalidatoren für die Klasse
 			final @NotNull List<Validator> list = new ArrayList<>();
 
-			list.add(new ValidatorKkKlassenKlassenart(
-					() -> null, //hier muss die idKlassenart hin -> gibt es in den daten noch nicht
-					this.kontext()));
+// Validatoren KK* laufen nur an der Oberfläche
+//			list.add(new ValidatorKkKlassenKlassenart(
+//					() -> null, //hier muss die idKlassenart hin -> gibt es in den daten noch nicht
+//					this.kontext()));
 			list.add(new ValidatorKlKlassenKlassenleitung(
 					() -> klasse.klassenLeitungen,
 					this.kontext()));
-			list.add(new ValidatorKoKlassenOrganisationsform(
-					() -> null, //hier muss die idallgemeinbildungsorganisationsform hin -> gibt es in den daten noch nicht
-					() -> null, //hier muss die idweiterbildungsorganisationsform hin    -> gibt es in den daten noch nicht
-					() -> null, //hier muss die idberufsbildungsorganisationsform hin    -> gibt es in den daten noch nicht
-					this.kontext()));
-			list.add(new ValidatorKsKlassenSchulgliederung(
-					() -> null, //hier muss die idSchulgliederung hin -> gibt es in den daten noch nicht,
-					this.kontext()));
+			// Validatoren KO* laufen nur an der Oberfläche
+//			list.add(new ValidatorKoKlassenOrganisationsform(
+//					() -> null, //hier muss die idallgemeinbildungsorganisationsform hin -> gibt es in den daten noch nicht
+//					() -> null, //hier muss die idweiterbildungsorganisationsform hin    -> gibt es in den daten noch nicht
+//					() -> null, //hier muss die idberufsbildungsorganisationsform hin    -> gibt es in den daten noch nicht
+//					this.kontext()));
+			// Validatoren KS* laufen nur an der Oberfläche
+//			list.add(new ValidatorKsKlassenSchulgliederung(
+//					() -> null, //hier muss die idSchulgliederung hin -> gibt es in den daten noch nicht,
+//					this.kontext()));
 
 			// Füge diese in die allgemeine Liste für die Ausführung ein und in die Map für die Klasse
 			_validatoren.addAll(list);
@@ -248,6 +262,9 @@ public final class ValidatorGesamt extends Validator {
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft(
 					() -> kurs.lehrer,
 					() -> gesamt.lehrer,
+					this.kontext()));
+			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden(
+					() -> kurs.wochenstundenLehrer,
 					this.kontext()));
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden(
 					() -> (double) kurs.wochenstunden,
@@ -286,6 +303,20 @@ public final class ValidatorGesamt extends Validator {
 					() -> ort.plz,
 					() -> ort.ortsname,
 					() -> ort.idLand,
+					this.kontext()));
+		}
+	}
+
+
+	/**
+	 * Fügt die Subvalidatoren für den Katalog der Förderschwerpunkte hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit dem Katalog der Förderschwerpunkte
+	 */
+	private void addSubvalidatorenKatalogFoerderschwerpunkte(final @NotNull StatistikGesamt gesamt) {
+		for (final FoerderschwerpunktStatistikGesamt foerderschwerpunkt : gesamt.foederschwerpunkte) {
+			_validatoren.add(new ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog(
+					() -> foerderschwerpunkt.idKatalog,
 					this.kontext()));
 		}
 	}

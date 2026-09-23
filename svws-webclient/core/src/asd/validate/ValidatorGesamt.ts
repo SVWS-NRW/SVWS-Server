@@ -1,14 +1,13 @@
+import { ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog } from '../../asd/validate/intKataloge/ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog';
 import { ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft } from '../../asd/validate/kurse/ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft';
 import { HashMap } from '../../java/util/HashMap';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorSlSchuelerLernabschnittsdaten } from '../../asd/validate/schueler/ValidatorSlSchuelerLernabschnittsdaten';
-import { ValidatorKoKlassenOrganisationsform } from '../../asd/validate/klassen/ValidatorKoKlassenOrganisationsform';
 import { ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung } from '../../asd/validate/lehrer/ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung';
 import { ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft } from '../../asd/validate/kurse/ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft';
 import { ValidatorIolIntKatalogOrteLand } from '../../asd/validate/intKataloge/ValidatorIolIntKatalogOrteLand';
 import { ValidatorUwUnterrichtsverteilungsdatenWochenstunden } from '../../asd/validate/kurse/ValidatorUwUnterrichtsverteilungsdatenWochenstunden';
 import { ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet } from '../../asd/validate/klassen/ValidatorKckpKlassenKombinationKlassenjahrgangParallelitaet';
-import { ValidatorKsKlassenSchulgliederung } from '../../asd/validate/klassen/ValidatorKsKlassenSchulgliederung';
 import { ValidatorIopIntKatalogOrtePlz } from '../../asd/validate/intKataloge/ValidatorIopIntKatalogOrtePlz';
 import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
@@ -17,10 +16,12 @@ import { ValidatorKlKlassenKlassenleitung } from '../../asd/validate/klassen/Val
 import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/ValidatorSsSchuelerStammdaten';
 import { ValidatorIkaIntKatalogKonfessionenAsdKatalog } from '../../asd/validate/intKataloge/ValidatorIkaIntKatalogKonfessionenAsdKatalog';
 import { ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden } from '../../asd/validate/kurse/ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden';
+import { ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung } from '../../asd/validate/lehrer/ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung';
 import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
+import { ValidatorLplfLehrerPersonaldatenLehramtFachrichtung } from '../../asd/validate/lehrer/ValidatorLplfLehrerPersonaldatenLehramtFachrichtung';
+import { ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden } from '../../asd/validate/kurse/ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden';
 import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
-import { ValidatorKkKlassenKlassenart } from '../../asd/validate/klassen/ValidatorKkKlassenKlassenart';
 import { ValidatorGsGesamtSchuelerdaten } from '../../asd/validate/gesamt/ValidatorGsGesamtSchuelerdaten';
 import { LehrerLehramt } from '../../asd/types/lehrer/LehrerLehramt';
 import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
@@ -95,6 +96,10 @@ export class ValidatorGesamt extends Validator {
 			for (const lehraemter of lehrer.lehraemter) {
 				for (const lehrbefaehigungen of lehraemter.lehrbefaehigungen) {
 					list.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => lehrbefaehigungen.idLehrbefaehigung }, { get: () => LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt) }, this.kontext()));
+					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung({ get: () => lehrbefaehigungen.idAnerkennungsgrund }, this.kontext()));
+				}
+				for (const fachrichtungen of lehraemter.fachrichtungen) {
+					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung({ get: () => fachrichtungen.idFachrichtung }, this.kontext()));
 				}
 			}
 			this._validatoren.addAll(list);
@@ -137,10 +142,7 @@ export class ValidatorGesamt extends Validator {
 		this.mapValidatorenKlassen.put(-1, allgemein);
 		for (const klasse of gesamt.klassen) {
 			const list: List<Validator> = new ArrayList<Validator>();
-			list.add(new ValidatorKkKlassenKlassenart({ get: () => null }, this.kontext()));
 			list.add(new ValidatorKlKlassenKlassenleitung({ get: () => klasse.klassenLeitungen }, this.kontext()));
-			list.add(new ValidatorKoKlassenOrganisationsform({ get: () => null }, { get: () => null }, { get: () => null }, this.kontext()));
-			list.add(new ValidatorKsKlassenSchulgliederung({ get: () => null }, this.kontext()));
 			this._validatoren.addAll(list);
 			this.mapValidatorenKlassen.put(klasse.id, list);
 		}
@@ -160,6 +162,7 @@ export class ValidatorGesamt extends Validator {
 			const list: List<Validator> = new ArrayList<Validator>();
 			list.add(new ValidatorUfUnterrichtsverteilungsdatenFach({ get: () => kurs.idFach }, this.kontext()));
 			list.add(new ValidatorUllUnterrichtsverteilungsdatenLehrkraefteLehrkraft({ get: () => kurs.lehrer }, { get: () => gesamt.lehrer }, this.kontext()));
+			list.add(new ValidatorUlwUnterrichtsverteilungsdatenLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
 			list.add(new ValidatorUwUnterrichtsverteilungsdatenWochenstunden({ get: () => kurs.wochenstunden as number }, this.kontext()));
 			list.add(new ValidatorUzlUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteLehrkraft({ get: () => kurs.weitereLehrer }, { get: () => gesamt.lehrer }, this.kontext()));
 			list.add(new ValidatorUzwUnterrichtsverteilungsdatenZusaetzlicheLehrkraefteWochenstunden({ get: () => kurs.wochenstundenLehrer }, this.kontext()));
@@ -178,6 +181,17 @@ export class ValidatorGesamt extends Validator {
 			this._validatoren.add(new ValidatorIolIntKatalogOrteLand({ get: () => ort.idLand }, this.kontext()));
 			this._validatoren.add(new ValidatorIooIntKatalogOrteOrtsname({ get: () => ort.plz }, { get: () => ort.ortsname }, { get: () => ort.idLand }, this.kontext()));
 			this._validatoren.add(new ValidatorIopIntKatalogOrtePlz({ get: () => ort.plz }, { get: () => ort.ortsname }, { get: () => ort.idLand }, this.kontext()));
+		}
+	}
+
+	/**
+	 * Fügt die Subvalidatoren für den Katalog der Förderschwerpunkte hinzu.
+	 *
+	 * @param gesamt   die Statistikdaten mit dem Katalog der Förderschwerpunkte
+	 */
+	private addSubvalidatorenKatalogFoerderschwerpunkte(gesamt: StatistikGesamt): void {
+		for (const foerderschwerpunkt of gesamt.foederschwerpunkte) {
+			this._validatoren.add(new ValidatorIfaIntKatalogFoerderschwerpunkteAsdKatalog({ get: () => foerderschwerpunkt.idKatalog }, this.kontext()));
 		}
 	}
 

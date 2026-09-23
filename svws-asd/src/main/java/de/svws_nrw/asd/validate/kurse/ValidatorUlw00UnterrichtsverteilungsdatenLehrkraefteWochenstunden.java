@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden extends Validator {
 
-	private final @NotNull Supplier<@AllowNull Integer> wochenstundenLehrer;
+	private final @NotNull Supplier<@AllowNull Double> wochenstundenLehrer;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -20,16 +20,16 @@ public final class ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstu
 	 * @param wochenstundenLehrer     die Wochenstunden der Lehrkraft
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden(final @NotNull Supplier<@AllowNull Integer> wochenstundenLehrer, final @NotNull ValidatorKontext kontext) {
+	public ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden(final @NotNull Supplier<@AllowNull Double> wochenstundenLehrer, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.wochenstundenLehrer = wochenstundenLehrer;
-		_validatoren.add(new ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(getNotNullSupplierInteger(wochenstundenLehrer), kontext));
+		_validatoren.add(new ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(getNotNullSupplierDouble(wochenstundenLehrer), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		final Integer wochenstunden = wochenstundenLehrer.get();
+		final Double wochenstunden = wochenstundenLehrer.get();
 
 		if ((wochenstunden == null)) {
 			addFehler(0, "Wochenstunden der Lehrkraft: Kein Wert vorhanden.");

@@ -18,7 +18,7 @@ export class ValidatorUlw00UnterrichtsverteilungsdatenLehrkraefteWochenstunden e
 	public constructor(wochenstundenLehrer: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.wochenstundenLehrer = wochenstundenLehrer;
-		this._validatoren.add(new ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(this.getNotNullSupplierInteger(wochenstundenLehrer), kontext));
+		this._validatoren.add(new ValidatorUlw10UnterrichtsverteilungsdatenLehrkraefteWochenstunden(this.getNotNullSupplierDouble(wochenstundenLehrer), kontext));
 	}
 
 	protected pruefe(): boolean {

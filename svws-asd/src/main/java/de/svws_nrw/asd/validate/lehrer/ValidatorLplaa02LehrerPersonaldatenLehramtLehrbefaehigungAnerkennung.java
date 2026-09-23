@@ -33,10 +33,6 @@ public final class ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAner
 	protected boolean pruefe() {
 		final Long idAnerkennungsgrund = _idAnerkennungsgrund.get();
 
-		if (idAnerkennungsgrund == null) {
-			return true;
-		}
-
 		final int schuljahr = kontext().getSchuljahr();
 
 		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, schuljahr)) {

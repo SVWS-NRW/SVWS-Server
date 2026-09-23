@@ -21,7 +21,7 @@ export class ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 	public constructor(idAnerkennungsgrund: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idAnerkennungsgrund = idAnerkennungsgrund;
-		this._validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(idAnerkennungsgrund, kontext));
+		this._validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(this.getNotNullSupplierLong(idAnerkennungsgrund), kontext));
 	}
 
 	protected pruefe(): boolean {
