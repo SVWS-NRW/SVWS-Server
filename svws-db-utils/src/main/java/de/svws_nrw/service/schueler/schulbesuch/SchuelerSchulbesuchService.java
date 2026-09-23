@@ -126,13 +126,13 @@ public final class SchuelerSchulbesuchService {
 		patchRequest.idEingangsphaseGrundschule.ifPresent(id -> patchEPJahre(entity, id));
 		patchRequest.idUebergangsempfehlungGrundschule.ifPresent(id -> patchUebergangsempfehlung(entity, id));
 		patchRequest.idDauerKindergartenbesuch.ifPresent(id -> patchKindergartenbesuch(entity, id));
-		patchRequest.schluesselHoechsterSchulabschluss.ifPresent(schluessel -> patchHoechsterSchulabschluss(entity, schluessel));
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule.ifPresent(schluessel -> patchAbschlussartAllgemeinbildendVorherigeSchule(entity, schluessel));
 		patchRequest.idSchulgliederungVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchHerkunftbildungsgang(entity, id));
 		patchRequest.schluesselCoreTypeFachklasseVorherigeSchule.ifPresent(schluessel -> patchFachklasse(entity, schluessel));
 		patchRequest.idHerkunftSonstigeVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, id));
 		patchRequest.idHochschulabschluss.ifPresent(this::validateIdHochschulabschluss);
 		patchRequest.idHerkunftSchulformVorherigeSchule.ifPresent(id -> SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, id));
-		patchAbschlussartVorherigeSchule(entity, patchRequest);
+		patchAbschlussartDieseSchule(entity, patchRequest);
 	}
 
 	private void patchFachklasse(final DTOSchueler entity, final String schluessel) {
@@ -157,36 +157,36 @@ public final class SchuelerSchulbesuchService {
 		entity.LSFachklSIM = schluessel.substring(schluessel.indexOf("-") + 1);
 	}
 
-	private void patchAbschlussartVorherigeSchule(final DTOSchueler entity, final SchuelerSchulbesuchPatchRequest patchRequest) {
-		final boolean allgemeinbildendPresent = patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule
+	private void patchAbschlussartDieseSchule(final DTOSchueler entity, final SchuelerSchulbesuchPatchRequest patchRequest) {
+		final boolean allgemeinbildendPresent = patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule
 				.isPresent();
-		final boolean berufsbildendPresent = patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule.isPresent();
+		final boolean berufsbildendPresent = patchRequest.schluesselAbschlussartBerufsbildendDieseSchule.isPresent();
 
 		if (!allgemeinbildendPresent && !berufsbildendPresent) {
 			return;
 		}
 
-		final String schluesselAllgemeinbildend = patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule
-				.orElseGet(() -> extractAllgemeinbildend(entity.LSEntlassArt));
+		final String schluesselAllgemeinbildend = patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule
+				.orElseGet(() -> extractAllgemeinbildend(entity.Entlassart));
 
 		if (schluesselAllgemeinbildend == null) {
 			// kein berufsbildend ohne allgemeinbildend möglich
-			entity.LSEntlassArt = null;
+			entity.Entlassart = null;
 			return;
 		}
 
 		validateSchulabschlussAllgemeinbildend(schluesselAllgemeinbildend);
 
-		final String schluesselBerufsbildend = patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule
-				.orElseGet(() -> extractBerufsbildend(entity.LSEntlassArt));
+		final String schluesselBerufsbildend = patchRequest.schluesselAbschlussartBerufsbildendDieseSchule
+				.orElseGet(() -> extractBerufsbildend(entity.Entlassart));
 
 		if (schluesselBerufsbildend == null) {
-			entity.LSEntlassArt = schluesselAllgemeinbildend;
+			entity.Entlassart = schluesselAllgemeinbildend;
 			return;
 		}
 
 		validateSchulabschlussBerufsbildend(schluesselBerufsbildend);
-		entity.LSEntlassArt = schluesselBerufsbildend + schluesselAllgemeinbildend;
+		entity.Entlassart = schluesselBerufsbildend + schluesselAllgemeinbildend;
 	}
 
 	private static void validateSchulabschlussBerufsbildend(final String schluesselBerufsbildend) {
@@ -219,13 +219,13 @@ public final class SchuelerSchulbesuchService {
 		return lsEntlassArt.substring(0, 1);
 	}
 
-	private void patchHoechsterSchulabschluss(final DTOSchueler entity, final String schluessel) {
+	private void patchAbschlussartAllgemeinbildendVorherigeSchule(final DTOSchueler entity, final String schluessel) {
 		if (schluessel == null) {
-			entity.Entlassart = null;
+			entity.LSEntlassArt = null;
 			return;
 		}
 		validateSchulabschlussAllgemeinbildend(schluessel);
-		entity.Entlassart = schluessel;
+		entity.LSEntlassArt = schluessel;
 	}
 
 	private void patchLSEntlassgrund(final DTOSchueler entity, final Long id) {

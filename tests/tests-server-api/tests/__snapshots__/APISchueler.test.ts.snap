@@ -27846,7 +27846,7 @@ ArrayList {
 exports[`Schueler Tests  > gegen { schema: 'GymAbi01' } > getSchuelerSchulbesuch 1`] = `
 SchuelerSchulbesuchsdaten {
   "bemerkungVorherigeSchule": null,
-  "berufsabschlussVorhanden": false,
+  "berufsabschlussVorhandenVorherigeSchule": false,
   "bisherBesuchteSchulen": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],
@@ -27929,10 +27929,10 @@ SchuelerSchulbesuchsdaten {
     "removeFirst": [Function],
     "removeLast": [Function],
   },
+  "schluesselAbschlussartAllgemeinbildendDieseSchule": null,
   "schluesselAbschlussartAllgemeinbildendVorherigeSchule": null,
-  "schluesselAbschlussartBerufsbildendVorherigeSchule": null,
+  "schluesselAbschlussartBerufsbildendDieseSchule": null,
   "schluesselCoreTypeFachklasseVorherigeSchule": null,
-  "schluesselHoechsterSchulabschluss": null,
   "teilnahmeSprachfoerderkurs": false,
   "verpflichtungSprachfoerderkurs": false,
   "wechselBestaetigtAufnehmendeSchule": false,

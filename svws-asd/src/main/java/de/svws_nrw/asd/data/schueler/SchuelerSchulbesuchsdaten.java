@@ -22,14 +22,6 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID des Schulbesuchdatensatzes", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
-	/** Der Schlüssel des höchsten Schulabschlusses. */
-	@Schema(description = "Der Schlüssel des höchsten Schulabschlusses.", example = "K")
-	public String schluesselHoechsterSchulabschluss;
-
-	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
-	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
-	public boolean berufsabschlussVorhanden;
-
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
@@ -67,9 +59,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "Der Schlüssel des Schulabschlusses (Allgemeinbildend) der zuvor besuchten Schule.", example = "B")
 	public String schluesselAbschlussartAllgemeinbildendVorherigeSchule;
 
-	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule. */
-	@Schema(description = "Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule.", example = "2")
-	public String schluesselAbschlussartBerufsbildendVorherigeSchule;
+	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
+	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
+	public boolean berufsabschlussVorhandenVorherigeSchule;
 
 	/** Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule. */
 	@Schema(description = "Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule.", example = "2000")
@@ -98,6 +90,14 @@ public class SchuelerSchulbesuchsdaten {
 	/** Die ID der Abschlussart, welcher an dieser Schule erworben wurde. */
 	@Schema(description = "Die ID der Abschlussart, welcher an dieser Schule erworben wurde.", example = "OA")
 	public String idAbschlussartDieseSchule;
+
+	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde. */
+	@Schema(description = "Die ID des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde.", example = "B")
+	public String schluesselAbschlussartAllgemeinbildendDieseSchule;
+
+	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der an dieser Schule erworben wurde.. */
+	@Schema(description = "Die ID des Schulabschlusses (Berufsbildend) der an dieser Schule erworben wurde..", example = "2")
+	public String schluesselAbschlussartBerufsbildendDieseSchule;
 
 	/** Die ID der aufnehmenden Schule. */
 	@Schema(description = "die ID der aufnehmenden Schule.", example = "12")

@@ -48,41 +48,41 @@ class SchulbesuchMapperTest {
 
 
 	@Test
-	@DisplayName("mapAbschlussartVorherigeSchule | Einstelliger Schlüssel setzt nur allgemeinbildend")
-	void toApi_mapptEinstelligenAbschlussartSchluessel() {
+	@DisplayName("mapAbschlussartDieseSchule | Einstelliger Schlüssel setzt nur allgemeinbildend")
+	void toApi_mapptEinstelligeAbschlussartSchluessel() {
 		final var entity = createEntity(1L);
-		entity.LSEntlassArt = "A";
+		entity.Entlassart = "A";
 
 		final var result = mapper.toApi(entity, emptyContext());
 
-		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isEqualTo("A");
-		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isNull();
+		assertThat(result.schluesselAbschlussartAllgemeinbildendDieseSchule).isEqualTo("A");
+		assertThat(result.schluesselAbschlussartBerufsbildendDieseSchule).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAbschlussartVorherigeSchule | Zweistelliger Schlüssel splittet korrekt auf beide Felder")
+	@DisplayName("mapAbschlussartDieseSchule | Zweistelliger Schlüssel splittet korrekt auf beide Felder")
 	void toApi_mapptZweistelligenAbschlussartSchluessel() {
 		final var entity = createEntity(1L);
-		entity.LSEntlassArt = "2A";
+		entity.Entlassart = "2A";
 
 		final var result = mapper.toApi(entity, emptyContext());
 
-		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isEqualTo("2");
-		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isEqualTo("A");
+		assertThat(result.schluesselAbschlussartBerufsbildendDieseSchule).isEqualTo("2");
+		assertThat(result.schluesselAbschlussartAllgemeinbildendDieseSchule).isEqualTo("A");
 	}
 
 	@ParameterizedTest
-	@DisplayName("mapAbschlussartVorherigeSchule | null, blank, einstellige Ziffer auf null")
+	@DisplayName("mapAbschlussartDieseSchule | null, blank, einstellige Ziffer auf null")
 	@NullSource
 	@ValueSource(strings = {" ", "   "})
 	void toApi_mapptZuNull(final String input) {
 		final var entity = createEntity(1L);
-		entity.LSEntlassArt = input;
+		entity.Entlassart = input;
 
 		final var result = mapper.toApi(entity, emptyContext());
 
-		assertThat(result.schluesselAbschlussartAllgemeinbildendVorherigeSchule).isNull();
-		assertThat(result.schluesselAbschlussartBerufsbildendVorherigeSchule).isNull();
+		assertThat(result.schluesselAbschlussartAllgemeinbildendDieseSchule).isNull();
+		assertThat(result.schluesselAbschlussartBerufsbildendDieseSchule).isNull();
 
 	}
 

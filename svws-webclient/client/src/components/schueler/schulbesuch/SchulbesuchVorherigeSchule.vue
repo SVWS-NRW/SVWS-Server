@@ -75,10 +75,11 @@
 				:manager="abschlussartAllgemeinbildendVorherigeSchuleManager"
 				v-model="model.abschlussartAllgemeinbildendVorherigeSchule.value"
 				:readonly statistics />
-			<ui-select label="Höchster berufsbildender Abschluss" v-if="abschlussartBerufsbildendSelectable"
-				:manager="abschlussartBerufsbildendVorherigeSchuleManager"
-				v-model="model.abschlussartBerufsbildendVorherigeSchule.value"
-				:readonly statistics />
+			<svws-ui-checkbox v-if="abschlussartBerufsbildendSelectable"
+				v-model="model.proxy.berufsabschlussVorhandenVorherigeSchule"
+				:readonly>
+				Berufsabschluss vorhanden
+			</svws-ui-checkbox>
 			<ui-select label="Versetzung" class="col-span-full" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
 				:manager="herkunftsartenManager"
 				v-model="model.idHerkunftsartVersetzungVorherigeSchule.value"
@@ -103,7 +104,6 @@
 	import { Hochschulabschluss } from "@core/asd/types/schueler/Hochschulabschluss";
 	import { Fachklasse } from "@core/asd/types/schule/Fachklasse";
 	import { SchulabschlussAllgemeinbildend } from "@core/asd/types/schule/SchulabschlussAllgemeinbildend";
-	import { SchulabschlussBerufsbildend } from "@core/asd/types/schule/SchulabschlussBerufsbildend";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import type { KatalogEntlassgrund } from "@core/core/data/kataloge/KatalogEntlassgrund";
 	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
@@ -292,13 +292,6 @@
 
 	const abschlussartAllgemeinbildendVorherigeSchuleManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "kuerzelText",
-		selectionDisplayText: "kuerzelText",
-	});
-
-	const abschlussartBerufsbildendVorherigeSchuleManager = new CoreTypeSelectManager({
-		clazz: SchulabschlussBerufsbildend.class,
 		schuljahr: schuljahr,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",

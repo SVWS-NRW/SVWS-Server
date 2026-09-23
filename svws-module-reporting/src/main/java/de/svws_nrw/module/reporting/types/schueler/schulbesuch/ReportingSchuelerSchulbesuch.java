@@ -131,16 +131,35 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param alleSchulen Die Informationen zu allen bisher besuchten Schulen.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ReportingSchuelerSchulbesuch(final ReportingSchulkatalogEintragNRW vorherigeSchule,
-			final String vorigeEntlassdatum, final String vorigeEntlassjahrgang, final String vorigeArtLetzteVersetzung,
-			final String vorigeBemerkung, final KatalogEntlassgrund vorigeEntlassgrund, final String vorigeAbschlussartID,
-			final String entlassungDatum, final Long idEntlassjahrgang, final KatalogEntlassgrund entlassungGrund,
-			final String entlassungAbschlussartID, final String hoechsterSchulabschlussSchluessel, final ReportingSchulkatalogEintragNRW aufnehmendeSchule,
-			final String aufnehmendWechseldatum, final Boolean aufnehmendBestaetigt, final Integer grundschuleEinschulungsjahr,
-			final Long grundschuleEinschulungsartID, final Long idGrundschuleJahreEingangsphase, final String uebergangsempfehlungKuerzel,
-			final String uebergangsempfehlungText, final Integer sekIWechsel, final String sekIErsteSchulform, final Integer sekIIWechsel,
-			final Long idDauerKindergartenbesuch, final Long idKindergarten, final boolean verpflichtungSprachfoerderkurs,
-			final boolean teilnahmeSprachfoerderkurs, final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
+	public ReportingSchuelerSchulbesuch(
+			final ReportingSchulkatalogEintragNRW vorherigeSchule,
+			final String vorigeEntlassdatum,
+			final String vorigeEntlassjahrgang,
+			final String vorigeArtLetzteVersetzung,
+			final String vorigeBemerkung,
+			final KatalogEntlassgrund vorigeEntlassgrund,
+			final String vorigeAbschlussartID,
+			final String entlassungDatum,
+			final Long idEntlassjahrgang,
+			final KatalogEntlassgrund entlassungGrund,
+			final String entlassungAbschlussartID,
+			final String hoechsterSchulabschlussSchluessel,
+			final ReportingSchulkatalogEintragNRW aufnehmendeSchule,
+			final String aufnehmendWechseldatum,
+			final Boolean aufnehmendBestaetigt,
+			final Integer grundschuleEinschulungsjahr,
+			final Long grundschuleEinschulungsartID,
+			final Long idGrundschuleJahreEingangsphase,
+			final String uebergangsempfehlungKuerzel,
+			final String uebergangsempfehlungText,
+			final Integer sekIWechsel,
+			final String sekIErsteSchulform,
+			final Integer sekIIWechsel,
+			final Long idDauerKindergartenbesuch,
+			final Long idKindergarten,
+			final boolean verpflichtungSprachfoerderkurs,
+			final boolean teilnahmeSprachfoerderkurs,
+			final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
 		this.vorherigeSchule = vorherigeSchule;
 		this.vorigeEntlassdatum = ersetzeNullBlankTrim(vorigeEntlassdatum);
 		this.vorigeEntlassjahrgang = ersetzeNullBlankTrim(vorigeEntlassjahrgang);

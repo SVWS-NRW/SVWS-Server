@@ -8,15 +8,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 
 public class SchuelerSchulbesuchPatchRequest {
 
-	/** Der Schlüssel des höchsten Schulabschlusses. */
-	@Schema(description = "Der Schlüssel des höchsten Schulabschlusses.", example = "2")
-	@Size(max = 2)
-	public JsonNullable<String> schluesselHoechsterSchulabschluss = JsonNullable.undefined();
-
-	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
-	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
-	public JsonNullable<Boolean> berufsabschlussVorhanden = JsonNullable.undefined();
-
 	/** Die ID der zuvor besuchten Schule. */
 	@Schema(description = "Die ID der zuvor besuchten Schule.", example = "12")
 	public JsonNullable<Long> idVorherigeSchule = JsonNullable.undefined();
@@ -58,10 +49,9 @@ public class SchuelerSchulbesuchPatchRequest {
 	@Size(max = 1)
 	public JsonNullable<String> schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.undefined();
 
-	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule. */
-	@Schema(description = "Die ID des Schulabschlusses (Berufsbildend) der zuvor besuchten Schule.", example = "2")
-	@Size(max = 1)
-	public JsonNullable<String> schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.undefined();
+	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
+	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
+	public JsonNullable<Boolean> berufsabschlussVorhandenVorherigeSchule = JsonNullable.undefined();
 
 	/** Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule. */
 	@Schema(description = "Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule.", example = "2000")
@@ -92,6 +82,16 @@ public class SchuelerSchulbesuchPatchRequest {
 	@Schema(description = "Die ID der Abschlussart, welcher an dieser Schule erworben wurde.", example = "OA")
 	@Size(max = 2)
 	public JsonNullable<String> idAbschlussartDieseSchule = JsonNullable.undefined();
+
+	/** Der Schlüssel des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde. */
+	@Schema(description = "Die ID des Schulabschlusses (Allgemeinbildend) der an dieser Schule erworben wurde.", example = "B")
+	@Size(max = 1)
+	public JsonNullable<String> schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.undefined();
+
+	/** Der Schlüssel des Schulabschlusses (Berufsbildend) der an dieser Schule erworben wurde.. */
+	@Schema(description = "Die ID des Schulabschlusses (Berufsbildend) der an dieser Schule erworben wurde..", example = "2")
+	@Size(max = 1)
+	public JsonNullable<String> schluesselAbschlussartBerufsbildendDieseSchule = JsonNullable.undefined();
 
 	/** Die ID der aufnehmenden Schule nach einer Entlassung. */
 	@Schema(description = "die ID der aufnehmenden Schule nach einer Entlassung", example = "12")

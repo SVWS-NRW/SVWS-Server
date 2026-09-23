@@ -5,29 +5,16 @@
 		</svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-grid-cards">
-		<!-- Vorhandene Abschlüsse !-->
-		<svws-ui-content-card title="Vorhandene Abschlüsse" v-if="!eigeneSchuleIstGrundschule">
-			<svws-ui-input-wrapper :grid="2">
-				<ui-select label="Höchster allgemeinbildender Abschluss"
-					:manager="hoechsterAbschlussManager"
-					v-model="model.hoechsterSchulabschluss.value"
-					:readonly />
-				<svws-ui-checkbox v-if="eigeneSchuleIstBKOderWBK"
-					v-model="model.proxy.berufsabschlussVorhanden"
-					:readonly>
-					Berufsabschluss vorhanden
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<div v-else />
-		<svws-ui-content-card title="Schulbesuchsjahre" v-if="showSchulbesuchsjahre">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number placeholder="Schulbesuchsjahre"
-					:model-value="schulbesuchsjahre"
-					readonly />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<div v-else />
+		<template v-if="showSchulbesuchsjahre">
+			<svws-ui-content-card title="Schulbesuchsjahre">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Schulbesuchsjahre"
+						:model-value="schulbesuchsjahre"
+						readonly />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<div />
+		</template>
 		<schulbesuch-vorherige-schule :manager :go-to-schule :model :readonly />
 		<!-- Entlassung von eigener Schule !-->
 		<svws-ui-content-card title="Entlassung von eigener Schule">
@@ -43,6 +30,16 @@
 					:manager="entlassgrundManager"
 					v-model="model.idEntlassgrundDieseSchule.value"
 					:readonly />
+				<div />
+				<ui-select label="Höchster allgemeinbildender Abschluss" v-if="!eigeneSchuleIstGrundschule"
+					:manager="abschlussartAllgemeinbildendDieseSchuleManager"
+					v-model="model.abschlussartAllgemeinbildendDieseSchule.value"
+					:readonly statistics />
+				<ui-select label="Höchster berufsbildender Abschluss" v-if="!eigeneSchuleIstGrundschule"
+					:manager="abschlussartBerufsbildendDieseSchuleManager"
+					v-model="model.abschlussartBerufsbildendDieseSchule.value"
+					:readonly statistics
+					:disabled="noAllgemeinbildenderAbschlussSelected" />
 				<svws-ui-text-input placeholder="Art des Abschlusses" span="full"
 					v-model="model.proxy.idAbschlussartDieseSchule"
 					disabled statistics :readonly />
@@ -174,6 +171,7 @@
 	import { Uebergangsempfehlung } from '@core/asd/types/schueler/Uebergangsempfehlung';
 	import { Kindergartenbesuch } from '@core/asd/types/schule/Kindergartenbesuch';
 	import { SchulabschlussAllgemeinbildend } from '@core/asd/types/schule/SchulabschlussAllgemeinbildend';
+	import { SchulabschlussBerufsbildend } from "@core/asd/types/schule/SchulabschlussBerufsbildend";
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
 	import type { KatalogEntlassgrund } from '@core/core/data/kataloge/KatalogEntlassgrund';
@@ -209,8 +207,6 @@
 
 	const schuleHatPrimarstufe = computed(
 		() => [Schulform.G, Schulform.FW, Schulform.WF, Schulform.GM, Schulform.KS, Schulform.S, Schulform.GE, Schulform.V].includes(schuleState.schulform));
-	const eigeneSchuleIstBKOderWBK = computed(
-		() => [Schulform.SB, Schulform.BK, Schulform.WB].includes(schuleState.schulform));
 	const eigeneSchuleIstGrundschule = computed(() => schuleState.schulform === Schulform.G);
 
 	const wechselBevorstehend = ref<boolean>(false);
@@ -235,15 +231,10 @@
 		return Math.max(result, 0);
 	});
 
+	const noAllgemeinbildenderAbschlussSelected = computed<boolean>(() => model.abschlussartAllgemeinbildendDieseSchule.value === null);
+
 
 	// --- Toggle Schulauswahl ---
-
-	const hoechsterAbschlussManager = new CoreTypeSelectManager({
-		clazz: SchulabschlussAllgemeinbildend.class,
-		schuljahr: schuljahr,
-		optionDisplayText: "text",
-		selectionDisplayText: "text",
-	});
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
 		options: computed(() => props.manager().jahrgaengeById.values()),
@@ -302,6 +293,20 @@
 		schuljahr: schuljahr,
 		optionDisplayText: "text",
 		selectionDisplayText: "text",
+	});
+
+	const abschlussartAllgemeinbildendDieseSchuleManager = new CoreTypeSelectManager({
+		clazz: SchulabschlussAllgemeinbildend.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
+	});
+
+	const abschlussartBerufsbildendDieseSchuleManager = new CoreTypeSelectManager({
+		clazz: SchulabschlussBerufsbildend.class,
+		schuljahr: schuljahr,
+		optionDisplayText: "kuerzelText",
+		selectionDisplayText: "kuerzelText",
 	});
 
 	function bezeichnungSchule(s: SchulEintrag) {

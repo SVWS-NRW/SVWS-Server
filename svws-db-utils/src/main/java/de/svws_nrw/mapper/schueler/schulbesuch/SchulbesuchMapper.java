@@ -41,8 +41,8 @@ public interface SchulbesuchMapper {
 	 * @return die befüllten {@link SchuelerSchulbesuchsdaten}
 	 */
 	@Mapping(source = "entity.ID", target = "id")
-	@Mapping(source = "entity.Entlassart", target = "schluesselHoechsterSchulabschluss")
-	@Mapping(source = "entity.HatBerufsausbildung", target = "berufsabschlussVorhanden")
+	@Mapping(source = "entity.LSEntlassArt", target = "schluesselAbschlussartAllgemeinbildendVorherigeSchule")
+	@Mapping(source = "entity.HatBerufsausbildung", target = "berufsabschlussVorhandenVorherigeSchule")
 	@Mapping(source = "entity.LSSchulEntlassDatum", target = "entlassdatumVorherigeSchule")
 	@Mapping(source = "entity.LSJahrgang", target = "kuerzelEntlassjahrgangVorherigeSchule")
 	@Mapping(source = "entity.LSVersetzung", target = "idHerkunftsartVersetzungVorherigeSchule")
@@ -72,7 +72,7 @@ public interface SchulbesuchMapper {
 			@Context SchulbesuchMappingContext ctx);
 
 	/**
-	 * Splittet den kombinierten Abschlussart-Schlüssel aus {@link DTOSchueler#LSEntlassArt}
+	 * Splittet den kombinierten Abschlussart-Schlüssel aus {@link DTOSchueler#Entlassart}
 	 * auf die getrennten Felder für allgemeinbildenden und berufsbildenden Abschluss auf.
 	 * Bei einstelligem Wert wird nur der allgemeinbildende Schlüssel gesetzt.
 	 * Bei zweistelligem Wert enthält die erste Stelle den berufsbildenden (Ziffer)
@@ -82,18 +82,18 @@ public interface SchulbesuchMapper {
 	 * @param target das Zielobjekt der Mapping-Operation
 	 */
 	@AfterMapping
-	default void mapAbschlussartVorherigeSchule(
+	default void mapAbschlussartDieseSchule(
 			final DTOSchueler entity,
 			@MappingTarget final SchuelerSchulbesuchsdaten target) {
-		final var abschlussart = entity.LSEntlassArt;
+		final var abschlussart = entity.Entlassart;
 		if ((abschlussart == null) || abschlussart.isBlank()) {
 			return;
 		}
 		if (abschlussart.length() == 1) {
-			target.schluesselAbschlussartAllgemeinbildendVorherigeSchule = abschlussart;
+			target.schluesselAbschlussartAllgemeinbildendDieseSchule = abschlussart;
 		} else if (abschlussart.length() == 2) {
-			target.schluesselAbschlussartBerufsbildendVorherigeSchule = abschlussart.substring(0, 1);
-			target.schluesselAbschlussartAllgemeinbildendVorherigeSchule = abschlussart.substring(1, 2);
+			target.schluesselAbschlussartBerufsbildendDieseSchule = abschlussart.substring(0, 1);
+			target.schluesselAbschlussartAllgemeinbildendDieseSchule = abschlussart.substring(1, 2);
 		}
 	}
 
@@ -287,7 +287,7 @@ public interface SchulbesuchMapper {
 	 * @param input                  der Patch-Request mit den zu ändernden Feldern
 	 * @param toPatch                die zu aktualisierende Entity
 	 */
-	@Mapping(source = "berufsabschlussVorhanden", target = "HatBerufsausbildung")
+	@Mapping(source = "berufsabschlussVorhandenVorherigeSchule", target = "HatBerufsausbildung")
 	@Mapping(source = "entlassdatumVorherigeSchule", target = "LSSchulEntlassDatum")
 	@Mapping(source = "kuerzelEntlassjahrgangVorherigeSchule", target = "LSJahrgang")
 	@Mapping(source = "idHerkunftsartVersetzungVorherigeSchule", target = "LSVersetzung")

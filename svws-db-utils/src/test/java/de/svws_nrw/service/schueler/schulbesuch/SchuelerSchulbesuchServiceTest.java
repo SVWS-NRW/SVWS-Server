@@ -256,30 +256,30 @@ class SchuelerSchulbesuchServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// patch - Entlassart (schluesselHoechsterSchulabschluss)
+	// patch - LSEntlassart (schluesselAbschlussartAllgemeinbildendVorherigeSchule)
 	// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("patch - Entlassart")
-	void patchEntlassart() {
+	@DisplayName("patch - LSEntlassArt")
+	void patchLSEntlassArt() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
 		final var schluessel = SchulabschlussAllgemeinbildend.ABITUR.historie().getLast().schluessel;
-		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of(schluessel);
-		schueler.Entlassart = "--";
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of(schluessel);
+		schueler.LSEntlassArt = "--";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo(schluessel);
+		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo(schluessel);
 	}
 
 	@Test
-	@DisplayName("patch - Entlassart - null")
-	void patchEntlassart_null() {
+	@DisplayName("patch - LSEntlassArt - null")
+	void patchLSEntlassArt_null() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of(null);
-		schueler.Entlassart = "--";
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of(null);
+		schueler.LSEntlassArt = "--";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
@@ -289,11 +289,11 @@ class SchuelerSchulbesuchServiceTest {
 	}
 
 	@Test
-	@DisplayName("patch - Entlassart - wrong schluessel")
-	void patchEntlassart_wrongSchluessel() {
+	@DisplayName("patch - LSEntlassArt - wrong schluessel")
+	void patchLSEntlassArt_wrongSchluessel() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselHoechsterSchulabschluss = JsonNullable.of("--");
-		schueler.Entlassart = "before patch";
+		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("--");
+		schueler.LSEntlassArt = "before patch";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()
@@ -816,113 +816,113 @@ class SchuelerSchulbesuchServiceTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// patch - AbschlussartVorherigeSchule (schluesselAbschlussart*)
+	// patch - AbschlussartDieseSchule (schluesselAbschlussart*)
 	// -------------------------------------------------------------------------
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - beide undefined - kein Patch")
-	void patchAbschlussartVorherigeSchule_beideUndefined() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - beide undefined - kein Patch")
+	void patchAbschlussartDieseSchule_beideUndefined() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		schueler.LSEntlassArt = "2A";
+		schueler.Entlassart = "2A";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo("2A");
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur allgemeinbildend - zweite Stelle ersetzen")
-	void patchAbschlussartVorherigeSchule_nurAllgemeinbildend() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - nur allgemeinbildend - zweite Stelle ersetzen")
+	void patchAbschlussartDieseSchule_nurAllgemeinbildend() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
-		schueler.LSEntlassArt = "2G";
+		patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.of("A");
+		schueler.Entlassart = "2G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo("2A");
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur allgemeinbildend - DB hat keinen berufsbildend")
-	void patchAbschlussartVorherigeSchule_nurAllgemeinbildend_ohneBerufsbildendInDb() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - nur allgemeinbildend - DB hat keinen berufsbildend")
+	void patchAbschlussartDieseSchule_nurAllgemeinbildend_ohneBerufsbildendInDb() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
-		schueler.LSEntlassArt = "G";
+		patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.of("A");
+		schueler.Entlassart = "G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("A");
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo("A");
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur berufsbildend - erste Stelle ersetzen")
-	void patchAbschlussartVorherigeSchule_nurBerufsbildend() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - nur berufsbildend - erste Stelle ersetzen")
+	void patchAbschlussartDieseSchule_nurBerufsbildend() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("3");
-		schueler.LSEntlassArt = "2G";
+		patchRequest.schluesselAbschlussartBerufsbildendDieseSchule = JsonNullable.of("3");
+		schueler.Entlassart = "2G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("3G");
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo("3G");
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - nur berufsbildend - DB hat keinen allgemeinbildend - bleibt null")
-	void patchAbschlussartVorherigeSchule_nurBerufsbildend_ohneAllgemeinbildendInDb() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - nur berufsbildend - DB hat keinen allgemeinbildend - bleibt null")
+	void patchAbschlussartDieseSchule_nurBerufsbildend_ohneAllgemeinbildendInDb() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("3");
-		schueler.LSEntlassArt = null;
+		patchRequest.schluesselAbschlussartBerufsbildendDieseSchule = JsonNullable.of("3");
+		schueler.Entlassart = null;
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isNull();
+		assertThat(schuelerCaptor.getValue().Entlassart).isNull();
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - beide gesetzt - kombiniert")
-	void patchAbschlussartVorherigeSchule_beideGesetzt() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - beide gesetzt - kombiniert")
+	void patchAbschlussartDieseSchule_beideGesetzt() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("A");
-		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("2");
-		schueler.LSEntlassArt = "3G";
+		patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.of("A");
+		patchRequest.schluesselAbschlussartBerufsbildendDieseSchule = JsonNullable.of("2");
+		schueler.Entlassart = "3G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isEqualTo("2A");
+		assertThat(schuelerCaptor.getValue().Entlassart).isEqualTo("2A");
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - allgemeinbildend null - setzt LSEntlassArt auf null")
-	void patchAbschlussartVorherigeSchule_allgemeinbildendNull() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - allgemeinbildend null - setzt LSEntlassArt auf null")
+	void patchAbschlussartDieseSchule_allgemeinbildendNull() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of(null);
-		schueler.LSEntlassArt = "2G";
+		patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.of(null);
+		schueler.Entlassart = "2G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		schuelerSchulbesuchService.patch(idSchueler, patchRequest);
 
 		verify(schulbesuchMapper).patch(any(), schuelerCaptor.capture());
-		assertThat(schuelerCaptor.getValue().LSEntlassArt).isNull();
+		assertThat(schuelerCaptor.getValue().Entlassart).isNull();
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - ungültiger allgemeinbildend Schlüssel - BAD_REQUEST")
-	void patchAbschlussartVorherigeSchule_ungueltigerAllgemeinbildendSchluessel() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - ungültiger allgemeinbildend Schlüssel - BAD_REQUEST")
+	void patchAbschlussartDieseSchule_ungueltigerAllgemeinbildendSchluessel() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartAllgemeinbildendVorherigeSchule = JsonNullable.of("UNGUELTIG");
-		schueler.LSEntlassArt = "2G";
+		patchRequest.schluesselAbschlussartAllgemeinbildendDieseSchule = JsonNullable.of("UNGUELTIG");
+		schueler.Entlassart = "2G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()
@@ -932,11 +932,11 @@ class SchuelerSchulbesuchServiceTest {
 	}
 
 	@Test
-	@DisplayName("patch - patchAbschlussartVorherigeSchule - ungültiger berufsbildend Schlüssel - BAD_REQUEST")
-	void patchAbschlussartVorherigeSchule_ungueltigerBerufsbildendSchluessel() {
+	@DisplayName("patch - patchAbschlussartDieseSchule - ungültiger berufsbildend Schlüssel - BAD_REQUEST")
+	void patchAbschlussartDieseSchule_ungueltigerBerufsbildendSchluessel() {
 		final var patchRequest = new SchuelerSchulbesuchPatchRequest();
-		patchRequest.schluesselAbschlussartBerufsbildendVorherigeSchule = JsonNullable.of("UNGUELTIG");
-		schueler.LSEntlassArt = "2G";
+		patchRequest.schluesselAbschlussartBerufsbildendDieseSchule = JsonNullable.of("UNGUELTIG");
+		schueler.Entlassart = "2G";
 		when(schuelerRepository.findById(idSchueler)).thenReturn(Optional.of(schueler));
 
 		assertThatException()

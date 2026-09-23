@@ -55,9 +55,9 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 				"idEntlassgrundDieseSchule", "idAbschlussartDieseSchule", "idKindergarten", "idDauerKindergartenbesuch", "verpflichtungSprachfoerderkurs",
 				"teilnahmeSprachfoerderkurs", "wechselBestaetigtAufnehmendeSchule", "idAufnehmendeSchule", "wechseldatumAufnehmendeSchule",
 				"idEinschulungsartGrundschule", "idEingangsphaseGrundschule", "idUebergangsempfehlungGrundschule", "kuerzelErsteSchulformSek1",
-				"berufsabschlussVorhanden", "schluesselHoechsterSchulabschluss", "schluesselAbschlussartAllgemeinbildendVorherigeSchule",
-				"schluesselAbschlussartBerufsbildendVorherigeSchule", "idSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule",
-				"idHerkunftSchulformVorherigeSchule", "idHerkunftSonstigeVorherigeSchule", "idHochschulabschluss"];
+				"berufsabschlussVorhandenVorherigeSchule", "schluesselAbschlussartAllgemeinbildendDieseSchule", "schluesselAbschlussartBerufsbildendDieseSchule",
+				"idSchulgliederungVorherigeSchule", "schluesselCoreTypeFachklasseVorherigeSchule", "idHerkunftSchulformVorherigeSchule",
+				"schluesselAbschlussartAllgemeinbildendVorherigeSchule", "idHerkunftSonstigeVorherigeSchule", "idHochschulabschluss"];
 		super({ data, patch, listOfAutopatchProps });
 		this.manager = manager;
 		this.addValidatoren();
@@ -136,12 +136,6 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 
 	schulnummerStatistik = computed<string | null>(() => this.vorherigeSchule.value?.schulnummerStatistik ?? null);
 
-
-	hoechsterSchulabschluss = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
-		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselHoechsterSchulabschluss ?? '') ?? null,
-		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselHoechsterSchulabschluss = v?.schluessel ?? null,
-	});
-
 	kuerzelEntlassjahrgangVorherigeSchule = computed<JahrgaengeKatalogEintrag | null>({
 		get: () => Jahrgaenge.data().getWertByKuerzel(this.proxy.kuerzelEntlassjahrgangVorherigeSchule ?? '')?.daten(this.manager().schuljahr) ?? null,
 		set: (v: JahrgaengeKatalogEintrag | null) => this.proxy.kuerzelEntlassjahrgangVorherigeSchule = v?.kuerzel ?? null,
@@ -167,11 +161,6 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule = v?.schluessel ?? null,
 	});
 
-	abschlussartBerufsbildendVorherigeSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
-		get: () => SchulabschlussBerufsbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartBerufsbildendVorherigeSchule ?? ''),
-		set: (v: SchulabschlussBerufsbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartBerufsbildendVorherigeSchule = v?.schluessel ?? null,
-	});
-
 	idEntlassjahrgangDieseSchule = computed<JahrgangsDaten | null>({
 		get: () => this.manager().jahrgaengeById.get(this.proxy.idEntlassjahrgangDieseSchule ?? -1) ?? null,
 		set: (v: JahrgangsDaten | null) => this.proxy.idEntlassjahrgangDieseSchule = v?.id ?? null,
@@ -180,6 +169,16 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	idEntlassgrundDieseSchule = computed<KatalogEntlassgrund | null>({
 		get: () => this._entlassgruendeState.entlassgruende.byId.get(this.proxy.idEntlassgrundDieseSchule ?? -1) ?? null,
 		set: (v: KatalogEntlassgrund | null) => this.proxy.idEntlassgrundDieseSchule = v?.id ?? null,
+	});
+
+	abschlussartAllgemeinbildendDieseSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
+		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartAllgemeinbildendDieseSchule ?? ''),
+		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartAllgemeinbildendDieseSchule = v?.schluessel ?? null,
+	});
+
+	abschlussartBerufsbildendDieseSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
+		get: () => SchulabschlussBerufsbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartBerufsbildendDieseSchule ?? ''),
+		set: (v: SchulabschlussBerufsbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartBerufsbildendDieseSchule = v?.schluessel ?? null,
 	});
 
 	idKindergarten = computed<Kindergarten | null>({
