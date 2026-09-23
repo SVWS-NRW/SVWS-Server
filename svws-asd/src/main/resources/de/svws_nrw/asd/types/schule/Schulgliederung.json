@@ -1,5 +1,5 @@
 {
-	"version": 9,
+	"version": 10,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idStatistik": "1",
@@ -616,7 +616,7 @@
 			"kuerzel": "A12",
 			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
 			"gueltigVon": 2016,
-			"gueltigBis": null,
+			"gueltigBis": 2024,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -652,6 +652,95 @@
 				"jahrgangVon": "JAHRGANG_01",
 				"jahrgangBis": "JAHRGANG_01"
 			} ]
+		}, {
+			"id": 1012001,
+			"schluessel": "A12",
+			"kuerzel": "A12",
+			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025,
+			"auslaufdauer": 0,
+			"schulformen": [ "BK", "SB" ],
+			"istBK": true,
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"bkAnlage": "A",
+			"bkTyp": "12",
+			"bkIndex": 57,
+			"istVZ": true,
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "0A",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9_FOE",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
+		}, {
+			"id": 1012002,
+			"schluessel": "A12",
+			"kuerzel": "A12",
+			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
+			"gueltigVon": 2026,
+			"gueltigBis": null,
+			"auslaufdauer": 0,
+			"schulformen": [ "BK", "SB" ],
+			"istBK": true,
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"bkAnlage": "A",
+			"bkTyp": "12",
+			"bkIndex": 57,
+			"istVZ": true,
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
 		} ]
 	}, {
 		"bezeichner": "A13",
@@ -662,7 +751,7 @@
 			"kuerzel": "A13",
 			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
 			"gueltigVon": 2016,
-			"gueltigBis": null,
+			"gueltigBis": 2024,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -685,6 +774,95 @@
 			}, {
 				"allgemeinbildend": "HA9A",
 				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
+		}, {
+			"id": 1013001,
+			"schluessel": "A13",
+			"kuerzel": "A13",
+			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
+			"gueltigVon": 2025,
+			"gueltigBis": 2025,
+			"auslaufdauer": 0,
+			"schulformen": [ "BK", "SB" ],
+			"istBK": true,
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"bkAnlage": "A",
+			"bkTyp": "13",
+			"bkIndex": 58,
+			"istVZ": false,
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "0A",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9_FOE",
+				"berufsbildend": "ASZBK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
+		}, {
+			"id": 1013002,
+			"schluessel": "A13",
+			"kuerzel": "A13",
+			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
+			"gueltigVon": 2026,
+			"gueltigBis": null,
+			"auslaufdauer": 0,
+			"schulformen": [ "BK", "SB" ],
+			"istBK": true,
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"bkAnlage": "A",
+			"bkTyp": "13",
+			"bkIndex": 58,
+			"istVZ": false,
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "BK",
 				"jahrgangVon": "JAHRGANG_01",
 				"jahrgangBis": "JAHRGANG_01"
 			}, {
@@ -1097,7 +1275,37 @@
 			"bkTyp": "17",
 			"bkIndex": 65,
 			"istVZ": false,
-			"abschluesse": [ ]
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "0A",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9_FOE",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
 		} ]
 	}, {
 		"bezeichner": "A18",
@@ -1118,7 +1326,22 @@
 			"bkTyp": "18",
 			"bkIndex": 66,
 			"istVZ": false,
-			"abschluesse": [ ]
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "0A",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
 		} ]
 	}, {
 		"bezeichner": "A19",
@@ -1139,7 +1362,32 @@
 			"bkTyp": "19",
 			"bkIndex": 67,
 			"istVZ": false,
-			"abschluesse": [ ]
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "0A",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "DFR",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA9A",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
 		} ]
 	}, {
 		"bezeichner": "AB",

@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"eintraege": [ {
 		"kuerzel": "0A",
 		"historie": [ {
@@ -159,6 +159,89 @@
 				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": 2022,
+			"gueltigBis": 2025
+		}, {
+			"id": 1001002,
+			"beschreibung": "Ohne Abschluss",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A02", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A03", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A04", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A14", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A15", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A16", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A18", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A19", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "B06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "B07", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "B08", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "B09", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "B10", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "C01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "C02", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "C05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "C06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "C07", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "C08", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "C11", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "C12", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "C13", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "D05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "D06", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "E01", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "E02", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "E03", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "E04", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "E05", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "E07", "jahrgaenge": [ "01","02","03","04","05","06" ] },
+				{ "schulform": "BK", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "A01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A02", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A03", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A04", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A14", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A15", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A16", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A18", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A19", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "B06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "B07", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "B08", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "C01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "C02", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "C05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "C06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "C07", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "C08", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "C11", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "C12", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "D05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "D06", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "E01", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "E02", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "E03", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "E04", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "E05", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "E07", "jahrgaenge": [ "01","02","03","04","05","06" ] },
+				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -199,7 +282,7 @@
 				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": 2025
 		} ]
 	}, {
 		"kuerzel": "0D",
@@ -276,6 +359,39 @@
 				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": 2022,
+			"gueltigBis": 2025
+		}, {
+			"id": 1002002,
+			"beschreibung": "Erweiterter Erster Schulabschluss",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A14", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A15", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "A16", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "B08", "jahrgaenge": [ "02" ] },
+				{ "schulform": "BK", "gliederung": "B09", "jahrgaenge": [ "03" ] },
+				{ "schulform": "BK", "gliederung": "B10", "jahrgaenge": [ "04" ] },
+				{ "schulform": "BK", "gliederung": "C01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "C05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "C12", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "C13", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "BK", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "BK", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "A14", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A15", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "A16", "jahrgaenge": [ "02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "B08", "jahrgaenge": [ "02" ] },
+				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "03" ] },
+				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] },
+				{ "schulform": "SB", "gliederung": "C01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "C05", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "C12", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "01","02","03" ] },
+				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
+				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -428,7 +544,7 @@
 				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": 2022,
-			"gueltigBis": null
+			"gueltigBis": 2025
 		} ]
 	}, {
 		"kuerzel": "0H",
@@ -460,6 +576,19 @@
 				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		}, {
+			"id": 2177001,
+			"beschreibung": "ohne Abschluss, kommt aus Deutschförderung",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A18", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A19", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A18", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A19", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -478,6 +607,17 @@
 				{ "schulform": "SB", "gliederung": "E04", "jahrgaenge": [ "02" ] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2025
+		}, {
+			"id": 1007001,
+			"beschreibung": "Abschlusszeugnis (berufliche Kenntnisse, Fähigkeiten und Fertigkeiten)",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "E03", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "E04", "jahrgaenge": [ "02" ] },
+				{ "schulform": "SB", "gliederung": "E03", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "E04", "jahrgaenge": [ "02" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -492,6 +632,50 @@
 				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": 2025,
+			"gueltigBis": 2025
+		} ]
+	}, {
+		"kuerzel": "4R",
+		"historie": [ {
+			"id": 2180000,
+			"beschreibung": "berufliche Kenntnisse, Fähigkeiten und Fertigkeiten, kommt aus Deutschförderung",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A19", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A19", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2026,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "4B",
+		"historie": [ {
+			"id": 2181000,
+			"beschreibung": "berufliche Kenntnisse, Fähigkeiten und Fertigkeiten und Erster Schulabschluss",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "A19", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A19", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2026,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "4S",
+		"historie": [ {
+			"id": 2182000,
+			"beschreibung": "berufliche Kenntnisse, Fähigkeiten und Fertigkeiten und Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "A17", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "A17", "jahrgaenge": [ "01" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -677,8 +861,7 @@
 			],
 			"gueltigVon": null,
 			"gueltigBis": 2021
-		},
-		{
+		}, {
 			"id": 1019001,
 			"beschreibung": "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten und Erweiterter Erster Schulabschluss",
 			"zulaessig": [
@@ -690,6 +873,21 @@
 				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "02" ] }
 			],
 			"gueltigVon": 2022,
+			"gueltigBis": 2025
+		}, {
+			"id": 1019002,
+			"beschreibung": "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten und Erweiterter Erster Schulabschluss",
+			"zulaessig": [
+				{ "schulform": "BK", "gliederung": "B06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "B07", "jahrgaenge": [ "01" ] },
+				{ "schulform": "BK", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "BK", "gliederung": "C13", "jahrgaenge": [ "02" ] },
+				{ "schulform": "SB", "gliederung": "B06", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "B07", "jahrgaenge": [ "01" ] },
+				{ "schulform": "SB", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
+				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "02" ] }
+			],
+			"gueltigVon": 2026,
 			"gueltigBis": null
 		} ]
 	}, {
