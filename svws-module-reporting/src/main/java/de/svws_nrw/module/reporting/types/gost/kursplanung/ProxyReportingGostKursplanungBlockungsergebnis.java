@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikHalbjahr;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -25,6 +26,10 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	@JsonIgnore
 	private final ReportingContext reportingContext;
 
+	/** Der Manager des Blockungsergebnisses. Nur der Aufbau im Repository setzt ihn. Die Einzelausgabe erhält keinen. */
+	@JsonIgnore
+	private final GostBlockungsergebnisManager ergebnisManager;
+
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungBlockungsergebnis}. Wird vom
@@ -32,6 +37,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * mit bereits gefilterten Schüler-/Kurs-/Schienen-Listen zu kapseln.
 	 *
 	 * @param reportingContext         Context mit Parametern, Logger und Daten zum Reporting.
+	 * @param ergebnisManager          Der Manager des Blockungsergebnisses.
 	 * @param abiturjahr               Das Kalenderjahr, in dem die Abiturprüfung des Blockungsergebnisses stattfindet.
 	 * @param anzahlDummy              Anzahl der Dummy-Schüler im Ergebnis.
 	 * @param anzahlExterne            Anzahl der externen Schüler im Ergebnis.
@@ -46,7 +52,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * @param schueler                 Liste der Schüler des Blockungsergebnisses.
 	 */
 	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
-	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingContext reportingContext, final int abiturjahr, final int anzahlDummy,
+	public ProxyReportingGostKursplanungBlockungsergebnis(final ReportingContext reportingContext,
+			final GostBlockungsergebnisManager ergebnisManager, final int abiturjahr, final int anzahlDummy,
 			final int anzahlExterne, final int anzahlMaxKurseProSchiene, final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung,
 			final GostHalbjahr gostHalbjahr, final long id, final List<ReportingGostKursplanungKurs> kurse,
 			final List<ReportingGostKursplanungSchiene> schienen, final List<ReportingSchueler> schueler) {
@@ -57,6 +64,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				ReportingGostKursplanungKurs.FILTER.bedingung(
 						reportingContext.filterService().getFilter(ReportingGostKursplanungKurs.class.getSimpleName()), null));
 		this.reportingContext = reportingContext;
+		this.ergebnisManager = ergebnisManager;
 	}
 
 
@@ -65,6 +73,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 * übergebenen Schüler- und Kurs-Prädikaten. Wird verwendet, um Sub-Kontexte (z. B. für Einzelausgaben) auf einen
 	 * einzelnen Schüler oder Kurs einzuschränken. Die zugrunde liegenden Listen werden aus einem bereits aufgebauten
 	 * Reporting-Objekt übernommen.
+	 * <p>Dieses Objekt erhält keinen Manager. Die Fachwahlstatistik der Quelle ist damit das endgültige Ergebnis und wird unverändert weitergegeben.</p>
 	 *
 	 * @param reportingContext       Context mit Parametern, Logger und Daten zum Reporting.
 	 * @param quelle                 Ein bereits aufgebautes Reporting-Objekt, dessen Listen wiederverwendet werden.
@@ -80,6 +89,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				new ArrayList<>(quelle.kurse), new ArrayList<>(quelle.schienen()), new ArrayList<>(quelle.schueler),
 				filterSchueler, filterKurse);
 		this.reportingContext = reportingContext;
+		this.ergebnisManager = null;
 	}
 
 
@@ -101,6 +111,10 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	 */
 	@Override
 	public Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik() {
+		// Ohne Manager ist die Statistik der Quelle endgültig. Ein eigener Aufbau liefe hier ohne Manager in eine NullPointerException.
+		if (this.ergebnisManager == null) {
+			return super.fachwahlstatistik();
+		}
 		if ((super.fachwahlstatistik() == null) || super.fachwahlstatistik().isEmpty()) {
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> mapFachwahlStatistik = new HashMap<>();
 			// Die Fachwahl-Anzahlen aus der Laufbahnplanung reichern die Kursausgabe an: Ein Ladefehler wird gemeldet, die Kurse erscheinen weiterhin und die
@@ -113,7 +127,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 										f -> f.id,
 										f -> (ReportingGostKursplanungFachwahlstatistik) new ProxyReportingGostKursplanungFachwahlstatistik(
 												new ProxyReportingGostFachwahlstatistikHalbjahr(this.reportingContext, this.gostHalbjahr(), f),
-												this.reportingContext.repositoryGostKursplanung().manager()))));
+												this.ergebnisManager))));
 			}
 			super.fachwahlstatistik = mapFachwahlStatistik;
 		}

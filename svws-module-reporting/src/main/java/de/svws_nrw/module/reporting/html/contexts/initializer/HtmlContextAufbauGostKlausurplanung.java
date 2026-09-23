@@ -1,10 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts.initializer;
 
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -12,14 +10,12 @@ import de.svws_nrw.module.reporting.repositories.ReportingContext;
 /**
  * Die Konfiguration eines Datenaufbaus der GOSt-Klausurplanung.
  * <p>Beide Sichtweisen — die der Schüler und die der Klausurtermine — prüfen dasselbe und legen ihren Context unter demselben Schlüssel ab; sie
- * unterscheiden sich allein im Context-Typ. Der Rückgabetyp des Erzeugers bindet diesen auf die Klausurplan-Contexts. Die ausgewählten Stufen kommen aus
- * dem Initializer, der die Auswahl prüft und meldet.</p>
+ * unterscheiden sich allein im Context-Typ. Der Rückgabetyp des Erzeugers bindet diesen auf die Klausurplan-Contexts.</p>
  *
- * @param contextErzeuger Erzeugt den Haupt-Context dieser Sichtweise aus dem Reporting-Context und den ausgewählten Stufen.
+ * @param contextErzeuger Erzeugt den Haupt-Context dieser Sichtweise.
  */
 record HtmlContextAufbauGostKlausurplanung(
-		BiFunction<ReportingContext, List<GostKlausurenHalbjahresdaten>, HtmlContextGostKlausurplanungKlausurplan> contextErzeuger)
-		implements HtmlContextAufbau {
+		Function<ReportingContext, HtmlContextGostKlausurplanungKlausurplan> contextErzeuger) implements HtmlContextAufbau {
 
 	/**
 	 * Der Schlüssel des Haupt-Contexts in der Context-Map; für beide Sichtweisen derselbe.

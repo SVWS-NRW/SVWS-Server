@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
@@ -10,7 +9,6 @@ import org.thymeleaf.context.Context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositoryGostKlausurplanung;
@@ -38,14 +36,12 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	 * zentral im Repository anhand der konfigurierten FILTER-Companions.
 	 *
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
-	 * @param selection			Die vom Initializer ausgewählten Stufen (Abiturjahrgang und GOSt-Halbjahr).
 	 *
 	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
-	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingContext reportingContext, final List<GostKlausurenHalbjahresdaten> selection)
-			throws ApiOperationException {
+	protected HtmlContextGostKlausurplanungKlausurplan(final ReportingContext reportingContext) throws ApiOperationException {
 		super(reportingContext);
-		erzeugeContext(selection);
+		erzeugeContext();
 	}
 
 	/**
@@ -75,16 +71,13 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 
 
 	/**
-	 * Erzeugt den Context zur GOSt-Klausurplanung aus den vom Initializer ausgewählten Stufen.
-	 *
-	 * @param selection Die ausgewählten Stufen (Abiturjahrgang und GOSt-Halbjahr).
+	 * Erzeugt den Context zur GOSt-Klausurplanung. Die Stufen der Auswahl beschafft sich das Repository beim ersten Zugriff selbst.
 	 *
 	 * @throws ApiOperationException   	im Fehlerfall
 	 */
-	private void erzeugeContext(final List<GostKlausurenHalbjahresdaten> selection) throws ApiOperationException {
+	private void erzeugeContext() throws ApiOperationException {
 		try {
 			final ReportingRepositoryGostKlausurplanung repo = this.reportingContext.repositoryGostKlausurplanung();
-			repo.initManager(selection);
 
 			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingContext,
 					repo.klausurtermine(), repo.kurse(), repo.kursklausuren(), repo.schueler(), repo.schuelerklausuren());
@@ -104,13 +97,15 @@ public abstract class HtmlContextGostKlausurplanungKlausurplan extends HtmlConte
 	}
 
 	/**
-	 * Ermittelt den Ausgabeumfang dieser Sichtweise aus dem initialisierten Repository: die im Plan vorhandenen Einheiten gegen die nach Filterung
+	 * Ermittelt den Ausgabeumfang dieser Sichtweise aus dem Repository: die im Plan vorhandenen Einheiten gegen die nach Filterung
 	 * ausgegebenen. Eine leere Ausgabe ist zulässig, wenn keine Einheit ausgegeben wird - sei es, weil keine Stufe übrig blieb, die Stufen keine Einheiten
 	 * enthalten oder der Benutzerfilter alle ausschließt.
 	 *
-	 * @param repo Das initialisierte Repository der GOSt-Klausurplanung.
+	 * @param repo Das Repository der GOSt-Klausurplanung.
 	 *
 	 * @return Der Ausgabeumfang dieser Sichtweise.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	protected abstract ReportingAusgabeumfang ermittleAusgabeumfang(ReportingRepositoryGostKlausurplanung repo);
+	protected abstract ReportingAusgabeumfang ermittleAusgabeumfang(ReportingRepositoryGostKlausurplanung repo) throws ApiOperationException;
 }

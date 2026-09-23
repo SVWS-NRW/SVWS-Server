@@ -30,6 +30,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.service.gost.GostServiceFactory;
 import de.svws_nrw.service.gost.GostServiceFactoryBuilder;
 import jakarta.ws.rs.core.Response.Status;
@@ -67,6 +68,9 @@ class TestReportingRepositoryAbbruchstatus {
 		log = new LogConsumerList();
 		logger.addConsumer(log);
 		when(reportingContext.logger()).thenReturn(logger);
+		final ReportingParameterTypisiert reportingParameter = mock(ReportingParameterTypisiert.class);
+		when(reportingParameter.idHauptdatenObjekt()).thenReturn(ID_BLOCKUNGSERGEBNIS);
+		when(reportingContext.reportingParameter()).thenReturn(reportingParameter);
 	}
 
 
@@ -147,7 +151,7 @@ class TestReportingRepositoryAbbruchstatus {
 		try (MockedStatic<DataGostBlockungsergebnisse> dataErgebnisse = mockStatic(DataGostBlockungsergebnisse.class)) {
 			dataErgebnisse.when(() -> DataGostBlockungsergebnisse.getErgebnisFromID(any(), anyLong())).thenThrow(ursache);
 
-			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.initManager(ID_BLOCKUNGSERGEBNIS));
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, repository::blockungsergebnis);
 
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
@@ -169,7 +173,7 @@ class TestReportingRepositoryAbbruchstatus {
 			dataErgebnisse.when(() -> DataGostBlockungsergebnisse.getErgebnisFromID(any(), anyLong())).thenReturn(blockungsergebnis);
 			dataBlockungsdaten.when(() -> DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(any(), eq(ID_BLOCKUNG))).thenThrow(ursache);
 
-			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.initManager(ID_BLOCKUNGSERGEBNIS));
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, repository::blockungsergebnis);
 
 			assertEquals(Status.INTERNAL_SERVER_ERROR, aoe.getStatus());
 			assertSame(ursache, aoe.getCause(), "Die Meldung der Datenschicht bleibt als Ursache erhalten.");
@@ -260,7 +264,7 @@ class TestReportingRepositoryAbbruchstatus {
 			dataErgebnisse.when(() -> DataGostBlockungsergebnisse.getErgebnisFromID(any(), anyLong()))
 					.thenThrow(new ApiOperationException(Status.NOT_FOUND, "Ungültige Blockungsergebnis-ID übergeben."));
 
-			final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> repository.initManager(ID_BLOCKUNGSERGEBNIS));
+			final ApiOperationException aoe = assertThrows(ApiOperationException.class, repository::blockungsergebnis);
 
 			assertEquals(Status.NOT_FOUND, aoe.getStatus());
 		}

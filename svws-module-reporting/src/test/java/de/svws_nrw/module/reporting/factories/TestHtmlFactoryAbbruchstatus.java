@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
@@ -163,12 +162,10 @@ class TestHtmlFactoryAbbruchstatus {
 		// Serverfehler als fehlende Klausurdaten aus.
 		when(reportingParameter.reportVorlage()).thenReturn(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN);
 		when(reportingParameter.idsHauptdaten()).thenReturn(List.of(20253L));
-		final ReportingRepositoryGost repositoryGost = mock(ReportingRepositoryGost.class);
-		when(repositoryGost.abiturjahrgaenge()).thenReturn(List.of(2025));
-		when(reportingContext.repositoryGost()).thenReturn(repositoryGost);
 		final ReportingRepositoryGostKlausurplanung repositoryKlausurplanung = mock(ReportingRepositoryGostKlausurplanung.class);
 		final ApiOperationException ursache = new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Klausurdaten sind nicht lesbar.");
-		doThrow(ursache).when(repositoryKlausurplanung).initManager(any());
+		// Der Fehler sitzt am ersten Getter, den der Context auswertet: Er stößt den Aufbau des Klausurplans an.
+		when(repositoryKlausurplanung.klausurtermine()).thenThrow(ursache);
 		when(reportingContext.repositoryGostKlausurplanung()).thenReturn(repositoryKlausurplanung);
 
 		final ApiOperationException aoe = assertThrows(ApiOperationException.class, () -> HtmlFactory.erzeuge(reportingContext));

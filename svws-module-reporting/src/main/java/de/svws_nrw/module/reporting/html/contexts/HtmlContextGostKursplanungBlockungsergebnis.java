@@ -76,10 +76,7 @@ public abstract class HtmlContextGostKursplanungBlockungsergebnis extends HtmlCo
 		reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge Context zu einem GostKursplanungBlockungsergebnis.");
 
 		try {
-			final long idBlockungsergebnis = this.reportingContext.reportingParameter().idHauptdatenObjekt();
-
 			final ReportingRepositoryGostKursplanung repo = this.reportingContext.repositoryGostKursplanung();
-			repo.initManager(idBlockungsergebnis);
 			this.blockungsergebnis = repo.blockungsergebnis();
 
 			// Erst das aufgebaute Blockungsergebnis kennt die Zähleinheiten dieses Datenaufbaus; die Sichtweise bestimmt, ob Kurse oder Schüler gezählt werden.

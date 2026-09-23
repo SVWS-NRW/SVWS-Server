@@ -15,8 +15,12 @@ import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurtermin;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.klausuren.GostKlausurplanManager;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
+import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterung;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.ReportingSortierung;
@@ -31,6 +35,7 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Domänen-Repository für die GOSt-Klausurplanung. Hält pro Reporting-Request genau einen
@@ -59,8 +64,14 @@ public class ReportingRepositoryGostKlausurplanung {
 
 	private final ReportingContext reportingContext;
 
-	/** Der GOSt-Klausurplan-Manager dieses Reports (lazy, einmalig initialisiert). */
+	/** Der GOSt-Klausurplan-Manager dieses Reports. Ein gesetztes Feld bedeutet: Manager und Reporting-Objekte stehen vollständig. */
 	private GostKlausurplanManager manager = null;
+
+	/** Der Fehler, an dem der Aufbau gescheitert ist. Jeder weitere Zugriff wirft ihn erneut, statt neu aufzubauen. */
+	private ApiOperationException aufbaufehler = null;
+
+	/** Kennzeichen, dass ein Aufbau begonnen hat. Es hält auch Abbrüche fest, die der Catch nicht erfasst. */
+	private boolean aufbauBegonnen = false;
 
 	/** Cache der bereits erzeugten Klausurtermine, indiziert nach Klausurtermin-ID. */
 	private final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine = new LinkedHashMap<>();
@@ -83,31 +94,163 @@ public class ReportingRepositoryGostKlausurplanung {
 
 
 	/**
-	 * Initialisiert den {@link GostKlausurplanManager} und baut die Reporting-Objekte für alle Klausurtermine,
-	 * Kursklausuren und Schülerklausuren auf. Wird einmalig pro Reporting-Request vom HtmlContext aufgerufen.
-	 * Folgeaufrufe sind No-Ops (Single-Threaded pro Request).
+	 * Gibt den vollständig aufgebauten {@link GostKlausurplanManager} zurück und baut ihn beim ersten Zugriff auf. Jeder Daten-Getter ruft diese Methode.
+	 * So gibt es keinen Zugriff auf ein nur teilweise aufgebautes Repository.
 	 *
-	 * @param selection Die Auswahl aus Abiturjahrgang und GOSt-Halbjahr.
+	 * @return Der Klausurplan-Manager dieses Reports.
 	 *
-	 * @throws ApiOperationException Falls die Klausurplandaten nicht ermittelt werden konnten.
+	 * @throws ApiOperationException Falls der Aufbau scheitert oder bereits gescheitert ist.
 	 */
-	public void initManager(final List<GostKlausurenHalbjahresdaten> selection) throws ApiOperationException {
-		if (manager != null) {
-			return;
+	private GostKlausurplanManager aufgebauterManager() throws ApiOperationException {
+		if (aufbaufehler != null) {
+			throw aufbaufehler;
 		}
-		final GostKlausurenAlleKlausurdaten allData = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
-				.getGostKlausurenAllDataService().getAllData(selection);
-		manager = new GostKlausurplanManager(allData);
-		erzeugeReportingObjekte();
+		if (manager != null) {
+			return manager;
+		}
+		// Der Aufbau wird höchstens einmal versucht. Ein zweiter Lauf verdoppelt die Schülerklausuren an den geteilten Schüler-Objekten.
+		if (aufbauBegonnen) {
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Der Aufbau der Daten des gewählten Klausurplans ist abgebrochen.");
+		}
+		aufbauBegonnen = true;
+		try {
+			manager = baueManagerAuf();
+		} catch (final Exception e) {
+			// Die Core-Manager melden ihre Datenfehler als DeveloperNotificationException. Sie ist keine ApiOperationException.
+			aufbaufehler = alsApiOperationException(e);
+			throw aufbaufehler;
+		}
+		return manager;
 	}
 
 	/**
-	 * Gibt den {@link GostKlausurplanManager} zurück. Liefert {@code null}, wenn der Manager noch nicht initialisiert wurde.
+	 * Baut den {@link GostKlausurplanManager} und die Reporting-Objekte für alle Klausurtermine, Kursklausuren und Schülerklausuren auf. Die Stufen der
+	 * Auswahl stehen in den Reportparametern oder werden aus dem ausgewählten Schuljahresabschnitt abgeleitet.
+	 * <p>Der Manager wird erst nach dem Aufbau aller Reporting-Objekte zurückgegeben. Ein Abbruch dazwischen hinterlässt deshalb kein gefülltes Feld.</p>
 	 *
-	 * @return Der Klausurplan-Manager oder {@code null}.
+	 * @return Der aufgebaute Klausurplan-Manager.
+	 *
+	 * @throws ApiOperationException Falls eine Stufe ungültig ist oder die Klausurplandaten nicht ermittelt werden konnten.
 	 */
-	public GostKlausurplanManager manager() {
-		return manager;
+	private GostKlausurplanManager baueManagerAuf() throws ApiOperationException {
+		final List<GostKlausurenHalbjahresdaten> selection = waehleStufenAus();
+		final GostKlausurenAlleKlausurdaten allData = GostKlausurenServiceFactoryBuilder.getGostKlausurenServiceFactory()
+				.getGostKlausurenAllDataService().getAllData(selection);
+		final GostKlausurplanManager klausurplanManager = new GostKlausurplanManager(allData);
+		erzeugeReportingObjekte(klausurplanManager);
+		return klausurplanManager;
+	}
+
+	/**
+	 * Wählt die Stufen des Klausurplans aus: die übergebenen kombinierten IDs oder ohne Übergabe die drei aus dem ausgewählten Schuljahresabschnitt
+	 * abgeleiteten Stufen. Ein nicht vorhandener Abiturjahrgang und ein abgeleitetes Paar ohne GOSt-Halbjahr werden ausgelassen und gemeldet - für sie gibt
+	 * es keine Ausgabe.
+	 *
+	 * @return Die ausgewählten Stufen; leer, wenn keine angeforderte oder abgeleitete Stufe vorhanden ist.
+	 *
+	 * @throws ApiOperationException Falls eine übergebene ID ungültig ist oder die vorhandenen Abiturjahrgänge nicht geladen werden konnten.
+	 */
+	private List<GostKlausurenHalbjahresdaten> waehleStufenAus() throws ApiOperationException {
+		final List<long[]> kandidaten = new ArrayList<>();
+		final List<Long> parameterDaten = reportingContext.reportingParameter().idsHauptdaten();
+
+		if (parameterDaten.isEmpty()) {
+			// Ohne übergebene Stufen gilt der Grundfall des Clients: alle drei Stufen gemäß dem ausgewählten Schuljahresabschnitt.
+			final int schuljahr = reportingContext.repositorySchule().auswahlSchuljahresabschnitt().schuljahr();
+			final int abschnitt = reportingContext.repositorySchule().auswahlSchuljahresabschnitt().abschnitt();
+			kandidatOderMelde(kandidaten, schuljahr + 3L, abschnitt - 1L);
+			kandidatOderMelde(kandidaten, schuljahr + 2L, abschnitt + 1L);
+			kandidatOderMelde(kandidaten, schuljahr + 1L, abschnitt + 3L);
+		} else {
+			for (final Long kombinierteId : parameterDaten) {
+				if (kombinierteId != null) {
+					kandidaten.add(zerlegeStufenId(kombinierteId));
+				}
+			}
+		}
+
+		// Der Existenzabgleich folgt nach der Formprüfung; ein Ladefehler der vorhandenen Abiturjahrgänge wirft statustragend als Serverfehler.
+		final List<Integer> vorhandeneAbiturjahrgaenge = reportingContext.repositoryGost().abiturjahrgaenge();
+		final List<GostKlausurenHalbjahresdaten> selection = new ArrayList<>();
+		for (final long[] kandidat : kandidaten) {
+			final int abiturjahr = (int) kandidat[0];
+			final int halbjahr = (int) kandidat[1];
+			if (vorhandeneAbiturjahrgaenge.contains(abiturjahr)) {
+				selection.add(new GostKlausurenHalbjahresdaten(abiturjahr, halbjahr));
+			} else {
+				meldeAusgelasseneStufe(abiturjahr, halbjahr,
+						"Der Abiturjahrgang %d ist nicht vorhanden; die Stufe mit dem GOSt-Halbjahr %s wird in der Ausgabe ausgelassen."
+								.formatted(abiturjahr, GostHalbjahr.fromID(halbjahr).kuerzel));
+			}
+		}
+
+		return selection;
+	}
+
+	/**
+	 * Zerlegt eine übergebene kombinierte ID (z. B. 20253 für Abitur 2025 in Q1.2) und prüft ihre Form. Das Repository prüft die selbst gelesene Angabe als
+	 * letzte Instanz; ohne gültiges GOSt-Halbjahr liefen der Ladeweg und die Meldung der Auslassung in eine Zugriffsverletzung.
+	 *
+	 * @param kombinierteId Die kombinierte ID aus Abiturjahr und GOSt-Halbjahr.
+	 *
+	 * @return Das Paar aus Abiturjahr und Halbjahres-ID.
+	 *
+	 * @throws ApiOperationException Falls Abiturjahr oder Halbjahr außerhalb des Wertebereichs liegen.
+	 */
+	private static long[] zerlegeStufenId(final long kombinierteId) throws ApiOperationException {
+		final long abiturjahr = kombinierteId / 10;
+		if ((abiturjahr < 1900) || (abiturjahr > 9999) || (GostHalbjahr.fromID((int) (kombinierteId % 10)) == null)) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "### FEHLER: Die Angabe zur gewählten Stufe ist ungültig.");
+		}
+		return new long[] { abiturjahr, kombinierteId % 10 };
+	}
+
+	/**
+	 * Übernimmt ein aus dem Schuljahresabschnitt abgeleitetes Paar in die Kandidatenliste, sofern die Halbjahres-ID ein GOSt-Halbjahr bezeichnet. Ein
+	 * Abschnitt jenseits der beiden Schulhalbjahre erzeugt IDs ohne GOSt-Halbjahr; diese Stufe wird ausgelassen und gemeldet, denn der Anwender hat hier
+	 * nichts übergeben, das sich abweisen ließe.
+	 *
+	 * @param kandidaten Die Kandidatenliste der Auswahl.
+	 * @param abiturjahr Das abgeleitete Abiturjahr.
+	 * @param halbjahr   Die abgeleitete Halbjahres-ID.
+	 */
+	private void kandidatOderMelde(final List<long[]> kandidaten, final long abiturjahr, final long halbjahr) {
+		if (GostHalbjahr.fromID((int) halbjahr) == null) {
+			meldeAusgelasseneStufe((int) abiturjahr, (int) halbjahr,
+					"Zum ausgewählten Schuljahresabschnitt gehört kein GOSt-Halbjahr; die abgeleitete Stufe des Abiturjahrgangs %d wird in der Ausgabe ausgelassen."
+							.formatted(abiturjahr));
+			return;
+		}
+		kandidaten.add(new long[] { abiturjahr, halbjahr });
+	}
+
+	/**
+	 * Meldet eine ausgelassene Stufe als Ausgabeproblem. Der Schlüssel trägt die kombinierte ID, sodass dieselbe Stufe je Aufruf einmal zählt.
+	 *
+	 * @param abiturjahr   Das Abiturjahr der Stufe.
+	 * @param halbjahr     Die Halbjahres-ID der Stufe.
+	 * @param beschreibung Der Sachverhalt für das Log.
+	 */
+	private void meldeAusgelasseneStufe(final int abiturjahr, final int halbjahr, final String beschreibung) {
+		reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.DATENSATZ_AUSGELASSEN,
+				ReportingProblemSchluessel.fuer(GostKlausurenHalbjahresdaten.class, (abiturjahr * 10L) + halbjahr), beschreibung, null);
+	}
+
+	/**
+	 * Führt einen Fehler des Aufbaus auf eine {@link ApiOperationException} zurück. Eine bereits passende Ausnahme bleibt unverändert. So behält sie den
+	 * Status und die Ursachenkette der Datenschicht.
+	 *
+	 * @param fehler Der aufgetretene Fehler.
+	 *
+	 * @return Der Fehler als ApiOperationException.
+	 */
+	private static ApiOperationException alsApiOperationException(final Exception fehler) {
+		if (fehler instanceof final ApiOperationException aoe) {
+			return aoe;
+		}
+		return new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, fehler,
+				"### FEHLER: Die Daten des gewählten Klausurplans konnten nicht aufgebaut werden.");
 	}
 
 
@@ -120,12 +263,12 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Default-Verhalten siehe Klassen-JavaDoc.
 	 *
 	 * @return Liste der Schüler.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public List<ReportingSchueler> schueler() {
-		if (manager == null) {
-			return List.of();
-		}
-		final List<Long> ids = manager.schuelerklausurGetMengeAsList().stream().map(sk -> sk.idSchueler).distinct().toList();
+	public List<ReportingSchueler> schueler() throws ApiOperationException {
+		final GostKlausurplanManager klausurplanManager = aufgebauterManager();
+		final List<Long> ids = klausurplanManager.schuelerklausurGetMengeAsList().stream().map(sk -> sk.idSchueler).distinct().toList();
 		return reportingContext.repositorySchueler().schueler(ids);
 	}
 
@@ -133,13 +276,12 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Gibt die Anzahl der Schüler zurück, die der Klausurplan-Manager zu den ausgewählten Stufen kennt - vor jeder Filterung. Aus ihr entsteht das Feld
 	 * {@code angefordert} des Hinweis-Headers der Schüler-Sichtweise.
 	 *
-	 * @return Die Anzahl der Schüler im Plan; 0 vor der Initialisierung des Managers.
+	 * @return Die Anzahl der Schüler im Plan.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public int anzahlSchuelerVorhanden() {
-		if (manager == null) {
-			return 0;
-		}
-		return (int) manager.schuelerklausurGetMengeAsList().stream().map(sk -> sk.idSchueler).distinct().count();
+	public int anzahlSchuelerVorhanden() throws ApiOperationException {
+		return (int) aufgebauterManager().schuelerklausurGetMengeAsList().stream().map(sk -> sk.idSchueler).distinct().count();
 	}
 
 	/**
@@ -149,12 +291,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Default-Verhalten siehe Klassen-JavaDoc.
 	 *
 	 * @return Liste der Kurse.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public List<ReportingKurs> kurse() {
-		if (manager == null) {
-			return List.of();
-		}
-		final List<Long> ids = manager.getKursManager().kurse().stream().map(k -> k.id).toList();
+	public List<ReportingKurs> kurse() throws ApiOperationException {
+		final List<Long> ids = aufgebauterManager().getKursManager().kurse().stream().map(k -> k.id).toList();
 		return reportingContext.repositoryLerngruppen().kurse(ids);
 	}
 
@@ -162,13 +303,12 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Gibt die Anzahl der Kurse zurück, die der Kurs-Manager des Klausurplan-Managers kennt - vor jeder Filterung. Aus ihr entsteht das Feld
 	 * {@code angefordert} des Hinweis-Headers der Kurs-Sichtweise.
 	 *
-	 * @return Die Anzahl der Kurse im Plan; 0 vor der Initialisierung des Managers.
+	 * @return Die Anzahl der Kurse im Plan.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public int anzahlKurseVorhanden() {
-		if (manager == null) {
-			return 0;
-		}
-		return manager.getKursManager().kurse().size();
+	public int anzahlKurseVorhanden() throws ApiOperationException {
+		return aufgebauterManager().getKursManager().kurse().size();
 	}
 
 
@@ -179,8 +319,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * und sortiert über {@link ReportingGostKlausurplanungKlausurtermin#SORTIERUNG}. Default-Verhalten siehe Klassen-JavaDoc.
 	 *
 	 * @return Liste der Klausurtermine.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermine() {
+	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermine() throws ApiOperationException {
+		aufgebauterManager();
 		return getListeMitFilter(mapKlausurtermine, ReportingGostKlausurplanungKlausurtermin.class,
 				ReportingGostKlausurplanungKlausurtermin.FILTER, ReportingGostKlausurplanungKlausurtermin.SORTIERUNG);
 	}
@@ -189,9 +332,12 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Gibt die Anzahl der Klausurtermine des Klausurplans zurück - vor der Filterung über das FILTER-Companion. Aus ihr entsteht das Feld
 	 * {@code angefordert} des Hinweis-Headers der Termin-Sichtweise.
 	 *
-	 * @return Die Anzahl der Klausurtermine im Plan; 0 vor der Initialisierung des Managers.
+	 * @return Die Anzahl der Klausurtermine im Plan.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public int anzahlKlausurtermineVorhanden() {
+	public int anzahlKlausurtermineVorhanden() throws ApiOperationException {
+		aufgebauterManager();
 		return mapKlausurtermine.size();
 	}
 
@@ -203,8 +349,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * @param id Die ID des Klausurtermins.
 	 *
 	 * @return Der Klausurtermin oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) {
+	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapKlausurtermine, id, ReportingGostKlausurplanungKlausurtermin.class, ReportingGostKlausurplanungKlausurtermin.FILTER);
 	}
 
@@ -216,8 +365,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * und sortiert über {@link ReportingGostKlausurplanungKursklausur#SORTIERUNG}. Default-Verhalten siehe Klassen-JavaDoc.
 	 *
 	 * @return Liste der Kursklausuren.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
+	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() throws ApiOperationException {
+		aufgebauterManager();
 		return getListeMitFilter(mapKursklausuren, ReportingGostKlausurplanungKursklausur.class,
 				ReportingGostKlausurplanungKursklausur.FILTER, ReportingGostKlausurplanungKursklausur.SORTIERUNG);
 	}
@@ -230,8 +382,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * @param id Die ID der Kursklausur.
 	 *
 	 * @return Die Kursklausur oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) {
+	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapKursklausuren, id, ReportingGostKlausurplanungKursklausur.class, ReportingGostKlausurplanungKursklausur.FILTER);
 	}
 
@@ -243,8 +398,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * und sortiert über {@link ReportingGostKlausurplanungSchuelerklausur#SORTIERUNG}. Default-Verhalten siehe Klassen-JavaDoc.
 	 *
 	 * @return Liste der Schülerklausuren.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
+	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() throws ApiOperationException {
+		aufgebauterManager();
 		return getListeMitFilter(mapSchuelerklausuren, ReportingGostKlausurplanungSchuelerklausur.class,
 				ReportingGostKlausurplanungSchuelerklausur.FILTER, ReportingGostKlausurplanungSchuelerklausur.SORTIERUNG);
 	}
@@ -257,8 +415,11 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * @param idSchuelerklausurtermin Die ID des Schülerklausurtermins (eindeutiger Schlüssel je Proxy-Objekt).
 	 *
 	 * @return Die Schülerklausur oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
-	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long idSchuelerklausurtermin) {
+	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long idSchuelerklausurtermin) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapSchuelerklausuren, idSchuelerklausurtermin, ReportingGostKlausurplanungSchuelerklausur.class,
 				ReportingGostKlausurplanungSchuelerklausur.FILTER);
 	}
@@ -334,55 +495,57 @@ public class ReportingRepositoryGostKlausurplanung {
 	 * Im Anschluss werden die Cache-Maps über {@link #sortiereMaps()} gemäß ihrer SORTIERUNG-Konfiguration neu
 	 * geordnet (deterministische Iterationsreihenfolge). Abschließend verteilt {@link #verteileSchuelerklausuren()}
 	 * die Schülerklausuren auf die zugehörigen Schüler und Kursklausuren. Hierbei wird der FILTER der Schülerklausur vorab angewandt.
+	 *
+	 * @param klausurplanManager Der im Aufbau befindliche Klausurplan-Manager.
 	 */
-	private void erzeugeReportingObjekte() {
-		erzeugeKlausurtermine();
-		erzeugeKursklausuren();
-		verknuepfeKlausurraeumeMitTerminen();
-		erzeugeSchuelerklausuren();
+	private void erzeugeReportingObjekte(final GostKlausurplanManager klausurplanManager) {
+		erzeugeKlausurtermine(klausurplanManager);
+		erzeugeKursklausuren(klausurplanManager);
+		verknuepfeKlausurraeumeMitTerminen(klausurplanManager);
+		erzeugeSchuelerklausuren(klausurplanManager);
 		sortiereMaps();
 		verteileSchuelerklausuren();
 	}
 
-	private void erzeugeKlausurtermine() {
-		for (final GostKlausurtermin t : manager.terminGetMengeAsList()) {
+	private void erzeugeKlausurtermine(final GostKlausurplanManager klausurplanManager) {
+		for (final GostKlausurtermin t : klausurplanManager.terminGetMengeAsList()) {
 			mapKlausurtermine.put(t.id, new ProxyReportingGostKlausurplanungKlausurtermin(t));
 		}
 	}
 
-	private void erzeugeKursklausuren() {
-		for (final var k : manager.kursklausurGetMengeAsList()) {
-			final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurs(manager.kursdatenByKursklausur(k).id);
+	private void erzeugeKursklausuren(final GostKlausurplanManager klausurplanManager) {
+		for (final var k : klausurplanManager.kursklausurGetMengeAsList()) {
+			final ReportingKurs kurs = reportingContext.repositoryLerngruppen().kurs(klausurplanManager.kursdatenByKursklausur(k).id);
 			if (kurs == null) {
 				// Bewusst still: Das zentrale Lerngruppen-Repository liefert kein Objekt, wenn der Benutzerfilter den Kurs ausschließt
 				// (Auswahlentscheidung) oder sein Laden scheiterte - den Ladefehler meldet es dabei selbst über die Fassade.
 				continue;
 			}
-			final GostKlausurtermin terminOrNull = manager.terminOrNullByKursklausur(k);
+			final GostKlausurtermin terminOrNull = klausurplanManager.terminOrNullByKursklausur(k);
 			final ReportingGostKlausurplanungKlausurtermin termin = (terminOrNull == null) ? null : mapKlausurtermine.get(terminOrNull.id);
-			mapKursklausuren.put(k.id, new ProxyReportingGostKlausurplanungKursklausur(k, manager.vorgabeByKursklausur(k), termin, kurs));
+			mapKursklausuren.put(k.id, new ProxyReportingGostKlausurplanungKursklausur(k, klausurplanManager.vorgabeByKursklausur(k), termin, kurs));
 		}
 	}
 
-	private void verknuepfeKlausurraeumeMitTerminen() {
+	private void verknuepfeKlausurraeumeMitTerminen(final GostKlausurplanManager klausurplanManager) {
 		for (final ReportingGostKlausurplanungKlausurtermin termin : mapKlausurtermine.values()) {
-			final GostKlausurtermin gostTermin = manager.terminGetByIdOrNull(termin.id());
+			final GostKlausurtermin gostTermin = klausurplanManager.terminGetByIdOrNull(termin.id());
 			if (gostTermin == null) {
 				// Bewusst still: Die Termin-Map ist aus derselben Manager-Menge aufgebaut; ein hier nicht auflösbarer Termin ist auf dem produktiven
 				// Weg nicht erreichbar.
 				continue;
 			}
-			for (final GostKlausurraum terminraum : manager.raumGetMengeByTermin(gostTermin)) {
+			for (final GostKlausurraum terminraum : klausurplanManager.raumGetMengeByTermin(gostTermin)) {
 				termin.klausurraeume().add(new ProxyReportingGostKlausurplanungKlausurraum(reportingContext, termin, terminraum,
-						manager.raumstundeGetMengeByRaum(terminraum)));
+						klausurplanManager.raumstundeGetMengeByRaum(terminraum)));
 			}
 		}
 	}
 
-	private void erzeugeSchuelerklausuren() {
-		for (final GostSchuelerklausur sk : manager.schuelerklausurGetMengeAsList()) {
-			for (final GostSchuelerklausurtermin skTermin : manager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
-				erzeugeSchuelerklausurtermin(sk, skTermin);
+	private void erzeugeSchuelerklausuren(final GostKlausurplanManager klausurplanManager) {
+		for (final GostSchuelerklausur sk : klausurplanManager.schuelerklausurGetMengeAsList()) {
+			for (final GostSchuelerklausurtermin skTermin : klausurplanManager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
+				erzeugeSchuelerklausurtermin(klausurplanManager, sk, skTermin);
 			}
 		}
 	}
@@ -421,14 +584,15 @@ public class ReportingRepositoryGostKlausurplanung {
 	}
 
 
-	private void erzeugeSchuelerklausurtermin(final GostSchuelerklausur sk, final GostSchuelerklausurtermin skTermin) {
+	private void erzeugeSchuelerklausurtermin(final GostKlausurplanManager klausurplanManager, final GostSchuelerklausur sk,
+			final GostSchuelerklausurtermin skTermin) {
 		final ReportingSchueler schueler = reportingContext.repositorySchueler().schueler(sk.idSchueler);
 		if (schueler == null) {
 			// Bewusst still: Das zentrale Schüler-Repository liefert kein Objekt, wenn der Benutzerfilter den Schüler ausschließt oder sein Laden
 			// scheiterte - den Ladefehler meldet es dabei selbst über die Fassade.
 			return;
 		}
-		final ReportingGostKlausurplanungKursklausur kursklausur = mapKursklausuren.get(manager.kursklausurBySchuelerklausur(sk).id);
+		final ReportingGostKlausurplanungKursklausur kursklausur = mapKursklausuren.get(klausurplanManager.kursklausurBySchuelerklausur(sk).id);
 		if (kursklausur == null) {
 			// Bewusst still: Die Kursklausur fehlt genau dann, wenn ihr Kurs oben ausgeschlossen wurde - dieselbe Auswahlentscheidung, kein neuer Befund.
 			return;
@@ -447,9 +611,9 @@ public class ReportingRepositoryGostKlausurplanung {
 		}
 
 		ReportingGostKlausurplanungKlausurraum klausurraum = null;
-		final GostKlausurraum gostKlausurraum = manager.raumGetBySchuelerklausurtermin(skTermin);
+		final GostKlausurraum gostKlausurraum = klausurplanManager.raumGetBySchuelerklausurtermin(skTermin);
 		if (gostKlausurraum != null) {
-			final List<GostKlausurraumstunde> raumstunden = manager.raumstundeGetMengeByRaum(gostKlausurraum);
+			final List<GostKlausurraumstunde> raumstunden = klausurplanManager.raumstundeGetMengeByRaum(gostKlausurraum);
 			if (!raumstunden.isEmpty()) {
 				klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(reportingContext, klausurtermin, gostKlausurraum, raumstunden);
 			}

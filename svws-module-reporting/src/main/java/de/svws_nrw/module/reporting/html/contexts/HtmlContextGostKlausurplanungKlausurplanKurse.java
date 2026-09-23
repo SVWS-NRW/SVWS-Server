@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenHalbjahresdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAusgabeumfang;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
@@ -33,13 +32,11 @@ public final class HtmlContextGostKlausurplanungKlausurplanKurse extends HtmlCon
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
 	 * @param reportingContext	Context mit Parametern, Logger und Daten zum Reporting.
-	 * @param selection			Die vom Initializer ausgewählten Stufen (Abiturjahrgang und GOSt-Halbjahr).
 	 *
 	 * @throws ApiOperationException	Bei einem Abbruch; die Exception trägt den Abbruchgrund als Meldung.
 	 */
-	public HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingContext reportingContext,
-			final List<GostKlausurenHalbjahresdaten> selection) throws ApiOperationException {
-		super(reportingContext, selection);
+	public HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingContext reportingContext) throws ApiOperationException {
+		super(reportingContext);
 	}
 
 	private HtmlContextGostKlausurplanungKlausurplanKurse(final ReportingContext reportingContext,
@@ -75,12 +72,14 @@ public final class HtmlContextGostKlausurplanungKlausurplanKurse extends HtmlCon
 	/**
 	 * Die Zähleinheit dieser Sichtweise sind die Kurse des Klausurplans: die im Manager vorhandenen gegen die nach Filterung ausgegebenen.
 	 *
-	 * @param repo Das initialisierte Repository der GOSt-Klausurplanung.
+	 * @param repo Das Repository der GOSt-Klausurplanung.
 	 *
 	 * @return Der Ausgabeumfang dieser Sichtweise.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau des Klausurplans scheitert.
 	 */
 	@Override
-	protected ReportingAusgabeumfang ermittleAusgabeumfang(final ReportingRepositoryGostKlausurplanung repo) {
+	protected ReportingAusgabeumfang ermittleAusgabeumfang(final ReportingRepositoryGostKlausurplanung repo) throws ApiOperationException {
 		final int ausgegeben = repo.kurse().size();
 		return new ReportingAusgabeumfang(repo.anzahlKurseVorhanden(), ausgegeben, ausgegeben == 0);
 	}

@@ -52,8 +52,14 @@ public class ReportingRepositoryGostKursplanung {
 
 	private final ReportingContext reportingContext;
 
-	/** Der GOSt-Blockungsergebnis-Manager dieses Reports (lazy, einmalig initialisiert). */
+	/** Der GOSt-Blockungsergebnis-Manager dieses Reports. Ein gesetztes Feld bedeutet: Manager und Reporting-Objekte stehen vollständig. */
 	private GostBlockungsergebnisManager manager = null;
+
+	/** Der Fehler, an dem der Aufbau gescheitert ist. Jeder weitere Zugriff wirft ihn erneut, statt neu aufzubauen. */
+	private ApiOperationException aufbaufehler = null;
+
+	/** Kennzeichen, dass ein Aufbau begonnen hat. Es hält auch Abbrüche fest, die der Catch nicht erfasst. */
+	private boolean aufbauBegonnen = false;
 
 	/** Cache des Blockungsergebnisses. */
 	private final Map<Long, ReportingGostKursplanungBlockungsergebnis> mapBlockungsergebnis = new LinkedHashMap<>();
@@ -76,19 +82,51 @@ public class ReportingRepositoryGostKursplanung {
 
 
 	/**
-	 * Initialisiert den {@link GostBlockungsergebnisManager} anhand der ID des Blockungsergebnisses und baut die
-	 * Reporting-Objekte für das Blockungsergebnis, die Schienen und die Kurse auf. Das Blockungsergebnis und der
-	 * zugehörige Daten-Manager werden aus der Datenbank geladen. Kurs-Schüler-Zuordnungen von Schülern, die nicht
-	 * mehr Teil der Blockung sind (z. B. Abgänger), werden vor dem Aufbau entfernt. Wird einmalig pro
-	 * Reporting-Request vom HtmlContext aufgerufen. Folgeaufrufe sind No-Ops (Single-Threaded pro Request).
+	 * Gibt den vollständig aufgebauten {@link GostBlockungsergebnisManager} zurück und baut ihn beim ersten Zugriff auf. Jeder Daten-Getter ruft diese
+	 * Methode. So gibt es keinen Zugriff auf ein nur teilweise aufgebautes Repository.
 	 *
-	 * @param idBlockungsergebnis Die ID des Blockungsergebnisses.
+	 * @return Der Blockungsergebnis-Manager dieses Reports.
 	 *
-	 * @throws ApiOperationException Falls Blockungsergebnis oder Blockungsdaten-Manager nicht ermittelt werden konnten.
+	 * @throws ApiOperationException Falls der Aufbau scheitert oder bereits gescheitert ist.
 	 */
-	public void initManager(final long idBlockungsergebnis) throws ApiOperationException {
+	private GostBlockungsergebnisManager aufgebauterManager() throws ApiOperationException {
+		if (aufbaufehler != null) {
+			throw aufbaufehler;
+		}
 		if (manager != null) {
-			return;
+			return manager;
+		}
+		// Der Aufbau wird höchstens einmal versucht. Ein zweiter Lauf verdoppelt die Kursbelegungen an den geteilten Schüler-Objekten.
+		if (aufbauBegonnen) {
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR,
+					"### FEHLER: Der Aufbau der Daten des gewählten Blockungsergebnisses ist abgebrochen.");
+		}
+		aufbauBegonnen = true;
+		try {
+			manager = baueManagerAuf();
+		} catch (final Exception e) {
+			// Die Core-Manager melden ihre Datenfehler als DeveloperNotificationException. Sie ist keine ApiOperationException.
+			aufbaufehler = alsApiOperationException(e);
+			throw aufbaufehler;
+		}
+		return manager;
+	}
+
+	/**
+	 * Baut den {@link GostBlockungsergebnisManager} und die Reporting-Objekte für das Blockungsergebnis, die Schienen und die Kurse auf. Die ID des
+	 * Blockungsergebnisses steht in den Reportparametern. Kurs-Schüler-Zuordnungen von Schülern, die nicht mehr Teil der Blockung sind (z. B. Abgänger),
+	 * werden vor dem Aufbau entfernt.
+	 * <p>Der Manager wird erst nach dem Aufbau aller Reporting-Objekte zurückgegeben. Ein Abbruch dazwischen hinterlässt deshalb kein gefülltes Feld.</p>
+	 *
+	 * @return Der aufgebaute Blockungsergebnis-Manager.
+	 *
+	 * @throws ApiOperationException Falls keine gültige ID vorliegt oder Blockungsergebnis und Blockungsdaten nicht ermittelt werden konnten.
+	 */
+	private GostBlockungsergebnisManager baueManagerAuf() throws ApiOperationException {
+		final long idBlockungsergebnis = this.reportingContext.reportingParameter().idHauptdatenObjekt();
+		// Der E-Mail-Versand erreicht das Repository ohne den Initializer. Ohne diese Prüfung ginge sein Vorgabewert in den Ladeweg.
+		if (idBlockungsergebnis < 0) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "### FEHLER: Es wurde kein Blockungsergebnis angegeben.");
 		}
 
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
@@ -97,9 +135,10 @@ public class ReportingRepositoryGostKursplanung {
 		final GostBlockungsdatenManager datenManager = blockungsdatenManager(blockungsergebnis.blockungID);
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Der Datenmanager zum Blockungsergebnis wurde ermittelt.");
 
-		manager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
-		entferneKurszuordnungenUnbekannterSchueler(blockungsergebnis, datenManager);
-		erzeugeReportingObjekte(blockungsergebnis, datenManager);
+		final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, blockungsergebnis);
+		entferneKurszuordnungenUnbekannterSchueler(blockungsergebnis, datenManager, ergebnisManager);
+		erzeugeReportingObjekte(blockungsergebnis, datenManager, ergebnisManager);
+		return ergebnisManager;
 	}
 
 	/**
@@ -114,9 +153,10 @@ public class ReportingRepositoryGostKursplanung {
 	 *
 	 * @param blockungsergebnis Das geladene Blockungsergebnis.
 	 * @param datenManager      Der zugehörige Blockungsdaten-Manager.
+	 * @param ergebnisManager   Der im Aufbau befindliche Blockungsergebnis-Manager.
 	 */
 	private void entferneKurszuordnungenUnbekannterSchueler(final GostBlockungsergebnis blockungsergebnis,
-			final GostBlockungsdatenManager datenManager) {
+			final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager) {
 		final Set<Long> unbekannteSchuelerIDs = blockungsergebnis.schienen.stream()
 				.flatMap(s -> s.kurse.stream())
 				.flatMap(k -> k.schueler.stream())
@@ -128,7 +168,7 @@ public class ReportingRepositoryGostKursplanung {
 		for (final Long idSchueler : unbekannteSchuelerIDs) {
 			meldeEntfernteKurszuordnungen(idSchueler);
 		}
-		manager.kursSchuelerUpdateExecute(manager.kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(unbekannteSchuelerIDs));
+		ergebnisManager.kursSchuelerUpdateExecute(ergebnisManager.kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(unbekannteSchuelerIDs));
 	}
 
 	/**
@@ -141,19 +181,25 @@ public class ReportingRepositoryGostKursplanung {
 		this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
 				ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, idSchueler),
 				"Die gespeicherten Kurszuordnungen des Schülers %d gehören zu keinem Schüler der Blockung mehr (z. B. Abgänger) und fehlen in der Ausgabe."
-						.formatted(idSchueler), null);
+						.formatted(idSchueler),
+				null);
 	}
 
 	/**
-	 * Gibt den {@link GostBlockungsergebnisManager} zurück. Liefert {@code null}, wenn der Manager noch nicht
-	 * initialisiert wurde.
+	 * Führt einen Fehler des Aufbaus auf eine {@link ApiOperationException} zurück. Eine bereits passende Ausnahme bleibt unverändert. So behält sie den
+	 * Status und die Ursachenkette der Datenschicht.
 	 *
-	 * @return Der Blockungsergebnis-Manager oder {@code null}.
+	 * @param fehler Der aufgetretene Fehler.
+	 *
+	 * @return Der Fehler als ApiOperationException.
 	 */
-	public GostBlockungsergebnisManager manager() {
-		return manager;
+	private static ApiOperationException alsApiOperationException(final Exception fehler) {
+		if (fehler instanceof final ApiOperationException aoe) {
+			return aoe;
+		}
+		return new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, fehler,
+				"### FEHLER: Die Daten des gewählten Blockungsergebnisses konnten nicht aufgebaut werden.");
 	}
-
 
 	// ##### Blockungsergebnis #####
 
@@ -198,12 +244,14 @@ public class ReportingRepositoryGostKursplanung {
 	}
 
 	/**
-	 * Liefert das aufgebaute Blockungsergebnis dieses Reports. Liefert {@code null}, wenn der Manager noch nicht
-	 * initialisiert wurde.
+	 * Liefert das aufgebaute Blockungsergebnis dieses Reports und baut es beim ersten Zugriff auf.
 	 *
-	 * @return Das Blockungsergebnis oder {@code null}.
+	 * @return Das Blockungsergebnis.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public ReportingGostKursplanungBlockungsergebnis blockungsergebnis() {
+	public ReportingGostKursplanungBlockungsergebnis blockungsergebnis() throws ApiOperationException {
+		aufgebauterManager();
 		return mapBlockungsergebnis.isEmpty() ? null : mapBlockungsergebnis.values().iterator().next();
 	}
 
@@ -214,8 +262,11 @@ public class ReportingRepositoryGostKursplanung {
 	 * @param id Die ID des Blockungsergebnisses.
 	 *
 	 * @return Das Blockungsergebnis oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public ReportingGostKursplanungBlockungsergebnis blockungsergebnis(final long id) {
+	public ReportingGostKursplanungBlockungsergebnis blockungsergebnis(final long id) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapBlockungsergebnis, id, ReportingGostKursplanungBlockungsergebnis.class, ReportingGostKursplanungBlockungsergebnis.FILTER);
 	}
 
@@ -226,8 +277,11 @@ public class ReportingRepositoryGostKursplanung {
 	 * Liefert die gefilterte Liste aller Schienen des Blockungsergebnisses.
 	 *
 	 * @return Liste der Schienen.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public List<ReportingGostKursplanungSchiene> schienen() {
+	public List<ReportingGostKursplanungSchiene> schienen() throws ApiOperationException {
+		aufgebauterManager();
 		return getListeMitFilter(mapSchienen, ReportingGostKursplanungSchiene.class, ReportingGostKursplanungSchiene.FILTER, null);
 	}
 
@@ -237,8 +291,11 @@ public class ReportingRepositoryGostKursplanung {
 	 * @param id Die ID der Schiene.
 	 *
 	 * @return Die Schiene oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public ReportingGostKursplanungSchiene schiene(final long id) {
+	public ReportingGostKursplanungSchiene schiene(final long id) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapSchienen, id, ReportingGostKursplanungSchiene.class, ReportingGostKursplanungSchiene.FILTER);
 	}
 
@@ -249,8 +306,11 @@ public class ReportingRepositoryGostKursplanung {
 	 * Liefert die gefilterte Liste aller Kurse des Blockungsergebnisses.
 	 *
 	 * @return Liste der Kurse.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public List<ReportingGostKursplanungKurs> kurse() {
+	public List<ReportingGostKursplanungKurs> kurse() throws ApiOperationException {
+		aufgebauterManager();
 		return getListeMitFilter(mapKurse, ReportingGostKursplanungKurs.class,
 				ReportingGostKursplanungKurs.FILTER, null);
 	}
@@ -261,8 +321,11 @@ public class ReportingRepositoryGostKursplanung {
 	 * @param id Die ID des Kurses.
 	 *
 	 * @return Der Kurs oder {@code null}.
+	 *
+	 * @throws ApiOperationException Falls der Aufbau scheitert.
 	 */
-	public ReportingGostKursplanungKurs kurs(final long id) {
+	public ReportingGostKursplanungKurs kurs(final long id) throws ApiOperationException {
+		aufgebauterManager();
 		return getObjektMitFilter(mapKurse, id, ReportingGostKursplanungKurs.class, ReportingGostKursplanungKurs.FILTER);
 	}
 
@@ -373,11 +436,12 @@ public class ReportingRepositoryGostKursplanung {
 	 *
 	 * @param blockungsergebnis Das Blockungsergebnis.
 	 * @param datenManager      Der zugehörige Blockungsdaten-Manager.
+	 * @param ergebnisManager   Der im Aufbau befindliche Blockungsergebnis-Manager.
 	 *
 	 * @throws ApiOperationException Falls die Blockungsdaten kein gültiges GOSt-Halbjahr enthalten.
 	 */
-	private void erzeugeReportingObjekte(final GostBlockungsergebnis blockungsergebnis, final GostBlockungsdatenManager datenManager)
-			throws ApiOperationException {
+	private void erzeugeReportingObjekte(final GostBlockungsergebnis blockungsergebnis, final GostBlockungsdatenManager datenManager,
+			final GostBlockungsergebnisManager ergebnisManager) throws ApiOperationException {
 		final var blockungsdaten = datenManager.daten();
 		final GostHalbjahr gostHalbjahr = gostHalbjahrDerBlockung(blockungsdaten);
 		final int schuljahr = gostHalbjahr.getSchuljahrFromAbiturjahr(blockungsdaten.abijahrgang);
@@ -395,7 +459,7 @@ public class ReportingRepositoryGostKursplanung {
 
 		// Schienen ohne Kurse werden nicht berücksichtigt.
 		final List<GostBlockungSchiene> aktiveSchienen = datenManager.schieneGetListe().stream()
-				.filter(s -> !manager.getOfSchieneKursmengeSortiert(s.id).isEmpty()).toList();
+				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty()).toList();
 
 		// Blockungsergebnis-Proxy mit leeren Listen vorab erzeugen — Schienen- und Kurs-Proxys halten eine Rückreferenz.
 		// Die vollständig aufgebauten Listen werden dem Ergebnis am Ende dieser Methode per setSchienen/setKurse übergeben.
@@ -403,10 +467,11 @@ public class ReportingRepositoryGostKursplanung {
 		final List<ReportingGostKursplanungSchiene> schienenListe = new ArrayList<>();
 		final ProxyReportingGostKursplanungBlockungsergebnis proxy = new ProxyReportingGostKursplanungBlockungsergebnis(
 				reportingContext,
+				ergebnisManager,
 				blockungsdaten.abijahrgang,
-				manager.getAnzahlSchuelerDummy(),
-				manager.getAnzahlSchuelerExterne(),
-				manager.getOfSchieneMaxKursanzahl(),
+				ergebnisManager.getAnzahlSchuelerDummy(),
+				ergebnisManager.getAnzahlSchuelerExterne(),
+				ergebnisManager.getOfSchieneMaxKursanzahl(),
 				aktiveSchienen.size(),
 				datenManager.schuelerGetAnzahl(),
 				blockungsdaten.name,
@@ -418,14 +483,14 @@ public class ReportingRepositoryGostKursplanung {
 		for (final GostBlockungSchiene s : aktiveSchienen) {
 			final ReportingGostKursplanungSchiene schiene = new ProxyReportingGostKursplanungSchiene(
 					proxy,
-					manager.getOfSchieneAnzahlSchuelerDummy(s.id),
-					manager.getOfSchieneAnzahlSchuelerExterne(s.id),
-					manager.getOfSchieneAnzahlSchueler(s.id),
+					ergebnisManager.getOfSchieneAnzahlSchuelerDummy(s.id),
+					ergebnisManager.getOfSchieneAnzahlSchuelerExterne(s.id),
+					ergebnisManager.getOfSchieneAnzahlSchueler(s.id),
 					s.bezeichnung,
-					manager.getOfSchieneHatKollision(s.id),
+					ergebnisManager.getOfSchieneHatKollision(s.id),
 					s.id,
-					manager.getOfSchieneKursmengeMitKollisionen(s.id).stream().map(k -> k.id).toList(),
-					List.copyOf(manager.getOfSchieneSchuelermengeMitKollisionen(s.id)),
+					ergebnisManager.getOfSchieneKursmengeMitKollisionen(s.id).stream().map(k -> k.id).toList(),
+					List.copyOf(ergebnisManager.getOfSchieneSchuelermengeMitKollisionen(s.id)),
 					new ArrayList<>(),
 					s.nummer);
 			mapSchienen.put(s.id, schiene);
@@ -440,28 +505,28 @@ public class ReportingRepositoryGostKursplanung {
 
 			final ReportingGostKursplanungKurs reportingKurs = new ProxyReportingGostKursplanungKurs(
 					proxy,
-					manager.getOfKursAnzahlSchuelerAbiturLK(kurs.id),
-					manager.getOfKursAnzahlSchuelerAbitur3(kurs.id),
-					manager.getOfKursAnzahlSchuelerAbitur4(kurs.id),
-					manager.getOfKursAnzahlSchuelerDummy(kurs.id),
-					manager.getOfKursAnzahlSchuelerExterne(kurs.id),
-					manager.getOfKursAnzahlSchueler(kurs.id),
-					manager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerAbitur3(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
+					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 					datenManager.kursGetName(kurs.id),
 					schuljahresabschnitt.fach(kurs.fach_id),
 					null,
 					gostHalbjahr,
-					GostKursart.fromID(manager.getKursE(kurs.id).kursart),
+					GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),
 					kurs.id,
 					kursLehrer,
-					manager.getOfKursSchienenmenge(kurs.id).stream().map(sch -> mapSchienen.get(sch.id)).toList(),
+					ergebnisManager.getOfKursSchienenmenge(kurs.id).stream().map(sch -> mapSchienen.get(sch.id)).toList(),
 					new ArrayList<>());
 
 			mapKurse.put(kurs.id, reportingKurs);
 			kurseListe.add(reportingKurs);
 
-			for (final long idKursschueler : manager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
-				ergaenzeKursbelegung(idKursschueler, kurs.id, reportingKurs, mapSchueler);
+			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
+				ergaenzeKursbelegung(idKursschueler, kurs.id, reportingKurs, mapSchueler, ergebnisManager);
 			}
 
 			reportingKurs.schienen().forEach(s -> mapSchienen.get(s.id()).kurse().add(reportingKurs));
@@ -473,14 +538,15 @@ public class ReportingRepositoryGostKursplanung {
 	}
 
 	private void ergaenzeKursbelegung(final long idKursschueler, final long kursId,
-			final ReportingGostKursplanungKurs reportingKurs, final Map<Long, ReportingSchueler> mapSchueler) {
+			final ReportingGostKursplanungKurs reportingKurs, final Map<Long, ReportingSchueler> mapSchueler,
+			final GostBlockungsergebnisManager ergebnisManager) {
 		final ReportingSchueler schueler = mapSchueler.get(idKursschueler);
 		if (schueler == null) {
 			// Bewusst still: Hier fehlen nur Schüler, die der Benutzerfilter des zentralen Schüler-Repositorys ausgeschlossen hat - eine
 			// Auswahlentscheidung des Anwenders und kein Ausgabeproblem.
 			return;
 		}
-		final FachwahlDaten fachwahl = fachwahlDatenOderMelde(manager, idKursschueler, kursId);
+		final FachwahlDaten fachwahl = fachwahlDatenOderMelde(ergebnisManager, idKursschueler, kursId);
 
 		schueler.gostKursplanungKursbelegungen().add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
 				fachwahl.abiturfach(), fachwahl.gueltig(), fachwahl.schriftlich(), reportingKurs));
@@ -518,7 +584,8 @@ public class ReportingRepositoryGostKursplanung {
 			this.reportingContext.meldeAusgabeproblem(ReportingProblemursache.NICHT_VORHANDEN, ReportingProblemauswirkung.TEILDATEN_FEHLEN,
 					ReportingProblemSchluessel.fuer(ProxyReportingSchuelerGostKursplanungKursbelegung.class, idKursschueler),
 					"Die Fachwahl des Schülers %d zum Kurs %d fehlt; die Kursbelegung erscheint in der Ausgabe als ungültig."
-							.formatted(idKursschueler, idKurs), e);
+							.formatted(idKursschueler, idKurs),
+					e);
 			return new FachwahlDaten("", false, false);
 		}
 	}

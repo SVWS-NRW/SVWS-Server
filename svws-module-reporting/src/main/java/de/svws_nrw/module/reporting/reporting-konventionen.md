@@ -24,6 +24,24 @@ Bei Konflikt gilt diese Datei; Regel-Änderungen werden hier gepflegt.
   die neun Domänen-Repositories. Während ihrer Initialisierung im Konstruktor dürfen
   Repositories nur die Infrastruktur-Getter (`conn()`, `logger()`, `sortierungService()`,
   `filterService()`) nutzen.
+- **Kein Repository ist von außen erreichbar, solange es nur teilweise aufgebaut ist.** Braucht
+  ein Repository vor dem ersten Zugriff einen Aufbau — etwa den Aufbau eines Managers —, dann
+  baut es sich beim ersten Zugriff selbst auf. Es gibt keine öffentliche `init`-Methode und keine
+  Reihenfolge, die ein Aufrufer einhalten müsste. Vier Regeln gelten dabei:
+  - Die **Aufbauangaben beschafft sich das Repository selbst** aus den Reportparametern. Deren
+    Form prüft der Initializer; das Repository prüft sie erneut, weil es auch ohne ihn erreichbar
+    ist, und weist eine unbrauchbare Angabe mit `BAD_REQUEST` ab.
+  - Das **Feld ist erst gesetzt, wenn der Aufbau vollständig ist.** Bis dahin reist das Ergebnis
+    als lokaler Wert durch die Aufbauschritte. Ein Abbruch dazwischen hinterlässt kein gefülltes
+    Feld, an dem ein späterer Zugriff vorbeiliefe.
+  - Der **Aufbau wird höchstens einmal versucht.** Ein Kennzeichen hält den Versuch fest, auch
+    wenn der Abbruch am Catch vorbeigeht. Ein zweiter Lauf hängte seine Objekte ein weiteres Mal
+    an geteilte Reporting-Typen des zentralen Caches an, und diese Verdopplung stünde in der
+    Ausgabe.
+  - Der **Aufbaufehler wird gemerkt** und bei jedem weiteren Zugriff unverändert geworfen. Der
+    Catch fängt `Exception`, denn die Core-Manager melden ihre Datenfehler als
+    `DeveloperNotificationException`. Eine bereits passende `ApiOperationException` wird
+    unverändert durchgereicht und behält Status und Ursachenkette.
 
 ## 2. Reporting-Typen & Null-Sicherheit
 
