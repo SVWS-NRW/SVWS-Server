@@ -7,7 +7,6 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
-import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
@@ -22,7 +21,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schuelerliste: SchuelerListe;
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
 	private readonly _faecherById: Map<number, FachDaten>;
-	private readonly _haltestellenById: Map<number, Haltestelle>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
 	private readonly _schulenById: Map<number, SchulEintrag>;
@@ -39,7 +37,6 @@ export class SchuelerSchnelleingabeManager {
 		schuelerliste: SchuelerListe,
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		faecherById: Map<number, FachDaten>,
-		haltestellenById: Map<number, Haltestelle>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		kindergaertenById: Map<number, Kindergarten>,
 		schulenById: Map<number, SchulEintrag>,
@@ -52,7 +49,6 @@ export class SchuelerSchnelleingabeManager {
 		this._schuelerliste = schuelerliste;
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._faecherById = faecherById;
-		this._haltestellenById = haltestellenById;
 		this._jahrgaengeById = jahrgaengeById;
 		this._kindergaertenById = kindergaertenById;
 		this._schulenById = schulenById;
@@ -100,10 +96,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get faecherById(): Map<number, FachDaten> {
 		return this._faecherById;
-	}
-
-	get haltestellenById(): Map<number, Haltestelle> {
-		return this._haltestellenById;
 	}
 
 	get jahrgaengeById(): Map<number, JahrgangsDaten> {

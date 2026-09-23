@@ -39,8 +39,11 @@
 		<div v-if="statistikState.schuelerListeManager.auswahlID() !== null" class="flex-1">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoSchueler(statistikState.schuelerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.schuelerListeManager.auswahl().nachname }}, {{ statistikState.schuelerListeManager.auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
-				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'" :zeige-alles="false"
-					:foerderschwerpunkte-by-id :haltestellen-by-id :map-schulen :map-telefon-arten />
+				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'"
+					:zeige-alles="false"
+					:foerderschwerpunkte-by-id
+					:map-schulen
+					:map-telefon-arten />
 			</svws-ui-tab-bar>
 		</div>
 	</div>

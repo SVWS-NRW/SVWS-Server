@@ -27,7 +27,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			zeigeAlles: false,
 			// schueler
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
 			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
 		};

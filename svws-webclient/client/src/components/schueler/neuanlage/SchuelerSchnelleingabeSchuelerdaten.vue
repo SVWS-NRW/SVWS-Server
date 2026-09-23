@@ -142,6 +142,7 @@
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
@@ -162,10 +163,10 @@
 	const orteState = useOrteState();
 	const fahrschuelerartenState = useFahrschuelerartenState();
 	const religionenState = useReligionenState();
+	const haltestellenState = useHaltestellenState();
 
 	const manager = () => props.manager();
 	const externeSchulnummern = computed(() => props.manager().schulenById.values());
-	const haltestellen = computed(() => props.manager().haltestellenById.values());
 
 	const geschlecht = computed<Geschlecht | null>({
 		get: () => Geschlecht.fromValue(manager().stammdaten.geschlecht),
@@ -273,7 +274,7 @@
 	});
 
 	const haltestelle = computed({
-		get: () => props.manager().haltestellenById.get(props.manager().stammdaten.haltestelleID ?? -1) ?? null,
+		get: () => haltestellenState.haltestellen.byId.get(props.manager().stammdaten.haltestelleID ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? null;
 			props.manager().stammdaten.haltestelleID = id;
@@ -349,7 +350,7 @@
 	});
 
 	const haltestellenManager = new SelectManager({
-		options: haltestellen,
+		options: haltestellenState.haltestellen.list,
 		optionDisplayText: i => i.bezeichnung ?? '',
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});

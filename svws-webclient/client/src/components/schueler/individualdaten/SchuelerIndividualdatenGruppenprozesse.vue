@@ -188,6 +188,7 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
@@ -202,6 +203,7 @@
 	const benutzerState = useBenutzerState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const religionenState = useReligionenState();
+	const haltestellenState = useHaltestellenState();
 
 	const { pendingStateManager } = toRefs(props);
 
@@ -238,7 +240,6 @@
 
 	const schuljahr = computed(() => schuleState.schuljahr);
 	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
-	const haltestellen = computed(() => props.haltestellenById.values());
 	const schulen = computed(() => props.mapSchulen.values());
 
 	watch(() => props.pendingStateManager().pendingStateExists(), (somethingPending: boolean) => {
@@ -248,27 +249,33 @@
 	const ersteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const zweiteStaatsAngehoerigkeitSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const statusSelectManager = new CoreTypeSelectManager({
 		clazz: SchuelerStatus.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const konfessionSelectManager = new SelectManager({
 		options: computed(() => religionenState.religionen.list),
 		optionDisplayText: selected => selected.bezeichnung,
 		selectionDisplayText: selected => selected.bezeichnung,
 	});
+
 	const fahrschuelerSelectManager = new SelectManager({
 		options: computed(() => fahrschuelerartenState.fahrschuelerarten.byId.values()),
 		optionDisplayText: selected => selected.bezeichnung ?? '',
 		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
+
 	const haltestelleSelectManager = new SelectManager({
-		options: haltestellen,
+		options: haltestellenState.haltestellen.list,
 		optionDisplayText: selected => selected.bezeichnung ?? '',
 		selectionDisplayText: selected => selected.bezeichnung ?? '',
 	});
+
 	const stammschuleSelectManager = new SelectManager({
 		options: schulen,
 		selectionDisplayText: getSchulnummerText,
@@ -279,15 +286,19 @@
 		const text = `${eintrag?.schulnummerStatistik ?? ''} ${eintrag?.kuerzel ?? eintrag?.kurzbezeichnung ?? ''}`;
 		return text.length > 0 ? text : 'Fehlende Angaben';
 	}
+
 	const geburtslandSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const geburtslandMutterSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const geburtslandVaterSelectManager = new CoreTypeSelectManager({
 		clazz: Nationalitaeten.class, schuljahr: schuljahr, schulformen: schulform,
 	});
+
 	const verkehrsspracheSelectManager = new CoreTypeSelectManager({
 		clazz: Verkehrssprache.class, schuljahr: schuljahr, schulformen: schulform,
 	});

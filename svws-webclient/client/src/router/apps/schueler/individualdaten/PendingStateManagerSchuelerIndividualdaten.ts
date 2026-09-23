@@ -12,11 +12,11 @@ import type { Fahrschuelerart } from "@core/core/data/schule/Fahrschuelerart";
 import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
 
-import { routeApp } from "~/router/apps/RouteApp";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 /**
@@ -57,7 +57,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 		this._attributeDisplayMappers.set('idStaatsangehoerigkeit', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
 		this._attributeDisplayMappers.set('idStaatsangehoerigkeit2', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.bezeichnung);
 		this._attributeDisplayMappers.set('religionID', (value: any) => this._religionenState.religionen.byId.get(Number(value))?.bezeichnung);
-		this._attributeDisplayMappers.set('haltestelleID', (value: any) => routeApp.cache.kataloge.haltestellenById.get(Number(value))?.bezeichnung);
+		this._attributeDisplayMappers.set('haltestelleID', (value: any) => useHaltestellenState().haltestellen.byId.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('idVerkehrspracheFamilie', (value: any) => Verkehrssprache.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
 		this._attributeDisplayMappers.set('idGeburtsland', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
 		this._attributeDisplayMappers.set('idGeburtslandMutter', (value: any) => Nationalitaeten.data().getWertByIDOrNull(value)?.daten(schuleStateImpl.schuljahr)?.text);
@@ -164,7 +164,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut haltestelleID als computed value.
 	 */
 	public haltestelleID = this.genComputed<Haltestelle | null>('haltestelleID', null,
-		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : routeApp.cache.kataloge.haltestellenById.get(value) ?? null,
+		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : useHaltestellenState().haltestellen.byId.get(value) ?? null,
 		(value: Haltestelle | null) => value?.id ?? null
 	);
 

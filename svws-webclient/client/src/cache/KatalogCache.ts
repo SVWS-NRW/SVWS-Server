@@ -7,7 +7,6 @@ import type { Einwilligungsart } from "@core/core/data/schule/Einwilligungsart";
 import type { Floskel } from "@core/core/data/schule/Floskel";
 import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
-import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import type { Merkmal } from "@core/core/data/schule/Merkmal";
@@ -35,7 +34,6 @@ export class KatalogCache {
 	private _floskelnById: Map<number, Floskel> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
 	private _faecherById: Map<number, FachDaten> = new Map();
-	private _haltestellenById: Map<number, Haltestelle> = new Map();
 	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
@@ -82,11 +80,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
 			const result = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 			return { foerderschwerpunkteById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.HALTESTELLEN, async () => {
-			const result = await api.server.getHaltestellen(api.schema);
-			return { haltestellenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.JAHRGAENGE, async () => {
@@ -197,14 +190,6 @@ export class KatalogCache {
 
 	set faecherById(value: Map<number, FachDaten>) {
 		this._faecherById = value;
-	}
-
-	get haltestellenById(): Map<number, Haltestelle> {
-		return this._haltestellenById;
-	}
-
-	set haltestellenById(value: Map<number, Haltestelle>) {
-		this._haltestellenById = value;
 	}
 
 	get jahrgaengeById(): Map<number, JahrgangsDaten> {

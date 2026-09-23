@@ -10,6 +10,7 @@ import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
 import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
 import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
 import { FahrschuelerartenStateKey } from "@ui/states/kataloge/FahrschuelerartenState";
+import { HaltestellenStateKey } from "@ui/states/kataloge/HaltestellenState";
 import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/LeitungsfunktionenState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { ReligionenStateKey } from "@ui/states/kataloge/ReligionenState";
@@ -23,6 +24,7 @@ import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
+import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -83,5 +85,6 @@ export function registerStates(): void {
 	context.provide(ReligionenStateKey, religionenStateImpl);
 	context.provide(StatistikStateKey, statistikStateImpl);
 	context.provide(ErzieherartenStateKey, erzieherartenStateImpl);
+	context.provide(HaltestellenStateKey, haltestellenStateImpl);
 
 }

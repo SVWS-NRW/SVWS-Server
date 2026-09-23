@@ -278,6 +278,7 @@
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
+	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useReportingState } from "@ui/states/ReportingState";
@@ -310,10 +311,10 @@
 		() => schuelerAuswahlState.manager.daten(),
 		() => schuleState.validatorKontext,
 		() => schuljahr.value,
-		() => props.haltestellenById,
 		(data) => schuelerAuswahlState.patch(data)
 	);
 	const benutzerState = useBenutzerState();
+	const haltestellenState = useHaltestellenState();
 
 	// --- Benutzerkompetenzen ---
 
@@ -348,7 +349,7 @@
 	});
 
 	const haltestellenManager = new SelectManager<Haltestelle>({
-		options: computed(() => props.haltestellenById.values()),
+		options: computed(() => haltestellenState.haltestellen.list),
 		optionDisplayText: i => i.bezeichnung ?? '',
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});
