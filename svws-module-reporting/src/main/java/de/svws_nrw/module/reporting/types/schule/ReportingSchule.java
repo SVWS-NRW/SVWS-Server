@@ -200,7 +200,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	}
 
 	/**
-	 * Das Schullogo der Schule als HTML-ImageSource inklusive MIME-Type. Dieser wird versucht aus den Bilddaten zu ermitteln.
+	 * Das Schullogo der Schule als HTML-ImageSource inklusive MIME-Type.
 	 * Beide Quellen liegen in der Logoverwaltung: Vorrang hat das quadratische Schullogo, sonst greift das aus SchILD-NRW übernommene. Die Übernahme
 	 * geschieht bei der Migration auf Schema-Revision 62, so dass die alte Tabelle EigeneSchule_Logo hier nicht mehr gelesen wird.
 	 *

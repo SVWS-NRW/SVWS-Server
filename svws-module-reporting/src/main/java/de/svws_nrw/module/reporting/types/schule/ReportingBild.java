@@ -16,48 +16,40 @@ public class ReportingBild extends ReportingBaseType {
 	/** Die Bilddefinition, zu der das Bild gehört. */
 	private final ReportingBildDefinition bildDefinition;
 
-	/** Das Bild im Base64-Format, ohne den Kopf einer Data-URL. */
-	private final String base64;
-
-	/** Die Bildquelle, beim ersten Zugriff aus dem Bild abgeleitet. */
-	private String htmlImageSource;
+	/** Die Bildquelle für die Vorlagen; leer, wenn kein darstellbares Bild vorliegt. */
+	private final String htmlImageSource;
 
 
 	/**
-	 * Erstellt ein Bild zu der übergebenen Bilddefinition.
+	 * Erstellt ein Bild zu der übergebenen Bilddefinition. Daten, aus denen sich keine Bildquelle bilden lässt, gelten wie ein fehlendes Bild:
+	 * Was kein Renderer anzeigen kann, ist für eine Vorlage dasselbe wie nichts.
 	 *
 	 * @param bildDefinition Die Bilddefinition, zu der das Bild gehört. Bei einer unbekannten Definition {@code null}.
-	 * @param base64         Das Bild im Base64-Format. Ohne hinterlegtes Bild ein leerer String oder {@code null}.
+	 * @param bildDaten      Das Bild im Base64-Format, mit oder ohne den Kopf einer Data-URL. Ohne hinterlegtes Bild ein leerer String oder {@code null}.
 	 */
-	public ReportingBild(final ReportingBildDefinition bildDefinition, final String base64) {
+	public ReportingBild(final ReportingBildDefinition bildDefinition, final String bildDaten) {
 		this.bildDefinition = bildDefinition;
-		this.base64 = ersetzeNullBlankTrim(base64);
+		this.htmlImageSource = ReportingBildquelle.ausBase64(ersetzeNullBlankTrim(bildDaten));
 	}
 
 
 	// ##### Getter #####
 
 	/**
-	 * Gibt an, ob eine anzeigbare Bildquelle vorliegt. Bilddaten, aus denen sich keine Data-URL bilden lässt, gelten als nicht vorhanden: Ein Bild, das
-	 * kein Renderer darstellen kann, ist für eine Vorlage dasselbe wie ein fehlendes.
+	 * Gibt an, ob eine anzeigbare Bildquelle vorliegt.
 	 *
 	 * @return true, wenn ein anzeigbares Bild vorliegt, andernfalls false.
 	 */
 	public boolean vorhanden() {
-		return !htmlImageSource().isEmpty();
+		return !htmlImageSource.isEmpty();
 	}
 
 	/**
-	 * Das Bild als HTML-ImageSource inklusive MIME-Type. Den Typ bestimmt {@link ReportingBildquelle} aus den Bilddaten.
-	 * Die Zeichenkette entsteht nur beim ersten Zugriff: Eine Ausgabe in einzelne Dateien rendert die Vorlage je Datei erneut und baute sie sonst jedes Mal
-	 * neu auf, obwohl sich das Bild über den gesamten Aufruf nicht ändert.
+	 * Das Bild als HTML-ImageSource inklusive MIME-Type.
 	 *
-	 * @return Die HTML-ImageSource im Base64-Format mit MIME-Type oder ein leerer String, wenn kein oder ein nicht auflösbares Bild vorliegt.
+	 * @return Die HTML-ImageSource im Base64-Format mit MIME-Type oder ein leerer String, wenn kein darstellbares Bild vorliegt.
 	 */
 	public String htmlImageSource() {
-		if (htmlImageSource == null) {
-			htmlImageSource = ReportingBildquelle.ausBase64(base64);
-		}
 		return htmlImageSource;
 	}
 

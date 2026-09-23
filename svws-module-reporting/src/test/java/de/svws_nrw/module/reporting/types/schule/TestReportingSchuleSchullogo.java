@@ -16,12 +16,12 @@ import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
  */
 class TestReportingSchuleSchullogo {
 
-	/** Ein gültiges PNG im Base64-Format, hinterlegt als quadratisches Schullogo. */
-	private static final String PNG_BASE64 =
-			"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+	/** Die Bildquelle eines PNG, hinterlegt als quadratisches Schullogo. */
+	private static final String PNG_BILDQUELLE =
+			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 
-	/** Ein gültiges GIF im Base64-Format, hinterlegt als aus SchILD-NRW übernommenes Schullogo. */
-	private static final String GIF_BASE64 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+	/** Die Bildquelle eines GIF, hinterlegt als aus SchILD-NRW übernommenes Schullogo. */
+	private static final String GIF_BILDQUELLE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 	/** Die Bilddefinitionen, nach denen eine Schule im Verlauf eines Tests fragt, in der Reihenfolge der Abfrage. */
 	private final List<ReportingBildDefinition> abgefragt = new ArrayList<>();
@@ -50,15 +50,25 @@ class TestReportingSchuleSchullogo {
 	@Test
 	void testDasQuadratischeSchullogoHatVorrang() {
 		final String bildquelle = schule(Map.of(
-				ReportingBildDefinition.SCHULLOGO_QUADRATISCH, PNG_BASE64,
-				ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BASE64)).schullogoHtmlImageSource();
-		assertEquals("data:image/png;base64," + PNG_BASE64, bildquelle);
+				ReportingBildDefinition.SCHULLOGO_QUADRATISCH, PNG_BILDQUELLE,
+				ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BILDQUELLE)).schullogoHtmlImageSource();
+		assertEquals(PNG_BILDQUELLE, bildquelle);
 	}
 
 	@Test
 	void testOhneQuadratischesSchullogoGreiftDasAusSchild() {
-		final String bildquelle = schule(Map.of(ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BASE64)).schullogoHtmlImageSource();
-		assertEquals("data:image/gif;base64," + GIF_BASE64, bildquelle);
+		final String bildquelle = schule(Map.of(ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BILDQUELLE)).schullogoHtmlImageSource();
+		assertEquals(GIF_BILDQUELLE, bildquelle);
+	}
+
+	@Test
+	void testEinNichtDarstellbaresQuadratischesSchullogoGibtDenRueckfallFrei() {
+		// Ein Kopf mit erlaubtem MIME-Type sagt nichts über den Inhalt. Gälte ein solcher Eintrag als vorhandenes Logo, so bliebe das aus SchILD-NRW
+		// übernommene ungenutzt und die Ausgabe zeigte ein defektes Bild.
+		final String bildquelle = schule(Map.of(
+				ReportingBildDefinition.SCHULLOGO_QUADRATISCH, "data:image/png;base64,AAAA",
+				ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BILDQUELLE)).schullogoHtmlImageSource();
+		assertEquals(GIF_BILDQUELLE, bildquelle);
 	}
 
 	@Test
@@ -68,14 +78,14 @@ class TestReportingSchuleSchullogo {
 
 	@Test
 	void testDasQuadratischeSchullogoWirdZuerstGefragt() {
-		schule(Map.of(ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BASE64)).schullogoHtmlImageSource();
+		schule(Map.of(ReportingBildDefinition.SCHULLOGO_SCHILD, GIF_BILDQUELLE)).schullogoHtmlImageSource();
 		assertEquals(List.of(ReportingBildDefinition.SCHULLOGO_QUADRATISCH, ReportingBildDefinition.SCHULLOGO_SCHILD), abgefragt);
 	}
 
 	@Test
 	void testDasAusSchildUebernommeneWirdOhneNotNichtGeladen() {
 		// Das Bild wird nur bei Bedarf geladen; ist das quadratische Schullogo hinterlegt, bleibt die zweite Abfrage aus.
-		schule(Map.of(ReportingBildDefinition.SCHULLOGO_QUADRATISCH, PNG_BASE64)).schullogoHtmlImageSource();
+		schule(Map.of(ReportingBildDefinition.SCHULLOGO_QUADRATISCH, PNG_BILDQUELLE)).schullogoHtmlImageSource();
 		assertEquals(List.of(ReportingBildDefinition.SCHULLOGO_QUADRATISCH), abgefragt);
 	}
 

@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,6 +43,9 @@ import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.schule.ReportingBild;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepository;
+import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -78,11 +82,20 @@ class TestReportingRepositorySchule {
 	/** Die Liste, die die Einträge des Loggers sammelt. */
 	private LogConsumerList log;
 
-	/** Die Datenbankverbindung, über die das Repository die Bilder der Logoverwaltung lädt. */
+	/** Die Datenbankverbindung, über die das Repository den angemeldeten Benutzer erreicht. */
 	private DBEntityManager conn;
+
+	/** Das Repository der Logoverwaltung; über es erhält der Test die Bilder in den Zugriff. */
+	private LogoverwaltungRepository logoverwaltungRepository;
 
 	/** Die Naht für das Laden der Stammdaten über die statische Methode. */
 	private MockedStatic<DataSchuleStammdaten> dataSchuleStammdatenStatisch;
+
+	/** Die Naht für die Repository-Factory der Logoverwaltung, die sonst die Verbindung des laufenden Requests verlangte. */
+	private MockedStatic<LogoverwaltungRepositoryFactory> logoverwaltungRepositoryFactoryStatisch;
+
+	/** Die Naht für die Repository-Factory der Schule, die der Logoverwaltungs-Service beim Erstellen mitbekommt. */
+	private MockedStatic<EigeneSchuleRepositoryFactory> eigeneSchuleRepositoryFactoryStatisch;
 
 
 	@BeforeAll
@@ -118,11 +131,24 @@ class TestReportingRepositorySchule {
 
 		dataSchuleStammdatenStatisch = mockStatic(DataSchuleStammdaten.class);
 		dataSchuleStammdatenStatisch.when(() -> DataSchuleStammdaten.getStammdaten(any())).thenReturn(stammdaten);
+
+		logoverwaltungRepository = mock(LogoverwaltungRepository.class);
+		when(logoverwaltungRepository.findByKennung(any())).thenReturn(Optional.empty());
+		final LogoverwaltungRepositoryFactory logoverwaltungRepositoryFactory = mock(LogoverwaltungRepositoryFactory.class);
+		when(logoverwaltungRepositoryFactory.getRepository()).thenReturn(logoverwaltungRepository);
+		logoverwaltungRepositoryFactoryStatisch = mockStatic(LogoverwaltungRepositoryFactory.class);
+		logoverwaltungRepositoryFactoryStatisch.when(LogoverwaltungRepositoryFactory::getNewInstance).thenReturn(logoverwaltungRepositoryFactory);
+
+		eigeneSchuleRepositoryFactoryStatisch = mockStatic(EigeneSchuleRepositoryFactory.class);
+		eigeneSchuleRepositoryFactoryStatisch.when(EigeneSchuleRepositoryFactory::getNewInstance)
+				.thenReturn(mock(EigeneSchuleRepositoryFactory.class));
 	}
 
 	@AfterEach
 	void tearDown() {
 		dataSchuleStammdatenStatisch.close();
+		logoverwaltungRepositoryFactoryStatisch.close();
+		eigeneSchuleRepositoryFactoryStatisch.close();
 	}
 
 
@@ -218,19 +244,19 @@ class TestReportingRepositorySchule {
 	// ##### Bilder aus der Logoverwaltung #####
 
 	/**
-	 * Legt fest, welche Datensätze die Abfrage zu der übergebenen Bilddefinition liefert.
+	 * Legt fest, dass die Logoverwaltung zu der übergebenen Bilddefinition den angegebenen Datensatz führt.
 	 *
 	 * @param bildDefinition Die Bilddefinition, nach der das Repository fragt.
-	 * @param treffer        Die Datensätze der Logoverwaltung.
+	 * @param base64         Die Bilddaten des Datensatzes.
 	 */
-	private void hinterlegeBild(final ReportingBildDefinition bildDefinition, final DTOLogo... treffer) {
-		when(conn.queryList(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, bildDefinition)).thenReturn(List.of(treffer));
+	private void hinterlegeBild(final ReportingBildDefinition bildDefinition, final String base64) {
+		when(logoverwaltungRepository.findByKennung(bildDefinition))
+				.thenReturn(Optional.of(new DTOLogo(1L, bildDefinition, base64, "2026-08-26")));
 	}
 
 	@Test
 	void testDasBildWirdAusDerLogoverwaltungGeladen() {
-		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF,
-				new DTOLogo(1L, ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64, "2026-08-26"));
+		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64);
 
 		final ReportingBild bild = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT).bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
 
@@ -242,22 +268,19 @@ class TestReportingRepositorySchule {
 	@Test
 	void testDasGeladeneBildWirdZwischengespeichert() {
 		// Eine Ausgabe in einzelne Dateien fragt dasselbe Bild je Datei erneut ab. Ohne Zwischenspeicher liefe je Abfrage ein Datenbankzugriff.
-		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF,
-				new DTOLogo(1L, ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64, "2026-08-26"));
+		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64);
 		final ReportingRepositorySchule repository = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT);
 
 		final ReportingBild erst = repository.bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
 		final ReportingBild zweit = repository.bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
 
 		assertSame(erst, zweit);
-		verify(conn, times(1)).queryList(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, ReportingBildDefinition.DIN5008_BRIEFKOPF);
+		verify(logoverwaltungRepository, times(1)).findByKennung(ReportingBildDefinition.DIN5008_BRIEFKOPF);
 	}
 
 	@Test
 	void testVerschiedeneBilddefinitionenWerdenGetrenntGehalten() {
-		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF,
-				new DTOLogo(1L, ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64, "2026-08-26"));
-		hinterlegeBild(ReportingBildDefinition.SCHULLOGO_QUADRATISCH);
+		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64);
 		final ReportingRepositorySchule repository = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT);
 
 		assertTrue(repository.bild(ReportingBildDefinition.DIN5008_BRIEFKOPF).vorhanden());
@@ -267,9 +290,8 @@ class TestReportingRepositorySchule {
 
 	@Test
 	void testOhneEintragEntstehtEinLeeresBildOhneAusgabeproblem() {
-		// Welche Bilddefinitionen eine Schule pflegt, entscheidet sie selbst. Ein fehlendes Bild ist deshalb kein Befund für das Ausgabeprotokoll.
-		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
-
+		// Welche Bilddefinitionen eine Schule pflegt, entscheidet sie selbst. Ein fehlendes Bild ist deshalb kein Befund für das Ausgabeprotokoll,
+		// auch wenn der Service es mit dem Status NOT_FOUND beantwortet.
 		final ReportingBild bild = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT).bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
 
 		assertFalse(bild.vorhanden());
@@ -278,9 +300,21 @@ class TestReportingRepositorySchule {
 	}
 
 	@Test
+	void testNichtAufloesbareBilddatenErgebenEinLeeresBildOhneAusgabeproblem() {
+		// Einen Datensatz, den sie nicht auflösen kann, reicht die Logoverwaltung unverändert zurück - auch mitsamt einem Kopf, der nicht zu seinem
+		// Inhalt passt. Für die Ausgabe zählt er wie ein fehlendes Bild und ist kein Ladefehler.
+		hinterlegeBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, "data:image/png;base64,AAAA");
+
+		final ReportingBild bild = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT).bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
+
+		assertFalse(bild.vorhanden());
+		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
+	}
+
+	@Test
 	void testEinGescheitertesLadenMeldetEinAusgabeproblemUndLiefertEinLeeresBild() {
 		// Ein Bild ist untergeordnetes Datum: Die Ausgabe erscheint weiterhin, ihr fehlt allein das Bild.
-		when(conn.queryList(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, ReportingBildDefinition.DIN5008_BRIEFKOPF))
+		when(logoverwaltungRepository.findByKennung(ReportingBildDefinition.DIN5008_BRIEFKOPF))
 				.thenThrow(new IllegalStateException("Der Datensatz konnte nicht gelesen werden."));
 
 		final ReportingBild bild = new ReportingRepositorySchule(reportingContext, ID_ABSCHNITT).bild(ReportingBildDefinition.DIN5008_BRIEFKOPF);
@@ -297,7 +331,7 @@ class TestReportingRepositorySchule {
 
 		assertFalse(bild.vorhanden());
 		assertEquals(0, bild.breiteMM());
-		verify(conn, never()).queryList(eq(DTOLogo.QUERY_BY_KENNUNG), eq(DTOLogo.class), any());
+		verify(logoverwaltungRepository, never()).findByKennung(any());
 	}
 
 }

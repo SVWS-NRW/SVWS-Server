@@ -14,14 +14,19 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.reporting.ReportingBildDefinition;
 import de.svws_nrw.data.email.DataEmailJobs;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.mapper.schule.logoverwaltung.LogoverwaltungMapper;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingBild;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.logoverwaltung.LogoverwaltungRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungService;
+import de.svws_nrw.service.schule.logoverwaltung.LogoverwaltungServiceFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -129,7 +134,7 @@ public class ReportingRepositorySchule {
 	}
 
 	/**
-	 * Lädt das Bild zu der übergebenen Bilddefinition aus der Logoverwaltung. Ein Bild ist untergeordnetes Datum: Scheitert sein Laden, so erscheint die
+	 * Lädt das Bild zu der übergebenen Bilddefinition aus der Logoverwaltung. Ein Bild ist untergeordnetes Datenobjekt: Scheitert sein Laden, so erscheint die
 	 * Ausgabe weiterhin und ihr fehlt allein das Bild.
 	 *
 	 * @param bildDefinition Die Bilddefinition, deren Bild geladen wird.
@@ -137,16 +142,40 @@ public class ReportingRepositorySchule {
 	 * @return Das Bild oder ein leeres Objekt, wenn nichts hinterlegt ist oder das Laden gescheitert ist.
 	 */
 	private ReportingBild ladeBild(final ReportingBildDefinition bildDefinition) {
-		final DTOLogo dtoLogo;
 		try {
-			dtoLogo = this.reportingContext.conn().queryList(DTOLogo.QUERY_BY_KENNUNG, DTOLogo.class, bildDefinition)
-					.stream().findFirst().orElse(null);
+			return new ReportingBild(bildDefinition, logoverwaltungService().getByKennung(bildDefinition).logoBase64);
 		} catch (final Exception e) {
-			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingBild.class, bildDefinition),
-					"Die Bilddaten aus der Logoverwaltung", e);
+			if (!istKeinBildHinterlegt(e)) {
+				ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(ReportingBild.class, bildDefinition),
+						"Die Bilddaten aus der Logoverwaltung", e);
+			}
 			return new ReportingBild(bildDefinition, "");
 		}
-		return new ReportingBild(bildDefinition, (dtoLogo == null) ? "" : dtoLogo.logoBase64);
+	}
+
+	/**
+	 * Prüft, ob die übergebene Ausnahme allein besagt, dass zu der Bilddefinition nichts hinterlegt ist. Der Service beantwortet diesen Fall mit dem
+	 * Status {@code NOT_FOUND}, obwohl er für eine Ausgabe kein Fehler ist.
+	 *
+	 * @param fehler Die Ausnahme aus dem Zugriff auf die Logoverwaltung.
+	 *
+	 * @return true, wenn kein Bild hinterlegt ist, andernfalls false.
+	 */
+	private static boolean istKeinBildHinterlegt(final Exception fehler) {
+		return (fehler instanceof final ApiOperationException apiOperationException) && (apiOperationException.getStatus() == Status.NOT_FOUND);
+	}
+
+	/**
+	 * Erzeugt den Service für den Zugriff auf die Logoverwaltung. Er wird je Zugriff neu erstellt; die geladenen Bilder hält {@link #mapBilder}.
+	 *
+	 * @return Der Service für die Logoverwaltung.
+	 */
+	private static LogoverwaltungService logoverwaltungService() {
+		return LogoverwaltungServiceFactory.getNewInstance(
+				LogoverwaltungRepositoryFactory.getNewInstance(),
+				LogoverwaltungMapper.INSTANCE,
+				EigeneSchuleServiceFactory.getNewInstance(EigeneSchuleRepositoryFactory.getNewInstance())
+		).getService();
 	}
 
 	/**

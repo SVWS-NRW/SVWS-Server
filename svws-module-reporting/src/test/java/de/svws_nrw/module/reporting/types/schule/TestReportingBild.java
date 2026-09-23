@@ -2,7 +2,6 @@ package de.svws_nrw.module.reporting.types.schule;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
@@ -28,6 +27,9 @@ class TestReportingBild {
 	/** Die Bildquelle, die zu {@link #PNG_BASE64} erwartet wird. */
 	private static final String PNG_BILDQUELLE = "data:image/png;base64," + PNG_BASE64;
 
+	/** Ein gültiges GIF im Base64-Format. */
+	private static final String GIF_BASE64 = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 	/** Die Bilddefinition des Briefkopfs, so wie eine Vorlage sie anspricht. */
 	private static final String AUSDRUCK_BRIEFKOPF = "@de.svws_nrw.core.types.reporting.ReportingBildDefinition@DIN5008_BRIEFKOPF";
 
@@ -46,16 +48,16 @@ class TestReportingBild {
 	 * Erzeugt eine Schule, die zu jeder Bilddefinition das übergebene Bild liefert. Sie tritt an die Stelle der Proxy-Klasse, die dafür eine
 	 * Datenbankverbindung benötigte.
 	 *
-	 * @param base64 Das Bild im Base64-Format.
+	 * @param bildDaten Das Bild im Base64-Format.
 	 *
 	 * @return Die Schule.
 	 */
-	private static ReportingSchule schuleMitBriefkopf(final String base64) {
+	private static ReportingSchule schuleMitBriefkopf(final String bildDaten) {
 		return new ReportingSchule(null, null, null, null, null, null, 0, null, null, null, null, 0, 0, null, null, null, 0, null, null, null, null,
 				null) {
 			@Override
 			public ReportingBild bild(final ReportingBildDefinition bildDefinition) {
-				return new ReportingBild(bildDefinition, base64);
+				return new ReportingBild(bildDefinition, bildDaten);
 			}
 		};
 	}
@@ -106,11 +108,10 @@ class TestReportingBild {
 	}
 
 	@Test
-	void testDieBildquelleEntstehtNurEinmal() {
-		// Eine Ausgabe in einzelne Dateien rendert die Vorlage je Datei erneut. Ohne Zwischenspeicher entstünde die Zeichenkette mit den vollständigen
-		// Bilddaten bei jedem Aufruf neu.
-		final ReportingBild bild = new ReportingBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BASE64);
-		assertSame(bild.htmlImageSource(), bild.htmlImageSource());
+	void testEineFertigeBildquelleBleibtErhalten() {
+		final ReportingBild bild = new ReportingBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, PNG_BILDQUELLE);
+		assertTrue(bild.vorhanden());
+		assertEquals(PNG_BILDQUELLE, bild.htmlImageSource());
 	}
 
 	@Test
@@ -126,13 +127,32 @@ class TestReportingBild {
 
 	@Test
 	void testEinTiffWirdErkannt() {
-		// Die Logoverwaltung nimmt TIFF an. Die zuvor genutzte Erkennung kannte das Format nicht und lieferte den Typ "unknown".
+		// Die Logoverwaltung nimmt TIFF an, also muss eine Ausgabe es ebenfalls annehmen.
 		final String tiff = "SUkqAAgAAAAAAA==";
 
 		final ReportingBild bild = new ReportingBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, tiff);
 
 		assertTrue(bild.vorhanden());
 		assertEquals("data:image/tiff;base64," + tiff, bild.htmlImageSource());
+	}
+
+	@Test
+	void testDerInhaltEntscheidetUeberDenMimeType() {
+		// Ein Kopf, der nicht zum Inhalt passt, darf nicht in die Ausgabe gelangen: Der Renderer richtet sich nach ihm und zeigte sonst ein defektes Bild.
+		final ReportingBild bild = new ReportingBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, "data:image/png;base64," + GIF_BASE64);
+
+		assertTrue(bild.vorhanden());
+		assertEquals("data:image/gif;base64," + GIF_BASE64, bild.htmlImageSource());
+	}
+
+	@Test
+	void testEinBildformatImKopfOhneBildinhaltGiltAlsFehlendesBild() {
+		// Ein erlaubter MIME-Type im Kopf genügt nicht. Ohne Prüfung des Inhalts unterdrückte ein solcher Wert als vorhandenes Bild die Ersatzdarstellung
+		// der Vorlage.
+		final ReportingBild bild = new ReportingBild(ReportingBildDefinition.DIN5008_BRIEFKOPF, "data:image/png;base64,AAAA");
+
+		assertFalse(bild.vorhanden());
+		assertEquals("", bild.htmlImageSource());
 	}
 
 	@Test
@@ -189,7 +209,7 @@ class TestReportingBild {
 
 	@Test
 	void testDasHinterlegteBildErreichtDieVorlageAlsBildquelle() {
-		assertEquals(PNG_BILDQUELLE, rendere("${Schule.bild(" + AUSDRUCK_BRIEFKOPF + ").htmlImageSource()}", schuleMitBriefkopf(PNG_BASE64)));
+		assertEquals(PNG_BILDQUELLE, rendere("${Schule.bild(" + AUSDRUCK_BRIEFKOPF + ").htmlImageSource()}", schuleMitBriefkopf(PNG_BILDQUELLE)));
 	}
 
 }
