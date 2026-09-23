@@ -128,7 +128,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 					JSONMapper.convertToString(value, false, false, Schema.tab_Kurse.col_KurzBez.datenlaenge(), name);
 			case "kursartAllg" -> // TODO Prüfe Kursart
 				dto.KursartAllg = JSONMapper.convertToString(value, false, true, Schema.tab_Kurse.col_KursartAllg.datenlaenge(), name);
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, 32000, name);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "wochenstunden" -> dto.WochenStd = JSONMapper.convertToIntegerInRange(value, false, 0, 40, name);
 			case "wochenstundenLehrer" -> dto.WochenstdKL = Optional.ofNullable(JSONMapper.convertToDouble(value, true, name)).orElse(0.0);

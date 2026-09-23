@@ -4,6 +4,7 @@ import type { SchulgliederungKatalogEintrag } from "@core/asd/data/schule/Schulg
 import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -61,7 +62,7 @@ export class AnkreuzkompetenzenModelProxy extends ModelProxy<Ankreuzkompetenz> {
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.abschnitt.value), "abschnitt");
 		// sortierung
 		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
-		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
 	}
 
 	fach = computed<FachDaten | null>({

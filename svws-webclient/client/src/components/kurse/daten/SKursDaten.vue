@@ -20,7 +20,7 @@
 						@update:model-value="value => kurseAuswahlState.patch({ idKursFortschreibungsart: value?.id ?? 0 })"
 						:items="KursFortschreibungsart.values()" :item-text="f => f.beschreibung" />
 					<svws-ui-multi-select title="Schienen" :readonly v-model="schienen" :items="Array.from({length: 40}, (_, i) => i + 1)" :item-text="s => 'Schiene ' + s" />
-					<svws-ui-input-number placeholder="Sortierung" :readonly :model-value="data().sortierung" :min="0" :max="32000"
+					<svws-ui-input-number placeholder="Sortierung" :readonly :model-value="data().sortierung" :min="0"
 						@change="sortierung=> sortierung && kurseAuswahlState.patch({ sortierung })" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
