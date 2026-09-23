@@ -1,7 +1,6 @@
 import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
-import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
@@ -66,7 +65,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
 		}
 		const schuljahresabschnitte = abschnittStateImpl.alle;
-		const erzieherartenById: Map<number, Erzieherart> = routeApp.cache.kataloge.erzieherartenById;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
 		const haltestellenById: Map<number, Haltestelle> = routeApp.cache.kataloge.haltestellenById;
 		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
@@ -75,9 +73,20 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
 		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
 
-		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte,
-			erzieherartenById, faecherById, haltestellenById, jahrgaengeById, kindergaertenById,
-			schulenById, telefonartenById, vermerkartenById);
+		return new SchuelerSchnelleingabeManager(
+			stammdaten,
+			schulbesuchsdaten,
+			lernabschnitt,
+			schuelerListe,
+			schuljahresabschnitte,
+			faecherById,
+			haltestellenById,
+			jahrgaengeById,
+			kindergaertenById,
+			schulenById,
+			telefonartenById,
+			vermerkartenById
+		);
 	}
 
 	private async createListen(idSchueler: number) {

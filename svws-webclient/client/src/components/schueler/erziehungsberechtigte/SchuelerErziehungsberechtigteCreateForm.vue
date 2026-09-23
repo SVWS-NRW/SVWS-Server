@@ -40,7 +40,7 @@
 			<div v-if="istErsterErzGespeichert">
 				<schueler-erziehungsberechtigte-zweiter-erz-felder :model="zweiterErzModel" :schuljahr :readonly="false" />
 			</div>
-			<svws-ui-notification type="warning" v-if="erzieherartenById.size === 0">
+			<svws-ui-notification type="warning" v-if="erzieherartenState.erzieherarten.list.size() === 0">
 				Die Liste der Erzieherarten ist leer, es sollte mindestens eine Erzieherart unter Schule/Kataloge angelegt werden, damit zusätzliche Erzieher eine gültige Zuordnung
 			</svws-ui-notification>
 			<div class="mt-7 flex flex-row gap-4 justify-between">
@@ -67,11 +67,12 @@
 
 
 <script setup lang="ts">
+
 	import { computed, ref, shallowRef } from "vue";
 
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
-	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+	import { useErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -82,7 +83,6 @@
 	const props = defineProps<{
 		addErzieher: (data: Partial<ErzieherStammdaten>, pos: number) => Promise<ErzieherStammdaten>;
 		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
-		erzieherartenById: Map<number, Erzieherart>;
 		schuljahr: number;
 		createModalIsOpen: boolean;
 	}>();
@@ -92,6 +92,7 @@
 	}>();
 
 	const orteState = useOrteState();
+	const erzieherartenState = useErzieherartenState();
 
 	const model = shallowRef(createModel());
 	const formIsValid = computed(() => model.value.getAlleFehler().isEmpty());
@@ -99,7 +100,7 @@
 	const istErsterErzGespeichert = ref(false);
 
 	const erzieherartenManager = new SelectManager({
-		options: computed(() => props.erzieherartenById.values()),
+		options: computed(() => erzieherartenState.erzieherarten.list),
 		sort: erzieherArtSort,
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,
@@ -128,12 +129,11 @@
 
 	function createModel() {
 		const defaultErz = new ErzieherStammdaten();
-		const ersteErzieherArt = props.erzieherartenById.values().next().value;
+		const ersteErzieherArt = erzieherartenState.erzieherarten.byId.values().next().value;
 		defaultErz.idErzieherArt = ersteErzieherArt?.id ?? null;
 		defaultErz.erhaeltAnschreiben = false;
 		return new ErzieherStammdatenModelProxy(
 			() => defaultErz,
-			() => props.erzieherartenById,
 			() => props.schuljahr
 		);
 	}
@@ -144,11 +144,9 @@
 		const defaultZweiterErz = new ErzieherStammdaten();
 		return new ErzieherStammdatenModelProxy(
 			() => defaultZweiterErz,
-			() => props.erzieherartenById,
 			() => props.schuljahr
 		);
 	}
-
 
 	function resetForm() {
 		model.value = createModel();

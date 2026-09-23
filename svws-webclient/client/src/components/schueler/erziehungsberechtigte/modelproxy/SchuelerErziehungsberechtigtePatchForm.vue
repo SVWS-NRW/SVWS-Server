@@ -76,8 +76,8 @@
 	import { computed } from "vue";
 
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
-	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
+	import { useErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -87,18 +87,17 @@
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;
-		erzieherartenById: Map<number, Erzieherart>;
 		schuljahr: number;
 		hatKompetenzUpdate: boolean;
 		patch: (data: Partial<ErzieherStammdaten>, id: number) => Promise<void>;
 	}>();
 
 	const orteState = useOrteState();
+	const erzieherartenState = useErzieherartenState();
 
 	const readonly = computed(() => !props.hatKompetenzUpdate);
 	const model = new ErzieherStammdatenModelProxy(
 		() => props.erzieher,
-		() => props.erzieherartenById,
 		() => props.schuljahr,
 		async (data) => {
 			await props.patch(data, props.erzieher.id); return true;
@@ -106,7 +105,7 @@
 	);
 
 	const erzieherartenManager = new SelectManager({
-		options: computed(() => props.erzieherartenById.values()),
+		options: computed(() => erzieherartenState.erzieherarten.list),
 		sort: erzieherArtSort,
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,

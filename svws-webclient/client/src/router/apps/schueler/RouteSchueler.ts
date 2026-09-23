@@ -31,6 +31,7 @@ import { configStateImpl } from "~/states/ConfigStateImpl";
 import { beschaeftigungsartenStateImpl } from "~/states/kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
+import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
@@ -81,10 +82,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await Promise.all([orteStateImpl.init(), beschaeftigungsartenStateImpl.init(), betriebeStateImpl.init(),
-				religionenStateImpl.init(), entlassgruendeStateImpl.init(), fahrschuelerartenStateImpl.init(),
-				routeApp.cache.refreshKataloge(Katalog.ERZIEHERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE,
-					Katalog.MERKMALE, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN)]);
+			await this.initiateKataloge();
 		}
 
 		try {
@@ -137,6 +135,28 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	private async initiateKataloge() {
+		await Promise.all([
+			beschaeftigungsartenStateImpl.init(),
+			betriebeStateImpl.init(),
+			entlassgruendeStateImpl.init(),
+			erzieherartenStateImpl.init(),
+			fahrschuelerartenStateImpl.init(),
+			orteStateImpl.init(),
+			religionenStateImpl.init(),
+			routeApp.cache.refreshKataloge(
+				Katalog.FOERDERSCHWERPUNKTE,
+				Katalog.HALTESTELLEN,
+				Katalog.KINDERGAERTEN,
+				Katalog.JAHRGAENGE,
+				Katalog.MERKMALE,
+				Katalog.SCHULEN,
+				Katalog.TELEFONARTEN,
+				Katalog.VERMERKARTEN
+			),
+		]);
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {

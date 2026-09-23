@@ -17,7 +17,7 @@
 			</svws-ui-tooltip>
 		</template>
 		<template #cell(idErzieherArt)="{ value }">
-			{{ erzieherartenById.get(value)?.bezeichnung ?? '' }}
+			{{ erzieherartenState.erzieherarten.byId.get(value)?.bezeichnung ?? '' }}
 		</template>
 		<template #cell(name)="{ rowData }">
 			{{ rowData.vorname }} {{ rowData.nachname }}
@@ -44,18 +44,18 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
-	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import type { List } from "@core/java/util/List";
+	import { useErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import type { DataTableColumn } from "@ui/types";
 
 	const props = defineProps<{
 		data: () => List<ErzieherStammdaten>;
-		erzieherartenById: Map<number, Erzieherart>;
 		hatKompetenzUpdate: boolean;
 		erzieher: ErzieherStammdaten | undefined;
 		selectedErz: ErzieherStammdaten[];
@@ -70,6 +70,7 @@
 	}>();
 
 	const orteState = useOrteState();
+	const erzieherartenState = useErzieherartenState();
 
 	const orteById = computed(() => orteState.orte.byId);
 	const erzieherList = computed(() => Array.from(props.data()));
@@ -104,4 +105,5 @@
 	function hasSuffix2(id: number): boolean {
 		return suffix2Ids.value.has(id + 1);
 	}
+
 </script>

@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
-	import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 	import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 
 	import { ErzieherStammdatenModelProxy } from "~/components/schueler/erziehungsberechtigte/modelproxy/ErzieherStammdatenModelProxy";
@@ -27,7 +27,6 @@
 		show: boolean;
 		zweiterErz: ErzieherStammdaten;
 		pos2SourceId: number;
-		erzieherartenById: Map<number, Erzieherart>;
 		schuljahr: number;
 		hatKompetenzUpdate: boolean;
 		patchErzieherAnPosition: (data: Partial<ErzieherStammdaten>, id: number, pos: number) => Promise<void>;
@@ -39,7 +38,6 @@
 
 	const model = new ErzieherStammdatenModelProxy(
 		() => props.zweiterErz,
-		() => props.erzieherartenById,
 		() => props.schuljahr
 	);
 

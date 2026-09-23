@@ -8,6 +8,8 @@ import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintr
 import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import type { ErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
+import { useErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
 import type { OrteState } from "@ui/states/kataloge/OrteState";
 import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -18,21 +20,19 @@ import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/com
 export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten> {
 
 	private readonly _orteState: OrteState = useOrteState();
+	private readonly _erzieherartenState: ErzieherartenState = useErzieherartenState();
 
-	private readonly _erzieherartenById: () => Map<number, Erzieherart>;
 	private readonly _schuljahr: () => number;
 
 	constructor(
 		data: () => ErzieherStammdaten,
-		erzieherartenById: () => Map<number, Erzieherart>,
 		schuljahr: () => number,
 		patch?: (data: Partial<ErzieherStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof ErzieherStammdaten> = [
 			'idErzieherArt', 'staatsangehoerigkeitID', 'wohnortID', 'ortsteilID', 'erhaeltAnschreiben'];
-		super({	data, patch, listOfAutopatchProps });
+		super({ data, patch, listOfAutopatchProps });
 
-		this._erzieherartenById = erzieherartenById;
 		this._schuljahr = schuljahr;
 		this.addValidatoren();
 		this.validate();
@@ -75,7 +75,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	}
 
 	erzieherart = computed<Erzieherart | null>({
-		get: () => this._erzieherartenById().get(this.proxy.idErzieherArt ?? -1) ?? null,
+		get: () => this._erzieherartenState.erzieherarten.byId.get(this.proxy.idErzieherArt ?? -1) ?? null,
 		set: (v: Erzieherart | null) => this.proxy.idErzieherArt = v?.id ?? null,
 	});
 

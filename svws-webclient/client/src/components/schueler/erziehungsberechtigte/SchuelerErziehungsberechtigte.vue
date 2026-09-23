@@ -26,7 +26,6 @@
 				:schuljahr
 				:hat-kompetenz-update
 				@close-modal="closeModal" />
-
 			<schueler-erziehungsberechtigte-create-form v-bind="props"
 				:schuljahr
 				:create-modal-is-open
@@ -36,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ref, watch } from "vue";
 
 	import { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";

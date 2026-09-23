@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
@@ -70,6 +71,7 @@
 	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useErzieherartenState } from "@ui/states/kataloge/ErzieherartenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -87,13 +89,12 @@
 
 	const abschnittState = useAbschnittState();
 	const orteState = useOrteState();
+	const erzieherartenState = useErzieherartenState();
 
-	const manager = () => props.manager();
 	const data = computed<ErzieherStammdaten>(() => props.data ?? new ErzieherStammdaten());
-	const erzieherarten = computed(() => manager().erzieherartenById.values());
 
 	const erzieherart = computed({
-		get: () => manager().erzieherartenById.get(data.value.idErzieherArt ?? -1) ?? null,
+		get: () => erzieherartenState.erzieherarten.byId.get(data.value.idErzieherArt ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? null;
 			data.value.idErzieherArt = id;
@@ -146,7 +147,7 @@
 	});
 
 	const erzieherartenManager = new SelectManager({
-		options: erzieherarten,
+		options: erzieherartenState.erzieherarten.list,
 		sort: erzieherArtSort,
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,

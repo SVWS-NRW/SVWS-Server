@@ -1,4 +1,3 @@
-import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { List } from "@core/java/util/List";
@@ -10,13 +9,11 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 interface RouteStateDataSchuelerErziehungsberechtigte extends RouteStateInterface {
 	daten: List<ErzieherStammdaten> | undefined;
 	idSchueler: number | undefined;
-	erzieherartenById: Map<number, Erzieherart>;
 }
 
 const defaultState = <RouteStateDataSchuelerErziehungsberechtigte> {
 	daten: undefined,
 	idSchueler: undefined,
-	erzieherartenById: new Map(),
 };
 
 export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteStateDataSchuelerErziehungsberechtigte> {
@@ -45,22 +42,6 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 		}
 		const daten = await api.server.getSchuelerErzieher(api.schema, idSchueler);
 		this.setPatchedState({ idSchueler, daten });
-	}
-
-	public get mapErzieherarten(): Map<number, Erzieherart> {
-		if (this._state.value.erzieherartenById.size === 0) {
-			throw new DeveloperNotificationException("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
-		}
-		return this._state.value.erzieherartenById;
-	}
-
-	public async ladeListe() {
-		const listErzieherarten = await api.server.getErzieherArten(api.schema);
-		const mapErzieherarten = new Map<number, Erzieherart>();
-		for (const e of listErzieherarten) {
-			mapErzieherarten.set(e.id, e);
-		}
-		this.setPatchedDefaultState({ erzieherartenById: mapErzieherarten });
 	}
 
 	patchErzieher = async (data: Partial<ErzieherStammdaten>, id: number) => {

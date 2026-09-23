@@ -1,7 +1,6 @@
 <template>
 	<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
 		<schueler-erziehungsberechtigte-table :data="props.getErzieher"
-			:erzieherarten-by-id="manager().erzieherartenById"
 			:hat-kompetenz-update="updateKompetenz"
 			v-model:erzieher="data"
 			v-model:selected-erz="selectedData"
@@ -11,7 +10,6 @@
 		<schueler-erziehungsberechtigte-patch-form v-if="data !== undefined"
 			:key="data.id"
 			:erzieher="data"
-			:erzieherarten-by-id="manager().erzieherartenById"
 			:schuljahr
 			:hat-kompetenz-update="updateKompetenz"
 			:patch="props.patchErzieher" />
@@ -53,7 +51,6 @@
 		</svws-ui-modal>
 		<schueler-erziehungsberechtigte-create-form :add-erzieher="addErzieherWrapper"
 			:patch-erzieher-an-position="patchErzieherAnPositionWrapper"
-			:erzieherarten-by-id="manager().erzieherartenById"
 			:schuljahr
 			:create-modal-is-open
 			@close-modal="() => createModalIsOpen = false" />

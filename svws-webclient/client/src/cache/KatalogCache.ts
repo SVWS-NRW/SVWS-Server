@@ -1,4 +1,3 @@
-import type { Erzieherart } from "@core/core/data/erzieher/Erzieherart";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
@@ -32,7 +31,6 @@ export class KatalogCache {
 	private _abteilungenById: Map<number, Abteilung> = new Map();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _einwilligungsartenById: Map<number, Einwilligungsart> = new Map();
-	private _erzieherartenById: Map<number, Erzieherart> = new Map();
 	private _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
 	private _floskelnById: Map<number, Floskel> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
@@ -64,11 +62,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.EINWILLIGUNGSARTEN, async () => {
 			const result = await api.server.getEinwilligungsarten(api.schema);
 			return { einwilligungsartenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.ERZIEHERARTEN, async () => {
-			const result = await api.server.getErzieherArten(api.schema);
-			return { erzieherartenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.FAECHER, async () => {
@@ -172,14 +165,6 @@ export class KatalogCache {
 
 	set einwilligungsartenById(value: Map<number, Einwilligungsart>) {
 		this._einwilligungsartenById = value;
-	}
-
-	get erzieherartenById(): Map<number, Erzieherart> {
-		return this._erzieherartenById;
-	}
-
-	set erzieherartenById(value: Map<number, Erzieherart>) {
-		this._erzieherartenById = value;
 	}
 
 	get floskelgruppenById(): Map<number, Floskelgruppe> {

@@ -8,6 +8,7 @@ import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState
 import { BeschaeftigungsartenStateKey } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
 import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
+import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
 import { FahrschuelerartenStateKey } from "@ui/states/kataloge/FahrschuelerartenState";
 import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/LeitungsfunktionenState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
@@ -20,6 +21,8 @@ import { ServerStateKey } from "@ui/states/ServerState";
 import { StatistikStateKey } from "@ui/states/statistik/StatistikState";
 import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
+
+import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -51,7 +54,6 @@ import { statistikStateImpl } from "./statistik/StatistikStateImpl";
 import { uvStateImpl } from "./UvStateImpl";
 import { wiedervorlageStateImpl } from "./wiedervorlage/WiedervorlageStateImpl";
 
-
 export function registerStates(): void {
 	const context = AppContext.instance;
 
@@ -80,4 +82,6 @@ export function registerStates(): void {
 	context.provide(FahrschuelerartenStateKey, fahrschuelerartenStateImpl);
 	context.provide(ReligionenStateKey, religionenStateImpl);
 	context.provide(StatistikStateKey, statistikStateImpl);
+	context.provide(ErzieherartenStateKey, erzieherartenStateImpl);
+
 }
