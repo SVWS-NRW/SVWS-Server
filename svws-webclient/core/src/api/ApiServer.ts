@@ -13617,7 +13617,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/belegungen
 	 *
-	 * Erstellt eine neuen Sprachbelegung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 * Erstellt eine neuen Sprachbelegung für den Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Sprachbelegung des Schülers
@@ -13679,7 +13679,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/pruefungen
 	 *
-	 * Erstellt eine neuen Sprachprüfung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 * Erstellt eine neuen Sprachprüfung für den Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Sprachprüfung des Schülers
@@ -13826,7 +13826,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteSchuelerVermerk für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/vermerke/{idVermerk : \d+}
 	 *
-	 * Löscht einen Schueler-VermerkDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.
+	 * Löscht einen Schüler-VermerkDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Vermerk des Schülers wurde gelöscht
@@ -14494,7 +14494,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSchuelerLeistungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/leistungsdaten/{id : \d+}
 	 *
-	 * Passt die Schülerleistungsdaten mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.
+	 * Passt die Schülerleistungsdaten mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich integriert.
@@ -14671,7 +14671,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSchuelerLernabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}
 	 *
-	 * Passt die Schülerlernabschnittsdaten mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
+	 * Passt die Schülerlernabschnittsdaten mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Der Patch wurde erfolgreich integriert.
@@ -14697,7 +14697,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PATCH-Methode patchSchuelerLernabschnittsdatenBemerkungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}/bemerkungen
 	 *
-	 * Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
+	 * Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich integriert.

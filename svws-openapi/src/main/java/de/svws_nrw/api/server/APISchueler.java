@@ -251,9 +251,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines neuen Schülers mit Lernabschnitt.
 	 *
-	 * @param schema                     das Datenbankschema
-	 * @param is                         der Input-Stream mit den Daten der SchülerStammdaten
-	 * @param request                    die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten der SchülerStammdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den erstellen SchülerStammdaten
 	 */
@@ -286,10 +286,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Schülers
-	 * @param patchRequest  das Patch-Objekt
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema         das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id             die Datenbank-ID zur Identifikation des Schülers
+	 * @param patchRequest   das Patch-Objekt
+	 * @param request        die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
@@ -319,7 +319,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten mehrerer Schüler.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param dtos     die zu aktualisierenden SchülerStammdaten
+	 * @param dtos      die zu aktualisierenden SchülerStammdaten
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -350,7 +350,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids      	die Liste von zu löschenden IDs
+	 * @param ids       die Liste von zu löschenden IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
@@ -377,9 +377,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen der bisher besuchten Schule eines Schülers
 	 *
-	 * @param schema     das Datenbankschema
-	 * @param input      {@link SchuelerSchulbesuchSchule}
-	 * @param request    die Information zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param input     {@link SchuelerSchulbesuchSchule}
+	 * @param request   die Information zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Anwort mit einer neuen bisher besuchen Schule
 	 */
@@ -436,9 +436,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen von bisher besuchten Schulen.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param ids          die IDs der bisher besuchten Schulen
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param ids       die IDs der bisher besuchten Schulen
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten bisherigen Schule
 	 */
@@ -466,9 +466,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen von SchuelerMerkmalen.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param input        {@link SchuelerSchulbesuchMerkmal}
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param input     {@link SchuelerSchulbesuchMerkmal}
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neuen SchuelerMerkmal
 	 */
@@ -525,9 +525,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen von SchuelerMerkmalen.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param ids           die IDs der SchuelerMerkmale
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param ids       die IDs der SchuelerMerkmale
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten SchuelerMerkmal
 	 */
@@ -555,9 +555,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Schulbesuchsdaten eines Schülers.
 	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler        die Datenbank-ID zur Identifikation des Schülers
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler   die Datenbank-ID zur Identifikation des Schülers
+	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Schulbesuchsdaten des Schülers
 	 */
@@ -582,10 +582,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Stammdaten eines Schülers.
 	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param idSchulbesuch die Datenbank-ID zur Identifikation der Schulbesuch Entität
-	 * @param patch     der Request Body
-	 * @param request   die Informationen zur HTTP-Anfrage
+	 * @param schema          das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param idSchulbesuch   die Datenbank-ID zur Identifikation der Schulbesuch Entität
+	 * @param patch           der Request Body
+	 * @param request         die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
@@ -615,9 +615,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste von Lernabschnitten eines Schülers.
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id         die Datenbank-ID zur Identifikation des Schülers
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Lernabschnittsdaten des Schülers
 	 */
@@ -641,10 +641,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id         die Datenbank-ID zur Identifikation des Schülers
-	 * @param abschnitt  der Schuljahresabschnitt des auszulesenden Lernabschnitts
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id          die Datenbank-ID zur Identifikation des Schülers
+	 * @param abschnitt   der Schuljahresabschnitt des auszulesenden Lernabschnitts
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Lernabschnittsdaten des Schülers
 	 */
@@ -669,9 +669,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt  die ID des Schülerlernabschnitts
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param abschnitt   die ID des Schülerlernabschnitts
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Lernabschnittsdaten des Schülers
 	 */
@@ -694,10 +694,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
 	 *
-	 * @param schema     				das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler 				die ID des Schülerlernabschnitts
-	 * @param idSchuljahresabschnitt  	die ID des Schülerlernabschnitts
-	 * @param request    				die Informationen zur HTTP-Anfrage
+	 * @param schema                   das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler               die ID des Schülerlernabschnitts
+	 * @param idSchuljahresabschnitt   die ID des Schülerlernabschnitts
+	 * @param request                  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Lernabschnittsdaten des Schülers
 	 */
@@ -732,8 +732,8 @@ public class APISchueler {
 	 */
 	@PATCH
 	@Path("/lernabschnittsdaten/{abschnitt : \\d+}")
-	@Operation(summary = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an.",
-			description = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an. "
+	@Operation(summary = "Passt die Schülerlernabschnittsdaten mit der angegebenen ID an.",
+			description = "Passt die Schülerlernabschnittsdaten mit der angegebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
 	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
@@ -766,8 +766,8 @@ public class APISchueler {
 	 */
 	@PATCH
 	@Path("/lernabschnittsdaten/{abschnitt : \\d+}/bemerkungen")
-	@Operation(summary = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angebenen ID an.",
-			description = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angebenen ID an. "
+	@Operation(summary = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an.",
+			description = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
@@ -791,9 +791,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Leistungsdaten eines Schülers.
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id         die Datenbank-ID der Schülerleistungsdaten
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID der Schülerleistungsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Leistungsdaten des Schülers
 	 */
@@ -826,8 +826,8 @@ public class APISchueler {
 	 */
 	@PATCH
 	@Path("/leistungsdaten/{id : \\d+}")
-	@Operation(summary = "Passt die Schülerleistungsdaten mit der angebenen ID an.",
-			description = "Passt die Schülerleistungsdaten mit der angebenen ID an. "
+	@Operation(summary = "Passt die Schülerleistungsdaten mit der angegebenen ID an.",
+			description = "Passt die Schülerleistungsdaten mit der angegebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
@@ -850,9 +850,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen von Leistungsdaten.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Leistungsdaten
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten der Leistungsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit den neuen Leistungsdaten
 	 */
@@ -881,9 +881,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen mehrerer Leistungsdaten.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Räume
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten der Räume
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der Liste der neuen Leistungsdaten
 	 */
@@ -912,9 +912,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen von Leistungsdaten.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID der Leistungsdaten
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param id        die ID der Leistungsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Leistungsdaten
 	 */
@@ -940,9 +940,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Leistungsdaten.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Leistungsdaten
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        die IDs der Leistungsdaten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Leistungsdaten
 	 */
@@ -973,7 +973,7 @@ public class APISchueler {
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param request   die Informationen zur HTTP-Anfrage
-	 * @param id		die ID des Schülers, dessen Erzieher zurückgegeben werden.
+	 * @param id        die ID des Schülers, dessen Erzieher zurückgegeben werden.
 	 *
 	 * @return die Liste mit den einzelnen Erziehern
 	 */
@@ -1108,10 +1108,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Vermerke eines Schülers.
 	 *
-	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden
 	 *                soll
-	 * @param id      die Datenbank-ID zur Identifikation des Schülers
-	 * @param request die Informationen zur HTTP-Anfrage
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Vermerkdaten des Schülers
 	 */
@@ -1134,10 +1134,10 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Vermerke eines Schülers.
 	 *
-	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden
 	 *                soll
-	 * @param vermerkArt      die Datenbank-ID zur Identifikation des Vermerart
-	 * @param request die Informationen zur HTTP-Anfrage
+	 * @param vermerkArt   die Datenbank-ID zur Identifikation des Vermerart
+	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Vermerkdaten des Schülers
 	 */
@@ -1192,13 +1192,13 @@ public class APISchueler {
 
 	/**
 	 *
-	 * Erzeugt einen Schpler-Vermerk und gibt diesen zurück
+	 * Erzeugt einen Schüler-Vermerk und gibt diesen zurück
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param is 		der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return HTTP_201 und der angelegte Schueler-Vermerk, wenn erfolgreich. <br>
+	 * @return HTTP_201 und der angelegte Schüler-Vermerk, wenn erfolgreich. <br>
 	 *         HTTP_400, wenn Fehler bei der Validierung auftreten HTTP_403 bei fehlender Berechtigung,<br>
 	 *         HTTP_404, wenn der Eintrag nicht gefunden wurde
 	 */
@@ -1222,10 +1222,10 @@ public class APISchueler {
 	/**
 	 * Löscht ein SchülerVermerk-Eintrag anhand dessen Id
 	 *
-	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param schuelerID     die Schueler-ID
-	 * @param idVermerk      die Datenbank-ID des Schüler-Vermerks
-	 * @param request        die Informationen zur HTTP-Anfrage
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schuelerID   die Schüler-ID
+	 * @param idVermerk    die Datenbank-ID des Schüler-Vermerks
+	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return HTTP_204, wenn erfolgreich. <br>
 	 *         HTTP_403 bei fehlender Berechtigung,<br>
@@ -1233,7 +1233,7 @@ public class APISchueler {
 	 */
 	@DELETE
 	@Path("/{id : \\d+}/vermerke/{idVermerk : \\d+}")
-	@Operation(summary = "Löscht einen Schueler-Vermerk", description = "Löscht einen Schueler-Vermerk"
+	@Operation(summary = "Löscht einen Schüler-Vermerk", description = "Löscht einen Schüler-Vermerk"
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schüler-Vermerken besitzt.")
 	@ApiResponse(responseCode = "204", description = "Der Vermerk des Schülers wurde gelöscht")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
@@ -1301,7 +1301,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Patchen einer Einwilligung.
 	 *
 	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
-	 * @param idSchueler           die Schueler-ID
+	 * @param idSchueler           die Schüler-ID
 	 * @param idEinwilligungsart   die ID der Einwilligungsart, zu welcher die zu patchende Einwilligung gehört
 	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request              die Informationen zur HTTP-Anfrage
@@ -1364,7 +1364,7 @@ public class APISchueler {
 	 * Erzeugt einen SchuelerKAoADaten-Eintrag und gibt diesen zurück
 	 *
 	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler   die Schueler-ID
+	 * @param idSchueler   die Schüler-ID
 	 * @param is           der InputStream, mit dem JSON-Patch-Objekt der KAoA-Klassendaten
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
@@ -1396,9 +1396,9 @@ public class APISchueler {
 	 * Ändert einen SchuelerKAoADaten-Eintrag anhand seiner ID
 	 *
 	 * @param schema           das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler       die Schueler-ID
+	 * @param idSchueler       die Schüler-ID
 	 * @param schuelerKAoAId   die Datenbank-ID der Schüler-KAoA-Daten
-	 * @param is			   der InputStream
+	 * @param is               der InputStream
 	 * @param request          die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1429,7 +1429,7 @@ public class APISchueler {
 	 * Löscht ein SchuelerKAoADaten-Eintrag anhand dessen Id
 	 *
 	 * @param schema           das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler       die Schueler-ID
+	 * @param idSchueler       die Schüler-ID
 	 * @param schuelerKAoAID   die Datenbank-ID der Schüler-KAoA-Daten
 	 * @param request          die Informationen zur HTTP-Anfrage
 	 *
@@ -1456,9 +1456,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Sprachbelegungen eines Schülers.
 	 *
-	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id      die Datenbank-ID zur Identifikation des Schülers
-	 * @param request die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Spachbelegungen des Schülers
 	 */
@@ -1541,10 +1541,10 @@ public class APISchueler {
 
 
 	/**
-	 * Erzeugt einen Sprachbelegung für den Schüler mit der angebenen ID.
+	 * Erzeugt eine Sprachbelegung für den Schüler mit der angegebenen ID.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Schueler-ID
+	 * @param id        die Schüler-ID
 	 * @param is        der Input-Stream mit den Daten der Sprachbelegung
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -1553,7 +1553,7 @@ public class APISchueler {
 	@POST
 	@Path("/{id : \\d+}/sprachen/belegungen")
 	@Operation(summary = "Erstellt einen neuen Sprachbelegung für einen Schüler", description = "Erstellt eine neuen Sprachbelegung "
-			+ "für den Schüler mit der angebenen ID. "
+			+ "für den Schüler mit der angegebenen ID. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Sprachbelegung des Schülers",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
@@ -1575,7 +1575,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen der Sprachbelegung eines Schülers.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param id        die Schueler-ID
+	 * @param id        die Schüler-ID
 	 * @param sprache   das Sprachkürzel der Sprache
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -1604,9 +1604,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Sprachprüfungen eines Schülers.
 	 *
-	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id      die Datenbank-ID zur Identifikation des Schülers
-	 * @param request die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Spachprüfungen des Schülers
 	 */
@@ -1689,10 +1689,10 @@ public class APISchueler {
 
 
 	/**
-	 * Erzeugt einen Sprachprüfung für den Schüler mit der angebenen ID.
+	 * Erzeugt eine Sprachprüfung für den Schüler mit der angegebenen ID.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Schueler-ID
+	 * @param id        die Schüler-ID
 	 * @param is        der Input-Stream mit den Daten der Sprachprüfung
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -1701,7 +1701,7 @@ public class APISchueler {
 	@POST
 	@Path("/{id : \\d+}/sprachen/pruefungen")
 	@Operation(summary = "Erstellt eine neuen Sprachprüfung für einen Schüler", description = "Erstellt eine neuen Sprachprüfung "
-			+ "für den Schüler mit der angebenen ID. "
+			+ "für den Schüler mit der angegebenen ID. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Sprachprüfung des Schülers",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
@@ -1723,7 +1723,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Entfernen der Sprachprüfung eines Schülers.
 	 *
 	 * @param schema      das Datenbankschema
-	 * @param id          die Schueler-ID
+	 * @param id          die Schüler-ID
 	 * @param idEintrag   die ID des Eintrages der Sprachprüfung
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
@@ -1776,11 +1776,11 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Patchen einer Lernplattform.
 	 *
-	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
-	 * @param idSchueler           die Schueler-ID
-	 * @param idLernplattform      die ID der Lernplattform, zu welcher die zu patchende Einwilligung gehört
-	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request              die Informationen zur HTTP-Anfrage
+	 * @param schema            das Datenbankschema, auf welchem der Patch ausgeführt werden soll
+	 * @param idSchueler        die Schüler-ID
+	 * @param idLernplattform   die ID der Lernplattform, zu welcher die zu patchende Einwilligung gehört
+	 * @param is                der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request           die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
@@ -1863,7 +1863,7 @@ public class APISchueler {
 	 *
 	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param idSchueler   die ID des Schülers bei dem der Eintrag erzeugt werden soll
-	 * @param is 		   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param is           der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return HTTP_201, bei Erfolg und Rückgabe des angelegten Schülertelefoneintrags <br>
@@ -1970,9 +1970,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer neuen Fahrschülerart.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der Fahrschülerart
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten der Fahrschülerart
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der erstellten Fahrschülerart
 	 */
@@ -2026,9 +2026,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Fahrschülerarten.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Fahrschülerarten
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        die IDs der Fahrschülerarten
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
 	 */
@@ -2051,9 +2051,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Förderempfehlungen eines Schüler-Lernabschnitts.
 	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt  die ID des Schüler-Lernabschnitts
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param abschnitt   die ID des Schüler-Lernabschnitts
+	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Förderempfehlungen des Schüler-Lernabschnitts
 	 */
@@ -2075,9 +2075,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer Förderempfehlung für einen Schüler-Lernabschnitts.
 	 *
-	 * @param schema     das Datenbankschema
-	 * @param is         der Input-Stream mit den Daten der Förderempfehlung
-	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten der Förderempfehlung
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der erstellten Förderempfehlung
 	 */
@@ -2184,9 +2184,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der SchuelerBetriebe.
 	 *
-	 * @param idSchueler	die Id des Schülers
-	 * @param schema    	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   	die Informationen zur HTTP-Anfrage
+	 * @param idSchueler   die Id des Schülers
+	 * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Liste der SchuelerBetriebe
 	 */
@@ -2208,7 +2208,7 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für das Patchen eines SchuelerBetriebs.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id		die ID zur Identifikation des SchuelerBetriebs
+	 * @param id        die ID zur Identifikation des SchuelerBetriebs
 	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
@@ -2237,9 +2237,9 @@ public class APISchueler {
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des Betriebs
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param is        der Input-Stream mit den Daten des Betriebs
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem erstellten Betrieb
 	 */
