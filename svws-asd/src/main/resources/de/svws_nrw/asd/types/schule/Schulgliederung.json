@@ -1,5 +1,5 @@
 {
-	"version": 10,
+	"version": 11,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idStatistik": "1",
@@ -616,7 +616,7 @@
 			"kuerzel": "A12",
 			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
 			"gueltigVon": 2016,
-			"gueltigBis": 2024,
+			"gueltigBis": 2023,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -657,8 +657,8 @@
 			"schluessel": "A12",
 			"kuerzel": "A12",
 			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
-			"gueltigVon": 2025,
-			"gueltigBis": 2025,
+			"gueltigVon": 2024,
+			"gueltigBis": 2024,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -709,7 +709,7 @@
 			"schluessel": "A12",
 			"kuerzel": "A12",
 			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
-			"gueltigVon": 2026,
+			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
@@ -751,7 +751,7 @@
 			"kuerzel": "A13",
 			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
 			"gueltigVon": 2016,
-			"gueltigBis": 2024,
+			"gueltigBis": 2023,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -787,8 +787,8 @@
 			"schluessel": "A13",
 			"kuerzel": "A13",
 			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
-			"gueltigVon": 2025,
-			"gueltigBis": 2025,
+			"gueltigVon": 2024,
+			"gueltigBis": 2024,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -839,7 +839,7 @@
 			"schluessel": "A13",
 			"kuerzel": "A13",
 			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
-			"gueltigVon": 2026,
+			"gueltigVon": 2025,
 			"gueltigBis": null,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
@@ -2136,7 +2136,7 @@
 			"kuerzel": "B07",
 			"text": "Berufliche Kenntnisse/Mittlerer Schulabschluss (BK/FOR; 1j. VZ)",
 			"gueltigVon": 2016,
-			"gueltigBis": null,
+			"gueltigBis": 2024,
 			"auslaufdauer": 0,
 			"schulformen": [ "BK", "SB" ],
 			"istBK": true,
@@ -2177,6 +2177,54 @@
 				"jahrgangVon": "JAHRGANG_01",
 				"jahrgangBis": "JAHRGANG_01"
 			} ]
+		}, {
+			"id": 2007001,
+			"schluessel": "B07",
+			"kuerzel": "B07",
+			"text": "Berufliche Kenntnisse/Mittlerer Schulabschluss (BK/FOR; 1j. VZ)",
+			"gueltigVon": 2025,
+			"gueltigBis": null,
+			"auslaufdauer": 0,
+			"schulformen": [ "BK", "SB" ],
+			"istBK": true,
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"bkAnlage": "B",
+			"bkTyp": "07",
+			"bkIndex": 92,
+			"istVZ": true,
+			"abschluesse": [ {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "OA",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "HA10",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "MSA",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "MSA_Q",
+				"berufsbildend": "BK",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			}, {
+				"allgemeinbildend": "OA",
+				"berufsbildend": "WECHSEL",
+				"jahrgangVon": "JAHRGANG_01",
+				"jahrgangBis": "JAHRGANG_01"
+			} ]
+
 		} ]
 	}, {
 		"bezeichner": "B08",
