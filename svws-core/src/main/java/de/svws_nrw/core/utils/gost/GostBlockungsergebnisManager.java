@@ -47,7 +47,6 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
@@ -57,18 +56,25 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsergebnis}. Hierbei werden auch Hilfsmethoden zur
- * Interpretation der Daten erzeugt. <br>
+ * Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsergebnis}.
+ * Hierbei werden auch Hilfsmethoden zur Interpretation der Daten erzeugt. <br>
  * Nur Methoden, die mit "state" beginnen verändern den Zustand der Daten. <br>
+ * <br>
+ * Hinweis: Methoden-Referenzen (z.B. {@code this::method}) werden aufgrund
+ * von Transpiler-Einschränkungen nicht verwendet. Stattdessen werden
+ * Lambda-Ausdrücke genutzt (siehe {@code @SuppressWarnings("java:S1612")}).
  */
+@SuppressWarnings("java:S1612")
 public class GostBlockungsergebnisManager {
+
+	/** Zeilenumbruch. */
+	private final @NotNull String lineSeparator = "\n";
 
 	/** Der Blockungsdaten-Manager ist das Elternteil dieses Objektes. */
 	private final @NotNull GostBlockungsdatenManager parent;
 
 	/** Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. */
 	private @NotNull GostBlockungsergebnis ergebnis = new GostBlockungsergebnis();
-
 
 	/** Liste aller Fehlermeldungen. */
 	private @NotNull List<String> fehlermeldungen = new ArrayList<>();
@@ -312,69 +318,30 @@ public class GostBlockungsergebnisManager {
 		regelverletzungsmengeByRegelTyp = new HashMap<>();
 		regelverletzungsBeschreibungByRegelID = new HashMap<>();
 
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
-			stateRegelvalidierung1(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
-			stateRegelvalidierung2(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) {
-			stateRegelvalidierung3(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			stateRegelvalidierung4(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
-			stateRegelvalidierung5(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
-			stateRegelvalidierung6(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
-			stateRegelvalidierung7(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) {
-			stateRegelvalidierung8(r);
-		}
-
-		// stateRegelvalidierung9 ist nicht nötig
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN)) {
-			stateRegelvalidierung10(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
-			stateRegelvalidierung11(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
-			stateRegelvalidierung12(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
-			stateRegelvalidierung13(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			stateRegelvalidierung14(r);
-		}
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
-			stateRegelvalidierung15(r);
-		}
-
-		// stateRegelvalidierung16 ist nicht nötig
-		// stateRegelvalidierung17 ist nicht nötig
-
-		for (final @NotNull GostBlockungRegel r : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE)) {
-			stateRegelvalidierung18(r);
+		for (final @NotNull GostBlockungRegel r : parent.regelGetListe()) {
+			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
+			switch (typ) {
+				case KURSART_SPERRE_SCHIENEN_VON_BIS -> stateRegelvalidierung1(r);
+				case KURS_FIXIERE_IN_SCHIENE -> stateRegelvalidierung2(r);
+				case KURS_SPERRE_IN_SCHIENE -> stateRegelvalidierung3(r);
+				case SCHUELER_FIXIEREN_IN_KURS -> stateRegelvalidierung4(r);
+				case SCHUELER_VERBIETEN_IN_KURS -> stateRegelvalidierung5(r);
+				case KURSART_ALLEIN_IN_SCHIENEN_VON_BIS -> stateRegelvalidierung6(r);
+				case KURS_VERBIETEN_MIT_KURS -> stateRegelvalidierung7(r);
+				case KURS_ZUSAMMEN_MIT_KURS -> stateRegelvalidierung8(r);
+				// stateRegelvalidierung9 ist nicht nötig
+				case LEHRKRAEFTE_BEACHTEN -> stateRegelvalidierung10(r);
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH -> stateRegelvalidierung11(r);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH -> stateRegelvalidierung12(r);
+				case SCHUELER_ZUSAMMEN_MIT_SCHUELER -> stateRegelvalidierung13(r);
+				case SCHUELER_VERBIETEN_MIT_SCHUELER -> stateRegelvalidierung14(r);
+				case KURS_MAXIMALE_SCHUELERANZAHL -> stateRegelvalidierung15(r);
+				// stateRegelvalidierung16 ist nicht nötig
+				// stateRegelvalidierung17 ist nicht nötig
+				case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE -> stateRegelvalidierung18(r);
+				default -> {
+					/* andere Regeltypen ignorieren */ }
+			}
 		}
 
 		// Bewertungskriterium 1b (anzahlKurseNichtZugeordnet)
@@ -396,7 +363,8 @@ public class GostBlockungsergebnisManager {
 		for (final int idRegeltyp : GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE) {
 			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(regelverletzungsmengeByRegelTyp, idRegeltyp)) {
 				if (konflikte < 10) {
-					sb.append("%s\n".formatted(fehlermeldung));
+					sb.append(fehlermeldung);
+					sb.append(lineSeparator);
 				} else {
 					konflikteIgnoriert++;
 				}
@@ -407,7 +375,10 @@ public class GostBlockungsergebnisManager {
 			return "";
 		}
 
-		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikteIgnoriert == 0 ? "" : "+" + konflikteIgnoriert + " weitere Konflikte.");
+		if (konflikteIgnoriert != 0) {
+			sb.append("+" + konflikteIgnoriert + " weitere Konflikte.");
+		}
+		return konflikte + " Regelverletzungen" + lineSeparator + sb.toString();
 	}
 
 	private void stateClearErgebnisTooltipWahlkonflikteBewertung() {
@@ -440,54 +411,85 @@ public class GostBlockungsergebnisManager {
 		regelverletzungenTooltipWahlkonflikte = stateClearErgebnisTooltipWahlkonflikteString();
 	}
 
-	private @NotNull String stateClearErgebnisTooltipWahlkonflikteString() {
-		final @NotNull StringBuilder sb = new StringBuilder();
+	private void appendNichtwahlenLinien(
+			final @NotNull StringBuilder sb,
+			final @NotNull int[] wahlkonflikte,
+			final @NotNull int[] wahlkonflikteIgnoriert) {
 
-		// Nichtwahlen des Schülers.
-		int wahlkonflikte = 0;
-		int wahlkonflikteIgnoriert = 0;
 		for (final long idSchueler : kursOrNullBySchuelerIDAndFachID.getKeySet()) {
 			final var entries = kursOrNullBySchuelerIDAndFachID.getSubMapOrException(idSchueler).entrySet();
 			for (final @NotNull Entry<Long, GostBlockungsergebnisKurs> e : entries) {
-				if (e.getValue() == null) {
-					if (wahlkonflikte < 10) {
-						final long idFach = e.getKey();
-						final int kursart = parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-						sb.append("%s ist im Fach %s keinem Kurs zugeordnet.\n"
-								.formatted(parent.toStringSchuelerSimple(idSchueler), parent.toStringFachartSimple(idFach, kursart)));
-					} else {
-						wahlkonflikteIgnoriert++;
-					}
-					wahlkonflikte++;
+				if (e.getValue() != null) {
+					continue;
 				}
+				// Ein Wahlkonflikt wurde gefunden.
+				if (wahlkonflikte[0] < 10) {
+					final long idFach = e.getKey();
+					final int kursart = parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
+					sb.append("%s ist im Fach %s keinem Kurs zugeordnet."
+							.formatted(parent.toStringSchuelerSimple(idSchueler), parent.toStringFachartSimple(idFach, kursart)));
+					sb.append(lineSeparator);
+				} else {
+					// So viele Wahlkonflikte konnten nicht mehr angezeigt werden.
+					wahlkonflikteIgnoriert[0]++;
+				}
+				wahlkonflikte[0]++;
 			}
 		}
+	}
 
-		// Kollisionen des Schülers.
+	private void appendKollisionenLinien(
+			final @NotNull StringBuilder sb,
+			final @NotNull int[] wahlkonflikte,
+			final @NotNull int[] wahlkonflikteIgnoriert) {
+
 		for (final long idSchueler : kursmengeBySchuelerIDAndSchienenID.getKeySet()) {
 			for (final @NotNull Entry<Long, Set<GostBlockungsergebnisKurs>> e : kursmengeBySchuelerIDAndSchienenID
 					.getSubMapOrException(idSchueler).entrySet()) {
-				final @NotNull Set<GostBlockungsergebnisKurs> set = e.getValue();
-				if (set.size() <= 1) {
-					continue;
-				}
-				final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(set);
-				if (wahlkonflikte < 10) {
-					sb.append("%s ist in %s in mehreren Kursen:"
-							.formatted(parent.toStringSchuelerSimple(idSchueler), parent.toStringSchieneSimple(e.getKey())));
-					for (int i = 0; i < list.size(); i++) {
-						sb.append("%s%s".formatted(i == 0 ? "" : ", ", parent.toStringKursSimple(list.get(i).id)));
+				if (e.getValue().size() >= 2) {
+					// Wenn ein Schüler in einer Schüler mehr als 1 Mal vertreten ist, gibt Kollisionen.
+					final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(e.getValue());
+					if (wahlkonflikte[0] < 10) {
+						appendKollisionVonSchuelerInSchiene(sb, idSchueler, e.getKey(), list);
+					} else {
+						// So viele Kollisionen konnten nicht mehr angezeigt werden.
+						wahlkonflikteIgnoriert[0]++;
 					}
-					sb.append("\n");
-				} else {
-					wahlkonflikteIgnoriert++;
+					wahlkonflikte[0] += list.size() - 1;
 				}
-				wahlkonflikte += list.size() - 1;
 			}
 		}
+	}
 
-		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString()
-				+ (wahlkonflikteIgnoriert == 0 ? "" : "+" + wahlkonflikteIgnoriert + " weitere Konflikte.");
+	private void appendKollisionVonSchuelerInSchiene(
+			final @NotNull StringBuilder sb,
+			final long idSchueler,
+			final long idSchiene,
+			final @NotNull ArrayList<GostBlockungsergebnisKurs> list) {
+		sb.append("%s ist in %s in mehreren Kursen:"
+				.formatted(parent.toStringSchuelerSimple(idSchueler), parent.toStringSchieneSimple(idSchiene)));
+		for (int i = 0; i < list.size(); i++) {
+			sb.append("%s%s".formatted(i == 0 ? "" : ", ", parent.toStringKursSimple(list.get(i).id)));
+		}
+		sb.append(lineSeparator);
+	}
+
+	private @NotNull String stateClearErgebnisTooltipWahlkonflikteString() {
+		final @NotNull StringBuilder sb = new StringBuilder();
+		final @NotNull int[] wahlkonflikte = { 0 };
+		final @NotNull int[] wahlkonflikteIgnoriert = { 0 };
+
+		// Nichtwahlen sind Wahlkonflikte.
+		appendNichtwahlenLinien(sb, wahlkonflikte, wahlkonflikteIgnoriert);
+
+		// Kollisionen sind Wahlkonflikte.
+		appendKollisionenLinien(sb, wahlkonflikte, wahlkonflikteIgnoriert);
+
+		// Ausgabe konstruieren.
+		if (wahlkonflikteIgnoriert[0] != 0) {
+			sb.append("+" + wahlkonflikteIgnoriert[0] + " weitere Konflikte.");
+		}
+		return "Wahlkonflikte = " + wahlkonflikte[0] + lineSeparator + sb.toString();
 	}
 
 	private void stateClearErgebnisTooltipKursdifferenzenBewertung() {
@@ -522,10 +524,13 @@ public class GostBlockungsergebnisManager {
 	private @NotNull String stateClearErgebnisTooltipKursdifferenzenString() {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		final @NotNull int[] histo = ergebnis.bewertung.kursdifferenzHistogramm;
-		sb.append("Maximale Kursdifferenz (LK, GK, REST): " + bewertungKursdifferenzNurLK + ", " + bewertungKursdifferenzNurGK + ", " + bewertungKursdifferenzRest + "\n");
+		sb.append("Maximale Kursdifferenz (LK, GK, REST): " + bewertungKursdifferenzNurLK + ", " + bewertungKursdifferenzNurGK + ", "
+				+ bewertungKursdifferenzRest);
+		sb.append(lineSeparator);
 
 		if (histo.length >= 2) {
-			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x\n");
+			sb.append("Optimal 0/1: " + (histo[0] + histo[1]) + "x");
+			sb.append(lineSeparator);
 		}
 
 		for (int i = 2; i < histo.length; i++) {
@@ -538,7 +543,8 @@ public class GostBlockungsergebnisManager {
 			for (int j = 1; j < listFacharten.size(); j++) {
 				sb.append(", %s".formatted(listFacharten.get(j)));
 			}
-			sb.append(")\n");
+			sb.append(")");
+			sb.append(lineSeparator);
 		}
 
 		return sb.toString();
@@ -566,7 +572,9 @@ public class GostBlockungsergebnisManager {
 			final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
 			final @NotNull String proSchiene = stateClearErgebnisTooltipFaecherparallelitaetStringProSchiene(schiene.id);
 			if (!proSchiene.isEmpty()) {
-				sb.append("Schiene %d:\n%s".formatted(nr, proSchiene));
+				sb.append("Schiene %d:".formatted(nr));
+				sb.append(lineSeparator);
+				sb.append(proSchiene);
 			}
 		}
 
@@ -579,7 +587,8 @@ public class GostBlockungsergebnisManager {
 		for (final long idFachart : fachartIDsSortiert) {
 			final @NotNull String proFachart = stateClearErgebnisTooltipFaecherparallelitaetStringProSchieneUndFachart(idSchiene, idFachart);
 			if (!proFachart.isEmpty()) {
-				sb.append("%s\n".formatted(proFachart));
+				sb.append(proFachart);
+				sb.append(lineSeparator);
 			}
 		}
 
@@ -602,7 +611,6 @@ public class GostBlockungsergebnisManager {
 		}
 		return sb.toString();
 	}
-
 
 	private void update0schienenIDsUndschienenNRs() {
 		schienenIDs = new HashSet<>();
@@ -631,57 +639,53 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-
 	private void update0kursIDs() {
-	    kursIDs = new HashSet<>();
-	    for (final @NotNull GostBlockungKurs gKurs : parent.daten().kurse) {
-	        if (gKurs.id < 0) {
+		kursIDs = new HashSet<>();
+		for (final @NotNull GostBlockungKurs gKurs : parent.daten().kurse) {
+			if (gKurs.id < 0) {
 				fehlermeldungen.add("Die Kurs-ID %d ist ungültig!".formatted(gKurs.id));
 			}
-	        if (!kursIDs.add(gKurs.id)) {
+			if (!kursIDs.add(gKurs.id)) {
 				fehlermeldungen.add("Die Kurs-ID %d ist doppelt!".formatted(gKurs.id));
 			}
-	    }
+		}
 	}
 
-
 	private void update0fachIDs() {
-	    fachIDs = new HashSet<>();
-	    for (final @NotNull GostFach gFach : parent.faecherManager().faecher()) {
-	        if (gFach.id < 0) {
+		fachIDs = new HashSet<>();
+		for (final @NotNull GostFach gFach : parent.faecherManager().faecher()) {
+			if (gFach.id < 0) {
 				fehlermeldungen.add("Die Fach-ID %d ist ungültig!".formatted(gFach.id));
 			}
-	        if (!fachIDs.add(gFach.id)) {
+			if (!fachIDs.add(gFach.id)) {
 				fehlermeldungen.add("Die Fach-ID %d ist doppelt!".formatted(gFach.id));
 			}
-	    }
-	    // Gibt es Kurse ohne definiertes Fach?
-	    for (final @NotNull GostBlockungKurs gKurs : parent.daten().kurse) {
+		}
+		// Gibt es Kurse ohne definiertes Fach?
+		for (final @NotNull GostBlockungKurs gKurs : parent.daten().kurse) {
 			if (fachIDs.add(gKurs.fach_id)) {
 				fehlermeldungen.add("Kurs %s hat ein undefiniertes Fach (im Fächer-Manager)!".formatted(parent.toStringKursSimple(gKurs.id)));
 			}
 		}
-	    // Gibt es Fachwahlen ohne definiertes Fach?
-	    for (final @NotNull GostFachwahl gFachwahl : parent.daten().fachwahlen) {
+		// Gibt es Fachwahlen ohne definiertes Fach?
+		for (final @NotNull GostFachwahl gFachwahl : parent.daten().fachwahlen) {
 			if (fachIDs.add(gFachwahl.fachID)) {
 				fehlermeldungen.add("Fachwahl %s hat ein undefiniertes Fach (im Fächer-Manager)!".formatted(parent.toStringFachwahlSimple(gFachwahl)));
 			}
 		}
 	}
 
-
 	private void update0schuelerIDs() {
-	    schuelerIDs = new HashSet<>();
-	    for (final @NotNull Schueler schueler : parent.daten().schueler) {
-	        if (schueler.id < 0) {
+		schuelerIDs = new HashSet<>();
+		for (final @NotNull Schueler schueler : parent.daten().schueler) {
+			if (schueler.id < 0) {
 				fehlermeldungen.add("Die Schüler-ID %d ist ungültig!".formatted(schueler.id));
 			}
-	        if (!schuelerIDs.add(schueler.id)) {
+			if (!schuelerIDs.add(schueler.id)) {
 				fehlermeldungen.add("Die Schüler-ID %d ist doppelt!".formatted(schueler.id));
 			}
-	    }
+		}
 	}
-
 
 	/**
 	 * Wichtig: Die Methode muss auf gelöschte und hinzugefügt Schienen reagieren
@@ -692,7 +696,7 @@ public class GostBlockungsergebnisManager {
 		schieneByNR = new HashMap<>();
 
 		// Lösche alle E-Schienen, die es im Elternteil nicht mehr gibt.
-		final List<GostBlockungsergebnisSchiene> listZuLoeschen = new ArrayList<>();
+		final @NotNull List<GostBlockungsergebnisSchiene> listZuLoeschen = new ArrayList<>();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : ergebnis.schienen) {
 			if (!parent.schieneGetExistiert(eSchiene.id)) {
 				listZuLoeschen.add(eSchiene);
@@ -805,7 +809,6 @@ public class GostBlockungsergebnisManager {
 
 	}
 
-
 	private void update1schuelerAnzahlDummyByKursID() {
 		// Leeren und hinzufügen.
 		schuelerAnzahlDummyByKursID = new HashMap<>();
@@ -814,24 +817,20 @@ public class GostBlockungsergebnisManager {
 			final int anzahl = r.parameter.get(1).intValue();
 			if (!kursIDs.contains(idKurs)) {
 				fehlermeldungen.add("Kurs %s soll %d externe SuS haben, aber den Kurs gibt es nicht!".formatted(parent.toStringKursSimple(idKurs), anzahl));
-				continue;
-			}
-			if ((anzahl < 1) || (anzahl > 99)) {
+			} else if ((anzahl < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN)
+					|| (anzahl > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX)) {
 				fehlermeldungen.add("Kurs %s mit %d externen SuS ist ungültig!".formatted(parent.toStringKursSimple(idKurs), anzahl));
-				continue;
-			}
-			if (schuelerAnzahlDummyByKursID.containsKey(idKurs)) {
+			} else if (schuelerAnzahlDummyByKursID.containsKey(idKurs)) {
 				fehlermeldungen.add("Kurs %s mit %d externen SuS. Doppelte Regel gefunden!".formatted(parent.toStringKursSimple(idKurs), anzahl));
-				continue;
+			} else {
+				schuelerAnzahlDummyByKursID.put(idKurs, anzahl);
 			}
-			schuelerAnzahlDummyByKursID.put(idKurs, anzahl);
 		}
 		// Kurse ohne Dummy-SuS ergänzen.
 		for (final long idKurs : kursIDs) {
 			MapUtils.putNonNullIfNotExists(schuelerAnzahlDummyByKursID, idKurs, 0);
 		}
 	}
-
 
 	private void update1kursmengeByFachID() {
 		// Leeren und hinzufügen.
@@ -925,7 +924,7 @@ public class GostBlockungsergebnisManager {
 		kursdifferenzByFachartID = new HashMap<>();
 
 		for (final long idFachart : kursmengeByFachartID.keySet()) {
-			final List<GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(kursmengeByFachartID, idFachart);
+			final @NotNull List<GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(kursmengeByFachartID, idFachart);
 
 			// Neue Kursdifferenz berechnen
 			int min = 10000; // Dummy-Wert
@@ -1062,6 +1061,10 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
+	// Das explizite Setzen von null ist hier erforderlich, um eine fehlende Kurszuordnung
+	// zu markieren (siehe @AllowNull am Typ-Parameter der Map-Deklaration).
+	// Sonar S2637 false-positive: @AllowNull wird vom Analyzer nicht erkannt.
+	@SuppressWarnings("java:S2637")
 	private void update3kursOrNullBySchuelerIDAndFachID() {
 		// Leeren und hinzufügen.
 		kursOrNullBySchuelerIDAndFachID = new HashMap2D<>();
@@ -1081,7 +1084,7 @@ public class GostBlockungsergebnisManager {
 
 	private void stateRegelvalidierung1(final @NotNull GostBlockungRegel r) {
 		for (int schienenNr = r.parameter.get(1).intValue(); schienenNr <= r.parameter.get(2).intValue(); schienenNr++) {
-			for (final GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse) {
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse) {
 				if (eKurs.kursart == r.parameter.get(0).intValue()) {
 					ergebnis.bewertung.regelVerletzungen.add(r.id);
 					final @NotNull String beschreibung = "Kursart " + getOfKursName(eKurs.id) + " sollte nicht auf Schiene " + schienenNr + " liegen.";
@@ -1097,7 +1100,7 @@ public class GostBlockungsergebnisManager {
 		final int schienenNr = r.parameter.get(1).intValue();
 		if (!getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " sollte fixiert sein in Schiene " + schienenNr + ".";
+			final @NotNull String beschreibung = "Kurs %s sollte fixiert sein in Schiene %d.".formatted(getOfKursName(idKurs), schienenNr);
 			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 2, beschreibung);
 			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
 		}
@@ -1108,7 +1111,7 @@ public class GostBlockungsergebnisManager {
 		final int schienenNr = r.parameter.get(1).intValue();
 		if (getOfKursSchienenmenge(idKurs).contains(getSchieneEmitNr(schienenNr))) {
 			ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " sollte gesperrt sein in Schiene " + schienenNr + ".";
+			final @NotNull String beschreibung = "Kurs %s sollte gesperrt sein in Schiene %d.".formatted(getOfKursName(idKurs), schienenNr);
 			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 3, beschreibung);
 			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
 		}
@@ -1137,7 +1140,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void stateRegelvalidierung6(final @NotNull GostBlockungRegel r) {
-		for (final GostBlockungsergebnisKurs eKurs : kursByID.values()) {
+		for (final @NotNull GostBlockungsergebnisKurs eKurs : kursByID.values()) {
 			for (final @NotNull Long eSchieneID : eKurs.schienen) {
 				final int nr = getSchieneG(eSchieneID).nummer; // Hier stürzt es ab?
 				final int kursart = r.parameter.get(0).intValue();
@@ -1180,56 +1183,51 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-
 	private void stateRegelvalidierung8(final @NotNull GostBlockungRegel r) {
-	    final long idKurs1 = r.parameter.get(0);
-	    final long idKurs2 = r.parameter.get(1);
-	    final @NotNull Set<GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
-	    final @NotNull Set<GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
-	    if (set1.size() < set2.size()) {
-	        // "set1" muss in "set2" enthalten sein (da es dass kleinere ist).
-	        for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1) {
+		final long idKurs1 = r.parameter.get(0);
+		final long idKurs2 = r.parameter.get(1);
+		final @NotNull Set<GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
+		final @NotNull Set<GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
+		if (set1.size() < set2.size()) {
+			// "set1" muss in "set2" enthalten sein (da es dass kleinere ist).
+			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1) {
 				if (!set2.contains(schiene1)) {
-	                ergebnis.bewertung.regelVerletzungen.add(r.id);
-	                final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
-	                		.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
-	                MapUtils.addToList(regelverletzungsmengeByRegelTyp, 8, beschreibung);
-	                regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	            }
+					ergebnis.bewertung.regelVerletzungen.add(r.id);
+					final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
+							.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
+					MapUtils.addToList(regelverletzungsmengeByRegelTyp, 8, beschreibung);
+					regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+				}
 			}
-	    } else {
-	        // "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
-	        for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2) {
+		} else {
+			// "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
+			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2) {
 				if (!set1.contains(schiene2)) {
-	                ergebnis.bewertung.regelVerletzungen.add(r.id);
-	                final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
-	                		.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
-	                MapUtils.addToList(regelverletzungsmengeByRegelTyp, 8, beschreibung);
-	                regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	            }
+					ergebnis.bewertung.regelVerletzungen.add(r.id);
+					final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
+							.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
+					MapUtils.addToList(regelverletzungsmengeByRegelTyp, 8, beschreibung);
+					regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+				}
 			}
-	    }
+		}
 	}
-
 
 	private void stateRegelvalidierung10(final @NotNull GostBlockungRegel r) {
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : schieneByID.values()) {
-			for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse) {
-				for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse) {
-					if (eKurs1.id < eKurs2.id) {
-						for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer) {
-							for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer) {
-								if (gLehr1.id == gLehr2.id) {
-									ergebnis.bewertung.regelVerletzungen.add(r.id);
-									final int nr = getSchieneG(eSchiene.id).nummer;
-									final @NotNull String beschreibung = "Kurs " + getOfKursName(eKurs1.id) + " und Kurs " + getOfKursName(eKurs2.id)
-											+ " haben die Lehrkraft " + gLehr1.kuerzel + " in der selben Schiene (" + nr + ").";
-									MapUtils.addToList(regelverletzungsmengeByRegelTyp, 10, beschreibung);
-									regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-								}
-							}
-						}
+			final int nr = getSchieneG(eSchiene.id).nummer;
+			final @NotNull Map<Long, List<GostBlockungsergebnisKurs>> lehrerZuKursen = new HashMap<>();
+			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse) {
+				for (final @NotNull GostBlockungKursLehrer gLehr : getKursG(eKurs.id).lehrer) {
+					final @NotNull List<GostBlockungsergebnisKurs> kursList = MapUtils.getOrCreateArrayList(lehrerZuKursen, gLehr.id);
+					for (final @NotNull GostBlockungsergebnisKurs konfliktKurs : kursList) {
+						ergebnis.bewertung.regelVerletzungen.add(r.id);
+						final @NotNull String beschreibung = "Kurs %s und Kurs %s haben die Lehrkraft %s in der selben Schiene (%d)."
+								.formatted(getOfKursName(eKurs.id), getOfKursName(konfliktKurs.id), gLehr.kuerzel, nr);
+						MapUtils.addToList(regelverletzungsmengeByRegelTyp, 10, beschreibung);
+						regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
 					}
+					kursList.add(eKurs);
 				}
 			}
 		}
@@ -1285,50 +1283,48 @@ public class GostBlockungsergebnisManager {
 
 	}
 
-
 	private void stateRegelvalidierung12(final @NotNull GostBlockungRegel r) {
-	    final long idSchueler1 = r.parameter.get(0);
-	    final long idSchueler2 = r.parameter.get(1);
-	    final long idFach = r.parameter.get(2);
-	    final @NotNull GostFach fach = getFach(idFach);
+		final long idSchueler1 = r.parameter.get(0);
+		final long idSchueler2 = r.parameter.get(1);
+		final long idFach = r.parameter.get(2);
+		final @NotNull GostFach fach = getFach(idFach);
 
-	    if (!parent.schuelerGetHatFach(idSchueler1, idFach)) {
-	        ergebnis.bewertung.regelVerletzungen.add(r.id);
-	        final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
-	        		.formatted(getOfSchuelerNameVorname(idSchueler1), fach.kuerzelAnzeige);
-	        MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
-	        regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	        return;
-	    }
+		if (!parent.schuelerGetHatFach(idSchueler1, idFach)) {
+			ergebnis.bewertung.regelVerletzungen.add(r.id);
+			final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
+					.formatted(getOfSchuelerNameVorname(idSchueler1), fach.kuerzelAnzeige);
+			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
+			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+			return;
+		}
 
-	    if (!parent.schuelerGetHatFach(idSchueler2, idFach)) {
-	        ergebnis.bewertung.regelVerletzungen.add(r.id);
-	        final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
-	        		.formatted(getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
-	        MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
-	        regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	        return;
-	    }
+		if (!parent.schuelerGetHatFach(idSchueler2, idFach)) {
+			ergebnis.bewertung.regelVerletzungen.add(r.id);
+			final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
+					.formatted(getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
+			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+			return;
+		}
 
-	    if (!parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
-	        ergebnis.bewertung.regelVerletzungen.add(r.id);
-	        final @NotNull String beschreibung = "%s und SchülerIn %s haben nicht die selbe Kursart bei %s."
-	        		.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
-	        MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
-	        regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	        return;
-	    }
+		if (!parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
+			ergebnis.bewertung.regelVerletzungen.add(r.id);
+			final @NotNull String beschreibung = "%s und SchülerIn %s haben nicht die selbe Kursart bei %s."
+					.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
+			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+			return;
+		}
 
-	    if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
-	        ergebnis.bewertung.regelVerletzungen.add(r.id);
-	        final @NotNull String beschreibung = "%s und SchülerIn %s sollten nicht gemeinsam in %s sein."
-	        		.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
-	        MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
-	        regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
-	    }
+		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
+			ergebnis.bewertung.regelVerletzungen.add(r.id);
+			final @NotNull String beschreibung = "%s und SchülerIn %s sollten nicht gemeinsam in %s sein."
+					.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 12, beschreibung);
+			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
+		}
 
 	}
-
 
 	private void stateRegelvalidierung13(final @NotNull GostBlockungRegel r) {
 		final long idSchueler1 = r.parameter.get(0);
@@ -1364,12 +1360,13 @@ public class GostBlockungsergebnisManager {
 		final long idKurs = r.parameter.get(0);
 		final int maxSuS = r.parameter.get(1).intValue();
 		DeveloperNotificationException.ifTrue("Regel 15: " + parent.toStringKurs(idKurs) + " maximale SuS-Anzahl = " + maxSuS + " ist ungültig!",
-				(maxSuS < 0) || (maxSuS > 100));
+				(maxSuS < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
+						|| (maxSuS > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX));
 		final int sus = getOfKursAnzahlSchuelerPlusDummy(idKurs);
 
 		if (sus > maxSuS) {
 			ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs) + " hat " + sus + " SuS, sollte aber nicht mehr als " + maxSuS + " haben.";
+			final @NotNull String beschreibung = "Kurs %s hat %d SuS, sollte aber nicht mehr als %d haben.".formatted(getOfKursName(idKurs), sus, maxSuS);
 			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 15, beschreibung);
 			regelverletzungsBeschreibungByRegelID.put(r.id, beschreibung);
 		}
@@ -1392,7 +1389,7 @@ public class GostBlockungsergebnisManager {
 					+ " Mal vertreten, erlaubt sind aber nur " + maxProSchiene + "!";
 			MapUtils.addToList(regelverletzungsmengeByRegelTyp, 18, beschreibung);
 			final @NotNull String old = MapUtils.getOrDefault(regelverletzungsBeschreibungByRegelID, r.id, "");
-			regelverletzungsBeschreibungByRegelID.put(r.id, (old.isEmpty() ? "" : "\n") + beschreibung);
+			regelverletzungsBeschreibungByRegelID.put(r.id, (old.isEmpty() ? "" : lineSeparator) + beschreibung);
 		}
 	}
 
@@ -1461,7 +1458,7 @@ public class GostBlockungsergebnisManager {
 		return ListUtils.getCountFiltered(parent.daten().schueler, (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
 	}
 
-	private static double dividiereUndScheideNachZweiNachkommastellenAb(final int zaehler, final int nenner) {
+	private static double dividiereUndSchneideNachZweiNachkommastellenAb(final int zaehler, final int nenner) {
 		final long hochskaliert = (zaehler * 100L) / nenner;
 		return hochskaliert / 100.0;
 	}
@@ -1480,8 +1477,8 @@ public class GostBlockungsergebnisManager {
 		}
 		// Berechne die 1. Formel
 		final int nFachwahlen = parent.fachwahlGetAnzahl();
-		final double avg1 = dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
-		return  ("" + avg1).replace('.', ',');
+		final double avg1 = dividiereUndSchneideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
+		return ("" + avg1).replace('.', ',');
 	}
 
 	/**
@@ -1503,8 +1500,8 @@ public class GostBlockungsergebnisManager {
 				nVerteilt += getOfKursAnzahlSchueler(gKurs.id);
 			}
 		}
-		final double avg2 = dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
-		return  ("" + avg2).replace('.', ',');
+		final double avg2 = dividiereUndSchneideNachZweiNachkommastellenAb(nVerteilt, nKurse);
+		return ("" + avg2).replace('.', ',');
 	}
 
 	/**
@@ -1756,37 +1753,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
-	 * <br>Darin enthalten sind:
-	 * <br>- Das Histogramm der ersten 10 Kursdifferenzen (Kursdifferenz 0 bis Kursdifferenz 9).
-	 * <br>- Das Histogramm hat eine garantierte Länge von 10.
-	 *
-	 * @param bewertung  Die Bewertung vom Ergebnis.
-	 *
-	 * @return den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
-	 */
-	private static @NotNull int[] getOfBewertung3HistogrammStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
-		final @NotNull int[] histo = new int[10];
-
-		for (int i = 0; i < histo.length; i++) {
-			histo[i] = (bewertung.kursdifferenzHistogramm.length >= histo.length) ? bewertung.kursdifferenzHistogramm[i] : 0;
-		}
-
-		return histo;
-	}
-
-	/**
-	 * Liefert den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
-	 * <br>- Das Histogramm der ersten 10 Kursdifferenzen (Kursdifferenz 0 bis Kursdifferenz 9).
-	 * <br>- Das Histogramm hat eine garantierte Länge von 10.
-	 *
-	 * @return den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
-	 */
-	private @NotNull int[] getOfBewertung3Histogramm() {
-		return GostBlockungsergebnisManager.getOfBewertung3HistogrammStatic(ergebnis.bewertung);
-	}
-
-	/**
 	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
 	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
@@ -1953,16 +1919,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Facharten (Fach + Kursart) sortiert nach der aktuellen Sortiervariante.
-	 * <br>Hinweis: Die Sortierung lässt sich mit {@link #kursSetSortierungFachKursartNummer()} und {@link #kursSetSortierungKursartFachNummer()} ändern.
-	 *
-	 * @return die Menge aller Facharten (Fach + Kursart) sortiert nach der aktuellen Sortiervariante.
-	 */
-	private @NotNull List<Long> getOfFachartMengeSortiert() {
-		return fachartIDsSortiert;
-	}
-
-	/**
 	 * Ändert die aktuelle Sortierung von Facharten und Kursen.
 	 * <br>Hinweis: Sortiert zuerst nach LK/GK, dann nach der Fachsortierung, zuletzt nach der Kursnummer.
 	 */
@@ -2019,28 +1975,6 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull Set<GostBlockungsergebnisKurs> getOfSchuelerKursmenge(final long idSchueler) {
 		return DeveloperNotificationException.ifMapGetIsNull(kursmengeBySchuelerID, idSchueler);
-	}
-
-	/**
-	 * Liefert die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
-	 * <br>Hinweis: Die Sortierung wird mit {@link #kursSetSortierungFachKursartNummer()} und {@link #kursSetSortierungKursartFachNummer()} definiert.
-	 * <br>Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
-	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
-	 *
-	 * @return die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
-	 */
-	private @NotNull List<GostBlockungsergebnisKurs> getOfSchuelerKursmengeSortiert(final long idSchueler) {
-		final List<GostBlockungsergebnisKurs> list = new ArrayList<>();
-		list.addAll(DeveloperNotificationException.ifMapGetIsNull(kursmengeBySchuelerID, idSchueler));
-
-		if (fachartmengeSortierArt == 1) {
-			list.sort(comparatorKursByKursartAndFachAndKursnummer);
-		} else {
-			list.sort(comparatorKursByFachAndKursartAndKursnummer);
-		}
-
-		return list;
 	}
 
 	/**
@@ -2104,7 +2038,6 @@ public class GostBlockungsergebnisManager {
 		return parent.schuelerGetHatFachart(idSchueler, idFach, idKursart);
 	}
 
-
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach (unabhängig von der Kursart) gewählt hat.
 	 *
@@ -2142,17 +2075,82 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl der Schüler, die den Filterkriterien entsprechen.
 	 */
-	public int getOfSchuelerAnzahlGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString,
-			final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
-		int summe = 0;
+	public int getOfSchuelerAnzahlGefiltert(
+			final long idKurs,
+			final long idFach,
+			final int idKursart,
+			final int konfliktTyp,
+			final @NotNull String subString,
+			final Geschlecht geschlecht,
+			final GostSchriftlichkeit schriftlichkeit) {
 
-		for (final @NotNull Schueler schueler : parent.schuelerGetListe()) {
-			if (getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht, schriftlichkeit)) {
+		// Zunächst filtern wir die Basis-Kriterien (inklusive Geschlechts-Kriterium).
+		final @NotNull List<Schueler> menge = getOfSchuelerMengeBasisGefiltert(idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht);
+
+		// Ist keine Schriftlichkeit gefordert, so sind wir bereits fertig.
+		if (schriftlichkeit == null) {
+			return menge.size();
+		}
+
+		// Jetzt kommt die Nachfilterung der Schriftlichkeit.
+		int summe = 0;
+		for (final @NotNull Schueler schueler : menge) {
+			if (getOfSchuelerErfuelltNachfilterKriterien(schueler.id, idKurs, idFach, schriftlichkeit)) {
 				summe++;
 			}
 		}
-
 		return summe;
+	}
+
+	/**
+	 * Prüft das Nachfilter-Kriterium (Schriftlichkeit) für einen Schüler.
+	 * <br>Hinweis: Sind Kurs-Filter und Fach-Filter gleichzeitig gesetzt, werden beide Schriftlichkeiten geprüft.
+	 *
+	 * @param idSchueler        die ID des zu prüfenden Schülers
+	 * @param idKurs            die ID des Kurses (für Schriftlichkeits-Prüfung)
+	 * @param idFach            die ID des Faches (für Schriftlichkeits-Prüfung)
+	 * @param schriftlichkeit   die geforderte Schriftlichkeit oder null
+	 *
+	 * @return true, wenn der Schüler die Kriterien erfüllt
+	 */
+	private boolean getOfSchuelerErfuelltNachfilterKriterien(
+			final long idSchueler,
+			final long idKurs,
+			final long idFach,
+			final GostSchriftlichkeit schriftlichkeit) {
+
+		// Ist keine Schriftlichkeit gefordert, so besteht der Schüler die Nachfilterung.
+		if (schriftlichkeit == null) {
+			return true;
+		}
+
+		final boolean istSchriftlich = schriftlichkeit.getIstSchriftlichOrException();
+
+		// Schriftlichkeits-Filter bezogen auf einen konkreten Kurs?
+		if (idKurs >= 0) {
+			// Nicht zugeordnet?
+			if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
+				return false;
+			}
+
+			final boolean ungueltig = getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs);
+
+			// Ungültige Zuordnung: nur "SCHRIFTLICH" wird abgelehnt.
+			if ((ungueltig) && (schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH)) {
+				return false;
+			}
+
+			// Gültige Zuordnung: Die Schriftlichkeit der Kurs-Fachwahl muss der geforderten entsprechen.
+			if (!ungueltig && (istSchriftlich != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich)) {
+				return false;
+			}
+		}
+
+		// Schriftlichkeits-Filter bezogen auf ein Fach? (unabhängig vom Kurs-Filter)
+		if (idFach < 0) {
+			return true;
+		}
+		return (istSchriftlich == getOfSchuelerOfFachFachwahl(idSchueler, idFach).istSchriftlich);
 	}
 
 	/**
@@ -2292,14 +2290,14 @@ public class GostBlockungsergebnisManager {
 	 * @param idSchueler           Die ID des {@link Schueler}-Objekts.
 	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
 	 *
-	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
+	 * @return ein {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse beinhaltet.
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate getOfSchuelerNeuzuordnung(final long idSchueler, final boolean fixiereBelegteKurse) {
 		// Berechne die neue Zuordnung
 		final @NotNull SchuelerblockungOutput zuordnung = getOfSchuelerNeuzuordnungMitFixierung(idSchueler, fixiereBelegteKurse);
 
 		// Erzeuge das entsprechende Update-Objekt
-		final GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs z : zuordnung.fachwahlenZuKurs) {
 			// Kurs des Faches 'vorher'.
@@ -2457,7 +2455,6 @@ public class GostBlockungsergebnisManager {
 		return fachwahl.istSchriftlich;
 	}
 
-
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 *
@@ -2516,17 +2513,17 @@ public class GostBlockungsergebnisManager {
 	 */
 	private boolean getOfSchuelerHatStatusExtern(final @NotNull Long idSchueler) {
 		final int idStatus = getSchuelerG(idSchueler).status;
-		final SchuelerStatus status = SchuelerStatus.data().getWertByID((long) idStatus);
+		final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID((long) idStatus);
 		return (status == SchuelerStatus.EXTERN);
 	}
 
 	/**
-	 * Liefert die Fachwahl des Schüler passend zu den Kurs.
+	 * Liefert die Fachwahl des Schülers passend zum Kurs.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idKurs      Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Fachwahl des Schüler passend zu den Kurs.
+	 * @return die Fachwahl des Schülers passend zum Kurs.
 	 */
 	public @NotNull GostFachwahl getOfSchuelerOfKursFachwahl(final long idSchueler, final long idKurs) {
 		final long idFach = getKursE(idKurs).fachID;
@@ -2534,12 +2531,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Fachwahl des Schüler passend zum Fach.
+	 * Liefert die Fachwahl des Schülers passend zum Fach.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idFach      Die Datenbank-ID des Faches.
 	 *
-	 * @return die Fachwahl des Schüler passend zum Fach.
+	 * @return die Fachwahl des Schülers passend zum Fach.
 	 */
 	private @NotNull GostFachwahl getOfSchuelerOfFachFachwahl(final long idSchueler, final long idFach) {
 		return parent.schuelerGetOfFachFachwahl(idSchueler, idFach);
@@ -2556,17 +2553,13 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return eine nach Kriterien gefilterte Menge aller Schüler.
 	 */
-	public @NotNull List<Schueler> getOfSchuelerMengeGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp,
+	public @NotNull List<Schueler> getOfSchuelerMengeGefiltert(
+			final long idKurs,
+			final long idFach,
+			final int idKursart,
+			final int konfliktTyp,
 			final @NotNull String subString) {
-		final @NotNull List<Schueler> menge = new ArrayList<>();
-
-		for (final @NotNull Schueler schueler : parent.schuelerGetListe()) {
-			if (getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, null, null)) {
-				menge.add(schueler);
-			}
-		}
-
-		return menge;
+		return getOfSchuelerMengeBasisGefiltert(idKurs, idFach, idKursart, konfliktTyp, subString, null);
 	}
 
 	/**
@@ -2593,81 +2586,95 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler alle definierten Kriterien erfüllt.
+	 * Liefert eine nach den Basis-Kriterien gefilterte Menge aller Schüler.
 	 *
-	 * @param idSchueler        Die Datenbank-ID des Schülers.
-	 * @param idKurs            Falls >= 0, muss der Schüler in dem Kurs sein.
-	 * @param idFach            Falls >= 0, muss der Schüler das Fach haben.
-	 * @param idKursart         Falls >= 0, und idFach >= muss der Schüler auch die zugehörige Kursart haben.
-	 * @param konfliktTyp       Falls > 0 muss der Schüler "1=Kollisionen", "2=Nichtwahlen" oder "3= Kollisionen und Nichtwahlen" haben.
-	 * @param subString         Falls length() > 0 muss der Schüler den Substring im Vor- oder Nachnamen haben.
-	 * @param geschlecht        Falls != null, muss der Schüler das definierte Geschlecht haben.
-	 * @param schriftlichkeit   Falls != null, muss der Schüler das definierte {@link GostSchriftlichkeit} haben.
+	 * @param idKurs       falls >= 0, werden Schüler des Kurses herausgefiltert.
+	 * @param idFach       falls >= 0, werden Schüler mit diesem Fach herausgefiltert.
+	 * @param idKursart    falls >= 0 und idFach >= 0, werden Schüler mit dieser Fach/Kursart Kombination herausgefiltert.
+	 * @param konfliktTyp  falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param subString    falls der String nicht leer ist, werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * @param geschlecht   falls != null, werden nur Schüler mit diesem {@link Geschlecht} herausgefiltert.
 	 *
-	 * @return TRUE, falls der Schüler alle definierten Kriterien erfüllt.
+	 * @return eine nach den Basis-Kriterien gefilterte Menge aller Schüler.
 	 */
-	private boolean getOfSchuelerErfuelltKriterien(final long idSchueler, final long idKurs, final long idFach, final int idKursart, final int konfliktTyp,
-			final @NotNull String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
+	private @NotNull List<Schueler> getOfSchuelerMengeBasisGefiltert(
+			final long idKurs,
+			final long idFach,
+			final int idKursart,
+			final int konfliktTyp,
+			final @NotNull String subString,
+			final Geschlecht geschlecht) {
+		final @NotNull List<Schueler> menge = new ArrayList<>();
+		for (final @NotNull Schueler schueler : parent.schuelerGetListe()) {
+			if (getOfSchuelerErfuelltBasisKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht)) {
+				menge.add(schueler);
+			}
+		}
+		return menge;
+	}
 
+	/**
+	 * Prüft die Basis-Kriterien (Konflikt-Typ, String, Geschlecht, Kurs und Fach) für einen Schüler.
+	 *
+	 * @param idSchueler   Die Datenbank-ID des Schülers.
+	 * @param idKurs       falls >= 0, muss der Schüler dem Kurs zugeordnet sein.
+	 * @param idFach       falls >= 0, muss der Schüler dieses Fach haben.
+	 * @param idKursart    falls >= 0 und idFach >= 0, muss der Schüler diese Fach/Kursart Kombination haben.
+	 * @param konfliktTyp  falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param subString    falls der String nicht leer ist, muss der Vor- oder Nachname diesen String enthalten.
+	 * @param geschlecht   falls != null, muss der Schüler dieses {@link Geschlecht} haben.
+	 *
+	 * @return TRUE, falls der Schüler die Basis-Kriterien erfüllt.
+	 */
+	private boolean getOfSchuelerErfuelltBasisKriterien(
+			final long idSchueler,
+			final long idKurs,
+			final long idFach,
+			final int idKursart,
+			final int konfliktTyp,
+			final @NotNull String subString,
+			final Geschlecht geschlecht) {
+
+		// Konflikt-Typ-Kriterium
 		if ((konfliktTyp == 1) && (!getOfSchuelerHatKollision(idSchueler))) {
 			return false;
 		}
-
 		if ((konfliktTyp == 2) && (!getOfSchuelerHatNichtwahl(idSchueler))) {
 			return false;
 		}
-
 		if ((konfliktTyp == 3) && ((!getOfSchuelerHatKollision(idSchueler)) && (!getOfSchuelerHatNichtwahl(idSchueler)))) {
 			return false;
 		}
 
+		// String-Kriterium
 		if (!subString.isEmpty() && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString))) {
 			return false;
 		}
 
+		// Geschlechts-Kriterium
 		if ((geschlecht != null) && (getOfSchuelerGeschlechtOrException(idSchueler).id != geschlecht.id)) {
 			return false;
 		}
 
-		// Kurs-Filter
-		if (idKurs >= 0) {
-			if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
-				return false;
-			}
-
-			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
-			if (schriftlichkeit != null) {
-				// Prüfe, ob die Kurs-Schüler-Zuordnung gültig ist oder nicht
-				final boolean ungueltig = getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs);
-				if (ungueltig && (schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH)) {
-					return false;
-				}
-				if (!ungueltig && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich)) {
-					return false;
-				}
-			}
+		// Kurs-Kriterium
+		if ((idKurs >= 0) && (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))) {
+			return false;
 		}
 
-		if (idFach >= 0) {
-			if (idKursart >= 0) {
-				// Fach/Kursart-Filter
-				if (!getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart)) {
-					return false;
-				}
-			} else {
-				// Fach-Filter
-				if (!getOfSchuelerHatFach(idSchueler, idFach)) {
-					return false;
-				}
-			}
-			// Schüler hat das Fach. Stimmt die Schriftlichkeit ebenfalls?
-			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfFachFachwahl(idSchueler, idFach).istSchriftlich)) {
-				return false;
-			}
+		// Ohne Fach ist es erfüllt.
+		if (idFach < 0) {
+			return true;
 		}
 
-		return true;
+		// Fach mit Kursart vorhanden --> Dann muss die Fachwahl stimmen.
+		if ((idKursart >= 0) && (!getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart))) {
+			return false;
+		}
+
+		// Fach ohne Kursart --> Dann muss nur das Fach stimmen.
+		return getOfSchuelerHatFach(idSchueler, idFach);
 	}
+
 
 	/**
 	 * Liefert die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet. <br>
@@ -2705,7 +2712,6 @@ public class GostBlockungsergebnisManager {
 
 		return false;
 	}
-
 
 	/**
 	 * Liefert TRUE, falls beide Schüler bezogen auf das Fach gemeinsam im selben Kurs sind.
@@ -2865,18 +2871,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Kurs in der Schiene fixiert ist.
-	 *
-	 * @param  idKurs     Die Datenbank-ID des Kurses.
-	 * @param  idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return TRUE, falls der Kurs in der Schiene fixiert ist.
-	 */
-	private boolean getOfKursOfSchieneIstFixiert(final long idKurs, final long idSchiene) {
-		return parent.kursGetHatFixierungInSchiene(idKurs, idSchiene);
-	}
-
-	/**
 	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
@@ -2927,10 +2921,10 @@ public class GostBlockungsergebnisManager {
 	 * @return ein Array aller Schienen-Nummern des Kurses.
 	 */
 	public @NotNull int[] getOfKursSchienenNummern(final long idKurs) {
-		final @NotNull List<@NotNull Long> schienenIDs = getKursE(idKurs).schienen;
-		final int[] a = new int[schienenIDs.size()];
+		final @NotNull List<@NotNull Long> schienenIDmenge = getKursE(idKurs).schienen;
+		final @NotNull int[] a = new int[schienenIDmenge.size()];
 		for (int i = 0; i < a.length; i++) {
-			final long schienenID = schienenIDs.get(i);
+			final long schienenID = schienenIDmenge.get(i);
 			a[i] = parent.schieneGet(schienenID).nummer;
 		}
 		return a;
@@ -3035,7 +3029,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl externer SuS und der Dummy-SuS die dem Kurs zugeordnet sind.
 	 */
 	public int getOfKursAnzahlSchuelerExternePlusDummies(final long idKurs) {
-		return getOfKursAnzahlSchuelerExterne(idKurs) +  getOfKursAnzahlSchuelerDummy(idKurs);
+		return getOfKursAnzahlSchuelerExterne(idKurs) + getOfKursAnzahlSchuelerDummy(idKurs);
 	}
 
 	/**
@@ -3156,52 +3150,13 @@ public class GostBlockungsergebnisManager {
 	 * @return die maximale Anzahl an SuS, die in dem Kurs sein dürfen, oder 999 falls es keine Begrenzung gibt.
 	 */
 	public long getOfKursMaxSuS(final long idKurs) {
-		for (final GostBlockungRegel rAlt : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
+		for (final @NotNull GostBlockungRegel rAlt : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
 			if (idKurs == rAlt.parameter.get(0)) {
 				return rAlt.parameter.get(1);
 			}
 		}
 
 		return 999;
-	}
-
-	/**
-	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
-	 */
-	private @NotNull List<Schueler> getOfKursMengeAllerNichtFixiertenSchueler(final long idKurs) {
-		final @NotNull List<Schueler> list = new ArrayList<>();
-
-		for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs)) {
-			if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) {
-				list.add(schueler);
-			}
-		}
-
-		return list;
-	}
-
-
-	/**
-	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
-	 */
-	private @NotNull List<Schueler> getOfKursMengeAllerNichtFixiertenAbiturSchueler(final long idKurs) {
-		final @NotNull List<Schueler> list = new ArrayList<>();
-
-		for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs)) {
-			if ((!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) && (getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs))) {
-				list.add(schueler);
-			}
-		}
-
-		return list;
 	}
 
 	/**
@@ -3223,234 +3178,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert eine Menge aller Kurse mit mindestens einer Kollision.
-	 *
-	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
-	 */
-	private @NotNull Set<GostBlockungsergebnisKurs> getMengeDerKurseMitKollisionen() {
-		final @NotNull Set<GostBlockungsergebnisKurs> set = new HashSet<>();
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kursByID.values()) {
-			if (getOfKursHatKollision(kurs.id)) {
-				set.add(kurs);
-			}
-		}
-		return set;
-	}
-
-	private static @NotNull List<GostBlockungKurs> regelGetListeToggleFilteredBetween(final @NotNull List<GostBlockungKurs> list,
-			final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB) {
-		final @NotNull List<GostBlockungKurs> result = new ArrayList<>();
-		boolean foundA = false;
-		boolean foundB = false;
-
-		// Alle Elemente zwischen den beiden markierten Kursen kopieren.
-		for (final @NotNull GostBlockungKurs kursG : list) {
-			if (kursG == kursA) {
-				foundA = true;
-			}
-			if (kursG == kursB) {
-				foundB = true;
-			}
-
-			if (foundA || foundB) {
-				result.add(kursG);
-			}
-
-			if (foundA && foundB) {
-				break;
-			}
-		}
-
-		return result;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 *
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Sperrung in einem Auswahl-Rechteck ändern soll.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetListeToggleSperrung(final @NotNull List<GostBlockungKurs> list,
-			final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA,
-			final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB)) {
-			for (int nr = min; nr <= max; nr++) {
-				regeln.add(parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
-			}
-		}
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 *
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schienen-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetListeToggleKursfixierung(final @NotNull List<GostBlockungKurs> list,
-			final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA,
-			final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB)) {
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE : DeveloperNotificationException.ifMapGetIsNull(schienenmengeByKursID, kursG.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) { // Kurs im Auswahl-Rechteck?
-					regeln.add(parent.regelGetRegelOrDummyKursFixierungInSchiene(kursG.id, schieneG.nummer));
-				}
-			}
-		}
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 * <br>Hinweis: Die Regeln sind vom Typ {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS}. Eine negative ID steht
-	 * symbolisch für eine Regel, die noch nicht existiert, andernfalls erhält man eine existierende Regel. Die GUI kann selbst
-	 * entscheiden, wie sie mit den Regeln umgeht (toggle, create, delete).
-	 * <br>Hinweis: Wenn ein Multi-Kurs zum Teil im Auswahl-Rechteck liegt, wird der Kurs ebenso beachtet.
-	 *
-	 * @param list      Die aktuelle sortierte Liste der GUI.
-	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
-	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
-	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
-	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
-	 *
-	 * @return eine Liste von Regeln, welche den Status der Kurs-Schueler-Fixierung in einem Auswahl-Rechteck ändern soll.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetListeToggleSchuelerfixierung(final @NotNull List<GostBlockungKurs> list,
-			final @NotNull GostBlockungKurs kursA, final @NotNull GostBlockungKurs kursB, final @NotNull GostBlockungSchiene schieneA,
-			final @NotNull GostBlockungSchiene schieneB) {
-		final int min = Math.min(schieneA.nummer, schieneB.nummer);
-		final int max = Math.max(schieneA.nummer, schieneB.nummer);
-		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
-
-		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB)) {
-			for (final @NotNull GostBlockungsergebnisSchiene schieneE : DeveloperNotificationException.ifMapGetIsNull(schienenmengeByKursID, kursG.id)) {
-				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
-				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
-					// Kurs gefunden, füge nun seine SuS hinzu.
-					final @NotNull GostBlockungsergebnisKurs kursE = getKursE(kursG.id);
-					for (final long idSchueler : kursE.schueler) {
-						regeln.add(parent.regelGetRegelOrDummySchuelerInKursFixierung(idSchueler, kursE.id));
-					}
-					// Bei Multikursen dürfen SuS nur einmalig fixiert werden.
-					break;
-				}
-			}
-		}
-
-		return regeln;
-	}
-
-	/**
-	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetMengeAnKursSchienenFixierungenDesKurses(final long idKurs) {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungRegel regel : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
-			if (regel.parameter.get(0) == idKurs) {
-				list.add(regel);
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
-	 *
-	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	 *
-	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetMengeAnKursSchienenFixierungenDerKurse(final @NotNull List<Long> listeDerKursIDs) {
-		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
-		final @NotNull Set<Long> setKursIDs = new HashSet<>(listeDerKursIDs);
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungRegel regel : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
-			if (setKursIDs.contains(regel.parameter.get(0))) {
-				list.add(regel);
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen des übergebenen Kurses.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen des übergebenen Kurses.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDesKurses(final long idKurs) {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungRegel regel : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			if (regel.parameter.get(1) == idKurs) {
-				list.add(regel);
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
-	 *
-	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	 *
-	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDerKurse(final @NotNull List<Long> listeDerKursIDs) {
-		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
-		final @NotNull Set<Long> setKursIDs = new HashSet<>(listeDerKursIDs);
-
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungRegel regel : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			if (setKursIDs.contains(regel.parameter.get(1))) {
-				list.add(regel);
-			}
-		}
-
-		return list;
-	}
-
-	/**
 	 * Liefert die Map, welche der verletzten Regel-ID (long) die Beschreibung (String) zuordnet.
 	 * <br>Hinweis: Nur verletzte Regel-IDs sind in der KEY-Menge enthalten.
 	 *
@@ -3461,139 +3188,11 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
-	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAllerKursSchienenFixierungen() {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kursByID.values()) {
-			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(kurs.id)) {
-				if (!getOfKursOfSchieneIstFixiert(kurs.id, schiene.id)) {
-					final long schienenNr = parent.schieneGet(schiene.id).nummer;
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
-	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAnKursSchienenFixierungen(final @NotNull List<Long> listeDerKursIDs) {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull Long idKurs : listeDerKursIDs) {
-			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs)) {
-				if (!getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
-					final long schienenNr = parent.schieneGet(schiene.id).nummer;
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
-	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAllerSchuelerKursFixierungen() {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kursByID.values()) {
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id)) {
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, kurs.id));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
-	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAllerSchuelerAbiturKursFixierungen() {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : kursByID.values()) {
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id)) {
-				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) && (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))) {
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, kurs.id));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
-	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAnKursSchuelerFixierungen(final @NotNull List<Long> listeDerKursIDs) {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull Long idKurs : listeDerKursIDs) {
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs)) {
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) {
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
-	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
-	 *
-	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
-	 */
-	private @NotNull List<GostBlockungRegel> regelGetDummyMengeAnAbiturKursSchuelerFixierungen(final @NotNull List<Long> listeDerKursIDs) {
-		final @NotNull List<GostBlockungRegel> list = new ArrayList<>();
-
-		for (final @NotNull Long idKurs : listeDerKursIDs) {
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs)) {
-				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)) && (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))) {
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
 	 * Liefert einen Tooltip für alle Regelverletzungen der definierten Regeln.
 	 *
 	 * @return einen Tooltip für alle Regelverletzungen der definierten Regeln.
 	 */
-	final @NotNull String regelGetTooltipFuerRegelverletzungen() {
+	public final @NotNull String regelGetTooltipFuerRegelverletzungen() {
 		return regelverletzungenTooltipRegeln;
 	}
 
@@ -3602,7 +3201,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return einen Tooltip für alle Regelverletzungen der Fächerparallelität.
 	 */
-	final @NotNull String regelGetTooltipFuerFaecherparallelitaet() {
+	public final @NotNull String regelGetTooltipFuerFaecherparallelitaet() {
 		return regelverletzungenTooltipFaecherparallelitaet;
 	}
 
@@ -3611,7 +3210,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return einen Tooltip für alle Wahlkonflikte (Kollisionen und Nichtwahlen) ggf. gekürzt.
 	 */
-	final @NotNull String regelGetTooltipFuerWahlkonflikte() {
+	public final @NotNull String regelGetTooltipFuerWahlkonflikte() {
 		return regelverletzungenTooltipWahlkonflikte;
 	}
 
@@ -3620,7 +3219,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return einen Tooltip für alle Kursdifferenzen.
 	 */
-	final @NotNull String regelGetTooltipFuerKursdifferenzen() {
+	public final @NotNull String regelGetTooltipFuerKursdifferenzen() {
 		return regelverletzungenTooltipKursdifferenzen;
 	}
 
@@ -3631,6 +3230,115 @@ public class GostBlockungsergebnisManager {
 	private static void regelupdateAppend(final @NotNull GostBlockungRegelUpdate u1, final @NotNull GostBlockungRegelUpdate u2) {
 		u1.listEntfernen.addAll(u2.listEntfernen);
 		u1.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+	}
+
+	/**
+	 * Entfernt die Regel mit dem übergebenen Schlüssel aus dem Update, falls sie existiert.
+	 *
+	 * @param u          das Update, in dem die Regel entfernt werden soll
+	 * @param parameter  der Schlüssel (Typ und Parameter) der zu entfernenden Regel
+	 */
+	private void regelupdateEntferneFallsVorhanden(final @NotNull GostBlockungRegelUpdate u, final @NotNull long[] parameter) {
+		final GostBlockungRegel regel = parent.regelGetByLongArrayKeyOrNull(new LongArrayKey(parameter));
+		if (regel != null) {
+			u.listEntfernen.add(regel);
+		}
+	}
+
+	/**
+	 * Fügt die Regel dem Update hinzu, falls sie noch nicht existiert.
+	 *
+	 * @param u      das Update, in dem die Regel hinzugefügt werden soll
+	 * @param key    der Schlüssel (Typ und Parameter) der Regel
+	 * @param regel  die hinzuzufügende Regel
+	 */
+	private void regelupdateHinzufuegenFallsNichtVorhanden(final @NotNull GostBlockungRegelUpdate u, final @NotNull LongArrayKey key,
+			final @NotNull GostBlockungRegel regel) {
+		if (parent.regelGetByLongArrayKeyOrNull(key) == null) {
+			u.listHinzuzufuegen.add(regel);
+		}
+	}
+
+	/**
+	 * Entfernt alle Regeln des Typs, deren erster Parameter mit param0 übereinstimmt, aus dem Update.
+	 *
+	 * @param u       das Update, in dem die Regeln entfernt werden sollen
+	 * @param typ     der Typ der zu entfernenden Regeln
+	 * @param param0  der erste Parameter, der übereinstimmen muss
+	 */
+	private void regelupdateEntferneAlleVonTypMitParameter0(final @NotNull GostBlockungRegelUpdate u,
+			final @NotNull GostKursblockungRegelTyp typ, final long param0) {
+		for (final @NotNull GostBlockungRegel rAlt : parent.regelGetListeOfTyp(typ)) {
+			if (param0 == rAlt.parameter.get(0)) {
+				u.listEntfernen.add(rAlt);
+			}
+		}
+	}
+
+	/**
+	 * Entfernt alle Regeln des Typs, deren Parameterpaar (0,1) mit dem übergebenen Paar übereinstimmt, aus dem Update.
+	 *
+	 * @param u    das Update, in dem die Regeln entfernt werden sollen
+	 * @param typ  der Typ der zu entfernenden Regeln
+	 * @param id1  die erste ID des Paares
+	 * @param id2  die zweite ID des Paares
+	 */
+	private void regelupdateEntferneAlleVonTypMitPair(final @NotNull GostBlockungRegelUpdate u,
+			final @NotNull GostKursblockungRegelTyp typ, final long id1, final long id2) {
+		for (final @NotNull GostBlockungRegel rAlt : parent.regelGetListeOfTyp(typ)) {
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(rAlt.parameter.get(0), rAlt.parameter.get(1), id1, id2)) {
+				u.listEntfernen.add(rAlt);
+			}
+		}
+	}
+
+	/**
+	 * Prüft, ob ein Regel-Patch ausgeführt werden darf: Der Typ der alten Regel muss dem erwarteten Typ entsprechen und es darf noch
+	 * keine Regel mit den neuen Parametern existieren. <br>
+	 * Hinweis: Die Prüfung erfolgt bewusst vor der Berechnung des Create-Updates, damit z. B. bei falschem Regeltyp keine
+	 * ungültigen Ziel-Parameter mehr ausgewertet werden.
+	 *
+	 * @param idRegelAlt    Die ID der alten zu modifizierenden Regel.
+	 * @param typ           Der erwartete Typ der alten Regel.
+	 * @param parameterNeu  Die Parameter der neuen Regel (Typ und Parameter).
+	 *
+	 * @return die alte Regel, falls der Patch ausgeführt werden darf, andernfalls NULL.
+	 */
+	private GostBlockungRegel regelupdatePatchByIdPruefe(final long idRegelAlt, final @NotNull GostKursblockungRegelTyp typ,
+			final @NotNull long[] parameterNeu) {
+		// (1)
+		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
+		if (rAlt.typ != typ.typ) {
+			return null;
+		}
+
+		// (2)
+		final @NotNull LongArrayKey kNeu = new LongArrayKey(parameterNeu);
+		if (parent.regelGetByLongArrayKeyOrNull(kNeu) != null) {
+			return null;
+		}
+
+		return rAlt;
+	}
+
+	/**
+	 * Baut das Update eines Regel-Patches zusammen: Übernimmt das Update uNeu und entfernt die alte Regel (falls nicht bereits
+	 * durch Kaskaden gelöscht).
+	 *
+	 * @param u      Das Update, in das die Veränderungen eingetragen werden.
+	 * @param rAlt   Die alte zu entfernende Regel.
+	 * @param uNeu   Das Update mit den nötigen Veränderungen für die neue Regel.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt.
+	 */
+	private @NotNull GostBlockungRegelUpdate regelupdatePatchByIdZusammenbauen(final @NotNull GostBlockungRegelUpdate u,
+			final @NotNull GostBlockungRegel rAlt, final @NotNull GostBlockungRegelUpdate uNeu) {
+		GostBlockungsergebnisManager.regelupdateAppend(u, uNeu);
+		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
+		if (!u.listEntfernen.contains(rAlt)) {
+			u.listEntfernen.add(rAlt);
+		}
+		return u;
 	}
 
 	/**
@@ -3646,8 +3354,11 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursart-Schienenmengen-Sperrung zu setzen.
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursartSperreSchienenVonBis(final int kursart, final int schienenNrVon,
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursartSperreSchienenVonBis(
+			final int kursart,
+			final int schienenNrVon,
 			final int schienenNrBis) {
+
 		final int von = Math.min(schienenNrVon, schienenNrBis);
 		final int bis = Math.max(schienenNrVon, schienenNrBis);
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
@@ -3656,37 +3367,21 @@ public class GostBlockungsergebnisManager {
 			for (int schienenNr = von; schienenNr <= bis; schienenNr++) {
 				if (kurs.kursart == kursart) { // Kursart und Schienenbereich stimmen.
 					// (1)
-					final @NotNull LongArrayKey keySperrung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr });
-					final GostBlockungRegel regelSperrung = parent.regelGetByLongArrayKeyOrNull(keySperrung);
-					if (regelSperrung != null) {
-						u.listEntfernen.add(regelSperrung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr });
 					// (2)
-					final @NotNull LongArrayKey keyFixierung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr });
-					final GostBlockungRegel regelFixierung = parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-					if (regelFixierung != null) {
-						u.listEntfernen.add(regelFixierung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr });
 				}
 			}
 		}
 
 		// (3a)
-		final @NotNull LongArrayKey keyBisVon =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, bis, von });
-		final GostBlockungRegel regelBisVon = parent.regelGetByLongArrayKeyOrNull(keyBisVon);
-		if (regelBisVon != null) {
-			u.listEntfernen.add(regelBisVon);
-		}
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, bis, von });
 
 		// (3)
 		final @NotNull LongArrayKey keyVonBis =
 				new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis });
-		if (parent.regelGetByLongArrayKeyOrNull(keyVonBis) == null) {
-			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis));
-		}
+		regelupdateHinzufuegenFallsNichtVorhanden(u, keyVonBis,
+				DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis));
 
 		return u;
 	}
@@ -3711,40 +3406,28 @@ public class GostBlockungsergebnisManager {
 			for (final int nr : setSchienenNr) {
 				if (getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
 					// (1)
-					final @NotNull LongArrayKey kSperrung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nr });
-					final GostBlockungRegel rSperrung = parent.regelGetByLongArrayKeyOrNull(kSperrung);
-					if (rSperrung != null) {
-						u.listEntfernen.add(rSperrung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nr });
 					// (2)
-					final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
-					final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-					if (rFixierung == null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
-					}
+					regelupdateHinzufuegenFallsNichtVorhanden(u,
+							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr }),
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
 				}
 			}
 
 			// (3) Fixiert + kein Kurs
 			for (int nr = 1; nr <= schieneByNR.size(); nr++) {
 				if (!getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
-					final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
-					final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-					if (rFixierung != null) {
-						u.listEntfernen.add(rFixierung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
 				}
 			}
 		}
-
-
 
 		return u;
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmenge komplett in ihrer Lage zu fixieren.
-	 * <br>(1) Fixierungen innerhalb der Kurslage werden hinzugefügt, falls noch nicht existend.
+	 * <br>(1) Fixierungen innerhalb der Kurslage werden hinzugefügt, falls noch nicht existent.
 	 * <br>(2) Fixierungen außerhalb der Kurslage werden gelöscht.
 	 *
 	 * @param setKursID  Die Kursmenge, die fixiert werden soll.
@@ -3756,19 +3439,14 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID) {
 			for (int nr = 1; nr <= schieneByNR.size(); nr++) {
-				final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
-				final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-
 				if (getOfKursOfSchienenNrIstZugeordnet(idKurs, nr)) {
 					// (1)
-					if (rFixierung == null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
-					}
+					regelupdateHinzufuegenFallsNichtVorhanden(u,
+							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr }),
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr));
 				} else {
 					// (2)
-					if (rFixierung != null) {
-						u.listEntfernen.add(rFixierung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
 				}
 			}
 		}
@@ -3821,12 +3499,7 @@ public class GostBlockungsergebnisManager {
 					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer));
 
 					// (3)
-					final @NotNull LongArrayKey keySperrung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer });
-					final GostBlockungRegel regelSperrung = parent.regelGetByLongArrayKeyOrNull(keySperrung);
-					if (regelSperrung != null) {
-						u.listEntfernen.add(regelSperrung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer });
 				}
 			}
 		}
@@ -3850,15 +3523,12 @@ public class GostBlockungsergebnisManager {
 		return regelupdateCreateKursFixiereInEinerSchieneHelper(idKurs, schienenNr, true);
 	}
 
-	private @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInEinerSchieneHelper(final long idKurs, final int schienenNr, final boolean checkErlaubt) {
+	private @NotNull GostBlockungRegelUpdate regelupdateCreateKursFixiereInEinerSchieneHelper(final long idKurs, final int schienenNr,
+			final boolean checkErlaubt) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		final @NotNull LongArrayKey kSperrung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
-		final GostBlockungRegel rSperrung = parent.regelGetByLongArrayKeyOrNull(kSperrung);
-		if (rSperrung != null) {
-			u.listEntfernen.add(rSperrung);
-		}
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
 
 		// (2)
 		final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr });
@@ -3870,11 +3540,7 @@ public class GostBlockungsergebnisManager {
 		// (3)
 		if (checkErlaubt && !parent.kursIstWeitereFixierungErlaubt(idKurs)) {
 			for (int nr = 1; nr <= schieneByNR.size(); nr++) {
-				final @NotNull LongArrayKey kFixierungAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
-				final GostBlockungRegel rFixierungAlt = parent.regelGetByLongArrayKeyOrNull(kFixierungAlt);
-				if (rFixierungAlt != null) {
-					u.listEntfernen.add(rFixierungAlt);
-				}
+				regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
 			}
 		}
 
@@ -3942,12 +3608,9 @@ public class GostBlockungsergebnisManager {
 						continue;
 					}
 					// (2)
-					final @NotNull LongArrayKey keyFixierung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer });
-					final GostBlockungRegel regelFixierung = parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-					if (regelFixierung == null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer));
-					}
+					regelupdateHinzufuegenFallsNichtVorhanden(u,
+							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer }),
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schieneG.nummer));
 				}
 			}
 		}
@@ -3996,10 +3659,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID) {
 			// (1) (2) (3) (4)
-			final @NotNull GostBlockungRegelUpdate u2 =
-					regelupdateCreateSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
-			u.listEntfernen.addAll(u2.listEntfernen);
-			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+			GostBlockungsergebnisManager.regelupdateAppend(u,
+					regelupdateCreateSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 		}
 
 		return u;
@@ -4252,6 +3913,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert alle GostBlockungRegelUpdate-Objekte für die Umsetzung einer Menge von Schüler-Kurs-Fixierungen.
 	 *
+	 * <br>(0) Wenn der Schüler den Kurs nicht wählen kann, wird das Paar ignoriert.
 	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird dies entfernt.
 	 * <br>(2) Wenn der Schüler nicht im Kurs fixiert ist, wird er fixiert.
 	 * <br>(3) Wenn der Schüler im Nachbar-Kurs fixiert ist, wird dies entfernt.
@@ -4262,7 +3924,6 @@ public class GostBlockungsergebnisManager {
 	 */
 	private @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerFixierenInKursmenge(
 			final @NotNull Set<PairNN<Long, Long>> schuelerKursPaare) {
-		// TODO Wenn der Schüler gar nicht den Kurs wählen kann --> ignorieren.
 
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
@@ -4271,30 +3932,26 @@ public class GostBlockungsergebnisManager {
 			final @NotNull Long idKurs = pair.b;
 			final @NotNull GostBlockungKurs kurs1 = parent.kursGet(idKurs);
 
-			// (1)
-			final @NotNull LongArrayKey keySperrung =
-					new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
-			final GostBlockungRegel regelSperrung = parent.regelGetByLongArrayKeyOrNull(keySperrung);
-			if (regelSperrung != null) {
-				u.listEntfernen.add(regelSperrung);
+			// Wenn der Schüler den Kurs gar nicht wählen kann, wird das Paar ignoriert.
+			if (!parent.schuelerGetHatFachart(idSchueler, kurs1.fach_id, kurs1.kursart)) {
+				continue;
 			}
+
+			// (1)
+			regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
 
 			// (2) (3)
 			for (final @NotNull GostBlockungKurs kurs2 : parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
 				final @NotNull LongArrayKey keyFixierung =
 						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id });
-				final GostBlockungRegel regelFixierung = parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 
 				if (kurs1.id == kurs2.id) {
-					if (regelFixierung == null) {
-						// (2)
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
-					}
+					// (2)
+					regelupdateHinzufuegenFallsNichtVorhanden(u, keyFixierung,
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
 				} else {
-					if (regelFixierung != null) {
-						// (3)
-						u.listEntfernen.add(regelFixierung);
-					}
+					// (3)
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id });
 				}
 			}
 		}
@@ -4319,40 +3976,12 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchueler : setSchuelerID) {
 			for (final long idKurs : setKursID) {
 				// (1)
-				final @NotNull LongArrayKey keyFixierung =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
-				final GostBlockungRegel regelFixierung = parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-				if (regelFixierung != null) {
-					u.listEntfernen.add(regelFixierung);
-				}
+				regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
 				// (2)
-				final @NotNull LongArrayKey keySperrung =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
-				final GostBlockungRegel regelSperrung = parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung == null) {
-					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs));
-				}
+				regelupdateHinzufuegenFallsNichtVorhanden(u,
+						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs }),
+						DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs));
 			}
-		}
-
-		return u;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
-	 * <br>(1) Wenn der Schüler im Kurs fixiert ist, wird die Fixierung entfernt.
-	 * <br>(2) Wenn der Schüler nicht im Kurs gesperrt ist, wird er gesperrt.
-	 *
-	 * @param setKursID  Die Menge der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu sperren.
-	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateCreate05bSchuelerVerbietenInDenKursen(final @NotNull Set<Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1) (2)
-		for (final long idKurs : setKursID) {
-			GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 		}
 
 		return u;
@@ -4378,12 +4007,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		for (final @NotNull GostBlockungRegel rGleicheKursart : parent
-				.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
-			if (kursart == rGleicheKursart.parameter.get(0)) {
-				u.listEntfernen.add(rGleicheKursart);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitParameter0(u, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS, kursart);
 
 		// (2) (3)
 		for (final @NotNull GostBlockungsergebnisKurs kurs : getKursmenge()) {
@@ -4392,19 +4016,9 @@ public class GostBlockungsergebnisManager {
 				final boolean richtigeKursart = (kurs.kursart == kursart);
 				if (imSchienenBereich != richtigeKursart) { // Kursart ist im falschen Bereich.
 					// (2)
-					final @NotNull LongArrayKey kFixierung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr });
-					final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-					if (rFixierung != null) {
-						u.listEntfernen.add(rFixierung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, kurs.id, schienenNr });
 					// (3)
-					final @NotNull LongArrayKey kSperrung =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr });
-					final GostBlockungRegel rSperrung = parent.regelGetByLongArrayKeyOrNull(kSperrung);
-					if (rSperrung != null) {
-						u.listEntfernen.add(rSperrung);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, kurs.id, schienenNr });
 				}
 			}
 		}
@@ -4432,33 +4046,15 @@ public class GostBlockungsergebnisManager {
 			for (final long idKurs2 : setKursID) {
 				if (idKurs1 < idKurs2) {
 					// (1a)
-					final @NotNull LongArrayKey keyZusammen12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelZusammen12 = parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-					if (regelZusammen12 != null) {
-						u.listEntfernen.add(regelZusammen12);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2 });
 					// (1b)
-					final @NotNull LongArrayKey keyZusammen21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelZusammen21 = parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
-					if (regelZusammen21 != null) {
-						u.listEntfernen.add(regelZusammen21);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1 });
 					// (2)
-					final @NotNull LongArrayKey keyVerboten21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelVerboten21 = parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
-					if (regelVerboten21 != null) {
-						u.listEntfernen.add(regelVerboten21);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1 });
 					// (3)
-					final @NotNull LongArrayKey keyVerboten12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelVerboten12 = parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
-					if (regelVerboten12 == null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2));
-					}
+					regelupdateHinzufuegenFallsNichtVorhanden(u,
+							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2 }),
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2));
 				}
 			}
 		}
@@ -4483,33 +4079,15 @@ public class GostBlockungsergebnisManager {
 			for (final long idKurs2 : setKursID) {
 				if (idKurs1 < idKurs2) {
 					// (1a)
-					final @NotNull LongArrayKey keyVerboten12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelVerboten12 = parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
-					if (regelVerboten12 != null) {
-						u.listEntfernen.add(regelVerboten12);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2 });
 					// (1b)
-					final @NotNull LongArrayKey keyVerboten21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelVerboten21 = parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
-					if (regelVerboten21 != null) {
-						u.listEntfernen.add(regelVerboten21);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1 });
 					// (2)
-					final @NotNull LongArrayKey keyZusammen21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelZusammen21 = parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
-					if (regelZusammen21 != null) {
-						u.listEntfernen.add(regelZusammen21);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1 });
 					// (3)
-					final @NotNull LongArrayKey keyZusammen12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelZusammen12 = parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-					if (regelZusammen12 == null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2));
-					}
+					regelupdateHinzufuegenFallsNichtVorhanden(u,
+							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2 }),
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2));
 				}
 			}
 		}
@@ -4531,14 +4109,10 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		for (final GostBlockungRegel rAlt : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
-			if (idKurs == rAlt.parameter.get(0)) {
-				u.listEntfernen.add(rAlt);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitParameter0(u, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN, idKurs);
 
 		// (2)
-		if (anzahl > 0) {
+		if (anzahl >= GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN) {
 			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl));
 		}
 
@@ -4558,16 +4132,15 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		final @NotNull LongArrayKey keyDummyAlt = new LongArrayKey(new long[] { GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ });
-		final GostBlockungRegel regelDummyAlt = parent.regelGetByLongArrayKeyOrNull(keyDummyAlt);
 
 		// (1)
-		if ((!erstellen) && (regelDummyAlt != null)) {
-			u.listEntfernen.add(regelDummyAlt);
+		if (!erstellen) {
+			regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ });
 		}
 
 		// (2)
-		if ((erstellen) && (regelDummyAlt == null)) {
-			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel0(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ));
+		if (erstellen) {
+			regelupdateHinzufuegenFallsNichtVorhanden(u, keyDummyAlt, DTOUtils.newGostBlockungRegel0(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ));
 		}
 
 		return u;
@@ -4600,64 +4173,23 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (2a)
-		final @NotNull LongArrayKey keyVerbietenFach12 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
-		final GostBlockungRegel regelVerbietenFach12 = parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach12);
-		if (regelVerbietenFach12 != null) {
-			u.listEntfernen.add(regelVerbietenFach12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
 		// (2b)
-		final @NotNull LongArrayKey keyVerbietenFach21 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
-		final GostBlockungRegel regelVerbietenFach21 = parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach21);
-		if (regelVerbietenFach21 != null) {
-			u.listEntfernen.add(regelVerbietenFach21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
 		// (3a)
-		final @NotNull LongArrayKey keyVerbieten12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2 });
-		final GostBlockungRegel regelVerbieten12 = parent.regelGetByLongArrayKeyOrNull(keyVerbieten12);
-		if (regelVerbieten12 != null) {
-			u.listEntfernen.add(regelVerbieten12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2 });
 		// (3b)
-		final @NotNull LongArrayKey keyVerbieten21 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS2, idS1 });
-		final GostBlockungRegel regelVerbieten21 = parent.regelGetByLongArrayKeyOrNull(keyVerbieten21);
-		if (regelVerbieten21 != null) {
-			u.listEntfernen.add(regelVerbieten21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS2, idS1 });
 		// (4a)
-		final @NotNull LongArrayKey keyZusammen12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2 });
-		final GostBlockungRegel regelZusammen12 = parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-		if (regelZusammen12 != null) {
-			u.listEntfernen.add(regelZusammen12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2 });
 		// (4b)
-		final @NotNull LongArrayKey keyZusammen21 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS2, idS1 });
-		final GostBlockungRegel regelZusammen21 = parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
-		if (regelZusammen21 != null) {
-			u.listEntfernen.add(regelZusammen21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS2, idS1 });
 		// (5a)
-		final @NotNull LongArrayKey keyZusammenFach21 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
-		final GostBlockungRegel regelZusammenFach21 = parent.regelGetByLongArrayKeyOrNull(keyZusammenFach21);
-		if (regelZusammenFach21 != null) {
-			u.listEntfernen.add(regelZusammenFach21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
 		// (5b)
-		final @NotNull LongArrayKey keyZusammenFach12 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
-		final GostBlockungRegel regelZusammenFach12 = parent.regelGetByLongArrayKeyOrNull(keyZusammenFach12);
-		if (regelZusammenFach12 == null) {
-			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
-		}
+		regelupdateHinzufuegenFallsNichtVorhanden(u,
+				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach }),
+				DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
 
 		return u;
 	}
@@ -4689,64 +4221,23 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (2a)
-		final @NotNull LongArrayKey keyZusammenFach12 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
-		final GostBlockungRegel regelZusammenFach12 = parent.regelGetByLongArrayKeyOrNull(keyZusammenFach12);
-		if (regelZusammenFach12 != null) {
-			u.listEntfernen.add(regelZusammenFach12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
 		// (2b)
-		final @NotNull LongArrayKey keyZusammenFach21 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
-		final GostBlockungRegel regelZusammenFach21 = parent.regelGetByLongArrayKeyOrNull(keyZusammenFach21);
-		if (regelZusammenFach21 != null) {
-			u.listEntfernen.add(regelZusammenFach21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
 		// (3a)
-		final @NotNull LongArrayKey keyZusammen12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2 });
-		final GostBlockungRegel regelZusammen12 = parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-		if (regelZusammen12 != null) {
-			u.listEntfernen.add(regelZusammen12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2 });
 		// (3b)
-		final @NotNull LongArrayKey keyZusammen21 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS2, idS1 });
-		final GostBlockungRegel regelZusammen21 = parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
-		if (regelZusammen21 != null) {
-			u.listEntfernen.add(regelZusammen21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS2, idS1 });
 		// (4a)
-		final @NotNull LongArrayKey keyVerbieten12 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2 });
-		final GostBlockungRegel regelVerbieten12 = parent.regelGetByLongArrayKeyOrNull(keyVerbieten12);
-		if (regelVerbieten12 != null) {
-			u.listEntfernen.add(regelVerbieten12);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2 });
 		// (4b)
-		final @NotNull LongArrayKey keyVerbieten21 = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS2, idS1 });
-		final GostBlockungRegel regelVerbieten21 = parent.regelGetByLongArrayKeyOrNull(keyVerbieten21);
-		if (regelVerbieten21 != null) {
-			u.listEntfernen.add(regelVerbieten21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS2, idS1 });
 		// (5a)
-		final @NotNull LongArrayKey keyVerbietenFach21 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
-		final GostBlockungRegel regelVerbietenFach21 = parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach21);
-		if (regelVerbietenFach21 != null) {
-			u.listEntfernen.add(regelVerbietenFach21);
-		}
-
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS2, idS1, idFach });
 		// (5b)
-		final @NotNull LongArrayKey keyVerbietenFach12 =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach });
-		final GostBlockungRegel regelVerbietenFach12 = parent.regelGetByLongArrayKeyOrNull(keyVerbietenFach12);
-		if (regelVerbietenFach12 == null) {
-			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
-		}
+		regelupdateHinzufuegenFallsNichtVorhanden(u,
+				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach }),
+				DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idS1, idS2, idFach));
 
 		return u;
 	}
@@ -4770,32 +4261,16 @@ public class GostBlockungsergebnisManager {
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
 
 		// (1)
-		for (final @NotNull GostBlockungRegel r11 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r11);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, idS1, idS2);
 
 		// (2)
-		for (final @NotNull GostBlockungRegel r12 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r12);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH, idS1, idS2);
 
 		// (3)
-		for (final @NotNull GostBlockungRegel r13 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r13);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER, idS1, idS2);
 
 		// (4)
-		for (final @NotNull GostBlockungRegel r14 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r14);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER, idS1, idS2);
 
 		// (5)
 		if ((0 <= idS1) && (idS1 < idS2)) {
@@ -4824,32 +4299,16 @@ public class GostBlockungsergebnisManager {
 		final long idS2 = Math.max(idSchueler1, idSchueler2);
 
 		// (1)
-		for (final @NotNull GostBlockungRegel r11 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r11);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH, idS1, idS2);
 
 		// (2)
-		for (final @NotNull GostBlockungRegel r12 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r12);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH, idS1, idS2);
 
 		// (3)
-		for (final @NotNull GostBlockungRegel r13 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r13);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER, idS1, idS2);
 
 		// (4)
-		for (final @NotNull GostBlockungRegel r14 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER)) {
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2)) {
-				u.listEntfernen.add(r14);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitPair(u, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER, idS1, idS2);
 
 		// (5)
 		if ((0 <= idS1) && (idS1 < idS2)) {
@@ -4863,6 +4322,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 * <br>(1) Wenn die Regel bereits existiert, wird sie (zunächst) entfernt.
 	 * <br>(2) Wenn danach die Anzahl einen Wert im Intervall [0;99] hat, wird die Regel hinzugefügt.
+	 * <br>Hinweis: Dummy-SuS sind in der maximalen Schüleranzahl inklusive.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 * @param anzahl  Die maximale Anzahl an SuS des Kurses.
@@ -4870,18 +4330,14 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die maximale Anzahl an Schülern eines Kurses zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreateKursMaximaleSchueleranzahl(final long idKurs, final int anzahl) {
-		// TODO BAR Sind Dummy-SuS im Algorithmus inklusive?
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		for (final GostBlockungRegel rAlt : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) {
-			if (idKurs == rAlt.parameter.get(0)) {
-				u.listEntfernen.add(rAlt);
-			}
-		}
+		regelupdateEntferneAlleVonTypMitParameter0(u, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL, idKurs);
 
 		// (2)
-		if ((anzahl >= 0) && (anzahl <= 99)) {
+		if ((anzahl >= GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
+				&& (anzahl <= GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX)) {
 			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl));
 		}
 
@@ -4901,12 +4357,10 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idSchueler : setSchuelerID) {
 			final @NotNull LongArrayKey keySchuelerIgnorieren = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler });
-			final GostBlockungRegel regelSchuelerIgnorieren = parent.regelGetByLongArrayKeyOrNull(keySchuelerIgnorieren);
 
 			// (1)
-			if (regelSchuelerIgnorieren == null) {
-				u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler));
-			}
+			regelupdateHinzufuegenFallsNichtVorhanden(u, keySchuelerIgnorieren,
+					DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler));
 		}
 
 		return u;
@@ -4926,13 +4380,10 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : setKursID) {
 			final @NotNull LongArrayKey keyKursKursdifferenzIgnorieren =
 					new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs });
-			final GostBlockungRegel regelKursKursdifferenzIgnorieren = parent.regelGetByLongArrayKeyOrNull(keyKursKursdifferenzIgnorieren);
 
 			// (1)
-			if (regelKursKursdifferenzIgnorieren == null) {
-				u.listHinzuzufuegen
-						.add(DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs));
-			}
+			regelupdateHinzufuegenFallsNichtVorhanden(u, keyKursKursdifferenzIgnorieren,
+					DTOUtils.newGostBlockungRegel1(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN.typ, idKurs));
 		}
 
 		return u;
@@ -4962,7 +4413,7 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// (2)
-		if (maximal == 1) {
+		if (maximal == GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN) {
 			for (final @NotNull GostBlockungRegel r7 : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
 				final long idKurs1 = r7.parameter.get(0);
 				final long idKurs2 = r7.parameter.get(1);
@@ -4991,8 +4442,8 @@ public class GostBlockungsergebnisManager {
 	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelermengeEntfernen(final @NotNull Set<Long> setSchuelerID) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
-		for (final GostBlockungRegel regel : parent.regelGetListe()) {
-			final GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		for (final @NotNull GostBlockungRegel regel : parent.regelGetListe()) {
+			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
 			for (int i = 0; i < typ.getParamCount(); i++) {
 				if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID) && setSchuelerID.contains(regel.parameter.get(i))) {
 					u.listEntfernen.add(regel);
@@ -5005,7 +4456,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5018,36 +4469,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursartSperreSchienenVonBis(final long idRegelAlt, final int kursart,
 			final int schienenNrVon, final int schienenNrBis) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final int von = Math.min(schienenNrVon, schienenNrBis);
 		final int bis = Math.max(schienenNrVon, schienenNrBis);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS,
+				new long[] { GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ, kursart, von, bis });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursartSperreSchienenVonBis(kursart, von, bis));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursartSperreSchienenVonBis(kursart, von, bis));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5060,33 +4495,17 @@ public class GostBlockungsergebnisManager {
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursFixiereInEinerSchiene(final long idRegelAlt, final long idKurs,
 			final int schienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE,
+				new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursFixiereInEinerSchieneHelper(idKurs, schienenNr, false));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursFixiereInEinerSchieneHelper(idKurs, schienenNr, false));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5098,71 +4517,47 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursSperreInSchiene(final long idRegelAlt, final long idKurs, final int schienenNr) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE,
+				new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursSperreInSchiene(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursSperreInSchiene(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
-	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
+	 * <br>(3) Wenn der Ziel-Kurs für den Schüler nicht wählbar ist (fehlende Fachwahl), bleibt das Update leer und die alte
+	 * Fixierung erhalten.
+	 * <br>(4) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
 	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
 	 * @param idSchueler  Die ID des Schülers.
 	 * @param idKurs      Die ID des Kurses.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 *         Das Update kann leer sein, falls der Patch nicht ausgeführt wird (siehe (2) und (3)).
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerFixierenInKurs(final long idRegelAlt, final long idSchueler, final long idKurs) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
+		// (3) Ist der Ziel-Kurs für den Schüler nicht wählbar, bleibt das Update leer und die alte Fixierung erhalten.
+		final @NotNull GostBlockungKurs zielKurs = parent.kursGet(idKurs);
+		if (!parent.schuelerGetHatFachart(idSchueler, zielKurs.fach_id, zielKurs.kursart)) {
 			return u;
 		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate04xSchuelerFixierenInKurs(idSchueler, idKurs));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreate04xSchuelerFixierenInKurs(idSchueler, idKurs));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5175,33 +4570,17 @@ public class GostBlockungsergebnisManager {
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenInKurs(final long idRegelAlt, final long idSchueler,
 			final long idKurs) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5214,36 +4593,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursartAlleinInSchienenVonBis(final long idRegelAlt, final int kursart,
 			final int schienenNrVon, final int schienenNrBis) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final int von = Math.min(schienenNrVon, schienenNrBis);
 		final int bis = Math.max(schienenNrVon, schienenNrBis);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS,
+				new long[] { GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ, kursart, von, bis });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursartAlleinInSchienenVonBis(kursart, von, bis));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursartAlleinInSchienenVonBis(kursart, von, bis));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5254,36 +4617,20 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursVerbietenMitKurs(final long idRegelAlt, final long idKurs1, final long idKurs2) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idKursMin = Math.min(idKurs1, idKurs2);
 		final long idKursMax = Math.max(idKurs1, idKurs2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS,
+				new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKursMin, idKursMax });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKursMin, idKursMax });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursVerbietenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursVerbietenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5294,36 +4641,20 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursZusammenMitKurs(final long idRegelAlt, final long idKurs1, final long idKurs2) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idKursMin = Math.min(idKurs1, idKurs2);
 		final long idKursMax = Math.max(idKurs1, idKurs2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS,
+				new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKursMin, idKursMax });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKursMin, idKursMax });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursZusammenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursZusammenMitKurs(SetUtils.create2(idKursMin, idKursMax)));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5335,35 +4666,19 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursMitDummySusAuffuellen(final long idRegelAlt, final long idKurs, final int anzahl) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN,
+				new long[] { GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ, idKurs, anzahl });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursMitDummySusAuffuellen(idKurs, anzahl));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursMitDummySusAuffuellen(idKurs, anzahl));
 	}
 
 	// regelupdatePatchByID_10 ist nicht nötig, da die Create-Anweisung das bereits beinhaltet.
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5376,37 +4691,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerZusammenMitSchuelerInFach(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2, final long idFach) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
 		final long idSchuelerMax = Math.max(idSchueler1, idSchueler2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idSchuelerMin, idSchuelerMax, idFach });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH.typ, idSchuelerMin, idSchuelerMax, idFach });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerZusammenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerZusammenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5419,37 +4717,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenMitSchuelerInFach(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2, final long idFach) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
 		final long idSchuelerMax = Math.max(idSchueler1, idSchueler2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idSchuelerMin, idSchuelerMax, idFach });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH.typ, idSchuelerMin, idSchuelerMax, idFach });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerVerbietenMitSchuelerInFach(idSchuelerMin, idSchuelerMax, idFach));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5461,37 +4742,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerZusammenMitSchueler(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
 		final long idSchuelerMax = Math.max(idSchueler1, idSchueler2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idSchuelerMin, idSchuelerMax });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idSchuelerMin, idSchuelerMax });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerZusammenMitSchueler(idSchuelerMin, idSchuelerMax));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerZusammenMitSchueler(idSchuelerMin, idSchuelerMax));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5503,37 +4767,20 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerVerbietenMitSchueler(final long idRegelAlt, final long idSchueler1,
 			final long idSchueler2) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		final long idSchuelerMin = Math.min(idSchueler1, idSchueler2);
 		final long idSchuelerMax = Math.max(idSchueler1, idSchueler2);
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idSchuelerMin, idSchuelerMax });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu =
-				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idSchuelerMin, idSchuelerMax });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerVerbietenMitSchueler(idSchuelerMin, idSchuelerMax));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerVerbietenMitSchueler(idSchuelerMin, idSchuelerMax));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5545,33 +4792,17 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdKursMaximaleSchueleranzahl(final long idRegelAlt, final long idKurs, final int anzahl) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL,
+				new long[] { GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ, idKurs, anzahl });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateKursMaximaleSchueleranzahl(idKurs, anzahl));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateKursMaximaleSchueleranzahl(idKurs, anzahl));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
-	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht gefunden wird, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
 	 * <br>(3) Andernfalls wird die alte Regel entfernt und eine neue Regel hinzugefügt.
 	 *
@@ -5582,34 +4813,18 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerIgnorieren(final long idRegelAlt, final long idSchueler) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		// (1)
-		final @NotNull GostBlockungRegel rAlt = parent.regelGet(idRegelAlt);
-		if (rAlt.typ != GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ) {
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler });
+		if (rAlt == null) {
 			return u;
 		}
-
-		// (2)
-		final @NotNull LongArrayKey kNeu = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler });
-		final GostBlockungRegel rNeu = parent.regelGetByLongArrayKeyOrNull(kNeu);
-		if (rNeu != null) {
-			return u;
-		}
-
-		// (3)
-		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreateSchuelerIgnorieren(SetUtils.create1(idSchueler)));
-		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
-		if (!u.listEntfernen.contains(rAlt)) {
-			u.listEntfernen.add(rAlt);
-		}
-
-		return u;
+		return regelupdatePatchByIdZusammenbauen(u, rAlt, regelupdateCreateSchuelerIgnorieren(SetUtils.create1(idSchueler)));
 	}
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um die Regel von einem zu einem anderen Kurs zu patchen.
 	 *
-	 * <br>(1) Wenn die alte Regel nicht existiert, passiert nichts.
+	 * <br>(1) Wenn die alte Regel nicht existiert, wird eine {@link DeveloperNotificationException} geworfen.
 	 * <br>(2) Wenn die neue Kurs-ID bereits existiert, passiert nichts.
 	 * <br>(3) Wenn die alte Kurs-ID der neuen Kurs-ID gleicht, passiert nichts.
 	 * <br>(4) Andernfalls wird die alte Regel gelöscht (idKursAlt) und eine neue Regel wird erzeugt (idKursNeu).
@@ -5672,12 +4887,7 @@ public class GostBlockungsergebnisManager {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if (setSchienenNr.contains(schieneG.nummer)) {
 					// (1)
-					final @NotNull LongArrayKey keyKursInSchiene =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer });
-					final GostBlockungRegel regel = parent.regelGetByLongArrayKeyOrNull(keyKursInSchiene);
-					if (regel != null) {
-						u.listEntfernen.add(regel);
-					}
+					regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schieneG.nummer });
 				}
 			}
 		}
@@ -5699,11 +4909,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : setKursID) {
 			for (int nr = 1; nr <= schieneByNR.size(); nr++) {
 				// (1)
-				final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
-				final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-				if (rFixierung != null) {
-					u.listEntfernen.add(rFixierung);
-				}
+				regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr });
 			}
 		}
 
@@ -5732,11 +4938,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		// (1)
-		final @NotNull LongArrayKey kFixierung = new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr });
-		final GostBlockungRegel rFixierung = parent.regelGetByLongArrayKeyOrNull(kFixierung);
-		if (rFixierung != null) {
-			u.listEntfernen.add(rFixierung);
-		}
+		regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr });
 
 		return u;
 	}
@@ -5757,12 +4959,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : setKursID) {
 			for (final int schienenNr : setSchienenNr) {
 				// (1)
-				final @NotNull LongArrayKey keyGesperrt =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
-				final GostBlockungRegel regelGesperrt = parent.regelGetByLongArrayKeyOrNull(keyGesperrt);
-				if (regelGesperrt != null) {
-					u.listEntfernen.add(regelGesperrt);
-				}
+				regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, schienenNr });
 			}
 		}
 
@@ -5785,12 +4982,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchueler : setSchuelerID) {
 			for (final long idKurs : setKursID) {
 				// (1)
-				final @NotNull LongArrayKey keyFixierung =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
-				final GostBlockungRegel regelFixierung = parent.regelGetByLongArrayKeyOrNull(keyFixierung);
-				if (regelFixierung != null) {
-					u.listEntfernen.add(regelFixierung);
-				}
+				regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
 			}
 		}
 
@@ -5810,10 +5002,8 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID) {
 			// (1)
-			final @NotNull GostBlockungRegelUpdate u2 =
-					regelupdateRemoveSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
-			u.listEntfernen.addAll(u2.listEntfernen);
-			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
+			GostBlockungsergebnisManager.regelupdateAppend(u,
+					regelupdateRemoveSchuelerFixierenInKurs(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 		}
 
 		return u;
@@ -5821,7 +5011,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
-	 * <br>Die Methode delegiert alles an {@link #regelupdateCreateSchuelerFixierenInKurs}.
+	 * <br>Es werden alle Regeln des Typs {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS} entfernt.
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Fixierungen zu lösen.
 	 */
@@ -5854,140 +5044,15 @@ public class GostBlockungsergebnisManager {
 					u.listEntfernen.add(rFixierung);
 				} else {
 					// (2)
-					u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs1));
+					regelupdateHinzufuegenFallsNichtVorhanden(u, kFixierung,
+							DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs1));
 				}
 
 				// (3)
 				final @NotNull GostBlockungKurs kurs1 = parent.kursGet(idKurs1);
 				for (final @NotNull GostBlockungKurs kurs2 : parent.kursGetListeByFachUndKursart(kurs1.fach_id, kurs1.kursart)) {
 					if (kurs1.id != kurs2.id) {
-						final @NotNull LongArrayKey kFixierung2 =
-								new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id });
-						final GostBlockungRegel rFixierung2 = parent.regelGetByLongArrayKeyOrNull(kFixierung2);
-						if (rFixierung2 != null) {
-							u.listEntfernen.add(rFixierung2);
-						}
-					}
-				}
-			}
-		}
-
-		return u;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
-	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird die Sperrung entfernt.
-	 *
-	 * @param setSchuelerID  Die Menge der Schüler-IDs.
-	 * @param setKursID      Die Menge der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Sperrung zu lösen.
-	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateRemove05SchuelermengeVerbietenInKursmenge(final @NotNull Set<Long> setSchuelerID,
-			final @NotNull Set<Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		for (final long idSchueler : setSchuelerID) {
-			for (final long idKurs : setKursID) {
-				// (1)
-				final @NotNull LongArrayKey keySperrung =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs });
-				final GostBlockungRegel regelSperrung = parent.regelGetByLongArrayKeyOrNull(keySperrung);
-				if (regelSperrung != null) {
-					u.listEntfernen.add(regelSperrung);
-				}
-			}
-		}
-
-		return u;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
-	 * <br>(1) Wenn der Schüler im Kurs gesperrt ist, wird die Sperrung entfernt.
-	 *
-	 * @param setKursID  Die Menge der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Schüler-Kurs-Sperrungen der Kurse zu lösen.
-	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateRemove05bSchuelerVerbietenInDenKursen(final @NotNull Set<Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		for (final long idKurs : setKursID) {
-			// (1)
-			final @NotNull GostBlockungRegelUpdate u2 =
-					regelupdateRemove05SchuelermengeVerbietenInKursmenge(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs));
-			u.listEntfernen.addAll(u2.listEntfernen);
-			u.listHinzuzufuegen.addAll(u2.listHinzuzufuegen);
-		}
-
-		return u;
-	}
-
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
-	 * <br>(1) Wenn das Kurs-Kurs-Verbot existiert (in beliebiger Permutation), wird es entfernt.
-	 *
-	 * @param setKursID  Die Menge der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Verbote der Kursmenge (alle Paarungen) zu lösen.
-	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateRemove07KursVerbietenMitKurs(final @NotNull Set<Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		for (final long idKurs1 : setKursID) {
-			for (final long idKurs2 : setKursID) {
-				if (idKurs1 < idKurs2) {
-					// (1a)
-					final @NotNull LongArrayKey keyVerboten12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelVerboten12 = parent.regelGetByLongArrayKeyOrNull(keyVerboten12);
-					if (regelVerboten12 != null) {
-						u.listEntfernen.add(regelVerboten12);
-					}
-					// (1b)
-					final @NotNull LongArrayKey keyVerboten21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelVerboten21 = parent.regelGetByLongArrayKeyOrNull(keyVerboten21);
-					if (regelVerboten21 != null) {
-						u.listEntfernen.add(regelVerboten21);
-					}
-				}
-			}
-		}
-
-		return u;
-	}
-
-	/**
-	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
-	 * <br>(1) Wenn das Kurs-Kurs-Gebot existiert (in beliebiger Permutation), wird es entfernt.
-	 *
-	 * @param setKursID  Die Menge der Kurs-IDs.
-	 *
-	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Kurs-Kurs-Gebote von setKursID (alle Paarungen) zu lösen.
-	 */
-	private @NotNull GostBlockungRegelUpdate regelupdateRemove08KursZusammenMitKurs(final @NotNull Set<Long> setKursID) {
-		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
-
-		for (final long idKurs1 : setKursID) {
-			for (final long idKurs2 : setKursID) {
-				if (idKurs1 < idKurs2) {
-					// (1a)
-					final @NotNull LongArrayKey keyZusammen12 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs1, idKurs2 });
-					final GostBlockungRegel regelZusammen12 = parent.regelGetByLongArrayKeyOrNull(keyZusammen12);
-					if (regelZusammen12 != null) {
-						u.listEntfernen.add(regelZusammen12);
-					}
-					// (1b)
-					final @NotNull LongArrayKey keyZusammen21 =
-							new LongArrayKey(new long[] { GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ, idKurs2, idKurs1 });
-					final GostBlockungRegel regelZusammen21 = parent.regelGetByLongArrayKeyOrNull(keyZusammen21);
-					if (regelZusammen21 != null) {
-						u.listEntfernen.add(regelZusammen21);
+						regelupdateEntferneFallsVorhanden(u, new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, kurs2.id });
 					}
 				}
 			}
@@ -6051,6 +5116,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus einem Kurs zu entfernen.
 	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
 	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist. Auch die Fixierungs-Regel wird entfernt.
+	 * <br>Hinweis: Ungültige Zuordnungen (ohne passende Fachwahl) werden wie normale Zuordnungen entfernt.
 	 *
 	 * @param schuelerIDs           Die Menge der Schüler-IDs.
 	 * @param idKurs                Die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen.
@@ -6060,34 +5126,49 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneSchuelermengeAusKurs(
 			final @NotNull Set<Long> schuelerIDs, final long idKurs, final boolean entferneAuchFixierte) {
-		// TODO ungültige Zuordnungen überprüfen.
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		final @NotNull Set<Long> setSchulerOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		for (final long idSchueler : schuelerIDs) {
-			// Ist der Schüler überhaupt dem Kurs zugeordnet?
-			if (!setSchulerOfKurs.contains(idSchueler)) {
-				continue;
-			}
-
-			final @NotNull LongArrayKey keyFixiert =
-					new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
-			final GostBlockungRegel regelFixiert = parent.regelGetByLongArrayKeyOrNull(keyFixiert);
-
-			if (regelFixiert == null) {
-				// (1)
-				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
-				continue;
-			}
-
-			if (entferneAuchFixierte) {
-				// (2)
-				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
-				u.regelUpdates.listEntfernen.add(regelFixiert);
-			}
+			kursSchuelerUpdateEntferneSchuelermengeAusKursVerarbeite(u, idSchueler, idKurs, setSchulerOfKurs, entferneAuchFixierte);
 		}
 
 		return u;
+	}
+
+	/**
+	 * Verarbeitet einen einzelnen Schüler der Methode {@link #kursSchuelerUpdateEntferneSchuelermengeAusKurs}.
+	 * <br>(1) Wenn der Schüler dem Kurs zugeordnet ist und nicht fixiert ist, wird er entfernt.
+	 * <br>(2) Wenn der Schüler dem Kurs zugeordnet ist und fixiert ist, wird er entfernt, falls entferneAuchFixierte==TRUE ist. Auch die Fixierungs-Regel wird entfernt.
+	 *
+	 * @param u                    das Update, in das die Veränderungen eingetragen werden
+	 * @param idSchueler           die Datenbank-ID des Schülers
+	 * @param idKurs               die Datenbank-ID des Kurses aus dem die Schüler entfernt werden sollen
+	 * @param setSchulerOfKurs     die Menge der Schüler-IDs des Kurses
+	 * @param entferneAuchFixierte  Falls TRUE, werden auch fixiert SuS entfernt.
+	 */
+	private void kursSchuelerUpdateEntferneSchuelermengeAusKursVerarbeite(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u,
+			final long idSchueler, final long idKurs, final @NotNull Set<Long> setSchulerOfKurs, final boolean entferneAuchFixierte) {
+		// Ist der Schüler überhaupt dem Kurs zugeordnet?
+		if (!setSchulerOfKurs.contains(idSchueler)) {
+			return;
+		}
+
+		final @NotNull LongArrayKey keyFixiert =
+				new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs });
+		final GostBlockungRegel regelFixiert = parent.regelGetByLongArrayKeyOrNull(keyFixiert);
+
+		if (regelFixiert == null) {
+			// (1)
+			u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+			return;
+		}
+
+		if (entferneAuchFixierte) {
+			// (2)
+			u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+			u.regelUpdates.listEntfernen.add(regelFixiert);
+		}
 	}
 
 	/**
@@ -6098,11 +5179,12 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
 	 */
-	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(final @NotNull Set<Long> schuelerIDs) {
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdateEntferneSchuelermengeAusAllenKursen(
+			final @NotNull Set<Long> schuelerIDs) {
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		for (final long idSchueler : schuelerIDs) {
-			for (final GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler)) {
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler)) {
 				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, idSchueler));
 			}
 		}
@@ -6157,47 +5239,69 @@ public class GostBlockungsergebnisManager {
 	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um Schüler auf Kurse zu verteilen mit Nebenbedingungen.
 	 */
 	private @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate03aVerschiebeSchuelerZuKursen(
-			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen, final boolean verschiebeFixierteDesQuellkurses,
+			final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen,
+			final boolean verschiebeFixierteDesQuellkurses,
 			final boolean fixiereImZielkurs) {
+
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
 
 		// Der Sonderfall von Kurs X zu Kurs X funktioniert auch, da zuerst die "listEntfernen" abgearbeitet wird und dann erst die "listHinzufuegen".
-
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : kursSchuelerZuordnungen) {
-			final @NotNull GostBlockungKurs kursNeu = parent.kursGet(z.idKurs);
-
-			// (1)
-			if (!getOfSchuelerHatFachwahl(z.idSchueler, kursNeu.fach_id, kursNeu.kursart)) {
-				continue;
-			}
-
-			final GostBlockungsergebnisKurs kursAlt = getOfSchuelerOfFachZugeordneterKurs(z.idSchueler, kursNeu.fach_id);
-			if (kursAlt != null) {
-				final @NotNull LongArrayKey keyFixiertAlt =
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, kursAlt.id });
-				final GostBlockungRegel regelFixiertAlt = parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
-
-				// (2)
-				if ((regelFixiertAlt != null) && (!verschiebeFixierteDesQuellkurses)) {
-					continue;
-				}
-
-				// (3)
-				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursAlt.id, z.idSchueler));
-				if (regelFixiertAlt != null) {
-					u.regelUpdates.listEntfernen.add(regelFixiertAlt);
-				}
-			}
-
-			// (4)
-			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursNeu.id, z.idSchueler));
-			if (fixiereImZielkurs) {
-				u.regelUpdates.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ,
-						z.idSchueler, kursNeu.id));
-			}
+			kursSchuelerUpdate03aVerschiebeSchuelerZuKursenVerarbeite(u, z, verschiebeFixierteDesQuellkurses, fixiereImZielkurs);
 		}
 
 		return u;
+	}
+
+	/**
+	 * Verarbeitet eine einzelne Kurs-Schüler-Zuordnung der Methode {@link #kursSchuelerUpdate03aVerschiebeSchuelerZuKursen}.
+	 * <br>(1) Wenn der Schüler den Ziel-Kurs nicht wählen darf (falsche Fachwahlen), dann passiert nichts.
+	 * <br>(2) Wenn der Schüler aus einem fixierten Kurs verschoben werden soll, dies aber nicht erlaubt ist, dann passiert nichts.
+	 * <br>(3) Der Schüler ggf. aus einem alten Kurs entfernt und die Fixier-Regel des alten Kurses wird ggf. entfernt.
+	 * <br>(4) Der Schüler wird einem neuen Kurs hinzugefügt und wird ggf. im neuen Kurs fixiert.
+	 *
+	 * @param u                                 das Update, in das die Veränderungen eingetragen werden
+	 * @param z                                 die zu verarbeitende Kurs-Schüler-Zuordnung
+	 * @param verschiebeFixierteDesQuellkurses  TRUE, dann werden fixierte SuS aus potentiell alten Kursen entfernt.
+	 * @param fixiereImZielkurs                 TRUE, dann werden die SuS im Zielkurs fixiert.
+	 */
+	private void kursSchuelerUpdate03aVerschiebeSchuelerZuKursenVerarbeite(
+			final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u,
+			final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z,
+			final boolean verschiebeFixierteDesQuellkurses,
+			final boolean fixiereImZielkurs) {
+
+		final @NotNull GostBlockungKurs kursNeu = parent.kursGet(z.idKurs);
+
+		// (1)
+		if (!getOfSchuelerHatFachwahl(z.idSchueler, kursNeu.fach_id, kursNeu.kursart)) {
+			return;
+		}
+
+		final GostBlockungsergebnisKurs kursAlt = getOfSchuelerOfFachZugeordneterKurs(z.idSchueler, kursNeu.fach_id);
+		if (kursAlt != null) {
+			final @NotNull LongArrayKey keyFixiertAlt =
+					new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, kursAlt.id });
+			final GostBlockungRegel regelFixiertAlt = parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
+
+			// (2)
+			if ((regelFixiertAlt != null) && (!verschiebeFixierteDesQuellkurses)) {
+				return;
+			}
+
+			// (3)
+			u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursAlt.id, z.idSchueler));
+			if (regelFixiertAlt != null) {
+				u.regelUpdates.listEntfernen.add(regelFixiertAlt);
+			}
+		}
+
+		// (4)
+		u.listHinzuzufuegen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kursNeu.id, z.idSchueler));
+		if (fixiereImZielkurs) {
+			u.regelUpdates.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ,
+					z.idSchueler, kursNeu.id));
+		}
 	}
 
 	/**
@@ -6221,12 +5325,8 @@ public class GostBlockungsergebnisManager {
 			}
 
 			// (2)
-			final @NotNull LongArrayKey keyFixiertAlt =
-					new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, z.idKurs });
-			final GostBlockungRegel regelFixiertAlt = parent.regelGetByLongArrayKeyOrNull(keyFixiertAlt);
-			if (regelFixiertAlt != null) {
-				u.regelUpdates.listEntfernen.add(regelFixiertAlt);
-			}
+			regelupdateEntferneFallsVorhanden(u.regelUpdates,
+					new long[] { GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, z.idSchueler, z.idKurs });
 		}
 
 		return u;
@@ -6255,8 +5355,8 @@ public class GostBlockungsergebnisManager {
 			final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idZielKurs);
 			final long fachartID = GostKursart.getFachartID(kurs.fachID, kurs.kursart);
 			if (!fachartSet.add(fachartID)) {
-				final String sKursQuelle = parent.toStringKursSimple(idQuellKurs);
-				final String sFachartZiel = parent.toStringFachartSimpleByFachartID(fachartID);
+				final @NotNull String sKursQuelle = parent.toStringKursSimple(idQuellKurs);
+				final @NotNull String sFachartZiel = parent.toStringFachartSimpleByFachartID(fachartID);
 				throw new UserNotificationException(
 						"Die Kerngruppe des Kurses " + sKursQuelle + " kann nicht auf zwei Kurse der Fachart " + sFachartZiel + " verteilt werden!");
 			}
@@ -6278,10 +5378,10 @@ public class GostBlockungsergebnisManager {
 		//          denn das Erkennen einer Regelverletzung ist hier wichtig.
 		if (zielKurseLeeren) {
 			for (final long idZielKurs : idZielKurse) {
-				for (final long idSchueler : getOfKursSchuelerIDmenge(idZielKurs)) {
-					if (!idSchuelerKerngruppe.contains(idSchueler)) {
-						u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
-					}
+				final @NotNull Set<Long> menge = new HashSet<>(getOfKursSchuelerIDmenge(idZielKurs));
+				menge.removeAll(idSchuelerKerngruppe);
+				for (final long idSchueler : menge) {
+					u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idZielKurs, idSchueler));
 				}
 			}
 		}
@@ -6306,7 +5406,6 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// An dieser Stelle darf kein "stateRevalidateEverything".
-
 
 		// SuS hinzufügen
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listHinzuzufuegen) {
@@ -6343,7 +5442,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt, um Kurse aus Schienen zu entfernen.
-	 * <br>(1) Wenn der Kurs nicht in der Schiene ist, wird er hinzugefügt.
+	 * <br>(1) Wenn der Kurs in der Schiene ist, wird er entfernt.
 	 *
 	 * @param kursSchienenZuordnungen  Alle Kurs-Schienen-Paare, welche entfernt werden sollen.
 	 *
@@ -6506,16 +5605,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert eine Menge aller Schienen mit mindestens einer Kollision.
-	 *
-	 * @return Eine Menge aller Schienen mit mindestens einer Kollision.
-	 */
-	private @NotNull Set<GostBlockungsergebnisSchiene> getMengeDerSchienenMitKollisionen() {
-		return CollectionUtils.toFilteredHashSet(schieneByID.values(),
-				(final @NotNull GostBlockungsergebnisSchiene s) -> getOfSchieneHatKollision(s.id));
-	}
-
-	/**
 	 * Liefert TRUE, falls die E-Schiene existiert.
 	 *
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
@@ -6527,7 +5616,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück.<br>
-	 * Hinweis: Falls ein Schüler mehrfach in der Schiene ist, also mit Kollisionen, wird er mehrfach gezählt!
+	 * Hinweis: Falls ein Schüler mehrfach in der Schiene ist (Kollision), wird er mehrfach gezählt!
 	 *
 	 * @param idSchiene Die Datenbank-ID der Schiene.
 	 *
@@ -6550,7 +5639,7 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene.<br>
-	 * Hinweis Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
+	 * Hinweis: Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
 	 * @param idSchiene Die Datenbank-ID der Schiene.
 	 *
@@ -6606,38 +5695,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
-	 *
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return einen Tooltip für die Schiene, welche alle Kollisionen pro Kurs-Paarung darstellt.
-	 */
-	private @NotNull String getOfSchieneTooltipKurskollisionen(final long idSchiene) {
-		final StringBuilder sbZeilen = new StringBuilder();
-
-		for (final GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
-			int summe = 0;
-			final StringBuilder sbZeile = new StringBuilder();
-
-			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
-				if (kurs2.id != kurs1.id) {
-					final int anzahl = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
-					if (anzahl > 0) {
-						summe += anzahl;
-						sbZeile.append("%s%s(%d)".formatted(sbZeile.isEmpty() ? "" : ", ", getOfKursName(kurs2.id), anzahl));
-					}
-				}
-			}
-
-			if (summe > 0) {
-				sbZeilen.append("%s(%d): %s\n".formatted(getOfKursName(kurs1.id), summe, sbZeile.toString()));
-			}
-		}
-
-		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
-	}
-
-	/**
 	 * Liefert alle Kollisionen einer Schiene, als Liste von Liste von Kurs-Anzahl-Paaren.
 	 * <br>Pro innerer Liste gilt: Das erste Paar ist der Kurs, welcher mit allen anderen verglichen wurde, zusammen mit der Kollisions-Summe.
 	 * <br>Anschließend folgen alle anderen Kurse mit ihrer Kollisions-Anzahl, falls diese größer 0 ist.
@@ -6649,30 +5706,30 @@ public class GostBlockungsergebnisManager {
 	public @NotNull List<List<Pair<GostBlockungsergebnisKurs, Integer>>> getOfSchieneTooltipKurskollisionenAsData(final long idSchiene) {
 		final @NotNull List<List<Pair<GostBlockungsergebnisKurs, Integer>>> listOfLists = new ArrayList<>();
 
-		for (final GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
+		for (final @NotNull GostBlockungsergebnisKurs kurs1 : getSchieneE(idSchiene).kurse) {
 			int summe = 0;
 			final @NotNull List<Pair<GostBlockungsergebnisKurs, Integer>> listOfPairs = new ArrayList<>();
 
-			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
+			for (final @NotNull GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
 				if (kurs2.id != kurs1.id) {
 					final int anzahl = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
 					if (anzahl > 0) {
-						listOfPairs.add(new Pair<GostBlockungsergebnisKurs, Integer>(kurs2, anzahl));
+						listOfPairs.add(new Pair<>(kurs2, anzahl));
 						summe += anzahl;
 					}
 				}
 			}
 
 			if (summe > 0) {
-				listOfPairs.add(0, new Pair<GostBlockungsergebnisKurs, Integer>(kurs1, summe));
+				// Hinweis: Direktes Übergeben als 2. Parameter geht nicht (Transpiler-Bug)
+				final @NotNull Pair<GostBlockungsergebnisKurs, Integer> neu = new Pair<>(kurs1, summe);
+				listOfPairs.add(0, neu);
 				listOfLists.add(listOfPairs);
 			}
 		}
 
 		return listOfLists;
 	}
-
-
 
 	/**
 	 * Liefert alle Kollisionen einer Schiene (pro Element ein Schüler).
@@ -6691,10 +5748,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idSchueler : kursmengeBySchuelerIDAndSchienenID.getKeySet()) {
 			// Überprüfe, ob die Schiene bezogen auf den Schüler überhaupt Kollisionen hat.
 			final Set<GostBlockungsergebnisKurs> set = kursmengeBySchuelerIDAndSchienenID.getOrNull(idSchueler, idSchiene);
-			if (set == null) {
-				continue;
-			}
-			if (set.size() <= 1) {
+			if ((set == null) || (set.size() <= 1)) {
 				continue;
 			}
 
@@ -6705,7 +5759,7 @@ public class GostBlockungsergebnisManager {
 				for (int i = 0; i < list.size(); i++) {
 					sb.append("%s%s".formatted(i == 0 ? "" : ", ", parent.toStringKursSimpleOhneID(list.get(i).id)));
 				}
-				sb.append("\n");
+				sb.append(lineSeparator);
 			} else {
 				zeilenIgnoriert++;
 			}
@@ -7122,34 +6176,5 @@ public class GostBlockungsergebnisManager {
 		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(ergebnis.bewertung.kursdifferenzHistogramm));
 		logger.modifyIndent(-4);
 	}
-
-	/**
-	 * Liefert einen String, der alle Schienen-Fachart-Kurs-Zuordnungen zeigt.
-	 *
-	 * @return einen String, der alle Schienen-Fachart-Kurs-Zuordnungen zeigt.
-	 */
-	private @NotNull String debugKursSchienenZuordnungen() {
-		final @NotNull StringBuilder sb = new StringBuilder();
-		sb.append("\n\nSchienen-Fachart-Kurs-Zuordnungen");
-
-		// Ergänze leere (Schienen, Fachart) Kombinationen
-		for (final long idSchiene : schienenIDs) {
-			sb.append("Schiene %s\n".formatted(parent.toStringSchieneSimple(idSchiene)));
-
-			for (final long idFachart : kursmengeBySchienenIDAndFachartID.getKeySetOf(idSchiene)) {
-				if (!Map2DUtils.getOrCreateArrayList(kursmengeBySchienenIDAndFachartID, idSchiene, idFachart).isEmpty()) {
-					sb.append("    Fachart %s\n".formatted(parent.toStringFachartSimpleByFachartID(idFachart)));
-					for (final @NotNull GostBlockungsergebnisKurs eKurs : Map2DUtils.getOrCreateArrayList(kursmengeBySchienenIDAndFachartID, idSchiene,
-							idFachart)) {
-						sb.append("        Kurs %s\n".formatted(parent.toStringKursSimple(eKurs.id)));
-					}
-				}
-			}
-		}
-
-		return sb.toString();
-
-	}
-
 
 }
