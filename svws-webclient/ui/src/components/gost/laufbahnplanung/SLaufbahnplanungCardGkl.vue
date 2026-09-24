@@ -80,45 +80,45 @@
 	import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 	import { GostKursart } from "@core/core/types/gost/GostKursart";
 	import { GostSchriftlichkeit } from "@core/core/types/gost/GostSchriftlichkeit";
+	import type { GostLaufbahnplanungGKLKlausurvorgabe } from "@core/core/utils/gost/GostLaufbahnplanungGKLKlausurvorgabe";
 	import { JavaInteger } from "@core/java/lang/JavaInteger";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { Comparator } from "@core/java/util/Comparator";
 	import type { List } from "@core/java/util/List";
-	import type { GostKlausurvorgabeEintrag } from "@ui/states/GostLaufbahnplanungState";
 	import { useGostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 
 	const gostLaufbahnplanungState = useGostLaufbahnplanungState();
 
-	const gklEFSprachlich = computed<GostKlausurvorgabeEintrag | null>({
+	const gklEFSprachlich = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeEF_Sprachen),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_Sprachen: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_Sprachen: value?.getVorgabe().id ?? null }),
 	});
 
-	const gklEF_GW = computed<GostKlausurvorgabeEintrag | null>({
+	const gklEF_GW = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeEF_GW),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_GW: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_GW: value?.getVorgabe().id ?? null }),
 	});
 
-	const gklEF_NW = computed<GostKlausurvorgabeEintrag | null>({
+	const gklEF_NW = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeEF_NW),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_NW: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeEF_NW: value?.getVorgabe().id ?? null }),
 	});
 
-	const gklQSprachlich = computed<GostKlausurvorgabeEintrag | null>({
+	const gklQSprachlich = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeQ_Sprachen),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_Sprachen: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_Sprachen: value?.getVorgabe().id ?? null }),
 	});
 
-	const gklQ_GW = computed<GostKlausurvorgabeEintrag | null>({
+	const gklQ_GW = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeQ_GW),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_GW: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_GW: value?.getVorgabe().id ?? null }),
 	});
 
-	const gklQ_NW = computed<GostKlausurvorgabeEintrag | null>({
+	const gklQ_NW = computed<GostLaufbahnplanungGKLKlausurvorgabe | null>({
 		get: () => gostLaufbahnplanungState.getKlausurvorgabe(gostLaufbahnplanungState.gklWahlen.idKlausurvorgabeQ_NW),
-		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_NW: value?.vorgabe.id ?? null }),
+		set: (value) => void gostLaufbahnplanungState.patchGKLWahlen({ idKlausurvorgabeQ_NW: value?.getVorgabe().id ?? null }),
 	});
 
 	const faecherEFSprachlich = computed(() => getFaecher(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH, GostHalbjahr.getEinfuehrungsphase()));
@@ -145,8 +145,8 @@
 		],
 	});
 
-	function getFaecher(bereich: GostFachbereich, halbjahre: GostHalbjahr[]): List<GostKlausurvorgabeEintrag> {
-		const result = new ArrayList<GostKlausurvorgabeEintrag>;
+	function getFaecher(bereich: GostFachbereich, halbjahre: GostHalbjahr[]): List<GostLaufbahnplanungGKLKlausurvorgabe> {
+		const result = new ArrayList<GostLaufbahnplanungGKLKlausurvorgabe>;
 		const manager = gostLaufbahnplanungState.abiturdatenManager;
 
 		// Durchwandere alle Fachbelegungen, die zu dem Fachbereich gehören, jeweils für die jeweiligen Halbjahre
@@ -166,21 +166,21 @@
 				result.addAll(gostLaufbahnplanungState.istGKLMoeglich(fachbelegung.fachID, halbjahr));
 			}
 		}
-		result.sort(<Comparator<GostKlausurvorgabeEintrag>>{ compare: (a, b) => {
-			let tmp = GostFachbereich.compareGostFach(a.fach, b.fach);
+		result.sort(<Comparator<GostLaufbahnplanungGKLKlausurvorgabe>>{ compare: (a, b) => {
+			let tmp = GostFachbereich.compareGostFach(a.getFach(), b.getFach());
 			if (tmp !== 0) {
 				return tmp;
 			}
-			tmp = a.halbjahr.compareTo(b.halbjahr);
+			tmp = a.getHalbjahr().compareTo(b.getHalbjahr());
 			if (tmp !== 0) {
 				return tmp;
 			}
-			return JavaInteger.compare(a.vorgabe.quartal, b.vorgabe.quartal);
+			return JavaInteger.compare(a.getVorgabe().quartal, b.getVorgabe().quartal);
 		} });
 		return result;
 	}
 
-	function getSelectManager(options: ComputedRef<List<GostKlausurvorgabeEintrag>>): SelectManager<GostKlausurvorgabeEintrag> {
+	function getSelectManager(options: ComputedRef<List<GostLaufbahnplanungGKLKlausurvorgabe>>): SelectManager<GostLaufbahnplanungGKLKlausurvorgabe> {
 		return new SelectManager({
 			options,
 			optionDisplayText: textAuswahl,
@@ -188,8 +188,8 @@
 		});
 	}
 
-	function textAuswahl(auswahl: GostKlausurvorgabeEintrag): string {
-		return `${auswahl.halbjahr.kuerzel}-${auswahl.vorgabe.quartal} ${textFach(auswahl.fach)}`;
+	function textAuswahl(auswahl: GostLaufbahnplanungGKLKlausurvorgabe): string {
+		return `${auswahl.getHalbjahr().kuerzel}-${auswahl.getVorgabe().quartal} ${textFach(auswahl.getFach())}`;
 	}
 
 	function textFach(fach: GostFach): string {

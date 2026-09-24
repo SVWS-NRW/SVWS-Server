@@ -1,0 +1,94 @@
+{
+  "erfolgreich": false,
+  "fehlercodes": [ {
+    "art": "BELEGUNG",
+    "beschreibung": "Deutsch muss in EF.1 belegt werden.",
+    "code": "D_10"
+  },
+  {
+    "art": "HINWEIS",
+    "beschreibung": "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit.",
+    "code": "FS_22_INFO"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden.",
+    "code": "FS_18"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Wurde bisher keine 2. Fremdsprache erlernt, muss eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt werden.",
+    "code": "FS_14"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Im bilingualen Bildungsgang muss die bilinguale Fremdsprache schriftlich belegt werden.",
+    "code": "BIL_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Im bilingualen Bildungsgang muss mindestens ein bilinguales Sachfach belegt werden.",
+    "code": "BIL_15"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden",
+    "code": "KU_MU_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Mathematik muss in EF.1 belegt werden.",
+    "code": "M_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) muss in EF.1 belegt werden und durchgängig belegbar sein.",
+    "code": "NW_10"
+  },
+  {
+    "art": "SCHRIFTLICHKEIT",
+    "beschreibung": "Mindestens eine Naturwissenschaft (Physik, Biologie, Chemie) muss in EF.1 schriftlich belegt werden.",
+    "code": "NW_11"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Sport muss in EF.1 belegt werden.",
+    "code": "SP_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "In EF.1 müssen entweder zwei naturwissenschaftlich-technische Fächer (mind. eines schriftlich) oder zwei Fremdsprachen (beide schriftlich) belegt werden. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer.",
+    "code": "NW_FS_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Mindestens eine Gesellschaftswissenschaft muss in EF.1 belegt werden und durchgängig belegbar sein.",
+    "code": "GW_10"
+  },
+  {
+    "art": "SCHRIFTLICHKEIT",
+    "beschreibung": "Mindestens eine Gesellschaftswissenschaft muss in EF.1 schriftlich belegt werden.",
+    "code": "GW_11"
+  },
+  {
+    "art": "HINWEIS",
+    "beschreibung": "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden.",
+    "code": "GE_1_INFO"
+  },
+  {
+    "art": "HINWEIS",
+    "beschreibung": "Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden.",
+    "code": "SW_1_INFO"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "Ein Religionskurs muss in EF.1 belegt werden. Als Ersatz kann Philosophie belegt werden, sofern eine weitere Gesellschaftswissenschaft bis zum Abitur belegt wird.",
+    "code": "RE_10"
+  },
+  {
+    "art": "BELEGUNG",
+    "beschreibung": "In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt.",
+    "code": "ANZ_10"
+  } ],
+  "log": [ ]
+}

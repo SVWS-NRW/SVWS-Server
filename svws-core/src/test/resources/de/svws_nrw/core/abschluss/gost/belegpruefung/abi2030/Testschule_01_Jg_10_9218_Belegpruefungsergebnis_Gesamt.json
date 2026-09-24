@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "PF_28",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Der Projektkurs wurde als 5. Abiturfach gewählt, obwohl das aktuell gewählte Referenzfach bereits als Abiturfach gewählt ist. Beides zusammen ist nicht möglich."
+  } ],
+  "log" : [ ]
+}

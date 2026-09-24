@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "PF_27",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Das aktuell gewählte Referenzfach ist für diesen Projektkurs nicht möglich. Wählen Sie das andere Referenzfach oder passen Sie ggf. die anderen Fachwahlen an."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftlich-technische Fächer durchgehend belegt wurden, oder kein naturwissenschaftlich-technisches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+  } ],
+  "log" : [ ]
+}

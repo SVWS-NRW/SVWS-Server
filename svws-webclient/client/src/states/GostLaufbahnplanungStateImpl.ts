@@ -19,11 +19,12 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
 import { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
 import { GostFaecherManager } from "@core/core/utils/gost/GostFaecherManager";
+import { GostLaufbahnplanungGKLKlausurvorgabe } from "@core/core/utils/gost/GostLaufbahnplanungGKLKlausurvorgabe";
 import { ArrayList } from "@core/java/util/ArrayList";
 import { HashMap } from "@core/java/util/HashMap";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
-import type { GostBelegpruefungsModus, GostKlausurvorgabeEintrag, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
+import type { GostBelegpruefungsModus, GostLaufbahnplanungState } from "@ui/states/GostLaufbahnplanungState";
 import { StateManager } from "@ui/ui/StateManager";
 
 import { api } from "~/router/Api";
@@ -45,8 +46,8 @@ interface GostLaufbahnplanungReactiveState {
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
-	mapKlausurvorgaben: JavaMap<number, GostKlausurvorgabeEintrag>;
-	gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>,
+	mapKlausurvorgaben: JavaMap<number, GostLaufbahnplanungGKLKlausurvorgabe>;
+	gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>,
 	gklWahlen: GostSchuelerGKLWahl,
 	listeLehrer: List<LehrerListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
@@ -70,8 +71,8 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			gostJahrgang: new GostJahrgang(),
 			gostJahrgangsdaten: new GostJahrgangsdaten(),
 			gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
-			mapKlausurvorgaben: new HashMap<number, GostKlausurvorgabeEintrag>(),
-			gklMoeglich: new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>(),
+			mapKlausurvorgaben: new HashMap<number, GostLaufbahnplanungGKLKlausurvorgabe>(),
+			gklMoeglich: new HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>(),
 			gklWahlen: new GostSchuelerGKLWahl(),
 			listeLehrer: new ArrayList<LehrerListeEintrag>(),
 			mapLehrer: new Map<number, LehrerListeEintrag>(),
@@ -205,7 +206,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	}
 
 
-	public getKlausurvorgabe(id: number | null): GostKlausurvorgabeEintrag | null {
+	public getKlausurvorgabe(id: number | null): GostLaufbahnplanungGKLKlausurvorgabe | null {
 		if (id === null) {
 			return null;
 		}
@@ -213,7 +214,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	}
 
 
-	public istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostKlausurvorgabeEintrag> {
+	public istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostLaufbahnplanungGKLKlausurvorgabe> {
 		return this._state.value.gklMoeglich.getOrException(idFach, halbjahr);
 	}
 
@@ -223,7 +224,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			return false;
 		}
 		const vorgabe = this.getKlausurvorgabe(idVorgabe);
-		if ((vorgabe !== null) && (vorgabe.fach.id === idFach) && (vorgabe.halbjahr === halbjahr)) {
+		if ((vorgabe !== null) && (vorgabe.getFach().id === idFach) && (vorgabe.getHalbjahr() === halbjahr)) {
 			return true;
 		}
 		return false;
@@ -450,26 +451,26 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 
 	private async ladeGKL(abiturjahr: number, faecherManager: GostFaecherManager): Promise<{
-		gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>,
-		mapKlausurvorgaben: JavaMap<number, GostKlausurvorgabeEintrag>
+		gklMoeglich: HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>,
+		mapKlausurvorgaben: JavaMap<number, GostLaufbahnplanungGKLKlausurvorgabe>
 	}> {
 		const vorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, abiturjahr);
 
-		const gklMoeglich = new HashMap2D<number, GostHalbjahr, List<GostKlausurvorgabeEintrag>>();
+		const gklMoeglich = new HashMap2D<number, GostHalbjahr, List<GostLaufbahnplanungGKLKlausurvorgabe>>();
 		for (const fach of faecherManager.faecher()) {
 			for (const halbjahr of GostHalbjahr.values()) {
-				gklMoeglich.put(fach.id, halbjahr, new ArrayList<GostKlausurvorgabeEintrag>());
+				gklMoeglich.put(fach.id, halbjahr, new ArrayList<GostLaufbahnplanungGKLKlausurvorgabe>());
 			}
 		}
 
-		const mapKlausurvorgaben = new HashMap<number, GostKlausurvorgabeEintrag>();
+		const mapKlausurvorgaben = new HashMap<number, GostLaufbahnplanungGKLKlausurvorgabe>();
 		for (const vorgabe of vorgaben) {
 			const halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
 			const fach = faecherManager.get(vorgabe.idFach);
 			if (fach === null) {
 				continue;
 			}
-			const eintrag = { fach, halbjahr, vorgabe };
+			const eintrag = new GostLaufbahnplanungGKLKlausurvorgabe(fach, halbjahr, vorgabe);
 			mapKlausurvorgaben.put(vorgabe.id, eintrag);
 			if ((!vorgabe.istGklMoeglich) || !gklMoeglich.containsKey1(vorgabe.idFach)) {
 				continue;

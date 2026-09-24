@@ -4,23 +4,19 @@ import type { ApiFile } from "@core/api/BaseApi";
 import type { AbiturdatenManager } from "@core/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "@core/core/abschluss/gost/GostBelegpruefungErgebnis";
 import type { GostBeratungslehrer } from "@core/core/data/gost/GostBeratungslehrer";
-import type { GostFach } from "@core/core/data/gost/GostFach";
 import type { GostJahrgangsdaten } from "@core/core/data/gost/GostJahrgangsdaten";
 import type { GostLaufbahnplanungBeratungsdaten } from "@core/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 import type { GostSchuelerFachwahl } from "@core/core/data/gost/GostSchuelerFachwahl";
 import type { GostSchuelerGKLWahl } from "@core/core/data/gost/GostSchuelerGKLWahl";
-import type { GostKlausurvorgabe } from "@core/core/data/gost/klausuren/GostKlausurvorgabe";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import type { GostHalbjahr } from "@core/core/types/gost/GostHalbjahr";
+import type { GostLaufbahnplanungGKLKlausurvorgabe } from "@core/core/utils/gost/GostLaufbahnplanungGKLKlausurvorgabe";
 import type { List } from "@core/java/util/List";
 import { AppContext } from "@ui/AppContext";
 
 export type GostBelegpruefungsModus = 'ef1' | 'gesamt' | 'auto';
-
-export type GostKlausurvorgabeEintrag = { fach: GostFach, halbjahr: GostHalbjahr, vorgabe: GostKlausurvorgabe };
-
 
 /**
  * Die Schnittstelle für den Zustand der Laufbahnplanung der Gymnasialen Oberstufe
@@ -126,7 +122,7 @@ export interface GostLaufbahnplanungState {
 	 *
 	 * @param id   die ID der Klausurvorgabe
 	 */
-	getKlausurvorgabe(id: number | null): GostKlausurvorgabeEintrag | null;
+	getKlausurvorgabe(id: number | null): GostLaufbahnplanungGKLKlausurvorgabe | null;
 
 	/**
 	 * Gibt zurück, ob ein Gleichwertig Komplexer Leistungsnachweis in dem übergebenen Fach in dem übergebenen Halbjahr
@@ -137,7 +133,7 @@ export interface GostLaufbahnplanungState {
 	 *
 	 * @returns false, falls kein GKL möglich ist, 0 wenn ein GKL in beiden Quartalen möglich ist und ansonsten das Quartal 1 oder 2
 	 */
-	istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostKlausurvorgabeEintrag>;
+	istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostLaufbahnplanungGKLKlausurvorgabe>;
 
 	/**
 	 * Gibt zurück, ob bei dem angegebenen Fach in dem angegebenen Halbjahr eine Gleichwertig Komplexe Lernleistung (GKL)
