@@ -68,7 +68,7 @@ class TestValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit validator =
-				new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(() -> idStaatsangehoerigkeit, kontext);
+				new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(() -> kontext.getSchuljahr(), () -> idStaatsangehoerigkeit, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

@@ -16,6 +16,7 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param idSchuljahresabschnitt    Schuljahresabschnitt ID
 	 * @param geschlecht                das geschlecht des Schuelers
 	 * @param geburtsdatum              das geburtsdatum des Schuelers
 	 * @param idGeburtsland             die ID des Geburtslandes
@@ -27,6 +28,7 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsSchuelerStammdaten(
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Integer> geschlecht,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@AllowNull Long> idGeburtsland,
@@ -40,7 +42,7 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 		_validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		_validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, kontext));
-		_validatoren.add(new ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit(idStaatsangehoerigkeit, kontext));
+		_validatoren.add(new ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit(idSchuljahresabschnitt, idStaatsangehoerigkeit, kontext));
 		_validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
 	}
 

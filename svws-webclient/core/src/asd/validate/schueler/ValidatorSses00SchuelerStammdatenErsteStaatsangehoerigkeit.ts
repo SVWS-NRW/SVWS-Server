@@ -13,15 +13,16 @@ export class ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit extends 
 
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
 	 *
-	 * @param idStaatsangehoerigkeit    StaatsangehörigkeitID
-	 * @param kontext                   der Kontext des Validators
+	 * @param schuljahr                Schuljahr
+	 * @param idStaatsangehoerigkeit   StaatsangehörigkeitID
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		this._validatoren.add(new ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit(this.getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+		this._validatoren.add(new ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, this.getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
 	}
 
 	protected pruefe(): boolean {

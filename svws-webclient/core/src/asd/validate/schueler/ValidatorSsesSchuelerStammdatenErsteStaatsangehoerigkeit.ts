@@ -1,30 +1,45 @@
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit } from '../../../asd/validate/schueler/ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit extends Validator {
 
-	/**
-	 * Die Staatsangehoerigkeit des Schuelers
-	 */
-	private readonly _idStaatsangehoerigkeit: Supplier<number | null>;
+	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
+
+	private readonly _kontextNeu: ValidatorKontext;
 
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
 	 *
-	 * @param idStaatsangehoerigkeit    StaatsangehörigkeitID
-	 * @param kontext                   der Kontext des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idStaatsangehoerigkeit   StaatsangehörigkeitID
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		this._validatoren.add(new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(this.getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._kontextNeu = kontext;
+		const schuljahr: Supplier<number> = { get: () => {
+			const sja: Schuljahresabschnitt | null = this._kontextNeu.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja === null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		} };
+		this._validatoren.add(new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, this.getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
 	}
 
 	protected pruefe(): boolean {
+		const sja: Schuljahresabschnitt | null = this._kontextNeu.getSchuljahresabschnittByID(this.getNotNullSupplierLong(this._idSchuljahresabschnitt).get());
+		if (sja === null) {
+			this.addFehler(0, "Dem Schüler ist kein Schuljahresabschnitt zugeordnet");
+			return false;
+		}
 		return true;
 	}
 

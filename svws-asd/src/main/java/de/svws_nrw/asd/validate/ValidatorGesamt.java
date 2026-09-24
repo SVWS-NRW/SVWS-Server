@@ -166,6 +166,7 @@ public final class ValidatorGesamt extends Validator {
 			// Erzeuge die Liste der Subvalidatoren für den Schüler
 			final @NotNull List<Validator> list = new ArrayList<>();
 			list.add(new ValidatorSsSchuelerStammdaten(
+					() -> schueler.idSchuljahresabschnitt,
 					() -> schueler.geschlecht,
 					() -> schueler.geburtsdatum,
 					() -> schueler.idGeburtsland,

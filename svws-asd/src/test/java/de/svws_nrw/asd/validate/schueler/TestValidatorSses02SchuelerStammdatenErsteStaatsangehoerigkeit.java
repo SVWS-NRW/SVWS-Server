@@ -75,6 +75,7 @@ class TestValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit {
 
 		final ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit validator =
 				new ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(
+						() -> kontext.getSchuljahr(),
 						() -> idStaatsangehoerigkeit,
 						kontext);
 

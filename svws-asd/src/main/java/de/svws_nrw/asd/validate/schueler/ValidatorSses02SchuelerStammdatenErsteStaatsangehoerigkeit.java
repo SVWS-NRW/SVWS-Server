@@ -14,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
 
 public final class ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit extends Validator {
 
+	/** Das aktuelle Schuljahr des Schülers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die Staatsangehoerigkeit des Schuelers */
 	private final @NotNull Supplier<Long> _idStaatsangehoerigkeit;
 
@@ -23,20 +26,26 @@ public final class ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit ex
 	/**
 	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   StaatsangehörigkeitID
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idStaatsangehoerigkeit,
 			final @NotNull ValidatorKontext kontext) {
-		super(kontext);
-		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 
+		super(kontext);
+
+		_schuljahr = schuljahr;
+		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 	}
+
 
 	@Override
 	protected boolean pruefe() {
-		if (!Nationalitaeten.data().isGueltig(_idStaatsangehoerigkeit.get(), kontext().getSchuljahr())) {
+
+		if (!Nationalitaeten.data().isGueltig(_idStaatsangehoerigkeit.get(), _schuljahr.get())) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}

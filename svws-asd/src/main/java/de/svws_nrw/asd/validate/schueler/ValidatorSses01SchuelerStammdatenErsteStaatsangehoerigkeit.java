@@ -18,16 +18,22 @@ public final class ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit ex
 	private final @NotNull Supplier<Long> _idStaatsangehoerigkeit;
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
 	 *
-	 * @param idStaatsangehoerigkeit   StaatsangehoerigkeitID
+	 * @param schuljahr                Schuljahr
+	 * @param idStaatsangehoerigkeit   StaatsangehörigkeitID
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit(final @NotNull Supplier<Long> idStaatsangehoerigkeit,
+	public ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
+			final @NotNull Supplier<@NotNull Long> idStaatsangehoerigkeit,
 			final @NotNull ValidatorKontext kontext) {
+
 		super(kontext);
-		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		_validatoren.add(new ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(idStaatsangehoerigkeit, kontext));
+		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
+
+		_validatoren.add(new ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+
 	}
 
 	@Override
