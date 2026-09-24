@@ -617,7 +617,9 @@ export class StundenplanManager extends JavaObject {
 			this.setStundenplanOhneUpdate(stundenplanKomplett.daten);
 			DeveloperNotificationException.ifTrue("Die ID des Stundenplans passt nicht zur ID der StundenplanUnterrichtsverteilung.", stundenplanKomplett.daten.id !== stundenplanKomplett.unterrichtsverteilung.id);
 			this.initAll(stundenplanKomplett.unterrichtsverteilung.faecher, stundenplanKomplett.unterrichtsverteilung.lehrer, stundenplanKomplett.unterrichtsverteilung.schueler, stundenplanKomplett.unterrichtsverteilung.klassen, stundenplanKomplett.unterrichtsverteilung.klassenunterricht, stundenplanKomplett.pausenaufsichten, stundenplanKomplett.unterrichtsverteilung.kurse, stundenplanKomplett.unterrichte);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -740,7 +742,7 @@ export class StundenplanManager extends JavaObject {
 			try {
 				DateUtils.extractFromDateISO8601(gueltigBis);
 				return gueltigBis;
-			} catch(ex : any) {
+			} catch (ex: any) {
 				// empty block
 			}
 		}

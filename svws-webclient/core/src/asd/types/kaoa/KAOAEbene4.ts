@@ -22,122 +22,122 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Langzeitpraktikum 1-tägig
 	 */
-	public static readonly SBO_6_5_1_1: KAOAEbene4 = new KAOAEbene4("SBO_6_5_1_1", 0, );
+	public static readonly SBO_6_5_1_1: KAOAEbene4 = new KAOAEbene4("SBO_6_5_1_1", 0);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Langzeitpraktikum 2-tägig
 	 */
-	public static readonly SBO_6_5_1_2: KAOAEbene4 = new KAOAEbene4("SBO_6_5_1_2", 1, );
+	public static readonly SBO_6_5_1_2: KAOAEbene4 = new KAOAEbene4("SBO_6_5_1_2", 1);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: An der KAoA-kompakt Potenzialanalyse teilgenommen
 	 */
-	public static readonly SBO_7_1_1_1: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_1", 2, );
+	public static readonly SBO_7_1_1_1: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_1", 2);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Keine Teilnahme an der KAoA-kompakt Potenzialanalyse
 	 */
-	public static readonly SBO_7_1_1_2: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_2", 3, );
+	public static readonly SBO_7_1_1_2: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_2", 3);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: An der KAoA-kompakt Berufsfelderkundung teilgenommen - 1. Tag
 	 */
-	public static readonly SBO_7_1_1_3: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_3", 4, );
+	public static readonly SBO_7_1_1_3: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_3", 4);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: An der KAoA-kompakt Berufsfelderkundung teilgenommen - 2. Tag
 	 */
-	public static readonly SBO_7_1_1_4: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_4", 5, );
+	public static readonly SBO_7_1_1_4: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_4", 5);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: An der KAoA-kompakt Berufsfelderkundung teilgenommen - 3. Tag
 	 */
-	public static readonly SBO_7_1_1_5: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_5", 6, );
+	public static readonly SBO_7_1_1_5: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_5", 6);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Keine Teilnahme an den KAoA-kompakt Berufsfelderkundungen
 	 */
-	public static readonly SBO_7_1_1_6: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_6", 7, );
+	public static readonly SBO_7_1_1_6: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_6", 7);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: An KAoA-kompakt Praxiskursen teilgenommen
 	 */
-	public static readonly SBO_7_1_1_7: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_7", 8, );
+	public static readonly SBO_7_1_1_7: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_7", 8);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Keine Teilnahme an den KAoA-kompakt Praxiskursen
 	 */
-	public static readonly SBO_7_1_1_8: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_8", 9, );
+	public static readonly SBO_7_1_1_8: KAOAEbene4 = new KAOAEbene4("SBO_7_1_1_8", 9);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Einzeltag
 	 */
-	public static readonly SBO_9_1_1_1: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_1", 10, );
+	public static readonly SBO_9_1_1_1: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_1", 10);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Betriebspraktikum
 	 */
-	public static readonly SBO_9_1_1_2: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_2", 11, );
+	public static readonly SBO_9_1_1_2: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_2", 11);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Auslandspraktikum
 	 */
-	public static readonly SBO_9_1_1_3: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_3", 12, );
+	public static readonly SBO_9_1_1_3: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_3", 12);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Hochschulpraktikum/Schnupperstudium
 	 */
-	public static readonly SBO_9_1_1_4: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_4", 13, );
+	public static readonly SBO_9_1_1_4: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_4", 13);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Duales Orientierungspraktikum
 	 */
-	public static readonly SBO_9_1_1_5: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_5", 14, );
+	public static readonly SBO_9_1_1_5: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_5", 14);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Projektworkshop ( bei einem Bildungsträger)
 	 */
-	public static readonly SBO_9_1_1_6: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_6", 15, );
+	public static readonly SBO_9_1_1_6: KAOAEbene4 = new KAOAEbene4("SBO_9_1_1_6", 15);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Veranstaltungen zur allgemeinen Studienorientierung an einer Hochschule
 	 */
-	public static readonly SBO_9_2_1_1: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_1", 16, );
+	public static readonly SBO_9_2_1_1: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_1", 16);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Veranstaltungen zur allgemeinen Studienorientierung in der Schule
 	 */
-	public static readonly SBO_9_2_1_2: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_2", 17, );
+	public static readonly SBO_9_2_1_2: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_2", 17);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Wochen der Studienorientierung
 	 */
-	public static readonly SBO_9_2_1_3: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_3", 18, );
+	public static readonly SBO_9_2_1_3: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_3", 18);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Langer Abend der Studienberatung
 	 */
-	public static readonly SBO_9_2_1_4: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_4", 19, );
+	public static readonly SBO_9_2_1_4: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_4", 19);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Individuelle Einzelberatung durch die Zentralen Studienberatungen der Hochschulen
 	 */
-	public static readonly SBO_9_2_1_5: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_5", 20, );
+	public static readonly SBO_9_2_1_5: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_5", 20);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Workshops für Schülerinnen und Schüler in der Zentralen Studienberatung
 	 */
-	public static readonly SBO_9_2_1_6: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_6", 21, );
+	public static readonly SBO_9_2_1_6: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_6", 21);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Besondere Formate für Schülerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)
 	 */
-	public static readonly SBO_9_2_1_7: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_7", 22, );
+	public static readonly SBO_9_2_1_7: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_7", 22);
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Fachspezifische Angebote (z. B. Schülerstudium, Praktika bei Hochschullehrer*innen, Schülerlabore, zdi-Zentren, fachspezifische Boys‘ und Girls‘ Day Angebote)
 	 */
-	public static readonly SBO_9_2_1_8: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_8", 23, );
+	public static readonly SBO_9_2_1_8: KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_8", 23);
 
 	/**
 	 * (Integer, Long) -> Schuljahr, idZusatzmerkmal
@@ -229,7 +229,7 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 	 */
 	public static valueOf(name: string): KAOAEbene4 | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOAEbene4KatalogEintrag, KAOAEbene4> {

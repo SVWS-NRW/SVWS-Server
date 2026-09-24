@@ -17,237 +17,237 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> impleme
 	/**
 	 * Berufsschule, Fachklassen (Teilzeit)
 	 */
-	public static readonly A01: HerkunftBildungsgang = new HerkunftBildungsgang("A01", 0, );
+	public static readonly A01: HerkunftBildungsgang = new HerkunftBildungsgang("A01", 0);
 
 	/**
 	 * Berufsschule, Fachklassen/Fachhochschulreife (Teilzeit)
 	 */
-	public static readonly A02: HerkunftBildungsgang = new HerkunftBildungsgang("A02", 1, );
+	public static readonly A02: HerkunftBildungsgang = new HerkunftBildungsgang("A02", 1);
 
 	/**
 	 * Berufsschule, Fachklassen/erweiterte Zusatzqualifikation (Teilzeit)
 	 */
-	public static readonly A03: HerkunftBildungsgang = new HerkunftBildungsgang("A03", 2, );
+	public static readonly A03: HerkunftBildungsgang = new HerkunftBildungsgang("A03", 2);
 
 	/**
 	 * Berufsschule, Fachklassen mit erweitertem Stützunterricht (Teilzeit)
 	 */
-	public static readonly A04: HerkunftBildungsgang = new HerkunftBildungsgang("A04", 3, );
+	public static readonly A04: HerkunftBildungsgang = new HerkunftBildungsgang("A04", 3);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/mittlerer Schulabschluss (nach BKAZVO, BBiG/HwO/ in Vollzeit)
 	 */
-	public static readonly A10: HerkunftBildungsgang = new HerkunftBildungsgang("A10", 4, );
+	public static readonly A10: HerkunftBildungsgang = new HerkunftBildungsgang("A10", 4);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)
 	 */
-	public static readonly A11: HerkunftBildungsgang = new HerkunftBildungsgang("A11", 5, );
+	public static readonly A11: HerkunftBildungsgang = new HerkunftBildungsgang("A11", 5);
 
 	/**
 	 * Berufsschule, Ausbildungsvorbereitung (1-jährig, Vollzeit)
 	 */
-	public static readonly A12: HerkunftBildungsgang = new HerkunftBildungsgang("A12", 6, );
+	public static readonly A12: HerkunftBildungsgang = new HerkunftBildungsgang("A12", 6);
 
 	/**
 	 * Berufsschule, Ausbildungsvorbereitung (1-jährig, Teilzeit)
 	 */
-	public static readonly A13: HerkunftBildungsgang = new HerkunftBildungsgang("A13", 7, );
+	public static readonly A13: HerkunftBildungsgang = new HerkunftBildungsgang("A13", 7);
 
 	/**
 	 * Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss
 	 */
-	public static readonly A14: HerkunftBildungsgang = new HerkunftBildungsgang("A14", 8, );
+	public static readonly A14: HerkunftBildungsgang = new HerkunftBildungsgang("A14", 8);
 
 	/**
 	 * Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife
 	 */
-	public static readonly A15: HerkunftBildungsgang = new HerkunftBildungsgang("A15", 9, );
+	public static readonly A15: HerkunftBildungsgang = new HerkunftBildungsgang("A15", 9);
 
 	/**
 	 * Fachklassen (nach §2 BKAZVO)
 	 */
-	public static readonly A16: HerkunftBildungsgang = new HerkunftBildungsgang("A16", 10, );
+	public static readonly A16: HerkunftBildungsgang = new HerkunftBildungsgang("A16", 10);
 
 	/**
 	 * Internationale Förderklasse
 	 */
-	public static readonly A17: HerkunftBildungsgang = new HerkunftBildungsgang("A17", 11, );
+	public static readonly A17: HerkunftBildungsgang = new HerkunftBildungsgang("A17", 11);
 
 	/**
 	 * Fit für Mehr
 	 */
-	public static readonly A18: HerkunftBildungsgang = new HerkunftBildungsgang("A18", 12, );
+	public static readonly A18: HerkunftBildungsgang = new HerkunftBildungsgang("A18", 12);
 
 	/**
 	 * Förderzentrum
 	 */
-	public static readonly A19: HerkunftBildungsgang = new HerkunftBildungsgang("A19", 13, );
+	public static readonly A19: HerkunftBildungsgang = new HerkunftBildungsgang("A19", 13);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachoberschulreife (2-jährig, Vollzeit)
 	 */
-	public static readonly B01: HerkunftBildungsgang = new HerkunftBildungsgang("B01", 14, );
+	public static readonly B01: HerkunftBildungsgang = new HerkunftBildungsgang("B01", 14);
 
 	/**
 	 * Berufsfachschule, Berufsgrundbildung/Fachoberschulreife (2-jährig, Vollzeit)
 	 */
-	public static readonly B02: HerkunftBildungsgang = new HerkunftBildungsgang("B02", 15, );
+	public static readonly B02: HerkunftBildungsgang = new HerkunftBildungsgang("B02", 15);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachoberschulreife (nach BKAZVO, BBiG/HwO, in Vollzeit)
 	 */
-	public static readonly B04: HerkunftBildungsgang = new HerkunftBildungsgang("B04", 16, );
+	public static readonly B04: HerkunftBildungsgang = new HerkunftBildungsgang("B04", 16);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)
 	 */
-	public static readonly B05: HerkunftBildungsgang = new HerkunftBildungsgang("B05", 17, );
+	public static readonly B05: HerkunftBildungsgang = new HerkunftBildungsgang("B05", 17);
 
 	/**
 	 * Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)
 	 */
-	public static readonly B06: HerkunftBildungsgang = new HerkunftBildungsgang("B06", 18, );
+	public static readonly B06: HerkunftBildungsgang = new HerkunftBildungsgang("B06", 18);
 
 	/**
 	 * Berufsfachschule, Berufliche Kenntnisse/Mittlerer Schulabschluss (1-jährig, Vollzeit)
 	 */
-	public static readonly B07: HerkunftBildungsgang = new HerkunftBildungsgang("B07", 19, );
+	public static readonly B07: HerkunftBildungsgang = new HerkunftBildungsgang("B07", 19);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)
 	 */
-	public static readonly B08: HerkunftBildungsgang = new HerkunftBildungsgang("B08", 20, );
+	public static readonly B08: HerkunftBildungsgang = new HerkunftBildungsgang("B08", 20);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)
 	 */
-	public static readonly B09: HerkunftBildungsgang = new HerkunftBildungsgang("B09", 21, );
+	public static readonly B09: HerkunftBildungsgang = new HerkunftBildungsgang("B09", 21);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)
 	 */
-	public static readonly B10: HerkunftBildungsgang = new HerkunftBildungsgang("B10", 22, );
+	public static readonly B10: HerkunftBildungsgang = new HerkunftBildungsgang("B10", 22);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum, 3-jährig, Vollzeit)
 	 */
-	public static readonly C01: HerkunftBildungsgang = new HerkunftBildungsgang("C01", 23, );
+	public static readonly C01: HerkunftBildungsgang = new HerkunftBildungsgang("C01", 23);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss (2-jährig, Vollzeit)
 	 */
-	public static readonly C02: HerkunftBildungsgang = new HerkunftBildungsgang("C02", 24, );
+	public static readonly C02: HerkunftBildungsgang = new HerkunftBildungsgang("C02", 24);
 
 	/**
 	 * Berufsfachschule, Berufliche Kenntnisse/FHR (HBFS) (2-jährig, Vollzeit)
 	 */
-	public static readonly C03: HerkunftBildungsgang = new HerkunftBildungsgang("C03", 25, );
+	public static readonly C03: HerkunftBildungsgang = new HerkunftBildungsgang("C03", 25);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 11 (1-jährig, Teilzeit)
 	 */
-	public static readonly C05: HerkunftBildungsgang = new HerkunftBildungsgang("C05", 26, );
+	public static readonly C05: HerkunftBildungsgang = new HerkunftBildungsgang("C05", 26);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 12S (1-jährig, Vollzeit)
 	 */
-	public static readonly C06: HerkunftBildungsgang = new HerkunftBildungsgang("C06", 27, );
+	public static readonly C06: HerkunftBildungsgang = new HerkunftBildungsgang("C06", 27);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 12B (2-jährig, Teilzeit)
 	 */
-	public static readonly C07: HerkunftBildungsgang = new HerkunftBildungsgang("C07", 28, );
+	public static readonly C07: HerkunftBildungsgang = new HerkunftBildungsgang("C07", 28);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 12B (1-jährig, Vollzeit)
 	 */
-	public static readonly C08: HerkunftBildungsgang = new HerkunftBildungsgang("C08", 29, );
+	public static readonly C08: HerkunftBildungsgang = new HerkunftBildungsgang("C08", 29);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 12B (3-jährig, Teilzeit)
 	 */
-	public static readonly C11: HerkunftBildungsgang = new HerkunftBildungsgang("C11", 30, );
+	public static readonly C11: HerkunftBildungsgang = new HerkunftBildungsgang("C11", 30);
 
 	/**
 	 * Berufsfachschule, Berufsabschluss/Fachhochschulreife (mit Berufspraktikum; 3,5 -jährig, Vollzeit)
 	 */
-	public static readonly C12: HerkunftBildungsgang = new HerkunftBildungsgang("C12", 31, );
+	public static readonly C12: HerkunftBildungsgang = new HerkunftBildungsgang("C12", 31);
 
 	/**
 	 * Berufsabschluss/FHR (gestuft), (3jährig, Vollzeit)
 	 */
-	public static readonly C13: HerkunftBildungsgang = new HerkunftBildungsgang("C13", 32, );
+	public static readonly C13: HerkunftBildungsgang = new HerkunftBildungsgang("C13", 32);
 
 	/**
 	 * Berufliches Gymnasium, Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum; 4-jährig, Vollzeit)
 	 */
-	public static readonly D01: HerkunftBildungsgang = new HerkunftBildungsgang("D01", 33, );
+	public static readonly D01: HerkunftBildungsgang = new HerkunftBildungsgang("D01", 33);
 
 	/**
 	 * Berufliches Gymnasium, Berufliche Kenntnisse/Allg. Hochschulreife
 	 */
-	public static readonly D02: HerkunftBildungsgang = new HerkunftBildungsgang("D02", 34, );
+	public static readonly D02: HerkunftBildungsgang = new HerkunftBildungsgang("D02", 34);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 13 (1-jährig, Vollzeit)
 	 */
-	public static readonly D05: HerkunftBildungsgang = new HerkunftBildungsgang("D05", 35, );
+	public static readonly D05: HerkunftBildungsgang = new HerkunftBildungsgang("D05", 35);
 
 	/**
 	 * Fachoberschule, Fachoberschule Kl. 13 (2-jährig, Teilzeit)
 	 */
-	public static readonly D06: HerkunftBildungsgang = new HerkunftBildungsgang("D06", 36, );
+	public static readonly D06: HerkunftBildungsgang = new HerkunftBildungsgang("D06", 36);
 
 	/**
 	 * Fachschule (2-jährig, Vollzeit)
 	 */
-	public static readonly E01: HerkunftBildungsgang = new HerkunftBildungsgang("E01", 37, );
+	public static readonly E01: HerkunftBildungsgang = new HerkunftBildungsgang("E01", 37);
 
 	/**
 	 * Fachschule (4-jährig, Teilzeit)
 	 */
-	public static readonly E02: HerkunftBildungsgang = new HerkunftBildungsgang("E02", 38, );
+	public static readonly E02: HerkunftBildungsgang = new HerkunftBildungsgang("E02", 38);
 
 	/**
 	 * Fachschule (verkürzt/1-jährig, Vollzeit/Teilzeit)
 	 */
-	public static readonly E03: HerkunftBildungsgang = new HerkunftBildungsgang("E03", 39, );
+	public static readonly E03: HerkunftBildungsgang = new HerkunftBildungsgang("E03", 39);
 
 	/**
 	 * Fachschule (verkürzt/2-jährig, Teilzeit)
 	 */
-	public static readonly E04: HerkunftBildungsgang = new HerkunftBildungsgang("E04", 40, );
+	public static readonly E04: HerkunftBildungsgang = new HerkunftBildungsgang("E04", 40);
 
 	/**
 	 * Fachschule für Sozialwesen (mit Berufspraktikum/3-jährig, Vollzeit)
 	 */
-	public static readonly E05: HerkunftBildungsgang = new HerkunftBildungsgang("E05", 41, );
+	public static readonly E05: HerkunftBildungsgang = new HerkunftBildungsgang("E05", 41);
 
 	/**
 	 * Fachschule für Sozialwesen (mit Berufspraktikum/6-jährig, Teilzeit)
 	 */
-	public static readonly E07: HerkunftBildungsgang = new HerkunftBildungsgang("E07", 42, );
+	public static readonly E07: HerkunftBildungsgang = new HerkunftBildungsgang("E07", 42);
 
 	/**
 	 * Fachschule (3-jährig, Teilzeit)
 	 */
-	public static readonly E13: HerkunftBildungsgang = new HerkunftBildungsgang("E13", 43, );
+	public static readonly E13: HerkunftBildungsgang = new HerkunftBildungsgang("E13", 43);
 
 	/**
 	 * Weiterbildungskolleg - Abendymnasium
 	 */
-	public static readonly G02: HerkunftBildungsgang = new HerkunftBildungsgang("G02", 44, );
+	public static readonly G02: HerkunftBildungsgang = new HerkunftBildungsgang("G02", 44);
 
 	/**
 	 * Weiterbildungskolleg - Abendrealschule
 	 */
-	public static readonly R02: HerkunftBildungsgang = new HerkunftBildungsgang("R02", 45, );
+	public static readonly R02: HerkunftBildungsgang = new HerkunftBildungsgang("R02", 45);
 
 	/**
 	 * Weiterbildungskolleg - Kolleg
 	 */
-	public static readonly K02: HerkunftBildungsgang = new HerkunftBildungsgang("K02", 46, );
+	public static readonly K02: HerkunftBildungsgang = new HerkunftBildungsgang("K02", 46);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -291,7 +291,7 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> impleme
 	 */
 	public static valueOf(name: string): HerkunftBildungsgang | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<HerkunftBildungsgangKatalogEintrag, HerkunftBildungsgang> {

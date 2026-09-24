@@ -17,72 +17,72 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	/**
 	 * Beschäftigungsart 'Vollzeit' eines Lehrers
 	 */
-	public static readonly V: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("V", 0, );
+	public static readonly V: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("V", 0);
 
 	/**
 	 * Beschäftigungsart 'Teilzeit' eines Lehrers
 	 */
-	public static readonly T: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("T", 1, );
+	public static readonly T: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("T", 1);
 
 	/**
 	 * Beschäftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers
 	 */
-	public static readonly AT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("AT", 2, );
+	public static readonly AT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("AT", 2);
 
 	/**
 	 * Beschäftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
-	public static readonly TA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TA", 3, );
+	public static readonly TA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TA", 3);
 
 	/**
 	 * Beschäftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
-	public static readonly VA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("VA", 4, );
+	public static readonly VA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("VA", 4);
 
 	/**
 	 * Beschäftigungsart 'Sabbatjahr' eines Lehrers
 	 */
-	public static readonly TS: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TS", 5, );
+	public static readonly TS: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TS", 5);
 
 	/**
 	 * Beschäftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers
 	 */
-	public static readonly SB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6, );
+	public static readonly SB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6);
 
 	/**
 	 * Beschäftigungsart 'Geringfügige Beschäftigung' eines Lehrers
 	 */
-	public static readonly GB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7, );
+	public static readonly GB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7);
 
 	/**
 	 * Beschäftigungsart 'Studierende' eines Lehrers
 	 */
-	public static readonly ST: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("ST", 8, );
+	public static readonly ST: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("ST", 8);
 
 	/**
 	 * Beschäftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers
 	 */
-	public static readonly NA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("NA", 9, );
+	public static readonly NA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("NA", 9);
 
 	/**
 	 * Beschäftigungsart 'Gestellungsvertrag' eines Lehrers
 	 */
-	public static readonly G: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("G", 10, );
+	public static readonly G: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("G", 10);
 
 	/**
 	 * Beschäftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers
 	 */
-	public static readonly X: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("X", 11, );
+	public static readonly X: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("X", 11);
 
 	/**
 	 * Beschäftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers
 	 */
-	public static readonly WT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WT", 12, );
+	public static readonly WT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WT", 12);
 
 	/**
 	 * Beschäftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers
 	 */
-	public static readonly WV: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WV", 13, );
+	public static readonly WV: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WV", 13);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -126,7 +126,7 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	 */
 	public static valueOf(name: string): LehrerBeschaeftigungsart | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerBeschaeftigungsartKatalogEintrag, LehrerBeschaeftigungsart> {

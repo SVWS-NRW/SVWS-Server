@@ -17,32 +17,32 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaEnum<KAOAZusatzmerkmaleO
 	/**
 	 * Keine Option für das KAoA-Zusatzmerkmal
 	 */
-	public static readonly KEINE: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("KEINE", 0, );
+	public static readonly KEINE: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("KEINE", 0);
 
 	/**
 	 * Anschlussoptionen laut SBO 10.7
 	 */
-	public static readonly ANSCHLUSSOPTION: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("ANSCHLUSSOPTION", 1, );
+	public static readonly ANSCHLUSSOPTION: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("ANSCHLUSSOPTION", 1);
 
 	/**
 	 * Berufsfelder
 	 */
-	public static readonly BERUFSFELD: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("BERUFSFELD", 2, );
+	public static readonly BERUFSFELD: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("BERUFSFELD", 2);
 
 	/**
 	 * Freitext
 	 */
-	public static readonly FREITEXT: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT", 3, );
+	public static readonly FREITEXT: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT", 3);
 
 	/**
 	 * Freitext Beruf
 	 */
-	public static readonly FREITEXT_BERUF: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT_BERUF", 4, );
+	public static readonly FREITEXT_BERUF: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT_BERUF", 4);
 
 	/**
 	 * SBO der Ebene 4 (SBO x.x.x.y)
 	 */
-	public static readonly SBO_EBENE_4: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("SBO_EBENE_4", 5, );
+	public static readonly SBO_EBENE_4: KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("SBO_EBENE_4", 5);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -86,7 +86,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaEnum<KAOAZusatzmerkmaleO
 	 */
 	public static valueOf(name: string): KAOAZusatzmerkmaleOptionsarten | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOAZusatzmerkmaleOptionsartenKatalogEintrag, KAOAZusatzmerkmaleOptionsarten> {

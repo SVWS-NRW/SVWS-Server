@@ -17,32 +17,32 @@ export class Betreuungsart extends JavaEnum<Betreuungsart> implements CoreType<B
 	/**
 	 * keine Teilnahme an Ganztagsangeboten und/oder Übermittagbetreuung
 	 */
-	public static readonly KEINE: Betreuungsart = new Betreuungsart("KEINE", 0, );
+	public static readonly KEINE: Betreuungsart = new Betreuungsart("KEINE", 0);
 
 	/**
 	 * Übermittagbetreuung (Primarstufe)
 	 */
-	public static readonly UEBERMITTAG_PRIMARSTUFE: Betreuungsart = new Betreuungsart("UEBERMITTAG_PRIMARSTUFE", 1, );
+	public static readonly UEBERMITTAG_PRIMARSTUFE: Betreuungsart = new Betreuungsart("UEBERMITTAG_PRIMARSTUFE", 1);
 
 	/**
 	 * Übermittagbetreuung (Sekundarstufe)
 	 */
-	public static readonly UEBERMITTAG_SEKUNDARSTUFE: Betreuungsart = new Betreuungsart("UEBERMITTAG_SEKUNDARSTUFE", 2, );
+	public static readonly UEBERMITTAG_SEKUNDARSTUFE: Betreuungsart = new Betreuungsart("UEBERMITTAG_SEKUNDARSTUFE", 2);
 
 	/**
 	 * Übermittagbetreuung und zusätzliches Ganztagsangebot
 	 */
-	public static readonly UEBERMITTAG_UND_GANZTAG: Betreuungsart = new Betreuungsart("UEBERMITTAG_UND_GANZTAG", 3, );
+	public static readonly UEBERMITTAG_UND_GANZTAG: Betreuungsart = new Betreuungsart("UEBERMITTAG_UND_GANZTAG", 3);
 
 	/**
 	 * ausschließlich Schule von acht bis eins
 	 */
-	public static readonly NUR_ACHT_BIS_EINS: Betreuungsart = new Betreuungsart("NUR_ACHT_BIS_EINS", 4, );
+	public static readonly NUR_ACHT_BIS_EINS: Betreuungsart = new Betreuungsart("NUR_ACHT_BIS_EINS", 4);
 
 	/**
 	 * Schule von acht bis eins und Dreizehn Plus
 	 */
-	public static readonly ACHT_BIS_EINS_UND_DREIZEHN_PLUS: Betreuungsart = new Betreuungsart("ACHT_BIS_EINS_UND_DREIZEHN_PLUS", 5, );
+	public static readonly ACHT_BIS_EINS_UND_DREIZEHN_PLUS: Betreuungsart = new Betreuungsart("ACHT_BIS_EINS_UND_DREIZEHN_PLUS", 5);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -86,7 +86,7 @@ export class Betreuungsart extends JavaEnum<Betreuungsart> implements CoreType<B
 	 */
 	public static valueOf(name: string): Betreuungsart | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BetreuungsartKatalogEintrag, Betreuungsart> {

@@ -57,7 +57,9 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 					map2.put(key2, value);
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

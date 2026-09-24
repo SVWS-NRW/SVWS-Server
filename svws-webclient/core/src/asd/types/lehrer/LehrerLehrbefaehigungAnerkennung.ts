@@ -17,22 +17,22 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	/**
 	 * Anerkennung der Lehrbefähigung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'
 	 */
-	public static readonly ID_1: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_1", 0, );
+	public static readonly ID_1: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_1", 0);
 
 	/**
 	 * Anerkennung der Lehrbefähigung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'
 	 */
-	public static readonly ID_2: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_2", 1, );
+	public static readonly ID_2: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_2", 1);
 
 	/**
 	 * Anerkennung der Lehrbefähigung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'
 	 */
-	public static readonly ID_3: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_3", 2, );
+	public static readonly ID_3: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_3", 2);
 
 	/**
 	 * Anerkennung der Lehrbefähigung 'sonstige'
 	 */
-	public static readonly ID_9: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_9", 3, );
+	public static readonly ID_9: LehrerLehrbefaehigungAnerkennung = new LehrerLehrbefaehigungAnerkennung("ID_9", 3);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -76,7 +76,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaEnum<LehrerLehrbefaehi
 	 */
 	public static valueOf(name: string): LehrerLehrbefaehigungAnerkennung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerLehrbefaehigungAnerkennungKatalogEintrag, LehrerLehrbefaehigungAnerkennung> {

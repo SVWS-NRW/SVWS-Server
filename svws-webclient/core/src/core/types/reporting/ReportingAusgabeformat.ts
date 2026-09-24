@@ -85,7 +85,7 @@ export class ReportingAusgabeformat extends JavaEnum<ReportingAusgabeformat> {
 	 */
 	public static valueOf(name: string): ReportingAusgabeformat | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

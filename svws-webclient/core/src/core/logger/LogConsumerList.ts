@@ -52,7 +52,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 			const printLevel: boolean = __param1 as boolean;
 			this.printTime = printTime;
 			this.printLevel = printLevel;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -91,7 +93,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-	public getStrings() : List<string> | null;
+	public getStrings(): List<string> | null;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück, die alle
@@ -103,7 +105,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-	public getStrings(indent: string) : List<string> | null;
+	public getStrings(indent: string): List<string> | null;
 
 	/**
 	 * Implementation for method overloads of 'getStrings'
@@ -130,7 +132,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 				result.add(sb.toString());
 			}
 			return result;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -142,7 +146,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @return der Text der Log-Informationen für das Log-Level LogLevel.INFO
 	 */
-	public getText() : string;
+	public getText(): string;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
@@ -156,7 +160,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
-	public getText(level: LogLevel) : string;
+	public getText(level: LogLevel): string;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
@@ -171,7 +175,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
-	public getText(level: LogLevel, indent: string) : string;
+	public getText(level: LogLevel, indent: string): string;
 
 	/**
 	 * Implementation for method overloads of 'getText'
@@ -198,7 +202,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 				sb.append("\n");
 			}
 			return sb.toString();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

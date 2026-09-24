@@ -81,7 +81,7 @@ export class UvBlockungRegelPrioritaet extends JavaEnum<UvBlockungRegelPrioritae
 	 */
 	public static valueOf(name: string): UvBlockungRegelPrioritaet | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

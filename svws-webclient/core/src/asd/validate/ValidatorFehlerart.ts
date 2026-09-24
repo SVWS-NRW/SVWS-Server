@@ -12,22 +12,22 @@ export class ValidatorFehlerart extends JavaEnum<ValidatorFehlerart> {
 	/**
 	 * MUSS-Fehler : verhindert das Absenden der Statistik
 	 */
-	public static readonly MUSS: ValidatorFehlerart = new ValidatorFehlerart("MUSS", 0, );
+	public static readonly MUSS: ValidatorFehlerart = new ValidatorFehlerart("MUSS", 0);
 
 	/**
 	 * KANN-Fehler: Wahrscheinlicher Fehler, der erklärt werden muss, aber das Absenden der Statistik nicht verhindert
 	 */
-	public static readonly KANN: ValidatorFehlerart = new ValidatorFehlerart("KANN", 1, );
+	public static readonly KANN: ValidatorFehlerart = new ValidatorFehlerart("KANN", 1);
 
 	/**
 	 * HINWEIS: auf einen möglichen Fehler
 	 */
-	public static readonly HINWEIS: ValidatorFehlerart = new ValidatorFehlerart("HINWEIS", 2, );
+	public static readonly HINWEIS: ValidatorFehlerart = new ValidatorFehlerart("HINWEIS", 2);
 
 	/**
 	 * UNGENUTZT: der Validator soll nicht ausgeführt werden, wegen Ausschluss im Umfeld oder Schulform
 	 */
-	public static readonly UNGENUTZT: ValidatorFehlerart = new ValidatorFehlerart("UNGENUTZT", 3, );
+	public static readonly UNGENUTZT: ValidatorFehlerart = new ValidatorFehlerart("UNGENUTZT", 3);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -53,7 +53,7 @@ export class ValidatorFehlerart extends JavaEnum<ValidatorFehlerart> {
 	 */
 	public static valueOf(name: string): ValidatorFehlerart | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

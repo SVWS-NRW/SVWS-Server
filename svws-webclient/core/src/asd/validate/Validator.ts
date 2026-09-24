@@ -125,7 +125,7 @@ export abstract class Validator extends BasicValidator {
 			}
 			try {
 				return DateManager.from(value);
-			} catch(e : any) {
+			} catch (e: any) {
 				return null;
 			}
 		} };

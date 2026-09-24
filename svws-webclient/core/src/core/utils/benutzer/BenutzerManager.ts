@@ -101,7 +101,9 @@ export class BenutzerManager extends JavaObject {
 			for (const bgd of this._daten.gruppen) {
 				this.addGruppe(bgd);
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

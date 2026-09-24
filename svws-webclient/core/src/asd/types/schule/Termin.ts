@@ -21,22 +21,22 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	/**
 	 * Der letzte Unterrichtstag in dem ersten Halbjahr des Schuljahres
 	 */
-	public static readonly HALBJAHR_LETZTER_UNTERRICHTSTAG: Termin = new Termin("HALBJAHR_LETZTER_UNTERRICHTSTAG", 0, );
+	public static readonly HALBJAHR_LETZTER_UNTERRICHTSTAG: Termin = new Termin("HALBJAHR_LETZTER_UNTERRICHTSTAG", 0);
 
 	/**
 	 * Der letzte Unterrichtstag in dem ersten Halbjahr des zweiten Schuljahres der Qualifikationsphase
 	 */
-	public static readonly GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2: Termin = new Termin("GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2", 1, );
+	public static readonly GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2: Termin = new Termin("GOST_HALBJAHR_LETZTER_UNTERRICHTSTAG_Q2", 1);
 
 	/**
 	 * Der letzte Unterrichtstag des Schuljahres
 	 */
-	public static readonly SCHULJAHR_LETZTER_UNTERRICHTSTAG: Termin = new Termin("SCHULJAHR_LETZTER_UNTERRICHTSTAG", 2, );
+	public static readonly SCHULJAHR_LETZTER_UNTERRICHTSTAG: Termin = new Termin("SCHULJAHR_LETZTER_UNTERRICHTSTAG", 2);
 
 	/**
 	 * Der letzte Unterrichtstag in dem zweiten Halbjahr des zweiten Schuljahres der Qualifikationsphase
 	 */
-	public static readonly GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2: Termin = new Termin("GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2", 3, );
+	public static readonly GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2: Termin = new Termin("GOST_SCHULJAHR_LETZTER_UNTERRICHTSTAG_Q2", 3);
 
 	private static readonly _mapSchuljahrToLetzterUnterrichtstag: JavaMap<number, DateManager> = new HashMap<number, DateManager>();
 
@@ -84,7 +84,7 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 		}
 		try {
 			result = DateManager.from(eintrag.von);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new CoreTypeException("Fehlerhafter Termin-Eintrag für HALBJAHR_LETZTER_UNTERRICHTSTAG im Schuljahr " + schuljahr, e);
 		}
 		Termin._mapSchuljahrToLetzterUnterrichtstag.put(schuljahr, result);
@@ -109,7 +109,7 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	 */
 	public static valueOf(name: string): Termin | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<TerminKatalogEintrag, Termin> {

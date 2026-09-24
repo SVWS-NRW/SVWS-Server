@@ -17,52 +17,52 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> i
 	/**
 	 * Rechtsverhältnis 'Beamter auf Lebenszeit'
 	 */
-	public static readonly L: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("L", 0, );
+	public static readonly L: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("L", 0);
 
 	/**
 	 * Rechtsverhältnis 'Beamter auf Probe'
 	 */
-	public static readonly P: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("P", 1, );
+	public static readonly P: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("P", 1);
 
 	/**
 	 * Rechtsverhältnis 'Beamter auf Probe zur Anstellung'
 	 */
-	public static readonly A: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("A", 2, );
+	public static readonly A: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("A", 2);
 
 	/**
 	 * Rechtsverhältnis 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)'
 	 */
-	public static readonly N: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("N", 3, );
+	public static readonly N: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("N", 3);
 
 	/**
 	 * Rechtsverhältnis 'Beamter auf Widerruf (LAA)'
 	 */
-	public static readonly W: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("W", 4, );
+	public static readonly W: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("W", 4);
 
 	/**
 	 * Rechtsverhältnis 'Angestellte, unbefristet (BAT-Vertrag)'
 	 */
-	public static readonly U: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("U", 5, );
+	public static readonly U: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("U", 5);
 
 	/**
 	 * Rechtsverhältnis 'Angestellte, befristet (BAT-Vertrag)'
 	 */
-	public static readonly B: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("B", 6, );
+	public static readonly B: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("B", 6);
 
 	/**
 	 * Rechtsverhältnis 'Angestellte, nicht BAT-Vertrag'
 	 */
-	public static readonly J: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("J", 7, );
+	public static readonly J: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("J", 7);
 
 	/**
 	 * Rechtsverhältnis 'Gestellungsvertrag'
 	 */
-	public static readonly S: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("S", 8, );
+	public static readonly S: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("S", 8);
 
 	/**
 	 * Rechtsverhältnis 'Unentgeltlich Beschäftigte'
 	 */
-	public static readonly X: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("X", 9, );
+	public static readonly X: LehrerRechtsverhaeltnis = new LehrerRechtsverhaeltnis("X", 9);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -121,7 +121,7 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> i
 	 */
 	public static valueOf(name: string): LehrerRechtsverhaeltnis | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerRechtsverhaeltnisKatalogEintrag, LehrerRechtsverhaeltnis> {

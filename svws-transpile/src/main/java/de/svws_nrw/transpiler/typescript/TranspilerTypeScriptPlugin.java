@@ -819,7 +819,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final String tmpExprVar = "_seexpr_" + nodeID;
 		final StringBuilder sb = new StringBuilder();
 		if (switchVarName == null) {
-			sb.append("let ").append(tmpVar).append(" : any;").append(System.lineSeparator()).append(getIndent());
+			sb.append("let ").append(tmpVar).append(";").append(System.lineSeparator()).append(getIndent());
 		}
 		sb.append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
 		boolean first = true;
@@ -1401,7 +1401,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (param == null) {
 			throw new TranspilerException("Transpiler Error: Catch clause without a parameter variable is not supported.");
 		}
-		String result = "catch(" + param.getName().toString() + " : any) {" + System.lineSeparator();
+		String result = "catch (" + param.getName().toString() + ": any) {" + System.lineSeparator();
 		indentC++;
 		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
@@ -1514,9 +1514,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (expressions == null) {
 			return "";
 		}
-		final String enumInject = ((enumValueName != null) && (enumOrdinal != null)) ? "\"" + enumValueName + "\", " + enumOrdinal + ", " : "";
+		final String enumInject = ((enumValueName != null) && (enumOrdinal != null)) ? "\"" + enumValueName + "\", " + enumOrdinal : "";
 		final StringBuilder sb = new StringBuilder();
 		sb.append((noParentheses ? "" : "(")).append(enumInject);
+		if ((enumValueName != null) && (enumOrdinal != null) && (!expressions.isEmpty())) {
+			sb.append(", ");	
+		}
 		for (int i = 0; i < expressions.size(); i++) {
 			final ExpressionTree expr = expressions.get(i);
 			if (i > 0) {
@@ -1804,10 +1807,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						final ExpressionTree param = params.get(1);
 						final ExpressionType paramType = transpiler.getExpressionType(param);
 						if ((paramType instanceof final ExpressionPrimitiveType ept) && (ept.isNumberType())) {
-							return "Array(" + this.convertExpression(param) + ").fill(null)";
+							return "new Array(" + this.convertExpression(param) + ").fill(null)";
 						}
 						if ((paramType instanceof final ExpressionClassType ect) && (ect.isNumberType())) {
-							return "Array(" + this.convertExpression(param) + ".valueOf()).fill(null)";
+							return "new Array(" + this.convertExpression(param) + ".valueOf()).fill(null)";
 						}
 						if (paramType instanceof final ExpressionArrayType eat) {
 							throw new TranspilerException(
@@ -2936,7 +2939,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				%1$s */
 				%1$spublic static valueOf(name: string): %2$s | null {
 				%1$s\tconst tmp = this.all_values_by_name.get(name);
-				%1$s\treturn (!tmp) ? null : tmp;
+				%1$s\treturn tmp ?? null;
 				%1$s}
 				""".formatted(getIndent(), node.getSimpleName())
 		).append(System.lineSeparator());

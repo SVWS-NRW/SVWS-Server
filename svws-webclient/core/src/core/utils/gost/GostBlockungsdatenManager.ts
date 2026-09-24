@@ -1835,7 +1835,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			return JavaString.format("%s existiert bereits als gleiche (nicht als selbe) Regel im MultiMap!", this.toStringRegel(r.id));
 		}
 		const typ: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
-		let _sevar_1897008228 : any;
+		let _sevar_1897008228;
 		const _seexpr_1897008228 = (typ);
 		if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS) {
 			_sevar_1897008228 = this.regelCheckTyp01(r);

@@ -245,19 +245,19 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		let jahr: number;
 		try {
 			jahr = JavaInteger.parseInt(d[0]);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new InvalidDateException(strError + ": Der Teil vor dem ersten Bindestrich muss eine Zahl sein und sollte das Jahr angeben", e);
 		}
 		let monat: number;
 		try {
 			monat = JavaInteger.parseInt(d[1]);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new InvalidDateException(strError + ": Der mittlere Teil zwischen den Bindestrichen muss eine Zahl sein und sollte den Monat angeben", e);
 		}
 		let tag: number;
 		try {
 			tag = JavaInteger.parseInt(d[2]);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new InvalidDateException(strError + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e);
 		}
 		return new DateManager(tag, monat, jahr);

@@ -672,7 +672,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 */
 	public static valueOf(name: string): BenutzerKompetenz | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

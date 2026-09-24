@@ -27,7 +27,7 @@ export class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator {
 		let geburtsdatum: DateManager | null = null;
 		try {
 			geburtsdatum = DateManager.from(this.daten.get());
-		} catch(e : any) {
+		} catch (e: any) {
 			e.printStackTrace();
 		}
 		const finalGeburtsdatum: DateManager | null = geburtsdatum;

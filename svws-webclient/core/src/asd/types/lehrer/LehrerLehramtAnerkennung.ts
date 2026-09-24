@@ -17,27 +17,27 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	/**
 	 * Lehramtsanerkennung 'Zweite Staatsprüfung für ein Lehramt'
 	 */
-	public static readonly ST: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("ST", 0, );
+	public static readonly ST: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("ST", 0);
 
 	/**
 	 * Lehramtsanerkennung 'Anerkennung Lehramt'
 	 */
-	public static readonly AL: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AL", 1, );
+	public static readonly AL: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AL", 1);
 
 	/**
 	 * Lehramtsanerkennung 'Anerkennung geeignete Prüfung'
 	 */
-	public static readonly AP: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AP", 2, );
+	public static readonly AP: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("AP", 2);
 
 	/**
 	 * Lehramtsanerkennung 'Förderliche Berufstätigkeit'
 	 */
-	public static readonly BT: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("BT", 3, );
+	public static readonly BT: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("BT", 3);
 
 	/**
 	 * Lehramtsanerkennung 'ohne'
 	 */
-	public static readonly OH: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("OH", 4, );
+	public static readonly OH: LehrerLehramtAnerkennung = new LehrerLehramtAnerkennung("OH", 4);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -81,7 +81,7 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 	 */
 	public static valueOf(name: string): LehrerLehramtAnerkennung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerLehramtAnerkennungKatalogEintrag, LehrerLehramtAnerkennung> {

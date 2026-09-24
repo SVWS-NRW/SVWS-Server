@@ -84,7 +84,7 @@ export class ReportingFilterVerknuepfung extends JavaEnum<ReportingFilterVerknue
 	 */
 	public static valueOf(name: string): ReportingFilterVerknuepfung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

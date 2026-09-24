@@ -20,172 +20,172 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	/**
 	 * Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte
 	 */
-	public static readonly HAUSFRUEHERZIEHUNG: Jahrgaenge = new Jahrgaenge("HAUSFRUEHERZIEHUNG", 0, );
+	public static readonly HAUSFRUEHERZIEHUNG: Jahrgaenge = new Jahrgaenge("HAUSFRUEHERZIEHUNG", 0);
 
 	/**
 	 * Jahrgang 00: Frühkindliche Förderung, Förderschulkindergarten
 	 */
-	public static readonly JAHRGANG_00: Jahrgaenge = new Jahrgaenge("JAHRGANG_00", 1, );
+	public static readonly JAHRGANG_00: Jahrgaenge = new Jahrgaenge("JAHRGANG_00", 1);
 
 	/**
 	 * 1. Jahrgang
 	 */
-	public static readonly JAHRGANG_01: Jahrgaenge = new Jahrgaenge("JAHRGANG_01", 2, );
+	public static readonly JAHRGANG_01: Jahrgaenge = new Jahrgaenge("JAHRGANG_01", 2);
 
 	/**
 	 * 2. Jahrgang
 	 */
-	public static readonly JAHRGANG_02: Jahrgaenge = new Jahrgaenge("JAHRGANG_02", 3, );
+	public static readonly JAHRGANG_02: Jahrgaenge = new Jahrgaenge("JAHRGANG_02", 3);
 
 	/**
 	 * 3. Jahrgang
 	 */
-	public static readonly JAHRGANG_03: Jahrgaenge = new Jahrgaenge("JAHRGANG_03", 4, );
+	public static readonly JAHRGANG_03: Jahrgaenge = new Jahrgaenge("JAHRGANG_03", 4);
 
 	/**
 	 * 4. Jahrgang
 	 */
-	public static readonly JAHRGANG_04: Jahrgaenge = new Jahrgaenge("JAHRGANG_04", 5, );
+	public static readonly JAHRGANG_04: Jahrgaenge = new Jahrgaenge("JAHRGANG_04", 5);
 
 	/**
 	 * 5. Jahrgang
 	 */
-	public static readonly JAHRGANG_05: Jahrgaenge = new Jahrgaenge("JAHRGANG_05", 6, );
+	public static readonly JAHRGANG_05: Jahrgaenge = new Jahrgaenge("JAHRGANG_05", 6);
 
 	/**
 	 * 6. Jahrgang
 	 */
-	public static readonly JAHRGANG_06: Jahrgaenge = new Jahrgaenge("JAHRGANG_06", 7, );
+	public static readonly JAHRGANG_06: Jahrgaenge = new Jahrgaenge("JAHRGANG_06", 7);
 
 	/**
 	 * 7. Jahrgang
 	 */
-	public static readonly JAHRGANG_07: Jahrgaenge = new Jahrgaenge("JAHRGANG_07", 8, );
+	public static readonly JAHRGANG_07: Jahrgaenge = new Jahrgaenge("JAHRGANG_07", 8);
 
 	/**
 	 * 8. Jahrgang
 	 */
-	public static readonly JAHRGANG_08: Jahrgaenge = new Jahrgaenge("JAHRGANG_08", 9, );
+	public static readonly JAHRGANG_08: Jahrgaenge = new Jahrgaenge("JAHRGANG_08", 9);
 
 	/**
 	 * 9. Jahrgang
 	 */
-	public static readonly JAHRGANG_09: Jahrgaenge = new Jahrgaenge("JAHRGANG_09", 10, );
+	public static readonly JAHRGANG_09: Jahrgaenge = new Jahrgaenge("JAHRGANG_09", 10);
 
 	/**
 	 * 10. Jahrgang
 	 */
-	public static readonly JAHRGANG_10: Jahrgaenge = new Jahrgaenge("JAHRGANG_10", 11, );
+	public static readonly JAHRGANG_10: Jahrgaenge = new Jahrgaenge("JAHRGANG_10", 11);
 
 	/**
 	 * 11. Jahrgang
 	 */
-	public static readonly JAHRGANG_11: Jahrgaenge = new Jahrgaenge("JAHRGANG_11", 12, );
+	public static readonly JAHRGANG_11: Jahrgaenge = new Jahrgaenge("JAHRGANG_11", 12);
 
 	/**
 	 * 12. Jahrgang
 	 */
-	public static readonly JAHRGANG_12: Jahrgaenge = new Jahrgaenge("JAHRGANG_12", 13, );
+	public static readonly JAHRGANG_12: Jahrgaenge = new Jahrgaenge("JAHRGANG_12", 13);
 
 	/**
 	 * 13. Jahrgang
 	 */
-	public static readonly JAHRGANG_13: Jahrgaenge = new Jahrgaenge("JAHRGANG_13", 14, );
+	public static readonly JAHRGANG_13: Jahrgaenge = new Jahrgaenge("JAHRGANG_13", 14);
 
 	/**
 	 * Jahrgang EF: Gymnasiale Oberstufe - Einführungsphase
 	 */
-	public static readonly EF: Jahrgaenge = new Jahrgaenge("EF", 15, );
+	public static readonly EF: Jahrgaenge = new Jahrgaenge("EF", 15);
 
 	/**
 	 * Jahrgang Q1: Gymnasiale Oberstufe - Qualifikationsphase 1. Jahr
 	 */
-	public static readonly Q1: Jahrgaenge = new Jahrgaenge("Q1", 16, );
+	public static readonly Q1: Jahrgaenge = new Jahrgaenge("Q1", 16);
 
 	/**
 	 * Jahrgang Q2: Gymnasiale Oberstufe - Qualifikationsphase 2. Jahr
 	 */
-	public static readonly Q2: Jahrgaenge = new Jahrgaenge("Q2", 17, );
+	public static readonly Q2: Jahrgaenge = new Jahrgaenge("Q2", 17);
 
 	/**
 	 * Jahrgang Berufspraxisstufe in Vollzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich)
 	 */
-	public static readonly BERUFSPRAXISSTUFE_VOLLZEIT: Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_VOLLZEIT", 18, );
+	public static readonly BERUFSPRAXISSTUFE_VOLLZEIT: Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_VOLLZEIT", 18);
 
 	/**
 	 * Jahrgang Berufspraxisstufe in Teilzeit laut AO-SF für den Förderschwerpunkt Geistige Entwicklung (je nach Organisationsform in Teilzeit (86) und Vollzeit (85) möglich)
 	 */
-	public static readonly BERUFSPRAXISSTUFE_TEILZEIT: Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_TEILZEIT", 19, );
+	public static readonly BERUFSPRAXISSTUFE_TEILZEIT: Jahrgaenge = new Jahrgaenge("BERUFSPRAXISSTUFE_TEILZEIT", 19);
 
 	/**
 	 * 91: Abendrealschule Vorkurs, 1. Semester
 	 */
-	public static readonly REALSCHULE_VORKURS_SEMESTER_1: Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_1", 20, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_1: Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_1", 20);
 
 	/**
 	 * 92: Abendrealschule Vorkurs, 2. Semester
 	 */
-	public static readonly REALSCHULE_VORKURS_SEMESTER_2: Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_2", 21, );
+	public static readonly REALSCHULE_VORKURS_SEMESTER_2: Jahrgaenge = new Jahrgaenge("REALSCHULE_VORKURS_SEMESTER_2", 21);
 
 	/**
 	 * Abendrealschule 1. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_01: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_01", 22, );
+	public static readonly REALSCHULE_SEMESTER_01: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_01", 22);
 
 	/**
 	 * Abendrealschule 2. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_02: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_02", 23, );
+	public static readonly REALSCHULE_SEMESTER_02: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_02", 23);
 
 	/**
 	 * Abendrealschule 3. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_03: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_03", 24, );
+	public static readonly REALSCHULE_SEMESTER_03: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_03", 24);
 
 	/**
 	 * Abendrealschule 4. Semester
 	 */
-	public static readonly REALSCHULE_SEMESTER_04: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_04", 25, );
+	public static readonly REALSCHULE_SEMESTER_04: Jahrgaenge = new Jahrgaenge("REALSCHULE_SEMESTER_04", 25);
 
 	/**
 	 * Abendgymnasium/Kolleg: Vorkurs, 1. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_1: Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 26, );
+	public static readonly VORKURS_SEMESTER_1: Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_1", 26);
 
 	/**
 	 * Abendgymnasium/Kolleg: Vorkurs, 2. Semester
 	 */
-	public static readonly VORKURS_SEMESTER_2: Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 27, );
+	public static readonly VORKURS_SEMESTER_2: Jahrgaenge = new Jahrgaenge("VORKURS_SEMESTER_2", 27);
 
 	/**
 	 * Abendgymnasium/Kolleg: 1. Semester (EF.1)
 	 */
-	public static readonly SEMESTER_01: Jahrgaenge = new Jahrgaenge("SEMESTER_01", 28, );
+	public static readonly SEMESTER_01: Jahrgaenge = new Jahrgaenge("SEMESTER_01", 28);
 
 	/**
 	 * Abendgymnasium/Kolleg: 2. Semester (EF.2)
 	 */
-	public static readonly SEMESTER_02: Jahrgaenge = new Jahrgaenge("SEMESTER_02", 29, );
+	public static readonly SEMESTER_02: Jahrgaenge = new Jahrgaenge("SEMESTER_02", 29);
 
 	/**
 	 * Abendgymnasium/Kolleg: 3. Semester (Q1.1)
 	 */
-	public static readonly SEMESTER_03: Jahrgaenge = new Jahrgaenge("SEMESTER_03", 30, );
+	public static readonly SEMESTER_03: Jahrgaenge = new Jahrgaenge("SEMESTER_03", 30);
 
 	/**
 	 * Abendgymnasium/Kolleg: 4. Semester (Q1.2)
 	 */
-	public static readonly SEMESTER_04: Jahrgaenge = new Jahrgaenge("SEMESTER_04", 31, );
+	public static readonly SEMESTER_04: Jahrgaenge = new Jahrgaenge("SEMESTER_04", 31);
 
 	/**
 	 * Abendgymnasium/Kolleg: 5. Semester (Q2.1)
 	 */
-	public static readonly SEMESTER_05: Jahrgaenge = new Jahrgaenge("SEMESTER_05", 32, );
+	public static readonly SEMESTER_05: Jahrgaenge = new Jahrgaenge("SEMESTER_05", 32);
 
 	/**
 	 * Abendgymnasium/Kolleg: 6. Semester (Q2.2)
 	 */
-	public static readonly SEMESTER_06: Jahrgaenge = new Jahrgaenge("SEMESTER_06", 33, );
+	public static readonly SEMESTER_06: Jahrgaenge = new Jahrgaenge("SEMESTER_06", 33);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -242,7 +242,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, wenn dieser ein Jahrgang der gymnasialen Oberstufe ist, und ansonsten false
 	 */
 	public istGymOb(): boolean {
-		let _sevar_627718607 : any;
+		let _sevar_627718607;
 		const _seexpr_627718607 = (this);
 		if (_seexpr_627718607 === Jahrgaenge.EF) {
 			_sevar_627718607 = true;
@@ -281,7 +281,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 			return false;
 		}
 		const gl: Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
-		let _sevar_515668459 : any;
+		let _sevar_515668459;
 		const _seexpr_515668459 = (this);
 		if (_seexpr_515668459 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
 			_sevar_515668459 = (vergleichsjahrgang === null);
@@ -380,7 +380,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 			return false;
 		}
 		const gl: Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
-		let _sevar_285007581 : any;
+		let _sevar_285007581;
 		const _seexpr_285007581 = (this);
 		if (_seexpr_285007581 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
 			_sevar_285007581 = (vergleichsjahrgang === null);
@@ -468,7 +468,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
 	 */
 	public isMoeglicherNachfolgerVon(vergleichsjahrgang: Jahrgaenge | null): boolean {
-		let _sevar_24040579 : any;
+		let _sevar_24040579;
 		const _seexpr_24040579 = (this);
 		if (_seexpr_24040579 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
 			_sevar_24040579 = (vergleichsjahrgang === null);
@@ -556,7 +556,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
 	 */
 	public isMoeglicherVorgaengerVon(vergleichsjahrgang: Jahrgaenge | null): boolean {
-		let _sevar_305222773 : any;
+		let _sevar_305222773;
 		const _seexpr_305222773 = (this);
 		if (_seexpr_305222773 === Jahrgaenge.HAUSFRUEHERZIEHUNG) {
 			_sevar_305222773 = (vergleichsjahrgang === null);
@@ -643,48 +643,50 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls eine Lernbereichsnote vorhanden ist.
 	 */
 	public hatLernbereichsnote1(schulform: Schulform, schulgliederung: Schulgliederung | null, schuljahr: number): boolean {
-		let _sevar_434506116 : any;
-		const _seexpr_434506116 = (schulform);
-		if (_seexpr_434506116 === Schulform.R) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.SR) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.H) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.S) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.FW) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.WF) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.GY) {
-			_sevar_434506116 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.SG) {
-			_sevar_434506116 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.GM) {
-			_sevar_434506116 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_434506116 === Schulform.GE) {
-			_sevar_434506116 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_434506116 === Schulform.PS) {
-			_sevar_434506116 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_434506116 === Schulform.SK) {
-			_sevar_434506116 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
-		} else if (_seexpr_434506116 === Schulform.HI) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.KS) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.V) {
-			_sevar_434506116 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_434506116 === Schulform.BK) {
-			_sevar_434506116 = false;
-		} else if (_seexpr_434506116 === Schulform.SB) {
-			_sevar_434506116 = false;
-		} else if (_seexpr_434506116 === Schulform.WB) {
-			_sevar_434506116 = false;
-		} else if (_seexpr_434506116 === Schulform.G) {
-			_sevar_434506116 = false;
+		let _sevar_1020076659;
+		const _seexpr_1020076659 = (schulform);
+		if (_seexpr_1020076659 === Schulform.R) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.SR) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.H) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.S) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.FW) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.WF) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.GY) {
+			_sevar_1020076659 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.SG) {
+			_sevar_1020076659 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.GM) {
+			_sevar_1020076659 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1020076659 === Schulform.GE) {
+			_sevar_1020076659 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1020076659 === Schulform.PS) {
+			_sevar_1020076659 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1020076659 === Schulform.SK) {
+			_sevar_1020076659 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) && (schuljahr <= 2024)) || ((this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) && (schuljahr <= 2023)) || ((this as unknown === Jahrgaenge.JAHRGANG_08 as unknown) && (schuljahr <= 2022));
+		} else if (_seexpr_1020076659 === Schulform.HI) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.KS) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.V) {
+			_sevar_1020076659 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_1020076659 === Schulform.BK) {
+			_sevar_1020076659 = false;
+		} else if (_seexpr_1020076659 === Schulform.SB) {
+			_sevar_1020076659 = false;
+		} else if (_seexpr_1020076659 === Schulform.WB) {
+			_sevar_1020076659 = false;
+		} else if (_seexpr_1020076659 === Schulform.G) {
+			_sevar_1020076659 = false;
+		} else {
+			_sevar_1020076659 = false;
 		}
-		return _sevar_434506116;
+		return _sevar_1020076659;
 	}
 
 	/**
@@ -701,7 +703,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 		if (!this.hatLernbereichsnote1(schulform, schulgliederung, schuljahr)) {
 			return null;
 		}
-		let _sevar_825399400 : any;
+		let _sevar_825399400;
 		const _seexpr_825399400 = (schulform);
 		if (_seexpr_825399400 === Schulform.H) {
 			_sevar_825399400 = "Arbeitslehre";
@@ -730,48 +732,50 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls eine Lernbereichsnote vorhanden ist.
 	 */
 	public hatLernbereichsnote2(schulform: Schulform, schulgliederung: Schulgliederung | null, schuljahr: number): boolean {
-		let _sevar_1863460395 : any;
-		const _seexpr_1863460395 = (schulform);
-		if (_seexpr_1863460395 === Schulform.R) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.SR) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.H) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.S) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.FW) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.WF) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.GY) {
-			_sevar_1863460395 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.SG) {
-			_sevar_1863460395 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.GM) {
-			_sevar_1863460395 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
-		} else if (_seexpr_1863460395 === Schulform.GE) {
-			_sevar_1863460395 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
-		} else if (_seexpr_1863460395 === Schulform.PS) {
-			_sevar_1863460395 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
-		} else if (_seexpr_1863460395 === Schulform.SK) {
-			_sevar_1863460395 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
-		} else if (_seexpr_1863460395 === Schulform.HI) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.KS) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.V) {
-			_sevar_1863460395 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
-		} else if (_seexpr_1863460395 === Schulform.BK) {
-			_sevar_1863460395 = false;
-		} else if (_seexpr_1863460395 === Schulform.SB) {
-			_sevar_1863460395 = false;
-		} else if (_seexpr_1863460395 === Schulform.WB) {
-			_sevar_1863460395 = false;
-		} else if (_seexpr_1863460395 === Schulform.G) {
-			_sevar_1863460395 = false;
+		let _sevar_525512764;
+		const _seexpr_525512764 = (schulform);
+		if (_seexpr_525512764 === Schulform.R) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.SR) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.H) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.S) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.FW) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.WF) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.GY) {
+			_sevar_525512764 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.SG) {
+			_sevar_525512764 = ((schulgliederung as unknown === Schulgliederung.GY8 as unknown) || (schulgliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? (this as unknown === Jahrgaenge.EF as unknown) : (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.GM) {
+			_sevar_525512764 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
+		} else if (_seexpr_525512764 === Schulform.GE) {
+			_sevar_525512764 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
+		} else if (_seexpr_525512764 === Schulform.PS) {
+			_sevar_525512764 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
+		} else if (_seexpr_525512764 === Schulform.SK) {
+			_sevar_525512764 = ((this as unknown === Jahrgaenge.JAHRGANG_10 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_09 as unknown) || (this as unknown === Jahrgaenge.JAHRGANG_08 as unknown));
+		} else if (_seexpr_525512764 === Schulform.HI) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.KS) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.V) {
+			_sevar_525512764 = (this as unknown === Jahrgaenge.JAHRGANG_10 as unknown);
+		} else if (_seexpr_525512764 === Schulform.BK) {
+			_sevar_525512764 = false;
+		} else if (_seexpr_525512764 === Schulform.SB) {
+			_sevar_525512764 = false;
+		} else if (_seexpr_525512764 === Schulform.WB) {
+			_sevar_525512764 = false;
+		} else if (_seexpr_525512764 === Schulform.G) {
+			_sevar_525512764 = false;
+		} else {
+			_sevar_525512764 = false;
 		}
-		return _sevar_1863460395;
+		return _sevar_525512764;
 	}
 
 	/**
@@ -821,7 +825,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 */
 	public static valueOf(name: string): Jahrgaenge | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<JahrgaengeKatalogEintrag, Jahrgaenge> {

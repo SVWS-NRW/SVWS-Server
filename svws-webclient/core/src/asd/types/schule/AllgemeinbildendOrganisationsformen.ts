@@ -18,27 +18,27 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	/**
 	 * Organisationsform: Nicht zuordenbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)
 	 */
-	public static readonly NICHT_ZUGEORDNET: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("NICHT_ZUGEORDNET", 0, );
+	public static readonly NICHT_ZUGEORDNET: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("NICHT_ZUGEORDNET", 0);
 
 	/**
 	 * Organisationsform: Halbtagsunterricht
 	 */
-	public static readonly HALBTAG: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("HALBTAG", 1, );
+	public static readonly HALBTAG: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("HALBTAG", 1);
 
 	/**
 	 * Organisationsform: Teilnahme am gebundenen Ganztag
 	 */
-	public static readonly GANZTAG: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG", 2, );
+	public static readonly GANZTAG: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG", 2);
 
 	/**
 	 * Organisationsform: Teilnahme am erweiterten Ganztag
 	 */
-	public static readonly GANZTAG_ERWEITERT: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_ERWEITERT", 3, );
+	public static readonly GANZTAG_ERWEITERT: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_ERWEITERT", 3);
 
 	/**
 	 * Organisationsform: Teilnahme am offenen Ganztag
 	 */
-	public static readonly GANZTAG_OFFEN: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_OFFEN", 4, );
+	public static readonly GANZTAG_OFFEN: AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_OFFEN", 4);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -94,7 +94,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	 */
 	public static valueOf(name: string): AllgemeinbildendOrganisationsformen | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<OrganisationsformKatalogEintrag, AllgemeinbildendOrganisationsformen> {

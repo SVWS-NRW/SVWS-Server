@@ -40,7 +40,9 @@ export class LongPair extends JavaObject {
 			const b: number = __param1 as number;
 			this.a = a;
 			this.b = b;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

@@ -59,7 +59,9 @@ export class BenutzergruppenManager extends JavaObject {
 				}
 				this._setKompetenzen.add(kID);
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

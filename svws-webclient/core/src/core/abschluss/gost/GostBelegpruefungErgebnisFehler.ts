@@ -50,7 +50,9 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 			this.beschreibung = f.getText(pruefArt);
 		} else if ((__param0 === undefined) && (__param1 === undefined)) {
 			// empty method body
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

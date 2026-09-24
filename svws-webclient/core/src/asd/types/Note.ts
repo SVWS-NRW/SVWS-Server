@@ -18,132 +18,132 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	/**
 	 * leerer Noteneintrag
 	 */
-	public static readonly KEINE: Note = new Note("KEINE", 0, );
+	public static readonly KEINE: Note = new Note("KEINE", 0);
 
 	/**
 	 * Die Note "ungenügend" mit 0 Punkten.
 	 */
-	public static readonly UNGENUEGEND: Note = new Note("UNGENUEGEND", 1, );
+	public static readonly UNGENUEGEND: Note = new Note("UNGENUEGEND", 1);
 
 	/**
 	 * Die Note "mangelhaft minus" mit 1 Punkt.
 	 */
-	public static readonly MANGELHAFT_MINUS: Note = new Note("MANGELHAFT_MINUS", 2, );
+	public static readonly MANGELHAFT_MINUS: Note = new Note("MANGELHAFT_MINUS", 2);
 
 	/**
 	 * Die Note "mangelhaft" mit 2 Punkten.
 	 */
-	public static readonly MANGELHAFT: Note = new Note("MANGELHAFT", 3, );
+	public static readonly MANGELHAFT: Note = new Note("MANGELHAFT", 3);
 
 	/**
 	 * Die Note "mangelhaft plus" mit 3 Punkten.
 	 */
-	public static readonly MANGELHAFT_PLUS: Note = new Note("MANGELHAFT_PLUS", 4, );
+	public static readonly MANGELHAFT_PLUS: Note = new Note("MANGELHAFT_PLUS", 4);
 
 	/**
 	 * Die Note "ausreichend minus" mit 4 Punkten.
 	 */
-	public static readonly AUSREICHEND_MINUS: Note = new Note("AUSREICHEND_MINUS", 5, );
+	public static readonly AUSREICHEND_MINUS: Note = new Note("AUSREICHEND_MINUS", 5);
 
 	/**
 	 * Die Note "ausreichend " mit 5 Punkten.
 	 */
-	public static readonly AUSREICHEND: Note = new Note("AUSREICHEND", 6, );
+	public static readonly AUSREICHEND: Note = new Note("AUSREICHEND", 6);
 
 	/**
 	 * Die Note "ausreichend plus" mit 6 Punkten.
 	 */
-	public static readonly AUSREICHEND_PLUS: Note = new Note("AUSREICHEND_PLUS", 7, );
+	public static readonly AUSREICHEND_PLUS: Note = new Note("AUSREICHEND_PLUS", 7);
 
 	/**
 	 * Die Note "befriedigend minus" mit 7 Punkten.
 	 */
-	public static readonly BEFRIEDIGEND_MINUS: Note = new Note("BEFRIEDIGEND_MINUS", 8, );
+	public static readonly BEFRIEDIGEND_MINUS: Note = new Note("BEFRIEDIGEND_MINUS", 8);
 
 	/**
 	 * Die Note "befriedigend" mit 8 Punkten.
 	 */
-	public static readonly BEFRIEDIGEND: Note = new Note("BEFRIEDIGEND", 9, );
+	public static readonly BEFRIEDIGEND: Note = new Note("BEFRIEDIGEND", 9);
 
 	/**
 	 * Die Note "befriedigend plus" mit 9 Punkten.
 	 */
-	public static readonly BEFRIEDIGEND_PLUS: Note = new Note("BEFRIEDIGEND_PLUS", 10, );
+	public static readonly BEFRIEDIGEND_PLUS: Note = new Note("BEFRIEDIGEND_PLUS", 10);
 
 	/**
 	 * Die Note "gut minus" mit 10 Punkten.
 	 */
-	public static readonly GUT_MINUS: Note = new Note("GUT_MINUS", 11, );
+	public static readonly GUT_MINUS: Note = new Note("GUT_MINUS", 11);
 
 	/**
 	 * Die Note "gut" mit 11 Punkten.
 	 */
-	public static readonly GUT: Note = new Note("GUT", 12, );
+	public static readonly GUT: Note = new Note("GUT", 12);
 
 	/**
 	 * Die Note "gut plus" mit 12 Punkten.
 	 */
-	public static readonly GUT_PLUS: Note = new Note("GUT_PLUS", 13, );
+	public static readonly GUT_PLUS: Note = new Note("GUT_PLUS", 13);
 
 	/**
 	 * Die Note "sehr gut minus" mit 13 Punkten.
 	 */
-	public static readonly SEHR_GUT_MINUS: Note = new Note("SEHR_GUT_MINUS", 14, );
+	public static readonly SEHR_GUT_MINUS: Note = new Note("SEHR_GUT_MINUS", 14);
 
 	/**
 	 * Die Note "sehr gut" mit 14 Punkten.
 	 */
-	public static readonly SEHR_GUT: Note = new Note("SEHR_GUT", 15, );
+	public static readonly SEHR_GUT: Note = new Note("SEHR_GUT", 15);
 
 	/**
 	 * Die Note "sehr gut plus" mit 15 Punkten.
 	 */
-	public static readonly SEHR_GUT_PLUS: Note = new Note("SEHR_GUT_PLUS", 16, );
+	public static readonly SEHR_GUT_PLUS: Note = new Note("SEHR_GUT_PLUS", 16);
 
 	/**
 	 * Der Noteneintrag "ärztliches Attest" mit dem Wert AT.
 	 */
-	public static readonly ATTEST: Note = new Note("ATTEST", 17, );
+	public static readonly ATTEST: Note = new Note("ATTEST", 17);
 
 	/**
 	 * Der Noteneintrag "mit besonderem Erfolg teilgenommen" mit dem Wert E1.
 	 */
-	public static readonly E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN: Note = new Note("E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN", 18, );
+	public static readonly E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN: Note = new Note("E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN", 18);
 
 	/**
 	 * Der Noteneintrag "mit Erfolg teilgenommen" mit dem Wert E2.
 	 */
-	public static readonly E2_MIT_ERFOLG_TEILGENOMMEN: Note = new Note("E2_MIT_ERFOLG_TEILGENOMMEN", 19, );
+	public static readonly E2_MIT_ERFOLG_TEILGENOMMEN: Note = new Note("E2_MIT_ERFOLG_TEILGENOMMEN", 19);
 
 	/**
 	 * Der Noteneintrag "teilgenommen" mit dem Wert E3.
 	 */
-	public static readonly E3_TEILGENOMMEN: Note = new Note("E3_TEILGENOMMEN", 20, );
+	public static readonly E3_TEILGENOMMEN: Note = new Note("E3_TEILGENOMMEN", 20);
 
 	/**
 	 * Der Noteneintrag "nicht teilgenommen" mit dem Wert NT.
 	 */
-	public static readonly NICHT_TEILGENOMMEN: Note = new Note("NICHT_TEILGENOMMEN", 21, );
+	public static readonly NICHT_TEILGENOMMEN: Note = new Note("NICHT_TEILGENOMMEN", 21);
 
 	/**
 	 * Der Noteneintrag "kann nicht beurteilt werden" mit dem Wert NB.
 	 */
-	public static readonly NICHT_BEURTEILT: Note = new Note("NICHT_BEURTEILT", 22, );
+	public static readonly NICHT_BEURTEILT: Note = new Note("NICHT_BEURTEILT", 22);
 
 	/**
 	 * Der Noteneintrag "nicht erteilt" mit dem Wert NE.
 	 */
-	public static readonly NICHT_ERTEILT: Note = new Note("NICHT_ERTEILT", 23, );
+	public static readonly NICHT_ERTEILT: Note = new Note("NICHT_ERTEILT", 23);
 
 	/**
 	 * Der Noteneintrag "kein Unterricht wegen Lehrermangel" mit dem Wert LM.
 	 */
-	public static readonly LEHRERMANGEL: Note = new Note("LEHRERMANGEL", 24, );
+	public static readonly LEHRERMANGEL: Note = new Note("LEHRERMANGEL", 24);
 
 	/**
 	 * Der Noteneintrag "abgemeldet" mit dem Wert AM.
 	 */
-	public static readonly ABGEMELDET: Note = new Note("ABGEMELDET", 25, );
+	public static readonly ABGEMELDET: Note = new Note("ABGEMELDET", 25);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -193,7 +193,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		if (noteSekI === null) {
 			return null;
 		}
-		let _sevar_928693309 : any;
+		let _sevar_928693309;
 		const _seexpr_928693309 = (noteSekI);
 		if (_seexpr_928693309 === 1) {
 			_sevar_928693309 = Note.SEHR_GUT;
@@ -224,7 +224,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		if (notenpunkte === null) {
 			return Note.KEINE;
 		}
-		let _sevar_1649314226 : any;
+		let _sevar_1649314226;
 		const _seexpr_1649314226 = (notenpunkte);
 		if (_seexpr_1649314226 === 0) {
 			_sevar_1649314226 = Note.UNGENUEGEND;
@@ -272,7 +272,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	private static pseudoNoteFromKuerzel(kuerzel: string): Note {
-		let _sevar_709055086 : any;
+		let _sevar_709055086;
 		const _seexpr_709055086 = (kuerzel);
 		if (_seexpr_709055086 === "E1") {
 			_sevar_709055086 = Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
@@ -310,7 +310,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 			return Note.KEINE;
 		}
 		const kuerzelUppercase: string | null = kuerzel.toUpperCase();
-		let _sevar_1799037231 : any;
+		let _sevar_1799037231;
 		const _seexpr_1799037231 = (kuerzelUppercase);
 		if (_seexpr_1799037231 === "6") {
 			_sevar_1799037231 = Note.UNGENUEGEND;
@@ -362,7 +362,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		if (notenpunkte === null) {
 			return Note.KEINE;
 		}
-		let _sevar_397605981 : any;
+		let _sevar_397605981;
 		const _seexpr_397605981 = (notenpunkte);
 		if (_seexpr_397605981 === "0") {
 			_sevar_397605981 = Note.UNGENUEGEND;
@@ -457,7 +457,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 			return Note.KEINE;
 		}
 		const np: number | null = nke.notenpunkte;
-		let _sevar_240724349 : any;
+		let _sevar_240724349;
 		const _seexpr_240724349 = (np);
 		if (_seexpr_240724349 === 0) {
 			_sevar_240724349 = Note.UNGENUEGEND;
@@ -513,7 +513,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		return result;
 	}
 
-	public toString() : string;
+	public toString(): string;
 
 	/**
 	 * Gibt das Notenkürzel zurück
@@ -521,7 +521,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @param schuljahr - Schuljahr, für das das Kürzel gilt
 	 * @return String - das Notenkürzel
 	 */
-	public toString(schuljahr: number) : string;
+	public toString(schuljahr: number): string;
 
 	/**
 	 * Implementation for method overloads of 'toString'
@@ -536,7 +536,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 				return nke.kuerzel;
 			}
 			return "";
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -561,7 +563,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 			return null;
 		}
 		const np: number | null = nke.notenpunkte;
-		let _sevar_606963213 : any;
+		let _sevar_606963213;
 		const _seexpr_606963213 = (np);
 		if (_seexpr_606963213 === 15) {
 			_sevar_606963213 = 1;
@@ -721,7 +723,7 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public static valueOf(name: string): Note | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<NoteKatalogEintrag, Note> {

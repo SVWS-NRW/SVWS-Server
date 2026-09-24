@@ -482,7 +482,9 @@ export class UvManager extends JavaObject {
 			const fachdaten: Collection<FachDaten> = cast_java_util_Collection(__param1);
 			this.jahrgangsdatenAddAll(jahrgaenge);
 			this.fachdatenAddAll(fachdaten);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -4293,14 +4295,14 @@ export class UvManager extends JavaObject {
 	 * @param idLerngruppe die ID der Lerngruppe.
 	 * @return eine Liste aller {@link UvLerngruppenSchiene}-Objekte für die Lerngruppe.
 	 */
-	public lerngruppenSchieneGetMengeByLerngruppe(idPlanungsabschnitt: number, idLerngruppe: number) : List<UvLerngruppenSchiene>;
+	public lerngruppenSchieneGetMengeByLerngruppe(idPlanungsabschnitt: number, idLerngruppe: number): List<UvLerngruppenSchiene>;
 
 	/**
 	 * Gibt die Menge der {@link UvLerngruppenSchiene}n zur übergebenen {@link UvLerngruppe} zurück.
 	 * @param lerngruppe die {@link UvLerngruppe}, zu der die Schienen gesucht werden
 	 * @return die Menge der zugeordneten {@link UvLerngruppenSchiene}-Objekte
 	 */
-	public lerngruppenSchieneGetMengeByLerngruppe(lerngruppe: UvLerngruppe) : List<UvLerngruppenSchiene>;
+	public lerngruppenSchieneGetMengeByLerngruppe(lerngruppe: UvLerngruppe): List<UvLerngruppenSchiene>;
 
 	/**
 	 * Implementation for method overloads of 'lerngruppenSchieneGetMengeByLerngruppe'
@@ -4313,7 +4315,9 @@ export class UvManager extends JavaObject {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.uv.UvLerngruppe')))) && (__param1 === undefined)) {
 			const lerngruppe: UvLerngruppe = cast_de_svws_nrw_core_data_uv_UvLerngruppe(__param0);
 			return this.lerngruppenSchieneByIdPlanungsabschnittAndIdLerngruppeAndIdSchiene.get12(lerngruppe.idPlanungsabschnitt, lerngruppe.id);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

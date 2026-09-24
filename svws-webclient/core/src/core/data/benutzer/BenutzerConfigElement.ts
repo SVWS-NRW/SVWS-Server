@@ -39,7 +39,9 @@ export class BenutzerConfigElement extends JavaObject {
 			const value: string = __param1;
 			this.key = key;
 			this.value = value;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

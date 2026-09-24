@@ -17,22 +17,22 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	/**
 	 * Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'
 	 */
-	public static readonly ID4: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID4", 0, );
+	public static readonly ID4: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID4", 0);
 
 	/**
 	 * Fachrichtungsanerkennung 'Unterrichtserlaubnis (z. B. Zertifikatskurs)'
 	 */
-	public static readonly ID5: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID5", 1, );
+	public static readonly ID5: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID5", 1);
 
 	/**
 	 * Fachrichtungsanerkennung 'mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis'
 	 */
-	public static readonly ID6: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID6", 2, );
+	public static readonly ID6: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID6", 2);
 
 	/**
 	 * Fachrichtungsanerkennung 'sonstige'
 	 */
-	public static readonly ID7: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID7", 3, );
+	public static readonly ID7: LehrerFachrichtungAnerkennung = new LehrerFachrichtungAnerkennung("ID7", 3);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -76,7 +76,7 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 	 */
 	public static valueOf(name: string): LehrerFachrichtungAnerkennung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerFachrichtungAnerkennungKatalogEintrag, LehrerFachrichtungAnerkennung> {

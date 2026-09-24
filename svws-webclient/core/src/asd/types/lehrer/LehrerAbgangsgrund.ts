@@ -17,37 +17,37 @@ export class LehrerAbgangsgrund extends JavaEnum<LehrerAbgangsgrund> implements 
 	/**
 	 * Grund 'Eintritt in den Ruhestand' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly RUHEST: LehrerAbgangsgrund = new LehrerAbgangsgrund("RUHEST", 0, );
+	public static readonly RUHEST: LehrerAbgangsgrund = new LehrerAbgangsgrund("RUHEST", 0);
 
 	/**
 	 * Grund 'Dienst-, Erwerbs-, Berufsunfähigkeit' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly UNFAEHIGK: LehrerAbgangsgrund = new LehrerAbgangsgrund("UNFAEHIGK", 1, );
+	public static readonly UNFAEHIGK: LehrerAbgangsgrund = new LehrerAbgangsgrund("UNFAEHIGK", 1);
 
 	/**
 	 * Grund 'Tod' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly TOD: LehrerAbgangsgrund = new LehrerAbgangsgrund("TOD", 2, );
+	public static readonly TOD: LehrerAbgangsgrund = new LehrerAbgangsgrund("TOD", 2);
 
 	/**
 	 * Grund 'Übertritt in den Schuldienst eines anderen Bundeslandes' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly AndBuLand: LehrerAbgangsgrund = new LehrerAbgangsgrund("AndBuLand", 3, );
+	public static readonly AndBuLand: LehrerAbgangsgrund = new LehrerAbgangsgrund("AndBuLand", 3);
 
 	/**
 	 * Grund 'Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly WECHSEL: LehrerAbgangsgrund = new LehrerAbgangsgrund("WECHSEL", 4, );
+	public static readonly WECHSEL: LehrerAbgangsgrund = new LehrerAbgangsgrund("WECHSEL", 4);
 
 	/**
 	 * Grund 'Befristete Abgänge' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly BEFRIST: LehrerAbgangsgrund = new LehrerAbgangsgrund("BEFRIST", 5, );
+	public static readonly BEFRIST: LehrerAbgangsgrund = new LehrerAbgangsgrund("BEFRIST", 5);
 
 	/**
 	 * Grund 'Sonstige Abgänge' für das Verlassen der Schule durch den Lehrer
 	 */
-	public static readonly SONSTIG: LehrerAbgangsgrund = new LehrerAbgangsgrund("SONSTIG", 6, );
+	public static readonly SONSTIG: LehrerAbgangsgrund = new LehrerAbgangsgrund("SONSTIG", 6);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -91,7 +91,7 @@ export class LehrerAbgangsgrund extends JavaEnum<LehrerAbgangsgrund> implements 
 	 */
 	public static valueOf(name: string): LehrerAbgangsgrund | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerAbgangsgrundKatalogEintrag, LehrerAbgangsgrund> {

@@ -88,9 +88,9 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		return list;
 	}
 
-	public toArray() : Array<unknown>;
+	public toArray(): Array<unknown>;
 
-	public toArray<T>(a: Array<T>) : Array<T>;
+	public toArray<T>(a: Array<T>): Array<T>;
 
 	/**
 	 * Implementation for method overloads of 'toArray'
@@ -101,7 +101,9 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
 			const a: Array<T> = __param0 as unknown as Array<T>;
 			return this.getEntryList().toArray(a);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public add(e: JavaMapEntry<K, V> | null): boolean {

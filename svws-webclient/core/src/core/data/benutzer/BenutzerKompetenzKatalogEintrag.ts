@@ -73,7 +73,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 					this.nurSchulformen.add(schulform.name());
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

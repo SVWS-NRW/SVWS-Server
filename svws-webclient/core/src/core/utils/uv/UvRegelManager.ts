@@ -140,7 +140,7 @@ export class UvRegelManager extends JavaObject {
 
 	private istRegelFehlerhaft(regel: UvBlockungRegel): boolean {
 		const typ: UvBlockungRegelTyp = UvBlockungRegelTyp.ofNr(regel.typ);
-		let _sevar_1204273150 : any;
+		let _sevar_1204273150;
 		const _seexpr_1204273150 = (typ);
 		if (_seexpr_1204273150 === UvBlockungRegelTyp.UNDEFINIERT) {
 			_sevar_1204273150 = true;
@@ -447,7 +447,7 @@ export class UvRegelManager extends JavaObject {
 		try {
 			this.uvManager.klasseGetByIdOrException(regel.parameter.get(parameterIndex));
 			return false;
-		} catch(ex : any) {
+		} catch (ex: any) {
 			return true;
 		}
 	}
@@ -456,7 +456,7 @@ export class UvRegelManager extends JavaObject {
 		try {
 			this.uvManager.lehrerGetByIdOrException(regel.parameter.get(parameterIndex));
 			return false;
-		} catch(ex : any) {
+		} catch (ex: any) {
 			return true;
 		}
 	}
@@ -465,7 +465,7 @@ export class UvRegelManager extends JavaObject {
 		try {
 			this.uvManager.lerngruppeGetByIdOrException(regel.parameter.get(parameterIndex));
 			return false;
-		} catch(ex : any) {
+		} catch (ex: any) {
 			return true;
 		}
 	}
@@ -483,7 +483,7 @@ export class UvRegelManager extends JavaObject {
 		try {
 			this.uvManager.jahrgangsdatenGetById(regel.parameter.get(parameterIndex));
 			return false;
-		} catch(ex : any) {
+		} catch (ex: any) {
 			return true;
 		}
 	}
@@ -501,7 +501,7 @@ export class UvRegelManager extends JavaObject {
 		try {
 			this.uvManager.fachGetByIdOrException(regel.parameter.get(parameterIndex));
 			return false;
-		} catch(ex : any) {
+		} catch (ex: any) {
 			return true;
 		}
 	}

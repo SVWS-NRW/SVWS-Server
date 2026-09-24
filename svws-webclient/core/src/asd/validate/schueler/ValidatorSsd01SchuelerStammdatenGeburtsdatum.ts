@@ -28,7 +28,7 @@ export class ValidatorSsd01SchuelerStammdatenGeburtsdatum extends Validator {
 		let errorMsg: string = "";
 		try {
 			geburtsdatum = DateManager.from(this.fieldGeburtsdatum.get());
-		} catch(e : any) {
+		} catch (e: any) {
 			errorMsg = e.getMessage();
 		}
 		const finalGeburtsdatum: DateManager | null = geburtsdatum;

@@ -18,37 +18,37 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements Co
 	/**
 	 * Bilinguale Sprache Englisch
 	 */
-	public static readonly ENGLISCH: BilingualeSprache = new BilingualeSprache("ENGLISCH", 0, );
+	public static readonly ENGLISCH: BilingualeSprache = new BilingualeSprache("ENGLISCH", 0);
 
 	/**
 	 * Bilinguale Sprache Französisch
 	 */
-	public static readonly FRANZOESISCH: BilingualeSprache = new BilingualeSprache("FRANZOESISCH", 1, );
+	public static readonly FRANZOESISCH: BilingualeSprache = new BilingualeSprache("FRANZOESISCH", 1);
 
 	/**
 	 * Bilinguale Sprache Italienisch
 	 */
-	public static readonly ITALIENISCH: BilingualeSprache = new BilingualeSprache("ITALIENISCH", 2, );
+	public static readonly ITALIENISCH: BilingualeSprache = new BilingualeSprache("ITALIENISCH", 2);
 
 	/**
 	 * Bilinguale Sprache Niederländisch
 	 */
-	public static readonly NIEDERLAENDISCH: BilingualeSprache = new BilingualeSprache("NIEDERLAENDISCH", 3, );
+	public static readonly NIEDERLAENDISCH: BilingualeSprache = new BilingualeSprache("NIEDERLAENDISCH", 3);
 
 	/**
 	 * Bilinguale Sprache Spanisch
 	 */
-	public static readonly SPANISCH: BilingualeSprache = new BilingualeSprache("SPANISCH", 4, );
+	public static readonly SPANISCH: BilingualeSprache = new BilingualeSprache("SPANISCH", 4);
 
 	/**
 	 * Bilinguale Sprache Türkisch
 	 */
-	public static readonly TUERKISCH: BilingualeSprache = new BilingualeSprache("TUERKISCH", 5, );
+	public static readonly TUERKISCH: BilingualeSprache = new BilingualeSprache("TUERKISCH", 5);
 
 	/**
 	 * Bilinguale Sprache Neugriechisch
 	 */
-	public static readonly NEUGRIECHIESCH: BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6, );
+	public static readonly NEUGRIECHIESCH: BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -104,7 +104,7 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements Co
 	 */
 	public static valueOf(name: string): BilingualeSprache | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BilingualeSpracheKatalogEintrag, BilingualeSprache> {

@@ -17,57 +17,57 @@ export class Religion extends JavaEnum<Religion> implements CoreType<CoreTypeDat
 	/**
 	 * Religion: alevitisch
 	 */
-	public static readonly AR: Religion = new Religion("AR", 0, );
+	public static readonly AR: Religion = new Religion("AR", 0);
 
 	/**
 	 * Religion: evangelisch
 	 */
-	public static readonly ER: Religion = new Religion("ER", 1, );
+	public static readonly ER: Religion = new Religion("ER", 1);
 
 	/**
 	 * Religion: jüdisch
 	 */
-	public static readonly HR: Religion = new Religion("HR", 2, );
+	public static readonly HR: Religion = new Religion("HR", 2);
 
 	/**
 	 * Religion: islamisch
 	 */
-	public static readonly IR: Religion = new Religion("IR", 3, );
+	public static readonly IR: Religion = new Religion("IR", 3);
 
 	/**
 	 * Religion: katholisch
 	 */
-	public static readonly KR: Religion = new Religion("KR", 4, );
+	public static readonly KR: Religion = new Religion("KR", 4);
 
 	/**
 	 * Religion: mennonitische BG NRW
 	 */
-	public static readonly ME: Religion = new Religion("ME", 5, );
+	public static readonly ME: Religion = new Religion("ME", 5);
 
 	/**
 	 * Religion: ohne Bekenntnis
 	 */
-	public static readonly OH: Religion = new Religion("OH", 6, );
+	public static readonly OH: Religion = new Religion("OH", 6);
 
 	/**
 	 * Religion: griechisch-orthodox
 	 */
-	public static readonly OR: Religion = new Religion("OR", 7, );
+	public static readonly OR: Religion = new Religion("OR", 7);
 
 	/**
 	 * Religion: syrisch-orthodox
 	 */
-	public static readonly SO: Religion = new Religion("SO", 8, );
+	public static readonly SO: Religion = new Religion("SO", 8);
 
 	/**
 	 * Religion: sonstige orthodoxe
 	 */
-	public static readonly XO: Religion = new Religion("XO", 9, );
+	public static readonly XO: Religion = new Religion("XO", 9);
 
 	/**
 	 * Religion: andere Religionen
 	 */
-	public static readonly XR: Religion = new Religion("XR", 10, );
+	public static readonly XR: Religion = new Religion("XR", 10);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -111,7 +111,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<CoreTypeDat
 	 */
 	public static valueOf(name: string): Religion | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<CoreTypeData, Religion> {

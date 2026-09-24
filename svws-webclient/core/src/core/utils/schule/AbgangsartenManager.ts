@@ -114,7 +114,7 @@ export class AbgangsartenManager extends JavaObject {
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag
 	 *         keine Daten für das übergebene Schuljahr hat
 	 */
-	public getDaten(kuerzel: string, schuljahr: number) : AbgangsartKatalogDaten | null;
+	public getDaten(kuerzel: string, schuljahr: number): AbgangsartKatalogDaten | null;
 
 	/**
 	 * Gibt die Katalog-Daten für die Abgangsart zurück.
@@ -123,7 +123,7 @@ export class AbgangsartenManager extends JavaObject {
 	 *
 	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
 	 */
-	public getDaten(id: number) : AbgangsartKatalogDaten | null;
+	public getDaten(id: number): AbgangsartKatalogDaten | null;
 
 	/**
 	 * Implementation for method overloads of 'getDaten'
@@ -145,7 +145,9 @@ export class AbgangsartenManager extends JavaObject {
 		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined)) {
 			const id: number = __param0 as number;
 			return this._mapDatenByID.get(id);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

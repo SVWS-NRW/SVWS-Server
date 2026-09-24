@@ -60,7 +60,7 @@ export class BKGymPruefungsArt extends JavaEnum<BKGymPruefungsArt> {
 	 * @return die Prüfungsart
 	 */
 	public static fromKuerzel(kuerzel: string): BKGymPruefungsArt | null {
-		let _sevar_1586417265 : any;
+		let _sevar_1586417265;
 		const _seexpr_1586417265 = (kuerzel);
 		if (_seexpr_1586417265 === "BELEGUNG") {
 			_sevar_1586417265 = BKGymPruefungsArt.BELEGUNG;
@@ -98,7 +98,7 @@ export class BKGymPruefungsArt extends JavaEnum<BKGymPruefungsArt> {
 	 */
 	public static valueOf(name: string): BKGymPruefungsArt | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

@@ -110,7 +110,7 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	 * @return true, wenn die Note zu einer Belegung führt.
 	 */
 	private static giltNoteFuerBelegung(note: Note): boolean {
-		let _sevar_1448546682 : any;
+		let _sevar_1448546682;
 		const _seexpr_1448546682 = (note);
 		if (_seexpr_1448546682 === Note.KEINE) {
 			_sevar_1448546682 = false;

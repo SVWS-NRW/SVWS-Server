@@ -17,102 +17,102 @@ export class Laender extends JavaEnum<Laender> implements CoreType<LaenderKatalo
 	/**
 	 * Land: Übriges Ausland
 	 */
-	public static readonly AL: Laender = new Laender("AL", 0, );
+	public static readonly AL: Laender = new Laender("AL", 0);
 
 	/**
 	 * Land: Belgien
 	 */
-	public static readonly B: Laender = new Laender("B", 1, );
+	public static readonly B: Laender = new Laender("B", 1);
 
 	/**
 	 * Land: Brandenburg
 	 */
-	public static readonly BB: Laender = new Laender("BB", 2, );
+	public static readonly BB: Laender = new Laender("BB", 2);
 
 	/**
 	 * Land: Berlin
 	 */
-	public static readonly BE: Laender = new Laender("BE", 3, );
+	public static readonly BE: Laender = new Laender("BE", 3);
 
 	/**
 	 * Land: Baden-Württemberg
 	 */
-	public static readonly BW: Laender = new Laender("BW", 4, );
+	public static readonly BW: Laender = new Laender("BW", 4);
 
 	/**
 	 * Land: Bayern
 	 */
-	public static readonly BY: Laender = new Laender("BY", 5, );
+	public static readonly BY: Laender = new Laender("BY", 5);
 
 	/**
 	 * Land: Bremen
 	 */
-	public static readonly HB: Laender = new Laender("HB", 6, );
+	public static readonly HB: Laender = new Laender("HB", 6);
 
 	/**
 	 * Land: Hessen
 	 */
-	public static readonly HE: Laender = new Laender("HE", 7, );
+	public static readonly HE: Laender = new Laender("HE", 7);
 
 	/**
 	 * Land: Hamburg
 	 */
-	public static readonly HH: Laender = new Laender("HH", 8, );
+	public static readonly HH: Laender = new Laender("HH", 8);
 
 	/**
 	 * Land: Luxemburg
 	 */
-	public static readonly L: Laender = new Laender("L", 9, );
+	public static readonly L: Laender = new Laender("L", 9);
 
 	/**
 	 * Land: Mecklenburg-Vorpommern
 	 */
-	public static readonly MV: Laender = new Laender("MV", 10, );
+	public static readonly MV: Laender = new Laender("MV", 10);
 
 	/**
 	 * Land: Niedersachsen
 	 */
-	public static readonly NI: Laender = new Laender("NI", 11, );
+	public static readonly NI: Laender = new Laender("NI", 11);
 
 	/**
 	 * Land: Niederlande
 	 */
-	public static readonly NL: Laender = new Laender("NL", 12, );
+	public static readonly NL: Laender = new Laender("NL", 12);
 
 	/**
 	 * Land: Nordrhein-Westfalen
 	 */
-	public static readonly NW: Laender = new Laender("NW", 13, );
+	public static readonly NW: Laender = new Laender("NW", 13);
 
 	/**
 	 * Land: Rheinland-Pfalz
 	 */
-	public static readonly RP: Laender = new Laender("RP", 14, );
+	public static readonly RP: Laender = new Laender("RP", 14);
 
 	/**
 	 * Land: Saarland
 	 */
-	public static readonly SL: Laender = new Laender("SL", 15, );
+	public static readonly SL: Laender = new Laender("SL", 15);
 
 	/**
 	 * Land: Sachsen
 	 */
-	public static readonly SN: Laender = new Laender("SN", 16, );
+	public static readonly SN: Laender = new Laender("SN", 16);
 
 	/**
 	 * Land: Sachsen-Anhalt
 	 */
-	public static readonly ST: Laender = new Laender("ST", 17, );
+	public static readonly ST: Laender = new Laender("ST", 17);
 
 	/**
 	 * Land: Schleswig-Holstein
 	 */
-	public static readonly SH: Laender = new Laender("SH", 18, );
+	public static readonly SH: Laender = new Laender("SH", 18);
 
 	/**
 	 * Land: Thüringen
 	 */
-	public static readonly TH: Laender = new Laender("TH", 19, );
+	public static readonly TH: Laender = new Laender("TH", 19);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -156,7 +156,7 @@ export class Laender extends JavaEnum<Laender> implements CoreType<LaenderKatalo
 	 */
 	public static valueOf(name: string): Laender | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LaenderKatalogEintrag, Laender> {

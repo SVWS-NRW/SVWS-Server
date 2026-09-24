@@ -54,7 +54,7 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 * @return die OAuth Domaine
 	 */
 	public static getByDbValue(dbValue: string | null): OAuthServiceDomain | null {
-		let _sevar_238503942 : any;
+		let _sevar_238503942;
 		const _seexpr_238503942 = (dbValue);
 		if (_seexpr_238503942 === "WENOM") {
 			_sevar_238503942 = OAuthServiceDomain.WENOM;
@@ -86,7 +86,7 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 */
 	public static valueOf(name: string): OAuthServiceDomain | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

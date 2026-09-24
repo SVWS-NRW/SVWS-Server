@@ -129,7 +129,7 @@ export class Logger extends JavaObject {
 	 *
 	 * @param data   die Log-Informationen
 	 */
-	public log(data: LogData) : void;
+	public log(data: LogData): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der angegebenen Einrückung.
@@ -138,7 +138,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public log(level: LogLevel, indent: number, text: string) : void;
+	public log(level: LogLevel, indent: number, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung.
@@ -146,7 +146,7 @@ export class Logger extends JavaObject {
 	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param text     der Text
 	 */
-	public log(level: LogLevel, text: string) : void;
+	public log(level: LogLevel, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der angegebenen Einrückung.
@@ -154,14 +154,14 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public log(indent: number, text: string) : void;
+	public log(indent: number, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der Standard-Einrückung.
 	 *
 	 * @param text     der Text
 	 */
-	public log(text: string) : void;
+	public log(text: string): void;
 
 	/**
 	 * Implementation for method overloads of 'log'
@@ -188,7 +188,9 @@ export class Logger extends JavaObject {
 		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && (__param1 === undefined) && (__param2 === undefined)) {
 			const text: string = __param0;
 			this.log(this.defaultLevel, text);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -199,7 +201,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public logLn(level: LogLevel, indent: number, text: string) : void;
+	public logLn(level: LogLevel, indent: number, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung
@@ -209,7 +211,7 @@ export class Logger extends JavaObject {
 	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param text     der Text
 	 */
-	public logLn(level: LogLevel, text: string) : void;
+	public logLn(level: LogLevel, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der angegebenen Einrückung
@@ -218,7 +220,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public logLn(indent: number, text: string) : void;
+	public logLn(indent: number, text: string): void;
 
 	/**
 	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der Standard-Einrückung
@@ -226,7 +228,7 @@ export class Logger extends JavaObject {
 	 *
 	 * @param text     der Text
 	 */
-	public logLn(text: string) : void;
+	public logLn(text: string): void;
 
 	/**
 	 * Implementation for method overloads of 'logLn'
@@ -248,7 +250,9 @@ export class Logger extends JavaObject {
 		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && (__param1 === undefined) && (__param2 === undefined)) {
 			const text: string = __param0;
 			this.logLn(this.defaultLevel, text);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

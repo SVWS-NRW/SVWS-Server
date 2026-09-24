@@ -20,97 +20,97 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	/**
 	 * Berufskolleg
 	 */
-	public static readonly BK: Schulform = new Schulform("BK", 0, );
+	public static readonly BK: Schulform = new Schulform("BK", 0);
 
 	/**
 	 * Freie Waldorfschule
 	 */
-	public static readonly FW: Schulform = new Schulform("FW", 1, );
+	public static readonly FW: Schulform = new Schulform("FW", 1);
 
 	/**
 	 * Grundschule
 	 */
-	public static readonly G: Schulform = new Schulform("G", 2, );
+	public static readonly G: Schulform = new Schulform("G", 2);
 
 	/**
 	 * Gesamtschule
 	 */
-	public static readonly GE: Schulform = new Schulform("GE", 3, );
+	public static readonly GE: Schulform = new Schulform("GE", 3);
 
 	/**
 	 * Gemeinschaftsschule
 	 */
-	public static readonly GM: Schulform = new Schulform("GM", 4, );
+	public static readonly GM: Schulform = new Schulform("GM", 4);
 
 	/**
 	 * Gymnasium
 	 */
-	public static readonly GY: Schulform = new Schulform("GY", 5, );
+	public static readonly GY: Schulform = new Schulform("GY", 5);
 
 	/**
 	 * Hauptschule
 	 */
-	public static readonly H: Schulform = new Schulform("H", 6, );
+	public static readonly H: Schulform = new Schulform("H", 6);
 
 	/**
 	 * Hibernia
 	 */
-	public static readonly HI: Schulform = new Schulform("HI", 7, );
+	public static readonly HI: Schulform = new Schulform("HI", 7);
 
 	/**
 	 * Schulversuch PRIMUS
 	 */
-	public static readonly PS: Schulform = new Schulform("PS", 8, );
+	public static readonly PS: Schulform = new Schulform("PS", 8);
 
 	/**
 	 * Realschule
 	 */
-	public static readonly R: Schulform = new Schulform("R", 9, );
+	public static readonly R: Schulform = new Schulform("R", 9);
 
 	/**
 	 * Förderschule im Bereich G/H
 	 */
-	public static readonly S: Schulform = new Schulform("S", 10, );
+	public static readonly S: Schulform = new Schulform("S", 10);
 
 	/**
 	 * Klinikschule
 	 */
-	public static readonly KS: Schulform = new Schulform("KS", 11, );
+	public static readonly KS: Schulform = new Schulform("KS", 11);
 
 	/**
 	 * Förderschule im Bereich Berufskolleg
 	 */
-	public static readonly SB: Schulform = new Schulform("SB", 12, );
+	public static readonly SB: Schulform = new Schulform("SB", 12);
 
 	/**
 	 * Förderschule im Bereich Gymnasium
 	 */
-	public static readonly SG: Schulform = new Schulform("SG", 13, );
+	public static readonly SG: Schulform = new Schulform("SG", 13);
 
 	/**
 	 * Sekundarschule
 	 */
-	public static readonly SK: Schulform = new Schulform("SK", 14, );
+	public static readonly SK: Schulform = new Schulform("SK", 14);
 
 	/**
 	 * Förderschule im Bereich Realschule
 	 */
-	public static readonly SR: Schulform = new Schulform("SR", 15, );
+	public static readonly SR: Schulform = new Schulform("SR", 15);
 
 	/**
 	 * nicht umorganisierte Volksschule
 	 */
-	public static readonly V: Schulform = new Schulform("V", 16, );
+	public static readonly V: Schulform = new Schulform("V", 16);
 
 	/**
 	 * Weiterbildungskolleg
 	 */
-	public static readonly WB: Schulform = new Schulform("WB", 17, );
+	public static readonly WB: Schulform = new Schulform("WB", 17);
 
 	/**
 	 * Freie Waldorfschule (Förderschule)
 	 */
-	public static readonly WF: Schulform = new Schulform("WF", 18, );
+	public static readonly WF: Schulform = new Schulform("WF", 18);
 
 	private static readonly _mapSchuljahrToSchulformenMitGymOb: JavaMap<number, List<Schulform>> = new HashMap<number, List<Schulform>>();
 
@@ -198,7 +198,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 * @return true/false
 	 */
 	public istAllgemeinbildend(): boolean {
-		let _sevar_1292800746 : any;
+		let _sevar_1292800746;
 		const _seexpr_1292800746 = (this);
 		if (_seexpr_1292800746 === Schulform.FW) {
 			_sevar_1292800746 = true;
@@ -244,7 +244,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 * @return true/false
 	 */
 	public istBerufsbildend(): boolean {
-		let _sevar_369848762 : any;
+		let _sevar_369848762;
 		const _seexpr_369848762 = (this);
 		if (_seexpr_369848762 === Schulform.BK) {
 			_sevar_369848762 = true;
@@ -270,7 +270,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 * @return true/false
 	 */
 	public istWeiterbildung(): boolean {
-		let _sevar_1133631252 : any;
+		let _sevar_1133631252;
 		const _seexpr_1133631252 = (this);
 		if (_seexpr_1133631252 === Schulform.WB) {
 			_sevar_1133631252 = true;
@@ -298,7 +298,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 	 */
 	public static valueOf(name: string): Schulform | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<SchulformKatalogEintrag, Schulform> {

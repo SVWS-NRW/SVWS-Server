@@ -17,42 +17,42 @@ export class SchuelerStatus extends JavaEnum<SchuelerStatus> implements CoreType
 	/**
 	 * Status Neuaufnahme mit dem Wert 0
 	 */
-	public static readonly NEUAUFNAHME: SchuelerStatus = new SchuelerStatus("NEUAUFNAHME", 0, );
+	public static readonly NEUAUFNAHME: SchuelerStatus = new SchuelerStatus("NEUAUFNAHME", 0);
 
 	/**
 	 * Status Warteliste mit dem Wert 1
 	 */
-	public static readonly WARTELISTE: SchuelerStatus = new SchuelerStatus("WARTELISTE", 1, );
+	public static readonly WARTELISTE: SchuelerStatus = new SchuelerStatus("WARTELISTE", 1);
 
 	/**
 	 * Status Aktiv mit dem Wert 2
 	 */
-	public static readonly AKTIV: SchuelerStatus = new SchuelerStatus("AKTIV", 2, );
+	public static readonly AKTIV: SchuelerStatus = new SchuelerStatus("AKTIV", 2);
 
 	/**
 	 * Status Beurlaubt mit dem Wert 3
 	 */
-	public static readonly BEURLAUBT: SchuelerStatus = new SchuelerStatus("BEURLAUBT", 3, );
+	public static readonly BEURLAUBT: SchuelerStatus = new SchuelerStatus("BEURLAUBT", 3);
 
 	/**
 	 * Status Extern mit dem Wert 6
 	 */
-	public static readonly EXTERN: SchuelerStatus = new SchuelerStatus("EXTERN", 4, );
+	public static readonly EXTERN: SchuelerStatus = new SchuelerStatus("EXTERN", 4);
 
 	/**
 	 * Status Abschluss mit dem Wert 8
 	 */
-	public static readonly ABSCHLUSS: SchuelerStatus = new SchuelerStatus("ABSCHLUSS", 5, );
+	public static readonly ABSCHLUSS: SchuelerStatus = new SchuelerStatus("ABSCHLUSS", 5);
 
 	/**
 	 * Status Abgänger mit dem Wert 9
 	 */
-	public static readonly ABGANG: SchuelerStatus = new SchuelerStatus("ABGANG", 6, );
+	public static readonly ABGANG: SchuelerStatus = new SchuelerStatus("ABGANG", 6);
 
 	/**
 	 * Status Abgänger mit dem Wert 10
 	 */
-	public static readonly EHEMALIGE: SchuelerStatus = new SchuelerStatus("EHEMALIGE", 7, );
+	public static readonly EHEMALIGE: SchuelerStatus = new SchuelerStatus("EHEMALIGE", 7);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -96,7 +96,7 @@ export class SchuelerStatus extends JavaEnum<SchuelerStatus> implements CoreType
 	 */
 	public static valueOf(name: string): SchuelerStatus | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<SchuelerStatusKatalogEintrag, SchuelerStatus> {

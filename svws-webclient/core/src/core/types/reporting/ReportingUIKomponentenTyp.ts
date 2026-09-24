@@ -104,7 +104,7 @@ export class ReportingUIKomponentenTyp extends JavaEnum<ReportingUIKomponentenTy
 	 */
 	public static valueOf(name: string): ReportingUIKomponentenTyp | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

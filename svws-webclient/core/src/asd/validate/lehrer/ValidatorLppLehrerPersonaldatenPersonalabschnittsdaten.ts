@@ -81,7 +81,7 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 			const supplierGeburtsdatumNullable: Supplier<DateManager | null> = { get: () => datum };
 			const supplierGeburtsdatum: Supplier<DateManager> = this.getNotNullSupplierObject(supplierGeburtsdatumNullable);
 			this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this._idSchuljahresabschnitt, this._idStaatsangehoerigkeit, this._idRechtsverhaeltnis, supplierGeburtsdatum, this.kontext()));
-		} catch(e : any) {
+		} catch (e: any) {
 			// empty block
 		}
 		return true;

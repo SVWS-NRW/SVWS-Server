@@ -17,17 +17,17 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaEnum<Weiterbildungs
 	/**
 	 * Abendgymnasium
 	 */
-	public static readonly ABENDGYMNASIUM: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDGYMNASIUM", 0, );
+	public static readonly ABENDGYMNASIUM: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDGYMNASIUM", 0);
 
 	/**
 	 * Abendrealschule
 	 */
-	public static readonly ABENDREALSCHULE: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDREALSCHULE", 1, );
+	public static readonly ABENDREALSCHULE: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDREALSCHULE", 1);
 
 	/**
 	 * Kolleg
 	 */
-	public static readonly KOLLEG: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("KOLLEG", 2, );
+	public static readonly KOLLEG: WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("KOLLEG", 2);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -71,7 +71,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaEnum<Weiterbildungs
 	 */
 	public static valueOf(name: string): WeiterbildungskollegBildungsgangTyp | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BildungsgangTypKatalogEintrag, WeiterbildungskollegBildungsgangTyp> {

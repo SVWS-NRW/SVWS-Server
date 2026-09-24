@@ -49,7 +49,9 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 			const printLevel: boolean = __param1 as boolean;
 			this.printTime = printTime;
 			this.printLevel = printLevel;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

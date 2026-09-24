@@ -55,7 +55,9 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 			this.bezeichnung = bezeichnung;
 			this.spalte = spalte;
 			this.zeile = zeile;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

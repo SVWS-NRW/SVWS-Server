@@ -109,7 +109,7 @@ export class ValidatorKontext extends JavaObject {
 	public getSchuljahresbeginn(): DateManager {
 		try {
 			return DateManager.fromValues(this.getSchuljahr(), 8, 1);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new ValidatorException("Fehler beim Erstellen des Datums für den Beginn des Schuljahres", e);
 		}
 	}
@@ -122,7 +122,7 @@ export class ValidatorKontext extends JavaObject {
 	public getSchuljahresende(): DateManager {
 		try {
 			return DateManager.fromValues(this.getSchuljahr() + 1, 7, 31);
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new ValidatorException("Fehler beim Erstellen des Datums für das Ende des Schuljahres", e);
 		}
 	}

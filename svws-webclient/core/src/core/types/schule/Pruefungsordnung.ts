@@ -125,7 +125,7 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 	 */
 	public static valueOf(name: string): Pruefungsordnung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

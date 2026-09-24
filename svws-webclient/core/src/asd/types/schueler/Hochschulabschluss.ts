@@ -17,67 +17,67 @@ export class Hochschulabschluss extends JavaEnum<Hochschulabschluss> implements 
 	/**
 	 * Ohne Hochschulabschluss
 	 */
-	public static readonly OHNE_HOCHSCHULABSCHLUSS: Hochschulabschluss = new Hochschulabschluss("OHNE_HOCHSCHULABSCHLUSS", 0, );
+	public static readonly OHNE_HOCHSCHULABSCHLUSS: Hochschulabschluss = new Hochschulabschluss("OHNE_HOCHSCHULABSCHLUSS", 0);
 
 	/**
 	 * Bachelor
 	 */
-	public static readonly BACHELOR: Hochschulabschluss = new Hochschulabschluss("BACHELOR", 1, );
+	public static readonly BACHELOR: Hochschulabschluss = new Hochschulabschluss("BACHELOR", 1);
 
 	/**
 	 * Master
 	 */
-	public static readonly MASTER: Hochschulabschluss = new Hochschulabschluss("MASTER", 2, );
+	public static readonly MASTER: Hochschulabschluss = new Hochschulabschluss("MASTER", 2);
 
 	/**
 	 * Promotion
 	 */
-	public static readonly PROMOTION: Hochschulabschluss = new Hochschulabschluss("PROMOTION", 3, );
+	public static readonly PROMOTION: Hochschulabschluss = new Hochschulabschluss("PROMOTION", 3);
 
 	/**
 	 * 1. Staatsexamen (Bachelor-Niveau)
 	 */
-	public static readonly STAATSEXAMEN_1_BACHELOR: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_1_BACHELOR", 4, );
+	public static readonly STAATSEXAMEN_1_BACHELOR: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_1_BACHELOR", 4);
 
 	/**
 	 * 2. Staatsexamen (Bachelor-Niveau)
 	 */
-	public static readonly STAATSEXAMEN_2_BACHELOR: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_2_BACHELOR", 5, );
+	public static readonly STAATSEXAMEN_2_BACHELOR: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_2_BACHELOR", 5);
 
 	/**
 	 * 1. Staatsexamen (Master-Niveau)
 	 */
-	public static readonly STAATSEXAMEN_1_MASTER: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_1_MASTER", 6, );
+	public static readonly STAATSEXAMEN_1_MASTER: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_1_MASTER", 6);
 
 	/**
 	 * 2. Staatsexamen (Master-Niveau)
 	 */
-	public static readonly STAATSEXAMEN_2_MASTER: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_2_MASTER", 7, );
+	public static readonly STAATSEXAMEN_2_MASTER: Hochschulabschluss = new Hochschulabschluss("STAATSEXAMEN_2_MASTER", 7);
 
 	/**
 	 * Diplom (Fachhochschule)
 	 */
-	public static readonly DIPLOM_FACHHOCHSCHULE: Hochschulabschluss = new Hochschulabschluss("DIPLOM_FACHHOCHSCHULE", 8, );
+	public static readonly DIPLOM_FACHHOCHSCHULE: Hochschulabschluss = new Hochschulabschluss("DIPLOM_FACHHOCHSCHULE", 8);
 
 	/**
 	 * Diplom (Universität)
 	 */
-	public static readonly DIPLOM_UNIVERSITAET: Hochschulabschluss = new Hochschulabschluss("DIPLOM_UNIVERSITAET", 9, );
+	public static readonly DIPLOM_UNIVERSITAET: Hochschulabschluss = new Hochschulabschluss("DIPLOM_UNIVERSITAET", 9);
 
 	/**
 	 * Magister
 	 */
-	public static readonly MAGISTER: Hochschulabschluss = new Hochschulabschluss("MAGISTER", 10, );
+	public static readonly MAGISTER: Hochschulabschluss = new Hochschulabschluss("MAGISTER", 10);
 
 	/**
 	 * Sonstiger Hochschulabschluss (Bachelor-Niveau)
 	 */
-	public static readonly SONSTIGER_HOCHSCHULABSCHLUSS_BACHELOR: Hochschulabschluss = new Hochschulabschluss("SONSTIGER_HOCHSCHULABSCHLUSS_BACHELOR", 11, );
+	public static readonly SONSTIGER_HOCHSCHULABSCHLUSS_BACHELOR: Hochschulabschluss = new Hochschulabschluss("SONSTIGER_HOCHSCHULABSCHLUSS_BACHELOR", 11);
 
 	/**
 	 * Sonstiger Hochschulabschluss (Master-Niveau)
 	 */
-	public static readonly SONSTIGER_HOCHSCHULABSCHLUSS_MASTER: Hochschulabschluss = new Hochschulabschluss("SONSTIGER_HOCHSCHULABSCHLUSS_MASTER", 12, );
+	public static readonly SONSTIGER_HOCHSCHULABSCHLUSS_MASTER: Hochschulabschluss = new Hochschulabschluss("SONSTIGER_HOCHSCHULABSCHLUSS_MASTER", 12);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -121,7 +121,7 @@ export class Hochschulabschluss extends JavaEnum<Hochschulabschluss> implements 
 	 */
 	public static valueOf(name: string): Hochschulabschluss | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<HochschulabschlussKatalogEintrag, Hochschulabschluss> {

@@ -95,7 +95,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 			}
 			this.keyArray = keyArray;
 			this.keyIndexFunction = this.keyIndexFunctionEnum;
-			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
+			this.entries = new Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
 			this._keySet = new ArrayMapKeySet(this);
 			this._collection = new ArrayMapCollection(this);
 			this._entrySet = new ArrayMapEntrySet(this);
@@ -107,11 +107,13 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 			}
 			this.keyArray = keyArray;
 			this.keyIndexFunction = keyIndexFunction;
-			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
+			this.entries = new Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
 			this._keySet = new ArrayMapKeySet(this);
 			this._collection = new ArrayMapCollection(this);
 			this._entrySet = new ArrayMapEntrySet(this);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public keySet(): JavaSet<K> {

@@ -52,7 +52,9 @@ export class AbiturKursMarkierung extends JavaObject {
 			const aufAbiturZeugnis: boolean = __param1 as boolean;
 			this.fuerBerechnung = fuerBerechnung;
 			this.aufAbiturZeugnis = aufAbiturZeugnis;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

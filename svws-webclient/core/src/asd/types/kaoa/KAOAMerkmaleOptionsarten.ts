@@ -17,7 +17,7 @@ export class KAOAMerkmaleOptionsarten extends JavaEnum<KAOAMerkmaleOptionsarten>
 	/**
 	 * Keine Option für das KAoA-Merkmal
 	 */
-	public static readonly KEINE: KAOAMerkmaleOptionsarten = new KAOAMerkmaleOptionsarten("KEINE", 0, );
+	public static readonly KEINE: KAOAMerkmaleOptionsarten = new KAOAMerkmaleOptionsarten("KEINE", 0);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -61,7 +61,7 @@ export class KAOAMerkmaleOptionsarten extends JavaEnum<KAOAMerkmaleOptionsarten>
 	 */
 	public static valueOf(name: string): KAOAMerkmaleOptionsarten | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOAMerkmaleOptionsartenKatalogEintrag, KAOAMerkmaleOptionsarten> {

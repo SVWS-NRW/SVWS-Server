@@ -140,7 +140,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 * @return die Anlage
 	 */
 	private bestimmeAnlage(): BeruflichesGymnasiumPruefungsordnungAnlage {
-		let _sevar_1540609204 : any;
+		let _sevar_1540609204;
 		const _seexpr_1540609204 = (this.gliederung);
 		if (_seexpr_1540609204 === Schulgliederung.D01) {
 			_sevar_1540609204 = this.getAnlageD01();
@@ -153,7 +153,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	}
 
 	private getAnlageD01(): BeruflichesGymnasiumPruefungsordnungAnlage {
-		let _sevar_2040674675 : any;
+		let _sevar_2040674675;
 		const _seexpr_2040674675 = (this.fks);
 		if (_seexpr_2040674675 === "10100") {
 			_sevar_2040674675 = BeruflichesGymnasiumPruefungsordnungAnlage.D6;
@@ -186,7 +186,7 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	}
 
 	private getAnlageD02(): BeruflichesGymnasiumPruefungsordnungAnlage {
-		let _sevar_999310226 : any;
+		let _sevar_999310226;
 		const _seexpr_999310226 = (this.fks);
 		if (_seexpr_999310226 === "10100") {
 			_sevar_999310226 = BeruflichesGymnasiumPruefungsordnungAnlage.D14;

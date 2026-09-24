@@ -103,7 +103,9 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 			const v5: number = __param4 as number;
 			this._keys = [v1, v2, v3, v4, v5];
 			this._hashcode = this.calculateHashcode();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	private calculateHashcode(): number {

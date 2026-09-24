@@ -70,7 +70,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 				this.add(iter.next());
 			}
 			this._modCount = c._modCount;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public size(): number {
@@ -97,9 +99,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return new LinkedCollectionIterator<E>(this);
 	}
 
-	public toArray() : Array<unknown>;
+	public toArray(): Array<unknown>;
 
-	public toArray<T>(a: Array<T>) : Array<T>;
+	public toArray<T>(a: Array<T>): Array<T>;
 
 	/**
 	 * Implementation for method overloads of 'toArray'
@@ -109,7 +111,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			if (this._size === 0) {
 				return Array(0).fill(null);
 			}
-			const array: Array<E> = Array(this._size).fill(null) as unknown as Array<E>;
+			const array: Array<E> = new Array(this._size).fill(null) as unknown as Array<E>;
 			const iter: JavaIterator<E> = this.iterator();
 			for (let i: number = 0; i < this._size; i++) {
 				array[i] = iter.next();
@@ -127,7 +129,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			}
 			Arrays.fill(a, this._size, a.length, null);
 			return a;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public add(e: E | null): boolean {
@@ -192,9 +196,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return true;
 	}
 
-	public remove(obj: unknown | null) : boolean;
+	public remove(obj: unknown | null): boolean;
 
-	public remove() : E;
+	public remove(): E;
 
 	/**
 	 * Implementation for method overloads of 'remove'
@@ -205,7 +209,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			return this.removeFirstOccurrence(obj);
 		} else if ((__param0 === undefined)) {
 			return this.pop();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public containsAll(c: Collection<any> | null): boolean {

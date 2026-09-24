@@ -23,7 +23,7 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 	 *
 	 * @return die neu erzeugte Sortierdefinition
 	 */
-	public static definition(bezeichnung: string, typ: string, verwendeStandardsortierung: boolean, attribute: List<string>) : ReportingSortierungDefinition;
+	public static definition(bezeichnung: string, typ: string, verwendeStandardsortierung: boolean, attribute: List<string>): ReportingSortierungDefinition;
 
 	/**
 	 * Erzeugt eine {@link ReportingSortierungDefinition}.
@@ -35,7 +35,7 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 	 *
 	 * @return die neu erzeugte Sortierdefinition
 	 */
-	public static definition(bezeichnung: string, typ: Class<any>, verwendeStandardsortierung: boolean, attribute: List<string>) : ReportingSortierungDefinition;
+	public static definition(bezeichnung: string, typ: Class<any>, verwendeStandardsortierung: boolean, attribute: List<string>): ReportingSortierungDefinition;
 
 	/**
 	 * Implementation for method overloads of 'definition'
@@ -58,7 +58,9 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 			const verwendeStandardsortierung: boolean = __param2 as boolean;
 			const attribute: List<string> = cast_java_util_List(__param3);
 			return ReportingSortierungDefinitionFactory.definition(bezeichnung, typ.getSimpleName(), verwendeStandardsortierung, attribute);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -69,7 +71,7 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 	 *
 	 * @return die neu erzeugte Sortierdefinition mit aktivierter Standardsortierung
 	 */
-	public static standard(bezeichnung: string, typ: string) : ReportingSortierungDefinition;
+	public static standard(bezeichnung: string, typ: string): ReportingSortierungDefinition;
 
 	/**
 	 * Erzeugt eine {@link ReportingSortierungDefinition}, die die Standardsortierung des Typs verwendet.
@@ -79,7 +81,7 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 	 *
 	 * @return die neu erzeugte Sortierdefinition mit aktivierter Standardsortierung
 	 */
-	public static standard(bezeichnung: string, typ: Class<any>) : ReportingSortierungDefinition;
+	public static standard(bezeichnung: string, typ: Class<any>): ReportingSortierungDefinition;
 
 	/**
 	 * Implementation for method overloads of 'standard'
@@ -93,7 +95,9 @@ export class ReportingSortierungDefinitionFactory extends JavaObject {
 			const bezeichnung: string = __param0;
 			const typ: Class<any> = cast_java_lang_Class(__param1);
 			return ReportingSortierungDefinitionFactory.definition(bezeichnung, typ, true, ArrayList.of());
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

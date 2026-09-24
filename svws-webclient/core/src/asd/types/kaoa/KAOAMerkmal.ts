@@ -22,177 +22,177 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 	/**
 	 * KAoA-Merkmal: Schulische prozessorientierte Begleitung und Beratung
 	 */
-	public static readonly SBO_2_1: KAOAMerkmal = new KAOAMerkmal("SBO_2_1", 0, );
+	public static readonly SBO_2_1: KAOAMerkmal = new KAOAMerkmal("SBO_2_1", 0);
 
 	/**
 	 * KAoA-Merkmal: Berufsorientierende Angebote der Berufsberatung der Bundesagentur für Arbeit (BA)
 	 */
-	public static readonly SBO_2_2: KAOAMerkmal = new KAOAMerkmal("SBO_2_2", 1, );
+	public static readonly SBO_2_2: KAOAMerkmal = new KAOAMerkmal("SBO_2_2", 1);
 
 	/**
 	 * KAoA-Merkmal: Individuelle Beratungsangebote außerschulischer Partner
 	 */
-	public static readonly SBO_2_3: KAOAMerkmal = new KAOAMerkmal("SBO_2_3", 2, );
+	public static readonly SBO_2_3: KAOAMerkmal = new KAOAMerkmal("SBO_2_3", 2);
 
 	/**
 	 * KAoA-Merkmal: STAR - Berufswegekonferenz
 	 */
-	public static readonly SBO_2_4: KAOAMerkmal = new KAOAMerkmal("SBO_2_4", 3, );
+	public static readonly SBO_2_4: KAOAMerkmal = new KAOAMerkmal("SBO_2_4", 3);
 
 	/**
 	 * KAoA-Merkmal: Einbindung von Eltern bzw. Erziehungsberechtigten
 	 */
-	public static readonly SBO_2_5: KAOAMerkmal = new KAOAMerkmal("SBO_2_5", 4, );
+	public static readonly SBO_2_5: KAOAMerkmal = new KAOAMerkmal("SBO_2_5", 4);
 
 	/**
 	 * KAoA-Merkmal: STAR - Einbindung von Eltern bzw. Erziehungsberechtigten
 	 */
-	public static readonly SBO_2_6: KAOAMerkmal = new KAOAMerkmal("SBO_2_6", 5, );
+	public static readonly SBO_2_6: KAOAMerkmal = new KAOAMerkmal("SBO_2_6", 5);
 
 	/**
 	 * KAoA-Merkmal: Portfolioinstrument
 	 */
-	public static readonly SBO_3_4: KAOAMerkmal = new KAOAMerkmal("SBO_3_4", 6, );
+	public static readonly SBO_3_4: KAOAMerkmal = new KAOAMerkmal("SBO_3_4", 6);
 
 	/**
 	 * KAoA-Merkmal: Potenzialanalyse 1-tägig
 	 */
-	public static readonly SBO_4_1: KAOAMerkmal = new KAOAMerkmal("SBO_4_1", 7, );
+	public static readonly SBO_4_1: KAOAMerkmal = new KAOAMerkmal("SBO_4_1", 7);
 
 	/**
 	 * KAoA-Merkmal: Potenzialanalyse für Schülerinnen und Schüler mit den Förderschwerpunkten Lernen und Emotionale soziale Entwicklung– 2-tägig
 	 */
-	public static readonly SBO_4_2: KAOAMerkmal = new KAOAMerkmal("SBO_4_2", 8, );
+	public static readonly SBO_4_2: KAOAMerkmal = new KAOAMerkmal("SBO_4_2", 8);
 
 	/**
 	 * KAoA-Merkmal: STAR – Potenzialanalyse für Schülerinnen und Schüler mit den Förderschwerpunkten Geistige Entwicklung, Körperliche und motorische Entwicklung, Hören und Kommunikation und Sprache - 2-tägig
 	 */
-	public static readonly SBO_4_3: KAOAMerkmal = new KAOAMerkmal("SBO_4_3", 9, );
+	public static readonly SBO_4_3: KAOAMerkmal = new KAOAMerkmal("SBO_4_3", 9);
 
 	/**
 	 * KAoA-Merkmal: STAR – Feststellung des funktionalen Sehvermögens im Förderschwerpunkt Sehen
 	 */
-	public static readonly SBO_4_4: KAOAMerkmal = new KAOAMerkmal("SBO_4_4", 10, );
+	public static readonly SBO_4_4: KAOAMerkmal = new KAOAMerkmal("SBO_4_4", 10);
 
 	/**
 	 * KAoA-Merkmal: STAR – Potenzialanalyse im Förderschwerpunkt Sehen – 2-tägig
 	 */
-	public static readonly SBO_4_5: KAOAMerkmal = new KAOAMerkmal("SBO_4_5", 11, );
+	public static readonly SBO_4_5: KAOAMerkmal = new KAOAMerkmal("SBO_4_5", 11);
 
 	/**
 	 * KAoA-Merkmal: Berufsfelderkundungen
 	 */
-	public static readonly SBO_5_1: KAOAMerkmal = new KAOAMerkmal("SBO_5_1", 12, );
+	public static readonly SBO_5_1: KAOAMerkmal = new KAOAMerkmal("SBO_5_1", 12);
 
 	/**
 	 * KAoA-Merkmal: STAR – Berufsfelderkundungen
 	 */
-	public static readonly SBO_5_2: KAOAMerkmal = new KAOAMerkmal("SBO_5_2", 13, );
+	public static readonly SBO_5_2: KAOAMerkmal = new KAOAMerkmal("SBO_5_2", 13);
 
 	/**
 	 * KAoA-Merkmal: STAR – Arbeitsplatzbezogenes Kommunikationstraining I im Förderschwerpunkt Hören und Kommunikation
 	 */
-	public static readonly SBO_5_3: KAOAMerkmal = new KAOAMerkmal("SBO_5_3", 14, );
+	public static readonly SBO_5_3: KAOAMerkmal = new KAOAMerkmal("SBO_5_3", 14);
 
 	/**
 	 * KAoA-Merkmal: STAR - Berufsorientierungsseminar
 	 */
-	public static readonly SBO_5_4: KAOAMerkmal = new KAOAMerkmal("SBO_5_4", 15, );
+	public static readonly SBO_5_4: KAOAMerkmal = new KAOAMerkmal("SBO_5_4", 15);
 
 	/**
 	 * KAoA-Merkmal: Betriebspraktika in der Sekundarstufe I (ggf. 1 Woche verlagert aus der Oberstufe)
 	 */
-	public static readonly SBO_6_1: KAOAMerkmal = new KAOAMerkmal("SBO_6_1", 16, );
+	public static readonly SBO_6_1: KAOAMerkmal = new KAOAMerkmal("SBO_6_1", 16);
 
 	/**
 	 * KAoA-Merkmal: STAR – Intensivtraining arbeitsrelevanter sozialer Kompetenzen (TASK)
 	 */
-	public static readonly SBO_6_2: KAOAMerkmal = new KAOAMerkmal("SBO_6_2", 17, );
+	public static readonly SBO_6_2: KAOAMerkmal = new KAOAMerkmal("SBO_6_2", 17);
 
 	/**
 	 * KAoA-Merkmal: STAR – Betriebspraktikum im Block
 	 */
-	public static readonly SBO_6_3: KAOAMerkmal = new KAOAMerkmal("SBO_6_3", 18, );
+	public static readonly SBO_6_3: KAOAMerkmal = new KAOAMerkmal("SBO_6_3", 18);
 
 	/**
 	 * KAoA-Merkmal: Praxiskurse
 	 */
-	public static readonly SBO_6_4: KAOAMerkmal = new KAOAMerkmal("SBO_6_4", 19, );
+	public static readonly SBO_6_4: KAOAMerkmal = new KAOAMerkmal("SBO_6_4", 19);
 
 	/**
 	 * KAoA-Merkmal: Langzeitpraktikum
 	 */
-	public static readonly SBO_6_5: KAOAMerkmal = new KAOAMerkmal("SBO_6_5", 20, );
+	public static readonly SBO_6_5: KAOAMerkmal = new KAOAMerkmal("SBO_6_5", 20);
 
 	/**
 	 * KAoA-Merkmal: STAR – Betriebspraktikum in Langzeit
 	 */
-	public static readonly SBO_6_6: KAOAMerkmal = new KAOAMerkmal("SBO_6_6", 21, );
+	public static readonly SBO_6_6: KAOAMerkmal = new KAOAMerkmal("SBO_6_6", 21);
 
 	/**
 	 * KAoA-Merkmal: KAoA-kompakt
 	 */
-	public static readonly SBO_7_1: KAOAMerkmal = new KAOAMerkmal("SBO_7_1", 22, );
+	public static readonly SBO_7_1: KAOAMerkmal = new KAOAMerkmal("SBO_7_1", 22);
 
 	/**
 	 * KAoA-Merkmal: Standortbestimmung - Reflexionsworkshop Sek. II
 	 */
-	public static readonly SBO_8_1: KAOAMerkmal = new KAOAMerkmal("SBO_8_1", 23, );
+	public static readonly SBO_8_1: KAOAMerkmal = new KAOAMerkmal("SBO_8_1", 23);
 
 	/**
 	 * KAoA-Merkmal: Stärkung der Entscheidungskompetenz I – Sek. II
 	 */
-	public static readonly SBO_8_2: KAOAMerkmal = new KAOAMerkmal("SBO_8_2", 24, );
+	public static readonly SBO_8_2: KAOAMerkmal = new KAOAMerkmal("SBO_8_2", 24);
 
 	/**
 	 * KAoA-Merkmal: Praxiselemente in Betrieben, Hochschulen, Institutionen
 	 */
-	public static readonly SBO_9_1: KAOAMerkmal = new KAOAMerkmal("SBO_9_1", 25, );
+	public static readonly SBO_9_1: KAOAMerkmal = new KAOAMerkmal("SBO_9_1", 25);
 
 	/**
 	 * KAoA-Merkmal: Studienorientierung
 	 */
-	public static readonly SBO_9_2: KAOAMerkmal = new KAOAMerkmal("SBO_9_2", 26, );
+	public static readonly SBO_9_2: KAOAMerkmal = new KAOAMerkmal("SBO_9_2", 26);
 
 	/**
 	 * KAoA-Merkmal: Stärkung der Entscheidungskompetenz II - Sek. II
 	 */
-	public static readonly SBO_9_3: KAOAMerkmal = new KAOAMerkmal("SBO_9_3", 27, );
+	public static readonly SBO_9_3: KAOAMerkmal = new KAOAMerkmal("SBO_9_3", 27);
 
 	/**
 	 * KAoA-Merkmal: Bewerbungsphase
 	 */
-	public static readonly SBO_10_1: KAOAMerkmal = new KAOAMerkmal("SBO_10_1", 28, );
+	public static readonly SBO_10_1: KAOAMerkmal = new KAOAMerkmal("SBO_10_1", 28);
 
 	/**
 	 * KAoA-Merkmal: STAR – Arbeitsplatzbezogenes Kommunikationstraining II im Förderschwerpunkt Hören und Kommunikation
 	 */
-	public static readonly SBO_10_2: KAOAMerkmal = new KAOAMerkmal("SBO_10_2", 29, );
+	public static readonly SBO_10_2: KAOAMerkmal = new KAOAMerkmal("SBO_10_2", 29);
 
 	/**
 	 * KAoA-Merkmal: STAR – Betriebsnahes Bewerbungstraining/Umgang mit Dolmetschenden und Technik im Förderschwerpunkt Hören und Kommunikation
 	 */
-	public static readonly SBO_10_3: KAOAMerkmal = new KAOAMerkmal("SBO_10_3", 30, );
+	public static readonly SBO_10_3: KAOAMerkmal = new KAOAMerkmal("SBO_10_3", 30);
 
 	/**
 	 * KAoA-Merkmal: Übergangsbegleitung
 	 */
-	public static readonly SBO_10_4: KAOAMerkmal = new KAOAMerkmal("SBO_10_4", 31, );
+	public static readonly SBO_10_4: KAOAMerkmal = new KAOAMerkmal("SBO_10_4", 31);
 
 	/**
 	 * KAoA-Merkmal: STAR - Übergangsbegleitung
 	 */
-	public static readonly SBO_10_5: KAOAMerkmal = new KAOAMerkmal("SBO_10_5", 32, );
+	public static readonly SBO_10_5: KAOAMerkmal = new KAOAMerkmal("SBO_10_5", 32);
 
 	/**
 	 * KAoA-Merkmal: Anschlussvereinbarung
 	 */
-	public static readonly SBO_10_6: KAOAMerkmal = new KAOAMerkmal("SBO_10_6", 33, );
+	public static readonly SBO_10_6: KAOAMerkmal = new KAOAMerkmal("SBO_10_6", 33);
 
 	/**
 	 * KAoA-Merkmal: Koordinierte Übergangsgestaltung
 	 */
-	public static readonly SBO_10_7: KAOAMerkmal = new KAOAMerkmal("SBO_10_7", 34, );
+	public static readonly SBO_10_7: KAOAMerkmal = new KAOAMerkmal("SBO_10_7", 34);
 
 	/**
 	 * (Integer, Long) -> Schuljahr, idKategorie
@@ -284,7 +284,7 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 	 */
 	public static valueOf(name: string): KAOAMerkmal | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOAMerkmalKatalogEintrag, KAOAMerkmal> {

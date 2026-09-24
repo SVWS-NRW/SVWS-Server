@@ -12,17 +12,17 @@ export class PairIteratorModus extends JavaEnum<PairIteratorModus> {
 	/**
 	 * Alle Paare (i, j), auch i == j. Liefert insgesamt n² Paare.
 	 */
-	public static readonly ALL: PairIteratorModus = new PairIteratorModus("ALL", 0, );
+	public static readonly ALL: PairIteratorModus = new PairIteratorModus("ALL", 0);
 
 	/**
 	 * Alle Paare (i, j) mit i != j. Liefert insgesamt n² - n Paare.
 	 */
-	public static readonly NO_EQUAL: PairIteratorModus = new PairIteratorModus("NO_EQUAL", 1, );
+	public static readonly NO_EQUAL: PairIteratorModus = new PairIteratorModus("NO_EQUAL", 1);
 
 	/**
 	 * Alle Paare (i, j) mit i &lt; j. Liefert insgesamt (n² - n)/2 Paare, somit keine Duplikate.
 	 */
-	public static readonly LOWER_ONLY: PairIteratorModus = new PairIteratorModus("LOWER_ONLY", 2, );
+	public static readonly LOWER_ONLY: PairIteratorModus = new PairIteratorModus("LOWER_ONLY", 2);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -48,7 +48,7 @@ export class PairIteratorModus extends JavaEnum<PairIteratorModus> {
 	 */
 	public static valueOf(name: string): PairIteratorModus | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

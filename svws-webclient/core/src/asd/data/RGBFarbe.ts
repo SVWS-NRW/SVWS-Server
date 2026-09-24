@@ -59,7 +59,9 @@ export class RGBFarbe extends JavaObject {
 			this.red = (decimal >> 16) & 255;
 			this.green = (decimal >> 8) & 255;
 			this.blue = decimal & 255;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

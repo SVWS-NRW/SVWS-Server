@@ -150,7 +150,7 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	 */
 	public static valueOf(name: string): Sprachpruefungniveau | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

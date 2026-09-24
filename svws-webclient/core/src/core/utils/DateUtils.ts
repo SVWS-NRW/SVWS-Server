@@ -161,7 +161,7 @@ export class DateUtils extends JavaObject {
 			}
 			const maxTage: number = DateUtils.daysInMonth(jahr, monat);
 			return tagImMonat >= 1 && tagImMonat <= maxTage;
-		} catch(e : any) {
+		} catch (e: any) {
 			return false;
 		}
 	}

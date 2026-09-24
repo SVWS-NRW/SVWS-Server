@@ -103,7 +103,9 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 			this.link = link;
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

@@ -17,82 +17,82 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> implements CoreType
 	/**
 	 * KAoA-Berufsfeld: Bau, Architektur, Vermessung
 	 */
-	public static readonly BAV: KAOABerufsfeld = new KAOABerufsfeld("BAV", 0, );
+	public static readonly BAV: KAOABerufsfeld = new KAOABerufsfeld("BAV", 0);
 
 	/**
 	 * KAoA-Berufsfeld: Dienstleistung
 	 */
-	public static readonly D: KAOABerufsfeld = new KAOABerufsfeld("D", 1, );
+	public static readonly D: KAOABerufsfeld = new KAOABerufsfeld("D", 1);
 
 	/**
 	 * KAoA-Berufsfeld: Elektro
 	 */
-	public static readonly EL: KAOABerufsfeld = new KAOABerufsfeld("EL", 2, );
+	public static readonly EL: KAOABerufsfeld = new KAOABerufsfeld("EL", 2);
 
 	/**
 	 * KAoA-Berufsfeld: Gesundheit
 	 */
-	public static readonly G: KAOABerufsfeld = new KAOABerufsfeld("G", 3, );
+	public static readonly G: KAOABerufsfeld = new KAOABerufsfeld("G", 3);
 
 	/**
 	 * KAoA-Berufsfeld: Gesellschafts-,Geisteswissenschaften
 	 */
-	public static readonly GESGE: KAOABerufsfeld = new KAOABerufsfeld("GESGE", 4, );
+	public static readonly GESGE: KAOABerufsfeld = new KAOABerufsfeld("GESGE", 4);
 
 	/**
 	 * KAoA-Berufsfeld: IT, Computer
 	 */
-	public static readonly ITC: KAOABerufsfeld = new KAOABerufsfeld("ITC", 5, );
+	public static readonly ITC: KAOABerufsfeld = new KAOABerufsfeld("ITC", 5);
 
 	/**
 	 * KAoA-Berufsfeld: Kunst, Kultur, Gestaltung
 	 */
-	public static readonly KKG: KAOABerufsfeld = new KAOABerufsfeld("KKG", 6, );
+	public static readonly KKG: KAOABerufsfeld = new KAOABerufsfeld("KKG", 6);
 
 	/**
 	 * KAoA-Berufsfeld: Landwirtschaft, Natur, Umwelt
 	 */
-	public static readonly LANAUM: KAOABerufsfeld = new KAOABerufsfeld("LANAUM", 7, );
+	public static readonly LANAUM: KAOABerufsfeld = new KAOABerufsfeld("LANAUM", 7);
 
 	/**
 	 * KAoA-Berufsfeld: Metall, Maschinenbau
 	 */
-	public static readonly M: KAOABerufsfeld = new KAOABerufsfeld("M", 8, );
+	public static readonly M: KAOABerufsfeld = new KAOABerufsfeld("M", 8);
 
 	/**
 	 * KAoA-Berufsfeld: Medien
 	 */
-	public static readonly ME: KAOABerufsfeld = new KAOABerufsfeld("ME", 9, );
+	public static readonly ME: KAOABerufsfeld = new KAOABerufsfeld("ME", 9);
 
 	/**
 	 * KAoA-Berufsfeld: Naturwissenschaft
 	 */
-	public static readonly N: KAOABerufsfeld = new KAOABerufsfeld("N", 10, );
+	public static readonly N: KAOABerufsfeld = new KAOABerufsfeld("N", 10);
 
 	/**
 	 * KAoA-Berufsfeld: Produktion, Fertigung
 	 */
-	public static readonly PRFE: KAOABerufsfeld = new KAOABerufsfeld("PRFE", 11, );
+	public static readonly PRFE: KAOABerufsfeld = new KAOABerufsfeld("PRFE", 11);
 
 	/**
 	 * KAoA-Berufsfeld: Soziales, Pädagogik
 	 */
-	public static readonly SP: KAOABerufsfeld = new KAOABerufsfeld("SP", 12, );
+	public static readonly SP: KAOABerufsfeld = new KAOABerufsfeld("SP", 12);
 
 	/**
 	 * KAoA-Berufsfeld: Technik, Technologiefelder
 	 */
-	public static readonly TEC: KAOABerufsfeld = new KAOABerufsfeld("TEC", 13, );
+	public static readonly TEC: KAOABerufsfeld = new KAOABerufsfeld("TEC", 13);
 
 	/**
 	 * KAoA-Berufsfeld: Verkehr, Logistik
 	 */
-	public static readonly VL: KAOABerufsfeld = new KAOABerufsfeld("VL", 14, );
+	public static readonly VL: KAOABerufsfeld = new KAOABerufsfeld("VL", 14);
 
 	/**
 	 * KAoA-Berufsfeld: Wirtschaft, Verwaltung
 	 */
-	public static readonly WIVE: KAOABerufsfeld = new KAOABerufsfeld("WIVE", 15, );
+	public static readonly WIVE: KAOABerufsfeld = new KAOABerufsfeld("WIVE", 15);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -147,7 +147,7 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> implements CoreType
 	 */
 	public static valueOf(name: string): KAOABerufsfeld | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOABerufsfeldKatalogEintrag, KAOABerufsfeld> {

@@ -177,7 +177,7 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 	 */
 	public static valueOf(name: string): KursFortschreibungsart | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

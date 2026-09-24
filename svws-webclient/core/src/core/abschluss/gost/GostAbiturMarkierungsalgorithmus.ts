@@ -275,7 +275,9 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 					this.markiert.put(e1.getKey(), e2.getKey(), e2.getValue());
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

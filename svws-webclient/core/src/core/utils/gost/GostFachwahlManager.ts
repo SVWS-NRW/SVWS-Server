@@ -57,7 +57,9 @@ export class GostFachwahlManager extends JavaObject {
 			for (const fw of fachwahlen.fachwahlen) {
 				this.add(fw);
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

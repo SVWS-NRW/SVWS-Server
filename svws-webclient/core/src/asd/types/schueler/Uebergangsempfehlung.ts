@@ -17,32 +17,32 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> impleme
 	/**
 	 *  Übergangsempfehlung Hauptschule
 	 */
-	public static readonly HAUPTSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE", 0, );
+	public static readonly HAUPTSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE", 0);
 
 	/**
 	 *  Übergangsempfehlung Hauptschule / Realschule (eingeschränkt)
 	 */
-	public static readonly HAUPTSCHULE_REALSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE_REALSCHULE", 1, );
+	public static readonly HAUPTSCHULE_REALSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("HAUPTSCHULE_REALSCHULE", 1);
 
 	/**
 	 *  Übergangsempfehlung Realschule
 	 */
-	public static readonly REALSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE", 2, );
+	public static readonly REALSCHULE: Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE", 2);
 
 	/**
 	 *  Übergangsempfehlung Realschule / Gymnasium (eingeschränkt)
 	 */
-	public static readonly REALSCHULE_GYMNASIUM: Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE_GYMNASIUM", 3, );
+	public static readonly REALSCHULE_GYMNASIUM: Uebergangsempfehlung = new Uebergangsempfehlung("REALSCHULE_GYMNASIUM", 3);
 
 	/**
 	 *  Übergangsempfehlung Gymnasium
 	 */
-	public static readonly GYMNASIUM: Uebergangsempfehlung = new Uebergangsempfehlung("GYMNASIUM", 4, );
+	public static readonly GYMNASIUM: Uebergangsempfehlung = new Uebergangsempfehlung("GYMNASIUM", 4);
 
 	/**
 	 *  Keine Übergangsempfehlung
 	 */
-	public static readonly KEINE: Uebergangsempfehlung = new Uebergangsempfehlung("KEINE", 5, );
+	public static readonly KEINE: Uebergangsempfehlung = new Uebergangsempfehlung("KEINE", 5);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -86,7 +86,7 @@ export class Uebergangsempfehlung extends JavaEnum<Uebergangsempfehlung> impleme
 	 */
 	public static valueOf(name: string): Uebergangsempfehlung | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<UebergangsempfehlungKatalogEintrag, Uebergangsempfehlung> {

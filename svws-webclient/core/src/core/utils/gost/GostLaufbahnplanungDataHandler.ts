@@ -128,7 +128,9 @@ export class GostLaufbahnplanungDataHandler extends JavaObject {
 			this.mapKlausurvorgaben = new HashMap();
 			this.gklWahlen = new GostSchuelerGKLWahl();
 			this.importV2GKL(planungsdaten, daten.gkl, this.faecherManager);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

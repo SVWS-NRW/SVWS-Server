@@ -55,7 +55,7 @@ export class BKGymBelegungsfehlerArt extends JavaEnum<BKGymBelegungsfehlerArt> {
 	 * @return die Belegungsfehler-Art
 	 */
 	public static fromKuerzel(kuerzel: string): BKGymBelegungsfehlerArt {
-		let _sevar_2055730872 : any;
+		let _sevar_2055730872;
 		const _seexpr_2055730872 = (kuerzel);
 		if (_seexpr_2055730872 === "BELEGUNG") {
 			_sevar_2055730872 = BKGymBelegungsfehlerArt.BELEGUNG;
@@ -93,7 +93,7 @@ export class BKGymBelegungsfehlerArt extends JavaEnum<BKGymBelegungsfehlerArt> {
 	 */
 	public static valueOf(name: string): BKGymBelegungsfehlerArt | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

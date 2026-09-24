@@ -18,82 +18,82 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	/**
 	 * Förderschwerpunkt - kein Förderschwerpunkt
 	 */
-	public static readonly KEINER: Foerderschwerpunkt = new Foerderschwerpunkt("KEINER", 0, );
+	public static readonly KEINER: Foerderschwerpunkt = new Foerderschwerpunkt("KEINER", 0);
 
 	/**
 	 * Förderschwerpunkt - Sehen (Blinde)
 	 */
-	public static readonly BL: Foerderschwerpunkt = new Foerderschwerpunkt("BL", 1, );
+	public static readonly BL: Foerderschwerpunkt = new Foerderschwerpunkt("BL", 1);
 
 	/**
 	 * Förderschwerpunkt - Emotionale und soziale Entwicklung
 	 */
-	public static readonly EZ: Foerderschwerpunkt = new Foerderschwerpunkt("EZ", 2, );
+	public static readonly EZ: Foerderschwerpunkt = new Foerderschwerpunkt("EZ", 2);
 
 	/**
 	 * Förderschwerpunkt - Geistige Entwicklung
 	 */
-	public static readonly GB: Foerderschwerpunkt = new Foerderschwerpunkt("GB", 3, );
+	public static readonly GB: Foerderschwerpunkt = new Foerderschwerpunkt("GB", 3);
 
 	/**
 	 * Förderschwerpunkt - Hören und Kommunikation (Gehörlose)
 	 */
-	public static readonly GH: Foerderschwerpunkt = new Foerderschwerpunkt("GH", 4, );
+	public static readonly GH: Foerderschwerpunkt = new Foerderschwerpunkt("GH", 4);
 
 	/**
 	 * Förderschwerpunkt - Körperliche und motorische Entwicklung
 	 */
-	public static readonly KB: Foerderschwerpunkt = new Foerderschwerpunkt("KB", 5, );
+	public static readonly KB: Foerderschwerpunkt = new Foerderschwerpunkt("KB", 5);
 
 	/**
 	 * Förderschwerpunkt - Schule für Kranke
 	 */
-	public static readonly KR: Foerderschwerpunkt = new Foerderschwerpunkt("KR", 6, );
+	public static readonly KR: Foerderschwerpunkt = new Foerderschwerpunkt("KR", 6);
 
 	/**
 	 * Förderschwerpunkt - Lernen
 	 */
-	public static readonly LB: Foerderschwerpunkt = new Foerderschwerpunkt("LB", 7, );
+	public static readonly LB: Foerderschwerpunkt = new Foerderschwerpunkt("LB", 7);
 
 	/**
 	 * Förderschwerpunkt - Präventive Förderung im Bereich Emotionale und soziale Entwicklung
 	 */
-	public static readonly PE: Foerderschwerpunkt = new Foerderschwerpunkt("PE", 8, );
+	public static readonly PE: Foerderschwerpunkt = new Foerderschwerpunkt("PE", 8);
 
 	/**
 	 * Förderschwerpunkt - Präventive Förderung
 	 */
-	public static readonly PF: Foerderschwerpunkt = new Foerderschwerpunkt("PF", 9, );
+	public static readonly PF: Foerderschwerpunkt = new Foerderschwerpunkt("PF", 9);
 
 	/**
 	 * Förderschwerpunkt - Präventive Förderung im Bereich Lernen
 	 */
-	public static readonly PL: Foerderschwerpunkt = new Foerderschwerpunkt("PL", 10, );
+	public static readonly PL: Foerderschwerpunkt = new Foerderschwerpunkt("PL", 10);
 
 	/**
 	 * Förderschwerpunkt - Präventive Förderung im Bereich Sprache
 	 */
-	public static readonly PS: Foerderschwerpunkt = new Foerderschwerpunkt("PS", 11, );
+	public static readonly PS: Foerderschwerpunkt = new Foerderschwerpunkt("PS", 11);
 
 	/**
 	 * Förderschwerpunkt - Sprache
 	 */
-	public static readonly SB: Foerderschwerpunkt = new Foerderschwerpunkt("SB", 12, );
+	public static readonly SB: Foerderschwerpunkt = new Foerderschwerpunkt("SB", 12);
 
 	/**
 	 * Förderschwerpunkt - Hören und Kommunikation (Schwerhörige)
 	 */
-	public static readonly SG: Foerderschwerpunkt = new Foerderschwerpunkt("SG", 13, );
+	public static readonly SG: Foerderschwerpunkt = new Foerderschwerpunkt("SG", 13);
 
 	/**
 	 * Förderschwerpunkt - Sehen (Sehbehinderte)
 	 */
-	public static readonly SH: Foerderschwerpunkt = new Foerderschwerpunkt("SH", 14, );
+	public static readonly SH: Foerderschwerpunkt = new Foerderschwerpunkt("SH", 14);
 
 	/**
 	 * Förderschwerpunkt - Kein Förderschwerpunkt
 	 */
-	public static readonly XX: Foerderschwerpunkt = new Foerderschwerpunkt("XX", 15, );
+	public static readonly XX: Foerderschwerpunkt = new Foerderschwerpunkt("XX", 15);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -161,7 +161,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	 */
 	public static valueOf(name: string): Foerderschwerpunkt | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<FoerderschwerpunktKatalogEintrag, Foerderschwerpunkt> {

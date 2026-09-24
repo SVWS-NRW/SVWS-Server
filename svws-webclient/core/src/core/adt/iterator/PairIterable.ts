@@ -57,7 +57,9 @@ export class PairIterable<T> extends JavaObject implements JavaIterable<PairNN<T
 			const modus: PairIteratorModus = cast_de_svws_nrw_core_adt_iterator_PairIteratorModus(__param1);
 			this.modus = modus;
 			this.elemente = Arrays.asList(...source);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

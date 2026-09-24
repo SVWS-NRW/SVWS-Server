@@ -93,7 +93,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			this._nodes = Arrays.copyOf(original._nodes, original._nodes.length);
 			this._size = original._size;
 			this._modCount = original._modCount;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public add(e: T | null): boolean {
@@ -139,9 +141,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return elem;
 	}
 
-	public remove() : T;
+	public remove(): T;
 
-	public remove(o: unknown | null) : boolean;
+	public remove(o: unknown | null): boolean;
 
 	/**
 	 * Implementation for method overloads of 'remove'
@@ -172,7 +174,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			this.heapifyUp(index);
 			this.heapifyDown(index);
 			return true;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public size(): number {
@@ -289,9 +293,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		this._modCount++;
 	}
 
-	public toArray() : Array<unknown>;
+	public toArray(): Array<unknown>;
 
-	public toArray<U>(a: Array<U>) : Array<U>;
+	public toArray<U>(a: Array<U>): Array<U>;
 
 	/**
 	 * Implementation for method overloads of 'toArray'
@@ -307,7 +311,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			System.arraycopy(this._nodes, 0, a, 0, this._size);
 			Arrays.fill(a, this._size, a.length, null);
 			return a;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	public iterator(): JavaIterator<T> {
@@ -507,9 +513,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	private newArray(elem: T | null, length: number): Array<T> {
 		if (elem === null) {
-			return Array(length).fill(null) as unknown as Array<T>;
+			return new Array(length).fill(null) as unknown as Array<T>;
 		}
-		return Array(length).fill(null) as unknown as Array<T>;
+		return new Array(length).fill(null) as unknown as Array<T>;
 	}
 
 	/**

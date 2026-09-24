@@ -269,7 +269,9 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 					this.markiert.put(e1.getKey(), e2.getKey(), e2.getValue());
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -303,7 +305,7 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 *
 	 * @param text   der zu loggende Text
 	 */
-	private log(text: string) : void;
+	private log(text: string): void;
 
 	/**
 	 * Schreibt den übergeben Text in das Ergebnis-Log für den Algorithmus, falls die übergebene Bedingung erfüllt ist
@@ -311,7 +313,7 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 	 * @param bedingung   die Bedingung
 	 * @param text        der zu loggende Text
 	 */
-	private log(bedingung: boolean, text: string) : void;
+	private log(bedingung: boolean, text: string): void;
 
 	/**
 	 * Implementation for method overloads of 'log'
@@ -326,7 +328,9 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 			if (bedingung) {
 				this.ergebnis.log.add(this.logIndent + text);
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

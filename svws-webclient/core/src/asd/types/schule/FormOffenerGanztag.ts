@@ -17,17 +17,17 @@ export class FormOffenerGanztag extends JavaEnum<FormOffenerGanztag> implements 
 	/**
 	 * an der eigenen Schule wahrgenommen (ggf. an anderer Einrichtung)
 	 */
-	public static readonly EIGENE_SCHULE: FormOffenerGanztag = new FormOffenerGanztag("EIGENE_SCHULE", 0, );
+	public static readonly EIGENE_SCHULE: FormOffenerGanztag = new FormOffenerGanztag("EIGENE_SCHULE", 0);
 
 	/**
 	 * vollständig an einer anderen Schule
 	 */
-	public static readonly ANDERE_SCHULE: FormOffenerGanztag = new FormOffenerGanztag("ANDERE_SCHULE", 1, );
+	public static readonly ANDERE_SCHULE: FormOffenerGanztag = new FormOffenerGanztag("ANDERE_SCHULE", 1);
 
 	/**
 	 * nicht angeboten
 	 */
-	public static readonly NICHT_ANGEBOTEN: FormOffenerGanztag = new FormOffenerGanztag("NICHT_ANGEBOTEN", 2, );
+	public static readonly NICHT_ANGEBOTEN: FormOffenerGanztag = new FormOffenerGanztag("NICHT_ANGEBOTEN", 2);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -71,7 +71,7 @@ export class FormOffenerGanztag extends JavaEnum<FormOffenerGanztag> implements 
 	 */
 	public static valueOf(name: string): FormOffenerGanztag | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<FormOffenerGanztagKatalogEintrag, FormOffenerGanztag> {

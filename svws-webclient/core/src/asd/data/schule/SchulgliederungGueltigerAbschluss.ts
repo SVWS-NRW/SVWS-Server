@@ -56,7 +56,9 @@ export class SchulgliederungGueltigerAbschluss extends JavaObject {
 			this.berufsbildend = berufsbildend;
 			this.jahrgangVon = jahrgangVon;
 			this.jahrgangBis = jahrgangBis;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

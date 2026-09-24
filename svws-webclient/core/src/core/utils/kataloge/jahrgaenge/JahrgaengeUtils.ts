@@ -153,7 +153,7 @@ export class JahrgaengeUtils extends JavaObject {
 		if ((sf === null) || (!sf.hatGymOb) || (gliederung === null) || (jahrgang === null)) {
 			return null;
 		}
-		let _sevar_1739790870 : any;
+		let _sevar_1739790870;
 		const _seexpr_1739790870 = (jahrgang);
 		if (_seexpr_1739790870 === "05") {
 			_sevar_1739790870 = ((schulform as unknown === Schulform.GY as unknown) && (gliederung.istG8() || (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 8 : 9;
@@ -194,7 +194,7 @@ export class JahrgaengeUtils extends JavaObject {
 	 */
 	public static istSekI(jahrgang: string): boolean {
 		const jg: Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(jahrgang);
-		let _sevar_590951878 : any;
+		let _sevar_590951878;
 		const _seexpr_590951878 = (jg);
 		if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_05) {
 			_sevar_590951878 = true;
@@ -223,7 +223,7 @@ export class JahrgaengeUtils extends JavaObject {
 	 */
 	public static istGymOb(jahrgang: string): boolean {
 		const jg: Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(jahrgang);
-		let _sevar_1826259116 : any;
+		let _sevar_1826259116;
 		const _seexpr_1826259116 = (jg);
 		if (_seexpr_1826259116 === Jahrgaenge.EF) {
 			_sevar_1826259116 = true;

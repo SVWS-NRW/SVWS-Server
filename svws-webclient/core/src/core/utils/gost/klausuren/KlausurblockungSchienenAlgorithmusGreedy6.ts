@@ -23,9 +23,9 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 		return "Recursive Largest First (RLF)";
 	}
 
-	public berechne(pZeitEnde: number) : void;
+	public berechne(pZeitEnde: number): void;
 
-	public berechne() : void;
+	public berechne(): void;
 
 	/**
 	 * Implementation for method overloads of 'berechne'
@@ -63,7 +63,9 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 					nr2 = this._dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

@@ -75,7 +75,9 @@ export class GostKlausurenHalbjahresdaten extends JavaObject {
 			const gostHalbjahr: number = __param1 as number;
 			this.abiturjahrgang = abiturjahrgang;
 			this.gostHalbjahr = gostHalbjahr;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

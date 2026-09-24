@@ -49,7 +49,9 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.Logger'))))) {
 			const pLogger: Logger = cast_de_svws_nrw_core_logger_Logger(__param0);
 			this.log = pLogger;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

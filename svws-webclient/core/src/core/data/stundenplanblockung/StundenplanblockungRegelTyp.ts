@@ -209,7 +209,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	 */
 	public static valueOf(name: string): StundenplanblockungRegelTyp | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

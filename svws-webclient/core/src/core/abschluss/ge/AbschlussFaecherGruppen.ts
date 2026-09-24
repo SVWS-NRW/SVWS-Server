@@ -101,7 +101,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public getKuerzelListe(filter: Predicate<GEAbschlussFach>) : string;
+	public getKuerzelListe(filter: Predicate<GEAbschlussFach>): string;
 
 	/**
 	 * Erstellt eine Zeichenkette mit einer Komma-separierten Liste der Kürzel aller Fächer
@@ -113,7 +113,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 *
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public getKuerzelListe(filterFG1: Predicate<GEAbschlussFach>, filterFG2: Predicate<GEAbschlussFach>) : string;
+	public getKuerzelListe(filterFG1: Predicate<GEAbschlussFach>, filterFG2: Predicate<GEAbschlussFach>): string;
 
 	/**
 	 * Implementation for method overloads of 'getKuerzelListe'
@@ -149,7 +149,9 @@ export class AbschlussFaecherGruppen extends JavaObject {
 				sb.append(fach);
 			}
 			return sb.toString();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

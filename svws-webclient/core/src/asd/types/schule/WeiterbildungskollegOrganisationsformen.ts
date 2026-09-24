@@ -18,12 +18,12 @@ export class WeiterbildungskollegOrganisationsformen extends JavaEnum<Weiterbild
 	/**
 	 * Organisationsform: Teilbeleger
 	 */
-	public static readonly TEILZEIT: WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("TEILZEIT", 0, );
+	public static readonly TEILZEIT: WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("TEILZEIT", 0);
 
 	/**
 	 * Organisationsform: Vollbeleger
 	 */
-	public static readonly VOLLZEIT: WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("VOLLZEIT", 1, );
+	public static readonly VOLLZEIT: WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("VOLLZEIT", 1);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -79,7 +79,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaEnum<Weiterbild
 	 */
 	public static valueOf(name: string): WeiterbildungskollegOrganisationsformen | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<OrganisationsformKatalogEintrag, WeiterbildungskollegOrganisationsformen> {

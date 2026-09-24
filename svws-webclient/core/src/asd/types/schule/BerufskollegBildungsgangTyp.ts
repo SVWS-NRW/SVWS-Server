@@ -17,27 +17,27 @@ export class BerufskollegBildungsgangTyp extends JavaEnum<BerufskollegBildungsga
 	/**
 	 * Berufsfachschulen
 	 */
-	public static readonly BERUFSFACHSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSFACHSCHULE", 0, );
+	public static readonly BERUFSFACHSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSFACHSCHULE", 0);
 
 	/**
 	 * Berufsfachschulen
 	 */
-	public static readonly BERUFSSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSSCHULE", 1, );
+	public static readonly BERUFSSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFSSCHULE", 1);
 
 	/**
 	 * Berufliches Gymnasium
 	 */
-	public static readonly BERUFLICHES_GYMNASIUM: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFLICHES_GYMNASIUM", 2, );
+	public static readonly BERUFLICHES_GYMNASIUM: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("BERUFLICHES_GYMNASIUM", 2);
 
 	/**
 	 * Fachoberschule
 	 */
-	public static readonly FACHOBERSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHOBERSCHULE", 3, );
+	public static readonly FACHOBERSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHOBERSCHULE", 3);
 
 	/**
 	 * Fachschule
 	 */
-	public static readonly FACHSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHSCHULE", 4, );
+	public static readonly FACHSCHULE: BerufskollegBildungsgangTyp = new BerufskollegBildungsgangTyp("FACHSCHULE", 4);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -81,7 +81,7 @@ export class BerufskollegBildungsgangTyp extends JavaEnum<BerufskollegBildungsga
 	 */
 	public static valueOf(name: string): BerufskollegBildungsgangTyp | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BildungsgangTypKatalogEintrag, BerufskollegBildungsgangTyp> {

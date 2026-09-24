@@ -89,7 +89,7 @@ export class GostBelegpruefungsArt extends JavaEnum<GostBelegpruefungsArt> {
 	 */
 	public static valueOf(name: string): GostBelegpruefungsArt | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

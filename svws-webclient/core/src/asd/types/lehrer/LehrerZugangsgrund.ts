@@ -17,27 +17,27 @@ export class LehrerZugangsgrund extends JavaEnum<LehrerZugangsgrund> implements 
 	/**
 	 * Grund 'Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung' für das Kommen des Lehrers an die Schule
 	 */
-	public static readonly NEU: LehrerZugangsgrund = new LehrerZugangsgrund("NEU", 0, );
+	public static readonly NEU: LehrerZugangsgrund = new LehrerZugangsgrund("NEU", 0);
 
 	/**
 	 * Grund 'Übertritt aus dem Schuldienst eines anderen Bundeslandes' für das Kommen des Lehrers an die Schule
 	 */
-	public static readonly AndBuLand: LehrerZugangsgrund = new LehrerZugangsgrund("AndBuLand", 1, );
+	public static readonly AndBuLand: LehrerZugangsgrund = new LehrerZugangsgrund("AndBuLand", 1);
 
 	/**
 	 * Grund 'Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule' für das Kommen des Lehrers an die Schule
 	 */
-	public static readonly WECHSEL: LehrerZugangsgrund = new LehrerZugangsgrund("WECHSEL", 2, );
+	public static readonly WECHSEL: LehrerZugangsgrund = new LehrerZugangsgrund("WECHSEL", 2);
 
 	/**
 	 * Grund 'Wiedereintritt in den Schuldienst' für das Kommen des Lehrers an die Schule
 	 */
-	public static readonly WIEDER: LehrerZugangsgrund = new LehrerZugangsgrund("WIEDER", 3, );
+	public static readonly WIEDER: LehrerZugangsgrund = new LehrerZugangsgrund("WIEDER", 3);
 
 	/**
 	 * Grund 'Sonstige Zugänge' für das Kommen des Lehrers an die Schule
 	 */
-	public static readonly SONSTIG: LehrerZugangsgrund = new LehrerZugangsgrund("SONSTIG", 4, );
+	public static readonly SONSTIG: LehrerZugangsgrund = new LehrerZugangsgrund("SONSTIG", 4);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -81,7 +81,7 @@ export class LehrerZugangsgrund extends JavaEnum<LehrerZugangsgrund> implements 
 	 */
 	public static valueOf(name: string): LehrerZugangsgrund | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerZugangsgrundKatalogEintrag, LehrerZugangsgrund> {

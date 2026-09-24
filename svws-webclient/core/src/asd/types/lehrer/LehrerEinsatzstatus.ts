@@ -17,17 +17,17 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> implement
 	/**
 	 * Einsatzstatus: 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig'
 	 */
-	public static readonly A: LehrerEinsatzstatus = new LehrerEinsatzstatus("A", 0, );
+	public static readonly A: LehrerEinsatzstatus = new LehrerEinsatzstatus("A", 0);
 
 	/**
 	 * Einsatzstatus: 'nicht Stammschule, aber auch hier tätig'
 	 */
-	public static readonly B: LehrerEinsatzstatus = new LehrerEinsatzstatus("B", 1, );
+	public static readonly B: LehrerEinsatzstatus = new LehrerEinsatzstatus("B", 1);
 
 	/**
 	 * Einsatzstatus: 'Stammschule, nur hier tätig'
 	 */
-	public static readonly DEFAULT: LehrerEinsatzstatus = new LehrerEinsatzstatus("DEFAULT", 2, );
+	public static readonly DEFAULT: LehrerEinsatzstatus = new LehrerEinsatzstatus("DEFAULT", 2);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -87,7 +87,7 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> implement
 	 */
 	public static valueOf(name: string): LehrerEinsatzstatus | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerEinsatzstatusKatalogEintrag, LehrerEinsatzstatus> {

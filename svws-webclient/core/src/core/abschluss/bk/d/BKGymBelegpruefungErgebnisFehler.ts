@@ -46,7 +46,9 @@ export class BKGymBelegpruefungErgebnisFehler extends JavaObject {
 			this.beschreibung = f.text;
 		} else if ((__param0 === undefined)) {
 			// empty method body
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

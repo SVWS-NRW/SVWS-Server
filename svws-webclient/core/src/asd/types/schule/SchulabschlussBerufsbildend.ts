@@ -17,82 +17,82 @@ export class SchulabschlussBerufsbildend extends JavaEnum<SchulabschlussBerufsbi
 	/**
 	 * Es liegt kein Abschluss vor
 	 */
-	public static readonly OA: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("OA", 0, );
+	public static readonly OA: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("OA", 0);
 
 	/**
 	 * Abschluss der Ausbildungsvorbereitung
 	 */
-	public static readonly VORB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VORB", 1, );
+	public static readonly VORB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VORB", 1);
 
 	/**
 	 * Versetzungszeugnis
 	 */
-	public static readonly VERS: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VERS", 2, );
+	public static readonly VERS: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VERS", 2);
 
 	/**
 	 * Abschlusszeugnis in Aufbaubildungsgängen
 	 */
-	public static readonly AUFB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("AUFB", 3, );
+	public static readonly AUFB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("AUFB", 3);
 
 	/**
 	 * Abschluss der Berufschulvorbereitung
 	 */
-	public static readonly BV: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BV", 4, );
+	public static readonly BV: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BV", 4);
 
 	/**
 	 * Vorpraktikum
 	 */
-	public static readonly VP: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VP", 5, );
+	public static readonly VP: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VP", 5);
 
 	/**
 	 * Vorpraktikum
 	 */
-	public static readonly BP: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BP", 6, );
+	public static readonly BP: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BP", 6);
 
 	/**
 	 * Abschluss der Berufschulgrundjahres
 	 */
-	public static readonly BG: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BG", 7, );
+	public static readonly BG: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BG", 7);
 
 	/**
 	 * Abschlusszeugnis berufliche Kenntnisse
 	 */
-	public static readonly ASZBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("ASZBK", 8, );
+	public static readonly ASZBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("ASZBK", 8);
 
 	/**
 	 * Berufschulabschluss
 	 */
-	public static readonly BS: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BS", 9, );
+	public static readonly BS: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BS", 9);
 
 	/**
 	 * Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten
 	 */
-	public static readonly BK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BK", 10, );
+	public static readonly BK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BK", 10);
 
 	/**
 	 * Berufsabschluss
 	 */
-	public static readonly BAB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BAB", 11, );
+	public static readonly BAB: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BAB", 11);
 
 	/**
 	 * Fachschulabschluss (berufliche Weiterbildung)
 	 */
-	public static readonly BW: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BW", 12, );
+	public static readonly BW: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BW", 12);
 
 	/**
 	 * Erweiterte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten
 	 */
-	public static readonly EBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("EBK", 13, );
+	public static readonly EBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("EBK", 13);
 
 	/**
 	 * Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten
 	 */
-	public static readonly VBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VBK", 14, );
+	public static readonly VBK: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VBK", 14);
 
 	/**
 	 * Pseudoabschluss: Schulwechsler, die im selben Bildungsgang verbleiben
 	 */
-	public static readonly WECHSEL: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("WECHSEL", 15, );
+	public static readonly WECHSEL: SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("WECHSEL", 15);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -136,7 +136,7 @@ export class SchulabschlussBerufsbildend extends JavaEnum<SchulabschlussBerufsbi
 	 */
 	public static valueOf(name: string): SchulabschlussBerufsbildend | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<SchulabschlussBerufsbildendKatalogEintrag, SchulabschlussBerufsbildend> {

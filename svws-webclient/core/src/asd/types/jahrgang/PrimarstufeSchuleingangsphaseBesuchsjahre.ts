@@ -17,17 +17,17 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	/**
 	 * E1: Das erste Besuchsjahr in der Schuleingangsphase
 	 */
-	public static readonly E1: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E1", 0, );
+	public static readonly E1: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E1", 0);
 
 	/**
 	 * E2: Das zweite Besuchsjahr in der Schuleingangsphase
 	 */
-	public static readonly E2: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E2", 1, );
+	public static readonly E2: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E2", 1);
 
 	/**
 	 * E3: Das dritte Besuchsjahr in der Schuleingangsphase
 	 */
-	public static readonly E3: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E3", 2, );
+	public static readonly E3: PrimarstufeSchuleingangsphaseBesuchsjahre = new PrimarstufeSchuleingangsphaseBesuchsjahre("E3", 2);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -71,7 +71,7 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 	 */
 	public static valueOf(name: string): PrimarstufeSchuleingangsphaseBesuchsjahre | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag, PrimarstufeSchuleingangsphaseBesuchsjahre> {

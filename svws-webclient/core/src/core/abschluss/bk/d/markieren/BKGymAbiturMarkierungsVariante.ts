@@ -156,7 +156,9 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			this.unmarkiert.addAll(other.unmarkiert);
 			this.log.addAll(other.log);
 			this.addLogEintrag(1, "Variante ist: " + this.kennung + ".");
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

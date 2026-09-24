@@ -335,7 +335,7 @@ export class SprachendatenUtils extends JavaObject {
 	 */
 	public static getErsetzeSprache(kuerzel: string): string | null {
 		const fach: Fach = Fach.getBySchluesselOrDefault(kuerzel);
-		let _sevar_832970431 : any;
+		let _sevar_832970431;
 		const _seexpr_832970431 = (fach);
 		if (_seexpr_832970431 === Fach.AM) {
 			_sevar_832970431 = null;
@@ -647,7 +647,7 @@ export class SprachendatenUtils extends JavaObject {
 			default: {
 				try {
 					return JavaInteger.parseInt(kuerzelJg);
-				} catch(e : any) {
+				} catch (e: any) {
 					return 0;
 				}
 			}

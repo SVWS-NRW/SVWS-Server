@@ -22,47 +22,47 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	/**
 	 * KAoA-Kategorie: Formen der Orientierung und Beratung
 	 */
-	public static readonly SBO_2: KAOAKategorie = new KAOAKategorie("SBO_2", 0, );
+	public static readonly SBO_2: KAOAKategorie = new KAOAKategorie("SBO_2", 0);
 
 	/**
 	 * KAoA-Kategorie: Strukturen an Schulen
 	 */
-	public static readonly SBO_3: KAOAKategorie = new KAOAKategorie("SBO_3", 1, );
+	public static readonly SBO_3: KAOAKategorie = new KAOAKategorie("SBO_3", 1);
 
 	/**
 	 * KAoA-Kategorie: Potenziale entdecken und den eigenen Standort bestimmen
 	 */
-	public static readonly SBO_4: KAOAKategorie = new KAOAKategorie("SBO_4", 2, );
+	public static readonly SBO_4: KAOAKategorie = new KAOAKategorie("SBO_4", 2);
 
 	/**
 	 * KAoA-Kategorie: Berufsfelder erkunden und Informationen sammeln
 	 */
-	public static readonly SBO_5: KAOAKategorie = new KAOAKategorie("SBO_5", 3, );
+	public static readonly SBO_5: KAOAKategorie = new KAOAKategorie("SBO_5", 3);
 
 	/**
 	 * KAoA-Kategorie: Praxis der Arbeitswelt kennenlernen und erproben
 	 */
-	public static readonly SBO_6: KAOAKategorie = new KAOAKategorie("SBO_6", 4, );
+	public static readonly SBO_6: KAOAKategorie = new KAOAKategorie("SBO_6", 4);
 
 	/**
 	 * KAoA-Kategorie: Nachholung der Erstberufsorientierung
 	 */
-	public static readonly SBO_7: KAOAKategorie = new KAOAKategorie("SBO_7", 5, );
+	public static readonly SBO_7: KAOAKategorie = new KAOAKategorie("SBO_7", 5);
 
 	/**
 	 * KAoA-Kategorie: Sekundarstufe II - Individuelle Voraussetzungen für eine Ausbildung oder ein Studium überprüfen
 	 */
-	public static readonly SBO_8: KAOAKategorie = new KAOAKategorie("SBO_8", 6, );
+	public static readonly SBO_8: KAOAKategorie = new KAOAKategorie("SBO_8", 6);
 
 	/**
 	 * KAoA-Kategorie: Sekundarstufe II - Praxis vertiefen - Ausbildungs- und Studienwahl konkretisieren
 	 */
-	public static readonly SBO_9: KAOAKategorie = new KAOAKategorie("SBO_9", 7, );
+	public static readonly SBO_9: KAOAKategorie = new KAOAKategorie("SBO_9", 7);
 
 	/**
 	 * KAoA-Kategorie: Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II
 	 */
-	public static readonly SBO_10: KAOAKategorie = new KAOAKategorie("SBO_10", 8, );
+	public static readonly SBO_10: KAOAKategorie = new KAOAKategorie("SBO_10", 8);
 
 	/**
 	 * (Integer) -> Schuljahr
@@ -216,7 +216,7 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 */
 	public static valueOf(name: string): KAOAKategorie | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KAOAKategorieKatalogEintrag, KAOAKategorie> {

@@ -43,7 +43,9 @@ export class KursManager extends JavaObject {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
 			const kurse: List<KursDaten> = cast_java_util_List(__param0);
 			this.addAll(kurse);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

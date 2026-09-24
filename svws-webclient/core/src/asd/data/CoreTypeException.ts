@@ -53,7 +53,9 @@ export class CoreTypeException extends RuntimeException {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Throwable'))) || (__param0 === null)) && (__param1 === undefined)) {
 			const cause: Throwable | null = cast_java_lang_Throwable(__param0);
 			// empty method body
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	transpilerCanonicalName(): string {

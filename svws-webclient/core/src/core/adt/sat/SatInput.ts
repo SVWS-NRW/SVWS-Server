@@ -317,7 +317,7 @@ export class SatInput extends JavaObject {
 	 * @param pArray  Das Array der Variablen.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public add_clause_exactly(pArray: Array<number>, pAmount: number) : void;
+	public add_clause_exactly(pArray: Array<number>, pAmount: number): void;
 
 	/**
 	 * Forciert, dass genau {@code pAmount} Variablen der Variablenliste den Wert TRUE haben.
@@ -325,7 +325,7 @@ export class SatInput extends JavaObject {
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public add_clause_exactly(pList: LinkedCollection<number>, pAmount: number) : void;
+	public add_clause_exactly(pList: LinkedCollection<number>, pAmount: number): void;
 
 	/**
 	 * Implementation for method overloads of 'add_clause_exactly'
@@ -362,7 +362,9 @@ export class SatInput extends JavaObject {
 				return;
 			}
 			this._bitonic_exactly(list, pAmount);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

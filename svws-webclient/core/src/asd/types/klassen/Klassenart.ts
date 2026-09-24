@@ -26,77 +26,77 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	/**
 	 * Klassenart: Kein Eintrag
 	 */
-	public static readonly UNDEFINIERT: Klassenart = new Klassenart("UNDEFINIERT", 0, );
+	public static readonly UNDEFINIERT: Klassenart = new Klassenart("UNDEFINIERT", 0);
 
 	/**
 	 * Klassenart: Hauptschulklasse 1A
 	 */
-	public static readonly HA_1A: Klassenart = new Klassenart("HA_1A", 1, );
+	public static readonly HA_1A: Klassenart = new Klassenart("HA_1A", 1);
 
 	/**
 	 * Klassenart: Hauptschulklasse 1B
 	 */
-	public static readonly HA_1B: Klassenart = new Klassenart("HA_1B", 2, );
+	public static readonly HA_1B: Klassenart = new Klassenart("HA_1B", 2);
 
 	/**
 	 * Klassenart: Hauptschulklasse ohne Differenzierung nach A und B
 	 */
-	public static readonly HA_AB: Klassenart = new Klassenart("HA_AB", 3, );
+	public static readonly HA_AB: Klassenart = new Klassenart("HA_AB", 3);
 
 	/**
 	 * Klassenart: Auffangklasse
 	 */
-	public static readonly AK: Klassenart = new Klassenart("AK", 4, );
+	public static readonly AK: Klassenart = new Klassenart("AK", 4);
 
 	/**
 	 * Klassenart: Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)
 	 */
-	public static readonly AM: Klassenart = new Klassenart("AM", 5, );
+	public static readonly AM: Klassenart = new Klassenart("AM", 5);
 
 	/**
 	 * Klassenart: BUS - Beruf und Schule
 	 */
-	public static readonly BP: Klassenart = new Klassenart("BP", 6, );
+	public static readonly BP: Klassenart = new Klassenart("BP", 6);
 
 	/**
 	 * Klassenart: Deutschförderung (ohne Bildungsgangzuordnung, BASS 13-63 Nr. 3)
 	 */
-	public static readonly DF: Klassenart = new Klassenart("DF", 7, );
+	public static readonly DF: Klassenart = new Klassenart("DF", 7);
 
 	/**
 	 * Klassenart: Integrative Lerngruppe
 	 */
-	public static readonly IL: Klassenart = new Klassenart("IL", 8, );
+	public static readonly IL: Klassenart = new Klassenart("IL", 8);
 
 	/**
 	 * Klassenart: Kooperationsklasse
 	 */
-	public static readonly KK: Klassenart = new Klassenart("KK", 9, );
+	public static readonly KK: Klassenart = new Klassenart("KK", 9);
 
 	/**
 	 * Klassenart: Frühförderung: SKG (Präsenzgruppe)
 	 */
-	public static readonly PG: Klassenart = new Klassenart("PG", 10, );
+	public static readonly PG: Klassenart = new Klassenart("PG", 10);
 
 	/**
 	 * Klassenart: Profilklasse (gemäß § 21 Abs. 3 APO-S I)
 	 */
-	public static readonly PK: Klassenart = new Klassenart("PK", 11, );
+	public static readonly PK: Klassenart = new Klassenart("PK", 11);
 
 	/**
 	 * Klassenart: Regelklasse
 	 */
-	public static readonly RK: Klassenart = new Klassenart("RK", 12, );
+	public static readonly RK: Klassenart = new Klassenart("RK", 12);
 
 	/**
 	 * Klassenart: Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)
 	 */
-	public static readonly SG: Klassenart = new Klassenart("SG", 13, );
+	public static readonly SG: Klassenart = new Klassenart("SG", 13);
 
 	/**
 	 * Klassenart: Vorbereitungsklasse
 	 */
-	public static readonly VK: Klassenart = new Klassenart("VK", 14, );
+	public static readonly VK: Klassenart = new Klassenart("VK", 14);
 
 	/**
 	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
@@ -196,7 +196,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	 * @return die Default-Klassenart
 	 */
 	public static getDefault(schulform: Schulform): Klassenart | null {
-		let _sevar_1941679985 : any;
+		let _sevar_1941679985;
 		const _seexpr_1941679985 = (schulform);
 		if (_seexpr_1941679985 === Schulform.FW) {
 			_sevar_1941679985 = Klassenart.RK;
@@ -260,7 +260,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	 */
 	public static valueOf(name: string): Klassenart | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KlassenartKatalogEintrag, Klassenart> {

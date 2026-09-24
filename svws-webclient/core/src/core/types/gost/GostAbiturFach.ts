@@ -183,7 +183,7 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	 */
 	public static valueOf(name: string): GostAbiturFach | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

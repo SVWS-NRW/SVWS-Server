@@ -699,14 +699,14 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.fachartZuKurs[fachartIndex] = kurs;
 	}
 
-	public aktionKursEntfernen(fachartIndex: number, kurs: KursblockungDynKurs) : void;
+	public aktionKursEntfernen(fachartIndex: number, kurs: KursblockungDynKurs): void;
 
 	/**
 	 * Versucht den S. aus dem Kurs zu entfernen.
 	 *
 	 * @param idKursDB  Die Datenbank-ID des Kurses.
 	 */
-	public aktionKursEntfernen(idKursDB: number) : void;
+	public aktionKursEntfernen(idKursDB: number): void;
 
 	/**
 	 * Implementation for method overloads of 'aktionKursEntfernen'
@@ -736,7 +736,9 @@ export class KursblockungDynSchueler extends JavaObject {
 					}
 				}
 			}
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

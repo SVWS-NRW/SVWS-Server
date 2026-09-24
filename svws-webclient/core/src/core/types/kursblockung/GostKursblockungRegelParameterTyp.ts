@@ -12,37 +12,37 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 	/**
 	 * Der Parameter-Typ Kursart.
 	 */
-	public static readonly KURSART: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURSART", 0, );
+	public static readonly KURSART: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURSART", 0);
 
 	/**
 	 * Der Parameter-Typ Schienennummer.
 	 */
-	public static readonly SCHIENEN_NR: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHIENEN_NR", 1, );
+	public static readonly SCHIENEN_NR: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHIENEN_NR", 1);
 
 	/**
 	 * Der Parameter-Typ Kurs-ID.
 	 */
-	public static readonly KURS_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURS_ID", 2, );
+	public static readonly KURS_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURS_ID", 2);
 
 	/**
 	 * Der Parameter Typ Schüler-ID.
 	 */
-	public static readonly SCHUELER_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHUELER_ID", 3, );
+	public static readonly SCHUELER_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHUELER_ID", 3);
 
 	/**
 	 * Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung.
 	 */
-	public static readonly BOOLEAN: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4, );
+	public static readonly BOOLEAN: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4);
 
 	/**
 	 * Der Parameter Typ für eine ganze Zahl.
 	 */
-	public static readonly GANZZAHL: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("GANZZAHL", 5, );
+	public static readonly GANZZAHL: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("GANZZAHL", 5);
 
 	/**
 	 * Der Parameter Typ Fach-ID.
 	 */
-	public static readonly FACH_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("FACH_ID", 6, );
+	public static readonly FACH_ID: GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("FACH_ID", 6);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -68,7 +68,7 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 	 */
 	public static valueOf(name: string): GostKursblockungRegelParameterTyp | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

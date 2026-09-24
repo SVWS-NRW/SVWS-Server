@@ -48,7 +48,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	 */
 	public static initValues<T extends CoreTypeData, U extends CoreTypeSimple<T, U>>(obj: U, clazz: Class<U>, data: JavaMap<string, List<T>>): void {
 		try {
-			const values: Array<U> = Array(data.size()).fill(null) as unknown as Array<U>;
+			const values: Array<U> = new Array(data.size()).fill(null) as unknown as Array<U>;
 			CoreTypeSimple._values.put(clazz, values);
 			let i: number = 0;
 			for (const bezeichner of data.keySet()) {
@@ -60,7 +60,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 					coreTypeValue._ordinal = i++;
 				}
 			}
-		} catch(e : any) {
+		} catch (e: any) {
 			throw new CoreTypeException(e);
 		}
 	}
@@ -76,7 +76,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	public static valuesByClass<S extends CoreTypeSimple<any, any>>(clazz: Class<S>): Array<S> {
 		const list = CoreTypeSimple._values.get(clazz);
 		if (list === null) {
-			return Array(0).fill(null) as unknown as Array<S>;
+			return new Array(0).fill(null) as unknown as Array<S>;
 		}
 		return list as unknown as Array<S>;
 	}

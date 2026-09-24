@@ -17,138 +17,138 @@ export class BeruflichesGymnasiumPruefungsordnungAnlage extends JavaEnum<Berufli
 	/**
 	 * Anlage D1: Bautechnische/-r Assistent/-in/AHR
 	 */
-	public static readonly D1: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D1", 0, );
+	public static readonly D1: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D1", 0);
 
 	/**
 	 * Elektrotechnische/-r Assistent/-in/AHR
 	 */
-	public static readonly D2: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D2", 1, );
+	public static readonly D2: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D2", 1);
 
 	/**
 	 * Erzieher/-in/AHR
 	 */
-	public static readonly D3: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D3", 2, );
+	public static readonly D3: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D3", 2);
 
 	/**
 	 * Informationstechnische/-r Assistent/-in/AHR
 	 */
-	public static readonly D3a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D3a", 3, );
+	public static readonly D3a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D3a", 3);
 
 	/**
 	 * Gestaltungstechnische/-r Assistent/-in/AHR
 	 */
-	public static readonly D4: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D4", 4, );
+	public static readonly D4: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D4", 4);
 
 	/**
 	 * Assistent/-in für Konstruktions- und Fertigungstechnik/AHR
 	 */
-	public static readonly D6: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D6", 5, );
+	public static readonly D6: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D6", 5);
 
 	/**
 	 * Assistent/-in für Konstruktions- und Fertigungstechnik/AHR
 	 */
-	public static readonly D7: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D7", 6, );
+	public static readonly D7: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D7", 6);
 
 	/**
 	 * Chemisch-technische/-r Assistent/-in/AHR
 	 */
-	public static readonly D8: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D8", 7, );
+	public static readonly D8: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D8", 7);
 
 	/**
 	 * Physikalisch-technische/-r Assistent/-in/AHR
 	 */
-	public static readonly D9: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D9", 8, );
+	public static readonly D9: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D9", 8);
 
 	/**
 	 * Umwelttechnische/-r Assistent/-in/AHR
 	 */
-	public static readonly D10: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D10", 9, );
+	public static readonly D10: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D10", 9);
 
 	/**
 	 * Kaufmännische/-r Assistent/-in/AHR
 	 */
-	public static readonly D12: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D12", 10, );
+	public static readonly D12: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D12", 10);
 
 	/**
 	 * Technische/-r Assistent/-in für Betriebsinformatik/AHR
 	 */
-	public static readonly D13: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D13", 11, );
+	public static readonly D13: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D13", 11);
 
 	/**
 	 * Allgemeine Hochschulreife/Bautechnik
 	 */
-	public static readonly D14: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D14", 12, );
+	public static readonly D14: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D14", 12);
 
 	/**
 	 * Allgemeine Hochschulreife/Elektrotechnik
 	 */
-	public static readonly D15: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D15", 13, );
+	public static readonly D15: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D15", 13);
 
 	/**
 	 * Allgemeine Hochschulreife/Ingenieurwissenschaften
 	 */
-	public static readonly D15a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D15a", 14, );
+	public static readonly D15a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D15a", 14);
 
 	/**
 	 * Allgemeine Hochschulreife/Erziehungswissenschaften
 	 */
-	public static readonly D16: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D16", 15, );
+	public static readonly D16: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D16", 15);
 
 	/**
 	 * Allgemeine Hochschulreife/Freizeitsportleiter/-in (Sport, Gesundheitsförderung, Biologie)
 	 */
-	public static readonly D17: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D17", 16, );
+	public static readonly D17: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D17", 16);
 
 	/**
 	 * Allgemeine Hochschulreife/Gesundheit
 	 */
-	public static readonly D17a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D17a", 17, );
+	public static readonly D17a: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D17a", 17);
 
 	/**
 	 * Allgemeine Hochschulreife/Kunst, Englisch
 	 */
-	public static readonly D18: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D18", 18, );
+	public static readonly D18: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D18", 18);
 
 	/**
 	 * Allgemeine Hochschulreife/Ernährung
 	 */
-	public static readonly D19: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D19", 19, );
+	public static readonly D19: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D19", 19);
 
 	/**
 	 * Allgemeine Hochschulreife/Maschinenbautechnik
 	 */
-	public static readonly D20: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D20", 20, );
+	public static readonly D20: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D20", 20);
 
 	/**
 	 * Allgemeine Hochschulreife/Mathematik, Informatik
 	 */
-	public static readonly D21: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D21", 21, );
+	public static readonly D21: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D21", 21);
 
 	/**
 	 * Allgemeine Hochschulreife/Biologie, Chemie
 	 */
-	public static readonly D22: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D22", 22, );
+	public static readonly D22: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D22", 22);
 
 	/**
 	 * Allgemeine Hochschulreife/Chemie, Chemietechnik
 	 */
-	public static readonly D23: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D23", 23, );
+	public static readonly D23: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D23", 23);
 
 	/**
 	 * Allgemeine Hochschulreife/Deutsch, Englisch
 	 */
-	public static readonly D25: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D25", 24, );
+	public static readonly D25: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D25", 24);
 
 	/**
 	 * Allgemeine Hochschulreife/Betriebswirtschaftslehre
 	 */
-	public static readonly D27: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D27", 25, );
+	public static readonly D27: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D27", 25);
 
 	/**
 	 * Allgemeine Hochschulreife/Fremdsprachenkorrespondent/-in (Betriebswirtschaftslehre, Sprachen) -> 2024
 	 * 	    Allgemeine Hochschulreife/International Business Communication (Betriebswirtschaftslehre Sprachen 2025 ->
 	 */
-	public static readonly D28: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D28", 26, );
+	public static readonly D28: BeruflichesGymnasiumPruefungsordnungAnlage = new BeruflichesGymnasiumPruefungsordnungAnlage("D28", 26);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -192,7 +192,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlage extends JavaEnum<Berufli
 	 */
 	public static valueOf(name: string): BeruflichesGymnasiumPruefungsordnungAnlage | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag, BeruflichesGymnasiumPruefungsordnungAnlage> {

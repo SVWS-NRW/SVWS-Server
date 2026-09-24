@@ -119,7 +119,9 @@ export class GostFaecherManager extends JavaObject {
 			this.schuljahr = schuljahr;
 			this.addAll(faecher);
 			this.addFachkombinationenAll(fachkombis);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -230,7 +232,7 @@ export class GostFaecherManager extends JavaObject {
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
-	public add(fach: GostFach) : boolean;
+	public add(fach: GostFach): boolean;
 
 	/**
 	 * Fügt die geforderten oder nicht erlaubte Fächerkombination zu diesem
@@ -240,7 +242,7 @@ export class GostFaecherManager extends JavaObject {
 	 *
 	 * @return true, falls die Fachkombination hinzugefügt wurde
 	 */
-	public add(fachkombi: GostJahrgangFachkombination) : boolean;
+	public add(fachkombi: GostJahrgangFachkombination): boolean;
 
 	/**
 	 * Implementation for method overloads of 'add'
@@ -254,7 +256,9 @@ export class GostFaecherManager extends JavaObject {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachkombination'))))) {
 			const fachkombi: GostJahrgangFachkombination = cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination(__param0);
 			return this.addFachkombinationInternal(fachkombi);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

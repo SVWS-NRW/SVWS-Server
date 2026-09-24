@@ -117,7 +117,7 @@ export class KlausurterminblockungModusKursarten extends JavaEnum<Klausurterminb
 	 */
 	public static valueOf(name: string): KlausurterminblockungModusKursarten | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {

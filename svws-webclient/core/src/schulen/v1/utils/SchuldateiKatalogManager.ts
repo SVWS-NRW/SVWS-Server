@@ -227,7 +227,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hasEintrag(wert: string | null) : boolean;
+	public hasEintrag(wert: string | null): boolean;
 
 	/**
 	 * Gibt zurück, ob ein Katalog-Eintrag für den Wert existiert.
@@ -236,7 +236,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hasEintrag(wert: number) : boolean;
+	public hasEintrag(wert: number): boolean;
 
 	/**
 	 * Implementation for method overloads of 'hasEintrag'
@@ -251,7 +251,9 @@ export class SchuldateiKatalogManager extends JavaObject {
 		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const wert: number = __param0 as number;
 			return this.hasEintrag("" + wert);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -262,7 +264,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag im angegebenen Schuljahr existiert und ansonsten false.
 	 */
-	public hasEintragBySchuljahr(schuljahr: number, wert: string) : boolean;
+	public hasEintragBySchuljahr(schuljahr: number, wert: string): boolean;
 
 	/**
 	 * Gibt zurück, ob ein Katalog-Eintrag für den numerischen Wert existiert.
@@ -272,7 +274,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hasEintragBySchuljahr(schuljahr: number, wert: number) : boolean;
+	public hasEintragBySchuljahr(schuljahr: number, wert: number): boolean;
 
 	/**
 	 * Implementation for method overloads of 'hasEintragBySchuljahr'
@@ -286,7 +288,9 @@ export class SchuldateiKatalogManager extends JavaObject {
 			const schuljahr: number = __param0 as number;
 			const wert: number = __param1 as number;
 			return this.hasEintragBySchuljahr(schuljahr, ("" + wert));
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -297,7 +301,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hasEintragInZeitraum(abBis: SchuldateiEintrag | null, wert: string | null) : boolean;
+	public hasEintragInZeitraum(abBis: SchuldateiEintrag | null, wert: string | null): boolean;
 
 	/**
 	 * Gibt zurück, ob ein Katalog-Eintrag für den numerischen Wert in einem Zeitraum existiert.
@@ -307,7 +311,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hasEintragInZeitraum(abBis: SchuldateiEintrag | null, wert: number) : boolean;
+	public hasEintragInZeitraum(abBis: SchuldateiEintrag | null, wert: number): boolean;
 
 	/**
 	 * Prüft ob ein Katalog-Eintrag für den Wert in einem Zeitraum existiert
@@ -321,7 +325,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return boolean, true wenn Eintrag entsprechend vorliegt, sonst false
 	 */
-	public hasEintragInZeitraum(schuljahrAb: number, schuljahrBis: number, wert: string | null, mitTeilgueltigkeit: boolean) : boolean;
+	public hasEintragInZeitraum(schuljahrAb: number, schuljahrBis: number, wert: string | null, mitTeilgueltigkeit: boolean): boolean;
 
 	/**
 	 * Implementation for method overloads of 'hasEintragInZeitraum'
@@ -365,7 +369,9 @@ export class SchuldateiKatalogManager extends JavaObject {
 				}
 			}
 			return false;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

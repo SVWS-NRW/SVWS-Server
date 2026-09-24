@@ -141,7 +141,9 @@ export class UvKursImportManager extends JavaObject {
 				this.kurse.add(quellkurs);
 			}
 			this.analyse();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

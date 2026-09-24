@@ -64,7 +64,7 @@ export class SchuldateiUtils extends JavaObject {
 			}
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
-		} catch(nfe : any) {
+		} catch (nfe: any) {
 			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.");
 		}
 	}

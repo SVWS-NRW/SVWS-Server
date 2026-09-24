@@ -17,52 +17,52 @@ export class Versetzungsvermerk extends JavaEnum<Versetzungsvermerk> implements 
 	/**
 	 * Versetzt
 	 */
-	public static readonly VERSETZT: Versetzungsvermerk = new Versetzungsvermerk("VERSETZT", 0, );
+	public static readonly VERSETZT: Versetzungsvermerk = new Versetzungsvermerk("VERSETZT", 0);
 
 	/**
 	 * Versetzt, Anforderungen nicht erfüllt
 	 */
-	public static readonly VERSETZT_ANFORERUNGEN_UNERFUELLT: Versetzungsvermerk = new Versetzungsvermerk("VERSETZT_ANFORERUNGEN_UNERFUELLT", 1, );
+	public static readonly VERSETZT_ANFORERUNGEN_UNERFUELLT: Versetzungsvermerk = new Versetzungsvermerk("VERSETZT_ANFORERUNGEN_UNERFUELLT", 1);
 
 	/**
 	 * Vorversetzt
 	 */
-	public static readonly VORVERSETZT: Versetzungsvermerk = new Versetzungsvermerk("VORVERSETZT", 2, );
+	public static readonly VORVERSETZT: Versetzungsvermerk = new Versetzungsvermerk("VORVERSETZT", 2);
 
 	/**
 	 * Freiwillig zurück
 	 */
-	public static readonly FREIWILLIG_ZURUECK: Versetzungsvermerk = new Versetzungsvermerk("FREIWILLIG_ZURUECK", 3, );
+	public static readonly FREIWILLIG_ZURUECK: Versetzungsvermerk = new Versetzungsvermerk("FREIWILLIG_ZURUECK", 3);
 
 	/**
 	 * Nicht versetzt
 	 */
-	public static readonly NICHT_VERSETZT: Versetzungsvermerk = new Versetzungsvermerk("NICHT_VERSETZT", 4, );
+	public static readonly NICHT_VERSETZT: Versetzungsvermerk = new Versetzungsvermerk("NICHT_VERSETZT", 4);
 
 	/**
 	 * Nicht versetzt, Nachprüfung möglich
 	 */
-	public static readonly NICHT_VERSETZT_NACHPRUEFUNG: Versetzungsvermerk = new Versetzungsvermerk("NICHT_VERSETZT_NACHPRUEFUNG", 5, );
+	public static readonly NICHT_VERSETZT_NACHPRUEFUNG: Versetzungsvermerk = new Versetzungsvermerk("NICHT_VERSETZT_NACHPRUEFUNG", 5);
 
 	/**
 	 * Abschluss
 	 */
-	public static readonly ABSCHLUSS: Versetzungsvermerk = new Versetzungsvermerk("ABSCHLUSS", 6, );
+	public static readonly ABSCHLUSS: Versetzungsvermerk = new Versetzungsvermerk("ABSCHLUSS", 6);
 
 	/**
 	 * Verbleib in der Schuleingangsphase
 	 */
-	public static readonly VERBLEIB_SCHULEINGANGSPHASE: Versetzungsvermerk = new Versetzungsvermerk("VERBLEIB_SCHULEINGANGSPHASE", 7, );
+	public static readonly VERBLEIB_SCHULEINGANGSPHASE: Versetzungsvermerk = new Versetzungsvermerk("VERBLEIB_SCHULEINGANGSPHASE", 7);
 
 	/**
 	 * Verbleib in Stufe
 	 */
-	public static readonly VERBLEIB_STUFE: Versetzungsvermerk = new Versetzungsvermerk("VERBLEIB_STUFE", 8, );
+	public static readonly VERBLEIB_STUFE: Versetzungsvermerk = new Versetzungsvermerk("VERBLEIB_STUFE", 8);
 
 	/**
 	 * Versetzung auf Probe
 	 */
-	public static readonly VERSETZUNG_PROBE: Versetzungsvermerk = new Versetzungsvermerk("VERSETZUNG_PROBE", 9, );
+	public static readonly VERSETZUNG_PROBE: Versetzungsvermerk = new Versetzungsvermerk("VERSETZUNG_PROBE", 9);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -106,7 +106,7 @@ export class Versetzungsvermerk extends JavaEnum<Versetzungsvermerk> implements 
 	 */
 	public static valueOf(name: string): Versetzungsvermerk | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<VersetzungsvermerkKatalogEintrag, Versetzungsvermerk> {

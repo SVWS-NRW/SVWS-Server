@@ -65,7 +65,7 @@ export abstract class BasicValidator extends JavaObject {
 			if (!this.pruefe()) {
 				return false;
 			}
-		} catch(e : any) {
+		} catch (e: any) {
 			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 			return false;
 		}
@@ -80,7 +80,7 @@ export abstract class BasicValidator extends JavaObject {
 			if (!this.pruefeAbschluss()) {
 				success = false;
 			}
-		} catch(e : any) {
+		} catch (e: any) {
 			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 		}
 		return success;

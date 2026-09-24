@@ -434,6 +434,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case KS -> (this == Jahrgaenge.JAHRGANG_10);
 			case V -> (this == Jahrgaenge.JAHRGANG_10);
 			case BK, SB, WB, G -> false;
+			default -> false;
 		};
 	}
 
@@ -479,6 +480,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 			case KS -> (this == Jahrgaenge.JAHRGANG_10);
 			case V -> (this == Jahrgaenge.JAHRGANG_10);
 			case BK, SB, WB, G -> false;
+			default -> false;
 		};
 	}
 

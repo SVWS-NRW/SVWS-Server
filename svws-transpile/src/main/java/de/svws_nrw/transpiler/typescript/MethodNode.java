@@ -293,7 +293,7 @@ public final class MethodNode {
 
 		// the return type if the method is not a constructor
 		if (returnType != null) {
-			sb.append(" : ");
+			sb.append(": ");
 			sb.append(returnType.transpile(false));
 		}
 		sb.append(";");
@@ -630,8 +630,11 @@ public final class MethodNode {
 			sb.append(blockIndent);
 			sb.append("}");
 		}
-		sb.append(" else throw new Error('invalid method overload');");
-		sb.append(System.lineSeparator());
+		sb.append(" else {" + System.lineSeparator());
+		sb.append(blockIndent);
+		sb.append(indent + "throw new Error('invalid method overload');" + System.lineSeparator());
+		sb.append(blockIndent);
+		sb.append("}" + System.lineSeparator());
 
 		// implementation block end
 		sb.append(indent);

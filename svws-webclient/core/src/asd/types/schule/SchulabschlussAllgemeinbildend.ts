@@ -17,97 +17,97 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	/**
 	 * Es liegt kein Abschluss vor
 	 */
-	public static readonly OA: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("OA", 0, );
+	public static readonly OA: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("OA", 0);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)
 	 */
-	public static readonly HA9A: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9A", 1, );
+	public static readonly HA9A: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9A", 1);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)
 	 */
-	public static readonly HA9: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9", 2, );
+	public static readonly HA9: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9", 2);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen) - siehe BK-Bildungsgang A12
 	 */
-	public static readonly HA9_FOE: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_FOE", 3, );
+	public static readonly HA9_FOE: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_FOE", 3);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 9 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe
 	 */
-	public static readonly HA9_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_Q", 4, );
+	public static readonly HA9_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_Q", 4);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 10
 	 */
-	public static readonly HA10: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10", 5, );
+	public static readonly HA10: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10", 5);
 
 	/**
 	 * Hauptschulabschluss nach Klasse 10 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe
 	 */
-	public static readonly HA10_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10_Q", 6, );
+	public static readonly HA10_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10_Q", 6);
 
 	/**
 	 * Der Mittlere Schulabschluss bzw. Fachoberschulreife
 	 */
-	public static readonly MSA: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA", 7, );
+	public static readonly MSA: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA", 7);
 
 	/**
 	 * Der Mittlere Schulabschluss mit der Berechtigung zum Besuch Gymnasialen Oberstufe
 	 */
-	public static readonly MSA_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q", 8, );
+	public static readonly MSA_Q: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q", 8);
 
 	/**
 	 * Der Mittlere Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase der Gymnasialen Oberstufe
 	 */
-	public static readonly MSA_Q1: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q1", 9, );
+	public static readonly MSA_Q1: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q1", 9);
 
 	/**
 	 * Versetzung in die Klasse 11 der Fachoberschule (BK)
 	 */
-	public static readonly VS_11: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("VS_11", 10, );
+	public static readonly VS_11: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("VS_11", 10);
 
 	/**
 	 * Fachhochschulreife (nur schulischer Teil)
 	 */
-	public static readonly FHR_S: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR_S", 11, );
+	public static readonly FHR_S: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR_S", 11);
 
 	/**
 	 * Fachhochschulreife
 	 */
-	public static readonly FHR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR", 12, );
+	public static readonly FHR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR", 12);
 
 	/**
 	 * fachgebundene Hochschulreife (BK)
 	 */
-	public static readonly FGHR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FGHR", 13, );
+	public static readonly FGHR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FGHR", 13);
 
 	/**
 	 * Abitur / Allgemeine Hochschulreife
 	 */
-	public static readonly ABITUR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("ABITUR", 14, );
+	public static readonly ABITUR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("ABITUR", 14);
 
 	/**
 	 * Förderschule (Förderschwerpunkt geistige Entwicklung)
 	 */
-	public static readonly FOEG: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEG", 15, );
+	public static readonly FOEG: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEG", 15);
 
 	/**
 	 * Förderschule (Förderschwerpunkt Lernen)
 	 */
-	public static readonly FOEL: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEL", 16, );
+	public static readonly FOEL: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEL", 16);
 
 	/**
 	 * Waldorfschule
 	 */
-	public static readonly WALD: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("WALD", 17, );
+	public static readonly WALD: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("WALD", 17);
 
 	/**
 	 * Ohne Abschluss, kommt aus der Deutschförderung
 	 */
-	public static readonly DFR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("DFR", 18, );
+	public static readonly DFR: SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("DFR", 18);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -169,7 +169,7 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	 */
 	public static valueOf(name: string): SchulabschlussAllgemeinbildend | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<SchulabschlussAllgemeinbildendKatalogEintrag, SchulabschlussAllgemeinbildend> {

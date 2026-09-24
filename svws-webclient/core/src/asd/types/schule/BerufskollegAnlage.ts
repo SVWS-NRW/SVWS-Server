@@ -17,42 +17,42 @@ export class BerufskollegAnlage extends JavaEnum<BerufskollegAnlage> implements 
 	/**
 	 * Anlage A: Fachklassen duales System und Ausbildungsvorbereitung
 	 */
-	public static readonly A: BerufskollegAnlage = new BerufskollegAnlage("A", 0, );
+	public static readonly A: BerufskollegAnlage = new BerufskollegAnlage("A", 0);
 
 	/**
 	 * Anlage B: Berufsfachschule
 	 */
-	public static readonly B: BerufskollegAnlage = new BerufskollegAnlage("B", 1, );
+	public static readonly B: BerufskollegAnlage = new BerufskollegAnlage("B", 1);
 
 	/**
 	 * Anlage C: Berufsfachschule und Fachoberschule
 	 */
-	public static readonly C: BerufskollegAnlage = new BerufskollegAnlage("C", 2, );
+	public static readonly C: BerufskollegAnlage = new BerufskollegAnlage("C", 2);
 
 	/**
 	 * Anlage D: Berufliches Gymnasium und Fachoberschule
 	 */
-	public static readonly D: BerufskollegAnlage = new BerufskollegAnlage("D", 3, );
+	public static readonly D: BerufskollegAnlage = new BerufskollegAnlage("D", 3);
 
 	/**
 	 * Anlage E: Fachschule
 	 */
-	public static readonly E: BerufskollegAnlage = new BerufskollegAnlage("E", 4, );
+	public static readonly E: BerufskollegAnlage = new BerufskollegAnlage("E", 4);
 
 	/**
 	 * Anlage H: Berufsgrundbildung und Berufsausbildung an einer freien Waldorfschule / Hiberniakolleg
 	 */
-	public static readonly H: BerufskollegAnlage = new BerufskollegAnlage("H", 5, );
+	public static readonly H: BerufskollegAnlage = new BerufskollegAnlage("H", 5);
 
 	/**
 	 * Anlage X: Ehemalige Kollegschule
 	 */
-	public static readonly X: BerufskollegAnlage = new BerufskollegAnlage("X", 6, );
+	public static readonly X: BerufskollegAnlage = new BerufskollegAnlage("X", 6);
 
 	/**
 	 * Anlage Z: TODO
 	 */
-	public static readonly Z: BerufskollegAnlage = new BerufskollegAnlage("Z", 7, );
+	public static readonly Z: BerufskollegAnlage = new BerufskollegAnlage("Z", 7);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -96,7 +96,7 @@ export class BerufskollegAnlage extends JavaEnum<BerufskollegAnlage> implements 
 	 */
 	public static valueOf(name: string): BerufskollegAnlage | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<BerufskollegAnlageKatalogEintrag, BerufskollegAnlage> {

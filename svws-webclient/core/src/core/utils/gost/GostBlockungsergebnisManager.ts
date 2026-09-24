@@ -325,7 +325,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.ergebnis.blockungID = this.parent.getID();
 			this.ergebnis.gostHalbjahr = this.parent.daten().gostHalbjahr;
 			this.stateClear();
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -2851,7 +2853,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2))) {
 					summe++;
 				}
-			} catch(dne : any) {
+			} catch (dne: any) {
 				// empty block
 			}
 		}
@@ -2873,7 +2875,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3)) {
 					summe++;
 				}
-			} catch(dne : any) {
+			} catch (dne: any) {
 				// empty block
 			}
 		}
@@ -2895,7 +2897,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4)) {
 					summe++;
 				}
-			} catch(dne : any) {
+			} catch (dne: any) {
 				// empty block
 			}
 		}

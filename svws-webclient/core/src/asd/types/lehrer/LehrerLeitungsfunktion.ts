@@ -17,12 +17,12 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> imp
 	/**
 	 * Schulleitung
 	 */
-	public static readonly SL: LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL", 0, );
+	public static readonly SL: LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL", 0);
 
 	/**
 	 * Stellvertretende Schulleitung
 	 */
-	public static readonly SL_STV: LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL_STV", 1, );
+	public static readonly SL_STV: LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL_STV", 1);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -66,7 +66,7 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> imp
 	 */
 	public static valueOf(name: string): LehrerLeitungsfunktion | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<LehrerLeitungsfunktionKatalogEintrag, LehrerLeitungsfunktion> {

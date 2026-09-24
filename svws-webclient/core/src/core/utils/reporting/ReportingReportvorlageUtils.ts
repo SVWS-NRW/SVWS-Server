@@ -107,7 +107,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameterGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>) : ReportingReportvorlageParameterGruppe;
+	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>): ReportingReportvorlageParameterGruppe;
 
 	/**
 	 * Erstellt ein ReportingReportvorlageParameterGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
@@ -123,7 +123,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameterGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>) : ReportingReportvorlageParameterGruppe;
+	public static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>): ReportingReportvorlageParameterGruppe;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeReportingvorlageParameterGruppe'
@@ -153,7 +153,9 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			gruppe.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
 			gruppe.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
 			return gruppe;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -169,7 +171,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameter-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number) : ReportingReportvorlageParameter;
+	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number): ReportingReportvorlageParameter;
 
 	/**
 	 * Erstellt ein ReportingReportvorlageParameter-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
@@ -187,7 +189,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingReportvorlageParameter-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>) : ReportingReportvorlageParameter;
+	public static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>): ReportingReportvorlageParameter;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeVorlageParameter'
@@ -223,7 +225,9 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			parameter.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
 			parameter.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
 			return parameter;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -255,7 +259,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingSortierungDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>) : ReportingSortierungDefinitionGruppe;
+	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>): ReportingSortierungDefinitionGruppe;
 
 	/**
 	 * Erstellt ein ReportingSortierungDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
@@ -270,7 +274,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingSortierungDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>) : ReportingSortierungDefinitionGruppe;
+	public static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>): ReportingSortierungDefinitionGruppe;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeSortierungDefinitionGruppe'
@@ -297,7 +301,9 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			gruppe.uiErforderlicherServerMode = ReportingReportvorlageUtils.serverModeText(uiErforderlicherServerMode);
 			gruppe.uiErforderlicheKompetenzen = ReportingReportvorlageUtils.kompetenzIds(uiErforderlicheKompetenzen);
 			return gruppe;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -312,7 +318,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt basierend auf den angegebenen Parametern, inklusive der Angaben zu erforderlichem ServerMode und
@@ -329,7 +335,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen.
@@ -347,7 +353,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Erstellt ein ReportingFilterDefinitionGruppe-Objekt mit einer Vorauswahl an Filterdefinitionen, inklusive der Angaben zu erforderlichem ServerMode und
@@ -368,7 +374,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstFilterMultiselect: boolean, uiFilterMultiselectVerknuepfung: ReportingFilterVerknuepfung, uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>, filterDefinitionenOptionen: List<ReportingFilterDefinition>, filterDefinitionenVorauswahl: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeFilterDefinitionGruppe'
@@ -423,7 +429,9 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			const gruppe: ReportingFilterDefinitionGruppe | null = ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe(bezeichnung, typ, uiIstSichtbar, uiIstFilterMultiselect, uiFilterMultiselectVerknuepfung, uiErforderlicherServerMode, uiErforderlicheKompetenzen, filterDefinitionenOptionen);
 			gruppe.filterDefinitionen = new ArrayList(filterDefinitionenVorauswahl);
 			return gruppe;
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
@@ -432,7 +440,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
 	 */
-	public static erzeugeSchuelerStatusfilterGruppe() : ReportingFilterDefinitionGruppe;
+	public static erzeugeSchuelerStatusfilterGruppe(): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Erstellt die Filter-Definition-Gruppe "Statusfilter" für den Reporting-Typ "ReportingSchueler", inklusive der Angaben zu erforderlichem ServerMode und
@@ -444,7 +452,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	 *
 	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung nach dem Schülerstatus
 	 */
-	public static erzeugeSchuelerStatusfilterGruppe(uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>) : ReportingFilterDefinitionGruppe;
+	public static erzeugeSchuelerStatusfilterGruppe(uiErforderlicherServerMode: ServerMode, uiErforderlicheKompetenzen: List<BenutzerKompetenz>): ReportingFilterDefinitionGruppe;
 
 	/**
 	 * Implementation for method overloads of 'erzeugeSchuelerStatusfilterGruppe'
@@ -465,7 +473,9 @@ export class ReportingReportvorlageUtils extends JavaObject {
 				}
 			}
 			return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Schülerstatus", "ReportingSchueler", true, true, ReportingFilterVerknuepfung.OR, uiErforderlicherServerMode, uiErforderlicheKompetenzen, optionen, vorauswahl);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**

@@ -17,27 +17,27 @@ export class Kindergartenbesuch extends JavaEnum<Kindergartenbesuch> implements 
 	/**
 	 * Kein Kindergartenbesuch
 	 */
-	public static readonly KEINER: Kindergartenbesuch = new Kindergartenbesuch("KEINER", 0, );
+	public static readonly KEINER: Kindergartenbesuch = new Kindergartenbesuch("KEINER", 0);
 
 	/**
 	 * Kindergartenbesuch unter einem Jahr
 	 */
-	public static readonly MAX_1_JAHR: Kindergartenbesuch = new Kindergartenbesuch("MAX_1_JAHR", 1, );
+	public static readonly MAX_1_JAHR: Kindergartenbesuch = new Kindergartenbesuch("MAX_1_JAHR", 1);
 
 	/**
 	 * Kindergartenbesuch unter einem Jahr
 	 */
-	public static readonly MAX_2_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MAX_2_JAHRE", 2, );
+	public static readonly MAX_2_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MAX_2_JAHRE", 2);
 
 	/**
 	 * Kindergartenbesuch unter einem Jahr
 	 */
-	public static readonly MAX_3_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MAX_3_JAHRE", 3, );
+	public static readonly MAX_3_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MAX_3_JAHRE", 3);
 
 	/**
 	 * Kindergartenbesuch unter einem Jahr
 	 */
-	public static readonly MIN_3_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MIN_3_JAHRE", 4, );
+	public static readonly MIN_3_JAHRE: Kindergartenbesuch = new Kindergartenbesuch("MIN_3_JAHRE", 4);
 
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
@@ -81,7 +81,7 @@ export class Kindergartenbesuch extends JavaEnum<Kindergartenbesuch> implements 
 	 */
 	public static valueOf(name: string): Kindergartenbesuch | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	public getManager(): CoreTypeDataManager<KindergartenbesuchKatalogEintrag, Kindergartenbesuch> {

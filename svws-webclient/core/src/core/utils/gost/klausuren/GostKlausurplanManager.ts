@@ -474,7 +474,9 @@ export class GostKlausurplanManager extends JavaObject {
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurenKlausurdaten')))) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			const data: GostKlausurenKlausurdaten = cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurenKlausurdaten(__param0);
 			this.addKlausurData(data);
-		} else throw new Error('invalid method overload');
+		} else {
+			throw new Error('invalid method overload');
+		}
 	}
 
 	/**
