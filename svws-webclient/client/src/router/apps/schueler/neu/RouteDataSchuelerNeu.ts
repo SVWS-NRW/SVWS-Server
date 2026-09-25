@@ -30,11 +30,10 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 	}
 
 	private async createManager() {
-		const kindergaertenById = routeApp.cache.kataloge.kindergaertenById;
 		const klassenFuerAbschnitt = await this.getKlassenBySchuljahresabschnitt();
 		const jahrgaengeById = routeApp.cache.kataloge.jahrgaengeById;
 
-		return new SchuelerNeuManager(kindergaertenById, jahrgaengeById, abschnittStateImpl.alle, klassenFuerAbschnitt, abschnittStateImpl.auswahl);
+		return new SchuelerNeuManager(jahrgaengeById, abschnittStateImpl.alle, klassenFuerAbschnitt, abschnittStateImpl.auswahl);
 	}
 
 	private async getKlassenBySchuljahresabschnitt(): Promise<Map<number, List<KlassenListeEintrag>>> {

@@ -180,6 +180,7 @@
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+	import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { useServerState } from '@ui/states/ServerState';
 	import { CoreTypeSelectManager } from '@ui/ui/controls/select/manager/CoreTypeSelectManager';
@@ -195,6 +196,7 @@
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
 	const entlassgruendeState = useEntlassgruendeState();
+	const kindergaertenState = useKindergaertenState();
 
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
@@ -249,7 +251,7 @@
 	});
 
 	const kindergartenManager = new SelectManager<Kindergarten>({
-		options: computed(() => props.manager().kindergaertenById.values()),
+		options: computed(() => kindergaertenState.kindergaerten.list),
 		optionDisplayText: s => s.bezeichnung,
 		selectionDisplayText: s => s.bezeichnung,
 	});

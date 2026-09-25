@@ -7,7 +7,6 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
-import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -22,7 +21,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
 	private readonly _faecherById: Map<number, FachDaten>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
-	private readonly _kindergaertenById: Map<number, Kindergarten>;
 	private readonly _schulenById: Map<number, SchulEintrag>;
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
 	private readonly _telefonartenById: Map<number, Telefonart>;
@@ -38,7 +36,6 @@ export class SchuelerSchnelleingabeManager {
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		faecherById: Map<number, FachDaten>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
-		kindergaertenById: Map<number, Kindergarten>,
 		schulenById: Map<number, SchulEintrag>,
 		telefonartenById: Map<number, Telefonart>,
 		vermerkartenById: Map<number, VermerkartEintrag>
@@ -50,7 +47,6 @@ export class SchuelerSchnelleingabeManager {
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._faecherById = faecherById;
 		this._jahrgaengeById = jahrgaengeById;
-		this._kindergaertenById = kindergaertenById;
 		this._schulenById = schulenById;
 		this._telefonartenById = telefonartenById;
 		this._vermerkartenById = vermerkartenById;
@@ -100,10 +96,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get jahrgaengeById(): Map<number, JahrgangsDaten> {
 		return this._jahrgaengeById;
-	}
-
-	get kindergaertenById(): Map<number, Kindergarten> {
-		return this._kindergaertenById;
 	}
 
 	get schulenById(): Map<number, SchulEintrag> {

@@ -35,6 +35,7 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
@@ -42,6 +43,7 @@ import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLeng
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
 
 	private readonly _entlassgruendeState = useEntlassgruendeState();
+	private readonly _kindergaertenState = useKindergaertenState();
 
 	private readonly manager: () => SchuelerSchulbesuchManager;
 
@@ -182,7 +184,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	idKindergarten = computed<Kindergarten | null>({
-		get: () => this.manager().kindergaertenById.get(this.proxy.idKindergarten ?? -1) ?? null,
+		get: () => this._kindergaertenState.kindergaerten.byId.get(this.proxy.idKindergarten ?? -1) ?? null,
 		set: (v: Kindergarten | null) => this.proxy.idKindergarten = v?.id ?? null,
 	});
 

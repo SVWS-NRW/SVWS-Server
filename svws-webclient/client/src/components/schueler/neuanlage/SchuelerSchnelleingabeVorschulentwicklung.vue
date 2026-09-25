@@ -29,6 +29,7 @@
 	import { Kindergartenbesuch } from "@core/asd/types/schule/Kindergartenbesuch";
 	import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
@@ -38,12 +39,13 @@
 		patchSchulbesuchsdaten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
 	}>();
 	const abschnittState = useAbschnittState();
+	const kindergaertenState = useKindergaertenState();
 
 	const manager = () => props.manager();
 	const schulbesuch = ref(manager().schulbesuchsdaten);
 
 	const selectedKindergarten = computed<Kindergarten | null>({
-		get: () => props.manager().kindergaertenById.get(schulbesuch.value.idKindergarten ?? -1) ?? null,
+		get: () => kindergaertenState.kindergaerten.byId.get(schulbesuch.value.idKindergarten ?? -1) ?? null,
 		set: (value: Kindergarten | null) => {
 			schulbesuch.value.idKindergarten = value?.id ?? null;
 			void props.patchSchulbesuchsdaten({ idKindergarten: value?.id ?? null }, manager().stammdaten.id);
@@ -76,7 +78,7 @@
 	});
 
 	const kindergartenManager = new SelectManager({
-		options: manager().kindergaertenById.values(),
+		options: computed(() => kindergaertenState.kindergaerten.list),
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,
 	});

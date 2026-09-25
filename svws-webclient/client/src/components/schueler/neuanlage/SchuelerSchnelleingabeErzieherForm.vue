@@ -147,7 +147,7 @@
 	});
 
 	const erzieherartenManager = new SelectManager({
-		options: erzieherartenState.erzieherarten.list,
+		options: computed(() => erzieherartenState.erzieherarten.list),
 		sort: erzieherArtSort,
 		optionDisplayText: i => i.bezeichnung,
 		selectionDisplayText: i => i.bezeichnung,

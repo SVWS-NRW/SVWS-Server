@@ -4,13 +4,11 @@ import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/Schueler
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
-import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Merkmal } from "@core/core/data/schule/Merkmal";
 
 export interface SchulbesuchLookups {
 	schulenById: Map<number, SchulEintrag>;
 	merkmaleById: Map<number, Merkmal>;
-	kindergaertenById: Map<number, Kindergarten>;
 	jahrgaengeById: Map<number, JahrgangsDaten>;
 	abschnitteById: Map<number, Schuljahresabschnitt>;
 }
@@ -25,7 +23,6 @@ export class SchuelerSchulbesuchManager {
 	private readonly _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
 	private readonly _schulenById: Map<number, SchulEintrag> = new Map();
 	private readonly _merkmaleById: Map<number, Merkmal> = new Map();
-	private readonly _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 
 	public constructor(
@@ -38,7 +35,6 @@ export class SchuelerSchulbesuchManager {
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this._schulenById = lookups.schulenById;
 		this._merkmaleById = lookups.merkmaleById;
-		this._kindergaertenById = lookups.kindergaertenById;
 		this._jahrgaengeById = lookups.jahrgaengeById;
 		this._schuljahresabschnitteById = lookups.abschnitteById;
 		this._schuljahr = this.getSchuljahr();
@@ -136,10 +132,6 @@ export class SchuelerSchulbesuchManager {
 
 	get merkmaleById(): Map<number, Merkmal> {
 		return this._merkmaleById;
-	}
-
-	get kindergaertenById(): Map<number, Kindergarten> {
-		return this._kindergaertenById;
 	}
 
 	get jahrgaengeById(): Map<number, JahrgangsDaten> {

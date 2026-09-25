@@ -7,7 +7,6 @@ import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
-import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -66,7 +65,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const schuljahresabschnitte = abschnittStateImpl.alle;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
 		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
-		const kindergaertenById: Map<number, Kindergarten> = routeApp.cache.kataloge.kindergaertenById;
 		const schulenById: Map<number, SchulEintrag> = routeApp.cache.kataloge.schulenById;
 		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
 		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
@@ -79,7 +77,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			schuljahresabschnitte,
 			faecherById,
 			jahrgaengeById,
-			kindergaertenById,
 			schulenById,
 			telefonartenById,
 			vermerkartenById

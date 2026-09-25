@@ -35,7 +35,6 @@ export class KatalogCache {
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
 	private _faecherById: Map<number, FachDaten> = new Map();
 	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
-	private _kindergaertenById: Map<number, Kindergarten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 	private _merkmaleById: Map<number, Merkmal> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
@@ -85,11 +84,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.JAHRGAENGE, async () => {
 			const result = await api.server.getJahrgaenge(api.schema);
 			return { jahrgaengeById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.KINDERGAERTEN, async () => {
-			const result = await api.server.getKindergaerten(api.schema);
-			return { kindergaertenById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.LERNPLATTFORMEN, async () => {
@@ -198,14 +192,6 @@ export class KatalogCache {
 
 	set jahrgaengeById(value: Map<number, JahrgangsDaten>) {
 		this._jahrgaengeById = value;
-	}
-
-	get kindergaertenById(): Map<number, Kindergarten> {
-		return this._kindergaertenById;
-	}
-
-	set kindergaertenById(value: Map<number, Kindergarten>) {
-		this._kindergaertenById = value;
 	}
 
 	get lernplattformenById(): Map<number, Lernplattform> {

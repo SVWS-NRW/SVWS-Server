@@ -350,7 +350,7 @@
 	});
 
 	const haltestellenManager = new SelectManager({
-		options: haltestellenState.haltestellen.list,
+		options: computed(() => haltestellenState.haltestellen.list),
 		optionDisplayText: i => i.bezeichnung ?? '',
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});

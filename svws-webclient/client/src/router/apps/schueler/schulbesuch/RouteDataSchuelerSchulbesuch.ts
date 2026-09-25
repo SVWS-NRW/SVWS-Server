@@ -48,7 +48,6 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 			{
 				schulenById: routeApp.cache.kataloge.schulenById,
 				merkmaleById: routeApp.cache.kataloge.merkmaleById,
-				kindergaertenById: routeApp.cache.kataloge.kindergaertenById,
 				jahrgaengeById: routeApp.cache.kataloge.jahrgaengeById,
 				abschnitteById: this.mapSchuljahresabschnitte(),
 			}
