@@ -14,10 +14,10 @@ import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 
 /**
- * Testklasse für den Validator {@link ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog}.
+ * Testklasse für den Validator {@link ValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog}.
  */
-@DisplayName("Tests ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog")
-class TestValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog {
+@DisplayName("Tests ValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog")
+class TestValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -35,14 +35,14 @@ class TestValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog {
 			  null   , false
 			  1000   ,  true
 			""")
-	void testValidatorIfa00IfDatenNotNull(final Long idKatalog,
+	void testValidatorIjja00IfDatenNotNull(final Long idKatalog,
 			final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		final ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog validator =
-				new ValidatorIfa00IntKatalogFoerderschwerpunkteAsdKatalog(() -> idKatalog, kontext);
+		final ValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog validator =
+				new ValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog(() -> idKatalog, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

@@ -14,25 +14,19 @@ import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 
 /**
- * <p> Testklasse für den Validator
+ * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog},
+ *   <li> {@link ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog}
  * </ul>
  * </p>
- *
- * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
- *
- * CoreType: Foerderschwerpunkt
  */
-@DisplayName("Tests ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog")
-class TestValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog {
+@DisplayName("Tests ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog")
+class TestValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog {
 
 	private static final String TESTDATEN = """
-		1000, 2012, true
-		1000, 2026, false
-		0, 2026, false
-		0, 2016, true
-		14001, 2025, true
+			1000000   , true
+			512       , false
+			-1        , false
 		""";
 
 	/** Stammdaten der Schule */
@@ -50,35 +44,26 @@ class TestValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog {
 	}
 
 	/**
-	 * Test von ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog
+	 * Test von ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog
 	 *
-	 * CoreType: Foerderschwerpunkt
+	 * CoreType: Jahrgaenge
 	 *
-	 * @param idKatalog  KatalogID
-	 * @param schuljahr  das Schuljahr
-	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
+	 * @param idKatalog   die KatalogID, welche bei den eingelesenen Testdaten ersetzt wird
+	 * @param result      gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSle02SchuelerLernabschnittsdatenEpJahre")
+	@DisplayName("Tests für ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN)
-	void testValidatorIfa02SchuelerLernabschnittsdatenEpJahre(final Long idKatalog, final Integer schuljahr,
-			final boolean result) {
+	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
+	void testValidatorIjja01IntKatalogFoerderschwerpunkteAsdKatalog(final Long idKatalog, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-
-		//		Setzen Schuljahr
-		kontext.getSchuljahresabschnitt().schuljahr = schuljahr;
-
-		final ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog validator =
-				new ValidatorIfa02IntKatalogFoerderschwerpunkteAsdKatalog(
-						() -> idKatalog,
-						kontext);
-
+		final ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog validator =
+				new ValidatorIjja01IntKatalogJahrgaengeJahrgangAsdKatalog(() -> idKatalog, kontext);
 		assertEquals(result, validator.pruefe());
-
 	}
+
 
 }

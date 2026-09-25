@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.intKataloge.ValidatorIjja00IntKatalogJahrgaengeJahrgangAsdKatalog",
+    "historie" : [ {
+      "praefix" : "IJJA00",
+      "altes_kuerzel" : "",
+      "zweig" : "IntKatalog-Jahrgaenge-Jahrgang-AsdKatalog",
+      "dtos" : "JahrgaengeStatistikGesamt",
+      "ausfuehrungsbereich_ui" : "Schule, Kataloge, Jahrgänge ?",
+      "anzeigebereich_ui" : "Jahrgang ASD-Kürzel ?",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Jahrgang ASD-Kürzel: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "JahrgaengeStatistikGesamt.idKatalog = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}  
