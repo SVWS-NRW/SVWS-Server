@@ -1,8 +1,10 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,8 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -143,6 +147,41 @@ class TestGostBelegpruefungAbi2030 {
 		System.out.println("  FERTIG!");
 	}
 
+
+	@Test
+	@Disabled("Aktiviere diesen Test, um fehlende Ergebnisse zu Testfällen automatisch zu erzeugen. Im Allgemeinen bliebt dieser Test deaktiviert.")
+	void createNonExistingResults() {
+		System.out.println("- Erzeuge ggf. fehlende Ergebniss der Belegprüfung der Laufbahnplanung...");
+		final String path = "src/test/resources/" + TestGostBelegpruefungAbi2030.class.getPackageName().replace(".", "/") + "/";
+		System.out.println(path);
+		testLaufbahnen.forEach((name, lpDaten) -> {
+			final boolean hatEF1 = (testBelegpruefungsergebnisseEF1.get(name) != null);
+			if (!hatEF1) {
+				final AbiturdatenManager manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(),
+						lpDaten.getFaecherManager(), GostBelegpruefungsArt.EF1);
+				final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
+				final String filename = path + "Testschule_" + name + "_Belegpruefungsergebnis_EF1.json";
+				assertDoesNotThrow(() ->  {
+					mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filename), ergebnis);
+					testBelegpruefungsergebnisseEF1.put(name, ergebnis);
+					System.out.println("  - Schreiben des Testfalles " + name + " für die EF1-Prüfung erfolgreich");
+				}, "Fehler beim Schreiben des Testfallergenisses " + name);
+			}
+			final boolean hatGesamt = (testBelegpruefungsergebnisseGesamt.get(name) != null);
+			if (!hatGesamt) {
+				final AbiturdatenManager manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(),
+						lpDaten.getFaecherManager(), GostBelegpruefungsArt.GESAMT);
+				final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
+				final String filename = path + "Testschule_" + name + "_Belegpruefungsergebnis_Gesamt.json";
+				testBelegpruefungsergebnisseGesamt.put(name, ergebnis);
+				assertDoesNotThrow(() ->  {
+					mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filename), ergebnis);
+					System.out.println("  - Schreiben des Testfalles " + name + " für die Gesamt-Prüfung erfolgreich");
+				}, "Fehler beim Schreiben des Testfallergenisses " + name);
+			}
+		});
+		System.out.println("  FERTIG!");
+	}
 
 
 	/**

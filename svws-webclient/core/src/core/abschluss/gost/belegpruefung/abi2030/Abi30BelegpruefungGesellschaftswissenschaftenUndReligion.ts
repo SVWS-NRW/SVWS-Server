@@ -368,9 +368,13 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		let hatKontinuitaetPL: boolean = true;
 		let hatKontinuitaetRE: boolean = true;
 		let hatteRE: boolean = false;
+		let hattePLvorQ2: boolean = false;
 		for (const halbjahr of GostHalbjahr.values()) {
 			const hatPL: boolean = this.manager.pruefeBelegung(this.philosophie, halbjahr);
 			const hatRE: boolean = this.manager.pruefeBelegungExistiertEinzeln(this.religion, halbjahr);
+			if (hatPL && !halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
+				hattePLvorQ2 = true;
+			}
 			if (!hatRE && hatPL) {
 				hatKontinuitaetPL = true;
 			}
@@ -385,6 +389,9 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 				}
 			}
 			if (hatRE && !hatteRE && halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
+				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+			}
+			if ((halbjahr as unknown === GostHalbjahr.Q22 as unknown) && hatPL && hatRE && !hattePLvorQ2) {
 				this.addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 			hatKontinuitaetPL = hatKontinuitaetPL && hatPL;

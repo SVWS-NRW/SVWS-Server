@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  }, {
+    "code" : "ZK_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden."
+  } ],
+  "log" : [ ]
+}

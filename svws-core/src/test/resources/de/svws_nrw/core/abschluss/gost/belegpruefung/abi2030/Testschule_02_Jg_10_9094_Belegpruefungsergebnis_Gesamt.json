@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 und EF.2 belegt werden."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  }, {
+    "code" : "E1BEL_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Bis auf Literatur, Zusatzkurse, Vertiefungskurse und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden."
+  } ],
+  "log" : [ ]
+}

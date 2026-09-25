@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "BIL_11",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da in EF.1 weniger als zwei naturwissenschaftlich-technische Fächer belegt, oder keine schriftlich belegt wurden, müssen zwei Fremdsprachen bis Q2.2 durchgehend schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

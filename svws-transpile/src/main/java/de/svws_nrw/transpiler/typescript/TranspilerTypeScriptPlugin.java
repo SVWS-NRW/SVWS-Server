@@ -1518,7 +1518,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final StringBuilder sb = new StringBuilder();
 		sb.append((noParentheses ? "" : "(")).append(enumInject);
 		if ((enumValueName != null) && (enumOrdinal != null) && (!expressions.isEmpty())) {
-			sb.append(", ");	
+			sb.append(", ");
 		}
 		for (int i = 0; i < expressions.size(); i++) {
 			final ExpressionTree expr = expressions.get(i);

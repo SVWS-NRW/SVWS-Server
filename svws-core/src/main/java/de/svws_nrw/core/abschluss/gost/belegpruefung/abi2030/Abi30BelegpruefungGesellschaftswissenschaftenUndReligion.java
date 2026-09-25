@@ -487,9 +487,15 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 		boolean hatKontinuitaetPL = true;
 		boolean hatKontinuitaetRE = true;
 		boolean hatteRE = false;
+		boolean hattePLvorQ2 = false;
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			final boolean hatPL = manager.pruefeBelegung(philosophie, halbjahr);
 			final boolean hatRE = manager.pruefeBelegungExistiertEinzeln(religion, halbjahr);
+
+			// Merkt sich, ob PL bereits vor der Q2 belegt wurde, wenn nicht, dann kann es nicht als Kontinutität weitergewählt werden, wenn Religion doch wieder in der Q2.2 gewählt wird
+			if (hatPL && !halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
+				hattePLvorQ2 = true;
+			}
 
 			// Wenn Religion nicht gewählt wurde, aber PL, dann fungiert es als Ersatzfach und ab jetzt setzt die Kontinuität für PL wieder ein
 			if (!hatRE && hatPL) {
@@ -512,6 +518,10 @@ public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion exte
 
 			// In der Q2 kann Religion nicht mehr neu angewählt werde, da dann keine Belegverpflichtung mehr vorhanden ist und das Prinzip der Kontinuität vorliegt
 			if (hatRE && !hatteRE && halbjahr.istIn(GostHalbjahr.Q21, GostHalbjahr.Q22)) {
+				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
+			}
+
+			if ((halbjahr == GostHalbjahr.Q22) && hatPL && hatRE && !hattePLvorQ2) {
 				addFehler(GostBelegungsfehler.GOST30_E1BEL_10);
 			}
 

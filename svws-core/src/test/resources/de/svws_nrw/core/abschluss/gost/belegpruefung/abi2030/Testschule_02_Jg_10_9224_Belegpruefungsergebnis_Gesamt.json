@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "KU_MU_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur mit zwei aufeinander folgenden Kursen belegt werden."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  } ],
+  "log" : [ ]
+}
