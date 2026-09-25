@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfsSchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung",
+    "historie" : [ {
+      "praefix" : "SLFS",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Foerderschwerpunkt-Schwerstbehinderung",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "'Allgemein', Feld 'Schwerstbehinderung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "R", "PS", "SK", "GE", "FW", "HI", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "",
+      "erlaeuterung" : "",
+      "bedingung" : "",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

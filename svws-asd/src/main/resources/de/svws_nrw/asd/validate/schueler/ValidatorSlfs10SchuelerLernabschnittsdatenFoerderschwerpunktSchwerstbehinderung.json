@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlfs10SchuelerLernabschnittsdatenFoerderschwerpunktSchwerstbehinderung",
+    "historie" : [ {
+      "praefix" : "SLFS10",
+      "altes_kuerzel" : "AB52, TB",
+      "zweig" : "Schueler-Lernabschnittsdaten-Foerderschwerpunkt-Schwerstbehinderung",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "'Allgemein', Feld 'Schwerstbehinderung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "R", "PS", "SK", "GE", "FW", "HI", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Wenn eine Schwerstbehinderung vorliegt, muss das Feld 'Förderschwerpunkt' ebenfalls besetzt sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.hatSchwerbehinderungsNachweis = true ∧ SchuelerLernabschnittsdaten.foerderschwerpunkt1ID = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+    }
