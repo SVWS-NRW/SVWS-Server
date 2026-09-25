@@ -63,6 +63,7 @@
 	import type { Merkmal } from "@core/core/data/schule/Merkmal";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+	import { useMerkmaleState } from "@ui/states/kataloge/MerkmaleState";
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
@@ -80,13 +81,14 @@
 		updateKompetenz: boolean;
 	}>();
 
+	const merkmaleState = useMerkmaleState();
+
 	const selectedEntries = ref<SchuelerSchulbesuchMerkmal[]>([]);
-	let model = new SchuelerSchulbesuchMerkmaleModelProxy(() => new SchuelerSchulbesuchMerkmal(), () => props.manager());
+	let model = new SchuelerSchulbesuchMerkmaleModelProxy(() => new SchuelerSchulbesuchMerkmal());
 	const entries = computed(() => [...props.getMerkmale()]);
-	const merkmale = computed(() => props.manager().merkmaleById.values());
 
 	const merkmalManager = new SelectManager<Merkmal>({
-		options: merkmale,
+		options: computed(() => merkmaleState.merkmale.list),
 		optionDisplayText: m => m.bezeichnung ?? '-',
 		selectionDisplayText: m => m.bezeichnung ?? '-',
 	});
@@ -147,7 +149,7 @@
 	// --- table ---
 
 	function bezeichnungMerkmal(merkmal: SchuelerSchulbesuchMerkmal) {
-		return props.manager().merkmaleById.get(merkmal.idMerkmal ?? -1)?.bezeichnung ?? " - ";
+		return merkmaleState.merkmale.byId.get(merkmal.idMerkmal ?? -1)?.bezeichnung ?? " - ";
 	}
 
 	const columns: DataTableColumn[] = [
@@ -175,7 +177,7 @@
 	// --- util ---
 
 	function resetData() {
-		model = new SchuelerSchulbesuchMerkmaleModelProxy(() => new SchuelerSchulbesuchMerkmal(), () => props.manager());
+		model = new SchuelerSchulbesuchMerkmaleModelProxy(() => new SchuelerSchulbesuchMerkmal());
 	}
 
 </script>

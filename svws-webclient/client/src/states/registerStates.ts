@@ -13,6 +13,7 @@ import { FahrschuelerartenStateKey } from "@ui/states/kataloge/Fahrschuelerarten
 import { HaltestellenStateKey } from "@ui/states/kataloge/HaltestellenState";
 import { KindergaertenStateKey } from "@ui/states/kataloge/KindergaertenState";
 import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/LeitungsfunktionenState";
+import { MerkmaleStateKey } from "@ui/states/kataloge/MerkmaleState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { ReligionenStateKey } from "@ui/states/kataloge/ReligionenState";
 import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
@@ -27,6 +28,7 @@ import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
+import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
 import { auskunftStateImpl } from "./AuskunftStateImpl";
@@ -89,5 +91,6 @@ export function registerStates(): void {
 	context.provide(ErzieherartenStateKey, erzieherartenStateImpl);
 	context.provide(HaltestellenStateKey, haltestellenStateImpl);
 	context.provide(KindergaertenStateKey, kindergaertenStateImpl);
+	context.provide(MerkmaleStateKey, merkmaleStateImpl);
 
 }

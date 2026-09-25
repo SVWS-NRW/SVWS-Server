@@ -19,6 +19,7 @@ import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenS
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
 import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
+import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
 import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
@@ -62,6 +63,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 				haltestellenStateImpl.init(),
 				kindergaertenStateImpl.init(),
 				leitungsfunktionenStateImpl.init(),
+				merkmaleStateImpl.init(),
 				orteStateImpl.init(),
 				religionenStateImpl.init(),
 				statistikStateImpl.init(),

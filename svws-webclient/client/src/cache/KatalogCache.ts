@@ -9,7 +9,6 @@ import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
-import type { Merkmal } from "@core/core/data/schule/Merkmal";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import type { List } from "@core/java/util/List";
@@ -36,7 +35,6 @@ export class KatalogCache {
 	private _faecherById: Map<number, FachDaten> = new Map();
 	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
-	private _merkmaleById: Map<number, Merkmal> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 	private _telefonartenById: Map<number, Telefonart> = new Map();
 	private _vermerkartenById: Map<number, VermerkartEintrag> = new Map();
@@ -104,11 +102,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.VERMERKARTEN, async () => {
 			const result = await api.server.getVermerkarten(api.schema);
 			return { vermerkartenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.MERKMALE, async () => {
-			const result = await api.server.getMerkmale(api.schema);
-			return { merkmaleById: this.convertToMap(result) };
 		});
 
 	}
@@ -224,14 +217,6 @@ export class KatalogCache {
 
 	set vermerkartenById(value: Map<number, VermerkartEintrag>) {
 		this._vermerkartenById = value;
-	}
-
-	get merkmaleById(): Map<number, Merkmal> {
-		return this._merkmaleById;
-	}
-
-	set merkmaleById(value: Map<number, Merkmal>) {
-		this._merkmaleById = value;
 	}
 
 }
