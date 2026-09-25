@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.parameter.ReportingDatumUhrzeit;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingContext;
 import de.svws_nrw.module.reporting.repositories.ReportingRepositorySchule;
@@ -133,6 +135,20 @@ class TestHtmlContextBasisdaten {
 				.thenReturn(List.of(vorlageParameter("Zeugnisdatum", ReportingReportvorlageParameterTyp.STRING.getId())));
 
 		assertDoesNotThrow(() -> new HtmlContextBasisdaten(reportingContext));
+	}
+
+	@Test
+	void testDatumUndTerminErreichenDasTemplateInEinheitlicherForm() throws ApiOperationException {
+		final ReportingReportvorlageParameter datum = vorlageParameter("zeugnisdatum", ReportingReportvorlageParameterTyp.DATUM.getId());
+		datum.wert = "15.06.2026";
+		final ReportingReportvorlageParameter termin = vorlageParameter("terminElternsprechtag", ReportingReportvorlageParameterTyp.DATUM_UHRZEIT.getId());
+		termin.wert = "15.06.2026 8:00";
+		when(reportingParameter.reportvorlageParameter()).thenReturn(List.of(datum, termin));
+
+		final Map<?, ?> werte = (Map<?, ?>) new HtmlContextBasisdaten(reportingContext).getContext().getVariable("VorlageParameter");
+
+		assertEquals("2026-06-15", werte.get("zeugnisdatum"));
+		assertEquals(new ReportingDatumUhrzeit("2026-06-15", "08:00"), werte.get("terminElternsprechtag"));
 	}
 
 	@Test

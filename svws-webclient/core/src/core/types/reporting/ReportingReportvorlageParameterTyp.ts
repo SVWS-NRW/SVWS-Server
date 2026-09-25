@@ -40,6 +40,17 @@ export class ReportingReportvorlageParameterTyp extends JavaEnum<ReportingReport
 	public static readonly DECIMAL: ReportingReportvorlageParameterTyp = new ReportingReportvorlageParameterTyp("DECIMAL", 5, 5);
 
 	/**
+	 * Vorlage-Parameter für ein Datum. Angenommen werden TT.MM.JJJJ und JJJJ-MM-TT; das Template erhält das Datum als JJJJ-MM-TT.
+	 */
+	public static readonly DATUM: ReportingReportvorlageParameterTyp = new ReportingReportvorlageParameterTyp("DATUM", 6, 6);
+
+	/**
+	 *  Vorlage-Parameter für einen Termin mit Datum und Uhrzeit. Angenommen werden JJJJ-MM-TTTHH:mm, wie es ein Datum-Uhrzeit-Feld liefert, und
+	 *  TT.MM.JJJJ HH:mm; das Template erhält Datum und Uhrzeit getrennt.
+	 */
+	public static readonly DATUM_UHRZEIT: ReportingReportvorlageParameterTyp = new ReportingReportvorlageParameterTyp("DATUM_UHRZEIT", 7, 7);
+
+	/**
 	 * Die ID des Vorlage-Parameter-Typs
 	 */
 	private readonly id: number;

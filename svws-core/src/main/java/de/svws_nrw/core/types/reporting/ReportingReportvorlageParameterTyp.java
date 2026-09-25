@@ -22,7 +22,16 @@ public enum ReportingReportvorlageParameterTyp {
 	INTEGER(4),
 
 	/** Vorlage-Parameter des Typs DECIMAL */
-	DECIMAL(5);
+	DECIMAL(5),
+
+	/** Vorlage-Parameter für ein Datum. Angenommen werden TT.MM.JJJJ und JJJJ-MM-TT; das Template erhält das Datum als JJJJ-MM-TT. */
+	DATUM(6),
+
+	/**
+	 * Vorlage-Parameter für einen Termin mit Datum und Uhrzeit. Angenommen werden JJJJ-MM-TTTHH:mm, wie es ein Datum-Uhrzeit-Feld liefert, und
+	 * TT.MM.JJJJ HH:mm; das Template erhält Datum und Uhrzeit getrennt.
+	 */
+	DATUM_UHRZEIT(7);
 
 
 	/** Die ID des Vorlage-Parameter-Typs */

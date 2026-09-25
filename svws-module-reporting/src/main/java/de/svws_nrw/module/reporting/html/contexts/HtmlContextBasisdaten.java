@@ -78,7 +78,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 			throws ApiOperationException {
 		try {
 			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
-				case BOOLEAN, INTEGER, LONG, DECIMAL, STRING -> new ReportingVorlageParameterTypisiert<>(reportingReportVorlageParameter);
+				case BOOLEAN, INTEGER, LONG, DECIMAL, STRING, DATUM, DATUM_UHRZEIT -> new ReportingVorlageParameterTypisiert<>(reportingReportVorlageParameter);
 				default -> throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Ein Vorlagenparameter hat keinen bekannten Typ.");
 			};
 		} catch (final ApiOperationException e) {

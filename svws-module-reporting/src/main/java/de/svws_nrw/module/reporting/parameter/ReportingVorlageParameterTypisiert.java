@@ -1,6 +1,10 @@
 package de.svws_nrw.module.reporting.parameter;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Objects;
 
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
@@ -17,6 +21,15 @@ import jakarta.ws.rs.core.Response;
  * @param <T> der Typ des Wertes des Vorlage-Parameters
  */
 public class ReportingVorlageParameterTypisiert<T> {
+
+	/** Das Datum, wie Anwender es eintippen. STRICT mit uuuu lehnt ungültige Tage wie den 31.02. ab, statt sie still zu korrigieren. */
+	private static final DateTimeFormatter FORMAT_DATUM_DEUTSCH = DateTimeFormatter.ofPattern("d.M.uuuu").withResolverStyle(ResolverStyle.STRICT);
+
+	/** Datum und Uhrzeit, wie Anwender sie eintippen, auch mit einstelliger Stunde. STRICT lehnt ungültige Tage und Uhrzeiten ab. */
+	private static final DateTimeFormatter FORMAT_DATUM_UHRZEIT_DEUTSCH = DateTimeFormatter.ofPattern("d.M.uuuu H:mm").withResolverStyle(ResolverStyle.STRICT);
+
+	/** Die Uhrzeit, wie das Template sie erhält. */
+	private static final DateTimeFormatter FORMAT_UHRZEIT_AUSGABE = DateTimeFormatter.ofPattern("HH:mm");
 
 	/** Der Name des Vorlage-Parameters, wie er später im HTML-Template verwendet wird. */
 	protected String name = "";
@@ -108,6 +121,8 @@ public class ReportingVorlageParameterTypisiert<T> {
 				case INTEGER -> (T) Integer.valueOf(s.isEmpty() ? -1 : Integer.parseInt(s));
 				case LONG -> (T) Long.valueOf(s.isEmpty() ? -1L : Long.parseLong(s));
 				case DECIMAL -> (T) Double.valueOf(s.isEmpty() ? -1.0 : Double.parseDouble(s));
+				case DATUM -> (T) datumAlsIso(s);
+				case DATUM_UHRZEIT -> (T) datumUhrzeit(s);
 				case STRING, UNDEFINED -> (T) s;
 			};
 		} catch (final Exception e) {
@@ -117,10 +132,44 @@ public class ReportingVorlageParameterTypisiert<T> {
 	}
 
 	/**
+	 * Wandelt ein Datum in das Format JJJJ-MM-TT, das die Datumsfunktionen der Templates erwarten. Ein leerer Wert bleibt leer.
+	 *
+	 * @param s Das Datum als TT.MM.JJJJ oder JJJJ-MM-TT
+	 *
+	 * @return Das Datum als JJJJ-MM-TT oder ein leerer String
+	 *
+	 * @throws java.time.format.DateTimeParseException Wenn der Wert kein gültiges Datum ist
+	 */
+	private static String datumAlsIso(final String s) {
+		if ((s == null) || s.isEmpty()) {
+			return "";
+		}
+		return (s.contains(".") ? LocalDate.parse(s, FORMAT_DATUM_DEUTSCH) : LocalDate.parse(s)).toString();
+	}
+
+	/**
+	 * Zerlegt einen Termin in Datum und Uhrzeit. Ein Datum-Uhrzeit-Feld liefert JJJJ-MM-TTTHH:mm; getippte Eingaben kommen als TT.MM.JJJJ HH:mm.
+	 * Ein leerer Wert ergibt einen leeren Termin.
+	 *
+	 * @param s Der Termin als JJJJ-MM-TTTHH:mm oder TT.MM.JJJJ HH:mm
+	 *
+	 * @return Der Termin mit Datum als JJJJ-MM-TT und Uhrzeit als HH:mm
+	 *
+	 * @throws java.time.format.DateTimeParseException Wenn der Wert kein gültiger Termin ist
+	 */
+	private static ReportingDatumUhrzeit datumUhrzeit(final String s) {
+		if ((s == null) || s.isEmpty()) {
+			return ReportingDatumUhrzeit.LEER;
+		}
+		final LocalDateTime termin = s.contains("T") ? LocalDateTime.parse(s) : LocalDateTime.parse(s, FORMAT_DATUM_UHRZEIT_DEUTSCH);
+		return new ReportingDatumUhrzeit(termin.toLocalDate().toString(), termin.toLocalTime().format(FORMAT_UHRZEIT_AUSGABE));
+	}
+
+	/**
 	 * Prüft vorab, ob der übergebene Wert für den angegebenen Parameter-Typ gültig ist und somit ohne Fehler und ohne stillen Bedeutungsverlust
 	 * konvertiert werden kann. Für BOOLEAN sind nur "true" und "false" (unabhängig von Groß-/Kleinschreibung) gültig, da Boolean.parseBoolean alle
-	 * anderen Zeichenketten still als false interpretiert. Für die Zahlentypen wird die zentrale Konvertierung selbst als Prüfung verwendet, wobei
-	 * der leere String gültig ist und bei der Konvertierung als -1 interpretiert wird. Zeichenketten-Typen sind immer gültig.
+	 * anderen Zeichenketten still als false interpretiert. Für Zahlen, Datum und Termine wird die zentrale Konvertierung selbst als Prüfung verwendet,
+	 * wobei der leere String gültig ist; Zahlen interpretiert die Konvertierung dann als -1. Zeichenketten-Typen sind immer gültig.
 	 *
 	 * @param typ   Der Typ des Parameters gemäß {@link ReportingReportvorlageParameterTyp}
 	 * @param wert  Der zu prüfende Wert als Zeichenkette
