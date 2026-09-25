@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSbe01SchuelerSchulbesuchsdatenEinschulungsart",
+    "historie" : [ {
+      "praefix" : "SBE01",
+      "zweig" : "Schueler-Schulbesuchsdaten-Einschulungsart",
+      "dtos" : "SchuelerSchulbesuchsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Schulbesuch'",
+      "anzeigebereich_ui" : "Feld 'Einschulungsart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SBE00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Einschulungsart des Schülers: Das Feld 'Einschulungsart' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerSchulbesuchsdaten.idEinschulungsartGrundschule ≠ einer id eines Eintrages in Einschulungsart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
