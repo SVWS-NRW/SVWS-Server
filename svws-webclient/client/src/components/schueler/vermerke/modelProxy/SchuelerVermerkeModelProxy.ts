@@ -3,20 +3,19 @@ import { computed } from "vue";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useVermerkartenState } from "@ui/states/kataloge/VermerkartenState";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
 export class SchuelerVermerkeModelProxy extends ModelProxy<SchuelerVermerke> {
 
-	private readonly _vermerkartenById: () => Map<number, VermerkartEintrag>;
+	private readonly _vermerkartenState = useVermerkartenState();
 
 	constructor(
 		data: () => SchuelerVermerke,
-		vermerkartenById: () => Map<number, VermerkartEintrag>,
 		patch?: (data: Partial<SchuelerVermerke>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerVermerke> = ["idVermerkart"];
 		super({ data, patch, listOfAutopatchProps });
-		this._vermerkartenById = vermerkartenById;
 		this.addValidatoren();
 		this.validate();
 	}
@@ -27,7 +26,7 @@ export class SchuelerVermerkeModelProxy extends ModelProxy<SchuelerVermerke> {
 	}
 
 	vermerkart = computed<VermerkartEintrag | null>({
-		get: () => this._vermerkartenById().get(this.proxy.idVermerkart ?? -1) ?? null,
+		get: () => this._vermerkartenState.vermerkarten.byId.get(this.proxy.idVermerkart ?? -1) ?? null,
 		set: (value: VermerkartEintrag | null) => this.proxy.idVermerkart = value?.id ?? null,
 	});
 

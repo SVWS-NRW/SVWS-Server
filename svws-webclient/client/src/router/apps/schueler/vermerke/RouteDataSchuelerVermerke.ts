@@ -1,6 +1,5 @@
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
-import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { JavaLong } from "@core/java/lang/JavaLong";
 import { JavaString } from "@core/java/lang/JavaString";
@@ -16,13 +15,11 @@ import { configStateImpl } from "~/states/ConfigStateImpl";
 interface RouteStateSchuelerVermerke extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
 	schuelerVermerke: List<SchuelerVermerke>;
-	mapVermerkArten: Map<number, VermerkartEintrag>;
 }
 
 const defaultState = <RouteStateSchuelerVermerke> {
 	auswahl: undefined,
 	schuelerVermerke: new ArrayList(),
-	mapVermerkArten: new Map(),
 };
 
 export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVermerke> {
@@ -61,10 +58,6 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 
 	get schuelerVermerke(): List<SchuelerVermerke> {
 		return this._state.value.schuelerVermerke;
-	}
-
-	get mapVermerkArten(): Map<number, VermerkartEintrag> {
-		return this._state.value.mapVermerkArten;
 	}
 
 	patch = async (data: Partial<SchuelerVermerke>, idVermerk: number) => {
@@ -110,12 +103,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		} else {
 			const schuelerVermerke = await api.server.getVermerkdaten(api.schema, auswahl.id);
 			schuelerVermerke.sort(RouteDataSchuelerVermerke.comparatorDatumDesc);
-			const vermerkArten = await api.server.getVermerkarten(api.schema);
-			const mapVermerkArten = new Map();
-			for (const va of vermerkArten) {
-				mapVermerkArten.set(va.id, va);
-			}
-			this.setPatchedDefaultState({ auswahl, schuelerVermerke, mapVermerkArten });
+			this.setPatchedDefaultState({ auswahl, schuelerVermerke });
 		}
 	}
 

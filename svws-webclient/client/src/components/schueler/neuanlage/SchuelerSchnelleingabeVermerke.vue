@@ -31,7 +31,7 @@
 				<svws-ui-textarea-input placeholder="Bemerkung" class="col-span-full"
 					v-model="vermerk.bemerkung"
 					:autoresize="true" />
-				<svws-ui-notification type="warning" v-if="manager().vermerkartenById.size === 0">
+				<svws-ui-notification type="warning" v-if="keineVermerkartenVorhanden">
 					Die Liste der Vermerkarten ist leer. Es sollte mindestens eine Vermerkart unter Schule/Kataloge angelegt werden, damit zusätzliche Vermerke
 					eine gültige Zuordnung haben.
 				</svws-ui-notification>
@@ -41,7 +41,7 @@
 						Abbrechen
 					</svws-ui-button>
 					<svws-ui-button @click="sendRequest"
-						:disabled="(selectedVermerkart === null) || (manager().vermerkartenById.size === 0) || (vermerk.bemerkung === '') || (!updateKompetenz)">
+						:disabled="(selectedVermerkart === null) || keineVermerkartenVorhanden || (vermerk.bemerkung === '') || (!updateKompetenz)">
 						Speichern
 					</svws-ui-button>
 				</div>
@@ -57,6 +57,7 @@
 	import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
+	import { useVermerkartenState } from "@ui/states/kataloge/VermerkartenState";
 	import type { DataTableColumn } from "@ui/types";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { SchuelerSchnelleingabeManager } from "@ui/ui/manager/schueler/SchuelerSchnelleingabeManager";
@@ -70,17 +71,18 @@
 		updateKompetenz: boolean;
 	}>();
 
+	const vermerkartenState = useVermerkartenState();
 	const manager = () => props.manager();
 	const selectedVermerke = ref<SchuelerVermerke[]>([]);
+	const keineVermerkartenVorhanden = computed(() => vermerkartenState.vermerkarten.list.size() === 0);
 	const vermerk = ref<SchuelerVermerke>(new SchuelerVermerke());
-	const vermerkarten = computed(() => manager().vermerkartenById.values());
 	const selectedVermerkart = computed<VermerkartEintrag | undefined>({
-		get: () => manager().vermerkartenById.get(vermerk.value.idVermerkart ?? -1),
+		get: () => vermerkartenState.vermerkarten.byId.get(vermerk.value.idVermerkart ?? -1),
 		set: (value) => vermerk.value.idVermerkart = value?.id ?? null,
 	});
 
 	const vermerkartenManager = new SelectManager({
-		options: vermerkarten,
+		options: computed(() => vermerkartenState.vermerkarten.list),
 		optionDisplayText: i => i.bezeichnung ?? "",
 		selectionDisplayText: i => i.bezeichnung ?? "",
 	});
@@ -142,6 +144,7 @@
 	// --- mode ---
 
 	enum Mode { ADD, PATCH, DEFAULT }
+
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 
 	function setMode(newMode: Mode) {
@@ -157,12 +160,12 @@
 	// --- util ---
 
 	function bezeichnung(idVermerkArt: number): string {
-		return manager().vermerkartenById.get(idVermerkArt)?.bezeichnung ?? "";
+		return vermerkartenState.vermerkarten.byId.get(idVermerkArt)?.bezeichnung ?? "";
 	}
 
 	function resetData() {
 		const defaultVermerk = new SchuelerVermerke();
-		const ersteVermerkArt = manager().vermerkartenById.values().next().value;
+		const ersteVermerkArt = vermerkartenState.vermerkarten.byId.values().next().value;
 		defaultVermerk.idVermerkart = ersteVermerkArt?.id ?? 0;
 		defaultVermerk.bemerkung = '';
 		vermerk.value = defaultVermerk;

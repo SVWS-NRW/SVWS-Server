@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ref } from "vue";
 
 	import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
@@ -64,6 +65,7 @@
 	import type { List } from "@core/java/util/List";
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useVermerkartenState } from "@ui/states/kataloge/VermerkartenState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { SchuelerVermerkeModelProxy } from "./modelProxy/SchuelerVermerkeModelProxy";
@@ -71,6 +73,7 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 	const benutzerState = useBenutzerState();
+	const vermerkartenState = useVermerkartenState();
 
 	const lastAddedVermerk = ref<SchuelerVermerke>();
 
@@ -88,7 +91,7 @@
 				filtered.add(item);
 				continue;
 			}
-			const art = props.mapVermerkArten.get(item.idVermerkart);
+			const art: VermerkartEintrag | null | undefined = vermerkartenState.vermerkarten.byId.get(item.idVermerkart);
 			if ((art !== undefined) && art.istSichtbar) {
 				filtered.add(item);
 			}
@@ -96,20 +99,17 @@
 		return filtered;
 	});
 
-	const vermerkarten = computed<Iterable<VermerkartEintrag>>(() => props.mapVermerkArten.values());
-
 	const vermerkeModels = useModelProxyList(
 		filteredVermerke,
 		(vermerk) => vermerk.id,
 		(vermerk) => new SchuelerVermerkeModelProxy(
 			() => vermerk,
-			() => props.mapVermerkArten,
 			(data) => props.patch(data, vermerk.id)
 		)
 	);
 
 	const vermerkartenManager = new SelectManager({
-		options: vermerkarten,
+		options: computed(() => vermerkartenState.vermerkarten.list),
 		optionDisplayText: i => getItemText(i),
 		selectionDisplayText: i => getItemText(i),
 	});
@@ -119,7 +119,7 @@
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {
-		const title = `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung ?? ""}`;
+		const title = `${vermerkartenState.vermerkarten.byId.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung ?? ""}`;
 		return title.length > 50 ? title.substring(0, 50) + "..." : title;
 	}
 

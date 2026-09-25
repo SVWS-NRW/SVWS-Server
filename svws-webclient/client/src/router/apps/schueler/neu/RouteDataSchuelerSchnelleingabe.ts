@@ -8,7 +8,6 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import type { Telefonart } from "@core/core/data/schule/Telefonart";
-import type { VermerkartEintrag } from "@core/core/data/schule/VermerkartEintrag";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
@@ -67,7 +66,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
 		const schulenById: Map<number, SchulEintrag> = routeApp.cache.kataloge.schulenById;
 		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
-		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
 
 		return new SchuelerSchnelleingabeManager(
 			stammdaten,
@@ -78,8 +76,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			faecherById,
 			jahrgaengeById,
 			schulenById,
-			telefonartenById,
-			vermerkartenById
+			telefonartenById
 		);
 	}
 

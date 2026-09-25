@@ -22,6 +22,7 @@ import { leitungsfunktionenStateImpl } from "~/states/kataloge/Leitungsfunktione
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
+import { vermerkartenStateImpl } from "~/states/kataloge/VermerkartenStateImpl";
 import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
 
 import { RouteDataStatistik } from "./RouteDataStatistik";
@@ -67,6 +68,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 				orteStateImpl.init(),
 				religionenStateImpl.init(),
 				statistikStateImpl.init(),
+				vermerkartenStateImpl.init(),
 			]);
 		}
 		if (to === this) {

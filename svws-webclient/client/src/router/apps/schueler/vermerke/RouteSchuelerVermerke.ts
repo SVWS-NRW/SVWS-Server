@@ -66,7 +66,6 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 	public getProps(to: RouteLocationNormalized): SchuelerVermerkeProps {
 		return {
 			schuelerVermerke: () => this.data.schuelerVermerke,
-			mapVermerkArten: this.data.mapVermerkArten,
 			patch: this.data.patch,
 			add: this.data.add,
 			remove: this.data.remove,
