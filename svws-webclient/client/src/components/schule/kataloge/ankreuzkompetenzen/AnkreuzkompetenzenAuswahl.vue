@@ -2,6 +2,7 @@
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
 			<h1>Ankreuzkompetenzen</h1>
+			<svws-ui-button @click="show = true">Einstellungen …</svws-ui-button>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
@@ -33,7 +34,7 @@
 					<span v-else>{{ manager().faecherById.get(rowData.idFach ?? -1)?.kuerzel || '—' }}</span>
 				</template>
 				<template #cell(floskelText)="{ value }">
-					<span class="line-clamp-2 break-words" :title="value">{{ value }}</span>
+					<span class="line-clamp-2 wrap-break-word" :title="value">{{ value }}</span>
 				</template>
 
 				<template #actions v-if="!readonly">
@@ -51,15 +52,39 @@
 			</svws-ui-table>
 		</div>
 	</div>
+	<svws-ui-modal v-model:show="show" size="small">
+		<template #modalTitle>Einstellungen</template>
+		<template #modalDescription>
+			<div class="text-left">
+				Verfügbare Stufen für Ankreuzkompetenzen
+				<div class="font-normal">
+					Es können die Stufen 1 bis 5 verwendet werden. Angezeigt werden ausschließlich diejenigen, die eine Bezeichnung haben. Eine Stufe ohne Bezeichnung wird ausgeblendet und steht bei der Noteneingabe nicht zur Verfügung.
+					<ul>
+						<li v-for="stufe, i of konfig.textStufen" :key="stufe ?? i">
+							<svws-ui-text-input :model-value="stufe" @blur="value => konfig.textStufen[i] = ((value === null) || JavaString.isBlank(value)) ? null : value" :placeholder="`Stufe ${i+1}`" />
+						</li>
+					</ul>
+				</div>
+				<div class="mt-2">Bezeichnung Fach Sonstiges</div>
+				<svws-ui-text-input v-model="konfig.textSonstiges" placeholder="Bezeichnung Fach Sonstiges" />
+			</div>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="show = false">Abbrechen</svws-ui-button>
+			<svws-ui-button type="danger" @click="patchKonfig">Speichern</svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { computed } from "vue";
+	import { computed, ref, watchEffect } from "vue";
 
 	import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
 	import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
+	import { AnkreuzkompetenzKonfiguration } from "@core/core/data/kataloge/AnkreuzkompetenzKonfiguration";
 	import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
+	import { JavaString } from "@core/java/lang/JavaString";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import type { DataTableColumn } from "@ui/types";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
@@ -83,6 +108,22 @@
 		showOnlyVisible,
 		noFilteredItems,
 	} = useKatalogAuswahl<Ankreuzkompetenz>(props);
+
+	const show = ref<boolean>(false);
+
+	async function patchKonfig() {
+		await props.patchKonfiguration(konfig.value);
+		props.manager().ankreuzkompetenzKonfiguration = konfig.value;
+		show.value = false;
+	}
+
+	const konfig = ref<AnkreuzkompetenzKonfiguration>(new AnkreuzkompetenzKonfiguration());
+	watchEffect(() => {
+		if (show.value) {
+			Object.assign(konfig.value, manager().ankreuzkompetenzKonfiguration);
+		}
+	});
+
 
 	const columns: DataTableColumn[] = [
 		{ key: "fach", label: "Fach", width: 8 },

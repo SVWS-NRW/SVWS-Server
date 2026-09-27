@@ -1,5 +1,6 @@
 import type { RouteParamsRawGeneric } from "vue-router";
 
+import type { AnkreuzkompetenzKonfiguration } from "@core/core/data/kataloge/AnkreuzkompetenzKonfiguration";
 import type { Ankreuzkompetenz } from "@core/core/data/schule/Ankreuzkompetenz";
 import { AnkreuzkompetenzJahrgangszuordnung } from "@core/core/data/schule/AnkreuzkompetenzJahrgangszuordnung";
 import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
@@ -37,10 +38,11 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<AnkreuzkompetenzenListeManager>>> {
-		const [ankreuzkompetenzen, faecher, jahrgaenge] = await Promise.all([
+		const [ankreuzkompetenzen, faecher, jahrgaenge, ankreuzkompetenzKonfiguration] = await Promise.all([
 			api.server.getAnkreuzkompetenzen(api.schema),
 			api.server.getFaecher(api.schema),
 			api.server.getJahrgaenge(api.schema),
+			api.server.getAnkreuzkompetenzenKonfiguration(api.schema),
 		]);
 
 		const manager = new AnkreuzkompetenzenListeManager(
@@ -50,7 +52,9 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 			schuleStateImpl.schulform,
 			ankreuzkompetenzen,
 			faecher,
-			jahrgaenge);
+			jahrgaenge,
+			ankreuzkompetenzKonfiguration
+		);
 
 		return { manager };
 	}
@@ -147,4 +151,7 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 		return errorMessage;
 	}
 
+	patchKonfiguration = async (data: AnkreuzkompetenzKonfiguration): Promise<void> => {
+		await api.server.patchAnkreuzkompetenzenKonfiguration(data, api.schema);
+	};
 }

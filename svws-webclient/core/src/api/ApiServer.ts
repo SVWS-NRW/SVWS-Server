@@ -6,6 +6,7 @@ import { AbteilungKlassenzuordnung } from '../core/data/schule/AbteilungKlassenz
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 import { Ankreuzkompetenz } from '../core/data/schule/Ankreuzkompetenz';
 import { AnkreuzkompetenzJahrgangszuordnung } from '../core/data/schule/AnkreuzkompetenzJahrgangszuordnung';
+import { AnkreuzkompetenzKonfiguration } from '../core/data/kataloge/AnkreuzkompetenzKonfiguration';
 import { ArrayList } from '../java/util/ArrayList';
 import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
 import { BenutzerAllgemeinCredentials } from '../core/data/benutzer/BenutzerAllgemeinCredentials';
@@ -16255,6 +16256,53 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = Ankreuzkompetenz.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAnkreuzkompetenzenKonfiguration für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/config
+	 *
+	 * Gibt die Konfiguration für die Ankreuzkompetenzen zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Konfiguration besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Konfiguration für die Ankreuzkompetenzen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: AnkreuzkompetenzKonfiguration
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Konfiguration der Ankreuzkompetenzen anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Konfiguration für die Ankreuzkompetenzen
+	 */
+	public async getAnkreuzkompetenzenKonfiguration(schema: string): Promise<AnkreuzkompetenzKonfiguration> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return AnkreuzkompetenzKonfiguration.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchAnkreuzkompetenzenKonfiguration für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/config
+	 *
+	 * Passt die Konfiguration der Ankreuzkompetenzen an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Konfiguration besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<AnkreuzkompetenzKonfiguration>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchAnkreuzkompetenzenKonfiguration(data: Partial<AnkreuzkompetenzKonfiguration>, schema: string): Promise<void> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = AnkreuzkompetenzKonfiguration.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

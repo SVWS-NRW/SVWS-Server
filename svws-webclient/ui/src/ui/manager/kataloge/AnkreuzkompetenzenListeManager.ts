@@ -3,6 +3,7 @@ import type { Schulform } from '@core/asd/types/schule/Schulform';
 import type { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
 import type { FachDaten } from '@core/core/data/fach/FachDaten';
 import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
+import type { AnkreuzkompetenzKonfiguration } from '@core/core/data/kataloge/AnkreuzkompetenzKonfiguration';
 import type { Ankreuzkompetenz } from '@core/core/data/schule/Ankreuzkompetenz';
 import type { AnkreuzkompetenzJahrgangszuordnung } from '@core/core/data/schule/AnkreuzkompetenzJahrgangszuordnung';
 import { JavaInteger } from '@core/java/lang/JavaInteger';
@@ -27,6 +28,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 	private _filterJahrgaenge: JahrgangsDaten[] = [];
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _searchTerm: string = "";
+	private _ankreuzkompetenzKonfiguration: AnkreuzkompetenzKonfiguration;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Ankreuzkompetenzen.
@@ -63,7 +65,8 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 		schulform: Schulform | null,
 		ankreuzkompetenzen: List<Ankreuzkompetenz>,
 		faecher: List<FachDaten>,
-		jahrgaenge: List<JahrgangsDaten>
+		jahrgaenge: List<JahrgangsDaten>,
+		ankreuzkompetenzKonfiguration: AnkreuzkompetenzKonfiguration
 	) {
 		super(
 			idSchuljahresabschnitt,
@@ -78,6 +81,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 		);
 		this.mapFaecher(faecher);
 		this.mapJahrgaenge(jahrgaenge);
+		this._ankreuzkompetenzKonfiguration = ankreuzkompetenzKonfiguration;
 	}
 
 	/**
@@ -322,5 +326,13 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 	get idsReferencedAnkreuzkompetenzen(): HashSet<number> {
 		return this._idsReferencedAnkreuzkompetenzen;
+	}
+
+	get ankreuzkompetenzKonfiguration(): AnkreuzkompetenzKonfiguration {
+		return this._ankreuzkompetenzKonfiguration;
+	}
+
+	set ankreuzkompetenzKonfiguration(value: AnkreuzkompetenzKonfiguration) {
+		this._ankreuzkompetenzKonfiguration = value;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.kataloge.AnkreuzkompetenzKonfiguration;
 import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.AnkreuzkompetenzJahrgangszuordnung;
 import de.svws_nrw.core.types.ServerMode;
@@ -17,6 +18,7 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangCreateRequest;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,6 +55,64 @@ public class APIAnkreuzkompetenzen {
 	public APIAnkreuzkompetenzen() {
 		// leer
 	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Konfiguration der Ankreuzkompetenzen im angegebenen Schema.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Konfiguration der Ankreuzkompetenzen
+	 */
+	@GET
+	@Path("/config")
+	@Operation(summary = "Gibt die Konfiguration für die Ankreuzkompetenzen zurück.",
+			description = "Gibt die Konfiguration für die Ankreuzkompetenzen zurück."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Konfiguration besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Konfiguration für die Ankreuzkompetenzen",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnkreuzkompetenzKonfiguration.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Konfiguration der Ankreuzkompetenzen anzusehen.")
+	public Response getAnkreuzkompetenzenKonfiguration(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getAnkreuzkompetenzKonfigurationController()
+				.get();
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Konfiguration der Ankreuzkompetenzen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param patch     der Patch
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/config")
+	@Operation(summary = "Passt die Konfiguration der Ankreuzkompetenzen an.",
+			description = "Passt die Konfiguration der Ankreuzkompetenzen an."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Konfiguration besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchAnkreuzkompetenzenKonfiguration(@PathParam("schema") final String schema,
+			@RequestBody(description = "Der Patch für die Ankreuzkompetenz", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = AnkreuzkompetenzKonfiguration.class))) final AnkreuzkompetenzKonfigurationPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getAnkreuzkompetenzKonfigurationController()
+				.patch(patch);
+	}
+
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Ankreuzkompetenzen im angegebenen Schema.
@@ -194,7 +254,8 @@ public class APIAnkreuzkompetenzen {
 			@RequestBody(description = "Die Daten der zu erstellenden AnkreuzkompetenzJahrgangszuordnungen ohne ID, die automatisch generiert werden",
 					required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class)))) final List<AnkreuzkompetenzJahrgangCreateRequest> dtos,
+							array = @ArraySchema(schema = @Schema(
+									implementation = AnkreuzkompetenzJahrgangszuordnung.class)))) final List<AnkreuzkompetenzJahrgangCreateRequest> dtos,
 			@Context final HttpServletRequest request) {
 		return KatalogControllerFactory
 				.withWriteAccessStable(request)

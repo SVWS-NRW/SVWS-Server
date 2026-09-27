@@ -7,6 +7,7 @@ import type { AnkreuzkompetenzenListeManager } from "@ui/ui/manager/kataloge/Ank
 
 import AnkreuzkompetenzenApp from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenApp.vue";
 import AnkreuzkompetenzenAuswahl from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahl.vue";
+import type { AnkreuzkompetenzenAuswahlProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahlProps";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeAnkreuzkompetenzenDaten } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenDaten";
 import { routeAnkreuzkompetenzenGruppenprozesse } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenGruppenprozesse";
@@ -20,7 +21,7 @@ export class RouteAnkreuzkompetenzen extends RouteAuswahlNode<Ankreuzkompetenzen
 	public constructor() {
 		super(Schulform.values(),
 			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.ankreuzkompetenzen",
-			"schule/ankreuzkompetenzen/:id(\\d+)?", AnkreuzkompetenzenApp, AnkreuzkompetenzenAuswahl, new RouteDataAnkreuzkompetenzen());
+			String.raw`schule/ankreuzkompetenzen/:id(\d+)?`, AnkreuzkompetenzenApp, AnkreuzkompetenzenAuswahl, new RouteDataAnkreuzkompetenzen());
 		super.mode = ServerMode.STABLE;
 		super.text = "Ankreuzkompetenzen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
@@ -30,6 +31,10 @@ export class RouteAnkreuzkompetenzen extends RouteAuswahlNode<Ankreuzkompetenzen
 			routeAnkreuzkompetenzenGruppenprozesse,
 		];
 		super.defaultChild = routeAnkreuzkompetenzenDaten;
+		super.getAuswahlListProps = (props) => (<AnkreuzkompetenzenAuswahlProps>{
+			...props,
+			patchKonfiguration: this.data.patchKonfiguration,
+		});
 		super.updateIfTarget = this.doUpdateIfTarget;
 	}
 

@@ -2,6 +2,8 @@ package de.svws_nrw.controller.schule.katalog;
 
 import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangController;
 import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangControllerImpl;
+import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationController;
+import de.svws_nrw.controller.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationControllerImpl;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseController;
 import de.svws_nrw.controller.schule.katalog.fachklasse.FachklasseControllerImpl;
 import de.svws_nrw.controller.schule.katalog.merkmal.MerkmalController;
@@ -23,6 +25,9 @@ import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Die Factory für Katalog-Controller
+ */
 public final class KatalogControllerFactory {
 
 	private final KatalogServiceFactory serviceFactory;
@@ -163,6 +168,15 @@ public final class KatalogControllerFactory {
 	 */
 	public AnkreuzkompetenzJahrgangController getAnkreuzkompetenzJahrgangController() {
 		return new AnkreuzkompetenzJahrgangControllerImpl(serviceFactory.getAnkreuzkompetenzJahrgangService());
+	}
+
+	/**
+	 * Erstellt einen neuen AnkreuzkompetenzKonfigurationController.
+	 *
+	 * @return {@link AnkreuzkompetenzKonfigurationController} - neu erzeugter Controller
+	 */
+	public AnkreuzkompetenzKonfigurationController getAnkreuzkompetenzKonfigurationController() {
+		return new AnkreuzkompetenzKonfigurationControllerImpl(serviceFactory.getAnkreuzkompetenzKonfigurationService());
 	}
 
 }

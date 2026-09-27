@@ -1,6 +1,7 @@
 package de.svws_nrw.service.schule.katalog;
 
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangMapper;
+import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationMapper;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
 import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
 import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
@@ -9,6 +10,7 @@ import de.svws_nrw.mapper.schule.katalog.religion.ReligionMapper;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
+import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
@@ -118,6 +120,19 @@ public final class KatalogServiceFactory {
 				katalogRepositoryFactory.getAnkreuzkompetenzRepository(),
 				katalogRepositoryFactory.getJahrgangRepository(),
 				AnkreuzkompetenzJahrgangMapper.INSTANCE
+		);
+	}
+
+
+	/**
+	 * Erstellt eine neue Instanz des AnkreuzkompetenzKonfigurationService.
+	 *
+	 * @return eine neue Instanz des AnkreuzkompetenzKonfigurationService.
+	 */
+	public AnkreuzkompetenzKonfigurationService getAnkreuzkompetenzKonfigurationService() {
+		return new AnkreuzkompetenzKonfigurationService(
+				katalogRepositoryFactory.getAnkreuzkompetenzKonfigurationRepository(),
+				AnkreuzkompetenzKonfigurationMapper.INSTANCE
 		);
 	}
 
