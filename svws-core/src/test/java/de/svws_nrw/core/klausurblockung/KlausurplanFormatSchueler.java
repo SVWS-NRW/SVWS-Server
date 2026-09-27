@@ -3,12 +3,11 @@ package de.svws_nrw.core.klausurblockung;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-/** Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung im Format von
- * Mirko Esser. In dieser Datei findet man alle SuS.
+/** Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung. In dieser Datei findet man alle SuS.
  *
  * @author Benjamin A. Bartsch */
 @JsonPropertyOrder({ "id", "kursid", "stufe", "vorname", "nachname" })
-public class EsserFormatSchueler {
+public class KlausurplanFormatSchueler {
 
 	/** Die ID des Datensatzes. **/
 	@JsonProperty

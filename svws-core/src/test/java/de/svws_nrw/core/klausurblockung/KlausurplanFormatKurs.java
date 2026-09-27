@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung im
- * Format von Mirko Esser. In dieser Datei findet man alle Kurse.
+ * Diese Klasse dient als DTO für die CSV-Tabelle {@code kurs.txt} eines Datensatzes einer Klausurplanung. In dieser Datei findet man alle Kurse.
  *
  * @author Benjamin A. Bartsch
  */
 @JsonPropertyOrder({ "id", "stufe", "kursart", "fach", "kursnr", "lehrer", "halbjahr" })
-public class EsserFormatKurs {
+public class KlausurplanFormatKurs {
 
 	/** Die ID des Datensatzes. **/
 	@JsonProperty

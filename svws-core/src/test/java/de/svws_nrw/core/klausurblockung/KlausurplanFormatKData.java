@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * Diese Klasse dient als DTO für die CSV-Tabelle {@code kdata.txt} eines Datensatzes einer Klausurplanung im Format
- * von Mirko Esser. In dieser Datei findet man die Zuordnungen der Klausuren zu Quartalen.
+ * Diese Klasse dient als DTO für die CSV-Tabelle {@code kdata.txt} eines Datensatzes einer Klausurplanung. In dieser Datei findet man die Zuordnungen der Klausuren zu Quartalen.
  *
  * @author Benjamin A. Bartsch
  */
 @JsonPropertyOrder({ "id", "fach", "kursart", "stufe", "halbjahr", "klausnr", "dauer", "zeitdiff", "bemerkung" })
-public class EsserFormatKData {
+public class KlausurplanFormatKData {
 
 	/** Die ID des Datensatzes. **/
 	@JsonProperty

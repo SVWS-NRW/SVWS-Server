@@ -41,21 +41,21 @@ class KlausurterminblockungTests {
 	void test001_data() {
 
 		// Einlesen der Kurs-Datensätze
-		final HashMap<Integer, EsserFormatKurs> mapKurs = new HashMap<>();
-		for (final EsserFormatKurs kurs : CsvReader.fromResource(PFAD_DATEN_001 + "kurs.txt", EsserFormatKurs.class)) {
+		final HashMap<Integer, KlausurplanFormatKurs> mapKurs = new HashMap<>();
+		for (final KlausurplanFormatKurs kurs : CsvReader.fromResource(PFAD_DATEN_001 + "kurs.txt", KlausurplanFormatKurs.class)) {
 			mapKurs.put(kurs.id, kurs);
 		}
 
 		// Einlesen der SuS-Datensätze
-		final HashMap<Integer, EsserFormatSchueler> mapSuS = new HashMap<>();
-		for (final EsserFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt", EsserFormatSchueler.class)) {
+		final HashMap<Integer, KlausurplanFormatSchueler> mapSuS = new HashMap<>();
+		for (final KlausurplanFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt", KlausurplanFormatSchueler.class)) {
 			mapSuS.put(schueler.id, schueler);
 		}
 
 		// Einlesen der SuS-Fachwahl-Datensätze (nur diejenigen, die es schriftlich haben).
-		final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS1 = new HashMap<>();
-		final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS2 = new HashMap<>();
-		for (final EsserFormatFachwahl fachwahl : CsvReader.fromResource(PFAD_DATEN_001 + "fachwahl.txt", EsserFormatFachwahl.class)) {
+		final HashMap<Integer, LinkedList<KlausurplanFormatSchueler>> mapKursSuS1 = new HashMap<>();
+		final HashMap<Integer, LinkedList<KlausurplanFormatSchueler>> mapKursSuS2 = new HashMap<>();
+		for (final KlausurplanFormatFachwahl fachwahl : CsvReader.fromResource(PFAD_DATEN_001 + "fachwahl.txt", KlausurplanFormatFachwahl.class)) {
 			if (mapKursSuS1.get(fachwahl.kurs) == null) {
 				mapKursSuS1.put(fachwahl.kurs, new LinkedList<>());
 			}
@@ -63,7 +63,7 @@ class KlausurterminblockungTests {
 				mapKursSuS2.put(fachwahl.kurs, new LinkedList<>());
 			}
 
-			final EsserFormatSchueler schueler = mapSuS.get(fachwahl.schueler);
+			final KlausurplanFormatSchueler schueler = mapSuS.get(fachwahl.schueler);
 			if (fachwahl.schriftlich > 1) {
 				mapKursSuS1.get(fachwahl.kurs).addLast(schueler);
 			}
@@ -73,22 +73,22 @@ class KlausurterminblockungTests {
 		}
 
 		// Einlesen der KData-Datensätze
-		final HashMap<Integer, EsserFormatKData> mapKData = new HashMap<>();
-		for (final EsserFormatKData kdata : CsvReader.fromResource(PFAD_DATEN_001 + "kdata.txt", EsserFormatKData.class)) {
+		final HashMap<Integer, KlausurplanFormatKData> mapKData = new HashMap<>();
+		for (final KlausurplanFormatKData kdata : CsvReader.fromResource(PFAD_DATEN_001 + "kdata.txt", KlausurplanFormatKData.class)) {
 			mapKData.put(kdata.id, kdata);
 		}
 
 		// Einlesen der Klausur-Datensätze
-		final HashMap<Integer, EsserFormatKlausur> mapKlausur = new HashMap<>();
-		final HashMap<Integer, EsserFormatKurs> mapKlausurZuKurs = new HashMap<>();
-		final HashMap<Integer, HashMap<Integer, HashMap<String, LinkedList<EsserFormatKlausur>>>> mapQuartalZuKlausuren = new HashMap<>();
-		for (final EsserFormatKlausur klausur : CsvReader.fromResource(PFAD_DATEN_001 + "klausur.txt", EsserFormatKlausur.class)) {
+		final HashMap<Integer, KlausurplanFormatKlausur> mapKlausur = new HashMap<>();
+		final HashMap<Integer, KlausurplanFormatKurs> mapKlausurZuKurs = new HashMap<>();
+		final HashMap<Integer, HashMap<Integer, HashMap<String, LinkedList<KlausurplanFormatKlausur>>>> mapQuartalZuKlausuren = new HashMap<>();
+		for (final KlausurplanFormatKlausur klausur : CsvReader.fromResource(PFAD_DATEN_001 + "klausur.txt", KlausurplanFormatKlausur.class)) {
 			mapKlausur.put(klausur.id, klausur);
 
-			final EsserFormatKurs kurs = mapKurs.get(klausur.kurs);
+			final KlausurplanFormatKurs kurs = mapKurs.get(klausur.kurs);
 			mapKlausurZuKurs.put(klausur.id, kurs);
 
-			final EsserFormatKData kdata = mapKData.get(klausur.kdata);
+			final KlausurplanFormatKData kdata = mapKData.get(klausur.kdata);
 
 			if (mapQuartalZuKlausuren.get(kdata.halbjahr) == null) {
 				mapQuartalZuKlausuren.put(kdata.halbjahr, new HashMap<>());
@@ -109,12 +109,12 @@ class KlausurterminblockungTests {
 				for (final String stufe : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).keySet()) {
 					// Was war die Mindestanzahl an Terminen bis jetzt?
 					final TreeSet<Integer> termine = new TreeSet<>();
-					for (final EsserFormatKlausur klausur : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe)) {
+					for (final KlausurplanFormatKlausur klausur : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe)) {
 						termine.add(klausur.termin);
 					}
 
 					// Welche Klausuren müssen geschrieben werden?
-					final LinkedList<EsserFormatKlausur> klausuren = mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe);
+					final LinkedList<KlausurplanFormatKlausur> klausuren = mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe);
 
 					// Blockungsalgorithmus...
 					klausurblockung(halbjahr, stufe, klausuren, mapKursSuS1, mapKursSuS2);
@@ -215,9 +215,9 @@ class KlausurterminblockungTests {
 
 
 	private static void klausurblockung(final int halbjahr, final String stufe,
-			final LinkedList<EsserFormatKlausur> klausuren,
-			final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
-			final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
+			final LinkedList<KlausurplanFormatKlausur> klausuren,
+			final HashMap<Integer, LinkedList<KlausurplanFormatSchueler>> mapKursSuSschriftlich1,
+			final HashMap<Integer, LinkedList<KlausurplanFormatSchueler>> mapKursSuSschriftlich2) {
 
 		if (stufe.equals("EF")) {
 			return;
@@ -228,7 +228,7 @@ class KlausurterminblockungTests {
 		// termine + " Termine");
 
 		// Wähle die richtige Map.
-		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
+		HashMap<Integer, LinkedList<KlausurplanFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
 		if (stufe.equals("Q2") && (halbjahr == 2)) {
 			mapSchriftlich = mapKursSuSschriftlich2;
 		}
@@ -237,12 +237,12 @@ class KlausurterminblockungTests {
 		final @NotNull List<@NotNull GostKursklausurRich> input = new ArrayList<>();
 
 		// Für alle Klausuren ...
-		for (final EsserFormatKlausur klausur : klausuren) {
+		for (final KlausurplanFormatKlausur klausur : klausuren) {
 			final @NotNull GostKursklausurRich gostKlausur = new GostKursklausurRich();
 			gostKlausur.id = klausur.id;
 
 			// Für alle schriftlichen Schüler ...
-			for (final EsserFormatSchueler schueler : mapSchriftlich.get(klausur.kurs)) {
+			for (final KlausurplanFormatSchueler schueler : mapSchriftlich.get(klausur.kurs)) {
 				gostKlausur.schuelerIds.add(Long.parseLong("" + schueler.id));
 			}
 
