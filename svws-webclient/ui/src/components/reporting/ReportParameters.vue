@@ -37,7 +37,7 @@
 								<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
 									<div v-if="reportingState.istParameterSichtbar(gruppe, vp)"
 										:class="[vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`, { 'opacity-50': !reportingState.istParameterAktiv(gruppe, vp) }]">
-										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!reportingState.istParameterAktiv(gruppe, vp)" :placeholder="vp.bezeichnung">
+										<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" :disabled="!reportingState.istParameterAktiv(gruppe, vp)" :placeholder="vp.bezeichnung" :type="getInputType(vp.typ)">
 											<label :for="vp.name"> {{ vp.bezeichnung }} </label>
 											<svws-ui-tooltip v-if="!reportingState.istParameterAktiv(gruppe, vp)">
 												<span class="icon i-ri-information-line" />
@@ -52,43 +52,39 @@
 						</div>
 					</template>
 					<div class="text-left" />
-					<div v-if="parameter.sortierungDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+					<div v-if="sortierungGruppen.length > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
 						<div class="font-bold mb-2">Sortierung</div>
 						<div class="flex items-center gap-x-4 gap-y-2">
-							<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
-								<template v-if="reportingState.istSichtbar(gruppe) && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
-									<span>{{ gruppe.bezeichnung }}</span>
-									<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
-										:model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
-										@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
-									<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
-										<span class="icon i-ri-information-line" />
-										<template #content>
-											{{ gruppeBerechtigungText(gruppe) }}
-										</template>
-									</svws-ui-tooltip>
-								</template>
+							<template v-for="gruppe of sortierungGruppen" :key="gruppe.bezeichnung">
+								<span>{{ gruppe.bezeichnung }}</span>
+								<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
+									:model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
+									@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
+								<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
+									<span class="icon i-ri-information-line" />
+									<template #content>
+										{{ gruppeBerechtigungText(gruppe) }}
+									</template>
+								</svws-ui-tooltip>
 							</template>
 						</div>
 					</div>
-					<div v-if="parameter.filterDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+					<div v-if="filterGruppen.length > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
 						<div class="font-bold mb-2">Filterung</div>
 						<div class="flex items-center gap-x-4 gap-y-2">
-							<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
-								<template v-if="reportingState.istSichtbar(gruppe) && !gruppe.filterDefinitionenOptionen.isEmpty()">
-									<span>{{ gruppe.bezeichnung }}</span>
-									<ui-select-multi v-if="gruppe.uiIstFilterMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)" :model-value="gruppe.filterDefinitionen"
-										@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
-									<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
-										:model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
-										@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
-									<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
-										<span class="icon i-ri-information-line" />
-										<template #content>
-											{{ gruppeBerechtigungText(gruppe) }}
-										</template>
-									</svws-ui-tooltip>
-								</template>
+							<template v-for="gruppe of filterGruppen" :key="gruppe.bezeichnung">
+								<span>{{ gruppe.bezeichnung }}</span>
+								<ui-select-multi v-if="gruppe.uiIstFilterMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)" :model-value="gruppe.filterDefinitionen"
+									@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
+								<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :disabled="!reportingState.istAktiv(gruppe)"
+									:model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
+									@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
+								<svws-ui-tooltip v-if="!reportingState.istAktiv(gruppe)">
+									<span class="icon i-ri-information-line" />
+									<template #content>
+										{{ gruppeBerechtigungText(gruppe) }}
+									</template>
+								</svws-ui-tooltip>
 							</template>
 						</div>
 					</div>
@@ -273,8 +269,8 @@
 	const localIdHauptdatenObjekt = ref<number>(-1);
 	const localIdsHauptdaten = ref<string>("");
 	const localIdsDetaildaten = ref<string>("");
-	const parameter = ref(new ReportingParameter());
-	const altParameter = ref();
+	const parameter = ref<ReportingParameter>(new ReportingParameter());
+	const altParameter = ref<string>();
 
 	/** Die Vorlagen, die an dieser Schulform genutzt werden dürfen. Versorgt die Auswahlliste und die Vorauswahl, damit keine ausgeblendete Vorlage
 	 * vorausgewählt wird. */
@@ -295,6 +291,26 @@
 		} else {
 			parameter.value = reportingState.createParameter(vorlage);
 		}
+	});
+
+	const sortierungGruppen = computed(() => {
+		const list = [];
+		for (const gruppe of parameter.value.sortierungDefinitionenGruppen) {
+			if (reportingState.istSichtbar(gruppe) && !gruppe.sortierungDefinitionenOptionen.isEmpty()) {
+				list.push(gruppe);
+			}
+		}
+		return list;
+	});
+
+	const filterGruppen = computed(() => {
+		const list = [];
+		for (const gruppe of parameter.value.filterDefinitionenGruppen) {
+			if (reportingState.istSichtbar(gruppe) && !gruppe.filterDefinitionenOptionen.isEmpty()) {
+				list.push(gruppe);
+			}
+		}
+		return list;
 	});
 
 
@@ -415,6 +431,17 @@
 		}
 	}
 
+	function getInputType(typ: number): 'date' | 'datetime-local' | '' {
+		const inputTyp = ReportingReportvorlageParameterTyp.getByID(typ);
+		if (ReportingReportvorlageParameterTyp.DATUM === inputTyp) {
+			return 'date';
+		} else if (ReportingReportvorlageParameterTyp.DATUM_UHRZEIT === inputTyp) {
+			return 'datetime-local';
+		} else {
+			return '';
+		}
+	}
+
 	const reportvorlageSelectManager = new SelectManager({
 		options: zulaessigeReportvorlagen,
 		selectionDisplayText: option => option.getBezeichnung(),
@@ -436,6 +463,9 @@
 	}
 
 	async function downloadJSONAusTextfeld() {
+		if (altParameter.value === undefined) {
+			return;
+		}
 		await reportingState.createJSONReportingParameter(ReportingParameter.transpilerFromJSON(altParameter.value));
 	}
 
@@ -444,7 +474,7 @@
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
-		if (selectedRoute.value.name === 'json') {
+		if ((selectedRoute.value.name === 'json') && (altParameter.value !== undefined)) {
 			parameter.value = ReportingParameter.transpilerFromJSON(altParameter.value);
 		}
 		try {
@@ -462,7 +492,7 @@
 		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
-		if (selectedRoute.value.name === 'json') {
+		if ((selectedRoute.value.name === 'json') && (altParameter.value !== undefined)) {
 			parameter.value = ReportingParameter.transpilerFromJSON(altParameter.value);
 		}
 		parameter.value.ausgabeformat = ReportingAusgabeformat.HTML.getId();
