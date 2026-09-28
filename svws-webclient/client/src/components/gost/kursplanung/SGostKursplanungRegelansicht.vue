@@ -161,6 +161,20 @@
 				</template>
 			</template>
 		</BlockungsregelBase>
+		<!-- Regeltyp 19  -->
+		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS" :get-datenmanager :get-ergebnismanager :api-status :nur-regelverletzungen
+			:regel-hinzufuegen="regelHinzufuegen_19" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'schueler', label: 'Schüler war'}, {key: 'in', label: 'im Kurs'}, ]">
+			<template #regelRead="{ regel: r }">
+				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(r.parameter.get(1)) }} </div>
+			</template>
+			<template #regelEdit>
+				<template v-if="regel !== undefined">
+					<svws-ui-select v-model="regelParameterSchueler(regel, 0).value" :items="schueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
+					<svws-ui-select v-model="regelParameterKurs(regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+				</template>
+			</template>
+		</BlockungsregelBase>
 		<!-- Regeltyp 11  -->
 		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH" :get-datenmanager :get-ergebnismanager :api-status :nur-regelverletzungen
 			:regel-hinzufuegen="regelHinzufuegen_11" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'schueler', label: 'Schüler zusammen'}, {key: 'schueler', label: 'mit Schüler'}, {key: 'in', label: 'in Fach'}, ]">
@@ -445,6 +459,17 @@
 		regel.value = r;
 	}
 
+	function regelHinzufuegen_19() {
+		if ((schueler.value.size() < 1) || (kurse.value.size() < 1)) {
+			return;
+		}
+		const r = new GostBlockungRegel();
+		r.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
+		r.parameter.add(schueler.value.get(0).id);
+		r.parameter.add(kurse.value.get(0).id);
+		regel.value = r;
+	}
+
 	function regelHinzufuegen_11() {
 		if ((schueler.value.size() < 2) || (faecher.value.size() < 1)) {
 			return;
@@ -560,6 +585,11 @@
 						return props.getErgebnismanager().regelupdatePatchByIdSchuelerVerbietenInKurs(regel.value.id, p.get(0), p.get(1));
 					}
 					return props.getErgebnismanager().regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
+				case GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ:
+					if (regel.value.id > 0) {
+						return props.getErgebnismanager().regelupdatePatchByIdSchuelerWarImKurs(regel.value.id, p.get(0), p.get(1));
+					}
+					return props.getErgebnismanager().regelupdateCreateSchuelerWarImKurs(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
 					if (regel.value.id > 0) {
 						return props.getErgebnismanager().regelupdatePatchByIdKursartAlleinInSchienenVonBis(regel.value.id, p.get(0), p.get(1), p.get(2));

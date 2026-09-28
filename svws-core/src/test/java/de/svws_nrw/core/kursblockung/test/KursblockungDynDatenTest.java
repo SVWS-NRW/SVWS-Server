@@ -820,4 +820,22 @@ class KursblockungDynDatenTest {
 		assertEquals(1, dd2.gibStatistik().gibBewertungRegelverletzungen());
 	}
 
+	/**
+	 * Testet die Regel: {@link GostKursblockungRegelTyp#SCHUELER_WAR_IM_KURS}
+	 * <br>Die Regel ist eine reine Definition und wird vom Algorithmus nicht beachtet.
+	 */
+	@Test
+	@DisplayName("test_regel_19_SCHUELER_WAR_IM_KURS")
+	void test_regel_19_SCHUELER_WAR_IM_KURS() {
+		final GostBlockungRegel regel = new GostBlockungRegel();
+		regel.id = 1;
+		regel.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
+		regel.parameter.add(Long.valueOf(17)); // S-17
+		regel.parameter.add(Long.valueOf(62)); // K-62 (M;LK)
+		final KursblockungDynDaten dd = ladeDaten001(1, regel);
+		assertTrue(dd.gibIstSchuelerWarImKurs(17, 62));
+		assertKeineNegativeBewertung(dd);
+		// Die Definition wird gespeichert, aber (noch) nicht auf den Algorithmus angewandt.
+	}
+
 }

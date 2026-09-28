@@ -706,7 +706,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 						conn.transactionRemove(regel);
 					}
 				}
-				case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS -> {
+				case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, SCHUELER_WAR_IM_KURS -> {
 					final DTOGostBlockungRegelParameter param = params.get(1);
 					if (param.Nummer != 1) {
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,

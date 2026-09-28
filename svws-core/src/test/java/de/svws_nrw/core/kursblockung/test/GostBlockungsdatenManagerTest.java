@@ -2492,6 +2492,40 @@ class GostBlockungsdatenManagerTest {
 	}
 
 	@Test
+	@DisplayName("testRegelTyp19")
+	void testRegelTyp19() {
+		final GostBlockungsdatenManager manager = createManagerFuerRegelTypTests();
+
+		// Gültig: Schüler 100 war im Kurs 1
+		final GostBlockungRegel r = createRegel(REGEL_ID_1, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
+		r.parameter.add(SCHUELER_1_ID);
+		r.parameter.add(KURS_ID_1);
+		manager.regelAdd(r);
+		assertTrue(manager.regelGetExistiert(REGEL_ID_1));
+
+		// Ungültige Schüler-ID
+		final GostBlockungRegel rS = createRegel(REGEL_ID_2, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
+		rS.parameter.add(SCHUELER_NICHT_VORHANDEN);
+		rS.parameter.add(KURS_ID_1);
+		manager.regelAdd(rS);
+		assertEquals(1, manager.regelGetMapUngueltig().size());
+
+		// Ungültige Kurs-ID
+		final GostBlockungRegel rK = createRegel(REGEL_ID_3, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
+		rK.parameter.add(SCHUELER_1_ID);
+		rK.parameter.add(KURS_NICHT_VORHANDEN);
+		manager.regelAdd(rK);
+		assertEquals(2, manager.regelGetMapUngueltig().size());
+
+		// Duplikat: gleiche Schüler-Kurs-Kombination (Multikey-Kollision)
+		final GostBlockungRegel rDup = createRegel(REGEL_ID_4, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
+		rDup.parameter.add(SCHUELER_1_ID);
+		rDup.parameter.add(KURS_ID_1);
+		manager.regelAdd(rDup);
+		assertEquals(3, manager.regelGetMapUngueltig().size());
+	}
+
+	@Test
 	@DisplayName("testRegelGetMapUngueltig")
 	void testRegelGetMapUngueltig() {
 		final GostBlockungsdatenManager manager = createManagerFuerRegelTests();

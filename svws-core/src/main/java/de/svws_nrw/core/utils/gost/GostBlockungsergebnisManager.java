@@ -339,6 +339,7 @@ public class GostBlockungsergebnisManager {
 				// stateRegelvalidierung16 ist nicht nötig
 				// stateRegelvalidierung17 ist nicht nötig
 				case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE -> stateRegelvalidierung18(r);
+				// stateRegelvalidierung19 ist nicht nötig (SCHUELER_WAR_IM_KURS ist nicht verletzbar)
 				default -> {
 					/* andere Regeltypen ignorieren */ }
 			}
@@ -3331,8 +3332,10 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt.
 	 */
-	private @NotNull GostBlockungRegelUpdate regelupdatePatchByIdZusammenbauen(final @NotNull GostBlockungRegelUpdate u,
-			final @NotNull GostBlockungRegel rAlt, final @NotNull GostBlockungRegelUpdate uNeu) {
+	private static @NotNull GostBlockungRegelUpdate regelupdatePatchByIdZusammenbauen(
+			final @NotNull GostBlockungRegelUpdate u,
+			final @NotNull GostBlockungRegel rAlt,
+			final @NotNull GostBlockungRegelUpdate uNeu) {
 		GostBlockungsergebnisManager.regelupdateAppend(u, uNeu);
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt)) {
@@ -4433,6 +4436,69 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Definition zu setzen.
+	 * <br>Es werden alle Kombinationen (Kreuzprodukt) aus der Schülermenge und der Kursmenge hinzugefügt.
+	 * <br>(1) Wenn eine Kombination noch nicht als Definition existiert, wird sie hinzugefügt.
+	 *
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 * @param setKursID      Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Definition zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerWarImKurs(final @NotNull Set<Long> setSchuelerID,
+			final @NotNull Set<Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idSchueler : setSchuelerID) {
+			for (final long idKurs : setKursID) {
+				// (1)
+				regelupdateHinzufuegenFallsNichtVorhanden(u,
+						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs }),
+						DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+			}
+		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für die aktuellen
+	 * Schüler-Kurs-Zuordnungen der übergebenen Kursmenge die Definition "Schüler war im Kurs" zu setzen.
+	 * <br>(1) Wenn eine Zuordnung noch nicht als Definition existiert, wird sie hinzugefügt.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für die aktuellen
+	 *         Schüler-Kurs-Zuordnungen der übergebenen Kursmenge die Definition "Schüler war im Kurs" zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerWarImKursInDenKursen(final @NotNull Set<Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final long idKurs : setKursID) {
+			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs)) {
+				// (1)
+				regelupdateHinzufuegenFallsNichtVorhanden(u,
+						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs }),
+						DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+			}
+		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für alle aktuellen
+	 * Schüler-Kurs-Zuordnungen die Definition "Schüler war im Kurs" zu setzen.
+	 * <br>Die Methode delegiert alles an {@link #regelupdateCreateSchuelerWarImKursInDenKursen}.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für alle aktuellen
+	 *         Schüler-Kurs-Zuordnungen die Definition "Schüler war im Kurs" zu setzen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerWarImKursAusAktuellerZuordnung() {
+		return regelupdateCreateSchuelerWarImKursInDenKursen(kursByID.keySet());
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
 	 *
 	 * @param setSchuelerID  Die Menge der Schüler-IDs.
@@ -4869,6 +4935,28 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 *
+	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
+	 * @param idSchueler  Die ID des Schülers.
+	 * @param idKurs      Die ID des Kurses.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
+	 *         Das Update kann leer sein, falls der Patch nicht ausgeführt wird (siehe (1)).
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerWarImKurs(final long idRegelAlt, final long idSchueler, final long idKurs) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		// (1)
+		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS,
+				new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs });
+		if (rAlt == null) {
+			return u;
+		}
+		return regelupdatePatchByIdZusammenbauen(u, rAlt,
+				regelupdateCreateSchuelerWarImKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Kursmengen-Schienemengen-Fixierung zu lösen.
 	 * <br>(1) Wenn der Kurs im Schienen-Bereich liegt und bereits fixiert ist, wird die Fixierung entfernt.
 	 *
@@ -5018,6 +5106,40 @@ public class GostBlockungsergebnisManager {
 	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerFixierenInAllenKursen() {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		u.listEntfernen.addAll(parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Definitionen "Schüler war im Kurs"
+	 * der übergebenen Kursmenge zu entfernen.
+	 * <br>Es werden alle Regeln des Typs {@link GostKursblockungRegelTyp#SCHUELER_WAR_IM_KURS} entfernt, deren Kurs in der Kursmenge enthalten ist.
+	 *
+	 * @param setKursID  Die Menge der Kurs-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Definitionen "Schüler war im Kurs"
+	 *         der übergebenen Kursmenge zu entfernen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerWarImKursInDenKursen(final @NotNull Set<Long> setKursID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final @NotNull GostBlockungRegel regel : parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS)) {
+			if (setKursID.contains(regel.parameter.get(1))) {
+				u.listEntfernen.add(regel);
+			}
+		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Definitionen "Schüler war im Kurs" zu entfernen.
+	 * <br>Es werden alle Regeln des Typs {@link GostKursblockungRegelTyp#SCHUELER_WAR_IM_KURS} entfernt.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Definitionen "Schüler war im Kurs" zu entfernen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateRemoveSchuelerWarImKursAlle() {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+		u.listEntfernen.addAll(parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS));
 		return u;
 	}
 

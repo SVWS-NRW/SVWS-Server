@@ -1,12 +1,13 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
+import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
-import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
-import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp> {
@@ -168,6 +169,14 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	public static readonly FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE: GostKursblockungRegelTyp = new GostKursblockungRegelTyp("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE", 18, 18, "Fachart: Maximale Anzahl pro Schiene", Arrays.asList(GostKursblockungRegelParameterTyp.FACH_ID, GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
+	 *  Der Regel-Typ(19) zum Definieren, dass ein Schüler (A) irgendwann einem Kurs (B) zugeordnet war.<br>
+	 *  Diese Regel kann nicht verletzt werden, sie dient lediglich der Definition einer Zuordnung.
+	 *  <br>- Parameter A: Datenbank-ID des Schülers (long)
+	 *  <br>- Parameter B: Datenbank-ID des Kurses (long)
+	 */
+	public static readonly SCHUELER_WAR_IM_KURS: GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_WAR_IM_KURS", 19, 19, "Schüler: War im Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
+
+	/**
 	 * Liefert den kleinsten Wert (inklusive) für Regel 9.
 	 */
 	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN: number = 1;
@@ -200,7 +209,7 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	/**
 	 * Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen.
 	 */
-	public static readonly ANZEIGE_REIHENFOLGE: Array<number> = [1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+	public static readonly ANZEIGE_REIHENFOLGE: List<number> = ArrayList.of(1, 6, 2, 3, 4, 5, 19, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
 
 	/**
 	 * Die ID des Regel-Typs

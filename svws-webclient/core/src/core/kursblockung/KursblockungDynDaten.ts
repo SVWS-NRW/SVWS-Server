@@ -149,6 +149,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.fehlerBeiRegel15();
 		this.fehlerBeiRegel16();
 		this.fehlerBeiRegel18();
+		this.fehlerBeiRegel19();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -293,6 +294,10 @@ export class KursblockungDynDaten extends JavaObject {
 				}
 				case GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE: {
 					KursblockungDynDaten.fehlerBeiReferenzenRegeltyp18(daten, setFaecher, setKursarten);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS: {
+					KursblockungDynDaten.fehlerBeiReferenzenRegeltyp19(daten, setSchueler, setKurse);
 					break;
 				}
 				default: {
@@ -458,6 +463,14 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifSetNotContains(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Kursart nicht vorhanden!", fachID, kursartID, maximum), setKursarten, kursartID);
 		DeveloperNotificationException.ifSmaller(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu klein!", fachID, kursartID, maximum), maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN);
 		DeveloperNotificationException.ifGreater(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu groß!", fachID, kursartID, maximum), maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX);
+	}
+
+	private static fehlerBeiReferenzenRegeltyp19(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 2);
+		const schuelerID: number = daten[0].valueOf();
+		const kursID: number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d): Schüler-ID nicht vorhanden!", schuelerID, kursID), setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d): Kurs-ID nicht vorhanden!", schuelerID, kursID), setKurse, kursID);
 	}
 
 	private fehlerBeiRegelGruppierung(pRegeln: List<GostBlockungRegel>): void {
@@ -856,6 +869,17 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
+	/**
+	 * Definiert im Algorithmus-Datenmodell, dass ein Schüler in einem Kurs war (Regel 19: SCHUELER_WAR_IM_KURS).
+	 */
+	private fehlerBeiRegel19(): void {
+		for (const regel19 of MapUtils.getOrCreateArrayList(this.regelMap, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS)) {
+			const schueler: KursblockungDynSchueler = this.gibSchueler(regel19.parameter.get(0));
+			const kurs: KursblockungDynKurs = this.gibKurs(regel19.parameter.get(1));
+			schueler.aktionSetzeWarImKurs(kurs.gibInternalID());
+		}
+	}
+
 	private gibFachart(fachID: number, kursart: number): KursblockungDynFachart {
 		return this.fachartMap2D.getOrException(fachID, kursart);
 	}
@@ -1118,6 +1142,20 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Liefert true, falls der Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) in dem Kurs war.
+	 *
+	 * @param idSchuelerDB  Die Datenbank-ID des Schülers.
+	 * @param idKursDB      Die Datenbank-ID des Kurses.
+	 *
+	 * @return true, falls der Schüler laut Definition in dem Kurs war.
+	 */
+	public gibIstSchuelerWarImKurs(idSchuelerDB: number, idKursDB: number): boolean {
+		const schueler: KursblockungDynSchueler | null = this.schuelerMap.get(idSchuelerDB);
+		const kurs: KursblockungDynKurs | null = this.kursMap.get(idKursDB);
+		return (schueler !== null) && (kurs !== null) && schueler.kursWarImKurs[kurs.gibInternalID()];
 	}
 
 	/**

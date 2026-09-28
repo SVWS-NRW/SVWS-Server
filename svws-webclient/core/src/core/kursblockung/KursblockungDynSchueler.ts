@@ -87,6 +87,11 @@ export class KursblockungDynSchueler extends JavaObject {
 	 */
 	regel16schuelerIgnorieren: boolean = false;
 
+	/**
+	 * Die Kurse, in denen dieser Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) war.
+	 */
+	readonly kursWarImKurs: Array<boolean>;
+
 
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
@@ -115,6 +120,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.nichtwahlen = 0;
 		this.schieneBelegt = Array(schienenAnzahl).fill(false);
 		this.kursGesperrt = Array(kursAnzahl).fill(false);
+		this.kursWarImKurs = Array(kursAnzahl).fill(false);
 		this.regel16schuelerIgnorieren = false;
 		this.matrix = new KursblockungMatrix(this.rnd, 0, 0);
 	}
@@ -275,6 +281,15 @@ export class KursblockungDynSchueler extends JavaObject {
 	 */
 	aktionSetzeKursSperrung(pInterneKursID: number): void {
 		this.kursGesperrt[pInterneKursID] = true;
+	}
+
+	/**
+	 * Definiert, dass dieser Schüler in dem Kurs mit der übergebenen internen Kurs-ID war.
+	 *
+	 * @param pInterneKursID  Die interne ID des Kurses.
+	 */
+	aktionSetzeWarImKurs(pInterneKursID: number): void {
+		this.kursWarImKurs[pInterneKursID] = true;
 	}
 
 	/**

@@ -59,6 +59,9 @@ public class KursblockungDynSchueler {
 	/** Soll der Schüler ignoriert werden beim Verteilen?  */
 	boolean regel16schuelerIgnorieren;
 
+	/** Die Kurse, in denen dieser Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) war. */
+	final @NotNull boolean[] kursWarImKurs;
+
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
 	 *
@@ -86,6 +89,7 @@ public class KursblockungDynSchueler {
 		this.nichtwahlen = 0;
 		this.schieneBelegt = new boolean[schienenAnzahl];
 		this.kursGesperrt = new boolean[kursAnzahl];
+		this.kursWarImKurs = new boolean[kursAnzahl];
 		this.regel16schuelerIgnorieren = false;
 		this.matrix = new KursblockungMatrix(rnd, 0, 0);
 	}
@@ -268,6 +272,15 @@ public class KursblockungDynSchueler {
 	 */
 	void aktionSetzeKursSperrung(final int pInterneKursID) {
 		kursGesperrt[pInterneKursID] = true;
+	}
+
+	/**
+	 * Definiert, dass dieser Schüler in dem Kurs mit der übergebenen internen Kurs-ID war.
+	 *
+	 * @param pInterneKursID  Die interne ID des Kurses.
+	 */
+	void aktionSetzeWarImKurs(final int pInterneKursID) {
+		kursWarImKurs[pInterneKursID] = true;
 	}
 
 	/**

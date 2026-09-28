@@ -318,6 +318,10 @@
 					{ text: "Fixiere alle Schüler im vierten Abiturfach", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypAb4()) },
 					{ text: "Fixiere alle Schüler in schriftlichen Kursen", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypSchriftlich()) });
 			}
+			result.push(
+				{ text: "", action: async () => {}, separator: true },
+				{ text: "Erstelle alle Schüler-war-im-Kurs-Regeln", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerWarImKursAusAktuellerZuordnung()) },
+				{ text: "Lösche alle Schüler-war-im-Kurs-Regeln", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateRemoveSchuelerWarImKursAlle()) });
 		} else {
 			result.push(
 				{ text: "Kursauswahl: Fixiere Kurse", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateKursFixiereMengeInIhrenSchienen(props.getKursauswahl())) },
@@ -333,6 +337,10 @@
 					{ text: "Kursauswahl: Fixiere Schüler im vierten Abiturfach", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypAb4DerKursmenge(kursauswahl)) },
 					{ text: "Kursauswahl: Fixiere Schüler in schriftlichen Kursen", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerFixierenTypSchriftlichDerKursmenge(kursauswahl)) });
 			}
+			result.push(
+				{ text: "", action: async () => {}, separator: true },
+				{ text: "Kursauswahl: Erstelle Schüler-war-im-Kurs-Regeln", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateCreateSchuelerWarImKursInDenKursen(props.getKursauswahl())) },
+				{ text: "Kursauswahl: Lösche Schüler-war-im-Kurs-Regeln", action: async () => await props.regelnUpdate(props.getErgebnismanager().regelupdateRemoveSchuelerWarImKursInDenKursen(props.getKursauswahl())) });
 		}
 		if (filter.kurs !== undefined) {
 			const kurseSet = new HashSet<number>();

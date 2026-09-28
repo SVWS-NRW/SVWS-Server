@@ -1835,48 +1835,50 @@ export class GostBlockungsdatenManager extends JavaObject {
 			return JavaString.format("%s existiert bereits als gleiche (nicht als selbe) Regel im MultiMap!", this.toStringRegel(r.id));
 		}
 		const typ: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
-		let _sevar_1897008228;
-		const _seexpr_1897008228 = (typ);
-		if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS) {
-			_sevar_1897008228 = this.regelCheckTyp01(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE) {
-			_sevar_1897008228 = this.regelCheckTyp02und03(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE) {
-			_sevar_1897008228 = this.regelCheckTyp02und03(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS) {
-			_sevar_1897008228 = this.regelCheckTyp04und05(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS) {
-			_sevar_1897008228 = this.regelCheckTyp04und05(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS) {
-			_sevar_1897008228 = this.regelCheckTyp06(r, menge);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS) {
-			_sevar_1897008228 = this.regelCheckTyp07und08(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS) {
-			_sevar_1897008228 = this.regelCheckTyp07und08(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN) {
-			_sevar_1897008228 = this.regelCheckTyp09(r, menge);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN) {
-			_sevar_1897008228 = this.regelCheckTyp10(r, menge);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH) {
-			_sevar_1897008228 = this.regelCheckTyp11und12(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH) {
-			_sevar_1897008228 = this.regelCheckTyp11und12(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER) {
-			_sevar_1897008228 = this.regelCheckTyp13und14(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER) {
-			_sevar_1897008228 = this.regelCheckTyp13und14(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL) {
-			_sevar_1897008228 = this.regelCheckTyp15(r, menge);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.SCHUELER_IGNORIEREN) {
-			_sevar_1897008228 = this.regelCheckTyp16(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN) {
-			_sevar_1897008228 = this.regelCheckTyp17(r);
-		} else if (_seexpr_1897008228 === GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE) {
-			_sevar_1897008228 = this.regelCheckTyp18(r);
+		let _sevar_683572943;
+		const _seexpr_683572943 = (typ);
+		if (_seexpr_683572943 === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS) {
+			_sevar_683572943 = this.regelCheckTyp01(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE) {
+			_sevar_683572943 = this.regelCheckTyp02und03(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE) {
+			_sevar_683572943 = this.regelCheckTyp02und03(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS) {
+			_sevar_683572943 = this.regelCheckTyp04und05(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS) {
+			_sevar_683572943 = this.regelCheckTyp04und05(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS) {
+			_sevar_683572943 = this.regelCheckTyp06(r, menge);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS) {
+			_sevar_683572943 = this.regelCheckTyp07und08(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS) {
+			_sevar_683572943 = this.regelCheckTyp07und08(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN) {
+			_sevar_683572943 = this.regelCheckTyp09(r, menge);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN) {
+			_sevar_683572943 = this.regelCheckTyp10(r, menge);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH) {
+			_sevar_683572943 = this.regelCheckTyp11und12(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH) {
+			_sevar_683572943 = this.regelCheckTyp11und12(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER) {
+			_sevar_683572943 = this.regelCheckTyp13und14(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER) {
+			_sevar_683572943 = this.regelCheckTyp13und14(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL) {
+			_sevar_683572943 = this.regelCheckTyp15(r, menge);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_IGNORIEREN) {
+			_sevar_683572943 = this.regelCheckTyp16(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN) {
+			_sevar_683572943 = this.regelCheckTyp17(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE) {
+			_sevar_683572943 = this.regelCheckTyp18(r);
+		} else if (_seexpr_683572943 === GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS) {
+			_sevar_683572943 = this.regelCheckTyp19(r);
 		} else {
-			_sevar_1897008228 = JavaString.format("%s Regeltypüberprüfung: Der Regeltyp ist unbekannt!", this.toStringRegel(r.id));
+			_sevar_683572943 = JavaString.format("%s Regeltypüberprüfung: Der Regeltyp ist unbekannt!", this.toStringRegel(r.id));
 		}
-		return _sevar_1897008228;
+		return _sevar_683572943;
 	}
 
 	private regelCheckTyp01(r: GostBlockungRegel): string {
@@ -2090,6 +2092,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 		}
 		if (anzahl2 > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX) {
 			return JavaString.format("%s FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit %d zu groß!", this.toStringRegel(r.id), anzahl2);
+		}
+		return "";
+	}
+
+	private regelCheckTyp19(r: GostBlockungRegel): string {
+		const wSchueler0: string = this.regelCheckReferenzSchuelerID(r, 0);
+		if (!JavaString.isEmpty(wSchueler0)) {
+			return wSchueler0;
+		}
+		const wKurs1: string = this.regelCheckReferenzKursID(r, 1);
+		if (!JavaString.isEmpty(wKurs1)) {
+			return wKurs1;
 		}
 		return "";
 	}

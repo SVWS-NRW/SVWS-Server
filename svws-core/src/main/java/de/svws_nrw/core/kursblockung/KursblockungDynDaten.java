@@ -162,6 +162,8 @@ public class KursblockungDynDaten {
 
 		fehlerBeiRegel18();
 
+		fehlerBeiRegel19();
+
 		// Zustände Speichern
 		aktionZustandSpeichernS();
 		aktionZustandSpeichernK();
@@ -345,6 +347,9 @@ public class KursblockungDynDaten {
 					break;
 				case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE:
 					fehlerBeiReferenzenRegeltyp18(daten, setFaecher, setKursarten);
+					break;
+				case SCHUELER_WAR_IM_KURS:
+					fehlerBeiReferenzenRegeltyp19(daten, setSchueler, setKurse);
 					break;
 				default:
 					throw new DeveloperNotificationException("Unbekannter Regeltyp!");
@@ -691,6 +696,23 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifGreater(
 				"FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE(%d, %d, %d): Anzahl ist zu groß!".formatted(fachID, kursartID, maximum),
 				maximum, GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX);
+	}
+
+	private static void fehlerBeiReferenzenRegeltyp19(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
+			final @NotNull HashSet<Long> setKurse) {
+
+		ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 2);
+
+		final long schuelerID = daten[0];
+		final long kursID = daten[1];
+
+		DeveloperNotificationException.ifSetNotContains(
+				"SCHUELER_WAR_IM_KURS(%d, %d): Schüler-ID nicht vorhanden!".formatted(schuelerID, kursID),
+				setSchueler, schuelerID);
+
+		DeveloperNotificationException.ifSetNotContains(
+				"SCHUELER_WAR_IM_KURS(%d, %d): Kurs-ID nicht vorhanden!".formatted(schuelerID, kursID),
+				setKurse, kursID);
 	}
 
 
@@ -1245,6 +1267,17 @@ public class KursblockungDynDaten {
 		}
 	}
 
+	/**
+	 * Definiert im Algorithmus-Datenmodell, dass ein Schüler in einem Kurs war (Regel 19: SCHUELER_WAR_IM_KURS).
+	 */
+	private void fehlerBeiRegel19() {
+		for (final @NotNull GostBlockungRegel regel19 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS)) {
+			final @NotNull KursblockungDynSchueler schueler = gibSchueler(regel19.parameter.get(0));
+			final @NotNull KursblockungDynKurs kurs = gibKurs(regel19.parameter.get(1));
+			schueler.aktionSetzeWarImKurs(kurs.gibInternalID());
+		}
+	}
+
 	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {
 		return fachartMap2D.getOrException(fachID, kursart);
 	}
@@ -1539,6 +1572,20 @@ public class KursblockungDynDaten {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Liefert true, falls der Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) in dem Kurs war.
+	 *
+	 * @param idSchuelerDB  Die Datenbank-ID des Schülers.
+	 * @param idKursDB      Die Datenbank-ID des Kurses.
+	 *
+	 * @return true, falls der Schüler laut Definition in dem Kurs war.
+	 */
+	public boolean gibIstSchuelerWarImKurs(final long idSchuelerDB, final long idKursDB) {
+		final KursblockungDynSchueler schueler = schuelerMap.get(idSchuelerDB);
+		final KursblockungDynKurs kurs = kursMap.get(idKursDB);
+		return (schueler != null) && (kurs != null) && schueler.kursWarImKurs[kurs.gibInternalID()];
 	}
 
 	/**

@@ -1585,6 +1585,9 @@ public class GostBlockungsdatenManager {
 				!kursById.containsKey(idKursID2delete));
 
 		// (2) Zunächst wird die Regel "KURS_MIT_DUMMY_SUS_AUFFUELLEN" angepasst.
+		//     Andere Regeltypen werden bewusst nicht auf den Ziel-Kurs übertragen, sondern in (3) mit dem Quell-Kurs
+		//     gelöscht. Bei SCHUELER_WAR_IM_KURS ist das gewollt: Die Schüler des gelöschten Kurses sind danach in
+		//     einem Kurs mit (i. d. R.) neuer Lehrkraft, sodass "war im Kurs" für sie faktisch nicht mehr zutrifft.
 		final GostBlockungRegel regelKursKeep = regelGetKursMitDummySusAuffuellen(idKursID1keep);
 		final GostBlockungRegel regelKursDelete = regelGetKursMitDummySusAuffuellen(idKursID2delete);
 
@@ -1932,6 +1935,7 @@ public class GostBlockungsdatenManager {
 			case SCHUELER_IGNORIEREN -> regelCheckTyp16(r);
 			case KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN -> regelCheckTyp17(r);
 			case FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE -> regelCheckTyp18(r);
+			case SCHUELER_WAR_IM_KURS -> regelCheckTyp19(r);
 			default -> "%s Regeltypüberprüfung: Der Regeltyp ist unbekannt!".formatted(toStringRegel(r.id));
 		};
 	}
@@ -2159,6 +2163,18 @@ public class GostBlockungsdatenManager {
 		}
 		if (anzahl2 > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX) {
 			return "%s FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit %d zu groß!".formatted(toStringRegel(r.id), anzahl2);
+		}
+		return "";
+	}
+
+	private @NotNull String regelCheckTyp19(final @NotNull GostBlockungRegel r) {
+		final @NotNull String wSchueler0 = regelCheckReferenzSchuelerID(r, 0);
+		if (!wSchueler0.isEmpty()) {
+			return wSchueler0;
+		}
+		final @NotNull String wKurs1 = regelCheckReferenzKursID(r, 1);
+		if (!wKurs1.isEmpty()) {
+			return wKurs1;
 		}
 		return "";
 	}

@@ -17,23 +17,32 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse definiert die unterschiedlichen Regel-Typen, die im Rahmen der Kursblockung eingesetzt werden.
  * Um eine neue Regel zu definieren, geht man wie folgt vor:
  * <br>
- * <br> Passive Anpassung
- * <br> {@link GostKursblockungRegelTyp}: Enum definieren                                                 -->
- * <br> {@link GostKursblockungRegelTyp}: ANZEIGE_REIHENFOLGE ergänzen                                    -->
- * <br> {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen              -->
- * <br> {@link KursblockungDynDaten#fehlerBeiReferenzen}: anpassen (bei der Switch-Anweisung)             -->
- * <br> {@link GostBlockungsdatenManager#kurseRemoveByID}: ggf. Regel-Löschung beachten.                  -->
- * <br> {@link GostBlockungsergebnisManager}: regelupdate und regelpatch Methoden(n) erzeugen.            -->
- * <br> {@link GostBlockungsergebnisManager}: stateClearErgebnisBewertung1() aktualisieren.               -->
-
- * <br> Weitere Schritte
- * <br> API Anpassung überprüfen (Datei: DataGostBlockungRegel).                                          -->
- * <br> GUI Regel-Einbindung nun möglich.                                                                 -->
- * <br>
- * <br> Aktive Anpassung
- * <br> {@link KursblockungDynDaten#KursblockungDynDaten}: Methode schrittXXFehlerBeiRegelXXX() einfügen  -->
- * <br> {@link KursblockungDynStatistik}: Auf Regelverletzungen dynamisch reagieren                       -->
+ * <br>01) {@link GostKursblockungRegelTyp} (Core-Definition): Neues Enum definieren und die
+ * <br>       {@link GostKursblockungRegelTyp#ANZEIGE_REIHENFOLGE} anpassen.
+ * <br>       {@link GostKursblockungRegelTyp#getNeueParameterBeiSchienenLoeschung}: ggf. anpassen (nur bei Schienen-Nr-Parametern).
+ * <br>02) {@link GostBlockungsdatenManager} (Manager-Validierung): In {@code regelGetWarnung} einen Case für den neuen Typ
+ * <br>       ergänzen, der eine neue {@code regelCheckTypNN(...)}-Methode aufruft.
+ * <br>03) DataGostBlockungRegel (Trigger bei Kurslöschung): {@code updateKursRegelnOnDelete} anpassen.
+ * <br>04) {@link KursblockungDynDaten} (Algorithmus-Eingang): In {@link KursblockungDynDaten#fehlerBeiReferenzen} einen Case
+ * <br>       für den neuen Typ ergänzen (nur Referenzprüfung, noch keine Anwendung).
+ * <br>05) {@link GostBlockungsergebnisManager} (Create, Patch): {@code regelupdateCreate...} und
+ * <br>       {@code regelupdatePatchById...} erzeugen.
+ * <br>06) Transpilieren, damit der neue Typ und die neuen Methoden im Client verfügbar sind.
+ * <br>07) SGostKursplanungRegelansicht.vue (GUI-Integration): {@code BlockungsregelBase}-Karte hinzufügen,
+ * <br>       {@code regelHinzufuegen_NN()} implementieren und in {@code regelSpeichern()} einen Case ergänzen.
+ * <br>08) Tests: GostBlockungsdatenManagerTest, GostBlockungsergebnisManagerTest (Create, Patch) und
+ * <br>       KursblockungDynDatenTest (Ankommen der Regel).
+ * <br>09) {@link GostBlockungsergebnisManager} (Regelvalidierung): {@code stateRegelvalidierungNN} ergänzen, falls die Regel
+ * <br>       verletzbar ist. Ggf. {@link KursblockungDynStatistik} für die Bewertung anpassen.
+ * <br>10) DataGostBlockungsdaten.hochschreiben: Prüfen, ob die Regel ins Folgehalbjahr mitgenommen werden soll.
+ * <br>11) {@link GostBlockungsdatenManager#kursMerge}: Verhalten der Regel beim Zusammenlegen von Kursen festlegen.
+ * <br>12) {@link KursblockungDynDaten} (Algorithmus-Datenmodell): Regel persistieren - {@code fehlerBeiRegelNN()} +
+ * <br>       Aufruf im Konstruktor - und den Test erweitern.
+ * <br>13) {@link KursblockungDynDaten} (Algorithmus): Regel anwenden (Phase 2).
 */
+// SonarQube S8954 wird für diese Klasse unterdrückt: Die statischen Felder tragen bewusst @NotNull, da der
+// Transpiler damit im TypeScript nicht-nullbare Typen erzeugt (z. B. ANZEIGE_REIHENFOLGE).
+@SuppressWarnings("java:S8954")
 public enum GostKursblockungRegelTyp {
 
 	/**
@@ -238,6 +247,17 @@ public enum GostKursblockungRegelTyp {
 			GostKursblockungRegelParameterTyp.FACH_ID,
 			GostKursblockungRegelParameterTyp.KURSART,
 			GostKursblockungRegelParameterTyp.GANZZAHL
+	)),
+
+	/**
+	 * Der Regel-Typ(19) zum Definieren, dass ein Schüler (A) irgendwann einem Kurs (B) zugeordnet war.<br>
+	 * Diese Regel kann nicht verletzt werden, sie dient lediglich der Definition einer Zuordnung.
+	 * <br>- Parameter A: Datenbank-ID des Schülers (long)
+	 * <br>- Parameter B: Datenbank-ID des Kurses (long)
+	 */
+	SCHUELER_WAR_IM_KURS(19, "Schüler: War im Kurs", Arrays.asList(
+			GostKursblockungRegelParameterTyp.SCHUELER_ID,
+			GostKursblockungRegelParameterTyp.KURS_ID
 	));
 
 	/** Liefert den kleinsten Wert (inklusive) für Regel 9. */
@@ -260,7 +280,9 @@ public enum GostKursblockungRegelTyp {
 
 
 	/** Definiert eine Reihenfolge der Regel-Typen bei visuellen Darstellungen. */
-	public static final @NotNull int[] ANZEIGE_REIHENFOLGE = new int[] { 1, 6, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 };
+	public static final @NotNull List<Integer> ANZEIGE_REIHENFOLGE = List.of(
+			1, 6, 2, 3, 4, 5, 19, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
+	);
 
 	/** Die ID des Regel-Typs */
 	public final int typ;
@@ -395,6 +417,9 @@ public enum GostKursblockungRegelTyp {
 	 *
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
+	// SonarQube S1168 wird für diese Methode unterdrückt: Der Rückgabewert null ist hier bedeutungstragend
+	// (die Regel muss bei der Schienen-Löschung entfernt werden) und daher nicht durch ein leeres Array ersetzbar.
+	@SuppressWarnings("java:S1168")
 	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel regel, final int nr) {
 		final @NotNull List<Long> param = regel.parameter;
 
