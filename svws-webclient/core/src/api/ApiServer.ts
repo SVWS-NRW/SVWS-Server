@@ -1765,6 +1765,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die GPU017.txt
 	 *     - Mime-Type: application/octet-stream
 	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 400: Die übergebene GPU002.txt konnte nicht gelesen werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 404: Es wurden nicht alle benötigten Daten für den Export gefunden.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse

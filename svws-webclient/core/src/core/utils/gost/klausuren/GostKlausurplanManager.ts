@@ -270,6 +270,17 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private readonly _compSchuelerWochenkonflikt: Comparator<PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>> = { compare: (a: PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>, b: PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>>) => this._compSchuelerListeEintrag.compare(a.a, b.a) };
 
+	private static readonly _compRaumstundeMitZeitraster: Comparator<PairNN<StundenplanZeitraster, GostKlausurraumstunde>> = { compare: (a: PairNN<StundenplanZeitraster, GostKlausurraumstunde>, b: PairNN<StundenplanZeitraster, GostKlausurraumstunde>) => {
+		const wochentagComparison: number = JavaInteger.compare(a.a.wochentag, b.a.wochentag);
+		if (wochentagComparison !== 0) {
+			return wochentagComparison;
+		}
+		const stundeComparison: number = JavaInteger.compare(a.a.unterrichtstunde, b.a.unterrichtstunde);
+		return (stundeComparison !== 0) ? stundeComparison : JavaLong.compare(a.b.id, b.b.id);
+	} };
+
+	private static readonly _compRaumstundeOhneZeitraster: Comparator<GostKlausurraumstunde> = { compare: (a: GostKlausurraumstunde, b: GostKlausurraumstunde) => JavaLong.compare(a.id, b.id) };
+
 	private readonly _compKursklausurKonflikt: Comparator<PairNN<GostKursklausur, List<SchuelerListeEintrag>>> = { compare: (a: PairNN<GostKursklausur, List<SchuelerListeEintrag>>, b: PairNN<GostKursklausur, List<SchuelerListeEintrag>>) => this._compKursklausur.compare(a.a, b.a) };
 
 	private readonly _compKwSchuelerWochenkonflikt: Comparator<PairNN<PairNN<number, SchuelerListeEintrag>, List<GostSchuelerklausurtermin>>> = { compare: (a: PairNN<PairNN<number, SchuelerListeEintrag>, List<GostSchuelerklausurtermin>>, b: PairNN<PairNN<number, SchuelerListeEintrag>, List<GostSchuelerklausurtermin>>) => {
@@ -841,7 +852,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param datum das Datum, zu dem der Stundenplan gültig ist
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
-	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt: number, datum: string, stundenplanManager: StundenplanManager): void {
+	private stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt: number, datum: string, stundenplanManager: StundenplanManager): void {
 		DeveloperNotificationException.ifMap2DPutOverwrites(this._stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 		const kw: number = GostKlausurplanManager.gibIntkeyJahrUndKwDesDatumsISO8601(datum);
 		if (!this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kw)) {
@@ -1300,9 +1311,9 @@ export class GostKlausurplanManager extends JavaObject {
 			}
 			if (skt.folgeNr === 0) {
 				const idTermin: number | null = this.kursklausurBySchuelerklausurtermin(skt).idTermin;
-				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, idTermin === null ? GostKlausurplanManager._ID_OHNE_ZUORDNUNG : idTermin).add(skt);
+				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, (idTermin === null) ? GostKlausurplanManager._ID_OHNE_ZUORDNUNG : idTermin).add(skt);
 			} else {
-				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, skt.idTermin === null ? GostKlausurplanManager._ID_OHNE_ZUORDNUNG : skt.idTermin).add(skt);
+				MapUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idTermin, (skt.idTermin === null) ? GostKlausurplanManager._ID_OHNE_ZUORDNUNG : skt.idTermin).add(skt);
 			}
 		}
 	}
@@ -3083,23 +3094,62 @@ export class GostKlausurplanManager extends JavaObject {
 		return (e1 >= s2) && (e2 >= s1);
 	}
 
-	private minKlausurstartzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
+	/**
+	 * Liefert die früheste Startzeit eines Klausurtermins anhand der zugeordneten Schüler- und Kursklausuren.
+	 * Falls keine Klausur eine Startzeit besitzt, wird die Startzeit des Termins verwendet.
+	 *
+	 * @param termin der zu prüfende Klausurtermin
+	 * @param includeNachschreiber gibt an, ob Nachschreibklausuren berücksichtigt werden
+	 *
+	 * @return die früheste Startzeit in Minuten oder {@code null}, falls keine Startzeit vorliegt
+	 */
+	public minKlausurstartzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
 		const skts: List<GostSchuelerklausurtermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty()) {
-			return termin.startzeit;
+		let minStart: number | null = this.minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		for (const klausur of this.kursklausurGetMengeByTermin(termin)) {
+			if (this.hatSchuelerklausurterminByTerminAndKursklausur(termin, klausur, includeNachschreiber)) {
+				continue;
+			}
+			const start: number | null = this.startzeitByKursklausurOrNull(klausur);
+			if (start !== null) {
+				minStart = ((minStart === null) || (start < minStart)) ? start : minStart;
+			}
 		}
-		const minStart: number | null = this.minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
 		return (minStart !== null) ? minStart : termin.startzeit;
 	}
 
-	private maxKlausurendzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
+	/**
+	 * Liefert die späteste Endzeit der einem Klausurtermin zugeordneten Schüler- und Kursklausuren.
+	 *
+	 * @param termin der zu prüfende Klausurtermin
+	 * @param includeNachschreiber gibt an, ob Nachschreibklausuren berücksichtigt werden
+	 *
+	 * @return die späteste Endzeit in Minuten oder {@code null}, falls keine berechnet werden kann
+	 */
+	public maxKlausurendzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
 		const skts: List<GostSchuelerklausurtermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		const maxEnd: number | null = this.maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
-		if (maxEnd !== null) {
-			return maxEnd;
+		let maxEnd: number | null = this.maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		for (const klausur of this.kursklausurGetMengeByTermin(termin)) {
+			if (this.hatSchuelerklausurterminByTerminAndKursklausur(termin, klausur, includeNachschreiber)) {
+				continue;
+			}
+			const start: number | null = this.startzeitByKursklausurOrNull(klausur);
+			if (start !== null) {
+				const vorgabe: GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
+				const ende: number = start + vorgabe.dauer + vorgabe.auswahlzeit;
+				maxEnd = ((maxEnd === null) || (ende > maxEnd)) ? ende : maxEnd;
+			}
 		}
-		const start: number | null = this.minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber);
-		return (start !== null) ? (start + 1) : null;
+		return maxEnd;
+	}
+
+	private hatSchuelerklausurterminByTerminAndKursklausur(termin: GostKlausurtermin, klausur: GostKursklausur, includeNachschreiber: boolean): boolean {
+		for (const skt of this.schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur)) {
+			if (includeNachschreiber || (skt.folgeNr === 0)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private kursklausurGetMengeByTerminid(idTermin: number | null): List<GostKursklausur> {
@@ -3444,11 +3494,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die minimale Startzeit des {@link GostKlausurtermin}s in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren an dem Termin
 	 */
 	public minKlausurstartzeitByTermin(termin: GostKlausurtermin, includeNachschreiber: boolean): number {
-		const skts: List<GostSchuelerklausurtermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty()) {
-			return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", termin.startzeit);
-		}
-		return this.minKlausurstartzeitBySchuelerklausurterminMenge(skts, includeNachschreiber);
+		return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", this.minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber));
 	}
 
 	/**
@@ -3557,7 +3603,8 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die maximale Endzeit des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die maximale Endzeit des {@link GostKlausurtermin}s in Minuten anhand der zugeordneten Schüler- und Kursklausuren
+	 * und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3565,8 +3612,10 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die maximale Endzeit des {@link GostKlausurtermin}s in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren an dem Termin
 	 */
 	public maxKlausurendzeitByTermin(termin: GostKlausurtermin, includeNachschreiber: boolean): number {
-		const skts: List<GostSchuelerklausurtermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		return this.maxKlausurendzeitBySchuelerklausurterminMenge(skts, includeNachschreiber);
+		if (this.schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty() && this.kursklausurGetMengeByTermin(termin).isEmpty()) {
+			throw new DeveloperNotificationException("Keine Klausuren zur Ermittlung der maximalen Klausurendzeit gefunden.");
+		}
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der maximalen Klausurendzeit.", this.maxKlausurendzeitByTerminOrNull(termin, includeNachschreiber));
 	}
 
 	/**
@@ -3620,7 +3669,8 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die minimale Klausurdauer des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die minimale Klausurdauer der Kurs- und Schülerklausuren eines {@link GostKlausurtermin}s in Minuten.
+	 * Schüler-Nachschreibklausuren werden auf Wunsch berücksichtigt.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3629,8 +3679,14 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public minKlausurdauerGetByTermin(termin: GostKlausurtermin, includeNachschreiber: boolean): number {
 		let minDauer: number = -1;
-		const skts: List<GostSchuelerklausurtermin> | null = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		for (const skt of skts) {
+		for (const klausur of this.kursklausurGetMengeByTermin(termin)) {
+			const vorgabe: GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
+			minDauer = ((minDauer === -1) || (vorgabe.dauer < minDauer)) ? vorgabe.dauer : minDauer;
+		}
+		for (const skt of this.schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			if (!includeNachschreiber && (skt.folgeNr > 0)) {
+				continue;
+			}
 			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurtermin(skt);
 			minDauer = ((minDauer === -1) || (vorgabe.dauer < minDauer)) ? vorgabe.dauer : minDauer;
 		}
@@ -3638,7 +3694,8 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die maximale Klausurdauer des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die maximale Klausurdauer der Kurs- und Schülerklausuren eines {@link GostKlausurtermin}s in Minuten.
+	 * Schüler-Nachschreibklausuren werden auf Wunsch berücksichtigt.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3647,16 +3704,15 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public maxKlausurdauerGetByTermin(termin: GostKlausurtermin, includeNachschreiber: boolean): number {
 		let maxDauer: number = 0;
-		const skts: List<GostSchuelerklausurtermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (!skts.isEmpty()) {
-			for (const skt of skts) {
-				const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurtermin(skt);
-				maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
-			}
-			return maxDauer;
-		}
 		for (const klausur of this.kursklausurGetMengeByTermin(termin)) {
 			const vorgabe: GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
+			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
+		}
+		for (const skt of this.schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			if (!includeNachschreiber && (skt.folgeNr > 0)) {
+				continue;
+			}
+			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurtermin(skt);
 			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
 		}
 		return maxDauer;
@@ -5271,15 +5327,38 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum} zurück.
+	 * Liefert die {@link GostKlausurraumstunde}en des Raums als neue, nach auflösbarem Zeitraster sortierte Liste zurück.
+	 * Raumstunden ohne auflösbares Zeitraster stehen am Ende.
 	 *
 	 * @param raum der {@link GostKlausurraum}
 	 *
-	 * @return die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
+	 * @return die sortierten {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
 	 */
 	public raumstundeGetMengeByRaum(raum: GostKlausurraum): List<GostKlausurraumstunde> {
 		const stunden: List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idRaum.get(raum.id);
-		return (stunden !== null) ? stunden : new ArrayList();
+		const ergebnis: List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
+		if (stunden === null) {
+			return ergebnis;
+		}
+		const termin: GostKlausurtermin | null = this.terminGetByIdOrNull(raum.idTermin);
+		const stundenplan: StundenplanManager | null = ((termin === null) || (termin.datum === null)) ? null : this.stundenplanManagerGetByTerminOrNull(termin);
+		const mitZeitraster: List<PairNN<StundenplanZeitraster, GostKlausurraumstunde>> = new ArrayList<PairNN<StundenplanZeitraster, GostKlausurraumstunde>>();
+		const ohneZeitraster: List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
+		for (const stunde of stunden) {
+			const zeitraster: StundenplanZeitraster | null = ((stundenplan === null) || (stunde.idZeitraster === null)) ? null : stundenplan.zeitrasterGetByIdOrNull(stunde.idZeitraster);
+			if (zeitraster === null) {
+				ohneZeitraster.add(stunde);
+			} else {
+				mitZeitraster.add(new PairNN<StundenplanZeitraster, GostKlausurraumstunde>(zeitraster, stunde));
+			}
+		}
+		mitZeitraster.sort(GostKlausurplanManager._compRaumstundeMitZeitraster);
+		ohneZeitraster.sort(GostKlausurplanManager._compRaumstundeOhneZeitraster);
+		for (const eintrag of mitZeitraster) {
+			ergebnis.add(eintrag.b);
+		}
+		ergebnis.addAll(ohneZeitraster);
+		return ergebnis;
 	}
 
 	private setzeRaumZuSchuelerklausurenOhneUpdate(patchResponseData: GostKlausurenPatchResponseData): void {
@@ -6262,7 +6341,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Stundenplanzeitraster-Menge zu einem Klausurraum
+	 * Liefert die auflösbaren Stundenplanzeitraster eines Klausurraums nach Wochentag und Unterrichtsstunde sortiert.
 	 * @param raum der Klausurraum
 	 * @return die Stundenplanzeitraster-Menge zu einem Klausurraum
 	 */

@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
@@ -1453,8 +1452,13 @@ public final class DataUntis {
 				if (stundenplan == null) {
 					logger.logLn("-> INFO: Kein Stundenplan zu Termin %d gefunden.".formatted(termin.id));
 				} else {
-					klausur.vonStunde = stundenplan.zeitrasterGetByIdOrException(stunden.getFirst().idZeitraster).unterrichtstunde;
-					klausur.bisStunde = stundenplan.zeitrasterGetByIdOrException(stunden.getLast().idZeitraster).unterrichtstunde;
+					final List<StundenplanZeitraster> zeitraster = manager.zeitrasterGetMengeByRaum(raum);
+					if (zeitraster.isEmpty()) {
+						logger.logLn("-> INFO: Kein auflösbares Zeitraster zu Raum %d gefunden. Stundenlage wird nicht exportiert.".formatted(raum.id));
+					} else {
+						klausur.vonStunde = zeitraster.getFirst().unterrichtstunde;
+						klausur.bisStunde = zeitraster.getLast().unterrichtstunde;
+					}
 				}
 
 				final StundenplanRaum stundenplanraum = manager.stundenplanraumGetByKlausurraumOrNull(raum);
@@ -1479,30 +1483,62 @@ public final class DataUntis {
 			klausur.name = (termin.bezeichnung != null) ? termin.bezeichnung : "%s_K%d_%s".formatted(
 					GostHalbjahr.fromIDorException(termin.halbjahr).jahrgang, termin.quartal,
 					klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("_")));
+			setzeStundenbereichFuerRaumlosenTermin(logger, klausur, manager, termin);
 			processKlausurenAndSchueler(klausur, manager, unterrichte, idVariante, klausuren, manager.schuelerklausurGetMengeByTermin(termin));
 			result.add(klausur);
 		}
 		return result;
 	}
 
+	/* Bestimmt für einen raumlosen Klausurtermin anhand der tatsächlichen Klausurzeiten die Untis-Stunden. */
+	private static void setzeStundenbereichFuerRaumlosenTermin(final @NotNull Logger logger, final @NotNull UntisGPU017 klausur,
+			final @NotNull GostKlausurplanManager manager, final @NotNull GostKlausurtermin termin) {
+		final Integer startzeit = manager.minKlausurstartzeitByTerminOrNull(termin, true);
+		final Integer endzeit = manager.maxKlausurendzeitByTerminOrNull(termin, true);
+		if ((startzeit == null) || (endzeit == null)) {
+			logger.logLn("-> INFO: Kein berechenbarer Zeitbereich zu raumlosem Termin %d gefunden. Stundenlage wird nicht exportiert.".formatted(termin.id));
+			return;
+		}
+		if (termin.datum == null) {
+			logger.logLn("-> INFO: Kein Datum zu raumlosem Termin %d gefunden. Stundenlage wird nicht exportiert.".formatted(termin.id));
+			return;
+		}
+		final StundenplanManager stundenplan = manager.stundenplanManagerGetByTerminOrNull(termin);
+		if (stundenplan == null) {
+			logger.logLn("-> INFO: Kein Stundenplan zu raumlosem Termin %d gefunden. Stundenlage wird nicht exportiert.".formatted(termin.id));
+			return;
+		}
+		final Wochentag wochentag = Wochentag.fromIDorException(DateUtils.gibWochentagDesDatumsISO8601(termin.datum));
+		final List<StundenplanZeitraster> zeitraster = stundenplan.zeitrasterGetMengeByWochentagAndZeitbereich(wochentag, startzeit, endzeit);
+		if (zeitraster.isEmpty()) {
+			logger.logLn("-> INFO: Kein Zeitraster für die Stundenlage des raumlosen Termins %d gefunden.".formatted(termin.id));
+			return;
+		}
+		klausur.vonStunde = zeitraster.getFirst().unterrichtstunde;
+		klausur.bisStunde = zeitraster.getLast().unterrichtstunde;
+	}
+
 	private static void processKlausurenAndSchueler(final UntisGPU017 klausur, final GostKlausurplanManager manager,
 			final HashMap2D<String, String, List<UntisGPU002>> unterrichte, final int idVarianteSchuelerBezeichner,
 			final Collection<GostKursklausur> klausuren, final List<GostSchuelerklausur> schuelerKlausuren) {
 		klausur.unterrichte = klausuren.stream()
-				.flatMap(k -> Optional.ofNullable(unterrichte
+				.map(k -> Optional.ofNullable(unterrichte
 						.getOrNull(GostHalbjahr.fromIDorException(manager.vorgabeByKursklausur(k).halbjahr).jahrgang,
 								manager.kursKurzbezeichnungByKursklausur(k)))
-						.map(uKlausuren -> uKlausuren.stream().filter(uKlausur -> {
-							if (klausur.datum == null) {
-								return true;
-							}
-							final long gueltigAb = Long.parseLong(uKlausur.datumVon);
-							final long gueltigBis = Long.parseLong(uKlausur.datumBis);
-							final long klausurDatum = Long.parseLong(klausur.datum);
-							return (gueltigAb <= klausurDatum) && (klausurDatum <= gueltigBis);
-						}))
-						.orElseGet(Stream::empty))
-				.map(u -> u.idUnterricht).map(Object::toString).collect(Collectors.joining("~"));
+						.map(uKlausuren -> {
+							// TODO Die fachlich führende Unterrichtsnummer bei mehreren gültigen Unterrichten eines Kurses bestimmen.
+							return uKlausuren.stream().filter(uKlausur -> {
+								if (klausur.datum == null) {
+									return true;
+								}
+								final long gueltigAb = Long.parseLong(uKlausur.datumVon);
+								final long gueltigBis = Long.parseLong(uKlausur.datumBis);
+								final long klausurDatum = Long.parseLong(klausur.datum);
+								return (gueltigAb <= klausurDatum) && (klausurDatum <= gueltigBis);
+							}).map(uKlausur -> Long.toString(uKlausur.idUnterricht)).findFirst().orElse("");
+						})
+						.orElse(""))
+				.collect(Collectors.joining("~"));
 		klausur.kurse = klausuren.stream().map(manager::kursKurzbezeichnungByKursklausur).collect(Collectors.joining("~"));
 		klausur.text = klausur.kurse;
 		klausur.schueler = schuelerKlausuren.stream().map(sk -> manager.getSchuelerMap().get(sk.idSchueler))
@@ -1596,7 +1632,7 @@ public final class DataUntis {
 			unterrichte = getMapUntisGPU002ByKlasseAndFach(UntisGPU002.readCSV(gpu002.getBytes(StandardCharsets.UTF_8)));
 		} catch (final IOException e) {
 			logger.logLn("-> Fehler: " + e.getMessage());
-			return "Fehler: " + e.getMessage();
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die übergebene GPU002 konnte nicht gelesen werden. Überprüfen Sie das Dateiformat.");
 		}
 
 		return getGPU017(logger, manager, unterrichte, idVariante);

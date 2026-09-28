@@ -297,23 +297,21 @@
 	}
 
 	function zeitenByKlausurtermin(termin: GostKlausurtermin): { beginn: number; ende: number } | undefined {
-		const terminBeginn = (termin.startzeit === null) ? -1 : state.manager.minKlausurstartzeitByTermin(termin, true);
-		let terminEnde = -1;
-		if (terminBeginn !== -1) {
-			if (state.manager.schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty()) {
-				let dauer = state.manager.maxKlausurdauerGetByTermin(termin, true);
-				if (dauer === 0) {
-					dauer = GostHalbjahr.fromIDorException(termin.halbjahr).istEinfuehrungsphase() ? 90 : 135;
-				}
-				terminEnde = terminBeginn + dauer;
-			} else {
-				terminEnde = state.manager.maxKlausurendzeitByTermin(termin, true);
-			}
-		}
-		if ((terminBeginn === -1) || (terminEnde === -1)) {
+		const kursklausuren = state.manager.kursklausurGetMengeByTermin(termin);
+		const schuelerklausurtermine = state.manager.schuelerklausurterminAktuellGetMengeByTermin(termin);
+		const hatStartzeit = (termin.startzeit !== null)
+			|| [...kursklausuren].some(klausur => state.manager.startzeitByKursklausurOrNull(klausur) !== null)
+			|| [...schuelerklausurtermine].some(skt => state.manager.startzeitBySchuelerklausurterminOrNull(skt) !== null);
+		if (!hatStartzeit) {
 			return undefined;
 		}
-		return { beginn: terminBeginn, ende: terminEnde };
+		const terminBeginn = state.manager.minKlausurstartzeitByTermin(termin, true);
+		if (kursklausuren.isEmpty() && schuelerklausurtermine.isEmpty()) {
+			// Nur die Anzeige leerer Termine erhält eine angenommene Dauer.
+			const anzeigedauer = GostHalbjahr.fromIDorException(termin.halbjahr).istEinfuehrungsphase() ? 90 : 135;
+			return { beginn: terminBeginn, ende: terminBeginn + anzeigedauer };
+		}
+		return { beginn: terminBeginn, ende: state.manager.maxKlausurendzeitByTermin(termin, true) };
 	}
 
 	function posKlausurtermin(termin: GostKlausurtermin): string {

@@ -487,6 +487,8 @@ public class APIDatenaustausch {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Exportieren besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die GPU017.txt", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
 			schema = @Schema(type = "string", format = "binary", description = "Die GPU017.txt")))
+	@ApiResponse(responseCode = "400", description = "Die übergebene GPU002.txt konnte nicht gelesen werden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Export gefunden.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter Fehler aufgetreten.",

@@ -279,6 +279,20 @@ public class GostKlausurplanManager {
 			(final @NotNull PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>> a,
 					final @NotNull PairNN<SchuelerListeEintrag, List<GostSchuelerklausurtermin>> b) -> _compSchuelerListeEintrag.compare(a.a, b.a);
 
+	private static final @NotNull Comparator<PairNN<StundenplanZeitraster, GostKlausurraumstunde>> _compRaumstundeMitZeitraster =
+			(final @NotNull PairNN<StundenplanZeitraster, GostKlausurraumstunde> a,
+					final @NotNull PairNN<StundenplanZeitraster, GostKlausurraumstunde> b) -> {
+				final int wochentagComparison = Integer.compare(a.a.wochentag, b.a.wochentag);
+				if (wochentagComparison != 0) {
+					return wochentagComparison;
+				}
+				final int stundeComparison = Integer.compare(a.a.unterrichtstunde, b.a.unterrichtstunde);
+				return (stundeComparison != 0) ? stundeComparison : Long.compare(a.b.id, b.b.id);
+			};
+
+	private static final @NotNull Comparator<GostKlausurraumstunde> _compRaumstundeOhneZeitraster =
+			(final @NotNull GostKlausurraumstunde a, final @NotNull GostKlausurraumstunde b) -> Long.compare(a.id, b.id);
+
 	private final @NotNull Comparator<PairNN<GostKursklausur, List<SchuelerListeEintrag>>> _compKursklausurKonflikt =
 			(final @NotNull PairNN<GostKursklausur, List<SchuelerListeEintrag>> a,
 					final @NotNull PairNN<GostKursklausur, List<SchuelerListeEintrag>> b) -> _compKursklausur.compare(a.a, b.a);
@@ -831,7 +845,7 @@ public class GostKlausurplanManager {
 	 * @param datum das Datum, zu dem der Stundenplan gültig ist
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
-	public void stundenplanManagerAddByAbschnittAndDatum(final long idSchuljahresabschnitt, final @NotNull String datum,
+	private void stundenplanManagerAddByAbschnittAndDatum(final long idSchuljahresabschnitt, final @NotNull String datum,
 			final @NotNull StundenplanManager stundenplanManager) {
 		DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum,
 				stundenplanManager);
@@ -1311,10 +1325,10 @@ public class GostKlausurplanManager {
 			}
 			if (skt.folgeNr == 0) {
 				final Long idTermin = kursklausurBySchuelerklausurtermin(skt).idTermin;
-				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, idTermin == null ? _ID_OHNE_ZUORDNUNG : idTermin).add(skt);
+				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, (idTermin == null) ? _ID_OHNE_ZUORDNUNG : idTermin).add(skt);
 			} else {
 				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin,
-						skt.idTermin == null ? _ID_OHNE_ZUORDNUNG : skt.idTermin).add(skt);
+						(skt.idTermin == null) ? _ID_OHNE_ZUORDNUNG : skt.idTermin).add(skt);
 			}
 		}
 	}
@@ -3299,23 +3313,64 @@ public class GostKlausurplanManager {
 		return (e1 >= s2) && (e2 >= s1);
 	}
 
-	private Integer minKlausurstartzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
+	/**
+	 * Liefert die früheste Startzeit eines Klausurtermins anhand der zugeordneten Schüler- und Kursklausuren.
+	 * Falls keine Klausur eine Startzeit besitzt, wird die Startzeit des Termins verwendet.
+	 *
+	 * @param termin der zu prüfende Klausurtermin
+	 * @param includeNachschreiber gibt an, ob Nachschreibklausuren berücksichtigt werden
+	 *
+	 * @return die früheste Startzeit in Minuten oder {@code null}, falls keine Startzeit vorliegt
+	 */
+	public Integer minKlausurstartzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		final @NotNull List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty()) {
-			return termin.startzeit;
+		Integer minStart = minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByTermin(termin)) {
+			if (hatSchuelerklausurterminByTerminAndKursklausur(termin, klausur, includeNachschreiber)) {
+				continue;
+			}
+			final Integer start = startzeitByKursklausurOrNull(klausur);
+			if (start != null) {
+				minStart = ((minStart == null) || (start < minStart)) ? start : minStart;
+			}
 		}
-		final Integer minStart = minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
 		return (minStart != null) ? minStart : termin.startzeit;
 	}
 
-	private Integer maxKlausurendzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
+	/**
+	 * Liefert die späteste Endzeit der einem Klausurtermin zugeordneten Schüler- und Kursklausuren.
+	 *
+	 * @param termin der zu prüfende Klausurtermin
+	 * @param includeNachschreiber gibt an, ob Nachschreibklausuren berücksichtigt werden
+	 *
+	 * @return die späteste Endzeit in Minuten oder {@code null}, falls keine berechnet werden kann
+	 */
+	public Integer maxKlausurendzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		final @NotNull List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		final Integer maxEnd = maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
-		if (maxEnd != null) {
-			return maxEnd;
+		Integer maxEnd = maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByTermin(termin)) {
+			if (hatSchuelerklausurterminByTerminAndKursklausur(termin, klausur, includeNachschreiber)) {
+				continue;
+			}
+			final Integer start = startzeitByKursklausurOrNull(klausur);
+			if (start != null) {
+				final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
+				final int ende = start + vorgabe.dauer + vorgabe.auswahlzeit;
+				maxEnd = ((maxEnd == null) || (ende > maxEnd)) ? ende : maxEnd;
+			}
 		}
-		final Integer start = minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber);
-		return (start != null) ? (start + 1) : null;
+		return maxEnd;
+	}
+
+	/* Prüft, ob für die Kursklausur ein bei der Zeitberechnung berücksichtigter Schülerklausurtermin vorliegt. */
+	private boolean hatSchuelerklausurterminByTerminAndKursklausur(final @NotNull GostKlausurtermin termin,
+			final @NotNull GostKursklausur klausur, final boolean includeNachschreiber) {
+		for (final @NotNull GostSchuelerklausurtermin skt : schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur)) {
+			if (includeNachschreiber || (skt.folgeNr == 0)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private @NotNull List<GostKursklausur> kursklausurGetMengeByTerminid(final Long idTermin) {
@@ -3679,11 +3734,8 @@ public class GostKlausurplanManager {
 	 * @return die minimale Startzeit des {@link GostKlausurtermin}s in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren an dem Termin
 	 */
 	public int minKlausurstartzeitByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
-		final @NotNull List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty()) {
-			return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", termin.startzeit);
-		}
-		return minKlausurstartzeitBySchuelerklausurterminMenge(skts, includeNachschreiber);
+		return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.",
+				minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber));
 	}
 
 	/**
@@ -3801,7 +3853,8 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die maximale Endzeit des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die maximale Endzeit des {@link GostKlausurtermin}s in Minuten anhand der zugeordneten Schüler- und Kursklausuren
+	 * und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3809,8 +3862,11 @@ public class GostKlausurplanManager {
 	 * @return die maximale Endzeit des {@link GostKlausurtermin}s in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren an dem Termin
 	 */
 	public int maxKlausurendzeitByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
-		final @NotNull List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		return maxKlausurendzeitBySchuelerklausurterminMenge(skts, includeNachschreiber);
+		if (schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty() && kursklausurGetMengeByTermin(termin).isEmpty()) {
+			throw new DeveloperNotificationException("Keine Klausuren zur Ermittlung der maximalen Klausurendzeit gefunden.");
+		}
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der maximalen Klausurendzeit.",
+				maxKlausurendzeitByTerminOrNull(termin, includeNachschreiber));
 	}
 
 	/**
@@ -3868,7 +3924,8 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die minimale Klausurdauer des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die minimale Klausurdauer der Kurs- und Schülerklausuren eines {@link GostKlausurtermin}s in Minuten.
+	 * Schüler-Nachschreibklausuren werden auf Wunsch berücksichtigt.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3877,8 +3934,14 @@ public class GostKlausurplanManager {
 	 */
 	public int minKlausurdauerGetByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		int minDauer = -1;
-		final List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		for (final @NotNull GostSchuelerklausurtermin skt : skts) {
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByTermin(termin)) {
+			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
+			minDauer = ((minDauer == -1) || (vorgabe.dauer < minDauer)) ? vorgabe.dauer : minDauer;
+		}
+		for (final @NotNull GostSchuelerklausurtermin skt : schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			if (!includeNachschreiber && (skt.folgeNr > 0)) {
+				continue;
+			}
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(skt);
 			minDauer = ((minDauer == -1) || (vorgabe.dauer < minDauer)) ? vorgabe.dauer : minDauer;
 		}
@@ -3886,7 +3949,8 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die maximale Klausurdauer des {@link GostKlausurtermin}s in Minuten und berücksichtigt dabei auf Wunsch auch Nachschreibklausuren an dem Termin
+	 * Liefert die maximale Klausurdauer der Kurs- und Schülerklausuren eines {@link GostKlausurtermin}s in Minuten.
+	 * Schüler-Nachschreibklausuren werden auf Wunsch berücksichtigt.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param includeNachschreiber wenn <code>true</code> werden auch Nachschreibklausuren an dem Termin berücksichtigt
@@ -3895,16 +3959,15 @@ public class GostKlausurplanManager {
 	 */
 	public int maxKlausurdauerGetByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		int maxDauer = 0;
-		final @NotNull List<GostSchuelerklausurtermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (!skts.isEmpty()) {
-			for (final @NotNull GostSchuelerklausurtermin skt : skts) {
-				final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(skt);
-				maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
-			}
-			return maxDauer;
-		}
 		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByTermin(termin)) {
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
+			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
+		}
+		for (final @NotNull GostSchuelerklausurtermin skt : schuelerklausurterminAktuellGetMengeByTermin(termin)) {
+			if (!includeNachschreiber && (skt.folgeNr > 0)) {
+				continue;
+			}
+			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurtermin(skt);
 			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
 		}
 		return maxDauer;
@@ -5624,15 +5687,40 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum} zurück.
+	 * Liefert die {@link GostKlausurraumstunde}en des Raums als neue, nach auflösbarem Zeitraster sortierte Liste zurück.
+	 * Raumstunden ohne auflösbares Zeitraster stehen am Ende.
 	 *
 	 * @param raum der {@link GostKlausurraum}
 	 *
-	 * @return die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
+	 * @return die sortierten {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
 	 */
 	public @NotNull List<GostKlausurraumstunde> raumstundeGetMengeByRaum(final @NotNull GostKlausurraum raum) {
 		final List<GostKlausurraumstunde> stunden = _raumstundenmenge_by_idRaum.get(raum.id);
-		return (stunden != null) ? stunden : new ArrayList<>();
+		final @NotNull List<GostKlausurraumstunde> ergebnis = new ArrayList<>();
+		if (stunden == null) {
+			return ergebnis;
+		}
+		final GostKlausurtermin termin = terminGetByIdOrNull(raum.idTermin);
+		final StundenplanManager stundenplan = ((termin == null) || (termin.datum == null))
+				? null : stundenplanManagerGetByTerminOrNull(termin);
+		final @NotNull List<PairNN<StundenplanZeitraster, GostKlausurraumstunde>> mitZeitraster = new ArrayList<>();
+		final @NotNull List<GostKlausurraumstunde> ohneZeitraster = new ArrayList<>();
+		for (final @NotNull GostKlausurraumstunde stunde : stunden) {
+			final StundenplanZeitraster zeitraster = ((stundenplan == null) || (stunde.idZeitraster == null))
+					? null : stundenplan.zeitrasterGetByIdOrNull(stunde.idZeitraster);
+			if (zeitraster == null) {
+				ohneZeitraster.add(stunde);
+			} else {
+				mitZeitraster.add(new PairNN<>(zeitraster, stunde));
+			}
+		}
+		mitZeitraster.sort(_compRaumstundeMitZeitraster);
+		ohneZeitraster.sort(_compRaumstundeOhneZeitraster);
+		for (final @NotNull PairNN<StundenplanZeitraster, GostKlausurraumstunde> eintrag : mitZeitraster) {
+			ergebnis.add(eintrag.b);
+		}
+		ergebnis.addAll(ohneZeitraster);
+		return ergebnis;
 	}
 
 	private void setzeRaumZuSchuelerklausurenOhneUpdate(final @NotNull GostKlausurenPatchResponseData patchResponseData) {
@@ -6647,7 +6735,7 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die Stundenplanzeitraster-Menge zu einem Klausurraum
+	 * Liefert die auflösbaren Stundenplanzeitraster eines Klausurraums nach Wochentag und Unterrichtsstunde sortiert.
 	 * @param raum der Klausurraum
 	 * @return die Stundenplanzeitraster-Menge zu einem Klausurraum
 	 */
