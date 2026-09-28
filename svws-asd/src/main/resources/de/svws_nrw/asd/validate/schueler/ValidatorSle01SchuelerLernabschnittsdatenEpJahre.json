@@ -11,7 +11,7 @@
       "svws" : true,
       "zebras" : true,
       "vorbedingung" : ["SLE00"],
-      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "muss" : ["G", "V", "S", "PS", "FW", "HI", "WF", "KS"],
       "kann" : [ ],
       "hinweis" : [ ],
       "text" : "EP-Jahr des Schülers: Das Feld 'EP-Jahr' muss zulässig sein.",

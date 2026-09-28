@@ -11,7 +11,7 @@
       "svws" : true,
       "zebras" : true,
       "vorbedingung" : ["SLE01"],
-      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "muss" : ["G", "V", "S", "PS", "FW", "HI", "WF", "KS"],
       "kann" : [ ],
       "hinweis" : [],
       "text" : "EP-Jahr des Schülers: Der eingetragene Wert für das Feld 'EP-Jahr' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",

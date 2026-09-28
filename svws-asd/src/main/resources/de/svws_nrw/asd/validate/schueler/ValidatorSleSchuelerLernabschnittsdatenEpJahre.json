@@ -9,7 +9,7 @@
       "anzeigebereich_ui" : "'Allgemein', Feld 'EP-Jahr'",
       "svws" : true,
       "zebras" : true,
-      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "muss" : ["G", "V", "S", "PS", "FW", "HI", "WF", "KS"],
       "kann" : [ ],
       "hinweis": [ ],
       "gueltigVon" : null,
