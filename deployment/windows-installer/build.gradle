@@ -47,7 +47,7 @@ def mariadb_win_url = (base_url == null)
 
 def innosetup_version = "7.0.2"
 def innosetup_win_url = (base_url == null)
-	? "https://github.com/jrsoftware/issrc/releases/download/is-{innosetup_version.replace('.', '_')}/innosetup-${innosetup_version}-x64.exe"
+	? "https://github.com/jrsoftware/issrc/releases/download/is-${innosetup_version.replace('.', '_')}/innosetup-${innosetup_version}-x64.exe"
 	: "${base_url}/innosetup-${innosetup_version}-x64.exe"
 
 def windowsservicewrapper_version = "2.10.3"
