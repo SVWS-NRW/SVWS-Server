@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland}
+ *   <li> {@link ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr}
  * </ul>
  * </p>
  *
@@ -24,10 +24,10 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
  */
-@DisplayName("Tests ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
-class TestValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland {
+@DisplayName("Tests ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr")
+class TestValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr {
 
-	private static final String TESTDATEN_GEBURTSLAND = """
+	private static final String TESTDATEN_ZUZUGSJAHR = """
 			null        , false , true
 			null        , true  , false
 			-1          , true  , true
@@ -49,24 +49,24 @@ class TestValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland {
 	}
 
 	/**
-	 * Test von ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland
+	 * Test von ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr
 	 *
-	 * @param idGeburtsland             die Beschaeftigungsart
+	 * @param zuzugsjahr                das Zuzugsjahr
 	 * @param hatMigrationshintergrund  hat Migrationshintergrund
 	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland")
+	@DisplayName("Tests für ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_GEBURTSLAND, nullValues = { "null" })
-	void testValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(final Long idGeburtsland, final boolean hatMigrationshintergrund,
+	@CsvSource(textBlock = TESTDATEN_ZUZUGSJAHR, nullValues = { "null" })
+	void testValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(final Integer zuzugsjahr, final boolean hatMigrationshintergrund,
 			final boolean result) {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland validator =
-				new ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburtsland(
-						() -> idGeburtsland, () -> hatMigrationshintergrund, kontext);
+		final ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr validator =
+				new ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr(
+						() -> null, () -> zuzugsjahr, () -> null, () -> hatMigrationshintergrund, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

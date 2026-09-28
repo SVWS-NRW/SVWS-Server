@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsmz12SchuelerStammdatenMigrationshintergrundZuzugsjahr",
+    "historie" : [ {
+      "praefix" : "SSMZ12",
+      "zweig" : "Schueler-Stammdaten-Migrationshintergrund-Zuzugsjahr",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Zuzugsjahr'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Das Feld 'Zuzugsjahr' darf nur ausgefüllt werden, wenn ein Migrationshintergrund vorhanden ist",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = FALSE ∧ SchuelerStammdaten.zuzugsjahr ≠ @ ",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
