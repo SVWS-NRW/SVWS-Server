@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpa01LehrerPersonaldatenAbgangsdatum",
+    "historie" : [ {
+      "praefix" : "LPA01",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Personaldaten-Abgangsdatum",
+      "dtos" : "LehrerPersonaldaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Abgangsdatum'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Abgangsdatum des Lehrers: Das Abgangsdatum ist ungültig.",
+      "erlaeuterung" : "",
+      "bedingung" : "Im Java Code wird das Abgangsdatum zur Prüfung an den DateManager übergeben. Deswegen können wir die genaue Bedingung dazu nicht spezifizieren. Bitte an Lehrer Geburtsdatum LSD01 orientieren.",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

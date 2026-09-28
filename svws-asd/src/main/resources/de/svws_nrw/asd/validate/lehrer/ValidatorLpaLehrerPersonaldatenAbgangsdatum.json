@@ -1,0 +1,18 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpaLehrerPersonaldatenAbgangsdatum",
+    "historie" : [ {
+      "praefix" : "LPA",
+      "zweig" : "Lehrer-Personaldaten-Abgangsdatum",
+      "dtos" : "LehrerPersonaldaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Feld 'Abgangsdatum'",
+      "svws" : true,
+      "zebras" : true,
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
