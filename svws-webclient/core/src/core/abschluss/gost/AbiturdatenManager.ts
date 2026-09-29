@@ -74,6 +74,7 @@ import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremds
 import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
 import { Abi30BelegpruefungAllgemeines } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungAllgemeines';
 import { GostAbiturMarkierungsalgorithmusErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
+import { Abi30BelegpruefungEinbringung } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungEinbringung';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
 
@@ -244,6 +245,7 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(new Abi30BelegpruefungAllgemeines(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachkombinationen(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachWaehlbar(this, pruefungsArt));
+		pruefungen.add(new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse));
 		return pruefungen;
 	}
 

@@ -511,6 +511,31 @@ public enum GostBelegungsfehler {
 			"Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.",
 			null),
 
+	/** BelegungsfehlerArt EINBR_1 */
+	GOST30_EINBR_1("EINBR_1", GostBelegungsfehlerArt.BELEGUNG,
+			"Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und Philosophie als Abiturfächer.",
+			null),
+
+	/** BelegungsfehlerArt EINBR_2 */
+	GOST30_EINBR_2("EINBR_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und Kunst als Abiturfächer.",
+			null),
+
+	/** BelegungsfehlerArt EINBR_3 */
+	GOST30_EINBR_3("EINBR_3", GostBelegungsfehlerArt.BELEGUNG,
+			"Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und Musik als Abiturfächer.",
+			null),
+
+	/** BelegungsfehlerArt EINBR_4 */
+	GOST30_EINBR_4("EINBR_4", GostBelegungsfehlerArt.BELEGUNG,
+			"Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und ein Projektkurs mit einer Referenzfachbelegung nur in der Q1 als Abiturfächer.",
+			null),
+
+	/** BelegungsfehlerArt EINBR_5 */
+	GOST30_EINBR_5("EINBR_5", GostBelegungsfehlerArt.BELEGUNG,
+			"Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und zwei Fächer aus dem Gesellschaftswissenschaftlichen Bereich als Abiturfächer.",
+			null),
+
 	/** BelegungsfehlerArt KOMBI_1 */
 	GOST30_KOMBI_1("KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
 			"Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.",

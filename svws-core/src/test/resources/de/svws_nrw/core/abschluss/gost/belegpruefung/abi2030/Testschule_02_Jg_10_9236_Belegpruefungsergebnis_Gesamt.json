@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "EINBR_4",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und ein Projektkurs mit einer Referenzfachbelegung nur in der Q1 als Abiturfächer."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlich-technischer Schwerpunkt vor."
+  } ],
+  "log" : [ ]
+}
