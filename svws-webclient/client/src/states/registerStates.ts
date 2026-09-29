@@ -16,6 +16,7 @@ import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/Leitungsfunktion
 import { MerkmaleStateKey } from "@ui/states/kataloge/MerkmaleState";
 import { OrteStateKey } from "@ui/states/kataloge/OrteState";
 import { ReligionenStateKey } from "@ui/states/kataloge/ReligionenState";
+import { TelefonartenStateKey } from "@ui/states/kataloge/TelefonartenState";
 import { VermerkartenStateKey } from "@ui/states/kataloge/VermerkartenState";
 import { NotenmodulStateKey } from "@ui/states/NotenmodulState";
 import { NotificationsStateKey } from "@ui/states/NotificationsState";
@@ -30,6 +31,7 @@ import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
+import { telefonartenStateImpl } from "~/states/kataloge/TelefonartenStateImpl";
 import { vermerkartenStateImpl } from "~/states/kataloge/VermerkartenStateImpl";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
@@ -95,5 +97,6 @@ export function registerStates(): void {
 	context.provide(KindergaertenStateKey, kindergaertenStateImpl);
 	context.provide(VermerkartenStateKey, vermerkartenStateImpl);
 	context.provide(MerkmaleStateKey, merkmaleStateImpl);
+	context.provide(TelefonartenStateKey, telefonartenStateImpl);
 
 }

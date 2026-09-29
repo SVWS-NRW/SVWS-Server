@@ -42,8 +42,7 @@
 				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'"
 					:zeige-alles="false"
 					:foerderschwerpunkte-by-id
-					:map-schulen
-					:map-telefon-arten />
+					:map-schulen />
 			</svws-ui-tab-bar>
 		</div>
 	</div>

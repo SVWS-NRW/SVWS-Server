@@ -216,8 +216,7 @@
 		</svws-ui-content-card>
 		<schueler-telefonnummern v-if="serverState.hasDev && hatKompetenzAnsehen && zeigeAlles"
 			:readonly
-			:id-schueler="model.proxy.id"
-			:map-telefon-arten="props.mapTelefonArten" />
+			:id-schueler="model.proxy.id" />
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
 				<svws-ui-checkbox :readonly class="mt-3 xl:mt-0" v-model="model.proxy.hatMigrationshintergrund" statistics focus-class-content>

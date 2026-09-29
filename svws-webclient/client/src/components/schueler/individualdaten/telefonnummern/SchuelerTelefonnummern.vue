@@ -28,7 +28,7 @@
 			<template #modalTitle>Telefonnummer hinzufügen</template>
 			<template #modalContent>
 				<svws-ui-input-wrapper :grid="2" class="text-left">
-					<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
+					<svws-ui-select title="Telefonart" :items="telefonartenState.telefonarten.list" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
 					<svws-ui-text-input v-model="telefonnummernEntry.telefonnummer" type="tel" placeholder="Telefonnummer" :valid="v => phoneNumberIsValid(v, 20)"
 						:max-len="20" />
 					<svws-ui-tooltip class="col-span-full">
@@ -42,7 +42,7 @@
 						Für Weitergabe gesperrt
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">
+				<svws-ui-notification type="warning" v-if="keineTelefonartenVorhanden">
 					Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter
 					Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben.
 				</svws-ui-notification>
@@ -65,6 +65,7 @@
 	import type { Telefonart } from "@core/core/data/schule/Telefonart";
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
+	import { useTelefonartenState } from "@ui/states/kataloge/TelefonartenState";
 	import type { DataTableColumn } from "@ui/types";
 
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -74,6 +75,7 @@
 
 	const props = defineProps<SchuelerTelefonnummernProps>();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
+	const telefonartenState = useTelefonartenState();
 
 	// --- State ---
 
@@ -89,13 +91,14 @@
 	// --- Computed ---
 
 	const selectedTelefonArt = computed<Telefonart | null>({
-		get: () => props.mapTelefonArten.get(telefonnummernEntry.value.idTelefonArt) ?? null,
+		get: () => telefonartenState.telefonarten.byId.get(telefonnummernEntry.value.idTelefonArt) ?? null,
 		set: (selected: Telefonart | null) => telefonnummernEntry.value.idTelefonArt = (selected === null) ? -1 : selected.id,
 	});
 
+	const keineTelefonartenVorhanden = computed(() => telefonartenState.telefonarten.list.size() === 0);
 	const saveTelefonnummernDisabled = computed<boolean>(() =>
 		(selectedTelefonArt.value === null)
-		|| (props.mapTelefonArten.size === 0)
+		|| keineTelefonartenVorhanden.value
 		|| JavaString.isBlank(telefonnummernEntry.value.telefonnummer)
 		|| !phoneNumberIsValid(telefonnummernEntry.value.telefonnummer, 20));
 
@@ -109,13 +112,13 @@
 	// --- Hilfsfunktionen ---
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
-		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
+		return telefonartenState.telefonarten.byId.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
 	function resetTelefonnummer() {
 		const defaultTelefon = new SchuelerTelefon();
 		defaultTelefon.telefonnummer = '+49';
-		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		const ersteTelefonArt = telefonartenState.telefonarten.byId.values().next().value;
 		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? -1;
 		telefonnummernEntry.value = defaultTelefon;
 	}

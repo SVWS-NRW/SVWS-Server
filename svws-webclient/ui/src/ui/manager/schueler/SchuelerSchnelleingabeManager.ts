@@ -7,7 +7,6 @@ import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
-import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 
@@ -22,7 +21,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _schulenById: Map<number, SchulEintrag>;
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
-	private readonly _telefonartenById: Map<number, Telefonart>;
 	private readonly _klassenAktuell: List<KlassenDaten> = new ArrayList();
 
 
@@ -34,8 +32,7 @@ export class SchuelerSchnelleingabeManager {
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		faecherById: Map<number, FachDaten>,
 		jahrgaengeById: Map<number, JahrgangsDaten>,
-		schulenById: Map<number, SchulEintrag>,
-		telefonartenById: Map<number, Telefonart>
+		schulenById: Map<number, SchulEintrag>
 	) {
 		this._stammdaten = stammdaten;
 		this._schulbesuchsdaten = schulbesuchsdaten;
@@ -45,7 +42,6 @@ export class SchuelerSchnelleingabeManager {
 		this._faecherById = faecherById;
 		this._jahrgaengeById = jahrgaengeById;
 		this._schulenById = schulenById;
-		this._telefonartenById = telefonartenById;
 		this.filterKlassen();
 		this.processSchulen();
 	}
@@ -96,10 +92,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get schulenById(): Map<number, SchulEintrag> {
 		return this._schulenById;
-	}
-
-	get telefonartenById(): Map<number, Telefonart> {
-		return this._telefonartenById;
 	}
 
 	get klassenAktuell(): List<KlassenDaten> {

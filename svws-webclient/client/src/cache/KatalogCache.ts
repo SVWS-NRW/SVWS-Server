@@ -8,7 +8,6 @@ import type { Floskel } from "@core/core/data/schule/Floskel";
 import type { Floskelgruppe } from "@core/core/data/schule/Floskelgruppe";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
-import type { Telefonart } from "@core/core/data/schule/Telefonart";
 import type { List } from "@core/java/util/List";
 
 import { Katalog } from "~/cache/Katalog";
@@ -34,7 +33,6 @@ export class KatalogCache {
 	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
-	private _telefonartenById: Map<number, Telefonart> = new Map();
 
 	public constructor() {
 		this.initializeCacheUpdater();
@@ -89,11 +87,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.SCHULEN, async () => {
 			const result = await api.server.getSchulen(api.schema);
 			return { schulenById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.TELEFONARTEN, async () => {
-			const result = await api.server.getTelefonarten(api.schema);
-			return { telefonartenById: this.convertToMap(result) };
 		});
 
 	}
@@ -193,14 +186,6 @@ export class KatalogCache {
 
 	set schulenById(value: Map<number, SchulEintrag>) {
 		this._schulenById = value;
-	}
-
-	get telefonartenById(): Map<number, Telefonart> {
-		return this._telefonartenById;
-	}
-
-	set telefonartenById(value: Map<number, Telefonart>) {
-		this._telefonartenById = value;
 	}
 
 }

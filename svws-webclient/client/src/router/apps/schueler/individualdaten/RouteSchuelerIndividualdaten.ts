@@ -32,7 +32,6 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
 			mapSchulen: this.data.mapSchulen,
 			zeigeAlles: true,
 		};

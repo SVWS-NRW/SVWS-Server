@@ -1,4 +1,3 @@
-
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
@@ -9,6 +8,7 @@ import type { StatistikSchuelerProps } from "~/components/statistik/StatistikSch
 import { RouteNode } from "~/router/RouteNode";
 
 import { type RouteStatistik, routeStatistik } from "./RouteStatistik";
+
 const StatistikSchueler = () => import("~/components/statistik/StatistikSchueler.vue");
 
 export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
@@ -27,7 +27,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			zeigeAlles: false,
 			// schueler
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
 			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
 		};
 	}
