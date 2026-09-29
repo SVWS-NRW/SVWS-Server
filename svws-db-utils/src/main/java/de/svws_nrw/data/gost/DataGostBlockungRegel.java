@@ -420,24 +420,27 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 					GostServiceFactoryBuilder.getGostServiceFactory().getGostSchuelerService().getByAbiturjahrgang(blockung.Abi_Jahrgang);
 			final Set<Long> setSchuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toSet());
 			final GostFaecherManager faecher = DataGostFaecher.getFaecherManager(conn, blockung.Abi_Jahrgang);
-			// Durchwandere die Regeln und füge sie nacheinander hinzu
+			// Validiere alle Regeln
 			for (final GostBlockungRegel regel : regeln) {
-				// validiere die Regel
 				DataGostBlockungRegel.validateRegel(conn, blockung.Abi_Jahrgang, blockung.ID, setSchuelerIDs, faecher, regel, mapVorhanden);
-				final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-				// Füge die Regel hinzu
+			}
+			// Füge alle Regeln hinzu und flush einmal, damit die Regeln für die Parameter in der Datenbank existieren
+			for (final GostBlockungRegel regel : regeln) {
 				regel.id = idRegel++;
+				final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 				final DTOGostBlockungRegel dtoRegel = new DTOGostBlockungRegel(regel.id, blockung.ID, regelTyp);
 				conn.transactionPersist(dtoRegel);
-				conn.transactionFlush();
-				// Füge die Parameter zu der Regel hinzu.
+				mapVorhanden.computeIfAbsent(regel.typ, r -> new ArrayList<>()).add(dtoRegel);
+			}
+			conn.transactionFlush();
+			// Füge alle Parameter hinzu
+			for (final GostBlockungRegel regel : regeln) {
 				for (int i = 0; i < regel.parameter.size(); i++) {
 					final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(regel.id, i, regel.parameter.get(i));
 					conn.transactionPersist(param);
 				}
-				conn.transactionFlush();
-				mapVorhanden.computeIfAbsent(regel.typ, r -> new ArrayList<>()).add(dtoRegel);
 			}
+			conn.transactionFlush();
 			return regeln;
 		} catch (final Exception exception) {
 			if (exception instanceof final IllegalArgumentException e) {
