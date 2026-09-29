@@ -133,7 +133,6 @@
 
 	// model mit der aktuellen Selektion
 	type MaybeNull<T> = T | null;
-	// eslint-disable-next-line vue/require-default-prop
 	const model = defineModel<MaybeNull<T>>();
 
 	watch(
