@@ -28,8 +28,6 @@ import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Fachklasse;
-import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
-import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
@@ -602,8 +600,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			// TODO Prüfung der Abschlussart
 			case "abschlussart" -> dto.AbschlussArt = JSONMapper.convertToInteger(value, true);
 			case "istAbschlussPrognose" -> dto.AbschlIstPrognose = JSONMapper.convertToBoolean(value, true);
-			case "abschluss" -> updateAbschluss(dto, value);
-			case "abschlussBerufsbildend" -> updateAbschlussBerufsbildend(dto, value);
+			case "abschluss" -> updateAbschluss();
+			case "abschlussBerufsbildend" -> updateAbschlussBerufsbildend();
 			case "textErgebnisPruefungsalgorithmus" -> dto.PruefAlgoErgebnis = JSONMapper.convertToString(value, true, false, null);
 			case "zeugnisart" -> dto.Zeugnisart = JSONMapper.convertToString(value, true, false, 5);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
@@ -644,20 +642,16 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		}
 	}
 
-	private static void updateAbschlussBerufsbildend(final DTOSchuelerLernabschnittsdaten dto, final Object value) {
-		final String str = JSONMapper.convertToString(value, true, false, null);
-		if ((str != null) && (SchulabschlussBerufsbildend.data().getWertByKuerzel(str) == null)) {
-			throw new ApiOperationException(Status.CONFLICT);
-		}
-		dto.Abschluss_B = str;
+	private static void updateAbschlussBerufsbildend() {
+		// Die Interpretation des Schild3-String und dessen Valididerung ist hier bei der API nicht vorgesehen. Daher kommt es hier zu einem Bad-Request
+		throw new ApiOperationException(Status.BAD_REQUEST, "Der berufsbildende Abschluss kann an dieser Stelle derzeit nicht über die API gesetzt werden. Hierfür werden zukünftig andere API-Endpunkte vorgesehen.");
+		// dto.Abschluss_B = str;
 	}
 
-	private static void updateAbschluss(final DTOSchuelerLernabschnittsdaten dto, final Object value) {
-		final String str = JSONMapper.convertToString(value, true, false, null);
-		if ((str != null) && (SchulabschlussAllgemeinbildend.data().getWertByKuerzel(str) == null)) {
-			throw new ApiOperationException(Status.CONFLICT);
-		}
-		dto.Abschluss = str;
+	private static void updateAbschluss() {
+		// Die Interpretation des Schild3-String und dessen Valididerung ist hier bei der API nicht vorgesehen. Daher kommt es hier zu einem Bad-Request
+		throw new ApiOperationException(Status.BAD_REQUEST, "Der allgemeinbildende Abschluss kann an dieser Stelle derzeit nicht über die API gesetzt werden. Hierfür werden zukünftig andere API-Endpunkte vorgesehen.");
+		// dto.Abschluss = str;
 	}
 
 	private static void updateNoteLernbereichNW(final DTOSchuelerLernabschnittsdaten dto, final Object value) {

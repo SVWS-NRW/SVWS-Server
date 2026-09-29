@@ -1,6 +1,7 @@
 import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten } from '../core/data/gost/Abiturdaten';
+import { Abschlussdaten } from '../core/data/abschluss/Abschlussdaten';
 import { Abteilung } from '../core/data/schule/Abteilung';
 import { AbteilungKlassenzuordnung } from '../core/data/schule/AbteilungKlassenzuordnung';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
@@ -410,6 +411,88 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerAbschlussinformationen für den Zugriff auf die URL https://{hostname}/db/{schema}/abschluesse/schueler/{id : \d+}/abschnitt/{abschnitt : \d+}
+	 *
+	 * Liest die Informationen zum erreichten Schulabschluss des Schülers zu der angegebenen ID und dem angegeben Schuljahresabschnittaus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zum erreichten Schulabschluss des Schülers in dem Schuljahresabschnitt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abschlussdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID bzw. kein Lernabschnitt in dem angegeben Schujahresabschnitt gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 *
+	 * @returns Die Informationen zum erreichten Schulabschluss des Schülers in dem Schuljahresabschnitt
+	 */
+	public async getSchuelerAbschlussinformationen(schema: string, id: number, abschnitt: number): Promise<Abschlussdaten> {
+		const path = "/db/{schema}/abschluesse/schueler/{id : \\d+}/abschnitt/{abschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return Abschlussdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerAbschlussinformationenByLernabschnittID für den Zugriff auf die URL https://{hostname}/db/{schema}/abschluesse/schueler/lernabschnittsdaten/{abschnitt : \d+}
+	 *
+	 * Liest die Informationen zum erreichten Schulabschluss des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zum erreichten Schulabschluss in dem Lernabschnitt des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abschlussdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 *
+	 * @returns Die Informationen zum erreichten Schulabschluss in dem Lernabschnitt des Schülers
+	 */
+	public async getSchuelerAbschlussinformationenByLernabschnittID(schema: string, abschnitt: number): Promise<Abschlussdaten> {
+		const path = "/db/{schema}/abschluesse/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return Abschlussdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerAbschlussinformationen für den Zugriff auf die URL https://{hostname}/db/{schema}/abschluesse/schueler/lernabschnittsdaten/{abschnitt : \d+}
+	 *
+	 * Passt die Informationen zum Schulabschluss in dem Lernabschnitt mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Abschlussinformationen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Abschlussdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 */
+	public async patchSchuelerAbschlussinformationen(data: Partial<Abschlussdaten>, schema: string, abschnitt: number): Promise<void> {
+		const path = "/db/{schema}/abschluesse/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
+		const body: string = Abschlussdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
