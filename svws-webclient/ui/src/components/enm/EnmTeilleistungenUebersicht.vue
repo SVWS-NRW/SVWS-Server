@@ -78,6 +78,7 @@
 						<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 							<td v-if="teilleistung === null" class="bg-ui-disabled" />
 							<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt)"
+								:style="`anchor-name: --anchor_Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`, teilleistung.note)"
 								:ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
 								:class="{
 									'bg-ui-selected': (gridManager.focusColumn === indexArt + 6),
@@ -90,6 +91,7 @@
 				</template>
 				<template v-if="gridManager.isColVisible('Quartal') ?? true">
 					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
+						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
 						:ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 6),
@@ -100,6 +102,7 @@
 				</template>
 				<template v-if="gridManager.isColVisible('Note') ?? true">
 					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
 						:ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 7),
@@ -111,13 +114,16 @@
 				<td />
 			</template>
 		</ui-table-grid>
+		<div id="popover_Noteneingabe" ref="popoverNote" popover :style="`position-anchor: ${popoverAnchor}; position-area: right; position-try-fallbacks: flip-block;`">
+			<grid-popover-note :model-value="popoverNote" @update:model-value="updateNote" @close="popoverRef?.hidePopover()" />
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { ComponentPublicInstance } from 'vue';
-	import { computed, watch } from 'vue';
+	import { computed, ref, useTemplateRef, watch } from 'vue';
 
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
@@ -128,6 +134,7 @@
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import { HashSet } from '@core/java/util/HashSet';
 	import type { List } from '@core/java/util/List';
+	import type { GridInputNote } from '@ui/ui/controls/tablegrid/GridInputNote';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
@@ -135,6 +142,41 @@
 	type LocalElement = Element | ComponentPublicInstance<unknown> | null;
 	const props = defineProps<EnmTeilleistungenProps>();
 
+
+	const popoverRef = useTemplateRef('popoverNote');
+	const popoverNote = ref<Note>(Note.KEINE);
+	const popoverAnchor = ref<string | null>(null);
+	const popoverKey = ref<string | null>(null);
+
+	function popover(key: string, val: string | null) {
+		if (popoverRef.value === null) {
+			return;
+		}
+		popoverAnchor.value = `--anchor_${key}`;
+		const note = Note.fromKuerzel(val);
+		popoverNote.value = note;
+		popoverKey.value = key;
+		popoverRef.value.showPopover();
+		gridManager.doFocusByKey(key);
+	}
+
+	function updateNote(val: Note) {
+		popoverNote.value = val;
+		const key = popoverKey.value;
+		if ((key === null) || (popoverRef.value === null)) {
+			return;
+		}
+		const input = gridManager.getInputByKey(key) as GridInputNote<string> | null;
+		if (input === null) {
+			return;
+		}
+		input.update(val.getNoteKuerzel(props.enmManager().schuljahr));
+		input.commit();
+		popoverRef.value.hidePopover();
+		popoverKey.value = null;
+		popoverAnchor.value = null;
+		popoverNote.value = Note.KEINE;
+	}
 	const colsValidationTooltip = new Set(['Sperre', 'Klasse', 'Name', 'Fach', 'Lehrer', 'Kurs', 'Kursart']);
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 

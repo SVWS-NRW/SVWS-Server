@@ -11,7 +11,7 @@
 		"./dist/**/*"
 	],
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite --host",
 		"build": "vite build",
 		"serve": "vite preview",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",

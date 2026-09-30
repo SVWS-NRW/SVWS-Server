@@ -110,7 +110,7 @@
 
 <script setup lang="ts" generic="T">
 
-	import { computed, ref, toRaw, toRefs, useAttrs, watch } from 'vue';
+	import { computed, ref, toRaw, toRefs, useAttrs, useId, watch } from 'vue';
 
 	import type { BasicValidator } from '@core/asd/validate/BasicValidator';
 	import type { ValidatorFehler } from '@core/asd/validate/ValidatorFehler';
@@ -335,7 +335,7 @@
 
 	const state = computed((): UiSelectState<T> => {
 		return {
-			instanceId: crypto.randomUUID(),
+			instanceId: useId(),
 			multi: true,
 			label: destructedProps.label.value,
 			manager: destructedProps.manager.value,

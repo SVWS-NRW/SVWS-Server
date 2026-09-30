@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
-import UiSelectMulti from "@ui/ui/controls/select/UiSelectMulti.vue";
-import { describe, test, expect, vi, beforeAll } from "vitest";
+import { beforeAll, describe, expect, test, vi } from "vitest";
+
 import type { KlassenartKatalogEintrag } from "@core/asd/data/klassen/KlassenartKatalogEintrag";
 import { Klassenart } from "@core/asd/types/klassen/Klassenart";
 import { Schulform } from "@core/asd/types/schule/Schulform";
@@ -12,6 +12,7 @@ import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+import UiSelectMulti from "@ui/ui/controls/select/UiSelectMulti.vue";
 
 const reader = new JsonCoreTypeReaderStatic();
 vi.mock("@json/klassen/Klassenart.json", async () => ({
@@ -893,9 +894,9 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 		const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
 		const state = vm.state;
-		const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+		const uuidRegex = /^v-[0-9]/;
 
-		test("state.instanceId ist eine UUID", () => {
+		test("state.instanceId ist eine ID", () => {
 			expect(state.instanceId).toMatch(uuidRegex);
 		});
 

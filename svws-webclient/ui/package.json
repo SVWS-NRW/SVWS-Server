@@ -5,7 +5,7 @@
 	"license": "BSD-3-Clause",
 	"version": "1.5.0-SNAPSHOT",
 	"scripts": {
-		"dev": "vite dev --config vite.config.story.ts",
+		"dev": "vite dev --config vite.config.story.ts --host",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage --coverage.include=src/ui/**/*.vue --coverage.include=src/components/**/*.vue --coverage.include=src/model/**/*.ts --coverage.include=src/validation/**/*.ts --coverage.exclude=src/ui/**/*.story.*",

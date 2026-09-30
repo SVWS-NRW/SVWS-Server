@@ -1152,4 +1152,17 @@
 	mask-repeat: no-repeat;
 	mask-position: center;
 }
+
+@utility i-ri-delete-back-2-line {
+	mask-image: url(@icons/System/delete-back-2-line.svg);
+	-webkit-mask-image: url(@icons/System/delete-back-2-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+@utility i-ri-delete-back-2-fill {
+	mask-image: url(@icons/System/delete-back-2-fill.svg);
+	-webkit-mask-image: url(@icons/System/delete-back-2-fill.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
 /*endregion*/

@@ -1,0 +1,26 @@
+@layer components {
+	.ui-grid-popover {
+		span.popover-touch-item {
+			@apply bg-ui-75 cursor-pointer;
+			@apply text-ui-100 font-bold text-3xl size-16;
+			@apply border-ui-100 border-2 rounded-full;
+			@apply flex justify-center items-center;
+		}
+		span.popover-touch-item.selected {
+			@apply bg-ui-selected;
+			@apply text-ui-100;
+		}
+		span.popover-touch-item.extra-button {
+			@apply bg-ui-50;
+			@apply text-ui-100;
+			@apply border-ui-100 rounded-md;
+		}
+	}
+
+	[popover] {}
+
+	[popover]:popover-open {
+		background: transparent;
+	}
+	[popover]::backdrop {}
+}

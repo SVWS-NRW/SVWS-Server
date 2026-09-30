@@ -80,6 +80,7 @@
 				</td>
 				<template v-if="gridManager.isColVisible('FS') ?? true">
 					<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+						:style="`anchor-name: --anchor_FS_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FS_${pair.a.id}_${pair.b.id}`, pair.b.lernabschnitt.fehlstundenGesamt, 999)"
 						:ref="inputFehlstunden(pair, 2, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 2),
@@ -89,6 +90,7 @@
 				</template>
 				<template v-if="gridManager.isColVisible('FSU') ?? true">
 					<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+						:style="`anchor-name: --anchor_FSU_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FSU_${pair.a.id}_${pair.b.id}`, pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt, pair.b.lernabschnitt.fehlstundenGesamt)"
 						:ref="inputFehlstundenUnendschuldigt(pair, 3, index)" class="ui-table-grid-input"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 3),
@@ -174,13 +176,16 @@
 				<td />
 			</template>
 		</ui-table-grid>
+		<div id="popover_fs_eingabe" ref="popoverFS" popover :style="`position-anchor: ${popoverAnchor}; position-area: right; position-try-fallbacks: flip-block;`">
+			<grid-popover-fehlstunden :model-value="popoverFs" @update:model-value="updateFs" @close="popoverFSRef?.hidePopover()" />
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { ComponentPublicInstance } from 'vue';
-	import { computed, watchEffect } from 'vue';
+	import { computed, ref, useTemplateRef, watchEffect } from 'vue';
 
 	import { PairNN } from '@core/asd/adt/PairNN';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
@@ -196,6 +201,40 @@
 
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
 
+	const popoverFSRef = useTemplateRef('popoverFS');
+	const popoverFs = ref<number | null>(null);
+	const popoverAnchor = ref<string | null>(null);
+	const popoverKey = ref<string | null>(null);
+	const popoverMax = ref<number | null>(null);
+
+	function showPopoverFS(key: string, val: number | null, max?: number | null) {
+		if (popoverFSRef.value === null) {
+			return;
+		}
+		popoverAnchor.value = `--anchor_${key}`;
+		popoverFs.value = val;
+		popoverKey.value = key;
+		popoverFSRef.value.showPopover();
+		popoverMax.value = max ?? null;
+		gridManager.doFocusByKey(key);
+	}
+
+	function updateFs(val: number | null) {
+		if (((popoverMax.value !== null) && (val !== null) && (popoverMax.value < val)) || (popoverMax.value === null)) {
+			return;
+		}
+		const key = popoverKey.value;
+		if (key === null) {
+			return;
+		}
+		const input = gridManager.getInputByKey(key) as GridInputIntegerDiv<string> | null;
+		if (input === null) {
+			return;
+		}
+		popoverFs.value = val;
+		input.update(val);
+		input.commit();
+	}
 	const colsValidationTooltip = new Set(["FS", "FSU"]);
 
 	const gridManager = new GridManager<string, PairNN<ENMv2Klasse, ENMv2Schueler>, List<PairNN<ENMv2Klasse, ENMv2Schueler>>>({

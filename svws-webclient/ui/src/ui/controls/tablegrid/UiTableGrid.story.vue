@@ -5,8 +5,8 @@
 				<template #header>
 					<template v-for="col of gridManager.cols.values()" :key="col.name">
 						<th v-if="col.kuerzel === 'Auswahl'" class="flex items-start justify-center">
-							<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.size()) && (auswahl.length > 0)"
-								:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.size())"
+							<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.length) && (auswahl.length > 0)"
+								:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.length)"
 								@update:model-value="toggleAll" />
 						</th>
 						<th v-else-if="col.kuerzel === 'RowActions'" />
@@ -55,14 +55,14 @@
 
 <script setup lang="ts">
 
-	import { computed, reactive, ref } from "vue";
+	import type { ComponentPublicInstance } from "vue";
+	import { computed, reactive, ref, useTemplateRef } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
 
-	import { ArrayList } from "@core/java/util/ArrayList";
-	import type { List } from "@core/java/util/List";
+	import { Note } from "@core/asd/types/Note";
 
 	import { GridManager } from "./GridManager";
 	import type { TableActions } from "./UiTableActions.vue";
-	import UiTableActions from "./UiTableActions.vue";
 
 	const state = reactive({
 		add: false,
@@ -72,13 +72,13 @@
 		allChecked: false,
 	});
 
-	type Schueler = { id: number, vorname: string, nachname: string, birthYear: number };
+	type Schueler = { id: number, vorname: string, nachname: string, birthYear: number, note: string | null };
 
-	const schuelerArray = ref([
-		{ id: 1, vorname: "Lena", nachname: "Müller", birthYear: 2005 },
-		{ id: 2, vorname: "Lukas", nachname: "Stark", birthYear: 2004 },
-		{ id: 3, vorname: "Anton", nachname: "Meier", birthYear: 2003 },
-		{ id: 4, vorname: "Hannah", nachname: "Strauch", birthYear: 2003 },
+	const schuelerArray2 = ref([
+		{ id: 1, vorname: "Lena", nachname: "Müller", birthYear: 2005, note: Note.AUSREICHEND.getNoteKuerzel(2026) },
+		{ id: 2, vorname: "Lukas", nachname: "Stark", birthYear: 2004, note: Note.BEFRIEDIGEND.getNoteKuerzel(2026) },
+		{ id: 3, vorname: "Anton", nachname: "Meier", birthYear: 2003, note: Note.SEHR_GUT_MINUS.getNoteKuerzel(2026) },
+		{ id: 4, vorname: "Hannah", nachname: "Strauch", birthYear: 2003, note: Note.BEFRIEDIGEND_MINUS.getNoteKuerzel(2026) },
 	]);
 
 	const auswahl = ref<Schueler[]>([]);
@@ -98,17 +98,12 @@
 		auswahl.value = value ? [...gridManager.value.daten] : [];
 	}
 
-	const schueler = new ArrayList<Schueler>();
-	for (const item of schuelerArray.value) {
-		schueler.add(item);
-	}
-
 	const countActiveActions = computed(() =>
 		[state.add, state.edit, state.delete].filter(Boolean).length
 	);
 
-	const gridManager = computed(() => new GridManager<string, Schueler, List<Schueler>>({
-		daten: computed(() => schueler),
+	const gridManager = computed(() => new GridManager<string, Schueler, Array<Schueler>>({
+		daten: computed(() => schuelerArray2.value),
 		getRowKey: row => `ID_${row.id}`,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
@@ -120,6 +115,27 @@
 				: []),
 		],
 	}));
+
+	const gridManagerNoten = computed(() => new GridManager<string, Schueler, Array<Schueler>>({
+		daten: computed(() => schuelerArray2.value),
+		getRowKey: row => `ID_${row.id}`,
+		columns: [
+			{ kuerzel: "Vorname", name: "Vorname", width: "1fr" },
+			{ kuerzel: "Nachname", name: "Nachname", width: '1fr' },
+			{ kuerzel: "Note", name: "Note", width: '1fr' },
+		],
+	}));
+
+	function inputNote(note: string | null, index: number) {
+		const key = 'Note_' + index;
+		const setter = (value: string | null) => console.log(value);
+		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManagerNoten.value.applyInputNote(key, 3, index, element, setter, 2026);
+			if (input !== null) {
+				gridManagerNoten.value.update(key, note);
+			}
+		};
+	}
 
 	const rowActions = computed(() => {
 		const actions: TableActions<Schueler>[] = [];
