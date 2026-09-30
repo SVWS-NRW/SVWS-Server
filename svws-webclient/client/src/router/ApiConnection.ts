@@ -10,11 +10,10 @@ import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperN
 import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import type { List } from "@core/java/util/List";
 import type { ConfigState } from "@ui/states/ConfigState";
+import { StateRegistry } from "@ui/states/StateRegistry";
 
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
-import { serverStateImpl } from "~/states/ServerStateImpl";
 
 export class ApiConnection {
 
@@ -131,10 +130,7 @@ export class ApiConnection {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._api = undefined;
 			this._apiExternal = undefined;
-			benutzerStateImpl.reset();
-			this.configState.clear();
-			schuleStateImpl.reset();
-			serverStateImpl.reset();
+			StateRegistry.instance.resetSessionStates();
 		}
 	};
 
@@ -143,12 +139,9 @@ export class ApiConnection {
 	 * Trennt die Verbindung für den aktuell angemeldeten Benutzer
 	 */
 	logout = async (): Promise<void> => {
-		benutzerStateImpl.reset();
-		schuleStateImpl.reset();
-		serverStateImpl.reset();
+		StateRegistry.instance.resetSessionStates();
 		this._api = undefined;
 		this._apiExternal = undefined;
-		this.configState.clear();
 	};
 
 }

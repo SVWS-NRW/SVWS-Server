@@ -59,6 +59,13 @@ class ConfigStateImpl implements ConfigState {
 
 
 	/**
+	 * Führt einen Reset des States aus, indem die Konfiguration geleert wird.
+	 */
+	public reset(): void {
+		this.clear();
+	}
+
+	/**
 	 * Gibt die Konfiguration des angemeldeten Benutzers zurück, sofern diese geladen wurde
 	 */
 	public get config(): Config {
