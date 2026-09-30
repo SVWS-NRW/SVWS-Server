@@ -1,5 +1,4 @@
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
-import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Abteilung } from "@core/core/data/schule/Abteilung";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
@@ -30,7 +29,6 @@ export class KatalogCache {
 	private _floskelnById: Map<number, Floskel> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
 	private _faecherById: Map<number, FachDaten> = new Map();
-	private _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 	private _schulenById: Map<number, SchulEintrag> = new Map();
 
@@ -72,11 +70,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
 			const result = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 			return { foerderschwerpunkteById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.JAHRGAENGE, async () => {
-			const result = await api.server.getJahrgaenge(api.schema);
-			return { jahrgaengeById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.LERNPLATTFORMEN, async () => {
@@ -162,14 +155,6 @@ export class KatalogCache {
 
 	set faecherById(value: Map<number, FachDaten>) {
 		this._faecherById = value;
-	}
-
-	get jahrgaengeById(): Map<number, JahrgangsDaten> {
-		return this._jahrgaengeById;
-	}
-
-	set jahrgaengeById(value: Map<number, JahrgangsDaten>) {
-		this._jahrgaengeById = value;
 	}
 
 	get lernplattformenById(): Map<number, Lernplattform> {

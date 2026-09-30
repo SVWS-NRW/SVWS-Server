@@ -180,6 +180,7 @@
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+	import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 	import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 	import { useSchuleState } from '@ui/states/SchuleState';
 	import { useServerState } from '@ui/states/ServerState';
@@ -197,6 +198,7 @@
 	const serverState = useServerState();
 	const entlassgruendeState = useEntlassgruendeState();
 	const kindergaertenState = useKindergaertenState();
+	const jahrgaengeState = useJahrgaengeState();
 
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !updateKompetenz.value);
@@ -239,7 +241,7 @@
 	// --- Toggle Schulauswahl ---
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
-		options: computed(() => props.manager().jahrgaengeById.values()),
+		options: computed(() => jahrgaengeState.jahrgaenge.list),
 		optionDisplayText: j => j.bezeichnung ?? '-',
 		selectionDisplayText: j => j.bezeichnung ?? '-',
 	});

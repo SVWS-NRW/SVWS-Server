@@ -34,6 +34,7 @@ import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateIm
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
+import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
@@ -150,15 +151,15 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 			erzieherartenStateImpl.init(),
 			fahrschuelerartenStateImpl.init(),
 			haltestellenStateImpl.init(),
-			merkmaleStateImpl.init(),
+			jahrgaengeStateImpl.init(),
 			kindergaertenStateImpl.init(),
+			merkmaleStateImpl.init(),
 			orteStateImpl.init(),
 			religionenStateImpl.init(),
 			telefonartenStateImpl.init(),
 			vermerkartenStateImpl.init(),
 			routeApp.cache.refreshKataloge(
 				Katalog.FOERDERSCHWERPUNKTE,
-				Katalog.JAHRGAENGE,
 				Katalog.SCHULEN
 			),
 		]);

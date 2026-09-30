@@ -2,12 +2,10 @@ import type { SchuelerSchulbesuchMerkmal } from "@core/asd/data/schueler/Schuele
 import type { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
 import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/SchuelerSchulbesuchsdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
-import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 
 export interface SchulbesuchLookups {
 	schulenById: Map<number, SchulEintrag>;
-	jahrgaengeById: Map<number, JahrgangsDaten>;
 	abschnitteById: Map<number, Schuljahresabschnitt>;
 }
 
@@ -20,7 +18,6 @@ export class SchuelerSchulbesuchManager {
 
 	private readonly _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
 	private readonly _schulenById: Map<number, SchulEintrag> = new Map();
-	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 
 	public constructor(
 		schulbesuchsdaten: SchuelerSchulbesuchsdaten,
@@ -31,7 +28,6 @@ export class SchuelerSchulbesuchManager {
 		this._idSchueler = idSchueler;
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this._schulenById = lookups.schulenById;
-		this._jahrgaengeById = lookups.jahrgaengeById;
 		this._schuljahresabschnitteById = lookups.abschnitteById;
 		this._schuljahr = this.getSchuljahr();
 	}
@@ -126,7 +122,4 @@ export class SchuelerSchulbesuchManager {
 		return this._schulenById;
 	}
 
-	get jahrgaengeById(): Map<number, JahrgangsDaten> {
-		return this._jahrgaengeById;
-	}
 }

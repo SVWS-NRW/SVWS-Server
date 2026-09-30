@@ -9,6 +9,7 @@ import { Einschulungsart } from "@core/asd/types/schueler/Einschulungsart";
 import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { SchuelerNeuManager } from "@ui/ui/manager/schueler/SchuelerNeuManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
@@ -19,6 +20,7 @@ import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/com
 export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 
 	private readonly _religionenState = useReligionenState();
+	private readonly _jahrgaengeState = useJahrgaengeState();
 	private readonly _manager: () => SchuelerNeuManager;
 
 	/**
@@ -71,7 +73,7 @@ export class SchuelerNeuModelProxy extends ModelProxy<SchuelerNeu> {
 	});
 
 	jahrgang = computed<JahrgangsDaten | null>({
-		get: () => this._manager().jahrgaengeById.get(this.proxy.idJahrgang ?? -1) ?? null,
+		get: () => this._jahrgaengeState.jahrgaenge.byId.get(this.proxy.idJahrgang ?? -1) ?? null,
 		set: (value: JahrgangsDaten | null) => {
 			this.proxy.idJahrgang = value?.id ?? null;
 			this.proxy.idKlasse = null;

@@ -35,6 +35,7 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -43,6 +44,7 @@ import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLeng
 export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuchsdaten> {
 
 	private readonly _entlassgruendeState = useEntlassgruendeState();
+	private readonly _jahrgaengeState = useJahrgaengeState();
 	private readonly _kindergaertenState = useKindergaertenState();
 
 	private readonly manager: () => SchuelerSchulbesuchManager;
@@ -164,7 +166,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	idEntlassjahrgangDieseSchule = computed<JahrgangsDaten | null>({
-		get: () => this.manager().jahrgaengeById.get(this.proxy.idEntlassjahrgangDieseSchule ?? -1) ?? null,
+		get: () => this._jahrgaengeState.jahrgaenge.byId.get(this.proxy.idEntlassjahrgangDieseSchule ?? -1) ?? null,
 		set: (v: JahrgangsDaten | null) => this.proxy.idEntlassjahrgangDieseSchule = v?.id ?? null,
 	});
 

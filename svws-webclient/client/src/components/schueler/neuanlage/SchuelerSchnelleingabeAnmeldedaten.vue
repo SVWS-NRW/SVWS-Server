@@ -54,6 +54,7 @@
 	import { SchuelerStatus } from "@core/asd/types/schueler/SchuelerStatus";
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
+	import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -69,10 +70,10 @@
 	}>();
 	const abschnittState = useAbschnittState();
 	const schuleState = useSchuleState();
+	const jahrgaengeState = useJahrgaengeState();
 
 	const manager = () => props.manager();
 	const schulenMitBKoderSK = computed(() => (schuleState.schulform === Schulform.BK) || (schuleState.schulform === Schulform.SK));
-	const jahrgaenge = computed(() => Array.from(props.manager().jahrgaengeById.values()));
 	const schuljahresabschnitte = computed(() => Array.from(props.manager().schuljahresabschnitte));
 
 	const klassen = computed(() => {
@@ -96,7 +97,8 @@
 		return `${abschnitt.schuljahr}/${(abschnitt.schuljahr + 1) % 100}.${abschnitt.abschnitt}`;
 	});
 
-	const jahrgang = computed<string | null>(() => jahrgaenge.value.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
+	const jahrgang = computed<string | null>(() => Array.from(jahrgaengeState.jahrgaenge.list)
+		.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
 
 	const klasse = computed<KlassenDaten | null>({
 		get: () => klassen.value.find(i => i.id === (manager().lernabschnittsdaten.klassenID)) ?? null,

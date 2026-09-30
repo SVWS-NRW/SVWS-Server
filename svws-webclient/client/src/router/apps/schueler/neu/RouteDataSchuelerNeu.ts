@@ -31,9 +31,8 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 
 	private async createManager() {
 		const klassenFuerAbschnitt = await this.getKlassenBySchuljahresabschnitt();
-		const jahrgaengeById = routeApp.cache.kataloge.jahrgaengeById;
 
-		return new SchuelerNeuManager(jahrgaengeById, abschnittStateImpl.alle, klassenFuerAbschnitt, abschnittStateImpl.auswahl);
+		return new SchuelerNeuManager(abschnittStateImpl.alle, klassenFuerAbschnitt, abschnittStateImpl.auswahl);
 	}
 
 	private async getKlassenBySchuljahresabschnitt(): Promise<Map<number, List<KlassenListeEintrag>>> {

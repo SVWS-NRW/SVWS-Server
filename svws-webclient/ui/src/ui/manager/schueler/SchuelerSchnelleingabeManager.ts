@@ -4,7 +4,6 @@ import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/Schueler
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
-import type { JahrgangsDaten } from "@core/core/data/jahrgang/JahrgangsDaten";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -18,7 +17,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schuelerliste: SchuelerListe;
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
 	private readonly _faecherById: Map<number, FachDaten>;
-	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _schulenById: Map<number, SchulEintrag>;
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
 	private readonly _klassenAktuell: List<KlassenDaten> = new ArrayList();
@@ -31,7 +29,6 @@ export class SchuelerSchnelleingabeManager {
 		schuelerliste: SchuelerListe,
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
 		faecherById: Map<number, FachDaten>,
-		jahrgaengeById: Map<number, JahrgangsDaten>,
 		schulenById: Map<number, SchulEintrag>
 	) {
 		this._stammdaten = stammdaten;
@@ -40,7 +37,6 @@ export class SchuelerSchnelleingabeManager {
 		this._schuelerliste = schuelerliste;
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._faecherById = faecherById;
-		this._jahrgaengeById = jahrgaengeById;
 		this._schulenById = schulenById;
 		this.filterKlassen();
 		this.processSchulen();
@@ -84,10 +80,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get faecherById(): Map<number, FachDaten> {
 		return this._faecherById;
-	}
-
-	get jahrgaengeById(): Map<number, JahrgangsDaten> {
-		return this._jahrgaengeById;
 	}
 
 	get schulenById(): Map<number, SchulEintrag> {

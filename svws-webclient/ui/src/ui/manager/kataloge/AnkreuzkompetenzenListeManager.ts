@@ -216,8 +216,8 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 			const matchesASV = filterIncludesASV && eintrag.istASV;
 			const matchesFach = (filterFaecherWithoutASV.length > 0)
-			&& (eintrag.idFach !== null)
-			&& filterFaecherWithoutASV.some(fach => fach.id === eintrag.idFach);
+					&& (eintrag.idFach !== null)
+					&& filterFaecherWithoutASV.some(fach => fach.id === eintrag.idFach);
 
 			if (!matchesASV && !matchesFach) {
 				return false;

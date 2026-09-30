@@ -89,6 +89,7 @@
 	import { Schulform } from "@core/asd/types/schule/Schulform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
@@ -103,6 +104,7 @@
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const religionenState = useReligionenState();
+	const jahrgaengeState = useJahrgaengeState();
 
 	const manager = () => props.manager();
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
@@ -116,7 +118,7 @@
 	const statusNeuaufnahme = SchuelerStatus.NEUAUFNAHME.daten(schuljahr);
 
 	const abschnitteFiltered = computed(() => manager().schuljahresabschnitteFilteredById.values());
-	const jahrgaenge = computed(() => Array.from(manager().jahrgaengeById.values()));
+	const jahrgaenge = computed(() => Array.from(jahrgaengeState.jahrgaenge.list));
 
 	const initialData = ref<SchuelerNeu>(Object.assign(new SchuelerNeu(), { status: statusNeuaufnahme?.id ?? -1 }));
 	const model = new SchuelerNeuModelProxy(() => initialData.value, () => manager());

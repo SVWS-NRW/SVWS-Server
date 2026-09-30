@@ -17,6 +17,7 @@ import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateIm
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
+import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
 import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
@@ -63,14 +64,15 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 				erzieherartenStateImpl.init(),
 				fahrschuelerartenStateImpl.init(),
 				haltestellenStateImpl.init(),
+				jahrgaengeStateImpl.init(),
 				kindergaertenStateImpl.init(),
 				leitungsfunktionenStateImpl.init(),
 				merkmaleStateImpl.init(),
 				orteStateImpl.init(),
 				religionenStateImpl.init(),
 				statistikStateImpl.init(),
-				vermerkartenStateImpl.init(),
 				telefonartenStateImpl.init(),
+				vermerkartenStateImpl.init(),
 			]);
 		}
 		if (to === this) {

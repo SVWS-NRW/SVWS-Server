@@ -11,6 +11,7 @@ import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState"
 import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
 import { FahrschuelerartenStateKey } from "@ui/states/kataloge/FahrschuelerartenState";
 import { HaltestellenStateKey } from "@ui/states/kataloge/HaltestellenState";
+import { JahrgaengeStateKey } from "@ui/states/kataloge/JahrgaengeState";
 import { KindergaertenStateKey } from "@ui/states/kataloge/KindergaertenState";
 import { LeitungsfunktionenStateKey } from "@ui/states/kataloge/LeitungsfunktionenState";
 import { MerkmaleStateKey } from "@ui/states/kataloge/MerkmaleState";
@@ -29,6 +30,7 @@ import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
+import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { telefonartenStateImpl } from "~/states/kataloge/TelefonartenStateImpl";
@@ -98,5 +100,6 @@ export function registerStates(): void {
 	context.provide(VermerkartenStateKey, vermerkartenStateImpl);
 	context.provide(MerkmaleStateKey, merkmaleStateImpl);
 	context.provide(TelefonartenStateKey, telefonartenStateImpl);
+	context.provide(JahrgaengeStateKey, jahrgaengeStateImpl);
 
 }
