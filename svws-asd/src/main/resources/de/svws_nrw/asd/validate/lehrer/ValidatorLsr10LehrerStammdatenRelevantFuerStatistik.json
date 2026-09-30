@@ -1,0 +1,24 @@
+
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsr10LehrerStammdatenRelevantFuerStatistik",
+    "historie" : [ {
+      "praefix" : "LSR10",
+      "altes_kuerzel" : "",
+      "zweig" : "Lehrer-Stammdaten-RelevantFuerStatistik",
+      "dtos" : "LehrerStammdaten",
+      "ausfuehrungsbereich_ui" : "Lehrer, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Ist relevant für Statistik'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [""],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text" : "Statistikrelevanz des Lehrers: Das Feld 'Ist relevant für Statistik' darf nicht ausgewählt sein, wenn die Lehrkraft im vorherigen Schuljahr abgegangen ist.",
+      "erlaeuterung" : "",
+      "bedingung" : "LehrerStammdaten.istRelevantFuerStatistik = TRUE ∧ LehrerPersonaldaten.abgangsdatum < aktuelles Schuljahr",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}  
