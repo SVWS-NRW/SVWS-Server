@@ -7,10 +7,6 @@ configurations {
 	testImplementation.extendsFrom(jetty, resteasy, swagger, validation)
 }
 
-dependencies {
-	implementation 'org.codehaus.plexus:plexus-utils:4.0.1'
-}
-
 checkstyleMain.enabled = false
 checkstyleTest.enabled = false
 
