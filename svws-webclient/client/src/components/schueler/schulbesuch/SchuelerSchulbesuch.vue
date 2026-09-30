@@ -114,7 +114,7 @@
 					:manager="einschulungsartenManager"
 					v-model="model.idEinschulungsartGrundschule.value"
 					:readonly />
-				<ui-select label="EP-Jahre"
+				<ui-select label="EP-Jahre" v-if="!eigeneSchuleIstGrundschule"
 					:manager="grundschuleJahreEingangsphaseManager"
 					v-model="model.idEingangsphaseGrundschule.value"
 					:readonly />
