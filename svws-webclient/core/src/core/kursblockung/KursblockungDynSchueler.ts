@@ -88,9 +88,9 @@ export class KursblockungDynSchueler extends JavaObject {
 	regel16schuelerIgnorieren: boolean = false;
 
 	/**
-	 * Die Kurse, in denen dieser Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) war.
+	 * Das Abiturfach als ID des {@link GostAbiturFach}, welches dieser Schüler im Fach des jeweiligen Kurses laut Definition (Regel 19) hatte. Der Wert 0 wird als NULL interpretiert (kein Abiturfach) und der Wert -1 bedeutet, dass der Schüler laut Definition nicht in dem Kurs war.
 	 */
-	readonly kursWarImKurs: Array<boolean>;
+	readonly kursWarImKursAbiturfach: Array<number>;
 
 
 	/**
@@ -120,7 +120,8 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.nichtwahlen = 0;
 		this.schieneBelegt = Array(schienenAnzahl).fill(false);
 		this.kursGesperrt = Array(kursAnzahl).fill(false);
-		this.kursWarImKurs = Array(kursAnzahl).fill(false);
+		this.kursWarImKursAbiturfach = Array(kursAnzahl).fill(0);
+		Arrays.fill(this.kursWarImKursAbiturfach, -1);
 		this.regel16schuelerIgnorieren = false;
 		this.matrix = new KursblockungMatrix(this.rnd, 0, 0);
 	}
@@ -287,9 +288,21 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Definiert, dass dieser Schüler in dem Kurs mit der übergebenen internen Kurs-ID war.
 	 *
 	 * @param pInterneKursID  Die interne ID des Kurses.
+	 * @param pAbiturfach     Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 */
-	aktionSetzeWarImKurs(pInterneKursID: number): void {
-		this.kursWarImKurs[pInterneKursID] = true;
+	aktionSetzeWarImKurs(pInterneKursID: number, pAbiturfach: number): void {
+		this.kursWarImKursAbiturfach[pInterneKursID] = pAbiturfach;
+	}
+
+	/**
+	 * Liefert das Abiturfach als ID des {@link GostAbiturFach}, welches dieser Schüler im Fach des Kurses laut Definition (Regel 19) hatte.
+	 *
+	 * @param pInterneKursID  Die interne ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach und -1, dass der Schüler nicht in dem Kurs war.
+	 */
+	gibWarImKursAbiturfach(pInterneKursID: number): number {
+		return this.kursWarImKursAbiturfach[pInterneKursID];
 	}
 
 	/**

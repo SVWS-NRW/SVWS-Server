@@ -24,6 +24,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
@@ -2175,6 +2176,10 @@ public class GostBlockungsdatenManager {
 		final @NotNull String wKurs1 = regelCheckReferenzKursID(r, 1);
 		if (!wKurs1.isEmpty()) {
 			return wKurs1;
+		}
+		final long abiturfach2 = r.parameter.get(2);
+		if ((abiturfach2 != 0) && (GostAbiturFach.fromID((int) abiturfach2) == null)) {
+			return "%s SCHUELER_WAR_IM_KURS ist mit %d als Abiturfach ungültig!".formatted(toStringRegel(r.id), abiturfach2);
 		}
 		return "";
 	}

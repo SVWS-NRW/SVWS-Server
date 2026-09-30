@@ -22,6 +22,7 @@ import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SetUtils } from '../../../core/utils/SetUtils';
+import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
@@ -2104,6 +2105,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const wKurs1: string = this.regelCheckReferenzKursID(r, 1);
 		if (!JavaString.isEmpty(wKurs1)) {
 			return wKurs1;
+		}
+		const abiturfach2: number = r.parameter.get(2).valueOf();
+		if ((abiturfach2 !== 0) && (GostAbiturFach.fromID(abiturfach2 as number) === null)) {
+			return JavaString.format("%s SCHUELER_WAR_IM_KURS ist mit %d als Abiturfach ungültig!", this.toStringRegel(r.id), abiturfach2);
 		}
 		return "";
 	}

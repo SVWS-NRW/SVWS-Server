@@ -7,6 +7,7 @@ import java.util.Random;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -59,8 +60,8 @@ public class KursblockungDynSchueler {
 	/** Soll der Schüler ignoriert werden beim Verteilen?  */
 	boolean regel16schuelerIgnorieren;
 
-	/** Die Kurse, in denen dieser Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS) war. */
-	final @NotNull boolean[] kursWarImKurs;
+	/** Das Abiturfach als ID des {@link GostAbiturFach}, welches dieser Schüler im Fach des jeweiligen Kurses laut Definition (Regel 19) hatte. Der Wert 0 wird als NULL interpretiert (kein Abiturfach) und der Wert -1 bedeutet, dass der Schüler laut Definition nicht in dem Kurs war. */
+	final @NotNull int[] kursWarImKursAbiturfach;
 
 	/**
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
@@ -89,7 +90,8 @@ public class KursblockungDynSchueler {
 		this.nichtwahlen = 0;
 		this.schieneBelegt = new boolean[schienenAnzahl];
 		this.kursGesperrt = new boolean[kursAnzahl];
-		this.kursWarImKurs = new boolean[kursAnzahl];
+		this.kursWarImKursAbiturfach = new int[kursAnzahl];
+		Arrays.fill(this.kursWarImKursAbiturfach, -1);
 		this.regel16schuelerIgnorieren = false;
 		this.matrix = new KursblockungMatrix(rnd, 0, 0);
 	}
@@ -278,9 +280,21 @@ public class KursblockungDynSchueler {
 	 * Definiert, dass dieser Schüler in dem Kurs mit der übergebenen internen Kurs-ID war.
 	 *
 	 * @param pInterneKursID  Die interne ID des Kurses.
+	 * @param pAbiturfach     Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 */
-	void aktionSetzeWarImKurs(final int pInterneKursID) {
-		kursWarImKurs[pInterneKursID] = true;
+	void aktionSetzeWarImKurs(final int pInterneKursID, final int pAbiturfach) {
+		kursWarImKursAbiturfach[pInterneKursID] = pAbiturfach;
+	}
+
+	/**
+	 * Liefert das Abiturfach als ID des {@link GostAbiturFach}, welches dieser Schüler im Fach des Kurses laut Definition (Regel 19) hatte.
+	 *
+	 * @param pInterneKursID  Die interne ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach und -1, dass der Schüler nicht in dem Kurs war.
+	 */
+	int gibWarImKursAbiturfach(final int pInterneKursID) {
+		return kursWarImKursAbiturfach[pInterneKursID];
 	}
 
 	/**

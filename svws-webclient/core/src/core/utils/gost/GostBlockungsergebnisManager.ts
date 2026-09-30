@@ -2252,16 +2252,31 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
+	 * Liefert das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 * Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idKurs      Die Datenbank-ID des Kurses.
 	 *
-	 * @return den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach.
 	 */
 	private getOfSchuelerOfKursAbiturfach(idSchueler: number, idKurs: number): number {
 		const fachwahl: GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 		return (fachwahl.abiturfach === null) ? 0 : fachwahl.abiturfach;
+	}
+
+	/**
+	 * Liefert das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 * Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist oder (noch) keine Fachwahl existiert.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach.
+	 */
+	private getOfSchuelerOfKursAbiturfachOr0(idSchueler: number, idKurs: number): number {
+		const fachwahl: GostFachwahl | null = this.parent.schuelerGetOfFachFachwahlOrNull(idSchueler, this.getKursE(idKurs).fachID);
+		return ((fachwahl === null) || (fachwahl.abiturfach === null)) ? 0 : fachwahl.abiturfach;
 	}
 
 	/**
@@ -3969,14 +3984,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @param setSchuelerID  Die Menge der Schüler-IDs.
 	 * @param setKursID      Die Menge der Kurs-IDs.
+	 * @param abiturfach     Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Definition zu setzen.
 	 */
-	public regelupdateCreateSchuelerWarImKurs(setSchuelerID: JavaSet<number>, setKursID: JavaSet<number>): GostBlockungRegelUpdate {
+	public regelupdateCreateSchuelerWarImKurs(setSchuelerID: JavaSet<number>, setKursID: JavaSet<number>, abiturfach: number): GostBlockungRegelUpdate {
 		const u: GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idSchueler of setSchuelerID) {
 			for (const idKurs of setKursID) {
-				this.regelupdateHinzufuegenFallsNichtVorhanden(u, new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs]), DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+				this.regelupdateHinzufuegenFallsNichtVorhanden(u, new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach]), DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach));
 			}
 		}
 		return u;
@@ -3986,6 +4002,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für die aktuellen
 	 * Schüler-Kurs-Zuordnungen der übergebenen Kursmenge die Definition "Schüler war im Kurs" zu setzen.
 	 * <br>(1) Wenn eine Zuordnung noch nicht als Definition existiert, wird sie hinzugefügt.
+	 * <br>Hinweis: Als Abiturfach (Parameter C) wird das aktuelle Abiturfach des Schülers im Fach des Kurses übernommen (0, falls keines).
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
@@ -3996,7 +4013,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const u: GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 		for (const idKurs of setKursID) {
 			for (const idSchueler of this.getOfKursSchuelerIDmenge(idKurs)) {
-				this.regelupdateHinzufuegenFallsNichtVorhanden(u, new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs]), DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+				const abiturfach: number = this.getOfSchuelerOfKursAbiturfachOr0(idSchueler, idKurs);
+				this.regelupdateHinzufuegenFallsNichtVorhanden(u, new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach]), DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach));
 			}
 		}
 		return u;
@@ -4416,17 +4434,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
 	 * @param idSchueler  Die ID des Schülers.
 	 * @param idKurs      Die ID des Kurses.
+	 * @param abiturfach  Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 *         Das Update kann leer sein, falls der Patch nicht ausgeführt wird (siehe (1)).
 	 */
-	public regelupdatePatchByIdSchuelerWarImKurs(idRegelAlt: number, idSchueler: number, idKurs: number): GostBlockungRegelUpdate {
+	public regelupdatePatchByIdSchuelerWarImKurs(idRegelAlt: number, idSchueler: number, idKurs: number, abiturfach: number): GostBlockungRegelUpdate {
 		const u: GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
-		const rAlt: GostBlockungRegel | null = this.regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS, [GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs]);
+		const rAlt: GostBlockungRegel | null = this.regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS, [GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach]);
 		if (rAlt === null) {
 			return u;
 		}
-		return GostBlockungsergebnisManager.regelupdatePatchByIdZusammenbauen(u, rAlt, this.regelupdateCreateSchuelerWarImKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+		return GostBlockungsergebnisManager.regelupdatePatchByIdZusammenbauen(u, rAlt, this.regelupdateCreateSchuelerWarImKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs), abiturfach));
 	}
 
 	/**

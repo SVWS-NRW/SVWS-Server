@@ -34,6 +34,8 @@ import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 class KursblockungDynDatenTest {
 
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
+
+	private static final int ABITURFACH_AB3 = 3;
 	// private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";
 
 	/**
@@ -832,8 +834,10 @@ class KursblockungDynDatenTest {
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
 		regel.parameter.add(Long.valueOf(17)); // S-17
 		regel.parameter.add(Long.valueOf(62)); // K-62 (M;LK)
+		regel.parameter.add(Long.valueOf(ABITURFACH_AB3)); // Abiturfach AB3
 		final KursblockungDynDaten dd = ladeDaten001(1, regel);
 		assertTrue(dd.gibIstSchuelerWarImKurs(17, 62));
+		assertEquals(ABITURFACH_AB3, dd.gibWarImKursAbiturfach(17, 62));
 		assertKeineNegativeBewertung(dd);
 		// Die Definition wird gespeichert, aber (noch) nicht auf den Algorithmus angewandt.
 	}

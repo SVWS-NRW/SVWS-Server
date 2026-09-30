@@ -9,6 +9,7 @@ import java.util.List;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.kursblockung.KursblockungDynDaten;
 import de.svws_nrw.core.kursblockung.KursblockungDynStatistik;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import jakarta.validation.constraints.NotNull;
@@ -254,10 +255,14 @@ public enum GostKursblockungRegelTyp {
 	 * Diese Regel kann nicht verletzt werden, sie dient lediglich der Definition einer Zuordnung.
 	 * <br>- Parameter A: Datenbank-ID des Schülers (long)
 	 * <br>- Parameter B: Datenbank-ID des Kurses (long)
+	 * <br>- Parameter C: Das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 *       Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist.
+	 *       Gültig sind 0 und alle IDs, für die {@link GostAbiturFach#fromID(Integer)} ein Enum liefert.
 	 */
 	SCHUELER_WAR_IM_KURS(19, "Schüler: War im Kurs", Arrays.asList(
 			GostKursblockungRegelParameterTyp.SCHUELER_ID,
-			GostKursblockungRegelParameterTyp.KURS_ID
+			GostKursblockungRegelParameterTyp.KURS_ID,
+			GostKursblockungRegelParameterTyp.GANZZAHL
 	));
 
 	/** Liefert den kleinsten Wert (inklusive) für Regel 9. */

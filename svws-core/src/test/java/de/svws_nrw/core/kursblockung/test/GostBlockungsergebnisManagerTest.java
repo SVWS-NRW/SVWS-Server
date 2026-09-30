@@ -80,6 +80,9 @@ class GostBlockungsergebnisManagerTest {
 	private static final long FACH_E_ID = 3;
 	private static final long FACH_NICHT_VORHANDEN = 999;
 
+	private static final long ABITURFACH_NULL = 0;
+	private static final long ABITURFACH_AB3 = 3;
+
 	private static final int KURSART_GK = GostKursart.GK.id;
 	private static final int KURSART_LK = GostKursart.LK.id;
 	private static final int KURSART_ZK = GostKursart.ZK.id;
@@ -190,12 +193,13 @@ class GostBlockungsergebnisManagerTest {
 		return regel;
 	}
 
-	private static GostBlockungRegel createRegelWarImKurs(final long id, final long idSchueler, final long idKurs) {
+	private static GostBlockungRegel createRegelWarImKurs(final long id, final long idSchueler, final long idKurs, final long abiturfach) {
 		final GostBlockungRegel regel = new GostBlockungRegel();
 		regel.id = id;
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
 		regel.parameter.add(idSchueler);
 		regel.parameter.add(idKurs);
+		regel.parameter.add(abiturfach);
 		return regel;
 	}
 
@@ -2594,13 +2598,13 @@ class GostBlockungsergebnisManagerTest {
 	void testRegelupdateRemoveSchuelerWarImKursAlle() {
 		final GostBlockungsergebnisManager mgr = createStandardManager();
 		final GostBlockungsdatenManager parent = mgr.getParent();
-		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1));
-		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 1, SCHUELER_2_ID, KURS_ID_4));
+		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL));
+		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 1, SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL));
 
 		// Alle Definitionen des Typs werden entfernt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateRemoveSchuelerWarImKursAlle();
 		assertRegelListe(u.listEntfernen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_2_ID, KURS_ID_4)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL), List.of(SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL)));
 		assertEquals(0, u.listHinzuzufuegen.size());
 	}
 
@@ -2609,14 +2613,14 @@ class GostBlockungsergebnisManagerTest {
 	void testRegelupdateRemoveSchuelerWarImKursInDenKursen() {
 		final GostBlockungsergebnisManager mgr = createStandardManager();
 		final GostBlockungsdatenManager parent = mgr.getParent();
-		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1));
-		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 1, SCHUELER_1_ID, KURS_ID_2));
-		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 2, SCHUELER_2_ID, KURS_ID_4));
+		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL));
+		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 1, SCHUELER_1_ID, KURS_ID_2, ABITURFACH_NULL));
+		parent.regelAdd(createRegelWarImKurs(REGEL_ID_1 + 2, SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL));
 
 		// Nur die Definitionen der übergebenen Kursmenge (K1 und K4) werden entfernt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateRemoveSchuelerWarImKursInDenKursen(Set.of(KURS_ID_1, KURS_ID_4));
 		assertRegelListe(u.listEntfernen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_2_ID, KURS_ID_4)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL), List.of(SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL)));
 		assertEquals(0, u.listHinzuzufuegen.size());
 	}
 
@@ -2888,10 +2892,10 @@ class GostBlockungsergebnisManagerTest {
 
 		// Alle Kombinationen (Kreuzprodukt) werden hinzugefügt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateCreateSchuelerWarImKurs(Set.of(SCHUELER_1_ID, SCHUELER_2_ID),
-				Set.of(KURS_ID_1, KURS_ID_3));
+				Set.of(KURS_ID_1, KURS_ID_3), (int) ABITURFACH_AB3);
 		assertRegelListe(u.listHinzuzufuegen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_1_ID, KURS_ID_3),
-						List.of(SCHUELER_2_ID, KURS_ID_1), List.of(SCHUELER_2_ID, KURS_ID_3)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_AB3), List.of(SCHUELER_1_ID, KURS_ID_3, ABITURFACH_AB3),
+						List.of(SCHUELER_2_ID, KURS_ID_1, ABITURFACH_AB3), List.of(SCHUELER_2_ID, KURS_ID_3, ABITURFACH_AB3)));
 	}
 
 	@Test
@@ -2902,8 +2906,8 @@ class GostBlockungsergebnisManagerTest {
 		// Alle aktuellen Schüler-Kurs-Zuordnungen (S1 -> K1, K2, K3 / S2 -> K2, K4) werden als Definition hinzugefügt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateCreateSchuelerWarImKursAusAktuellerZuordnung();
 		assertRegelListe(u.listHinzuzufuegen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_1_ID, KURS_ID_2), List.of(SCHUELER_1_ID, KURS_ID_3),
-						List.of(SCHUELER_2_ID, KURS_ID_2), List.of(SCHUELER_2_ID, KURS_ID_4)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL), List.of(SCHUELER_1_ID, KURS_ID_2, ABITURFACH_NULL), List.of(SCHUELER_1_ID, KURS_ID_3, ABITURFACH_NULL),
+						List.of(SCHUELER_2_ID, KURS_ID_2, ABITURFACH_NULL), List.of(SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL)));
 		assertEquals(0, u.listEntfernen.size());
 	}
 
@@ -2912,13 +2916,13 @@ class GostBlockungsergebnisManagerTest {
 	void testRegelupdateCreateSchuelerWarImKursAusAktuellerZuordnungOhneDuplikate() {
 		final GostBlockungsergebnisManager mgr = createStandardManager();
 		// Die Definition "S1 war in K2" existiert bereits.
-		mgr.getParent().regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_2));
+		mgr.getParent().regelAdd(createRegelWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_2, ABITURFACH_NULL));
 
 		// Die bereits existierende Zuordnung wird nicht erneut hinzugefügt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateCreateSchuelerWarImKursAusAktuellerZuordnung();
 		assertRegelListe(u.listHinzuzufuegen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_1_ID, KURS_ID_3),
-						List.of(SCHUELER_2_ID, KURS_ID_2), List.of(SCHUELER_2_ID, KURS_ID_4)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL), List.of(SCHUELER_1_ID, KURS_ID_3, ABITURFACH_NULL),
+						List.of(SCHUELER_2_ID, KURS_ID_2, ABITURFACH_NULL), List.of(SCHUELER_2_ID, KURS_ID_4, ABITURFACH_NULL)));
 		assertEquals(0, u.listEntfernen.size());
 	}
 
@@ -2930,7 +2934,7 @@ class GostBlockungsergebnisManagerTest {
 		// Nur die aktuellen Zuordnungen der übergebenen Kursmenge (K1 und K2) werden als Definition hinzugefügt.
 		final GostBlockungRegelUpdate u = mgr.regelupdateCreateSchuelerWarImKursInDenKursen(Set.of(KURS_ID_1, KURS_ID_2));
 		assertRegelListe(u.listHinzuzufuegen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1), List.of(SCHUELER_1_ID, KURS_ID_2), List.of(SCHUELER_2_ID, KURS_ID_2)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL), List.of(SCHUELER_1_ID, KURS_ID_2, ABITURFACH_NULL), List.of(SCHUELER_2_ID, KURS_ID_2, ABITURFACH_NULL)));
 		assertEquals(0, u.listEntfernen.size());
 	}
 
@@ -3662,15 +3666,16 @@ class GostBlockungsergebnisManagerTest {
 		regel.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
 		regel.parameter.add(SCHUELER_1_ID);
 		regel.parameter.add(KURS_ID_3);
+		regel.parameter.add(ABITURFACH_NULL);
 		parent.regelAdd(regel);
 
 		final GostBlockungsergebnisManager mgr = new GostBlockungsergebnisManager(parent, ERGEBNIS_ID_1 + 110);
 		// Wechsel auf anderen Kurs -> entfernen + hinzufügen
-		final GostBlockungRegelUpdate u = mgr.regelupdatePatchByIdSchuelerWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1);
+		final GostBlockungRegelUpdate u = mgr.regelupdatePatchByIdSchuelerWarImKurs(REGEL_ID_1, SCHUELER_1_ID, KURS_ID_1, (int) ABITURFACH_NULL);
 		assertRegelListe(u.listEntfernen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_3)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_3, ABITURFACH_NULL)));
 		assertRegelListe(u.listHinzuzufuegen, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ,
-				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1)));
+				Set.of(List.of(SCHUELER_1_ID, KURS_ID_1, ABITURFACH_NULL)));
 	}
 
 	@Test

@@ -173,8 +173,11 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 *  Diese Regel kann nicht verletzt werden, sie dient lediglich der Definition einer Zuordnung.
 	 *  <br>- Parameter A: Datenbank-ID des Schülers (long)
 	 *  <br>- Parameter B: Datenbank-ID des Kurses (long)
+	 *  <br>- Parameter C: Das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 *        Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist.
+	 *        Gültig sind 0 und alle IDs, für die {@link GostAbiturFach#fromID(Integer)} ein Enum liefert.
 	 */
-	public static readonly SCHUELER_WAR_IM_KURS: GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_WAR_IM_KURS", 19, 19, "Schüler: War im Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
+	public static readonly SCHUELER_WAR_IM_KURS: GostKursblockungRegelTyp = new GostKursblockungRegelTyp("SCHUELER_WAR_IM_KURS", 19, 19, "Schüler: War im Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
 	 * Liefert den kleinsten Wert (inklusive) für Regel 9.

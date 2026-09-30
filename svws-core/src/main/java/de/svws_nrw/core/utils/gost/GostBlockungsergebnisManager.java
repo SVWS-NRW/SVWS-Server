@@ -43,6 +43,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
@@ -2431,16 +2432,31 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
+	 * Liefert das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 * Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 * @param idKurs      Die Datenbank-ID des Kurses.
 	 *
-	 * @return den Wert (1-4) des Abiturfaches oder 0, falls es kein Abiturfach ist.
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach.
 	 */
 	private int getOfSchuelerOfKursAbiturfach(final long idSchueler, final long idKurs) {
 		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 		return (fachwahl.abiturfach == null) ? 0 : fachwahl.abiturfach;
+	}
+
+	/**
+	 * Liefert das Abiturfach des Schülers im Fach des Kurses als ID des {@link GostAbiturFach}.
+	 * Der Wert 0 wird als NULL interpretiert und bedeutet, dass es kein Abiturfach ist oder (noch) keine Fachwahl existiert.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach.
+	 */
+	private int getOfSchuelerOfKursAbiturfachOr0(final long idSchueler, final long idKurs) {
+		final GostFachwahl fachwahl = parent.schuelerGetOfFachFachwahlOrNull(idSchueler, getKursE(idKurs).fachID);
+		return ((fachwahl == null) || (fachwahl.abiturfach == null)) ? 0 : fachwahl.abiturfach;
 	}
 
 	/**
@@ -4442,19 +4458,20 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @param setSchuelerID  Die Menge der Schüler-IDs.
 	 * @param setKursID      Die Menge der Kurs-IDs.
+	 * @param abiturfach     Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Schülermengen-Kursmengen-Definition zu setzen.
 	 */
 	public @NotNull GostBlockungRegelUpdate regelupdateCreateSchuelerWarImKurs(final @NotNull Set<Long> setSchuelerID,
-			final @NotNull Set<Long> setKursID) {
+			final @NotNull Set<Long> setKursID, final int abiturfach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 
 		for (final long idSchueler : setSchuelerID) {
 			for (final long idKurs : setKursID) {
 				// (1)
 				regelupdateHinzufuegenFallsNichtVorhanden(u,
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs }),
-						DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach }),
+						DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach));
 			}
 		}
 
@@ -4465,6 +4482,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um für die aktuellen
 	 * Schüler-Kurs-Zuordnungen der übergebenen Kursmenge die Definition "Schüler war im Kurs" zu setzen.
 	 * <br>(1) Wenn eine Zuordnung noch nicht als Definition existiert, wird sie hinzugefügt.
+	 * <br>Hinweis: Als Abiturfach (Parameter C) wird das aktuelle Abiturfach des Schülers im Fach des Kurses übernommen (0, falls keines).
 	 *
 	 * @param setKursID  Die Menge der Kurs-IDs.
 	 *
@@ -4476,10 +4494,11 @@ public class GostBlockungsergebnisManager {
 
 		for (final long idKurs : setKursID) {
 			for (final long idSchueler : getOfKursSchuelerIDmenge(idKurs)) {
+				final int abiturfach = getOfSchuelerOfKursAbiturfachOr0(idSchueler, idKurs);
 				// (1)
 				regelupdateHinzufuegenFallsNichtVorhanden(u,
-						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs }),
-						DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs));
+						new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach }),
+						DTOUtils.newGostBlockungRegel3(GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach));
 			}
 		}
 
@@ -4940,20 +4959,22 @@ public class GostBlockungsergebnisManager {
 	 * @param idRegelAlt  Die ID der alten zu modifizierenden Regel.
 	 * @param idSchueler  Die ID des Schülers.
 	 * @param idKurs      Die ID des Kurses.
+	 * @param abiturfach  Das Abiturfach als ID des {@link GostAbiturFach}; 0 wird als NULL interpretiert (kein Abiturfach).
 	 *
 	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 *         Das Update kann leer sein, falls der Patch nicht ausgeführt wird (siehe (1)).
 	 */
-	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerWarImKurs(final long idRegelAlt, final long idSchueler, final long idKurs) {
+	public @NotNull GostBlockungRegelUpdate regelupdatePatchByIdSchuelerWarImKurs(final long idRegelAlt, final long idSchueler, final long idKurs,
+			final int abiturfach) {
 		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
 		// (1)
 		final GostBlockungRegel rAlt = regelupdatePatchByIdPruefe(idRegelAlt, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS,
-				new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs });
+				new long[] { GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ, idSchueler, idKurs, abiturfach });
 		if (rAlt == null) {
 			return u;
 		}
 		return regelupdatePatchByIdZusammenbauen(u, rAlt,
-				regelupdateCreateSchuelerWarImKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+				regelupdateCreateSchuelerWarImKurs(SetUtils.create1(idSchueler), SetUtils.create1(idKurs), abiturfach));
 	}
 
 	/**

@@ -68,6 +68,10 @@ class GostBlockungsdatenManagerTest {
 	private static final long FACH_E_ID = 3;
 	private static final long FACH_NICHT_VORHANDEN = 999;
 
+	private static final long ABITURFACH_NULL = 0;
+	private static final long ABITURFACH_AB3 = 3;
+	private static final long ABITURFACH_UNGUELTIG = 6;
+
 	private static final int KURSART_GK = GostKursart.GK.id;
 	private static final int KURSART_LK = GostKursart.LK.id;
 	private static final int KURSART_UNGUELTIG = 99;
@@ -2496,10 +2500,11 @@ class GostBlockungsdatenManagerTest {
 	void testRegelTyp19() {
 		final GostBlockungsdatenManager manager = createManagerFuerRegelTypTests();
 
-		// Gültig: Schüler 100 war im Kurs 1
+		// Gültig: Schüler 100 war im Kurs 1 (mit Abiturfach 3)
 		final GostBlockungRegel r = createRegel(REGEL_ID_1, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
 		r.parameter.add(SCHUELER_1_ID);
 		r.parameter.add(KURS_ID_1);
+		r.parameter.add(ABITURFACH_AB3);
 		manager.regelAdd(r);
 		assertTrue(manager.regelGetExistiert(REGEL_ID_1));
 
@@ -2507,6 +2512,7 @@ class GostBlockungsdatenManagerTest {
 		final GostBlockungRegel rS = createRegel(REGEL_ID_2, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
 		rS.parameter.add(SCHUELER_NICHT_VORHANDEN);
 		rS.parameter.add(KURS_ID_1);
+		rS.parameter.add(ABITURFACH_NULL);
 		manager.regelAdd(rS);
 		assertEquals(1, manager.regelGetMapUngueltig().size());
 
@@ -2514,6 +2520,7 @@ class GostBlockungsdatenManagerTest {
 		final GostBlockungRegel rK = createRegel(REGEL_ID_3, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
 		rK.parameter.add(SCHUELER_1_ID);
 		rK.parameter.add(KURS_NICHT_VORHANDEN);
+		rK.parameter.add(ABITURFACH_NULL);
 		manager.regelAdd(rK);
 		assertEquals(2, manager.regelGetMapUngueltig().size());
 
@@ -2521,8 +2528,17 @@ class GostBlockungsdatenManagerTest {
 		final GostBlockungRegel rDup = createRegel(REGEL_ID_4, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
 		rDup.parameter.add(SCHUELER_1_ID);
 		rDup.parameter.add(KURS_ID_1);
+		rDup.parameter.add(ABITURFACH_AB3);
 		manager.regelAdd(rDup);
 		assertEquals(3, manager.regelGetMapUngueltig().size());
+
+		// Ungültig: Abiturfach zu groß
+		final GostBlockungRegel rA = createRegel(REGEL_ID_4 + 1, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ);
+		rA.parameter.add(SCHUELER_1_ID);
+		rA.parameter.add(KURS_ID_1);
+		rA.parameter.add(ABITURFACH_UNGUELTIG);
+		manager.regelAdd(rA);
+		assertEquals(4, manager.regelGetMapUngueltig().size());
 	}
 
 	@Test

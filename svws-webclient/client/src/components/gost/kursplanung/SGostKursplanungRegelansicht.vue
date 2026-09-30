@@ -163,15 +163,17 @@
 		</BlockungsregelBase>
 		<!-- Regeltyp 19  -->
 		<BlockungsregelBase v-model="regel" :regel-typ="GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS" :get-datenmanager :get-ergebnismanager :api-status :nur-regelverletzungen
-			:regel-hinzufuegen="regelHinzufuegen_19" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'schueler', label: 'Schüler war'}, {key: 'in', label: 'im Kurs'}, ]">
+			:regel-hinzufuegen="regelHinzufuegen_19" :regel-speichern :regel-entfernen :disabled :columns="[ {key: 'schueler', label: 'Schüler war'}, {key: 'in', label: 'im Kurs'}, {key: 'abiturfach', label: 'Abiturfach'}, ]">
 			<template #regelRead="{ regel: r }">
 				<div class="svws-ui-td" role="cell"> {{ getSchuelerName(r.parameter.get(0)) }} </div>
 				<div class="svws-ui-td" role="cell"> {{ getKursbezeichnung(r.parameter.get(1)) }} </div>
+				<div class="svws-ui-td" role="cell"> {{ getAbiturfachKuerzel(r.parameter.get(2)) }} </div>
 			</template>
 			<template #regelEdit>
 				<template v-if="regel !== undefined">
 					<svws-ui-select v-model="regelParameterSchueler(regel, 0).value" :items="schueler" :item-text="i => `${i.nachname}, ${i.vorname}`" :item-filter="(items, search) => items.filter(i => i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase()))" autocomplete />
 					<svws-ui-select v-model="regelParameterKurs(regel, 1).value" :items="kurse" :item-text="i => getErgebnismanager().getOfKursName(i.id)" />
+					<svws-ui-select v-model="regelParameterAbiturfach" :items="abiturfachOptionen" :item-text="abiturfachText" />
 				</template>
 			</template>
 		</BlockungsregelBase>
@@ -277,6 +279,7 @@
 	import { GostBlockungSchiene } from '@core/core/data/gost/GostBlockungSchiene';
 	import type { GostFach } from '@core/core/data/gost/GostFach';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { GostAbiturFach } from '@core/core/types/gost/GostAbiturFach';
 	import { GostKursart } from '@core/core/types/gost/GostKursart';
 	import { GostKursblockungRegelTyp } from '@core/core/types/kursblockung/GostKursblockungRegelTyp';
 	import type { GostBlockungsdatenManager } from '@core/core/utils/gost/GostBlockungsdatenManager';
@@ -467,6 +470,7 @@
 		r.typ = GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ;
 		r.parameter.add(schueler.value.get(0).id);
 		r.parameter.add(kurse.value.get(0).id);
+		r.parameter.add(0);
 		regel.value = r;
 	}
 
@@ -587,9 +591,9 @@
 					return props.getErgebnismanager().regelupdateCreateSchuelerVerbietenInKurs(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
 				case GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS.typ:
 					if (regel.value.id > 0) {
-						return props.getErgebnismanager().regelupdatePatchByIdSchuelerWarImKurs(regel.value.id, p.get(0), p.get(1));
+						return props.getErgebnismanager().regelupdatePatchByIdSchuelerWarImKurs(regel.value.id, p.get(0), p.get(1), p.get(2));
 					}
-					return props.getErgebnismanager().regelupdateCreateSchuelerWarImKurs(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)));
+					return props.getErgebnismanager().regelupdateCreateSchuelerWarImKurs(SetUtils.create1(p.get(0)), SetUtils.create1(p.get(1)), p.get(2));
 				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ:
 					if (regel.value.id > 0) {
 						return props.getErgebnismanager().regelupdatePatchByIdKursartAlleinInSchienenVonBis(regel.value.id, p.get(0), p.get(1), p.get(2));
@@ -679,6 +683,11 @@
 		return (schueler === null) ? "???" : `${schueler.nachname}, ${schueler.vorname}`;
 	}
 
+	function getAbiturfachKuerzel(abiturfach: number): string {
+		const fach = GostAbiturFach.fromID(abiturfach);
+		return (fach === null) ? "–" : fach.kuerzel;
+	}
+
 	const regelParameterAnzahlSuS = computed<number>({
 		get: () => {
 			if (regel.value === undefined) {
@@ -692,6 +701,30 @@
 			}
 		},
 	});
+
+	const regelParameterAbiturfach = computed<number>({
+		get: () => {
+			if (regel.value === undefined) {
+				return 0;
+			}
+			return regel.value.parameter.get(2);
+		},
+		set: (value) => {
+			if (regel.value !== undefined) {
+				regel.value.parameter.set(2, value);
+			}
+		},
+	});
+
+	const abiturfachOptionen: number[] = [0, ...GostAbiturFach.values().map(fach => fach.id)];
+
+	function abiturfachText(abiturfach: number): string {
+		if (abiturfach === 0) {
+			return "kein Abiturfach";
+		}
+		const fach = GostAbiturFach.fromID(abiturfach);
+		return (fach === null) ? "?" : fach.beschreibung;
+	}
 
 	const regelParameterMaxAnzahlProSchiene = computed<number>({
 		get: () => {

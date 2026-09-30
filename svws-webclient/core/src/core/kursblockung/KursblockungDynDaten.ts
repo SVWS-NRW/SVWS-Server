@@ -28,6 +28,7 @@ import { HashSet } from '../../java/util/HashSet';
 import { GostBlockungKurs } from '../../core/data/gost/GostBlockungKurs';
 import { GostFach } from '../../core/data/gost/GostFach';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
+import { GostAbiturFach } from '../../core/types/gost/GostAbiturFach';
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { ArrayMap } from '../../core/adt/map/ArrayMap';
@@ -466,11 +467,13 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private static fehlerBeiReferenzenRegeltyp19(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
-		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 2);
+		KursblockungDynDaten.ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 3);
 		const schuelerID: number = daten[0].valueOf();
 		const kursID: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d): Schüler-ID nicht vorhanden!", schuelerID, kursID), setSchueler, schuelerID);
-		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d): Kurs-ID nicht vorhanden!", schuelerID, kursID), setKurse, kursID);
+		const abiturfach: number = daten[2];
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d, %d): Schüler-ID nicht vorhanden!", schuelerID, kursID, abiturfach), setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d, %d): Kurs-ID nicht vorhanden!", schuelerID, kursID, abiturfach), setKurse, kursID);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_WAR_IM_KURS(%d, %d, %d): Abiturfach ist ungültig!", schuelerID, kursID, abiturfach), (abiturfach !== 0) && (GostAbiturFach.fromID(abiturfach) === null));
 	}
 
 	private fehlerBeiRegelGruppierung(pRegeln: List<GostBlockungRegel>): void {
@@ -876,7 +879,7 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const regel19 of MapUtils.getOrCreateArrayList(this.regelMap, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS)) {
 			const schueler: KursblockungDynSchueler = this.gibSchueler(regel19.parameter.get(0));
 			const kurs: KursblockungDynKurs = this.gibKurs(regel19.parameter.get(1));
-			schueler.aktionSetzeWarImKurs(kurs.gibInternalID());
+			schueler.aktionSetzeWarImKurs(kurs.gibInternalID(), regel19.parameter.get(2));
 		}
 	}
 
@@ -1155,7 +1158,22 @@ export class KursblockungDynDaten extends JavaObject {
 	public gibIstSchuelerWarImKurs(idSchuelerDB: number, idKursDB: number): boolean {
 		const schueler: KursblockungDynSchueler | null = this.schuelerMap.get(idSchuelerDB);
 		const kurs: KursblockungDynKurs | null = this.kursMap.get(idKursDB);
-		return (schueler !== null) && (kurs !== null) && schueler.kursWarImKurs[kurs.gibInternalID()];
+		return (schueler !== null) && (kurs !== null) && (schueler.kursWarImKursAbiturfach[kurs.gibInternalID()] >= 0);
+	}
+
+	/**
+	 * Liefert das Abiturfach als ID des {@link GostAbiturFach}, welches der Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS)
+	 * im Fach des Kurses hatte.
+	 *
+	 * @param idSchuelerDB  Die Datenbank-ID des Schülers.
+	 * @param idKursDB      Die Datenbank-ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach und -1, dass der Schüler laut Definition nicht in dem Kurs war.
+	 */
+	public gibWarImKursAbiturfach(idSchuelerDB: number, idKursDB: number): number {
+		const schueler: KursblockungDynSchueler | null = this.schuelerMap.get(idSchuelerDB);
+		const kurs: KursblockungDynKurs | null = this.kursMap.get(idKursDB);
+		return ((schueler === null) || (kurs === null)) ? -1 : schueler.gibWarImKursAbiturfach(kurs.gibInternalID());
 	}
 
 	/**

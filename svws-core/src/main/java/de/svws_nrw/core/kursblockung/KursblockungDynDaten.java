@@ -30,6 +30,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.DTOUtils;
@@ -701,18 +702,23 @@ public class KursblockungDynDaten {
 	private static void fehlerBeiReferenzenRegeltyp19(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<Long> setSchueler,
 			final @NotNull HashSet<Long> setKurse) {
 
-		ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 2);
+		ueberpruefeDatenLaenge("SCHUELER_WAR_IM_KURS", daten, 3);
 
 		final long schuelerID = daten[0];
 		final long kursID = daten[1];
+		final int abiturfach = daten[2].intValue();
 
 		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_WAR_IM_KURS(%d, %d): Schüler-ID nicht vorhanden!".formatted(schuelerID, kursID),
+				"SCHUELER_WAR_IM_KURS(%d, %d, %d): Schüler-ID nicht vorhanden!".formatted(schuelerID, kursID, abiturfach),
 				setSchueler, schuelerID);
 
 		DeveloperNotificationException.ifSetNotContains(
-				"SCHUELER_WAR_IM_KURS(%d, %d): Kurs-ID nicht vorhanden!".formatted(schuelerID, kursID),
+				"SCHUELER_WAR_IM_KURS(%d, %d, %d): Kurs-ID nicht vorhanden!".formatted(schuelerID, kursID, abiturfach),
 				setKurse, kursID);
+
+		DeveloperNotificationException.ifTrue(
+				"SCHUELER_WAR_IM_KURS(%d, %d, %d): Abiturfach ist ungültig!".formatted(schuelerID, kursID, abiturfach),
+				(abiturfach != 0) && (GostAbiturFach.fromID(abiturfach) == null));
 	}
 
 
@@ -1274,7 +1280,7 @@ public class KursblockungDynDaten {
 		for (final @NotNull GostBlockungRegel regel19 : MapUtils.getOrCreateArrayList(regelMap, GostKursblockungRegelTyp.SCHUELER_WAR_IM_KURS)) {
 			final @NotNull KursblockungDynSchueler schueler = gibSchueler(regel19.parameter.get(0));
 			final @NotNull KursblockungDynKurs kurs = gibKurs(regel19.parameter.get(1));
-			schueler.aktionSetzeWarImKurs(kurs.gibInternalID());
+			schueler.aktionSetzeWarImKurs(kurs.gibInternalID(), regel19.parameter.get(2).intValue());
 		}
 	}
 
@@ -1585,7 +1591,22 @@ public class KursblockungDynDaten {
 	public boolean gibIstSchuelerWarImKurs(final long idSchuelerDB, final long idKursDB) {
 		final KursblockungDynSchueler schueler = schuelerMap.get(idSchuelerDB);
 		final KursblockungDynKurs kurs = kursMap.get(idKursDB);
-		return (schueler != null) && (kurs != null) && schueler.kursWarImKurs[kurs.gibInternalID()];
+		return (schueler != null) && (kurs != null) && (schueler.kursWarImKursAbiturfach[kurs.gibInternalID()] >= 0);
+	}
+
+	/**
+	 * Liefert das Abiturfach als ID des {@link GostAbiturFach}, welches der Schüler laut Definition (Regel 19: SCHUELER_WAR_IM_KURS)
+	 * im Fach des Kurses hatte.
+	 *
+	 * @param idSchuelerDB  Die Datenbank-ID des Schülers.
+	 * @param idKursDB      Die Datenbank-ID des Kurses.
+	 *
+	 * @return das Abiturfach als ID des {@link GostAbiturFach}; 0 bedeutet kein Abiturfach und -1, dass der Schüler laut Definition nicht in dem Kurs war.
+	 */
+	public int gibWarImKursAbiturfach(final long idSchuelerDB, final long idKursDB) {
+		final KursblockungDynSchueler schueler = schuelerMap.get(idSchuelerDB);
+		final KursblockungDynKurs kurs = kursMap.get(idKursDB);
+		return ((schueler == null) || (kurs == null)) ? -1 : schueler.gibWarImKursAbiturfach(kurs.gibInternalID());
 	}
 
 	/**
