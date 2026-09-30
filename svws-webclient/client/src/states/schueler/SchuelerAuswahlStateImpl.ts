@@ -198,11 +198,11 @@ export class SchuelerAuswahlStateImpl extends GenericAuswahlStateImpl<SchuelerLi
 	 * @returns eine Promise mit dem Ergebis der Lösch-Operation
 	 */
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		return await api.server.deleteSchueler(ids, api.schema);
+		return await api.server.softDeleteSchuelerStammdatenMultiple(ids, api.schema);
 	}
 
 	protected deleteMessage(id: number, schueler: SchuelerListeEintrag | null): string {
-		return `Schüler ${(schueler?.vorname ?? '???') + ' ' + (schueler?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
+		return `Der Löschvermerk des Schülers ${(schueler?.vorname ?? '???') + ' ' + (schueler?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gesetzt.`;
 	}
 
 	public deleteSchuelerCheck(): [boolean, List<string>] {

@@ -193,7 +193,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 							.stream().filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).distinct().toList();
 			// ... allerdings sollten zuvor die gelöschten Schüler gefiltert werden, da diese auf die Lösch-Operation keinen Einfluss haben sollten
 			final List<Long> schuelerIdsGeloescht = schuelerIds.isEmpty() ? new ArrayList<>()
-					: conn.queryByKeyList(DTOSchueler.class, schuelerIds).stream().filter(s -> s.Geloescht).map(s -> s.ID).toList();
+					: conn.queryByKeyList(DTOSchueler.class, schuelerIds).stream().filter(s -> s.hatLoeschvermerk).map(s -> s.ID).toList();
 			// ... und dann darf die Klasse gelöscht werden, wenn keine nicht gelöschten Schüler der Klasse zugeordnet sind...
 			if (schuelerIds.size() > schuelerIdsGeloescht.size()) {
 				operationResponse.success = false;
@@ -772,7 +772,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			return new HashMap<>();
 		}
 		final List<DTOSchuelerLernabschnittsdaten> listAbschnitte = conn.queryList(
-				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.Geloescht = false AND s.ID = l.Schueler_ID"
+				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.hatLoeschvermerk = false AND s.ID = l.Schueler_ID"
 						+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
@@ -878,7 +878,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	private List<DTOSchueler> getSchuelerDtosNichtGeloeschtByKlassenID(final Long klassenId) {
 		final List<Long> schuelerIDs = getSchuelerIDsByKlassenID(klassenId);
 		return conn.queryByKeyList(DTOSchueler.class, schuelerIDs).stream()
-				.filter(schueler -> Boolean.FALSE.equals(schueler.Geloescht))
+				.filter(schueler -> Boolean.FALSE.equals(schueler.hatLoeschvermerk))
 				.toList();
 	}
 

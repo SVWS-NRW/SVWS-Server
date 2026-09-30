@@ -347,31 +347,30 @@ public class APISchueler {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
+	 * Die OpenAPI-Methode für das Setzen des Löschvermerks bei mehreren Schülern.
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param ids       die Liste von zu löschenden IDs
+	 * @param ids       die Liste der IDs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 * @return das Ergebnis der Patch-Operation
 	 */
 	@DELETE
-	@Path("/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Schüler durch setzen eines Löschvermerks.",
-			description = "Entfernt mehrere Schüler durch setzen eines Löschvermerks. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
-					+ "der Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@Path("/softdelete/multiple")
+	@Operation(summary = "Setzt den Löschvermerk bei mehreren Schülern.",
+			description = "Setzt den Löschvermerk bei mehreren Schülern, insofern der SVWS-Benutzer die notwendige Berechtigung hat.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchueler(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
+	public Response softDeleteSchuelerStammdatenMultiple(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
 		return SchuelerControllerFactory
 				.withDeleteAccess(request)
 				.getSchuelerStammdatenController()
-				.delete(ids);
+				.softDelete(ids);
 	}
 
 	/**

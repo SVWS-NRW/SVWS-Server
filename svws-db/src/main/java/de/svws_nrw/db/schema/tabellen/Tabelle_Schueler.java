@@ -347,6 +347,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Geloescht */
 	public final SchemaTabelleSpalte col_Geloescht = add("Geloescht", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("hatLoeschvermerk")
 			.setDefault("-")
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 			.setJavaComment("Löschmarkierung Schülerdatensatz");

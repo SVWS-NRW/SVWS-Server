@@ -163,9 +163,9 @@ class SchuelerStammdatenControllerImplTest {
 				mock(SimpleOperationResponse.class)
 		);
 
-		when(schuelerStammdatenService.delete(ids)).thenReturn(deleteResponses);
+		when(schuelerStammdatenService.softDelete(ids)).thenReturn(deleteResponses);
 
-		assertThat(schuelerStammdatenControllerImpl.delete(ids))
+		assertThat(schuelerStammdatenControllerImpl.softDelete(ids))
 				.isInstanceOf(Response.class)
 				.hasFieldOrPropertyWithValue("status", Response.Status.OK.getStatusCode())
 				.extracting(Response::getEntity)
@@ -173,7 +173,7 @@ class SchuelerStammdatenControllerImplTest {
 				.isNotNull()
 				.hasSize(2);
 
-		verify(schuelerStammdatenService, times(1)).delete(ids);
+		verify(schuelerStammdatenService, times(1)).softDelete(ids);
 	}
 
 	@Test

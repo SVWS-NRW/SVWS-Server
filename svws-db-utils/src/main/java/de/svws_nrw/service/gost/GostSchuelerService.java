@@ -66,7 +66,7 @@ public class GostSchuelerService {
 				.map(j -> j.ID).toList();
 
 		return schuelerRepository.getAll().stream().filter(
-				s -> (!s.Geloescht) && (s.idStatus != 10) && (((s.idStatus != 8) && (s.idStatus != 9)) || (idsGostJahrgaenge.contains(s.Entlassjahrgang_ID))))
+				s -> (!s.hatLoeschvermerk) && (s.idStatus != 10) && (((s.idStatus != 8) && (s.idStatus != 9)) || (idsGostJahrgaenge.contains(s.Entlassjahrgang_ID))))
 				.toList();
 	}
 

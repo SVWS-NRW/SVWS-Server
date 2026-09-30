@@ -72,7 +72,7 @@ class SchuelerRepositoryImplTest {
 	@DisplayName("Test: getListAktiveBySchuljahresabschnitt liest die Schüler aus der Datenbank")
 	void testGetListAktiveBySchuljahresabschnitt() {
 		// Die erwartetet Datenbank-Anfrage und ihre Parameter
-		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.Geloescht = ?3";
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.hatLoeschvermerk = ?3";
 		final long idAbschnitt = 42L;
 		final long idStatus = SchuelerStatus.AKTIV.historie().getLast().id;
 
@@ -89,7 +89,7 @@ class SchuelerRepositoryImplTest {
 	@DisplayName("Test: getMapAktiveBySchuljahresabschnitt liefert eine Map der aktiven Schüler des Schuljahresabschnittes anhand ihrer ID.")
 	void testGetMapAktiveBySchuljahresabschnitt() {
 		// Die erwartetet Datenbank-Anfrage und ihre Parameter
-		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.Geloescht = ?3";
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.hatLoeschvermerk = ?3";
 		final long idAbschnitt = 42L;
 		final long idStatus = SchuelerStatus.AKTIV.historie().getLast().id;
 
@@ -108,7 +108,7 @@ class SchuelerRepositoryImplTest {
 	@Test
 	@DisplayName("Test: getListByStatusAndSchuljahresabschnitt liefert die Schüler mit einer der angegebenen Status-IDs und dem angegebenen Schuljahresabschnitt.")
 	void testGetListByStatusAndSchuljahresabschnitt() {
-		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3";
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.hatLoeschvermerk = ?3";
 		final long idAbschnitt = 42L;
 		final List<Long> statusIds = List.of(2L, 6L);
 
@@ -132,7 +132,7 @@ class SchuelerRepositoryImplTest {
 	@Test
 	@DisplayName("Test: getMapByStatusAndSchuljahresabschnitt liefert eine Map der Schüler mit einer der angegebenen Status-IDs und dem angegebenen Schuljahresabschnitt indiziert nach den Schüler-IDs")
 	void testGetMapByStatusAndSchuljahresabschnitt() {
-		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3";
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.hatLoeschvermerk = ?3";
 		final long idAbschnitt = 42L;
 		final List<Long> statusIds = List.of(2L);
 

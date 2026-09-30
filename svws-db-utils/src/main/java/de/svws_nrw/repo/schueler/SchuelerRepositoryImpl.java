@@ -28,7 +28,7 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 
 	@Override
 	public List<DTOSchueler> getListAktiveBySchuljahresabschnitt(final long idSchuljahresabschnitt) {
-		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.Geloescht = ?3",
+		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus = ?2 AND e.hatLoeschvermerk = ?3",
 				DTOSchueler.class, idSchuljahresabschnitt, SchuelerStatus.AKTIV.historie().getLast().id, false);
 	}
 
@@ -42,7 +42,7 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 		if (status.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3",
+		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.hatLoeschvermerk = ?3",
 				DTOSchueler.class, idSchuljahresabschnitt, status, false);
 	}
 
@@ -56,7 +56,7 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 		if (status.isEmpty() || idsSchuljahresabschnitte.isEmpty()) {
 			return Collections.emptyList();
 		}
-		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID IN ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3",
+		return conn.queryList("SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID IN ?1 AND e.idStatus IN ?2 AND e.hatLoeschvermerk = ?3",
 				DTOSchueler.class, idsSchuljahresabschnitte, status, false);
 	}
 

@@ -213,4 +213,8 @@ public class SchuelerStammdatenPatchRequest {
 	@Schema(description = "Der Beruf des Schülers (nur bei Schulform BK/SB/WB)", example = "Tischler")
 	public JsonNullable<@Size(max = 100) @NoLeadingOrTrailingWhitespaces String> beruf = JsonNullable.undefined();
 
+	/** Gibt an, ob der Löschvermerk des Schülers gesetzt ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Löschvermerk des Schülers gesetzt ist oder nicht.", example = "true")
+	public JsonNullable<@NotNull Boolean> hatLoeschvermerk = JsonNullable.undefined();
+
 }

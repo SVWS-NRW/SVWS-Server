@@ -52,10 +52,11 @@ public interface SchuelerStammdatenController {
 	Response patchMultiple(List<SchuelerStammdatenBatchPatchRequest> patches);
 
 	/**
-	 * Löscht mehrere Schüler anhand ihrer IDs.
+	 * Markiert die Schüler mit den angegebenen IDs als gelöscht, ohne ihre Datensätze
+	 * physisch aus der Datenbank zu entfernen.
 	 *
-	 * @param ids die IDs der zu löschenden Schüler
-	 * @return die Response
+	 * @param ids Liste der zu löschenden Schüler-IDs
+	 * @return Stammdaten der gefundenen und als gelöscht markierten Schüler
 	 */
-	Response delete(List<Long> ids);
+	Response softDelete(List<Long> ids);
 }

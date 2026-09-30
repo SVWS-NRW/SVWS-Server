@@ -270,7 +270,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final List<DTOSchueler> listSchueler =
 				((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, schuelerIDs);
 		final Map<Long, Schueler> mapSchueler = listSchueler.stream()
-				.filter(dto -> Boolean.FALSE.equals(dto.Geloescht))
+				.filter(dto -> Boolean.FALSE.equals(dto.hatLoeschvermerk))
 				.map(dto -> DataSchuelerliste.mapToSchueler(dto, null))
 				.collect(Collectors.toMap(s -> s.id, s -> s));
 		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler) {
@@ -459,7 +459,7 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
 		for (final DTOKursSchueler ks : listKursSchueler) {
 			final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
-			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.Geloescht))) {
+			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.hatLoeschvermerk))) {
 				continue;
 			}
 			List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);

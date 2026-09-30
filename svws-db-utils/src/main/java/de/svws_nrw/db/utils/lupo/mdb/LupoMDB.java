@@ -243,7 +243,7 @@ public class LupoMDB {
 			final TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
 					"SELECT s FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
 							+ "s.ID IS NOT NULL AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID "
-							+ "AND (s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
+							+ "AND (s.hatLoeschvermerk = null OR s.hatLoeschvermerk = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
 							+ "ORDER BY s.Nachname, s.Vorname",
 					DTOSchueler.class);
 			final List<DTOSchueler> dtoSchueler = queryDtoSchueler

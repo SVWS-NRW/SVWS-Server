@@ -271,11 +271,11 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		List<DTOSchueler> schueler = null;
 		if (nurAktive) {
 			final TypedQuery<DTOSchueler> querySchueler = conn.query("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND "
-					+ "(s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status", DTOSchueler.class);
+					+ "(s.hatLoeschvermerk = null OR s.hatLoeschvermerk = false) AND s.Status = :status", DTOSchueler.class);
 			schueler = querySchueler.setParameter("status", SchuelerStatus.AKTIV).getResultList();
 		} else {
 			final TypedQuery<DTOSchueler> querySchueler = conn.query("SELECT s FROM DTOSchueler s WHERE s.ID IS NOT NULL AND "
-					+ "(s.Geloescht = null OR s.Geloescht = false)", DTOSchueler.class);
+					+ "(s.hatLoeschvermerk = null OR s.hatLoeschvermerk = false)", DTOSchueler.class);
 			schueler = querySchueler.getResultList();
 		}
 		if (schueler == null) {

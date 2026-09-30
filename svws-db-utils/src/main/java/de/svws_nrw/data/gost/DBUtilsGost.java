@@ -182,7 +182,7 @@ public final class DBUtilsGost {
 		// Bestimme die SchuelerLernabschnitte von Schülern der Stufe
 		return (listJahrgaengeGostIDs.isEmpty()) ? new ArrayList<>()
 				: conn.queryList(
-						"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s ON s.Geloescht <> true AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = ?1 AND sla.Jahrgang_ID IN ?2",
+						"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s ON s.hatLoeschvermerk <> true AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = ?1 AND sla.Jahrgang_ID IN ?2",
 						DTOSchuelerLernabschnittsdaten.class, abschnitt.id, listJahrgaengeGostIDs);
 	}
 

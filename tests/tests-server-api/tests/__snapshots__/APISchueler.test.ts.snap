@@ -27963,6 +27963,7 @@ SchuelerStammdaten {
   "geburtsort": "Olfen",
   "geschlecht": 4,
   "haltestelleID": null,
+  "hatLoeschvermerk": false,
   "hatMasernimpfnachweis": false,
   "hatMigrationshintergrund": false,
   "hausnummer": "302",

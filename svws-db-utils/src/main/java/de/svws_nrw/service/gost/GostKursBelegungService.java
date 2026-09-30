@@ -101,7 +101,7 @@ public final class GostKursBelegungService {
 			final DTOSchuljahresabschnitte schuljahresabschnitt, final Set<Integer> validStatus) {
 		return (schueler != null)
 				&& (schuljahresabschnitt != null)
-				&& !schueler.Geloescht
+				&& !schueler.hatLoeschvermerk
 				&& (schueler.idStatus != null)
 				&& validStatus.contains(schueler.idStatus)
 				&& istKursartSchriftlich(leistung.Kursart, lernabschnitt.ASDJahrgang, schuljahresabschnitt.Abschnitt);

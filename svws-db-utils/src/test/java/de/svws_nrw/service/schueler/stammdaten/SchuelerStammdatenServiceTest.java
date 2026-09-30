@@ -657,61 +657,59 @@ class SchuelerStammdatenServiceTest {
 		verify(mapper, never()).patch(any(), any());
 	}
 
-
-
 	// =========================================================================
-	// delete
+	// softDelete
 	// =========================================================================
 
 	@Test
-	@DisplayName("delete - alle gefunden und gelöscht")
-	void delete_erfolgreich() {
+	@DisplayName("softDelete - gefundener Schüler wird markiert und als erfolgreich zurückgegeben")
+	void softDelete_erfolgreich() {
 		when(repository.findListByIds(List.of(1L))).thenReturn(List.of(entity));
-		when(repository.delete(List.of(entity))).thenReturn(List.of(entity));
 
-		final var result = service.delete(List.of(1L));
+		final var result = service.softDelete(List.of(1L));
 
+		assertThat(entity.hatLoeschvermerk).isTrue();
 		assertThat(result).hasSize(1);
 		assertThat(result.getFirst().success).isTrue();
 		assertThat(result.getFirst().id).isEqualTo(1L);
+		verify(repository, never()).delete(anyList());
 	}
 
 	@Test
-	@DisplayName("delete - ID nicht gefunden -> success=false")
-	void delete_nichtGefunden() {
+	@DisplayName("softDelete - nicht gefundene ID wird ignoriert")
+	void softDelete_nichtGefunden() {
 		when(repository.findListByIds(List.of(99L))).thenReturn(List.of());
-		when(repository.delete(List.of())).thenReturn(List.of());
 
-		final var result = service.delete(List.of(99L));
+		final var result = service.softDelete(List.of(99L));
 
-		assertThat(result).hasSize(1);
-		assertThat(result.getFirst().success).isFalse();
-		assertThat(result.getFirst().id).isEqualTo(99L);
+		assertThat(result).isEmpty();
+		verify(repository, never()).delete(anyList());
 	}
 
 	@Test
-	@DisplayName("delete - teilweise gefunden")
-	void delete_teilweiseGefunden() {
+	@DisplayName("softDelete - teilweise gefundene IDs: nur gefundene Schüler werden zurückgegeben")
+	void softDelete_teilweiseGefunden() {
 		when(repository.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
-		when(repository.delete(List.of(entity))).thenReturn(List.of(entity));
 
-		final var result = service.delete(List.of(1L, 99L));
+		final var result = service.softDelete(List.of(1L, 99L));
 
-		assertThat(result).hasSize(2);
-		assertThat(result.stream().filter(r -> r.id == 1L).findFirst().orElseThrow().success).isTrue();
-		assertThat(result.stream().filter(r -> r.id == 99L).findFirst().orElseThrow().success).isFalse();
+		assertThat(entity.hatLoeschvermerk).isTrue();
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().id).isEqualTo(1L);
+		assertThat(result.getFirst().success).isTrue();
 	}
 
 	@Test
-	@DisplayName("delete - Ergebnis ist aufsteigend nach ID sortiert")
-	void delete_sortiertNachId() {
+	@DisplayName("softDelete - Ergebnis ist aufsteigend nach ID sortiert")
+	void softDelete_sortiertNachId() {
 		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
-		when(repository.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity, entity2));
-		when(repository.delete(anyList())).thenReturn(List.of(entity, entity2));
+		when(repository.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity2, entity));
 
-		final var result = service.delete(List.of(2L, 1L));
+		final var result = service.softDelete(List.of(2L, 1L));
 
-		assertThat(result).extracting(r -> r.id).isSorted();
+		assertThat(entity.hatLoeschvermerk).isTrue();
+		assertThat(entity2.hatLoeschvermerk).isTrue();
+		assertThat(result).extracting(r -> r.id).containsExactly(1L, 2L);
 	}
 
 	// =========================================================================

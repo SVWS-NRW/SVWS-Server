@@ -52,8 +52,8 @@ public final class SchuelerStammdatenControllerImpl implements SchuelerStammdate
 	}
 
 	@Override
-	public Response delete(final List<Long> ids) {
-		final var responses = service.delete(ids);
+	public Response softDelete(final List<Long> ids) {
+		final var responses = service.softDelete(ids);
 		return Responses.ok(responses);
 	}
 

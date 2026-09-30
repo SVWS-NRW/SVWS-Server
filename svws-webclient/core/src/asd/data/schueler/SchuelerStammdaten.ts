@@ -248,6 +248,11 @@ export class SchuelerStammdaten extends JavaObject {
 	 */
 	public beruf: string | null = null;
 
+	/**
+	 * Gibt an, ob der Löschvermerk des Schülers gesetzt ist oder nicht.
+	 */
+	public hatLoeschvermerk: boolean = false;
+
 
 	public constructor() {
 		super();
@@ -347,6 +352,9 @@ export class SchuelerStammdaten extends JavaObject {
 		result.beginnBildungsgang = (obj.beginnBildungsgang === undefined) ? null : obj.beginnBildungsgang === null ? null : obj.beginnBildungsgang;
 		result.dauerBildungsgang = (obj.dauerBildungsgang === undefined) ? null : obj.dauerBildungsgang === null ? null : obj.dauerBildungsgang;
 		result.beruf = (obj.beruf === undefined) ? null : obj.beruf === null ? null : obj.beruf;
+		if (obj.hatLoeschvermerk === undefined)
+			throw new Error('invalid json format, missing attribute hatLoeschvermerk');
+		result.hatLoeschvermerk = obj.hatLoeschvermerk;
 		return result;
 	}
 
@@ -401,6 +409,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		result += '"dauerBildungsgang" : ' + ((obj.dauerBildungsgang === null) ? 'null' : obj.dauerBildungsgang.toString()) + ',';
 		result += '"beruf" : ' + ((obj.beruf === null) ? 'null' : JSON.stringify(obj.beruf)) + ',';
+		result += '"hatLoeschvermerk" : ' + obj.hatLoeschvermerk.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -554,6 +563,9 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (obj.beruf !== undefined) {
 			result += '"beruf" : ' + ((obj.beruf === null) ? 'null' : JSON.stringify(obj.beruf)) + ',';
+		}
+		if (obj.hatLoeschvermerk !== undefined) {
+			result += '"hatLoeschvermerk" : ' + obj.hatLoeschvermerk.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
