@@ -1,0 +1,19 @@
+/* Aufstellung der Zugangsdaten im Schreiben. */
+.zugangsdaten {
+	border-collapse: collapse;
+	margin: 4mm 0 4mm 0;
+}
+
+.zugangsdaten th,
+.zugangsdaten td {
+	vertical-align: top;
+	padding: 1mm 2mm 1mm 0;
+}
+
+/* Das Kennwort wird abgetippt. Eine nichtproportionale Schrift trennt die Ziffer 1 vom kleinen l und vom großen I. */
+.zugangsdaten .kennwort {
+	font-family: monospace;
+	font-size: 1.15em;
+	letter-spacing: 0.08em;
+}
+

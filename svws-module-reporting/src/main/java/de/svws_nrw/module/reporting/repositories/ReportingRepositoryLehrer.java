@@ -13,6 +13,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -85,6 +86,12 @@ public class ReportingRepositoryLehrer {
 
 	/** Die Fehler gescheiterter Foto-Ladevorgänge je Lehrer-ID. */
 	private final Map<Long, Exception> ladefehlerLehrerFotos = new HashMap<>();
+
+	/** Die Initialkennwörter für das Notenmodul je Lehrer-ID. Sie werden erst beim ersten Zugriff geladen, da nur wenige Ausgaben sie zeigen. */
+	private final Map<Long, String> mapNotenmodulInitialkennwoerter = new HashMap<>();
+
+	/** Die Fehler gescheiterter Ladevorgänge der Initialkennwörter je Lehrer-ID. */
+	private final Map<Long, Exception> ladefehlerNotenmodulInitialkennwoerter = new HashMap<>();
 
 	/**
 	 * Erstellt ein neues ReportingLehrerRepository. Die Stammdaten werden erst bei Bedarf geladen.
@@ -287,6 +294,52 @@ public class ReportingRepositoryLehrer {
 		final Map<Long, String> gefundene = this.reportingContext.conn().queryByKeyList(DTOLehrerFoto.class, idsLehrer).stream()
 				.filter(f -> f.FotoBase64 != null)
 				.collect(Collectors.toMap(f -> f.Lehrer_ID, f -> f.FotoBase64));
+		final Map<Long, String> ergebnis = new HashMap<>();
+		for (final Long id : idsLehrer) {
+			ergebnis.put(id, gefundene.getOrDefault(id, ""));
+		}
+		return ergebnis;
+	}
+
+
+	// ##### Initialkennwörter für das Notenmodul #####
+
+	/**
+	 * Gibt das Initialkennwort der Lehrkraft für das externe Notenmodul (Wenom) zurück. Beim ersten Zugriff werden die Kennwörter aller bekannten
+	 * Lehrkräfte gesammelt nachgeladen und im Cache abgelegt.
+	 *
+	 * @param idLehrer Die ID der Lehrkraft.
+	 *
+	 * @return Das Initialkennwort oder ein leerer String, wenn keines hinterlegt ist oder das Laden gescheitert ist.
+	 */
+	public String notenmodulInitialkennwort(final long idLehrer) {
+		final List<Long> ids = new ArrayList<>(mapLehrerStammdaten.keySet());
+		ids.add(idLehrer);
+		ReportingRepositoryUtils.ladeFehlendeWerteInRepositoryMap(
+				ids,
+				mapNotenmodulInitialkennwoerter,
+				this::ladeNotenmodulInitialkennwoerter,
+				"Notenmodul-Initialkennwörter",
+				this.reportingContext.logger(),
+				ladefehlerNotenmodulInitialkennwoerter);
+		ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ladefehlerNotenmodulInitialkennwoerter, idLehrer, ReportingLehrer.class,
+				"Das Notenmodul-Initialkennwort der Lehrkraft %d".formatted(idLehrer));
+		final String kennwort = mapNotenmodulInitialkennwoerter.get(idLehrer);
+		return (kennwort == null) ? "" : kennwort;
+	}
+
+	/**
+	 * Lädt die Initialkennwörter zu den übergebenen Lehrer-IDs. Eine Lehrkraft ohne Credentials erhält einen leeren Eintrag: Ohne ihn gälte sie als noch
+	 * nicht geladen, und jeder weitere Zugriff würde eine erneute Abfrage anstoßen.
+	 *
+	 * @param idsLehrer Die IDs der Lehrkräfte, deren Initialkennwörter geladen werden sollen.
+	 *
+	 * @return Map mit Lehrer-ID als Schlüssel und dem Initialkennwort als Wert.
+	 */
+	private Map<Long, String> ladeNotenmodulInitialkennwoerter(final List<Long> idsLehrer) {
+		final Map<Long, String> gefundene = this.reportingContext.conn().queryByKeyList(DTONotenmodulCredentials.class, idsLehrer).stream()
+				.filter(c -> c.initialkennwort != null)
+				.collect(Collectors.toMap(c -> c.idLehrer, c -> c.initialkennwort));
 		final Map<Long, String> ergebnis = new HashMap<>();
 		for (final Long id : idsLehrer) {
 			ergebnis.put(id, gefundene.getOrDefault(id, ""));

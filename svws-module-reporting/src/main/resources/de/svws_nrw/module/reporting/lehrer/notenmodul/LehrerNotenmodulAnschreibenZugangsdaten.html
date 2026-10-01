@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<!--/* @thymesVar id="#aktuell" type="de.svws_nrw.module.reporting.html.dialects.AktuellExpressionHelper" */-->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Zugangsdaten für den WebNotenManager',
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-DIN5008.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="mitBildBriefkopf = ${VorlageParameter.get('mitBildBriefkopf')},
+				   briefkopf = ${mitBildBriefkopf ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@DIN5008_BRIEFKOPF).htmlImageSource() : ''},
+				   mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
+				   keinInfoblock = ${VorlageParameter.get('keinInfoblock')},
+				   adresseNotenmodul = ${(VorlageParameter.get('adresseNotenmodul') == null) ? '' : ('' + #strings.trim(VorlageParameter.get('adresseNotenmodul')))}">
+
+	<th:block th:each="lehrer : ${Lehrer}">
+
+		<!-- WICHTIG: Absolut-positionierte Elemente müssen von einem relativen Element mit einer Höhe größer 0 umschlossen sein, damit sie auf mehreren Seiten gedruckt werden! -->
+		<div class="din5008-seitenrahmen start-new-page" style="position: relative;">
+
+			<!-- Briefkopfbereich -->
+			<div th:if="${!briefkopf.isEmpty()}" class="briefkopfbereich">
+				<img th:src="@{${briefkopf}}" alt="Briefkopf der Schule"/>
+			</div>
+
+			<!-- Schulbezeichnung und Anschrift -->
+			<div th:if="${briefkopf.isEmpty()}" class="absenderanschrift">
+				<span th:utext="${Schule.anschriftVollstaendigHtml()}">Schulbezeichnung1<br/>Schulbezeichnung2<br/>Schulbezeichnung3<br/>Musterstraße 123A<br/>12345 Musterstadt</span>
+			</div>
+
+			<!-- Schullogo -->
+			<div th:if="${briefkopf.isEmpty() && mitSchullogo}" class="schullogo">
+				<img style="max-height: 100%; max-width: 100%; object-fit: scale-down;" th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/>
+			</div>
+
+			<!-- Empfänger: Das Schreiben wird nicht versandt, sondern ausgehändigt oder per E-Mail zugestellt. Statt der Postanschrift steht hier, was die
+				 Zuordnung im Kollegium trägt: das Kürzel und darunter die Lehrkraft mit ihrer Amtsbezeichnung. -->
+			<div class="empfaengeranschrift">
+				<p>
+					<span th:text="${lehrer.kuerzel()}">MUFR</span><br/>
+					<span th:text="${lehrer.anredeVornameNachnameAmtsbezeichnung()}">Frau Lisa Mustermann, OStD</span>
+				</p>
+			</div>
+
+			<!-- Infoblock -->
+			<div th:if="${!keinInfoblock}" class="infoblock">
+				<table>
+					<colgroup>
+						<col style="width: 23%;"/>
+						<col style="width: 2%;"/>
+						<col style="width: 75%;"/>
+					</colgroup>
+					<tr>
+						<th class="ta-l">Kontakt:</th>
+						<th class="ta-l"></th>
+						<th class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
+					</tr>
+					<tr>
+						<td class="ta-l">Telefon:</td>
+						<td class="ta-l"></td>
+						<td class="ta-l" th:text="${Schule.telefon()}">01234 567 899-0</td>
+					</tr>
+					<tr>
+						<td class="ta-l">E-Mail:</td>
+						<td class="ta-l"></td>
+						<td class="ta-l" th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().emailSchule() : Schule.email()}">sekretariat@schule-email.de</td>
+					</tr>
+					<tr>
+						<td class="ta-l">Schulnummer:</td>
+						<td class="ta-l"></td>
+						<td class="ta-l" th:text="${Schule.schulnummer()}">1234567</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- OrtUndDatum -->
+			<div class="ortunddatum">
+				<p th:text="${Schule.ort() + ', ' + #aktuell.formatiert('dd.MM.yyyy')}">Düsseldorf, 15.03.2024</p>
+			</div>
+
+			<!-- Schreiben -->
+			<div class="schreiben" th:with="kennwort = ${lehrer.notenmodulInitialkennwort()}">
+				<p class="f-bold m-b-2em">Ihre Zugangsdaten für den WebNotenManager</p>
+
+				<p th:text="${lehrer.briefanredeFormal() + ','}">Sehr geehrte Frau Dr. Musterfrau,</p>
+
+				<!-- Ohne Kennwort besteht kein Zugang. -->
+				<p th:if="${kennwort.isEmpty()}">für den WebNotenManager wurde für Sie noch kein Zugang eingerichtet. Bitte wenden Sie sich daher an die zuständige koordinierende Lehrkraft.</p>
+
+				<th:block th:unless="${kennwort.isEmpty()}">
+					<p>für den WebNotenManager wurde für Sie ein Zugang eingerichtet. Für Ihre erste Anmeldung unter diesem Zugang müssen Sie die folgenden Zugangsdaten verwenden.</p>
+
+					<!-- Zugangsdaten. Das Kennwort steht in Monospace, damit sich die Ziffer 1, der kleine Buchstabe l und der große Buchstabe I
+						 beim Abtippen unterscheiden lassen. -->
+					<table class="zugangsdaten">
+						<colgroup>
+							<col style="width: 40mm;"/>
+							<col style="width: auto;"/>
+						</colgroup>
+						<tr th:if="${!adresseNotenmodul.isEmpty()}">
+							<th class="ta-l">Adresse:</th>
+							<td class="ta-l" th:text="${adresseNotenmodul}">https://wenom.beispielschule.de</td>
+						</tr>
+						<tr>
+							<th class="ta-l">Benutzername:</th>
+							<td class="ta-l" th:text="${lehrer.emailSchule()}">j.musterfrau@beispielschule.de</td>
+						</tr>
+						<tr>
+							<th class="ta-l">Kennwort:</th>
+							<td class="ta-l kennwort" th:text="${kennwort}">aB3dE5fG7hJ9kL2m</td>
+						</tr>
+					</table>
+
+					<p>Bitte beachten Sie: Das genannte Kennwort ist ein Initialkennwort. Es gilt nur bis zu Ihrer ersten Anmeldung. Sobald Sie dabei ein eigenes Kennwort setzen, verliert es seine Gültigkeit.</p>
+
+					<p>Bewahren Sie dieses Schreiben bis zum Abschluss Ihrer ersten Anmeldung sicher auf.</p>
+				</th:block>
+			</div>
+
+		</div>
+
+	</th:block>
+	</body>
+</html>

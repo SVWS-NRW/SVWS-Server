@@ -31,6 +31,11 @@
 				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN"
 					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
+			<ui-card v-if="hatKompetenzDruckenNotenmodulZugangsdaten" icon="i-ri-printer-line" title="Zugangsdaten für den WebNotenManager drucken oder versenden" subtitle="Drucke oder versende je ausgewählter Lehrkraft ein Anschreiben mit dem Initialkennwort für den WebNotenManager."
+				:is-open="currentAction === 'druckLehrerNotenmodulZugangsdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerNotenmodulZugangsdaten', isOpen)">
+				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_NOTENMODUL_ANSCHREIBEN_ZUGANGSDATEN"
+					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
+			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
@@ -73,7 +78,7 @@
 
 	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 
-	type Action = 'druckLehrerListeKontaktdaten' | 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
+	type Action = 'druckLehrerListeKontaktdaten' | 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'druckLehrerNotenmodulZugangsdaten' | 'delete' | '';
 
 	const props = defineProps<LehrerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
@@ -83,6 +88,7 @@
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenLehrerdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenNotenmodulZugangsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);

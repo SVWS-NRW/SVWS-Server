@@ -2,7 +2,12 @@
 	<div class="flex flex-col w-full h-full overflow-hidden">
 		<svws-ui-header>
 			<span class="inline-block mr-3">Lehrer-Zugangsdaten verwalten</span>
-			<div v-if="!manager().daten.lehrer.isEmpty()"><svws-ui-button-select :dropdown-actions /></div>
+			<div v-if="!manager().daten.lehrer.isEmpty()" class="inline-flex items-center gap-2">
+				<svws-ui-button-select :dropdown-actions />
+				<svws-ui-button v-if="hatKompetenzDrucken" @click="showDruckModal = true" type="secondary" :disabled="idsDruck.length === 0">
+					<span class="icon i-ri-printer-line" /> Zugangsdaten drucken
+				</svws-ui-button>
+			</div>
 			<ul v-if="lehrerEmailProbleme !== 0" class="text-base mt-2 text-ui-danger">
 				<li v-if="lehrerOhneEmail > 1">{{ lehrerOhneEmail }} fehlende Adressen</li>
 				<li v-if="lehrerOhneEmail === 1">{{ lehrerOhneEmail }} fehlende Adresse</li>
@@ -48,7 +53,7 @@
 							<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
 								<span class="icon i-ri-alert-line icon-ui-danger" />
 								<template #content>
-									Eine fehlende dienstliche Email-Adresse ist für den Web-Noten-Manager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
+									Eine fehlende dienstliche Email-Adresse ist für den WebNotenManager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-else-if="!validatorEmail(lehrer.eMailDienstlich)">
@@ -60,7 +65,7 @@
 							<svws-ui-tooltip v-else-if="emailDuplikate.has(lehrer.eMailDienstlich)">
 								<span class="icon i-ri-alert-line icon-ui-danger" />
 								<template #content>
-									Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
+									Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den WebNotenManager nicht zulässig.
 								</template>
 							</svws-ui-tooltip>
 							<div v-if="lehrer.eMailDienstlich !== null" @click="copyToClipboard(lehrer, 'mail')" class="cursor-pointer flex items-center gap-2">
@@ -198,6 +203,17 @@
 				</div>
 			</div>
 		</div>
+		<svws-ui-modal v-model:show="showDruckModal" size="medium">
+			<template #modalTitle>Zugangsdaten drucken oder versenden</template>
+			<template #modalDescription>
+				{{ idsDruck.length === 1 ? 'Anschreiben für eine Lehrkraft erzeugen.' : `Anschreiben für ${idsDruck.length} Lehrkräfte erzeugen.` }}
+			</template>
+			<template #modalContent>
+				<div class="text-left">
+					<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_NOTENMODUL_ANSCHREIBEN_ZUGANGSDATEN" :ids-hauptdaten="idsDruck" :ids-detaildaten="[]" />
+				</div>
+			</template>
+		</svws-ui-modal>
 	</div>
 </template>
 
@@ -207,15 +223,25 @@
 
 	import { ENMv2Lehrer } from '@core/core/data/enm/v2/ENMv2Lehrer';
 	import { DeveloperNotificationException } from '@core/core/exceptions/DeveloperNotificationException';
+	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
+	import { ReportingReportvorlage } from '@core/core/types/reporting/ReportingReportvorlage';
 	import { ArrayList } from '@core/java/util/ArrayList';
 	import type { List } from '@core/java/util/List';
+	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { GridManager } from '@ui/ui/controls/tablegrid/GridManager';
 
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
+	const benutzerState = useBenutzerState();
 	const search = ref<string>("");
 	const auswahl = ref<ENMv2Lehrer[]>([]);
+
+	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
+	const showDruckModal = ref<boolean>(false);
+
+	// Ohne Auswahl gelten alle angezeigten Lehrkräfte, damit der Druck für das ganze Kollegium ohne Einzelauswahl auskommt.
+	const idsDruck = computed<number[]>(() => ((auswahl.value.length > 0) ? auswahl.value : [...lehrerListe.value]).map(l => l.id));
 
 	const dropdownActions = [
 		{ key: 1, text: "CSV Export", action: () => exportieren("csv") },

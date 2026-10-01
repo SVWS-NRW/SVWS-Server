@@ -43,6 +43,7 @@ class TestHtmlContextInitializerRegistry {
 
 			Map.entry(ReportingReportvorlage.LEHRER_V_LISTE_KONTAKTDATEN, ReportingReportvorlageDatenContext.LEHRER),
 			Map.entry(ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN, ReportingReportvorlageDatenContext.LEHRER),
+			Map.entry(ReportingReportvorlage.LEHRER_V_NOTENMODUL_ANSCHREIBEN_ZUGANGSDATEN, ReportingReportvorlageDatenContext.LEHRER),
 			Map.entry(ReportingReportvorlage.LEHRER_V_STAMMDATENLISTE, ReportingReportvorlageDatenContext.LEHRER),
 
 			Map.entry(ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN, ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH),

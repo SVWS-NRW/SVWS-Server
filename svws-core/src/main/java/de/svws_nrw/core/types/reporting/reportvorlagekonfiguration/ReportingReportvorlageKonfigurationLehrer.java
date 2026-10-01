@@ -7,6 +7,7 @@ import java.util.List;
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
@@ -120,6 +121,39 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
 				new ArrayList<>(),
 				new ReportingEMailDaten(),
+				new ArrayList<>(), new ArrayList<>(), true, true);
+	}
+
+	/**
+	 * Erstellt die Reportparamater für die Vorlage "LehrerVNotenmodulAnschreibenZugangsdaten".
+	 *
+	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
+	 */
+	public static @NotNull ReportingParameter getLehrerVNotenmodulAnschreibenZugangsdaten() {
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
+						ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+								"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+								Arrays.asList(
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("adresseNotenmodul", "Adresse des WebNotenManagers",
+												ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchullogo", "mit Schullogo",
+												ReportingReportvorlageParameterTyp.BOOLEAN,
+												"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBildBriefkopf", "mit Bild im Briefkopf",
+												ReportingReportvorlageParameterTyp.BOOLEAN,
+												"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("keinInfoblock", "ohne Infoblock",
+												ReportingReportvorlageParameterTyp.BOOLEAN,
+												"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+								))),
+				// Die Anschreiben gehen an die Lehrkraft selbst. Die private Adresse scheidet als Ersatz aus: Der Benutzername des Notenmoduls ist die
+				// dienstliche Adresse, und ohne sie führen die Zugangsdaten zu keiner Anmeldung.
+				ReportingReportvorlageUtils.erzeugeEmailParameter(
+						ReportingEMailEmpfaengerTyp.LEHRER,
+						false,
+						"",
+						""),
 				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 }

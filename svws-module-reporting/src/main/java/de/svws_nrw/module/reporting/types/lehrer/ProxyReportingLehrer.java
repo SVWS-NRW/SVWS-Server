@@ -186,4 +186,15 @@ public class ProxyReportingLehrer extends ReportingLehrer {
 		return this.reportingContext.repositoryLehrer().lehrerFoto(this.id());
 	}
 
+	/**
+	 * Holt das Initialkennwort der Lehrkraft für das externe Notenmodul aus dem Repository. Gerufen wird die Methode nur beim ersten Zugriff auf das
+	 * Kennwort.
+	 *
+	 * @return Das Initialkennwort; nie {@code null}, bei fehlendem Kennwort ein leerer String.
+	 */
+	@Override
+	protected String ladeNotenmodulInitialkennwort() {
+		return this.reportingContext.repositoryLehrer().notenmodulInitialkennwort(this.id());
+	}
+
 }

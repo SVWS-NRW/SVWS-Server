@@ -50,6 +50,12 @@ public class ReportingLehrer extends ReportingPerson {
 	/** Eine Liste von Leitungsfunktionen, die der Lehrer besaß oder besitzt. */
 	protected List<ReportingLehrerLeitungsfunktion> leitungsfunktionen;
 
+	/** Das Initialkennwort des Lehrers für das externe Notenmodul (Wenom). */
+	protected String notenmodulInitialkennwort;
+
+	/** Flag für den Ladezustand des Initialkennworts, um mehrfache DB-Anfragen zu vermeiden. */
+	private boolean notenmodulInitialkennwortGeladen = false;
+
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
 	protected PersonalTyp personalTyp;
 
@@ -180,6 +186,19 @@ public class ReportingLehrer extends ReportingPerson {
 		return (unterschriftfeld(mitVornameKurz, mitAmtsbezeichnung) + zusatzUnterschrift).trim().translateEscapes();
 	}
 
+	/**
+	 * Erzeugt die Anrede mit Vorname, Nachname und der Amtsbezeichnung, etwa für das Anschriftfeld eines Briefes. Anders als beim Unterschriftfeld steht
+	 * die Anrede voran.
+	 *
+	 * @return Die Angabe in der Form: Anrede Titel Vorname Nachname, Amtsbezeichnung. Fehlt die Amtsbezeichnung, entfällt auch das Komma.
+	 */
+	public String anredeVornameNachnameAmtsbezeichnung() {
+		if (this.amtsbezeichnung().isEmpty()) {
+			return this.anredeVornameNachname();
+		}
+		return this.anredeVornameNachname() + ", " + this.amtsbezeichnung();
+	}
+
 
 	// ##### Berechnete Methoden #####
 
@@ -247,6 +266,32 @@ public class ReportingLehrer extends ReportingPerson {
 	 */
 	public List<ReportingLehrerLeitungsfunktion> leitungsfunktionen() {
 		return leitungsfunktionen;
+	}
+
+	/**
+	 * Das Initialkennwort des Lehrers für das externe Notenmodul (Wenom). Liegt es noch nicht vor, wird es einmalig über
+	 * {@link #ladeNotenmodulInitialkennwort()} nachgefordert; jeder Zugriff muss deshalb über diesen Getter laufen und nicht über das Feld.
+	 * Der Wert sagt nichts darüber aus, ob das Kennwort noch gilt: Sobald die Lehrkraft ein eigenes Kennwort setzt, verliert es seine Gültigkeit,
+	 * bleibt aber gespeichert.
+	 *
+	 * @return Inhalt des Feldes notenmodulInitialkennwort; nie {@code null}, bei fehlendem Kennwort ein leerer String.
+	 */
+	public String notenmodulInitialkennwort() {
+		if (!notenmodulInitialkennwortGeladen) {
+			notenmodulInitialkennwort = ersetzeNullBlankTrim(ladeNotenmodulInitialkennwort());
+			notenmodulInitialkennwortGeladen = true;
+		}
+		return notenmodulInitialkennwort;
+	}
+
+	/**
+	 * Fordert das Initialkennwort aus der Datenquelle an. Die Basisklasse kennt keine und behält, was sie beim Erzeugen bekommen hat; die Proxy-Klasse
+	 * holt es hier aus ihrem Repository.
+	 *
+	 * @return Das Initialkennwort oder {@code null}, wenn keines vorliegt. Der Getter normalisiert das Ergebnis zu einem leeren String.
+	 */
+	protected String ladeNotenmodulInitialkennwort() {
+		return notenmodulInitialkennwort;
 	}
 
 	/**

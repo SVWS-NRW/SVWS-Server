@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { ReportingEMailEmpfaengerTyp } from '../../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
 import { ReportingSortierungDefinitionFactory } from '../../../../core/utils/reporting/ReportingSortierungDefinitionFactory';
 import { ReportingReportvorlageParameterTyp } from '../../../../core/types/reporting/ReportingReportvorlageParameterTyp';
 import { ReportingEMailDaten } from '../../../../core/data/reporting/ReportingEMailDaten';
@@ -43,6 +44,15 @@ export class ReportingReportvorlageKonfigurationLehrer extends JavaObject {
 	 */
 	public static getLehrerVStammdatenliste(): ReportingParameter {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), true, true);
+	}
+
+	/**
+	 * Erstellt die Reportparamater für die Vorlage "LehrerVNotenmodulAnschreibenZugangsdaten".
+	 *
+	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
+	 */
+	public static getLehrerVNotenmodulAnschreibenZugangsdaten(): ReportingParameter {
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("adresseNotenmodul", "Adresse des WebNotenManagers", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchullogo", "mit Schullogo", ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBildBriefkopf", "mit Bild im Briefkopf", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2), ReportingReportvorlageUtils.erzeugeVorlageParameter("keinInfoblock", "ohne Infoblock", ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.LEHRER, false, "", ""), new ArrayList(), new ArrayList(), true, true);
 	}
 
 	transpilerCanonicalName(): string {

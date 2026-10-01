@@ -242,6 +242,18 @@ public enum ReportingReportvorlage {
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten()
 	),
 
+	/** Report-Vorlage: Lehrer - Zugangsdaten für das externe Notenmodul */
+	LEHRER_V_NOTENMODUL_ANSCHREIBEN_ZUGANGSDATEN("Lehrer-Notenmodul-Anschreiben-Zugangsdaten",
+			"Zugangsdaten für den WebNotenManager",
+			"Ein Anschreiben mit dem Initialkennwort für den WebNotenManager je Lehrkraft erzeugen.",
+			ReportingReportvorlageDatenContext.LEHRER,
+			"lehrer/notenmodul/LehrerNotenmodulAnschreibenZugangsdaten.html",
+			"Lehrer-Notenmodul-Anschreiben-Zugangsdaten",
+			List.of(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION),
+			List.of(),
+			ReportingReportvorlageKonfigurationLehrer.getLehrerVNotenmodulAnschreibenZugangsdaten()
+	),
+
 	/** Report-Vorlage: Lehrer - Stammdaten - Liste */
 	LEHRER_V_STAMMDATENLISTE("Lehrer-Stammdatenliste",
 			"Stammdatenliste der Lehrkräfte",
