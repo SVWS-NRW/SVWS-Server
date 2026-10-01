@@ -3,7 +3,7 @@
 		<s-gost-klausurplanung-quartal-auswahl />
 	</Teleport>
 	<div class="page page-flex-col">
-		<svws-ui-content-card class="col-span-full" :title="`Nachschreibplan ${state.jahrgangsdaten.jahrgang}, ${state.halbjahr.halbjahr}. Halbjahr${state.quartal === 0 ? '' : ', ' + state.quartal + '. Quartal'}`">
+		<svws-ui-content-card class="col-span-full" :title="`Nachschreibplan ${state.jahrgangsdaten.bezeichnung}, ${state.halbjahr.halbjahr}. Halbjahr${state.quartal === 0 ? '' : ', ' + state.quartal + '. Quartal'}`">
 			<svws-ui-table v-model:sort-by-and-order="sortByAndOrder" :columns="cols" :items="itemsSorted">
 				<template #noData>
 					<slot name="noData">
