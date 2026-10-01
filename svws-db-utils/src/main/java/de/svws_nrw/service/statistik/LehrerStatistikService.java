@@ -79,6 +79,7 @@ public final class LehrerStatistikService {
 		final var daten = new LehrerStatistikGesamt();
 		daten.id = dtoLehrer.ID;
 		daten.kuerzel = dtoLehrer.Kuerzel;
+		daten.kuerzelStatistik = dtoLehrer.kuerzelLID;
 		daten.vorname = (dtoLehrer.Vorname == null) ? "" : dtoLehrer.Vorname;
 		daten.nachname = (dtoLehrer.Nachname == null) ? "" : dtoLehrer.Nachname;
 		daten.geburtsdatum = dtoLehrer.Geburtsdatum;

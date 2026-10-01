@@ -18,6 +18,11 @@ export class LehrerStatistikGesamt extends JavaObject {
 	public kuerzel: string = "";
 
 	/**
+	 * Das Statistik-Kürzel des Lehrers.
+	 */
+	public kuerzelStatistik: string | null = null;
+
+	/**
 	 * Der Vorname des Lehrers.
 	 */
 	public vorname: string = "";
@@ -109,6 +114,7 @@ export class LehrerStatistikGesamt extends JavaObject {
 		if (obj.kuerzel === undefined)
 			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
+		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
 		if (obj.vorname === undefined)
 			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
@@ -151,6 +157,7 @@ export class LehrerStatistikGesamt extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
@@ -204,6 +211,9 @@ export class LehrerStatistikGesamt extends JavaObject {
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.kuerzelStatistik !== undefined) {
+			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
 		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';

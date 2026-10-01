@@ -17,6 +17,11 @@ export class LehrerStammdaten extends JavaObject {
 	public kuerzel: string = "";
 
 	/**
+	 * Das Statistik-Kürzel des Lehrers.
+	 */
+	public kuerzelStatistik: string | null = null;
+
+	/**
 	 * Die Bezeichnung des Personals-Typs des Lehrers.
 	 */
 	public personalTyp: string = "";
@@ -153,6 +158,7 @@ export class LehrerStammdaten extends JavaObject {
 		if (obj.kuerzel === undefined)
 			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
+		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
 		if (obj.personalTyp === undefined)
 			throw new Error('invalid json format, missing attribute personalTyp');
 		result.personalTyp = obj.personalTyp;
@@ -198,6 +204,7 @@ export class LehrerStammdaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		result += '"personalTyp" : ' + JSON.stringify(obj.personalTyp) + ',';
 		result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
@@ -239,6 +246,9 @@ export class LehrerStammdaten extends JavaObject {
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.kuerzelStatistik !== undefined) {
+			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
 		if (obj.personalTyp !== undefined) {
 			result += '"personalTyp" : ' + JSON.stringify(obj.personalTyp) + ',';

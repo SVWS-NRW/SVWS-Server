@@ -210,6 +210,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		final LehrerStammdaten daten = new LehrerStammdaten();
 		daten.id = dtoLehrer.ID;
 		daten.kuerzel = dtoLehrer.Kuerzel;
+		daten.kuerzelStatistik = dtoLehrer.kuerzelLID;
 		daten.personalTyp = (dtoLehrer.PersonTyp == null) ? "" : dtoLehrer.PersonTyp.kuerzel;
 		daten.anrede = (dtoLehrer.Anrede == null) ? "" : dtoLehrer.Anrede;
 		daten.titel = (dtoLehrer.Titel == null) ? "" : dtoLehrer.Titel;
@@ -297,7 +298,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, "istSichtbar");
 			case "istRelevantFuerStatistik" -> dto.statistikRelevant = JSONMapper.convertToBoolean(value, false, "istRelevantFuerStatistik");
 			case "foto" -> updateFoto(dto, value);
-			case "leitungsfunktionen" -> {
+			case "leitungsfunktionen", "kuerzelStatistik" -> {
 				/* nicht notwendig */
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));

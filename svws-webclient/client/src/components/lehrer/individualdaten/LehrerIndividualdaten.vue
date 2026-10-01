@@ -31,11 +31,9 @@
 					:validation="() => modelProxy.getFehler('kuerzel')"
 					:max-len="10"
 					:readonly statistics required focus />
-				<ui-select label="Personal-Typ"
-					v-model="modelProxy.personalTyp.value"
-					:manager="personaltypManger"
-					:validation="() => modelProxy.getFehler('personalTyp')"
-					:readonly required :removable="false" />
+				<svws-ui-text-input placeholder="Kürzel Statistik"
+					v-model="modelProxy.proxy.kuerzelStatistik"
+					readonly statistics />
 				<svws-ui-text-input placeholder="Nachname"
 					v-model="modelProxy.proxy.nachname"
 					@change="modelProxy.patch"
@@ -48,11 +46,15 @@
 					:validation="() => modelProxy.getFehler('vorname')"
 					:max-len="80"
 					:readonly required statistics />
-				<svws-ui-spacing />
 				<ui-select label="Geschlecht"
 					v-model="modelProxy.geschlecht.value"
 					:manager="geschlechtManager"
 					:validation="() => modelProxy.getFehler('geschlecht')"
+					:readonly required :removable="false" />
+				<ui-select label="Personal-Typ"
+					v-model="modelProxy.personalTyp.value"
+					:manager="personaltypManger"
+					:validation="() => modelProxy.getFehler('personalTyp')"
 					:readonly required :removable="false" />
 				<svws-ui-text-input placeholder="Geburtsdatum"
 					v-model="modelProxy.proxy.geburtsdatum"

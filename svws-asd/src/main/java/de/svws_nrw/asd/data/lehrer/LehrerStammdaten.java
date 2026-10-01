@@ -27,6 +27,10 @@ public class LehrerStammdaten {
 	@Schema(description = "Das Kürzel des Lehrers.", example = "MUS")
 	public @NotNull String kuerzel = "";
 
+	/** Das Statistik-Kürzel des Lehrers. */
+	@Schema(description = "Das Statistik-Kürzel des Lehrers.", example = "ALBE")
+	public String kuerzelStatistik;
+
 	/** Die Bezeichnung des Personals-Typs des Lehrers. */
 	@Schema(description = "Die Bezeichnung des Personals-Typs des Lehrers.", example = "SEKRETARIAT")
 	public @NotNull String personalTyp = "";

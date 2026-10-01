@@ -1328,6 +1328,7 @@ LehrerStammdaten {
   "istRelevantFuerStatistik": true,
   "istSichtbar": true,
   "kuerzel": "SPEC",
+  "kuerzelStatistik": "SPEC",
   "leitungsfunktionen": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],

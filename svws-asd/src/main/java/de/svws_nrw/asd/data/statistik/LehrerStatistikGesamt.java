@@ -29,6 +29,10 @@ public class LehrerStatistikGesamt {
 	@Schema(description = "Das Kürzel des Lehrers.", example = "MUS")
 	public @NotNull String kuerzel = "";
 
+	/** Das Statistik-Kürzel des Lehrers. */
+	@Schema(description = "Das Statistik-Kürzel des Lehrers.", example = "ALBE")
+	public String kuerzelStatistik;
+
 	/** Der Vorname des Lehrers. */
 	@Schema(description = "Der Vorname des Lehrers.", example = "Max")
 	public @NotNull String vorname = "";
