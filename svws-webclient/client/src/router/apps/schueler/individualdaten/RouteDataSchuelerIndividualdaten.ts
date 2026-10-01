@@ -1,18 +1,11 @@
-import type { SchulformKatalogEintrag } from "@core/asd/data/schule/SchulformKatalogEintrag";
-import { Schulform } from "@core/asd/types/schule/Schulform";
-import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
-
-import { routeApp } from "~/router/apps/RouteApp";
 import { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/PendingStateManagerSchuelerIndividualdaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
-import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 interface RouteStateDataSchuelerIndividualdaten extends RouteStateInterface {
 	pendingStateManager: PendingStateManagerSchuelerIndividualdaten | undefined;
-	mapSchulen: Map<string, SchulEintrag>;
 }
 
 export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSchuelerIndividualdaten> {
@@ -20,41 +13,34 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 	public constructor() {
 		super({
 			pendingStateManager: undefined,
-			mapSchulen: new Map<string, SchulEintrag>(),
 		});
 	}
 
 	get pendingStateManager(): PendingStateManagerSchuelerIndividualdaten {
-		if (this._state.value.pendingStateManager === undefined) {
-			const schuelerAuswahlState = useSchuelerAuswahlState();
-			this._state.value.pendingStateManager = new PendingStateManagerSchuelerIndividualdaten('id',
-				() => schuelerAuswahlState.manager, this._state.value.mapSchulen);
-			routeSchueler.data.pendingStateManagerRegistry.addPendingStateManager(this._state.value.pendingStateManager);
+		const pendingStateManager = this._state.value.pendingStateManager;
+
+		if (pendingStateManager === undefined) {
+			return this.initialisierePendingStateManager();
 		}
-		return this._state.value.pendingStateManager;
+
+		return pendingStateManager;
 	}
 
+	private initialisierePendingStateManager(): PendingStateManagerSchuelerIndividualdaten {
+		const schuelerAuswahlState = useSchuelerAuswahlState();
+		const pendingStateManager =
+			new PendingStateManagerSchuelerIndividualdaten(
+				'id',
+				() => schuelerAuswahlState.manager
+			);
 
-	public async ladeListe() {
-		const schulen = routeApp.cache.kataloge.schulenById.values();
+		this._state.value.pendingStateManager = pendingStateManager;
 
-		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler in Frage kommen
-		const mapSchulen = new Map<string, SchulEintrag>();
-		for (const schule of schulen) {
-			if (schule.schulnummerStatistik === null) {
-				continue;
-			}
-			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
-			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === schuleStateImpl.schulform) {
-				mapSchulen.set(schule.schulnummerStatistik, schule);
-			}
-		}
-		this.setPatchedDefaultState({ mapSchulen });
-	}
+		routeSchueler.data.pendingStateManagerRegistry.addPendingStateManager(
+			pendingStateManager
+		);
 
-	get mapSchulen(): Map<string, SchulEintrag> {
-		return this._state.value.mapSchulen;
+		return pendingStateManager;
 	}
 
 }

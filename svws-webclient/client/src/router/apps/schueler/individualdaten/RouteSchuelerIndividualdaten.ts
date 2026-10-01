@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
@@ -22,17 +22,9 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 		super.text = "Individualdaten";
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		// initialize states, load data etc
-		if (isEntering) {
-			await this.data.ladeListe();
-		}
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			mapSchulen: this.data.mapSchulen,
 			zeigeAlles: true,
 		};
 	}

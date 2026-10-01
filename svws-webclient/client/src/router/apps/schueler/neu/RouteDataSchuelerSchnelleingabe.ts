@@ -3,7 +3,6 @@ import type { SchuelerSchulbesuchsdaten } from "@core/asd/data/schueler/Schueler
 import type { SchuelerStammdaten } from "@core/asd/data/schueler/SchuelerStammdaten";
 import type { ErzieherStammdaten } from "@core/core/data/erzieher/ErzieherStammdaten";
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
-import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerTelefon } from "@core/core/data/schueler/SchuelerTelefon";
 import type { SchuelerVermerke } from "@core/core/data/schueler/SchuelerVermerke";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -61,7 +60,6 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		}
 		const schuljahresabschnitte = abschnittStateImpl.alle;
 		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
-		const schulenById: Map<number, SchulEintrag> = routeApp.cache.kataloge.schulenById;
 
 		return new SchuelerSchnelleingabeManager(
 			stammdaten,
@@ -69,8 +67,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			lernabschnitt,
 			schuelerListe,
 			schuljahresabschnitte,
-			faecherById,
-			schulenById
+			faecherById
 		);
 	}
 

@@ -8,6 +8,7 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { SchuelerListe } from "@core/core/data/schueler/SchuelerListe";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
+import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 
 export class SchuelerSchnelleingabeManager {
 
@@ -17,10 +18,10 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schuelerliste: SchuelerListe;
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
 	private readonly _faecherById: Map<number, FachDaten>;
-	private readonly _schulenById: Map<number, SchulEintrag>;
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
 	private readonly _klassenAktuell: List<KlassenDaten> = new ArrayList();
 
+	private readonly schulenState = useHerkunftschulenState();
 
 	constructor(
 		stammdaten: SchuelerStammdaten,
@@ -28,8 +29,7 @@ export class SchuelerSchnelleingabeManager {
 		lernabschnittsdaten: SchuelerLernabschnittsdaten,
 		schuelerliste: SchuelerListe,
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
-		faecherById: Map<number, FachDaten>,
-		schulenById: Map<number, SchulEintrag>
+		faecherById: Map<number, FachDaten>
 	) {
 		this._stammdaten = stammdaten;
 		this._schulbesuchsdaten = schulbesuchsdaten;
@@ -37,7 +37,6 @@ export class SchuelerSchnelleingabeManager {
 		this._schuelerliste = schuelerliste;
 		this._schuljahresabschnitte = schuljahresabschnitte;
 		this._faecherById = faecherById;
-		this._schulenById = schulenById;
 		this.filterKlassen();
 		this.processSchulen();
 	}
@@ -51,7 +50,7 @@ export class SchuelerSchnelleingabeManager {
 	}
 
 	private processSchulen() {
-		for (const schule of this.schulenById.values()) {
+		for (const schule of this.schulenState.herkunftschulen.list) {
 			if (schule.schulnummerStatistik !== null) {
 				this.schulenByExterneSchulnummer.set(schule.schulnummerStatistik, schule);
 			}
@@ -80,10 +79,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get faecherById(): Map<number, FachDaten> {
 		return this._faecherById;
-	}
-
-	get schulenById(): Map<number, SchulEintrag> {
-		return this._schulenById;
 	}
 
 	get klassenAktuell(): List<KlassenDaten> {

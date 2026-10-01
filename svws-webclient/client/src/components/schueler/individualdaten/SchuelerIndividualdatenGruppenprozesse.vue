@@ -189,6 +189,7 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
@@ -204,6 +205,7 @@
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 	const religionenState = useReligionenState();
 	const haltestellenState = useHaltestellenState();
+	const herkunftschulenState = useHerkunftschulenState();
 
 	const { pendingStateManager } = toRefs(props);
 
@@ -240,7 +242,7 @@
 
 	const schuljahr = computed(() => schuleState.schuljahr);
 	const schulform = computed(() => schuelerAuswahlState.manager.schulform());
-	const schulen = computed(() => props.mapSchulen.values());
+	const schulen = computed(() => herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.values());
 
 	watch(() => props.pendingStateManager().pendingStateExists(), (somethingPending: boolean) => {
 		props.checkpoint.active = somethingPending;

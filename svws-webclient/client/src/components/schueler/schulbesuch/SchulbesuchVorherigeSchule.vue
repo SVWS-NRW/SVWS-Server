@@ -112,6 +112,7 @@
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -128,6 +129,7 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const entlassgruendeState = useEntlassgruendeState();
+	const herkunftschulenState = useHerkunftschulenState();
 
 	const updateKompetenz = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const disabled = computed(() => !updateKompetenz.value);
@@ -244,7 +246,7 @@
 
 	const vorherigeSchuleManager = new SelectManager<SchulEintrag>({
 		filters: [vorherigeSchuleFilter],
-		options: computed(() => props.manager().schulenById.values()),
+		options: computed(() => herkunftschulenState.herkunftschulen.list),
 		optionDisplayText: bezeichnungSchule,
 		selectionDisplayText: bezeichnungSchule,
 	});

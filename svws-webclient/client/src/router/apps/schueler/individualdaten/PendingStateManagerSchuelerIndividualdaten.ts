@@ -13,6 +13,7 @@ import type { Haltestelle } from "@core/core/data/schule/Haltestelle";
 import type { ReligionEintrag } from "@core/core/data/schule/ReligionEintrag";
 import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
+import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 import type { AuswahlManager } from "@ui/ui/manager/AuswahlManager";
 import { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
@@ -29,23 +30,17 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	/* Katalog States */
 	private readonly _fahrschuelerartenState = useFahrschuelerartenState();
 	private readonly _religionenState = useReligionenState();
-
-	/** Maps, die Schulnummern zu entsprechenden Schuleinträgen zuordnet. */
-	private readonly _mapSchulen: Map<string, SchulEintrag>;
+	private readonly _herkunftschulenState = useHerkunftschulenState();
 
 	/**
 	 * Konstruktor, der einen neuen PendingState für Schülerstammdaten erstellt.
 	 * @param idFieldName Der Name des Attributs, welches Änderungen hält.
 	 * @param auswahlManager Funktion, die einen AuswahlManager bereitstellt.
-	 * @param mapSchulen Map der Schulen.
 	 */
-	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>, mapSchulen: Map<string, SchulEintrag>) {
+	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>) {
 		super(idFieldName, auswahlManager);
-		this._mapSchulen = mapSchulen;
 		this.initializeAttributeDisplayMappers();
 	}
-
-
 
 	/**
 	 * Initialisiert die Mapper für die Attributanzeige und ordnet
@@ -141,7 +136,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 			if (id === null || id === undefined) {
 				return null;
 			}
-			return this._mapSchulen.get(id) ?? null;
+			return this._herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.get(id) ?? null;
 		},
 		set: (value: SchulEintrag | null) => {
 			this.setPendingState(

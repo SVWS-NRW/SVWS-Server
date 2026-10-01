@@ -180,6 +180,7 @@
 	import { BenutzerKompetenz } from '@core/core/types/benutzer/BenutzerKompetenz';
 	import { useBenutzerState } from '@ui/states/BenutzerState';
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 	import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 	import { useSchuleState } from '@ui/states/SchuleState';
@@ -197,6 +198,7 @@
 	const schuleState = useSchuleState();
 	const serverState = useServerState();
 	const entlassgruendeState = useEntlassgruendeState();
+	const herkunftschulenState = useHerkunftschulenState();
 	const kindergaertenState = useKindergaertenState();
 	const jahrgaengeState = useJahrgaengeState();
 
@@ -266,7 +268,7 @@
 	});
 
 	const aufnehmendeSchuleManager = new SelectManager<SchulEintrag>({
-		options: computed(() => props.manager().schulenById.values()),
+		options: computed(() => herkunftschulenState.herkunftschulen.list),
 		optionDisplayText: bezeichnungSchule,
 		selectionDisplayText: bezeichnungSchule,
 	});

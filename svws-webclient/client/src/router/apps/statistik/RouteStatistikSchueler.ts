@@ -3,7 +3,6 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 
 import { routeApp } from "../RouteApp";
-import { routeSchuelerIndividualdaten } from "../schueler/individualdaten/RouteSchuelerIndividualdaten";
 import type { StatistikSchuelerProps } from "~/components/statistik/StatistikSchuelerProps";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -27,7 +26,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			zeigeAlles: false,
 			// schueler
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			mapSchulen: routeSchuelerIndividualdaten.data.mapSchulen,
 		};
 	}
 }

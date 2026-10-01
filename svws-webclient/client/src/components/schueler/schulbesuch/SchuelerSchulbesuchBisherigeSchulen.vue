@@ -93,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ref, watch } from "vue";
 
 	import { SchuelerSchulbesuchSchule } from "@core/asd/data/schueler/SchuelerSchulbesuchSchule";
@@ -104,6 +105,7 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import type { DataTableColumn } from "@ui/types";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
@@ -123,11 +125,11 @@
 	}>();
 
 	const entlassgruendeState = useEntlassgruendeState();
+	const herkunftschulenState = useHerkunftschulenState();
 
 	const selectedEntries = ref<SchuelerSchulbesuchSchule[]>([]);
 	let model = new SchuelerSchulbesuchSchuleModelProxy(() => new SchuelerSchulbesuchSchule(), () => props.manager());
 	const entries = computed(() => [...props.getBisherigeSchulen()]);
-	const schulen = computed(() => props.manager().schulenById.values());
 
 	const bezeichnungSchulformModal = computed<string>(() => Schulform.data().getEintragByID(model.schule.value?.idSchulform ?? -1)?.text ?? '');
 	const schuljahrDatumVon = computed<number>(() => (model.proxy.datumVon === null) ? -1 : Number(model.proxy.datumVon.substring(0, 4)));
@@ -135,7 +137,7 @@
 	const schulformSelectedSchule = computed<Schulform | null>(() => Schulform.data().getWertByIDOrNull(model.schule.value?.idSchulform ?? -1));
 
 	const schulenManager = new SelectManager<SchulEintrag>({
-		options: schulen,
+		options: computed(() => herkunftschulenState.herkunftschulen.list),
 		optionDisplayText: s => s.name,
 		selectionDisplayText: s => s.name,
 	});
@@ -239,12 +241,12 @@
 	// --- table ---
 
 	function bezeichnungSchulformTable(schule: SchuelerSchulbesuchSchule): string {
-		const idSchulform = props.manager().schulenById.get(schule.idSchule ?? -1)?.idSchulform ?? -1;
+		const idSchulform = herkunftschulenState.herkunftschulen.byId.get(schule.idSchule ?? -1)?.idSchulform ?? -1;
 		return Schulform.data().getEintragByID(idSchulform)?.kuerzel ?? '-';
 	}
 
 	function bezeichnungSchulname(schule: SchuelerSchulbesuchSchule): string {
-		return props.manager().schulenById.get(schule.idSchule ?? -1)?.name ?? '-';
+		return herkunftschulenState.herkunftschulen.byId.get(schule.idSchule ?? -1)?.name ?? '-';
 	}
 
 	function bezeichnungSchulgliederung(schule: SchuelerSchulbesuchSchule): string {

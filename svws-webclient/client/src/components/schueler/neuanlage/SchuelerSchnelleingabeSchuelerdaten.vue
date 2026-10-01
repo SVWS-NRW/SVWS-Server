@@ -114,7 +114,7 @@
 			<svws-ui-spacing />
 			<ui-select label="Ext. ID-Nr."
 				v-model="externeSchulNr"
-				:manager="externeIDNrManager"
+				:manager="schulenManager"
 				:removable="false" :readonly />
 			<svws-ui-text-input placeholder="Schülerausweis-Nummer"
 				:model-value="manager().stammdaten.idSchuelerausweis"
@@ -128,6 +128,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
@@ -138,11 +139,13 @@
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import { Verkehrssprache } from "@core/asd/types/schule/Verkehrssprache";
 	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
+	import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 	import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 	import { DateUtils } from "@core/core/utils/DateUtils";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
@@ -164,9 +167,9 @@
 	const fahrschuelerartenState = useFahrschuelerartenState();
 	const religionenState = useReligionenState();
 	const haltestellenState = useHaltestellenState();
+	const herkunftschulenState = useHerkunftschulenState();
 
 	const manager = () => props.manager();
-	const externeSchulnummern = computed(() => props.manager().schulenById.values());
 
 	const geschlecht = computed<Geschlecht | null>({
 		get: () => Geschlecht.fromValue(manager().stammdaten.geschlecht),
@@ -281,9 +284,10 @@
 			void props.patchSchueler({ haltestelleID: id }, manager().stammdaten.id);
 		},
 	});
-	const externeSchulNr = computed({
+
+	const externeSchulNr = computed<SchulEintrag | null>({
 		get: () => props.manager().schulenByExterneSchulnummer.get(props.manager().stammdaten.externeSchulNr ?? "") ?? null,
-		set: (value) => {
+		set: (value: SchulEintrag | null) => {
 			props.manager().stammdaten.externeSchulNr = value?.schulnummerStatistik ?? null;
 			void props.patchSchueler({ externeSchulNr: value?.schulnummerStatistik }, manager().stammdaten.id);
 		},
@@ -355,8 +359,9 @@
 		selectionDisplayText: i => i.bezeichnung ?? '',
 	});
 
-	const externeIDNrManager = new SelectManager({
-		options: externeSchulnummern, optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
+	const schulenManager = new SelectManager({
+		options: computed(() => herkunftschulenState.herkunftschulen.list),
+		optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 		selectionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 	});
 

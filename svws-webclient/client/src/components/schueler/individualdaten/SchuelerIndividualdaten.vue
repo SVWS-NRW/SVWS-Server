@@ -278,6 +278,7 @@
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useFahrschuelerartenState } from "@ui/states/kataloge/FahrschuelerartenState";
 	import { useHaltestellenState } from "@ui/states/kataloge/HaltestellenState";
+	import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useReligionenState } from "@ui/states/kataloge/ReligionenState";
 	import { useReportingState } from "@ui/states/ReportingState";
@@ -303,6 +304,7 @@
 	const serverState = useServerState();
 	const religionenState = useReligionenState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
+	const herkunftschulenState = useHerkunftschulenState();
 
 	const schuljahr = computed<number>(() => schuelerAuswahlState.manager.schuelerGetSchuljahrOrException());
 
@@ -357,7 +359,7 @@
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
 		const result = new HashSet<string>();
-		for (const schule of props.mapSchulen.values()) {
+		for (const schule of herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.values()) {
 			if ((schule.schulnummerStatistik !== null) && (schule.schulnummerStatistik !== eigeneSchulnummer.value)) {
 				result.add(schule.schulnummerStatistik);
 			}
@@ -372,7 +374,7 @@
 	});
 
 	function getSchulnummerText(schulnummer: string): string {
-		const eintrag = props.mapSchulen.get(schulnummer);
+		const eintrag = herkunftschulenState.herkunftschulen.bySchulnummerStatistikFilteredByEigeneSchulform.get(schulnummer);
 		const text = `${eintrag?.schulnummerStatistik ?? ''} ${eintrag?.kuerzel ?? eintrag?.kurzbezeichnung ?? ''}`;
 		return text.length > 0 ? text : 'Fehlende Angaben';
 	}

@@ -9,11 +9,13 @@ import { Schulgliederung } from "@core/asd/types/schule/Schulgliederung";
 import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 
 export class SchuelerSchulbesuchSchuleModelProxy extends ModelProxy<SchuelerSchulbesuchSchule> {
 
 	private readonly manager: () => SchuelerSchulbesuchManager;
+	private readonly herkunftschulenState = useHerkunftschulenState();
 
 	constructor(
 		data: () => SchuelerSchulbesuchSchule,
@@ -23,7 +25,7 @@ export class SchuelerSchulbesuchSchuleModelProxy extends ModelProxy<SchuelerSchu
 	}
 
 	schule = computed<SchulEintrag | null>({
-		get: () => this.manager().schulenById.get(this.proxy.idSchule ?? -1) ?? null,
+		get: () => this.herkunftschulenState.herkunftschulen.byId.get(this.proxy.idSchule ?? -1) ?? null,
 		set: (v: SchulEintrag | null) => this.proxy.idSchule = v?.id ?? null,
 	});
 

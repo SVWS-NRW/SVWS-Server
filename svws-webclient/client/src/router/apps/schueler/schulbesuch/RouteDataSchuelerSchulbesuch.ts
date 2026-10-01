@@ -8,7 +8,6 @@ import type { List } from "@core/java/util/List";
 import { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
 
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -46,7 +45,6 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 			idSchueler,
 			idSchuljahresabschnitt,
 			{
-				schulenById: routeApp.cache.kataloge.schulenById,
 				abschnitteById: this.mapSchuljahresabschnitte(),
 			}
 		);

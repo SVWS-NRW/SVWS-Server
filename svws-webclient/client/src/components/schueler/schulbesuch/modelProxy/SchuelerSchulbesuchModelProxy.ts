@@ -35,6 +35,7 @@ import type { SchulEintrag } from "@core/core/data/kataloge/SchulEintrag";
 import type { Kindergarten } from "@core/core/data/schule/Kindergarten";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useEntlassgruendeState } from "@ui/states/kataloge/EntlassgruendeState";
+import { useHerkunftschulenState } from "@ui/states/kataloge/HerkunftschulenState";
 import { useJahrgaengeState } from "@ui/states/kataloge/JahrgaengeState";
 import { useKindergaertenState } from "@ui/states/kataloge/KindergaertenState";
 import type { SchuelerSchulbesuchManager } from "@ui/ui/manager/schueler/SchuelerSchulbesuchManager";
@@ -45,6 +46,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 
 	private readonly _entlassgruendeState = useEntlassgruendeState();
 	private readonly _jahrgaengeState = useJahrgaengeState();
+	private readonly _herkunftschulenState = useHerkunftschulenState();
 	private readonly _kindergaertenState = useKindergaertenState();
 
 	private readonly manager: () => SchuelerSchulbesuchManager;
@@ -76,7 +78,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	}
 
 	vorherigeSchule = computed<SchulEintrag | null>({
-		get: () => this.manager().schulenById.get(this.proxy.idVorherigeSchule ?? -1) ?? null,
+		get: () => this._herkunftschulenState.herkunftschulen.byId.get(this.proxy.idVorherigeSchule ?? -1) ?? null,
 		set: (v: SchulEintrag | null) => {
 			this.proxy.idHerkunftSonstigeVorherigeSchule = null;
 			this.proxy.idVorherigeSchule = v?.id ?? null;
@@ -115,7 +117,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 		if (this.proxy.idVorherigeSchule === null) {
 			return null;
 		}
-		const schulnummer = this.manager().schulenById.get(this.proxy.idVorherigeSchule)?.schulnummerStatistik ?? null;
+		const schulnummer = this._herkunftschulenState.herkunftschulen.byId.get(this.proxy.idVorherigeSchule)?.schulnummerStatistik ?? null;
 		if (this.isOeffentlicheOderErsatzschuleInNRW(schulnummer)) {
 			return Schulform.data().getWertByIDOrNull(this.vorherigeSchule.value?.idSchulform ?? -1);
 		}
@@ -196,7 +198,7 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	idAufnehmendeSchule = computed<SchulEintrag | null>({
-		get: () => this.manager().schulenById.get(this.proxy.idAufnehmendeSchule ?? -1) ?? null,
+		get: () => this._herkunftschulenState.herkunftschulen.byId.get(this.proxy.idAufnehmendeSchule ?? -1) ?? null,
 		set: (v: SchulEintrag | null) => this.proxy.idAufnehmendeSchule = v?.id ?? null,
 	});
 

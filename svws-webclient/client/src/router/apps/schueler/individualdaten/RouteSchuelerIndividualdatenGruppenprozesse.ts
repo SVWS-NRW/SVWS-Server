@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
@@ -15,12 +15,12 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { serverStateImpl } from "~/states/ServerStateImpl";
 
-const SSchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
+const SchuelerIndividualdatenGruppenprozesse = () => import("~/components/schueler/individualdaten/SchuelerIndividualdatenGruppenprozesse.vue");
 
 export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schueler.gruppenprozesse.daten", "gruppenprozesse/daten", SSchuelerIndividualdatenGruppenprozesse, new RouteDataSchuelerIndividualdaten());
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schueler.gruppenprozesse.daten", "gruppenprozesse/daten", SchuelerIndividualdatenGruppenprozesse, new RouteDataSchuelerIndividualdaten());
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.propHandler = (props) => this.getProps(props);
 		super.mode = ServerMode.DEV; // checkHidden() kann wieder entfernt werden, sobald der ServerMode für diese Route auf Stable gesetzt ist
@@ -34,17 +34,10 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 			if (serverStateImpl.hasDev) {
 				return false;
 			}
-			// if (!benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
-			//	return false;
 			return this.getRoute(params);
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
-		isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
 	}
 
 	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams): Promise<any> {
@@ -56,7 +49,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 		return {
 			pendingStateManager: () => this.data.pendingStateManager,
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
-			mapSchulen: this.data.mapSchulen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

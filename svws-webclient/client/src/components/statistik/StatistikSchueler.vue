@@ -41,8 +41,7 @@
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<schueler-individualdaten v-if="tabManager.tab.name === 'SS'"
 					:zeige-alles="false"
-					:foerderschwerpunkte-by-id
-					:map-schulen />
+					:foerderschwerpunkte-by-id />
 			</svws-ui-tab-bar>
 		</div>
 	</div>
