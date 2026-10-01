@@ -28,6 +28,7 @@ import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { abteilungenStateImpl } from "~/states/kataloge/AbteilungenStateImpl";
 import { beschaeftigungsartenStateImpl } from "~/states/kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
