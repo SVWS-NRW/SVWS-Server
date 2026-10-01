@@ -12,6 +12,10 @@
 					v-model="model.proxy.faecher"
 					:validation="() => model.getFehler('faecher')"
 					required :max-len="255" />
+				<ui-select label="Lehrkraft"
+					v-model="model.lehrkraft.value"
+					:deep-search-attributes="['kuerzel', 'nachname', 'vorname']"
+					:manager="lehrerManager" />
 			</div>
 			<h3 class="text-base font-semibold flex justify-start">Diagnose</h3>
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -89,11 +93,15 @@
 	import { computed, ref } from 'vue';
 
 	import { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import type { List } from "@core/java/util/List";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { SchuelerFoerderempfehlungModelProxy } from "~/components/schueler/lernabschnitte/foerderempfehlungen/modelproxy/SchuelerFoerderempfehlungModelProxy";
 
 	const props = defineProps<{
 		add: (data: Partial<SchuelerFoerderempfehlung>) => Promise<void>,
+		lehrer: () => List<LehrerListeEintrag>
 		isOpen: boolean
 	}>();
 
@@ -102,7 +110,8 @@
 	}>();
 
 	const initialData = ref<SchuelerFoerderempfehlung>(createModel());
-	const model = new SchuelerFoerderempfehlungModelProxy(() => initialData.value);
+	const model = new SchuelerFoerderempfehlungModelProxy(() => initialData.value, props.lehrer);
+
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const modalIsOpen = computed<boolean>({
 		get: () => props.isOpen,
@@ -110,6 +119,12 @@
 			initialData.value = createModel();
 			emit("update:isOpen", v);
 		},
+	});
+
+	const lehrerManager = new SelectManager({
+		options: computed(() => props.lehrer()),
+		optionDisplayText: v => `${v.nachname}, ${v.vorname}`,
+		selectionDisplayText: v => `${v.nachname}, ${v.vorname}`,
 	});
 
 	function closeModal() {
@@ -122,7 +137,7 @@
 	}
 
 	async function addFoerderempfehlung(): Promise<void> {
-		const { guid, idKlasse, idLehrer, ...partialData } = model.proxy;
+		const { guid, idKlasse, ...partialData } = model.proxy;
 		await props.add(partialData);
 		closeModal();
 	}

@@ -11,6 +11,10 @@
 				@change="model.patch"
 				:validation="() => model.getFehler('faecher')"
 				required :max-len="255" />
+			<ui-select label="Lehrkraft"
+				v-model="model.lehrkraft.value"
+				:deep-search-attributes="['kuerzel', 'nachname', 'vorname']"
+				:manager="lehrerManager" />
 		</div>
 		<div class="mt-6">
 			<div class="flex items-center gap-2 cursor-pointer mb-3" @click="diagnoseCollapsed = !diagnoseCollapsed">
@@ -101,22 +105,32 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { computed, ref } from 'vue';
 
 	import type { SchuelerFoerderempfehlung } from '@core/asd/data/schueler/SchuelerFoerderempfehlung';
+	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+	import type { List } from "@core/java/util/List";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { SchuelerFoerderempfehlungModelProxy } from "~/components/schueler/lernabschnitte/foerderempfehlungen/modelproxy/SchuelerFoerderempfehlungModelProxy";
 
 	const props = defineProps<{
 		selectedFoerderempfehlung: SchuelerFoerderempfehlung;
+		lehrer: () => List<LehrerListeEintrag>,
 		patch: (data: Partial<SchuelerFoerderempfehlung>, guid: string) => Promise<boolean>;
 	}>();
-
-	const model = new SchuelerFoerderempfehlungModelProxy(() => props.selectedFoerderempfehlung,
-		(data) => props.patch(data, props.selectedFoerderempfehlung.guid ?? ''));
 
 	const diagnoseCollapsed = ref(true);
 	const massnahmeCollapsed = ref(true);
 	const verantwortlichkeitCollapsed = ref(true);
+
+	const model = new SchuelerFoerderempfehlungModelProxy(() => props.selectedFoerderempfehlung,
+		props.lehrer, (data) => props.patch(data, props.selectedFoerderempfehlung.guid ?? ''));
+
+	const lehrerManager = new SelectManager({
+		options: computed(() => props.lehrer()),
+		optionDisplayText: v => `${v.nachname}, ${v.vorname}`,
+		selectionDisplayText: v => `${v.nachname}, ${v.vorname}`,
+	});
 
 </script>

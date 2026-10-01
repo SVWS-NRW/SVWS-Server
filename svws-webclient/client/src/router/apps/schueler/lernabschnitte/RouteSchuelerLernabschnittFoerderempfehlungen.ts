@@ -22,12 +22,13 @@ class RouteSchuelerLernabschnittFoerderempfehlungen extends RouteNode<RouteDataS
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocation> {
-		await this.data.ladeFoerderempfehlungen();
+		await this.data.ladeDaten();
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittFoerderempfehlungenProps {
 		return {
 			foerderempfehlungen: () => this.data.listFoerderempfehlungen,
+			lehrer: () => this.data.lehrer,
 			add: this.data.addFoerderempfehlung,
 			patch: this.data.patchFoerderempfehlung,
 			delete: this.data.deleteFoerderempfehlungen,

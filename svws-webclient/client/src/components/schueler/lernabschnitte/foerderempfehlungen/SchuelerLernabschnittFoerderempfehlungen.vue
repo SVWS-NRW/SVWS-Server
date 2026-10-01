@@ -8,10 +8,9 @@
 			v-model:selected-foerderempfehlung="selectedFoerderempfehlung"
 			:delete="props.delete" />
 		<schueler-lernabschnitt-foerderempfehlungen-neu-modal v-model:is-open="modalIsShown"
-			:add="props.add" />
+			:lehrer="props.lehrer" :add="props.add" />
 		<schueler-lernabschnitt-foerderempfehlungen-daten v-if="selectedFoerderempfehlung !== undefined"
-			:selected-foerderempfehlung
-			:patch />
+			:selected-foerderempfehlung :lehrer="props.lehrer" :patch />
 	</svws-ui-content-card>
 </template>
 

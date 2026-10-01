@@ -1,4 +1,8 @@
+import { computed } from "vue";
+
 import type { SchuelerFoerderempfehlung } from "@core/asd/data/schueler/SchuelerFoerderempfehlung";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
+import type { List } from "@core/java/util/List";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
@@ -10,20 +14,24 @@ type StringNullableProps<T> = {
 
 export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoerderempfehlung> {
 
+	private readonly _lehrer: () => List<LehrerListeEintrag>;
 
 	/**
 	 * Modelproxy für Förderempfehlungen
 	 *
 	 * @param data Lambda für den Zugriff auf die Originaldaten
+	 * @param lehrer Lambda für den Zugriff auf die Lehrer
 	 * @param patch Methode zum Patchen einzelner Attribute
 	 */
 	public constructor(
 		data: () => SchuelerFoerderempfehlung,
+		lehrer: () => List<LehrerListeEintrag>,
 		patch?: (data: Partial<SchuelerFoerderempfehlung>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof SchuelerFoerderempfehlung> = ["datumUmsetzungVon", "datumUmsetzungBis", "datumUeberpruefung",
-			"datumNaechstesBeratungsgespraech", "abgeschlossen", "eingabeFertig"];
+			"datumNaechstesBeratungsgespraech", "abgeschlossen", "eingabeFertig", "idLehrer"];
 		super({ data, patch, listOfAutopatchProps });
+		this._lehrer = lehrer;
 		this.addValidatoren();
 		this.validate();
 	}
@@ -45,6 +53,11 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 			"verantwortlichkeitEltern", "verantwortlichkeitSchueler");
 	}
 
+	lehrkraft = computed<LehrerListeEintrag | null>({
+		get: () => this._lehrerMap.value.get(this.proxy.idLehrer ?? -1) ?? null,
+		set: (v: LehrerListeEintrag | null) => this.proxy.idLehrer = v?.id ?? null,
+	});
+
 	/**
 	 * Fügt für jedes übergebene Attribut einen {@link ValidatorStringMatchesPattern} mit dem angegebenen Muster hinzu.
 	 *
@@ -56,5 +69,13 @@ export class SchuelerFoerderempfehlungModelProxy extends ModelProxy<SchuelerFoer
 			this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy[prop], pattern), prop);
 		}
 	}
+
+	private readonly _lehrerMap = computed<Map<number, LehrerListeEintrag>>(() => {
+		const map = new Map<number, LehrerListeEintrag>();
+		for (const l of this._lehrer()) {
+			map.set(l.id, l);
+		}
+		return map;
+	});
 
 }

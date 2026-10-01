@@ -102,7 +102,7 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 		switch (name) {
 			case ID_LERNABSCHNITT -> dto.Abschnitt_ID = JSONMapper.convertToLongInRange(value, false, 1L, null, name);
 			case "idKlasse" -> updateklassenID(dto, JSONMapper.convertToLongInRange(value, false, 1L, null, name));
-			case "idLehrer" -> updatelehrerID(dto, JSONMapper.convertToLongInRange(value, false, 1L, null, name));
+			case "idLehrer" -> updatelehrerID(dto, JSONMapper.convertToLongInRange(value, true, 1L, null, name));
 			case DATUM_ANGELEGT -> dto.DatumAngelegt = JSONMapper.convertToString(value, true, true, null, name);
 			case "datumLetzteAenderung" -> updateDatumLetzteAenderung(dto, name, value);
 			case "diagnoseKompetenzenInhaltlichProzessbezogen" -> dto.Inhaltl_Prozessbez_Komp =
@@ -201,7 +201,7 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	 *
 	 * @throws ApiOperationException wenn der Lehrer nicht existiert
 	 */
-	private void updatelehrerID(final DTOSchuelerFoerderempfehlung dto, final long lehrerID) throws ApiOperationException {
+	private void updatelehrerID(final DTOSchuelerFoerderempfehlung dto, final Long lehrerID) throws ApiOperationException {
 		pruefeExistenzLehrer(lehrerID);
 		dto.Lehrer_ID = lehrerID;
 	}
@@ -245,6 +245,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	 * @throws ApiOperationException wenn der Lehrer nicht existiert
 	 */
 	private void pruefeExistenzLehrer(final Long lehrerID) throws ApiOperationException {
+		if (lehrerID == null) {
+			return;
+		}
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrerID);
 		if (lehrer == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Lehrer mit der ID %d gefunden.".formatted(lehrerID));

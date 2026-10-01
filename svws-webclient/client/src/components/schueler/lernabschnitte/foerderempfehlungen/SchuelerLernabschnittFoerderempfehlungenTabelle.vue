@@ -19,8 +19,8 @@
 			{{ value ? '&check;' : '&times;' }}
 		</template>
 		<template #actions>
-			<svws-ui-button @click="deleteAuswahl()" type="trash" :disabled="!hasSelectedFoerderempfehlungen" />
-			<svws-ui-button @click="$emit('open-modal')" type="icon">
+			<svws-ui-button @click="deleteAuswahl()" type="trash" :disabled="!hasSelectedFoerderempfehlungen" title="Ausgewählte Einträge werden gelöscht" />
+			<svws-ui-button @click="$emit('open-modal')" type="icon" title="Neue Förderempfehlung anlegen">
 				<span class="icon i-ri-add-line" />
 			</svws-ui-button>
 		</template>

@@ -1,4 +1,5 @@
 import type { SchuelerFoerderempfehlung } from "@core/asd/data/schueler/SchuelerFoerderempfehlung";
+import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 
@@ -10,10 +11,12 @@ import { routeSchuelerLernabschnitte } from "./RouteSchuelerLernabschnitte";
 
 interface RouteStateDataSchuelerLernabschnittFoerderempfehlungen extends RouteStateInterface {
 	listFoerderempfehlungen: List<SchuelerFoerderempfehlung>;
+	lehrer: List<LehrerListeEintrag>
 }
 
 const defaultState = <RouteStateDataSchuelerLernabschnittFoerderempfehlungen> {
 	listFoerderempfehlungen: new ArrayList<SchuelerFoerderempfehlung>(),
+	lehrer: new ArrayList<LehrerListeEintrag>(),
 };
 
 export class RouteDataSchuelerLernabschnittFoerderempfehlungen extends RouteData<RouteStateDataSchuelerLernabschnittFoerderempfehlungen> {
@@ -26,16 +29,25 @@ export class RouteDataSchuelerLernabschnittFoerderempfehlungen extends RouteData
 		return this._state.value.listFoerderempfehlungen;
 	}
 
+	get lehrer(): List<LehrerListeEintrag> {
+		return this._state.value.lehrer;
+	}
+
 	/**
-	 * Lädt die Förderempfehlungen für den aktuellen Lernabschnitt
+	 * Lädt die Daten für Förderempfehlungen für den aktuellen Lernabschnitt
 	 */
-	public async ladeFoerderempfehlungen(): Promise<void> {
+	public async ladeDaten(): Promise<void> {
 		if (!routeSchuelerLernabschnitte.data.hatAuswahl) {
 			return;
 		}
 		const lernabschnittsDaten = routeSchuelerLernabschnitte.data.daten;
-		const foerderempfehlungen = await api.server.getFoerderempfehlungenByLernabschnittsdatenID(api.schema, lernabschnittsDaten.id);
-		this.setPatchedDefaultState({ listFoerderempfehlungen: foerderempfehlungen });
+
+		const [foerderempfehlungen, lehrer] = await Promise.all([
+			api.server.getFoerderempfehlungenByLernabschnittsdatenID(api.schema, lernabschnittsDaten.id),
+			api.server.getLehrer(api.schema),
+		]);
+
+		this.setPatchedDefaultState({ listFoerderempfehlungen: foerderempfehlungen, lehrer });
 	}
 
 	addFoerderempfehlung = async (payload: Partial<SchuelerFoerderempfehlung>): Promise<void> => {
