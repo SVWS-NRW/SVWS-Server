@@ -19,14 +19,12 @@ export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	public constructor(idStaatsangehoerigkeit: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		const staatsangehoerigkeitSchluessel: Supplier<string> = this.getNotNullSupplier({ get: () => Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get()) });
-		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahr() };
-		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, schuljahr, kontext));
+		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const staatsangehoerigkeitSchluessel: string | null = Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get());
-		if (staatsangehoerigkeitSchluessel === null) {
+		const nationalitaet: Nationalitaeten | null = Nationalitaeten.data().getWertByIDOrNull(this._idStaatsangehoerigkeit.get());
+		if (nationalitaet === null) {
 			this.addFehler(0, "Das Feld 'Staatsangehörigkeit' muss zulässig sein. ");
 			return false;
 		}

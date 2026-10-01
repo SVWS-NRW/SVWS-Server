@@ -28,19 +28,14 @@ public final class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends 
 
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 
-		final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel =
-				getNotNullSupplier(() -> Nationalitaeten.data().getSchluesselByIDOrNull(_idStaatsangehoerigkeit.get()));
-		// Schuljahr wird als Testparameter benötigt und daher hier separat übergeben.
-		final @NotNull Supplier<Integer> schuljahr = () -> kontext.getSchuljahr();
-
-		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitSchluessel, schuljahr, kontext));
+		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		final String staatsangehoerigkeitSchluessel = Nationalitaeten.data().getSchluesselByIDOrNull(this._idStaatsangehoerigkeit.get());
+		final Nationalitaeten nationalitaet = Nationalitaeten.data().getWertByIDOrNull(this._idStaatsangehoerigkeit.get());
 
-		if (staatsangehoerigkeitSchluessel == null) {
+		if (nationalitaet == null) {
 			addFehler(0, "Das Feld 'Staatsangehörigkeit' muss zulässig sein. ");
 			return false;
 		}

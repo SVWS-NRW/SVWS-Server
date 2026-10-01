@@ -1,4 +1,3 @@
-import { Schulform } from '../../../asd/types/schule/Schulform';
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -7,9 +6,7 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Validator {
 
-	private readonly _staatsangehoerigkeitSchluessel: Supplier<string>;
-
-	private readonly schuljahr: number;
+	private readonly _idStaatsangehoerigkeit: Supplier<number>;
 
 	private static readonly FEHLERTEXT: string = "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
@@ -17,19 +14,16 @@ export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param staatsangehoerigkeitSchluessel              der staatsangehoerigkeitSchluessel des Lehrers
-	 * @param schuljahr
-	 * @param kontext            der Kontext des Validators
+	 * @param idStaatsangehoerigkeit   ID der Staatsangehörigkeit des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(staatsangehoerigkeitSchluessel: Supplier<string>, schuljahr: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idStaatsangehoerigkeit: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._staatsangehoerigkeitSchluessel = staatsangehoerigkeitSchluessel;
-		this.schuljahr = schuljahr.get().valueOf();
+		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 	}
 
 	protected pruefe(): boolean {
-		const schulform: Schulform | null = this.kontext().getSchulform();
-		if (Nationalitaeten.data().getBySchuljahrAndSchulformAndSchluessel(this.schuljahr, schulform, this._staatsangehoerigkeitSchluessel.get()) === null) {
+		if (!Nationalitaeten.data().isGueltig(this._idStaatsangehoerigkeit.get(), this.kontext().getSchuljahr())) {
 			this.addFehler(0, ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
 			return false;
 		}
