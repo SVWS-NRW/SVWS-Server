@@ -79,13 +79,6 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		// Die problematische Situation kann sich nur durch eine minimale Belegung bei Geschichte und Sozialwissenschaften sowie Sport im Abitur ergeben.
 		if (hatSportAbi && (anzahlGE == 2) && (anzahlSW == 2)) {
 
-			// Wenn zusätzlich Philosophie im Abitur gewählt wurde dann sind zwei Kurse zu viel einbringungspflichtig
-			final boolean hatPhilosophieAbi = (philosophie.size() == 1) && (philosophie.get(0).abiturFach != null);
-			if (hatPhilosophieAbi) {
-				addFehler(GostBelegungsfehler.GOST30_EINBR_1);
-				return;
-			}
-
 			// Wenn zusätzlich Kunst im Abitur gewählt wurde dann sind zwei Kurse zu viel einbringungspflichtig
 			final boolean hatKunstAbi = (kunst.size() == 1) && (kunst.get(0).abiturFach != null);
 			if (hatKunstAbi) {
@@ -114,17 +107,25 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 
 			// Wenn zusätzlich zwei weitere Gesellschaftswissenschaften im Abitur gewählt wurden, dann sind zwei Kurse zu viel einbringungspflichtig
 			int anzahlGWAbi = 0;
+			int anzahlREAbi = 0;
 			for (final @NotNull AbiturFachbelegung bel : gesellschaftswissenschaftenReligion) {
 				final GostFach fach = manager.faecher().get(bel.fachID);
 				if ((fach == null) || "GE".equals(fach.kuerzel) || "SW".equals(fach.kuerzel)) {
 					continue;
 				}
 				if (bel.abiturFach != null) {
-					anzahlGWAbi++;
+					if (GostFachbereich.RELIGION.hat(fach)) {
+						anzahlREAbi++;
+					} else {
+						anzahlGWAbi++;
+					}
 				}
 			}
 			if (anzahlGWAbi == 2) {
 				addFehler(GostBelegungsfehler.GOST30_EINBR_5);
+			}
+			if ((anzahlGWAbi == 1) && (anzahlREAbi == 1)) {
+				addFehler(GostBelegungsfehler.GOST30_EINBR_6);
 			}
 		}
 	}

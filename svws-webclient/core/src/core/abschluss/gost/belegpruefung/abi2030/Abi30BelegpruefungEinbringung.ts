@@ -81,11 +81,6 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 		const anzahlGE: number = this.manager.zaehleBelegungInHalbjahren(this.geschichte, ...GostHalbjahr.getQualifikationsphase());
 		const anzahlSW: number = this.manager.zaehleBelegungInHalbjahren(this.sozialwissenschaften, ...GostHalbjahr.getQualifikationsphase());
 		if (hatSportAbi && (anzahlGE === 2) && (anzahlSW === 2)) {
-			const hatPhilosophieAbi: boolean = (this.philosophie.size() === 1) && (this.philosophie.get(0).abiturFach !== null);
-			if (hatPhilosophieAbi) {
-				this.addFehler(GostBelegungsfehler.GOST30_EINBR_1);
-				return;
-			}
 			const hatKunstAbi: boolean = (this.kunst.size() === 1) && (this.kunst.get(0).abiturFach !== null);
 			if (hatKunstAbi) {
 				this.addFehler(GostBelegungsfehler.GOST30_EINBR_2);
@@ -106,17 +101,25 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 				return;
 			}
 			let anzahlGWAbi: number = 0;
+			let anzahlREAbi: number = 0;
 			for (const bel of this.gesellschaftswissenschaftenReligion) {
 				const fach: GostFach | null = this.manager.faecher().get(bel.fachID);
 				if ((fach === null) || JavaObject.equalsTranspiler("GE", (fach.kuerzel)) || JavaObject.equalsTranspiler("SW", (fach.kuerzel))) {
 					continue;
 				}
 				if (bel.abiturFach !== null) {
-					anzahlGWAbi++;
+					if (GostFachbereich.RELIGION.hat(fach)) {
+						anzahlREAbi++;
+					} else {
+						anzahlGWAbi++;
+					}
 				}
 			}
 			if (anzahlGWAbi === 2) {
 				this.addFehler(GostBelegungsfehler.GOST30_EINBR_5);
+			}
+			if ((anzahlGWAbi === 1) && (anzahlREAbi === 1)) {
+				this.addFehler(GostBelegungsfehler.GOST30_EINBR_6);
 			}
 		}
 	}

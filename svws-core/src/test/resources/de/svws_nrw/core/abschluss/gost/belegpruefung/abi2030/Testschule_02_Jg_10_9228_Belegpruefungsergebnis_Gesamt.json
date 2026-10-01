@@ -3,7 +3,7 @@
   "fehlercodes" : [ {
     "code" : "EINBR_2",
     "art" : "BELEGUNG",
-    "beschreibung" : "Die aus dieser Belegung sich ergebende Einbringungsverpflichtung überschreitet die Anzahl von 36 Kursen. Es ergeben sich zu viele einbringungspflichtige Kurse wenn Geschichte sowie Sozialwissenschaften in der Qualifikationsphase jeweils mit nur 2 Kursen belegt sind und Sport und ein Projektkurs mit einer Referenzfachbelegung nur in der Q1 als Abiturfächer."
+    "beschreibung" : "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Kunst als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden."
   }, {
     "code" : "NW_FS_12_INFO",
     "art" : "HINWEIS",
