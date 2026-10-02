@@ -70,18 +70,12 @@ public class ErzieherStammdaten {
 	public String eMail;
 
 	/** Die ID der Staatsangehörigkeit des Erziehers. */
-	@Schema(description = "die ID der Staatsangehörigkeit", example = "000")
-	public String staatsangehoerigkeitID;
+	@Schema(description = "die ID der Staatsangehörigkeit", example = "68069085")
+	public Long idStaatsangehoerigkeit;
 
 	/** Anmerkungen zum Erziehers. */
 	@Schema(description = "Anmerkungen zum Erzieher", example = "was auch immer")
 	public String bemerkungen;
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public ErzieherStammdaten() {
-		// leer
-	}
 
 }

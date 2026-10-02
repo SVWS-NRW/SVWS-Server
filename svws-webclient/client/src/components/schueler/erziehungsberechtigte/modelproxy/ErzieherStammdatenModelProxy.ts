@@ -30,7 +30,7 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 		patch?: (data: Partial<ErzieherStammdaten>) => Promise<boolean>
 	) {
 		const listOfAutopatchProps: Iterable<keyof ErzieherStammdaten> = [
-			'idErzieherArt', 'staatsangehoerigkeitID', 'wohnortID', 'ortsteilID', 'erhaeltAnschreiben'];
+			'idErzieherArt', 'idStaatsangehoerigkeit', 'wohnortID', 'ortsteilID', 'erhaeltAnschreiben'];
 		super({ data, patch, listOfAutopatchProps });
 
 		this._schuljahr = schuljahr;
@@ -80,8 +80,8 @@ export class ErzieherStammdatenModelProxy extends ModelProxy<ErzieherStammdaten>
 	});
 
 	staatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(this.proxy.staatsangehoerigkeitID)?.daten(this._schuljahr()) ?? null,
-		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.staatsangehoerigkeitID = v?.iso3 ?? null,
+		get: () => Nationalitaeten.data().getEintragByID(this.proxy.idStaatsangehoerigkeit) ?? null,
+		set: (v: NationalitaetenKatalogEintrag | null) => this.proxy.idStaatsangehoerigkeit = v?.id ?? null,
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -24,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,6 +42,8 @@ class DataErzieherStammdatenTest {
 	@BeforeEach
 	void setUp() {
 		dataErzieherStammdaten = new DataErzieherStammdaten(conn);
+		lenient().when(conn.getUser()).thenReturn(mock(Benutzer.class));
+		lenient().when(conn.getUser().schuleGetSchuljahr()).thenReturn(2012);
 	}
 
 	@Test
@@ -62,7 +67,7 @@ class DataErzieherStammdatenTest {
 				.hasFieldOrPropertyWithValue("wohnortID", 3L)
 				.hasFieldOrPropertyWithValue("ortsteilID", 4L)
 				.hasFieldOrPropertyWithValue("eMail", "anna.meier@xyz.de")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 				.hasFieldOrPropertyWithValue("erhaeltAnschreiben", true)
 				.hasFieldOrPropertyWithValue("bemerkungen", "Testbeschreibung");
 	}
@@ -88,7 +93,7 @@ class DataErzieherStammdatenTest {
 				.hasFieldOrPropertyWithValue("wohnortID", 3L)
 				.hasFieldOrPropertyWithValue("ortsteilID", 4L)
 				.hasFieldOrPropertyWithValue("eMail", "holger.meier@xyz.de")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 				.hasFieldOrPropertyWithValue("erhaeltAnschreiben", true)
 				.hasFieldOrPropertyWithValue("bemerkungen", "Testbeschreibung");
 	}
@@ -124,7 +129,7 @@ class DataErzieherStammdatenTest {
 				.hasFieldOrPropertyWithValue("wohnortID", 3L)
 				.hasFieldOrPropertyWithValue("ortsteilID", 4L)
 				.hasFieldOrPropertyWithValue("eMail", "anna.meier@xyz.de")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 				.hasFieldOrPropertyWithValue("erhaeltAnschreiben", true)
 				.hasFieldOrPropertyWithValue("bemerkungen", "Testbeschreibung");
 	}
@@ -149,7 +154,7 @@ class DataErzieherStammdatenTest {
 				.hasFieldOrPropertyWithValue("wohnortID", 3L)
 				.hasFieldOrPropertyWithValue("ortsteilID", 4L)
 				.hasFieldOrPropertyWithValue("eMail", "holger.meier@xyz.de")
-				.hasFieldOrPropertyWithValue("staatsangehoerigkeitID", null)
+				.hasFieldOrPropertyWithValue("idStaatsangehoerigkeit", null)
 				.hasFieldOrPropertyWithValue("erhaeltAnschreiben", true)
 				.hasFieldOrPropertyWithValue("bemerkungen", "Testbeschreibung");
 	}

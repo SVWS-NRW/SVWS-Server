@@ -97,6 +97,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	 * Lambda-Ausdruck zum Umwandeln des ersten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.
 	 */
 	private final Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher1 = (final DTOSchuelerErzieherAdresse e) -> {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final ErzieherStammdaten eintrag = new ErzieherStammdaten();
 		// Für den ersten Erzieher desselben Eintrags wird das Suffix "1" angehängt
 		eintrag.id = (e.ID * 10) + 1;
@@ -112,7 +113,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail;
-		eintrag.staatsangehoerigkeitID = (e.Erz1StaatKrz == null) ? null : e.Erz1StaatKrz.historie().getLast().iso3;
+		eintrag.idStaatsangehoerigkeit = mapIdStaatsangehoerigkeit(e.Erz1StaatKrz, schuljahr);
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
@@ -122,6 +123,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	 * Lambda-Ausdruck zum Umwandeln des zweiten Erziehers eines Datenbank-DTOs {@link DTOSchuelerErzieherAdresse} in einen Core-DTO {@link ErzieherStammdaten}.
 	 */
 	private final Function<DTOSchuelerErzieherAdresse, ErzieherStammdaten> dtoMapperErzieher2 = (final DTOSchuelerErzieherAdresse e) -> {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final ErzieherStammdaten eintrag = new ErzieherStammdaten();
 		// Für den zweiten Erzieher desselben Eintrags wird das Suffix "2" angehängt
 		eintrag.id = (e.ID * 10) + 2;
@@ -137,7 +139,7 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		eintrag.wohnortID = e.ErzOrt_ID;
 		eintrag.ortsteilID = e.ErzOrtsteil_ID;
 		eintrag.eMail = e.ErzEmail2;
-		eintrag.staatsangehoerigkeitID = (e.Erz2StaatKrz == null) ? null : e.Erz2StaatKrz.historie().getLast().iso3;
+		eintrag.idStaatsangehoerigkeit = mapIdStaatsangehoerigkeit(e.Erz2StaatKrz, schuljahr);
 		eintrag.erhaeltAnschreiben = e.ErzAnschreiben;
 		eintrag.bemerkungen = e.Bemerkungen;
 		return eintrag;
@@ -342,31 +344,44 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			case "ortsteilID" -> setWohnort(dto,
 					Optional.ofNullable(JSONMapper.convertToLong(map.get("wohnortID"), true, name)).orElse(dto.ErzOrt_ID),
 					JSONMapper.convertToLong(value, true, name));
-			case "staatsangehoerigkeitID" -> {
-				final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null, name);
-				if ((staatsangehoerigkeitID == null) || (staatsangehoerigkeitID.isEmpty())) {
-					if (targetNr == 1) {
-						dto.Erz1StaatKrz = null;
-					} else {
-						dto.Erz2StaatKrz = null;
-					}
-				} else {
-					final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
-					if (nat == null) {
-						throw new ApiOperationException(Status.NOT_FOUND, "Staatsangehörigkeit mit der ID " + staatsangehoerigkeitID + " nicht gefunden");
-					}
-					if (targetNr == 1) {
-						dto.Erz1StaatKrz = nat;
-					} else {
-						dto.Erz2StaatKrz = nat;
-					}
-				}
-			}
+			case "idStaatsangehoerigkeit" -> updateIdStaatsangehoerigkeit(dto, name, value, targetNr);
 			case "erhaeltAnschreiben" -> dto.ErzAnschreiben = JSONMapper.convertToBoolean(value, true, name);
 			case "bemerkungen" -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true,
 					Schema.tab_SchuelerErzAdr.col_Bemerkungen.datenlaenge(), name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Unbekanntes Feld: " + name);
 		}
+	}
+
+	private static void updateIdStaatsangehoerigkeit(final DTOSchuelerErzieherAdresse dto, final String name, final Object value, final int targetNr) {
+		final Long idStaatsangehoerigkeit = JSONMapper.convertToLong(value, true, name);
+		if (idStaatsangehoerigkeit == null) {
+			if (targetNr == 1) {
+				dto.Erz1StaatKrz = null;
+			} else {
+				dto.Erz2StaatKrz = null;
+			}
+		} else {
+			final Nationalitaeten nat = Nationalitaeten.data().getWertByIDOrNull(idStaatsangehoerigkeit);
+			if (nat == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Staatsangehörigkeit mit der ID " + idStaatsangehoerigkeit + " nicht gefunden");
+			}
+			if (targetNr == 1) {
+				dto.Erz1StaatKrz = nat;
+			} else {
+				dto.Erz2StaatKrz = nat;
+			}
+		}
+	}
+
+	private static Long mapIdStaatsangehoerigkeit(final Nationalitaeten nationalitaet, final int schuljahr) {
+		if (nationalitaet == null) {
+			return null;
+		}
+		final var eintrag = nationalitaet.daten(schuljahr);
+		if (eintrag == null) {
+			return null;
+		}
+		return eintrag.id;
 	}
 
 	@Override

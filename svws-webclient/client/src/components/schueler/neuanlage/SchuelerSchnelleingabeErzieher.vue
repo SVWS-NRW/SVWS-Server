@@ -90,10 +90,8 @@
 	const patchPosModalErzIsShown = ref(false);
 
 	const zweiteErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(zweiterErz.value.staatsangehoerigkeitID ?? null)?.daten(props.schuljahr) ?? null,
-		set: (value: NationalitaetenKatalogEintrag | null) => {
-			zweiterErz.value.staatsangehoerigkeitID = value?.iso3 ?? null;
-		},
+		get: () => Nationalitaeten.data().getEintragByID(zweiterErz.value.idStaatsangehoerigkeit ?? -1) ?? null,
+		set: (value: NationalitaetenKatalogEintrag | null) => zweiterErz.value.idStaatsangehoerigkeit = value?.id ?? null,
 	});
 
 	const staatsangehoerigkeitenManager = new CoreTypeSelectManager({

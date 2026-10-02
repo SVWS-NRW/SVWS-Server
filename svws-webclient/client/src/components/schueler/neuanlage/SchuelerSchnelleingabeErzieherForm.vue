@@ -125,11 +125,11 @@
 	});
 
 	const ersterErzStaatsangehoerigkeit = computed<NationalitaetenKatalogEintrag | null>({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID ?? null)?.daten(abschnittState.auswahl.schuljahr) ?? null,
+		get: () => Nationalitaeten.data().getEintragByID(data.value.idStaatsangehoerigkeit ?? -1) ?? null,
 		set: (value: NationalitaetenKatalogEintrag | null) => {
-			const iso3 = value?.iso3 ?? null;
-			data.value.staatsangehoerigkeitID = iso3;
-			void props.patchErzieher({ staatsangehoerigkeitID: iso3 }, data.value.id);
+			const id = value?.id ?? null;
+			data.value.idStaatsangehoerigkeit = id;
+			void props.patchErzieher({ idStaatsangehoerigkeit: id }, data.value.id);
 		},
 	});
 

@@ -43,7 +43,7 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				erzieherStammdaten.id,
 				ersetzeNullBlankTrim(erzieherStammdaten.nachname),
 				reportingSchueler,
-				Nationalitaeten.getByISO3(erzieherStammdaten.staatsangehoerigkeitID),
+				Nationalitaeten.data().getWertByIDOrNull(erzieherStammdaten.idStaatsangehoerigkeit),
 				null,
 				ersetzeNullBlankTrim(erzieherStammdaten.strassenname),
 				"",

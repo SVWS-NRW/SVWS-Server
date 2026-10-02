@@ -76,7 +76,7 @@ export class ErzieherStammdaten extends JavaObject {
 	/**
 	 * Die ID der Staatsangehörigkeit des Erziehers.
 	 */
-	public staatsangehoerigkeitID: string | null = null;
+	public idStaatsangehoerigkeit: number | null = null;
 
 	/**
 	 * Anmerkungen zum Erziehers.
@@ -84,9 +84,6 @@ export class ErzieherStammdaten extends JavaObject {
 	public bemerkungen: string | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -122,7 +119,7 @@ export class ErzieherStammdaten extends JavaObject {
 		result.ortsteilID = (obj.ortsteilID === undefined) ? null : obj.ortsteilID === null ? null : obj.ortsteilID;
 		result.erhaeltAnschreiben = (obj.erhaeltAnschreiben === undefined) ? null : obj.erhaeltAnschreiben === null ? null : obj.erhaeltAnschreiben;
 		result.eMail = (obj.eMail === undefined) ? null : obj.eMail === null ? null : obj.eMail;
-		result.staatsangehoerigkeitID = (obj.staatsangehoerigkeitID === undefined) ? null : obj.staatsangehoerigkeitID === null ? null : obj.staatsangehoerigkeitID;
+		result.idStaatsangehoerigkeit = (obj.idStaatsangehoerigkeit === undefined) ? null : obj.idStaatsangehoerigkeit === null ? null : obj.idStaatsangehoerigkeit;
 		result.bemerkungen = (obj.bemerkungen === undefined) ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
 		return result;
 	}
@@ -143,7 +140,7 @@ export class ErzieherStammdaten extends JavaObject {
 		result += '"ortsteilID" : ' + ((obj.ortsteilID === null) ? 'null' : obj.ortsteilID.toString()) + ',';
 		result += '"erhaeltAnschreiben" : ' + ((obj.erhaeltAnschreiben === null) ? 'null' : obj.erhaeltAnschreiben.toString()) + ',';
 		result += '"eMail" : ' + ((obj.eMail === null) ? 'null' : JSON.stringify(obj.eMail)) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -194,8 +191,8 @@ export class ErzieherStammdaten extends JavaObject {
 		if (obj.eMail !== undefined) {
 			result += '"eMail" : ' + ((obj.eMail === null) ? 'null' : JSON.stringify(obj.eMail)) + ',';
 		}
-		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		if (obj.idStaatsangehoerigkeit !== undefined) {
+			result += '"idStaatsangehoerigkeit" : ' + ((obj.idStaatsangehoerigkeit === null) ? 'null' : obj.idStaatsangehoerigkeit.toString()) + ',';
 		}
 		if (obj.bemerkungen !== undefined) {
 			result += '"bemerkungen" : ' + ((obj.bemerkungen === null) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
