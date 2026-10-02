@@ -16,7 +16,7 @@
       "hinweis" : [ ],
       "text" : "Geburtsland des Vaters: Das Feld 'Geburtsland Vater' darf nur ausgefüllt werden, wenn ein Migrationshintergrund vorhanden ist.",
       "erlaeuterung" : "",
-      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = FALSE ∧ SchuelerStammdaten.idGeburtslandVater ≠ @",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = FALSE ∧ SchuelerStammdaten.idGeburtslandVater ≠ @, 'DEU'",
       "gueltigVon" : null,
       "gueltigBis" : null
     } ]

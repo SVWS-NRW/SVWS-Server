@@ -38,7 +38,7 @@ public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehr
 		_hatMigrationshintergrund = hatMigrationshintergrund;
 
 		_validatoren.add(
-				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(verkehrsspracheFamilie, hatMigrationshintergrund, kontext));
+				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
 	}
 
 	@Override

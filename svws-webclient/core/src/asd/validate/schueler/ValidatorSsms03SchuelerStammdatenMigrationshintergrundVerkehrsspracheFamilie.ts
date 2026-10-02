@@ -1,3 +1,5 @@
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Verkehrssprache } from '../../../asd/types/schule/Verkehrssprache';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -8,7 +10,7 @@ export class ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Die ID der Verkehrssprache der Familie des Schülers
 	 */
-	private readonly _idVerkehrsspracheFamilie: Supplier<number | null>;
+	private readonly _idVerkehrsspracheFamilie: Supplier<number>;
 
 	/**
 	 * Gibt an, ob ein Migrationshintergrund vorhanden ist
@@ -25,19 +27,27 @@ export class ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
 	}
 
 	protected pruefe(): boolean {
-		const idVerkehrsspracheFamilie: number | null = this._idVerkehrsspracheFamilie.get();
+		const idVerkehrsspracheFamilie: number = this._idVerkehrsspracheFamilie.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (!hatMigrationshintergrund && (idVerkehrsspracheFamilie !== null)) {
-			this.addFehler(0, ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
-			return false;
+		if (!hatMigrationshintergrund) {
+			let verkehrsspracheKuerzel: string = "";
+			try {
+				verkehrsspracheKuerzel = Verkehrssprache.data().getEintragByIDOrException(idVerkehrsspracheFamilie).kuerzel;
+			} catch (e: any) {
+				// empty block
+			}
+			if (!(JavaObject.equalsTranspiler(idVerkehrsspracheFamilie, (-1)) || JavaObject.equalsTranspiler("de", (verkehrsspracheKuerzel)))) {
+				this.addFehler(0, ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
+				return false;
+			}
 		}
 		return true;
 	}

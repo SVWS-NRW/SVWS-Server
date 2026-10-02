@@ -10,7 +10,7 @@ export class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Die ID der Verkehrssprache der Familie des Schülers
 	 */
-	private readonly _idVerkehrsspracheFamilie: Supplier<number | null>;
+	private readonly _idVerkehrsspracheFamilie: Supplier<number>;
 
 	private static readonly FEHLERTEXT: string = "Verkehrssprache: Der eingetragene Wert für das Feld 'Verkehrssprache' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
@@ -22,17 +22,14 @@ export class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 		this._validatoren.add(new ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const idVerkehrsspracheFamilie: number | null = this._idVerkehrsspracheFamilie.get();
-		if (idVerkehrsspracheFamilie === null) {
-			return true;
-		}
+		const idVerkehrsspracheFamilie: number = this._idVerkehrsspracheFamilie.get();
 		const schuljahr: number = this.kontext().getSchuljahr();
 		if (!Verkehrssprache.data().isGueltig(idVerkehrsspracheFamilie, schuljahr)) {
 			this.addFehler(0, ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);

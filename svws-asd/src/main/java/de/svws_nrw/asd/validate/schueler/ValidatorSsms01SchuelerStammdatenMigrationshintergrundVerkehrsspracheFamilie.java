@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
 	/** Die ID der Verkehrssprache der Familie des Schülers */
-	private final @NotNull Supplier<@AllowNull Long> _idVerkehrsspracheFamilie;
+	private final @NotNull Supplier<@NotNull Long> _idVerkehrsspracheFamilie;
 
 	/** Gibt an, ob ein Migrationshintergrund vorhanden ist */
 	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;
@@ -31,7 +31,7 @@ public final class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehr
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
-			final @NotNull Supplier<@AllowNull Long> idVerkehrsspracheFamilie,
+			final @NotNull Supplier<@NotNull Long> idVerkehrsspracheFamilie,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
@@ -44,11 +44,7 @@ public final class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehr
 
 	@Override
 	protected boolean pruefe() {
-		final @AllowNull Long verkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
-
-		if (verkehrsspracheFamilie == null) {
-			return true;
-		}
+		final @NotNull Long verkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
 
 		// Prüfe, ob die ID im Core-Type-Katalog für Verkehrssprachen existiert
 		if (Verkehrssprache.data().getWertByIDOrNull(verkehrsspracheFamilie) == null) {

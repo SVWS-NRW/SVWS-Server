@@ -2,6 +2,8 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -45,9 +47,16 @@ public final class ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburts
 		final boolean hatMigrationshintergrund = (hatMigrationshintergrundZwisch != null) && hatMigrationshintergrundZwisch;
 
 		// Wenn kein Migrationshintergrund vorliegt, darf das Geburtsland nicht gesetzt sein
-		if (!hatMigrationshintergrund && (idGeburtslandMutter != null)) {
-			addFehler(0, FEHLERTEXT);
-			return false;
+		if (!hatMigrationshintergrund) {
+			@NotNull String geburtslandKuerzel = "";
+			try {
+				geburtslandKuerzel = Nationalitaeten.data().getEintragByIDOrException(idGeburtslandMutter).kuerzel;
+			} catch (CoreTypeException e) {
+			}
+			if (!(idGeburtslandMutter.equals(-1L) || "DEU".equals(geburtslandKuerzel))) {
+				addFehler(0, FEHLERTEXT);
+				return false;
+			}
 		}
 
 		return true;

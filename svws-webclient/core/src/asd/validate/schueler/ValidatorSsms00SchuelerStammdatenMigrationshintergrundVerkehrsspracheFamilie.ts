@@ -30,7 +30,7 @@ export class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrssprac
 		super(kontext);
 		this._idVerkehrsspracheFamilie = verkehrsspracheFamilie;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(verkehrsspracheFamilie, hatMigrationshintergrund, kontext));
+		this._validatoren.add(new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(this.getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -10,7 +10,7 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Die ID der Verkehrssprache der Familie des Schülers
 	 */
-	private readonly _idVerkehrsspracheFamilie: Supplier<number | null>;
+	private readonly _idVerkehrsspracheFamilie: Supplier<number>;
 
 	/**
 	 * Gibt an, ob ein Migrationshintergrund vorhanden ist
@@ -27,7 +27,7 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
@@ -35,10 +35,7 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	}
 
 	protected pruefe(): boolean {
-		const verkehrsspracheFamilie: number | null = this._idVerkehrsspracheFamilie.get();
-		if (verkehrsspracheFamilie === null) {
-			return true;
-		}
+		const verkehrsspracheFamilie: number = this._idVerkehrsspracheFamilie.get();
 		if (Verkehrssprache.data().getWertByIDOrNull(verkehrsspracheFamilie) === null) {
 			this.addFehler(0, ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
 			return false;

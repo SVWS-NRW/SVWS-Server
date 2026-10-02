@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
 	/** Die ID der Verkehrssprache der Familie des Schülers */
-	private final @NotNull Supplier<@AllowNull Long> _idVerkehrsspracheFamilie;
+	private final @NotNull Supplier<@NotNull Long> _idVerkehrsspracheFamilie;
 
 	private static final @NotNull String FEHLERTEXT =
 			"Verkehrssprache: Der eingetragene Wert für das Feld 'Verkehrssprache' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
@@ -28,7 +28,7 @@ public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehr
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
-			final @NotNull Supplier<@AllowNull Long> idVerkehrsspracheFamilie,
+			final @NotNull Supplier<@NotNull Long> idVerkehrsspracheFamilie,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
@@ -40,11 +40,7 @@ public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehr
 
 	@Override
 	protected boolean pruefe() {
-		final @AllowNull Long idVerkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
-
-		if (idVerkehrsspracheFamilie == null) {
-			return true;
-		}
+		final @NotNull Long idVerkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
 
 		final int schuljahr = kontext().getSchuljahr();
 

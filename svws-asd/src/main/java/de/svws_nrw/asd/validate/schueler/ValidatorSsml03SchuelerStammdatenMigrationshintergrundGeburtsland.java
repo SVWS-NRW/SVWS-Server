@@ -2,6 +2,8 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -43,9 +45,17 @@ public final class ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburts
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
 		final @NotNull Boolean hatMigrationshintergrund = hatMigrationshintergrundZwisch == null ? false : hatMigrationshintergrundZwisch;
 
-		if (!hatMigrationshintergrund && (idGeburtsland != -1L)) {
-			addFehler(0, FEHLERTEXT);
-			return false;
+
+		if (!hatMigrationshintergrund) {
+			@NotNull String geburtslandKuerzel = "";
+			try {
+				geburtslandKuerzel = Nationalitaeten.data().getEintragByIDOrException(idGeburtsland).kuerzel;
+			} catch (CoreTypeException e) {
+			}
+			if (!(idGeburtsland.equals(-1L) || "DEU".equals(geburtslandKuerzel))) {
+				addFehler(0, FEHLERTEXT);
+				return false;
+			}
 		}
 
 		return true;

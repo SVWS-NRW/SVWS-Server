@@ -16,7 +16,7 @@
       "hinweis" : [ ],
       "text" : "Verkehrssprache: Das Feld 'Verkehrssprache' darf nur ausgefüllt werden, wenn ein Migrationshintergrund vorhanden ist.",
       "erlaeuterung" : "",
-      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = FALSE ∧ SchuelerStammdaten.idVerkehrsspracheFamilie ≠ @",
+      "bedingung" : "SchuelerStammdaten.hatMigrationshintergrund = FALSE ∧ SchuelerStammdaten.idVerkehrsspracheFamilie ≠ @, 'DE'",
       "gueltigVon" : null,
       "gueltigBis" : null
     } ]

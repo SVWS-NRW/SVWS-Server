@@ -17,7 +17,7 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- * <li> {@link ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie}
+ * <li> {@link ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie}
  * </ul>
  * </p>
  *
@@ -25,16 +25,15 @@ import de.svws_nrw.transpiler.annotations.AllowNull;
  *
  * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
  */
-@DisplayName("Tests ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie")
+@DisplayName("Tests ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie")
 class TestValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie {
 
 	private static final String TESTDATEN_VERKEHRSSPRACHE = """
-            ID     , hatMH , RESULT
-            null   , true  , true
-            null   , false , true
-            1000   , true  , true
-            -1     , true  , false
-            999999 , false , false
+			ID,    hatMH, RESULT
+			-1,    false, true
+			-1,    true,  true
+			1000,  false, true
+			42000, false, false
         """;
 
 	/** Stammdaten der Schule */
@@ -52,13 +51,13 @@ class TestValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheF
 	}
 
 	/**
-	 * Test von ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie
+	 * Test von ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie
 	 *
 	 * @param idVerkehrsspracheFamilie  die ID der Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  hat Migrationshintergrund (wird für den Folgevalidator 03 mitgegeben)
 	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie")
+	@DisplayName("Tests für ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie")
 	@ParameterizedTest
 	@CsvSource(useHeadersInDisplayName = true, textBlock = TESTDATEN_VERKEHRSSPRACHE, nullValues = { "null" })
 	void testValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(final @AllowNull Long idVerkehrsspracheFamilie,
@@ -68,8 +67,8 @@ class TestValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheF
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		final ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie validator =
-				new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
+		final ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie validator =
+				new ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
 						() -> idVerkehrsspracheFamilie, () -> hatMigrationshintergrund, kontext);
 
 		assertEquals(result, validator.pruefe());

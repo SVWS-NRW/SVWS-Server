@@ -28,10 +28,10 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland {
 
 	private static final String TESTDATEN_GEBURTSLAND = """
-			-1          , false , true
-			-1          , true  , true
-			500         , false , false
-			500         , true  , true
+			-1,       false, true
+			-1,       true,  true
+			68069085, false, true
+			70082065, false, false
 		""";
 
 	/** Stammdaten der Schule */
@@ -51,7 +51,7 @@ class TestValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland {
 	/**
 	 * Test von ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland
 	 *
-	 * @param idGeburtsland             die Beschaeftigungsart
+	 * @param idGeburtsland             die ID des Geburtsland
 	 * @param hatMigrationshintergrund  hat Migrationshintergrund
 	 * @param result                    gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */

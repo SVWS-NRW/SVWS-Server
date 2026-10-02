@@ -1,3 +1,5 @@
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -35,9 +37,17 @@ export class ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMu
 		const idGeburtslandMutter: number | null = this._idGeburtslandMutter.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (!hatMigrationshintergrund && (idGeburtslandMutter !== null)) {
-			this.addFehler(0, ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
-			return false;
+		if (!hatMigrationshintergrund) {
+			let geburtslandKuerzel: string = "";
+			try {
+				geburtslandKuerzel = Nationalitaeten.data().getEintragByIDOrException(idGeburtslandMutter).kuerzel;
+			} catch (e: any) {
+				// empty block
+			}
+			if (!(JavaObject.equalsTranspiler(idGeburtslandMutter, (-1)) || JavaObject.equalsTranspiler("DEU", (geburtslandKuerzel)))) {
+				this.addFehler(0, ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
+				return false;
+			}
 		}
 		return true;
 	}
