@@ -1,6 +1,5 @@
 import type { FachDaten } from "@core/core/data/fach/FachDaten";
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
-import type { Floskel } from "@core/core/data/schule/Floskel";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import type { List } from "@core/java/util/List";
@@ -18,7 +17,6 @@ export class KatalogCache {
 	 */
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
-	private _floskelnById: Map<number, Floskel> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
 	private _faecherById: Map<number, FachDaten> = new Map();
 	private _lernplattformenById: Map<number, Lernplattform> = new Map();
@@ -36,11 +34,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.FAECHER, async () => {
 			const result = await api.server.getFaecher(api.schema);
 			return { faecherById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.FLOSKELN, async () => {
-			const result = await api.server.getFloskeln(api.schema);
-			return { floskelnById: this.convertToMap(result) };
 		});
 
 		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
@@ -78,14 +71,6 @@ export class KatalogCache {
 
 	set betriebsartenById(value: Map<number, Betriebsart>) {
 		this._betriebsartenById = value;
-	}
-
-	get floskelnById(): Map<number, Floskel> {
-		return this._floskelnById;
-	}
-
-	set floskelnById(value: Map<number, Floskel>) {
-		this._floskelnById = value;
 	}
 
 	get foerderschwerpunkteById(): Map<number, FoerderschwerpunktEintrag> {
