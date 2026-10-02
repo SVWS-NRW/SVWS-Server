@@ -7,6 +7,7 @@ import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState
 import { AbteilungenStateKey } from "@ui/states/kataloge/AbteilungenState";
 import { BeschaeftigungsartenStateKey } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
+import { EinwilligungsartenStateKey } from "@ui/states/kataloge/EinwilligungsartenState";
 import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
 import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
 import { FahrschuelerartenStateKey } from "@ui/states/kataloge/FahrschuelerartenState";
@@ -31,6 +32,7 @@ import { UvStateKey } from "@ui/states/UvState";
 import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 
 import { abteilungenStateImpl } from "~/states/kataloge/AbteilungenStateImpl";
+import { einwilligungsartenStateImpl } from "~/states/kataloge/EinwilligungsartenStateImpl";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
@@ -106,4 +108,5 @@ export function registerStates(): void {
 	registry.addSessionState(JahrgaengeStateKey, jahrgaengeStateImpl);
 	registry.addSessionState(HerkunftschulenStateKey, herkunftschulenStateImpl);
 	registry.addSessionState(AbteilungenStateKey, abteilungenStateImpl);
+	registry.addSessionState(EinwilligungsartenStateKey, einwilligungsartenStateImpl);
 }

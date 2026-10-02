@@ -50,12 +50,14 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	import type { LehrerEinwilligung } from "@core/core/data/lehrer/LehrerEinwilligung";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useEinwilligungsartenState } from "@ui/states/kataloge/EinwilligungsartenState";
 
 	import { LehrerEinwilligungenModelProxy } from "~/components/lehrer/einwilligungen/modelproxy/LehrerEinwilligungenModelProxy";
 
@@ -63,6 +65,7 @@
 
 	const props = defineProps<LehrerEinwilligungenProps>();
 	const benutzerState = useBenutzerState();
+	const einwilligungsartenState = useEinwilligungsartenState();
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
@@ -94,7 +97,7 @@
 	});
 
 	function getBezeichnungEinwilligungsart(idEinwilligungsart: number): string {
-		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
+		return einwilligungsartenState.einwilligungsarten.byId.get(idEinwilligungsart)?.bezeichnung ?? "";
 	}
 
 	function getEinwilligungsstatus(einwilligung: LehrerEinwilligung): string {

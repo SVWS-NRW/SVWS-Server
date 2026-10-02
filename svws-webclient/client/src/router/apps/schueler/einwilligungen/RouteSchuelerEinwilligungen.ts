@@ -44,7 +44,6 @@ export class RouteSchuelerEinwilligungen extends RouteNode<RouteDataSchuelerEinw
 	public getProps(_: RouteLocationNormalized): SchuelerEinwilligungenProps {
 		return {
 			einwilligungen: () => this.data.einwilligungen,
-			mapEinwilligungsarten: this.data.mapEinwilligungsarten,
 			patch: this.data.patch,
 			apiStatus: api.status,
 		};

@@ -28,9 +28,9 @@ import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { abteilungenStateImpl } from "~/states/kataloge/AbteilungenStateImpl";
 import { beschaeftigungsartenStateImpl } from "~/states/kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
+import { einwilligungsartenStateImpl } from "~/states/kataloge/EinwilligungsartenStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
@@ -149,6 +149,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 		await Promise.all([
 			beschaeftigungsartenStateImpl.init(),
 			betriebeStateImpl.init(),
+			einwilligungsartenStateImpl.init(),
 			entlassgruendeStateImpl.init(),
 			erzieherartenStateImpl.init(),
 			fahrschuelerartenStateImpl.init(),

@@ -47,18 +47,21 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	import type { SchuelerEinwilligung } from "@core/core/data/schueler/SchuelerEinwilligung";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useEinwilligungsartenState } from "@ui/states/kataloge/EinwilligungsartenState";
 
 	import { SchuelerEinwilligungenModelProxy } from "./modelProxy/SchuelerEinwilligungenModelProxy";
 	import type { SchuelerEinwilligungenProps } from './SchuelerEinwilligungenProps';
 
 	const props = defineProps<SchuelerEinwilligungenProps>();
 	const benutzerState = useBenutzerState();
+	const einwilligungsartenState = useEinwilligungsartenState();
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
@@ -91,7 +94,7 @@
 	});
 
 	function getBezeichnungEinwilligungsart(idEinwilligungsart: number): string {
-		return props.mapEinwilligungsarten.get(idEinwilligungsart)?.bezeichnung ?? "";
+		return einwilligungsartenState.einwilligungsarten.byId.get(idEinwilligungsart)?.bezeichnung ?? "";
 	}
 
 	function getEinwilligungsstatus(einwilligung: SchuelerEinwilligung): string {

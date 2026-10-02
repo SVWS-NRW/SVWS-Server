@@ -4,8 +4,6 @@ import { Schulform } from "@core/asd/types/schule/Schulform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { useLeitungsfunktionenState } from "@ui/states/kataloge/LeitungsfunktionenState";
-import { useOrteState } from "@ui/states/kataloge/OrteState";
 import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { ConfigElement } from "@ui/utils/Config";
@@ -24,6 +22,9 @@ import { routeError } from "~/router/error/RouteError";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
+import { einwilligungsartenStateImpl } from "~/states/kataloge/EinwilligungsartenStateImpl";
+import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
@@ -65,9 +66,7 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			const orteState = useOrteState();
-			const leitungsfunktionenState = useLeitungsfunktionenState();
-			await Promise.all([orteState.init(), leitungsfunktionenState.init()]);
+			await this.initiateKataloge();
 		}
 		try {
 			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
@@ -119,6 +118,14 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	private async initiateKataloge() {
+		await Promise.all([
+			orteStateImpl.init(),
+			leitungsfunktionenStateImpl.init(),
+			einwilligungsartenStateImpl.init(),
+		]);
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
