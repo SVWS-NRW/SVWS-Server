@@ -149,7 +149,7 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		if (this.anzahlDeutschMatheFremdsprache < 2) {
 			this.addFehler(GostBelegungsfehler.GOST30_ABI_10);
 		}
-		if ((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1)) {
+		if (((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1)) || ((this.anzahlDeutschMatheFremdsprache === 3) && (this.anzahlFremdsprachen === 3))) {
 			this.addFehler(GostBelegungsfehler.GOST30_ABI_19);
 		}
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);

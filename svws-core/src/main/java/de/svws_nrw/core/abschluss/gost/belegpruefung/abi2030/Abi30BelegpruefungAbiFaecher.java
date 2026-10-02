@@ -178,7 +178,7 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 		if (anzahlDeutschMatheFremdsprache < 2) {
 			addFehler(GostBelegungsfehler.GOST30_ABI_10);
 		}
-		if ((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1)) {
+		if (((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1)) || ((anzahlDeutschMatheFremdsprache == 3) && (anzahlFremdsprachen == 3))) {
 			addFehler(GostBelegungsfehler.GOST30_ABI_19);
 		}
 		final AbiturFachbelegung lk1 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
