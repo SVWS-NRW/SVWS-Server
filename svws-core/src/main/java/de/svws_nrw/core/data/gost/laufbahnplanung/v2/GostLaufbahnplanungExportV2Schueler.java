@@ -59,9 +59,9 @@ public class GostLaufbahnplanungExportV2Schueler {
 			description = "Gibt für die einzelnen Halbjahre der Oberstufe an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt."))
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
-	/** Die Informationen zu den Wahlen der Gleichwertigen komplexen Lernleistungen (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5). */
+	/** Die Informationen zu den Wahlen der gleichwertigen komplexen Leistungsnachweise (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5). */
 	@ArraySchema(schema = @Schema(implementation = Long.class,
-			description = "Die Informationen zu den Wahlen der Gleichwertigen komplexen Lernleistungen (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5)."))
+			description = "Die Informationen zu den Wahlen der gleichwertigen komplexen Leistungsnachweise (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5)."))
 	public final @NotNull Long[] gkl = new Long[6];
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */

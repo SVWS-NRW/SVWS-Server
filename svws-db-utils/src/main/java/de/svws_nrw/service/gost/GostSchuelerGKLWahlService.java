@@ -16,7 +16,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepository;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Ein Service für die Wahlen zu den Gleichwertig Komplexen Lernleistungen der Gymnasialen Oberstufe
+ * Ein Service für die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der Gymnasialen Oberstufe
  */
 public class GostSchuelerGKLWahlService {
 
@@ -88,7 +88,7 @@ public class GostSchuelerGKLWahlService {
 
 
 	/**
-	 * Setzt die Wahl für die Gleichwertig Komplexen Lernleistungen für die gymnasiale Oberstufe von einem Schüler.
+	 * Setzt die Wahl für die gleichwertigen komplexen Leistungsnachweise für die gymnasiale Oberstufe von einem Schüler.
 	 *
 	 * @param wahl         die Wahl des Schülers in Bezug auf die GKLs
 	 */

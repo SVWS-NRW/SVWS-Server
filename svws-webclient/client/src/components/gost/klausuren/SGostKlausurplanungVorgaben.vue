@@ -50,7 +50,7 @@
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
 				<template #cell(istGklMoeglich)="{ value, rowData }">
-					<button v-if="vorgabeHatGklMoeglich(rowData)" type="button" class="inline-flex items-center justify-center" :title="value ? 'Gleichwertige komplexe Lernleistung möglich' : 'Keine Gleichwertige komplexe Lernleistung möglich'" :class="{'cursor-pointer hover:opacity-70': hatKompetenzUpdate}" @click.stop="toggleVorgabeBoolean(rowData, 'istGklMoeglich')" :disabled="!hatKompetenzUpdate">
+					<button v-if="vorgabeHatGklMoeglich(rowData)" type="button" class="inline-flex items-center justify-center" :title="value ? 'Gleichwertiger komplexer Leistungsnachweis möglich' : 'Kein gleichwertiger komplexer Leistungsnachweis möglich'" :class="{'cursor-pointer hover:opacity-70': hatKompetenzUpdate}" @click.stop="toggleVorgabeBoolean(rowData, 'istGklMoeglich')" :disabled="!hatKompetenzUpdate">
 						<span class="icon i-ri-presentation-line -my-0.5" :class="{'opacity-25': !value}" />
 					</button>
 				</template>
@@ -420,7 +420,7 @@
 		{ key: 'quartal', label: 'Quartal', span: 0.5, sortable: true },
 		{ key: 'dauer', label: 'Dauer', tooltip: 'Dauer in Minuten', span: 0.5, sortable: true },
 		{ key: 'auswahlzeit', label: 'Auswahlzeit', tooltip: 'Auswahlzeit in Minuten', span: 0.5, sortable: false },
-		...(gklInHalbjahrMoeglich.value ? [{ key: 'istGklMoeglich', label: 'G', align: "center", tooltip: 'Gleichwertige komplexe Lernleistung möglich', fixedWidth: 2.5 } satisfies DataTableColumn] : []),
+		...(gklInHalbjahrMoeglich.value ? [{ key: 'istGklMoeglich', label: 'G', align: "center", tooltip: 'Gleichwertiger komplexer Leistungsnachweis möglich', fixedWidth: 2.5 } satisfies DataTableColumn] : []),
 		...(state.halbjahr.id !== GostHalbjahr.Q22.id ? [{ key: 'istMdlPruefung', label: 'M', align: "center", tooltip: 'Mündliche Kommunikationsprüfung', fixedWidth: 2.5 } satisfies DataTableColumn] : []),
 		{ key: 'istAudioNotwendig', label: 'A', align: "center", tooltip: 'Mit Audioteil', fixedWidth: 2.5 },
 		{ key: 'istVideoNotwendig', label: 'V', align: "center", tooltip: 'Mit Videoteil', fixedWidth: 2.5 },

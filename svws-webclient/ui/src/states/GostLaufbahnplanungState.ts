@@ -136,7 +136,7 @@ export interface GostLaufbahnplanungState {
 	istGKLMoeglich(idFach: number, halbjahr: GostHalbjahr): List<GostLaufbahnplanungGKLKlausurvorgabe>;
 
 	/**
-	 * Gibt zurück, ob bei dem angegebenen Fach in dem angegebenen Halbjahr eine Gleichwertig Komplexe Lernleistung (GKL)
+	 * Gibt zurück, ob bei dem angegebenen Fach in dem angegebenen Halbjahr ein gleichwertiger komplexer Leistungsnachweis (GKL)
 	 * gewählt wurde oder nicht.
 	 *
 	 * @param idFach     die ID des Faches
@@ -147,12 +147,12 @@ export interface GostLaufbahnplanungState {
 	istGKLGewaehlt(idFach: number, halbjahr: GostHalbjahr): boolean;
 
 	/**
-	 * Gibt die Wahlen zu den Gleichwertig Komplexen Lernleistungen (GKL) zurück.
+	 * Gibt die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL) zurück.
 	 */
 	get gklWahlen(): GostSchuelerGKLWahl;
 
 	/**
-	 * Führt einen Patch auf die Wahlen zu den Gleichwertig Komplexen Lernleistungen (GKL) aus.
+	 * Führt einen Patch auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL) aus.
 	 *
 	 * @param patch   der Patch
 	 */

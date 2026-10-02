@@ -7,10 +7,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Dieses DTO beschreibt die Informationen zu den Wahlen eines Schülers
- * in seinem Abiturjahrgang in Bezug auf die Gleichwertigen Komplexen Lernleistungen.
+ * in seinem Abiturjahrgang in Bezug auf die gleichwertigen komplexen Leistungsnachweise.
  */
 @XmlRootElement()
-@Schema(description = "Die Fachwahl eines Schüler zu den Gleichwertigen Komplexen Lernleistungen der gymnasialen Oberstufe.")
+@Schema(description = "Die Fachwahl eines Schüler zu den gleichwertigen komplexen Leistungsnachweisen der gymnasialen Oberstufe.")
 @TranspilerDTO
 public class GostSchuelerGKLWahl {
 

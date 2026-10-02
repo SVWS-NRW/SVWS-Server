@@ -220,7 +220,7 @@ public final class GostServiceFactory {
 
 
 	/**
-	 * Erstellt einen neuen Service für die Wahlen zu Gleichwertig Komplexen Lernleistungen in der gymnasialen Oberstufe
+	 * Erstellt einen neuen Service für die Wahlen zu gleichwertigen komplexen Leistungsnachweisen in der gymnasialen Oberstufe
 	 *
 	 * @return der Service
 	 */

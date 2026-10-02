@@ -381,10 +381,10 @@ public class ReportingRepositoryGost {
 	}
 
 
-	// ##### Gleichwertige Komplexe Lernleistungen (GKL, Abitur ab 2030) #####
+	// ##### Gleichwertige komplexe Leistungsnachweise (GKL, Abitur ab 2030) #####
 
 	/**
-	 * Liefert die Wahlen zu den Gleichwertigen Komplexen Lernleistungen (GKL) des übergebenen Schülers. Beim ersten Zugriff
+	 * Liefert die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL) des übergebenen Schülers. Beim ersten Zugriff
 	 * werden die Daten für alle bekannten Schüler gesammelt nachgeladen und im Cache abgelegt.
 	 *
 	 * @param idSchueler Die ID des Schülers.

@@ -306,7 +306,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final Map<String, Sprachbelegung> sprachbelegungen = abiturdaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		// Erzeuge eine Map einstelliges Sprachkürzel → Sprachprüfung aus den AbiturDaten
 		final Map<String, Sprachpruefung> sprachpruefungen = abiturdaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
-		// Ermittle die Klausurvorgaben zu Fach und Halbjahr, für die eine Gleichwertige Komplexe Lernleistung (GKL) gewählt wurde (nur Abitur ab 2030)
+		// Ermittle die Klausurvorgaben zu Fach und Halbjahr, für die ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde (nur Abitur ab 2030)
 		final ListMap2DLongKeys<GostKlausurvorgabe> gklVorgaben = ermittleGklVorgaben(idSchueler);
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
@@ -330,7 +330,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param sprachpruefungen Map mit Sprachprüfungen.
 	 * @param abiturdaten Abiturdaten des Schülers.
 	 * @param abiturdatenManager Der Manager für die Belegprüfung der Abiturdaten des Schülers.
-	 * @param gklVorgaben Die Klausurvorgaben je Fach und Halbjahr, für die eine Gleichwertige Komplexe Lernleistung (GKL) gewählt wurde.
+	 * @param gklVorgaben Die Klausurvorgaben je Fach und Halbjahr, für die ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde.
 	 *
 	 * @return Ein fertig befülltes Objekt vom Typ ProxyReportingGostLaufbahnplanungFachwahl.
 	 */
@@ -383,7 +383,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	}
 
 	/**
-	 * Ermittelt die Klausurvorgaben, für die der Schüler eine Gleichwertige Komplexe Lernleistung (GKL) gewählt hat, und
+	 * Ermittelt die Klausurvorgaben, für die der Schüler einen gleichwertigen komplexen Leistungsnachweis (GKL) gewählt hat, und
 	 * ordnet sie ihrer Fach-ID (1. Schlüssel) und Halbjahr-ID (2. Schlüssel) zu. Dies ist nur für Abiturjahrgänge ab 2030
 	 * relevant, für ältere Abiturjahrgänge wird eine leere Zuordnung geliefert.
 	 *
@@ -627,11 +627,11 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück. Wurde für das Fach in diesem Halbjahr
-	 * eine Gleichwertige Komplexe Lernleistung (GKL) gewählt, wird dies durch ein angehängtes "+" markiert (nur für
+	 * einen gleichwertigen komplexen Leistungsnachweis (GKL) gewählt, wird dies durch ein angehängtes "+" markiert (nur für
 	 * Abiturjahrgänge ab 2030 relevant).
 	 *
 	 * @param belegungHj 	Halbjahresbelegung des Faches
-	 * @param hatGkl		Gibt an, ob für das Fach in diesem Halbjahr eine Gleichwertige Komplexe Lernleistung (GKL) gewählt wurde.
+	 * @param hatGkl		Gibt an, ob für das Fach in diesem Halbjahr ein gleichwertiger komplexer Leistungsnachweis (GKL) gewählt wurde.
 	 *
 	 * @return 				String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */

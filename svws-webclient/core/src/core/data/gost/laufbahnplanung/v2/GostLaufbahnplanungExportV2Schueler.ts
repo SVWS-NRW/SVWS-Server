@@ -54,7 +54,7 @@ export class GostLaufbahnplanungExportV2Schueler extends JavaObject {
 	public readonly bewertetesHalbjahr: Array<boolean> = Array(6).fill(false);
 
 	/**
-	 * Die Informationen zu den Wahlen der Gleichwertigen komplexen Lernleistungen (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5).
+	 * Die Informationen zu den Wahlen der gleichwertigen komplexen Leistungsnachweise (ID oder null), jeweils für die Aufgabenfelder 1-3 in der EF (Index 0-2) und der Q-Phase (Index 3-5).
 	 */
 	public readonly gkl: Array<number | null> = Array(6).fill(null);
 

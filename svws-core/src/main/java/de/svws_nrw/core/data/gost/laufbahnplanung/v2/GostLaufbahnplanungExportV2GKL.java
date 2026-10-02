@@ -8,15 +8,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * Datenaustauschformat für die Laufbahnplanung der gymnasialen Oberstufe:
  *
- * - Die Informationen den Wahlen der Gleichwertigen komplexen Lernleistungen zu einem Schüler
+ * - Die Informationen zu den Wahlen der gleichwertigen komplexen Leistungsnachweise zu einem Schüler
  */
 @XmlRootElement
 @Schema(description = "Enthält die Informationen zu den GKL-Wahlen eines Schülers.")
 @TranspilerDTO
 public class GostLaufbahnplanungExportV2GKL {
 
-	/** Die ID der Definition der Gleichwertigen komplexen Lernleistung (GKL). */
-	@Schema(description = "Die ID der Definition der Gleichwertigen komplexen Lernleistung (GKL).")
+	/** Die ID der Definition des gleichwertigen komplexen Leistungsnachweises (GKL). */
+	@Schema(description = "Die ID der Definition des gleichwertigen komplexen Leistungsnachweises (GKL).")
 	public long id = -1;
 
 	/** Gibt an, in welchem Fach die GKL gewählte wurde. */

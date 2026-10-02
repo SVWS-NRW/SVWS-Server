@@ -87,7 +87,7 @@ export class GostLaufbahnplanungExportV2 extends JavaObject {
 	public readonly faecher: List<GostLaufbahnplanungExportV2Fach> = new ArrayList<GostLaufbahnplanungExportV2Fach>();
 
 	/**
-	 * Die Liste der Definition der Gleichwertigen Komplexen Lernleistungen für diesen Jahrgang
+	 * Die Liste der Definition der gleichwertigen komplexen Leistungsnachweise für diesen Jahrgang
 	 */
 	public readonly gkl: List<GostLaufbahnplanungExportV2GKL> = new ArrayList<GostLaufbahnplanungExportV2GKL>();
 

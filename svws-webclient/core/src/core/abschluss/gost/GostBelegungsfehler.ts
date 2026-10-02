@@ -501,27 +501,27 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt EINBR_2
 	 */
-	public static readonly GOST30_EINBR_2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_2", 97, "EINBR_2", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Kunst als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
+	public static readonly GOST30_EINBR_2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_2", 97, "EINBR_2", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Kunst als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
 
 	/**
 	 * BelegungsfehlerArt EINBR_3
 	 */
-	public static readonly GOST30_EINBR_3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_3", 98, "EINBR_3", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Musik als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
+	public static readonly GOST30_EINBR_3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_3", 98, "EINBR_3", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Musik als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
 
 	/**
 	 * BelegungsfehlerArt EINBR_4
 	 */
-	public static readonly GOST30_EINBR_4: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_4", 99, "EINBR_4", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie ein Abiturfach, das als Projektkurs-Referenzfach nur mit zwei Kursen in der Qualifikationsphase belegt wird, und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
+	public static readonly GOST30_EINBR_4: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_4", 99, "EINBR_4", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein weiteres Abiturfach, das als Projektkurs-Referenzfach nur mit zwei Kursen in der Qualifikationsphase belegt wird, und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
 
 	/**
 	 * BelegungsfehlerArt EINBR_5
 	 */
-	public static readonly GOST30_EINBR_5: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_5", 100, "EINBR_5", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie zwei gesellschaftswissenschaftliche Abiturfächer und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
+	public static readonly GOST30_EINBR_5: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_5", 100, "EINBR_5", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und zwei gesellschaftswissenschaftliche Abiturfächer und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
 
 	/**
 	 * BelegungsfehlerArt EINBR_6
 	 */
-	public static readonly GOST30_EINBR_6: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_6", 101, "EINBR_6", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie ein gesellschaftswissenschaftliches Abiturfach und Religionslehre als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
+	public static readonly GOST30_EINBR_6: GostBelegungsfehler = new GostBelegungsfehler("GOST30_EINBR_6", 101, "EINBR_6", GostBelegungsfehlerArt.BELEGUNG, "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein gesellschaftswissenschaftliches Abiturfach und Religionslehre als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.", null);
 
 	/**
 	 * BelegungsfehlerArt KOMBI_1
@@ -556,32 +556,32 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt GKL_EF_AF1
 	 */
-	public static readonly GOST30_GKL_EF_AF1: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF1", 108, "GKL_EF_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Einführungsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_EF_AF1: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF1", 108, "GKL_EF_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Einführungsphase muss ein schriftlichs Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt GKL_EF_AF2
 	 */
-	public static readonly GOST30_GKL_EF_AF2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF2", 109, "GKL_EF_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Einführungsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_EF_AF2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF2", 109, "GKL_EF_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Einführungsphase muss ein schriftliches Fach des gesellschaftswissenschaftlichen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt GKL_EF_AF3
 	 */
-	public static readonly GOST30_GKL_EF_AF3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF3", 110, "GKL_EF_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Einführungsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_EF_AF3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_EF_AF3", 110, "GKL_EF_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Einführungsphase muss ein schriftliches Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden", null);
 
 	/**
 	 * BelegungsfehlerArt GKL_Q_AF1
 	 */
-	public static readonly GOST30_GKL_Q_AF1: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF1", 111, "GKL_Q_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Qualifikationsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_Q_AF1: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF1", 111, "GKL_Q_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Qualifikationsphase muss ein schriftliches Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt GKL_Q_AF2
 	 */
-	public static readonly GOST30_GKL_Q_AF2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF2", 112, "GKL_Q_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Qualifikationsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_Q_AF2: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF2", 112, "GKL_Q_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Qualifikationsphase muss ein schriftliches Fach des gesellschaftswissenschaftlichen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt GKL_Q_AF3
 	 */
-	public static readonly GOST30_GKL_Q_AF3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF3", 113, "GKL_Q_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "Im der Qualifikationsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.", null);
+	public static readonly GOST30_GKL_Q_AF3: GostBelegungsfehler = new GostBelegungsfehler("GOST30_GKL_Q_AF3", 113, "GKL_Q_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT, "In der Qualifikationsphase muss ein schriftliches Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.", null);
 
 	/**
 	 * BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.

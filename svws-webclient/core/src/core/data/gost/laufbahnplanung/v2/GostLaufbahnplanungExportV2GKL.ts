@@ -4,7 +4,7 @@ import { Class } from '../../../../../java/lang/Class';
 export class GostLaufbahnplanungExportV2GKL extends JavaObject {
 
 	/**
-	 * Die ID der Definition der Gleichwertigen komplexen Lernleistung (GKL).
+	 * Die ID der Definition des gleichwertigen komplexen Leistungsnachweises (GKL).
 	 */
 	public id: number = -1;
 

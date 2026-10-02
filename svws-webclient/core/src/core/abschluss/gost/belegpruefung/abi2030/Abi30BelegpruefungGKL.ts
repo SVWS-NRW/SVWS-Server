@@ -20,7 +20,7 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 
 	/**
-	 * die Schülerwahlen für die Gleichwertig Komplexen Lernleistungen (GKL)
+	 * die Schülerwahlen für die gleichwertigen komplexen Leistungsnachweise (GKL)
 	 */
 	private readonly gklWahlen: GostSchuelerGKLWahl;
 
@@ -56,11 +56,11 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für die GleichwertigKomplexenLernleistungen (GKL).
+	 * Erstellt eine neue Belegprüfung für die gleichwertigen komplexen Leistungsnachweise (GKL).
 	 *
 	 * @param manager              der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt         die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
-	 * @param gklWahlen            die Schülerwahlen für die Gleichwertig Komplexen Lernleistungen (GKL)
+	 * @param gklWahlen            die Schülerwahlen für die gleichwertigen komplexen Leistungsnachweise (GKL)
 	 * @param mapKlausurvorgaben   eine Map mit der Klausurvorgaben zugeordnet zu ihrer ID
 	 */
 	public constructor(manager: AbiturdatenManager, pruefungsArt: GostBelegpruefungsArt, gklWahlen: GostSchuelerGKLWahl, mapKlausurvorgaben: JavaMap<number, GostLaufbahnplanungGKLKlausurvorgabe>) {

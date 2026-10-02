@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-4">
 		<div class="text-headline-md flex items-center gap-2">
-			Gleichwertige komplexe Lernleistungen
+			Gleichwertige komplexe Leistungsnachweise
 			<svws-ui-tooltip>
 				<span class="icon i-ri-question-line" />
 				<template #content>
@@ -9,7 +9,7 @@
 				</template>
 			</svws-ui-tooltip>
 		</div>
-		<ui-table-grid name="Gleichwertige komplexe Lernleistungen" :manager="() => gridManager">
+		<ui-table-grid name="Gleichwertige komplexe Leistungsnachweise" :manager="() => gridManager">
 			<template #header>
 				<td class="ui-divider" />
 				<td class="text-center ui-divider">Einführungsphase</td>

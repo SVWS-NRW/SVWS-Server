@@ -21,12 +21,12 @@ import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse führt für einen Schüler die Belegprüfungen für die Gleichwertig Komplexen Lernleistungen (GKL)
+ * Diese Klasse führt für einen Schüler die Belegprüfungen für die gleichwertigen komplexen Leistungsnachweise (GKL)
  * aus.
  */
 public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 
-	/** die Schülerwahlen für die Gleichwertig Komplexen Lernleistungen (GKL) */
+	/** die Schülerwahlen für die gleichwertigen komplexen Leistungsnachweise (GKL) */
 	private final @NotNull GostSchuelerGKLWahl gklWahlen;
 
 	/** eine Map mit der Klausurvorgaben zugeordnet zu ihrer ID */
@@ -48,11 +48,11 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 	private final @NotNull Map<Long, Set<GostHalbjahr>> mapGKLMoeglichQPhase = new HashMap<>();
 
 	/**
-	 * Erstellt eine neue Belegprüfung für die GleichwertigKomplexenLernleistungen (GKL).
+	 * Erstellt eine neue Belegprüfung für die gleichwertigen komplexen Leistungsnachweise (GKL).
 	 *
 	 * @param manager              der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt         die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
-	 * @param gklWahlen            die Schülerwahlen für die Gleichwertig Komplexen Lernleistungen (GKL)
+	 * @param gklWahlen            die Schülerwahlen für die gleichwertigen komplexen Leistungsnachweise (GKL)
 	 * @param mapKlausurvorgaben   eine Map mit der Klausurvorgaben zugeordnet zu ihrer ID
 	 */
 	public Abi30BelegpruefungGKL(final @NotNull AbiturdatenManager manager, final @NotNull GostBelegpruefungsArt pruefungsArt,

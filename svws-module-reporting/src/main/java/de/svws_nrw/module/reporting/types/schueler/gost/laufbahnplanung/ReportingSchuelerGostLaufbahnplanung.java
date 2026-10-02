@@ -616,7 +616,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 
 	/**
 	 * Gibt an, ob es sich um einen Abiturjahrgang ab 2030 mit dem erweiterten Funktionsumfang (z. B. Projektkurse mit Referenzfach,
-	 * Gleichwertige Komplexe Lernleistungen, 5. Abiturfach) handelt.
+	 * Gleichwertiger komplexer Leistungsnachweis, 5. Abiturfach) handelt.
 	 *
 	 * @return Inhalt des Feldes istAbiturAb2030
 	 */

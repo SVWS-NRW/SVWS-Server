@@ -513,27 +513,27 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt EINBR_2 */
 	GOST30_EINBR_2("EINBR_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Kunst als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Kunst als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
 			null),
 
 	/** BelegungsfehlerArt EINBR_3 */
 	GOST30_EINBR_3("EINBR_3", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Musik als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Musik als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
 			null),
 
 	/** BelegungsfehlerArt EINBR_4 */
 	GOST30_EINBR_4("EINBR_4", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie ein Abiturfach, das als Projektkurs-Referenzfach nur mit zwei Kursen in der Qualifikationsphase belegt wird, und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein weiteres Abiturfach, das als Projektkurs-Referenzfach nur mit zwei Kursen in der Qualifikationsphase belegt wird, und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
 			null),
 
 	/** BelegungsfehlerArt EINBR_5 */
 	GOST30_EINBR_5("EINBR_5", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie zwei gesellschaftswissenschaftliche Abiturfächer und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und zwei gesellschaftswissenschaftliche Abiturfächer und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
 			null),
 
 	/** BelegungsfehlerArt EINBR_6 */
 	GOST30_EINBR_6("EINBR_6", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie ein gesellschaftswissenschaftliches Abiturfach und Religionslehre als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein gesellschaftswissenschaftliches Abiturfach und Religionslehre als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
 			null),
 
 	/** BelegungsfehlerArt KOMBI_1 */
@@ -568,32 +568,32 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt GKL_EF_AF1 */
 	GOST30_GKL_EF_AF1("GKL_EF_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Einführungsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Einführungsphase muss ein schriftlichs Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
 	/** BelegungsfehlerArt GKL_EF_AF2 */
 	GOST30_GKL_EF_AF2("GKL_EF_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Einführungsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Einführungsphase muss ein schriftliches Fach des gesellschaftswissenschaftlichen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
 	/** BelegungsfehlerArt GKL_EF_AF3 */
 	GOST30_GKL_EF_AF3("GKL_EF_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Einführungsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Einführungsphase muss ein schriftliches Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden",
 			null),
 
 	/** BelegungsfehlerArt GKL_Q_AF1 */
 	GOST30_GKL_Q_AF1("GKL_Q_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Qualifikationsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Qualifikationsphase muss ein schriftliches Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
 	/** BelegungsfehlerArt GKL_Q_AF2 */
 	GOST30_GKL_Q_AF2("GKL_Q_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Qualifikationsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Qualifikationsphase muss ein schriftliches Fach des gesellschaftswissenschaftlichen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
 	/** BelegungsfehlerArt GKL_Q_AF3 */
 	GOST30_GKL_Q_AF3("GKL_Q_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
-			"Im der Qualifikationsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			"In der Qualifikationsphase muss ein schriftliches Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
 	// ------------------------------------ APO-Gost bis Abi 2029

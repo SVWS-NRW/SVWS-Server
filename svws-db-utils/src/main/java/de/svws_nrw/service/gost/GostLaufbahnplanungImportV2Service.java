@@ -293,7 +293,7 @@ public class GostLaufbahnplanungImportV2Service {
 			}
 		}
 
-		// Übernehme die Schüler-Wahlen zu den Gleichwertig Komplexen Lernleistungen (GKL)
+		// Übernehme die Schüler-Wahlen zu den gleichwertigen komplexen Leistungsnachweisen (GKL)
 		gostSchueler.GKL_EF_AF1_Klausurvorgabe_ID = daten.gkl[0];
 		gostSchueler.GKL_EF_AF2_Klausurvorgabe_ID = daten.gkl[1];
 		gostSchueler.GKL_EF_AF3_Klausurvorgabe_ID = daten.gkl[2];

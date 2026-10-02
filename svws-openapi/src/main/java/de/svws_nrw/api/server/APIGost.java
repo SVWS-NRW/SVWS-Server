@@ -1059,7 +1059,7 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Wahlen zu Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe eines Schülers.
+	 * Die OpenAPI-Methode für die Abfrage der Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der gymnasialen Oberstufe eines Schülers.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param schueler_id   die ID des Schülers
@@ -1069,12 +1069,12 @@ public class APIGost {
 	 */
 	@GET
 	@Path("/schueler/{schuelerid : \\d+}/gklwahl")
-	@Operation(summary = "Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus.",
-			description = "Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus. "
+	@Operation(summary = "Liest für die gymnasiale Oberstufe die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen von dem angegebenen Schüler aus.",
+			description = "Liest für die gymnasiale Oberstufe die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen von dem angegebenen Schüler aus. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler",
+	@ApiResponse(responseCode = "200", description = "Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der gymnasialen Oberstufe für den angegebenen Schüler",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostSchuelerGKLWahl.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den Gleichwertig Komplexen Lernleistungen"
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen"
 			+ "der Gymnasialen Oberstufe eines Schülers auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene "
 			+ "ID gefunden")
@@ -1086,19 +1086,19 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für das Setzen der Wahlen zu Gleichwertig Komplexen Lernleistungen eines Schülers
+	 * Die OpenAPI-Methode für das Setzen der Wahlen zu gleichwertigen komplexen Leistungsnachweisen eines Schülers
 	 * der gymnasialen Oberstufe.
 	 *
 	 * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param wahl          die Wahlen zu den Gleichwertig Komplexen Lernleistungen
+	 * @param wahl          die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort
 	 */
 	@PUT
 	@Path("/schueler/fachwahl")
-	@Operation(summary = "Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an.",
-			description = "Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an. "
+	@Operation(summary = "Passt die Wahl eines Schüler in Bezug die gleichwertigen komplexen Leistungsnachweise der Gymnasiale Oberstufe an.",
+			description = "Passt die Wahl eines Schüler in Bezug die gleichwertigen komplexen Leistungsnachweise der Gymnasiale Oberstufe an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.")
 	@ApiResponse(responseCode = "204", description = "Die Wahlen wurden erfolgreich übernommen.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu ändern.")

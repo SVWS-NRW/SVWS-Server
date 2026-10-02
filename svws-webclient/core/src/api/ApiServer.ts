@@ -8254,19 +8254,19 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostSchuelerGKLWahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/gklwahl
 	 *
-	 * Liest für die gymnasiale Oberstufe die Wahlen zu den Gleichwertig Komplexen Lernleistungen von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.
+	 * Liest für die gymnasiale Oberstufe die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Wahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler
+	 *   Code 200: Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der gymnasialen Oberstufe für den angegebenen Schüler
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostSchuelerGKLWahl
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den Gleichwertig Komplexen Lernleistungender Gymnasialen Oberstufe eines Schülers auszulesen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlen zu den gleichwertigen komplexen Leistungsnachweisender Gymnasialen Oberstufe eines Schülers auszulesen.
 	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 *
-	 * @returns Die Wahlen zu den Gleichwertig Komplexen Lernleistungen der gymnasialen Oberstufe für den angegebenen Schüler
+	 * @returns Die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen der gymnasialen Oberstufe für den angegebenen Schüler
 	 */
 	public async getGostSchuelerGKLWahl(schema: string, schuelerid: number): Promise<GostSchuelerGKLWahl> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/gklwahl"
@@ -8307,7 +8307,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der PUT-Methode putGostSchuelerGKLWahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/fachwahl
 	 *
-	 * Passt die Wahl eines Schüler in Bezug die Gleichwertig Komplexen Lernleistungen der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.
+	 * Passt die Wahl eines Schüler in Bezug die gleichwertigen komplexen Leistungsnachweise der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Wahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Die Wahlen wurden erfolgreich übernommen.

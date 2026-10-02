@@ -55,7 +55,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	/** Der Service für den Zugriff auf die Fachwahlen der Laufbahnplanung. */
 	private final GostFachwahlService gostFachwahlService;
 
-	/** Der Service für den Zugriff auf die Wahlen zu den Gleichwertig Komplexen Lernleistungen */
+	/** Der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen */
 	private final GostSchuelerGKLWahlService gostSchuelerGKLWahlService;
 
 	/** Der Service für den Zugriff auf die aggregierten Fachwahlen aus den Laufbahnplanungen eines Abiturjahrgangs. */
@@ -77,7 +77,7 @@ public final class GostLaufbahnplanungControllerImpl implements GostLaufbahnplan
 	 * @param benutzerKompetenzService             der Service für den Zugriff auf die Benutzer-Kompetenzen des aktuellen Benutzers
 	 * @param gostAbiturdatenService               der Service für den Zugriff auf die Abiturdaten aus der aktuellen Schülerlaufbahn und der Laufbahnplanung heraus
 	 * @param gostFachwahlService                  der Service für den Zugriff auf die Fachwahlen der Laufbahnplanung
-	 * @param gostSchuelerGKLWahlService           der Service für den Zugriff auf die Wahlen zu den Gleichwertig Komplexen Lernleistungen
+	 * @param gostSchuelerGKLWahlService           der Service für den Zugriff auf die Wahlen zu den gleichwertigen komplexen Leistungsnachweisen
 	 * @param gostJahrgangFachwahlService          der Service für den Zugriff auf die aggregierten Fachwahlen aus den Laufbahnplanungen eines Abiturjahrgangs
 	 * @param gostLaufbahnplanungImportV1Service   der Service für den Import mit dem Export-Format in Version 1 für die Laufbahnplanung
 	 * @param gostLaufbahnplanungExportV2Service   der Service für den Export mit dem Export-Format in Version 2 für die Laufbahnplanung

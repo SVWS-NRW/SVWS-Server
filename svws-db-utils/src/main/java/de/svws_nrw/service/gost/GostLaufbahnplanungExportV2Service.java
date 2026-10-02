@@ -304,7 +304,7 @@ public class GostLaufbahnplanungExportV2Service {
 		}
 		daten.schueler.add(schuelerDaten);
 
-		// Ergänze die Möglichkeiten für Gleichwertige Komplexe Lernleistungen
+		// Ergänze die Möglichkeiten für gleichwertig komplexe Leistungsnachweise
 		for (final DTOGostKlausurenVorgaben vorgabe : klausurvorgaben) {
 			if ((vorgabe.IstGklMoeglich == null) || !vorgabe.IstGklMoeglich) {
 				continue;

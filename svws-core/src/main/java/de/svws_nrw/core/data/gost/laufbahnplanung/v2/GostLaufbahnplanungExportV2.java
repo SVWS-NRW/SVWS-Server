@@ -84,7 +84,7 @@ public class GostLaufbahnplanungExportV2 {
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV2Fach.class))
 	public final @NotNull List<GostLaufbahnplanungExportV2Fach> faecher = new ArrayList<>();
 
-	/** Die Liste der Definition der Gleichwertigen Komplexen Lernleistungen für diesen Jahrgang */
+	/** Die Liste der Definition der gleichwertigen komplexen Leistungsnachweise für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungExportV2GKL.class))
 	public final @NotNull List<GostLaufbahnplanungExportV2GKL> gkl = new ArrayList<>();
 
