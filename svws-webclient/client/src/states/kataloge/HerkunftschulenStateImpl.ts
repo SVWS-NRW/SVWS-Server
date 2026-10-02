@@ -70,6 +70,7 @@ export class HerkunftschulenStateImpl extends StateManager<HerkunftschulenReacti
 	}
 
 	private initBySchulnummerStatikstikFilteredByEigeneSchuleSchulform() {
+		this.state.bySchulnummerStatistikFilteredByEigeneSchulform.clear();
 		const schuleState = useSchuleState();
 
 		for (const schule of this.state.schulen) {
