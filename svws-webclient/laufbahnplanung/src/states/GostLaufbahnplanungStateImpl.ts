@@ -156,13 +156,17 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
-	setGostBelegpruefungErgebnis = async () => {
+	private async setGostBelegpruefungErgebnis(setDirty: boolean) {
 		const abiturdatenManager = this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined) {
 			return;
 		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(this.dataHandler.getGklWahlen(), this.dataHandler.getMapKlausurvorgaben());
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
+		const dirty = setDirty ? true : this._state.value.dirty;
+		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis, dirty });
 	};
 
 	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
@@ -180,8 +184,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			this.fachbelegungEntfernen(fachID, wahl);
 			this.fachbelegungErstellen(fachID, wahl);
 		}
-		await this.setGostBelegpruefungErgebnis();
-		this.setPatchedState({ dirty: true });
+		await this.setGostBelegpruefungErgebnis(true);
 	};
 
 
@@ -231,7 +234,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 	public async patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>) {
 		const neu = Object.assign(new GostSchuelerGKLWahl(), this.dataHandler.getGklWahlen(), patch);
 		this.dataHandler.replaceGKLWahlen(neu);
-		this.commit();
+		await this.setGostBelegpruefungErgebnis(true);
 	}
 
 
@@ -296,6 +299,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		if (abiturdatenManager === undefined) {
 			return;
 		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(this.dataHandler.getGklWahlen(), this.dataHandler.getMapKlausurvorgaben());
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ zwischenspeicher: undefined, abiturdatenManager, gostBelegpruefungErgebnis, dirty: true });
 	};
@@ -306,7 +312,7 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsModus) => {
 		this.setPatchedState({ gostBelegpruefungsArt });
-		await this.setGostBelegpruefungErgebnis();
+		await this.setGostBelegpruefungErgebnis(false);
 	};
 
 	public async ladeV2Daten(daten: GostLaufbahnplanungExportV2) {
@@ -316,6 +322,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		const abiturdatenManager = this.createAbiturdatenmanager(dataHandler);
 		if (abiturdatenManager === undefined) {
 			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
+		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(dataHandler.getGklWahlen(), dataHandler.getMapKlausurvorgaben());
 		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedDefaultState({
@@ -332,6 +341,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		const abiturdatenManager = this.createAbiturdatenmanager(dataHandler);
 		if (abiturdatenManager === undefined) {
 			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
+		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(dataHandler.getGklWahlen(), dataHandler.getMapKlausurvorgaben());
 		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedDefaultState({
@@ -368,6 +380,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		const abiturdatenManager = this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined) {
 			return;
+		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(this.dataHandler.getGklWahlen(), this.dataHandler.getMapKlausurvorgaben());
 		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });

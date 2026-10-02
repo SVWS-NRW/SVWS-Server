@@ -186,6 +186,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			if (abiturdatenManager === undefined) {
 				return;
 			}
+			if (abiturdatenManager.istAbi2030()) {
+				abiturdatenManager.pruefeGKL(gklWahlen, this._state.value.mapKlausurvorgaben);
+			}
 			const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 			this.setPatchedState({ abiturdaten, gklWahlen, abiturdatenManager, gostBelegpruefungErgebnis });
 		})(data);
@@ -250,9 +253,10 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 
 
 	public async patchGKLWahlen(patch: Partial<GostSchuelerGKLWahl>) {
-		const neu = Object.assign(new GostSchuelerGKLWahl(), this._state.value.gklWahlen, patch);
-		await api.server.putGostSchuelerGKLWahl(neu, api.schema);
-		this.setPatchedState({ gklWahlen: neu });
+		const gklWahlen = Object.assign(new GostSchuelerGKLWahl(), this._state.value.gklWahlen, patch);
+		await api.server.putGostSchuelerGKLWahl(gklWahlen, api.schema);
+		this._state.value.gklWahlen = gklWahlen;
+		await this.setGostBelegpruefungErgebnis();
 	}
 
 
@@ -292,6 +296,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 			const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
 			if (abiturdatenManager === undefined) {
 				return;
+			}
+			if (abiturdatenManager.istAbi2030()) {
+				abiturdatenManager.pruefeGKL(this._state.value.gklWahlen, this._state.value.mapKlausurvorgaben);
 			}
 			const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 			this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
@@ -403,6 +410,9 @@ export class GostLaufbahnplanungStateImpl extends StateManager<GostLaufbahnplanu
 		const abiturdatenManager = this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined) {
 			return;
+		}
+		if (abiturdatenManager.istAbi2030()) {
+			abiturdatenManager.pruefeGKL(this._state.value.gklWahlen, this._state.value.mapKlausurvorgaben);
 		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });

@@ -566,6 +566,36 @@ public enum GostBelegungsfehler {
 			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.",
 			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist."),
 
+	/** BelegungsfehlerArt GKL_EF_AF1 */
+	GOST30_GKL_EF_AF1("GKL_EF_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Einführungsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKL_EF_AF2 */
+	GOST30_GKL_EF_AF2("GKL_EF_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Einführungsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKL_EF_AF3 */
+	GOST30_GKL_EF_AF3("GKL_EF_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Einführungsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKL_Q_AF1 */
+	GOST30_GKL_Q_AF1("GKL_Q_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Qualifikationsphase muss in einem schriftlichen Fach des sprachlich-literarisch-künstlerischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKL_Q_AF2 */
+	GOST30_GKL_Q_AF2("GKL_Q_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Qualifikationsphase muss in einem schriftlichen Fach des gesellschaftswissenschaftlichen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
+	/** BelegungsfehlerArt GKL_Q_AF3 */
+	GOST30_GKL_Q_AF3("GKL_Q_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Im der Qualifikationsphase muss in einem schriftlichen Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes eine Gleichwertige Komplexe Lernleistung gewählt werden.",
+			null),
+
 	// ------------------------------------ APO-Gost bis Abi 2029
 
 	/** BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */

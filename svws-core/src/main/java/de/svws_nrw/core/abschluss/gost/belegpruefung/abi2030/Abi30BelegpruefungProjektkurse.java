@@ -108,14 +108,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 */
 	private void pruefeBelegungEF() {
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
-				if (belegungHalbjahr == null) {
-					continue;
-				}
-				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2)) {
-					addFehler(GostBelegungsfehler.GOST30_PF_10);
-				}
+			if (manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
+				addFehler(GostBelegungsfehler.GOST30_PF_10);
 			}
 		}
 	}
@@ -141,13 +135,13 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		}
 
 		// Prüfe auf fehlerhafte Belegungen in den Halbjahren der Q1
-		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] != null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] != null)) {
+		if (manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 			addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
 
 		// Prüfe auf Belegungen in beiden Halbjahren der Q2
-		if ((fachbelegung.belegungen[GostHalbjahr.Q21.id] == null) || (fachbelegung.belegungen[GostHalbjahr.Q22.id] == null)) {
+		if (!manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}

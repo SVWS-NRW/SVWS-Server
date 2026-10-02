@@ -171,6 +171,7 @@ class TestGostBelegpruefungAbi2030 {
 			if (!hatGesamt) {
 				final AbiturdatenManager manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(),
 						lpDaten.getFaecherManager(), GostBelegpruefungsArt.GESAMT);
+				manager.pruefeGKL(lpDaten.getGklWahlen(), lpDaten.getMapKlausurvorgaben());
 				final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 				final String filename = path + "Testschule_" + name + "_Belegpruefungsergebnis_Gesamt.json";
 				testBelegpruefungsergebnisseGesamt.put(name, ergebnis);
@@ -252,6 +253,7 @@ class TestGostBelegpruefungAbi2030 {
 						System.out.println("- Test: Gesamt-Belegprüfung, Testfall " + name + ":");
 						final AbiturdatenManager manager = new AbiturdatenManager(lpDaten.getAbiturdaten(), lpDaten.getGostJahrgangsdaten(),
 								lpDaten.getFaecherManager(), GostBelegpruefungsArt.GESAMT);
+						manager.pruefeGKL(lpDaten.getGklWahlen(), lpDaten.getMapKlausurvorgaben());
 						final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 						final List<String> log = ergebnis.log;
 						if (log != null) {

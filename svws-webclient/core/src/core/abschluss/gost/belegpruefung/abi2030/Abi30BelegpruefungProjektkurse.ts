@@ -80,14 +80,8 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 */
 	private pruefeBelegungEF(): void {
 		for (const fachbelegung of this.projektkursBelegung) {
-			for (const belegungHalbjahr of fachbelegung.belegungen) {
-				if (belegungHalbjahr === null) {
-					continue;
-				}
-				const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if ((halbjahr as unknown === GostHalbjahr.EF1 as unknown) || (halbjahr as unknown === GostHalbjahr.EF2 as unknown)) {
-					this.addFehler(GostBelegungsfehler.GOST30_PF_10);
-				}
+			if (this.manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
+				this.addFehler(GostBelegungsfehler.GOST30_PF_10);
 			}
 		}
 	}
@@ -108,11 +102,11 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		if (fachbelegung === null) {
 			return;
 		}
-		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] !== null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] !== null)) {
+		if (this.manager.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}
-		if ((fachbelegung.belegungen[GostHalbjahr.Q21.id] === null) || (fachbelegung.belegungen[GostHalbjahr.Q22.id] === null)) {
+		if (!this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.PJK, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			this.addFehler(GostBelegungsfehler.GOST30_PF_20);
 			return;
 		}

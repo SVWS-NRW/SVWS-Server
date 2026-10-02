@@ -7,6 +7,7 @@ import { AbiturFachbelegungHalbjahr } from '../../../../../core/data/gost/Abitur
 import { Class } from '../../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../../core/abschluss/gost/AbiturdatenManager';
+import { GostKursart } from '../../../../../core/types/gost/GostKursart';
 import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
@@ -28,7 +29,7 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 
 	private pruefeFachbelegungHalbjahr(fach: GostFach, fachbelegung: AbiturFachbelegung, halbjahr: GostHalbjahr): void {
 		const fbHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-		if (fbHalbjahr === null) {
+		if ((fbHalbjahr === null) || GostKursart.fromKuerzel(fbHalbjahr.kursartKuerzel) === null) {
 			return;
 		}
 		let istwaehlbar: boolean;

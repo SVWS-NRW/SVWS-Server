@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
 /*
@@ -48,7 +49,7 @@ public final class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 	private void pruefeFachbelegungHalbjahr(final @NotNull GostFach fach, final @NotNull AbiturFachbelegung fachbelegung,
 			final @NotNull GostHalbjahr halbjahr) {
 		final AbiturFachbelegungHalbjahr fbHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		if (fbHalbjahr == null) {
+		if ((fbHalbjahr == null) || GostKursart.fromKuerzel(fbHalbjahr.kursartKuerzel) == null) {
 			return;
 		}
 		final boolean istwaehlbar = switch (halbjahr) {

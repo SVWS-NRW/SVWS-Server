@@ -35,6 +35,7 @@ import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungE
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachWaehlbar;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFachkombinationen;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFremdsprachen;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGKL;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLatinum;
@@ -54,6 +55,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
@@ -64,6 +66,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -242,7 +245,7 @@ public class AbiturdatenManager {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public @NotNull List<GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungsArt) {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			return this.getPruefungenAbi2030(pruefungsArt);
 		}
 		return this.getPruefungenDefault(pruefungsArt);
@@ -267,8 +270,7 @@ public class AbiturdatenManager {
 		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
 		// Führe ggf. den Markierungsalgorithmus durch...
 		if (istBewertetQualifikationsPhase()) {
-			if (istAbitur2030(abidaten.abiturjahr)) {
-				// Führe ggf. den experimentellen Code aus
+			if (istAbi2030()) {
 				markierungsErgebnis = Abi30GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
 			} else {
 				markierungsErgebnis = GostAbiturMarkierungsalgorithmus.berechne(this, belegpruefungen);
@@ -276,6 +278,20 @@ public class AbiturdatenManager {
 		}
 		// ... und ggf. auch eine Prüfung der aktuellen Markierungen
 		pruefeMarkierungen();
+	}
+
+
+	/**
+	 * Führt eine Belegprüfung der GKL-Wahlen durch
+	 *
+	 * @param gklWahlen            die GKL-Wahlen des Schülers
+	 * @param mapKlausurvorgaben   die Klausurvorgaben mit den Informationen zu den möglichen GKL-Wahlen in der Abiturjahrgang
+	 */
+	public void pruefeGKL(final @NotNull GostSchuelerGKLWahl gklWahlen, final @NotNull Map<Long, GostLaufbahnplanungGKLKlausurvorgabe> mapKlausurvorgaben) {
+		final Abi30BelegpruefungGKL belegpruefungGKL = new Abi30BelegpruefungGKL(this, pruefungsArt, gklWahlen, mapKlausurvorgaben);
+		belegpruefungGKL.pruefe();
+		belegpruefungsfehler.addAll(GostBelegpruefung.getBelegungsfehlerAlle(List.of(belegpruefungGKL)));
+		belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(belegpruefungsfehler);
 	}
 
 
@@ -288,6 +304,16 @@ public class AbiturdatenManager {
 	 */
 	public static boolean istAbitur2030(final int abiturjahr) {
 		return abiturjahr >= 2030;
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Abiturprüfung nach der APO Gost mit dem ersten Abiturjahrgang 2030 geprüft wird.
+	 *
+	 * @return true, wenn die Abiturprüfung nach der APO Gost mit dem ersten Abiturjahrgang 2030 verwendet wird, und ansonsten false
+	 */
+	public boolean istAbi2030() {
+		return istAbitur2030(abidaten.abiturjahr);
 	}
 
 
@@ -2330,7 +2356,7 @@ public class AbiturdatenManager {
 	 *         ausgewählt werden kann.
 	 */
 	public GostKursart getMoeglicheKursartAlsAbiturfach(final long id) {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			return _getAbi30MoeglicheKursartAlsAbiturfach(id);
 		}
 		final GostFach fach = faecherManager.get(id);
@@ -2750,7 +2776,7 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
 	 */
 	public @NotNull int[] getWochenstunden() {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] stunden = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values()) {
@@ -2773,7 +2799,7 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenEinfuehrungsphase() {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenEinfuehrungsphase();
 		}
@@ -2788,7 +2814,7 @@ public class AbiturdatenManager {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstundenQualifikationsphase() {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getWochenstundenQualifikationsphase();
 		}
@@ -2804,7 +2830,7 @@ public class AbiturdatenManager {
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
 	 */
 	public @NotNull int[] getAnrechenbareKurse() {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			final @NotNull int[] anzahl = new int[] { 0, 0, 0, 0, 0, 0 };
 			for (final GostHalbjahr hj : GostHalbjahr.values()) {
@@ -2828,7 +2854,7 @@ public class AbiturdatenManager {
 	 * @return die anrechenbaren Kursen für Block I des Abiturs
 	 */
 	public int getAnrechenbareKurseBlockI() {
-		if (istAbitur2030(abidaten.abiturjahr)) { // Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			final @NotNull Abi30BelegpruefungKurszahlenUndWochenstunden kuw = getAbi30KurszahlenUndWochenstunden();
 			return kuw.getBlockIAnzahlAnrechenbar();
 		}
@@ -3208,8 +3234,7 @@ public class AbiturdatenManager {
 			markierpruefungsergebnis.log.add("Es liegen noch nicht Bewertungen für alle Halbjahre des Qualifikationsphase vor.");
 			return;
 		}
-		if (istAbitur2030(abidaten.abiturjahr)) {
-			// Führe ggf. den experimentellen Code aus
+		if (istAbi2030()) {
 			markierpruefungsergebnis = Abi30GostAbiturMarkierungspruefung.pruefe(this, belegpruefungen);
 		} else {
 			markierpruefungsergebnis = GostAbiturMarkierungspruefung.pruefe(this, belegpruefungen);
