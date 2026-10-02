@@ -8,9 +8,9 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Die Klasse beschreibt das Patch-DTO für die Unterrichtsfächer von Lehrern.
+ * Die Klasse beschreibt das Patch-DTO für die Informationen zu dem Abschluss in einem Lernabschnitt eines Schülers.
  */
-@Schema(description = "Die Zuordnung eines Unterrichtsfachs zu einer Lehrkraft.")
+@Schema(description = "Der Patch für Informationen zu dem Abschluss in einem Lernabschnitt eines Schülers.")
 public class AbschlussPatchRequest {
 
 	/** Die Prüfungsordnung, welche der Abschlussberechnung zugrunde liegt. */

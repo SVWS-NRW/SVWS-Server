@@ -54,10 +54,12 @@ public class APIAbschluesse {
 			description = "Liest die Informationen zum erreichten Schulabschluss des Schülers zu der angegebenen ID und dem angegeben Schuljahresabschnitt"
 					+ "aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Informationen zum erreichten Schulabschluss des Schülers in dem Schuljahresabschnitt", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = Abschlussdaten.class)))
+	@ApiResponse(responseCode = "200", description = "Die Informationen zum erreichten Schulabschluss des Schülers in dem Schuljahresabschnitt",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Abschlussdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID bzw. kein Lernabschnitt in dem angegeben Schujahresabschnitt gefunden")
+	@ApiResponse(responseCode = "404",
+			description = "Kein Schüler-Eintrag mit der angegebenen ID bzw. kein Lernabschnitt in dem angegeben Schujahresabschnitt gefunden")
 	public Response getSchuelerAbschlussinformationen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
 		return AbschlussControllerFactory
@@ -81,8 +83,9 @@ public class APIAbschluesse {
 	@Operation(summary = "Liefert zu der ID des Schülerlernabschnittes die zugehörigen Informationen zum erreichten Schulabschluss.",
 			description = "Liest die Informationen zum erreichten Schulabschluss des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Informationen zum erreichten Schulabschluss in dem Lernabschnitt des Schülers", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = Abschlussdaten.class)))
+	@ApiResponse(responseCode = "200", description = "Die Informationen zum erreichten Schulabschluss in dem Lernabschnitt des Schülers",
+			content = @Content(mediaType = "application/json",
+					schema = @Schema(implementation = Abschlussdaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
 	public Response getSchuelerAbschlussinformationenByLernabschnittID(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
@@ -109,7 +112,8 @@ public class APIAbschluesse {
 	@Operation(summary = "Passt die Informationen zum Schulabschluss in dem Lernabschnitt mit der angegebenen ID an.",
 			description = "Passt die Informationen zum Schulabschluss in dem Lernabschnitt mit der angegebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Abschlussinformationen besitzt.")
-	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = Abschlussdaten.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")

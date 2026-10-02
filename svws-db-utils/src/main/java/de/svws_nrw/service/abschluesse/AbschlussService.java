@@ -157,6 +157,9 @@ public final class AbschlussService {
 
 
 	private static String fromApiSchulabschlussAllgemeinbildendGesamtschule(final String pruefungsOrdnung, final int schuljahr, final Long val) {
+		if (val ==  null) {
+			return null;
+		}
 		final StringBuilder sb = new StringBuilder("GE/");
 		if ("APO-SI05".equals(pruefungsOrdnung)) {
 			sb.append("APO-SI05");

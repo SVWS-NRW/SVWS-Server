@@ -477,7 +477,9 @@ export class ApiServer extends BaseApi {
 	 * Passt die Informationen zum Schulabschluss in dem Lernabschnitt mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Abschlussinformationen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Abschlussdaten
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
@@ -487,13 +489,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<Abschlussdaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
 	 */
-	public async patchSchuelerAbschlussinformationen(data: Partial<Abschlussdaten>, schema: string, abschnitt: number): Promise<void> {
+	public async patchSchuelerAbschlussinformationen(data: Partial<Abschlussdaten>, schema: string, abschnitt: number): Promise<Abschlussdaten> {
 		const path = "/db/{schema}/abschluesse/schueler/lernabschnittsdaten/{abschnitt : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
 		const body: string = Abschlussdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return Abschlussdaten.transpilerFromJSON(text);
 	}
 
 
