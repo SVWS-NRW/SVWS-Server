@@ -46,7 +46,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Marina Bachran
  *
- * @param <T> der Inhaltstyp des Minimum-Heaps
+ * @param <T>   der Inhaltstyp des Minimum-Heaps
  */
 public final class MinHeap<T> implements Queue<T> {
 
@@ -60,7 +60,7 @@ public final class MinHeap<T> implements Queue<T> {
 	/** Ein Objekt zum Vergleichen von Werten. */
 	private final @NotNull Comparator<T> _comparator;
 
-	/** Die initiale Kapazität des Baums */
+	/** Die initiale Kapazität des Baums. */
 	private final int _initialCapacity;
 
 	/** Die Anzahl der Modifikationen, die an dieser Datenstruktur vorgenommen wurden */
@@ -71,8 +71,8 @@ public final class MinHeap<T> implements Queue<T> {
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * der übergebenen initialen Kapazität.
 	 *
-	 * @param comparator      das Objekt zum Vergleich von zwei Objekten des Typ T
-	 * @param initialCapacity die initiale Kapazität des Baums
+	 * @param comparator        das Objekt zum Vergleich von zwei Objekten des Typ T
+	 * @param initialCapacity   die initiale Kapazität des Baums
 	 */
 	public MinHeap(final @NotNull Comparator<T> comparator, final int initialCapacity) {
 		if (initialCapacity <= 0) {
@@ -87,7 +87,7 @@ public final class MinHeap<T> implements Queue<T> {
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * einer initialen Kapazität von 63.
 	 *
-	 * @param comparator das Objekt zum Vergleich von zwei Objekten des Typ T
+	 * @param comparator   das Objekt zum Vergleich von zwei Objekten des Typ T
 	 */
 	public MinHeap(final @NotNull Comparator<T> comparator) {
 		this._comparator = comparator;
@@ -98,7 +98,7 @@ public final class MinHeap<T> implements Queue<T> {
 	/**
 	 * Erstellt eine Kopie des als Parameter übergebenen Heaps.
 	 *
-	 * @param original    Das zu kopierende Original
+	 * @param original   Das zu kopierende Original
 	 */
 	public MinHeap(final @NotNull MinHeap<T> original) {
 		this._comparator = original._comparator;
@@ -140,7 +140,7 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public T peek() {
-		return (_nodes.length == 0) ? null : _nodes[0];
+		return (_size == 0) ? null : _nodes[0];
 	}
 
 	@Override
@@ -242,6 +242,7 @@ public final class MinHeap<T> implements Queue<T> {
 		_size--;
 		this._modCount++;
 		if (index == _size) {
+			_nodes[index] = null; // Damit kann der Garbage Collector das entfernte Element freigeben
 			return true;
 		}
 		_nodes[index] = _nodes[_size];
@@ -343,7 +344,7 @@ public final class MinHeap<T> implements Queue<T> {
 	/**
 	 * Gibt die aktuelle Kapazität des Arrays zurück.
 	 *
-	 * @return die aktuelle Kapazität des Arrays zurück
+	 * @return die aktuelle Kapazität des Arrays
 	 */
 	public int capacity() {
 		return (this._nodes.length == 0) ? this._initialCapacity : this._nodes.length;
@@ -387,7 +388,7 @@ public final class MinHeap<T> implements Queue<T> {
 	}
 
 	/**
-	 * Ermittelt eine Hash-Code für dieses Objekt basierend auf den gespeicherten
+	 * Ermittelt einen Hash-Code für dieses Objekt basierend auf den gespeicherten
 	 * Daten im Heap (die konkrete Ordnung des Baumes wird nicht unterschieden).
 	 *
 	 * @return der Hashcode des Minimum Heaps
@@ -464,7 +465,7 @@ public final class MinHeap<T> implements Queue<T> {
 	}
 
 	/**
-	 * Stellt die Minimum Heap Eigenschaft vom Index i aus im Baum abwärts her.
+	 * Stellt die Minimum-Heap-Eigenschaft vom Index i aus im Baum abwärts wieder her.
 	 *
 	 * @param i   ab diesem Index wird im Baum abwärts geprüft.
 	 */
@@ -541,7 +542,7 @@ public final class MinHeap<T> implements Queue<T> {
 	/**
 	 * Erzeugt eine Kopie des internen Arrays _nodes.
 	 *
-	 * @return die Kopie des _nodes-Array.
+	 * @return die Kopie des _nodes-Arrays.
 	 */
 	private @NotNull T @NotNull [] copyNodes() {
 		final @NotNull T @NotNull [] result = newArray((_size <= 0) ? null : _nodes[0], _size);
@@ -550,7 +551,7 @@ public final class MinHeap<T> implements Queue<T> {
 	}
 
 	/**
-	 * Lässt den dem Baum zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap
+	 * Lässt den dem Heap zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap
 	 * gespeichert werden können.
 	 *
 	 * Falls der Heap durch das Wachsen auf mehr als {@link Integer.MAX_VALUE} Elemente ansteigen würde,
@@ -572,10 +573,10 @@ public final class MinHeap<T> implements Queue<T> {
 	}
 
 	/**
-	 * Findet den Index an dem das Element t im dem dem Heap zu Grunde liegendem Array gespeichert ist.
+	 * Findet den Index, an dem das Element t in dem dem Heap zu Grunde liegenden Array gespeichert ist.
 	 * Gibt -1 zurück, falls das Element nicht vorhanden ist.
 	 *
-	 * @param obj   zu diesem Element soll der Index gefunden werden
+	 * @param obj   das Element, zu dem der Index gefunden werden soll
 	 *
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */

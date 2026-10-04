@@ -293,6 +293,19 @@ class TestMinHeap {
 	}
 
 	/**
+	 * Test Methode für {@link MinHeap#peek()} nach dem Entfernen des letzten Elements über
+	 * {@link MinHeap#remove(Object)}: Der Heap muss danach leer sein und peek() muss null liefern.
+	 */
+	@Test
+	void testPeekAfterRemoveObjectLastElement() {
+		final MinHeap<Integer> heap2 = new MinHeap<Integer>(Comparator.naturalOrder(), 1);
+		assertTrue(heap2.add(5));
+		assertTrue(heap2.remove(5));
+		assertTrue(heap2.isEmpty());
+		assertNull(heap2.peek());
+	}
+
+	/**
 	 * Test method for {@link MinHeap#removeAll(Collection)}.
 	 */
 	@Test

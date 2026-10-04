@@ -33,7 +33,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	private readonly _comparator: Comparator<T>;
 
 	/**
-	 * Die initiale Kapazität des Baums
+	 * Die initiale Kapazität des Baums.
 	 */
 	private readonly _initialCapacity: number;
 
@@ -47,8 +47,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * der übergebenen initialen Kapazität.
 	 *
-	 * @param comparator      das Objekt zum Vergleich von zwei Objekten des Typ T
-	 * @param initialCapacity die initiale Kapazität des Baums
+	 * @param comparator        das Objekt zum Vergleich von zwei Objekten des Typ T
+	 * @param initialCapacity   die initiale Kapazität des Baums
 	 */
 	public constructor(comparator: Comparator<T>, initialCapacity: number);
 
@@ -56,14 +56,14 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * Erzeugt einen neuen Minimum-Heap mit dem übergebenen {@link Comparator} und
 	 * einer initialen Kapazität von 63.
 	 *
-	 * @param comparator das Objekt zum Vergleich von zwei Objekten des Typ T
+	 * @param comparator   das Objekt zum Vergleich von zwei Objekten des Typ T
 	 */
 	public constructor(comparator: Comparator<T>);
 
 	/**
 	 * Erstellt eine Kopie des als Parameter übergebenen Heaps.
 	 *
-	 * @param original    Das zu kopierende Original
+	 * @param original   Das zu kopierende Original
 	 */
 	public constructor(original: MinHeap<T>);
 
@@ -126,7 +126,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public peek(): T | null {
-		return (this._nodes.length === 0) ? null : this._nodes[0];
+		return (this._size === 0) ? null : this._nodes[0];
 	}
 
 	public poll(): T | null {
@@ -167,6 +167,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			this._size--;
 			this._modCount++;
 			if (index === this._size) {
+				this._nodes[index] = null;
 				return true;
 			}
 			this._nodes[index] = this._nodes[this._size];
@@ -332,7 +333,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	/**
 	 * Gibt die aktuelle Kapazität des Arrays zurück.
 	 *
-	 * @return die aktuelle Kapazität des Arrays zurück
+	 * @return die aktuelle Kapazität des Arrays
 	 */
 	public capacity(): number {
 		return (this._nodes.length === 0) ? this._initialCapacity : this._nodes.length;
@@ -374,7 +375,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	/**
-	 * Ermittelt eine Hash-Code für dieses Objekt basierend auf den gespeicherten
+	 * Ermittelt einen Hash-Code für dieses Objekt basierend auf den gespeicherten
 	 * Daten im Heap (die konkrete Ordnung des Baumes wird nicht unterschieden).
 	 *
 	 * @return der Hashcode des Minimum Heaps
@@ -449,7 +450,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	/**
-	 * Stellt die Minimum Heap Eigenschaft vom Index i aus im Baum abwärts her.
+	 * Stellt die Minimum-Heap-Eigenschaft vom Index i aus im Baum abwärts wieder her.
 	 *
 	 * @param i   ab diesem Index wird im Baum abwärts geprüft.
 	 */
@@ -521,7 +522,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	/**
 	 * Erzeugt eine Kopie des internen Arrays _nodes.
 	 *
-	 * @return die Kopie des _nodes-Array.
+	 * @return die Kopie des _nodes-Arrays.
 	 */
 	private copyNodes(): Array<T> {
 		const result: Array<T> = this.newArray((this._size <= 0) ? null : this._nodes[0], this._size);
@@ -530,7 +531,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	/**
-	 * Lässt den dem Baum zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap
+	 * Lässt den dem Heap zu Grunde liegenden Baum wachsen. Verdoppelt die Menge der Elemente, die im Heap
 	 * gespeichert werden können.
 	 *
 	 * Falls der Heap durch das Wachsen auf mehr als {@link Integer.MAX_VALUE} Elemente ansteigen würde,
@@ -552,10 +553,10 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	/**
-	 * Findet den Index an dem das Element t im dem dem Heap zu Grunde liegendem Array gespeichert ist.
+	 * Findet den Index, an dem das Element t in dem dem Heap zu Grunde liegenden Array gespeichert ist.
 	 * Gibt -1 zurück, falls das Element nicht vorhanden ist.
 	 *
-	 * @param obj   zu diesem Element soll der Index gefunden werden
+	 * @param obj   das Element, zu dem der Index gefunden werden soll
 	 *
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */
