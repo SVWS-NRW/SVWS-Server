@@ -316,7 +316,7 @@ publish:all:release:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
     script:
-        - ./gradlew publishReleaseAll
+        - ./gradlew publishRelease
     rules:
         - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
           when: never

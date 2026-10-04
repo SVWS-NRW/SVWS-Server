@@ -11,8 +11,6 @@ class SvwsMavenPublishPluginExtension {
 	private String nexusSnapshotRepositoryUrl = ""
 	// URL zum Release-Repository im SVWS-Nexus
 	private String nexusReleasesRepositoryUrl = ""
-	// URL zum Release-Repository im OSSRH (Maven Central Staging)
-	private String ossrhReleasesRepositoryUrl = ""
 	// URL zum Package-Repository von SVWS auf Github
 	private String githubReleasesRepositoryUrl = ""
 
@@ -30,14 +28,6 @@ class SvwsMavenPublishPluginExtension {
 
 	void setNexusReleasesRepositoryUrl(String nexusReleasesRepositoryUrl) {
 		this.nexusReleasesRepositoryUrl = nexusReleasesRepositoryUrl
-	}
-	
-	String getOssrhReleasesRepositoryUrl() {
-		return ossrhReleasesRepositoryUrl
-	}
-
-	void setOssrhReleasesRepositoryUrl(String ossrhReleasesRepositoryUrl) {
-		this.ossrhReleasesRepositoryUrl = ossrhReleasesRepositoryUrl
 	}
 
 	String getGithubReleasesRepositoryUrl() {

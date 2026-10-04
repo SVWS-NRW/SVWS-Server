@@ -1,5 +1,3 @@
-import org.gradle.internal.component.external.model.ComponentVariant
-
 // Dieses GradleSkript gibt die Publishing-Definition für Java-Artefakte vor
 // Gradle Module können dies dann Nutzen und einzelne Informationen überschreiben
 // um Redundanz vorzubeugen, bspw:

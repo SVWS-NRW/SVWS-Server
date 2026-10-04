@@ -1,4 +1,6 @@
+import groovy.json.JsonSlurper
 import org.gradle.internal.os.OperatingSystem
+import com.github.jk1.license.render.*
 
 plugins {
 	id 'com.github.jk1.dependency-license-report' version '2.8'
@@ -12,7 +14,7 @@ plugins {
 
 apply from: ("$rootDir/gradle/checkVulnerability.gradle")
 
-def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
+def config = new JsonSlurper().parseText(file("buildconfig.json").text)
 println "Version: " + config.project.version
 println "Kompatible Schild-Version: " + config.schild.version
 def gitHASH = null;
@@ -83,7 +85,6 @@ allprojects {
 	group = 'de.svws-nrw'
 
 	svwsmavenrepo {
-		//nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
 		githubMavenPackagesUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
 	}
 
@@ -94,10 +95,10 @@ allprojects {
 	checkstyle {
 		toolVersion = "13.9.0"
 	}
-	
+
 	dependencies {
 		checkstyle("com.puppycrawl.tools:checkstyle:" + checkstyle.toolVersion)
-	}	
+	}
 
 	sonar {
 		properties {
@@ -248,23 +249,6 @@ task buildTS() {
 	group = "build"
 }
 
-task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
-	tasks = ['publishAllPublicationsToSonatypeRepository', 'closeAndReleaseSonatypeStagingRepository', 'publishReleaseAll']
-	group = "publishing"
-	description = 'Publish ins Sonatype Staging, im Anschluss Release nach Maven Central und Schließen des Staging. Danach Release zu anderen Repositories'
-}
-
-nexusPublishing {
-	repositories {
-		sonatype {
-			nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-			snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-			username = getOssrhActor()
-			password = getOssrhToken()
-		}
-	}
-}
-
 task prepareSigning(type: Exec) {
 	group = 'signing'
 	doFirst {
@@ -281,8 +265,6 @@ task signWindowsInstaller(type: Exec) {
 	commandLine = ["${projectDir}/config/signing/sign_windows_installer.sh", "${project.version}"]
 }
 
-
-import com.github.jk1.license.render.*
 
 licenseReport {
 	// Set output directory for the report data.

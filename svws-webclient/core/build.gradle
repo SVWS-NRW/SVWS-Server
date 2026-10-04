@@ -51,5 +51,5 @@ task publishNpmCore(type: NpmPublish) {
 	tokenOnly = true
 }
 
-publishReleaseAll.dependsOn publishNexusCore
-publishReleaseAll.dependsOn publishNpmCore
+publishRelease.dependsOn publishNexusCore
+publishRelease.dependsOn publishNpmCore
