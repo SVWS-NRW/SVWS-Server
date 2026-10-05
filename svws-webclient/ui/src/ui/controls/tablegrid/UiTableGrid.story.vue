@@ -29,7 +29,7 @@
 						{{ row.birthYear }}
 					</td>
 					<td v-if="countActiveActions > 0">
-						<ui-table-actions :actions="rowActions" :items="row" />
+						<ui-table-actions :actions="getRowActions(row)" :items="row" />
 					</td>
 				</template>
 				<template v-if="state.showBulk" #footer>
@@ -62,7 +62,8 @@
 	import { Note } from "@core/asd/types/Note";
 
 	import { GridManager } from "./GridManager";
-	import type { TableActions } from "./UiTableActions.vue";
+	import type { TableAction } from "./UiTableActions.vue";
+	import UiTableActions from "./UiTableActions.vue";
 
 	const state = reactive({
 		add: false,
@@ -137,58 +138,85 @@
 		};
 	}
 
-	const rowActions = computed(() => {
-		const actions: TableActions<Schueler>[] = [];
+	function getRowActions(schueler: Schueler): TableAction[] {
+		const actions: TableAction[] = [];
 
 		if (state.edit) {
-			actions.push({ label: "Hinzufügen", iconClasses: "i-ri-add-line", action: (item: Schueler) => alert(`Hinzufügen: ${item.vorname} ${item.nachname}`) });
+			actions.push({
+				label: "Hinzufügen",
+				iconClasses: "i-ri-add-line",
+				action: () => alert(`Hinzufügen: ${schueler.vorname} ${schueler.nachname}`),
+			});
 		}
 
 		if (state.add) {
-			actions.push({ label: "Bearbeiten", iconClasses: "i-ri-edit-2-line", action: (item: Schueler) => alert(`Bearbeiten: ${item.vorname} ${item.nachname}`) });
+			actions.push({
+				label: "Bearbeiten",
+				iconClasses: "i-ri-edit-2-line",
+				action: () => alert(`Bearbeiten: ${schueler.vorname} ${schueler.nachname}`),
+			});
 		}
 
 		if (state.delete) {
-			actions.push({ label: "Trash", trash: true, action: (item: Schueler) => alert(`Löschen: ${item.vorname} ${item.nachname}`) });
+			actions.push({
+				label: "Trash",
+				trash: true,
+				action: () => alert(`Löschen: ${schueler.vorname} ${schueler.nachname}`),
+			});
 		}
 
 		return actions;
-	});
+	};
 
-	const bulkActions = computed(() => {
-		const actions: TableActions<Schueler[]>[] = [];
+	const bulkActions = computed<TableAction[]>(() => {
+		const actions: TableAction[] = [];
 
 		if (state.edit) {
-			actions.push(
-				{
-					label: "Hinzufügen",
-					iconClasses: "i-ri-add-line",
-					action: () => alert("Hinzufügen:\n" + auswahl.value.map(s => `${s.vorname} ${s.nachname}`).join("\n")),
-					disabled: auswahl.value.length === 0,
-				}
-			);
+			actions.push({
+				label: "Hinzufügen",
+				iconClasses: "i-ri-add-line",
+				action: () => {
+					alert(
+						"Hinzufügen:\n"
+							+ auswahl.value
+								.map(schueler => `${schueler.vorname} ${schueler.nachname}`)
+								.join("\n")
+					);
+				},
+				disabled: auswahl.value.length === 0,
+			});
 		}
 
 		if (state.add) {
-			actions.push(
-				{
-					label: "Bearbeiten",
-					iconClasses: "i-ri-edit-2-line",
-					action: (items: Schueler[]) => alert("Bearbeiten:\n" + items.map(s => `${s.vorname} ${s.nachname}`).join("\n")),
-					disabled: auswahl.value.length === 0,
-				}
-			);
+			actions.push({
+				label: "Bearbeiten",
+				iconClasses: "i-ri-edit-2-line",
+				action: () => {
+					alert(
+						"Bearbeiten:\n"
+							+ auswahl.value
+								.map(schueler => `${schueler.vorname} ${schueler.nachname}`)
+								.join("\n")
+					);
+				},
+				disabled: auswahl.value.length === 0,
+			});
 		}
 
 		if (state.delete) {
-			actions.push(
-				{
-					label: "Löschen",
-					trash: true,
-					action: (items: Schueler[]) => alert("Löschen:\n" + items.map(s => `${s.vorname} ${s.nachname}`).join("\n")),
-					disabled: auswahl.value.length === 0,
-				}
-			);
+			actions.push({
+				label: "Löschen",
+				trash: true,
+				action: () => {
+					alert(
+						"Löschen:\n"
+							+ auswahl.value
+								.map(schueler => `${schueler.vorname} ${schueler.nachname}`)
+								.join("\n")
+					);
+				},
+				disabled: auswahl.value.length === 0,
+			});
 		}
 
 		return actions;

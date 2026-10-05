@@ -99,13 +99,13 @@
 					{{ row.automatischErledigt ? 'an' : 'aus' }}
 				</td>
 				<td>
-					<ui-table-actions :actions="rowActions(row)" :items="row" />
+					<ui-table-actions :actions="rowActions(row)" />
 				</td>
 			</template>
 			<!-- Table Footer -->
 			<template #footer>
 				<td class="col-span-full my-1">
-					<ui-table-actions :actions="bulkActions" :items="[...selection.values()]" always-visible />
+					<ui-table-actions :actions="bulkActions" always-visible />
 				</td>
 			</template>
 		</ui-table-grid>
@@ -170,7 +170,7 @@
 	import { useNotificationsState } from "@ui/states/NotificationsState";
 	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 
 	import { dateToday, formatDateToDateTime, formatToLocalDate, getDateFromDateTime } from "~/utils/date";
 
@@ -330,7 +330,7 @@
 	);
 
 	/** Übergibt die Actions für die Tabellenzeile */
-	function rowActions(row: WiedervorlageEintrag): TableActions<WiedervorlageEintrag>[] {
+	function rowActions(row: WiedervorlageEintrag): TableAction[] {
 		const isErledigt = row.tsErledigt !== null;
 
 		return [

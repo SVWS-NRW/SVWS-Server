@@ -42,7 +42,7 @@
 					<div v-else class="text-left"> {{ row.anerkennung.value?.text ?? '—' }} </div>
 				</td>
 				<td class="pr-3">
-					<ui-table-actions :actions="rowActions(row)" :items="row" />
+					<ui-table-actions :actions="getRowActions(row)" />
 				</td>
 			</template>
 			<template v-else-if="row instanceof LehrerLehrbefaehigungEintragModelProxy">
@@ -59,7 +59,7 @@
 					<div v-else class="text-left"> {{ row.anerkennung.value?.text ?? '—' }} </div>
 				</td>
 				<td class="pr-9.5">
-					<ui-table-actions :actions="rowActions(row)" :items="row" />
+					<ui-table-actions :actions="getRowActions(row)" />
 				</td>
 			</template>
 			<template v-else-if="row instanceof LehrerFachrichtungEintragModelProxy">
@@ -75,22 +75,15 @@
 						headless :removable="false" />
 					<div v-else class="text-left"> {{ row.anerkennung.value?.text ?? '—' }} </div>
 				</td>
-				<td class="pr-5">
-					<ui-table-actions :actions="rowActions(row)" :items="row" />
+				<td>
+					<ui-table-actions :actions="getRowActions(row)" />
 				</td>
 			</template>
 		</template>
 		<template #footer>
 			<template v-if="hatUpdateKompetenz">
-				<td class="col-span-4 text-right">
-					<svws-ui-tooltip>
-						<svws-ui-button type="icon" @click="openLehramtHinzufuegen">
-							<span class="icon i-ri-add-line" />
-						</svws-ui-button>
-						<template #content>
-							Lehramt hinzufügen
-						</template>
-					</svws-ui-tooltip>
+				<td class="col-span-full my-1 pr-3">
+					<ui-table-actions :actions="footerActions" always-visible />
 				</td>
 			</template>
 			<template v-else>
@@ -161,7 +154,7 @@
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 	import { ValidatorInputGroupRequired, ValidatorInputGroupRequiredModus } from "@ui/validation/common/ValidatorInputGroupRequired";
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
@@ -350,8 +343,8 @@
 		createLehramtModel.value = null;
 	}
 
-	function rowActions(rowModel: GridDatenLehraemter): TableActions<GridDatenLehraemter>[] {
-		const rowActions: TableActions<GridDatenLehraemter>[] = [];
+	function getRowActions(rowModel: GridDatenLehraemter): TableAction[] {
+		const rowActions: TableAction[] = [];
 		let removeFn;
 		if (rowModel instanceof LehrerLehramtEintragModelProxy) {
 			removeFn = () => lehrerAuswahlState.removeLehraemter(Arrays.asList(rowModel.data));
@@ -369,6 +362,12 @@
 		}
 		return rowActions;
 	}
+
+	const footerActions = computed(() => {
+		return [
+			{ label: "Lehramt hinzufügen", action: () => openLehramtHinzufuegen(), iconClasses: "i-ri-add-line" },
+		];
+	});
 
 	const gridManager = new GridManager<string, GridDatenLehraemter, List<GridDatenLehraemter>>({
 		daten: computed<List<GridDatenLehraemter>>(() => {

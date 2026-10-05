@@ -48,7 +48,7 @@
 					</template>
 					<template #footer>
 						<td class="col-span-full my-1">
-							<ui-table-actions :actions="bulkActions" :items="bulkSelectedLogoModels" always-visible />
+							<ui-table-actions :actions="bulkActions" always-visible />
 						</td>
 					</template>
 				</ui-table-grid>
@@ -84,7 +84,7 @@
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
-	import type { TableActions } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
+	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
 
 	import LogoImage from "./LogoImage.vue";
@@ -184,7 +184,7 @@
 		],
 	}));
 
-	function rowActions(logoModel: LogoModelProxy): TableActions<LogoModelProxy>[] {
+	function rowActions(logoModel: LogoModelProxy): TableAction[] {
 		const hasImage = logoModel.proxy.base64 !== "";
 		return [
 			{

@@ -8,7 +8,7 @@
 						:disabled="action.disabled"
 						:title="action.label"
 						:aria-label="action.label"
-						@click="() => action.action(items)">
+						@click="action.action">
 						<span :class="['icon', iconClass(action)]" />
 					</svws-ui-button>
 				</template>
@@ -17,32 +17,32 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts">
 
-	export type TableActions<T> =
-		{
+	export type TableAction =
+		| {
 			trash: true;
 			label: string;
-			action: (item: T) => void;
-			disabled?: boolean; }
+			action: () => void;
+			disabled?: boolean;
+		}
 		| {
 			trash?: false;
 			label: string;
-			action: (item: T) => void;
+			action: () => void;
 			disabled?: boolean;
 			iconClasses: string;
 		};
 
 	withDefaults(defineProps<{
 		alwaysVisible?: boolean;
-		actions?: TableActions<T>[];
-		items: T,
+		actions?: TableAction[];
 	}>(), {
 		alwaysVisible: false,
 		actions: () => [],
 	});
 
-	const iconClass = ((action: TableActions<T>) => {
+	const iconClass = ((action: TableAction) => {
 		return (action.trash === true) ? "" : action.iconClasses;
 	});
 

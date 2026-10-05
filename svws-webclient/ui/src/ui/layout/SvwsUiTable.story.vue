@@ -7,7 +7,7 @@
 			<div class="px-3">
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" v-model:clicked="clickedRow" v-model:hidden-columns="state.hiddenColumns" :items="data"
-						:columns="cols" :row-actions :clickable="state.clickable" :selectable="state.selectable"
+						:columns="cols" :clickable="state.clickable" :selectable="state.selectable"
 						:disable-header="state.disableHeader" :disable-footer="state.disableFooter" :count="state.count"
 						:filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
 						:toggle-columns="state.toggleColumns" :filter-reset :type="state.typeGrid ? 'grid' : 'table'" :lock-selectable="state.lockSelectable">
@@ -41,10 +41,10 @@
 							<span class="line-clamp-1 break-all">{{ value }}</span>
 						</template>
 						<template #cell(rowActions)="{ rowData }">
-							<ui-table-actions :actions="rowActions" :items="rowData" />
+							<ui-table-actions :actions="getRowActions(rowData)" :items="rowData" />
 						</template>
 						<template #actions v-if="state.showBulk">
-							<ui-table-actions :actions="bulkActions" :items="[]" always-visible />
+							<ui-table-actions :actions="bulkActions" always-visible />
 						</template>
 					</svws-ui-table>
 				</svws-ui-content-card>
@@ -100,7 +100,7 @@
 
 	import type { DataTableColumn, SortByAndOrder } from "@ui/types.js";
 
-	import type { TableActions } from "../controls/tablegrid/UiTableActions.vue";
+	import type { TableAction } from "../controls/tablegrid/UiTableActions.vue";
 
 	const itemRefs = ref(new Map());
 	const hiddenColumns = ref<Set<string>>(new Set<string>());
@@ -136,30 +136,49 @@
 		showBulk: false,
 	});
 
-	const rowActions = computed<TableActions<DataType>[]>(() => {
-		const actions: TableActions<DataType>[] = [];
+	const countRowActions = computed(() => [state.add, state.delete, state.accept, state.details].filter(Boolean).length);
+
+	function getRowActions(item: DataType): TableAction[] {
+		const actions: TableAction[] = [];
 
 		if (state.add) {
-			actions.push({ label: "Hinzufügen", iconClasses: "i-ri-add-line", action: (item: DataType) => alert(`Hinzufügen: ${item.name}`), disabled: true });
+			actions.push({
+				label: "Hinzufügen",
+				iconClasses: "i-ri-add-line",
+				action: () => alert(`Hinzufügen: ${item.name}`),
+				disabled: true,
+			});
 		}
 
 		if (state.delete) {
-			actions.push({ label: "Löschen", action: (item: DataType) => alert(`Löschen: ${item.name}`), trash: true });
+			actions.push({
+				label: "Löschen",
+				trash: true,
+				action: () => alert(`Löschen: ${item.name}`),
+			});
 		}
 
 		if (state.accept) {
-			actions.push({ label: "Bestätigen", iconClasses: "i-ri-check-line", action: (item: DataType) => alert(`Bestätigen: ${item.name}`) });
+			actions.push({
+				label: "Bestätigen",
+				iconClasses: "i-ri-check-line",
+				action: () => alert(`Bestätigen: ${item.name}`),
+			});
 		}
 
 		if (state.details) {
-			actions.push({ label: "Details", iconClasses: "i-ri-eye-line", action: (item: DataType) => alert(`Default: ${item.name}`) });
+			actions.push({
+				label: "Details",
+				iconClasses: "i-ri-eye-line",
+				action: () => alert(`Details: ${item.name}`),
+			});
 		}
 
 		return actions;
-	});
+	}
 
-	const bulkActions = computed<TableActions<DataType[]>[]>(() => {
-		const actions: TableActions<DataType[]>[] = [];
+	const bulkActions = computed<TableAction[]>(() => {
+		const actions: TableAction[] = [];
 
 		if (state.add) {
 			actions.push({ label: "Hinzufügen", iconClasses: "i-ri-add-line", action: () => alert(`Hinzufügen: Bulk`), disabled: true });
@@ -188,8 +207,8 @@
 		{ key: "customIcon", label: "Icon", tooltip: "Icon statt Text", sortable: true, span: 0.25 },
 		{ key: "test", label: "Column", sortable: true },
 		{ key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true },
-		...(rowActions.value.length > 0
-			? [{ key: "rowActions", label: "", tooltip: "Aktionen", fixedWidth: (rowActions.value.length * 2.3), align: "right" }] as DataTableColumn[]
+		...(countRowActions.value > 0
+			? [{ key: "rowActions", label: "", tooltip: "Aktionen", fixedWidth: (countRowActions.value * 2.3), align: "right" }] as DataTableColumn[]
 			: []),
 	]);
 
