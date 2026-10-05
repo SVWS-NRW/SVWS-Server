@@ -36,7 +36,10 @@ public enum ReportingBildDefinition {
 			40, List.of()),
 
 	/** Definition für DIN5008-Briefkopf */
-	DIN5008_BRIEFKOPF("DIN5008_BRIEFKOPF", "DIN5008-Briefkopf", "Vollständiger Briefkopf für Anschreiben nach DIN5008", 190, 45, List.of());
+	DIN5008_BRIEFKOPF("DIN5008_BRIEFKOPF", "DIN5008-Briefkopf", "Vollständiger Briefkopf für Anschreiben nach DIN5008", 190, 45, List.of()),
+
+	/** Definition für den Zeugniskopf für die "Regelzeugnisse" zum Halbjahr oder die Versetzung. */
+	ZEUGNISKOPF("ZEUGNISKOPF", "Zeugniskopf", "Vollständiger Zeugniskopf mit Logos und Schulbezeichnung", 190, 32, List.of());
 
 
 	/** Die Kennung für die Persistierung in der DB. Diese Kennung muss eindeutig über alle Definitionen hinweg sein. */

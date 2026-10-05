@@ -28,6 +28,12 @@
 					:ids-hauptdaten="[...klassenState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
 			</ui-card>
 
+			<ui-card v-if="zeigeGrundschulzeugnis" icon="i-ri-printer-line" :title="ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4.getUiTitel()" :subtitle="ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4.getUiBeschreibung()"
+				:is-open="currentAction === 'druckKlasseGrundschulzeugnisKlasse4'" @update:is-open="isOpen => setCurrentAction('druckKlasseGrundschulzeugnisKlasse4', isOpen)">
+				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4"
+					:ids-hauptdaten="klassenState.manager.getSchuelerIDsDerAuswahl()" :ids-detaildaten="[]" />
+			</ui-card>
+
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (klassenState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseStundenplan'" @update:is-open="isOpen => setCurrentAction('druckKlasseStundenplan', isOpen)">
 				<div class="flex flex-col">
@@ -76,6 +82,7 @@
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useReportingState } from "@ui/states/ReportingState";
 	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
@@ -83,19 +90,22 @@
 
 	import type { KlassenGruppenprozesseProps } from "./KlassenGruppenprozesseProps";
 
-	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseStundenplan' | 'delete' | '';
+	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerFotos' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseListeSchuelerLeistungsdatenDetailliert' | 'druckKlasseGrundschulzeugnisKlasse4' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 	const klassenState = useKlassenAuswahlState();
 	const benutzerState = useBenutzerState();
-
-	const serverMode = useServerState().mode;
+	const reportingState = useReportingState();
+	const serverState = useServerState();
 
 	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
+	// Das Grundschulzeugnis befindet sich noch in der Entwicklung und ist daher nur im Alpha- und Dev-Modus verfügbar
+	const zeigeGrundschulzeugnis = computed(() => serverState.hasAlpha && hatKompetenzDruckenSchuelerIndividualdaten.value
+		&& reportingState.istSchulformZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4));
 
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value || hatKompetenzDruckenSchuelerLeistungsdaten.value);
 

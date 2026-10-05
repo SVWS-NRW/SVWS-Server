@@ -11,6 +11,11 @@ export class ReportingReportvorlageSchulformen extends JavaObject {
 	 */
 	public static readonly GOST: List<Schulform> = ArrayList.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF);
 
+	/**
+	 * Die Schulformen, an denen Grundschulzeugnisse ausgegeben werden. Der Katalog kennt dafür keine Eigenschaft.
+	 */
+	public static readonly GRUNDSCHULE: List<Schulform> = ArrayList.of(Schulform.G, Schulform.FW, Schulform.PS, Schulform.V, Schulform.S, Schulform.KS, Schulform.WF, Schulform.HI);
+
 
 	private constructor() {
 		super();

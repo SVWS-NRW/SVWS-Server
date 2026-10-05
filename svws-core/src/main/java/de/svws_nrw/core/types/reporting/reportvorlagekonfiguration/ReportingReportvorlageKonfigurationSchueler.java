@@ -94,6 +94,60 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 	}
 
 	/**
+	 * Erstellt die Reportparameter für die Vorlage "SchuelerVGrundschulzeugnisKlasse4".
+	 *
+	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
+	 */
+	public static @NotNull ReportingParameter getSchuelerVGrundschulzeugnisKlasse4() {
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(
+				List.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId()),
+				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+						Arrays.asList(
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchullogo", "mit Schullogo",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitSchultraegerlogo", "mit Schulträgerlogo",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBildZeugniskopf", "mit Bild-Zeugniskopf",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitTextZeugniskopf", "mit Text-Zeugniskopf",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitPersoenlichenUnterschriften", "mit persönlichen Unterschriften gemäß Datenbestand",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitZweiterKlassenlehrerUnterschrift", "mit Unterschrift 2. Klassenlehrer",
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschrift", "Unterschrift Schulleitung",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textSchulleitungUnterschriftBezeichnung", "Bezeichnung Schulleitung",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textKlassenlehrer1Unterschrift", "Unterschrift 1. Klassenlehrer",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textKlassenlehrer1UnterschriftBezeichnung", "Bezeichnung 1. Klassenlehrer",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textKlassenlehrer2Unterschrift", "Unterschrift 2. Klassenlehrer",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3),
+								ReportingReportvorlageUtils.erzeugeVorlageParameter("textKlassenlehrer2UnterschriftBezeichnung", "Bezeichnung 2. Klassenlehrer",
+										ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 3)
+								)),
+						ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Termine",
+								"Die ausgewählten Termine werden auf dem Zeugnis genannt, sofern sie eingetragen sind.", true, 2,
+								Arrays.asList(
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitTerminElternsprechtag", "mit Elternsprechtag",
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("terminElternsprechtag", "Elternsprechtag",
+												ReportingReportvorlageParameterTyp.DATUM_UHRZEIT, "", true, ReportingUIKomponentenTyp.INPUT, 1),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("mitTerminWiederbeginnUnterricht", "mit Wiederbeginn des Unterrichts",
+												ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+										ReportingReportvorlageUtils.erzeugeVorlageParameter("terminWiederbeginnUnterricht", "Wiederbeginn des Unterrichts",
+												ReportingReportvorlageParameterTyp.DATUM_UHRZEIT, "", true, ReportingUIKomponentenTyp.INPUT, 1)
+								))),
+				new ReportingEMailDaten(),
+				new ArrayList<>(),
+				List.of(ReportingReportvorlageUtils.erzeugeLeistungsdatenZeugnisfilterGruppe(), ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()),
+				true, true);
+	}
+
+	/**
 	 * Erstellt die Reportparamater für die Vorlage "SchuelerVGostLaufbahnplanungErgebnisuebersicht".
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern

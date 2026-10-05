@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.asd.data.schueler.VersetzungsvermerkKatalogEintrag;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.schueler.Versetzungsvermerk;
 import de.svws_nrw.core.adt.map.ListMap3DLongKeys;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
@@ -861,6 +862,44 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	}
 
 	/**
+	 * Gibt die Leistungsdaten zu einer Kursart zurück.
+	 *
+	 * @param kursart Die Kursart.
+	 *
+	 * @return Die Leistungsdaten der Kursart, sortiert nach Fachsortierung.
+	 */
+	private List<ReportingSchuelerLeistungsdaten> leistungsdatenZurKursart(final String kursart) {
+		if ((kursart == null) || kursart.isBlank() || (leistungsdaten() == null)) {
+			return new ArrayList<>();
+		}
+		return leistungsdaten().stream()
+				.filter(Objects::nonNull)
+				.filter(l -> kursart.equalsIgnoreCase(l.kursart()))
+				.sorted(Comparator
+						.comparingInt((final ReportingSchuelerLeistungsdaten l) -> (l.fach() == null) ? Integer.MAX_VALUE : l.fach().sortierungEintrag())
+						.thenComparing(l -> (l.fach() == null) ? "" : l.fach().kuerzel()))
+				.toList();
+	}
+
+	/**
+	 * Gibt die Leistungsdaten für den Bereich "Weiterer Unterricht" zurück (Kursart ZUV).
+	 *
+	 * @return Liste der Leistungsdaten zur Kursart ZUV.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenWeitererUnterricht() {
+		return leistungsdatenZurKursart("ZUV");
+	}
+
+	/**
+	 * Gibt die Leistungsdaten für den Bereich "Teilnahme an Arbeitsgemeinschaften" zurück (Kursart AGGT).
+	 *
+	 * @return Liste der Leistungsdaten zur Kursart AGGT.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenArbeitsgemeinschaften() {
+		return leistungsdatenZurKursart("AGGT");
+	}
+
+	/**
 	 * Liefert den Eintrag der Schüler-Leistungsdaten, der dem Klassenunterricht zu den gegebenen IDs von Fach und Lehrer entspricht.
 	 *
 	 * @param idFach Die ID des Fachs, zu dem die Leistungsdaten abgefragt werden sollen.
@@ -893,6 +932,84 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 		return leistungsdatenZumFachUndLehrer.stream()
 				.filter(l -> "PUK".equalsIgnoreCase(l.kursart) || "".equals(l.kursart))
 				.min(Comparator.comparingInt(l -> "PUK".equalsIgnoreCase(l.kursart) ? 0 : 1))
+				.orElse(null);
+	}
+
+	/**
+	 * Liefert den ersten Leistungsdatensatz, dessen Fach das übergebene Kürzel trägt.
+	 * Wird für Zeugnisvorlagen mit einer festen Fachreihenfolge verwendet, in denen jedes Fach über sein Kürzel gesucht wird.
+	 *
+	 * @param kuerzel Das Kürzel des gesuchten Fachs.
+	 *
+	 * @return Der gefundene Leistungsdatensatz oder {@code null}, falls kein passendes Fach vorhanden ist.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenZuKuerzelFach(final String kuerzel) {
+		if ((leistungsdaten() == null) || (kuerzel == null) || kuerzel.isEmpty()) {
+			return null;
+		}
+		return leistungsdaten().stream()
+				.filter(l -> (l.fach() != null) && kuerzel.equals(l.fach().kuerzel()))
+				.findFirst()
+				.orElse(null);
+	}
+
+	/**
+	 * Liefert die Leistungsdaten, deren Fach dem Statistikfach mit dem übergebenen Kürzel zugeordnet ist. Mehrere Fächer der Schule können auf dasselbe
+	 * Statistikfach verweisen, deshalb ist das Ergebnis eine Liste in der Reihenfolge der Leistungsdaten.
+	 *
+	 * @param kuerzelASD Das Kürzel des Statistikfachs gemäß der amtlichen Schulstatistik.
+	 *
+	 * @return Die Leistungsdaten zum Statistikfach oder eine leere Liste, falls kein Fach passt.
+	 */
+	public List<ReportingSchuelerLeistungsdaten> leistungsdatenZumStatistikfach(final String kuerzelASD) {
+		if ((leistungsdaten() == null) || (kuerzelASD == null) || kuerzelASD.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return leistungsdaten().stream()
+				.filter(l -> (l.fach() != null) && (l.fach().statistikfach() != null) && kuerzelASD.equals(l.fach().statistikfach().kuerzelASD()))
+				.toList();
+	}
+
+	/**
+	 * Liefert unter den Leistungsdaten zum Statistikfach den ersten Eintrag, dessen Fach das übergebene Kürzel oder die übergebene Bezeichnung trägt.
+	 * Verglichen werden das Kürzel der Schule, die Bezeichnung, die Zeugnisbezeichnung und die Bezeichnung für das Überweisungszeugnis, jeweils ohne
+	 * Beachtung der Groß- und Kleinschreibung. So lässt sich etwa unter mehreren Fächern zum Statistikfach Deutsch genau das Fach Lesen wählen. Die
+	 * Bezeichnung gehört dazu, weil die Zeugnisbezeichnung leer sein darf.
+	 *
+	 * @param kuerzelASD             Das Kürzel des Statistikfachs gemäß der amtlichen Schulstatistik.
+	 * @param kuerzelOderBezeichnung Das Kürzel der Schule, die Bezeichnung, die Zeugnisbezeichnung oder die Bezeichnung für das Überweisungszeugnis
+	 *                               des Fachs.
+	 *
+	 * @return Der erste passende Leistungsdatensatz oder {@code null}, falls kein Fach passt.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenZumStatistikfach(final String kuerzelASD, final String kuerzelOderBezeichnung) {
+		if ((kuerzelOderBezeichnung == null) || kuerzelOderBezeichnung.isBlank()) {
+			return null;
+		}
+		final String gesucht = kuerzelOderBezeichnung.trim();
+		return leistungsdatenZumStatistikfach(kuerzelASD).stream()
+				.filter(l -> gesucht.equalsIgnoreCase(l.fach().kuerzel()) || gesucht.equalsIgnoreCase(l.fach().bezeichnung())
+						|| gesucht.equalsIgnoreCase(l.fach().bezeichnungZeugnis()) || gesucht.equalsIgnoreCase(l.fach().bezeichnungUeberweisungszeugnis()))
+				.findFirst()
+				.orElse(null);
+	}
+
+	/**
+	 * Liefert den ersten Leistungsdatensatz, dessen Fach der übergebenen Fachgruppe angehört.
+	 * Wird beispielsweise für Religionslehre verwendet, da dort je nach Konfession unterschiedliche Fachkürzel
+	 * (z. B. KR, ER) zum Einsatz kommen, die alle derselben Fachgruppe angehören.
+	 *
+	 * @param fachgruppe Die gesuchte Fachgruppe.
+	 *
+	 * @return Der gefundene Leistungsdatensatz oder {@code null}, falls kein passendes Fach vorhanden ist.
+	 */
+	public ReportingSchuelerLeistungsdaten leistungsdatenZurFachgruppe(final Fachgruppe fachgruppe) {
+		if ((leistungsdaten() == null) || (fachgruppe == null)) {
+			return null;
+		}
+		return leistungsdaten().stream()
+				.filter(l -> (l.fach() != null) && (l.fach().fachgruppe() == fachgruppe))
+				.findFirst()
 				.orElse(null);
 	}
 

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+	<!--/* @thymesVar id="#convert" type="de.svws_nrw.module.reporting.html.dialects.ConvertExpressionHelper" */-->
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Zeugnis',
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-hoch-minimal-rand.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="mitSchullogo = ${VorlageParameter.get('mitSchullogo')},
+				   mitSchultraegerlogo = ${VorlageParameter.get('mitSchultraegerlogo')},
+				   mitBildZeugniskopf = ${VorlageParameter.get('mitBildZeugniskopf')},
+				   mitTextZeugniskopf = ${VorlageParameter.get('mitTextZeugniskopf')},
+				   textSchulleitungUnterschrift = ${VorlageParameter.get('textSchulleitungUnterschrift')},
+				   textSchulleitungUnterschriftBezeichnung = ${VorlageParameter.get('textSchulleitungUnterschriftBezeichnung')},
+				   textKlassenlehrer1Unterschrift = ${VorlageParameter.get('textKlassenlehrer1Unterschrift')},
+				   textKlassenlehrer1UnterschriftBezeichnung = ${VorlageParameter.get('textKlassenlehrer1UnterschriftBezeichnung')},
+				   textKlassenlehrer2Unterschrift = ${VorlageParameter.get('textKlassenlehrer2Unterschrift')},
+				   textKlassenlehrer2UnterschriftBezeichnung = ${VorlageParameter.get('textKlassenlehrer2UnterschriftBezeichnung')},
+				   mitPersoenlichenUnterschriften = ${VorlageParameter.get('mitPersoenlichenUnterschriften')},
+				   mitZweiterKlassenlehrerUnterschrift = ${VorlageParameter.get('mitZweiterKlassenlehrerUnterschrift')},
+				   mitTerminElternsprechtag = ${VorlageParameter.get('mitTerminElternsprechtag')},
+				   terminElternsprechtag = ${VorlageParameter.get('terminElternsprechtag')},
+				   mitTerminWiederbeginnUnterricht = ${VorlageParameter.get('mitTerminWiederbeginnUnterricht')},
+				   terminWiederbeginnUnterricht = ${VorlageParameter.get('terminWiederbeginnUnterricht')}">
+
+		<th:block th:each="schueler : ${Schueler}"
+				  th:with="lernabschnitt = ${schueler.auswahlLernabschnitt()},
+						   hatTextSchulleitung = ${!#strings.isEmpty(textSchulleitungUnterschrift) || !#strings.isEmpty(textSchulleitungUnterschriftBezeichnung)},
+						   finalSchulleitungUnterschrift = ${hatTextSchulleitung ? textSchulleitungUnterschrift : (mitPersoenlichenUnterschriften ? ((Schule != null && Schule.schulleitung() != null) ? Schule.schulleitung().unterschriftfeld(true, true) : 'N. N.') : 'Schulleiter/in')},
+						   finalSchulleitungBezeichnung = ${hatTextSchulleitung ? textSchulleitungUnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? ((Schule != null && Schule.schulleitung() != null && Schule.schulleitung().schulleitungsfunktion() != null) ? '(' + Schule.schulleitung().schulleitungsfunktion().bezeichnung() + ')' : '(Schulleiter/in)') : '')},
+						   klassenlehrer1 = ${(lernabschnitt != null && lernabschnitt.klasse() != null && lernabschnitt.klasse().klassenlehrer().size() > 0) ? lernabschnitt.klasse().klassenlehrer().get(0) : null},
+						   klassenlehrer2 = ${(lernabschnitt != null && lernabschnitt.klasse() != null && lernabschnitt.klasse().klassenlehrer().size() > 1) ? lernabschnitt.klasse().klassenlehrer().get(1) : null},
+						   hatTextKlassenlehrer1 = ${!#strings.isEmpty(textKlassenlehrer1Unterschrift) || !#strings.isEmpty(textKlassenlehrer1UnterschriftBezeichnung)},
+						   finalKlassenlehrer1Unterschrift = ${hatTextKlassenlehrer1 ? textKlassenlehrer1Unterschrift : (mitPersoenlichenUnterschriften ? (klassenlehrer1 != null ? klassenlehrer1.unterschriftfeld(true, true) : 'N. N.') : 'Klassenlehrer/in')},
+						   finalKlassenlehrer1Bezeichnung = ${hatTextKlassenlehrer1 ? textKlassenlehrer1UnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (klassenlehrer1 == null ? '(Klassenlehrer/in)' : (klassenlehrer1.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? '(Klassenlehrerin)' : (klassenlehrer1.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? '(Klassenlehrer)' : '(Klassenlehrkraft)'))) : '')},
+						   hatTextKlassenlehrer2 = ${!#strings.isEmpty(textKlassenlehrer2Unterschrift) || !#strings.isEmpty(textKlassenlehrer2UnterschriftBezeichnung)},
+						   finalKlassenlehrer2Unterschrift = ${hatTextKlassenlehrer2 ? textKlassenlehrer2Unterschrift : (mitPersoenlichenUnterschriften ? (klassenlehrer2 != null ? klassenlehrer2.unterschriftfeld(true, true) : 'N. N.') : 'Klassenlehrer/in')},
+						   finalKlassenlehrer2Bezeichnung = ${hatTextKlassenlehrer2 ? textKlassenlehrer2UnterschriftBezeichnung : (mitPersoenlichenUnterschriften ? (klassenlehrer2 == null ? '(Klassenlehrer/in)' : (klassenlehrer2.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? '(Klassenlehrerin)' : (klassenlehrer2.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? '(Klassenlehrer)' : '(Klassenlehrkraft)'))) : '')},
+						   finalKlassenlehrerUnterschrift = ${mitZweiterKlassenlehrerUnterschrift ? finalKlassenlehrer2Unterschrift : finalKlassenlehrer1Unterschrift},
+						   finalKlassenlehrerBezeichnung = ${mitZweiterKlassenlehrerUnterschrift ? finalKlassenlehrer2Bezeichnung : finalKlassenlehrer1Bezeichnung},
+						   schultraegerlogo = ${Schule != null ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@SCHULTRAEGERLOGO_QUADRATISCH).htmlImageSource() : ''},
+						   zeugniskopfbild = ${Schule != null ? Schule.bild(@de.svws_nrw.core.types.reporting.ReportingBildDefinition@ZEUGNISKOPF).htmlImageSource() : ''},
+						   mitZeugniskopfbild = ${mitBildZeugniskopf && !#strings.isEmpty(zeugniskopfbild)}">
+
+			<th:block th:if="${lernabschnitt != null}">
+
+			<!-- Seite 1 Beginn #################################################################################################################################### -->
+				<div class="start-new-page zeugnis-content">
+
+					<div class="kopfbereich">
+						<!-- Zeugniskopf mit Bild -->
+						<div th:if="${mitZeugniskopfbild}" class="zeugniskopfbild">
+							<img th:src="@{${zeugniskopfbild}}" alt="Zeugniskopf"/>
+						</div>
+						<!-- Zeugniskopf ohne Bild; ist kein Zeugniskopf hinterlegt, erscheinen die Logos, damit der Kopf nicht leer bleibt -->
+						<th:block th:unless="${mitZeugniskopfbild}">
+							<div class="logo-links" th:if="${mitSchullogo && Schule != null}"><img th:src="@{${Schule.schullogoHtmlImageSource()}}" alt="Schullogo"/></div>
+							<div class="logo-rechts" th:if="${mitSchultraegerlogo && !#strings.isEmpty(schultraegerlogo)}"><img th:src="@{${schultraegerlogo}}" alt="Schulträgerlogo"/></div>
+						</th:block>
+						<!-- Text-Zeugniskopf (optional), über Bild oder ohne Bild -->
+						<div class="zeugniskopf-text ta-c" th:if="${mitTextZeugniskopf}">
+							<div class="m-t-1 f-bold f-19" th:text="${Schule != null ? Schule.bezeichnungSchuleZeileEins() : ''}">Muster-Grundschule</div>
+							<div class="f-bold" th:if="${Schule != null && !#strings.isEmpty(Schule.bezeichnungSchuleZeileZwei())}"
+								 th:text="${Schule != null ? Schule.bezeichnungSchuleZeileZwei() : ''}">Gemeinschaftsgrundschule</div>
+						</div>
+					</div>
+					<!-- Zeugnis-Titel -->
+					<div class="ta-c">
+						<div class="zeugnis-titel f-bold">ZEUGNIS</div>
+						<div class="zeugnis-name f-bold" th:text="${schueler.vornamenNachname()}">Max Mustermann</div>
+					</div>
+
+					<!-- Allgemeiner Zeugniskopf mit/ohne Bild -->
+					<table class="kopfdaten fixed-100">
+						<tr>
+							<th class="ta-l" th:text="${'Klasse: ' + (lernabschnitt.klasse() != null ? lernabschnitt.klasse().kuerzel() : '')}">Klasse 4a</th>
+							<th class="ta-c" th:text="${'Geburtsdatum: ' + #convert.toDateDE(schueler.geburtsdatum())}">Geburtsdatum: 01.01.2000</th>
+							<th class="ta-r" th:text="${'Schuljahr: ' + (lernabschnitt.schuljahresabschnitt() != null ? lernabschnitt.schuljahresabschnitt().textSchuljahresabschnittLang() : '')}">Schuljahr: 2025/26 1. Halbjahr</th>
+						</tr>
+						<tr>
+							<td colspan="3" th:text="${'Versäumte Stunden: ' + lernabschnitt.fehlstundenGesamt() + ', davon unentschuldigt: ' + (lernabschnitt.fehlstundenUnentschuldigt() == 0 ? 'keine Stunde' : lernabschnitt.fehlstundenUnentschuldigt())}">Versäumte Stunden: 29, davon unentschuldigt: keine Stunde</td>
+						</tr>
+					</table>
+
+					<!-- Leistungsdaten eingerückt -->
+					<div class="inhalt-seite-1">
+
+						<div class="f-bold titel-leistungen">
+							Leistungen
+						</div>
+
+						<!-- Deutsch und seine Teilbereiche teilen sich das Statistikfach D. Sie werden deshalb zusätzlich über Kürzel oder Bezeichnung gewählt.
+							 Rechtschreibung wird ersatzweise auch unter „Rechtschreiben“ gesucht, damit ein so benanntes Fach ebenfalls seine Note zeigt. -->
+						<table class="mp-0 fixed-100"
+							   th:with="leistungDeutsch = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Deutsch')},
+										leistungSprachgebrauch = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Sprachgebrauch')},
+										leistungLesen = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Lesen')},
+										leistungRechtschreibung = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'Rechtschreibung') != null ? lernabschnitt.leistungsdatenZumStatistikfach('D', 'Rechtschreibung') : lernabschnitt.leistungsdatenZumStatistikfach('D', 'Rechtschreiben')},
+										leistungDGS = ${lernabschnitt.leistungsdatenZumStatistikfach('D', 'DGS')},
+										faecherMathematik = ${lernabschnitt.leistungsdatenZumStatistikfach('M')},
+										leistungMathematik = ${faecherMathematik.isEmpty() ? null : faecherMathematik[0]},
+										faecherSachunterricht = ${lernabschnitt.leistungsdatenZumStatistikfach('SU')},
+										leistungSachunterricht = ${faecherSachunterricht.isEmpty() ? null : faecherSachunterricht[0]},
+										faecherEnglisch = ${lernabschnitt.leistungsdatenZumStatistikfach('E')},
+										leistungEnglisch = ${faecherEnglisch.isEmpty() ? null : faecherEnglisch[0]},
+										faecherKunst = ${lernabschnitt.leistungsdatenZumStatistikfach('KU')},
+										leistungKunst = ${faecherKunst.isEmpty() ? null : faecherKunst[0]},
+										faecherMusik = ${lernabschnitt.leistungsdatenZumStatistikfach('MU')},
+										leistungMusik = ${faecherMusik.isEmpty() ? null : faecherMusik[0]},
+										faecherSport = ${lernabschnitt.leistungsdatenZumStatistikfach('SP')},
+										leistungSport = ${faecherSport.isEmpty() ? null : faecherSport[0]},
+										leistungReligion = ${lernabschnitt.leistungsdatenZurFachgruppe(@de.svws_nrw.asd.types.fach.Fachgruppe@FG_RE)}">
+							<colgroup>
+								<col style="width: 96mm" />
+								<col />
+							</colgroup>
+							<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+							<tr>
+								<td class="links"><!-- linke Fächer-Tabelle -->
+									<table class="table-faecher">
+										<colgroup>
+											<col style="width: 50mm" />
+											<col style="width: 29.5mm" />
+										</colgroup>
+										<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+										<tr>
+											<td th:with="fach = ${leistungDeutsch != null ? leistungDeutsch.fach() : null}" th:text="${fach == null ? 'Deutsch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Deutsch</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungDeutsch == null) || #strings.isEmpty(leistungDeutsch.noteKuerzel())) ? '' : leistungDeutsch.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td class="indent-1" th:with="fach = ${leistungSprachgebrauch != null ? leistungSprachgebrauch.fach() : null}" th:text="${fach == null ? 'Sprachgebrauch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sprachgebrauch</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungSprachgebrauch == null) || #strings.isEmpty(leistungSprachgebrauch.noteKuerzel())) ? '' : leistungSprachgebrauch.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td class="indent-1" th:with="fach = ${leistungLesen != null ? leistungLesen.fach() : null}" th:text="${fach == null ? 'Lesen' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Lesen</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungLesen == null) || #strings.isEmpty(leistungLesen.noteKuerzel())) ? '' : leistungLesen.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td class="indent-1" th:with="fach = ${leistungRechtschreibung != null ? leistungRechtschreibung.fach() : null}" th:text="${fach == null ? 'Rechtschreibung' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Rechtschreibung</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungRechtschreibung == null) || #strings.isEmpty(leistungRechtschreibung.noteKuerzel())) ? '' : leistungRechtschreibung.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr th:if="${leistungDGS != null}">
+											<td class="indent-1" th:with="fach = ${leistungDGS.fach()}" th:text="${fach == null ? 'DGS' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">DGS</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungDGS == null) || #strings.isEmpty(leistungDGS.noteKuerzel())) ? '' : leistungDGS.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungMathematik != null ? leistungMathematik.fach() : null}" th:text="${fach == null ? 'Mathematik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Mathematik</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungMathematik == null) || #strings.isEmpty(leistungMathematik.noteKuerzel())) ? '' : leistungMathematik.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungSachunterricht != null ? leistungSachunterricht.fach() : null}" th:text="${fach == null ? 'Sachunterricht' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sachunterricht</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungSachunterricht == null) || #strings.isEmpty(leistungSachunterricht.noteKuerzel())) ? '' : leistungSachunterricht.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungEnglisch != null ? leistungEnglisch.fach() : null}" th:text="${fach == null ? 'Englisch' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Englisch</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungEnglisch == null) || #strings.isEmpty(leistungEnglisch.noteKuerzel())) ? '' : leistungEnglisch.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+									</table>
+								</td>
+
+								<td class="rechts"><!-- rechte Fächer-Tabelle -->
+									<table class="table-faecher">
+										<colgroup>
+											<col style="width: 50mm" />
+											<col style="width: 29.5mm" />
+										</colgroup>
+										<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+										<tr>
+											<td th:with="fach = ${leistungKunst != null ? leistungKunst.fach() : null}" th:text="${fach == null ? 'Kunst' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Kunst</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungKunst == null) || #strings.isEmpty(leistungKunst.noteKuerzel())) ? '' : leistungKunst.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungMusik != null ? leistungMusik.fach() : null}" th:text="${fach == null ? 'Musik' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Musik</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungMusik == null) || #strings.isEmpty(leistungMusik.noteKuerzel())) ? '' : leistungMusik.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungReligion != null ? leistungReligion.fach() : null}" th:text="${fach == null ? 'Religionslehre' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Religionslehre</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungReligion == null) || #strings.isEmpty(leistungReligion.noteKuerzel())) ? '' : leistungReligion.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td th:with="fach = ${leistungSport != null ? leistungSport.fach() : null}" th:text="${fach == null ? 'Sport' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}">Sport</td>
+											<td>
+												<span class="formularfeld ta-c f-ital"
+															th:with="note=${((leistungSport == null) || #strings.isEmpty(leistungSport.noteKuerzel())) ? '' : leistungSport.noteTextZeugnis()}">
+													<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+													<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+												</span>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+
+						<!-- weiterer Unterricht -->
+						<div class="abschnitt abschnitt-nach-faechern f-bold">Weiterer Unterricht</div>
+						<table class="table-faecher" th:if="${!lernabschnitt.leistungsdatenWeitererUnterricht().isEmpty()}">
+							<colgroup>
+								<col style="width: 50mm" />
+								<col style="width: 29.5mm" />
+							</colgroup>
+							<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+							<tr th:each="leistung : ${lernabschnitt.leistungsdatenWeitererUnterricht()}">
+								<td th:with="fach = ${leistung.fach()}" th:text="${fach == null ? '' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}"></td>
+								<td>
+									<span class="formularfeld ta-c f-ital" th:with="note=${#strings.isEmpty(leistung.noteKuerzel()) ? '' : leistung.noteTextZeugnis()}">
+										<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+										<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+									</span>
+								</td>
+							</tr>
+						</table>
+						<div th:unless="${!lernabschnitt.leistungsdatenWeitererUnterricht().isEmpty()}" class="f-ital">- entfällt -</div>
+
+						<!-- Arbeitsgemeinschaften -->
+						<div class="abschnitt abschnitt-folge f-bold">Teilnahme an Arbeitsgemeinschaften</div>
+						<table class="table-faecher" th:if="${!lernabschnitt.leistungsdatenArbeitsgemeinschaften().isEmpty()}">
+							<colgroup>
+								<col style="width: 50mm" />
+								<col style="width: 29.5mm" />
+							</colgroup>
+							<thead th:if="${false}"><!-- Header nur für SonarQube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+							<tr th:each="leistung : ${lernabschnitt.leistungsdatenArbeitsgemeinschaften()}">
+								<td th:with="fach = ${leistung.fach()}" th:text="${fach == null ? '' : (#strings.isEmpty(fach.bezeichnungZeugnis()) ? fach.bezeichnung() : fach.bezeichnungZeugnis())}"></td>
+								<td>
+									<span class="formularfeld ta-c f-ital" th:with="note=${#strings.isEmpty(leistung.noteKuerzel()) ? '' : leistung.noteTextZeugnis()}">
+										<span th:if="${#strings.isEmpty(note)}" class="formularfeld-strich"></span>
+										<span th:unless="${#strings.isEmpty(note)}" th:text="${note}"></span>
+									</span>
+								</td>
+							</tr>
+						</table>
+						<div th:unless="${!lernabschnitt.leistungsdatenArbeitsgemeinschaften().isEmpty()}" class="f-ital">- keine -</div>
+
+						<!-- Arbeits- und Sozialverhalten -->
+						<div class="abschnitt abschnitt-folge">
+							<span class="f-bold">Angaben zum Arbeits- und Sozialverhalten</span><sup class="m-l-1">1)</sup>
+						</div>
+						<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisASVText())}" class="freitext max-zeilen-15" th:text="${lernabschnitt.zeugnisASVText()}"></div>
+						<div th:unless="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisASVText())}" class="f-ital">- keine -</div>
+
+						<!-- außerunterrichtlichen Engagement -->
+						<div class="abschnitt abschnitt-folge">
+							<span class="f-bold">Angaben zum außerunterrichtlichen Engagement</span><sup class="m-l-1">2)</sup>
+						</div>
+						<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisAUEText())}" class="freitext" th:text="${lernabschnitt.zeugnisAUEText()}"></div>
+						<div th:unless="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisAUEText())}" class="f-ital">- keine -</div>
+
+					</div>
+
+					<!-- Fußnoten -->
+					<div class="fussnoten-content">
+						<hr class="fussnoten-linie"/>
+						<div class="fussnote f-very-tiny"><span class="fussnote-zeichen">1)</span>Nach Entscheidung der Schulkonferenz.</div>
+						<div class="fussnote fussnote-letzte f-very-tiny"><span class="fussnote-zeichen">2)</span>Die Angaben beziehen sich auf das außerunterrichtliche Engagement in und außerhalb der Schule.</div>
+					</div>
+
+				</div>
+			<!-- Seite 1 Ende #################################################################################################################################### -->
+
+			<!-- Seite 2 Beginn #################################################################################################################################### -->
+				<div class="start-new-page zeugnis-content">
+
+					<div class="einzug inhalt-seite-2"
+						 th:with="istErstesHalbjahr = ${lernabschnitt.schuljahresabschnitt() != null && lernabschnitt.schuljahresabschnitt().abschnitt() == 1}">
+						<!-- Bemerkungen -->
+						<div class="abschnitt abschnitt-bemerkungen f-bold">
+							Bemerkungen
+						</div>
+						<div th:if="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisBemerkungText())}" class="freitext max-zeilen-8" th:text="${lernabschnitt.zeugnisBemerkungText()}"></div>
+						<div th:unless="${lernabschnitt != null && !#strings.isEmpty(lernabschnitt.zeugnisBemerkungText())}" class="f-ital">- keine -</div>
+
+						<!-- Empfehlung zur Schulform im ersten Halbjahr -->
+						<th:block th:if="${istErstesHalbjahr}"
+								  th:with="empfehlung = ${schueler.schulbesuch() != null ? schueler.schulbesuch().uebergangsempfehlungKuerzel() : ''},
+										   hauptschule = ${empfehlung.equalsIgnoreCase('H') || empfehlung.equalsIgnoreCase('H/R')},
+										   realschule = ${empfehlung.equalsIgnoreCase('R') || empfehlung.equalsIgnoreCase('R/GY')},
+										   gymnasium = ${empfehlung.equalsIgnoreCase('GY')},
+										   realschuleEingeschraenkt = ${empfehlung.equalsIgnoreCase('H/R')},
+										   gymnasiumEingeschraenkt = ${empfehlung.equalsIgnoreCase('R/GY')},
+										   pronomen = ${schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'sie' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'er' : schueler.vorname())}">
+							<div class="abschnitt m-t-4 f-bold">
+								Empfehlung zur Wahl der Schulform gem. § 11 Abs. 5 Satz 1 Schulgesetz NRW
+							</div>
+							<div th:text="${'Die Klassenkonferenz hat ' + (#strings.isEmpty(lernabschnitt.datumKonferenz()) ? '' : 'am ' + #convert.toDateDE(lernabschnitt.datumKonferenz()) + ' ') + 'beschlossen, dass ' + schueler.vorname() + ' auf der Grundlage des Leistungsstands, der Lernentwicklung und der Fähigkeiten sowie des Arbeits- und Sozialverhaltens auf der Grundlage des Beschlusses der Schulkonferenz nach § 49 Abs. 2 SchulG für den Besuch'}">Die Klassenkonferenz hat am 18.01.2027 beschlossen, dass Maja auf der Grundlage des Leistungsstands, der Lernentwicklung und der Fähigkeiten sowie des Arbeits- und Sozialverhaltens auf der Grundlage des Beschlusses der Schulkonferenz nach § 49 Abs. 2 SchulG für den Besuch</div>
+							<!-- Nicht zutreffende Felder sind immer gestrichen, weil maschinelle Zeugnisse keine handschriftlichen Eintragungen enthalten. -->
+							<div class="empfehlung-auswahl">
+								<span class="empfehlung-option" th:classappend="${hauptschule ? 'f-bold' : 'empfehlung-gestrichen'}"><img th:src="${#convert.toCheckboxSVG(hauptschule, 14)}" width="14" height="14" alt="[]"/> der Hauptschule</span>
+								<span class="empfehlung-option" th:classappend="${realschule ? 'f-bold' : 'empfehlung-gestrichen'}"><img th:src="${#convert.toCheckboxSVG(realschule, 14)}" width="14" height="14" alt="[]"/> der Realschule</span>
+								<span class="empfehlung-option" th:classappend="${gymnasium ? 'f-bold' : 'empfehlung-gestrichen'}"><img th:src="${#convert.toCheckboxSVG(gymnasium, 14)}" width="14" height="14" alt="[]"/> des Gymnasiums</span>
+							</div>
+							<div>und der Gesamtschule sowie der Sekundarschule geeignet ist. Für den Besuch</div>
+							<div class="empfehlung-auswahl">
+								<span class="empfehlung-option" th:classappend="${realschuleEingeschraenkt ? 'f-bold' : 'empfehlung-gestrichen'}"><img th:src="${#convert.toCheckboxSVG(realschuleEingeschraenkt, 14)}" width="14" height="14" alt="[]"/> der Realschule</span>
+								<span class="empfehlung-option" th:classappend="${gymnasiumEingeschraenkt ? 'f-bold' : 'empfehlung-gestrichen'}"><img th:src="${#convert.toCheckboxSVG(gymnasiumEingeschraenkt, 14)}" width="14" height="14" alt="[]"/> des Gymnasiums</span>
+								<span th:text="${'ist ' + pronomen + ' mit Einschränkungen geeignet.'}">ist sie mit Einschränkungen geeignet.</span>
+							</div>
+
+							<div class="abschnitt m-t-4 f-bold">
+								Begründung für die Empfehlung für die weitere Schullaufbahn
+							</div>
+							<div th:if="${!#strings.isEmpty(lernabschnitt.uebergangsempfehlungText())}" class="freitext" th:text="${lernabschnitt.uebergangsempfehlungText()}"></div>
+							<div th:unless="${!#strings.isEmpty(lernabschnitt.uebergangsempfehlungText())}" class="f-ital">- keine -</div>
+						</th:block>
+
+						<!-- Versetzungsvermerk im zweiten Halbjahr; der Freitext der Schule hat Vorrang vor dem Satz aus dem Versetzungsvermerk. -->
+						<th:block th:unless="${istErstesHalbjahr}"
+								  th:with="vermerk = ${lernabschnitt.versetzungsvermerkKuerzel()},
+										   versetzungstext = ${!#strings.isEmpty(lernabschnitt.versetzungsentscheidungText()) ? lernabschnitt.versetzungsentscheidungText() : (vermerk.equalsIgnoreCase('V') ? schueler.vorname() + ' wird in die Klasse 5 versetzt.' : (vermerk.equalsIgnoreCase('N') ? schueler.vorname() + ' wird nicht versetzt.' : ''))}">
+							<div class="abschnitt m-t-2 f-bold">
+								Versetzungsvermerk
+							</div>
+							<div th:unless="${#strings.isEmpty(versetzungstext)}" th:text="${versetzungstext}"></div>
+							<div th:if="${#strings.isEmpty(versetzungstext)}" class="f-ital">- kein -</div>
+						</th:block>
+					</div>
+
+					<!-- Bottom Box -->
+					<div class="fussnoten-content">
+
+						<!-- Unterschriftenblock -->
+						<div class="einzug"
+							 th:with="ort = ${(Schule != null) ? Schule.ort() : ''}"
+							 th:text="${(#strings.isEmpty(ort) ? '' : ort + ', den ') + #convert.toDateDELong(lernabschnitt.datumZeugnis())}">Soest, den 17. Juli 2026</div>
+
+						<div class="unterschriften">
+							<table class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 39%" />
+									<col style="width: 22%" />
+									<col style="width: 39%" />
+								</colgroup>
+								<tr style="height: 16mm">
+									<th class="ta-cb f-very-tiny"></th>
+									<th class="ta-cb f-very-tiny">(Siegel)</th>
+									<th class="ta-cb f-very-tiny"></th>
+								</tr>
+								<tr>
+									<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${finalSchulleitungUnterschrift}">Schulleiter/in</td>
+									<td class="ta-ct f-very-tiny"></td>
+									<td class="bo-t-black-strong ta-ct f-very-tiny" th:text="${finalKlassenlehrerUnterschrift}">Klassenlehrer/in</td>
+								</tr>
+								<tr>
+									<td class="ta-ct f-very-tiny" th:text="${finalSchulleitungBezeichnung}">(Schulleiter/in)</td>
+									<td class="ta-ct f-very-tiny"></td>
+									<td class="ta-ct f-very-tiny" th:text="${finalKlassenlehrerBezeichnung}">(Klassenlehrer/in)</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="einzug">
+							Kenntnis genommen
+						</div>
+
+						<div class="unterschriften">
+							<table class="fixed-100 mp-0">
+								<colgroup>
+									<col style="width: 39%" />
+									<col style="width: 22%" />
+									<col style="width: 39%" />
+								</colgroup>
+								<tr style="height: 16mm">
+									<th class="ta-cb f-very-tiny"></th>
+									<th></th>
+									<th></th>
+								</tr>
+								<tr>
+									<td class="bo-t-black-strong ta-ct f-very-tiny">Unterschrift der Sorgeberechtigten<sup class="m-l-1">*)</sup></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="einzug m-t-2">
+							<div class="m-b-2 f-9" th:if="${mitTerminElternsprechtag && terminElternsprechtag != null && !terminElternsprechtag.istLeer()}"
+								 th:text="${'Elternsprechtag am ' + #convert.toDateDELong(terminElternsprechtag.datum()) + ' um ' + terminElternsprechtag.uhrzeit() + ' Uhr'}">Elternsprechtag am 15. Juni 2026 um 18:00 Uhr</div>
+							<div class="m-b-2 f-9" th:if="${mitTerminWiederbeginnUnterricht && terminWiederbeginnUnterricht != null && !terminWiederbeginnUnterricht.istLeer()}"
+								 th:text="${'Wiederbeginn des Unterrichts am ' + #convert.toDateDELong(terminWiederbeginnUnterricht.datum()) + ' um ' + terminWiederbeginnUnterricht.uhrzeit() + ' Uhr'}">Wiederbeginn des Unterrichts am 1. September 2026 um 08:00 Uhr</div>
+						</div>
+
+						<!-- Fußnoten -->
+						<hr class="fussnoten-linie fussnoten-linie-voll"/>
+						<div class="fussnote f-very-tiny"><span class="fussnote-zeichen">*)</span>Sorgeberechtigte im Sinne des § 123 SchulG.</div>
+
+						<!-- Hinweise zum Zeugnis -->
+						<div class="ta-c f-very-tiny f-bold">Hinweise zum Zeugnis</div>
+						<div class="hinweise f-very-tiny">
+							<ol>
+								<li>Zur Spalte "Bemerkungen":<br/>
+									Hier können eingetragen werden: Angaben über die Leistungen im herkunftssprachlichen Unterricht, Angaben über besondere Leistungen,
+									Angaben über besonderen persönlichen Einsatz im außerunterrichtlichen Bereich, Angaben über außerschulische, insbesondere ehrenamtliche Tätigkeiten,
+									Angaben über sonderpädagogische Förderung, sofern zutreffend, Angaben über Wiederholung oder Rücktritt, sofern zutreffend</li>
+								<li>Notenstufen:<br/>
+									Bei der Bewertung einzelner Schülerleistungen sowie in Zeugnissen werden die folgenden Notenstufen gemäß § 48 Absatz 3 SchulG zugrunde gelegt:
+									1. sehr gut (1), 2. gut (2), 3. befriedigend (3), 4. ausreichend (4), 5. mangelhaft (5), 6. ungenügend (6)</li>
+								<li>Rechtsbehelfsbelehrung:<br/>
+									Gegen die Entscheidung, die Schülerin oder den Schüler nicht zu versetzen oder einen erreichbaren Abschluss oder eine Berechtigung nicht zu vergeben, kann innerhalb eines
+									Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden.
+									Der Widerspruch ist bei der Schule (<span th:text="${Schule != null ? Schule.bezeichnungSchuleZeileEins() : ''}">Schulname</span>,
+									<span th:text="${Schule != null ? Schule.strassennameHausnummer() : ''}">Straße 12</span>,
+									<span th:text="${Schule != null ? Schule.plzOrt() : ''}">12345 Ort</span>) schriftlich oder zur Niederschrift zu erheben.</li>
+							</ol>
+						</div>
+
+						<div class="m-r-3 m-b-2 f-very-tiny ta-r" th:text="${'SNr.: ' + (Schule != null ? Schule.schulnummer() : '') + ', SForm: ' + ((Schule != null && Schule.schulform() != null) ? Schule.schulform().kuerzel : '')}">SNr.: 123456, SForm: G</div>
+					</div>
+
+				</div>
+			<!-- Seite 2 Ende #################################################################################################################################### -->
+
+			</th:block>
+		</th:block>
+	</body>
+</html>

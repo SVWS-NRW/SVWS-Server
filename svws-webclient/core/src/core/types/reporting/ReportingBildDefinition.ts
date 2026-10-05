@@ -34,6 +34,11 @@ export class ReportingBildDefinition extends JavaEnum<ReportingBildDefinition> {
 	public static readonly DIN5008_BRIEFKOPF: ReportingBildDefinition = new ReportingBildDefinition("DIN5008_BRIEFKOPF", 3, "DIN5008_BRIEFKOPF", "DIN5008-Briefkopf", "Vollständiger Briefkopf für Anschreiben nach DIN5008", 190, 45, ArrayList.of());
 
 	/**
+	 * Definition für den Zeugniskopf für die "Regelzeugnisse" zum Halbjahr oder die Versetzung.
+	 */
+	public static readonly ZEUGNISKOPF: ReportingBildDefinition = new ReportingBildDefinition("ZEUGNISKOPF", 4, "ZEUGNISKOPF", "Zeugniskopf", "Vollständiger Zeugniskopf mit Logos und Schulbezeichnung", 190, 32, ArrayList.of());
+
+	/**
 	 * Die Kennung für die Persistierung in der DB. Diese Kennung muss eindeutig über alle Definitionen hinweg sein.
 	 */
 	private readonly kennung: string | null;

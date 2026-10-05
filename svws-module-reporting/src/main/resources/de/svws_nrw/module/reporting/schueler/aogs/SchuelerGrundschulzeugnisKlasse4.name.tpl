@@ -1,0 +1,12 @@
+[# th:with="schueler = ${Schueler}, anzahl = ${#lists.size(schueler)}, halbjahr = ${#strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', '_HJ'), '/', '-')}"]
+    [# th:if="${anzahl == 0}"]
+        Grundschulzeugnis-Klasse4_[(${halbjahr})]
+    [/]
+    [# th:if="${anzahl == 1}"]
+        Grundschulzeugnis-Klasse4_[(${halbjahr})]_[(${ #strings.replace(schueler[0].nachname(), ' ', '_') })]__[(${ #strings.replace(schueler[0].vorname(), ' ', '_') })]_([(${ schueler[0].id() })])
+    [/]
+    [# th:if="${anzahl > 1}"]
+        Grundschulzeugnisse-Klasse4_[(${halbjahr})]
+    [/]
+[/]
+[# th:if="${VorlageParameter.get('dateinameMitZeitstempel')}"]_[(${ #aktuell.formatiert('yyyyMMdd-HHmm') })][/]

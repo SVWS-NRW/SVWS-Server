@@ -150,6 +150,15 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	}
 
 	/**
+	 * Stellt das zweite der drei Bezeichnungsfelder der Schule zur Verfügung.
+	 *
+	 * @return Die zweite Bezeichnung der Schule oder ein Leerstring, falls keine zweite Bezeichnung vorhanden ist
+	 */
+	public String bezeichnungSchuleZeileZwei() {
+		return (bezeichnung.size() < 2) ? "" : ersetzeNullBlankTrim(bezeichnung.get(1));
+	}
+
+	/**
 	 * Erzeugt die Angabe von Postleitzahl und Wohnort.
 	 *
 	 * @return Postleitzahl und Wohnort

@@ -313,6 +313,22 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 	}
 
 	/**
+	 * Gibt die Liste der IDs der Schüler zurück, die den ausgewählten Klassen zugeordnet sind.
+	 * Eine Filterung nach dem Schüler-Status erfolgt hier nicht, diese übernimmt ggf. das Reporting.
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public getSchuelerIDsDerAuswahl(): List<number> {
+		const result = new ArrayList<number>();
+		for (const s of this.schueler.list()) {
+			if (this.liste.has(s.idKlasse) && this.liste.auswahlHasKey(s.idKlasse)) {
+				result.add(s.id);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Gibt die ausgewählte Klassenleitung zurück
 	 *
 	 * @return die ausgewählte Klassenleitung

@@ -495,6 +495,17 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	}
 
 	/**
+	 * Erstellt die Filter-Definition-Gruppe "Leistungsdatenfilter" für Zeugnisvorlagen. Sie lässt nur Leistungsdaten mit gesetztem Merkmal
+	 * {@code aufZeugnis} zu und ist unsichtbar und vorausgewählt, weil ein Zeugnis andere Einträge nie zeigen darf.
+	 *
+	 * @return Ein ReportingFilterDefinitionGruppe-Objekt für die Filterung auf zeugnisrelevante Leistungsdaten
+	 */
+	public static erzeugeLeistungsdatenZeugnisfilterGruppe(): ReportingFilterDefinitionGruppe {
+		const nurZeugnisrelevante: ReportingFilterDefinition | null = ReportingFilterDefinitionFactory.definition("Nur zeugnisrelevante Einträge", "ReportingSchuelerLeistungsdaten", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("aufZeugnis", "true")));
+		return ReportingReportvorlageUtils.erzeugeFilterDefinitionGruppe("Leistungsdatenfilter", "ReportingSchuelerLeistungsdaten", false, false, ReportingFilterVerknuepfung.AND, ArrayList.of(nurZeugnisrelevante), ArrayList.of(nurZeugnisrelevante));
+	}
+
+	/**
 	 * Normalisiert den technischen Namen einer Enum-Konstante für die Anzeige, indem der erste Buchstabe groß und die übrigen Buchstaben klein
 	 * geschrieben werden (z. B. "AKTIV" wird zu "Aktiv").
 	 *

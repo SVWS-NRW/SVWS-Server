@@ -1,0 +1,257 @@
+/* Seite */
+
+@Page {
+	size: A4 portrait;
+	margin: 10mm 10mm 12mm 10mm;
+}
+
+body {
+	font-size: 10pt;
+}
+
+.zeugnis-content {
+	height: 275mm;
+	position: relative;
+}
+
+/* Schrift und gemeinsame Kante */
+
+.f-19 { font-size: 19pt; }
+.f-9  { font-size: 9pt; }
+
+/* 4.3mm ist die gemeinsame Textkante beider Seiten. Kopfdaten, Inhaltsbereiche und Unterschriftenblock verwenden denselben Wert. */
+.einzug {
+	margin-left: 4.3mm;
+}
+
+/* Kopfbereich */
+
+.kopfbereich {
+	position: relative;
+	height: 32mm;
+}
+
+.zeugniskopfbild {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+}
+
+.logo-links, .logo-rechts {
+	position: absolute;
+	top: 0;
+	z-index: 2;
+	width: 32mm;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.logo-links {
+	left: 0;
+}
+
+.logo-rechts {
+	right: 0;
+}
+
+.zeugniskopfbild img, .logo-links img, .logo-rechts img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	object-position: center;
+}
+
+.zeugniskopf-text {
+	position: relative;
+	z-index: 3;
+}
+
+/* Titel und Kopfdaten */
+
+.zeugnis-titel {
+	font-size: 24pt;
+	letter-spacing: 1.5mm;
+	margin-right: -1.5mm;
+	margin-top: 3.05mm;
+}
+
+.zeugnis-name {
+	font-size: 16.5pt;
+	margin-top: 0.67mm;
+}
+
+.kopfdaten {
+	margin-top: 1.15mm;
+}
+
+.kopfdaten th, .kopfdaten td {
+	font-size: 11pt;
+	padding: 1mm 4.3mm;
+	border-top: 0.3mm solid #000000;
+	border-bottom: 0.3mm solid #000000;
+}
+
+/* Leistungen */
+
+.titel-leistungen {
+	font-size: 14.5pt;
+	line-height: 6.37mm;
+}
+
+.links, .rechts {
+	vertical-align: top;
+}
+
+.table-faecher {
+	width: auto;
+	border-collapse: separate;
+	border-spacing: 0 0.35mm;
+}
+
+/* Ohne seitlichen Zellenabstand beginnen die Fachnamen an derselben Kante wie die Überschriften. */
+.table-faecher td {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.table-faecher td.indent-1 {
+	padding-left: 4.2mm;
+}
+
+.table-faecher .formularfeld {
+	min-width: 26.5mm;
+	padding: 0.625mm 1.5mm;
+	background-color: #c0c0c0;
+}
+
+/* 0.625mm Innenabstand plus halbe Zeilenhöhe, abzüglich halber Strichstärke, legt den Strich auf die Mitte des Feldes. */
+.table-faecher .formularfeld-strich {
+	top: 2.525mm;
+}
+
+/* Abschnitte */
+
+.abschnitt {
+	margin-bottom: 0.6mm;
+}
+
+.abschnitt-folge {
+	margin-top: 2.5mm;
+}
+
+.abschnitt-nach-faechern {
+	margin-top: 2.4mm;
+}
+
+.abschnitt-bemerkungen {
+	margin-top: 3.2mm;
+}
+
+/* Begrenzter Inhalt */
+
+/* Der Inhalt über dem Fußbereich einer Seite hat eine feste Höchsthöhe, damit das Zeugnis bei jeder Textlänge zwei Seiten behält.
+   Die Freitexte darin teilen sich den Platz; was nicht passt, wird am unteren Rand abgeschnitten.
+   Ändern sich Abstände oder Schriftgrößen oberhalb eines Schnitts, müssen die Höhen neu bestimmt werden. */
+
+/* Ohne weiteren Unterricht, Arbeitsgemeinschaften und DGS liegt der Schnitt zwischen zwei Zeilen. */
+.inhalt-seite-1 {
+	margin: 6.2mm 4.3mm 0 4.3mm;
+	max-height: 184.1mm;
+	overflow: hidden;
+}
+
+/* Die Höhe ist so gewählt, dass der Schnitt im ersten Halbjahr zwischen zwei Zeilen der Begründung liegt. */
+.inhalt-seite-2 {
+	max-height: 146.5mm;
+	overflow: hidden;
+}
+
+/* Die feste Zeilenhöhe hält die Freitexte auf einem Zeilenraster, auf das die Höhen der Bereiche abgestimmt sind. */
+.freitext {
+	line-height: 4.5mm;
+	overflow: hidden;
+}
+
+/* Die oberen Freitexte sind zusätzlich begrenzt, damit sie die Abschnitte darunter nicht aus dem Bereich schieben. */
+.max-zeilen-8 {
+	max-height: 36mm;
+}
+
+.max-zeilen-15 {
+	max-height: 67.5mm;
+}
+
+/* Empfehlung zur Schulform */
+
+/* Die feste Zeilenhöhe hält die Zeile gleich hoch, ob eine Option fett ist oder nicht. Darauf ist die Höhe von .inhalt-seite-2 abgestimmt. */
+.empfehlung-auswahl {
+	margin: 3mm 0 3mm 5mm;
+	line-height: 5mm;
+}
+
+.empfehlung-option {
+	display: inline-block;
+	width: 55mm;
+}
+
+/* Der Versatz setzt die Box mittig vor die Großbuchstaben. Mit middle säße sie im PDF zu hoch. */
+.empfehlung-option img {
+	vertical-align: -0.7mm;
+}
+
+.empfehlung-gestrichen {
+	text-decoration: line-through;
+}
+
+/* Fußbereich */
+
+.fussnoten-content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.unterschriften {
+	height: 26mm;
+	margin: 0 4.3mm;
+}
+
+.fussnoten-linie {
+	width: 37mm;
+	margin: 0 0 1.5mm 0;
+	border: 0;
+	border-top: 0.25mm solid #000000;
+}
+
+.fussnoten-linie-voll {
+	width: 100%;
+	margin-bottom: 0.6mm;
+}
+
+/* Das Fußnotenzeichen steht hängend vor dem Text, damit alle Textzeilen an derselben Kante beginnen. */
+.fussnote {
+	padding-left: 4.3mm;
+	text-indent: -3.2mm;
+}
+
+.fussnote-zeichen {
+	display: inline-block;
+	width: 3.2mm;
+	text-indent: 0;
+}
+
+/* Ohne Abstand zur Unterkante rutscht die letzte Zeile beim Runden auf die nächste Seite. */
+.fussnote-letzte {
+	margin-bottom: 0.5mm;
+}
+
+.hinweise ol {
+	margin: 0;
+	padding-left: 4.8mm;
+}

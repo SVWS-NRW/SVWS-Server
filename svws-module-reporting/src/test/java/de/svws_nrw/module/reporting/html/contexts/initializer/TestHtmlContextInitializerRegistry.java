@@ -21,8 +21,9 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlageDatenContext;
  */
 class TestHtmlContextInitializerRegistry {
 
-	/** Der Datenaufbau jeder Reportvorlage gemäß Zuordnungstabelle: 29 Vorlagen auf 16 Datenaufbauten. */
+	/** Der Datenaufbau jeder Reportvorlage gemäß Zuordnungstabelle: 30 Vorlagen auf 16 Datenaufbauten. */
 	private static final Map<ReportingReportvorlage, ReportingReportvorlageDatenContext> SOLL_DATENAUFBAU_JE_VORLAGE = Map.ofEntries(
+			Map.entry(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4, ReportingReportvorlageDatenContext.SCHUELER),
 			Map.entry(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG, ReportingReportvorlageDatenContext.SCHUELER),
 			Map.entry(ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER, ReportingReportvorlageDatenContext.SCHUELER),
 			Map.entry(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN,

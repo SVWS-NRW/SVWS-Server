@@ -314,6 +314,18 @@ public enum ReportingReportvorlage {
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen()
 	),
 
+	/** Report-Vorlage: Schüler - Grundschulzeugnis - Klasse 4 */
+	SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4("Schueler-GrundschulzeugnisKlasse4",
+			"Grundschulzeugnis Klasse 4",
+			"Ein Zeugnis der Grundschule für die Klasse 4 erstellen.",
+			ReportingReportvorlageDatenContext.SCHUELER,
+			"schueler/aogs/SchuelerGrundschulzeugnisKlasse4.html",
+			"Grundschulzeugnis-Klasse4",
+			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
+			ReportingReportvorlageSchulformen.GRUNDSCHULE,
+			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGrundschulzeugnisKlasse4()
+	),
+
 	/** Report-Vorlage: Schüler - Schulbescheinigung */
 	SCHUELER_V_SCHULBESCHEINIGUNG("Schueler-Schulbescheinigung",
 			"Schulbescheinigung",

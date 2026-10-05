@@ -14,6 +14,10 @@ public final class ReportingReportvorlageSchulformen {
 	/** Die Schulformen mit gymnasialer Oberstufe. Ein Test gleicht die Liste mit den Katalogeinträgen ab, für die {@code hatGymOb} gilt. */
 	public static final @NotNull List<Schulform> GOST = List.of(Schulform.GY, Schulform.GE, Schulform.SG, Schulform.FW, Schulform.WF);
 
+	/** Die Schulformen, an denen Grundschulzeugnisse ausgegeben werden. Der Katalog kennt dafür keine Eigenschaft. */
+	public static final @NotNull List<Schulform> GRUNDSCHULE = List.of(Schulform.G, Schulform.FW, Schulform.PS, Schulform.V, Schulform.S, Schulform.KS,
+			Schulform.WF, Schulform.HI);
+
 	private ReportingReportvorlageSchulformen() {
 	}
 
