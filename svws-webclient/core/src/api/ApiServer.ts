@@ -205,6 +205,8 @@ import { SchulformKatalogEintrag } from '../asd/data/schule/SchulformKatalogEint
 import { SchulgliederungKatalogEintrag } from '../asd/data/schule/SchulgliederungKatalogEintrag';
 import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
+import { SchulwechselAbgang } from '../core/data/schule/SchulwechselAbgang';
+import { SchulwechselDokument } from '../core/data/schule/SchulwechselDokument';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SMTPServerKonfiguration } from '../core/data/email/SMTPServerKonfiguration';
 import { Sprachbelegung } from '../asd/data/schueler/Sprachbelegung';
@@ -19769,6 +19771,295 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/schule/zeitraster/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body: string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulwechselAbgang für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/abgaenge
+	 *
+	 * Entfernt den Wechselvorgang zum Abgang eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu entfernen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wechselvorgang wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselAbgang
+	 *   Code 403: Der SVWS-Benutzer hat nicht die erforderlichen Rechte, um Wechselvorgänge zu entfernen.
+	 *   Code 404: Wechselvorgang nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Wechselvorgang wurde erfolgreich entfernt.
+	 */
+	public async deleteSchulwechselAbgang(data: List<number>, schema: string): Promise<SchulwechselAbgang> {
+		const path = "/db/{schema}/schulwechsel/abgaenge"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const text = result;
+		return SchulwechselAbgang.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselAbgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/abgaenge/
+	 *
+	 * Erstellt eine Liste aller Wechselvorgänge abgehender Schüler und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste aller Wechselvorgänge abgehender Schüler.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulwechselAbgang>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.
+	 *   Code 404: Keine Wechselvorgänge gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste aller Wechselvorgänge abgehender Schüler.
+	 */
+	public async getSchulwechselAbgaenge(schema: string): Promise<List<SchulwechselAbgang>> {
+		const path = "/db/{schema}/schulwechsel/abgaenge/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulwechselAbgang>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulwechselAbgang.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createSchulwechselAbgang für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/abgaenge/
+	 *
+	 * Erstellt einen Wechselvorgang für den Abgang eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu erstellen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Wechselvorgang wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {SchulwechselAbgang} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Wechselvorgang wurde erfolgreich erstellt.
+	 */
+	public async createSchulwechselAbgang(data: SchulwechselAbgang, schema: string): Promise<string> {
+		const path = "/db/{schema}/schulwechsel/abgaenge/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = SchulwechselAbgang.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return JSON.parse(text).toString();
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselAbgang für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/abgaenge/{id : \d+}
+	 *
+	 * Liest die Wechselvorgangsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wechselvorgang mit der übergebenen ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulwechselAbgang>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.
+	 *   Code 404: Kein Wechselvorgang mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wechselvorgang mit der übergebenen ID.
+	 */
+	public async getSchulwechselAbgang(schema: string, id: number): Promise<List<SchulwechselAbgang>> {
+		const path = "/db/{schema}/schulwechsel/abgaenge/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulwechselAbgang>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulwechselAbgang.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulwechselAbgang für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/abgaenge/{id : \d+}/
+	 *
+	 * Passt die Wechselvorgangsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Wechselvorgängen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Wechselvorgangsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu ändern.
+	 *   Code 404: Kein Wechselvorgang mit der angegebenen ID gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID).
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchulwechselAbgang>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchulwechselAbgang(data: Partial<SchulwechselAbgang>, schema: string, id: number): Promise<void> {
+		const path = "/db/{schema}/schulwechsel/abgaenge/{id : \\d+}/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = SchulwechselAbgang.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselDokumente für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/dokumente/
+	 *
+	 * Erstellt eine Liste aller Wechseldokumente wechselnder Schüler und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechseldokumente anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste aller Wechseldokumente wechselnder Schüler.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulwechselDokument>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente anzusehen.
+	 *   Code 404: Keine Wechseldokumente gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste aller Wechseldokumente wechselnder Schüler.
+	 */
+	public async getSchulwechselDokumente(schema: string): Promise<List<SchulwechselDokument>> {
+		const path = "/db/{schema}/schulwechsel/dokumente/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulwechselDokument>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulwechselDokument.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createSchulwechselDokument für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/dokumente/
+	 *
+	 * Erstellt ein Wechseldokument für den Wechselvorgang eines Schülers. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechseldokumente zu erstellen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Wechseldokument wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselDokument
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente zu erstellen.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {SchulwechselDokument} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Wechseldokument wurde erfolgreich erstellt.
+	 */
+	public async createSchulwechselDokument(data: SchulwechselDokument, schema: string): Promise<SchulwechselDokument> {
+		const path = "/db/{schema}/schulwechsel/dokumente/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = SchulwechselDokument.transpilerToJSON(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return SchulwechselDokument.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulwechselDokumente für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/dokumente/
+	 *
+	 * Entfernt die Wechseldokumente mit den übergebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechseldokumente zu entfernen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wechseldokumente wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat nicht die erforderlichen Rechte, um Wechseldokumente zu entfernen.
+	 *   Code 404: Mindestens ein Wechseldokument wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Wechseldokumente wurden erfolgreich entfernt.
+	 */
+	public async deleteSchulwechselDokumente(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schulwechsel/dokumente/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselDokument für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/dokumente/{id : \d+}
+	 *
+	 * Liest die Wechseldokumentsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Wechseldokument mit der übergebenen ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselDokument
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente anzusehen.
+	 *   Code 404: Kein Wechseldokument mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Wechseldokument mit der übergebenen ID.
+	 */
+	public async getSchulwechselDokument(schema: string, id: number): Promise<SchulwechselDokument> {
+		const path = "/db/{schema}/schulwechsel/dokumente/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return SchulwechselDokument.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulwechselDokument für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/dokumente/{id : \d+}/
+	 *
+	 * Passt die Wechseldokumentsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Wechseldokumenten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Wechseldokumentsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente zu ändern.
+	 *   Code 404: Kein Wechseldokument mit der angegebenen ID gefunden.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID).
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchulwechselDokument>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchulwechselDokument(data: Partial<SchulwechselDokument>, schema: string, id: number): Promise<void> {
+		const path = "/db/{schema}/schulwechsel/dokumente/{id : \\d+}/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = SchulwechselDokument.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

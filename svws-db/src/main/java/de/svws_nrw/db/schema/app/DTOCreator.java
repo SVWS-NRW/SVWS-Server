@@ -441,16 +441,18 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.GeschlechtConverterFromString</class>
                           <class>de.svws_nrw.db.converter.current.KursFortschreibungsartConverter</class>
                           <class>de.svws_nrw.db.converter.current.NationalitaetenConverter</class>
+                          <class>de.svws_nrw.db.converter.current.OAuthServiceDomainConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter</class>
                           <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
+                          <class>de.svws_nrw.db.converter.current.StatusSchulwechselAbgangConverter</class>
+                          <class>de.svws_nrw.db.converter.current.StatusSchulwechselErfolgreicheBewerbungConverter</class>
                           <class>de.svws_nrw.db.converter.current.StringToIntegerConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverterString</class>
                           <class>de.svws_nrw.db.converter.current.VerkehrssprachenConverter</class>
-                          <class>de.svws_nrw.db.converter.current.OAuthServiceDomainConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.AbiturBelegungsartConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.AbiturKursMarkierungConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.GOStAbiturFachConverter</class>

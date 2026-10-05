@@ -372,21 +372,24 @@ public enum SchemaRevisionen {
 	REV_77(77, "2026-09-10"),
 
 	/** Fehler in Trigger t_UPDATE_TimestampsSchuelerAnkreuzkompetenzen behoben */
-	REV_78(78, "2026-09-16");
+	REV_78(78, "2026-09-16"),
+
+	/** Tabellen für Wechselvorgänge (Abgänge & Erfolgreiche Bewerbungen) und zugehörige Dokumente hinzugefügt */
+	REV_79(79, "2026-09-23");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_78;
+	public static final SchemaRevisionen maxRevision = REV_79;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_78;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_79;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */

@@ -22,6 +22,8 @@ import de.svws_nrw.db.converter.current.PersonalTypConverter;
 import de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter;
 import de.svws_nrw.db.converter.current.OAuthServiceDomainConverter;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
+import de.svws_nrw.db.converter.current.StatusSchulwechselAbgangConverter;
+import de.svws_nrw.db.converter.current.StatusSchulwechselErfolgreicheBewerbungConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverterString;
@@ -130,6 +132,8 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new VerkehrssprachenConverter());
 		add(new ReportingBildDefinitionConverter());
 		add(new OAuthServiceDomainConverter());
+		add(new StatusSchulwechselAbgangConverter());
+		add(new StatusSchulwechselErfolgreicheBewerbungConverter());
 
 		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN
 	}

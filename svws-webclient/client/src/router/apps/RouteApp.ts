@@ -78,7 +78,7 @@ import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangs
 import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/enmNotenmanager/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/laufbahnplanung/RouteSchuleDatenaustauschLupo";
-import { routeSchuleDatenaustauschSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
+import { routeSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchulwechsel";
 import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
@@ -226,7 +226,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeVermerkarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
-			routeSchuleDatenaustauschSchulwechsel,
+			routeSchulwechsel,
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,

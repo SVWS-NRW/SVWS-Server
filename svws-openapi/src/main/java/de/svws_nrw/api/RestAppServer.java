@@ -40,6 +40,7 @@ import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStatistik;
+import de.svws_nrw.api.server.APISchulwechsel;
 import de.svws_nrw.api.server.APIStundenplan;
 import de.svws_nrw.api.server.APIUnterrichtsverteilung;
 import de.svws_nrw.api.server.APIWiedervorlage;
@@ -99,6 +100,7 @@ public final class RestAppServer extends Application {
 			SvwsObjectMapperResolver.class,
 			ApiOperationExceptionMapper.class,
 			GenericExceptionMapper.class,
+			APISchulwechsel.class,
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 

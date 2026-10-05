@@ -221,6 +221,9 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_SchuleOAuthSecrets;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schulformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schuljahresabschnitte;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schulleitung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselAbgang;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselDokument;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchulwechselErfolgreicheBewerbung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Aufsichtsbereiche;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Kalenderwochen_Zuordnung;
@@ -252,9 +255,9 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Klassen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Klassen_Lehrer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Kurse;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Lehrer;
-import de.svws_nrw.db.schema.tabellen.Tabelle_UV_LehrerUnterrichtsfaecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_LehrerAnrechnungsstunden;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_LehrerPflichtstundensoll;
+import de.svws_nrw.db.schema.tabellen.Tabelle_UV_LehrerUnterrichtsfaecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Lerngruppen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Lerngruppen_Lehrer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Lerngruppen_Schienen;
@@ -1220,6 +1223,14 @@ public final class Schema {
 	public static final Tabelle_TimestampsSchuelerZuweisungen tab_TimestampsSchuelerZuweisungen =
 			add(new Tabelle_TimestampsSchuelerZuweisungen());
 
+	/** Tabelle SchulwechselAbgang */
+	public static final Tabelle_SchulwechselDokument tab_SchulwechselDokument = add(new Tabelle_SchulwechselDokument());
+
+	/** Tabelle SchulwechselAbgang */
+	public static final Tabelle_SchulwechselAbgang tab_SchulwechselAbgang = add(new Tabelle_SchulwechselAbgang());
+
+	/** Tabelle SchulwechselAbgang */
+	public static final Tabelle_SchulwechselErfolgreicheBewerbung tab_SchulwechselErfolgreicheBewerbung = add(new Tabelle_SchulwechselErfolgreicheBewerbung());
 
 	/**
 	 * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern

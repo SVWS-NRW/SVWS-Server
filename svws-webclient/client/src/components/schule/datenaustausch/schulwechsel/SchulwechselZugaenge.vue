@@ -28,9 +28,9 @@
 
 	import { ref } from "vue";
 
-	import type { SSchuleDatenaustauschSchulwechselZugaengeProps } from "~/components/schule/datenaustausch/schulwechsel/SSchuleDatenaustauschSchulwechselZugaengeProps";
+	import type { SchulwechselZugaengeProps } from "~/components/schule/datenaustausch/schulwechsel/SchulwechselZugaengeProps";
 
-	const props = defineProps<SSchuleDatenaustauschSchulwechselZugaengeProps>();
+	const props = defineProps<SchulwechselZugaengeProps>();
 
 	const columns = [
 		{ key: 'anrede', label: 'Anrede', span: 1 },
