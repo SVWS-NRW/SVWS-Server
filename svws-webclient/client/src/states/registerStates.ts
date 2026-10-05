@@ -10,6 +10,7 @@ import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
 import { EinwilligungsartenStateKey } from "@ui/states/kataloge/EinwilligungsartenState";
 import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
 import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
+import { FaecherStateKey } from "@ui/states/kataloge/FaecherState";
 import { FahrschuelerartenStateKey } from "@ui/states/kataloge/FahrschuelerartenState";
 import { FloskelgruppenStateKey } from "@ui/states/kataloge/FloskelgruppenState";
 import { FloskelnStateKey } from "@ui/states/kataloge/FloskelnState";
@@ -36,6 +37,7 @@ import { WiedervorlageStateKey } from "@ui/states/WiedervorlageState";
 import { abteilungenStateImpl } from "~/states/kataloge/AbteilungenStateImpl";
 import { einwilligungsartenStateImpl } from "~/states/kataloge/EinwilligungsartenStateImpl";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
+import { faecherStateImpl } from "~/states/kataloge/FaecherStateImpl";
 import { floskelgruppenStateImpl } from "~/states/kataloge/FloskelgruppenStateImpl";
 import { floskelnStateImpl } from "~/states/kataloge/FloskelnStateImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
@@ -115,4 +117,5 @@ export function registerStates(): void {
 	registry.addSessionState(EinwilligungsartenStateKey, einwilligungsartenStateImpl);
 	registry.addSessionState(FloskelgruppenStateKey, floskelgruppenStateImpl);
 	registry.addSessionState(FloskelnStateKey, floskelnStateImpl);
+	registry.addSessionState(FaecherStateKey, faecherStateImpl);
 }

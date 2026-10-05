@@ -171,10 +171,14 @@
 	import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { BenutzerTyp } from "@core/core/types/benutzer/BenutzerTyp";
+	import { JavaLong } from "@core/java/lang/JavaLong";
+	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
+	import type { Comparator } from "@core/java/util/Comparator";
 	import type { List } from "@core/java/util/List";
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useFaecherState } from "@ui/states/kataloge/FaecherState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
@@ -189,6 +193,7 @@
 	const benutzerState = useBenutzerState();
 	const schuleState = useSchuleState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
+	const faecherState = useFaecherState();
 
 	const selectedLeistungenIds = ref<Set<number>>(new Set());
 	const lernabschnittsdaten = computed<SchuelerLernabschnittsdaten>(() => props.manager().lernabschnittGet());
@@ -200,7 +205,12 @@
 	const lernbereichsnote1Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote1Bezeichnung());
 	const lernbereichsnote2Bezeichnung = computed<string | null>(() => props.manager().lernabschnittGetLernbereichsnote2Bezeichnung());
 	const hatLernbereichsnote = computed<boolean>(() => (lernbereichsnote1Bezeichnung.value !== null) || (lernbereichsnote2Bezeichnung.value !== null));
-	const hatLernabschnittFaecher = computed<boolean>(() => props.manager().fachGetMenge().size() > 0);
+	const hatLernabschnittFaecher = computed<boolean>(() => faecherState.faecher.list.size() > 0);
+	const sortedFaecher = computed<List<FachDaten>>(() => {
+		const faecher = faecherState.faecher.list;
+		faecher.sort(compFach);
+		return faecher;
+	});
 	const someSelected = computed<boolean>(() => (selectedLeistungenIds.value.size > 0) && (selectedLeistungenIds.value.size < leistungen.value.size()));
 
 	const tableBulkActions = computed(() => {
@@ -213,7 +223,7 @@
 			},
 			{
 				label: "Neue Leistungsdaten hinzufügen",
-				action: () => props.addLeistung(props.manager().fachGetMenge().get(0).id),
+				action: () => props.addLeistung(sortedFaecher.value.get(0).id),
 				disabled: !hatLernabschnittFaecher.value,
 				iconClasses: "i-ri-add-line",
 			},
@@ -308,7 +318,7 @@
 
 	const lernbereichsnoten = computed<Note[]>(() => [Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND]);
 	const lehrer = computed<Iterable<LehrerListeEintrag>>(() => props.manager().lehrerGetMengeAktiv());
-	const faecher = computed<Iterable<FachDaten>>(() => props.manager().fachGetMenge());
+	const faecher = computed<Iterable<FachDaten>>(() => faecherState.faecher.list);
 
 	const lernbereichsnotenSelectManager = new SelectManager({
 		options: lernbereichsnoten,
@@ -412,5 +422,14 @@
 		}
 		selectedLeistungenIds.value.clear();
 	});
+
+	const compFach: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
+		let cmp: number = a.sortierung - b.sortierung;
+		if (cmp !== 0) {
+			return cmp;
+		}
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
 
 </script>

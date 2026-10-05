@@ -25,6 +25,7 @@ import { HashSet } from "@core/java/util/HashSet";
 import type { JavaMap } from "@core/java/util/JavaMap";
 import type { JavaSet } from "@core/java/util/JavaSet";
 import type { List } from "@core/java/util/List";
+import { useFaecherState } from "@ui/states/kataloge/FaecherState";
 import { FoerderschwerpunkteListeManager } from "@ui/ui/manager/kataloge/FoerderschwerpunkteListeManager";
 
 /**
@@ -46,12 +47,6 @@ export class SchuelerLernabschnittManager {
 
 	// Eine Map für den schnellen Zugriff auf die Leistungsdaten des Schülers anhand der ID der Leistungsdaten
 	private readonly _mapLeistungById: JavaMap<number, SchuelerLeistungsdaten> = new HashMap<number, SchuelerLeistungsdaten>();
-
-	// Der Katalog der Unterrichtsfächer
-	private readonly _faecher: List<FachDaten> = new ArrayList<FachDaten>();
-
-	// Eine Map für den schnellen Zugriff auf die Fächer anhand ihrer ID
-	private readonly _mapFachByID: JavaMap<number, FachDaten> = new HashMap<number, FachDaten>();
 
 	// Der Katalog der Förderschwerpunkte
 	private readonly _foerderschwerpunkte: List<FoerderschwerpunktEintrag> = new ArrayList<FoerderschwerpunktEintrag>();
@@ -89,6 +84,8 @@ export class SchuelerLernabschnittManager {
 	// Eine Map für den schnellen Zugriff auf die Lehrer anhand ihrer ID
 	private readonly _mapLehrerByID: JavaMap<number, LehrerListeEintrag> = new HashMap<number, LehrerListeEintrag>();
 
+	private readonly faecherState = useFaecherState();
+
 	// Comparator: Führt einen Vergleich von zwei Fächern durch
 	private static readonly _compFach: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
@@ -115,8 +112,11 @@ export class SchuelerLernabschnittManager {
 
 	// Comparator: Führt einen Vergleich von zwei Leistungsdatensätzen anhand des Faches durch
 	private readonly _compLeistungenByFach: Comparator<SchuelerLeistungsdaten> = { compare: (a: SchuelerLeistungsdaten, b: SchuelerLeistungsdaten) => {
-		const aFach: FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, a.fachID);
-		const bFach: FachDaten = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, b.fachID);
+		const aFach: FachDaten | undefined = this.faecherState.faecher.byId.get(a.fachID);
+		const bFach: FachDaten | undefined = this.faecherState.faecher.byId.get(b.fachID);
+		if (!aFach || !bFach) {
+			throw new DeveloperNotificationException("Fach nicht gefunden.");
+		}
 		return SchuelerLernabschnittManager._compFach.compare(aFach, bFach);
 	} };
 
@@ -143,20 +143,28 @@ export class SchuelerLernabschnittManager {
 	 * @param schueler              Informationen zu dem Schüler
 	 * @param lernabschnittsdaten   die Lernabschnittsdaten
 	 * @param schuljahresabschnitt  der Schuljahresabschnitt der Lernabschnittsdaten
-	 * @param faecher               der Katalog der Fächer
 	 * @param jahrgaenge            der Katalog der Jahrgänge
 	 * @param klassen               der Katalog der Klassen
 	 * @param kurse                 der Katalog der Kurse
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schulform: Schulform, schueler: SchuelerListeEintrag, lernabschnittsdaten: SchuelerLernabschnittsdaten, schuljahresabschnitt: Schuljahresabschnitt, faecher: List<FachDaten>, foerderschwerpunkte: List<FoerderschwerpunktEintrag>, jahrgaenge: List<JahrgangsDaten>, klassen: List<KlassenDaten>, kurse: List<KursDaten>, lehrer: List<LehrerListeEintrag>) {
+	public constructor(
+		schulform: Schulform,
+		schueler: SchuelerListeEintrag,
+		lernabschnittsdaten: SchuelerLernabschnittsdaten,
+		schuljahresabschnitt: Schuljahresabschnitt,
+		foerderschwerpunkte: List<FoerderschwerpunktEintrag>,
+		jahrgaenge: List<JahrgangsDaten>,
+		klassen: List<KlassenDaten>,
+		kurse: List<KursDaten>,
+		lehrer: List<LehrerListeEintrag>
+	) {
 		this._schulform = schulform;
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
 		this._schuljahresabschnitt = schuljahresabschnitt;
 		this.initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
-		this.initFaecher(faecher);
 		this.initFoerderschwerpunkte(foerderschwerpunkte);
 		this.initJahrgaenge(jahrgaenge);
 		this.initKlassen(klassen);
@@ -172,22 +180,6 @@ export class SchuelerLernabschnittManager {
 	private initLeistungsdaten(leistungsdaten: List<SchuelerLeistungsdaten>): void {
 		for (const leistung of leistungsdaten) {
 			this.leistungAddInternal(leistung);
-		}
-	}
-
-	/**
-	 * Initialisiert die internen Datenstrukturen für die Fächer und führt dabei
-	 * eine Sortierung der internen Fächerliste aus.
-	 *
-	 * @param faecher   die Liste der Fächer für die Initialisierung
-	 */
-	private initFaecher(faecher: List<FachDaten>): void {
-		this._faecher.clear();
-		this._faecher.addAll(faecher);
-		this._faecher.sort(SchuelerLernabschnittManager._compFach);
-		this._mapFachByID.clear();
-		for (const f of faecher) {
-			this._mapFachByID.put(f.id, f);
 		}
 	}
 
@@ -428,30 +420,6 @@ export class SchuelerLernabschnittManager {
 		return this._mapLehrerByID.get(leistung.lehrerID) !== null;
 	}
 
-
-	/**
-	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
-	 *
-	 * @param id   die ID des Faches
-	 *
-	 * @return die Fach-Informationen oder null, falls die ID ungültig ist
-	 */
-	public fachGetByIdOrNull(id: number): FachDaten | null {
-		return this._mapFachByID.get(id);
-	}
-
-	/**
-	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
-	 *
-	 * @param id   die ID des Faches
-	 *
-	 * @return die Fach-Informationen
-	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
-	 */
-	public fachGetByIdOrException(id: number): FachDaten {
-		return DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, id);
-	}
-
 	/**
 	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
 	 *
@@ -464,20 +432,7 @@ export class SchuelerLernabschnittManager {
 		if (leistung === null) {
 			return null;
 		}
-		return this._mapFachByID.get(leistung.fachID);
-	}
-
-	/**
-	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
-	 *
-	 * @param idLeistung   die ID der Leistungsdaten
-	 *
-	 * @return die Fach-Informationen.
-	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
-	 */
-	public fachGetByLeistungIdOrException(idLeistung: number): FachDaten {
-		const leistung: SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
-		return DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, leistung.fachID);
+		return this.faecherState.faecher.byId.get(leistung.fachID) ?? null;
 	}
 
 	/**
@@ -494,16 +449,6 @@ export class SchuelerLernabschnittManager {
 		}
 		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
-
-	/**
-	 * Gibt die Liste der Fächer zurück.
-	 *
-	 * @return die Liste der Fächer
-	 */
-	public fachGetMenge(): List<FachDaten> {
-		return this._faecher;
-	}
-
 
 	/**
 	 * Ermittelt die Informationen zu dem Förderschwerpunkt mit der angegebenen ID.

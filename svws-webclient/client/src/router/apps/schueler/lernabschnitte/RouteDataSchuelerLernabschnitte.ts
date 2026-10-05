@@ -150,7 +150,17 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		if (schuljahresabschnitt === null) {
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
 		}
-		const manager = new SchuelerLernabschnittManager(schuleStateImpl.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
+		const manager = new SchuelerLernabschnittManager(
+			schuleStateImpl.schulform,
+			schueler,
+			daten,
+			schuljahresabschnitt,
+			curState.listFoerderschwerpunkte,
+			curState.listJahrgaenge,
+			listKlassen,
+			listKurse,
+			listLehrer
+		);
 		let klausurManager = undefined;
 		const abiturjahrgang = schuelerAuswahlState.manager.auswahl().abiturjahrgang;
 		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
@@ -187,21 +197,18 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				break;
 			}
 		}
-		let listFaecher;
 		let listFoerderschwerpunkte;
 		let listJahrgaenge;
 		if (this.hatAuswahl) {
-			listFaecher = this.manager.fachGetMenge();
 			listFoerderschwerpunkte = this.manager.foerderschwerpunktGetMenge();
 			listJahrgaenge = this.manager.jahrgangGetMenge();
 		} else {
-			[listFaecher, listFoerderschwerpunkte, listJahrgaenge] = await Promise.all([
-				api.server.getFaecher(api.schema),
+			[listFoerderschwerpunkte, listJahrgaenge] = await Promise.all([
 				api.server.getKatalogFoerderschwerpunkte(api.schema),
 				api.server.getJahrgaenge(api.schema),
 			]);
 		}
-		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, view: this._state.value.view };
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFoerderschwerpunkte, listJahrgaenge, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
