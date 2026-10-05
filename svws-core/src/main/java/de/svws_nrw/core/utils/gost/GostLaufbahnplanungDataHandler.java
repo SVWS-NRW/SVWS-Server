@@ -689,6 +689,7 @@ public final class GostLaufbahnplanungDataHandler {
 			vorgabe.idFach = moeglich.idFach;
 			vorgabe.halbjahr = moeglich.idHalbjahr;
 			vorgabe.quartal = moeglich.quartal;
+			vorgabe.istGklMoeglich = true;
 			final @NotNull GostHalbjahr halbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
 			final GostFach fach = faecherManager.get(vorgabe.idFach);
 			if (fach == null) {

@@ -10,6 +10,7 @@ import { AbiturdatenManager } from '../../../../../core/abschluss/gost/Abiturdat
 import { GostKursart } from '../../../../../core/types/gost/GostKursart';
 import { GostFachbereich } from '../../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../../core/types/gost/GostHalbjahr';
+import { GostSchriftlichkeit } from '../../../../../core/types/gost/GostSchriftlichkeit';
 import { GostSchuelerGKLWahl } from '../../../../../core/data/gost/GostSchuelerGKLWahl';
 import type { List } from '../../../../../java/util/List';
 import { Class } from '../../../../../java/lang/Class';
@@ -102,13 +103,25 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 		return false;
 	}
 
+	private pruefeKlausurvorgabenBelegung(idVorgabe: number, fehler: GostBelegungsfehler): void {
+		const v: GostLaufbahnplanungGKLKlausurvorgabe | null = this.mapKlausurvorgaben.get(idVorgabe);
+		if (v === null) {
+			this.addFehler(fehler);
+		} else {
+			const bel: AbiturFachbelegung | null = this.manager.getFachbelegungByID(v.getFach().id);
+			if ((!v.getVorgabe().istGklMoeglich) || !this.manager.pruefeBelegungMitKursart(bel, GostKursart.GK, v.getHalbjahr()) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(bel, GostSchriftlichkeit.SCHRIFTLICH, v.getHalbjahr())) {
+				this.addFehler(fehler);
+			}
+		}
+	}
+
 	private pruefeGKLEinfuehrungsphaseAF1(): void {
 		if (this.gklWahlen.idKlausurvorgabeEF_Sprachen === null) {
 			if (Abi30BelegpruefungGKL.hatSchriftlicheGKBelegungInEF(this.belegungenAF1)) {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF1);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeEF_Sprachen, GostBelegungsfehler.GOST30_GKL2_EF_AF1);
 		}
 	}
 
@@ -118,7 +131,7 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF2);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeEF_GW, GostBelegungsfehler.GOST30_GKL2_EF_AF2);
 		}
 	}
 
@@ -128,7 +141,7 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF3);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeEF_NW, GostBelegungsfehler.GOST30_GKL2_EF_AF3);
 		}
 	}
 
@@ -157,7 +170,7 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF1);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeQ_Sprachen, GostBelegungsfehler.GOST30_GKL2_Q_AF1);
 		}
 	}
 
@@ -167,7 +180,7 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF2);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeQ_GW, GostBelegungsfehler.GOST30_GKL2_Q_AF2);
 		}
 	}
 
@@ -177,7 +190,7 @@ export class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF3);
 			}
 		} else {
-			// empty block
+			this.pruefeKlausurvorgabenBelegung(this.gklWahlen.idKlausurvorgabeQ_NW, GostBelegungsfehler.GOST30_GKL2_Q_AF3);
 		}
 	}
 

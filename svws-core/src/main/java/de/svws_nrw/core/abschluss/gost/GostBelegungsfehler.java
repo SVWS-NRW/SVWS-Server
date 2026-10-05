@@ -596,6 +596,36 @@ public enum GostBelegungsfehler {
 			"In der Qualifikationsphase muss ein schriftliches Fach des mathematisch-naturwissenschaftlich-technischen Aufgabenfeldes zur Erbringung eines gleichwertigen komplexen Leistungsnachweises festgelegt werden.",
 			null),
 
+	/** BelegungsfehlerArt GKL2_EF_AF1 */
+	GOST30_GKL2_EF_AF1("GKL2_EF_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Einführungsphase im sprachlich-literarisch-künstlerischen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
+	/** BelegungsfehlerArt GKL2_EF_AF2 */
+	GOST30_GKL2_EF_AF2("GKL2_EF_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Einführungsphase im gesellschaftswissenschaftlichen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
+	/** BelegungsfehlerArt GKL2_EF_AF3 */
+	GOST30_GKL2_EF_AF3("GKL2_EF_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Einführungsphase im mathematisch-naturwissenschaftlich-technischen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
+	/** BelegungsfehlerArt GKL2_Q_AF1 */
+	GOST30_GKL2_Q_AF1("GKL2_Q_AF1", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Qualifikationsphase im sprachlich-literarisch-künstlerischen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
+	/** BelegungsfehlerArt GKL2_Q_AF2 */
+	GOST30_GKL2_Q_AF2("GKL2_Q_AF2", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Qualifikationsphase im gesellschaftswissenschaftlichen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
+	/** BelegungsfehlerArt GKL2_Q_AF3 */
+	GOST30_GKL2_Q_AF3("GKL2_Q_AF3", GostBelegungsfehlerArt.SCHRIFTLICHKEIT,
+			"Die Festlegung des gleichwertigen komplexen Leistungsnachweises in der Qualifikationsphase im mathematisch-naturwissenschaftlich-technischen Aufgabenfeld ist fehlerhaft. Korrigieren Sie die Festlegung zum Leistungsnachweis.",
+			null),
+
 	// ------------------------------------ APO-Gost bis Abi 2029
 
 	/** BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein. */

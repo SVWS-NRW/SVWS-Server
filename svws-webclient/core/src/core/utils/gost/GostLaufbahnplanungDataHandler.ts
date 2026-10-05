@@ -662,6 +662,7 @@ export class GostLaufbahnplanungDataHandler extends JavaObject {
 			vorgabe.idFach = moeglich.idFach;
 			vorgabe.halbjahr = moeglich.idHalbjahr;
 			vorgabe.quartal = moeglich.quartal;
+			vorgabe.istGklMoeglich = true;
 			const halbjahr: GostHalbjahr = GostHalbjahr.fromIDorException(vorgabe.halbjahr);
 			const fach: GostFach | null = faecherManager.get(vorgabe.idFach);
 			if (fach === null) {

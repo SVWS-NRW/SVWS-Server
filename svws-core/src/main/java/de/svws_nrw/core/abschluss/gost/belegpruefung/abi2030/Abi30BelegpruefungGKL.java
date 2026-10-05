@@ -17,6 +17,7 @@ import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.utils.gost.GostLaufbahnplanungGKLKlausurvorgabe;
 import jakarta.validation.constraints.NotNull;
 
@@ -97,13 +98,26 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 		return false;
 	}
 
+	private void pruefeKlausurvorgabenBelegung(final long idVorgabe, final @NotNull GostBelegungsfehler fehler) {
+		final GostLaufbahnplanungGKLKlausurvorgabe v = mapKlausurvorgaben.get(idVorgabe);
+		if (v == null) {
+			addFehler(fehler);
+		} else {
+			final AbiturFachbelegung bel = manager.getFachbelegungByID(v.getFach().id);
+			if ((!v.getVorgabe().istGklMoeglich) || !manager.pruefeBelegungMitKursart(bel, GostKursart.GK, v.getHalbjahr())
+					|| !manager.pruefeBelegungMitSchriftlichkeitEinzeln(bel, GostSchriftlichkeit.SCHRIFTLICH, v.getHalbjahr())) {
+				addFehler(fehler);
+			}
+		}
+	}
+
 	private void pruefeGKLEinfuehrungsphaseAF1() {
 		if (gklWahlen.idKlausurvorgabeEF_Sprachen == null) {
 			if (hatSchriftlicheGKBelegungInEF(belegungenAF1)) {
 				addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF1);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeEF_Sprachen, GostBelegungsfehler.GOST30_GKL2_EF_AF1);
 		}
 	}
 
@@ -113,7 +127,7 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF2);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeEF_GW, GostBelegungsfehler.GOST30_GKL2_EF_AF2);
 		}
 	}
 
@@ -123,7 +137,7 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GOST30_GKL_EF_AF3);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeEF_NW, GostBelegungsfehler.GOST30_GKL2_EF_AF3);
 		}
 	}
 
@@ -152,7 +166,7 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF1);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeQ_Sprachen, GostBelegungsfehler.GOST30_GKL2_Q_AF1);
 		}
 	}
 
@@ -162,7 +176,7 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF2);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeQ_GW, GostBelegungsfehler.GOST30_GKL2_Q_AF2);
 		}
 	}
 
@@ -172,7 +186,7 @@ public final class Abi30BelegpruefungGKL extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GOST30_GKL_Q_AF3);
 			}
 		} else {
-			// TODO Prüfe Gültigkeit der Wahl -> Info
+			pruefeKlausurvorgabenBelegung(gklWahlen.idKlausurvorgabeQ_NW, GostBelegungsfehler.GOST30_GKL2_Q_AF3);
 		}
 	}
 
