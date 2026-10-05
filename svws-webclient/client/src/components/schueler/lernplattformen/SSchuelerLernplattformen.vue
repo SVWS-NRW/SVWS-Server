@@ -31,6 +31,7 @@
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useLernplattformenState } from "@ui/states/kataloge/LernplattformenState";
 	import type { DataTableColumn } from "@ui/types";
 
 	import { SchuelerLernplattformenModelProxy } from "./modelProxy/SchuelerLernplattformenModelProxy";
@@ -38,6 +39,7 @@
 
 	const props = defineProps<SchuelerLernplattformenProps>();
 	const benutzerState = useBenutzerState();
+	const lernplattformenState = useLernplattformenState();
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed(() => !hatKompetenzAendern.value);
@@ -60,7 +62,7 @@
 	];
 
 	function getBezeichnungLernplattform(idLernplattform: number): string {
-		return props.mapLernplattformen.get(idLernplattform)?.bezeichnung ?? "";
+		return lernplattformenState.lernplattformen.byId.get(idLernplattform)?.bezeichnung ?? "";
 	}
 
 </script>

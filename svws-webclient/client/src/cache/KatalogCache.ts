@@ -1,6 +1,5 @@
 import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
-import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import type { List } from "@core/java/util/List";
 
 import { Katalog } from "~/cache/Katalog";
@@ -17,7 +16,6 @@ export class KatalogCache {
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
 	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
-	private _lernplattformenById: Map<number, Lernplattform> = new Map();
 
 	public constructor() {
 		this.initializeCacheUpdater();
@@ -32,11 +30,6 @@ export class KatalogCache {
 		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
 			const result = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 			return { foerderschwerpunkteById: this.convertToMap(result) };
-		});
-
-		this._katalogCacheUpdater.set(Katalog.LERNPLATTFORMEN, async () => {
-			const result = await api.server.getLernplattformen(api.schema);
-			return { lernplattformenById: this.convertToMap(result) };
 		});
 
 	}
@@ -72,14 +65,6 @@ export class KatalogCache {
 
 	set foerderschwerpunkteById(value: Map<number, FoerderschwerpunktEintrag>) {
 		this._foerderschwerpunkteById = value;
-	}
-
-	get lernplattformenById(): Map<number, Lernplattform> {
-		return this._lernplattformenById;
-	}
-
-	set lernplattformenById(value: Map<number, Lernplattform>) {
-		this._lernplattformenById = value;
 	}
 
 }

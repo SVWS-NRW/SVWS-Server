@@ -44,7 +44,6 @@ export class RouteSchuelerLernplattformen extends RouteNode<RouteDataSchuelerLer
 	public getProps(to: RouteLocationNormalized): SchuelerLernplattformenProps {
 		return {
 			schuelerLernplattformen: () => this.data.schuelerLernplattformen,
-			mapLernplattformen: this.data.mapLernplattformen,
 			patch: this.data.patch,
 			apiStatus: api.status,
 		};

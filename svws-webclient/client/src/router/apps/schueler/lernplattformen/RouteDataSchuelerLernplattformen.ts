@@ -1,6 +1,5 @@
 import type { SchuelerLernplattform } from "@core/core/data/schueler/SchuelerLernplattform";
 import type { SchuelerListeEintrag } from "@core/core/data/schueler/SchuelerListeEintrag";
-import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
@@ -12,13 +11,11 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 interface RouteStateSchuelerLernplattformen extends RouteStateInterface {
 	auswahl: SchuelerListeEintrag | undefined;
 	schuelerLernplattformen: List<SchuelerLernplattform>;
-	mapLernplattformen: Map<number, Lernplattform>;
 }
 
 const defaultState = <RouteStateSchuelerLernplattformen>{
 	auswahl: undefined,
 	schuelerLernplattformen: new ArrayList(),
-	mapLernplattformen: new Map(),
 };
 
 export class RouteDataSchuelerLernplattformen extends RouteData<RouteStateSchuelerLernplattformen> {
@@ -36,10 +33,6 @@ export class RouteDataSchuelerLernplattformen extends RouteData<RouteStateSchuel
 
 	get schuelerLernplattformen(): List<SchuelerLernplattform> {
 		return this._state.value.schuelerLernplattformen;
-	}
-
-	get mapLernplattformen(): Map<number, Lernplattform> {
-		return this._state.value.mapLernplattformen;
 	}
 
 	patch = async (data: Partial<SchuelerLernplattform> | undefined, idLernplattform: number) => {
@@ -65,12 +58,7 @@ export class RouteDataSchuelerLernplattformen extends RouteData<RouteStateSchuel
 			this.setPatchedDefaultState({});
 		} else {
 			const schuelerLernplattformen = await api.server.getSchuelerLernplattformen(api.schema, auswahl.id);
-			const lernplattformen = await api.server.getLernplattformen(api.schema);
-			const mapLernplattformen = new Map();
-			for (const lp of lernplattformen) {
-				mapLernplattformen.set(lp.id, lp);
-			}
-			this.setPatchedDefaultState({ auswahl, schuelerLernplattformen, mapLernplattformen });
+			this.setPatchedDefaultState({ auswahl, schuelerLernplattformen });
 		}
 	}
 

@@ -28,12 +28,14 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useLernplattformenState } from "@ui/states/kataloge/LernplattformenState";
 	import type { DataTableColumn } from "@ui/types";
 
 	import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
@@ -42,6 +44,7 @@
 
 	const props = defineProps<LehrerLernplattformenProps>();
 	const benutzerState = useBenutzerState();
+	const lernplattformenState = useLernplattformenState();
 	const noEntries = computed<boolean>(() => props.lehrerLernplattformen().isEmpty());
 
 	const hatKompetenzAendern = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_AENDERN));
@@ -63,7 +66,7 @@
 	];
 
 	function getBezeichnungLernplattform(idLernplattform: number): string {
-		return props.mapLernplattformen.get(idLernplattform)?.bezeichnung ?? "";
+		return lernplattformenState.lernplattformen.byId.get(idLernplattform)?.bezeichnung ?? "";
 	}
 
 </script>

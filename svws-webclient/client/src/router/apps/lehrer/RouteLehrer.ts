@@ -24,6 +24,7 @@ import { RouteTabNode } from "~/router/RouteTabNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
 import { einwilligungsartenStateImpl } from "~/states/kataloge/EinwilligungsartenStateImpl";
 import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
+import { lernplattformenStateImpl } from "~/states/kataloge/LernplattformenStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
@@ -124,6 +125,7 @@ export class RouteLehrer extends RouteTabNode<RouteDataLehrer, RouteApp> {
 		await Promise.all([
 			orteStateImpl.init(),
 			leitungsfunktionenStateImpl.init(),
+			lernplattformenStateImpl.init(),
 			einwilligungsartenStateImpl.init(),
 		]);
 	}

@@ -1,6 +1,5 @@
 import type { LehrerLernplattform } from "@core/core/data/lehrer/LehrerLernplattform";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
-import type { Lernplattform } from "@core/core/data/schule/Lernplattform";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
@@ -12,13 +11,11 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 interface RouteStateLehrerLernplattformen extends RouteStateInterface {
 	auswahl: LehrerListeEintrag | undefined;
 	lehrerLernplattformen: List<LehrerLernplattform>;
-	mapLernplattformen: Map<number, Lernplattform>;
 }
 
 const defaultState = <RouteStateLehrerLernplattformen>{
 	auswahl: undefined,
 	lehrerLernplattformen: new ArrayList(),
-	mapLernplattformen: new Map(),
 };
 
 export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLernplattformen> {
@@ -36,10 +33,6 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 
 	get lehrerLernplattformen(): List<LehrerLernplattform> {
 		return this._state.value.lehrerLernplattformen;
-	}
-
-	get mapLernplattformen(): Map<number, Lernplattform> {
-		return this._state.value.mapLernplattformen;
 	}
 
 	patch = async (data: Partial<LehrerLernplattform> | undefined, idLernplattform: number) => {
@@ -65,12 +58,7 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 			this.setPatchedDefaultState({});
 		} else {
 			const lehrerLernplattformen = await api.server.getLehrerLernplattformen(api.schema, auswahl.id);
-			const lernplattformen = await api.server.getLernplattformen(api.schema);
-			const mapLernplattformen = new Map();
-			for (const lp of lernplattformen) {
-				mapLernplattformen.set(lp.id, lp);
-			}
-			this.setPatchedDefaultState({ auswahl, lehrerLernplattformen, mapLernplattformen });
+			this.setPatchedDefaultState({ auswahl, lehrerLernplattformen });
 		}
 	}
 

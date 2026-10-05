@@ -39,6 +39,7 @@ import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
 import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
+import { lernplattformenStateImpl } from "~/states/kataloge/LernplattformenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
@@ -159,6 +160,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 			herkunftschulenStateImpl.init(),
 			jahrgaengeStateImpl.init(),
 			kindergaertenStateImpl.init(),
+			lernplattformenStateImpl.init(),
 			merkmaleStateImpl.init(),
 			orteStateImpl.init(),
 			religionenStateImpl.init(),
