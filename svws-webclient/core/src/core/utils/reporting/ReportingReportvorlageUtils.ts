@@ -233,17 +233,19 @@ export class ReportingReportvorlageUtils extends JavaObject {
 	/**
 	 * Erstellt ein ReportingEMailDaten-Objekt basierend auf den angegebenen Eigenschaften.
 	 *
-	 * @param eMailEmpfaengerTyp             Typ des Empfängers für die E-Mail
-	 * @param istPrivateEmailAlternative     Gibt an, ob es sich um eine private E-Mail-Alternative handelt
-	 * @param betreff                        Betreff der E-Mail
-	 * @param text                           Textinhalt der E-Mail
+	 * @param eMailEmpfaengerTyp                    Typ des Empfängers für die E-Mail
+	 * @param istPrivateEmailAlternativeZulaessig   Gibt an, ob die Vorlage den Versand an die private E-Mail-Adresse zulässt
+	 * @param istPrivateEmailAlternative            Gibt an, ob es sich um eine private E-Mail-Alternative handelt
+	 * @param betreff                               Betreff der E-Mail
+	 * @param text                                  Textinhalt der E-Mail
 	 *
 	 * @return Ein ReportingEMailDaten-Objekt mit den angegebenen Eigenschaften
 	 */
-	public static erzeugeEmailParameter(eMailEmpfaengerTyp: ReportingEMailEmpfaengerTyp, istPrivateEmailAlternative: boolean, betreff: string, text: string): ReportingEMailDaten {
+	public static erzeugeEmailParameter(eMailEmpfaengerTyp: ReportingEMailEmpfaengerTyp, istPrivateEmailAlternativeZulaessig: boolean, istPrivateEmailAlternative: boolean, betreff: string, text: string): ReportingEMailDaten {
 		const daten: ReportingEMailDaten | null = new ReportingEMailDaten();
 		daten.empfaengerTyp = eMailEmpfaengerTyp.getId();
-		daten.istPrivateEmailAlternative = istPrivateEmailAlternative;
+		daten.istPrivateEmailAlternativeZulaessig = istPrivateEmailAlternativeZulaessig;
+		daten.istPrivateEmailAlternative = istPrivateEmailAlternativeZulaessig && istPrivateEmailAlternative;
 		daten.betreff = betreff;
 		daten.text = text;
 		return daten;
@@ -568,6 +570,7 @@ export class ReportingReportvorlageUtils extends JavaObject {
 			copy.eMailDaten = new ReportingEMailDaten();
 			copy.eMailDaten.empfaengerTyp = source.eMailDaten.empfaengerTyp;
 			copy.eMailDaten.istPrivateEmailAlternative = source.eMailDaten.istPrivateEmailAlternative;
+			copy.eMailDaten.istPrivateEmailAlternativeZulaessig = source.eMailDaten.istPrivateEmailAlternativeZulaessig;
 			copy.eMailDaten.betreff = source.eMailDaten.betreff;
 			copy.eMailDaten.text = source.eMailDaten.text;
 		} else {

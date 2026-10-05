@@ -104,6 +104,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 1,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": true,
 		"betreff": "Persönlicher Wahlbogen zur Laufbahnplanung in der GOSt",
 		"text": "Im Anhang dieser automatisch generierten E-Mail befindet sich dein persönlicher Wahlbogen zur Laufbahnplanung in der gymnasialen Oberstufe."
 	}

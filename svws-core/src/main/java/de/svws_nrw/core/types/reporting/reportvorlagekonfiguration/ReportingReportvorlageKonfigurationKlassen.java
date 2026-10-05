@@ -39,6 +39,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
 						false,
+						false,
 						"",
 						""),
 				new ArrayList<>(), List.of(ReportingReportvorlageUtils.erzeugeSchuelerStatusfilterGruppe()), true, true);
@@ -88,6 +89,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
+						false,
 						false,
 						"",
 						""),

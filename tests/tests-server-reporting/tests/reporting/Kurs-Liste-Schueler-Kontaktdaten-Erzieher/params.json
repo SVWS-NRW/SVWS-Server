@@ -259,6 +259,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 4,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": false,
 		"betreff": "",
 		"text": ""
 	}

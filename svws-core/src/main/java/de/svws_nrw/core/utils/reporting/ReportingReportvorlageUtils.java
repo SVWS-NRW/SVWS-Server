@@ -232,19 +232,23 @@ public final class ReportingReportvorlageUtils {
 	/**
 	 * Erstellt ein ReportingEMailDaten-Objekt basierend auf den angegebenen Eigenschaften.
 	 *
-	 * @param eMailEmpfaengerTyp             Typ des Empfängers für die E-Mail
-	 * @param istPrivateEmailAlternative     Gibt an, ob es sich um eine private E-Mail-Alternative handelt
-	 * @param betreff                        Betreff der E-Mail
-	 * @param text                           Textinhalt der E-Mail
+	 * @param eMailEmpfaengerTyp                    Typ des Empfängers für die E-Mail
+	 * @param istPrivateEmailAlternativeZulaessig   Gibt an, ob die Vorlage den Versand an die private E-Mail-Adresse zulässt
+	 * @param istPrivateEmailAlternative            Gibt an, ob es sich um eine private E-Mail-Alternative handelt
+	 * @param betreff                               Betreff der E-Mail
+	 * @param text                                  Textinhalt der E-Mail
 	 *
 	 * @return Ein ReportingEMailDaten-Objekt mit den angegebenen Eigenschaften
 	 */
 	public static @NotNull ReportingEMailDaten erzeugeEmailParameter(final @NotNull ReportingEMailEmpfaengerTyp eMailEmpfaengerTyp,
-			final boolean istPrivateEmailAlternative, final @NotNull String betreff, final @NotNull String text) {
+			final boolean istPrivateEmailAlternativeZulaessig, final boolean istPrivateEmailAlternative, final @NotNull String betreff,
+			final @NotNull String text) {
 
 		final ReportingEMailDaten daten = new ReportingEMailDaten();
 		daten.empfaengerTyp = eMailEmpfaengerTyp.getId();
-		daten.istPrivateEmailAlternative = istPrivateEmailAlternative;
+		daten.istPrivateEmailAlternativeZulaessig = istPrivateEmailAlternativeZulaessig;
+		// Eine Vorbelegung, die die Vorlage nicht zulässt, wäre im Client nicht abwählbar, weil die Checkbox dort fehlt.
+		daten.istPrivateEmailAlternative = istPrivateEmailAlternativeZulaessig && istPrivateEmailAlternative;
 		daten.betreff = betreff;
 		daten.text = text;
 		return daten;
@@ -537,6 +541,7 @@ public final class ReportingReportvorlageUtils {
 			copy.eMailDaten = new ReportingEMailDaten();
 			copy.eMailDaten.empfaengerTyp = source.eMailDaten.empfaengerTyp;
 			copy.eMailDaten.istPrivateEmailAlternative = source.eMailDaten.istPrivateEmailAlternative;
+			copy.eMailDaten.istPrivateEmailAlternativeZulaessig = source.eMailDaten.istPrivateEmailAlternativeZulaessig;
 			copy.eMailDaten.betreff = source.eMailDaten.betreff;
 			copy.eMailDaten.text = source.eMailDaten.text;
 		} else {

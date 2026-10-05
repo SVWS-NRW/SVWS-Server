@@ -25,6 +25,10 @@ public class ReportingEMailDaten {
 			example = "false")
 	public boolean istPrivateEmailAlternative = false;
 
+	/** Gibt an, ob die Reportvorlage den Versand an die private E-Mail-Adresse zulässt. Der Server liest den Wert aus der Vorlage, nicht aus dem Request. */
+	@Schema(description = "Gibt an, ob die Reportvorlage den Versand an die private E-Mail-Adresse zulässt.", example = "true")
+	public boolean istPrivateEmailAlternativeZulaessig = true;
+
 	/** Der Betreff der E-Mail. */
 	@Schema(description = "Der Betreff der E-Mail.", example = "Persönlicher Stundenplan")
 	public @NotNull String betreff = "";

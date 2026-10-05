@@ -144,6 +144,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 1,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": true,
 		"betreff": "",
 		"text": ""
 	}

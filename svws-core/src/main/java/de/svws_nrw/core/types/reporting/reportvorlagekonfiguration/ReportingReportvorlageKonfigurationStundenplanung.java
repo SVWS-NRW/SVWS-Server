@@ -62,6 +62,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
 						false,
+						false,
 						"",
 						""),
 				new ArrayList<>(), new ArrayList<>(), true, true);
@@ -91,6 +92,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 								))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.LEHRER,
+						false,
 						false,
 						"",
 						""),
@@ -163,6 +165,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 								))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.SCHUELER,
+						true,
 						false,
 						"",
 						""),

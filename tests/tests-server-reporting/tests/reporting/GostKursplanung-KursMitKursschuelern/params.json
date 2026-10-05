@@ -131,6 +131,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 5,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": false,
 		"betreff": "Kurslisten zur Kursplanung",
 		"text": "Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."
 	}

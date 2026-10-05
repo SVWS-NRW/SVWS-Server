@@ -152,6 +152,7 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.LEHRER,
 						false,
+						false,
 						"",
 						""),
 				new ArrayList<>(), new ArrayList<>(), true, true);

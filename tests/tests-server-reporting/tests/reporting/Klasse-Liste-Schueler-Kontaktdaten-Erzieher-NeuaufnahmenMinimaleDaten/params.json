@@ -491,6 +491,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 3,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": false,
 		"betreff": "",
 		"text": ""
 	}

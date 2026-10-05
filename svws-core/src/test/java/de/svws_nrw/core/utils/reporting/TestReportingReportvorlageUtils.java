@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.reporting;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,7 +10,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
+import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 
 /**
  * Testklasse für die Hilfsmethoden aus {@link ReportingReportvorlageUtils}.
@@ -47,6 +51,32 @@ class TestReportingReportvorlageUtils {
 				ReportingReportvorlageUtils.waehleGespeicherteAuswahl(List.of(definition("A")), sd -> sd.bezeichnung, new ArrayList<>());
 
 		assertTrue(ergebnis.isEmpty(), "Ohne gespeicherte Bezeichnungen ist die Auswahl leer.");
+	}
+
+	@Test
+	void testErzeugeEmailParameterOhneZulassungVerwirftVorbelegung() {
+		final ReportingEMailDaten daten = ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.LEHRER, false, true, "", "");
+
+		assertFalse(daten.istPrivateEmailAlternativeZulaessig);
+		assertFalse(daten.istPrivateEmailAlternative, "Eine nicht zugelassene private E-Mail-Adresse darf nicht vorbelegt sein.");
+	}
+
+	@Test
+	void testErzeugeEmailParameterMitZulassungBehaeltVorbelegung() {
+		final ReportingEMailDaten daten = ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.LEHRER, true, true, "", "");
+
+		assertTrue(daten.istPrivateEmailAlternativeZulaessig);
+		assertTrue(daten.istPrivateEmailAlternative);
+	}
+
+	@Test
+	void testCloneReportingParameterUebernimmtZulassungDerPrivatenEmail() {
+		final ReportingParameter quelle = new ReportingParameter();
+		quelle.eMailDaten = ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.LEHRER, false, false, "", "");
+
+		final ReportingParameter kopie = ReportingReportvorlageUtils.cloneReportingParameter(quelle);
+
+		assertFalse(kopie.eMailDaten.istPrivateEmailAlternativeZulaessig, "Die Kopie muss die Vorgabe der Vorlage behalten.");
 	}
 
 	private static ReportingSortierungDefinition definition(final String bezeichnung) {

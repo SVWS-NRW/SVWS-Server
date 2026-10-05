@@ -14,6 +14,7 @@ import java.util.Set;
 
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageSchulformen;
@@ -256,6 +257,24 @@ class TestReportingReportvorlage {
 	@Test
 	void testDieGostSchulformenEntsprechenDemKatalog() {
 		assertEquals(Set.copyOf(Schulform.getListAllMitGymOb()), Set.copyOf(ReportingReportvorlageSchulformen.GOST));
+	}
+
+	/** E-Mails an Lehrkräfte gehen nur an die schulische Adresse; keine Vorlage mit Lehrkräften als Empfänger lässt die private Adresse zu. */
+	@Test
+	void testVorlagenAnLehrkraefteLassenKeinePrivateEmailZu() {
+		final Set<ReportingEMailEmpfaengerTyp> lehrerTypen = Set.of(ReportingEMailEmpfaengerTyp.LEHRER, ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
+				ReportingEMailEmpfaengerTyp.KURSLEHRER, ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER);
+		final List<String> verstoesse = new ArrayList<>();
+
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			final ReportingEMailDaten eMailDaten = reportvorlage.getReportingParameter().eMailDaten;
+			if ((eMailDaten != null) && lehrerTypen.contains(ReportingEMailEmpfaengerTyp.getByID(eMailDaten.empfaengerTyp))
+					&& eMailDaten.istPrivateEmailAlternativeZulaessig) {
+				verstoesse.add(reportvorlage.name());
+			}
+		}
+
+		assertTrue(verstoesse.isEmpty(), "Diese Vorlagen an Lehrkräfte lassen die private E-Mail-Adresse zu: " + verstoesse);
 	}
 
 	/**

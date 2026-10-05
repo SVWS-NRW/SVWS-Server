@@ -2,6 +2,7 @@ package de.svws_nrw.module.reporting.parameter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingEinstellungenBenutzerVorlageGruppe;
 import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
 import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
@@ -134,6 +136,37 @@ class TestReportingParameterBuilder {
 		final ReportingParameter pdf = parameterMitEinzelausgabe(ReportingAusgabeformat.PDF.getId(), true);
 		ReportingParameterBuilder.erzwingeAusgabeformatabhaengigeParameter(pdf, vorlage);
 		assertEquals("true", einzelausgabeWert(pdf), "Bei PDF bleibt der kombinierte Wert unverändert.");
+	}
+
+	@Test
+	void testPrivateEmailWirdOhneZulassungDerVorlageAbgeschaltet() {
+		final ReportingParameter request = parameterMitPrivaterEmail(true, true);
+		final ReportingParameter soll = parameterMitPrivaterEmail(false, false);
+
+		ReportingParameterBuilder.setzeUnerlaubtePrivateEmailZurueck(request, soll);
+
+		assertFalse(request.eMailDaten.istPrivateEmailAlternative,
+				"Lässt die Vorlage die private E-Mail-Adresse nicht zu, gilt das auch, wenn der Request sie zulässt und anfordert.");
+	}
+
+	@Test
+	void testPrivateEmailBleibtMitZulassungDerVorlageErhalten() {
+		final ReportingParameter request = parameterMitPrivaterEmail(true, true);
+		final ReportingParameter soll = parameterMitPrivaterEmail(true, false);
+
+		ReportingParameterBuilder.setzeUnerlaubtePrivateEmailZurueck(request, soll);
+
+		assertTrue(request.eMailDaten.istPrivateEmailAlternative, "Lässt die Vorlage die private E-Mail-Adresse zu, gilt die Wahl des Anwenders.");
+	}
+
+	@Test
+	void testPrivateEmailOhneEmailDatenImRequest() {
+		final ReportingParameter request = new ReportingParameter();
+		request.eMailDaten = null;
+
+		ReportingParameterBuilder.setzeUnerlaubtePrivateEmailZurueck(request, parameterMitPrivaterEmail(false, false));
+
+		assertNull(request.eMailDaten, "Ohne E-Mail-Daten im Request gibt es nichts abzuschalten.");
 	}
 
 
@@ -387,6 +420,14 @@ class TestReportingParameterBuilder {
 		final ReportingParameter rp = new ReportingParameter();
 		rp.ausgabeformat = ausgabeformat;
 		rp.reportvorlageParameterGruppen = List.of(gruppe("Ausgabeoptionen", true, boolParam("einzelausgabeDaten", wert)));
+		return rp;
+	}
+
+	private static ReportingParameter parameterMitPrivaterEmail(final boolean zulaessig, final boolean gewaehlt) {
+		final ReportingParameter rp = new ReportingParameter();
+		rp.eMailDaten = new ReportingEMailDaten();
+		rp.eMailDaten.istPrivateEmailAlternativeZulaessig = zulaessig;
+		rp.eMailDaten.istPrivateEmailAlternative = gewaehlt;
 		return rp;
 	}
 

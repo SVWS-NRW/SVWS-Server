@@ -91,6 +91,7 @@ public final class ReportingReportvorlageKonfigurationGost {
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER,
 						false,
+						false,
 						"Kurslisten zur Kursplanung",
 						"Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."),
 				new ArrayList<>(), new ArrayList<>(), false, true);

@@ -121,6 +121,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 2,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": false,
 		"betreff": "",
 		"text": ""
 	}

@@ -125,7 +125,7 @@
 									<svws-ui-text-input v-model="parameter.eMailDaten.betreff" placeholder="Betreff eingeben" />
 									<svws-ui-textarea-input autoresize v-model="parameter.eMailDaten.text" placeholder="E-Mail-Text eingeben" />
 								</div>
-								<svws-ui-checkbox v-model="parameter.eMailDaten.istPrivateEmailAlternative">
+								<svws-ui-checkbox v-if="parameter.eMailDaten.istPrivateEmailAlternativeZulaessig" v-model="parameter.eMailDaten.istPrivateEmailAlternative">
 									Private E-Mail-Adresse verwenden, wenn keine schulische E-Mail-Adresse vorhanden ist.
 								</svws-ui-checkbox>
 							</div>

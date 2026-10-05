@@ -45,7 +45,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKursplanungVKursMitKursschuelern(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), new ArrayList(), ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER, false, "Kurslisten zur Kursplanung", "Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."), new ArrayList(), new ArrayList(), false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.HTML.getId(), ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), new ArrayList(), ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.GOSTKURSPLANUNG_KURSLEHRER, false, false, "Kurslisten zur Kursplanung", "Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."), new ArrayList(), new ArrayList(), false, true);
 	}
 
 	/**

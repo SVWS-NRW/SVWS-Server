@@ -15,6 +15,11 @@ export class ReportingEMailDaten extends JavaObject {
 	public istPrivateEmailAlternative: boolean = false;
 
 	/**
+	 * Gibt an, ob die Reportvorlage den Versand an die private E-Mail-Adresse zulässt. Der Server liest den Wert aus der Vorlage, nicht aus dem Request.
+	 */
+	public istPrivateEmailAlternativeZulaessig: boolean = true;
+
+	/**
 	 * Der Betreff der E-Mail.
 	 */
 	public betreff: string = "";
@@ -53,6 +58,9 @@ export class ReportingEMailDaten extends JavaObject {
 		if (obj.istPrivateEmailAlternative === undefined)
 			throw new Error('invalid json format, missing attribute istPrivateEmailAlternative');
 		result.istPrivateEmailAlternative = obj.istPrivateEmailAlternative;
+		if (obj.istPrivateEmailAlternativeZulaessig === undefined)
+			throw new Error('invalid json format, missing attribute istPrivateEmailAlternativeZulaessig');
+		result.istPrivateEmailAlternativeZulaessig = obj.istPrivateEmailAlternativeZulaessig;
 		if (obj.betreff === undefined)
 			throw new Error('invalid json format, missing attribute betreff');
 		result.betreff = obj.betreff;
@@ -66,6 +74,7 @@ export class ReportingEMailDaten extends JavaObject {
 		let result = '{';
 		result += '"empfaengerTyp" : ' + obj.empfaengerTyp.toString() + ',';
 		result += '"istPrivateEmailAlternative" : ' + obj.istPrivateEmailAlternative.toString() + ',';
+		result += '"istPrivateEmailAlternativeZulaessig" : ' + obj.istPrivateEmailAlternativeZulaessig.toString() + ',';
 		result += '"betreff" : ' + JSON.stringify(obj.betreff) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result = result.slice(0, -1);
@@ -80,6 +89,9 @@ export class ReportingEMailDaten extends JavaObject {
 		}
 		if (obj.istPrivateEmailAlternative !== undefined) {
 			result += '"istPrivateEmailAlternative" : ' + obj.istPrivateEmailAlternative.toString() + ',';
+		}
+		if (obj.istPrivateEmailAlternativeZulaessig !== undefined) {
+			result += '"istPrivateEmailAlternativeZulaessig" : ' + obj.istPrivateEmailAlternativeZulaessig.toString() + ',';
 		}
 		if (obj.betreff !== undefined) {
 			result += '"betreff" : ' + JSON.stringify(obj.betreff) + ',';

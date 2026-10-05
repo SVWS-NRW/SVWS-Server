@@ -131,6 +131,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 						))),
 				ReportingReportvorlageUtils.erzeugeEmailParameter(
 						ReportingEMailEmpfaengerTyp.SCHUELER,
+						true,
 						false,
 						"Persönlicher Wahlbogen zur Laufbahnplanung in der GOSt",
 						"Im Anhang dieser automatisch generierten E-Mail befindet sich dein persönlicher Wahlbogen zur Laufbahnplanung in der gymnasialen Oberstufe."),

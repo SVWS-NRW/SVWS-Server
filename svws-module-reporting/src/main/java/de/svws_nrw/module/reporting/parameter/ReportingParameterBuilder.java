@@ -390,6 +390,24 @@ public class ReportingParameterBuilder {
 		final ReportingParameter sollParameter = reportvorlage.getReportingParameter();
 		setzeUnerlaubteSortierungZurueck(reportingParameter, sollParameter);
 		setzeUnerlaubteFilterungZurueck(reportingParameter, sollParameter);
+		setzeUnerlaubtePrivateEmailZurueck(reportingParameter, sollParameter);
+	}
+
+	/**
+	 * Schaltet den Versand an die private E-Mail-Adresse ab, wenn die Reportvorlage ihn nicht zulässt. Maßgeblich ist die Vorgabe der Vorlage, damit ein
+	 * manipulierter Request die Sperre nicht aufheben kann.
+	 *
+	 * @param reportingParameter das Reporting-Parameter-Objekt mit den übermittelten E-Mail-Daten (wird verändert)
+	 * @param sollParameter      die Parameter der Reportvorlage mit der Vorgabe zur privaten E-Mail-Adresse
+	 */
+	static void setzeUnerlaubtePrivateEmailZurueck(final ReportingParameter reportingParameter, final ReportingParameter sollParameter) {
+		if (reportingParameter.eMailDaten == null) {
+			return;
+		}
+		final boolean zulaessig = (sollParameter.eMailDaten != null) && sollParameter.eMailDaten.istPrivateEmailAlternativeZulaessig;
+		if (!zulaessig) {
+			reportingParameter.eMailDaten.istPrivateEmailAlternative = false;
+		}
 	}
 
 	/**

@@ -114,6 +114,7 @@
 	"eMailDaten": {
 		"empfaengerTyp": 0,
 		"istPrivateEmailAlternative": false,
+		"istPrivateEmailAlternativeZulaessig": true,
 		"betreff": "",
 		"text": ""
 	}
