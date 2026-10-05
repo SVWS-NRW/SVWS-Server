@@ -58,18 +58,26 @@ task createScripts {
 		if (OperatingSystem.current().isLinux()) {
 			file_Linux.text = '#! /bin/bash\n' + 'java --class-path ' + mainRuntimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
 			execOperations.exec {
-				commandLine('chmod',  '+x', './start_server.sh')
+				commandLine('chmod', '+x', './start_server.sh')
 			}
 		} else if (OperatingSystem.current().isWindows()) {
 			file_Win.text = 'java --class-path "' + mainRuntimeClasspath.getAsPath() + '" de.svws_nrw.server.jetty.Main\n'
 		} else if (OperatingSystem.current().isMacOsX()) {
 			file_Linux.text = '#! /bin/zsh\n' + 'java --class-path ' + mainRuntimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
 			execOperations.exec {
-				commandLine('chmod',  '+x', './start_server.sh')
+				commandLine('chmod', '+x', './start_server.sh')
 			}
 		} else {
 			// TODO
 		}
+	}
+}
+
+tasks.register('collectJars', Copy) {
+	into(this.layout.buildDirectory.dir('libs'))
+
+	from(configurations.runtimeClasspath) {
+		include "svws-*.jar"
 	}
 }
 
@@ -87,5 +95,4 @@ publishing {
 }
 
 assemble.dependsOn createScripts
-
-// TODO remove scripts if exists...
+assemble.finalizedBy collectJars

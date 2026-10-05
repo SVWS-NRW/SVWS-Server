@@ -17,25 +17,26 @@ task copyDockerClientArtifacts(type: Copy) {
 	doFirst {
 		mkdir "$projectDir/build/svws/app/lib"
 	}
-	dependsOn (':svws-webclient:client:doZip')
-	dependsOn (':svws-webclient:admin:doZip')
+	dependsOn(':svws-server-app:collectJars')
+	dependsOn(':svws-webclient:client:doZip')
+	dependsOn(':svws-webclient:admin:doZip')
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
 
 	into "$projectDir/build/svws"
-	into ("app/lib/") {
-		from (configurations.runtimeClasspath) {
+	into("app/lib/") {
+		from(configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
 		}
 	}
-	into ("app/") {
-		from (configurations.runtimeClasspath) {
-			include "svws-*.jar"
+	into("app/") {
+		from(project(':svws-server-app').layout.buildDirectory.dir('libs')) {
+			include 'svws-*.jar'
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
-	into ("/") {
+	into("/") {
 		from "$projectDir/svws/Dockerfile", "$projectDir/svws/startup.sh", "$projectDir/svws/svwsconfig-template.json", "$projectDir/svws/svwsconfig-template-nodb.json"
 	}
 }
@@ -47,9 +48,9 @@ task dockerBuildTag(type: Exec) {
 	dependsOn copyDockerClientArtifacts
 	workingDir "$projectDir/build/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
 	} else {
-		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
 	}
 }
 
@@ -73,10 +74,10 @@ task dockerPushDockerhub(type: Exec) {
 	workingDir "$projectDir/build/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker login'
-		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+		commandLine 'cmd', '/c', 'docker push svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
 	} else {
 		commandLine 'sh', '-c', 'docker login'
-		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
+		commandLine 'sh', '-c', 'docker push svwsnrw/svws-server:' + project.ext.svwsArtifactVersion
 	}
 }
 
@@ -149,7 +150,7 @@ task dockerRunner21Push(type: Exec) {
 
 /* Deprecated: Ein publish auf dem Nexus wurde durch den auf Harbor ersetzt.
  Diese Task muss noch angepasst werden.
- 
+
  Task führt einen Image-Build des SVWS durch, setzt ein Tag
  und veröffentlicht das Image im Image-Repository (Nexus)
 

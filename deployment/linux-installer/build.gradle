@@ -17,24 +17,24 @@ task clearAppFolder(type: Delete) {
 
 task copyArtifacts(type: Copy) {
 	dependsOn clearAppFolder
+	dependsOn(':svws-server-app:collectJars')
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
 	into linuxfileAppDir
-	into ("lib/") {
-		from (configurations.runtimeClasspath) {
+	into("lib/") {
+		from(configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
 		}
 	}
-	into ("/") {
-		from (configurations.runtimeClasspath) {
-			include "svws-*.jar"
+	into("/") {
+		from(project(':svws-server-app').layout.buildDirectory.dir('libs')) {
+			include 'svws-*.jar'
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
 }
-
 
 
 /*
@@ -45,10 +45,10 @@ task linuxZipBuild(type: Tar, dependsOn: copyArtifacts) {
 	archiveVersion = project.ext.svwsArtifactVersion
 	archiveExtension = "tar.gz"
 	compression = Compression.GZIP
-	from ("$projectDir/svws"){
+	from("$projectDir/svws") {
 		into "svws"
 	}
-	from ("$projectDir/init-scripts"){
+	from("$projectDir/init-scripts") {
 		into "init-scripts"
 	}
 }
@@ -58,11 +58,11 @@ task replacePlaceholder(type: Copy, dependsOn: linuxZipBuild) {
 	from "$projectDir/install.sh"
 
 	def placeholder_name = 'LINUX_INSTALLER_FILE_NAME'
-	def filename = "linux-installer-"+project.ext.svwsArtifactVersion+".tar.gz"
+	def filename = "linux-installer-" + project.ext.svwsArtifactVersion + ".tar.gz"
 	filter { String line -> line.replaceAll(placeholder_name, filename) }
 
 	def placeholder_dl = 'BASE_DOWNLOAD_URL'
-	def baseUrl = "https://github.com/SVWS-NRW/SVWS-Server/releases/download/v"+project.ext.svwsArtifactVersion
+	def baseUrl = "https://github.com/SVWS-NRW/SVWS-Server/releases/download/v" + project.ext.svwsArtifactVersion
 	filter { String line -> line.replaceAll(placeholder_dl, baseUrl) }
 
 	into "$buildDir/distributions"
@@ -78,10 +78,10 @@ task removeCR {
 	}
 }
 
-task renameInstallScript(type: Copy){
+task renameInstallScript(type: Copy) {
 	dependsOn('removeCR')
 	def inputFile = file("$buildDir/distributions/install.sh")
-	def fullFilename = "install-"+project.ext.svwsArtifactVersion+".sh"
+	def fullFilename = "install-" + project.ext.svwsArtifactVersion + ".sh"
 	from inputFile
 	into "$buildDir/distributions/"
 	rename { String fileName ->
