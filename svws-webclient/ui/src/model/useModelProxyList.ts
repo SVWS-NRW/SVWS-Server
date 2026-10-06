@@ -12,6 +12,7 @@ import type { ModelProxy } from "./ModelProxy";
  * @param source - Reaktive Quellliste (z.B. computed oder Arrow-Function)
  * @param getId - Funktion zum Ermitteln der ID eines Eintrags
  * @param createProxy - Factory-Funktion zum Erzeugen eines neuen ModelProxy für einen Eintrag
+ * @param options - Optionale Einstellungen, u.a. `deep` für Quellen, die (z.B. als JavaList) in-place mutiert werden
  * @returns Reaktive Liste der ModelProxy-Instanzen
  *
  * @example
@@ -27,7 +28,8 @@ import type { ModelProxy } from "./ModelProxy";
 export function useModelProxyList<T extends object, P extends ModelProxy<T>>(
 	source: Ref<Iterable<T>> | (() => Iterable<T>),
 	getId: (item: T) => number | string,
-	createProxy: (item: T) => P
+	createProxy: (item: T) => P,
+	options?: { deep?: boolean }
 ) {
 	// persistiert die ModelProxy Instanzen über reaktiven Updates hinweg
 	const cache = new Map<number | string, P>();
@@ -62,7 +64,7 @@ export function useModelProxyList<T extends object, P extends ModelProxy<T>>(
 
 		// aktualisiert die reaktive Liste der Model Proxies
 		list.value = neueModels;
-	}, { immediate: true });
+	}, { immediate: true, deep: options?.deep ?? false });
 
 	onUnmounted(() => {
 		// Cache der ModelProxies leeren

@@ -13,26 +13,15 @@
 			<td class="text-left">
 				{{ getGrundText(row) }}
 			</td>
-			<td class="ui-table-grid-input" :ref="inputAnzahl(row, index)">
-				{{ row.data.proxy.anzahl }}
-			</td>
-			<td>
-				<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
-					<svws-ui-button v-if="hatUpdateKompetenz" @click="removeDaten(row)" type="trash" />
-				</div>
+			<td class="ui-table-grid-input" :ref="inputAnzahl(row, index)" />
+			<td class="pr-3 py-1">
+				<ui-table-actions v-if="hatUpdateKompetenz" :actions="getRowActions(row)" />
 			</td>
 		</template>
 		<template #footer>
 			<template v-if="hatUpdateKompetenz">
-				<td class="col-span-4 text-right">
-					<svws-ui-tooltip>
-						<svws-ui-button type="icon" @click="openHinzufuegen">
-							<span class="icon i-ri-add-line" />
-						</svws-ui-button>
-						<template #content>
-							Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen
-						</template>
-					</svws-ui-tooltip>
+				<td class="col-span-full my-1 pr-3">
+					<ui-table-actions :actions="footerActions" always-visible />
 				</td>
 			</template>
 			<template v-else>
@@ -41,23 +30,35 @@
 		</template>
 	</ui-table-grid>
 	<div v-else>
-		<svws-ui-button v-if="hatUpdateKompetenz" @click="openHinzufuegen" type="secondary">Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen</svws-ui-button>
+		<svws-ui-button v-if="hatUpdateKompetenz" @click="openHinzufuegen" type="secondary">Gründe hinzufügen</svws-ui-button>
 		<div v-else>Keine Anrechnungs-, Mehr- oder Minderleistungsgründe zugeordnet.</div>
 	</div>
 	<svws-ui-modal v-model:show="showHinzufuegen" size="medium" class="hidden">
-		<template #modalTitle> Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen </template>
+		<template #modalTitle> Mehr-/Minderleistungs- oder Anrechnungsgründe hinzufügen </template>
 		<template #modalContent>
-			<div class="flex flex-row">
-				<div class="basis-3/4">
-					<ui-select-multi label="Mehrleistungsgründe" v-model="auswahlMehrleistungenNeu" :manager="mehrleistungenSelectManager" statistics required />
-					<ui-select-multi label="Minderleistungsgründe" v-model="auswahlMinderleistungenNeu" :manager="minderleistungenSelectManager" statistics required />
-					<ui-select-multi label="Anrechnungsgründe" v-model="auswahlAnrechnungenNeu" :manager="anrechnungenSelectManager" statistics required />
-				</div>
-				<div class="basis-1/4 flex flex-row justify-evenly items-end">
-					<svws-ui-button type="secondary" @click="showHinzufuegen = false"> Abbrechen </svws-ui-button>
-					<svws-ui-button @click="create"> Anlegen </svws-ui-button>
-				</div>
+			<div>
+				<ui-select-multi label="Mehrleistungsgründe"
+					v-model="auswahlMehrleistungenNeu"
+					:manager="mehrleistungenSelectManager"
+					statistics />
+				<ui-select-multi label="Minderleistungsgründe"
+					v-model="auswahlMinderleistungenNeu"
+					:manager="minderleistungenSelectManager"
+					statistics />
+				<ui-select-multi label="Anrechnungsgründe"
+					v-model="auswahlAnrechnungenNeu"
+					:manager="anrechnungenSelectManager"
+					statistics />
 			</div>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="showHinzufuegen = false"> Abbrechen </svws-ui-button>
+			<svws-ui-tooltip :disabled="!anlegenDisabled" :indicator="false">
+				<svws-ui-button @click="create" :disabled="anlegenDisabled"> Anlegen </svws-ui-button>
+				<template #content>
+					Es muss mindestens ein Feld befüllt sein
+				</template>
+			</svws-ui-tooltip>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -79,10 +80,12 @@
 	import { HashSet } from "@core/java/util/HashSet";
 	import type { JavaSet } from "@core/java/util/JavaSet";
 	import type { List } from "@core/java/util/List";
+	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { useAbschnittState } from "@ui/states/AbschnittState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
@@ -96,6 +99,10 @@
 	const schuleState = useSchuleState();
 	const abschnittState = useAbschnittState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
+	const anlegenDisabled = computed(() => (
+		auswahlMehrleistungenNeu.value.length === 0)
+		&& (auswahlMinderleistungenNeu.value.length === 0)
+		&& (auswahlAnrechnungenNeu.value.length === 0));
 
 	type Eintrag = { typ: 'mehrleistung' | 'minderleistung' | 'anrechnung', data: LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy };
 
@@ -131,35 +138,46 @@
 		},
 	};
 
+	const mehrleistungenModelProxies = useModelProxyList(
+		() => props.personalabschnittsdatenModelProxy().data.mehrleistung,
+		data => data.id,
+		(mehrleistung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => mehrleistung,
+			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.patchMehrleistung(data, mehrleistung.id)),
+		{ deep: true }
+	);
+
+	const minderleistungenModelProxies = useModelProxyList(
+		() => props.personalabschnittsdatenModelProxy().data.minderleistung,
+		data => data.id,
+		(minderleistung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => minderleistung,
+			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => lehrerAuswahlState.patchMinderleistung(data, minderleistung.id)),
+		{ deep: true }
+	);
+
+	const anrechnungenModelProxies = useModelProxyList(
+		() => props.personalabschnittsdatenModelProxy().data.anrechnungen,
+		data => data.id,
+		(anrechnung) => new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => anrechnung,
+			(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) =>
+				lehrerAuswahlState.patchAnrechnungen(ArrayList.of({ ...data, id: anrechnung.id }))), { deep: true }
+	);
+
 	const gridManager = new GridManager<string, Eintrag, List<Eintrag>>({
 		daten: computed<List<Eintrag>>(() => {
 			const result = new ArrayList<Eintrag>();
-			const abschnittsdaten = props.personalabschnittsdatenModelProxy().data;
-			// Füge Mehrleistungen, Minderleistung und Anrechnungen hinzu
-			for (const data of abschnittsdaten.mehrleistung) {
-				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await lehrerAuswahlState.patchMehrleistung(proxy, data.id);
-					return true;
-				};
-				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
-				result.add({ typ: 'mehrleistung', data: modelProxy });
+
+			for (const data of mehrleistungenModelProxies.value) {
+				result.add({ typ: 'mehrleistung', data });
 			}
-			for (const data of abschnittsdaten.minderleistung) {
-				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await lehrerAuswahlState.patchMinderleistung(proxy, data.id);
-					return true;
-				};
-				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
-				result.add({ typ: 'minderleistung', data: modelProxy });
+
+			for (const data of minderleistungenModelProxies.value) {
+				result.add({ typ: 'minderleistung', data });
 			}
-			for (const data of abschnittsdaten.anrechnungen) {
-				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
-					await lehrerAuswahlState.patchAnrechnungen(ArrayList.of({ ...proxy, id: data.id }));
-					return true;
-				};
-				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
-				result.add({ typ: 'anrechnung', data: modelProxy });
+
+			for (const data of anrechnungenModelProxies.value) {
+				result.add({ typ: 'anrechnung', data });
 			}
+
 			result.sort(comparatorEintrag);
 			return result;
 		}),
@@ -170,6 +188,14 @@
 			{ kuerzel: "anzahl", name: "Anzahl Stunden", width: "5rem", hideable: true },
 			{ kuerzel: "Buttons", name: "Buttons", width: "4rem", hideable: false },
 		],
+	});
+
+	function getRowActions(rowModel: Eintrag): TableAction[] {
+		return [{ label: "Eintrag löschen", action: () => removeDaten(rowModel), trash: true }];
+	}
+
+	const footerActions = computed(() => {
+		return [{ label: "Gründe hinzufügen", action: openHinzufuegen, iconClasses: "i-ri-add-line" }];
 	});
 
 	function updateAnzahl(row: Eintrag, anzahl: number | null): void {
@@ -184,8 +210,8 @@
 		const key = `${row.typ}-${row.data.proxy.idGrund}-${row.data.proxy.id}`;
 		const setter = (value: number | null) => updateAnzahl(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
-			const input = gridManager.applyInputNumberFixed(key, 4, index, element, 100, 2, setter);
-			if (input !== null) {
+			gridManager.applyInputNumberFixed(key, 4, index, element, 100, 2, setter);
+			if (element !== null) {
 				gridManager.update(key, row.data.proxy.anzahl);
 			}
 		};

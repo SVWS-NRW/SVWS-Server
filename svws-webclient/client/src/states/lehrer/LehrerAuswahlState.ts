@@ -126,19 +126,19 @@ export interface LehrerAuswahlState extends GenericAuswahlState<LehrerListeManag
 
 	addMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void>;
 
-	patchMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<void>;
+	patchMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean>;
 
 	removeMehrleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void>;
 
 	addMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void>;
 
-	patchMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<void>;
+	patchMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean>;
 
 	removeMinderleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void>;
 
 	addAnrechnung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void>;
 
-	patchAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>): Promise<void>;
+	patchAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>): Promise<boolean>;
 
 	removeAnrechnung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void>;
 

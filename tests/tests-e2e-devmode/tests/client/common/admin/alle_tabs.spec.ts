@@ -136,7 +136,7 @@ test('Admins können entsprechende Bereiche bei den Lehrern im DEV Mode sehen', 
 
 	await expect(page.getByRole('button', { name: 'Personaldaten' })).toBeVisible();
 	await page.getByRole('button', { name: 'Personaldaten' }).click();
-	await expect(page.getByRole('heading', { name: 'Mehr- und Minderleistung, Anrechnungsstunden' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Mehr- und Minderleistungen, Anrechnungsstunden' })).toBeVisible();
 
 
 	await expect(page.getByRole('button', { name: 'Stundenplan' })).toBeVisible();

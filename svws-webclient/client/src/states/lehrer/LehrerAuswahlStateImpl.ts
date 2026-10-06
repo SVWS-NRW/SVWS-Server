@@ -383,6 +383,23 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		this.commit();
 	};
 
+	/**
+	 * Übernimmt die gepatchten Werte in das lokale DTO mit der übergebenen ID, damit die Daten
+	 * nach einem erfolgreichen Patch dem Stand auf dem Server entsprechen.
+	 * Wird verwendet, um Änderungen in Anrechnungen, Mehrleistungen und Minderleistungen zu übernehmen.
+	 *
+	 * @param liste   die Liste mit den lokalen DTOs
+	 * @param data    die gepatchten Werte
+	 * @param id      die ID des DTOs
+	 */
+	private applyAnrechnungsstunden(liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden>, data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): void {
+		for (const eintrag of liste) {
+			if (eintrag.id === id) {
+				Object.assign(eintrag, data);
+				return;
+			}
+		}
+	}
 
 	public async addMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>): Promise<void> {
 		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
@@ -391,9 +408,11 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		this.commit();
 	};
 
-	public async patchMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<void> {
+	public async patchMehrleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean> {
 		await api.server.patchLehrerPersonalabschnittsdatenMehrleistung(data, api.schema, id);
+		this.applyAnrechnungsstunden(this.getAbschnitt(this.idSchuljahresabschnitt).mehrleistung, data, id);
 		this.commit();
+		return true;
 	};
 
 	public async removeMehrleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {
@@ -410,9 +429,11 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		this.commit();
 	};
 
-	public async patchMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<void> {
+	public async patchMinderleistung(data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number): Promise<boolean> {
 		await api.server.patchLehrerPersonalabschnittsdatenMinderleistung(data, api.schema, id);
+		this.applyAnrechnungsstunden(this.getAbschnitt(this.idSchuljahresabschnitt).minderleistung, data, id);
 		this.commit();
+		return true;
 	};
 
 	public async removeMinderleistung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {
@@ -429,9 +450,16 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		this.commit();
 	};
 
-	public async patchAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>): Promise<void> {
+	public async patchAnrechnungen(data: List<Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>>): Promise<boolean> {
 		await api.server.patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(data, api.schema);
+		const anrechnungen = this.getAbschnitt(this.idSchuljahresabschnitt).anrechnungen;
+		for (const patch of data) {
+			if (patch.id !== undefined) {
+				this.applyAnrechnungsstunden(anrechnungen, patch, patch.id);
+			}
+		}
 		this.commit();
+		return true;
 	};
 
 	public async removeAnrechnung(data: LehrerPersonalabschnittsdatenAnrechnungsstunden): Promise<void> {

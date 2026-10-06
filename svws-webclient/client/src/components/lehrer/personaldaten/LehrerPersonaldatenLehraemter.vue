@@ -111,21 +111,22 @@
 			<div class="flex flex-col">
 				<ui-select-multi label="Lehrbefähigungen"
 					v-model="auswahlLehrbefaehigungenNeu"
-					@update:model-value="groupValidator.run()"
-					:validation="() => groupValidator.getFehler()"
 					:manager="lehrbefaehigungenSelectManager"
 					statistics />
 				<ui-select-multi label="Fachrichtungen"
 					v-model="auswahlFachrichtungenNeu"
-					@update:model-value="groupValidator.run()"
-					:validation="() => groupValidator.getFehler()"
 					:manager="fachrichtungenSelectManager"
 					statistics />
 			</div>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="closeCreateLehrbefFachr()"> Abbrechen </svws-ui-button>
-			<svws-ui-button @click="createLehrbefFachr" :disabled="groupValidator.getFehler().size() > 0"> Anlegen </svws-ui-button>
+			<svws-ui-tooltip :disabled="!anlegenDisabled" :indicator="false">
+				<svws-ui-button @click="createLehrbefFachr" :disabled="anlegenDisabled"> Anlegen </svws-ui-button>
+				<template #content>
+					Es muss mindestens ein Feld befüllt sein
+				</template>
+			</svws-ui-tooltip>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -155,7 +156,6 @@
 	import { CoreTypeSelectManager } from "@ui/ui/controls/select/manager/CoreTypeSelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
 	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
-	import { ValidatorInputGroupRequired, ValidatorInputGroupRequiredModus } from "@ui/validation/common/ValidatorInputGroupRequired";
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
@@ -172,6 +172,7 @@
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
 	const showLehramtHinzufuegen = ref<boolean>(false);
+	const anlegenDisabled = computed(() => auswahlFachrichtungenNeu.value.length === 0 && auswahlLehrbefaehigungenNeu.value.length === 0);
 	const lehraemterSelectManager = computed(() => new CoreTypeSelectManager({
 		clazz: LehrerLehramt.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: lehrerAuswahlState.manager.schulform(),
 		filters: [{ key: 'vorhandene', apply: filterLehraemter }],
@@ -228,10 +229,6 @@
 	const auswahlLehrbefFachrNeuLehramt = shallowRef<LehrerLehramtEintrag | null>(null);
 	const auswahlLehrbefaehigungenNeu = shallowRef<Array<LehrerLehrbefaehigungKatalogEintrag>>([]);
 	const auswahlFachrichtungenNeu = shallowRef<Array<LehrerFachrichtungKatalogEintrag>>([]);
-	const groupValidator = new ValidatorInputGroupRequired([
-			{ fieldName: "Lehrbefähigungen", fieldData: () => auswahlLehrbefaehigungenNeu.value },
-			{ fieldName: "Fachrichtungen", fieldData: () => auswahlFachrichtungenNeu.value }],
-		ValidatorInputGroupRequiredModus.AT_LEAST_ONE);
 
 	const lehrbefaehigungenSelectManager = computed(() => new CoreTypeSelectManager({
 		clazz: LehrerLehrbefaehigung.class, schuljahr: abschnittState.auswahl.schuljahr, schulformen: lehrerAuswahlState.manager.schulform(),
@@ -266,7 +263,6 @@
 		auswahlFachrichtungenNeu.value = [];
 		auswahlLehrbefFachrNeuLehramt.value = row;
 		showLehrbefFachrHinzufuegen.value = true;
-		groupValidator.run();
 	}
 
 	const lehrbefaehigungenVorhanden = computed<JavaSet<number>>(() => {

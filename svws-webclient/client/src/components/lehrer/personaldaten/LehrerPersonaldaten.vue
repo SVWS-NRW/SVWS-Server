@@ -88,7 +88,7 @@
 				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
+		<svws-ui-content-card title="Mehr- und Minderleistungen, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-anrechnungen :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
 					:hat-update-kompetenz="!readonly" />
