@@ -4,7 +4,7 @@ plugins {
 
 sourcesJar.dependsOn project(':svws-openapi').tasks.assembleTranspiled
 
-task assembleCore(type: NpmRun) {
+tasks.register('assembleCore', NpmRun) {
 	dependsOn rootProject.npmPrepare, project(':svws-openapi').tasks.assemble
 	group = "build"
 	args = ['build']
@@ -12,18 +12,18 @@ task assembleCore(type: NpmRun) {
 	outputs.dir file("$projectDir/dist")
 }
 
-task cleanCore(type: Delete) {
+tasks.register('cleanCore', Delete) {
 	delete file("$projectDir/dist")
 }
 
 clean.dependsOn cleanCore
 
-task testCore(type: NpmRun) {
+tasks.register('testCore', NpmRun) {
 	group = "svws"
 	dependsOn ':svws-webclient:core:assemble'
 	inputs.files file("$projectDir/src")
 	outputs.dir file("$projectDir/build/coverage")
-	args = [ 'test:coverage' ]
+	args = ['test:coverage']
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
 	}
@@ -31,7 +31,7 @@ task testCore(type: NpmRun) {
 
 test.dependsOn testCore
 
-task publishNexusCore(type: NpmPublish) {
+tasks.register('publishNpmInternalRelease', NpmPublish) {
 	dependsOn assemble
 	group = "publishing"
 	npmrc = "$rootDir/.npmrc.nexus"
@@ -41,7 +41,7 @@ task publishNexusCore(type: NpmPublish) {
 	scopePublic = false
 }
 
-task publishNpmCore(type: NpmPublish) {
+tasks.register('publishNpmExternalRelease', NpmPublish) {
 	dependsOn assemble
 	group = "publishing"
 	npmrc = "$rootDir/.npmrc.npm"
@@ -50,6 +50,3 @@ task publishNpmCore(type: NpmPublish) {
 	scopePublic = true
 	tokenOnly = true
 }
-
-publishRelease.dependsOn publishNexusCore
-publishRelease.dependsOn publishNpmCore

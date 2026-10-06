@@ -19,12 +19,12 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 	 */
 	void configSigning() {
 		// Das Signieren von Artefakten soll nur bei RELEASES erfolgen, nicht bei SNAPSHOTS.
-			project.ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
-			project.signing {
-				required = { project.ext.isReleaseVersion && project.gradle.taskGraph.hasTask("publish") }
-				sign project.publishing.publications
-			}
+		project.ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
+		project.signing {
+			required = { project.ext.isReleaseVersion && project.gradle.taskGraph.hasTask("publish") }
+			sign project.publishing.publications
 		}
+	}
 
 	/**
 	 * Legt die Maven-Repos für den publish-Task fest.
@@ -38,15 +38,15 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 
 		if (nexus_actor?.trim() && nexus_token?.trim()) {
 			if (this.extension.getNexusSnapshotRepositoryUrl()?.trim() &&
-				this.extension.getNexusReleasesRepositoryUrl()?.trim()){
+					this.extension.getNexusReleasesRepositoryUrl()?.trim()) {
 				nexus_publish_ready = true
-			} else{
+			} else {
 				project.logger.info('Der Nexus Repository Manager kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
-					'weil die URLs der Repositories nicht hinterlegt sind.')
+						'weil die URLs der Repositories nicht hinterlegt sind.')
 			}
 		} else {
 			project.logger.info('Der Nexus Repository Manager kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
-				'weil die Zugangsdaten nicht hinterlegt sind.')
+					'weil die Zugangsdaten nicht hinterlegt sind.')
 		}
 
 		if (nexus_publish_ready) {
@@ -75,17 +75,17 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 		}
 	}
 
-	void registerPublishingTasks(){
-		project.tasks.register('publishSnapshot') {
+	void registerPublishingTasks() {
+		project.tasks.register('publishMavenInternalSnapshot') {
 			group = "publishing"
-			description = 'Publishes all Maven publications to the Nexus Maven snapshot repository.'
+			description = 'Publishes all Maven publications to the SVWS-Nexus snapshot repository.'
 			dependsOn project.tasks.withType(PublishToMavenRepository).matching {
 				it.repository == project.publishing.repositories.svwssnapshots
 			}
 		}
-		project.tasks.register('publishRelease') {
+		project.tasks.register('publishMavenInternalRelease') {
 			group = "publishing"
-			description = 'Publishes all Maven publications to the Nexus Maven release repository.'
+			description = 'Publishes all Maven publications to the SVWS-Nexus release repository.'
 			dependsOn project.tasks.withType(PublishToMavenRepository).matching {
 				it.repository == project.publishing.repositories.svwsreleases
 			}
@@ -97,7 +97,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 		super.apply(project)
 		this.project = project
 		this.extension = project.getExtensions()
-			.create("svwsmavenpublish", SvwsMavenPublishPluginExtension.class)
+				.create("svwsmavenpublish", SvwsMavenPublishPluginExtension.class)
 
 		project.pluginManager.apply "maven-publish"
 		project.pluginManager.apply "signing"
