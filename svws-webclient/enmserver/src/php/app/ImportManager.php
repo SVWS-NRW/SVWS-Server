@@ -796,6 +796,7 @@ class ImportManager {
                     $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $alt->tsPasswordHash, PDO::PARAM_STR);
                     $jsonNeu->passwordHash = $jsonAlt->passwordHash;
                     $jsonNeu->tsPasswordHash = $jsonAlt->tsPasswordHash;
+                    $jsonNeu->istInitialPassword = $jsonAlt->istInitialPassword;
                 } else {
                     $this->conn->bindStatementValue($stmt, ":passwordHash", $neu->passwordHash, PDO::PARAM_STR);
                     $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $neu->tsPasswordHash, PDO::PARAM_STR);
