@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Notenmodul_Credentials")
-@JsonPropertyOrder({"idLehrer", "initialkennwort", "passwordHash", "art2FA", "totpSecret", "istErstanmeldung"})
+@JsonPropertyOrder({"idLehrer", "initialkennwort", "istInitialkennwort", "passwordHash", "art2FA", "totpSecret", "istErstanmeldung"})
 public final class DTONotenmodulCredentials {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -52,6 +52,12 @@ public final class DTONotenmodulCredentials {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes initialkennwort */
 	public static final String QUERY_LIST_BY_INITIALKENNWORT = "SELECT e FROM DTONotenmodulCredentials e WHERE e.initialkennwort IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istInitialkennwort */
+	public static final String QUERY_BY_ISTINITIALKENNWORT = "SELECT e FROM DTONotenmodulCredentials e WHERE e.istInitialkennwort = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istInitialkennwort */
+	public static final String QUERY_LIST_BY_ISTINITIALKENNWORT = "SELECT e FROM DTONotenmodulCredentials e WHERE e.istInitialkennwort IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes passwordHash */
 	public static final String QUERY_BY_PASSWORDHASH = "SELECT e FROM DTONotenmodulCredentials e WHERE e.passwordHash = ?1";
@@ -88,6 +94,14 @@ public final class DTONotenmodulCredentials {
 	@JsonProperty
 	public String initialkennwort;
 
+	/** Gibt an, ob es sich bei dem Passwort-Hash um den Hash des Initialkennwortes handelt oder nicht */
+	@Column(name = "istInitialkennwort")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean istInitialkennwort;
+
 	/** Passwordhash für den Credential-Datensatz */
 	@Column(name = "passwordHash")
 	@JsonProperty
@@ -122,16 +136,18 @@ public final class DTONotenmodulCredentials {
 	 * Erstellt ein neues Objekt der Klasse DTONotenmodulCredentials ohne eine Initialisierung der Attribute.
 	 * @param idLehrer   der Wert für das Attribut idLehrer
 	 * @param initialkennwort   der Wert für das Attribut initialkennwort
+	 * @param istInitialkennwort   der Wert für das Attribut istInitialkennwort
 	 * @param passwordHash   der Wert für das Attribut passwordHash
 	 * @param art2FA   der Wert für das Attribut art2FA
 	 * @param istErstanmeldung   der Wert für das Attribut istErstanmeldung
 	 */
-	public DTONotenmodulCredentials(final long idLehrer, final String initialkennwort, final String passwordHash, final int art2FA, final Boolean istErstanmeldung) {
+	public DTONotenmodulCredentials(final long idLehrer, final String initialkennwort, final Boolean istInitialkennwort, final String passwordHash, final int art2FA, final Boolean istErstanmeldung) {
 		this.idLehrer = idLehrer;
 		if (initialkennwort == null) {
 			throw new NullPointerException("initialkennwort must not be null");
 		}
 		this.initialkennwort = initialkennwort;
+		this.istInitialkennwort = istInitialkennwort;
 		if (passwordHash == null) {
 			throw new NullPointerException("passwordHash must not be null");
 		}
@@ -172,7 +188,7 @@ public final class DTONotenmodulCredentials {
 	 */
 	@Override
 	public String toString() {
-		return "DTONotenmodulCredentials(idLehrer=" + this.idLehrer + ", initialkennwort=" + this.initialkennwort + ", passwordHash=" + this.passwordHash + ", art2FA=" + this.art2FA + ", totpSecret=" + this.totpSecret + ", istErstanmeldung=" + this.istErstanmeldung + ")";
+		return "DTONotenmodulCredentials(idLehrer=" + this.idLehrer + ", initialkennwort=" + this.initialkennwort + ", istInitialkennwort=" + this.istInitialkennwort + ", passwordHash=" + this.passwordHash + ", art2FA=" + this.art2FA + ", totpSecret=" + this.totpSecret + ", istErstanmeldung=" + this.istErstanmeldung + ")";
 	}
 
 }

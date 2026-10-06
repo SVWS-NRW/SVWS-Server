@@ -143,6 +143,7 @@ public class NotenmodulCredentialsService {
 					cred.initialkennwort = notenmodulCredentialGeneratorService.createInitialkennwort();
 				}
 				cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
+				cred.istInitialkennwort = true;
 				notenmodulCredentialsRepository.update(cred);
 			}
 		});
@@ -170,11 +171,10 @@ public class NotenmodulCredentialsService {
 			} else {
 				// Setze das Initialkennwort neu
 				cred = foundCred.get();
-				final boolean istInitialPassword = (cred.initialkennwort != null) && (cred.passwordHash != null)
-						&& BCrypt.checkpw(cred.initialkennwort, cred.passwordHash);
 				cred.initialkennwort = notenmodulCredentialGeneratorService.createInitialkennwort();
-				if ((cred.passwordHash == null) || istInitialPassword) {
+				if ((cred.passwordHash == null) || Boolean.TRUE.equals(cred.istInitialkennwort)) {
 					cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
+					cred.istInitialkennwort = true;
 				}
 				notenmodulCredentialsRepository.update(cred);
 			}

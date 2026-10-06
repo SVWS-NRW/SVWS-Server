@@ -39,6 +39,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisung
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZuweisungenPK;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.TimestampUtils;
+import de.svws_nrw.ext.jbcrypt.BCrypt;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
@@ -333,6 +334,24 @@ public class EnmV2ImportService {
 
 
 	/**
+	 * Prüft, ob es sich bei dem Kennwort-Hash um den Hash des Initialkennwortes handelt oder nicht.
+	 *
+	 * @param initialkennwort   die Credentials mit dem neuen Kennwort
+	 * @param passwordHash      die Credentials mit dem neuen Kennwort
+	 *
+	 * @return true, wenn es sich bei dem Hash um den Hash des Initialkennwortes handelt
+	 */
+	private static boolean checkIstInitialKennwort(final String initialkennwort, final String passwordHash) {
+		try {
+			return (initialkennwort != null) && (passwordHash != null) && (!passwordHash.isBlank())
+					&& BCrypt.checkpw(initialkennwort, passwordHash);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			return false;
+		}
+	}
+
+
+	/**
 	 * Importiert die Hashes aus den gegebenen ENMLehrer-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
 	 * und aktualisiert neuere Datensätze und deren Zeitstempel.
 	 *
@@ -353,9 +372,10 @@ public class EnmV2ImportService {
 			final DTOTimestampsNotenmodulCredentials credTS = kontext.mapLehrerCredsTimestamps.get(enmLehrer.id);
 			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : TimestampUtils.convertUtcToLocal(credTS.tsPasswordHash))) {
 				if (cred == null) {
-					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash, 0, true);
+					cred = new DTONotenmodulCredentials(enmLehrer.id, "", false, enmLehrer.passwordHash, 0, true);
 				} else {
 					cred.passwordHash = enmLehrer.passwordHash;
+					cred.istInitialkennwort = checkIstInitialKennwort(cred.initialkennwort, cred.passwordHash);
 				}
 				notenmodulCredentialsRepository.update(cred);
 			}

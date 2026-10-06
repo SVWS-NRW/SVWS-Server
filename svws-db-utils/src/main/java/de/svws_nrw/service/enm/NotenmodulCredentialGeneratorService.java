@@ -54,14 +54,35 @@ public class NotenmodulCredentialGeneratorService {
 	 * @return die neu erzeugten Credentials
 	 */
 	public DTONotenmodulCredentials createInitialCredentials(final long idLehrer, final String password, final int art2FA) {
+		final boolean neuesInitialkennwort = (password == null) || password.isBlank();
 		final String initial = createInitialkennwort();
-		final String hash = BCrypt.hashpw(((password == null) || password.isBlank()) ? initial : password, BCrypt.gensalt());
-		final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, hash, art2FA, true);
+		final String hash = BCrypt.hashpw(neuesInitialkennwort ? initial : password, BCrypt.gensalt());
+		final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, neuesInitialkennwort, hash, art2FA, true);
 		cred.totpSecret = Passwords.generateTotpSecret();
 		notenmodulCredentialsRepository.update(cred);
 		return cred;
 	}
 
+	private void updateExistingCredential(final DTONotenmodulCredentials cred) {
+		final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
+		final boolean hasHash = (cred.passwordHash != null) && (!cred.passwordHash.isBlank());
+		final boolean hasTotp = (cred.totpSecret != null) && (!cred.totpSecret.isBlank());
+		if (hasInitial && hasTotp && hasHash) {
+			return;
+		}
+		if (!hasInitial) {
+			cred.initialkennwort = createInitialkennwort();
+			cred.istInitialkennwort = false;
+		}
+		if (!hasHash) {
+			cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
+			cred.istInitialkennwort = true;
+		}
+		if (!hasTotp) {
+			cred.totpSecret = Passwords.generateTotpSecret();
+			cred.istErstanmeldung = true;
+		}
+	}
 
 
 	/**
@@ -77,22 +98,7 @@ public class NotenmodulCredentialGeneratorService {
 			final List<DTONotenmodulCredentials> existing = notenmodulCredentialsRepository.getAll();
 			for (final DTONotenmodulCredentials cred : existing) {
 				result.put(cred.idLehrer, cred);
-				final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
-				final boolean hasHash = (cred.passwordHash != null) && (!cred.passwordHash.isBlank());
-				final boolean hasTotp = (cred.totpSecret != null) && (!cred.totpSecret.isBlank());
-				if (hasInitial && hasTotp && hasHash) {
-					continue;
-				}
-				if (!hasInitial) {
-					cred.initialkennwort = createInitialkennwort();
-				}
-				if (!hasHash) {
-					cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
-				}
-				if (!hasTotp) {
-					cred.totpSecret = Passwords.generateTotpSecret();
-					cred.istErstanmeldung = true;
-				}
+				updateExistingCredential(cred);
 				notenmodulCredentialsRepository.update(cred);
 			}
 			// Erstelle dann die noch fehlenden Credentials

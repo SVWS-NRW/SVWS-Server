@@ -25,6 +25,14 @@ public class Tabelle_Notenmodul_Credentials extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Initialkennwort für den Credential-Datensatz");
 
+	/** Die Definition der Tabellenspalte istInitialkennwort */
+	public final SchemaTabelleSpalte col_istInitialkennwort = add("istInitialkennwort", SchemaDatentypen.INT, false)
+			.setDefault("1")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Gibt an, ob es sich bei dem Passwort-Hash um den Hash des Initialkennwortes handelt oder nicht")
+			.setRevision(SchemaRevisionen.REV_80);
+
 	/** Die Definition der Tabellenspalte passwordHash */
 	public final SchemaTabelleSpalte col_passwordHash = add("passwordHash", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
 			.setNotNull()

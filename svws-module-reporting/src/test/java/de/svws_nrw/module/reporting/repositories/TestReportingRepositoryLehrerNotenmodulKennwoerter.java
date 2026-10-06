@@ -86,7 +86,7 @@ class TestReportingRepositoryLehrerNotenmodulKennwoerter {
 	 * @return Der Eintrag, wie ihn die Abfrage liefert.
 	 */
 	private static DTONotenmodulCredentials dtoCredentials(final long idLehrer, final String initialkennwort) {
-		return new DTONotenmodulCredentials(idLehrer, initialkennwort, HASH, 0, true);
+		return new DTONotenmodulCredentials(idLehrer, initialkennwort, true, HASH, 0, true);
 	}
 
 	/**
