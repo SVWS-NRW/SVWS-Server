@@ -110,6 +110,7 @@
 	import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
+	import { useBetriebsartenState } from "@ui/states/kataloge/BetriebsartenState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import type { BetriebeNeuProps } from "~/components/schule/kataloge/betriebe/BetriebeNeuProps";
@@ -117,6 +118,7 @@
 
 	const props = defineProps<BetriebeNeuProps>();
 	const benutzerState = useBenutzerState();
+	const betriebsartenState = useBetriebsartenState();
 
 	const initialData = ref<Betrieb>(Object.assign(new Betrieb(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
 	const model = new BetriebModelProxy(() => initialData.value, () => props.manager());
@@ -124,7 +126,7 @@
 	const hatKompetenzAdd = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const disabled = computed<boolean>(() => !hatKompetenzAdd.value);
 	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
-	const betriebsartenById = computed<Map<number, Betriebsart>>(() => props.manager().betriebsartenById);
+	const betriebsartenById = computed<Map<number, Betriebsart>>(() => betriebsartenState.betriebsarten.byId);
 	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
 	const betriebsarten = computed(() => betriebsartenById.value.values());
 	const orte = computed(() => orteById.value.values());

@@ -3,7 +3,6 @@ import type { Schulform } from "@core/asd/types/schule/Schulform";
 import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
-import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { JavaLong } from "@core/java/lang/JavaLong";
 import { JavaString } from "@core/java/lang/JavaString";
@@ -19,7 +18,6 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	private readonly _idsOfReferencedBetriebe: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
-	private readonly _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private readonly _orteById: Map<number, OrtKatalogEintrag> = new Map();
 
 	/**
@@ -54,17 +52,10 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	 * @param orte								die Liste der Orte
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, betriebe: List<Betrieb>, betriebsarten: List<Betriebsart>, orte: List<OrtKatalogEintrag>) {
+		schulform: Schulform | null, betriebe: List<Betrieb>, orte: List<OrtKatalogEintrag>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, betriebe,
 			BetriebeListeManager.comparator, BetriebeListeManager._betriebToId, BetriebeListeManager._betriebToId, []);
-		this.mapBetriebsarten(betriebsarten);
 		this.mapOrte(orte);
-	}
-
-	private mapBetriebsarten(betriebsarten: List<Betriebsart>) {
-		for (const betriebsart of betriebsarten) {
-			this._betriebsartenById.set(betriebsart.id, betriebsart);
-		}
 	}
 
 	private mapOrte(orte: List<OrtKatalogEintrag>) {
@@ -166,10 +157,6 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 			}
 			index++;
 		}
-	}
-
-	get betriebsartenById(): Map<number, Betriebsart> {
-		return this._betriebsartenById;
 	}
 
 	get orteById(): Map<number, OrtKatalogEintrag> {

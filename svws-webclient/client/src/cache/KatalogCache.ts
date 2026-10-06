@@ -1,4 +1,3 @@
-import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
 import type { List } from "@core/java/util/List";
 
@@ -14,7 +13,6 @@ export class KatalogCache {
 	 * Wird zur Cache-Aktualisierung verwendet.
 	 */
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
-	private _betriebsartenById: Map<number, Betriebsart> = new Map();
 	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
 
 	public constructor() {
@@ -22,11 +20,6 @@ export class KatalogCache {
 	}
 
 	private initializeCacheUpdater() {
-		this._katalogCacheUpdater.set(Katalog.BETRIEBSARTEN, async () => {
-			const result = await api.server.getBetriebsarten(api.schema);
-			return { betriebsartenById: this.convertToMap(result) };
-		});
-
 		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
 			const result = await api.server.getKatalogFoerderschwerpunkte(api.schema);
 			return { foerderschwerpunkteById: this.convertToMap(result) };
@@ -49,14 +42,6 @@ export class KatalogCache {
 
 	set katalogCacheUpdater(value: Map<Katalog, () => Promise<Partial<KatalogCache>>>) {
 		this._katalogCacheUpdater = value;
-	}
-
-	get betriebsartenById(): Map<number, Betriebsart> {
-		return this._betriebsartenById;
-	}
-
-	set betriebsartenById(value: Map<number, Betriebsart>) {
-		this._betriebsartenById = value;
 	}
 
 	get foerderschwerpunkteById(): Map<number, FoerderschwerpunktEintrag> {

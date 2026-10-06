@@ -22,7 +22,7 @@ import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList()),
+	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
 	view: routeBetriebeDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -41,14 +41,13 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BetriebeListeManager>>> {
 		// TODO refactor katalog to work with orteState, ...
-		const [betriebe, betriebsarten, orte] = await Promise.all([
+		const [betriebe, orte] = await Promise.all([
 			api.server.getBetriebe(api.schema),
-			api.server.getBetriebsarten(api.schema),
 			api.server.getOrte(api.schema),
 		]);
 
 		const manager = new BetriebeListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
-			schuleStateImpl.schulform, betriebe, betriebsarten, orte);
+			schuleStateImpl.schulform, betriebe, orte);
 		return { manager };
 	}
 

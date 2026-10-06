@@ -6,6 +6,7 @@ import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
+import { useBetriebsartenState } from "@ui/states/kataloge/BetriebsartenState";
 import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -15,9 +16,12 @@ import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/com
 
 import { ValidatorBetriebName } from "./validation/ValidatorBetriebName";
 
+
+
 export class BetriebModelProxy extends ModelProxy<Betrieb> {
 
 	private readonly manager: () => BetriebeListeManager;
+	private useBetriebsartenState = useBetriebsartenState();
 
 	constructor(
 		data: () => Betrieb,
@@ -68,7 +72,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 	}
 
 	betriebsart = computed<Betriebsart | null>({
-		get: () => this.manager().betriebsartenById.get(this.proxy.idBetriebsart ?? -1) ?? null,
+		get: () => this.useBetriebsartenState.betriebsarten.byId.get(this.proxy.idBetriebsart ?? -1) ?? null,
 		set: (v: Betriebsart | null) => this.proxy.idBetriebsart = v?.id ?? null,
 	});
 

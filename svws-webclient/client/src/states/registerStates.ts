@@ -7,6 +7,7 @@ import { GostLaufbahnplanungStateKey } from "@ui/states/GostLaufbahnplanungState
 import { AbteilungenStateKey } from "@ui/states/kataloge/AbteilungenState";
 import { BeschaeftigungsartenStateKey } from "@ui/states/kataloge/BeschaeftigungsartenState";
 import { BetriebeStateKey } from "@ui/states/kataloge/BetriebeState";
+import { BetriebsartenState, BetriebsartenStateKey } from "@ui/states/kataloge/BetriebsartenState";
 import { EinwilligungsartenStateKey } from "@ui/states/kataloge/EinwilligungsartenState";
 import { EntlassgruendeStateKey } from "@ui/states/kataloge/EntlassgruendeState";
 import { ErzieherartenStateKey } from "@ui/states/kataloge/ErzieherartenState";
@@ -58,6 +59,7 @@ import { gostKlausurplanungStateImpl } from "./GostKlausurplanungStateImpl";
 import { gostLaufbahnplanungStateImpl } from "./GostLaufbahnplanungStateImpl";
 import { beschaeftigungsartenStateImpl } from "./kataloge/BeschaeftigungsartenStateImpl";
 import { betriebeStateImpl } from "./kataloge/BetriebeStateImpl";
+import { betriebsartenStateImpl } from "./kataloge/BetriebsartenStateImpl";
 import { entlassgruendeStateImpl } from "./kataloge/EntlassgruendeStateImpl";
 import { fahrschuelerartenStateImpl } from "./kataloge/FahrschuelerartenStateImpl";
 import { leitungsfunktionenStateImpl } from "./kataloge/LeitungsfunktionenStateImpl";
@@ -103,6 +105,7 @@ export function registerStates(): void {
 	registry.addSessionState(LeitungsfunktionenStateKey, leitungsfunktionenStateImpl);
 	registry.addSessionState(BeschaeftigungsartenStateKey, beschaeftigungsartenStateImpl);
 	registry.addSessionState(BetriebeStateKey, betriebeStateImpl);
+	registry.addSessionState(BetriebsartenStateKey, betriebsartenStateImpl);
 	registry.addSessionState(EntlassgruendeStateKey, entlassgruendeStateImpl);
 	registry.addSessionState(FahrschuelerartenStateKey, fahrschuelerartenStateImpl);
 	registry.addSessionState(ReligionenStateKey, religionenStateImpl);
