@@ -8,9 +8,7 @@ import { AppMenuGroup } from "@ui/ui/nav/AppMenuGroup";
 import { ViewType } from "@ui/ui/nav/ViewType";
 import { ConfigElement } from "@ui/utils/Config";
 
-import { Katalog } from "~/cache/Katalog";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteSchuelerBetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
@@ -166,9 +164,6 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 			religionenStateImpl.init(),
 			telefonartenStateImpl.init(),
 			vermerkartenStateImpl.init(),
-			routeApp.cache.refreshKataloge(
-				Katalog.FOERDERSCHWERPUNKTE
-			),
 		]);
 	}
 

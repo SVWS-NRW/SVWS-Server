@@ -16,6 +16,7 @@ import { betriebeStateImpl } from "~/states/kataloge/BetriebeStateImpl";
 import { entlassgruendeStateImpl } from "~/states/kataloge/EntlassgruendeStateImpl";
 import { erzieherartenStateImpl } from "~/states/kataloge/ErzieherartenStateImpl";
 import { fahrschuelerartenStateImpl } from "~/states/kataloge/FahrschuelerartenStateImpl";
+import { foerderschwerpunkteStateImpl } from "~/states/kataloge/FoerderschwerpunkteImpl";
 import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
 import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";

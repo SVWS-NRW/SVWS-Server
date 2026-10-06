@@ -24,8 +24,6 @@ export class RouteStatistikSchueler extends RouteNode<any, RouteStatistik> {
 			// statistik
 			gotoSchueler: routeStatistik.data.gotoSchueler,
 			zeigeAlles: false,
-			// schueler
-			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 		};
 	}
 }

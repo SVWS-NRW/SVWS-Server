@@ -48,7 +48,6 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 	public getProps(_: RouteLocationNormalized): SchuelerIndividualdatenGruppenprozesseProps {
 		return {
 			pendingStateManager: () => this.data.pendingStateManager,
-			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

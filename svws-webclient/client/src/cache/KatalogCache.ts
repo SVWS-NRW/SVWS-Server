@@ -1,8 +1,4 @@
-import type { FoerderschwerpunktEintrag } from "@core/core/data/schule/FoerderschwerpunktEintrag";
-import type { List } from "@core/java/util/List";
-
-import { Katalog } from "~/cache/Katalog";
-import { api } from "~/router/Api";
+import type { Katalog } from "~/cache/Katalog";
 
 
 export class KatalogCache {
@@ -13,28 +9,6 @@ export class KatalogCache {
 	 * Wird zur Cache-Aktualisierung verwendet.
 	 */
 	private _katalogCacheUpdater = new Map<Katalog, () => Promise<Partial<KatalogCache>>>();
-	private _foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag> = new Map();
-
-	public constructor() {
-		this.initializeCacheUpdater();
-	}
-
-	private initializeCacheUpdater() {
-		this._katalogCacheUpdater.set(Katalog.FOERDERSCHWERPUNKTE, async () => {
-			const result = await api.server.getKatalogFoerderschwerpunkte(api.schema);
-			return { foerderschwerpunkteById: this.convertToMap(result) };
-		});
-
-	}
-
-	private convertToMap<T extends { id: number }>(list: List<T>): Map<number, T> {
-		const map = new Map<number, T>();
-		for (const item of list) {
-			map.set(item.id, item);
-		}
-		return map;
-	}
-
 
 	get katalogCacheUpdater(): Map<Katalog, () => Promise<Partial<KatalogCache>>> {
 		return this._katalogCacheUpdater;
@@ -43,13 +17,4 @@ export class KatalogCache {
 	set katalogCacheUpdater(value: Map<Katalog, () => Promise<Partial<KatalogCache>>>) {
 		this._katalogCacheUpdater = value;
 	}
-
-	get foerderschwerpunkteById(): Map<number, FoerderschwerpunktEintrag> {
-		return this._foerderschwerpunkteById;
-	}
-
-	set foerderschwerpunkteById(value: Map<number, FoerderschwerpunktEintrag>) {
-		this._foerderschwerpunkteById = value;
-	}
-
 }

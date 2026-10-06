@@ -1,3 +1,2 @@
 export enum Katalog {
-	FOERDERSCHWERPUNKTE
 }
