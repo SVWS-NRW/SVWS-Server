@@ -1,7 +1,11 @@
 package de.svws_nrw.service.gost.klausuren;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenAlleKlausurdaten;
@@ -50,13 +54,20 @@ public final class GostKlausurenAllDataService {
 	 */
 	public GostKlausurenAlleKlausurdaten getAllData(final List<GostKlausurenHalbjahresdaten> hjData) throws ApiOperationException {
 		final GostKlausurenAlleKlausurdaten data = new GostKlausurenAlleKlausurdaten();
-		final List<SchuelerListeEintrag> schuelerNichtSenden = new ArrayList<>();
+		final Map<Integer, List<SchuelerListeEintrag>> schuelerNachAbiturjahr = new HashMap<>();
+		final Set<Long> schuelerNichtSendenIds = new HashSet<>();
 
 		for (final GostKlausurenHalbjahresdaten jg : hjData) {
 			jg.klausurdaten = collectionService.getKlausurdaten(jg.abiturjahrgang, jg.gostHalbjahr, false);
 
-			final List<SchuelerListeEintrag> schuelerJahrgang = repository.getSchuelerByAbiturjahr(jg.abiturjahrgang);
-			schuelerNichtSenden.addAll(schuelerJahrgang);
+			List<SchuelerListeEintrag> schuelerJahrgang = schuelerNachAbiturjahr.get(jg.abiturjahrgang);
+			if (schuelerJahrgang == null) {
+				schuelerJahrgang = repository.getSchuelerByAbiturjahr(jg.abiturjahrgang);
+				schuelerNachAbiturjahr.put(jg.abiturjahrgang, schuelerJahrgang);
+				for (final SchuelerListeEintrag schueler : schuelerJahrgang) {
+					schuelerNichtSendenIds.add(schueler.id);
+				}
+			}
 			if (jg.schueler != null) {
 				jg.schueler = schuelerJahrgang;
 			}
@@ -76,7 +87,7 @@ public final class GostKlausurenAllDataService {
 		}
 
 		final List<Long> missingSchuelerIds = hjData.stream().flatMap(jg -> jg.klausurdaten.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
-				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
+				.filter(id -> !schuelerNichtSendenIds.contains(id)).distinct().toList();
 		if (!missingSchuelerIds.isEmpty()) {
 			hjData.getFirst().schueler = (hjData.getFirst().schueler == null) ? new ArrayList<>() : new ArrayList<>(hjData.getFirst().schueler);
 			hjData.getFirst().schueler.addAll(repository.getSchuelerByIds(-1, missingSchuelerIds));

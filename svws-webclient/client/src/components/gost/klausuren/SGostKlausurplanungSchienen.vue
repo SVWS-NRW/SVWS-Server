@@ -51,7 +51,7 @@
 					:select-disabled="!hatKompetenzUpdate"
 					:selected="isKursklausurSelected(klausur)"
 					@update:checked="toggleKursklausurSelection(klausur)"
-					@dragstart="($event) => onDrag($event, klausur)"
+					@dragstart="onDrag($event, klausur)"
 					@dragend="onDrag($event, undefined)">
 					<template #badge>
 						<s-gost-klausurplanung-kurs-badge :kursklausur="klausur" />
