@@ -20,6 +20,9 @@ import static org.mockito.Mockito.when;
 import java.sql.SQLNonTransientConnectionException;
 import java.util.List;
 
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -33,7 +36,6 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
@@ -126,10 +128,15 @@ class TestReportingRepositoryRueckfallwerte {
 		// Der gesammelte Zugriff gelingt und liefert keinen Jahrgang; erst das Nachladen der einzelnen ID scheitert. Nur so ist die Stelle überhaupt
 		// erreichbar - ein Fehler des gesammelten Zugriffs beendet den Report.
 		final ReportingRepositoryKataloge repository = new ReportingRepositoryKataloge(reportingContext);
-		try (MockedConstruction<DataJahrgangsdaten> dataJahrgangsdaten = mockConstruction(DataJahrgangsdaten.class, (dataMock, ctx) -> {
-			when(dataMock.getAll()).thenReturn(List.of());
-			when(dataMock.getById(ID_JAHRGANG)).thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehlerinjektion"));
-		})) {
+		try (MockedStatic<KatalogRepositoryFactory> katalogRepoFactory = mockStatic(KatalogRepositoryFactory.class);
+				MockedStatic<EigeneSchuleRepositoryFactory> eigeneSchuleRepoFactory = mockStatic(EigeneSchuleRepositoryFactory.class);
+				MockedStatic<KatalogServiceFactory> katalogServiceFactory = mockStatic(KatalogServiceFactory.class)) {
+			final KatalogServiceFactory serviceFactory = mock(KatalogServiceFactory.class, RETURNS_DEEP_STUBS);
+			katalogServiceFactory.when(() -> KatalogServiceFactory.getNewInstance(any(), any())).thenReturn(serviceFactory);
+			when(serviceFactory.getJahrgangService().getAll()).thenReturn(List.of());
+			when(serviceFactory.getJahrgangService().getById(ID_JAHRGANG))
+					.thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehlerinjektion"));
+
 			assertNull(repository.jahrgang(ID_JAHRGANG), "Ohne Jahrgangsdaten bleibt der Wert leer, die Klasse erscheint weiterhin.");
 		}
 
@@ -142,11 +149,16 @@ class TestReportingRepositoryRueckfallwerte {
 		// Derselbe Weg, aber mit einer abgerissenen Verbindung als Ursache: Die Meldung trägt dann die abbrechende Ursache statt des Ladefehlers. Dass die
 		// Fassade daraus einen Serverfehler macht, prüft TestReportingContextMeldefassade - der Mock hier kann nicht werfen.
 		final ReportingRepositoryKataloge repository = new ReportingRepositoryKataloge(reportingContext);
-		try (MockedConstruction<DataJahrgangsdaten> dataJahrgangsdaten = mockConstruction(DataJahrgangsdaten.class, (dataMock, ctx) -> {
-			when(dataMock.getAll()).thenReturn(List.of());
-			when(dataMock.getById(ID_JAHRGANG)).thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					new SQLNonTransientConnectionException("Verbindung zur Datenbank verloren.")));
-		})) {
+		try (MockedStatic<KatalogRepositoryFactory> katalogRepoFactory = mockStatic(KatalogRepositoryFactory.class);
+				MockedStatic<EigeneSchuleRepositoryFactory> eigeneSchuleRepoFactory = mockStatic(EigeneSchuleRepositoryFactory.class);
+				MockedStatic<KatalogServiceFactory> katalogServiceFactory = mockStatic(KatalogServiceFactory.class)) {
+			final KatalogServiceFactory serviceFactory = mock(KatalogServiceFactory.class, RETURNS_DEEP_STUBS);
+			katalogServiceFactory.when(() -> KatalogServiceFactory.getNewInstance(any(), any())).thenReturn(serviceFactory);
+			when(serviceFactory.getJahrgangService().getAll()).thenReturn(List.of());
+			when(serviceFactory.getJahrgangService().getById(ID_JAHRGANG))
+					.thenThrow(new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+							new SQLNonTransientConnectionException("Verbindung zur Datenbank verloren.")));
+
 			assertNull(repository.jahrgang(ID_JAHRGANG));
 		}
 

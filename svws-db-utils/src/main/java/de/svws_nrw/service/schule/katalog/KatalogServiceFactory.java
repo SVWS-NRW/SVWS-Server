@@ -3,6 +3,7 @@ package de.svws_nrw.service.schule.katalog;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationMapper;
 import de.svws_nrw.mapper.schule.katalog.fachklasse.FachklasseMapper;
+import de.svws_nrw.mapper.schule.katalog.jahrgang.JahrgangMapper;
 import de.svws_nrw.mapper.schule.katalog.merkmal.MerkmalMapper;
 import de.svws_nrw.mapper.schule.katalog.ort.OrtMapper;
 import de.svws_nrw.mapper.schule.katalog.ortsteil.OrtsteilMapper;
@@ -12,6 +13,7 @@ import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzKonfigurationService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilService;
@@ -105,6 +107,19 @@ public final class KatalogServiceFactory {
 		return new ReligionService(
 				katalogRepositoryFactory.getReligionRepository(),
 				ReligionMapper.INSTANCE,
+				eigeneSchuleServiceFactory.getSchuleService()
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des JahrgangService.
+	 *
+	 * @return eine neue Instanz des JahrgangService.
+	 */
+	public JahrgangService getJahrgangService() {
+		return new JahrgangService(
+				katalogRepositoryFactory.getJahrgangRepository(),
+				JahrgangMapper.INSTANCE,
 				eigeneSchuleServiceFactory.getSchuleService()
 		);
 	}

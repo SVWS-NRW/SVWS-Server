@@ -14,6 +14,7 @@ import de.svws_nrw.service.schule.EigeneSchuleService;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.ankreuzkompetenz.AnkreuzkompetenzJahrgangService;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseService;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import de.svws_nrw.service.schule.katalog.merkmal.MerkmalService;
 import de.svws_nrw.service.schule.katalog.ort.OrtService;
 import de.svws_nrw.service.schule.katalog.ortsteil.OrtsteilService;
@@ -422,6 +423,66 @@ class KatalogServiceFactoryTest {
 			final ReligionService service = underTest.getReligionService();
 
 			assertThat(service).isInstanceOf(ReligionService.class);
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// getJahrgangService()
+	// -------------------------------------------------------------------------
+
+	@Nested
+	@DisplayName("getJahrgangService()")
+	class GetJahrgangService {
+		@Mock
+		private JahrgangRepository jahrgangRepository;
+
+		@BeforeEach
+		void setUp() {
+			when(katalogRepositoryFactory.getJahrgangRepository())
+					.thenReturn(jahrgangRepository);
+			when(eigeneSchuleServiceFactory.getSchuleService())
+					.thenReturn(eigeneSchuleService);
+		}
+
+		@Test
+		@DisplayName("gibt eine nicht-null JahrgangService-Instanz zurück")
+		void shouldReturnNonNullService() {
+			final JahrgangService service = underTest.getJahrgangService();
+
+			assertThat(service).isNotNull();
+		}
+
+		@Test
+		@DisplayName("gibt eine neue Instanz bei jedem Aufruf zurück")
+		void shouldReturnNewInstanceOnEachCall() {
+			final JahrgangService service1 = underTest.getJahrgangService();
+			final JahrgangService service2 = underTest.getJahrgangService();
+
+			assertThat(service1).isNotSameAs(service2);
+		}
+
+		@Test
+		@DisplayName("ruft getJahrgangRepository() auf der KatalogRepositoryFactory auf")
+		void shouldDelegateToKatalogRepositoryFactory() {
+			underTest.getJahrgangService();
+
+			verify(katalogRepositoryFactory).getJahrgangRepository();
+		}
+
+		@Test
+		@DisplayName("ruft getSchuleService() auf der EigeneSchuleServiceFactory auf")
+		void shouldDelegateToEigeneSchuleServiceFactory() {
+			underTest.getJahrgangService();
+
+			verify(eigeneSchuleServiceFactory).getSchuleService();
+		}
+
+		@Test
+		@DisplayName("erstellt eine JahrgangService-Instanz")
+		void shouldCreateJahrgangService() {
+			final JahrgangService service = underTest.getJahrgangService();
+
+			assertThat(service).isInstanceOf(JahrgangService.class);
 		}
 	}
 

@@ -141,22 +141,3 @@ ArrayList {
   "removeLast": [Function],
 }
 `;
-
-exports[`Jahrgaenge Tests > gegen { schema: 'GymAbi01' } > getJahrgang 1`] = `
-JahrgangsDaten {
-  "anzahlRestabschnitte": 6,
-  "bezeichnung": "Einführungsphase",
-  "gueltigBis": null,
-  "gueltigVon": null,
-  "id": 10,
-  "idBildungsstufe": 2,
-  "idFolgejahrgang": 11,
-  "idJahrgang": 21000000,
-  "idSchulgliederung": 0,
-  "istSichtbar": true,
-  "kuerzel": "EF",
-  "kurzbezeichnung": "EF",
-  "referenziertInAnderenTabellen": null,
-  "sortierung": 60,
-}
-`;

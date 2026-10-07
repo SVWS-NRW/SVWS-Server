@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,7 +79,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DataFaecher;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.klassen.DataKlassendaten;
@@ -113,6 +113,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRau
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepositoryImpl;
 import de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactoryBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -729,10 +730,28 @@ public final class DataUntis {
 		}
 		final List<Long> idsKlassen = klassen.stream().map(kl -> kl.ID).toList();
 		logger.logLn("-> bestimme die zugehörigen Jahrgänge...");
-		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = DataJahrgangsdaten.getDTOMapByKlassen(conn, klassen);
+		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = getJahrgaengeByKlassenId(conn, klassen);
 		logger.logLn("-> bestimme die zugehörigen Klassenlehrer...");
 		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = DataKlassendaten.getDTOMapKlassenlehrerByKlassenID(conn, idsKlassen);
 		return getGPU003(logger, klassen, mapJahrgaengeByKlassenId, mapKlassenlehrerByKlassenId);
+	}
+
+	/**
+	 * Bestimmt zu den übergebenen Klassen die jeweils zugehörigen Jahrgänge und gibt eine Map
+	 * mit der Zuordnung zur Klassen-ID zurück.
+	 *
+	 * @param conn      die aktuelle Datenbank-Verbindung
+	 * @param klassen   die Klassen
+	 *
+	 * @return die Zuordnung der Jahrgänge zu den Klassen-IDs
+	 */
+	private static Map<Long, DTOJahrgang> getJahrgaengeByKlassenId(final DBEntityManager conn, final List<DTOKlassen> klassen) {
+		final Set<Long> idsJahrgaenge = klassen.stream().map(kl -> kl.Jahrgang_ID).filter(Objects::nonNull).collect(Collectors.toSet());
+
+		final Map<Long, DTOJahrgang> jahrgaengeById = new JahrgangRepositoryImpl(conn).findMapByIds(idsJahrgaenge);
+
+		return klassen.stream().filter(kl -> (kl.Jahrgang_ID != null)).filter(kl -> jahrgaengeById.containsKey(kl.Jahrgang_ID))
+				.collect(Collectors.toMap(kl -> kl.ID, kl -> jahrgaengeById.get(kl.Jahrgang_ID)));
 	}
 
 

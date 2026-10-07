@@ -1,17 +1,18 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataKatalogJahrgaenge;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangCreateRequest;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -92,35 +93,12 @@ public class APIJahrgaenge {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
 	public Response getJahrgangsdaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataJahrgangsdaten(conn).getAllAsResponse(), request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+		return KatalogControllerFactory
+				.withReadAccessStable(request)
+				.getJahrgangController()
+				.getAll();
 	}
 
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Jahrgangs
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten des Jahrgangs
-	 */
-	@GET
-	@Path("/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID des Jahrgangs die zugehörigen Daten.",
-			description = "Liest die Daten des Jahrgangs zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Jahrgangsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten des Jahrgangs",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = JahrgangsDaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Jahrgangs-Eintrag mit der angegebenen ID gefunden")
-	public Response getJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
 
 
 	/**
@@ -152,7 +130,7 @@ public class APIJahrgaenge {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Jahrgangs
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param dto       die zu ändernden Felder des Jahrgangs
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -166,15 +144,15 @@ public class APIJahrgaenge {
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für den Jahrgang", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final JahrgangPatchRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getJahrgangController()
+				.patch(id, dto);
 	}
 
 
@@ -182,10 +160,10 @@ public class APIJahrgaenge {
 	 * Die OpenAPI-Methode für das Hinzufügen eines neuen Jahrgangs.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten des Raums
+	 * @param input        der Input-Stream mit den Daten des Jahrgangs
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
-	 * @return die HTTP-Antwort mit dem neuen Raum
+	 * @return die HTTP-Antwort mit dem neuen Jahrgang
 	 */
 	@POST
 	@Path("/create")
@@ -194,41 +172,17 @@ public class APIJahrgaenge {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten der Jahrgänge besitzt.")
 	@ApiResponse(responseCode = "201", description = "Der Jahrgang wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang für die Schule anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Die Jahrgangsdaten wurden nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addJahrgang(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Jahrgangs ohne ID, welche automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = JahrgangsDaten.class))) final JahrgangCreateRequest input,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).addAsResponse(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Jahrgangs.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Jahrgangs
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Jahrgang
-	 */
-	@DELETE
-	@Path("/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Jahrgang.",
-			description = "Entfernt einen Jahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgänge hat.")
-	@ApiResponse(responseCode = "200", description = "Der Jahrgang wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = JahrgangsDaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Kein Jahrgang vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withWriteAccessStable(request)
+				.getJahrgangController()
+				.create(input);
 	}
 
 
@@ -236,7 +190,7 @@ public class APIJahrgaenge {
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Jahrgänge.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           die IDs der Jahrgänge
+	 * @param ids          die IDs der Jahrgänge
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Jahrgängen
@@ -244,19 +198,18 @@ public class APIJahrgaenge {
 	@DELETE
 	@Path("/delete/multiple")
 	@Operation(summary = "Entfernt mehrere Jahrgänge.",
-			description = "Entfernt mehrere Jahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Jahrgängen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Jahrgänge wurde erfolgreich entfernt.",
+			description = "Entfernt mehrere Jahrgänge, insofern die notwendigen Berechtigungen vorhanden sind. Referenzierte Jahrgänge werden nicht entfernt.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt. Das Ergebnis jeder einzelnen Operation ist in der Liste enthalten.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Jahrgang zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Ein Jahrgang oder mehrere Jahrgänge nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgänge zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteJahrgaenge(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Jahrgänge", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataJahrgangsdaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+		return KatalogControllerFactory
+				.withDeleteAccessStable(request)
+				.getJahrgangController()
+				.delete(ids);
 	}
 }

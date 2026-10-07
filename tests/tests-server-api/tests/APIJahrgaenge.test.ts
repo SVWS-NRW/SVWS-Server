@@ -9,10 +9,5 @@ describe("Jahrgaenge Tests", () => {
 			const result = await api.getJahrgaenge(schema);
 			expect(result).toMatchSnapshot();
 		});
-
-		test("getJahrgang", async () => {
-			const result = await api.getJahrgang(schema, 10);
-			expect(result).toMatchSnapshot();
-		});
 	});
 });

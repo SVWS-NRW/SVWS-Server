@@ -20,7 +20,6 @@ import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataAnkreuzkompetenzen;
@@ -331,7 +330,7 @@ public class ReportingRepositoryKataloge {
 			try {
 				this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade Jahrgangsdaten.");
 				mapJahrgaenge = new HashMap<>();
-				new DataJahrgangsdaten(this.reportingContext.conn()).getAll().forEach(j -> mapJahrgaenge.put(j.id, j));
+				getKatalogServiceFactory().getJahrgangService().getAll().forEach(j -> mapJahrgaenge.put(j.id, j));
 			} catch (final Exception e) {
 				throw fehlerKatalogdatenLaden("Jahrgangsdaten", e);
 			}
@@ -358,7 +357,7 @@ public class ReportingRepositoryKataloge {
 			return map.get(idJahrgang);
 		}
 		try {
-			final JahrgangsDaten jahrgangsDaten = new DataJahrgangsdaten(this.reportingContext.conn()).getById(idJahrgang);
+			final JahrgangsDaten jahrgangsDaten = getKatalogServiceFactory().getJahrgangService().getById(idJahrgang);
 			map.put(idJahrgang, jahrgangsDaten);
 			return jahrgangsDaten;
 		} catch (final ApiOperationException e) {
