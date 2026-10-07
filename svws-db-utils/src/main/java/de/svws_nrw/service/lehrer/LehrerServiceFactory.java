@@ -2,6 +2,7 @@ package de.svws_nrw.service.lehrer;
 
 import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
+import de.svws_nrw.mapper.lehrer.lehramt.LehrerLehramtMapper;
 import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
@@ -89,9 +90,13 @@ public final class LehrerServiceFactory {
 	 * @return der Service für die Lehrämter von Lehrern
 	 */
 	public LehrerLehramtService getLehrerLehramtService() {
-		return new LehrerLehramtService(lehrerRepositoryFactory.getLehrerPersonaldatenLehramtRepository(),
+		return new LehrerLehramtService(
+				lehrerRepositoryFactory.getLehrerPersonaldatenLehramtRepository(),
+				lehrerRepositoryFactory.getLehrerRepository(),
 				this.getLehrerFachrichtungService(),
-				this.getLehrerLehrbefaehigungService());
+				this.getLehrerLehrbefaehigungService(),
+				LehrerLehramtMapper.INSTANCE
+		);
 	}
 
 	/**

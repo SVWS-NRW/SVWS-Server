@@ -38,9 +38,6 @@ export class LehrerLehramtEintrag extends JavaObject {
 	public readonly lehrbefaehigungen: List<LehrerLehrbefaehigungEintrag> = new ArrayList<LehrerLehrbefaehigungEintrag>();
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}

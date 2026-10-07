@@ -159,6 +159,7 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 	 * Lädt die Daten für den übergebenen Listeneintrag eines Lehrers
 	 *
 	 * @param auswahl   der ausgewählte Listeneintrag eines Lehrers
+	 * @param state   	der LehrerAuswahlReactiveState
 	 *
 	 * @returns eine Promise mit den Daten zu dem Lehrer
 	 */
@@ -482,10 +483,12 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
 		}
-		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
+		const ids: List<number> = new ArrayList();
 		for (const eintrag of eintraege) {
-			await api.server.deleteLehrerLehramt(api.schema, eintrag.id);
+			ids.add(eintrag.id);
 		}
+		await api.server.deleteLehrerLehraemter(ids, api.schema);
+
 		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	};

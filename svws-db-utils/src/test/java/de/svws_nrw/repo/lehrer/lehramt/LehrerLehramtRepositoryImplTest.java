@@ -1,7 +1,6 @@
 package de.svws_nrw.repo.lehrer.lehramt;
 
 import java.util.List;
-import java.util.Map;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
@@ -44,105 +43,72 @@ class LehrerLehramtRepositoryImplTest {
 	}
 
 	// -------------------------------------------------------------------------
-	// getMapByLehrerID
+	// findByIdsLehrer
 	// -------------------------------------------------------------------------
 
 	@Nested
-	@DisplayName("getMapByLehrerID")
-	class GetMapByLehrerId {
+	@DisplayName("findByIdsLehrer")
+	class FindByIdsLehrer {
 
 		@Test
-		@DisplayName("Gibt leere Map bei null zurück")
-		void getMapByLehrerId_null() {
-			final var result = repository.getMapByLehrerID(null);
+		@DisplayName("Gibt leere Liste bei null zurück")
+		void findByIdsLehrer_null() {
+			final var result = repository.findByIdsLehrer(null);
 
 			assertThat(result).isEmpty();
 			verifyNoInteractions(conn);
 		}
 
 		@Test
-		@DisplayName("Gibt leere Map bei leerer Collection zurück")
-		void getMapByLehrerId_empty() {
-			final var result = repository.getMapByLehrerID(List.of());
+		@DisplayName("Gibt leere Liste bei leerer Liste zurück")
+		void findByIdsLehrer_empty() {
+			final var result = repository.findByIdsLehrer(List.of());
 
 			assertThat(result).isEmpty();
 			verifyNoInteractions(conn);
 		}
 
 		@Test
-		@DisplayName("Gruppiert Lehrämter nach Lehrer-ID")
-		void getMapByLehrerId_groupedByLehrerId() {
-			final var idsLehrer = List.of(500L, 600L, 700L);
+		@DisplayName("Gibt gefundene Lehrämter zurück")
+		void findByIdsLehrer_found() {
+			final var idsLehrer = List.of(4711L, 4712L);
 
-			final var lehramt1 =
-					new DTOLehrerPersonaldatenLehramt(1L, 500L);
-			final var lehramt2 =
-					new DTOLehrerPersonaldatenLehramt(2L, 500L);
-			final var lehramt3 =
-					new DTOLehrerPersonaldatenLehramt(3L, 600L);
+			final var lehramt1 = new DTOLehrerPersonaldatenLehramt(1L, 4711L);
+			final var lehramt2 = new DTOLehrerPersonaldatenLehramt(2L, 4712L);
 
 			when(conn.queryList(
-					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID,
+					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_IDLEHRER,
 					DTOLehrerPersonaldatenLehramt.class,
 					idsLehrer))
-					.thenReturn(List.of(lehramt1, lehramt2, lehramt3));
+					.thenReturn(List.of(lehramt1, lehramt2));
 
-			final Map<Long, List<DTOLehrerPersonaldatenLehramt>> result =
-					repository.getMapByLehrerID(idsLehrer);
+			final var result = repository.findByIdsLehrer(idsLehrer);
 
-			assertThat(result)
-					.containsOnlyKeys(500L, 600L, 700L)
-					.containsEntry(500L, List.of(lehramt1, lehramt2))
-					.containsEntry(600L, List.of(lehramt3))
-					.containsEntry(700L, List.of());
+			assertThat(result).containsExactly(lehramt1, lehramt2);
 
 			verify(conn, times(1)).queryList(
-					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID,
+					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_IDLEHRER,
 					DTOLehrerPersonaldatenLehramt.class,
 					idsLehrer);
 		}
 
 		@Test
-		@DisplayName("Erzeugt leere Einträge für Lehrer ohne Lehramt")
-		void getMapByLehrerId_createsEmptyEntries() {
-			final var idsLehrer = List.of(500L, 600L);
-
-			final var lehramt =
-					new DTOLehrerPersonaldatenLehramt(1L, 500L);
+		@DisplayName("Gibt leere Liste zurück, wenn keine Lehrämter gefunden werden")
+		void findByIdsLehrer_noResults() {
+			final var idsLehrer = List.of(4711L, 4712L);
 
 			when(conn.queryList(
-					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID,
-					DTOLehrerPersonaldatenLehramt.class,
-					idsLehrer))
-					.thenReturn(List.of(lehramt));
-
-			final var result = repository.getMapByLehrerID(idsLehrer);
-
-			assertThat(result)
-					.containsOnlyKeys(500L, 600L)
-					.containsEntry(500L, List.of(lehramt))
-					.containsEntry(600L, List.of());
-		}
-
-		@Test
-		@DisplayName("Gibt für eine leere Datenbankabfrage leere Einträge für alle Lehrer zurück")
-		void getMapByLehrerId_noResults() {
-			final var idsLehrer = List.of(500L, 600L);
-
-			when(conn.queryList(
-					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID,
+					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_IDLEHRER,
 					DTOLehrerPersonaldatenLehramt.class,
 					idsLehrer))
 					.thenReturn(List.of());
 
-			final var result = repository.getMapByLehrerID(idsLehrer);
+			final var result = repository.findByIdsLehrer(idsLehrer);
 
-			assertThat(result)
-					.containsOnlyKeys(500L, 600L)
-					.containsEntry(500L, List.of());
+			assertThat(result).isEmpty();
 
 			verify(conn, times(1)).queryList(
-					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_LEHRER_ID,
+					DTOLehrerPersonaldatenLehramt.QUERY_LIST_BY_IDLEHRER,
 					DTOLehrerPersonaldatenLehramt.class,
 					idsLehrer);
 		}
@@ -157,9 +123,9 @@ class LehrerLehramtRepositoryImplTest {
 	class ExistsById {
 
 		@Test
-		@DisplayName("Gibt true zurück, wenn das Lehramt vorhanden ist")
-		void existsById_found() {
-			final long idLehramt = 500L;
+		@DisplayName("Gibt true zurück, wenn ein Lehramt mit der ID existiert")
+		void existsById_true() {
+			final long idLehramt = 4711L;
 
 			when(conn.existsBy(
 					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
@@ -178,9 +144,9 @@ class LehrerLehramtRepositoryImplTest {
 		}
 
 		@Test
-		@DisplayName("Gibt false zurück, wenn das Lehramt nicht vorhanden ist")
-		void existsById_notFound() {
-			final long idLehramt = 999L;
+		@DisplayName("Gibt false zurück, wenn kein Lehramt mit der ID existiert")
+		void existsById_false() {
+			final long idLehramt = 9999L;
 
 			when(conn.existsBy(
 					DTOLehrerPersonaldatenLehramt.QUERY_BY_ID,
@@ -197,35 +163,5 @@ class LehrerLehramtRepositoryImplTest {
 					DTOLehrerPersonaldatenLehramt.class,
 					idLehramt);
 		}
-	}
-
-	// -------------------------------------------------------------------------
-	// create
-	// -------------------------------------------------------------------------
-
-	@Test
-	@DisplayName("create | Setzt die nächste ID und persistiert das DTO")
-	void create_success() {
-		final var neuesLehramt =
-				new DTOLehrerPersonaldatenLehramt(1L, 500L);
-		final long neueId = 999L;
-
-		when(conn.transactionGetNextID(
-				DTOLehrerPersonaldatenLehramt.class))
-				.thenReturn(neueId);
-		when(conn.transactionPersist(neuesLehramt))
-				.thenReturn(true);
-
-		final var result = repository.create(neuesLehramt);
-
-		assertThat(result)
-				.isSameAs(neuesLehramt);
-
-		assertThat(result.ID)
-				.isEqualTo(neueId);
-
-		verify(conn, times(1)).transactionGetNextID(
-				DTOLehrerPersonaldatenLehramt.class);
-		verify(conn, times(1)).transactionPersist(neuesLehramt);
 	}
 }

@@ -42,11 +42,4 @@ public class LehrerLehramtEintrag {
 	@ArraySchema(schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class, description = "Ein Array mit den Lehrbefähigungen des Lehrers für diesen Lehramteintrag."))
 	public final @NotNull List<LehrerLehrbefaehigungEintrag> lehrbefaehigungen = new ArrayList<>();
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public LehrerLehramtEintrag() {
-		// leer
-	}
-
 }

@@ -17,20 +17,24 @@ public class Tabelle_LehrerPersonaldatenLehramt extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("Eine eindeutige ID für den Eintrag zum Lehramt eines Lehrers");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public final SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idLehrer")
 			.setNotNull()
 			.setJavaComment("Die ID des Lehrers zu der das Lehramt gehört");
 
-	/** Die Definition der Tabellenspalte LehramtKrz */
+	/** Die Definition der Tabellenspalte Lehramt_Katalog_ID */
 	public final SchemaTabelleSpalte col_Lehramt_Katalog_ID = add("Lehramt_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idKatalogLehramt")
 			.setJavaComment("Die ID des Lehramtes aus dem zugehörigen Statistik-Katalog");
 
-	/** Die Definition der Tabellenspalte LehramtAnerkennungKrz */
+	/** Die Definition der Tabellenspalte LehramtAnerkennung_Katalog_ID */
 	public final SchemaTabelleSpalte col_LehramtAnerkennung_Katalog_ID = add("LehramtAnerkennung_Katalog_ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idAnerkennungsgrund")
 			.setJavaComment("Die ID der Lehramts-Anerkennung aus dem zugehörigen Statistik-Katalog");
 
 

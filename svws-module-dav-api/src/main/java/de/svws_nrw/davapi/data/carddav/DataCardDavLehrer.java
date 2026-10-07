@@ -170,7 +170,7 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 		final Map<Long, List<DTOLehrerPersonaldatenLehramtBefaehigung>> mapLehraemterLehrbefaehigungen =
 				conn.queryAll(DTOLehrerPersonaldatenLehramtBefaehigung.class).stream().collect(Collectors.groupingBy(b -> b.idLehramt));
 		for (final DTOLehrerPersonaldatenLehramt lehramt : dtoLehraemter) {
-			final List<DTOLehrerPersonaldatenLehramtBefaehigung> befaehigungen = mapLehraemterLehrbefaehigungen.get(lehramt.ID);
+			final List<DTOLehrerPersonaldatenLehramtBefaehigung> befaehigungen = mapLehraemterLehrbefaehigungen.get(lehramt.id);
 			if (befaehigungen == null) {
 				continue;
 			}
@@ -179,7 +179,7 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 				if (bef == null) {
 					continue;
 				}
-				final Set<String> categories = result.computeIfAbsent(lehramt.Lehrer_ID, s -> new HashSet<>());
+				final Set<String> categories = result.computeIfAbsent(lehramt.idLehrer, s -> new HashSet<>());
 				categories.add("Fachschaft %s %s".formatted(bef.kuerzel, strSchuljahresabschnitt));
 			}
 		}

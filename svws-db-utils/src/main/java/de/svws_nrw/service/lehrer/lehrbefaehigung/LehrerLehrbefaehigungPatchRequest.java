@@ -12,7 +12,6 @@ public class LehrerLehrbefaehigungPatchRequest {
 
 	/** Die Katalog-ID der Lehrbefähigung. */
 	@Schema(description = "Die Katalog-ID der Lehrbefähigung.", example = "4712")
-	@NotNull
 	public JsonNullable<@NotNull Long> idLehrbefaehigung = JsonNullable.undefined();
 
 	/** Die Katalog-ID des Anerkennungsgrund für die Lehrbefähigung. */

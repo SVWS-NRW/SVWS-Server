@@ -9734,38 +9734,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/lehraemter
-	 *
-	 * Liest zugehörigen Daten zu den Lehrämtern des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die zugehörigen Daten zu den Lehrämtern des Lehrers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerLehramtEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
-	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die zugehörigen Daten zu den Lehrämtern des Lehrers
-	 */
-	public async getLehrerLehraemter(schema: string, id: number): Promise<List<LehrerLehramtEintrag>> {
-		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/lehraemter"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result: string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerLehramtEintrag>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(LehrerLehramtEintrag.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getLehrerUnterrichtsfaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/unterrichtsfach
 	 *
 	 * Liest die Unterrichtsfächer des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
@@ -11373,31 +11341,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \d+}
+	 * Implementierung der DELETE-Methode deleteLehrerLehraemter für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt
 	 *
-	 * Liest die Daten des Lehramtes eines Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 * Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten zu dem Lehramt
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerLehramtEintrag
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 400: Die Anfrage ist fehlerhaft.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.
-	 *   Code 404: Kein Lehramts-Eintrag mit der angegebenen ID gefunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
+	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
 	 *
-	 * @returns Die Daten zu dem Lehramt
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async getLehrerLehramt(schema: string, idLehramt: number): Promise<LehrerLehramtEintrag> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const result: string = await super.getJSON(path);
-		const text = result;
-		return LehrerLehramtEintrag.transpilerFromJSON(text);
+	public async deleteLehrerLehraemter(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/lehrer/personaldaten/lehramt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
+		return ret;
 	}
 
 
@@ -11424,35 +11397,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
 		const body: string = LehrerLehramtEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteLehrerLehramt für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \d+}
-	 *
-	 * Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerLehramtEintrag
-	 *   Code 400: Die Anfrage ist fehlerhaft.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
-	 *   Code 404: Kein Eintrag mit den angegebenen IDs gefunden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idLehramt - der Pfad-Parameter idLehramt
-	 *
-	 * @returns Der Datensatz wurde erfolgreich entfernt.
-	 */
-	public async deleteLehrerLehramt(schema: string, idLehramt: number): Promise<LehrerLehramtEintrag> {
-		const path = "/db/{schema}/lehrer/personaldaten/lehramt/{idLehramt : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idLehramt\s*(:[^{}]+({[^{}]+})*)?}/g, idLehramt.toString());
-		const result: string = await super.deleteJSON(path, null);
-		const text = result;
-		return LehrerLehramtEintrag.transpilerFromJSON(text);
 	}
 
 

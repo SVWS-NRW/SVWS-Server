@@ -4,6 +4,7 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.controller.lehrer.anrechnung.LehrerAnrechnungsstundenController;
 import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungController;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionController;
+import de.svws_nrw.controller.lehrer.lehramt.LehrerLehramtController;
 import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungController;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
@@ -164,6 +165,16 @@ class LehrerControllerFactoryTest {
 		final LehrerLehrbefaehigungController controller = LehrerControllerFactory
 				.withReadAccess(request)
 				.getLehrerLehrbefaehigungController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getLehrerLehramtController | gibt einen Controller zurück")
+	void getLehrerLehramtController() {
+		final LehrerLehramtController controller = LehrerControllerFactory
+				.withReadAccess(request)
+				.getLehrerLehramtController();
 
 		assertNotNull(controller);
 	}

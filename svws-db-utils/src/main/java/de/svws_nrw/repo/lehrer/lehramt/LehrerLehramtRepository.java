@@ -1,8 +1,6 @@
 package de.svws_nrw.repo.lehrer.lehramt;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.repo.Repository;
@@ -12,14 +10,14 @@ import de.svws_nrw.repo.Repository;
  */
 public interface LehrerLehramtRepository extends Repository<DTOLehrerPersonaldatenLehramt> {
 
+
 	/**
-	 * Bestimmt die Zuordnung der Lehrämter zu den Lehrern mit den übergebenen IDs.
+	 * Gibt alle Lehrämter der Lehrer mit den angegebenen IDs zurück.
 	 *
 	 * @param idsLehrer   die IDs der Lehrer
-	 *
-	 * @return die Zuordnung
+	 * @return Liste der zugehörigen {@link DTOLehrerPersonaldatenLehramt}-Objekte, leer wenn keine vorhanden
 	 */
-	Map<Long, List<DTOLehrerPersonaldatenLehramt>> getMapByLehrerID(Collection<Long> idsLehrer);
+	List<DTOLehrerPersonaldatenLehramt> findByIdsLehrer(List<Long> idsLehrer);
 
 	/**
 	 * @param idLehramt {@link Long}

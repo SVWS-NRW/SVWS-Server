@@ -54,14 +54,12 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
-import de.svws_nrw.data.lehrer.DataLehrerLehramt;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
-import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungCreateRequest;
@@ -69,6 +67,8 @@ import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionBatchPatchRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionCreateRequest;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionPatchRequest;
+import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtCreateRequest;
+import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtPatchRequest;
 import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungCreateRequest;
 import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungPatchRequest;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungCreateRequest;
@@ -382,78 +382,13 @@ public class APILehrer {
 				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Daten zu einem Lehramt eines Lehrers.
-	 *
-	 * @param schema      das Datenbankschema
-	 * @param idLehramt   die ID des Lehramteintrags
-	 * @param request     die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zu dem Lehramt
-	 */
-	@GET
-	@Path("/personaldaten/lehramt/{idLehramt : \\d+}")
-	@Operation(summary = "Liefert zu der ID des Lehramtes eines Lehrers die zugehörigen Daten.",
-			description = "Liest die Daten des Lehramtes eines Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten zu dem Lehramt",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerLehramtEintrag.class)))
-	@ApiResponse(responseCode = "400", description = "Die Anfrage ist fehlerhaft.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Lehramts-Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response getLehrerLehramt(@PathParam("schema") final String schema, @PathParam("idLehramt") final long idLehramt,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
-					final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-					final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
-					return new DataLehrerLehramt(conn, null, lehrerFachrichtungService, lehrerLehrbefaehigungService).getByIdAsResponse(idLehramt);
-				},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Lehrämter eines Lehrers.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Lehrämter des Lehrers
-	 */
-	@GET
-	@Path("/{id : \\d+}/personaldaten/lehraemter")
-	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Daten zu den Lehrämtern.",
-			description = "Liest zugehörigen Daten zu den Lehrämtern des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die zugehörigen Daten zu den Lehrämtern des Lehrers",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerLehramtEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-	public Response getLehrerLehraemter(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
-					final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-					final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
-					return new DataLehrerLehramt(conn, id, lehrerFachrichtungService, lehrerLehrbefaehigungService).getListAsResponse();
-				},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Patchen von Lehramtsdaten in den Personaldaten eines Lehrers.
 	 *
-	 * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param idLehramt   die ID des Lehramteintrags beim Lehrer
-	 * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request     die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param idLehramt die ID des Lehramteintrags beim Lehrer
+	 * @param patch		das Patchobjekt
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
@@ -470,24 +405,19 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerLehramt(@PathParam("schema") final String schema, @PathParam("idLehramt") final long idLehramt,
 			@RequestBody(description = "Der Patch für den Lehramtseintrag", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final InputStream is,
+					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final LehrerLehramtPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
-					final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-					final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
-					return new DataLehrerLehramt(conn, null, lehrerFachrichtungService, lehrerLehrbefaehigungService).patchAsResponse(idLehramt, is);
-				},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccess(request)
+				.getLehrerLehramtController()
+				.patch(idLehramt, patch);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines Lehramtes zu den Personaldaten eines Lehrers.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten
+	 * @param dto          CreateObjekt
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neuen Datensaz
@@ -505,50 +435,43 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerLehramt(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des Lehramtes", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final InputStream is,
+					schema = @Schema(implementation = LehrerLehramtEintrag.class))) final LehrerLehramtCreateRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
-					final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-					final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
-					return new DataLehrerLehramt(conn, null, lehrerFachrichtungService, lehrerLehrbefaehigungService).addAsResponse(is);
-				},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-		);
+		return LehrerControllerFactory
+				.withWriteAccess(request)
+				.getLehrerLehramtController()
+				.create(dto);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen von Lehramtsdaten aus den Personaldaten eines Lehrers.
 	 *
 	 * @param schema      das Datenbankschema
-	 * @param idLehramt   die ID des Lehramteintrags
+	 * @param ids   	die IDs des Lehramteinträge
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz
 	 */
 	@DELETE
-	@Path("/personaldaten/lehramt/{idLehramt : \\d+}")
+	@Path("/personaldaten/lehramt")
 	@Operation(summary = "Entfernt den Lehramtseintrag in den Personaldaten des Lehrers.",
 			description = "Entfernt den Lehramtseintrag in den Personaldaten des Lehrers aus der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Datensatz wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerLehramtEintrag.class)))
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "400", description = "Die Anfrage ist fehlerhaft.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit den angegebenen IDs gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteLehrerLehramt(@PathParam("schema") final String schema, @PathParam("idLehramt") final long idLehramt,
+	public Response deleteLehrerLehraemter(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Lehrerämter", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-					final var lehrerServiceFactory = LehrerServiceFactory.getNewInstance();
-					final var lehrerFachrichtungService = lehrerServiceFactory.getLehrerFachrichtungService();
-					final var lehrerLehrbefaehigungService = lehrerServiceFactory.getLehrerLehrbefaehigungService();
-					return new DataLehrerLehramt(conn, null, lehrerFachrichtungService, lehrerLehrbefaehigungService).deleteAsResponse(idLehramt);
-				},
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccess(request)
+				.getLehrerLehramtController()
+				.delete(ids);
 	}
 
 	/**

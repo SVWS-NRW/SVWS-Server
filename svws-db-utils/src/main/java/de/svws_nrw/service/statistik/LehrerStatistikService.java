@@ -123,7 +123,7 @@ public final class LehrerStatistikService {
 						.collect(Collectors.toMap(a -> a.Lehrer_ID, a -> a));
 
 		// Bestimme die Lehrämter
-		final var mapLehraemter = lehrerLehramtService.getMapByLehrer(listLehrerIDs);
+		final var mapLehraemter = lehrerLehramtService.getMapByIdLehrer(listLehrerIDs);
 
 		// Bestimme die Anrechnungsstunden, Mehr- und Minderleistungen
 		final var mapAnrechnungen = lehrerPersonalabschnittsdatenAnrechnungsstundeService.getMapAnrechungen(mapAbschnittsdaten.values());

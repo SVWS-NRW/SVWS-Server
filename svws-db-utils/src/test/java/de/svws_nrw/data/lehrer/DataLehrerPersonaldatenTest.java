@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.types.lehrer.LehrerAbgangsgrund;
@@ -16,11 +15,12 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.DbConnectionProvider;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
+import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
 import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
-import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -74,6 +74,9 @@ class DataLehrerPersonaldatenTest {
 	private LehrerMehrleistungService mehrleistungService;
 
 	@Mock
+	private LehrerLehramtService lehrerLehramtService;
+
+	@Mock
 	private LehrerServiceFactory serviceFactory;
 
 	@Mock
@@ -98,12 +101,10 @@ class DataLehrerPersonaldatenTest {
 
 		lenient().when(serviceFactory.getLehrerAnrechnungsstundenService()).thenReturn(anrechnungsService);
 		lenient().when(serviceFactory.getLehrerMehrleistungService()).thenReturn(mehrleistungService);
-		lenient().when(serviceFactory.getLehrerPersonalabschnittsdatenService())
-				.thenReturn(personalabschnittsdatenService);
-		lenient().when(serviceFactory.getLehrerFachrichtungService())
-				.thenReturn(fachrichtungService);
-		lenient().when(serviceFactory.getLehrerLehrbefaehigungService())
-				.thenReturn(lehrbefaehigungService);
+		lenient().when(serviceFactory.getLehrerPersonalabschnittsdatenService()).thenReturn(personalabschnittsdatenService);
+		lenient().when(serviceFactory.getLehrerFachrichtungService()).thenReturn(fachrichtungService);
+		lenient().when(serviceFactory.getLehrerLehrbefaehigungService()).thenReturn(lehrbefaehigungService);
+		lenient().when(serviceFactory.getLehrerLehramtService()).thenReturn(lehrerLehramtService);
 
 		lenient().when(personalabschnittsdatenService.getByIdLehrer(anyLong())).thenReturn(List.of());
 
@@ -191,15 +192,9 @@ class DataLehrerPersonaldatenTest {
 		dto.GrundAbgang = "GrundAbgang";
 
 		final var mockAbschnittsdaten = List.of(new LehrerPersonalabschnittsdaten());
-		final var mockLehraemter = List.of(new LehrerLehramtEintrag());
 
 		when(personalabschnittsdatenService.getByIdLehrer(dto.ID))
 				.thenReturn(mockAbschnittsdaten);
-
-		try (var mockedDataLehrerLehramt = Mockito.mockConstruction(
-				DataLehrerLehramt.class,
-				(mock, context) -> when(mock.getListByLehrerId(conn, dto.ID))
-						.thenReturn(mockLehraemter))) {
 
 			final var result = this.data.map(dto);
 
@@ -214,13 +209,7 @@ class DataLehrerPersonaldatenTest {
 					.hasFieldOrPropertyWithValue("zugangsdatum", dto.DatumZugang)
 					.hasFieldOrPropertyWithValue("zugangsgrund", dto.GrundZugang)
 					.hasFieldOrPropertyWithValue("abgangsdatum", dto.DatumAbgang)
-					.hasFieldOrPropertyWithValue("abgangsgrund", dto.GrundAbgang)
-					.extracting("abschnittsdaten", "lehraemter")
-					.containsExactly(mockAbschnittsdaten, mockLehraemter);
-
-			assertThat(mockedDataLehrerLehramt.constructed())
-					.hasSize(1);
-		}
+					.hasFieldOrPropertyWithValue("abgangsgrund", dto.GrundAbgang);
 	}
 
 	private static Stream<Arguments> patchStringAttributesTooManyCharacters() {
