@@ -290,7 +290,7 @@
 		}
 		const result = [];
 		for (const l of kurseAuswahlState.manager.lehrer.list()) {
-			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv)) {
+			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv) && (l.istSichtbar)) {
 				result.push(l);
 			}
 		}

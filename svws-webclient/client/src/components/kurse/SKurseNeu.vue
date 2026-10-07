@@ -7,7 +7,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Kürzel" required :min-len="1" :max-len="20" :disabled v-model="data.kuerzel"
 					:valid="fieldIsValid('kuerzel')" />
-				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="kurseAuswahlState.manager.lehrer.list()"
+				<svws-ui-select title="Lehrer" :disabled v-model="idLehrer" :items="lehrer"
 					:item-text="l => l.vorname + ' ' + l.nachname" removable statistics />
 				<svws-ui-select title="Fach" :disabled v-model="idFach" required :valid="fieldIsValid('idFach')" :items="kurseAuswahlState.manager.faecher.list()"
 					:item-text="f => f.bezeichnung" statistics />
@@ -96,6 +96,16 @@
 	const idKursFortschreibungsart = computed({
 		get: () => KursFortschreibungsart.fromID(data.value.idKursFortschreibungsart),
 		set: (v: KursFortschreibungsart | null) => data.value.idKursFortschreibungsart = v?.id ?? 0,
+	});
+
+	const lehrer = computed(() => {
+		const result = [];
+		for (const l of kurseAuswahlState.manager.lehrer.list()) {
+			if ((l.istAktiv) && (l.istSichtbar)) {
+				result.push(l);
+			}
+		}
+		return result;
 	});
 
 	const schienen = computed<number[]>({
