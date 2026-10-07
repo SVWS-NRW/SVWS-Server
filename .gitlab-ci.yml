@@ -43,6 +43,7 @@ stages:
 # ---------------------------------------------------------------
 # läuft nur manuell (falls vorher keine anderen Regeln definiert wurden)
 .rule_manual: &rule_manual
+    if: '$CI_PIPELINE_SOURCE != "schedule"'
     when: manual
 
 # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
