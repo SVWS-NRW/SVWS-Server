@@ -2,6 +2,7 @@ package de.svws_nrw.service.oauth.credential;
 
 import de.svws_nrw.repo.oauth.credential.OAuthCredentialRepository;
 import de.svws_nrw.repo.oauth.credential.OAuthCredentialRepositoryFactory;
+import de.svws_nrw.service.crypto.secret.SecretCipherFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,12 +20,14 @@ class OAuthCredentialServiceFactoryTest {
 
 	@Mock
 	private OAuthCredentialRepositoryFactory repositoryFactory;
+	@Mock
+	private SecretCipherFactory cipherFactory;
 
 	private OAuthCredentialServiceFactory cut;
 
 	@BeforeEach
 	void setUp() {
-		cut = OAuthCredentialServiceFactory.getNewInstance(repositoryFactory);
+		cut = OAuthCredentialServiceFactory.getNewInstance(repositoryFactory, cipherFactory);
 	}
 
 	@Test

@@ -4,7 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyStore;
@@ -21,6 +26,11 @@ import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.Objects;
+
+import javax.crypto.SecretKey;
+
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -258,7 +268,8 @@ public final class KeyStoreUtils {
 	 *
 	 * @throws KeyStoreException die Exception tritt auf, wenn der Schlüssel und das Zertifikat nicht zum Keystore hinzugefügt werden können
 	 */
-	public static void addPrivateKeyCertificate(final KeyStore keystore, final String location, final String password, final String alias, final PrivateKey privateKey, final X509Certificate cert) throws KeyStoreException {
+	public static void addPrivateKeyCertificate(final KeyStore keystore, final String location, final String password, final String alias,
+			final PrivateKey privateKey, final X509Certificate cert) throws KeyStoreException {
 		if ((alias == null) || alias.isBlank()) {
 			throw new KeyStoreException("Für das Hinzufügen muss ein Alias angegeben werden.");
 		}
@@ -331,6 +342,119 @@ public final class KeyStoreUtils {
 	}
 
 
+
+	/**
+	 * Liefert den symmetrischen Schlüssel zu dem angegebenen Alias aus dem Keystore.
+	 *
+	 * @param keystore   der Keystore (darf nicht null sein)
+	 * @param alias      der Alias des Schlüssels (darf nicht blank sein)
+	 * @param password   das Kennwort für den Zugriff auf den Schlüssel (darf nicht null sein)
+	 *
+	 * @return der symmetrische Schlüssel oder null, falls unter dem Alias kein Eintrag existiert
+	 *
+	 * @throws KeyStoreException   die Exception tritt auf, wenn kein Alias angegeben ist, der Eintrag nicht gelesen
+	 *                             werden kann oder kein symmetrischer Schlüssel ist
+	 * @throws NullPointerException   die Exception tritt auf, wenn der Keystore oder das Kennwort null ist (keine explizite Prüfung)
+	 */
+	public static SecretKey getSecretKey(final KeyStore keystore, final String alias, final String password) throws KeyStoreException {
+		if (StringUtils.isBlank(alias)) {
+			throw new KeyStoreException("Für das Auslesen muss ein Alias angegeben werden.");
+		}
+		if (!keystore.containsAlias(alias)) {
+			return null;
+		}
+
+		final Key key;
+		try {
+			key = keystore.getKey(alias, password.toCharArray());
+		} catch (final UnrecoverableKeyException | NoSuchAlgorithmException e) {
+			throw new KeyStoreException("Der symmetrische Schlüssel konnte nicht aus dem Keystore gelesen werden.", e);
+		}
+		if (key instanceof final SecretKey secretKey) {
+			return secretKey;
+		}
+		throw new KeyStoreException("Der Eintrag im Keystore ist kein symmetrischer Schlüssel.");
+	}
+
+
+	/**
+	 * Fügt den symmetrischen Schlüssel unter dem angegebenen Alias zum Keystore hinzu. Ein vorhandener Eintrag
+	 * unter dem Alias wird ersetzt. Der Keystore wird dabei nicht gespeichert (siehe
+	 * {@link #storeKeystore(KeyStore, String, String)}).
+	 *
+	 * @param keystore   der Keystore (darf nicht null sein)
+	 * @param alias      der Alias (darf nicht blank sein)
+	 * @param key        der symmetrische Schlüssel (darf nicht null sein)
+	 * @param password   das Kennwort, mit welchem der Eintrag geschützt wird (darf nicht null sein)
+	 *
+	 * @throws KeyStoreException   die Exception tritt auf, wenn Alias oder Schlüssel fehlen oder der Eintrag nicht gesetzt werden kann
+	 * @throws NullPointerException   die Exception tritt auf, wenn der Keystore oder das Kennwort null ist (keine explizite Prüfung)
+	 */
+	public static void setSecretKey(final KeyStore keystore, final String alias, final SecretKey key, final String password) throws KeyStoreException {
+		if (StringUtils.isBlank(alias)) {
+			throw new KeyStoreException("Für das Hinzufügen muss ein Alias angegeben werden.");
+		}
+		if (key == null) {
+			throw new KeyStoreException("Für das Hinzufügen muss ein symmetrischer Schlüssel angegeben werden.");
+		}
+
+		keystore.setEntry(alias, new KeyStore.SecretKeyEntry(key), new KeyStore.PasswordProtection(password.toCharArray()));
+	}
+
+
+	/**
+	 * Speichert den Keystore unter dem angegebenen Pfad. Der Keystore wird zunächst in eine temporäre Datei im
+	 * Zielverzeichnis geschrieben und diese anschließend atomar an den Zielpfad verschoben, so dass nie eine
+	 * unvollständige Keystore-Datei entsteht. Das Zielverzeichnis muss existieren.
+	 *
+	 * @param keystore   der Keystore (darf nicht null sein)
+	 * @param location   der Pfad der Keystore-Datei (darf nicht null sein)
+	 * @param password   das Kennwort für den Zugriff auf den Keystore (darf nicht null sein)
+	 *
+	 * @throws KeyStoreException   die Exception tritt auf, wenn der Keystore nicht geschrieben werden kann
+	 * @throws NullPointerException   die Exception tritt auf, wenn der Keystore, der Pfad oder das Kennwort null ist. Die Prüfung
+	 *                                erfolgt vor dem Anlegen der temporären Datei, so dass keine Reste im Zielverzeichnis verbleiben.
+	 */
+	public static void storeKeystore(final KeyStore keystore, final String location, final String password) throws KeyStoreException {
+		Objects.requireNonNull(keystore, "Der Keystore darf nicht null sein.");
+		Objects.requireNonNull(location, "Der Pfad der Keystore-Datei darf nicht null sein.");
+		Objects.requireNonNull(password, "Das Kennwort darf nicht null sein.");
+
+		final Path target = Path.of(location).toAbsolutePath();
+		Path tmp = null;
+		try {
+			tmp = Files.createTempFile(target.getParent(), "keystore", ".tmp");
+			try (OutputStream os = Files.newOutputStream(tmp)) {
+				keystore.store(os, password.toCharArray());
+			}
+			moveAtomic(tmp, target);
+		} catch (KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
+			final KeyStoreException ex = new KeyStoreException("Fehler beim Schreiben des Keystores", e);
+			deleteTempFile(tmp, ex);
+			throw ex;
+		}
+	}
+
+
+	private static void moveAtomic(final Path source, final Path target) throws IOException {
+		try {
+			Files.move(source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+		} catch (final AtomicMoveNotSupportedException e) {
+			Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+
+
+	private static void deleteTempFile(final Path tmp, final Exception cause) {
+		if (tmp == null) {
+			return;
+		}
+		try {
+			Files.deleteIfExists(tmp);
+		} catch (final IOException e) {
+			cause.addSuppressed(e);
+		}
+	}
 
 	// TODO ggf. Implementierung über alternativen Code zum Einlesen von PKCS12-Dateien
 	//	try {

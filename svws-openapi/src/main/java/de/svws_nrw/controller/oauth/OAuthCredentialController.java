@@ -12,6 +12,13 @@ import de.svws_nrw.service.oauth.credential.OAuthCreateCredential;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.ws.rs.core.Response;
 
+/**
+ * Controller für die OAuth2-Credentials der Schule.
+ *
+ * <p>Der Controller enthält keine Fachlogik. Er validiert die Eingaben, delegiert an den
+ * {@link OAuthCredentialService} und baut die HTTP-Antworten. Das Client-Secret wird in keiner Antwort
+ * im Klartext zurückgegeben, sondern immer maskiert.</p>
+ */
 public class OAuthCredentialController {
 
 	private final OAuthCredentialService service;
@@ -21,10 +28,11 @@ public class OAuthCredentialController {
 
 
 	/**
-	 * Konstruktor
+	 * Erstellt einen neuen Controller.
 	 *
-	 * @param service                        {@link OAuthCredentialService}
-	 * @param oAuthCredentialsInternalMapper {@link OAuthCredentialsInternalMapper}
+	 * @param service                          der {@link OAuthCredentialService} mit der Fachlogik
+	 * @param oAuthCredentialsInternalMapper   der {@link OAuthCredentialsInternalMapper} zur Umwandlung zwischen
+	 *                                         dem internen und dem externen Modell
 	 */
 	public OAuthCredentialController(final OAuthCredentialService service, final OAuthCredentialsInternalMapper oAuthCredentialsInternalMapper) {
 		this.service = service;
@@ -32,24 +40,28 @@ public class OAuthCredentialController {
 	}
 
 	/**
-	 * Fügt Credentials zur Laufzeit hinzu.
+	 * Legt neue Credentials an. Das Client-Secret wird verschlüsselt gespeichert.
 	 *
-	 * @param input {@link OAuthCreateCredential}
-	 * @return erzeugtes Entity
+	 * @param input   die {@link OAuthCreateCredential} mit den Daten der neuen Credentials
+	 *
+	 * @return die Antwort (201) mit den angelegten {@link OAuthCredentials} und maskiertem Client-Secret
+	 *
 	 */
 	public Response create(final OAuthCreateCredential input) {
 		BeanValidator.validate(input);
 
 		final var result = service.create(oAuthCredentialsInternalMapper.toInternal(input));
 
-		return Responses.created(result);
+		return Responses.created(oAuthCredentialsInternalMapper.fromInternal(result));
 	}
 
 	/**
-	 * Liefert Credential pro ID
+	 * Liefert die Credentials zur übergebenen ID.
 	 *
-	 * @param id die ID der Zugangsdaten
-	 * @return zugehörige Credentials
+	 * @param id   die ID der Credentials
+	 *
+	 * @return die Antwort (200) mit den zugehörigen {@link OAuthCredentials} und maskiertem Client-Secret
+	 *
 	 */
 	public Response get(final long id) {
 		final var credential = service.get(id)
@@ -60,10 +72,11 @@ public class OAuthCredentialController {
 	}
 
 	/**
-	 * Löscht Credentials per ID
+	 * Löscht die Credentials zur übergebenen ID.
 	 *
-	 * @param id Primary key
-	 * @return 204 No Content
+	 * @param id   die ID der Credentials
+	 *
+	 * @return die Antwort (200) mit dem Ergebnis der Löschoperation
 	 */
 	public Response delete(final long id) {
 		final var log = service.delete(id);
@@ -72,9 +85,9 @@ public class OAuthCredentialController {
 	}
 
 	/**
-	 * Liefert alle bekannten Client Credentials
+	 * Liefert alle bekannten Credentials.
 	 *
-	 * @return Liste von Credentials
+	 * @return die Antwort (200) mit der Liste der {@link OAuthCredentials} und maskiertem Client-Secret
 	 */
 	public Response getAll() {
 		final List<OAuthCredentials> results = service.getAll()
@@ -86,10 +99,12 @@ public class OAuthCredentialController {
 	}
 
 	/**
-	 * Liefert alle bekannten Client Credentials einer zugehörigen Domäne
+	 * Liefert alle bekannten Credentials einer Domäne.
 	 *
-	 * @param domain die Domäne
-	 * @return Liste von Credentials
+	 * @param domain   der Name der {@link OAuthDomain}
+	 *
+	 * @return die Antwort (200) mit der Liste der {@link OAuthCredentials} der Domäne und maskiertem Client-Secret
+	 *
 	 */
 	public Response getAll(final String domain) {
 		final List<OAuthCredentials> results = service.getAll(OAuthDomain.valueOf(domain))

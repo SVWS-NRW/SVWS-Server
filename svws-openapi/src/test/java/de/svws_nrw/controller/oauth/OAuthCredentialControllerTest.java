@@ -56,18 +56,21 @@ class OAuthCredentialControllerTest {
 	class Create {
 
 		@Test
-		@DisplayName("gibt 201 mit erzeugten Credentials zurueck")
+		@DisplayName("gibt 201 mit den ueber fromInternal gemappten Credentials zurueck")
 		void createSuccess() {
 			final var input = validCreateCredential();
 			final var credentials = buildCredentials(OAuthDomain.IT_NRW);
+			final var external = buildApiCredentials();
 			when(mapper.toInternal(input)).thenReturn(credentials);
 			when(service.create(credentials)).thenReturn(credentials);
+			when(mapper.fromInternal(credentials)).thenReturn(external);
 
 			final Response response = cut.create(input);
 
 			assertThat(response.getStatus()).isEqualTo(CREATED.getStatusCode());
-			assertThat(response.getEntity()).isEqualTo(credentials);
+			assertThat(response.getEntity()).isEqualTo(external);
 			verify(service).create(credentials);
+			verify(mapper).fromInternal(credentials);
 		}
 
 		@Test

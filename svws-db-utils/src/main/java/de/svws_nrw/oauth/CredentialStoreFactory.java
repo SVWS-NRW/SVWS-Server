@@ -2,6 +2,7 @@ package de.svws_nrw.oauth;
 
 import de.svws_nrw.oauth.internal.CredentialStore;
 import de.svws_nrw.repo.oauth.credential.OAuthCredentialRepositoryFactory;
+import de.svws_nrw.service.crypto.secret.SecretCipherFactory;
 import de.svws_nrw.service.oauth.credential.OAuthCredentialServiceFactory;
 
 /**
@@ -33,8 +34,8 @@ public final class CredentialStoreFactory {
 	 */
 	public CredentialStore getCredentialStore() {
 		final OAuthCredentialRepositoryFactory credentialRepositoryFactory = OAuthCredentialRepositoryFactory.getNewInstance();
-
-		return OAuthCredentialServiceFactory.getNewInstance(credentialRepositoryFactory)
+		final SecretCipherFactory cipherFactory = SecretCipherFactory.getNewInstance();
+		return OAuthCredentialServiceFactory.getNewInstance(credentialRepositoryFactory, cipherFactory)
 				.getClientCredentialService();
 	}
 }

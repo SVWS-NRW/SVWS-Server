@@ -18,6 +18,9 @@ import java.util.Objects;
  */
 public record Credentials(Long id, String clientId, String clientSecret, URI authServerUrl, String requestedScope, OAuthDomain serviceDomain) {
 
+	/** Die Maskierung, die in {@link #toString()} anstelle des Client-Secrets ausgegeben wird. */
+	private static final String MASKED_SECRET = "*******";
+
 	/**
 	 * Stellt sicher, dass {@code clientId}, {@code clientSecret} und {@code authServerUrl} nicht {@code null} sind.
 	 */
@@ -39,5 +42,17 @@ public record Credentials(Long id, String clientId, String clientSecret, URI aut
 	public Credentials(final String clientId, final String clientSecret, final URI authServerUrl, final String requestedScope,
 			final OAuthDomain serviceDomain) {
 		this(null, clientId, clientSecret, authServerUrl, requestedScope, serviceDomain);
+	}
+
+	/**
+	 * Gibt die Credentials als Text zurück. Das Client-Secret wird dabei nie im Klartext ausgegeben,
+	 * damit es nicht versehentlich in Logs oder Fehlermeldungen gelangt.
+	 *
+	 * @return die textuelle Darstellung mit maskiertem Client-Secret
+	 */
+	@Override
+	public String toString() {
+		return "Credentials[id=" + id + ", clientId=" + clientId + ", clientSecret=" + MASKED_SECRET + ", authServerUrl=" + authServerUrl
+				+ ", requestedScope=" + requestedScope + ", serviceDomain=" + serviceDomain + "]";
 	}
 }
