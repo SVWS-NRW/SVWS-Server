@@ -23,7 +23,6 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
@@ -33,10 +32,16 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
+import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
+import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -369,7 +374,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
 		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
 		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
-		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
+		result.jahrgaenge.addAll(getJahrgangService().getAll());
 
 		if (conn.getUser().schuleHatGymOb()) {
 			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn, schuljahresabschnitt));
@@ -386,6 +391,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		}
 
 		return result;
+	}
+
+	private static @NonNull JahrgangService getJahrgangService() {
+		final var katalogRepositoryFactory = new KatalogRepositoryFactory();
+		final var eigeneSchuleRepositoryFactory = new EigeneSchuleRepositoryFactory();
+		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
+		final var katalogServiceFactory = KatalogServiceFactory.getNewInstance(katalogRepositoryFactory, eigeneSchuleServiceFactory);
+		return katalogServiceFactory.getJahrgangService();
 	}
 
 }

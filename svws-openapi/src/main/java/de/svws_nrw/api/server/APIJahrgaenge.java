@@ -9,7 +9,6 @@ import de.svws_nrw.controller.schule.katalog.KatalogControllerFactory;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataKatalogJahrgaenge;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangCreateRequest;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangPatchRequest;
@@ -60,39 +59,13 @@ public class APIJahrgaenge {
 	 */
 	@GET
 	@Path("/")
-	@Operation(summary = "Gibt eine Übersicht von allen Jahrgängen zurück.",
-			description = "Erstellt eine Liste aller in der Datenbank vorhanden Jahrgänge unter Angabe der ID, des Kürzels, "
-					+ "des verwendeten Statistik-Kürzels, der Bezeichnung des Jahrgangs, die Schulgliederung zu der der "
-					+ "Jahrgang gehört, die ID eines Folgejahrgangs, sofern definiert, "
-					+ "einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Jahrgangsdaten "
-					+ "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Listen-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
-	public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsliste(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste der Jahrgänge im angegebenen Schema.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return              die Liste der Jahrgänge mit ID des Datenbankschemas
-	 */
-	@GET
-	@Path("/jahrgangsdaten")
 	@Operation(summary = "Gibt eine Übersicht von allen Jahrgangsdaten zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Jahrgangsdaten insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Listen-Einträgen",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsDaten.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
-	public Response getJahrgangsdaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+	public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return KatalogControllerFactory
 				.withReadAccessStable(request)
 				.getJahrgangController()
