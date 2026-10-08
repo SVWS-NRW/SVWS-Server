@@ -17,5 +17,5 @@ public record SchuelerStatistikRepositories(
 		SchuelerAbiturRepository schuelerAbiturRepository,
 		SchuelerAbiturFachRepository schuelerAbiturFachRepository,
 		FachRepository fachRepository,
-		SchuleRepository schuleRepository
-) { }
+		SchuleRepository schuleRepository) {
+}

@@ -1,12 +1,13 @@
 package de.svws_nrw.service.statistik;
 
+import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapperImpl;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
-import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 
@@ -160,7 +161,8 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Lehrerdaten
 	 */
 	public LehrerStatistikService getLehrerStatistikService() {
-		return new LehrerStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(), eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+		return new LehrerStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
 				lehrerServiceFactory.getLehrerLehramtService(),
@@ -217,7 +219,7 @@ public final class StatistikServiceFactory {
 				katalogRepositoryFactory.getFachRepository(),
 				katalogRepositoryFactory.getSchuleRepository()
 		);
-		return new SchuelerStatistikService(repositories);
+		return new SchuelerStatistikService(repositories, new SchulbesuchMapperImpl());
 	}
 
 

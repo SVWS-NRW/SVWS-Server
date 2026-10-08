@@ -111,10 +111,29 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "Die Statistik-Schulnummer der vorher besuchten Schule", example = "999000")
 	public String vorherigeSchuleSchulnummerStatistik;
 
-	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule. */
-	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
-			example = "Grundschule (auch Primarstufe der Volkschule)")
-	public String vorigeAllgHerkunft;
+	/** Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule). */
+	@Schema(description = "Die ID der HerkunftSchulform (falls zuvor besuchte Schule = Sonstige Schule).", example = "1000")
+	public Long idHerkunftSchulformVorherigeSchule;
+
+	/** Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch). */
+	@Schema(description = "Die ID der HerkunftSonstige (falls zuvor besuchte Schule = kein Schulbesuch).", example = "1000")
+	public Long idHerkunftSonstigeVorherigeSchule;
+
+	/** Gibt an, ob ein Berufsabschluss vorhanden ist. */
+	@Schema(description = "Gibt an, ob ein Berufsabschluss vorhanden ist.", example = "false")
+	public boolean berufsabschlussVorhandenVorherigeSchule;
+
+	/** Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule. */
+	@Schema(description = "Die ID der Schulgliederung aus Herkunftbildungsgang.json (BK/SB) der zuvor besuchten Schule.", example = "2000")
+	public Long idSchulgliederungVorherigeSchule;
+
+	/** Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB). */
+	@Schema(description = "Der Schlüssel des CoreTypes der Fachklasse der zuvor besuchten Schule (BK/SB).", example = "170-10100")
+	public String schluesselCoreTypeFachklasseVorherigeSchule;
+
+	/** Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB). */
+	@Schema(description = "Die ID des Hochschulabschlusses aus Hochschulabschluss.json (BK/SB/WB).", example = "2000")
+	public Long idHochschulabschluss;
 
 	/** Die ID der Art der letzten Versetzung an der zuvor besuchten Schule. */
 	@Schema(description = "die Art der letzten Versetzung an der zuvor besuchten Schule", example = "11")
@@ -168,6 +187,9 @@ public class SchuelerStatistikGesamt {
 	/** Die Daten zum Abitur (sofern vorhanden). */
 	@Schema(description = "die Daten zum Abitur (sofern vorhanden)")
 	public AbiturStatistikGesamt abitur;
+
+
+
 
 	// TODO Informationen zu besonderen Merkmalen für die Statistik
 

@@ -270,18 +270,22 @@ public class AggregationReligionStatistikExport {
 		// Ermitteln Jahrgang
 		String jahrgang = Jahrgaenge.data().getSchluesselByIDOrNull(jahrgangIdMap.get(lernabschnitt.idJahrgang));
 
-		if ((jahrgang == null) && istJahrgangErforderlich(schulform)) {
-			fehlermeldungen
-					.add("Zu folgender idJahrgang konnte kein Jahrgang gefunden werden: " + lernabschnitt.idJahrgang + " bei Schüler mit ID: " + schueler.id);
-			return;
-		}
+		if (jahrgang == null) {
 
-		// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
-		if (Set.of("01", "02").contains(jahrgang) && !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
-			jahrgang = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
-					.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().idEpJahre);
+			if (istJahrgangErforderlich(schulform)) {
+				fehlermeldungen
+						.add("Zu folgender idJahrgang konnte kein Jahrgang gefunden werden: " + lernabschnitt.idJahrgang + " bei Schüler mit ID: "
+								+ schueler.id);
+				return;
+			}
+		} else {
+			// Jahrgänge "01" und "02" müssen in bestimmten Fällen in die Bezeichnung für die Schuleingangsphase umgesetzt werden
+			if (Set.of("01", "02").contains(jahrgang)
+					&& !(Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform) || Schulform.WB.equals(schulform))) {
+				jahrgang = PrimarstufeSchuleingangsphaseBesuchsjahre.data()
+						.getSchluesselByIDOrNull(schueler.lernabschnitte.getFirst().idEpJahre);
+			}
 		}
-
 
 
 		// Ermitteln Förderschwerpunkt

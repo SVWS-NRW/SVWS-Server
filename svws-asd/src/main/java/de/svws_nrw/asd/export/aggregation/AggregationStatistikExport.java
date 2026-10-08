@@ -1,6 +1,5 @@
 package de.svws_nrw.asd.export.aggregation;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -65,12 +64,12 @@ public class AggregationStatistikExport {
 	/**
 	 * Zuordnung der ID eines Fachs zum zugehörigen {@link FachStatistikGesamt}-Objekt.
 	 */
-	private Map<Long, FachStatistikGesamt> fachIdMap = new HashMap<>();
+	private final Map<Long, FachStatistikGesamt> fachIdMap;
 
 	/**
 	 * Eine Liste der Fehlermeldungen zu den aufgetretenen Fehlern.
 	 */
-	private final LinkedList<String> fehlermeldungen = new LinkedList<>();
+	private final LinkedList<String> fehlermeldungen;
 
 
 	/**
@@ -86,12 +85,12 @@ public class AggregationStatistikExport {
 	/**
 	 * Zuordnung der ID einer Klasse zum zugehörigen {@link KlassenStatistikGesamt}-Objekt.
 	 */
-	private Map<Long, KlassenStatistikGesamt> klasseIdMap = new HashMap<>();
+	private final Map<Long, KlassenStatistikGesamt> klasseIdMap;
 
 	/**
 	 * Zuordnung der ID eines Lehrers zum zugehörigen {@link LehrerStatistikGesamt}-Objekt.
 	 */
-	private Map<Long, LehrerStatistikGesamt> lehrerIdMap = new HashMap<>();
+	private final Map<Long, LehrerStatistikGesamt> lehrerIdMap;
 
 	/**
 	 * Zuordnung der Religion-IDs der Schule zu den idReligion des Katalogs.
@@ -109,15 +108,14 @@ public class AggregationStatistikExport {
 	private final Map<Long, OrteStatistikGesamt> orteIdMap;
 
 	/**
-	 * Die für den Export vorgesehenen Statistikdaten mit den Aggregaten.
-	 */
-	private StatistikExport statistikExport;
-
-	/**
 	 * Die gesamten Statistikdaten der Schule, welche von einer Schule bei der Erfassung der amtlichen Schulstatistik übertragen werden.
 	 */
 	private final StatistikGesamt statistikGesamt;
 
+	/**
+	 * Die für den Export vorgesehenen Statistikdaten mit den Aggregaten.
+	 */
+	private StatistikExport statistikExport;
 
 
 	/**
@@ -137,6 +135,7 @@ public class AggregationStatistikExport {
 		final Optional<Schuljahresabschnitt> optional =
 				statistikGesamt.schule.abschnitte.stream().filter(e -> e.id == statistikGesamt.schule.idSchuljahresabschnitt).findFirst();
 		aktuellesSchuljahr = optional.isPresent() ? optional.get().schuljahr : 0;
+		fehlermeldungen = new LinkedList<>();
 	}
 
 	/**
@@ -236,9 +235,7 @@ public class AggregationStatistikExport {
 		// Klassendaten
 		final AggregationKlassenStatistikExport aggregationKlassenStatistikExport =
 				new AggregationKlassenStatistikExport(statistikGesamt, statistikExport, fehlermeldungen, jahrgangIdMap, foerderschwerpunktIdMap, fachIdMap,
-						klasseIdMap, lehrerIdMap,
-						orteIdMap,
-						aktuellesSchuljahr);
+						klasseIdMap, lehrerIdMap, orteIdMap, aktuellesSchuljahr);
 		erfolg &= aggregationKlassenStatistikExport.run();
 
 		// Unterrichtverteilungsdaten

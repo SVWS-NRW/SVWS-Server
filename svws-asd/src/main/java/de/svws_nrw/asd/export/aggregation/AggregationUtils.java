@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.statistik.KlassenStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.types.klassen.Klassenart;
@@ -60,6 +61,22 @@ public final class AggregationUtils {
 		}
 
 		return feldFormatiert;
+	}
+
+	/**
+	 * Ermittelt die Klasse anhand der übergebenen Daten.
+	 *
+	 * @param schueler                 - der Schüler
+	 * @param idSchuljahresabschnitt   - die ID des Schuljahresabschnitt
+	 * @param klasseIdMap              - Map der Klassen anhand deren IDs
+	 * @return die Klasse
+	 */
+	public static KlassenStatistikGesamt ermittelnKlasse(final SchuelerStatistikGesamt schueler, final long idSchuljahresabschnitt,
+			final Map<Long, KlassenStatistikGesamt> klasseIdMap) {
+		final SchuelerLernabschnittStatistikGesamt lernabschnitt =
+				AggregationUtils.ermittelnLernabschnitt(schueler, idSchuljahresabschnitt);
+
+		return klasseIdMap.get(lernabschnitt.idKlasse);
 	}
 
 	/**

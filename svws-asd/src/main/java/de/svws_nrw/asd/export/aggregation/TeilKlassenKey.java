@@ -35,7 +35,7 @@ public class TeilKlassenKey {
 	 */
 	String klassenart;
 	/**
-	 *
+	 * Organisationsform
 	 */
 	String orgForm;
 	/**
@@ -51,11 +51,11 @@ public class TeilKlassenKey {
 	 */
 	boolean schwerstbeh;
 	/**
-	 *
+	 *	Lehrername-Abkürzung
 	 */
 	String labk;
 	/**
-	 *
+	 * Reformpädagogik
 	 */
 	String reformpdg;
 	/**
@@ -136,15 +136,34 @@ public class TeilKlassenKey {
 
 		if (orgForm == null) {
 			orgForm = "";
-			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " konnte für die Organisationsform mit der ID: " + lernabschnitt.idOrganisationsform
+			fehlermeldungen.add(this.getClass().getSimpleName() + " Beim Schüler mit der ID: " + schueler.id + " konnte für die Organisationsform mit der ID: "
+					+ lernabschnitt.idOrganisationsform
 					+ " kein passender Schlüssel gefunden werden.");
 		}
 
 		foerderschwerp = Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt1)) == null ? ""
 				: Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt1));
 		schwerstbeh = lernabschnitt.hatSchwerbehinderungsNachweis;
-		labk = lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst()).kuerzel == null ? ""
-				: lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst()).kuerzel;
+
+		labk = "";
+		if (klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.isEmpty()) {
+			fehlermeldungen
+					.add(this.getClass().getSimpleName() + " Beim Schüler mit der ID: " + schueler.id
+							+ " existieren zu folgender Klasse keine Klassenleitungen - ID: " + lernabschnitt.idKlasse);
+		} else {
+			final LehrerStatistikGesamt lehrer = lehrerStatistikGesamt.get(klassenStatistikGesamt.get(lernabschnitt.idKlasse).klassenLeitungen.getFirst());
+			if (lehrer == null) {
+				labk = "";
+				fehlermeldungen
+						.add(this.getClass().getSimpleName() + " Beim Schüler mit der ID: " + schueler.id
+								+ " existieren zu folgender Klasse keine Klassenleitungen - ID: "
+								+ lernabschnitt.idKlasse);
+			} else {
+				labk = lehrer.kuerzel == null ? "" : lehrer.kuerzel;
+			}
+
+
+		}
 		//TODO reformpdg auf Klassenebene in svws-server implementieren
 		reformpdg = AggregationStatistikExport.EIN_LEERZEICHEN;
 		foerderschwerp2 = Foerderschwerpunkt.data().getSchluesselByIDOrNull(foerderschwerpunktIdMap.get(lernabschnitt.idFoerderschwerpunkt2)) == null ? ""
