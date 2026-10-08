@@ -2,7 +2,7 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -42,22 +42,20 @@ public final class ValidatorSsmv03SchuelerStammdatenMigrationshintergrundGeburts
 
 	@Override
 	protected boolean pruefe() {
-		final @AllowNull Long idGeburtslandVater = _idGeburtslandVater.get();
+		final Long idGeburtslandVater = _idGeburtslandVater.get();
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
 		final boolean hatMigrationshintergrund = (hatMigrationshintergrundZwisch != null) && hatMigrationshintergrundZwisch;
-
-
-		// Wenn kein Migrationshintergrund vorliegt, darf das Geburtsland nicht gesetzt sein
-		if (!hatMigrationshintergrund) {
-			@NotNull String geburtslandKuerzel = "";
-			try {
-				geburtslandKuerzel = Nationalitaeten.data().getEintragByIDOrException(idGeburtslandVater).kuerzel;
-			} catch (CoreTypeException e) {
+		@NotNull String geburtslandKuerzel = "";
+		if (idGeburtslandVater != null) {
+			final @AllowNull NationalitaetenKatalogEintrag nationalitaetenKatalogEintrag = Nationalitaeten.data().getEintragByID(idGeburtslandVater);
+			if (nationalitaetenKatalogEintrag != null) {
+				geburtslandKuerzel = nationalitaetenKatalogEintrag.kuerzel;
 			}
-			if (!(idGeburtslandVater.equals(-1L) || "DEU".equals(geburtslandKuerzel))) {
-				addFehler(0, FEHLERTEXT);
-				return false;
-			}
+		}
+
+		if (!hatMigrationshintergrund && !"DEU".equals(geburtslandKuerzel) && !geburtslandKuerzel.isBlank()) {
+			addFehler(0, FEHLERTEXT);
+			return false;
 		}
 
 		return true;

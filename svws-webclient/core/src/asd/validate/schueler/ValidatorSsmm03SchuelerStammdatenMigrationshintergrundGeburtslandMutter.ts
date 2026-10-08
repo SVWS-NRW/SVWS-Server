@@ -1,7 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { NationalitaetenKatalogEintrag } from '../../../asd/data/schule/NationalitaetenKatalogEintrag';
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -37,17 +39,16 @@ export class ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMu
 		const idGeburtslandMutter: number | null = this._idGeburtslandMutter.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (!hatMigrationshintergrund) {
-			let geburtslandKuerzel: string = "";
-			try {
-				geburtslandKuerzel = Nationalitaeten.data().getEintragByIDOrException(idGeburtslandMutter).kuerzel;
-			} catch (e: any) {
-				// empty block
+		let geburtslandKuerzel: string | null = "";
+		if (idGeburtslandMutter !== null) {
+			const nationalitaetenKatalogEintrag: NationalitaetenKatalogEintrag | null = Nationalitaeten.data().getEintragByID(idGeburtslandMutter);
+			if (nationalitaetenKatalogEintrag !== null) {
+				geburtslandKuerzel = nationalitaetenKatalogEintrag.kuerzel;
 			}
-			if (!(JavaObject.equalsTranspiler(idGeburtslandMutter, (-1)) || JavaObject.equalsTranspiler("DEU", (geburtslandKuerzel)))) {
-				this.addFehler(0, ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
-				return false;
-			}
+		}
+		if (!hatMigrationshintergrund && !JavaObject.equalsTranspiler("DEU", (geburtslandKuerzel)) && !JavaString.isBlank(geburtslandKuerzel)) {
+			this.addFehler(0, ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
+			return false;
 		}
 		return true;
 	}

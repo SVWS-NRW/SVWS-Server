@@ -22,12 +22,17 @@ class TestValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutte
 
 	// Testdaten: ID, hatMH (hat Migrationshintergrund), RESULT
 	// 66080985 ist eine valide Länder-ID.
+	// ID = 999 steht für null-Wert
 	private static final String TESTDATEN = """
 			ID          , hatMH , RESULT
+			999,      false, true
+			999,      true,  true
 			-1,       false, true
 			-1,       true,  true
 			68069085, false, true
 			70082065, false, false
+			123,      true,  true
+			-5,       false, true
 		""";
 
 	/** Stammdaten der Schule */
@@ -64,7 +69,7 @@ class TestValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutte
 
 		final ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter validator =
 				new ValidatorSsmm03SchuelerStammdatenMigrationshintergrundGeburtslandMutter(
-						() -> idGeburtslandMutter,
+						() -> idGeburtslandMutter == 999 ? null : idGeburtslandMutter,
 						() -> hatMigrationshintergrund,
 						kontext);
 
