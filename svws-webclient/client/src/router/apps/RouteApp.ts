@@ -10,7 +10,6 @@ import type { TabManager } from "@ui/ui/nav/TabManager";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
 import { routeError } from "../error/RouteError";
-import { AppCache } from "~/cache/AppCache";
 import SApp from "~/components/SApp.vue";
 import type { AppProps } from "~/components/SAppProps";
 import { api } from "~/router/Api";
@@ -89,7 +88,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
 	private readonly _menuMain: RouteNode<any, any>[];
-	private readonly _cache = new AppCache();
 
 	public menuHidden(): boolean[] {
 		return super.menu.map(c => c.hidden(RouteManager.instance.getRouteParams()) !== false);
@@ -398,10 +396,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			this.data.setView(node, this.children);
 		}
 	};
-
-	get cache(): AppCache {
-		return this._cache;
-	}
 
 }
 
