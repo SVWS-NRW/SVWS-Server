@@ -31,25 +31,45 @@ export class HerkunftschulenStateImpl extends StateManager<HerkunftschulenReacti
 			bySchulnummerStatistikFilteredByEigeneSchulform: new Map(),
 		});
 
-		this._herkunftschulen = {
-			...createKatalogState({
-				katalogLabel: KATALOG_LABEL,
-				getList: () => this.state.schulen,
-				getById: () => this.state.schulenById,
-				updateState: (list, byId) => this.setPatchedState({ schulen: list, schulenById: byId }),
-				updateDefaultState: (list, byId) => this.setPatchedDefaultState({ schulen: list, schulenById: byId }),
-				apiGet: () => api.server.getSchulen(api.schema),
-				apiAdd: (data) => api.server.addSchuleZuKatalog(data, api.schema),
-				apiPatch: (id, data) => api.server.patchSchuleAusKatalog(data, api.schema, id),
-				apiDelete: async (id) => {
-					const ids = new ArrayList<number>();
-					ids.add(id);
-					await api.server.deleteSchulenVonKatalog(ids, api.schema);
-				},
-			}),
-			bySchulnummerStatistikFilteredByEigeneSchulform: this.state.bySchulnummerStatistikFilteredByEigeneSchulform,
-		};
+		const katalogState = createKatalogState({
+			katalogLabel: KATALOG_LABEL,
+			getList: () => this.state.schulen,
+			getById: () => this.state.schulenById,
+			updateState: (list, byId) => {
+				this.setPatchedState({
+					schulen: list,
+					schulenById: byId,
+				});
+			},
+			updateDefaultState: (list, byId) => {
+				this.setPatchedDefaultState({
+					schulen: list,
+					schulenById: byId,
+				});
+			},
+			apiGet: () => api.server.getSchulen(api.schema),
+			apiAdd: (data) => api.server.addSchuleZuKatalog(data, api.schema),
+			apiPatch: (id, data) => api.server.patchSchuleAusKatalog(data, api.schema, id),
+			apiDelete: async (id) => {
+				const ids = new ArrayList<number>();
+				ids.add(id);
+				await api.server.deleteSchulenVonKatalog(
+					ids,
+					api.schema
+				);
+			},
+		});
 
+		Object.defineProperty(
+			katalogState,
+			"bySchulnummerStatistikFilteredByEigeneSchulform",
+			{
+				enumerable: true,
+				configurable: true,
+				get: () => this.state.bySchulnummerStatistikFilteredByEigeneSchulform,
+			}
+		);
+		this._herkunftschulen = katalogState as HerkunftSchuleKatalogState;
 	}
 
 	/** Initialisiert den State und lädt Daten der Kataloge */

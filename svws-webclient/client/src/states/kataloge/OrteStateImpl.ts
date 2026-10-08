@@ -49,47 +49,50 @@ export class OrteStateImpl extends StateManager<OrteReactiveState> implements Or
 			},
 		});
 
-		this._ortsteile = {
-			...createKatalogState({
-				katalogLabel: 'Betriebe',
-				getList: () => this.state.ortsteile,
-				getById: () => this.state.ortsteileById,
-				updateState: (list, byId) => this.setPatchedState({ ortsteile: list, ortsteileById: byId }),
-				updateDefaultState: (list, byId) => this.setPatchedDefaultState({ ortsteile: list, ortsteileById: byId }),
-				apiGet: () => api.server.getOrtsteile(api.schema),
-				apiAdd: (data) => api.server.addOrtsteil(data, api.schema),
-				apiPatch: (id, data) => api.server.patchOrtsteil(data, api.schema, id),
-				apiDelete: async (id) => {
-					const ids = new ArrayList<number>();
-					ids.add(id);
-					await api.server.deleteOrtsteile(ids, api.schema);
+		const ortsteileState = createKatalogState({
+			katalogLabel: 'Betriebe',
+			getList: () => this.state.ortsteile,
+			getById: () => this.state.ortsteileById,
+			updateState: (list, byId) => this.setPatchedState({ ortsteile: list, ortsteileById: byId }),
+			updateDefaultState: (list, byId) => this.setPatchedDefaultState({ ortsteile: list, ortsteileById: byId }),
+			apiGet: () => api.server.getOrtsteile(api.schema),
+			apiAdd: (data) => api.server.addOrtsteil(data, api.schema),
+			apiPatch: (id, data) => api.server.patchOrtsteil(data, api.schema, id),
+			apiDelete: async (id) => {
+				const ids = new ArrayList<number>();
+				ids.add(id);
+				await api.server.deleteOrtsteile(ids, api.schema);
+			},
+		});
+
+		this._ortsteile = Object.assign(
+			ortsteileState, {
+				listByOrtId: (idOrt: number | null) => {
+					const result = new ArrayList<OrtsteilKatalogEintrag>();
+					if (idOrt === null) {
+						return result;
+					}
+					for (const ortsteil of ortsteileState.list) {
+						if (ortsteil.idOrt === idOrt) {
+							result.add(ortsteil);
+						}
+					}
+					return result;
 				},
-			}),
-			listByOrtId(idOrt: number | null): List<OrtsteilKatalogEintrag> {
-				const result = new ArrayList<OrtsteilKatalogEintrag>();
-				if (idOrt === null) {
-					return result;
-				}
-				for (const ortsteil of this.list) {
-					if (ortsteil.idOrt === idOrt) {
-						result.add(ortsteil);
+				byOrtId: (idOrt: number | null) => {
+					const result = new Map<number, OrtsteilKatalogEintrag>();
+					if (idOrt === null) {
+						return result;
 					}
-				}
-				return result;
-			},
-			byOrtId(idOrt: number | null): Map<number, OrtsteilKatalogEintrag> {
-				const result = new Map<number, OrtsteilKatalogEintrag>();
-				if (idOrt === null) {
-					return result;
-				}
-				for (const ortsteil of this.list) {
-					if (ortsteil.idOrt === idOrt) {
-						result.set(ortsteil.id, ortsteil);
+					for (const ortsteil of ortsteileState.list) {
+						if (ortsteil.idOrt === idOrt) {
+							result.set(ortsteil.id, ortsteil);
+						}
 					}
-				}
-				return result;
-			},
-		};
+
+					return result;
+				},
+			}) as OrtsteileKatalogState;
 	}
 
 	/** Initialisiert den State und lädt Daten der Kataloge */
