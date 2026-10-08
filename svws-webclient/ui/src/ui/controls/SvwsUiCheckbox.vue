@@ -1,7 +1,7 @@
 <template>
 	<div class="inline-flex">
 		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-headless': headless && type !== 'toggle', 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title :color>
-			<input v-if="!readonly" type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle', 'contentFocusField': focusClassContent}" :disabled :indeterminate :color ref="input">
+			<input v-if="!readonly" type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle', 'contentFocusField': focusClassContent}" :disabled :indeterminate ref="input">
 			<span v-else :class="checked ? 'icon i-ri-checkbox-line' : 'icon i-ri-checkbox-blank-line'" />
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">

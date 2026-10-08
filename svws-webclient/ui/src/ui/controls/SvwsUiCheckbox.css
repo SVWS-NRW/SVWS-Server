@@ -98,7 +98,7 @@ input[type="checkbox"] {
 			}
 		}
 
-		
+
 	}
 
 	&.svws-headless {
@@ -109,12 +109,12 @@ input[type="checkbox"] {
 		}
 
 		&:not(:checked) {
-			@apply border-uistatic-75;
+			@apply border-ui-75;
 		}
 
 		&:hover:not([disabled]),
 		&:focus-visible:not([disabled]) {
-			@apply border-uistatic-75;
+			@apply border-ui-75;
 		}
 
 		&:not(:checked)[disabled] {
@@ -200,7 +200,7 @@ input[type="checkbox"] {
 		}
 	}
 
-	
+
 
 	&.svws-bw {
 		input[type="checkbox"] {

@@ -2,14 +2,14 @@
 	<div ref="uiSelect" @focusout="onFocusOut" class="ui-select-multi relative rounded-md text-base inline-flex h-fit w-full group" v-bind="filteredHtmlAttributes">
 		<!-- Combobox -->
 		<div :id="`uiSelectMulti_${state.instanceId}`" ref="uiSelectCombobox" :tabindex="comboboxTabindex" :role="comboboxRole" v-bind="comboboxAriaAttrs"
-			:class="[comboboxClasses, { [focusClass]: !props.searchable }, 'ui-select-multi--combobox relative outline-none ring-ui-neutral w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
+			:class="[comboboxClasses, { [focusClass]: !props.searchable }, 'ui-select-multi--combobox relative outline-none w-full rounded-md flex items-center gap-1 min-w-16 m-[0.2em] select-none group-focus-within:ring-2 hover:ring-2']"
 			@click.stop="handleComponentClick" @focus="focusSelect" @keydown.stop="handleKeyDown">
 			<div :class="[headlessPadding, 'flex']">
 				<!-- Expand-Icon + Clear-Button headless -->
 				<div v-if="headless && !readonly" class="ui-select-multi--icons-left flex items-center">
 					<span :class="[iconColorClass, 'icon-sm i-ri-expand-up-down-line cursor-pointer']" />
 					<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection" @keydown.enter.stop="clearSelection"
-						class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
+						class="hover:bg-ui-hover flex focus:ring-2 outline-none rounded-sm">
 						<span :class="[iconColorClass, 'icon-sm i-ri-close-line']" />
 					</button>
 				</div>
@@ -82,7 +82,7 @@
 			<!-- Expand-Icon + Clear-Button -->
 			<div v-if="!headless && !readonly" class="ui-select-multi--icons-right ml-auto flex items-center h-fit">
 				<button v-if="removable" type="button" :disabled aria-label="Auswahl löschen" @click.stop="clearSelection" @keydown.enter.stop="clearSelection"
-					class="hover:bg-ui-hover flex focus:ring-2 ring-ui-neutral outline-none rounded-sm">
+					class="hover:bg-ui-hover flex focus:ring-2 outline-none rounded-sm">
 					<span :class="[iconColorClass, 'icon-sm i-ri-close-line']" />
 				</button>
 				<span :class="[iconColorClass, 'icon i-ri-expand-up-down-line cursor-pointer']" />

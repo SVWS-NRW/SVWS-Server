@@ -38,11 +38,11 @@
 			</template>
 
 			<template #default="{ row: leistungModel }">
-				<td class="cursor-pointer flex items-center justify-center"
+				<td class="cursor-pointer flex items-center justify-center text-uistatic"
 					:style="getCellStyle(leistungModel.proxy)">
 					<svws-ui-checkbox :model-value="selectedLeistungenIds.has(leistungModel.proxy.id)"
 						@update:model-value="selectedLeistungenIds.has(leistungModel.proxy.id) ? selectedLeistungenIds.delete(leistungModel.proxy.id) : selectedLeistungenIds.add(leistungModel.proxy.id)"
-						headless />
+						headless class="[&_input:not(:checked):not([disabled])]:border-uistatic-75!" />
 				</td>
 				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Fach"
@@ -50,7 +50,8 @@
 						v-model="leistungModel.fach.value"
 						:validation="() => leistungModel.getFehler('fachID')"
 						headless :removable="false"
-						:readonly="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Kurs"
@@ -58,12 +59,14 @@
 						v-model="leistungModel.kurs.value"
 						:validation="() => leistungModel.getFehler('kursID')"
 						headless :removable="leistungModel.kurs.value !== undefined"
-						:readonly="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 				<td :style="getCellStyle(leistungModel.proxy)">
 					<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
 					<span v-if="(manager().kursGetByLeistungIdOrNull(leistungModel.proxy.id) === null)
-						|| ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistungModel.proxy.id)!.kursartAllg).size() === 1">
+							|| ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistungModel.proxy.id)!.kursartAllg).size() === 1"
+						class="text-uistatic">
 						{{ leistungModel.proxy.kursart }}
 					</span>
 					<ui-select v-else title="Kursart"
@@ -71,14 +74,15 @@
 						v-model="leistungModel.kursart.value"
 						:validation="() => leistungModel.getFehler('kursart')"
 						headless :removable="false"
-						:readonly="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 				<template v-if="istGymOb">
-					<td :style="getCellStyle(leistungModel.proxy)">
+					<td :style="getCellStyle(leistungModel.proxy)" class="text-uistatic">
 						{{ leistungModel.proxy.abifach ?? "" }}
 					</td>
 				</template>
-				<td :style="getCellStyle(leistungModel.proxy)">
+				<td :style="getCellStyle(leistungModel.proxy)" class="text-uistatic">
 					{{ leistungModel.proxy.wochenstunden ?? "" }}
 				</td>
 				<td :style="getCellStyle(leistungModel.proxy)">
@@ -87,7 +91,8 @@
 						v-model="leistungModel.lehrer.value"
 						:validation="() => leistungModel.getFehler('lehrerID')"
 						headless :removable="leistungModel.lehrer.value !== undefined"
-						:readonly="!hatUpdateKompetenz" />
+						:readonly="!hatUpdateKompetenz"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 				<td class="border-s" :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Quartalsnote"
@@ -95,7 +100,8 @@
 						v-model="leistungModel.noteQuartal.value"
 						:validation="() => leistungModel.getFehler('noteQuartal')"
 						headless :removable="leistungModel.noteQuartal.value !== undefined"
-						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)" />
+						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 				<td class="border-s" :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Halbjahresnote"
@@ -103,7 +109,8 @@
 						v-model="leistungModel.noteHalbjahr.value"
 						:validation="() => leistungModel.getFehler('note')"
 						headless :removable="leistungModel.noteHalbjahr.value !== undefined"
-						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)" />
+						:readonly="!hatFachlehrerKompetenz(leistungModel.proxy.lehrerID)"
+						class="text-uistatic icon-uistatic ring-uistatic-50" />
 				</td>
 			</template>
 
@@ -285,7 +292,7 @@
 	});
 
 	const getCellStyle = (leistung: SchuelerLeistungsdaten) => {
-		return `color: var(--color-text-uistatic); background-color: ${props.manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`;
+		return `border-color: var(--color-border-uistatic); background-color: ${props.manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id)}`;
 	};
 
 	/**

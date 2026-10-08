@@ -40,7 +40,7 @@ export function useUiSelectStyles<T>(
 		const result = { ...attrs };
 		const stringClass = result.class;
 		if (typeof stringClass === 'string') {
-			const excludedClasses = ['contentFocusField', 'subNavigationFocusField', 'icon-ui-', 'bg-ui-'];
+			const excludedClasses = ['contentFocusField', 'subNavigationFocusField', 'icon-ui', 'bg-ui'];
 			result.class = stringClass.split(' ').filter(c => !excludedClasses.some(prefix => c.startsWith(prefix))).join(' ');
 		}
 		return result;
@@ -59,6 +59,17 @@ export function useUiSelectStyles<T>(
 
 		const backgroundClass = findFirstBackgroundClass(classes);
 		return backgroundClass ?? (state.value.headless ? "" : "bg-ui");
+	});
+
+	const ringColorClass = computed(() => {
+		const classString = attrs.class;
+		if (typeof classString !== "string") {
+			return "ring-ui-neutral";
+		}
+		const classes = classString.split(' ');
+
+		const backgroundClass = findFirstRingClass(classes);
+		return backgroundClass ?? "ring-ui-neutral";
 	});
 
 	function getColorClass(prefix: 'text' | 'icon' | 'border') {
@@ -153,7 +164,7 @@ export function useUiSelectStyles<T>(
 			default:
 				cursor = 'cursor-pointer';
 		}
-		return [headlessClasses, borderColorClass.value, pointer, cursor, backgroundColorClass.value];
+		return [headlessClasses, borderColorClass.value, ringColorClass.value, pointer, cursor, backgroundColorClass.value];
 	});
 
 	const labelClasses = computed((): string[] => {
@@ -291,7 +302,7 @@ function getSecondaryIconColor(color: string): string {
  */
 function getSecondaryTextColor(color: string): string {
 	if (color.startsWith("text-uistatic")) {
-		return "text-uistatic-25";
+		return "text-uistatic-50";
 	}
 	switch (color) {
 		case "text-ui":
@@ -339,4 +350,8 @@ function getSecondaryTextColor(color: string): string {
 
 function findFirstBackgroundClass(classes: string[]): string | undefined {
 	return classes.find(c => c.startsWith('bg-ui'));
+}
+
+function findFirstRingClass(classes: string[]): string | undefined {
+	return classes.find(c => c.startsWith('ring-ui'));
 }

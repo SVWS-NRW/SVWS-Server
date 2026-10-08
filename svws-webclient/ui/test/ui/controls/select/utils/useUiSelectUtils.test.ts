@@ -1,7 +1,8 @@
-import { type Ref, ref } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { type Ref, ref } from "vue";
+
 import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 import UiSelect from "@ui/ui/controls/select/UiSelect.vue";
 
@@ -676,7 +677,7 @@ describe("UiSelect Utils", () => {
 			});
 
 			test.each([
-				["text-uistatic", "text-uistatic-25"],
+				["text-uistatic", "text-uistatic-50"],
 				["text-ui", "text-ui-secondary"],
 				["text-ui-brand", "text-ui-brand-secondary"],
 				["text-ui-statistic", "text-ui-statistic-secondary"],

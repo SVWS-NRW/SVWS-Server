@@ -602,6 +602,7 @@
 		['warning', ['ring-ui-warning']],
 		['caution', ['ring-ui-caution']],
 		['neutral', ['ring-ui-neutral']],
+		['uistatic', ['ring-uistatic', 'ring-uistatic-0', 'ring-uistatic-10', 'ring-uistatic-25', 'ring-uistatic-50', 'ring-uistatic-75', 'ring-uistatic-100']],
 	]);
 
 	const iconColorMap: Map<string, string[]> = new Map([

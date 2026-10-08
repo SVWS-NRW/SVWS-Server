@@ -266,6 +266,13 @@
 		--color-ring-ui-warning: light-dark(var(--color-palette-warning-200), var(--color-palette-warning-800));
 		--color-ring-ui-caution: light-dark(var(--color-palette-caution-200), var(--color-palette-caution-100));
 		--color-ring-ui-neutral: light-dark(rgba(0, 0, 0, 0.1),rgba(255, 255, 255, 0.2));
+		--color-ring-uistatic: var(--color-palette-neutral-900);
+		--color-ring-uistatic-0: var(--color-palette-neutral-100);
+		--color-ring-uistatic-10: var(--color-palette-neutral-300);
+		--color-ring-uistatic-25: var(--color-palette-neutral-500);
+		--color-ring-uistatic-50: var(--color-palette-neutral-700);
+		--color-ring-uistatic-75: var(--color-palette-neutral-800);
+		--color-ring-uistatic-100: var(--color-palette-neutral-900);
 
 		--color-shadow-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
 		--color-shadow-ui-10: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-700));
@@ -476,6 +483,13 @@
 	--ring-color-ui-warning: var(--color-ring-ui-warning);
 	--ring-color-ui-caution: var(--color-ring-ui-caution);
 	--ring-color-ui-neutral: var(--color-ring-ui-neutral);
+	--ring-color-uistatic: var(--color-ring-uistatic);
+	--ring-color-uistatic-0: var(--color-ring-uistatic-0);
+	--ring-color-uistatic-10: var(--color-ring-uistatic-10);
+	--ring-color-uistatic-25: var(--color-ring-uistatic-25);
+	--ring-color-uistatic-50: var(--color-ring-uistatic-50);
+	--ring-color-uistatic-75: var(--color-ring-uistatic-75);
+	--ring-color-uistatic-100: var(--color-ring-uistatic-100);
 
 	/* Generates tailwind class '.icon-ui-*' */
 	--icon-color-ui: var(--color-icon-ui);
