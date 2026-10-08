@@ -1,9 +1,9 @@
 {
   "erfolgreich" : false,
   "fehlercodes" : [ {
-    "code" : "EINBR_2",
+    "code" : "EINBR_1",
     "art" : "BELEGUNG",
-    "beschreibung" : "Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Geschichte und Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase sowie Kunst als Abiturfach und Sport als Abiturfach. Mindestens eine dieser Wahlentscheidungen muss angepasst werden."
+    "beschreibung" : "Die Anzahl der 36 einzubringenden Kurse wurde mit dieser Wahl überschritten."
   }, {
     "code" : "NW_FS_12_INFO",
     "art" : "HINWEIS",

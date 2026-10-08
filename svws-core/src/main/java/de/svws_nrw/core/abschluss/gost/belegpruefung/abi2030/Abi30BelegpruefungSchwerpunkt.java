@@ -24,6 +24,14 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
+	/** Gibt an, ob bei der Prüfung herausgekommen ist, dass nur ein fremdsprachlicher Schwerpunkt vorliegt */
+	private boolean _hatNurSchwerpunktFS = false;
+
+	/** Gibt an, ob bei der Prüfung herausgekommen ist, dass nur ein naturwissenschaftlicher Schwerpunkt vorliegt */
+	private boolean _hatNurSchwerpunktNW = false;
+
+
+
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
 	 *
@@ -61,12 +69,14 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
+			_hatNurSchwerpunktFS = true;
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
+			_hatNurSchwerpunktNW = true;
 			return;
 		}
 
@@ -92,17 +102,39 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
+			_hatNurSchwerpunktFS = true;
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
+			_hatNurSchwerpunktNW = true;
 			return;
 		}
 
 		// Es wurden zu wenig Fremdsprachen und Naturwissenschaften belegt -> Belegungsfehler
 		addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Prüfung ergeben hat, dass nur ein fremdsprachlicher Schwerpunkt vorliegt
+	 *
+	 * @return true, wenn nur ein fremdsprachlicher Schwerpunkt vorliegt, ansonsten false
+	 */
+	public boolean hatNurSchwerpunktFS() {
+		return _hatNurSchwerpunktFS;
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Prüfung ergeben hat, dass nur ein naturwissenschaftlicher Schwerpunkt vorliegt
+	 *
+	 * @return true, wenn nur ein naturwissenschaftlicher Schwerpunkt vorliegt, ansonsten false
+	 */
+	public boolean hatNurSchwerpunktNW() {
+		return _hatNurSchwerpunktNW;
 	}
 
 }

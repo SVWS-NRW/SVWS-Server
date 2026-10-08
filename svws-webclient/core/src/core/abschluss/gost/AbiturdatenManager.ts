@@ -75,8 +75,8 @@ import { AbiturBelegungsart } from '../../../core/types/gost/AbiturBelegungsart'
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
 import { Abi30BelegpruefungAllgemeines } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungAllgemeines';
-import { GostAbiturMarkierungsalgorithmusErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 import { Abi30BelegpruefungEinbringung } from '../../../core/abschluss/gost/belegpruefung/abi2030/Abi30BelegpruefungEinbringung';
+import { GostAbiturMarkierungsalgorithmusErgebnis } from '../../../core/abschluss/gost/GostAbiturMarkierungsalgorithmusErgebnis';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
 import { GostSchuelerGKLWahl } from '../../../core/data/gost/GostSchuelerGKLWahl';
@@ -144,9 +144,14 @@ export class AbiturdatenManager extends JavaObject {
 	private belegpruefungKurszahlenUndWochenstunden: KurszahlenUndWochenstunden | null = null;
 
 	/**
-	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden - experimenteller Code
+	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden
 	 */
 	private abi30BelegpruefungKurszahlenUndWochenstunden: Abi30BelegpruefungKurszahlenUndWochenstunden | null = null;
+
+	/**
+	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Einbringungsverpflichtungen
+	 */
+	private abi30BelegpruefungEinbringung: Abi30BelegpruefungEinbringung | null = null;
 
 	/**
 	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
@@ -240,15 +245,18 @@ export class AbiturdatenManager extends JavaObject {
 		const pruefungNaturwissenschaften: Abi30BelegpruefungNaturwissenschaften = new Abi30BelegpruefungNaturwissenschaften(this, pruefungsArt);
 		pruefungen.add(pruefungNaturwissenschaften);
 		pruefungen.add(new Abi30BelegpruefungSport(this, pruefungsArt));
-		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		const pruefungSchwerpunkt: Abi30BelegpruefungSchwerpunkt = new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften);
+		pruefungen.add(pruefungSchwerpunkt);
 		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt, pruefungProjektkurse));
-		pruefungen.add(new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
+		const pruefungAbiFaecher: Abi30BelegpruefungAbiFaecher = new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(pruefungAbiFaecher);
 		this.abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(this.abi30BelegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Abi30BelegpruefungAllgemeines(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachkombinationen(this, pruefungsArt));
 		pruefungen.add(new Abi30BelegpruefungFachWaehlbar(this, pruefungsArt));
-		pruefungen.add(new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse));
+		this.abi30BelegpruefungEinbringung = new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse, pruefungSchwerpunkt, pruefungAbiFaecher, this.abi30BelegpruefungKurszahlenUndWochenstunden);
+		pruefungen.add(this.abi30BelegpruefungEinbringung);
 		return pruefungen;
 	}
 
@@ -821,6 +829,35 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Zählt die Anzahl der Belegungen für die angegebenen Fachbelegungen in den angegeben Halbjahren.
+	 * Ist die Fachbelegung null, so wird 0 zurückgegeben. Wird bei einer gültigen Fachbelegung kein Halbjahr
+	 * angegeben, so wird ebenfalls 0 zurückgegeben. Eintragungen mit AT werden dabei ignoriert.
+	 *
+	 * @param fachbelegungen      die Fachbelegungen
+	 * @param halbjahre           die Halbjahre
+	 *
+	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern
+	 */
+	public zaehleBelegungInHalbjahrenOhneAT(fachbelegungen: List<AbiturFachbelegung> | null, ...halbjahre: Array<GostHalbjahr>): number {
+		if (fachbelegungen === null) {
+			return 0;
+		}
+		if (halbjahre.length === 0) {
+			return 0;
+		}
+		let anzahl: number = 0;
+		for (const fachbelegung of fachbelegungen) {
+			for (const halbjahr of halbjahre) {
+				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr !== null) && !JavaObject.equalsTranspiler("AT", (belegungHalbjahr.kursartKuerzel)) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
+					anzahl++;
+				}
+			}
+		}
+		return anzahl;
+	}
+
+	/**
 	 * Zählt die Anzahl der 0-Punkte-Belegungen aller Fachbelegungen in der Qualifikationsphase.
 	 *
 	 * @return die Anzahl der 0-Punkte-Belegungen aller Fachbelegungen in der Qualifikationsphase
@@ -1239,8 +1276,8 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keien Belegung
-	 * mit Sprt-Attest ist.
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keine Belegung
+	 * mit Sport-Attest ist.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
 	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
@@ -2569,7 +2606,6 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Experimenteller Code:
 	 * Gibt das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden zurück, welches für
 	 * die Belegprüfung genutzt wurde und die Statistiken dazu erstellt hat.
 	 *
@@ -2580,6 +2616,18 @@ export class AbiturdatenManager extends JavaObject {
 			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.");
 		}
 		return this.abi30BelegpruefungKurszahlenUndWochenstunden;
+	}
+
+	/**
+	 * Gibt die Belegprüfung zu den Einbringungsverpflichtungen zurück.
+	 *
+	 * @return die Belegprüfung zu den Einbringungsverpflichtungen
+	 */
+	public getBelegpruefungEinbringungsverpflichtungen(): Abi30BelegpruefungEinbringung {
+		if (this.abi30BelegpruefungEinbringung === null) {
+			throw new NullPointerException("Die Belegprüfung zu den Einbringunsverpflichtungen von Kursen wurde noch nicht erstellt und durchgeführt.");
+		}
+		return this.abi30BelegpruefungEinbringung;
 	}
 
 	/**

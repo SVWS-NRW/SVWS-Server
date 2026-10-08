@@ -127,8 +127,11 @@ public class AbiturdatenManager {
 	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden */
 	private KurszahlenUndWochenstunden belegpruefungKurszahlenUndWochenstunden = null;
 
-	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden - experimenteller Code */
+	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden */
 	private Abi30BelegpruefungKurszahlenUndWochenstunden abi30BelegpruefungKurszahlenUndWochenstunden = null;
+
+	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Einbringungsverpflichtungen */
+	private Abi30BelegpruefungEinbringung abi30BelegpruefungEinbringung = null;
 
 	/** Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind. */
 	private @NotNull List<GostBelegungsfehler> belegpruefungsfehler = new ArrayList<>();
@@ -220,9 +223,12 @@ public class AbiturdatenManager {
 		pruefungen.add(pruefungNaturwissenschaften);
 		pruefungen.add(new Abi30BelegpruefungSport(this, pruefungsArt));
 		// Die Prüfung zu dem Schwerpunkt muss nach den Prüfungen des naturwissenschaftlichen und der Fremdsprachen durchgeführt werden, da hier eine Abhängigkeit besteht.
-		pruefungen.add(new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
+		final @NotNull Abi30BelegpruefungSchwerpunkt pruefungSchwerpunkt =
+				new Abi30BelegpruefungSchwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften);
+		pruefungen.add(pruefungSchwerpunkt);
 		pruefungen.add(new Abi30BelegpruefungGesellschaftswissenschaftenUndReligion(this, pruefungsArt, pruefungProjektkurse));
-		pruefungen.add(new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse));
+		final @NotNull Abi30BelegpruefungAbiFaecher pruefungAbiFaecher = new Abi30BelegpruefungAbiFaecher(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(pruefungAbiFaecher);
 		// Die Prüfung der Kurszahlen und Wochenstunden ist abhängig von den Projektkursergebnissen - sie muss nach den Projektkursergebnissen durchgeführt werden!!!
 		abi30BelegpruefungKurszahlenUndWochenstunden = new Abi30BelegpruefungKurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
 		pruefungen.add(abi30BelegpruefungKurszahlenUndWochenstunden);
@@ -232,7 +238,9 @@ public class AbiturdatenManager {
 		// Die Prüfung der schulspezifischen Wählbarkeit von Fächern
 		pruefungen.add(new Abi30BelegpruefungFachWaehlbar(this, pruefungsArt));
 		// Die Prüfung für die Anzahl der einzubringenden Kurse. Diese kann ggf. zu hoch sein
-		pruefungen.add(new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse));
+		abi30BelegpruefungEinbringung = new Abi30BelegpruefungEinbringung(this, pruefungsArt, pruefungProjektkurse, pruefungSchwerpunkt, pruefungAbiFaecher,
+				abi30BelegpruefungKurszahlenUndWochenstunden);
+		pruefungen.add(abi30BelegpruefungEinbringung);
 		return pruefungen;
 	}
 
@@ -850,6 +858,36 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Zählt die Anzahl der Belegungen für die angegebenen Fachbelegungen in den angegeben Halbjahren.
+	 * Ist die Fachbelegung null, so wird 0 zurückgegeben. Wird bei einer gültigen Fachbelegung kein Halbjahr
+	 * angegeben, so wird ebenfalls 0 zurückgegeben. Eintragungen mit AT werden dabei ignoriert.
+	 *
+	 * @param fachbelegungen      die Fachbelegungen
+	 * @param halbjahre           die Halbjahre
+	 *
+	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern
+	 */
+	public int zaehleBelegungInHalbjahrenOhneAT(final List<AbiturFachbelegung> fachbelegungen, final @NotNull GostHalbjahr... halbjahre) {
+		if (fachbelegungen == null) {
+			return 0;
+		}
+		if (halbjahre.length == 0) {
+			return 0;
+		}
+		int anzahl = 0;
+		for (final @NotNull AbiturFachbelegung fachbelegung : fachbelegungen) {
+			for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
+				final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
+				if ((belegungHalbjahr != null) && !"AT".equals(belegungHalbjahr.kursartKuerzel) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
+					anzahl++;
+				}
+			}
+		}
+		return anzahl;
+	}
+
+
+	/**
 	 * Zählt die Anzahl der 0-Punkte-Belegungen aller Fachbelegungen in der Qualifikationsphase.
 	 *
 	 * @return die Anzahl der 0-Punkte-Belegungen aller Fachbelegungen in der Qualifikationsphase
@@ -1301,8 +1339,8 @@ public class AbiturdatenManager {
 
 
 	/**
-	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keien Belegung
-	 * mit Sprt-Attest ist.
+	 * Prüft, ob die Belegung eines der angegebenen Fächer mit dem angegebenen Halbjahr existiert und diese keine Belegung
+	 * mit Sport-Attest ist.
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl.
 	 * In dieser Methode wird ggf. auch geprüft, ob weitere Fachbelegungen existieren, welche das gleiche
 	 * Statistik-Kürzel haben und Ersatzweise eine Halbjahres-Belegung ersetzen können. Dies ist z.B. bei bilingualen
@@ -2755,7 +2793,6 @@ public class AbiturdatenManager {
 	}
 
 	/**
-	 * Experimenteller Code:
 	 * Gibt das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden zurück, welches für
 	 * die Belegprüfung genutzt wurde und die Statistiken dazu erstellt hat.
 	 *
@@ -2768,6 +2805,17 @@ public class AbiturdatenManager {
 		return this.abi30BelegpruefungKurszahlenUndWochenstunden;
 	}
 
+	/**
+	 * Gibt die Belegprüfung zu den Einbringungsverpflichtungen zurück.
+	 *
+	 * @return die Belegprüfung zu den Einbringungsverpflichtungen
+	 */
+	public @NotNull Abi30BelegpruefungEinbringung getBelegpruefungEinbringungsverpflichtungen() {
+		if (this.abi30BelegpruefungEinbringung == null) {
+			throw new NullPointerException("Die Belegprüfung zu den Einbringunsverpflichtungen von Kursen wurde noch nicht erstellt und durchgeführt.");
+		}
+		return this.abi30BelegpruefungEinbringung;
+	}
 
 	/**
 	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen

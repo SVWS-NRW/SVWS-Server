@@ -2,6 +2,7 @@ package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -255,6 +256,8 @@ class TestGostBelegpruefungAbi2030 {
 								lpDaten.getFaecherManager(), GostBelegpruefungsArt.GESAMT);
 						manager.pruefeGKL(lpDaten.getGklWahlen(), lpDaten.getMapKlausurvorgaben());
 						final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
+						final Abi30BelegpruefungEinbringung einbringung = manager.getBelegpruefungEinbringungsverpflichtungen();
+						assertTrue(einbringung.istExakt(), "Fehler: Die Berechnung der Einbringungsverpflichtung konnte nich exakt durchgeführt werden.");
 						final List<String> log = ergebnis.log;
 						if (log != null) {
 							System.out.println("  Log:");

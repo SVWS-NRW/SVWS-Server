@@ -8,6 +8,16 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
+	/**
+	 * Gibt an, ob bei der Prüfung herausgekommen ist, dass nur ein fremdsprachlicher Schwerpunkt vorliegt
+	 */
+	private _hatNurSchwerpunktFS: boolean = false;
+
+	/**
+	 * Gibt an, ob bei der Prüfung herausgekommen ist, dass nur ein naturwissenschaftlicher Schwerpunkt vorliegt
+	 */
+	private _hatNurSchwerpunktNW: boolean = false;
+
 
 	/**
 	 * Erstellt eine neue Belegprüfung für den Schwerpunkt.
@@ -33,10 +43,12 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		}
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
+			this._hatNurSchwerpunktFS = true;
 			return;
 		}
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
+			this._hatNurSchwerpunktNW = true;
 			return;
 		}
 		this.addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
@@ -50,13 +62,33 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		}
 		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_12_INFO);
+			this._hatNurSchwerpunktFS = true;
 			return;
 		}
 		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			this.addFehler(GostBelegungsfehler.GOST30_NW_FS_13_INFO);
+			this._hatNurSchwerpunktNW = true;
 			return;
 		}
 		this.addFehler(GostBelegungsfehler.GOST30_NW_FS_10);
+	}
+
+	/**
+	 * Gibt zurück, ob die Prüfung ergeben hat, dass nur ein fremdsprachlicher Schwerpunkt vorliegt
+	 *
+	 * @return true, wenn nur ein fremdsprachlicher Schwerpunkt vorliegt, ansonsten false
+	 */
+	public hatNurSchwerpunktFS(): boolean {
+		return this._hatNurSchwerpunktFS;
+	}
+
+	/**
+	 * Gibt zurück, ob die Prüfung ergeben hat, dass nur ein naturwissenschaftlicher Schwerpunkt vorliegt
+	 *
+	 * @return true, wenn nur ein naturwissenschaftlicher Schwerpunkt vorliegt, ansonsten false
+	 */
+	public hatNurSchwerpunktNW(): boolean {
+		return this._hatNurSchwerpunktNW;
 	}
 
 	transpilerCanonicalName(): string {

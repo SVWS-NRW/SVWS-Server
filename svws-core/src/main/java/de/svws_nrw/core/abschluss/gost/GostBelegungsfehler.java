@@ -511,29 +511,9 @@ public enum GostBelegungsfehler {
 			"Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.",
 			null),
 
-	/** BelegungsfehlerArt EINBR_2 */
-	GOST30_EINBR_2("EINBR_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Kunst als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
-			null),
-
-	/** BelegungsfehlerArt EINBR_3 */
-	GOST30_EINBR_3("EINBR_3", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und Musik als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
-			null),
-
-	/** BelegungsfehlerArt EINBR_4 */
-	GOST30_EINBR_4("EINBR_4", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein weiteres Abiturfach, das als Projektkurs-Referenzfach nur mit zwei Kursen in der Qualifikationsphase belegt wird, und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
-			null),
-
-	/** BelegungsfehlerArt EINBR_5 */
-	GOST30_EINBR_5("EINBR_5", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und zwei gesellschaftswissenschaftliche Abiturfächer und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
-			null),
-
-	/** BelegungsfehlerArt EINBR_6 */
-	GOST30_EINBR_6("EINBR_6", GostBelegungsfehlerArt.BELEGUNG,
-			"Bei dieser Belegung wird die Anzahl der 36 einzubringenden Kurse überschritten. Dies ergibt sich aus der Kombination folgender Wahlentscheidungen: Sport als Abiturfach und ein gesellschaftswissenschaftliches Abiturfach und Religionslehre als Abiturfach und Geschichte sowie Sozialwissenschaften als Fächer mit jeweils nur zwei Kursen in der Qualifikationsphase. Mindestens eine dieser Wahlentscheidungen muss angepasst werden.",
+	/** BelegungsfehlerArt EINBR_1 */
+	GOST30_EINBR_1("EINBR_1", GostBelegungsfehlerArt.BELEGUNG,
+			"Die Anzahl der 36 einzubringenden Kurse wurde mit dieser Wahl überschritten.",
 			null),
 
 	/** BelegungsfehlerArt KOMBI_1 */

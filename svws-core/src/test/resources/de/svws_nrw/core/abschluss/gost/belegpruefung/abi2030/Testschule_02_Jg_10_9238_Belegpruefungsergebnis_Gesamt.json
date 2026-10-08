@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss von EF.1 bis Q2.2 durchgehend belegt werden."
+  }, {
+    "code" : "ANZ_24_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "In der Qualifikationsphase gewählte Vertiefungskurse zählen zu den 40 zu belegenden Kursen, können aber nicht in die Gesamtqualifikation eingebracht werden."
+  } ],
+  "log" : [ ]
+}
