@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.data.jahrgaenge.DBUtilsJahrgaenge;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -12,6 +11,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -189,7 +189,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			}
 			final DTOKlassen klasse = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.Klasse, klassePrev.ASDKlasse,
 					schuljahresabschnitt.id);
-			final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
+			final DTOJahrgang jahrgang = KatalogRepositoryFactory.getNewInstance().getJahrgangRepository().getById(klasse.Jahrgang_ID);
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
 			sla.Hochrechnung = slaPrev.Hochrechnung;
 			sla.BilingualerZweig = slaPrev.BilingualerZweig;

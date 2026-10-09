@@ -20,6 +20,7 @@ import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 
 public class JahrgangService {
+
 	private final JahrgangRepository repository;
 	private final JahrgangMapper mapper;
 	private final EigeneSchuleService eigeneSchuleService;

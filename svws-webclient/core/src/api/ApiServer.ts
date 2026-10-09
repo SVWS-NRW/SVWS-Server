@@ -104,7 +104,6 @@ import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { Haltestelle } from '../core/data/schule/Haltestelle';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartenKatalogEintrag } from '../asd/data/schueler/HerkunftsartenKatalogEintrag';
-import { JahrgaengeKatalogEintrag } from '../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
 import { KAOABerufsfeldKatalogEintrag } from '../asd/data/kaoa/KAOABerufsfeldKatalogEintrag';
@@ -8547,36 +8546,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = JahrgangsDaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogJahrgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/allgemein/jahrgaenge
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden in den einzelnen Schulformen gültigen Jahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Jahrgangs-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<JahrgaengeKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Jahrgangs-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Jahrgangs-Katalog-Einträgen
-	 */
-	public async getKatalogJahrgaenge(schema: string): Promise<List<JahrgaengeKatalogEintrag>> {
-		const path = "/db/{schema}/jahrgaenge/allgemein/jahrgaenge"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result: string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<JahrgaengeKatalogEintrag>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(JahrgaengeKatalogEintrag.transpilerFromJSON(text));
-		});
-		return ret;
 	}
 
 
