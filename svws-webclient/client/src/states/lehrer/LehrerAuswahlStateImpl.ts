@@ -591,22 +591,24 @@ export class LehrerAuswahlStateImpl extends GenericAuswahlStateImpl<LehrerListeM
 		return this._state.value.lehrerUnterrichtsfaecher;
 	}
 
-	public async addLehrerUnterrichtsfach(eintrag: Partial<LehrerUnterrichtsfach>): Promise<void> {
+	public async addLehrerUnterrichtsfach(eintrag: Partial<LehrerUnterrichtsfach>): Promise<boolean> {
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Unterrichtsfächer können nur hinzugefügt werden, wenn gültige Personaldaten geladen sind.");
 		}
 		const result = await api.server.addLehrerUnterrichtsfach({ ...eintrag, idLehrer: this.manager.auswahl().id }, api.schema);
 		this._state.value.lehrerUnterrichtsfaecher.add(result);
 		this.commit();
+		return true;
 	};
 
-	public async patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<void> {
+	public async patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<boolean> {
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		}
 		await api.server.patchLehrerUnterrichtsfach(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
+		return true;
 	};
 
 	public async removeLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach): Promise<void> {

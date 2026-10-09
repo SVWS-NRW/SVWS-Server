@@ -75,7 +75,7 @@
 					v-model="personalabschnittsdatenModelProxy.proxy.stammschulnummer"
 					:validation="() => personalabschnittsdatenModelProxy.getFehler('stammschulnummer')"
 					:manager="stammschuleSelectManager"
-					:removable="true" :readonly required statistics />
+					:removable="false" :readonly required statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">

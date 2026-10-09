@@ -145,9 +145,9 @@ export interface LehrerAuswahlState extends GenericAuswahlState<LehrerListeManag
 
 	get lehrerUnterrichtsfaecher(): List<LehrerUnterrichtsfach>;
 
-	addLehrerUnterrichtsfach(eintrag: Partial<LehrerUnterrichtsfach>): Promise<void>;
+	addLehrerUnterrichtsfach(eintrag: Partial<LehrerUnterrichtsfach>): Promise<boolean>;
 
-	patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<void>;
+	patchLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>): Promise<boolean>;
 
 	removeLehrerUnterrichtsfach(eintrag: LehrerUnterrichtsfach): Promise<void>;
 

@@ -1,5 +1,5 @@
 <template>
-	<ui-table-grid name="Unterrichtsfächer" v-if="gridManager.daten.size() !== 0" :manager="() => gridManager" hide-selection>
+	<ui-table-grid name="Unterrichtsfächer" v-if="gridManager.daten.length !== 0" :manager="() => gridManager" hide-selection>
 		<template #header>
 			<th class="text-left">Fach</th>
 			<th class="text-center">Sek I</th>
@@ -9,40 +9,32 @@
 		</template>
 		<template #default="{ row }">
 			<td class="text-left">
-				{{ getFachText(row.data) }}
+				{{ getFachText(row.proxy) }}
 			</td>
-			<td class="text-center">
-				<svws-ui-checkbox v-if="hatUpdateKompetenz" :model-value="row.data.istSek1"
-					@update:model-value="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { istSek1: value })" />
-				<span v-else>{{ row.data.istSek1 ? 'Ja' : 'Nein' }}</span>
+			<td class="flex items-center justify-center">
+				<svws-ui-checkbox v-if="hatUpdateKompetenz" v-model="row.proxy.istSek1" />
+				<span v-else>{{ row.proxy.istSek1 ? 'Ja' : 'Nein' }}</span>
 			</td>
-			<td class="text-center">
-				<svws-ui-checkbox v-if="hatUpdateKompetenz" :model-value="row.data.istSek2"
-					@update:model-value="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { istSek2: value })" />
-				<span v-else>{{ row.data.istSek2 ? 'Ja' : 'Nein' }}</span>
+			<td class="flex items-center justify-center">
+				<svws-ui-checkbox v-if="hatUpdateKompetenz" v-model="row.proxy.istSek2" />
+				<span v-else>{{ row.proxy.istSek2 ? 'Ja' : 'Nein' }}</span>
 			</td>
 			<td class="text-left">
-				<svws-ui-text-input v-if="hatUpdateKompetenz" :model-value="row.data.bemerkung ?? ''"
-					@change="value => lehrerAuswahlState.patchLehrerUnterrichtsfach(row.data, { bemerkung: value || null })" headless />
-				<span v-else>{{ row.data.bemerkung ?? '' }}</span>
+				<svws-ui-text-input v-if="hatUpdateKompetenz"
+					v-model="row.proxy.bemerkung"
+					:validation="() => row.getFehler('bemerkung')"
+					@change="row.patch"
+					headless />
+				<span v-else>{{ row.proxy.bemerkung ?? '' }}</span>
 			</td>
-			<td>
-				<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
-					<svws-ui-button @click="lehrerAuswahlState.removeLehrerUnterrichtsfach(row.data)" type="trash" />
-				</div>
+			<td class="pr-3">
+				<ui-table-actions :actions="rowActions(row)" />
 			</td>
 		</template>
 		<template #footer>
 			<template v-if="hatUpdateKompetenz">
-				<td class="col-span-5 text-right">
-					<svws-ui-tooltip>
-						<svws-ui-button type="icon" @click="openHinzufuegen">
-							<span class="icon i-ri-add-line" />
-						</svws-ui-button>
-						<template #content>
-							Fach hinzufügen
-						</template>
-					</svws-ui-tooltip>
+				<td class="col-span-full my-1 pr-3">
+					<ui-table-actions :actions="footerActions" always-visible />
 				</td>
 			</template>
 			<template v-else>
@@ -54,22 +46,32 @@
 		<svws-ui-button v-if="hatUpdateKompetenz" @click="openHinzufuegen" type="secondary">Fach hinzufügen</svws-ui-button>
 		<div v-else>Keine Unterrichtsfächer zugeordnet.</div>
 	</div>
-	<svws-ui-modal v-model:show="showHinzufuegen" size="small" class="hidden">
+	<svws-ui-modal v-if="createUnterrichtsfachModel !== null" v-model:show="showHinzufuegen" size="small" class="hidden">
 		<template #modalTitle> Unterrichtsfach hinzufügen </template>
 		<template #modalContent>
-			<ui-select label="Fach" v-model="auswahlFachNeu" :manager="fachSelectManager" required :removable="false" />
+			<ui-select label="Fach"
+				v-model="createUnterrichtsfachModel.unterrichtsfach.value"
+				:manager="fachSelectManager"
+				:validation="() => createUnterrichtsfachModel?.getFehler('idFach') ?? new ArrayList()"
+				required :removable="false" />
 			<div class="mt-4 text-left">
 				<span class="text-headline-sm mb-2 block">wird unterrichtet in</span>
 				<div class="flex gap-4">
-					<svws-ui-checkbox v-model="neuIstSek1"> Sekundarstufe I </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="neuIstSek2"> Sekundarstufe II </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="createUnterrichtsfachModel.proxy.istSek1"> Sekundarstufe I </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="createUnterrichtsfachModel.proxy.istSek2"> Sekundarstufe II </svws-ui-checkbox>
 				</div>
 			</div>
-			<svws-ui-text-input placeholder="Bemerkung" v-model="neuBemerkung" />
+			<svws-ui-text-input placeholder="Bemerkung"
+				v-model="createUnterrichtsfachModel.proxy.bemerkung"
+				:validation="() => createUnterrichtsfachModel?.getFehler('bemerkung') ?? new ArrayList()"
+				:max-len="255" />
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showHinzufuegen = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button @click="createLehrerUnterrichtsfach" :disabled="auswahlFachNeu === null"> Anlegen </svws-ui-button>
+			<svws-ui-button :disabled="createUnterrichtsfachModel.hatBlockierendeFehler()"
+				@click="createLehrerUnterrichtsfach">
+				Anlegen
+			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -79,14 +81,17 @@
 	import { computed, ref, shallowRef } from "vue";
 
 	import type { FachDaten } from "@core/core/data/fach/FachDaten";
-	import type { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
+	import { LehrerUnterrichtsfach } from "@core/core/data/lehrer/LehrerUnterrichtsfach";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { HashSet } from "@core/java/util/HashSet";
-	import type { List } from "@core/java/util/List";
+	import { useModelProxyList } from "@ui/model/useModelProxyList";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import { GridManager } from "@ui/ui/controls/tablegrid/GridManager";
+	import type { TableAction } from "@ui/ui/controls/tablegrid/UiTableActions.vue";
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
+
+	import { LehrerUnterrichtsfachModelProxy } from "./modelproxy/LehrerUnterrichtsfachModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
@@ -94,16 +99,19 @@
 
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
-	type Eintrag = { data: LehrerUnterrichtsfach };
+	const createUnterrichtsfachModel = shallowRef<LehrerUnterrichtsfachModelProxy | null>(null);
 
-	const gridManager = new GridManager<string, Eintrag, List<Eintrag>>({
-		daten: computed<List<Eintrag>>(() => {
-			const result = new ArrayList<Eintrag>();
-			for (const fach of lehrerAuswahlState.lehrerUnterrichtsfaecher) {
-				result.add({ data: fach });
-			}
-			return result;
-		}),
+	const faecherModels = useModelProxyList(
+		() => lehrerAuswahlState.lehrerUnterrichtsfaecher,
+		(lehrerUnterrichtsfach) => lehrerUnterrichtsfach.id,
+		(lehrerUnterrichtsfach) => new LehrerUnterrichtsfachModelProxy(() => lehrerUnterrichtsfach,
+			lehrerAuswahlState.mapFaecher,
+			(data: Partial<LehrerUnterrichtsfach>) => lehrerAuswahlState.patchLehrerUnterrichtsfach(lehrerUnterrichtsfach, data)),
+		{ deep: true }
+	);
+
+	const gridManager = new GridManager<string, LehrerUnterrichtsfachModelProxy, LehrerUnterrichtsfachModelProxy[]>({
+		daten: faecherModels,
 		getRowKey: row => `fach-${row.data.id}`,
 		columns: [
 			{ kuerzel: "Fach", name: "Fach", width: "minmax(30%,20rem)", hideable: false },
@@ -113,17 +121,6 @@
 			{ kuerzel: "Buttons", name: "Buttons", width: "4rem", hideable: false },
 		],
 	});
-
-	function getFachText(eintrag: LehrerUnterrichtsfach): string {
-		const fach = lehrerAuswahlState.mapFaecher.get(eintrag.idFach);
-		return fach ? `${fach.kuerzel} - ${fach.bezeichnung}` : '—';
-	}
-
-	const showHinzufuegen = ref<boolean>(false);
-	const auswahlFachNeu = shallowRef<FachDaten | null>(null);
-	const neuIstSek1 = ref<boolean>(false);
-	const neuIstSek2 = ref<boolean>(false);
-	const neuBemerkung = ref<string>("");
 
 	const faecherVorhanden = computed(() => {
 		const vorhanden = new HashSet<number>();
@@ -140,36 +137,48 @@
 				result.push(fach);
 			}
 		}
-		return result.sort((a, b) => a.kuerzel.localeCompare(b.kuerzel));
+		return result;
+	});
+
+	function rowActions(fachModel: LehrerUnterrichtsfachModelProxy): TableAction[] {
+		return [{ label: "Fach Löschen", action: () => lehrerAuswahlState.removeLehrerUnterrichtsfach(fachModel.data), trash: true }];
+	}
+
+	const footerActions = computed(() => {
+		return [
+			{ label: "Fach hinzufügen", action: openHinzufuegen, iconClasses: "i-ri-add-line" },
+		];
 	});
 
 	const fachDisplayText = (f: FachDaten) => `${f.kuerzel} - ${f.bezeichnung}`;
-
 	const fachSelectManager = new SelectManager<FachDaten>({
 		options: faecherVerfuegbar,
 		optionDisplayText: fachDisplayText,
 		selectionDisplayText: fachDisplayText,
+		sort: (a, b) => a.kuerzel.localeCompare(b.kuerzel),
 	});
 
+	function getFachText(eintrag: LehrerUnterrichtsfach): string {
+		const fach = lehrerAuswahlState.mapFaecher.get(eintrag.idFach);
+		return fach ? `${fach.kuerzel} - ${fach.bezeichnung}` : '—';
+	}
+
+	const showHinzufuegen = ref<boolean>(false);
+
 	function openHinzufuegen() {
-		auswahlFachNeu.value = null;
-		neuIstSek1.value = false;
-		neuIstSek2.value = false;
-		neuBemerkung.value = "";
+		createUnterrichtsfachModel.value = new LehrerUnterrichtsfachModelProxy(() => new LehrerUnterrichtsfach(), lehrerAuswahlState.mapFaecher);
 		showHinzufuegen.value = true;
 	}
 
 	async function createLehrerUnterrichtsfach() {
-		if (auswahlFachNeu.value === null || faecherVorhanden.value.contains(auswahlFachNeu.value.id)) {
+		if (createUnterrichtsfachModel.value === null || faecherVorhanden.value.contains(createUnterrichtsfachModel.value.proxy.idFach)) {
 			return;
 		}
-		await lehrerAuswahlState.addLehrerUnterrichtsfach({
-			idFach: auswahlFachNeu.value.id,
-			istSek1: neuIstSek1.value,
-			istSek2: neuIstSek2.value,
-			bemerkung: neuBemerkung.value === "" ? null : neuBemerkung.value,
-		});
+		const { istSek1, istSek2, idFach, bemerkung } = createUnterrichtsfachModel.value.proxy;
+		await lehrerAuswahlState.addLehrerUnterrichtsfach({ istSek1, istSek2, idFach, bemerkung });
+
 		showHinzufuegen.value = false;
+		createUnterrichtsfachModel.value = null;
 	}
 
 </script>
