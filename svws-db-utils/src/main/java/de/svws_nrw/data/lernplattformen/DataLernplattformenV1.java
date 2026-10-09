@@ -545,14 +545,16 @@ public class DataLernplattformenV1 {
 
 	private Map<Long, DTOSchueler> getSchuelerById() {
 		final Schuljahresabschnitt aktuellerSchuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
-		return conn
-				.queryList(DTOSchueler.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchueler.class, aktuellerSchuljahresabschnitt.id)
+		return conn.queryList(DTOSchueler.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchueler.class, aktuellerSchuljahresabschnitt.id)
 				.stream()
-				.filter(s -> (s.idStatus == SchuelerStatus.AKTIV.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
-						|| (s.idStatus == SchuelerStatus.EXTERN.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
-						|| (s.idStatus == SchuelerStatus.BEURLAUBT.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
-				)
+				.filter(s -> Boolean.FALSE.equals(s.hatLoeschvermerk) && schuelerStatusIsValid(s.idStatus, aktuellerSchuljahresabschnitt))
 				.collect(Collectors.toMap(s -> s.ID, s -> s));
+	}
+
+	private static boolean schuelerStatusIsValid(final Integer idStatus, final Schuljahresabschnitt aktuellerSchuljahresabschnitt) {
+		return (idStatus == SchuelerStatus.AKTIV.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
+				|| (idStatus == SchuelerStatus.EXTERN.daten(aktuellerSchuljahresabschnitt.schuljahr).id)
+				|| (idStatus == SchuelerStatus.BEURLAUBT.daten(aktuellerSchuljahresabschnitt.schuljahr).id);
 	}
 
 	private Map<Long, DTOFach> getFaecherMap() {
