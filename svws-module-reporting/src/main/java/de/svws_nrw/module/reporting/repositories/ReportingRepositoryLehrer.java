@@ -14,7 +14,6 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
@@ -24,6 +23,9 @@ import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlassenunterricht;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKursunterricht;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
+import de.svws_nrw.service.lehrer.foto.LehrerFoto;
+import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -183,10 +185,13 @@ public class ReportingRepositoryLehrer {
 				ReportingLehrer.SORTIERUNG, sortiereListe);
 		final Predicate<ReportingLehrer> filter = ReportingLehrer.FILTER.bedingung(
 				this.reportingContext.filterService().getFilter(ReportingLehrer.class.getSimpleName()), null);
-
 		return ReportingRepositoryUtils.waehleAus(idsLehrer, mapLehrerStammdaten, mapLehrer,
-				fehlendeIds -> new DataLehrerStammdaten(this.reportingContext.conn(), new DataLernplattformen(this.reportingContext.conn()),
-						new DataEinwilligungsarten(this.reportingContext.conn())).getListByIDsOhneFotos(fehlendeIds),
+				fehlendeIds -> new DataLehrerStammdaten(
+						this.reportingContext.conn(),
+						new DataLernplattformen(this.reportingContext.conn()),
+						new DataEinwilligungsarten(this.reportingContext.conn()),
+						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+				).getListByIDsOhneFotos(fehlendeIds),
 				key -> new ProxyReportingLehrer(this.reportingContext, mapLehrerStammdaten.get(key)),
 				stammdaten -> stammdaten.id,
 				comparator, filter,
@@ -225,9 +230,12 @@ public class ReportingRepositoryLehrer {
 		}
 		try {
 			this.reportingContext.logger().logLn(LogLevel.DEBUG, 8, "Lade alle Lehrerstammdaten.");
-			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(this.reportingContext.conn(),
+			final List<LehrerStammdaten> alle = new DataLehrerStammdaten(
+					this.reportingContext.conn(),
 					new DataLernplattformen(this.reportingContext.conn()),
-					new DataEinwilligungsarten(this.reportingContext.conn())).getAllOhneFotos();
+					new DataEinwilligungsarten(this.reportingContext.conn()),
+					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+			).getAllOhneFotos();
 			for (final LehrerStammdaten ls : alle) {
 				mapLehrerStammdaten.putIfAbsent(ls.id, ls);
 			}
@@ -291,9 +299,10 @@ public class ReportingRepositoryLehrer {
 	 * @return Map mit Lehrer-ID als Schlüssel und dem Foto im Base64-Format als Wert.
 	 */
 	private Map<Long, String> ladeFotos(final List<Long> idsLehrer) {
-		final Map<Long, String> gefundene = this.reportingContext.conn().queryByKeyList(DTOLehrerFoto.class, idsLehrer).stream()
-				.filter(f -> f.FotoBase64 != null)
-				.collect(Collectors.toMap(f -> f.Lehrer_ID, f -> f.FotoBase64));
+		final LehrerFotoService lehrerFotoService = LehrerServiceFactory.getNewInstance().getLehrerFotoService();
+		final Map<Long, String> gefundene = lehrerFotoService.getByLehrerIds(idsLehrer).stream()
+				.filter(f -> f.fotoBase64() != null)
+				.collect(Collectors.toMap(LehrerFoto::idLehrer, LehrerFoto::fotoBase64));
 		final Map<Long, String> ergebnis = new HashMap<>();
 		for (final Long id : idsLehrer) {
 			ergebnis.put(id, gefundene.getOrDefault(id, ""));

@@ -24,10 +24,11 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.lehrer.foto.LehrerFoto;
+import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -41,6 +42,7 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 
 	private final DataLernplattformen dataLernplattformen;
 	private final DataEinwilligungsarten dataEinwilligungsarten;
+	private final LehrerFotoService lehrerFotoService;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für das Core-DTO {@link LehrerStammdaten}.
@@ -48,12 +50,18 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param dataLernplattformen {@link DataLernplattformen} Lernplattform Service
 	 * @param dataEinwilligungsarten {@link DataEinwilligungsarten} Einwilligungsarten Service
+	 * @param lehrerFotoService {@link LehrerFotoService} LehrerFotoService
 	 */
-	public DataLehrerStammdaten(final DBEntityManager conn, final DataLernplattformen dataLernplattformen,
-			final DataEinwilligungsarten dataEinwilligungsarten) {
+	public DataLehrerStammdaten(
+			final DBEntityManager conn,
+			final DataLernplattformen dataLernplattformen,
+			final DataEinwilligungsarten dataEinwilligungsarten,
+			final LehrerFotoService lehrerFotoService
+	) {
 		super(conn);
 		this.dataLernplattformen = dataLernplattformen;
 		this.dataEinwilligungsarten = dataEinwilligungsarten;
+		this.lehrerFotoService = lehrerFotoService;
 		setAttributesNotPatchable("id");
 		setAttributesRequiredOnCreation("kuerzel", "vorname", "nachname", "geschlecht", "personalTyp");
 	}
@@ -201,8 +209,9 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	@Override
 	protected LehrerStammdaten map(final DTOLehrer dtoLehrer) throws ApiOperationException {
 		final LehrerStammdaten daten = mapWithoutFoto(dtoLehrer);
-		final DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, dtoLehrer.ID);
-		daten.foto = (lehrerFoto == null) ? null : lehrerFoto.FotoBase64;
+		daten.foto = lehrerFotoService.findByIdLehrer(dtoLehrer.ID)
+				.map(LehrerFoto::fotoBase64)
+				.orElse(null);
 		return daten;
 	}
 
@@ -241,12 +250,14 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 		if ((lehrer == null) || lehrer.isEmpty()) {
 			return result;
 		}
-		final Map<Long, DTOLehrerFoto> mapFotos = conn.queryByKeyList(DTOLehrerFoto.class, lehrer.stream().map(l -> l.ID).toList())
-				.stream().collect(Collectors.toMap(lf -> lf.Lehrer_ID, lf -> lf));
+		final var ids = lehrer.stream().map(l -> l.ID).toList();
+		final Map<Long, LehrerFoto> mapFotos = lehrerFotoService.getByLehrerIds(ids)
+				.stream().collect(Collectors.toMap(LehrerFoto::idLehrer, f -> f));
 		for (final DTOLehrer l : lehrer) {
 			final LehrerStammdaten daten = mapWithoutFoto(l);
-			final var tmpFoto = mapFotos.get(daten.id);
-			daten.foto = (tmpFoto == null) ? null : tmpFoto.FotoBase64;
+			daten.foto = Optional.ofNullable(mapFotos.get(daten.id))
+					.map(LehrerFoto::fotoBase64)
+					.orElse(null);
 			result.add(daten);
 		}
 		return result;
@@ -376,15 +387,6 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 
 	private void updateFoto(final DTOLehrer dto, final Object value) throws ApiOperationException {
 		final String strData = JSONMapper.convertToString(value, true, true, null, "foto: strgData");
-		DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, dto.ID);
-		if (lehrerFoto == null) {
-			lehrerFoto = new DTOLehrerFoto(dto.ID);
-		}
-		final String oldFoto = lehrerFoto.FotoBase64;
-		if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto)))) {
-			return;
-		}
-		lehrerFoto.FotoBase64 = strData;
-		conn.transactionPersist(lehrerFoto);
+		lehrerFotoService.upsertOrDelete(dto.ID, strData);
 	}
 }

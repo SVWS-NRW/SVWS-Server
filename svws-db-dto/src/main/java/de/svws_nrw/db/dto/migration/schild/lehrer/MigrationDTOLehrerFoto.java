@@ -18,26 +18,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFotos")
-@JsonPropertyOrder({"Lehrer_ID", "Foto", "FotoBase64", "SchulnrEigner"})
+@JsonPropertyOrder({"idLehrer", "Foto", "fotoBase64", "SchulnrEigner"})
 public final class MigrationDTOLehrerFoto {
 
 	/** Die Datenbankabfrage für alle DTOs */
 	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLehrerFoto e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Lehrer_ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.idLehrer = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Lehrer_ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.idLehrer IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Lehrer_ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.idLehrer IS NOT NULL";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Lehrer_ID */
-	public static final String QUERY_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Lehrer_ID = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes idLehrer */
+	public static final String QUERY_BY_IDLEHRER = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.idLehrer = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Lehrer_ID */
-	public static final String QUERY_LIST_BY_LEHRER_ID = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Lehrer_ID IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes idLehrer */
+	public static final String QUERY_LIST_BY_IDLEHRER = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.idLehrer IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Foto */
 	public static final String QUERY_BY_FOTO = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Foto = ?1";
@@ -45,11 +45,11 @@ public final class MigrationDTOLehrerFoto {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Foto */
 	public static final String QUERY_LIST_BY_FOTO = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.Foto IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes FotoBase64 */
-	public static final String QUERY_BY_FOTOBASE64 = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.FotoBase64 = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes fotoBase64 */
+	public static final String QUERY_BY_FOTOBASE64 = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.fotoBase64 = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes FotoBase64 */
-	public static final String QUERY_LIST_BY_FOTOBASE64 = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.FotoBase64 IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes fotoBase64 */
+	public static final String QUERY_LIST_BY_FOTOBASE64 = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.fotoBase64 IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
 	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerFoto e WHERE e.SchulnrEigner = ?1";
@@ -61,7 +61,7 @@ public final class MigrationDTOLehrerFoto {
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public Long idLehrer;
 
 	/** Lehrerfoto im binär-Format */
 	@Column(name = "Foto")
@@ -71,7 +71,7 @@ public final class MigrationDTOLehrerFoto {
 	/** Lehrerfoto im Base64-Format */
 	@Column(name = "FotoBase64")
 	@JsonProperty
-	public String FotoBase64;
+	public String fotoBase64;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")
@@ -87,13 +87,13 @@ public final class MigrationDTOLehrerFoto {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerFoto ohne eine Initialisierung der Attribute.
-	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
+	 * @param idLehrer   der Wert für das Attribut idLehrer
 	 */
-	public MigrationDTOLehrerFoto(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
+	public MigrationDTOLehrerFoto(final Long idLehrer) {
+		if (idLehrer == null) {
+			throw new NullPointerException("idLehrer must not be null");
 		}
-		this.Lehrer_ID = Lehrer_ID;
+		this.idLehrer = idLehrer;
 	}
 
 
@@ -109,11 +109,11 @@ public final class MigrationDTOLehrerFoto {
 			return false;
 		}
 		MigrationDTOLehrerFoto other = (MigrationDTOLehrerFoto) obj;
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null) {
+		if (idLehrer == null) {
+			if (other.idLehrer != null) {
 				return false;
 			}
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID)) {
+		} else if (!idLehrer.equals(other.idLehrer)) {
 			return false;
 		}
 		return true;
@@ -123,7 +123,7 @@ public final class MigrationDTOLehrerFoto {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + ((idLehrer == null) ? 0 : idLehrer.hashCode());
 		return result;
 	}
 
@@ -135,7 +135,7 @@ public final class MigrationDTOLehrerFoto {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerFoto(Lehrer_ID=" + this.Lehrer_ID + ", Foto=" + this.Foto + ", FotoBase64=" + this.FotoBase64 + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOLehrerFoto(idLehrer=" + this.idLehrer + ", Foto=" + this.Foto + ", fotoBase64=" + this.fotoBase64 + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

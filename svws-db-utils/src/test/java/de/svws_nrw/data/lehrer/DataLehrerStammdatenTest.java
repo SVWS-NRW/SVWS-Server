@@ -18,16 +18,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.svws_nrw.service.lehrer.foto.LehrerFoto;
+import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -62,12 +65,19 @@ class DataLehrerStammdatenTest {
 	@Mock
 	private DataLernplattformen dataLernplattformen;
 
-	@InjectMocks
+	@Mock
+	private LehrerFotoService lehrerFotoService;
+
 	private DataLehrerStammdaten dataLehrerStammdaten;
 
 	@BeforeAll
-	static void setUp() {
+	static void setUpAll() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@BeforeEach
+	void setUp() {
+		dataLehrerStammdaten = new DataLehrerStammdaten(conn, dataLernplattformen, dataEinwilligungsarten, lehrerFotoService);
 	}
 
 	@Test
@@ -286,9 +296,7 @@ class DataLehrerStammdatenTest {
 	@DisplayName("map | erfolgreiches Mapping | check Basic Attributes")
 	void mapTest() throws ApiOperationException {
 		final var dtoLehrer = getDtoLehrer();
-		final var foto = new DTOLehrerFoto(1L);
-		foto.FotoBase64 = "abc";
-		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
+		when(lehrerFotoService.findByIdLehrer(1L)).thenReturn(Optional.of(new LehrerFoto(1L, "abc")));
 
 		assertThat(this.dataLehrerStammdaten.map(dtoLehrer))
 				.isInstanceOf(LehrerStammdaten.class)
@@ -373,9 +381,7 @@ class DataLehrerStammdatenTest {
 	@DisplayName("mapList | Erfolg")
 	void mapListTest() throws ApiOperationException {
 		final var dtoLehrer = getDtoLehrer();
-		final var foto = new DTOLehrerFoto(1L);
-		foto.FotoBase64 = "abc";
-		when(this.conn.queryByKeyList(DTOLehrerFoto.class, List.of(1L))).thenReturn(List.of(foto));
+		when(lehrerFotoService.getByLehrerIds(List.of(1L))).thenReturn(List.of(new LehrerFoto(1L, "abc")));
 
 		assertThat(this.dataLehrerStammdaten.mapList(List.of(dtoLehrer)))
 				.isInstanceOf(List.class)
@@ -695,43 +701,23 @@ class DataLehrerStammdatenTest {
 				.hasFieldOrPropertyWithValue("Status", Response.Status.CONFLICT);
 	}
 
-	@Test
-	@DisplayName("mapAttribute | update foto")
-	void mapAttributeTest_updateFoto() throws ApiOperationException {
+	@ParameterizedTest
+	@DisplayName("mapAttribute | foto | upsertOrDelete wird korrekt delegiert")
+	@MethodSource("provideFotoUpdateFaelle")
+	void mapAttributeTest_foto(final String neuesFoto) {
 		final var expectedDTO = new DTOLehrer(1L, "1", "1");
-		final var foto = new DTOLehrerFoto(1L);
-		foto.FotoBase64 = "abc";
-		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
-		final var expectedFoto = new DTOLehrerFoto(1L);
-		expectedFoto.FotoBase64 = "cde";
 
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", "cde", null);
+		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", neuesFoto, null);
 
-		verify(this.conn, times(1)).transactionPersist(expectedFoto);
+		verify(lehrerFotoService, times(1)).upsertOrDelete(1L, neuesFoto);
 	}
 
-	@Test
-	@DisplayName("mapAttribute | fotos identisch | kein update")
-	void mapAttributeTest_fotosIdentical() throws ApiOperationException {
-		final var expectedDTO = new DTOLehrer(1L, "1", "1");
-		final var foto = new DTOLehrerFoto(1L);
-		foto.FotoBase64 = "abc";
-		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(foto);
-
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", "abc", null);
-
-		verify(this.conn, never()).transactionPersist(any());
-	}
-
-	@Test
-	@DisplayName("mapAttribute | altes und neues foto null | kein update")
-	void mapAttributeTest_oldAndNewFotoNull() throws ApiOperationException {
-		final var expectedDTO = new DTOLehrer(1L, "1", "1");
-		when(this.conn.queryByKey(DTOLehrerFoto.class, 1L)).thenReturn(null);
-
-		this.dataLehrerStammdaten.mapAttribute(expectedDTO, "foto", null, null);
-
-		verify(this.conn, never()).transactionPersist(any());
+	private static Stream<Arguments> provideFotoUpdateFaelle() {
+		return Stream.of(
+				arguments("cde"),
+				arguments("abc"),
+				arguments(new Object[]{null})
+		);
 	}
 
 	@ParameterizedTest

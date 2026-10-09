@@ -1,12 +1,13 @@
 package de.svws_nrw.service.lehrer;
 
+import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
+import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.mapper.lehrer.fachrichtung.LehrerFachrichtungMapper;
+import de.svws_nrw.mapper.lehrer.foto.LehrerFotoMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.mapper.lehrer.lehramt.LehrerLehramtMapper;
 import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
-import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
-import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.mapper.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
@@ -15,10 +16,11 @@ import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeServiceKontext;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerPersonalabschnittsdatenAnrechnungsstundeService;
-import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungService;
+import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
+import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungServiceKontext;
 import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
@@ -221,6 +223,18 @@ public final class LehrerServiceFactory {
 		);
 
 		return new LehrerPersonalabschnittsdatenService(subRepos, subServices, LehrerPersonalabschnittsdatenMapper.INSTANCE);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerFotoService}.
+	 *
+	 * @return ein neuer {@code LehrerFotoService}
+	 */
+	public LehrerFotoService getLehrerFotoService() {
+		return new LehrerFotoService(
+				lehrerRepositoryFactory.getLehrerFotoRepository(),
+				LehrerFotoMapper.INSTANCE
+		);
 	}
 
 }

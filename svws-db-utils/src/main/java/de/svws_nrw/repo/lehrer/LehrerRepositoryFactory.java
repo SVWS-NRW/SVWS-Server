@@ -13,6 +13,8 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFac
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepository;
 import de.svws_nrw.repo.lehrer.anrechnung.LehrerAnrechnungRepositoryImpl;
+import de.svws_nrw.repo.lehrer.foto.LehrerFotoRepository;
+import de.svws_nrw.repo.lehrer.foto.LehrerFotoRepositoryImpl;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepositoryImpl;
 import de.svws_nrw.repo.lehrer.lehramt.LehrerLehramtRepository;
@@ -150,6 +152,13 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 */
 	public LehrerFunktionRepository getLehrerFunktionRepository() {
 		return this.getOrCreate(LehrerFunktionRepository.class, () -> new LehrerFunktionRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * @return {@link LehrerFotoRepository}
+	 */
+	public LehrerFotoRepository getLehrerFotoRepository() {
+		return this.getOrCreate(LehrerFotoRepository.class, () -> new LehrerFotoRepositoryImpl(this.conn));
 	}
 
 }

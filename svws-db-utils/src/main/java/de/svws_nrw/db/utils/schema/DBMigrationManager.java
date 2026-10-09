@@ -1754,18 +1754,18 @@ public final class DBMigrationManager {
 		final HashMap<Long, MigrationDTOLehrerFoto> map = new HashMap<>();
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerFoto daten = entities.get(i);
-			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer.formatted(daten.Lehrer_ID));
+			if ((daten.idLehrer == null) || (!lehrerIDs.contains(daten.idLehrer))) {
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer.formatted(daten.idLehrer));
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate mit gleicher ID
-				final MigrationDTOLehrerFoto other = map.get(daten.Lehrer_ID);
+				final MigrationDTOLehrerFoto other = map.get(daten.idLehrer);
 				if (other == null) {
-					map.put(daten.Lehrer_ID, daten);
+					map.put(daten.idLehrer, daten);
 				} else {
 					logger.logLn(LogLevel.ERROR,
 							"Entferne einen Datensatz (Leher_ID %d): Es ist nur die Speicherung von einem Foto für einen Lehrer in der DB vorgesehen."
-									.formatted(daten.Lehrer_ID));
+									.formatted(daten.idLehrer));
 					entities.remove(i);
 				}
 			}
@@ -2574,7 +2574,7 @@ public final class DBMigrationManager {
 					if (lf.Foto == null) {
 						return false;
 					}
-					lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
+					lf.fotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
 					return true;
 				}).toList();
 		tgtManager.getConnection().persistAll(lf_out);

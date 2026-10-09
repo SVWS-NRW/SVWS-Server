@@ -127,4 +127,13 @@ class LehrerServiceFactoryTest {
 		verify(repoLehrerFactory).getLehrerPersonaldatenLehramtRepository();
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerFotoService den Service mit dem Kontext korrekt erstellt")
+	void getLehrerFotoService() {
+		final var service = serviceFactory.getLehrerFotoService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerFotoRepository();
+	}
+
 }

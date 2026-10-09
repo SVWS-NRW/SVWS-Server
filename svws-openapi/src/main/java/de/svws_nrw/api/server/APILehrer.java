@@ -60,6 +60,7 @@ import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeCreateRequest;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundePatchRequest;
 import de.svws_nrw.service.lehrer.fachrichtung.LehrerFachrichtungCreateRequest;
@@ -229,9 +230,16 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getByIdAsResponse(id),
+				conn -> new DataLehrerStammdaten(
+						conn,
+						new DataLernplattformen(conn),
+						new DataEinwilligungsarten(conn),
+						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+				).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+				BenutzerKompetenz.LEHRERDATEN_ANSEHEN
+
+		);
 	}
 
 
@@ -259,9 +267,13 @@ public class APILehrer {
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
-						.getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
+			conn -> new DataLehrerStammdaten(
+					conn,
+					new DataLernplattformen(conn),
+					new DataEinwilligungsarten(conn),
+					LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+			).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+			request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
 
@@ -288,7 +300,12 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).addAsResponse(is), request,
+				conn -> new DataLehrerStammdaten(
+						conn,
+						new DataLernplattformen(conn),
+						new DataEinwilligungsarten(conn),
+						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+				).addAsResponse(is), request,
 				ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
@@ -319,7 +336,12 @@ public class APILehrer {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).patchAsResponse(id, is),
+				conn -> new DataLehrerStammdaten(
+						conn,
+						new DataLernplattformen(conn),
+						new DataEinwilligungsarten(conn),
+						LehrerServiceFactory.getNewInstance().getLehrerFotoService()
+				).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
@@ -387,7 +409,7 @@ public class APILehrer {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param idLehramt die ID des Lehramteintrags beim Lehrer
-	 * @param patch		das Patchobjekt
+	 * @param patch        das Patchobjekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -447,7 +469,7 @@ public class APILehrer {
 	 * Die OpenAPI-Methode für das Entfernen von Lehramtsdaten aus den Personaldaten eines Lehrers.
 	 *
 	 * @param schema      das Datenbankschema
-	 * @param ids   	die IDs des Lehramteinträge
+	 * @param ids    die IDs des Lehramteinträge
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz

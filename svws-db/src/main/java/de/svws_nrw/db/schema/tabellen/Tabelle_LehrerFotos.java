@@ -16,6 +16,7 @@ public class Tabelle_LehrerFotos extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public final SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("idLehrer")
 			.setNotNull()
 			.setJavaComment("LehrerID zu der das Foto gehört");
 
@@ -26,6 +27,7 @@ public class Tabelle_LehrerFotos extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte FotoBase64 */
 	public final SchemaTabelleSpalte col_FotoBase64 = add("FotoBase64", SchemaDatentypen.TEXT, false)
+			.setJavaName("fotoBase64")
 			.setJavaComment("Lehrerfoto im Base64-Format");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

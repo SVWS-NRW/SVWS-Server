@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,6 +17,8 @@ import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.List;
 
+import de.svws_nrw.repo.DbConnectionProvider;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -31,12 +34,15 @@ import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import org.mockito.MockedStatic;
 
 /**
  * Prüft, dass das Lehrer-Repository die Initialkennwörter des Notenmoduls getrennt von den Stammdaten lädt. Der Vertrag: Ein Kennwort wird höchstens einmal
  * aus der Datenbank geholt, und eine Lehrkraft ohne Credentials liefert einen leeren String, ohne weitere Abfragen auszulösen.
  */
 class TestReportingRepositoryLehrerNotenmodulKennwoerter {
+
+	private MockedStatic<DbConnectionProvider> dbConnectionProvider;
 
 	/** Die ID der Lehrkraft, zu der ein Initialkennwort hinterlegt ist. */
 	private static final long ID_LEHRER = 7L;
@@ -67,6 +73,9 @@ class TestReportingRepositoryLehrerNotenmodulKennwoerter {
 	void setUp() {
 		conn = mock(DBEntityManager.class);
 
+		dbConnectionProvider = mockStatic(DbConnectionProvider.class);
+		dbConnectionProvider.when(DbConnectionProvider::getConnection).thenReturn(conn);
+
 		final Logger logger = new Logger();
 		logger.addConsumer(new LogConsumerList());
 
@@ -75,6 +84,11 @@ class TestReportingRepositoryLehrerNotenmodulKennwoerter {
 		when(reportingContext.conn()).thenReturn(conn);
 
 		repository = new ReportingRepositoryLehrer(reportingContext);
+	}
+
+	@AfterEach
+	void tearDown() {
+		dbConnectionProvider.close();
 	}
 
 	/**

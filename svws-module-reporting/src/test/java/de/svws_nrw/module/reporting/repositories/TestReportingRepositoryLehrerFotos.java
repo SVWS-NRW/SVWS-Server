@@ -1,25 +1,7 @@
 package de.svws_nrw.module.reporting.repositories;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.Collection;
 import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.MockedConstruction;
 
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -31,6 +13,29 @@ import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemursache;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.repo.DbConnectionProvider;
+import de.svws_nrw.service.lehrer.foto.LehrerFoto;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Prüft, dass das Lehrer-Repository die Fotos getrennt von den Stammdaten lädt. Der Vertrag: Ein Foto wird höchstens einmal aus der Datenbank geholt, und
@@ -38,31 +43,23 @@ import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
  */
 class TestReportingRepositoryLehrerFotos {
 
-	/** Die ID der Lehrkraft, zu der ein Foto hinterlegt ist. */
 	private static final long ID_LEHRER = 7L;
-
-	/** Die ID einer zweiten bekannten Lehrkraft, deren Foto in derselben Abfrage mitkommt. */
 	private static final long ID_LEHRER_ZWEI = 8L;
-
-	/** Die ID der Lehrkraft ohne hinterlegtes Foto. */
 	private static final long ID_LEHRER_OHNE_FOTO = 9L;
-
-	/** Das Foto im Base64-Format, wie es die Datenbank führt. */
 	private static final String FOTO_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 
-	/** Die Datenbankverbindung, über die das Repository die Fotos lädt. */
 	private DBEntityManager conn;
-
-	/** Der gemockte Context, über den das Repository Ausgabeprobleme meldet. */
 	private ReportingContext reportingContext;
-
-	/** Das Repository unter Test. */
 	private ReportingRepositoryLehrer repository;
 
+	private MockedStatic<DbConnectionProvider> dbConnectionProvider;
 
 	@BeforeEach
 	void setUp() {
 		conn = mock(DBEntityManager.class);
+
+		dbConnectionProvider = mockStatic(DbConnectionProvider.class);
+		dbConnectionProvider.when(DbConnectionProvider::getConnection).thenReturn(conn);
 
 		final Logger logger = new Logger();
 		logger.addConsumer(new LogConsumerList());
@@ -74,28 +71,30 @@ class TestReportingRepositoryLehrerFotos {
 		repository = new ReportingRepositoryLehrer(reportingContext);
 	}
 
-	/**
-	 * Erzeugt den Datenbankeintrag eines Lehrerfotos.
-	 *
-	 * @param idLehrer Die ID der Lehrkraft.
-	 * @param base64   Das Foto im Base64-Format.
-	 *
-	 * @return Der Eintrag, wie ihn die Abfrage liefert.
-	 */
-	private static DTOLehrerFoto dtoFoto(final long idLehrer, final String base64) {
-		final DTOLehrerFoto dto = new DTOLehrerFoto(idLehrer);
-		dto.FotoBase64 = base64;
-		return dto;
+	@AfterEach
+	void tearDown() {
+		dbConnectionProvider.close();
 	}
 
-	/**
-	 * Legt fest, was die Foto-Abfrage der Datenbank zurückgibt.
-	 *
-	 * @param eintraege Die Einträge, die die Abfrage liefert.
-	 */
-	private void gebeFotosVor(final List<DTOLehrerFoto> eintraege) {
-		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection())).thenReturn(eintraege);
+	private static LehrerFoto lehrerFoto(final long idLehrer, final String base64) {
+		return new LehrerFoto(idLehrer, base64);
 	}
+
+	private void gebeFotosVor(final List<LehrerFoto> fotos) {
+		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection()))
+				.thenAnswer(invocation -> {
+					final Collection<Long> ids = invocation.getArgument(1);
+					return fotos.stream()
+							.filter(f -> ids.contains(f.idLehrer()))
+							.map(f -> {
+								final DTOLehrerFoto dto = new DTOLehrerFoto(f.idLehrer());
+								dto.fotoBase64 = f.fotoBase64();
+								return dto;
+							})
+							.toList();
+				});
+	}
+
 
 	/**
 	 * Erzeugt die Stammdaten einer Lehrkraft ohne Foto, wie sie das Laden ohne Bilddaten liefert.
@@ -110,6 +109,7 @@ class TestReportingRepositoryLehrerFotos {
 		return stammdaten;
 	}
 
+
 	/**
 	 * Legt den Vollbestand der Lehrerstammdaten in den Cache. Das Repository holt ihn beim Registrieren der ersten Lehrkraft, deshalb wird für diesen einen
 	 * Aufruf die Datenklasse ersetzt.
@@ -123,27 +123,26 @@ class TestReportingRepositoryLehrerFotos {
 		}
 	}
 
-
-	/** Zu einer Lehrkraft mit hinterlegtem Foto liefert das Repository dessen Base64-Daten. */
 	@Test
+	@DisplayName("Zu einer Lehrkraft mit hinterlegtem Foto liefert das Repository dessen Base64-Daten.")
 	void lehrerFotoLiefertDasHinterlegteFoto() {
-		gebeFotosVor(List.of(dtoFoto(ID_LEHRER, FOTO_BASE64)));
+		gebeFotosVor(List.of(lehrerFoto(ID_LEHRER, FOTO_BASE64)));
 
 		assertEquals(FOTO_BASE64, repository.lehrerFoto(ID_LEHRER));
 	}
 
-	/** Fehlt das Foto, ist das kein Fehler: Das Repository liefert einen leeren String. */
 	@Test
+	@DisplayName("Fehlt das Foto, ist das kein Fehler: Das Repository liefert einen leeren String.")
 	void lehrerOhneFotoLiefertLeerenString() {
 		gebeFotosVor(List.of());
 
 		assertEquals("", repository.lehrerFoto(ID_LEHRER_OHNE_FOTO));
 	}
 
-	/** Ein einmal geladenes Foto kommt aus dem Cache. */
 	@Test
+	@DisplayName("Ein einmal geladenes Foto kommt aus dem Cache.")
 	void zweiterZugriffFragtDieDatenbankNichtErneut() {
-		gebeFotosVor(List.of(dtoFoto(ID_LEHRER, FOTO_BASE64)));
+		gebeFotosVor(List.of(lehrerFoto(ID_LEHRER, FOTO_BASE64)));
 
 		repository.lehrerFoto(ID_LEHRER);
 		repository.lehrerFoto(ID_LEHRER);
@@ -151,8 +150,8 @@ class TestReportingRepositoryLehrerFotos {
 		verify(conn, times(1)).queryByKeyList(eq(DTOLehrerFoto.class), anyCollection());
 	}
 
-	/** Auch das Fehlen eines Fotos wird gemerkt, sonst fragte jeder weitere Zugriff die Datenbank erneut. */
 	@Test
+	@DisplayName("Auch das Fehlen eines Fotos wird gemerkt, sonst fragte jeder weitere Zugriff die Datenbank erneut.")
 	void zweiterZugriffOhneFotoFragtDieDatenbankNichtErneut() {
 		gebeFotosVor(List.of());
 
@@ -162,10 +161,10 @@ class TestReportingRepositoryLehrerFotos {
 		verify(conn, times(1)).queryByKeyList(eq(DTOLehrerFoto.class), anyCollection());
 	}
 
-	/** Der erste Zugriff holt die Fotos aller bekannten Lehrkräfte in einer Abfrage; die zweite Lehrkraft löst danach keine weitere aus. */
 	@Test
+	@DisplayName("Der erste Zugriff holt die Fotos aller bekannten Lehrkräfte in einer Abfrage; die zweite Lehrkraft löst danach keine weitere aus.")
 	void bekannteLehrkraefteWerdenGemeinsamGeladen() {
-		gebeFotosVor(List.of(dtoFoto(ID_LEHRER, FOTO_BASE64), dtoFoto(ID_LEHRER_ZWEI, FOTO_BASE64)));
+		gebeFotosVor(List.of(lehrerFoto(ID_LEHRER, FOTO_BASE64), lehrerFoto(ID_LEHRER_ZWEI, FOTO_BASE64)));
 		gebeVollbestandVor(List.of(stammdaten(ID_LEHRER), stammdaten(ID_LEHRER_ZWEI)));
 
 		repository.lehrerFoto(ID_LEHRER);
@@ -178,16 +177,17 @@ class TestReportingRepositoryLehrerFotos {
 		verify(conn, times(1)).queryByKeyList(eq(DTOLehrerFoto.class), anyCollection());
 	}
 
-	/** Ein Ladefehler beendet die Ausgabe nicht; die Lehrkraft erscheint dann ohne Foto. */
 	@Test
+	@DisplayName("Ein Ladefehler beendet die Ausgabe nicht; die Lehrkraft erscheint dann ohne Foto.")
 	void ladefehlerLiefertLeerenString() {
-		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection())).thenThrow(new IllegalStateException("Verbindung verloren"));
+		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection()))
+				.thenThrow(new IllegalStateException("Verbindung verloren"));
 
 		assertEquals("", repository.lehrerFoto(ID_LEHRER));
 	}
 
-	/** Ein erfolgreicher Zugriff meldet kein Problem, auch wenn zu der Lehrkraft gar kein Foto hinterlegt ist. */
 	@Test
+	@DisplayName("Ein erfolgreicher Zugriff meldet kein Problem, auch wenn zu der Lehrkraft gar kein Foto hinterlegt ist.")
 	void erfolgreicherZugriffMeldetKeinProblem() {
 		gebeFotosVor(List.of());
 
@@ -196,15 +196,15 @@ class TestReportingRepositoryLehrerFotos {
 		verify(reportingContext, never()).meldeAusgabeproblem(any(), any(), any(), anyString(), any());
 	}
 
-	/** Ein Ladefehler wird als Ausgabeproblem gemeldet, sonst verschwände er ohne jede Spur. */
 	@Test
+	@DisplayName("Ein Ladefehler wird als Ausgabeproblem gemeldet, sonst verschwände er ohne jede Spur.")
 	void ladefehlerWirdAlsAusgabeproblemGemeldet() {
-		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection())).thenThrow(new IllegalStateException("Verbindung verloren"));
+		when(conn.queryByKeyList(eq(DTOLehrerFoto.class), anyCollection()))
+				.thenThrow(new IllegalStateException("Verbindung verloren"));
 
 		repository.lehrerFoto(ID_LEHRER);
 
 		verify(reportingContext, times(1)).meldeAusgabeproblem(eq(ReportingProblemursache.DATENSATZBEZOGENER_LADEFEHLER),
 				eq(ReportingProblemauswirkung.TEILDATEN_FEHLEN), eq(ReportingProblemSchluessel.fuer(ReportingLehrer.class, ID_LEHRER)), anyString(), any());
 	}
-
 }
