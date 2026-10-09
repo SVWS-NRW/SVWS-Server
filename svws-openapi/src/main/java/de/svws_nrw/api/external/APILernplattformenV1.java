@@ -67,7 +67,7 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Lernplattformen Datenexport anzufordern.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Ressourcen gefunden.")
 	public Response getLernplattformenExport(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
-			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 						new DataLernplattformenV1(
 								conn,
@@ -104,7 +104,7 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Lernplattformen Datenexport anzufordern.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Ressourcen gefunden.")
 	public Response getLernplattformenExportAsGzip(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
-			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 						new DataLernplattformenV1(
 								conn,
@@ -138,7 +138,7 @@ public class APILernplattformenV1 {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 						new DataLernplattformenV1(
 								conn,
-								-1,
+								-1L,
 								new DataLernplattformen(conn),
 								this.clock
 						).getAllAsResponse(),

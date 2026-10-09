@@ -60,7 +60,7 @@ public class DataLernplattformenV1 {
 	private final DataLernplattformen dataLernplattformen;
 
 	/** Die ID des Schuljahresabschnitts zu dem die Lernplattform Daten ermittelt werden. */
-	private final int idSchuljahresabschnitt;
+	private final long idSchuljahresabschnitt;
 	private final Clock clock;
 
 	/**
@@ -72,7 +72,7 @@ public class DataLernplattformenV1 {
 	 * @param clock                       die Clock, welche für die Zeitmessung verwendet werden soll
 	 */
 	public DataLernplattformenV1(final @NotNull DBEntityManager conn,
-			final int idSchuljahresabschnitt,
+			final long idSchuljahresabschnitt,
 			final DataLernplattformen dataLernplattformen,
 			final Clock clock) {
 		this.conn = conn;

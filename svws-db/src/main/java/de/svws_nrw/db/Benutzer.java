@@ -446,7 +446,10 @@ public final class Benutzer {
 	 *
 	 * @return der Schuljahresabschnitt oder null
 	 */
-	public Schuljahresabschnitt schuleGetAbschnittById(final long id) {
+	public Schuljahresabschnitt schuleGetAbschnittById(final Long id) {
+		if (id == null) {
+			return null;
+		}
 		return _mapSchuljahresabschnitte.get(id);
 	}
 
