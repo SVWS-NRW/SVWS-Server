@@ -356,7 +356,7 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 
 	private int pruefeSonstigeGesellschaftswissenschaft(final @NotNull AbiturFachbelegung gw, final int anzahlErsatzfachRE) {
 		int anzahl = manager.zaehleHalbjahresbelegungen(gw, GostHalbjahr.getQualifikationsphase());
-		final boolean istErsatzfachRE = (anzahlErsatzfachRE > 0) && ((anzahl - 2) - anzahlErsatzfachRE >= 0);
+		final boolean istErsatzfachRE = (anzahlErsatzfachRE > 0) && (anzahl - anzahlErsatzfachRE >= 0);
 		final boolean nimmAlsDurchgaengigeGW = !hatGWDurchgaengig && (anzahl == 4);
 		if (nimmAlsDurchgaengigeGW) {
 			hatGWDurchgaengig = true;

@@ -353,7 +353,7 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 
 	private pruefeSonstigeGesellschaftswissenschaft(gw: AbiturFachbelegung, anzahlErsatzfachRE: number): number {
 		let anzahl: number = this.manager.zaehleHalbjahresbelegungen(gw, ...GostHalbjahr.getQualifikationsphase());
-		const istErsatzfachRE: boolean = (anzahlErsatzfachRE > 0) && ((anzahl - 2) - anzahlErsatzfachRE >= 0);
+		const istErsatzfachRE: boolean = (anzahlErsatzfachRE > 0) && (anzahl - anzahlErsatzfachRE >= 0);
 		const nimmAlsDurchgaengigeGW: boolean = !this.hatGWDurchgaengig && (anzahl === 4);
 		if (nimmAlsDurchgaengigeGW) {
 			this.hatGWDurchgaengig = true;
