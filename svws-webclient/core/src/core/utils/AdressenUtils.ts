@@ -78,13 +78,13 @@ export class AdressenUtils extends JavaObject {
 	 * @return die kombinierte Strassenangabe
 	 */
 	public static combineStrasse(name: string | null, hausNummer: string | null, zusatz: string | null): string | null {
-		if ((name === null) || (hausNummer === null) || (zusatz === null)) {
+		if ((name === null) && (hausNummer === null) && (zusatz === null)) {
 			return null;
 		}
-		if (JavaObject.equalsTranspiler("", (hausNummer.trim())) && (JavaObject.equalsTranspiler("", (zusatz.trim())))) {
-			return name;
-		}
-		return name + " " + hausNummer.trim() + zusatz.trim();
+		const st: string = (name !== null) ? (name.trim() + " ") : "";
+		const hn: string = (hausNummer !== null) ? hausNummer.trim() : "";
+		const zs: string = (zusatz !== null) ? zusatz.trim() : "";
+		return st + hn + zs;
 	}
 
 	transpilerCanonicalName(): string {
