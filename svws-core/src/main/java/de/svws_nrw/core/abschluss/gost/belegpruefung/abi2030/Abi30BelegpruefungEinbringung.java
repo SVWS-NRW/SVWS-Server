@@ -276,7 +276,14 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 			if (((anzahlPL == 4) && (philosophie.abiturFach != null))) {
 				kurseUntereGrenze += 4;
 			} else if (hatPjkAbi && (philosophie.fachID == referenzfach.id)) {
-				kurseUntereGrenze += 2;
+				if (istPLDurchgaengig) {
+					kurseUntereGrenze += 4;
+					hatGWDurchgaengig = true;
+				} else {
+					kurseUntereGrenze += 2;
+					kurseOberereGrenze -= (anzahlPL - 2);
+					istErsatzfachRE = true;
+				}
 			} else if (anzahlPL > 0) {
 				if (istPLDurchgaengig) {
 					kurseUntereGrenze += 4;
@@ -304,23 +311,20 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 			}
 		}
 		final boolean istGEErsatzfachRE = (anzahlErsatzfachRE > 0) && ((anzahlGE - 2) - anzahlErsatzfachRE >= 0);
-		int restKurse = anzahlGE;
 		if (istGEAbi || (!hatGWDurchgaengig && istGEDurchgaengig)) {
 			kurseUntereGrenze += 4;
-			restKurse -= 4;
 			if (istGEErsatzfachRE) {
 				istErsatzfachRE = true;
 			}
 		} else {
 			kurseUntereGrenze += 2;
-			restKurse -= 2;
+			kurseOberereGrenze -= (anzahlGE - 2);
+			if (istGEErsatzfachRE) {
+				kurseUntereGrenze += anzahlErsatzfachRE;
+				kurseOberereGrenze += anzahlErsatzfachRE;
+				istErsatzfachRE = true;
+			}
 		}
-		if (istGEErsatzfachRE) {
-			kurseUntereGrenze += anzahlErsatzfachRE;
-			kurseOberereGrenze += anzahlErsatzfachRE;
-			istErsatzfachRE = true;
-		}
-		kurseOberereGrenze -= restKurse;
 		return istErsatzfachRE ? 0 : anzahlErsatzfachRE;
 	}
 
@@ -334,23 +338,20 @@ public final class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 			}
 		}
 		final boolean istSWErsatzfachRE = (anzahlErsatzfachRE > 0) && ((anzahlSW - 2) - anzahlErsatzfachRE >= 0);
-		int restKurse = anzahlSW;
 		if (istSWAbi || (!hatGWDurchgaengig && istSWDurchgaengig && !istGEDurchgaengig)) {
 			kurseUntereGrenze += 4;
-			restKurse -= 4;
 			if (istSWErsatzfachRE) {
 				istErsatzfachRE = true;
 			}
 		} else {
 			kurseUntereGrenze += 2;
-			restKurse -= 2;
+			kurseOberereGrenze -= (anzahlSW - 2);
+			if (istSWErsatzfachRE) {
+				kurseUntereGrenze += anzahlErsatzfachRE;
+				kurseOberereGrenze += anzahlErsatzfachRE;
+				istErsatzfachRE = true;
+			}
 		}
-		if (istSWErsatzfachRE) {
-			kurseUntereGrenze += anzahlErsatzfachRE;
-			kurseOberereGrenze += anzahlErsatzfachRE;
-			istErsatzfachRE = true;
-		}
-		kurseOberereGrenze -= restKurse;
 		return istErsatzfachRE ? 0 : anzahlErsatzfachRE;
 	}
 

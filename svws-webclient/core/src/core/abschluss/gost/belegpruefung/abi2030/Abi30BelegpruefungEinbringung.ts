@@ -273,7 +273,14 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 				this.kurseUntereGrenze += 4;
 			} else
 				if (this.hatPjkAbi && (philosophie.fachID === this.referenzfach.id)) {
-					this.kurseUntereGrenze += 2;
+					if (istPLDurchgaengig) {
+						this.kurseUntereGrenze += 4;
+						this.hatGWDurchgaengig = true;
+					} else {
+						this.kurseUntereGrenze += 2;
+						this.kurseOberereGrenze -= (anzahlPL - 2);
+						istErsatzfachRE = true;
+					}
 				} else
 					if (anzahlPL > 0) {
 						if (istPLDurchgaengig) {
@@ -302,23 +309,20 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 			}
 		}
 		const istGEErsatzfachRE: boolean = (anzahlErsatzfachRE > 0) && ((anzahlGE - 2) - anzahlErsatzfachRE >= 0);
-		let restKurse: number = anzahlGE;
 		if (istGEAbi || (!this.hatGWDurchgaengig && istGEDurchgaengig)) {
 			this.kurseUntereGrenze += 4;
-			restKurse -= 4;
 			if (istGEErsatzfachRE) {
 				istErsatzfachRE = true;
 			}
 		} else {
 			this.kurseUntereGrenze += 2;
-			restKurse -= 2;
+			this.kurseOberereGrenze -= (anzahlGE - 2);
+			if (istGEErsatzfachRE) {
+				this.kurseUntereGrenze += anzahlErsatzfachRE;
+				this.kurseOberereGrenze += anzahlErsatzfachRE;
+				istErsatzfachRE = true;
+			}
 		}
-		if (istGEErsatzfachRE) {
-			this.kurseUntereGrenze += anzahlErsatzfachRE;
-			this.kurseOberereGrenze += anzahlErsatzfachRE;
-			istErsatzfachRE = true;
-		}
-		this.kurseOberereGrenze -= restKurse;
 		return istErsatzfachRE ? 0 : anzahlErsatzfachRE;
 	}
 
@@ -331,23 +335,20 @@ export class Abi30BelegpruefungEinbringung extends GostBelegpruefung {
 			}
 		}
 		const istSWErsatzfachRE: boolean = (anzahlErsatzfachRE > 0) && ((anzahlSW - 2) - anzahlErsatzfachRE >= 0);
-		let restKurse: number = anzahlSW;
 		if (istSWAbi || (!this.hatGWDurchgaengig && istSWDurchgaengig && !istGEDurchgaengig)) {
 			this.kurseUntereGrenze += 4;
-			restKurse -= 4;
 			if (istSWErsatzfachRE) {
 				istErsatzfachRE = true;
 			}
 		} else {
 			this.kurseUntereGrenze += 2;
-			restKurse -= 2;
+			this.kurseOberereGrenze -= (anzahlSW - 2);
+			if (istSWErsatzfachRE) {
+				this.kurseUntereGrenze += anzahlErsatzfachRE;
+				this.kurseOberereGrenze += anzahlErsatzfachRE;
+				istErsatzfachRE = true;
+			}
 		}
-		if (istSWErsatzfachRE) {
-			this.kurseUntereGrenze += anzahlErsatzfachRE;
-			this.kurseOberereGrenze += anzahlErsatzfachRE;
-			istErsatzfachRE = true;
-		}
-		this.kurseOberereGrenze -= restKurse;
 		return istErsatzfachRE ? 0 : anzahlErsatzfachRE;
 	}
 
