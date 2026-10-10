@@ -22,10 +22,12 @@
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
-			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
-			<th:block th:each="wochennummer : ${#numbers.sequence(1, plan.stundenplan().wochenperiodizitaet())}"
-				 th:with="wochentyp = ${(plan.stundenplan().wochenperiodizitaet() == 1 ? 0 : wochennummer)}">
-				<table class="fixed-100 mp-0" style="page-break-inside: avoid;" th:with="
+			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. Eine Periodizität unter 1 gilt als eine Woche, weil die Folge sonst rückwärts zählt. -->
+			<th:block th:each="wochennummer : ${#numbers.sequence(1, (plan.stundenplan().wochenperiodizitaet() > 1 ? plan.stundenplan().wochenperiodizitaet() : 1))}"
+				 th:with="wochentyp = ${(plan.stundenplan().wochenperiodizitaet() > 1 ? wochennummer : 0)}">
+				<!-- Ohne Zeitraster gibt es keine Wochentage. Die Tabelle entfällt dann, weil die Spaltenbreite sonst durch null teilt. -->
+				<table class="fixed-100 mp-0" style="page-break-inside: avoid;"
+					th:if="${!plan.stundenplan().unterrichtsrasterWochentage().isEmpty()}" th:with="
 						spaltenzahl = ${(plan.stundenplan().unterrichtsrasterWochentage().size() + 1)},
 						tageSpaltenbreite = ${95/plan.stundenplan().unterrichtsrasterWochentage().size()},
 						ersteSpaltenbreite = ${100 - (tageSpaltenbreite * plan.stundenplan().unterrichtsrasterWochentage().size())}">
