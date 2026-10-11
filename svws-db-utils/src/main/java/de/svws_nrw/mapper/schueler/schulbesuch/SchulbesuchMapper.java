@@ -12,7 +12,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.mapper.JsonNullableMapper;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchResolver;
-import org.apache.poi.util.StringUtil;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
@@ -168,7 +167,7 @@ public interface SchulbesuchMapper {
 	 */
 	@Named("mapSchluesselFachklasse")
 	default String mapSchluesselFachklasse(final String kennung) {
-		if (StringUtil.isBlank(kennung)) {
+		if ((kennung == null) || kennung.isBlank()) {
 			return null;
 		}
 		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"

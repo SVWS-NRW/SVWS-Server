@@ -12,7 +12,7 @@ import java.time.ZoneOffset;
 import java.util.Base64;
 
 import de.svws_nrw.oauth.OAuthScope;
-import org.jspecify.annotations.NonNull;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -146,7 +146,7 @@ class ClientCredentialsFlowTest {
 		return response;
 	}
 
-	private static @NonNull Credentials createCreds() {
+	private static @NotNull Credentials createCreds() {
 		return new Credentials(
 				"client-id",
 				"client-secret",

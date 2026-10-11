@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.schule.logoverwaltung;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,6 @@ import de.svws_nrw.base.compression.Zip;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.validation.ValidationException;
 import jakarta.ws.rs.core.Response;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections4.CollectionUtils;
 
 public final class LogoverwaltungControllerImpl implements LogoverwaltungController {
 
@@ -65,7 +64,7 @@ public final class LogoverwaltungControllerImpl implements LogoverwaltungControl
 	 */
 	@Override
 	public Response getByIdsAsZip(final List<Long> ids) {
-		if (CollectionUtils.isEmpty(ids)) {
+		if ((ids == null) || ids.isEmpty()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Es muss mindestens eine Logo ID im Request übergeben werden.");
 		}
 
@@ -152,7 +151,7 @@ public final class LogoverwaltungControllerImpl implements LogoverwaltungControl
 			final var fileName = Optional.ofNullable(dataUrl.fileExtension())
 					.map(extension -> String.format("%s%s", logo.kennung, extension))
 					.orElse(logo.kennung);
-			final var fileData = Base64.decodeBase64(dataUrl.payload());
+			final var fileData = Base64.getDecoder().decode(dataUrl.payload());
 
 			fileNameToBytes.put(fileName, fileData);
 		}
