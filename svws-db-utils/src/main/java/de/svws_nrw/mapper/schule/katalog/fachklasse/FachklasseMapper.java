@@ -14,7 +14,6 @@ import de.svws_nrw.mapper.JsonNullableMapper;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragCreateRequest;
 import de.svws_nrw.service.schule.katalog.fachklasse.FachklasseEintragPatchRequest;
 import jakarta.ws.rs.core.Response;
-import org.apache.poi.util.StringUtil;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
@@ -81,7 +80,7 @@ public interface FachklasseMapper {
 			final DTOFachklassen entity,
 			@Context final int schuljahr,
 			@MappingTarget final FachklasseEintrag dto) {
-		if (StringUtil.isBlank(entity.Kennung)) {
+		if ((entity.Kennung == null) || entity.Kennung.isBlank()) {
 			return;
 		}
 		// "10-179-02" -> letzten Bindestrich entfernen -> "10-17902"

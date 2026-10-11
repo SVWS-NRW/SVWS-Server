@@ -30,7 +30,6 @@ import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import org.apache.commons.collections4.CollectionUtils;
 import org.openapitools.jackson.nullable.JsonNullable;
 
 public final class LehrerPersonalabschnittsdatenService {
@@ -327,7 +326,7 @@ public final class LehrerPersonalabschnittsdatenService {
 	}
 
 	private Map<Long, Integer> getSchuljahrByIdAbschnitt(final List<Long> abschnittIds) {
-		if (CollectionUtils.isEmpty(abschnittIds)) {
+		if ((abschnittIds == null) || abschnittIds.isEmpty()) {
 			return Collections.emptyMap();
 		}
 
@@ -363,7 +362,7 @@ public final class LehrerPersonalabschnittsdatenService {
 				final LehrerMinderleistungService minderleistungService,
 				final LehrerFunktionService funktionService) {
 
-			if (CollectionUtils.isEmpty(entities)) {
+			if ((entities == null) || entities.isEmpty()) {
 				return Collections.emptyMap();
 			}
 			final var ids = entities.stream().map(e -> e.ID).toList();

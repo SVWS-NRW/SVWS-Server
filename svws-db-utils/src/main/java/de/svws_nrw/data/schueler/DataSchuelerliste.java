@@ -38,10 +38,10 @@ import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
 import de.svws_nrw.service.schule.katalog.KatalogServiceFactory;
 import de.svws_nrw.service.schule.katalog.jahrgang.JahrgangService;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -393,7 +393,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		return result;
 	}
 
-	private static @NonNull JahrgangService getJahrgangService() {
+	private static @NotNull JahrgangService getJahrgangService() {
 		final var katalogRepositoryFactory = new KatalogRepositoryFactory();
 		final var eigeneSchuleRepositoryFactory = new EigeneSchuleRepositoryFactory();
 		final var eigeneSchuleServiceFactory = EigeneSchuleServiceFactory.getNewInstance(eigeneSchuleRepositoryFactory);
