@@ -14,7 +14,7 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
 import de.svws_nrw.asd.types.fach.Fach;
 
 /**
@@ -125,11 +125,12 @@ public final class ABPFachgruppen {
 		return Arrays.stream(Fach.values())
 				.filter(f -> f.getFachgruppe(2024) != null)
 				.map(f -> {
+					final FachgruppeKatalogEintrag fke = f.getFachgruppe(2024).daten(2024);
 					final ABPFachgruppen fach = new ABPFachgruppen();
 					fach.FachKuerzel = f.daten(2024).schluessel;
 					fach.Bezeichnung = f.daten(2024).text;
-					fach.FachgruppeKrz = f.getFachgruppe(2024).daten(2024).kuerzel;
-					fach.Aufgabenfeld = f.getFachgruppe(2024).daten(2024).nummer;
+					fach.FachgruppeKrz = fke.kuerzel;
+					fach.Aufgabenfeld = (fke.nummer == null) ? 0 : fke.nummer;
 					return fach;
 				}).collect(Collectors.toMap(f -> f.FachKuerzel, f -> f));
 	}
