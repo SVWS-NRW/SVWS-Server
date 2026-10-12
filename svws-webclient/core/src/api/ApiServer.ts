@@ -55,6 +55,7 @@ import { FachgruppeKatalogEintrag } from '../asd/data/fach/FachgruppeKatalogEint
 import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
 import { FachklasseEintrag } from '../core/data/schule/FachklasseEintrag';
 import { Fahrschuelerart } from '../core/data/schule/Fahrschuelerart';
+import { FilterCategoryResponse } from '../core/data/filter/FilterCategoryResponse';
 import { Floskel } from '../core/data/schule/Floskel';
 import { Floskelgruppe } from '../core/data/schule/Floskelgruppe';
 import { FoerderschwerpunktEintrag } from '../core/data/schule/FoerderschwerpunktEintrag';
@@ -25813,6 +25814,40 @@ export class ApiServer extends BaseApi {
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
 			ret.add(UvZeitraster.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFilterCategories für den Zugriff auf die URL https://{hostname}/db/{schema}/v1/filter/{domain}/categories
+	 *
+	 * Liefert eine Liste mit allen verfügbaren Filterkategorien der angegebenen Domäne, z. B. schueler.
+Einer Kategorie können beliebig viele Filterattribute zugeordnet sein.
+
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Liste mit Filterkategorien der Domäne
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FilterCategoryResponse>
+	 *   Code 403: Der Benutzer hat keine Rechte, um die Filterkategorien der Domäne abzurufen.
+	 *   Code 404: Es gibt keine Filterdomäne mit dem angegebenen Schlüssel.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} domain - der Pfad-Parameter domain
+	 *
+	 * @returns Liste mit Filterkategorien der Domäne
+	 */
+	public async getFilterCategories(schema: string, domain: string): Promise<List<FilterCategoryResponse>> {
+		const path = "/db/{schema}/v1/filter/{domain}/categories"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{domain\s*(:[^{}]+({[^{}]+})*)?}/g, domain);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<FilterCategoryResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(FilterCategoryResponse.transpilerFromJSON(text));
 		});
 		return ret;
 	}

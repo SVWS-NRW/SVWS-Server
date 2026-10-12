@@ -23,6 +23,7 @@ import de.svws_nrw.api.server.APIENM;
 import de.svws_nrw.api.server.APIEmail;
 import de.svws_nrw.api.server.APIErzieher;
 import de.svws_nrw.api.server.APIFaecher;
+import de.svws_nrw.api.server.APIFilter;
 import de.svws_nrw.api.server.APIGesamtschule;
 import de.svws_nrw.api.server.APIGost;
 import de.svws_nrw.api.server.APIGostKlausuren;
@@ -96,6 +97,7 @@ public final class RestAppServer extends Application {
 			APIAbteilungen.class,
 			APIStatistik.class,
 			APIAnkreuzkompetenzen.class,
+			APIFilter.class,
 			ValidationExceptionMapper.class,
 			SvwsObjectMapperResolver.class,
 			ApiOperationExceptionMapper.class,
