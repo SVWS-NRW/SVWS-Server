@@ -374,6 +374,34 @@ public class APISchueler {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param ids       die Liste von zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Schüler.",
+			description = "Entfernt mehrere Schüler. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
+					+ "der Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteSchueler(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return SchuelerControllerFactory
+				.withDeleteAccess(request)
+				.getSchuelerStammdatenController()
+				.delete(ids);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Hinzufügen der bisher besuchten Schule eines Schülers
 	 *
 	 * @param schema    das Datenbankschema

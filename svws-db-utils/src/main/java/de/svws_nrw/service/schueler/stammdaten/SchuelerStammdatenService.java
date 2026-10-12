@@ -25,6 +25,7 @@ import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
 import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepository;
 import de.svws_nrw.service.schueler.foto.SchuelerFoto;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
+import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.annotation.Nonnull;
 import jakarta.ws.rs.core.Response;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -224,6 +225,25 @@ public final class SchuelerStammdatenService {
 				})
 				.sorted(Comparator.comparingLong(r -> r.id))
 				.toList()
+		);
+	}
+
+	/**
+	 * Löscht die Schüler mit den angegebenen IDs.
+	 * Nicht gefundene IDs werden stillschweigend ignoriert.
+	 * Jeder Eintrag in der Rückgabeliste enthält die ID und ob die Löschung erfolgreich war.
+	 *
+	 * @param idsToDelete Liste der zu löschenden Schüler-IDs
+	 * @return Liste von {@link SimpleOperationResponse}-Einträgen, aufsteigend nach ID sortiert
+	 */
+	public List<SimpleOperationResponse> delete(final List<Long> idsToDelete) {
+		return TransactionSupport.transactional(() ->
+				BulkDeleteUtils.delete(
+						idsToDelete,
+						repository,
+						e -> e.ID,
+						"Schueler"
+				)
 		);
 	}
 

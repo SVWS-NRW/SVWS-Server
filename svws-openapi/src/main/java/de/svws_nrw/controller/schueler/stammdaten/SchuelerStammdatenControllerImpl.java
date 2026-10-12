@@ -57,4 +57,10 @@ public final class SchuelerStammdatenControllerImpl implements SchuelerStammdate
 		return Responses.ok(responses);
 	}
 
+	@Override
+	public Response delete(final List<Long> ids) {
+		final var responses = service.delete(ids);
+		return Responses.ok(responses);
+	}
+
 }

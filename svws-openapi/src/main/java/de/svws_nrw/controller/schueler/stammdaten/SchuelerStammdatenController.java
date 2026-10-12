@@ -59,4 +59,12 @@ public interface SchuelerStammdatenController {
 	 * @return Stammdaten der gefundenen und als gelöscht markierten Schüler
 	 */
 	Response softDelete(List<Long> ids);
+
+	/**
+	 * Löscht mehrere Schüler anhand ihrer IDs.
+	 *
+	 * @param ids die IDs der zu löschenden Schüler
+	 * @return die Response
+	 */
+	Response delete(List<Long> ids);
 }

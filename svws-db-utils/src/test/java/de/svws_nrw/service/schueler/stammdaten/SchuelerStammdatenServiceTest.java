@@ -713,6 +713,62 @@ class SchuelerStammdatenServiceTest {
 	}
 
 	// =========================================================================
+	// delete
+	// =========================================================================
+
+	@Test
+	@DisplayName("delete - alle gefunden und gelöscht")
+	void delete_erfolgreich() {
+		when(repository.findListByIds(List.of(1L))).thenReturn(List.of(entity));
+		when(repository.delete(List.of(entity))).thenReturn(List.of(entity));
+
+		final var result = service.delete(List.of(1L));
+
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().success).isTrue();
+		assertThat(result.getFirst().id).isEqualTo(1L);
+	}
+
+	@Test
+	@DisplayName("delete - ID nicht gefunden -> success=false")
+	void delete_nichtGefunden() {
+		when(repository.findListByIds(List.of(99L))).thenReturn(List.of());
+		when(repository.delete(List.of())).thenReturn(List.of());
+
+		final var result = service.delete(List.of(99L));
+
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst().success).isFalse();
+		assertThat(result.getFirst().id).isEqualTo(99L);
+	}
+
+	@Test
+	@DisplayName("delete - teilweise gefunden")
+	void delete_teilweiseGefunden() {
+		when(repository.findListByIds(List.of(1L, 99L))).thenReturn(List.of(entity));
+		when(repository.delete(List.of(entity))).thenReturn(List.of(entity));
+
+		final var result = service.delete(List.of(1L, 99L));
+
+		assertThat(result).hasSize(2);
+		assertThat(result.stream().filter(r -> r.id == 1L).findFirst().orElseThrow().success).isTrue();
+		assertThat(result.stream().filter(r -> r.id == 99L).findFirst().orElseThrow().success).isFalse();
+	}
+
+	@Test
+	@DisplayName("delete - Ergebnis ist aufsteigend nach ID sortiert")
+	void delete_sortiertNachId() {
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		when(repository.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity, entity2));
+		when(repository.delete(anyList())).thenReturn(List.of(entity, entity2));
+
+		final var result = service.delete(List.of(2L, 1L));
+
+		assertThat(result).extracting(r -> r.id).isSorted();
+	}
+
+
+		// =========================================================================
 	// Hilfsmethoden
 	// =========================================================================
 

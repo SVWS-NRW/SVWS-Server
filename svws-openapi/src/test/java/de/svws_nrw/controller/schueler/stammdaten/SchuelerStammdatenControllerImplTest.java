@@ -155,8 +155,8 @@ class SchuelerStammdatenControllerImplTest {
 	}
 
 	@Test
-	@DisplayName("delete | Erfolg mit mehreren IDs")
-	void delete_success() {
+	@DisplayName("softDelete | Erfolg mit mehreren IDs")
+	void softDelete_success() {
 		final var ids = List.of(1L, 2L, 3L);
 		final var deleteResponses = List.of(
 				mock(SimpleOperationResponse.class),
@@ -174,6 +174,28 @@ class SchuelerStammdatenControllerImplTest {
 				.hasSize(2);
 
 		verify(schuelerStammdatenService, times(1)).softDelete(ids);
+	}
+
+	@Test
+	@DisplayName("delete | Erfolg mit mehreren IDs")
+	void delete_success() {
+		final var ids = List.of(1L, 2L, 3L);
+		final var deleteResponses = List.of(
+				mock(SimpleOperationResponse.class),
+				mock(SimpleOperationResponse.class)
+		);
+
+		when(schuelerStammdatenService.delete(ids)).thenReturn(deleteResponses);
+
+		assertThat(schuelerStammdatenControllerImpl.delete(ids))
+				.isInstanceOf(Response.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.OK.getStatusCode())
+				.extracting(Response::getEntity)
+				.asInstanceOf(InstanceOfAssertFactories.LIST)
+				.isNotNull()
+				.hasSize(2);
+
+		verify(schuelerStammdatenService, times(1)).delete(ids);
 	}
 
 	@Test
