@@ -226,7 +226,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt FS_19_INFO
 	 */
-	public static readonly GOST30_FS_19_INFO: GostBelegungsfehler = new GostBelegungsfehler("GOST30_FS_19_INFO", 42, "FS_19_INFO", GostBelegungsfehlerArt.HINWEIS, "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen.", "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen.");
+	public static readonly GOST30_FS_19_INFO: GostBelegungsfehler = new GostBelegungsfehler("GOST30_FS_19_INFO", 42, "FS_19_INFO", GostBelegungsfehlerArt.HINWEIS, "Die Teilnahme an einer Feststellungsprüfung in der Herkunftssprache am Ende der Sekundarstufe I und eine bestandene Feststellungsprüfung am Ende von EF.2 sind notwendig, um die Pflicht in der fortgeführten Fremdsprache zu erfüllen.", "Die Teilnahme an einer Feststellungsprüfung in der Herkunftssprache am Ende der Sekundarstufe I und eine bestandene Feststellungsprüfung am Ende von EF.2 sind notwendig, um die Pflicht in der fortgeführten Fremdsprache zu erfüllen.");
 
 	/**
 	 * BelegungsfehlerArt FS_20
@@ -797,7 +797,7 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	/**
 	 * BelegungsfehlerArt FS_19_INFO
 	 */
-	public static readonly FS_19_INFO: GostBelegungsfehler = new GostBelegungsfehler("FS_19_INFO", 156, "FS_19_INFO", GostBelegungsfehlerArt.HINWEIS, "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen.", "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen.");
+	public static readonly FS_19_INFO: GostBelegungsfehler = new GostBelegungsfehler("FS_19_INFO", 156, "FS_19_INFO", GostBelegungsfehlerArt.HINWEIS, "Die Teilnahme an einer Feststellungsprüfung in der Herkunftssprache am Ende der Sekundarstufe I und eine bestandene Feststellungsprüfung am Ende von EF.2 sind notwendig, um die Pflicht in der fortgeführten Fremdsprache zu erfüllen.", "Die Teilnahme an einer Feststellungsprüfung in der Herkunftssprache am Ende der Sekundarstufe I und eine bestandene Feststellungsprüfung am Ende von EF.2 sind notwendig, um die Pflicht in der fortgeführten Fremdsprache zu erfüllen.");
 
 	/**
 	 * BelegungsfehlerArt FS_20

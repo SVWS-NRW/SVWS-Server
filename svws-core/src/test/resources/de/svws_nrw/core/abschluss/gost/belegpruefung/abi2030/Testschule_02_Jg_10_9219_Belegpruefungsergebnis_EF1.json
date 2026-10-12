@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine neu einsetzende Fremdsprache kann nur gewählt werden, wenn diese nicht zuvor in der Sekundarstaufe I belegt wurde. Die Sprachenfolge ist fehlerhaft."
+  }, {
+    "code" : "GE_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  } ],
+  "log" : [ ]
+}

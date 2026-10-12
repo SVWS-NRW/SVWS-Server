@@ -906,7 +906,7 @@ export class LaufbahnplanungUiManager implements LaufbahnplanungUiStepper {
 				continue;
 			}
 			for (const pruefung of this.manager.getSprachendaten().pruefungen) {
-				if ((pruefung.ersetzteSprache === sprach_kuerzel) && (SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(pruefung))) {
+				if ((pruefung.ersetzteSprache === sprach_kuerzel) && (SprachendatenUtils.istFeststellungspruefungAufMSANiveau(pruefung))) {
 					map.put(fach, pruefung);
 				}
 			}
@@ -933,7 +933,7 @@ export class LaufbahnplanungUiManager implements LaufbahnplanungUiStepper {
 		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
 		if (sprachpruefung !== null) {
-			return fach.istFremdSpracheNeuEinsetzend || SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(sprachpruefung);
+			return fach.istFremdSpracheNeuEinsetzend || SprachendatenUtils.istFeststellungspruefungAufMSANiveau(sprachpruefung);
 		}
 		return false;
 	}

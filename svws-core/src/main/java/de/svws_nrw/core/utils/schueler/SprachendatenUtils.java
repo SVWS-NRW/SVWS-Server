@@ -124,8 +124,10 @@ public final class SprachendatenUtils {
 
 	/**
 	 * Prüft, ob die übergebene Sprache als eine fortgeführte Fremdsprache in der gymnasialen Oberstufe
-	 * gemäß APO-GOSt ab EF belegt werden kann. Dazu zählen alle belegten Sprachen mit mind. 2 Jahren Belegung in Sek-I
-	 * sowie Sprachen aus bestimmten Sprachprüfungen.
+	 * gemäß APO-GOSt ab EF belegt werden kann. Dazu zählen alle Sprachen mit mind. 2 Jahren Belegung bis zum Ende der Sek-I
+	 * sowie Sprachen aus bestimmten Sprachprüfungen. Eine bestandene HSU-Prüfung auf MSA-Niveau ermöglicht die Fortführung
+	 * (BASS 13-61 Nr. 2, Nr. 6.6; VV 8.3.2 zur APO-GOSt (2027)). Als fachlich vorgegebene Übergangslösung entscheidet der Eintrag
+	 * bei der Prüfung verbindlich, ob die Sprache fortgeführt wird.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
 	 * @param sprache 		das einstellige Kürzel der Sprache
@@ -153,15 +155,13 @@ public final class SprachendatenUtils {
 					continue;
 				}
 
-				// Prüfe auf erfolgreiche HSU Prüfung auf EESA/MSA-Niveau
-				if (pruefung.istHSUPruefung && (pruefung.note != null) && (pruefung.note <= 4)
-						&& ((pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id)
-								|| (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id))) {
+				// Prüfe auf bestandene HSU-Prüfung auf MSA-Niveau, bei der die Fortführung eingetragen ist
+				if (istHSUPruefungMitFortfuehrung(pruefung)) {
 					return true;
 				}
 
-				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
-				if (istFeststellungspruefungEESAMSABestanden(pruefung)) {
+				// Prüfe auf Feststellungsprüfung auf MSA-Niveau
+				if (istFeststellungspruefungAufMSANiveau(pruefung)) {
 					return true;
 				}
 			}
@@ -174,7 +174,8 @@ public final class SprachendatenUtils {
 	/**
 	 * Prüft, ob die übergebene Sprache als eine neueinsetzende Fremdsprache in der gymnasialen Oberstufe
 	 * gemäß APO-GOSt ab EF belegt werden kann. Dazu zählen alle bisher nicht belegten Sprachen oder Sprachen,
-	 * die nur im Rahmen des HSU belegt oder geprüft wurden.
+	 * die nur im Rahmen des HSU belegt oder geprüft wurden. Ist bei der HSU-Prüfung die Fortführung eingetragen,
+	 * wird die Sprache fortgeführt und kann nicht neu einsetzend belegt werden.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
 	 * @param sprache 		das einstellige Kürzel der Sprache
@@ -202,8 +203,8 @@ public final class SprachendatenUtils {
 					continue;
 				}
 
-				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
-				if (istFeststellungspruefungEESAMSABestanden(pruefung)) {
+				// Prüfe auf HSU-Prüfung mit Fortführung oder Feststellungsprüfung auf MSA-Niveau
+				if (istHSUPruefungMitFortfuehrung(pruefung) || istFeststellungspruefungAufMSANiveau(pruefung)) {
 					return false;
 				}
 			}
@@ -277,7 +278,7 @@ public final class SprachendatenUtils {
 		final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 		if (pruefungen != null) {
 			for (final Sprachpruefung pruefung : pruefungen) {
-				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
+				// Prüfe auf erfolgreiche Feststellungsprüfung auf MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
 				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung)) {
 					return true;
 				}
@@ -314,7 +315,7 @@ public final class SprachendatenUtils {
 			final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 			if (pruefungen != null) {
 				for (final Sprachpruefung pruefung : pruefungen) {
-					// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
+					// Prüfe auf erfolgreiche Feststellungsprüfung auf MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
 					if ((kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung))
 							&& (!belegungen.get(0).sprache.equals(pruefung.sprache))) {
 						return true;
@@ -375,8 +376,10 @@ public final class SprachendatenUtils {
 
 
 	/**
-	 * Prüft, ob eine Sprachfeststellungsprüfung auf dem Niveau der Einführungsphase (EF) der GOSt vorliegt.
-	 * Nach §11 (2) APO-GOSt setzt das eine Prüfung in der gleichen Sprache am Ende der Sek-I voraus
+	 * Prüft, ob eine bestandene Sprachfeststellungsprüfung auf dem Niveau der Einführungsphase (EF) der GOSt vorliegt.
+	 * Sie erfüllt die Pflicht in der fortgeführten Fremdsprache und setzt die Teilnahme an einer Feststellungsprüfung in der
+	 * gleichen Sprache am Ende der Sek-I voraus (APO-GOSt (2027) § 11 Abs. 3 Nr. 2 Satz 4 und 5). In der Qualifikationsphase
+	 * ist sie nicht möglich (VV 11.3.2).
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
 	 *
@@ -391,14 +394,21 @@ public final class SprachendatenUtils {
 		final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 		if (pruefungen != null) {
 			for (final Sprachpruefung pruefungS1 : pruefungen) {
-				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
-				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefungS1) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefungS1)) {
+				// Prüfe auf Teilnahme an einer Feststellungsprüfung in der Sek-I, die für die Oberstufe auf MSA-Niveau liegt
+				// (BASS 13-61 Nr. 1, Nr. 2.1 und 2.2). Die eingetragene Note dient als Nachweis der Teilnahme, ihr Wert spielt
+				// keine Rolle. Ein fehlender Jahrgang wird nicht beanstandet.
+				if (pruefungS1.istFeststellungspruefung
+						&& (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen
+								|| pruefungS1.kannWahlpflichtfremdspracheErsetzen)
+						&& (pruefungS1.note != null) && (getJahrgangNumerisch(pruefungS1.jahrgang) <= 10)
+						&& (pruefungS1.anspruchsniveauId != null) && (pruefungS1.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)) {
 					for (final Sprachpruefung pruefungEF : pruefungen) {
-						// Prüfe auf erfolgreiche Feststellungsprüfung auf EF-Niveau zur gefundenen Prüfungssprache
+						// Prüfe auf bestandene Feststellungsprüfung auf EF-Niveau zur gefundenen Prüfungssprache, die nicht in der Q-Phase liegt
 						if (pruefungEF.istFeststellungspruefung && pruefungEF.sprache.equals(pruefungS1.sprache)
 								&& (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen
 										|| pruefungEF.kannWahlpflichtfremdspracheErsetzen)
-								&& (pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id) && (pruefungEF.note != null) && (pruefungEF.note <= 4)) {
+								&& (pruefungEF.anspruchsniveauId != null) && (pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id)
+								&& (pruefungEF.note != null) && (pruefungEF.note <= 4) && (getJahrgangNumerisch(pruefungEF.jahrgang) <= 11)) {
 							return true;
 						}
 					}
@@ -705,6 +715,8 @@ public final class SprachendatenUtils {
 
 	/**
 	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der ersten Pflichtfremdsprache treten kann.
+	 * Den Notenersatz regelt § 5 Abs. 4 APO-S I. Die Belegprüfung berücksichtigt nur bestandene Prüfungen auf MSA-Niveau, da nur dieses
+	 * Niveau mit der Berechtigung zum Besuch der gymnasialen Oberstufe verbunden ist (BASS 13-61 Nr. 1, Nr. 2.1 und 2.2).
 	 *
 	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
 	 *
@@ -713,12 +725,15 @@ public final class SprachendatenUtils {
 	private static boolean kannFeststellungspruefungErsteSpracheErsetzen(final Sprachpruefung pruefung) {
 		return ((pruefung != null) && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4)
 				&& pruefung.kannErstePflichtfremdspracheErsetzen
-				&& ((pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id) || (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)));
+				&& (pruefung.anspruchsniveauId != null) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
 	}
 
 
 	/**
 	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der zweiten Pflichtfremdsprache bzw. einer Wahlpflichtsprache treten kann.
+	 * Eine erfolgreich abgelegte Prüfung befreit von der zweiten Fremdsprache in der Einführungsphase (APO-GOSt (2027) § 8 Abs. 3 Satz 2).
+	 * Die Beschränkung auf das MSA-Niveau folgt aus BASS 13-61 Nr. 1, Nr. 2.1 und 2.2: Nur dieses Niveau ist mit der Berechtigung
+	 * zum Besuch der gymnasialen Oberstufe verbunden.
 	 *
 	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
 	 *
@@ -727,7 +742,22 @@ public final class SprachendatenUtils {
 	private static boolean kannFeststellungspruefungZweiteSpracheErsetzen(final Sprachpruefung pruefung) {
 		return ((pruefung != null) && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4)
 				&& (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen)
-				&& ((pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id) || (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)));
+				&& (pruefung.anspruchsniveauId != null) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
+	}
+
+
+	/**
+	 * Hilfsfunktion, die prüft, ob eine bestandene HSU-Prüfung auf MSA-Niveau die Belegung der Sprache als fortgeführte Fremdsprache erlaubt
+	 * (BASS 13-61 Nr. 2, Nr. 6.6; VV 8.3.2 zur APO-GOSt (2027)). Als fachlich vorgegebene Übergangslösung entscheidet der Eintrag
+	 * bei der Prüfung verbindlich, ob die Sprache fortgeführt wird.
+	 *
+	 * @param pruefung	HSU-Prüfung, die geprüft werden soll.
+	 *
+	 * @return True, wenn die Sprache fortgeführt werden kann, sonst false
+	 */
+	private static boolean istHSUPruefungMitFortfuehrung(final @NotNull Sprachpruefung pruefung) {
+		return pruefung.istHSUPruefung && (pruefung.note != null) && (pruefung.note <= 4) && pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben
+				&& (pruefung.anspruchsniveauId != null) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id);
 	}
 
 
@@ -745,6 +775,27 @@ public final class SprachendatenUtils {
 								|| pruefung.kannWahlpflichtfremdspracheErsetzen)
 								&& ((pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id)
 										|| (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id))));
+	}
+
+
+	/**
+	 * Hilfsfunktion, die prüft, ob eine Feststellungsprüfung auf MSA-Niveau die Sprache für die gymnasiale Oberstufe als bereits erlernt ausweist.
+	 * Die Prüfung zählt erst, wenn eine Note eingetragen ist, da nur diese die Teilnahme belegt.
+	 * Bei einer Prüfung mit Ersatzkennzeichen wird die Note im Zeugnis anstelle der ersetzten Fremdsprache geführt (APO-S I § 5 Abs. 4,
+	 * BASS 13-61 Nr. 1, Nr. 9.2). Die Sprache gilt deshalb wie andere erlernte Sprachen als erlernt, unabhängig von der Note.
+	 * Eine Prüfung, die nur die Fortführung erlaubt, ersetzt keine Fremdsprache und zählt erst ab der
+	 * Note ausreichend (BASS 13-61 Nr. 1, Nr. 11.1 bis 11.3).
+	 *
+	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
+	 *
+	 * @return True, wenn die Prüfung die Sprache als bereits erlernt ausweist, sonst false
+	 */
+	public static boolean istFeststellungspruefungAufMSANiveau(final Sprachpruefung pruefung) {
+		return (pruefung != null) && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.anspruchsniveauId != null)
+				&& (pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
+				&& ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && (pruefung.note <= 4))
+						|| pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen
+						|| pruefung.kannWahlpflichtfremdspracheErsetzen);
 	}
 
 

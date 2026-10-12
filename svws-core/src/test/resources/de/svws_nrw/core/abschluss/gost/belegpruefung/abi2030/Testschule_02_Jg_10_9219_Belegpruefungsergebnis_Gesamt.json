@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine neu einsetzende Fremdsprache kann nur gewählt werden, wenn diese nicht zuvor in der Sekundarstaufe I belegt wurde. Die Sprachenfolge ist fehlerhaft."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftlich-technische Fächer durchgehend belegt wurden, oder kein naturwissenschaftlich-technisches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+  } ],
+  "log" : [ ]
+}
