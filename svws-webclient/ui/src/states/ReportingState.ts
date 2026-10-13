@@ -126,6 +126,16 @@ export interface ReportingState {
 	istSchulformZulaessig(vorlage: ReportingReportvorlage): boolean;
 
 	/**
+	 * Eine Vorlage wird angeboten, wenn der ServerMode des Servers den in der Vorlage verlangten ServerMode erfüllt. Sonst wird sie ausgeblendet.
+	 * Unabhängig von der Ausblendung lehnt der Server selbst eine Anfrage mit unzureichendem ServerMode ab.
+	 *
+	 * @param vorlage   die zu prüfende Reportvorlage
+	 *
+	 * @returns true, wenn die Vorlage im aktuellen ServerMode angeboten wird
+	 */
+	istServerModeZulaessig(vorlage: ReportingReportvorlage): boolean;
+
+	/**
 	 * Erzeuge die Parameter für die übergebene Vorlage, zusammengestellt aus neuen und gespeicherten Daten
 	 *
 	 * @param vorlage   die Vorlage, für die die Parameter erzeugt werden sollen

@@ -11,6 +11,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationGost;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageKonfigurationKlassen;
@@ -53,6 +54,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen()
 	),
 
@@ -66,6 +68,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
 					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren()
 	),
 
@@ -79,6 +82,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern()
 	),
 
@@ -92,6 +96,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten()
 	),
 
@@ -105,6 +110,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen()
 	),
 
@@ -118,6 +124,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen()
 	),
 
@@ -131,6 +138,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken()
 	),
 
@@ -143,6 +151,7 @@ public enum ReportingReportvorlage {
 			"Klasse-Liste-Schueler-Fotos-Namen",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerFotosNamen()
 	),
 
@@ -155,6 +164,7 @@ public enum ReportingReportvorlage {
 			"Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher()
 	),
 
@@ -167,6 +177,7 @@ public enum ReportingReportvorlage {
 			"Klassen-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten()
 	),
 
@@ -179,6 +190,7 @@ public enum ReportingReportvorlage {
 			"Klassen-Liste-Schueler-Leistungsdaten-Detailliert",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdatenDetailliert()
 	),
 
@@ -191,6 +203,7 @@ public enum ReportingReportvorlage {
 			"Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerKontaktdatenerzieher()
 	),
 
@@ -203,6 +216,7 @@ public enum ReportingReportvorlage {
 			"Kurs-Liste-Schueler-Fotos-Namen",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerFotosNamen()
 	),
 
@@ -215,6 +229,7 @@ public enum ReportingReportvorlage {
 			"Kurs-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten()
 	),
 
@@ -227,6 +242,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Liste-Kontaktdaten",
 			List.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVListeKontaktdaten()
 	),
 
@@ -239,6 +255,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten()
 	),
 
@@ -251,6 +268,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Notenmodul-Anschreiben-Zugangsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVNotenmodulAnschreibenZugangsdaten()
 	),
 
@@ -263,6 +281,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Stammdatenliste",
 			List.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationLehrer.getLehrerVStammdatenliste()
 	),
 
@@ -274,6 +293,7 @@ public enum ReportingReportvorlage {
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4()
 	),
 
@@ -285,6 +305,7 @@ public enum ReportingReportvorlage {
 			"APO-GOSt-Anlage12",
 			List.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3()
 	),
 
@@ -298,6 +319,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht()
 	),
 
@@ -311,6 +333,7 @@ public enum ReportingReportvorlage {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN),
 			ReportingReportvorlageSchulformen.GOST,
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen()
 	),
 
@@ -323,6 +346,7 @@ public enum ReportingReportvorlage {
 			"Grundschulzeugnis-Klasse4",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			ReportingReportvorlageSchulformen.GRUNDSCHULE,
+			ServerMode.ALPHA,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVGrundschulzeugnisKlasse4()
 	),
 
@@ -335,6 +359,7 @@ public enum ReportingReportvorlage {
 			"Schueler-Schulbescheinigung",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVSchulbescheinigung()
 	),
 
@@ -347,6 +372,7 @@ public enum ReportingReportvorlage {
 			"Schueler-Liste-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationSchueler.getSchuelerVListeKontaktdatenerzieher()
 	),
 
@@ -359,6 +385,7 @@ public enum ReportingReportvorlage {
 			"Fach-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVFachStundenplan()
 	),
 
@@ -371,6 +398,7 @@ public enum ReportingReportvorlage {
 			"Klassen-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan()
 	),
 
@@ -383,6 +411,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplan()
 	),
 
@@ -395,6 +424,7 @@ public enum ReportingReportvorlage {
 			"Lehrer-Stundenplan-Kombiniert",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplanKombiniert()
 	),
 
@@ -407,6 +437,7 @@ public enum ReportingReportvorlage {
 			"Raum-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVRaumStundenplan()
 	),
 
@@ -419,6 +450,7 @@ public enum ReportingReportvorlage {
 			"Schueler-Stundenplan",
 			List.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN),
 			List.of(),
+			ServerMode.STABLE,
 			ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVSchuelerStundenplan()
 	);
 
@@ -446,6 +478,9 @@ public enum ReportingReportvorlage {
 
 	/** Die Schulformen, an denen die Report-Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen. */
 	private final @NotNull List<Schulform> schulformen;
+
+	/** Der mindestens erforderliche ServerMode, damit die Report-Vorlage genutzt werden darf. STABLE lässt sie in allen Modi zu. */
+	private final @NotNull ServerMode erforderlicherServerMode;
 
 
 	/** Reporting-Parameter inkl. der gültigen Vorlage-Parametergruppen für diese Report-Vorlage. */
@@ -480,14 +515,16 @@ public enum ReportingReportvorlage {
 	 * @param dateiname           Der statische Dateiname ohne Dateiendung.
 	 * @param benutzerKompetenzen Die Liste mit Benutzerkompetenzen.
 	 * @param schulformen         Die Schulformen, an denen die Vorlage genutzt werden darf. Eine leere Liste gilt für alle Schulformen.
+	 * @param erforderlicherServerMode Der mindestens erforderliche ServerMode, damit die Vorlage genutzt werden darf.
 	 * @param reportingParameter  Eine Liste mit den Vorlage-Parametern, basierend auf der jeweiligen Definition.
 	 */
-	// SONARQUBE WARNUNG: Es sollen max. 7 Paramater an den Konstruktor übergeben werden. Hier sind es nun mal neun, aber dennoch ist alles gut nachvollziehbar.
+	// SONARQUBE WARNUNG: Es sollen max. 7 Paramater an den Konstruktor übergeben werden. Hier sind es nun mal zehn, aber dennoch ist alles gut nachvollziehbar.
 	@SuppressWarnings("java:S107")
 	ReportingReportvorlage(final @NotNull String bezeichnung, final @NotNull String uiTitel,
 			final @NotNull String uiBeschreibung, final @NotNull ReportingReportvorlageDatenContext datenContext,
 			final @NotNull String pfadHtmlTemplate, final @NotNull String dateiname, final @NotNull List<BenutzerKompetenz> benutzerKompetenzen,
-			final @NotNull List<Schulform> schulformen, final @NotNull ReportingParameter reportingParameter) {
+			final @NotNull List<Schulform> schulformen, final @NotNull ServerMode erforderlicherServerMode,
+			final @NotNull ReportingParameter reportingParameter) {
 		this.bezeichnung = bezeichnung;
 		this.uiTitel = uiTitel;
 		this.uiBeschreibung = uiBeschreibung;
@@ -497,6 +534,7 @@ public enum ReportingReportvorlage {
 		this.dateiname = dateiname;
 		this.benutzerKompetenzen = benutzerKompetenzen;
 		this.schulformen = schulformen;
+		this.erforderlicherServerMode = erforderlicherServerMode;
 		this.reportingParameter = reportingParameter;
 	}
 
@@ -622,6 +660,26 @@ public enum ReportingReportvorlage {
 	 */
 	public boolean giltFuerSchulform(final Schulform schulform) {
 		return this.schulformen.isEmpty() || ((schulform != null) && this.schulformen.contains(schulform));
+	}
+
+	/**
+	 * Gibt den mindestens erforderlichen ServerMode zurück, damit diese Report-Vorlage genutzt werden darf.
+	 *
+	 * @return Der erforderliche ServerMode. STABLE lässt die Vorlage in allen Modi zu.
+	 */
+	public @NotNull ServerMode getErforderlicherServerMode() {
+		return this.erforderlicherServerMode;
+	}
+
+	/**
+	 * Gibt an, ob diese Report-Vorlage in dem übergebenen ServerMode genutzt werden darf. Der Client blendet die Vorlage sonst aus, der Server lehnt sie ab.
+	 *
+	 * @param serverMode Der ServerMode, in dem der Server betrieben wird.
+	 *
+	 * @return true, wenn der ServerMode für diese Vorlage ausreicht; sonst false.
+	 */
+	public boolean giltFuerServerMode(final @NotNull ServerMode serverMode) {
+		return this.erforderlicherServerMode.checkServerMode(serverMode);
 	}
 
 	/**

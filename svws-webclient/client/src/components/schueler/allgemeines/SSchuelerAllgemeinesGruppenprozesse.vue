@@ -66,7 +66,6 @@
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useReportingState } from "@ui/states/ReportingState";
-	import { useServerState } from "@ui/states/ServerState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
@@ -78,16 +77,15 @@
 	const props = defineProps<SSchuelerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
 	const reportingState = useReportingState();
-	const serverState = useServerState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
 	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
-	// Das Grundschulzeugnis befindet sich noch in der Entwicklung und ist daher nur im Alpha- und Dev-Modus verfügbar
-	const zeigeGrundschulzeugnis = computed(() => serverState.hasAlpha && hatKompetenzDruckenSchuelerIndividualdaten.value
-		&& reportingState.istSchulformZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4));
+	const zeigeGrundschulzeugnis = computed(() => hatKompetenzDruckenSchuelerIndividualdaten.value
+		&& reportingState.istSchulformZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4)
+		&& reportingState.istServerModeZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4));
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !schuelerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);

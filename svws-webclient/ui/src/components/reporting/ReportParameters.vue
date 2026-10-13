@@ -272,9 +272,10 @@
 	const parameter = ref<ReportingParameter>(new ReportingParameter());
 	const altParameter = ref<string>();
 
-	/** Die Vorlagen, die an dieser Schulform genutzt werden dürfen. Versorgt die Auswahlliste und die Vorauswahl, damit keine ausgeblendete Vorlage
-	 * vorausgewählt wird. */
-	const zulaessigeReportvorlagen = ReportingReportvorlage.values().filter(vorlage => reportingState.istSchulformZulaessig(vorlage));
+	/** Die Vorlagen, die an dieser Schulform und im aktuellen ServerMode genutzt werden dürfen. Versorgt die Auswahlliste und die Vorauswahl, damit keine
+	 * ausgeblendete Vorlage vorausgewählt wird. */
+	const zulaessigeReportvorlagen = ReportingReportvorlage.values()
+		.filter(vorlage => reportingState.istSchulformZulaessig(vorlage) && reportingState.istServerModeZulaessig(vorlage));
 
 	watch(() => props.reportvorlage, () => {
 			localReportvorlage.value = props.reportvorlage;

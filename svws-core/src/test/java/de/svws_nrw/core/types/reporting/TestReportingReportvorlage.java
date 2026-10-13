@@ -17,6 +17,7 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.reporting.reportvorlagekonfiguration.ReportingReportvorlageSchulformen;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -251,6 +252,24 @@ class TestReportingReportvorlage {
 			}
 		}
 		assertFalse(reportvorlage.giltFuerSchulform(null));
+	}
+
+	/** Im ServerMode DEV wird jede Vorlage angeboten. */
+	@Test
+	void testImServerModeDevGiltJedeVorlage() {
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			assertTrue(reportvorlage.giltFuerServerMode(ServerMode.DEV), reportvorlage.name());
+		}
+	}
+
+	/** Eine Vorlage gilt in ihrem erforderlichen ServerMode; im ServerMode STABLE gilt sie nur, wenn sie STABLE verlangt. */
+	@Test
+	void testEineVorlageGiltAbIhremServerMode() {
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			final ServerMode erforderlich = reportvorlage.getErforderlicherServerMode();
+			assertTrue(reportvorlage.giltFuerServerMode(erforderlich), reportvorlage.name());
+			assertEquals(erforderlich == ServerMode.STABLE, reportvorlage.giltFuerServerMode(ServerMode.STABLE), reportvorlage.name());
+		}
 	}
 
 	/** Bindet die im Quelltext genannten GOSt-Schulformen an den Katalog: Die Liste führt genau die Schulformen, für die {@code hatGymOb} gilt. */

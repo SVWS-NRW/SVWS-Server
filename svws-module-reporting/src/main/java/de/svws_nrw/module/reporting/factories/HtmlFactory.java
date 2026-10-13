@@ -9,6 +9,7 @@ import java.util.Objects;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageDatenContext;
@@ -101,9 +102,31 @@ public final class HtmlFactory {
 							.formatted(reportingReportvorlage.getBezeichnung(), benannteKompetenzen(reportingReportvorlage)));
 		}
 
+		pruefeServerMode();
 		pruefeSchulform();
 
 		this.reportingContext.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Initialisierung der HTML-Factory und der Validierung der übergebenen Daten.");
+	}
+
+
+	/**
+	 * Prüft, ob die Reportvorlage im ServerMode dieses Servers genutzt werden darf. Eine Vorlage für STABLE gilt in jedem Modus, daher wird der ServerMode
+	 * dann nicht abgefragt.
+	 *
+	 * @throws ApiOperationException Mit Status 400, wenn der ServerMode des Servers für die Vorlage nicht ausreicht.
+	 */
+	private void pruefeServerMode() throws ApiOperationException {
+		final ServerMode erforderlich = reportingReportvorlage.getErforderlicherServerMode();
+		if (erforderlich == ServerMode.STABLE) {
+			return;
+		}
+
+		this.reportingContext.logger().logLn(LogLevel.DEBUG, 4, "Prüfe den ServerMode des Servers gegen den für die Vorlage erforderlichen ServerMode.");
+		if (!reportingReportvorlage.giltFuerServerMode(this.reportingContext.serverMode())) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"### FEHLER: Die Reportvorlage '%s' ist erst ab dem Servermodus '%s' verfügbar."
+							.formatted(reportingReportvorlage.getBezeichnung(), erforderlich.text));
+		}
 	}
 
 

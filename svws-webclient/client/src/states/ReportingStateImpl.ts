@@ -144,6 +144,10 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 		return vorlage.giltFuerSchulform(schuleStateImpl.schulform);
 	}
 
+	public istServerModeZulaessig(vorlage: ReportingReportvorlage): boolean {
+		return vorlage.giltFuerServerMode(serverStateImpl.mode);
+	}
+
 	public istParameterSichtbar(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean {
 		return this.istSichtbar(gruppe) && this.istSichtbar(vp);
 	}
