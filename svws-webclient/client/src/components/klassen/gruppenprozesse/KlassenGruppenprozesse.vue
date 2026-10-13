@@ -34,7 +34,7 @@
 					:ids-hauptdaten="klassenState.manager.getSchuelerIDsDerAuswahl()" :ids-detaildaten="[]" />
 			</ui-card>
 
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (klassenState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN_DETAILLIERT.getUiBeschreibung()"
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (klassenState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" :title="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiTitel()" :subtitle="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getUiBeschreibung()"
 				:is-open="currentAction === 'druckKlasseStundenplan'" @update:is-open="isOpen => setCurrentAction('druckKlasseStundenplan', isOpen)">
 				<div class="flex flex-col">
 					<div>

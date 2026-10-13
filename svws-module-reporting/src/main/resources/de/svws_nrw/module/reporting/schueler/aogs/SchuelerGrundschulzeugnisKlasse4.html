@@ -458,16 +458,16 @@
 								<li>Zur Spalte "Bemerkungen":<br/>
 									Hier können eingetragen werden: Angaben über die Leistungen im herkunftssprachlichen Unterricht, Angaben über besondere Leistungen,
 									Angaben über besonderen persönlichen Einsatz im außerunterrichtlichen Bereich, Angaben über außerschulische, insbesondere ehrenamtliche Tätigkeiten,
-									Angaben über sonderpädagogische Förderung, sofern zutreffend, Angaben über Wiederholung oder Rücktritt, sofern zutreffend</li>
+									Angaben über sonderpädagogische Förderung (sofern zutreffend), Angaben über Wiederholung oder Rücktritt (sofern zutreffend).</li>
 								<li>Notenstufen:<br/>
-									Bei der Bewertung einzelner Schülerleistungen sowie in Zeugnissen werden die folgenden Notenstufen gemäß § 48 Absatz 3 SchulG zugrunde gelegt:
+									Bei der Bewertung einzelner Schülerleistungen sowie in Zeugnissen werden die folgenden Notenstufen gemäß § 48 Absatz 3 SchulG zugrunde gelegt:<br/>
 									1. sehr gut (1), 2. gut (2), 3. befriedigend (3), 4. ausreichend (4), 5. mangelhaft (5), 6. ungenügend (6)</li>
 								<li>Rechtsbehelfsbelehrung:<br/>
 									Gegen die Entscheidung, die Schülerin oder den Schüler nicht zu versetzen oder einen erreichbaren Abschluss oder eine Berechtigung nicht zu vergeben, kann innerhalb eines
-									Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden.
-									Der Widerspruch ist bei der Schule (<span th:text="${Schule != null ? Schule.bezeichnungSchuleZeileEins() : ''}">Schulname</span>,
-									<span th:text="${Schule != null ? Schule.strassennameHausnummer() : ''}">Straße 12</span>,
-									<span th:text="${Schule != null ? Schule.plzOrt() : ''}">12345 Ort</span>) schriftlich oder zur Niederschrift zu erheben.</li>
+									Monats nach Bekanntgabe des Zeugnisses Widerspruch erhoben werden. Der Widerspruch ist bei der Schule
+									(<span th:text="${(Schule != null ? Schule.bezeichnungSchuleZeileEins() : '') + ','}">Schulname,</span>
+									<span th:text="${(Schule != null ? Schule.strassennameHausnummer() : '') + ','}">Straße 12,</span>
+									<span th:text="${(Schule != null ? Schule.plzOrt() : '') + ')'}">12345 Ort)</span> zu erheben.</li>
 							</ol>
 						</div>
 
