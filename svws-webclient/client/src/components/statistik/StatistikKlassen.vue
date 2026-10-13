@@ -36,7 +36,7 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.klassenListeManager.auswahlID() !== null">
+		<div v-if="statistikState.klassenListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKlasse(statistikState.klassenListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.klassenListeManager.auswahl().kuerzel }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<klassen-daten v-if="tabManager.tab.name === 'K'" />

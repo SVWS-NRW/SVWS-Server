@@ -36,7 +36,7 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.lehrerListeManager.auswahlID() !== null">
+		<div v-if="statistikState.lehrerListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoLehrer(statistikState.lehrerListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.lehrerListeManager.auswahl().nachname }}, {{ statistikState.lehrerListeManager.auswahl().vorname }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<lehrer-individualdaten v-if="tabManager.tab.name === 'LS'" :zeige-alles="false" />

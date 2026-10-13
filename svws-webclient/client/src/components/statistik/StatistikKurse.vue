@@ -36,7 +36,7 @@
 				</template>
 			</template>
 		</ui-table-grid>
-		<div v-if="statistikState.kursListeManager.auswahlID() !== null">
+		<div v-if="statistikState.kursListeManager.auswahlID() !== null" class="flex min-w-0 flex-1 flex-col">
 			<div class="font-bold ml-8 mb-4 flex flex-row items-center" @click="gotoKurs(statistikState.kursListeManager.auswahl())"><span class="icon cursor-pointer i-ri-link" /> {{ statistikState.kursListeManager.auswahl().kuerzel }}</div>
 			<svws-ui-tab-bar :tab-manager="() => tabManager">
 				<s-kurs-daten v-bind="$props" v-if="tabManager.tab.name === 'UF'" :manager="() => statistikState.kursListeManager" />
