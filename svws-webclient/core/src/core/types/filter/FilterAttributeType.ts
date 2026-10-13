@@ -86,7 +86,7 @@ export class FilterAttributeType extends JavaEnum<FilterAttributeType> {
 	 */
 	public static valueOf(name: string): FilterAttributeType | null {
 		const tmp = this.all_values_by_name.get(name);
-		return (!tmp) ? null : tmp;
+		return tmp ?? null;
 	}
 
 	transpilerCanonicalName(): string {
