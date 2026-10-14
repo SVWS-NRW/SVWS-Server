@@ -55,7 +55,6 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerEinwilligungen;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
-import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
@@ -80,6 +79,8 @@ import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungPatchReques
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenBatchPatchRequest;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenCreateRequest;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenPatchRequest;
+import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenBatchPatchRequest;
+import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenPatchRequest;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachCreateRequest;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachPatchRequest;
 import de.svws_nrw.service.schule.schulleitung.SchulleitungCreateRequest;
@@ -367,9 +368,10 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+		return LehrerControllerFactory
+				.withReadAccess(request)
+				.getLehrerPersonaldatenController()
+				.get(id);
 	}
 
 
@@ -378,7 +380,7 @@ public class APILehrer {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation des Lehrers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     Patch-Objekt
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -397,11 +399,43 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
+					schema = @Schema(implementation = LehrerPersonaldaten.class))) final LehrerPersonaldatenPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerControllerFactory
+				.withWriteAccess(request)
+				.getLehrerPersonaldatenController()
+				.patch(id, patch);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das teilweise Aktualisieren mehrerer LehrerPersonaldaten.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param dtos    die zu aktualisierenden LehrerPersonaldaten
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die aktualisierten LehrerPersonaldaten
+	 */
+	@PATCH
+	@Path("/personaldaten/multiple")
+	@Operation(summary = "Aktualisiert mehrere bestehende LehrerPersonaldaten.",
+			description = "Aktualisiert die LehrerPersonaldaten mit den angegebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die aktualisierten LehrerPersonaldaten", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = LehrerPersonaldaten.class))))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Eine LehrerPersonaldaten mit einer angegebenen ID wurde nicht gefunden.")
+	public Response patchLehrerPersonaldatenMultiple(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die zu aktualisierenden LehrerPersonaldaten", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(
+									implementation = LehrerPersonaldaten.class)))) final List<LehrerPersonaldatenBatchPatchRequest> dtos,
+			@Context final HttpServletRequest request) {
+		return LehrerControllerFactory
+				.withWriteAccess(request)
+				.getLehrerPersonaldatenController()
+				.patchMultiple(dtos);
 	}
 
 	/**

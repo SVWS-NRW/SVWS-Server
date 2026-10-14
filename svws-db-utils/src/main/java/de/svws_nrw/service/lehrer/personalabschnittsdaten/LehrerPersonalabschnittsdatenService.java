@@ -98,6 +98,21 @@ public final class LehrerPersonalabschnittsdatenService {
 	}
 
 	/**
+	 * Gibt eine Map mit der Zuordnung der LehrerPersonalabschnittsdaten zu den Lehrern mit den übergebenen IDs zurück.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 * @return die Zuordnung, leer wenn die Liste null oder leer ist
+	 */
+	public Map<Long, List<LehrerPersonalabschnittsdaten>> getMapByIdLehrer(final List<Long> idsLehrer) {
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		return toApi(repo.findByIdsLehrer(idsLehrer))
+				.stream()
+				.collect(Collectors.groupingBy(la -> la.idLehrer));
+	}
+
+	/**
 	 * Gibt alle {@link LehrerPersonalabschnittsdaten} zu übergebenen IDs zurück.
 	 *
 	 * @param ids für das Auflösen benötigte Identifier

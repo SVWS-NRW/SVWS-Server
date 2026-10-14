@@ -27,6 +27,18 @@ public final class LehrerPersonalabschnittsdatenRepositoryImpl extends Repositor
 	}
 
 	@Override
+	public List<DTOLehrerAbschnittsdaten> findByIdsLehrer(final List<Long> idsLehrer) {
+		if ((idsLehrer == null) || (idsLehrer.isEmpty())) {
+			return Collections.emptyList();
+		}
+		return conn.queryList(
+				DTOLehrerAbschnittsdaten.QUERY_LIST_BY_LEHRER_ID,
+				DTOLehrerAbschnittsdaten.class,
+				idsLehrer
+		);
+	}
+
+	@Override
 	public List<DTOLehrerAbschnittsdaten> getListByLehrerIdsAndSchuljahresabschnitt(final Collection<Long> idsLehrer, final long idSchuljahresabschnitt) {
 		if ((idsLehrer == null) || (idsLehrer.isEmpty()) || (conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt) == null)) {
 			return Collections.emptyList();

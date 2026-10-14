@@ -10,6 +10,7 @@ import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.mapper.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenMapper;
+import de.svws_nrw.mapper.lehrer.personaldaten.LehrerPersonaldatenMapper;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
@@ -27,6 +28,7 @@ import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepos;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenService;
 import de.svws_nrw.service.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenSubServices;
+import de.svws_nrw.service.lehrer.personaldaten.LehrerPersonaldatenService;
 import de.svws_nrw.service.lehrer.unterrichtsfach.LehrerUnterrichtsfachService;
 
 /**
@@ -234,6 +236,20 @@ public final class LehrerServiceFactory {
 		return new LehrerFotoService(
 				lehrerRepositoryFactory.getLehrerFotoRepository(),
 				LehrerFotoMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerPersonaldatenService}.
+	 *
+	 * @return ein neuer {@code LehrerPersonaldatenService}
+	 */
+	public LehrerPersonaldatenService getLehrerPersonaldatenService() {
+		return new LehrerPersonaldatenService(
+				lehrerRepositoryFactory.getLehrerRepository(),
+				LehrerPersonaldatenMapper.INSTANCE,
+				this.getLehrerPersonalabschnittsdatenService(),
+				this.getLehrerLehramtService()
 		);
 	}
 

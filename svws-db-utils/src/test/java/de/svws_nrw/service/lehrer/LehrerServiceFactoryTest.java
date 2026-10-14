@@ -1,9 +1,11 @@
 package de.svws_nrw.service.lehrer;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,10 @@ class LehrerServiceFactoryTest {
 	@InjectMocks
 	private LehrerServiceFactory serviceFactory;
 
+	@BeforeAll
+	static void setUpAll() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	@Test
 	@DisplayName("Test: Prüfe, ob getNewInstance die Factory korrekt initialisiert")
@@ -134,6 +140,13 @@ class LehrerServiceFactoryTest {
 		assertNotNull(service);
 
 		verify(repoLehrerFactory).getLehrerFotoRepository();
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerPersonaldatenService den Service mit dem Kontext korrekt erstellt")
+	void getLehrerPersonaldatenService() {
+		final var service = serviceFactory.getLehrerPersonaldatenService();
+		assertNotNull(service);
 	}
 
 }

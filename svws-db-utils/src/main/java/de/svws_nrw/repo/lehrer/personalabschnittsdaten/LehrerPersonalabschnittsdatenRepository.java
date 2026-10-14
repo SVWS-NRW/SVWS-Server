@@ -18,6 +18,14 @@ public interface LehrerPersonalabschnittsdatenRepository extends Repository<DTOL
 	List<DTOLehrerAbschnittsdaten> findByIdLehrer(long idLehrer);
 
 	/**
+	 * Gibt alle LehrerPersonalabschnittsdaten der Lehrer mit den angegebenen IDs zurück.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 * @return Liste der zugehörigen {@link DTOLehrerAbschnittsdaten}-Objekte, leer wenn keine vorhanden
+	 */
+	List<DTOLehrerAbschnittsdaten> findByIdsLehrer(List<Long> idsLehrer);
+
+	/**
 	 * Bestimmt die Lehrer-Abschnittsdaten-Datenbank-Objekte für einen Schuljahresabschnitt für die übergebenen Lehrer-IDs
 	 *
 	 * @param idsLehrer                die IDs der Lehrer für welche die Abschnittsdaten bestimmt werden sollen

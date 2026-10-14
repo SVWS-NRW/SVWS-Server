@@ -11577,6 +11577,39 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonaldatenMultiple für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/multiple
+	 *
+	 * Aktualisiert die LehrerPersonaldaten mit den angegebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die aktualisierten LehrerPersonaldaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerPersonaldaten>
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten zu ändern.
+	 *   Code 404: Eine LehrerPersonaldaten mit einer angegebenen ID wurde nicht gefunden.
+	 *
+	 * @param {List<Partial<LehrerPersonaldaten>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die aktualisierten LehrerPersonaldaten
+	 */
+	public async patchLehrerPersonaldatenMultiple(data: List<Partial<LehrerPersonaldaten>>, schema: string): Promise<List<LehrerPersonaldaten>> {
+		const path = "/db/{schema}/lehrer/personaldaten/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<LehrerPersonaldaten>).map(d => LehrerPersonaldaten.transpilerToJSONPatch(d)).join() + "]";
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerPersonaldaten>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(LehrerPersonaldaten.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addLehrerUnterrichtsfach für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/unterrichtsfach
 	 *
 	 * Erstellt einen neuen Datensatz für ein Unterrichtsfach eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.

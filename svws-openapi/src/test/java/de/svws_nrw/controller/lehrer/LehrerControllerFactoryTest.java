@@ -9,6 +9,7 @@ import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungContro
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
 import de.svws_nrw.controller.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenController;
+import de.svws_nrw.controller.lehrer.personaldaten.LehrerPersonaldatenController;
 import de.svws_nrw.controller.lehrer.unterrichtsfach.LehrerUnterrichtsfachController;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -175,6 +176,16 @@ class LehrerControllerFactoryTest {
 		final LehrerLehramtController controller = LehrerControllerFactory
 				.withReadAccess(request)
 				.getLehrerLehramtController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getLehrerPersonaldatenController | gibt einen Controller zurück")
+	void getLehrerPersonaldatenController() {
+		final LehrerPersonaldatenController controller = LehrerControllerFactory
+				.withReadAccess(request)
+				.getLehrerPersonaldatenController();
 
 		assertNotNull(controller);
 	}

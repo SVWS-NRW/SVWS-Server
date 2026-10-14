@@ -16,6 +16,8 @@ import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungControll
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungControllerImpl;
 import de.svws_nrw.controller.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenController;
 import de.svws_nrw.controller.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenControllerImpl;
+import de.svws_nrw.controller.lehrer.personaldaten.LehrerPersonaldatenController;
+import de.svws_nrw.controller.lehrer.personaldaten.LehrerPersonaldatenControllerImpl;
 import de.svws_nrw.controller.lehrer.unterrichtsfach.LehrerUnterrichtsfachController;
 import de.svws_nrw.controller.lehrer.unterrichtsfach.LehrerUnterrichtsfachControllerImpl;
 import de.svws_nrw.core.types.ServerMode;
@@ -157,5 +159,13 @@ public final class LehrerControllerFactory {
 	public LehrerLehramtController getLehrerLehramtController() {
 		return new LehrerLehramtControllerImpl(serviceFactory.getLehrerLehramtService());
 	}
+
+	/**
+	 * @return {@link LehrerPersonaldatenController}
+	 */
+	public LehrerPersonaldatenController getLehrerPersonaldatenController() {
+		return new LehrerPersonaldatenControllerImpl(serviceFactory.getLehrerPersonaldatenService());
+	}
+
 
 }
