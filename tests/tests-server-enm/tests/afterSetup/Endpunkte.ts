@@ -3,9 +3,11 @@ import { describe, expect, test } from "vitest";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfigElement } from "@core/core/data/benutzer/BenutzerConfigElement";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
 import type { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
 import type { ENMv2Lernabschnitt } from "@core/core/data/enm/v2/ENMv2Lernabschnitt";
+import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
 import type { ENMv2SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
 import type { ENMv2Teilleistung } from "@core/core/data/enm/v2/ENMv2Teilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
@@ -15,6 +17,15 @@ import { apiBerthold, apiGiesen } from "./Login";
 
 const apiServiceAuth = apiGiesen;
 const apiServiceAuthWrongTeacher = apiBerthold;
+
+function findeLeistung(schueler: ENMv2Schueler, idLeistung: number): ENMv2Leistung {
+	for (const leistung of schueler.leistungsdaten) {
+		if (leistung.id === idLeistung) {
+			return leistung;
+		}
+	}
+	throw new Error(`Die Leistung mit der ID ${idLeistung} ist nicht in den Daten des Schülers enthalten.`);
+}
 
 export function registerEndpunkteTests() {
 
@@ -28,7 +39,7 @@ export function registerEndpunkteTests() {
 			expect(res).toBe(Schulform.G);
 		});
 		test("getLehrerENMDaten", async () => {
-			const daten = await apiServiceAuth.getLehrerENMDaten();
+			const daten = await apiServiceAuth.getLehrerENMDaten(ENMLehrerFunktion.FACHLEHRER);
 			expect(daten.lehrer.size()).toBe(23);
 			expect(daten.schueler.size()).toBe(77);
 		});
@@ -140,8 +151,9 @@ export function registerEndpunkteTests() {
 			expect(schueler.nachname).toBe("Lindemann");
 			expect(schueler.vorname).toBe("Stefanie");
 
-			// Führe Patches auf die Teilleistungen aus
-			const leistungsdaten = schueler.leistungsdaten.get(8);
+			// Führe Patches auf die Teilleistungen einer Leistung aus, die die Lehrkraft selbst unterrichtet (Fach 17)
+			const idLeistung = 2682;
+			const leistungsdaten = findeLeistung(schueler, idLeistung);
 			const patches = new Array<Partial<ENMv2Teilleistung>>;
 			for (const datum of leistungsdaten.teilleistungen) {
 				const patch: Partial<ENMv2Teilleistung> = {
@@ -154,7 +166,7 @@ export function registerEndpunkteTests() {
 
 			// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
 			const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
-			const leistungsdatenNeu = schuelerNeu.leistungsdaten.get(8);
+			const leistungsdatenNeu = findeLeistung(schuelerNeu, idLeistung);
 			for (let i = 0; i < leistungsdatenNeu.teilleistungen.size(); i++) {
 				const datumNeu = leistungsdatenNeu.teilleistungen.get(i);
 				const patch = patches[i];
@@ -173,22 +185,30 @@ export function registerEndpunkteTests() {
 			expect(schueler.nachname).toBe("Fusenig");
 			expect(schueler.vorname).toBe("Kristin");
 
-			// Führe einen Patch auf den ersten Eintrag zu Ankreuzkompetenzen aus
-			const datum = schueler.ankreuzkompetenzen.getFirst();
+			// Führe einen Patch auf eine Ankreuzkompetenz in einem Fach aus, das die Lehrkraft bei der Schülerin unterrichtet (Fach 29)
+			const idKompetenz = 18182;
 			const patch: Partial<ENMv2SchuelerAnkreuzkompetenz> = {
-				id: datum.id,
+				id: idKompetenz,
 				stufen: [false, false, true, true, false],
 			};
 			await apiServiceAuth.patchENMSchuelerAnkreuzkompetenzen(patch);
 
 			// Lade den Schüler erneut und prüfe, ob die Daten korrekt gepatcht wurden
 			const schuelerNeu = await apiServiceAuth.testLadeSchueler(idSchueler);
-			const datumNeu = schuelerNeu.ankreuzkompetenzen.getFirst();
-			expect(datumNeu.id).toBe(patch.id);
-			expect(datumNeu.stufen).toStrictEqual(patch.stufen);
+			let datumNeu: ENMv2SchuelerAnkreuzkompetenz | null = null;
+			for (const k of schuelerNeu.ankreuzkompetenzen) {
+				if (k.id === idKompetenz) {
+					datumNeu = k;
+				}
+			}
+			expect(datumNeu?.stufen).toStrictEqual(patch.stufen);
 
 			// Prüfe, ob ein Patch durch einen Lehrer, der diese Daten nicht bearbeiten darf fehlschlägt
 			await ApiEnmServerTest.testErrorStatus(() => apiServiceAuthWrongTeacher.patchENMSchuelerAnkreuzkompetenzen(patch), 403);
+
+			// Die Klassenleitung darf ohne Freigabe der Noteneingabe keine Kompetenz eines Fachs ändern, das sie nicht unterrichtet (Fach 14)
+			const patchFremdesFach: Partial<ENMv2SchuelerAnkreuzkompetenz> = { id: 18153, stufen: [true, false, false, false, false] };
+			await ApiEnmServerTest.testErrorStatus(() => apiServiceAuth.patchENMSchuelerAnkreuzkompetenzen(patchFremdesFach), 403);
 		});
 
 	});

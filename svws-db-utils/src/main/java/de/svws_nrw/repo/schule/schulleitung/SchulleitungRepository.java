@@ -1,7 +1,9 @@
 package de.svws_nrw.repo.schule.schulleitung;
 
 import java.util.List;
+import java.util.Map;
 
+import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.repo.Repository;
 
@@ -25,5 +27,15 @@ public interface SchulleitungRepository extends Repository<DTOSchulleitung> {
 	 * @return Liste der Schulleitungseinträge
 	 */
 	List<DTOSchulleitung> getAllByIdLeitungsfunktion(long idLeitungsfunktion);
+
+	/**
+	 * Gibt die letzten Schulleitunseinträge für den angebenen Zeitraum zugeordnet zu der ID der Leitungsfunktion zurück.
+	 *
+	 * @param von   das Anfangsdatum - bei Null wird vom 1.1.1900 ausgegangen
+	 * @param bis   das Enddatum - bei Null wird vom 31.12.9999 ausgegangen
+	 *
+	 * @return die Map mit der letzten Zuordnung der Leitungsfunktion in dem angegebenen Zeitraum
+	 */
+	Map<Long, DTOSchulleitung> getMapByDates(DateManager von, DateManager bis);
 
 }

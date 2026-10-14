@@ -516,6 +516,9 @@ class Database {
         $mapSchueler = [];
         foreach ($results as $row) {
             $schueler = json_decode($row->daten);
+            // Die ZP10-Daten und die Sprachenfolge kommen nur aus ihren Tabellen, ältere Einträge im Schüler-JSON würden sonst doppelt erscheinen
+            $schueler->zp10 = [];
+            $schueler->sprachenfolge = [];
             $result[] = $schueler;
             $mapSchueler[$schueler->id] = $schueler;
         }

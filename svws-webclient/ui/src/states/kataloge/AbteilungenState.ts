@@ -6,11 +6,16 @@ import { AppContext } from "@ui/AppContext";
 
 import type { KatalogState } from "./KatalogState";
 
+/** Erweiterter KatalogState für Abteilungen mit Abteilungsleitungen */
+export interface AbteilungenKatalogState extends KatalogState<Abteilung> {
+	readonly abteilungsleitungen: Set<number>;
+}
+
 /**
  * Die Schnittstelle für den Zustand des AbteilungenStates
  */
 export interface AbteilungenState {
-	readonly abteilungen: KatalogState<Abteilung>;
+	readonly abteilungen: AbteilungenKatalogState;
 	init(): Promise<void>;
 	reset(): void;
 }

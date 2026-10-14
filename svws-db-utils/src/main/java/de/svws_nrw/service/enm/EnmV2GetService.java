@@ -13,6 +13,7 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.core.data.enm.ENMLehrerFunktion;
 import de.svws_nrw.core.data.enm.v2.ENMv2Ankreuzkompetenz;
 import de.svws_nrw.core.data.enm.v2.ENMv2Daten;
 import de.svws_nrw.core.data.enm.v2.ENMv2Fach;
@@ -430,6 +431,33 @@ public final class EnmV2GetService {
 	}
 
 
+	private boolean hatKompetenzFuerSchuelerAnkreuzkompetenzen(final ENMv2Klasse enmKlasse, final DTOAnkreuzfloskeln dtoAnkreuzkompetenz,
+			final Set<Long> fachIDs) {
+		// Bei einer allgemeinen Erstellung der ENM-Daten müssen alle Ankreuzkompetenzen übertragen werden
+		if (!kontext.istLehrerSpezifisch()) {
+			return true;
+		}
+
+		// Bei einem Zugriff über die Schulleitungsfunktion auch
+		final var lehrerFunktion = kontext.getLehrerFunktion();
+		if (lehrerFunktion == ENMLehrerFunktion.SCHULLEITUNG) {
+			return true;
+		}
+
+		// Bei einer Fachlehrer-Abfrage muss Fach-Lehrer-spezifisch geprüft werden
+		if ((lehrerFunktion == null) || (lehrerFunktion == ENMLehrerFunktion.FACHLEHRER)) {
+			if (dtoAnkreuzkompetenz.Fach_ID == null) {
+				return enmKlasse.klassenlehrer.contains(kontext.getLehrerSpezfisch().ID);
+			}
+			return fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID);
+		}
+
+		// Bei Klassenleitungen und Abteilungsleitungen wird die Klasse überprüft, in fremden Klassen zählt der eigene Unterricht im Fach
+		return kontext.istKlassenleitungOderAbteilungsleitung(enmKlasse.id, kontext.getLehrerSpezfisch().ID)
+				|| ((dtoAnkreuzkompetenz.Fach_ID != null) && fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID));
+	}
+
+
 	/**
 	 * Durchwandert die Ankreuzkompetenzen eine Schüler-Lernabschnittes und ergänzt die ENM-Daten um fehlende Einträge.
 	 *
@@ -450,10 +478,8 @@ public final class EnmV2GetService {
 				throw new NullPointerException();
 			}
 
-			// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls keine Fachlehrer-Zuordnung vorliegt bzw. der Lehrer kein Klassenlehrer ist
-			if ((kontext.istLehrerSpezifisch())
-					&& (((dtoAnkreuzkompetenz.Fach_ID == null) && !enmKlasse.klassenlehrer.contains(kontext.getLehrerSpezfisch().ID))
-							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !fachIDs.contains(dtoAnkreuzkompetenz.Fach_ID)))) {
+			// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls die Kompetenz für die Lehrerfunktion nicht vorliegt
+			if (!hatKompetenzFuerSchuelerAnkreuzkompetenzen(enmKlasse, dtoAnkreuzkompetenz, fachIDs)) {
 				continue;
 			}
 
@@ -479,25 +505,32 @@ public final class EnmV2GetService {
 
 
 	/**
-	 * Integriert die ZP10-Daten des übergebenen Schülers - sofern welche vorhanden sind - in die ENM-Daten
+	 * Integriert die ZP10-Daten des übergebenen Schülers - sofern welche vorhanden sind - in die ENM-Daten. Bei
+	 * lehrerspezifischen ENM-Daten erhält eine Lehrkraft nur die eigenen ZP10-Daten, eine Leitungsrolle für die Klasse alle.
 	 *
+	 * @param enmKlasse     die Klasse des Schülers
 	 * @param enmSchueler   der Schüler
 	 */
-	private void processSchuelerZP10(final ENMv2Schueler enmSchueler) {
+	private void processSchuelerZP10(final ENMv2Klasse enmKlasse, final ENMv2Schueler enmSchueler) {
+		final boolean alleZP10 = !kontext.istLehrerSpezifisch() || (kontext.getLehrerFunktion() == ENMLehrerFunktion.SCHULLEITUNG)
+				|| kontext.istKlassenleitungOderAbteilungsleitung(enmKlasse.id, kontext.getLehrerSpezfisch().ID);
 		// Durchwandere alle ZP10-Daten, die im Kontext für den Schüler zu dem Schuljahresabschnitt hinterlegt sind
 		for (final DTOSchuelerZP10 zp10 : kontext.getZP10Daten(enmSchueler.id)) {
 			// TODO prüfen, ob hier für den Fall null nicht einfach die ID des Lehrers für die Leistungsdaten des Faches bestimmt werden sollte...
 			if (zp10.Fachlehrer_ID == null) {
 				continue;
 			}
-			// Prüfung, ob die Lehrer-ID gültig ist, ist aufgrund eines fehlendes Foreign-Keys in de Datenbank aktuelle nötig
+			if (!alleZP10 && (zp10.Fachlehrer_ID.longValue() != kontext.getLehrerSpezfisch().ID)) {
+				continue;
+			}
+			// Prüfung, ob die Lehrer-ID gültig ist, ist aufgrund eines fehlendes Foreign-Keys in der Datenbank aktuelle nötig
 			// TODO ggf. FK-Constraint in der DB bei den ZP10-Daten ergänzen
-			if (kontext.manager.getLehrer(zp10.Fachlehrer_ID) == null) {
+			if (kontext.getLehrer(zp10.Fachlehrer_ID) == null) {
 				continue;
 			}
 			this.addLehrerIfNotExists(zp10.Fachlehrer_ID);
 
-			// TODO zugehörige Zeitstempelinformationen zu den ZP10-Daten im Kontext laden und auch hier übergeben...
+			// zugehörige Zeitstempelinformationen zu den ZP10-Daten im Kontext laden und auch hier übergeben...
 			final DTOTimestampsSchuelerZP10 tsZP10 = kontext.getZP10Timestamps(zp10.ID);
 			kontext.manager.addSchuelerZP10(enmSchueler, zp10, tsZP10);
 		}
@@ -518,7 +551,7 @@ public final class EnmV2GetService {
 		final ENMv2Schueler enmSchueler = addSchuelerIfNotExists(lernabschnitt, enmKlasse);
 		final Set<Long> idsFaecher = processSchuelerLeistungen(lernabschnitt, enmKlasse, enmSchueler);
 		processSchuelerAnkreuzkompetenzenOfLernabschnitt(lernabschnitt, enmKlasse, enmSchueler, idsFaecher);
-		processSchuelerZP10(enmSchueler);
+		processSchuelerZP10(enmKlasse, enmSchueler);
 		// TODO check and add BKAbschluss - Data
 	}
 
@@ -527,14 +560,15 @@ public final class EnmV2GetService {
 	 * Ermittelt die ENM-Daten des aktuellen Schuljahresabschnitts zu dem Lehrer mit der angegebenen ID.
 	 * Ist die ID null so werden die ENM-Daten für alle Lehrer generiert.
 	 *
-	 * @param id     die ID des Lehrers oder null
+	 * @param id        die ID des Lehrers oder null
+	 * @param funktion  die Funktion des Lehres, in welcher die Abfrage ausgeführt wird oder null
 	 *
 	 * @return die ENMDaten
 	 */
-	public ENMv2Daten get(final Long id) {
+	public ENMv2Daten get(final Long id, final ENMLehrerFunktion funktion) {
 		return transactional(() -> {
 			// Allgemeine ENM-Daten (Kontextdaten -  Schule, Kataloge, Lehrer, etc.) laden
-			kontext.fetchData(id);
+			kontext.fetchData(id, funktion);
 
 			// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
 			if (kontext.istLehrerSpezifisch()) {
@@ -575,6 +609,9 @@ public final class EnmV2GetService {
 			kontext.manager.addAbteilung(abteilung);
 			for (final var idKlasse : kontext.getAbteilungsKlassen(abteilung.ID)) {
 				kontext.manager.addAbteilungKlasse(abteilung.ID, idKlasse);
+			}
+			if (abteilung.AbteilungsLeiter_ID != null) {
+				addLehrerIfNotExists(abteilung.AbteilungsLeiter_ID);
 			}
 		}
 

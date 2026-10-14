@@ -143,7 +143,7 @@ public final class NotenmodulSynchronisationService {
 			notenmodulCredentialGeneratorService.generateMissingCredentials();
 
 			logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
-			final ENMv2Daten enmDaten = enmGetService.get(null); // null für schulenweiten Export
+			final ENMv2Daten enmDaten = enmGetService.get(null, null); // null für schulenweiten Export
 			final byte[] daten = JSONMapper.gzipByteArrayFromObject(enmDaten);
 
 			logger.logLn("Sende die ENM-Daten an den ENM-Server...");

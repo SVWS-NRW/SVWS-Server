@@ -1,4 +1,5 @@
 import type { ApiFile } from "@core/api/BaseApi";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import type { LehrerListeEintrag } from "@core/core/data/lehrer/LehrerListeEintrag";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -33,7 +34,7 @@ export class RouteDataSchuleDatenaustauschENM extends RouteData<RouteStateDatena
 	}
 
 	exportLehrerENM = async (id: number): Promise<ENMv2Daten> => {
-		return api.server.getLehrerENMv2Daten(api.schema, id);
+		return api.server.getLehrerENMv2Daten(api.schema, id, ENMLehrerFunktion.FACHLEHRER.id);
 	};
 
 	exportGzipENM = async (): Promise<ApiFile> => {

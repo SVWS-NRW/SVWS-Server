@@ -17,7 +17,7 @@ class ImportManager {
     /** Die Datenbank-Verbindung für die Verbindung zur WeNoM-Datenbank */
     protected DBConnection $conn;
 
-    /** Der Zeitstempel, wann der Manager erzeugt wurde. Dies ist für den Import von Daten relevant, um die neuen Daten von den alten Daten zu unterscheiden */
+    /** Der Zeitstempel des Imports in Sekunden. Er unterscheidet die neuen Daten von den alten und ist je Import eindeutig. */
     protected int $ts;
 
     /** Die ENM-Daten ohne Lehrer und Schüler-Informationen */
@@ -92,6 +92,12 @@ class ImportManager {
         if (!$updateMode) {
             ImportManager::clearENMDaten($this->conn);
         }
+        // Der Zeitstempel ist der Primärschlüssel der Tabelle Daten. Folgt ein Import in derselben Sekunde auf den vorherigen,
+        // so liegt er hinter dem vorherigen, sonst würde der Import scheitern.
+        $letzterImport = $this->conn->querySingleOrNull("SELECT MAX(ts) AS ts FROM Daten");
+        if (($letzterImport !== null) && ($letzterImport->ts !== null) && ($this->ts <= (int) $letzterImport->ts)) {
+            $this->ts = (int) $letzterImport->ts + 1;
+        }
         // Schreibe die allgemeinen ENM-Daten
         $this->writeENMDaten();
         // Schreibe die ENM-Daten für die Lehrer-Zugänge
@@ -105,6 +111,7 @@ class ImportManager {
             $this->importDiffLeistungen($this->ts);
             $this->importDiffTeilleistungen($this->ts);
             $this->importDiffAnkreuzkompetenzen($this->ts);
+            $this->importDiffZP10($this->ts);
             $this->importDiffLehrer($this->ts);
         }
         // Räume auf und entferne alle restlichen Daten, die nicht den neuen Zeitstempel haben
@@ -164,12 +171,13 @@ class ImportManager {
         $stmtSprachenfolge = $this->conn->prepareStatement("INSERT INTO Sprachenfolge(id, sprache, ts, idSchueler, daten) VALUES (:id, :sprache, :ts, :idSchueler, :daten)");
         $stmtZP10 = $this->conn->prepareStatement("INSERT INTO ZP10(id, ts, idSchueler, idLehrer, daten, tsVornote, tsNoteSchriftlichePruefung, tsMuendlichePruefung, tsMuendlichePruefungFreiwillig, tsNoteMuendlichePruefung, tsAbschlussnote) VALUES (:id, :ts, :idSchueler, :idLehrer, :daten, :tsVornote, :tsNoteSchriftlichePruefung, :tsMuendlichePruefung, :tsMuendlichePruefungFreiwillig, :tsNoteMuendlichePruefung, :tsAbschlussnote)");
         foreach ($this->enmSchueler as $schueler) {
-            // Erstelle den Schülereintrag mit einem JSON ohne Detaildaten zu der Sprachenfolge, den Leistungsdaten und den Ankreuzkompetenzen ...
+            // Erstelle den Schülereintrag mit einem JSON ohne Detaildaten zu der Sprachenfolge, den Leistungsdaten, den Ankreuzkompetenzen und den ZP10-Daten ...
             $tmpJsonSchueler = json_encode($schueler, JSON_UNESCAPED_SLASHES);
             $tmpSchueler = json_decode($tmpJsonSchueler);
             $tmpSchueler->leistungsdaten = [];
             $tmpSchueler->ankreuzkompetenzen = [];
             $tmpSchueler->sprachenfolge = [];
+            $tmpSchueler->zp10 = [];
             $jsonSchueler = json_encode($tmpSchueler, JSON_UNESCAPED_SLASHES);
             $this->conn->bindStatementValue($stmtSchueler, ":id", $schueler->id, PDO::PARAM_INT);
             $this->conn->bindStatementValue($stmtSchueler, ":ts", $this->ts, PDO::PARAM_INT);
@@ -246,7 +254,7 @@ class ImportManager {
                 $this->conn->bindStatementValue($stmtZP10, ":id", $zp10->id, PDO::PARAM_INT);
                 $this->conn->bindStatementValue($stmtZP10, ":ts", $this->ts, PDO::PARAM_INT);
                 $this->conn->bindStatementValue($stmtZP10, ":idSchueler", $schueler->id, PDO::PARAM_INT);
-                $this->conn->bindStatementValue($stmtZP10, ":idLehrer", $zp10->lehrerID, PDO::PARAM_INT);
+                $this->conn->bindStatementValue($stmtZP10, ":idLehrer", $zp10->idLehrer, PDO::PARAM_INT);
                 $this->conn->bindStatementValue($stmtZP10, ":daten", $jsonZP10, PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmtZP10, ":tsVornote", $zp10->tsVornote, PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmtZP10, ":tsNoteSchriftlichePruefung", $zp10->tsNoteSchriftlichePruefung, PDO::PARAM_STR);

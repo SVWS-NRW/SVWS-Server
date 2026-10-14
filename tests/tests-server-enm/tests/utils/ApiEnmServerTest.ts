@@ -4,6 +4,7 @@ import { ApiEnmServer } from "@wenom/ApiEnmServer";
 import { assert, expect } from "vitest";
 
 import { OpenApiError } from "@core/api/OpenApiError";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { ENMv2Schueler } from "@core/core/data/enm/v2/ENMv2Schueler";
 
 export class ApiEnmServerTest extends ApiEnmServer {
@@ -40,7 +41,7 @@ export class ApiEnmServerTest extends ApiEnmServer {
 	}
 
 	async testLadeSchueler(id: number): Promise<ENMv2Schueler> {
-		const daten = await this.getLehrerENMDaten();
+		const daten = await this.getLehrerENMDaten(ENMLehrerFunktion.FACHLEHRER);
 		for (const schueler of daten.schueler) {
 			if (schueler.id === id) {
 				return schueler;

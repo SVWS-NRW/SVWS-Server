@@ -1,8 +1,9 @@
 package de.svws_nrw.service.enm;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.enm.ENMLehrerFunktion;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
@@ -196,7 +198,6 @@ public final class EnmV2GetServiceKontext {
 	/** Das Repository für den Zugriff auf die Zeitstempel für die Credentials der Lehrer für das Notenmodul */
 	private final NotenmodulCredentialsTimestampsRepository notenmodulCredentialsTimestampsRepository;
 
-
 	/** Die Informationen zur Schule */
 	private DTOEigeneSchule schule;
 
@@ -220,6 +221,9 @@ public final class EnmV2GetServiceKontext {
 
 	/** Der Lehrer für welchen die ENM-Daten aggregiert werden - oder null, falls die Daten schulweit aggregiert werden */
 	private DTOLehrer dtoLehrer;
+
+	/** Die Leherfunktion für welche die ENM-Daten aggregiert werden - oder null, falls die Daten schulweit aggregiert werden */
+	private ENMLehrerFunktion lehrerFunktion;
 
 	/** Eine Map mit der Zuordnung der Lehrer zu ihren Entitäten */
 	private Map<Long, DTOLehrer> mapLehrer;
@@ -256,6 +260,9 @@ public final class EnmV2GetServiceKontext {
 
 	/** Eine Map mit den IDs der Klassenleitungen (Lehrer) zugeordnet zu der Klassen-ID */
 	private Map<Long, List<Long>> mapKlassenLeitung;
+
+	/** Eine Map mit den IDs der Klassenleitungen und Abteilungsleitungen (Lehrer) zugeordnet zu der Klassen-ID */
+	private Map<Long, List<Long>> mapKlassenLeitungAbteilungen;
 
 	/** Eine Map mit den Kursen zugeordnet zu der Kurs-ID */
 	private Map<Long, DTOKurs> mapKurse;
@@ -525,22 +532,6 @@ public final class EnmV2GetServiceKontext {
 
 
 	/**
-	 * Sortiert Schulleitungseinträge nach ihrer Aktualität.
-	 */
-	private static Comparator<DTOSchulleitung> nachAktualitaet = Comparator.comparing(l -> {
-		try {
-			return (l.Bis == null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
-		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-			try {
-				return DateManager.fromValues(1900, 1, 1);
-			} catch (@SuppressWarnings("unused") final InvalidDateException e1) {
-				return null;
-			}
-		}
-	});
-
-
-	/**
 	 * Bestimmt den Beginn des Schuljahresabschnitts als DateManager.
 	 * 1. Halbjahr: 01.08. im Jahr des Abschnitts.
 	 * 2. Halbjahr: 01.02. im Folgejahr des Abschnitts.
@@ -582,14 +573,35 @@ public final class EnmV2GetServiceKontext {
 
 
 	/**
+	 * Prüft, ob der Lehrer bei der Funktion Schulleitung auch zur Schulleitung gehört. Diese Funktion liefert die
+	 * Leistungsdaten der ganzen Schule. Klassen- und Abteilungsleitung filtern dagegen an den echten Zuordnungen.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return true, wenn die Lehrerfunktion zu dem Lehrer passt, und ansonsten false
+	 */
+	private boolean pruefeLehrerfunktion(final long idLehrer) {
+		if (lehrerFunktion != ENMLehrerFunktion.SCHULLEITUNG) {
+			return true;
+		}
+		return Objects.equals(idSchulleitung, idLehrer) || Objects.equals(idSchulleitungStv, idLehrer);
+	}
+
+
+	/**
 	 * Lädt die grundlegenden Daten für die Erstellung der ENM-Daten aus der Datenbank. Die Reihenfolge der
 	 * Repository-Aufrufe ist so gestaltet, dass die Zugriffe möglichst gebündelt stattfinden.
 	 *
 	 * @param idLehrer   die Lehrer-ID, falls die Daten Lehrer-spezifisch erzeugt werden
+	 * @param funktion  die Funktion des Lehres, in welcher die Abfrage ausgeführt wird oder null
 	 */
-	public void fetchData(final Long idLehrer) {
+	public void fetchData(final Long idLehrer, final ENMLehrerFunktion funktion) {
+		// Merke die Lehrer-Funktion
+		this.lehrerFunktion = (funktion == ENMLehrerFunktion.NOTENMODULADMIN) ? null : funktion;
+		final Long tmpIdLehrer = (funktion == ENMLehrerFunktion.NOTENMODULADMIN) ? null : idLehrer;
+
 		// Erzeuge den Manager für das Hinzufügen von ENM-Daten
-		this.manager = new EnmV2DatenManager(idLehrer);
+		this.manager = new EnmV2DatenManager(tmpIdLehrer);
 
 		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
 		final DTOEigeneSchule schuleDto = eigeneSchuleRepository.getFirst();
@@ -599,22 +611,7 @@ public final class EnmV2GetServiceKontext {
 		final DateManager abschnittBis = getAbschnittBis(this.schuljahresabschnitt);
 
 		// Bestimme die aktuelle Schulleitung und die Stellvertretung anhand des Schuljahresabschnittes
-		final List<DTOSchulleitung> leitungen = schulleitungRepository.getAll();
-		final Map<Long, DTOSchulleitung> result = leitungen.stream()
-				.filter(l -> (l.LeitungsfunktionID == 1) || (l.LeitungsfunktionID == 2))
-				.filter(l -> {
-					try {
-						final DateManager von = (l.Von == null) ? DateManager.fromValues(1900, 1, 1) : DateManager.from(l.Von);
-						final DateManager bis = (l.Bis == null) ? DateManager.fromValues(9999, 12, 31) : DateManager.from(l.Bis);
-						return (von.compareTo(abschnittBis) <= 0) && (bis.compareTo(abschnittVon) >= 0);
-					} catch (@SuppressWarnings("unused") final InvalidDateException e) {
-						return false;
-					}
-				})
-				.collect(Collectors.groupingBy(
-						l -> l.LeitungsfunktionID,
-						Collectors.collectingAndThen(Collectors.maxBy(nachAktualitaet), opt -> opt.orElse(null))
-				));
+		final Map<Long, DTOSchulleitung> result = schulleitungRepository.getMapByDates(abschnittVon, abschnittBis);
 		final var schulleitung = result.get(LehrerLeitungsfunktion.SL.historie().getLast().id);
 		this.idSchulleitung = (schulleitung == null) ? null : schulleitung.LehrerID;
 		final var schulleitungStv = result.get(LehrerLeitungsfunktion.SL_STV.historie().getLast().id);
@@ -624,18 +621,37 @@ public final class EnmV2GetServiceKontext {
 		this.mapKlassen = klassenRepository.getMapBySchuljahresabschnitt(idSchuljahresabschnitt);
 		this.mapKlassenLeitung = klassenleitungenRepository.getMapKlassenleitungen(mapKlassen.keySet());
 
-		// Bestimme dann die Abtailungen für den Schuljahresabschnitt
+		// Bestimme dann die Abteilungen für den Schuljahresabschnitt
 		this.listAbteilungen = abteilungenRepository.getListBySchuljahresabschnitt(idSchuljahresabschnitt);
 		this.mapAbteilungenKlassen = abteilungKlasseRepository.findListByAbteilungen(listAbteilungen.stream().map(a -> a.ID).toList())
 				.stream().collect(Collectors.groupingBy(a -> a.Abteilung_ID, Collectors.mapping(a -> a.Klassen_ID, Collectors.toList())));
+
+		if ((tmpIdLehrer != null) && !pruefeLehrerfunktion(tmpIdLehrer)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Lehrerfunktion passt nicht zu dem Lehrer.");
+		}
+
+		// Erstelle für Abeilungsleitungen eine erweiterte Map für Klassenleitungen, wo auch Abteilungsleitungen berücksichtigt werden
+		// Die Listen werden kopiert, da der Abteilungsleiter sonst auch in den Klassenleitungen der ENM-Daten landet
+		this.mapKlassenLeitungAbteilungen = new HashMap<>();
+		mapKlassenLeitung.forEach((idKlasse, idsLehrer) -> this.mapKlassenLeitungAbteilungen.put(idKlasse, new ArrayList<>(idsLehrer)));
+		if ((lehrerFunktion == ENMLehrerFunktion.ABTEILUNGSLEITUNG) && (tmpIdLehrer != null)) {
+			this.listAbteilungen.stream().filter(a -> (a.AbteilungsLeiter_ID != null) && (a.AbteilungsLeiter_ID.longValue() == tmpIdLehrer.longValue()))
+					.map(a -> this.mapAbteilungenKlassen.get(a.ID)).filter(k -> k != null).flatMap(k -> k.stream()).distinct().filter(k -> k != null)
+					.forEach(k -> {
+						final var list = this.mapKlassenLeitungAbteilungen.computeIfAbsent(k, id -> new ArrayList<>());
+						if (!list.contains(tmpIdLehrer)) {
+							list.add(tmpIdLehrer);
+						}
+					});
+		}
 
 		// Bestimmer die Lehrer ...
 		this.mapLehrer = lehrerRepository.getMap();
 
 		// ... ermittle den speziellen Lehrer, für welchen die ENM-Daten bestimmt werden, falls eine idLehrer übergeben wurde
 		// ... wenn idLehrer = null ist, dann sollen die ENM-Daten schulweit bestimmt werden
-		this.dtoLehrer = (idLehrer == null) ? null : mapLehrer.get(idLehrer);
-		if ((idLehrer != null) && (dtoLehrer == null)) {
+		this.dtoLehrer = (tmpIdLehrer == null) ? null : mapLehrer.get(tmpIdLehrer);
+		if ((tmpIdLehrer != null) && (dtoLehrer == null)) {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		}
 
@@ -646,15 +662,38 @@ public final class EnmV2GetServiceKontext {
 		this.mapLernabschnitte =
 				schuelerLernabschnittRepository.getMapByLernabschnittIDAndSchuljahreabschnitt(mapSchueler.keySet(), idSchuljahresabschnitt);
 
-		// Bestimme alle Leistungsdaten des Schuljahresabschnittes oder bei Lehrer-Spezifischen ENM-Daten die Liestungsdaten, wo der Lehrer Fachlehrer
-		final List<DTOSchuelerLeistungsdaten> leistungsdaten = (dtoLehrer == null)
-				? schuelerLeistungsdatenRepository.findListByLernabschnitt(mapLernabschnitte.keySet())
-				: schuelerLeistungsdatenRepository.findListByLernabschnittAndFachlehrer(mapLernabschnitte.keySet(), List.of(dtoLehrer.ID));
-		final List<Long> idsLeistungsdaten = leistungsdaten.stream().map(ld -> ld.ID).toList();
-		this.mapLeistungen = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
 
-		// Filtere ggf. die Lernabschnitte anhand von nicht vorhandenen Leistungsdaten, falls der Lehrer nicht als Klassenlehrer eingetragen ist
-		filterLernabschnitteByLehrer(dtoLehrer, mapLernabschnitte, mapKlassen, mapKlassenLeitung, mapLeistungen);
+		// Bestimme alle Leistungsdaten des Schuljahresabschnittes oder bei Lehrer-Spezifischen ENM-Daten die Leistungsdaten, wo der Lehrer Fachlehrer
+		List<DTOSchuelerLeistungsdaten> leistungsdaten;
+		if ((dtoLehrer == null) || ((lehrerFunktion != null) && (lehrerFunktion == ENMLehrerFunktion.SCHULLEITUNG))) {
+			// allgemein (nicht lehrer-spezifisch) oder Schulleitungsfunktion des Lehrers
+			leistungsdaten = schuelerLeistungsdatenRepository.findListByLernabschnitt(mapLernabschnitte.keySet());
+		} else if ((lehrerFunktion != null) && ((lehrerFunktion == ENMLehrerFunktion.KLASSENLEITUNG) || (lehrerFunktion == ENMLehrerFunktion.ABTEILUNGSLEITUNG))) {
+			// Bei Ablteilungsleitungen und Klassenleitungen müssen mehr Leistungsdaten geladen werden
+			final var idsLernabschnitteLeitungsfunktion = mapLernabschnitte.values().stream().filter(l -> {
+				if (l.Klassen_ID == null) {
+					return false;
+				}
+				final var idsLehrer = mapKlassenLeitungAbteilungen.get(l.Klassen_ID);
+				if (idsLehrer == null) {
+					return false;
+				}
+				return idsLehrer.contains(dtoLehrer.ID);
+			}).map(l -> l.ID).toList();
+			leistungsdaten = schuelerLeistungsdatenRepository.findListByLernabschnittAndFachlehrerOrLernabschnitt(mapLernabschnitte.keySet(),
+					List.of(dtoLehrer.ID), idsLernabschnitteLeitungsfunktion);
+		} else {
+			// Fachlehrer
+			leistungsdaten = schuelerLeistungsdatenRepository.findListByLernabschnittAndFachlehrer(mapLernabschnitte.keySet(), List.of(dtoLehrer.ID));
+		}
+		this.mapLeistungen = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
+		final List<Long> idsLeistungsdaten = leistungsdaten.stream().map(ld -> ld.ID).toList();
+
+		// Filtere ggf. die Lernabschnitte anhand von nicht vorhandenen Leistungsdaten, falls der Lehrer nicht als Klassenlehrer eingetragen ist.
+		// Die Schulleitung braucht alle Lernabschnitte, auch von Schülern ohne Leistungsdaten.
+		if (lehrerFunktion != ENMLehrerFunktion.SCHULLEITUNG) {
+			filterLernabschnitteByLehrer(dtoLehrer, mapLernabschnitte, mapKlassen, mapKlassenLeitungAbteilungen, mapLeistungen);
+		}
 
 		// Bestimme nun die Teilleistungen und die Ankreuzkompetenzen des Schülers
 		final List<DTOSchuelerTeilleistung> listTeilleistungen =
@@ -809,6 +848,15 @@ public final class EnmV2GetServiceKontext {
 		return dtoLehrer;
 	}
 
+	/**
+	 * Gibt die Lehrer-Funktion zurück, für welche die ENM-Daten erzeugt werden, sofern die ENM-Daten
+	 * Lehrer-Spezifisch erzeugt werden.
+	 *
+	 * @return die Lehrer-Funktion oder null
+	 */
+	public ENMLehrerFunktion getLehrerFunktion() {
+		return lehrerFunktion;
+	}
 
 	/**
 	 * Gibt den Lehrer für die übergene ID zurück.
@@ -962,6 +1010,20 @@ public final class EnmV2GetServiceKontext {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
 		}
 		return this.mapKlassenLeitung.get(id);
+	}
+
+
+	/**
+	 * Gibt zurück, ob es sich bei dem Lehrer um einen Klassenleiter oder Abetilungsleiter der Klasse handelt.
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return true, wenn der Lehrer ein Klassenleiter oder Abetilungsleiter ist.
+	 */
+	public boolean istKlassenleitungOderAbteilungsleitung(final long idKlasse, final long idLehrer) {
+		final List<Long> idsLehrer = mapKlassenLeitungAbteilungen.get(idKlasse);
+		return (idsLehrer != null) && (idsLehrer.contains(idLehrer));
 	}
 
 

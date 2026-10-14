@@ -1,8 +1,8 @@
 <template>
 	<div class="flex flex-col">
 		<template v-if="sperrenVorhanden.size > 0">
-			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base">
-				{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.
+			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base flex gap-2 items-center">
+				<span class="icon i-ri-lock-2-line icon-ui-danger" /> <span>{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.</span>
 			</div>
 		</template>
 		<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager">
@@ -79,7 +79,7 @@
 			</template>
 			<template #default="{ row: pair, index }">
 				<td>
-					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID)" class="flex items-center h-full">
+					<div v-if="sperrenVorhanden.has(pair.b.klasseID)" class="flex items-center h-full">
 						<svws-ui-tooltip>
 							<span class="icon i-ri-lock-2-line icon-ui-danger" />
 							<template #content>Die Eingabe für diese Klasse ist gesperrt</template>
@@ -105,7 +105,7 @@
 					{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 				</td>
 				<template v-if="gridManager.isColVisible('Quartal') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
+					<td v-if="istErlaubt(pair, 'Quartal')"
 						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="showPopoverNote(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
 						:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
 						:class="{
@@ -116,7 +116,7 @@
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Note') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+					<td v-if="istErlaubt(pair, 'Note')"
 						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="showPopoverNote(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
 						:ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
 						:class="{
@@ -127,7 +127,7 @@
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Mahnung') ?? true">
-					<template v-if="(pair.a.mahndatum === null) && enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Mahnung')">
+					<template v-if="(pair.a.mahndatum === null) && istErlaubt(pair, 'Mahnung')">
 						<td :ref="inputMahnung(pair, 8, index)" class="ui-table-grid-button"
 							:class="{
 								'bg-ui-selected': (gridManager.focusColumn === 8),
@@ -145,8 +145,7 @@
 					</template>
 				</template>
 				<template v-if="gridManager.isColVisible('Zuw.')">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)
-							&& enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')
+					<td v-if="istErlaubt(pair, 'Note')
 							&& enmManager().leistungGetKursartZulaessigFuerZuweisung(pair.a)"
 						:ref="inputZuweisungKursart(pair, 9, index)" class="ui-table-grid-input"
 						:class="{
@@ -156,7 +155,7 @@
 					<td v-else>{{ pair.a.neueZuweisungKursart ?? "—" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('FS') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
+					<td v-if="istErlaubtFehlstunden(pair)"
 						:style="`anchor-name: --anchor_FS_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FS_${pair.a.id}_${pair.b.id}`, pair.a.fehlstundenFach, 999)"
 						:ref="inputFehlstunden(pair, 10, index)" class="ui-table-grid-input"
 						:class="{
@@ -166,7 +165,7 @@
 					<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('FSU') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
+					<td v-if="istErlaubtFehlstunden(pair)"
 						:style="`anchor-name: --anchor_FSU_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FSU_${pair.a.id}_${pair.b.id}`, pair.a.fehlstundenUnentschuldigtFach, pair.a.fehlstundenFach)"
 						:ref="inputFehlstundenUnendschuldigt(pair, 11, index)" class="ui-table-grid-input"
 						:class="{
@@ -176,7 +175,7 @@
 					<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'FB')"
+					<td v-if="istErlaubt(pair, 'FB')"
 						:ref="inputBemerkung(pair, 12, index)" class="ui-table-grid-button"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 12),
@@ -220,7 +219,6 @@
 	import type { PairNN } from '@core/asd/adt/PairNN';
 	import { Note } from '@core/asd/types/Note';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
-	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
 	import type { ENMv2Schueler } from '@core/core/data/enm/v2/ENMv2Schueler';
 	import { ArrayList } from '@core/java/util/ArrayList';
@@ -447,26 +445,44 @@
 		};
 	}
 
+
 	const sperrenVorhanden = computed(() => {
-		const set = new Set<ENMv2Klasse>();
+		const set = new Set<number>();
 		for (const l of props.auswahl()) {
 			const klassen = props.enmManager().mapLerngruppeKlassen.get(l.id);
 			if (klassen === null) {
 				continue;
 			}
 			for (const klasse of klassen) {
-				if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id)) {
-					set.add(klasse);
+				if (!props.enmManager().sperrungen.istEingabeErlaubtLeistungen(klasse.id, props.enmManager().leistungsdatenKlasseIstBerechtigt(l.id, klasse.id))) {
+					// TODO if (!(props.enmManager().listKlassenKlassenlehrer.contains(klasse) && props.enmManager().sperrungen.istEingabeErlaubtLehrerFunktion(klasse.id))) {
+					set.add(klasse.id);
+					// }
 				}
 			}
 		}
 		return set;
 	});
 
+
+	function istErlaubt(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: 'Quartal' | 'Note' | 'Mahnung' | 'FB'): boolean {
+		const berechtigungen = props.enmManager().leistungsdatenIstBerechtigt(pair.a.lerngruppenID, pair.b.id);
+		return props.enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, col, berechtigungen);
+	}
+
+
+	function istErlaubtFehlstunden(pair: PairNN<ENMv2Leistung, ENMv2Schueler>): boolean {
+		const berechtigungen = props.enmManager().leistungsdatenIstBerechtigt(pair.a.lerngruppenID, pair.b.id);
+		return props.enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false, berechtigungen);
+	}
+
+
+
 	const gesperrteKlassen = computed(() => {
 		let str = "";
 		for (const k of sperrenVorhanden.value) {
-			str += `${k.kuerzelAnzeige}, `;
+			const klasse = props.enmManager().mapKlassen.get(k);
+			str += `${klasse?.kuerzelAnzeige ?? "Klassenbezeichnung fehlt"}, `;
 		}
 		return str.slice(0, -2);
 	});

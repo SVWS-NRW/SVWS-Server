@@ -46,6 +46,21 @@ public interface SchuelerLeistungsdatenRepository extends Repository<DTOSchueler
 
 	/**
 	 * Ermittelt eine Liste aller Leistungsdaten, welche den Lernabschnitten mit den übergebenen IDs
+	 * aus der ersten Collection zugeordnet sind und wo einer der übergeben Lehrer der Fachlehrer oder
+	 * welche den Lernabschnitten mit den übergebenen IDs aus der zweiten Collection zugeordnet sind.
+	 *
+	 * @param idsLernabschnitte    die IDs der Lernabschnitte, wo Leistungsdaten nur übernommen werden, wenn auch ein Fachlehrer zugeordnet ist
+	 * @param idsFachlehrer        die IDs der Fachlehrer
+	 * @param idsLernabschnitte2   die IDs der Lernabschnitte, wo alle Leistungsdaten übernommen werden
+	 *
+	 * @return die Liste mit den Leistungsdaten
+	 */
+	List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFachlehrerOrLernabschnitt(Collection<Long> idsLernabschnitte, Collection<Long> idsFachlehrer,
+			Collection<Long> idsLernabschnitte2);
+
+
+	/**
+	 * Ermittelt eine Liste aller Leistungsdaten, welche den Lernabschnitten mit den übergebenen IDs
 	 * zugeordnet sind und welche einem der übergeben Faecher zugeordnet ist.
 	 *
 	 * @param idsLernabschnitte   die IDs der Lernabschnitte

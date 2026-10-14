@@ -1,13 +1,18 @@
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
 import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
+import { useAbteilungenState } from "@ui/states/kataloge/AbteilungenState";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 
 import type { RouteApp } from "../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
+import type { RouteNode } from "~/router/RouteNode";
 
 import { RouteDataNotenmodulAdministration } from "./RouteDataNotenmodulAdministration";
 import { routeNotenmodulVerbindungGruppenprozesse } from "./RouteNotenmodulGruppenprozesse";
@@ -49,14 +54,26 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 	}
 
 	protected checkHidden() {
+		const notenmodulState = useNotenmodulState();
 		try {
-			if (notenmodulStateImpl.istAdminLehrer === false) {
+			if (notenmodulState.auswahlAnsicht !== ENMLehrerFunktion.NOTENMODULADMIN) {
 				return routeNotenmodulLeistungen.getRouteDefaultChild();
 			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
+		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+		if (isEntering && !(from?.name.startsWith("notenmodul.") ?? false)) {
+			const abteilungenState = useAbteilungenState();
+			await abteilungenState.init();
+			const notenmodulState = useNotenmodulState();
+			await notenmodulState.ladeDaten();
+		}
+		return await super.update(to, to_params, from, from_params, isEntering, redirected);
 	}
 
 	protected doUpdateIfTarget = async () => {

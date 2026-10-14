@@ -2,11 +2,13 @@ package de.svws_nrw.data.benutzer;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
@@ -67,8 +69,11 @@ public final class DBBenutzerUtils {
 					.forEach(komp -> user.getKompetenzen().add(komp));
 			// Funktionsbezogene Rechte bei Lehrern
 			if ((dbBenutzer.Typ == BenutzerTyp.LEHRER) && (dbBenutzer.TypID != null)) {
-				user.setKlassenIDs(DataBenutzerDaten.getKlassenFunktionsbezogen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
+				final List<Long> idsKlassenleitung = DataBenutzerDaten.getKlassenVonKlassenleitungen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID);
+				final List<Long> idsAbteilungsleitung = DataBenutzerDaten.getKlassenVonAbteilungsleitungen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID);
+				user.setKlassenIDs(Stream.concat(idsKlassenleitung.stream(), idsAbteilungsleitung.stream()).distinct().toList());
 				user.setLeitungsfunktionen(DataBenutzerDaten.getLeitungsfunktionen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
+				user.setAbteilungenKlassenIDs(idsAbteilungsleitung);
 				user.setAbiturjahrgaenge(DataBenutzerDaten.getBeratungslehrerAbiturjahrgaenge(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
 			}
 		}

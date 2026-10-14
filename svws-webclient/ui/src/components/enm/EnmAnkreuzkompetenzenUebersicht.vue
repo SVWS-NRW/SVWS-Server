@@ -41,7 +41,7 @@
 										<template #content> {{ row.gruppe?.bezeichnung ?? '' }} </template>
 									</svws-ui-tooltip>
 								</td>
-								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
+								<td v-if="auswahlZelle?.b.klasseID && istErlaubtLeistung(auswahlZelle, 'FB', row.gruppe)"
 									:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`"
 									:class="{
 										'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
@@ -72,7 +72,7 @@
 										<template #content> Arbeits- und Sozialverhalten </template>
 									</svws-ui-tooltip>
 								</td>
-								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'ASV')"
+								<td v-if="auswahlZelle?.b.klasseID && istErlaubt(auswahlZelle, 'ASV')"
 									:ref="inputASVBemerkung(1, index)" class="ui-table-grid-button text-left" :style="`grid-column: span ${columns.length + 1} / span ${columns.length + 1}`"
 									:class="{
 										'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
@@ -115,7 +115,7 @@
 								<td class="text-left"> {{ enmManager().mapAnkreuzkompetenzen.get(row.kompetenz.kompetenzID)?.text }} </td>
 								<template v-for="stufe, col of row.kompetenz.stufen" :key="col+2">
 									<template v-if="columns.at(col) !== undefined">
-										<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, (row.gruppe === null) ? 'ASV' : 'Note')"
+										<td v-if="auswahlZelle?.b.klasseID && istErlaubtKompetenz(auswahlZelle, row.gruppe)"
 											:ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
 											:class="{
 												'bg-ui-selected': (gridManager.focusColumn === col+2),
@@ -146,6 +146,7 @@
 	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
 
 	import { PairNN } from '@core/asd/adt/PairNN';
+	import { ENMLehrerFunktion } from '@core/core/data/enm/ENMLehrerFunktion';
 	import { ENMv2Fach } from '@core/core/data/enm/v2/ENMv2Fach';
 	import type { ENMv2Klasse } from '@core/core/data/enm/v2/ENMv2Klasse';
 	import type { ENMv2Leistung } from '@core/core/data/enm/v2/ENMv2Leistung';
@@ -256,7 +257,7 @@
 				const kompetenzFachOrNull = props.enmManager().mapFaecher.get(props.enmManager().mapAnkreuzkompetenzen.get(kompetenz.kompetenzID)?.fachID ?? null);
 				if (kompetenzFachOrNull === null) {
 					// Nur einfügen, wenn Benutzer die Klassenleitung ist
-					if ((auswahlZelle.value === undefined) || !props.enmManager().listKlassenKlassenlehrer.contains(auswahlZelle.value.a)) {
+					if ((auswahlZelle.value === undefined) || (props.enmManager().klasseIstBerechtigt(auswahlZelle.value.a.id).size === 0)) {
 						continue;
 					}
 					const ankreuzkompetenz = props.enmManager().mapAnkreuzkompetenzen.get(kompetenz.kompetenzID);
@@ -345,12 +346,47 @@
 	const sperrenVorhanden = computed(() => {
 		const set = new Set<ENMv2Klasse>();
 		for (const klasse of props.auswahl()) {
-			if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id)) {
+			if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id, props.enmManager().klasseIstBerechtigt(klasse.id))) {
 				set.add(klasse);
 			}
 		}
 		return set;
 	});
+
+	function istErlaubt(pair: PairNN<ENMv2Klasse, ENMv2Schueler>, col: 'ASV') {
+		const berechtigungen = props.enmManager().klasseIstBerechtigt(pair.a.id);
+		return props.enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, col, berechtigungen);
+	}
+
+	function istErlaubtLeistung(pair: PairNN<ENMv2Klasse, ENMv2Schueler>, col: 'FB' | 'Note', fach: ENMv2Fach | string | null) {
+		const berechtigungen = props.enmManager().klasseIstBerechtigt(pair.a.id);
+		// Bei einem Fach darf auch eingeben, wer den Schüler in diesem Fach unterrichtet
+		if ((fach instanceof ENMv2Fach) && istFachlehrerImFach(pair.b, fach.id)) {
+			berechtigungen.add(ENMLehrerFunktion.FACHLEHRER);
+		}
+		return props.enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, col, berechtigungen);
+	}
+
+	function istErlaubtKompetenz(pair: PairNN<ENMv2Klasse, ENMv2Schueler>, gruppe: ENMv2Fach | string | null): boolean {
+		if (gruppe === null) {
+			return istErlaubt(pair, 'ASV');
+		}
+		if (gruppe instanceof ENMv2Fach) {
+			return istErlaubtLeistung(pair, 'Note', gruppe);
+		}
+		// Sonstige Fachkompetenzen ohne Fach liegen bei der Klassenleitung, die dafür keine Freigabe der Noteneingabe braucht
+		const berechtigungen = props.enmManager().klasseIstBerechtigt(pair.a.id);
+		return props.enmManager().sperrungen.istSpalteneingabeOhneFreigabeErlaubt(pair.b.klasseID, 'Note', berechtigungen);
+	}
+
+	function istFachlehrerImFach(schueler: ENMv2Schueler, idFach: number): boolean {
+		for (const leistung of schueler.leistungsdaten) {
+			if (props.enmManager().lerngruppeIstFachlehrer(leistung.lerngruppenID) && (props.enmManager().lerngruppeGetFach(leistung.lerngruppenID)?.id === idFach)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	const gesperrteKlassen = computed(() => {
 		let str = "";

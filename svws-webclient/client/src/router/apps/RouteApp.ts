@@ -234,12 +234,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleReportingKonfiguration,
 		];
 		this._menuNotenmodul = [
-			routeNotenmodulAdministration,
-			routeNotenmodulZugangsdaten,
 			routeNotenmodulLeistungen,
 			routeNotenmodulTeilleistungen,
 			routeNotenmodulAnkreuzkompetenzen,
 			routeNotenmodulKlassenleitung,
+			routeNotenmodulAdministration,
+			routeNotenmodulZugangsdaten,
 		];
 		super.children = [
 			...this._menuBenutzerprofil,

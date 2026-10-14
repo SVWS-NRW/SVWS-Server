@@ -4,7 +4,7 @@
 		<template #modalTitle>Eingabe des Datums und der Uhrzeit</template>
 		<template #modalContent>
 			<div class="flex w-fit">
-				<svws-ui-text-input type="datetime-local" :placeholder="`Eingabe ${props.modus === 'ab' ? 'von' : 'bis'}`"
+				<svws-ui-text-input type="datetime-local" :placeholder="getPlaceholder()"
 					:model-value="model" class="min-w-64"
 					@change="update" :disabled />
 				<div class="content-end mb-1">
@@ -28,7 +28,7 @@
 		manager: () => NotenmodulConfigManagerSperrungen;
 		row: () => NotenmodulConfigManagerSperrungenZeile;
 		/** gibt an, ob als Modus der Beginn oder das Ende der Sperrzeit verwendet werden soll */
-		modus: 'ab' | 'bis';
+		modus: 'Beginn' | 'Ende' | 'EndeKL';
 	}>();
 
 	const show = ref<boolean>(false);
@@ -36,10 +36,12 @@
 	const model = ref<string | null>(null);
 
 	watchEffect(() => {
-		if (props.modus === 'ab') {
+		if (props.modus === 'Beginn') {
 			model.value = props.row().tsEingabeAb;
-		} else {
+		} else if (props.modus === 'Ende') {
 			model.value = props.row().tsEingabeBis;
+		} else {
+			model.value = props.row().tsEingabeBisKlassenleitung;
 		}
 	});
 
@@ -47,11 +49,22 @@
 		if (datum !== undefined) {
 			model.value = datum;
 		}
-		if ((props.modus === 'ab' && props.row().tsEingabeAb !== model.value) || (props.modus === 'bis' && props.row().tsEingabeBis !== model.value)) {
-			await props.manager().setzeDatumNoteneingabe(props.row(), model.value, props.modus === 'ab');
+		if ((props.modus === 'Beginn' && props.row().tsEingabeAb !== model.value)
+			|| (props.modus === 'Ende' && props.row().tsEingabeBis !== model.value)
+			|| (props.modus === 'EndeKL' && props.row().tsEingabeBisKlassenleitung !== model.value)) {
+			await props.manager().setzeDatumNoteneingabe(props.row(), model.value, props.modus);
 		}
 		show.value = false;
 		disabled.value = false;
+	}
+
+	function getPlaceholder() {
+		if (props.modus === 'Beginn') {
+			return 'Eingabe von';
+		} else if (props.modus === 'Ende') {
+			return 'Eingabe bis';
+		}
+		return 'Eingabe durch Klassenleitung bis';
 	}
 
 	function setToNow() {

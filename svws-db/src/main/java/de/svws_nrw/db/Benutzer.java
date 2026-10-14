@@ -90,6 +90,12 @@ public final class Benutzer {
 	private final Set<Long> _idsKlassen = new HashSet<>();
 
 	/**
+	 * Enthält die IDs zu den Klassen, bei welchen der Benutzer einen vollständigen Zugriff durch die Tätigkeit
+	 * als Abteilungsleiter erhält.
+	 */
+	private final Set<Long> _idsKlassenAbteilungen = new HashSet<>();
+
+	/**
 	 * Enthält die aktuellen Leitungsfunktionen des Benutzers, falls es sich um einen Lehrer
 	 * handelt. Diese sind normalerweise in Bezug auf das aktuelle Datum des Servers gesetzt.
 	 */
@@ -611,7 +617,7 @@ public final class Benutzer {
 
 
 	/**
-	 * Gibt die IDs der Klasse zurück, bei welchen der Benutzer einen vollständigen Zugriff bei
+	 * Gibt die IDs der Klassen zurück, bei welchen der Benutzer einen vollständigen Zugriff bei
 	 * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer
 	 * oder auch durch die Tätigkeit als Abteilungsleiter erfolgen.
 	 *
@@ -619,6 +625,29 @@ public final class Benutzer {
 	 */
 	public Set<Long> getKlassenIDs() {
 		return new HashSet<>(this._idsKlassen);
+	}
+
+
+	/**
+	 * Setzt die IDs der Klassen, bei welchen der Benutzer einen vollständigen Zugriff durch die
+	 * Tätigkeit als Abteilungsleiter erhält.
+	 *
+	 * @param idsKlassen   die IDs der Klassen
+	 */
+	public void setAbteilungenKlassenIDs(final Collection<Long> idsKlassen) {
+		this._idsKlassenAbteilungen.clear();
+		this._idsKlassenAbteilungen.addAll(idsKlassen);
+	}
+
+
+	/**
+	 * Gibt die IDs der Klassen zurück, bei welchen der Benutzer einen vollständigen Zugriff bei
+	 * funktionsbezogenenen Operationen durch die Tätigkeit als Abteilungsleiter erhält.
+	 *
+	 * @return die IDs der Klassen
+	 */
+	public Set<Long> getAbteilungenKlassenIDs() {
+		return new HashSet<>(this._idsKlassenAbteilungen);
 	}
 
 

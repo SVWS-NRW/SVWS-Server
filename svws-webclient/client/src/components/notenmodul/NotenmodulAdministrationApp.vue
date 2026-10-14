@@ -7,7 +7,7 @@
 						<h2 class="svws-headline">
 							Administration
 						</h2>
-						<span class="svws-subline">{{ konfiguration.bezeichnung }}</span>
+						<span class="svws-subline">{{ konfigurationsbezeichnung }}</span>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Verbindung...</h2>
@@ -41,7 +41,7 @@
 	const props = defineProps<NotenmodulAdministrationAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const konfiguration = computed(() => props.manager().auswahl());
+	const konfigurationsbezeichnung = computed(() => props.manager().auswahlID() !== null ? props.manager().auswahl().bezeichnung : "");
 
 	const subline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();

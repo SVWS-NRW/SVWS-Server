@@ -3266,7 +3266,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLehrerENMv2Daten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v2/lehrer/{id : \d+}
+	 * Implementierung der GET-Methode getLehrerENMv2Daten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v2/lehrer/{id : \d+}/{funktion : \d+}
 	 *
 	 * Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
 	 *
@@ -3274,18 +3274,21 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) des Lehrers
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: ENMv2Daten
+	 *   Code 400: Die Lehrerfunktion ist ungültig oder passt nicht zu dem Lehrer.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
 	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} funktion - der Pfad-Parameter funktion
 	 *
 	 * @returns Die Daten des Externen Notenmoduls (ENM) des Lehrers
 	 */
-	public async getLehrerENMv2Daten(schema: string, id: number): Promise<ENMv2Daten> {
-		const path = "/db/{schema}/enm/v2/lehrer/{id : \\d+}"
+	public async getLehrerENMv2Daten(schema: string, id: number, funktion: number): Promise<ENMv2Daten> {
+		const path = "/db/{schema}/enm/v2/lehrer/{id : \\d+}/{funktion : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{funktion\s*(:[^{}]+({[^{}]+})*)?}/g, funktion.toString());
 		const result: string = await super.getJSON(path);
 		const text = result;
 		return ENMv2Daten.transpilerFromJSON(text);

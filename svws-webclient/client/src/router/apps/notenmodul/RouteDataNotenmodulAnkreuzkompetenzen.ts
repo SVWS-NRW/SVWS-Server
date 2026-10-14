@@ -5,13 +5,13 @@ import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationRes
 import { UnsupportedOperationException } from "@core/java/lang/UnsupportedOperationException";
 import type { List } from "@core/java/util/List";
 import { EnmLerngruppenAuswahlListeManager } from "@ui/components/enm/EnmLerngruppenAuswahlListeManager";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 import { routeNotenmodulLeistungenData } from "./RouteNotenmodulLeistungenData";
@@ -41,7 +41,8 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulAnkreuzkompetenzen>> {
-		const manager = new EnmLerngruppenAuswahlListeManager(notenmodulStateImpl.manager, schuleStateImpl.abschnitt.id,
+		const notenmodulState = useNotenmodulState();
+		const manager = new EnmLerngruppenAuswahlListeManager(notenmodulState.manager, schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
@@ -69,7 +70,8 @@ export class RouteDataNotenmodulAnkreuzkompetenzen extends RouteDataAuswahl<EnmL
 	get columnsVisible(): Map<string, boolean | null> {
 		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.ankreuzkompetenzen.table.columns"));
 		if (config === null) {
-			return notenmodulStateImpl.manager.spalten.mapSpaltenLeistungen;
+			const notenmodulState = useNotenmodulState();
+			return notenmodulState.manager.spalten.mapSpaltenLeistungen;
 		}
 		return new Map<string, boolean | null>(config);
 	}

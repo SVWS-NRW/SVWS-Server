@@ -4,6 +4,7 @@ import { authStateImpl } from "@wenom/states/AuthStateImpl";
 import { shallowRef } from "vue";
 
 import { Schulform } from "@core/asd/types/schule/Schulform";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
@@ -36,6 +37,11 @@ interface RouteStateApp extends RouteStateInterface {
 	// Die temporäre, nicht in der DB festgehaltene Konfiguration
 	nonPersistentConfig: Config | null;
 
+	// Die aktuell ausgewählte Ansicht, unterschieden nach Funktion
+	auswahlAnsicht: ENMLehrerFunktion;
+
+	// Die Optionen für das Select zur Ansichtsauswahl
+	optionsAuswahlAnsicht: Set<ENMLehrerFunktion>;
 }
 
 
@@ -71,6 +77,8 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			managerSperrungen: null,
 			config: null,
 			nonPersistentConfig: null,
+			auswahlAnsicht: ENMLehrerFunktion.FACHLEHRER,
+			optionsAuswahlAnsicht: new Set<ENMLehrerFunktion>(),
 		});
 	}
 
@@ -129,18 +137,47 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			const newState = <Partial<RouteStateApp>>{};
 
 			// Lade die ENM-Daten vom Server...
-			newState.daten = await authStateImpl.api.getLehrerENMDaten();
+			newState.daten = await authStateImpl.api.getLehrerENMDaten(this.auswahlAnsicht);
 
 			// Erstellen des Enm-Managers
-			newState.manager = new EnmManager(newState.daten);
+			newState.manager = new EnmManager(newState.daten, this.auswahlAnsicht);
 
 			// Laden der persistenten Konfiguration
 			newState.config = await this.ladeConfig();
-			newState.manager.sperrungen = new EnmSperrManager(newState.config.getValue("noteneingabe.gesperrt"));
+			newState.manager.sperrungen = new EnmSperrManager(newState.config.getValue("noteneingabe.gesperrt"), this.auswahlAnsicht);
 			newState.manager.spalten = new EnmSpaltenManager(newState.config.getValue("table.columns"));
 
 			// Nicht-persistente Config leer anlegen
 			newState.nonPersistentConfig = this.initNonPersistenConfig();
+
+			// Initialisiere die Optionen für die Rollenauswahl
+			newState.auswahlAnsicht = this.auswahlAnsicht;
+			const options = new Set<ENMLehrerFunktion>();
+			options.add(ENMLehrerFunktion.FACHLEHRER);
+			for (const kl of newState.daten.klassen) {
+				for (const l of kl.klassenlehrer) {
+					if (l === newState.daten.lehrerID) {
+						options.add(ENMLehrerFunktion.KLASSENLEITUNG);
+						break;
+					}
+				}
+				if (options.has(ENMLehrerFunktion.KLASSENLEITUNG)) {
+					break;
+				}
+			}
+			for (const abt of newState.daten.abteilungen) {
+				if (abt.idAbteilungsleiter === newState.daten.lehrerID) {
+					options.add(ENMLehrerFunktion.ABTEILUNGSLEITUNG);
+					break;
+				}
+			}
+			if ((newState.daten.idSchulleitung === newState.daten.lehrerID) || (newState.daten.idSchulleitungStv === newState.daten.lehrerID)) {
+				options.add(ENMLehrerFunktion.SCHULLEITUNG);
+			}
+			newState.optionsAuswahlAnsicht = options;
+
+			// Die Ansicht bleibt erhalten, da ein Wechsel der Lehrerfunktion die Daten ohne Routing neu lädt
+			newState.view = this._state.value.view;
 			this.setPatchedDefaultState(newState);
 
 			// Initialisiere die Auswahlen
@@ -163,6 +200,8 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		this.setPatchedState({
 			daten: null,
 			manager: null,
+			auswahlAnsicht: ENMLehrerFunktion.FACHLEHRER,
+			optionsAuswahlAnsicht: new Set<ENMLehrerFunktion>(),
 		});
 		// TODO leere Konfiguration
 	}
@@ -468,4 +507,19 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		Object.assign(data, patch);
 		this.commit();
 	};
+
+
+	public async setAnsicht(auswahlAnsicht: ENMLehrerFunktion): Promise<void> {
+		this._state.value.auswahlAnsicht = auswahlAnsicht;
+		await this.ladeDaten();
+	}
+
+	public get optionsAuswahlAnsicht(): Set<ENMLehrerFunktion> {
+		return this._state.value.optionsAuswahlAnsicht;
+	}
+
+	public get auswahlAnsicht(): ENMLehrerFunktion {
+		return this._state.value.auswahlAnsicht;
+	}
+
 }

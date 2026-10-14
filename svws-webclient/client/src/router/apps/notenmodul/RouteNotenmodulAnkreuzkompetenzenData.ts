@@ -3,10 +3,10 @@ import type { RouteLocationNormalized } from "vue-router";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 
 import type { NotenmodulAnkreuzkompetenzenProps } from "~/components/notenmodul/NotenmodulAnkreuzkompetenzenProps";
 import { RouteNode } from "~/router/RouteNode";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 import type { RouteNotenmodulAnkreuzkompetenzen } from "./RouteNotenmodulAnkreuzkompetenzen";
 
@@ -28,12 +28,13 @@ export class RouteNotenmodulAnkreuzkompetenzenData extends RouteNode<any, RouteN
 	}
 
 	public getProps(to: RouteLocationNormalized): NotenmodulAnkreuzkompetenzenProps {
+		const notenmodulState = useNotenmodulState();
 		return {
-			enmManager: () => notenmodulStateImpl.manager,
-			auswahl: () => notenmodulStateImpl.auswahlKlassen,
-			patchLeistung: notenmodulStateImpl.patchLeistung,
-			patchBemerkungen: notenmodulStateImpl.patchBemerkungen,
-			patchAnkreuzkompetenz: notenmodulStateImpl.patchAnkreuzkompetenz,
+			enmManager: () => notenmodulState.manager,
+			auswahl: () => notenmodulState.auswahlKlassen,
+			patchLeistung: notenmodulState.patchLeistung,
+			patchBemerkungen: notenmodulState.patchBemerkungen,
+			patchAnkreuzkompetenz: notenmodulState.patchAnkreuzkompetenz,
 		};
 	}
 

@@ -4,13 +4,14 @@ import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
 import type { EnmKlassenleitungAuswahlListeManager } from "@ui/components/enm/EnmKlassenleitungAuswahlListeManager";
+import { useAbteilungenState } from "@ui/states/kataloge/AbteilungenState";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 import { ConfigElement } from "@ui/utils/Config";
 
 import type { RouteApp } from "../RouteApp";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteNode } from "~/router/RouteNode";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 import { RouteDataNotenmodulKlassenleitung } from "./RouteDataNotenmodulKlassenleitung";
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
@@ -30,18 +31,24 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.klassenleitung", "klassenleitung", NotenmodulKlassenleitungApp, NotenmodulKlassenleitungAuswahl, new RouteDataNotenmodulKlassenleitung());
 		super.mode = ServerMode.STABLE;
-		super.getAuswahlListProps = (props) => ({
-			...props,
-			enmManager: () => notenmodulStateImpl.manager,
-			setAuswahlEinzel: notenmodulStateImpl.setAuswahlKlasse,
-			auswahlEinzel: () => notenmodulStateImpl.auswahlKlasse,
-			setAuswahlMehrfach: notenmodulStateImpl.setAuswahlKlassen,
-			auswahlMehrfach: () => notenmodulStateImpl.auswahlKlassenNurMehrfachauswahl,
-		});
-		super.getAuswahlProps = props => ({
-			...props,
-			enmManager: () => notenmodulStateImpl.manager,
-		});
+		super.getAuswahlListProps = (props) => {
+			const notenmodulState = useNotenmodulState();
+			return {
+				...props,
+				enmManager: () => notenmodulState.manager,
+				setAuswahlEinzel: notenmodulState.setAuswahlKlasse,
+				auswahlEinzel: () => notenmodulState.auswahlKlasse,
+				setAuswahlMehrfach: notenmodulState.setAuswahlKlassen,
+				auswahlMehrfach: () => notenmodulState.auswahlKlassenNurMehrfachauswahl,
+			};
+		};
+		super.getAuswahlProps = props => {
+			const notenmodulState = useNotenmodulState();
+			return {
+				...props,
+				enmManager: () => notenmodulState.manager,
+			};
+		};
 		super.text = "Klassenleitung";
 		// TODO this.isHidden = () => notenmodulStateImpl.manager.listKlassenKlassenlehrer.isEmpty() ? routeNotenmodul.getRouteDefaultChild() : false;
 		configStateImpl.config.addElements([
@@ -55,8 +62,11 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering) {
-			await notenmodulStateImpl.ladeDaten();
+		if (isEntering && !(from?.name.startsWith("notenmodul.") ?? false)) {
+			const notenmodulState = useNotenmodulState();
+			const abteilungenState = useAbteilungenState();
+			await abteilungenState.init();
+			await notenmodulState.ladeDaten();
 		}
 		if (to.name === this.name) {
 			return routeNotenmodulKlassenleitungData.getRoute();
@@ -64,12 +74,13 @@ export class RouteNotenmodulKlassenleitung extends RouteAuswahlNode<EnmKlassenle
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
-		if (notenmodulStateImpl.manager.listKlassenMitAnkreuzkompetenzen.size() > 0) {
-			notenmodulStateImpl.setAuswahlKlassen([]);
+		const notenmodulState = useNotenmodulState();
+		if (notenmodulState.manager.listKlassenMitAnkreuzkompetenzen.size() > 0) {
+			notenmodulState.setAuswahlKlassen([]);
 		}
 		await this.data.entferneDaten();
 		if (!(to.name.startsWith("notenmodul"))) {
-			notenmodulStateImpl.reset();
+			notenmodulState.reset();
 		}
 		await super.leave(from, from_params, to, to_params);
 	}

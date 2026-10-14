@@ -1,5 +1,6 @@
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
+import type { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
 import { ENMv2LeistungBemerkungen } from "@core/core/data/enm/v2/ENMv2LeistungBemerkungen";
@@ -184,10 +185,17 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 404: Es wurden nicht alle benötigten ENM-Daten gefunden.
 	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
 	 *
+	 * @param lehrerFunktion   die Lehrer-Funktion des angemeldeten Lehrr, für welche die ENM-Daten vom Server
+	 *                         zurückgegeben werden sollen. Ist keine gesetzt, so wird der Default des Servers genommen: Fachlehrer
+	 *
 	 * @returns die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getLehrerENMDaten(): Promise<ENMv2Daten> {
-		const response = await super.getTextBased('/api/daten', 'application/json');
+	public async getLehrerENMDaten(lehrerFunktion?: ENMLehrerFunktion): Promise<ENMv2Daten> {
+		let path = '/api/daten';
+		if (lehrerFunktion !== undefined) {
+			path += '?funktion=' + lehrerFunktion.id;
+		}
+		const response = await super.getTextBased(path, 'application/json');
 		return ENMv2Daten.transpilerFromJSON(response.data);
 	}
 

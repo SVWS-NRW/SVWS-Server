@@ -3,10 +3,10 @@ import type { RouteLocationNormalized } from "vue-router";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 
 import type { NotenmodulKlassenleitungProps } from "~/components/notenmodul/NotenmodulKlassenleitungProps";
 import { RouteNode } from "~/router/RouteNode";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 
 import { type RouteNotenmodulKlassenleitung, routeNotenmodulKlassenleitung } from "./RouteNotenmodulKlassenleitung";
 
@@ -28,11 +28,12 @@ export class RouteNotenmodulKlassenleitungData extends RouteNode<any, RouteNoten
 	}
 
 	public getProps(to: RouteLocationNormalized): NotenmodulKlassenleitungProps {
+		const notenmodulState = useNotenmodulState();
 		return {
-			enmManager: () => notenmodulStateImpl.manager,
-			auswahl: () => notenmodulStateImpl.auswahlKlassen,
-			patchBemerkungen: notenmodulStateImpl.patchBemerkungen,
-			patchLernabschnitt: notenmodulStateImpl.patchLernabschnitt,
+			enmManager: () => notenmodulState.manager,
+			auswahl: () => notenmodulState.auswahlKlassen,
+			patchBemerkungen: notenmodulState.patchBemerkungen,
+			patchLernabschnitt: notenmodulState.patchLernabschnitt,
 			columnsVisible: () => routeNotenmodulKlassenleitung.data.columnsVisible,
 			setColumnsVisible: routeNotenmodulKlassenleitung.data.setColumnsVisible,
 		};

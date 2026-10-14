@@ -5,12 +5,12 @@ import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationRes
 import { UnsupportedOperationException } from "@core/java/lang/UnsupportedOperationException";
 import type { List } from "@core/java/util/List";
 import { EnmKlassenleitungAuswahlListeManager } from "@ui/components/enm/EnmKlassenleitungAuswahlListeManager";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 import { routeNotenmodulKlassenleitungData } from "./RouteNotenmodulKlassenleitungData";
@@ -39,7 +39,8 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	}
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateNotenmodulKlassenleitung>> {
-		const manager = new EnmKlassenleitungAuswahlListeManager(notenmodulStateImpl.manager, schuleStateImpl.abschnitt.id,
+		const notenmodulState = useNotenmodulState();
+		const manager = new EnmKlassenleitungAuswahlListeManager(notenmodulState.manager, schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform);
 		return { manager };
 	}
@@ -67,7 +68,8 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	get columnsVisible(): Map<string, boolean | null> {
 		const config = JSON.parse(configStateImpl.config.getValue("notenmodul.klassenleitung.table.columns"));
 		if (config === null) {
-			return notenmodulStateImpl.manager.spalten.mapSpaltenKlassenleitung;
+			const notenmodulState = useNotenmodulState();
+			return notenmodulState.manager.spalten.mapSpaltenKlassenleitung;
 		}
 		return new Map<string, boolean | null>(config);
 	}

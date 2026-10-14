@@ -22,6 +22,16 @@ export class ENMConfigKlasse extends JavaObject {
 	public tsEingabeBis: string | null = null;
 
 	/**
+	 * Der Zeitstempel, bis wann die Noteneingabe für eine Klassenleitung erlaubt ist, sofern eine abweichende Einschränkung zu tsEingabeBis vorliegt, sonst null.
+	 */
+	public tsEingabeBisKlassenleitung: string | null = null;
+
+	/**
+	 * Gibt an, ob die Klassenleitungen auch die Noten stellvertretend für die Fachlehrer eingegeben dürfen.
+	 */
+	public istNoteneingabeDurchKlassenleitung: boolean = false;
+
+	/**
 	 * Gibt an, ob die Fehlstunden klassen- oder kursweise eingegeben werden.
 	 */
 	public istFehlstundenEingabeKlassenweise: boolean = false;
@@ -57,6 +67,10 @@ export class ENMConfigKlasse extends JavaObject {
 		result.id = obj.id;
 		result.tsEingabeAb = (obj.tsEingabeAb === undefined) ? null : obj.tsEingabeAb === null ? null : obj.tsEingabeAb;
 		result.tsEingabeBis = (obj.tsEingabeBis === undefined) ? null : obj.tsEingabeBis === null ? null : obj.tsEingabeBis;
+		result.tsEingabeBisKlassenleitung = (obj.tsEingabeBisKlassenleitung === undefined) ? null : obj.tsEingabeBisKlassenleitung === null ? null : obj.tsEingabeBisKlassenleitung;
+		if (obj.istNoteneingabeDurchKlassenleitung === undefined)
+			throw new Error('invalid json format, missing attribute istNoteneingabeDurchKlassenleitung');
+		result.istNoteneingabeDurchKlassenleitung = obj.istNoteneingabeDurchKlassenleitung;
 		if (obj.istFehlstundenEingabeKlassenweise === undefined)
 			throw new Error('invalid json format, missing attribute istFehlstundenEingabeKlassenweise');
 		result.istFehlstundenEingabeKlassenweise = obj.istFehlstundenEingabeKlassenweise;
@@ -73,6 +87,8 @@ export class ENMConfigKlasse extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"tsEingabeAb" : ' + ((obj.tsEingabeAb === null) ? 'null' : JSON.stringify(obj.tsEingabeAb)) + ',';
 		result += '"tsEingabeBis" : ' + ((obj.tsEingabeBis === null) ? 'null' : JSON.stringify(obj.tsEingabeBis)) + ',';
+		result += '"tsEingabeBisKlassenleitung" : ' + ((obj.tsEingabeBisKlassenleitung === null) ? 'null' : JSON.stringify(obj.tsEingabeBisKlassenleitung)) + ',';
+		result += '"istNoteneingabeDurchKlassenleitung" : ' + obj.istNoteneingabeDurchKlassenleitung.toString() + ',';
 		result += '"istFehlstundenEingabeKlassenweise" : ' + obj.istFehlstundenEingabeKlassenweise.toString() + ',';
 		result += '"spalten" : [ ';
 		for (let i = 0; i < obj.spalten.size(); i++) {
@@ -97,6 +113,12 @@ export class ENMConfigKlasse extends JavaObject {
 		}
 		if (obj.tsEingabeBis !== undefined) {
 			result += '"tsEingabeBis" : ' + ((obj.tsEingabeBis === null) ? 'null' : JSON.stringify(obj.tsEingabeBis)) + ',';
+		}
+		if (obj.tsEingabeBisKlassenleitung !== undefined) {
+			result += '"tsEingabeBisKlassenleitung" : ' + ((obj.tsEingabeBisKlassenleitung === null) ? 'null' : JSON.stringify(obj.tsEingabeBisKlassenleitung)) + ',';
+		}
+		if (obj.istNoteneingabeDurchKlassenleitung !== undefined) {
+			result += '"istNoteneingabeDurchKlassenleitung" : ' + obj.istNoteneingabeDurchKlassenleitung.toString() + ',';
 		}
 		if (obj.istFehlstundenEingabeKlassenweise !== undefined) {
 			result += '"istFehlstundenEingabeKlassenweise" : ' + obj.istFehlstundenEingabeKlassenweise.toString() + ',';

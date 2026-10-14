@@ -48,7 +48,7 @@
 			</template>
 			<template #default="{ row: pair, index }">
 				<td>
-					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID)" class="flex items-center h-full">
+					<div v-if="!enmManager().sperrungen.istEingabeErlaubtLeistungen(pair.b.klasseID, enmManager().leistungsdatenIstBerechtigt(pair.a.lerngruppenID, pair.b.id))" class="flex items-center h-full">
 						<svws-ui-tooltip>
 							<span class="icon i-ri-lock-2-line icon-ui-danger" />
 							<template #content>Die Eingabe für diese Klasse ist gesperrt</template>
@@ -73,11 +73,11 @@
 				<td v-if="gridManager.isColVisible('Lehrer') ?? true">
 					{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 				</td>
-				<template v-for="(idArt, indexArt) of setTeilleistungsarten" :key="idArt">
+				<template v-for="(idArt, indexArt) of listTeilleistungsarten" :key="idArt">
 					<template v-for="teilleistung, i of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : [ null ]" :key="teilleistung?.id ?? (0 - i)">
 						<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 							<td v-if="teilleistung === null" class="bg-ui-disabled" />
-							<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt)"
+							<td v-else-if="istErlaubtTeilleistung(pair, idArt)"
 								:style="`anchor-name: --anchor_Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Teilleistung_${teilleistung.id}_${pair.a.id}_${pair.b.id}`, teilleistung.note)"
 								:ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
 								:class="{
@@ -90,24 +90,24 @@
 					</template>
 				</template>
 				<template v-if="gridManager.isColVisible('Quartal') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
+					<td v-if="istErlaubt(pair, 'Quartal')"
 						:style="`anchor-name: --anchor_Quartal_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Quartal_${pair.a.id}_${pair.b.id}`, pair.a.noteQuartal)"
-						:ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
+						:ref="inputNoteQuartal(pair, listTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 						:class="{
-							'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 6),
+							'bg-ui-selected': (gridManager.focusColumn === listTeilleistungsarten.size() + 6),
 							'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
-							'contentFocusField': gridManager.isFocusLast((setTeilleistungsarten.size() + 6), index),
+							'contentFocusField': gridManager.isFocusLast((listTeilleistungsarten.size() + 6), index),
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('Note') ?? true">
-					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+					<td v-if="istErlaubt(pair, 'Note')"
 						:style="`anchor-name: --anchor_Note_${pair.a.id}_${pair.b.id};`" popovertarget="popover_Noteneingabe" @touchend="popover(`Note_${pair.a.id}_${pair.b.id}`, pair.a.note)"
-						:ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
+						:ref="inputNote(pair, listTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
 						:class="{
-							'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 7),
+							'bg-ui-selected': (gridManager.focusColumn === listTeilleistungsarten.size() + 7),
 							'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
-							'contentFocusField': gridManager.isFocusLast((setTeilleistungsarten.size() + 7), index),
+							'contentFocusField': gridManager.isFocusLast((listTeilleistungsarten.size() + 7), index),
 						}" />
 					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 				</template>
@@ -180,14 +180,19 @@
 	const colsValidationTooltip = new Set(['Sperre', 'Klasse', 'Name', 'Fach', 'Lehrer', 'Kurs', 'Kursart']);
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
-	const setTeilleistungsarten = computed(() => {
-		const result = new HashSet<number>();
+	const listTeilleistungsarten = computed(() => {
+		const result = new ArrayList<number>();
 		for (const lerngruppe of props.auswahl()) {
 			const arten = props.enmManager().mapLerngruppeTeilleistungsarten.get(lerngruppe.id);
 			if (arten !== null) {
 				result.addAll(arten);
 			}
 		}
+		result.sort({ compare: (o1, o2) => {
+			const s1 = props.enmManager().mapTeilleistungsarten.get(o1)?.sortierung ?? 32000;
+			const s2 = props.enmManager().mapTeilleistungsarten.get(o2)?.sortierung ?? 32000;
+			return s1 < s2 ? -1 : 1;
+		} });
 		return result;
 	});
 
@@ -209,7 +214,7 @@
 			set: (value) => void props.setColumnsVisible(value),
 		}),
 	});
-	watch(setTeilleistungsarten, (teilleistungsarten) => {
+	watch(listTeilleistungsarten, (teilleistungsarten) => {
 		const cols = [
 			{ kuerzel: "Sperre", name: "Sperre", width: "2rem", hideable: false },
 			{ kuerzel: "Klasse", name: "Klasse", width: "4rem", hideable: false },
@@ -276,13 +281,23 @@
 				continue;
 			}
 			for (const klasse of klassen) {
-				if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id)) {
+				if (!props.enmManager().sperrungen.istEingabeErlaubtLeistungen(klasse.id, props.enmManager().leistungsdatenKlasseIstBerechtigt(l.id, klasse.id))) {
 					set.add(klasse);
 				}
 			}
 		}
 		return set;
 	});
+
+	function istErlaubt(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: 'Quartal' | 'Note'): boolean {
+		const berechtigungen = props.enmManager().leistungsdatenIstBerechtigt(pair.a.lerngruppenID, pair.b.id);
+		return props.enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, col, berechtigungen);
+	}
+
+	function istErlaubtTeilleistung(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, idArt: number): boolean {
+		const berechtigungen = props.enmManager().leistungsdatenIstBerechtigt(pair.a.lerngruppenID, pair.b.id);
+		return props.enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt, berechtigungen);
+	}
 
 	const gesperrteKlassen = computed(() => {
 		let str = "";

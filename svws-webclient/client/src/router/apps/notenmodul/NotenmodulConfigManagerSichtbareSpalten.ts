@@ -179,6 +179,11 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 				list.add(col.name);
 			}
 		}
+		list.sort({ compare: (o1, o2) => {
+			const s1 = this.mapTeilleistungsarten.get(o1)?.sortierung ?? 32000;
+			const s2 = this.mapTeilleistungsarten.get(o2)?.sortierung ?? 32000;
+			return s1 < s2 ? -1 : 1;
+		} });
 		return list;
 	}
 

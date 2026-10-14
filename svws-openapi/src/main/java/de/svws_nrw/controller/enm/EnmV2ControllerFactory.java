@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.enm;
 
+import de.svws_nrw.core.data.enm.ENMLehrerFunktion;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -65,20 +66,31 @@ public final class EnmV2ControllerFactory {
 	/**
 	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
 	 *
-	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
-	 * @param id       die ID des Lehrers
+	 * Die Funktion NOTENMODULADMIN liefert schulweite Daten samt Zugangsdaten aller Lehrer und
+	 * verlangt daher die allgemeine Kompetenz.
+	 *
+	 * @param request   der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 * @param id        die ID des Lehrers
+	 * @param funktion  die ID der Lehrerfunktion, in welcher die Abfrage ausgeführt wird
 	 *
 	 * @return der spezielle Servlet-Controller
 	 *
-	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 * @throws ApiOperationException   falls die Lehrerfunktion ungültig oder die Berechtigung nicht gegeben ist
 	 */
-	public static EnmV2ControllerFactory withReadAccessFunktionsbezogen(final HttpServletRequest request, final long id) throws ApiOperationException {
+	public static EnmV2ControllerFactory withReadAccessFunktionsbezogen(final HttpServletRequest request, final long id, final int funktion)
+			throws ApiOperationException {
 		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
 		final DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION);
+		final ENMLehrerFunktion lehrerFunktion = ENMLehrerFunktion.fromID(funktion);
+		if (lehrerFunktion == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die übergebene Lehrerfunktion wird nicht unterstützt.");
+		}
 		final Benutzer user = conn.getUser();
-		if (!user.pruefeKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN) && ((user.getIdLehrer() == null) || (user.getIdLehrer() != id))) {
+		final boolean hatAllgemeineKompetenz = user.pruefeKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+		if (!hatAllgemeineKompetenz && ((user.getIdLehrer() == null) || (user.getIdLehrer() != id)
+				|| (lehrerFunktion == ENMLehrerFunktion.NOTENMODULADMIN))) {
 			throw new ApiOperationException(Status.FORBIDDEN);
 		}
 		return new EnmV2ControllerFactory();

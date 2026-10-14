@@ -72,6 +72,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public getProps(): AppProps {
 		return {
+			enmManager: () => routeApp.data.manager,
+			setAnsicht: (lf) => routeApp.data.setAnsicht(lf),
+			optionsAuswahlAnsicht: () => routeApp.data.optionsAuswahlAnsicht,
+			auswahlAnsicht: () => routeApp.data.auswahlAnsicht,
+
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),

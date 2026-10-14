@@ -10,6 +10,9 @@ class ENMDatenManager {
     /** Die Datenbank-Verbindung, welche zum Laden der ENM-Daten genutzt wurde */
     public DBConnection $conn;
 
+    /** Eine Map von der Klassen-ID zu der jeweilgen Konfigurationen von Sperrungen für die Klasse */
+    private array $mapKlassenSperrkonfigurationen;
+
     /** Die ENM-Revision mit welcher diese Klasse arbeitet */
     public int $enmRevisionRequired = 1;
 
@@ -27,6 +30,9 @@ class ENMDatenManager {
 
     /** Ein Cache für die Klassen, bei denen ein angemeldeter Lehrer ein Klassenlehrer ist. */
     protected array | null $mapKlassen = null;
+
+    /** Ein Cache für die Klassen, bei denen ein angemeldeter Lehrer ein Abteilungsleiter ist. */
+    protected array | null $mapKlassenAbteilung = null;
 
     /** Ein Cache für die Lerngruppen */
     protected array | null $mapLerngruppen = null;
@@ -57,6 +63,21 @@ class ENMDatenManager {
      */
     private function __construct(DBConnection $conn) {
         $this->conn = $conn;
+        $this->mapKlassenSperrkonfigurationen = Database::getConfigSperrungNoteneingabe($this->conn);
+    }
+
+    /**
+     * Bestimmt die Sperrkonfiguration für Klasse mit der übergebenen ID.
+     *
+     * @param int $idKlasse   die ID der Klasse
+     *
+     * @return ?object die Sperrkonfiguration oder null, falls keine existiert
+     */
+    public function getSperrkonfiguration(int $idKlasse): ?object {
+        if (array_key_exists($idKlasse, $this->mapKlassenSperrkonfigurationen)) {
+            return $this->mapKlassenSperrkonfigurationen[$idKlasse];
+        }
+        return null;
     }
 
     /**
@@ -124,6 +145,40 @@ class ENMDatenManager {
             }
         }
         return $this->mapKlassen;
+    }
+
+    /**
+     * Bestimme die Klassen, bei denen der Lehrer Abteilungsleiter ist.
+     *
+     * @param object $lehrer   der Lehrer, der aktuell angemeldet ist
+     *
+     * @return array eine Map von der ID der Klasse auf das zugehörige Klassenobjekt
+     */
+    public function getMapKlassenAbteilung(object $lehrer): array {
+        if ($this->mapKlassenAbteilung !== null) {
+            return $this->mapKlassenAbteilung;
+        }
+
+        $this->mapKlassenAbteilung = [];
+        if (!isset($this->enmDaten->abteilungen)) {
+            return $this->mapKlassenAbteilung;
+        }
+
+        $klassenIDs = [];
+        foreach ($this->enmDaten->abteilungen as $abteilung) {
+            if ($abteilung->idAbteilungsleiter === $lehrer->id) {
+                foreach($abteilung->klassenzuordnungen as $klassenID) {
+                    $klassenIDs[$klassenID] = true;
+                }
+            }
+        }
+
+        foreach ($this->enmDaten->klassen as $klasse) {
+            if (isset($klassenIDs[$klasse->id])) {
+                $this->mapKlassenAbteilung[$klasse->id] = $klasse;
+            }
+        }
+        return $this->mapKlassenAbteilung;
     }
 
     /**
@@ -371,8 +426,22 @@ class ENMDatenManager {
         return $map->schueler[$idSchueler]->klasseID;
     }
 
+
     /**
-     * Prüft, ob die Ankreuzkompetenz dem Bereich ASV zugeordnet ist
+     * Gibt zurück, ob der übergenene Lehrer ein Mitglied der Schulleitung ist
+     *
+     * @param object $lehrer   der Lehrer
+     *
+     * @return bool   true, wenn der Lehrer Mitglied der Schulleitung ist, und ansonsten false
+     */
+    public function istSchulleitung(object $lehrer): bool {
+        return ($this->enmDaten->idSchulleitung === $lehrer->id) ||($this->enmDaten->idSchulleitungStv === $lehrer->id);
+    }
+
+
+    /**
+     * Prüft, ob die Ankreuzkompetenz dem Bereich ASV zugeordnet ist. Sonstige Fachkompetenzen ohne Fach
+     * gehören nicht dazu, sie werden wie Noten behandelt.
      *
      * @param object $ankreuzkompetenz   die Ankreuzkompetenz des Schülers
      *
@@ -381,7 +450,7 @@ class ENMDatenManager {
     public function istAnkreuzkompetenzASV(object $ankreuzkompetenz): bool {
         $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
         $kompetenz = $mapAnkreuzkompetenzen[$ankreuzkompetenz->kompetenzID];
-        return $kompetenz->fachID === null;
+        return ($kompetenz->fachID === null) && !$kompetenz->istFachkompetenz;
     }
 
     /**
@@ -417,14 +486,85 @@ class ENMDatenManager {
         return false;
     }
 
+
+    /**
+     * Prüft, ob der angemeldete Lehrer mindestens eine Klassenleitung ausübt.
+     *
+     * @param object $lehrer   der Lehrer, dessen Rolle geprüft wird
+     *
+     * @return bool true, wenn der Lehrer mind. eine eine Klassenleitung hat, und ansonsten false
+     */
+    private function pruefeLehrerfunktionKlassenleitung(object $lehrer): bool {
+        if (!isset($this->enmDaten->klassen)) {
+            return false;
+        }
+        foreach ($this->enmDaten->klassen as $klasse) {
+            foreach ($klasse->klassenlehrer as $idKlassenlehrer) {
+                if ($idKlassenlehrer === $lehrer->id) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Prüft, ob der angemeldete Lehrer mindestens eine Abteilungsleitung ausübt.
+     *
+     * @param object $lehrer   der Lehrer, dessen Rolle geprüft wird
+     *
+     * @return bool true, wenn der Lehrer mind. eine eine Abteilungsleitung hat, und ansonsten false
+     */
+    private function pruefeLehrerfunktionAbteilungsleitung(object $lehrer): bool {
+        if (!isset($this->enmDaten->abteilungen)) {
+            return false;
+        }
+        foreach ($this->enmDaten->abteilungen as $abteilung) {
+            if ($abteilung->idAbteilungsleiter === $lehrer->id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Prüft, ob der angemeldete Lehrer zur Schulleitung gehört.
+     *
+     * @param object $lehrer   der Lehrer, dessen Rolle geprüft wird
+     *
+     * @return bool true, wenn der Lehrer zur Schulleitung gehört, und ansonsten false
+     */
+    private function pruefeLehrerfunktionSchulleitung(object $lehrer): bool {
+        return ($this->enmDaten->idSchulleitung === $lehrer->id) || ($this->enmDaten->idSchulleitungStv === $lehrer->id);
+    }
+
+    /**
+     * Prüft, ob die übergebene Lehrerfunktion zu dem angemeldeten Lehrer passt oder nicht
+     *
+     * @param object $lehrer                      der Lehrer, dessen Rolle geprüft wird
+     * @param ENMLehrerFunktion $lehrerFunktion   die Funktion mit welcher der Lehrer die Datenabfragt
+     *
+     * @return bool true, wenn die Lehrer-Funktion zum angemeldeten Lehrer passt, und ansonsten false
+     */
+    public function pruefeLehrerfunktion(object $lehrer, ENMLehrerFunktion $lehrerFunktion): bool {
+        return match ($lehrerFunktion) {
+            ENMLehrerFunktion::FACHLEHRER => true,
+            ENMLehrerFunktion::KLASSENLEITUNG => $this->pruefeLehrerfunktionKlassenleitung($lehrer),
+            ENMLehrerFunktion::ABTEILUNGSLEITUNG => $this->pruefeLehrerfunktionAbteilungsleitung($lehrer),
+            ENMLehrerFunktion::SCHULLEITUNG => $this->pruefeLehrerfunktionSchulleitung($lehrer),
+            default => false,
+        };
+    }
+
     /**
      * Erstellt die ENM-Daten angepasst für den den übergebenen Lehrer
      *
-     * @param object $lehrer   der Lehrer, für den die ENM-Daten zusammengestellt werden sollen
+     * @param object $lehrer                      der Lehrer, für den die ENM-Daten zusammengestellt werden sollen
+     * @param ENMLehrerFunktion $lehrerFunktion   die Funktion mit welcher der Lehrer die Datenabfragt
      *
      * @return string die für den Lehrer zusammengestellten ENM-Daten
      */
-    public function getENMDatenForLehrer(object $lehrer): string {
+    public function getENMDatenForLehrer(object $lehrer, ENMLehrerFunktion $lehrerFunktion): string {
         // Nehme die ENM-Daten ohne Lehrer- und Schülerdaten ...
         $daten = $this->enmDaten;
         // Bestimme die zu integrierenden Lehrer-Daten, entferne dabei die Informationen zu den Credentials
@@ -440,17 +580,26 @@ class ENMDatenManager {
         }
         $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
         $mapKlassen = $this->getMapKlassen($lehrer);
+        $mapKlassenAbteilung = $this->getMapKlassenAbteilung($lehrer);
         $mapLerngruppen = $this->getMapLerngruppen();
         $mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
         $listSchueler = [];
         foreach ($this->enmSchueler as $schueler) {
-            $istKlassenlehrer = array_key_exists($schueler->klasseID, $mapKlassen);
+            $istKlassenlehrer =  match ($lehrerFunktion) {
+                ENMLehrerFunktion::FACHLEHRER => array_key_exists($schueler->klasseID, $mapKlassen),
+                ENMLehrerFunktion::KLASSENLEITUNG => array_key_exists($schueler->klasseID, $mapKlassen),
+                ENMLehrerFunktion::ABTEILUNGSLEITUNG => array_key_exists($schueler->klasseID, $mapKlassen) || array_key_exists($schueler->klasseID, $mapKlassenAbteilung),
+                ENMLehrerFunktion::SCHULLEITUNG => true,
+                default => false,
+            };
+            // In der Fachlehrer-Ansicht zählt auch in der eigenen Klasse nur der eigene Unterricht, alle Fächer zeigt die Ansicht Klassenleitung
+            $istAlleFaecher = $istKlassenlehrer && ($lehrerFunktion !== ENMLehrerFunktion::FACHLEHRER);
             // Bestimme die Leistungsdaten, die übernommen werden müssen
             $leistungen = [];
             $setFachIDs = [];
             foreach ($schueler->leistungsdaten as $leistung) {
                 $istFachlehrer = array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer);
-                if ($istFachlehrer || $istKlassenlehrer) {
+                if ($istFachlehrer || $istAlleFaecher) {
                     $leistungen[] = $leistung;
                     $tmpLerngruppe = $mapLerngruppen[$leistung->lerngruppenID];
                     if ($tmpLerngruppe != null) {
@@ -466,7 +615,8 @@ class ENMDatenManager {
                     continue;
                 }
                 $kompetenz = $mapAnkreuzkompetenzen[$schuelerkompetenz->kompetenzID];
-                if ($istKlassenlehrer || (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs)))) {
+                $istOhneFach = ($kompetenz->fachID == null);
+                if ($istAlleFaecher || ($istOhneFach && $istKlassenlehrer) || (!$istOhneFach && array_key_exists($kompetenz->fachID, $setFachIDs))) {
                     $kompetenzen[] = $schuelerkompetenz;
                 }
             }
@@ -480,8 +630,9 @@ class ENMDatenManager {
                 }
             }
 
-            // Prüfe, ob der Schüler zurückgegeben werden soll
-            if (empty($leistungen) && empty($kompetenzen) && empty($zp10Liste)) {
+            // Prüfe, ob der Schüler zurückgegeben werden soll. Leitungsrollen erhalten auch Schüler ohne Daten, damit sie
+            // z. B. Fehlstunden und Bemerkungen von Neuzugängen eintragen können.
+            if (!$istKlassenlehrer && empty($leistungen) && empty($kompetenzen) && empty($zp10Liste)) {
                 continue;
             }
             // Ersetze die Leistungsdaten und die Ankreuzkompetenzen

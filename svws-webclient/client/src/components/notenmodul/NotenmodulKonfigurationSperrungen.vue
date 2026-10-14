@@ -5,15 +5,50 @@
 			<div class="w-64 mb-4">
 				<ui-select label="Gruppierung" :manager="selectManagerGruppierung" v-model="manager().gruppierung" :removable="false" />
 			</div>
-			<ui-table-grid :header-count="2" :manager="() => gridManager" class="min-w-full" name="Matrix Noteneingabe">
+			<ui-table-grid :header-count="3" :manager="() => gridManager" class="min-w-full" name="Matrix Noteneingabe">
 				<template #header="{ i }">
 					<template v-if="i === 1">
-						<template v-for="col of gridManager.cols.values()" :key="col.name">
-							<th v-if="gridManager.isColVisible(col.name)" :title="col.name">
-								<div v-if="col.name === 'Gruppe'"> {{ manager().gruppierung }} </div>
+						<th class="ui-divider" :class="{ 'col-span-2': manager().gruppierung !== 'Keine' }" />
+						<th class="col-span-2 ui-divider">
+							<svws-ui-tooltip autosize>
+								Eingabezeitraum
+								<template #content>
+									Der Eingabezeitraum für die Eingabe von Leistungsdaten durch den Fachlehrer <br>
+									Sind keine Werte angegeben, so ist der Eingabezeitraum uneingeschränkt
+								</template>
+							</svws-ui-tooltip>
+						</th>
+						<th class="col-span-3 ui-divider">
+							<svws-ui-tooltip autosize>
+								Klassenleitung
+								<template #content>
+									Erweiterte Berechtigungen / Aufgaben für Klassenleitungen
+								</template>
+							</svws-ui-tooltip>
+						</th>
+						<th :style="`grid-column: span ${countVisibleColumns - ((manager().gruppierung === 'Keine') ? 6 : 7)} / span ${countVisibleColumns - ((manager().gruppierung === 'Keine') ? 6 : 7)}`">
+							<svws-ui-tooltip autosize>
+								Berechtigungen
+								<template #content>
+									Regelt, welche Eingaben für Leistungsdaten bei der Klasse erlaubt bzw. gesperrt sind
+								</template>
+							</svws-ui-tooltip>
+						</th>
+					</template>
+					<template v-else-if="i === 2">
+						<template v-for="col of gridManager.cols.values()" :key="col.kuerzel">
+							<th v-if="gridManager.isColVisible(col.name)"
+								:class="{ 'ui-divider': col.kuerzel === 'Klasse' || col.kuerzel === 'Eingabe bis' || col.kuerzel === 'FS Kl' || ((col.kuerzel === 'Teilnoten') && manager().zeigeTeilnoten) }">
+								<div v-if="col.kuerzel === 'Gruppe'"> {{ manager().gruppierung }} </div>
 								<div v-else>
-									{{ col.name }}
-									<template v-if="col.name === 'Teilnoten'">
+									<svws-ui-tooltip v-if="col.name !== col.kuerzel" autosize>
+										{{ col.kuerzel }}
+										<template #content>
+											{{ col.name }}
+										</template>
+									</svws-ui-tooltip>
+									<div v-else>{{ col.kuerzel }}</div>
+									<template v-if="col.kuerzel === 'Teilnoten'">
 										<span :class="[manager().zeigeTeilnoten ? 'i-ri-arrow-right-s-line' : 'i-ri-arrow-left-s-line', 'icon-ui-brand icon cursor-pointer']"
 											@click.stop="manager().toggleZeigeTeilnoten()" />
 									</template>
@@ -22,11 +57,12 @@
 						</template>
 					</template>
 					<template v-else-if="manager().gruppierung === 'Keine'">
-						<template v-for="col of gridManager.cols.values()" :key="col.name">
-							<td v-if="gridManager.isColVisible(col.name)" class="bg-ui-75 content-center">
-								<div v-if="col.name === 'Klasse'"> alle </div>
-								<template v-if="(col.name === 'Eingabe von')">
-									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="ab" :row="() => manager().zeileAlleKlassen()">
+						<template v-for="col of gridManager.cols.values()" :key="col.kuerzel">
+							<td v-if="gridManager.isColVisible(col.name)" class="bg-ui-75 content-center"
+								:class="{ 'ui-divider': col.kuerzel === 'Klasse' || col.kuerzel === 'Eingabe bis' || col.kuerzel === 'FS Kl' || ((col.kuerzel === 'Teilnoten') && manager().zeigeTeilnoten) }">
+								<div v-if="col.kuerzel === 'Klasse'"> alle </div>
+								<template v-if="(col.kuerzel === 'Eingabe von')">
+									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="Beginn" :row="() => manager().zeileAlleKlassen()">
 										<div @click="openModal" class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer">
 											<span v-if="manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeAb, true).value"
 												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabebeginn liegt in der Zukunft, alle Eingaben sind gesperrt." />
@@ -36,8 +72,8 @@
 										</div>
 									</notenmodul-konfiguration-sperrungen-datum-modal>
 								</template>
-								<template v-else-if="(col.name === 'Eingabe bis')">
-									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="bis" :row="() => manager().zeileAlleKlassen()">
+								<template v-else-if="(col.kuerzel === 'Eingabe bis')">
+									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="Ende" :row="() => manager().zeileAlleKlassen()">
 										<div @click="openModal" class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer">
 											<span v-if="manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeBis, false).value"
 												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende liegt bereits in der Vergangenheit, alle Eingaben sind gesperrt." />
@@ -45,7 +81,21 @@
 										</div>
 									</notenmodul-konfiguration-sperrungen-datum-modal>
 								</template>
-								<template v-else-if="(col.name === 'FS klassenweise')">
+								<template v-else-if="(col.kuerzel === 'ggf. verlängerte Eingabe')">
+									<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="EndeKL" :row="() => manager().zeileAlleKlassen()">
+										<div @click="openModal" class="border border-ui/0 hover:border-ui p-0.5 rounded-md cursor-pointer">
+											<span v-if="manager().istNoteneingabeZeitlichGesperrt(manager().zeileAlleKlassen().tsEingabeBisKlassenleitung, false).value"
+												class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende für die Klassenleitung liegt bereits in der Vergangenheit." />
+											{{ printDate(manager().zeileAlleKlassen().tsEingabeBisKlassenleitung) }}
+										</div>
+									</notenmodul-konfiguration-sperrungen-datum-modal>
+								</template>
+								<template v-else-if="(col.kuerzel === 'alle Noten')">
+									<svws-ui-checkbox :model-value="manager().hatNoteneingabeDurchKlassenleitung(manager().zeileAlleKlassen())"
+										:indeterminate="manager().hatNoteneingabeDurchKlassenleitungTeilweise(manager().zeileAlleKlassen())"
+										@update:model-value="manager().toggleNoteneingabeDurchKlassenleitung(manager().zeileAlleKlassen())" />
+								</template>
+								<template v-else-if="(col.kuerzel === 'FS Kl')">
 									<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())"
 										:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(manager().zeileAlleKlassen())"
 										@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())" />
@@ -60,24 +110,24 @@
 					</template>
 				</template>
 				<template #default="{ row }">
-					<template v-for="col of gridManager.cols.values()" :key="col.name">
-						<td v-if="gridManager.isColVisible(col.name)"
-							:class="[
-								manager().istGruppe(row) || manager().istTeilleistung(row, col.name) ? 'bg-ui-75' : '',
-								(col.name === 'Gruppe') ? 'text-left' : '', 'content-center'
-							]">
-							<template v-if="(col.name === 'Gruppe') && manager().istGruppe(row)">
+					<template v-for="col of gridManager.cols.values()" :key="col.kuerzel">
+						<td v-if="gridManager.isColVisible(col.name)" class="content-center" :class="{
+							'ui-divider': col.kuerzel === 'Klasse' || col.kuerzel === 'Eingabe bis' || col.kuerzel === 'FS Kl' || ((col.kuerzel === 'Teilnoten') && manager().zeigeTeilnoten),
+							'bg-ui-75': manager().istGruppe(row) || manager().istTeilleistung(row, col.name),
+							'text-left': (col.kuerzel === 'Gruppe')
+						}">
+							<template v-if="(col.kuerzel === 'Gruppe') && manager().istGruppe(row)">
 								<div @click.stop="manager().toggleZeigeGruppenKlassen(row)" class="cursor-pointer">
 									<span class="icon-ui-brand icon"
 										:class="[manager().zeigeGruppenKlassen(row) ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line']" />
 									{{ manager().getGruppenBezeichnung(row) }}
 								</div>
 							</template>
-							<template v-else-if="(col.name === 'Klasse') && !manager().istGruppe(row)">
+							<template v-else-if="(col.kuerzel === 'Klasse') && !manager().istGruppe(row)">
 								{{ manager().getKlassenBezeichnung(row) }}
 							</template>
-							<template v-else-if="(col.name === 'Eingabe von')">
-								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="ab" :row="() => row">
+							<template v-else-if="(col.kuerzel === 'Eingabe von')">
+								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="Beginn" :row="() => row">
 									<div @click="openModal" class="border border-ui/0 hover:border-ui rounded-md cursor-pointer">
 										<span v-if="manager().istNoteneingabeZeitlichGesperrt(row.tsEingabeAb, true).value"
 											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabebeginn liegt in der Zukunft, alle Eingaben sind gesperrt." />
@@ -87,8 +137,8 @@
 									</div>
 								</notenmodul-konfiguration-sperrungen-datum-modal>
 							</template>
-							<template v-else-if="(col.name === 'Eingabe bis')">
-								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="bis" :row="() => row">
+							<template v-else-if="(col.kuerzel === 'Eingabe bis')">
+								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="Ende" :row="() => row">
 									<div @click="openModal" class="border border-ui/0 hover:border-ui rounded-md cursor-pointer">
 										<span v-if="manager().istNoteneingabeZeitlichGesperrt(row.tsEingabeBis, false).value"
 											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende liegt bereits in der Vergangenheit, alle Eingaben sind gesperrt." />
@@ -96,7 +146,23 @@
 									</div>
 								</notenmodul-konfiguration-sperrungen-datum-modal>
 							</template>
-							<template v-else-if="(col.name === 'FS klassenweise')">
+							<template v-else-if="(col.kuerzel === 'ggf. verlängerte Eingabe')">
+								<notenmodul-konfiguration-sperrungen-datum-modal v-slot="{ openModal }" :manager modus="EndeKL" :row="() => row">
+									<div @click="openModal" class="border border-ui/0 hover:border-ui rounded-md cursor-pointer">
+										<span v-if="manager().istNoteneingabeZeitlichGesperrt(row.tsEingabeBisKlassenleitung, false).value"
+											class="icon-ui-danger icon i-ri-alert-line align-middle" title="Das Eingabeende für die Klassenleitung liegt bereits in der Vergangenheit." />
+										<span v-if="!manager().istGruppe(row) && (row.tsEingabeBisKlassenleitung !== null) && (row.tsEingabeBis === null)"
+											class="icon-ui-warning icon i-ri-information-line align-middle" title="Ohne Eingabeende gilt für die Klasse keine zeitliche Grenze. Das Eingabeende für die Klassenleitung ist dann wirkungslos." />
+										{{ printDate(row.tsEingabeBisKlassenleitung) }}
+									</div>
+								</notenmodul-konfiguration-sperrungen-datum-modal>
+							</template>
+							<template v-else-if="(col.kuerzel === 'alle Noten')">
+								<svws-ui-checkbox :model-value="manager().hatNoteneingabeDurchKlassenleitung(row)"
+									:indeterminate="manager().hatNoteneingabeDurchKlassenleitungTeilweise(row)"
+									@update:model-value="manager().toggleNoteneingabeDurchKlassenleitung(row)" />
+							</template>
+							<template v-else-if="(col.kuerzel === 'FS Kl')">
 								<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(row)"
 									:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(row)"
 									@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(row)" />
@@ -138,6 +204,16 @@
 			get: () => props.manager().columnsVisible,
 			set: (value) => {},
 		}),
+	});
+
+	const countVisibleColumns = computed<number>(() => {
+		let i = 0;
+		for (const col of gridManager.cols.values()) {
+			if (gridManager.isColVisible(col.name)) {
+				i++;
+			}
+		}
+		return i;
 	});
 
 	function printDate(isoDateTime: string | null) {

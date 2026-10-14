@@ -42,6 +42,9 @@ export class NotenmodulConfigManagerSperrungenGruppeSpalte {
 }
 
 
+type ArtDatum = 'Beginn' | 'Ende' | 'EndeKL';
+
+
 export class NotenmodulConfigManagerSperrungenGruppe {
 
 	/** Die ID der Wrapper aus der SVWS-DB (z.B. 16) */
@@ -52,6 +55,12 @@ export class NotenmodulConfigManagerSperrungenGruppe {
 
 	/** Der Zeitstempel, bis wann die Noteneingabe erlaubt ist, sofern eine Einschränkung vorliegt, sonst null. */
 	public tsEingabeBis: string | null = null;
+
+	/** Der Zeitstempel, bis wann die Noteneingabe für eine Klassenleitung erlaubt ist, sofern eine abweichende Einschränkung zu tsEingabeBis vorliegt, sonst null. */
+	public tsEingabeBisKlassenleitung: string | null = null;
+
+	/** Gibt an, ob die Klassenleitungen auch die Noten stellvertretend für die Fachlehrer eingegeben dürfen. */
+	public istNoteneingabeDurchKlassenleitung: number = 0;
 
 	/** Gibt an, ob die Fehlstunden Wrappern- oder kursweise eingegeben werden. Hier wird die Anzahl der Klassenweisen Eingaben in der Gruppe gezählt. */
 	public istFehlstundenEingabeKlassenweise: number = 0;
@@ -363,7 +372,7 @@ export class NotenmodulConfigManagerSperrungen {
 	}
 
 	/**
-	 * Generiert eine Standardkonfiguration für die Spalten einer Klass
+	 * Generiert eine Standardkonfiguration für die Spalten einer Klasse
 	 *
 	 * @returns gibt ein JavaMap mit den Spalten für eine Config-Klasse zurück
 	 */
@@ -438,6 +447,7 @@ export class NotenmodulConfigManagerSperrungen {
 		const now = null; // new Date().toISOString().slice(0, -3).replace('T', ' ');
 		config.tsEingabeAb = now;
 		config.tsEingabeBis = now;
+		config.tsEingabeBisKlassenleitung = now;
 		for (const spalte of this._mapDefaultConfigKlasseSpalte.values()) {
 			config.spalten.add(this.genGruppeSpalte(spalte, klassen));
 		}
@@ -564,8 +574,10 @@ export class NotenmodulConfigManagerSperrungen {
 	private updateGruppen(gruppen: Collection<NotenmodulConfigManagerSperrungenGruppe>) {
 		for (const gruppe of gruppen) {
 			gruppe.istFehlstundenEingabeKlassenweise = 0;
+			gruppe.istNoteneingabeDurchKlassenleitung = 0;
 			let tsEingabeAb = undefined;
 			let tsEingabeBis = undefined;
+			let tsEingabeBisKlassenleitung = undefined;
 			for (const idKlasse of gruppe.klassenzuordnungen) {
 				const row = this._mapConfigKlassen.get(idKlasse);
 				if (row === null) {
@@ -573,6 +585,9 @@ export class NotenmodulConfigManagerSperrungen {
 				}
 				if (row.istFehlstundenEingabeKlassenweise) {
 					gruppe.istFehlstundenEingabeKlassenweise++;
+				}
+				if (row.istNoteneingabeDurchKlassenleitung) {
+					gruppe.istNoteneingabeDurchKlassenleitung++;
 				}
 				if (tsEingabeAb === undefined) {
 					tsEingabeAb = row.tsEingabeAb;
@@ -584,9 +599,15 @@ export class NotenmodulConfigManagerSperrungen {
 				} else if (tsEingabeBis !== row.tsEingabeBis) {
 					tsEingabeBis = null;
 				}
+				if (tsEingabeBisKlassenleitung === undefined) {
+					tsEingabeBisKlassenleitung = row.tsEingabeBisKlassenleitung;
+				} else if (tsEingabeBisKlassenleitung !== row.tsEingabeBisKlassenleitung) {
+					tsEingabeBisKlassenleitung = null;
+				}
 			}
 			gruppe.tsEingabeAb = tsEingabeAb ?? null;
 			gruppe.tsEingabeBis = tsEingabeBis ?? null;
+			gruppe.tsEingabeBisKlassenleitung = tsEingabeBisKlassenleitung ?? null;
 			for (const colGruppe of gruppe.spalten) {
 				colGruppe.gesperrt = 0;
 				for (const idKlasse of gruppe.klassenzuordnungen) {
@@ -746,16 +767,20 @@ export class NotenmodulConfigManagerSperrungen {
 		result.push(
 			{ kuerzel: "Gruppe", name: "Gruppe", width: "15rem" },
 			{ kuerzel: "Klasse", name: "Klasse", width: "5rem" },
-			{ kuerzel: "EingabeVon", name: "Eingabe von", width: "15rem" },
-			{ kuerzel: "EingabeBis", name: "Eingabe bis", width: "15rem" },
-			{ kuerzel: "FSKlassenweise", name: "FS klassenweise", width: "5rem" }
+			{ kuerzel: "Eingabe von", name: "Eingabe von", width: "12rem" },
+			{ kuerzel: "Eingabe bis", name: "Eingabe bis", width: "12rem" },
+			{ kuerzel: "ggf. verlängerte Eingabe", name: "Ist ein Datum gesetzt, so gilt es als Eingabeende für Klassen-, Abteilungs- und Schulleitung. Es liegt nie vor dem Enddatum des Eingabezeitraums. Ohne Datum gilt das Enddatum des Eingabezeitraums.", width: "12rem" },
+			{ kuerzel: "alle Noten", name: "Die Klassenleitung hat die Berechtigung alle Noten in der Klasse zu bearbeiten", width: "5rem" },
+			{ kuerzel: "FS Kl", name: "Die Fehlstundeneingabe erfolgt klassenweise und nicht pro Lerngruppen.", width: "5rem" }
 		);
 		for (const col of this.spaltenSperrbar) {
-			result.push({ kuerzel: col, name: col, width: '6rem' });
+			result.push({ kuerzel: col, name: col, width: '5rem' });
 		}
-		for (const teilleistung of this._mapTeilleistungsarten.values()) {
+		const sublist = new ArrayList(this._mapTeilleistungsarten.values());
+		sublist.sort({ compare: (o1, o2) => (o1.sortierung ?? 32000) < (o2.sortierung ?? 32000) ? -1 : 1 });
+		for (const teilleistung of sublist) {
 			const name = teilleistung.bezeichnung ?? '—';
-			result.push({ kuerzel: name, name, width: '6rem' });
+			result.push({ kuerzel: name, name, width: '5rem' });
 		}
 		return result;
 	}
@@ -773,7 +798,9 @@ export class NotenmodulConfigManagerSperrungen {
 		result.set("Klasse", true);
 		result.set("Eingabe von", true);
 		result.set("Eingabe bis", true);
-		result.set("FS klassenweise", true);
+		result.set("ggf. verlängerte Eingabe", true);
+		result.set("alle Noten", true);
+		result.set("FS Kl", true);
 		for (const col of this.spaltenSperrbar) {
 			result.set(col, true);
 		}
@@ -917,12 +944,52 @@ export class NotenmodulConfigManagerSperrungen {
 	}
 
 	/**
+	 * Gibt zurück, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile des Konfigurationseintrages
+	 *
+	 * @returns true, wenn eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt, und ansonsten false
+	 */
+	public hatNoteneingabeDurchKlassenleitung(row: NotenmodulConfigManagerSperrungenZeile): boolean {
+		return (typeof row.istNoteneingabeDurchKlassenleitung === "number") ? (row.istNoteneingabeDurchKlassenleitung > 0) : row.istNoteneingabeDurchKlassenleitung;
+	}
+
+	/**
+	 * Gibt zurück, ob teilweise eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile des Konfigurationseintrages
+	 *
+	 * @returns true, wenn eine Erlaubnis für Leistungseintragungen durch Klassenleitungen teilweise vorliegt, und ansonsten false
+	 */
+	public hatNoteneingabeDurchKlassenleitungTeilweise(row: NotenmodulConfigManagerSperrungenZeile): boolean {
+		if (typeof row.istNoteneingabeDurchKlassenleitung !== "number") {
+			return false;
+		}
+		let max = 1;
+		if (this._gruppierung.value === 'Jahrgang') {
+			const listJahrgangsklassen = this._mapJahrgangKlassen.get(row.id);
+			if (listJahrgangsklassen !== null) {
+				max = listJahrgangsklassen.size();
+			}
+		} else if (this._gruppierung.value === 'Abteilung') {
+			const listAbteilungKlassen = this._mapAbteilungKlassen.get(row.id);
+			if (listAbteilungKlassen !== null) {
+				max = listAbteilungKlassen.size();
+			}
+		} else {
+			max = this._listKlassen.size();
+		}
+		return (row.istNoteneingabeDurchKlassenleitung > 0) && (row.istNoteneingabeDurchKlassenleitung < max);
+	}
+
+	/**
 	 * Setzt die Default-Konfiguration bei der die Noteneingabe gesperrt ist.
 	 */
 	public async setConfigDefault() {
 		for (const klasse of this._listKlassen) {
 			klasse.tsEingabeAb = null;
 			klasse.tsEingabeBis = null;
+			klasse.tsEingabeBisKlassenleitung = null;
 			for (const col of klasse.spalten) {
 				col.gesperrt = true;
 			}
@@ -938,6 +1005,7 @@ export class NotenmodulConfigManagerSperrungen {
 		for (const klasse of this._listKlassen) {
 			klasse.tsEingabeAb = null;
 			klasse.tsEingabeBis = null;
+			klasse.tsEingabeBisKlassenleitung = null;
 			for (const col of klasse.spalten) {
 				col.gesperrt = false;
 			}
@@ -1057,59 +1125,173 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 	}
 
+	/**
+	 * Schaltet den Wert bei einer Jahrgangsgruppe um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 */
+	private async toggleNoteneingabeDurchKlassenleitungJahrgang(row: NotenmodulConfigManagerSperrungenGruppe) {
+		const klassen = this._mapJahrgangKlassen.get(row.id);
+		await this.toggleNoteneingabeDurchKlassenleitungGruppe(row, klassen);
+		triggerRef(this._mapJahrgangGruppe);
+	}
+
+	/**
+	 * Schaltet den Wert bei einer Abteilungsgruppe um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 */
+	private async toggleNoteneingabeDurchKlassenleitungAbteilung(row: NotenmodulConfigManagerSperrungenGruppe) {
+		const klassen = this._mapAbteilungKlassen.get(row.id);
+		await this.toggleNoteneingabeDurchKlassenleitungGruppe(row, klassen);
+		triggerRef(this._mapAbteilungGruppe);
+	}
+
+	/**
+	 * Schaltet den Wert bei der Gruppe für alle Klassen um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 */
+	private async toggleNoteneingabeDurchKlassenleitungAlleKlassen(row: NotenmodulConfigManagerSperrungenGruppe) {
+		const klassen = this._listKlassen;
+		await this.toggleNoteneingabeDurchKlassenleitungGruppe(row, klassen);
+		triggerRef(this._configAlleKlassen);
+	}
+
+	/**
+	 * Schaltet den Wert für Jahrgänge oder Abteilungen oder alle Klassen um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row       die Zeile, die angeklickt wurde
+	 * @param klassen   die Klassen der jeweiligen Gruppe
+	 */
+	private async toggleNoteneingabeDurchKlassenleitungGruppe(row: NotenmodulConfigManagerSperrungenGruppe, klassen: List<ENMConfigKlasse> | null) {
+		if (klassen === null) {
+			return;
+		}
+		const newState = (row.istNoteneingabeDurchKlassenleitung === 0);
+		for (const klasse of klassen) {
+			const rowKlasse = this._mapConfigKlassen.get(klasse.id);
+			if (rowKlasse === null) {
+				continue;
+			}
+			rowKlasse.istNoteneingabeDurchKlassenleitung = newState;
+		}
+		row.istNoteneingabeDurchKlassenleitung = newState ? klassen.size() : 0;
+		await this.writeConfig();
+	}
+
+	/**
+	 * Schaltet den Wert bei einer einzelnen Klasse um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 */
+	private async toggleNoteneingabeDurchKlassenleitungKlasse(row: ENMConfigKlasse) {
+		row.istNoteneingabeDurchKlassenleitung = !row.istNoteneingabeDurchKlassenleitung;
+		// Aktualisiere ggf. beim Jahrgang Counter für die Anzahl Sperrungen...
+		const gruppeJahrgang = this._mapKlassenToJahrgang.get(row.id);
+		if (gruppeJahrgang !== null) {
+			if (row.istNoteneingabeDurchKlassenleitung) {
+				gruppeJahrgang.istNoteneingabeDurchKlassenleitung++;
+			} else {
+				gruppeJahrgang.istNoteneingabeDurchKlassenleitung--;
+			}
+			triggerRef(this._mapJahrgangGruppe);
+		}
+		// Aktualisiere ggf. bei der Abteilung den Counter für die Anzahl Sperrungen...
+		const gruppeAbteilung = this._mapKlassenToAbteilung.get(row.id);
+		if (gruppeAbteilung !== null) {
+			if (row.istNoteneingabeDurchKlassenleitung) {
+				gruppeAbteilung.istNoteneingabeDurchKlassenleitung++;
+			} else {
+				gruppeAbteilung.istNoteneingabeDurchKlassenleitung--;
+			}
+			triggerRef(this._mapAbteilungGruppe);
+		}
+		// Aktualisiere bei der Gruppe für Alle den Counter für die Anzahl Sperrungen...
+		const gruppeAlleKlassen = this._configAlleKlassen.value;
+		if (row.istNoteneingabeDurchKlassenleitung) {
+			gruppeAlleKlassen.istNoteneingabeDurchKlassenleitung++;
+		} else {
+			gruppeAlleKlassen.istNoteneingabeDurchKlassenleitung--;
+		}
+		triggerRef(this._configAlleKlassen);
+		await this.writeConfig();
+	}
+
+	/**
+	 * Schaltet den Wert für eine einzelne Klasse oder einer Gruppe um, ob eine Erlaubnis für Leistungseintragungen durch Klassenleitungen vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile, die angeklickt wurde
+	 */
+	public async toggleNoteneingabeDurchKlassenleitung(row: NotenmodulConfigManagerSperrungenZeile) {
+		const rowIstGruppe = 'klassenzuordnungen' in row;
+		if (!rowIstGruppe) {
+			await this.toggleNoteneingabeDurchKlassenleitungKlasse(row);
+		} else if (this._gruppierung.value === 'Jahrgang') {
+			await this.toggleNoteneingabeDurchKlassenleitungJahrgang(row);
+		} else if (this._gruppierung.value === 'Abteilung') {
+			await this.toggleNoteneingabeDurchKlassenleitungAbteilung(row);
+		} else {
+			await this.toggleNoteneingabeDurchKlassenleitungAlleKlassen(row);
+		}
+	}
+
 
 	/**
 	 * Aktualisiert den Beginn oder das Ende der Noteneingabe einer Jahrgangs-Gruppe.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
-	private async setzeDatumNoteneingabeJahrgang(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null, istBeginn: boolean) {
+	private async setzeDatumNoteneingabeJahrgang(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null,
+		artDatum: ArtDatum) {
 		const klassen = this._mapJahrgangKlassen.get(row.id);
-		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, istBeginn);
+		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, artDatum);
 		triggerRef(this._mapJahrgangGruppe);
 	}
 
 	/**
 	 * Aktualisiert den Beginn oder das Ende der Noteneingabe einer Abteilungs-Gruppe.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
-	private async setzeDatumNoteneingabeAbteilung(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null, istBeginn: boolean) {
+	private async setzeDatumNoteneingabeAbteilung(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null,
+		artDatum: ArtDatum) {
 		const klassen = this._mapAbteilungKlassen.get(row.id);
-		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, istBeginn);
+		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, artDatum);
 		triggerRef(this._mapAbteilungGruppe);
 	}
 
 	/**
 	 * Aktualisiert den Beginn oder das Ende der Noteneingabe der Gruppe aller Klassen.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
-	private async setzeDatumNoteneingabeAlleKlassen(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null, istBeginn: boolean) {
+	private async setzeDatumNoteneingabeAlleKlassen(row: NotenmodulConfigManagerSperrungenGruppe, isoDate: string | null,
+		artDatum: ArtDatum) {
 		const klassen = this._listKlassen;
-		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, istBeginn);
+		await this.setzeDatumNoteneingabeGruppe(row, klassen, isoDate, artDatum);
 		triggerRef(this._configAlleKlassen);
 	}
 
 	/**
 	 * Aktualisiert den Beginn oder das Ende der Noteneingabe einer Gruppe.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
 	private async setzeDatumNoteneingabeGruppe(row: NotenmodulConfigManagerSperrungenGruppe, klassen: List<ENMConfigKlasse> | null,
-		isoDate: string | null, istBeginn: boolean) {
+		isoDate: string | null, artDatum: ArtDatum) {
 		if (klassen === null) {
 			return;
 		}
-		if (istBeginn) {
+		if (artDatum === 'Beginn') {
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
 				if (rowKlasse === null) {
@@ -1118,17 +1300,53 @@ export class NotenmodulConfigManagerSperrungen {
 				rowKlasse.tsEingabeAb = isoDate;
 			}
 			row.tsEingabeAb = isoDate;
-		} else {
+		} else if (artDatum === 'Ende') {
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
 				if (rowKlasse === null) {
 					continue;
 				}
 				rowKlasse.tsEingabeBis = isoDate;
+				this.korrigiereEingabeendeKlassenleitung(rowKlasse);
 			}
 			row.tsEingabeBis = isoDate;
+			row.tsEingabeBisKlassenleitung = this.getGemeinsamesEingabeendeKlassenleitung(klassen);
+		} else {
+			for (const klasse of klassen) {
+				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
+				if (rowKlasse === null) {
+					continue;
+				}
+				rowKlasse.tsEingabeBisKlassenleitung = isoDate;
+				this.korrigiereEingabeendeKlassenleitung(rowKlasse);
+			}
+			row.tsEingabeBisKlassenleitung = this.getGemeinsamesEingabeendeKlassenleitung(klassen);
 		}
 		await this.writeConfig();
+	}
+
+	/**
+	 * Bestimmt das Eingabeende der Klassenleitung, das alle übergebenen Klassen gemeinsam haben. Nach einer Korrektur
+	 * können die Klassen einer Gruppe verschiedene Werte haben.
+	 *
+	 * @param klassen   die Klassen der Gruppe
+	 *
+	 * @returns das gemeinsame Eingabeende oder null, wenn es verschiedene Werte gibt oder keines gesetzt ist
+	 */
+	private getGemeinsamesEingabeendeKlassenleitung(klassen: List<ENMConfigKlasse>): string | null {
+		let result: string | null | undefined = undefined;
+		for (const klasse of klassen) {
+			const rowKlasse = this._mapConfigKlassen.get(klasse.id);
+			if (rowKlasse === null) {
+				continue;
+			}
+			if (result === undefined) {
+				result = rowKlasse.tsEingabeBisKlassenleitung;
+			} else if (result !== rowKlasse.tsEingabeBisKlassenleitung) {
+				return null;
+			}
+		}
+		return result ?? null;
 	}
 
 
@@ -1136,16 +1354,18 @@ export class NotenmodulConfigManagerSperrungen {
 	 * Aktualisiert den Beginn oder das Ende der Noteneingabe einer Gruppe aufgrund einer Änderungen bei einer einzelnen
 	 * Klasse aus der Gruppe.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
 	private setzeDatumNoteneingabeKlasseGruppenaktualisierung(row: ENMConfigKlasse, gruppe: NotenmodulConfigManagerSperrungenGruppe,
-		klassen: List<ENMConfigKlasse> | null, isoDate: string | null, istBeginn: boolean) {
-		if ((klassen === null) || (istBeginn && (row.tsEingabeAb === gruppe.tsEingabeAb)) || (!istBeginn && (row.tsEingabeBis === gruppe.tsEingabeBis))) {
+		klassen: List<ENMConfigKlasse> | null, isoDate: string | null, artDatum: ArtDatum) {
+		if ((klassen === null) || ((artDatum === 'Beginn') && (row.tsEingabeAb === gruppe.tsEingabeAb))
+			|| ((artDatum === 'Ende') && (row.tsEingabeBis === gruppe.tsEingabeBis))
+			|| ((artDatum === 'EndeKL') && (row.tsEingabeBisKlassenleitung === gruppe.tsEingabeBisKlassenleitung))) {
 			return;
 		}
-		if (istBeginn) {
+		if (artDatum === 'Beginn') {
 			let newState = row.tsEingabeAb;
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
@@ -1155,7 +1375,7 @@ export class NotenmodulConfigManagerSperrungen {
 				}
 			}
 			gruppe.tsEingabeAb = newState;
-		} else {
+		} else if (artDatum === 'Ende') {
 			let newState = row.tsEingabeBis;
 			for (const klasse of klassen) {
 				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
@@ -1165,60 +1385,94 @@ export class NotenmodulConfigManagerSperrungen {
 				}
 			}
 			gruppe.tsEingabeBis = newState;
+		} else {
+			let newState = row.tsEingabeBisKlassenleitung;
+			for (const klasse of klassen) {
+				const rowKlasse = this._mapConfigKlassen.get(klasse.id);
+				if (rowKlasse?.tsEingabeBisKlassenleitung !== row.tsEingabeBisKlassenleitung) {
+					newState = null;
+					break;
+				}
+			}
+			gruppe.tsEingabeBisKlassenleitung = newState;
 		}
 	}
 
 	/**
 	 * Setzt den Beginn oder das Ende der Noteneingabe bei einer einzelnen Klasse.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
-	private async setzeDatumNoteneingabeKlasse(row: ENMConfigKlasse, isoDate: string | null, istBeginn: boolean) {
-		if (istBeginn) {
+	private async setzeDatumNoteneingabeKlasse(row: ENMConfigKlasse, isoDate: string | null, artDatum: ArtDatum) {
+		if (artDatum === 'Beginn') {
 			row.tsEingabeAb = isoDate;
-		} else {
+		} else if (artDatum === 'Ende') {
 			row.tsEingabeBis = isoDate;
+		} else {
+			row.tsEingabeBisKlassenleitung = isoDate;
 		}
-		// Aktualisiere ggf. beim Jahrgang das Datum
-		const gruppeJahrgang = this._mapKlassenToJahrgang.get(row.id);
-		if (gruppeJahrgang !== null) {
-			this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeJahrgang, this._mapJahrgangKlassen.get(row.id), isoDate, istBeginn);
-			triggerRef(this._mapJahrgangGruppe);
+		const arten: Array<ArtDatum> = [artDatum];
+		if (this.korrigiereEingabeendeKlassenleitung(row) && (artDatum !== 'EndeKL')) {
+			arten.push('EndeKL');
 		}
-		// Aktualisiere ggf. bei der Abteilung den Counter für die Anzahl Sperrungen...
-		const gruppeAbteilung = this._mapKlassenToAbteilung.get(row.id);
-		if (gruppeAbteilung !== null) {
-			this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeAbteilung, this._mapAbteilungKlassen.get(row.id), isoDate, istBeginn);
-			triggerRef(this._mapAbteilungGruppe);
+		for (const art of arten) {
+			// Aktualisiere ggf. beim Jahrgang das Datum
+			const gruppeJahrgang = this._mapKlassenToJahrgang.get(row.id);
+			if (gruppeJahrgang !== null) {
+				this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeJahrgang, this._mapJahrgangKlassen.get(row.id), isoDate, art);
+				triggerRef(this._mapJahrgangGruppe);
+			}
+			// Aktualisiere ggf. bei der Abteilung den Counter für die Anzahl Sperrungen...
+			const gruppeAbteilung = this._mapKlassenToAbteilung.get(row.id);
+			if (gruppeAbteilung !== null) {
+				this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeAbteilung, this._mapAbteilungKlassen.get(row.id), isoDate, art);
+				triggerRef(this._mapAbteilungGruppe);
+			}
+			// Aktualisiere bei der Gruppe für Alle den Counter für die Anzahl Sperrungen...
+			const gruppeAlleKlassen = this._configAlleKlassen.value;
+			this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeAlleKlassen, this._listKlassen, isoDate, art);
+			triggerRef(this._configAlleKlassen);
 		}
-		// Aktualisiere bei der Gruppe für Alle den Counter für die Anzahl Sperrungen...
-		const gruppeAlleKlassen = this._configAlleKlassen.value;
-		this.setzeDatumNoteneingabeKlasseGruppenaktualisierung(row, gruppeAlleKlassen, this._listKlassen, isoDate, istBeginn);
-		triggerRef(this._configAlleKlassen);
 		await this.writeConfig();
+	}
+
+	/**
+	 * Setzt das Eingabeende der Klassenleitung auf das Eingabeende, wenn es davor liegt. Die Klassenleitung hat damit nie
+	 * weniger Zeit als die Fachlehrer, und die Server können sich darauf verlassen.
+	 *
+	 * @param row   die Konfiguration der Klasse
+	 *
+	 * @returns true, wenn das Eingabeende der Klassenleitung angepasst wurde, und ansonsten false
+	 */
+	private korrigiereEingabeendeKlassenleitung(row: ENMConfigKlasse): boolean {
+		if ((row.tsEingabeBis === null) || (row.tsEingabeBisKlassenleitung === null) || (row.tsEingabeBisKlassenleitung >= row.tsEingabeBis)) {
+			return false;
+		}
+		row.tsEingabeBisKlassenleitung = row.tsEingabeBis;
+		return true;
 	}
 
 
 	/**
 	 * Setzt den Beginn oder das Ende der Noteneingabe bei einer Klasse oder einer Gruppe.
 	 *
-	 * @param row         die Zeile, die angeklickt wurde
-	 * @param isoDate     das Datum
-	 * @param istBeginn   gibt an, ob der Beginn oder das Ende gesetzt wird
+	 * @param row        die Zeile, die angeklickt wurde
+	 * @param isoDate    das Datum
+	 * @param artDatum   gibt an, ob der Beginn, das Ende oder das erweiterte Ende für die Klassenleitung gesetzt wird
 	 */
-	public async setzeDatumNoteneingabe(row: NotenmodulConfigManagerSperrungenZeile, value: string | null, istBeginn: boolean) {
+	public async setzeDatumNoteneingabe(row: NotenmodulConfigManagerSperrungenZeile, value: string | null, artDatum: ArtDatum) {
 		const date = (value === null) || (JavaString.isBlank(value)) ? null : (value.replace('T', ' ') + ":00.0");
 		const rowIstGruppe = 'klassenzuordnungen' in row;
 		if (!rowIstGruppe) {
-			await this.setzeDatumNoteneingabeKlasse(row, date, istBeginn);
+			await this.setzeDatumNoteneingabeKlasse(row, date, artDatum);
 		} else if (this._gruppierung.value === 'Jahrgang') {
-			await this.setzeDatumNoteneingabeJahrgang(row, date, istBeginn);
+			await this.setzeDatumNoteneingabeJahrgang(row, date, artDatum);
 		} else if (this._gruppierung.value === 'Abteilung') {
-			await this.setzeDatumNoteneingabeAbteilung(row, date, istBeginn);
+			await this.setzeDatumNoteneingabeAbteilung(row, date, artDatum);
 		} else {
-			await this.setzeDatumNoteneingabeAlleKlassen(row, date, istBeginn);
+			await this.setzeDatumNoteneingabeAlleKlassen(row, date, artDatum);
 		}
 	}
 

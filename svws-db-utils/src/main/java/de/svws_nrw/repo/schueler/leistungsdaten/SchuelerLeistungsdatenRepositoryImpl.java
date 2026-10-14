@@ -41,12 +41,26 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 	}
 
 	@Override
-	public List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFachlehrer(final Collection<Long> idsLernabschnitte, final Collection<Long> idsFachlehrer) {
+	public List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFachlehrer(final Collection<Long> idsLernabschnitte,
+			final Collection<Long> idsFachlehrer) {
 		if (idsLernabschnitte.isEmpty() || idsFachlehrer.isEmpty()) {
 			return new ArrayList<>();
 		}
 		return conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fachlehrer_ID IN ?2",
 				DTOSchuelerLeistungsdaten.class, idsLernabschnitte, idsFachlehrer);
+	}
+
+	@Override
+	public List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFachlehrerOrLernabschnitt(final Collection<Long> idsLernabschnitte,
+			final Collection<Long> idsFachlehrer, final Collection<Long> idsLernabschnitte2) {
+		if (idsLernabschnitte2.isEmpty()) {
+			return this.findListByLernabschnittAndFachlehrer(idsLernabschnitte, idsFachlehrer);
+		}
+		if (idsLernabschnitte.isEmpty() || idsFachlehrer.isEmpty()) {
+			return conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsLernabschnitte2);
+		}
+		return conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fachlehrer_ID IN ?2 OR e.Abschnitt_ID IN ?3",
+				DTOSchuelerLeistungsdaten.class, idsLernabschnitte, idsFachlehrer, idsLernabschnitte2);
 	}
 
 	@Override
@@ -67,7 +81,8 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 		for (final long id : idsAbschnitte) {
 			map.put(id, new ArrayList<>());
 		}
-		final List<DTOSchuelerLeistungsdaten> list = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsAbschnitte);
+		final List<DTOSchuelerLeistungsdaten> list =
+				conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsAbschnitte);
 		for (final DTOSchuelerLeistungsdaten daten : list) {
 			map.getOrDefault(daten.Abschnitt_ID, new ArrayList<>()).add(daten);
 		}
@@ -80,7 +95,8 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 		if (idsAbschnitte.isEmpty()) {
 			return map;
 		}
-		final List<DTOSchuelerLeistungsdaten> list = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsAbschnitte);
+		final List<DTOSchuelerLeistungsdaten> list =
+				conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerLeistungsdaten.class, idsAbschnitte);
 		for (final DTOSchuelerLeistungsdaten daten : list) {
 			map.put(daten.Abschnitt_ID, daten.Fach_ID, daten);
 		}

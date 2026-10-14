@@ -8,6 +8,7 @@ use wenom\ENMAuth;
 use wenom\Http;
 use wenom\PatchManager;
 use wenom\ENMDatenManager;
+use wenom\ENMLehrerFunktion;
 use wenom\TimeUtils;
 use wenom\Version;
 
@@ -593,9 +594,24 @@ class ApiClient {
             Http::exit400BadRequest("Der Client unterstützt laut Header (accept-encoding) keine GZip-Komprimierung.");
         }
 
+        $idLehrerFunktion = filter_input(INPUT_GET, 'funktion', FILTER_VALIDATE_INT, array('options' => array(
+           'min_range' => ENMLehrerFunktion::FACHLEHRER->value,
+           'max_range' => ENMLehrerFunktion::SCHULLEITUNG->value
+        )));
+        if ($idLehrerFunktion === false) {
+            Http::exit400BadRequest("Die übergebene Lehrerfunktion wird nicht unterstützt.");
+        }
+        if ($idLehrerFunktion === null) {
+            $idLehrerFunktion = ENMLehrerFunktion::FACHLEHRER->value;
+        }
+        $lehrerFunktion = ENMLehrerFunktion::from($idLehrerFunktion);
+
         // 2. Daten über den Manager abrufen
         $enmDatenManager = ENMDatenManager::createFromDatabase($db);
-        $content = $enmDatenManager->getENMDatenForLehrer($lehrer);
+        if (!$enmDatenManager->pruefeLehrerfunktion($lehrer, $lehrerFunktion)) {
+            Http::exit400BadRequest("Die Lehrerfunktion passt nicht zu dem angemeldeten Lehrer.");
+        }
+        $content = $enmDatenManager->getENMDatenForLehrer($lehrer, $lehrerFunktion);
 
         // 3. Export via Http-Helper (nutzt intern gzencode($data, 5))
         Http::exit200OKGZipJson($content);

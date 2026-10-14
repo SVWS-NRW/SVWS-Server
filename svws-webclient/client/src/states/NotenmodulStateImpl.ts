@@ -1,4 +1,6 @@
 import { OpenApiError } from "@core/api/OpenApiError";
+import { LehrerLeitungsfunktion } from "@core/asd/types/lehrer/LehrerLeitungsfunktion";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 import type { ENMv2Klasse } from "@core/core/data/enm/v2/ENMv2Klasse";
 import type { ENMv2Leistung } from "@core/core/data/enm/v2/ENMv2Leistung";
@@ -15,6 +17,8 @@ import type { EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager
 import { EnmManager } from "@ui/components/enm/EnmManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import { useBenutzerState } from "@ui/states/BenutzerState";
+import { useAbteilungenState } from "@ui/states/kataloge/AbteilungenState";
 import type { NotenmodulState } from "@ui/states/NotenmodulState";
 import { StateManager } from "@ui/ui/StateManager";
 
@@ -42,8 +46,11 @@ interface NotenmodulReactiveState {
 	// Die aktuell ausgewählte Klasse bei der Ansicht für die Klassenleitung (bei Einzelauswahl)
 	auswahlKlasse: ENMv2Klasse | null;
 
-	// Dia aktuell ausgewählte Ansicht, admin oder lehrer, null, wenn der Nutzer nicht wechseln darf
-	istAdminLehrer: boolean | null;
+	// Die aktuell ausgewählte Ansicht, unterschieden nach Funktion
+	auswahlAnsicht: ENMLehrerFunktion;
+
+	// Die Optionen für das Select zur Ansichtsauswahl
+	optionsAuswahlAnsicht: Set<ENMLehrerFunktion>;
 }
 
 /**
@@ -59,19 +66,56 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 			auswahlLerngruppe: null,
 			auswahlKlassen: [],
 			auswahlKlasse: null,
-			istAdminLehrer: null,
+			auswahlAnsicht: ENMLehrerFunktion.FACHLEHRER,
+			optionsAuswahlAnsicht: new Set<ENMLehrerFunktion>(),
 		});
 	}
+
+
+	/**
+	 * Bestimmt die Optionen für die Auswahl der Lehrerfunktionen bei dem Notenmodul.
+	 *
+	 * @returns die Menge an verfügbaren Lehrer-Funktionen für die Auswahl
+	 */
+	private getOptionsLehrerfunktion(): Set<ENMLehrerFunktion> {
+		const optionsAuswahlAnsicht = new Set<ENMLehrerFunktion>;
+		const benutzerState = useBenutzerState();
+		if (benutzerState.benutzertyp === BenutzerTyp.LEHRER) {
+			optionsAuswahlAnsicht.add(ENMLehrerFunktion.FACHLEHRER);
+		}
+		if (benutzerState.kompetenzenKlasse.size > 0) {
+			optionsAuswahlAnsicht.add(ENMLehrerFunktion.KLASSENLEITUNG);
+		}
+		const abteilungenState = useAbteilungenState();
+		if ((benutzerState.benutzertyp === BenutzerTyp.LEHRER) && (abteilungenState.abteilungen.abteilungsleitungen.has(benutzerState.benutzerdaten.typID))) {
+			optionsAuswahlAnsicht.add(ENMLehrerFunktion.ABTEILUNGSLEITUNG);
+		}
+		const schulleitungSet = new Set(LehrerLeitungsfunktion.all_values_by_ordinal);
+		for (const eintrag of benutzerState.benutzerdaten.leitungsfunktionen) {
+			const funktion = LehrerLeitungsfunktion.data().getWertByIDOrNull(eintrag);
+			if (funktion !== null && schulleitungSet.has(funktion)) {
+				optionsAuswahlAnsicht.add(ENMLehrerFunktion.SCHULLEITUNG);
+				break;
+			}
+		}
+		if (benutzerStateImpl.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
+			optionsAuswahlAnsicht.add(ENMLehrerFunktion.NOTENMODULADMIN);
+		}
+		return optionsAuswahlAnsicht;
+	}
+
+
+
+
 
 	public async ladeDaten(reload = false) {
 		if ((this._state.value.daten !== null) && !reload) {
 			return;
 		}
 		api.status.start();
-		const patchedState = <Partial<NotenmodulReactiveState>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [], istAdminLehrer: this.istAdminLehrer };
-		if ((patchedState.istAdminLehrer === null) && (benutzerStateImpl.benutzertyp === BenutzerTyp.LEHRER) && benutzerStateImpl.benutzerHatEineKompetenz([BenutzerKompetenz.NOTENMODUL_ADMINISTRATION])) {
-			patchedState.istAdminLehrer = true;
-		}
+		const patchedState = <Partial<NotenmodulReactiveState>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [] };
+		patchedState.auswahlAnsicht = this.auswahlAnsicht;
+		patchedState.optionsAuswahlAnsicht = this.getOptionsLehrerfunktion();
 		try {
 			if (!benutzerStateImpl.istAdmin && !benutzerStateImpl.benutzerHatEineKompetenz([
 				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
@@ -81,12 +125,13 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 				BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION])) {
 				throw new DeveloperNotificationException("Der Benutzer hat keine Berechtigung, um auf das Notenmodul zuzugreifen. Diese Stelle sollte daher nicht erreichbar sein und es handelt sich um einen Programmierfehler.");
 			}
-			if ((benutzerStateImpl.benutzertyp === BenutzerTyp.LEHRER) && (patchedState.istAdminLehrer !== true)) {
-				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, benutzerStateImpl.benutzerIDLehrer);
+			if ((benutzerStateImpl.benutzertyp === BenutzerTyp.LEHRER) && (patchedState.auswahlAnsicht !== ENMLehrerFunktion.NOTENMODULADMIN)) {
+				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, benutzerStateImpl.benutzerIDLehrer, patchedState.auswahlAnsicht.id);
 			} else {
+				patchedState.auswahlAnsicht = ENMLehrerFunktion.NOTENMODULADMIN;
 				patchedState.daten = await api.server.getENMv2Daten(api.schema);
 			}
-			patchedState.manager = new EnmManager(patchedState.daten);
+			patchedState.manager = new EnmManager(patchedState.daten, patchedState.auswahlAnsicht);
 			const lerngruppen = patchedState.manager.mapLerngruppenAuswahl.values();
 			patchedState.auswahlLerngruppe = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
 			const klassen = patchedState.manager.listKlassenKlassenlehrer;
@@ -102,13 +147,13 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 					jsonSpalten = element.value;
 				}
 			}
-			patchedState.manager.sperrungen = new EnmSperrManager(jsonSperrungen);
+			patchedState.manager.sperrungen = new EnmSperrManager(jsonSperrungen, patchedState.auswahlAnsicht);
 			patchedState.manager.spalten = new EnmSpaltenManager(jsonSpalten);
 
 		} catch (error) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response) && (error.response.status === 404)) {
 				patchedState.daten = new ENMv2Daten();
-				patchedState.manager = new EnmManager(patchedState.daten);
+				patchedState.manager = new EnmManager(patchedState.daten, patchedState.auswahlAnsicht);
 			}
 		} finally {
 			this.setPatchedState(patchedState);
@@ -117,16 +162,8 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 	}
 
 
-	public async toggleAdmin() {
-		let istAdminLehrer = this.istAdminLehrer;
-		if ((istAdminLehrer === false) && benutzerStateImpl.benutzerHatKompetenz(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION)) {
-			istAdminLehrer = true;
-		} else if (istAdminLehrer === true) {
-			istAdminLehrer = false;
-		} else {
-			istAdminLehrer = null;
-		}
-		this.setPatchedState({ istAdminLehrer });
+	public async setAnsicht(auswahlAnsicht: ENMLehrerFunktion) {
+		this.setPatchedState({ auswahlAnsicht });
 		const routeName = RouteManager.instance.getRouteNode()?.name ?? "";
 		if (routeName.startsWith("notenmodul.administration") || routeName.startsWith("notenmodul.zugangsdaten")) {
 			await RouteManager.doRoute({ name: "notenmodul.leistungen" });
@@ -134,8 +171,12 @@ export class NotenmodulStateImpl extends StateManager<NotenmodulReactiveState> i
 		await this.ladeDaten(true);
 	}
 
-	public get istAdminLehrer(): boolean | null {
-		return this._state.value.istAdminLehrer;
+	public get optionsAuswahlAnsicht(): Set<ENMLehrerFunktion> {
+		return this._state.value.optionsAuswahlAnsicht;
+	}
+
+	public get auswahlAnsicht(): ENMLehrerFunktion {
+		return this._state.value.auswahlAnsicht;
 	}
 
 	public get manager(): EnmManager {

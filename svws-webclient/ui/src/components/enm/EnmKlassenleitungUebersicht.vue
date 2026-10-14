@@ -65,7 +65,7 @@
 			</template>
 			<template #default="{ row: pair, index }">
 				<td>
-					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID)" class="flex items-center h-full">
+					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID, enmManager().klasseIstBerechtigt(pair.a.id))" class="flex items-center h-full">
 						<svws-ui-tooltip>
 							<span class="icon i-ri-lock-2-line icon-ui-danger" />
 							<template #content>Die Eingabe für diese Klasse ist gesperrt</template>
@@ -79,7 +79,7 @@
 					{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
 				</td>
 				<template v-if="gridManager.isColVisible('FS') ?? true">
-					<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+					<td v-if="istErlaubtFehlstunden(pair)"
 						:style="`anchor-name: --anchor_FS_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FS_${pair.a.id}_${pair.b.id}`, pair.b.lernabschnitt.fehlstundenGesamt, 999)"
 						:ref="inputFehlstunden(pair, 2, index)" class="ui-table-grid-input"
 						:class="{
@@ -89,7 +89,7 @@
 					<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamt ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('FSU') ?? true">
-					<td v-if="enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true)"
+					<td v-if="istErlaubtFehlstunden(pair)"
 						:style="`anchor-name: --anchor_FSU_${pair.a.id}_${pair.b.id};`" popovertarget="popover_fs_eingabe" @touchend="showPopoverFS(`FSU_${pair.a.id}_${pair.b.id}`, pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt, pair.b.lernabschnitt.fehlstundenGesamt)"
 						:ref="inputFehlstundenUnendschuldigt(pair, 3, index)" class="ui-table-grid-input"
 						:class="{
@@ -99,7 +99,7 @@
 					<td v-else>{{ pair.b.lernabschnitt.fehlstundenGesamtUnentschuldigt ?? "-" }}</td>
 				</template>
 				<template v-if="gridManager.isColVisible('ASV') ?? true">
-					<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'ASV')"
+					<td v-if="istErlaubt(pair, 'ASV')"
 						:ref="inputASV(pair, 4, index)" class="ui-table-grid-button"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 4),
@@ -124,7 +124,7 @@
 					</td>
 				</template>
 				<template v-if="gridManager.isColVisible('AUE') ?? true">
-					<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'AUE')"
+					<td v-if="istErlaubt(pair, 'AUE')"
 						:ref="inputAUE(pair, 5, index)" class="ui-table-grid-button"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 5),
@@ -149,7 +149,7 @@
 					</td>
 				</template>
 				<template v-if="gridManager.isColVisible('ZB') ?? true">
-					<td v-if="enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'ZB')"
+					<td v-if="istErlaubt(pair, 'ZB')"
 						:ref="inputZB(pair, 6, index)" class="ui-table-grid-button"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 6),
@@ -352,12 +352,23 @@
 	const sperrenVorhanden = computed(() => {
 		const set = new Set<ENMv2Klasse>();
 		for (const klasse of props.auswahl()) {
-			if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id)) {
+			if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id, props.enmManager().klasseIstBerechtigt(klasse.id))) {
 				set.add(klasse);
 			}
 		}
 		return set;
 	});
+
+	function istErlaubt(pair: PairNN<ENMv2Klasse, ENMv2Schueler>, col: 'ASV' | 'AUE' | 'ZB'): boolean {
+		const berechtigungen = props.enmManager().klasseIstBerechtigt(pair.a.id);
+		return props.enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, col, berechtigungen);
+	}
+
+
+	function istErlaubtFehlstunden(pair: PairNN<ENMv2Klasse, ENMv2Schueler>): boolean {
+		const berechtigungen = props.enmManager().klasseIstBerechtigt(pair.a.id);
+		return props.enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, true, berechtigungen);
+	}
 
 	const gesperrteKlassen = computed(() => {
 		let str = "";

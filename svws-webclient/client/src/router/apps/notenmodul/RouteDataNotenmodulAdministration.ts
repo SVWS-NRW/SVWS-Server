@@ -2,6 +2,7 @@ import type { RouteParamsRawGeneric } from "vue-router";
 
 import { OpenApiError } from "@core/api/OpenApiError";
 import { ENMConfigKlasse } from "@core/core/data/enm/ENMConfigKlasse";
+import { ENMConfigKlasseSpalte } from "@core/core/data/enm/ENMConfigKlasseSpalte";
 import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
 import { ENMServerConfigElement } from "@core/core/data/enm/ENMServerConfigElement";
 import type { ENMServerConnection } from "@core/core/data/enm/ENMServerConnection";
@@ -15,13 +16,13 @@ import type { JavaMap } from "@core/java/util/JavaMap";
 import type { List } from "@core/java/util/List";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { WenomAuswahlListeManager } from "@ui/components/enm/WenomAuswahlListeManager";
+import { useNotenmodulState } from "@ui/states/NotenmodulState";
 import { ViewType } from "@ui/ui/nav/ViewType";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { configStateImpl } from "~/states/ConfigStateImpl";
-import { notenmodulStateImpl } from "~/states/NotenmodulStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 import { NotenmodulConfigManagerSichtbareSpalten } from "./NotenmodulConfigManagerSichtbareSpalten";
@@ -77,7 +78,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	protected async createManager(): Promise<Partial<RouteStateNotenmodulAdministration>> {
-		await notenmodulStateImpl.ladeDaten();
+		const notenmodulState = useNotenmodulState();
+		await notenmodulState.ladeDaten();
 		const list = await api.server.getENMServerConnections(api.schema);
 		const manager = new WenomAuswahlListeManager(schuleStateImpl.abschnitt.id,
 			schuleStateImpl.abschnitt.id, abschnittStateImpl.alle, schuleStateImpl.schulform, list);
@@ -110,9 +112,32 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 				liste.add(spalte);
 			}
 		}
-		const mapTeilleistungsarten = notenmodulStateImpl.manager.mapTeilleistungsarten;
+		const notenmodulState = useNotenmodulState();
+		const mapTeilleistungsarten = notenmodulState.manager.mapTeilleistungsarten;
 		return new NotenmodulConfigManagerSichtbareSpalten(liste, mapTeilleistungsarten, this.writeConfigSichtbareSpalten);
 	}
+
+
+	private mapJsonToENMConfigKlasse(input: any): ENMConfigKlasse {
+		const obj = JSON.parse(input) as Partial<ENMConfigKlasse>;
+		const result = new ENMConfigKlasse();
+		if (obj.id === undefined) {
+			throw new Error('invalid json format, missing attribute id');
+		}
+		result.id = obj.id;
+		result.tsEingabeAb = obj.tsEingabeAb ?? null;
+		result.tsEingabeBis = obj.tsEingabeBis ?? null;
+		result.tsEingabeBisKlassenleitung = obj.tsEingabeBisKlassenleitung ?? null;
+		result.istNoteneingabeDurchKlassenleitung = obj.istNoteneingabeDurchKlassenleitung ?? false;
+		result.istFehlstundenEingabeKlassenweise = obj.istFehlstundenEingabeKlassenweise ?? false;
+		if (obj.spalten !== undefined) {
+			for (const elem of obj.spalten) {
+				result.spalten.add(ENMConfigKlasseSpalte.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		return result;
+	}
+
 
 	protected createSpaltenManager(): NotenmodulConfigManagerSperrungen {
 		const key = "noteneingabe.gesperrt";
@@ -121,11 +146,12 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		const configs: any[] | null = JSON.parse(res ?? 'null');
 		if (configs !== null) {
 			for (const config of configs) {
-				const klasse = ENMConfigKlasse.transpilerFromJSON(JSON.stringify(config));
+				const klasse = this.mapJsonToENMConfigKlasse(JSON.stringify(config));
 				liste.add(klasse);
 			}
 		}
-		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen } = notenmodulStateImpl.manager;
+		const notenmodulState = useNotenmodulState();
+		const { mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen } = notenmodulState.manager;
 		return new NotenmodulConfigManagerSperrungen(liste, mapKlassen, mapTeilleistungsarten, mapJahrgaenge, mapAbteilungen,
 			this.writeConfigSperrungen, this.gruppierungAuswahl, this.setGruppierungAuswahl);
 	}
@@ -242,7 +268,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		element.type = "global";
 		if (this.manager.auswahlIsKonfigurationLokal()) {
 			await this.notenmodulSetLocalConfigElement(element);
-			notenmodulStateImpl.manager.sperrungen = new EnmSperrManager(element.value);
+			const notenmodulState = useNotenmodulState();
+			notenmodulState.manager.sperrungen = new EnmSperrManager(element.value, notenmodulState.auswahlAnsicht);
 		} else {
 			await this.wenomSetServerConfigElement(element);
 		}
@@ -463,7 +490,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return await api.call(async (): Promise<SimpleOperationResponse> => {
 			try {
 				const res = await api.server.synchronizeENMDaten(api.schema, this.manager.auswahl().id);
-				await notenmodulStateImpl.ladeDaten(true);
+				const notenmodulState = useNotenmodulState();
+				await notenmodulState.ladeDaten(true);
 				return res;
 			} catch (e) {
 				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {
@@ -484,7 +512,8 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		return await api.call(async (): Promise<SimpleOperationResponse> => {
 			try {
 				const res = await api.server.downloadENMDaten(api.schema, this.manager.auswahl().id);
-				await notenmodulStateImpl.ladeDaten(true);
+				const notenmodulState = useNotenmodulState();
+				await notenmodulState.ladeDaten(true);
 				return res;
 			} catch (e) {
 				if ((e instanceof OpenApiError) && (e.response instanceof Response)) {

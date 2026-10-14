@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { ApiServer } from "@core/api/ApiServer";
+import { OpenApiError } from "@core/api/OpenApiError";
 import { ENMServerConfigElement } from "@core/core/data/enm/ENMServerConfigElement";
 import { ArrayList } from "@core/java/util/ArrayList";
 
@@ -11,6 +12,26 @@ const CLIENT_SECRET = process.env.VITE_CLIENT_SECRET ?? "clientsecret";
 const targetDB = "ENM02A";
 const idConnection = 1;
 const api = new ApiServer(targetUrlSVWSAppServer, 'Admin', '');
+
+/**
+ * Führt einen API-Aufruf aus und ergänzt bei einem Fehler den Status und den Antworttext in der Meldung.
+ * Ohne den Antworttext zeigt ein fehlgeschlagener Testlauf nur den Status, z. B. 502, und nicht dessen Ursache.
+ *
+ * @param aufruf   der API-Aufruf
+ *
+ * @returns das Ergebnis des API-Aufrufs
+ */
+async function mitAntworttext<T>(aufruf: () => Promise<T>): Promise<T> {
+	try {
+		return await aufruf();
+	} catch (e) {
+		if ((e instanceof OpenApiError) && (e.response !== null)) {
+			const text = await e.response.text();
+			throw new Error(`${e.message} (Status ${e.response.status}): ${text}`, { cause: e });
+		}
+		throw e;
+	}
+}
 
 describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Server zur Initialisierung, Konfiguration und Synchronisation", () => {
 
@@ -61,19 +82,19 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Eine Synchronisation der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
-		const res = api.synchronizeENMDaten(targetDB, idConnection);
-		expect((await res).success).toBeTruthy();
+		const res = await mitAntworttext(() => api.synchronizeENMDaten(targetDB, idConnection));
+		expect(res.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Ein Upload der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
-		const responseGetUpload = await api.uploadENMDaten(targetDB, idConnection);
+		const responseGetUpload = await mitAntworttext(() => api.uploadENMDaten(targetDB, idConnection));
 		expect(responseGetUpload.success).toBeTruthy();
 	});
 
 	// Dieser Test kann fehlschlagen, wenn das Client Secret falsch ist
 	test("Ein Download der ENM-Daten über die WeNoM-Verbindung ist erfolgreich > 200", { concurrent: false }, async () => {
-		const responseGetDownload = await api.downloadENMDaten(targetDB, idConnection);
+		const responseGetDownload = await mitAntworttext(() => api.downloadENMDaten(targetDB, idConnection));
 		expect(responseGetDownload.success).toBeTruthy();
 	});
 
@@ -81,6 +102,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 	test("Das Setzen der Konfiguration für die Sperrung der Noteneingabe über die WeNoM-Verbindung ist erfolgreich > 204", { concurrent: false }, async () => {
 		const configKlasse = {
 			"istFehlstundenEingabeKlassenweise": false,
+			"istNoteneingabeDurchKlassenleitung": false,
 			"spalten": [
 				{ "gesperrt": false, "idTeilleistung": 1, "name": "Klassenarbeit 1" },
 				{ "gesperrt": false, "idTeilleistung": 4, "name": "Klassenarbeit 2" },
@@ -103,6 +125,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 			],
 			"tsEingabeAb": null,
 			"tsEingabeBis": null,
+			"tsEingabeBisKlassenleitung": null,
 		};
 		const configKlassen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 27].map(id => ({ id, ...configKlasse }));
 		const element = new ENMServerConfigElement();

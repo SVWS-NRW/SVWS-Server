@@ -31,6 +31,15 @@ public class ENMConfigKlasse {
 		example = "2013-11-14 13:12:48.774")
 	public String tsEingabeBis = null;
 
+	/** Der Zeitstempel, bis wann die Noteneingabe für eine Klassenleitung erlaubt ist, sofern eine abweichende Einschränkung zu tsEingabeBis vorliegt, sonst null. */
+	@Schema(description = "Der Zeitstempel, bis wann die Noteneingabe für eine Klassenleitung erlaubt ist, sofern abweichende Einschränkung zu tsEingabeBis eine Einschränkung vorliegt, sonst null.",
+		example = "2013-11-14 13:12:48.774")
+	public String tsEingabeBisKlassenleitung = null;
+
+	/** Gibt an, ob die Klassenleitungen auch die Noten stellvertretend für die Fachlehrer eingegeben dürfen. */
+	@Schema(description = "Gibt an, ob die Klassenleitungen auch die Noten stellvertretend für die Fachlehrer eingegeben dürfen.", example = "true")
+	public boolean istNoteneingabeDurchKlassenleitung = false;
+
 	/** Gibt an, ob die Fehlstunden klassen- oder kursweise eingegeben werden. */
 	@Schema(description = "Gibt an, ob die Fehlstunden klassen- oder kursweise eingegeben werden.", example = "true")
 	public boolean istFehlstundenEingabeKlassenweise = false;

@@ -11,7 +11,7 @@ export function toMap<T extends { id: number }>(list: Iterable<T>): Map<number, 
 	return map;
 }
 
-export interface KatalogStateConfig<T extends { id: number }, S extends object> {
+export interface KatalogStateConfig<T extends { id: number }> {
 	/** Für Fehlermeldungen, z. B. "Betriebe", "Orte" */
 	katalogLabel: string;
 	/** Liefert die reaktive Liste aus dem State */
@@ -30,7 +30,7 @@ export interface KatalogStateConfig<T extends { id: number }, S extends object> 
 }
 
 export function createKatalogState<T extends { id: number }>(
-	config: KatalogStateConfig<T, any>
+	config: KatalogStateConfig<T>
 ): KatalogState<T> {
 	const update = async (initial: boolean = false) => {
 		try {

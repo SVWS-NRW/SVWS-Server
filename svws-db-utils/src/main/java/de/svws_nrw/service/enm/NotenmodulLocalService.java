@@ -12,9 +12,11 @@ import java.time.temporal.ChronoField;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMConfigKlasse;
 import de.svws_nrw.core.data.enm.ENMConfigKlasseSpalte;
@@ -37,14 +39,14 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationClientRepository;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationServerRepository;
-import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
-import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.teilleistung.SchuelerTeilleistungRepository;
+import de.svws_nrw.repo.schule.kataloge.ankreuzkompetenz.AnkreuzkompetenzRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -224,17 +226,28 @@ public class NotenmodulLocalService {
 	/**
 	 * Prüfe, ob die zeitliche Eingabebeschränkung die Notenanpassung erlaubt oder nicht.
 	 *
-	 * @param config  die Konfiguration für die Klasse
-	 * @param now     der aktuelle Zeitpunkt
+	 * @param berechtigung   die Berechtigung über welcher der Zugriff erfolgt:
+	 *                           0 - allgemeine Kompetenz,
+	 *                           1 - funktionsbezogen als Fachlehrer,
+	 *                           2 - funktionsbezogen als Klassenlehrer,
+	 *                           3 - funktionsbezogen als Fachlehrer und Klassenlehrer,
+	 *                           4 - funktionsbezogen als Abteilungsleiter,
+	 *                           5 - funktionsbezogen als Schulleitung
+	 * @param config         die Konfiguration für die Klasse
+	 * @param now            der aktuelle Zeitpunkt
 	 *
 	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
 	 */
-	private static void pruefeEingabeende(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
+	private static void pruefeEingabeende(final int berechtigung, final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now)
+			throws ApiOperationException {
 		if (config.tsEingabeBis == null) {
 			return;
 		}
 		try {
-			final Timestamp ende = getTimeStampFromIso(config.tsEingabeBis);
+			Timestamp ende = getTimeStampFromIso(config.tsEingabeBis);
+			if ((berechtigung != 1) && (config.tsEingabeBisKlassenleitung != null)) {
+				ende = getTimeStampFromIso(config.tsEingabeBisKlassenleitung);
+			}
 			if (ende == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
@@ -255,35 +268,35 @@ public class NotenmodulLocalService {
 	 *
 	 * @param idKlasse   die ID der Klasse, für welche die Konfiguation geladen werden soll
 	 *
-	 * @return die Konfigurationen für die Klasse oder null, falls keine existiert
+	 * @return die Konfigurationen für die Klasse
 	 *
 	 * @throws ApiOperationException   falls ein Fehler beim Deserialisieren der Konfiguration auftritt
 	 */
-	private Optional<ENMConfigKlasse> getKonfigurationErlaubt(final long idKlasse) throws ApiOperationException {
+	private @NotNull ENMConfigKlasse getKonfigurationErlaubt(final long idKlasse) throws ApiOperationException {
 		try {
 			final Optional<DTONotenmodulKonfigurationClient> config = notenmodulKonfigurationClientRepository.findById("noteneingabe.gesperrt");
 			if (config.isEmpty()) {
-				return Optional.empty();
+				throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten vor.");
 			}
 			final List<ENMConfigKlasse> list = JSONMapper.mapper.readerForListOf(ENMConfigKlasse.class).readValue(config.get().wert);
 			if (list == null) {
-				return Optional.empty();
+				throw new ApiOperationException(Status.FORBIDDEN, "Es liegt in Konfiguration für die Eingabe von Noten kleine Liste der Klassen vor.");
 			}
 			for (final ENMConfigKlasse cfg : list) {
 				if (cfg.id == idKlasse) {
-					return Optional.of(cfg);
+					return cfg;
 				}
 			}
-			return Optional.empty();
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Es liegt keine Konfiguration für die Eingabe von Noten für die Klasse mit der ID %d vor.".formatted(idKlasse));
 		} catch (final @NotNull IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Einlesen der Konfiguration.");
 		}
 	}
 
 
-	private void pruefeKonfigurationPatchErlaubt(final long idKlasse, final @NotNull String attribute) throws ApiOperationException {
-		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse)
-				.orElseThrow(() -> new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor."));
+	private static void pruefeKonfigurationPatchErlaubt(final int berechtigung, final ENMConfigKlasse config, final @NotNull String attribute)
+			throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei der Eingabespalte
 		boolean allowed = false;
 		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
@@ -298,13 +311,11 @@ public class NotenmodulLocalService {
 		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
 		final Timestamp now = getTimeStampNow();
 		pruefeEingabebeginn(config, now);
-		pruefeEingabeende(config, now);
+		pruefeEingabeende(berechtigung, config, now);
 	}
 
 
-	private void pruefeKonfigurationPatchErlaubtFehlstunden(final long idKlasse, final boolean istGesamtFS) throws ApiOperationException {
-		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse)
-				.orElseThrow(() -> new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor."));
+	private static void pruefeKonfigurationPatchErlaubtFehlstunden(final int berechtigung, final ENMConfigKlasse config) throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei den Fehlstunden
 		boolean allowed = false;
 		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
@@ -317,18 +328,15 @@ public class NotenmodulLocalService {
 			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung von Fehlstunden wurde nicht explizit für diese Klasse erlaubt.");
 		}
 
-		// TODO prüfe auch die Information, ob nur Gesamtfehlstunden eingegeben werden sollen oder auf Basis von Lerngruppen
-
 		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
 		final Timestamp now = getTimeStampNow();
 		pruefeEingabebeginn(config, now);
-		pruefeEingabeende(config, now);
+		pruefeEingabeende(berechtigung, config, now);
 	}
 
 
-	private void pruefeKonfigurationPatchErlaubtTeilleistung(final long idKlasse, final long idTeilleistungsart) throws ApiOperationException {
-		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse)
-				.orElseThrow(() -> new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor."));
+	private static void pruefeKonfigurationPatchErlaubtTeilleistung(final int berechtigung, final ENMConfigKlasse config, final long idTeilleistungsart)
+			throws ApiOperationException {
 		// Prüfe generelle Berechtigung bei der Eingabespalte
 		boolean allowed = false;
 		boolean allowedSpecial = false;
@@ -348,7 +356,7 @@ public class NotenmodulLocalService {
 		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
 		final Timestamp now = getTimeStampNow();
 		pruefeEingabebeginn(config, now);
-		pruefeEingabeende(config, now);
+		pruefeEingabeende(berechtigung, config, now);
 	}
 
 
@@ -358,12 +366,17 @@ public class NotenmodulLocalService {
 	 * @param leistungen          die Leistungsdaten.
 	 * @param lernabschnitt       der Lenrabschnitt der Leistungsdaten
 	 * @param authenticatedUser   der angemeldete Benutzer
+	 * @param config              die Notenmodul-Konfiguration für die Klasse
 	 *
-	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz, 1 - funktionsbezogen als Fachlehrer,
-	 *                                         2 - funktionsbezogen als Klassenlehrer oder Abteilungsleiter)
+	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz,
+	 *                                         1 - funktionsbezogen als Fachlehrer,
+	 *                                         2 - funktionsbezogen als Klassenlehrer,
+	 *                                         3 - funktionsbezogen als Fachlehrer und Klassenlehrer,
+	 *                                         4 - funktionsbezogen als Abteilungsleiter,
+	 *                                         5 - funktionsbezogen als Schulleitung)
 	 */
 	private static int pruefeBerechtigungPatchLeistung(final List<DTOSchuelerLeistungsdaten> leistungen, final DTOSchuelerLernabschnittsdaten lernabschnitt,
-			final Benutzer authenticatedUser) {
+			final Benutzer authenticatedUser, final ENMConfigKlasse config) {
 		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
 		if (authenticatedUser.schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Leistungsdaten sind nicht dem aktuellen Schuljahresabschnitt der Schule zugeordnet.");
@@ -380,15 +393,32 @@ public class NotenmodulLocalService {
 			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
 		}
 
-		// Prüfe, ob er diese als Fachlehrer besitzt
-		final List<Long> setFachlehrer = leistungen.stream().map(l -> l.Fachlehrer_ID).filter(l -> l != null).toList();
-		if ((!setFachlehrer.isEmpty()) && (setFachlehrer.contains(idLehrer.longValue()))) {
-			return 1;
+		// Prüfe, ob der angemeldete Benutzer zur Schulleitung gehört
+		final Set<LehrerLeitungsfunktion> leitungsfunktionen = authenticatedUser.getLeitungsfunktionen();
+		if (leitungsfunktionen.contains(LehrerLeitungsfunktion.SL) || leitungsfunktionen.contains(LehrerLeitungsfunktion.SL_STV)) {
+			return 5;
 		}
 
-		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
-		if (authenticatedUser.getKlassenIDs().contains(lernabschnitt.Klassen_ID)) {
-			return 2;
+		// Prüfe, ob der angemeldete Lehrer als Abteilungsleiter die nötigen Rechte besitzt.
+		if (authenticatedUser.getAbteilungenKlassenIDs().contains(lernabschnitt.Klassen_ID)) {
+			return 4;
+		}
+
+		int berechtigung = 0;
+		// Prüfe, ob der angemeldete Lehrer als Fachlehrer die nötigen Rechte besitzt
+		final List<Long> setFachlehrer = leistungen.stream().map(l -> l.Fachlehrer_ID).filter(l -> l != null).toList();
+		if ((!setFachlehrer.isEmpty()) && (setFachlehrer.contains(idLehrer.longValue()))) {
+			berechtigung += 1;
+		}
+
+
+		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer die nötigen Rechte besitzt.
+		if (authenticatedUser.getKlassenIDs().contains(lernabschnitt.Klassen_ID) && config.istNoteneingabeDurchKlassenleitung) {
+			berechtigung += 2;
+		}
+
+		if (berechtigung > 0) {
+			return berechtigung;
 		}
 
 		// ... ansonsten ist kein funktionsbezogener Zugriff erlaubt.
@@ -402,7 +432,10 @@ public class NotenmodulLocalService {
 	 * @param lernabschnitt   die Lernabschnittsdaten.
 	 * @param authenticatedUser   der angemeldete Benutzer
 	 *
-	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz, 2 - funktionsbezogen als Klassenlehrer oder Abteilungsleiter)
+	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz,
+	 *                                         2 - funktionsbezogen als Klassenlehrer,
+	 *                                         4 - funktionsbezogen als Abteilungsleiter,
+	 *                                         5 - funktionsbezogen als Schulleitung)
 	 */
 	private static int pruefeBerechtigungPatchLernabschnitt(final DTOSchuelerLernabschnittsdaten lernabschnitt, final Benutzer authenticatedUser) {
 		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
@@ -421,7 +454,18 @@ public class NotenmodulLocalService {
 			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
 		}
 
-		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
+		// Prüfe, ob der angemeldete Benutzer zur Schulleitung gehört
+		final Set<LehrerLeitungsfunktion> leitungsfunktionen = authenticatedUser.getLeitungsfunktionen();
+		if (leitungsfunktionen.contains(LehrerLeitungsfunktion.SL) || leitungsfunktionen.contains(LehrerLeitungsfunktion.SL_STV)) {
+			return 5;
+		}
+
+		// Prüfe, ob der angemeldete Lehrer als Abteilungsleiter die nötigen Rechte besitzt.
+		if (authenticatedUser.getAbteilungenKlassenIDs().contains(lernabschnitt.Klassen_ID)) {
+			return 4;
+		}
+
+		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer die nötigen Rechte besitzt.
 		if (authenticatedUser.getKlassenIDs().contains(lernabschnitt.Klassen_ID)) {
 			return 2;
 		}
@@ -452,38 +496,40 @@ public class NotenmodulLocalService {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(leistung.Abschnitt_ID));
 			}
 
+			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
+
 			// Prüfe die Berechtigung für das Patchen der Leistungsdaten
-			pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser); // final int berechtigung =
+			final int berechtigung = pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser, config);
 
 			// Durchführen des Patches
 			patch.noteQuartal.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Quartal");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Quartal");
 				if ((val != null) && (Note.fromKuerzel(val) == Note.KEINE)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(val));
 				}
 				leistung.NotenKrzQuartal = val;
 			});
 			patch.note.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Note");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Note");
 				if ((val != null) && (Note.fromKuerzel(val) == Note.KEINE)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(val));
 				}
 				leistung.NotenKrz = val;
 			});
 			patch.fehlstundenFach.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
+				pruefeKonfigurationPatchErlaubtFehlstunden(berechtigung, config);
 				leistung.FehlStd = val;
 			});
 			patch.fehlstundenUnentschuldigtFach.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
+				pruefeKonfigurationPatchErlaubtFehlstunden(berechtigung, config);
 				leistung.uFehlStd = val;
 			});
 			patch.fachbezogeneBemerkungen.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "FB");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "FB");
 				leistung.Lernentw = val;
 			});
 			patch.istGemahnt.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Mahnung");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Mahnung");
 				if ((leistung.Warndatum != null) && (!"".equals(leistung.Warndatum.trim()))) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
 				}
@@ -503,7 +549,7 @@ public class NotenmodulLocalService {
 
 			// ggf. neue Kursart-Zuweisung setzen
 			patch.neueZuweisungKursart.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Note");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Note");
 				final DTOSchuelerZuweisung z =
 						schuelerLernabschnittKursartZuweisungenRepository.findById(new DTOSchuelerZuweisungPK(leistung.Abschnitt_ID, leistung.Fach_ID))
 								.orElse(new DTOSchuelerZuweisung(leistung.Abschnitt_ID, leistung.Fach_ID));
@@ -541,13 +587,14 @@ public class NotenmodulLocalService {
 			if (lernabschnitt.Klassen_ID == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(leistung.Abschnitt_ID));
 			}
+			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
 
 			// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
-			pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser); // final int berechtigung =
+			final int berechtigung = pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser, config);
 
 			// Durchführen des Patches
 			patch.note.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubtTeilleistung(lernabschnitt.Klassen_ID, teilleistung.Art_ID);
+				pruefeKonfigurationPatchErlaubtTeilleistung(berechtigung, config, teilleistung.Art_ID);
 				if ((val != null) && (Note.fromKuerzel(val) == Note.KEINE)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(val));
 				}
@@ -604,9 +651,13 @@ public class NotenmodulLocalService {
 		transactional(() -> {
 			// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = getLernabschnitt(id, authenticatedUser.schuleGetSchuljahresabschnitt());
+			if (lernabschnitt.Klassen_ID == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(lernabschnitt.ID));
+			}
+			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
 
 			// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-			pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser); // final int berechtigung =
+			final int berechtigung = pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser);
 
 			// Bestimme die Bemerkungen, welche dem Schüler zugeordnet sind.
 			final var sbs = schuelerLernabschnittBemerkungRepository.findMapByLernabschnittID(List.of(lernabschnitt.ID)).values();
@@ -620,31 +671,31 @@ public class NotenmodulLocalService {
 
 			// Durchführen des Patches
 			patch.ASV.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ASV");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "ASV");
 				sb.ASV = val;
 			});
 			patch.AUE.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "AUE");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "AUE");
 				sb.AUE = val;
 			});
 			patch.ZB.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ZB");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "ZB");
 				lernabschnitt.ZeugnisBem = val;
 			});
 			patch.LELS.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "LELS");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "LELS");
 				sb.LELS = val;
 			});
 			patch.schulformEmpf.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "SchulformEmpfehlung");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "SchulformEmpfehlung");
 				sb.ESF = val;
 			});
 			patch.individuelleVersetzungsbemerkungen.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Versetzungsbemerkungen");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Versetzungsbemerkungen");
 				sb.BemerkungVersetzung = val;
 			});
 			patch.foerderbemerkungen.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Förderbemerkungen");
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Förderbemerkungen");
 				sb.BemerkungFSP = val;
 			});
 
@@ -667,17 +718,21 @@ public class NotenmodulLocalService {
 			// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findById(patch.id)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(patch.id)));
+			if (lernabschnitt.Klassen_ID == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(lernabschnitt.ID));
+			}
+			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
 
 			// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-			pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser); // final int berechtigung =
+			final int berechtigung = pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser);
 
 			// Durchführen des Patches
 			patch.fehlstundenGesamt.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, true);
+				pruefeKonfigurationPatchErlaubtFehlstunden(berechtigung, config);
 				lernabschnitt.SumFehlStd = val;
 			});
 			patch.fehlstundenGesamtUnentschuldigt.ifPresent(val -> {
-				pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, true);
+				pruefeKonfigurationPatchErlaubtFehlstunden(berechtigung, config);
 				lernabschnitt.SumFehlStdU = val;
 			});
 
@@ -714,12 +769,23 @@ public class NotenmodulLocalService {
 
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findById(schuelerankreuzkompetenz.Abschnitt_ID)
 					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(patch.id)));
+			if (lernabschnitt.Klassen_ID == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(lernabschnitt.ID));
+			}
 
-			final List<DTOSchuelerLeistungsdaten> leistungsdaten =
-					schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(ankreuzkompetenz.Fach_ID));
+			final ENMConfigKlasse config = getKonfigurationErlaubt(lernabschnitt.Klassen_ID);
 
-			// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-			pruefeBerechtigungPatchLeistung(leistungsdaten, lernabschnitt, authenticatedUser); // final int berechtigung =
+			if (ankreuzkompetenz.Fach_ID != null) {
+				// Prüfe die Berechtigung anhand der Leistungsdaten des Schülers in dem Fach der Kompetenz
+				final List<DTOSchuelerLeistungsdaten> leistungsdaten =
+						schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(ankreuzkompetenz.Fach_ID));
+				final int berechtigung = pruefeBerechtigungPatchLeistung(leistungsdaten, lernabschnitt, authenticatedUser, config);
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, "Note");
+			} else {
+				// Kompetenzen ohne Fach liegen bei der Klassenleitung, die dafür keine Freigabe der Noteneingabe braucht
+				final int berechtigung = pruefeBerechtigungPatchLernabschnitt(lernabschnitt, authenticatedUser);
+				pruefeKonfigurationPatchErlaubt(berechtigung, config, (ankreuzkompetenz.IstASV != 0) ? "ASV" : "Note");
+			}
 
 			// Durchführen des Patches
 			schuelerankreuzkompetenz.Stufe1 = patch.stufen[0];

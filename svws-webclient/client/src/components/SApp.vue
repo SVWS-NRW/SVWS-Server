@@ -74,19 +74,14 @@
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
 						<h1> {{ menu.mainEntry.text }} </h1>
-						<div class="flex justify-between w-full items-center">
-							<abschnitt-auswahl :disabled="menu.current.name.startsWith('notenmodul')" />
-							<div v-if="apiStatus.pending && (notenmodulState.istAdminLehrer !== null)" class="flex gap-2">
-								<svws-ui-spinner spinning />
-								<span class="text-base font-normal">lade Daten …</span>
+						<abschnitt-auswahl :disabled="menu.current.name.startsWith('notenmodul')" />
+						<div class="flex w-full items-center">
+							<div class="w-8 mt-4">
+								<svws-ui-spinner v-if="apiStatus.pending && (notenmodulState.optionsAuswahlAnsicht.size > 1)" spinning />
 							</div>
-							<svws-ui-checkbox v-else-if="notenmodulState.istAdminLehrer !== null"
-								type="toggle"
-								:model-value="notenmodulState.istAdminLehrer"
-								@update:model-value="notenmodulState.toggleAdmin()">
-								Admin
-							</svws-ui-checkbox>
-							<div v-else />
+							<ui-select v-if="notenmodulState.optionsAuswahlAnsicht.size > 1" label="Ansicht"
+								:model-value="notenmodulState.auswahlAnsicht" @update:model-value="f => notenmodulState.setAnsicht(f ?? ENMLehrerFunktion.FACHLEHRER)"
+								:manager="auswahlSelectManager" :nullable="false" />
 						</div>
 					</div>
 					<div class="secondary-menu--header" />
@@ -140,6 +135,7 @@
 <script setup lang="ts">
 	import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 
+	import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 	import { githash } from "@githash";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useNotenmodulState } from "@ui/states/NotenmodulState";
@@ -147,6 +143,7 @@
 	import { useServerState } from "@ui/states/ServerState";
 	import { useWiedervorlageState } from "@ui/states/WiedervorlageState";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import type { TabManager } from "@ui/ui/nav/TabManager";
 	import { version } from "@version";
@@ -195,6 +192,8 @@
 		const name = schuleState.stammdaten.bezeichnung1;
 		return (name.length > 0) ? name : "Fehlende Bezeichnung für die Schule";
 	});
+
+	const auswahlSelectManager = computed(() => new SelectManager({ options: notenmodulState.optionsAuswahlAnsicht, optionDisplayText: f => f.text, selectionDisplayText: f => f.text	}));
 
 	const tabManager = computed<null | (() => TabManager)>(() => {
 		const name = props.menu.current.name;

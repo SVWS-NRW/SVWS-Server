@@ -53,7 +53,7 @@ public class NotenmodulCredentialsService {
 			// Erstelle zunächst Initialkennwörter, falls eine Lehrer noch keines hat
 			notenmodulCredentialGeneratorService.generateMissingCredentials();
 			// Erstelle die ENM-Daten, damit klar ist, für welche Lehrer die Initialkennwörter zurückgegeben werden müssen
-			final ENMv2Daten enmdaten = enmGetService.get(null);
+			final ENMv2Daten enmdaten = enmGetService.get(null, null);
 			// Bestimme die Menge der Lehrer-IDs und lese dann dafür die Initialkennwörter aus der Datenbank.
 			final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
 			final List<Long> idsLehrer = enmdaten.lehrer.stream().map(l -> l.id).toList();

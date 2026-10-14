@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.enm;
 
 import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.core.data.enm.ENMLehrerFunktion;
 import de.svws_nrw.core.data.enm.v2.ENMv2Daten;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.Responses;
@@ -34,15 +35,15 @@ public final class EnmV2ControllerImpl implements EnmV2Controller {
 	}
 
 	@Override
-	public Response get(final Long id) {
-		final ENMv2Daten daten = getService.get(id);
+	public Response get(final Long id, final Integer funktion) {
+		final ENMv2Daten daten = getService.get(id, ENMLehrerFunktion.fromID(funktion));
 		return Responses.ok(daten);
 	}
 
 	@Override
 	public Response getGZip(final Long id) {
 		try {
-			final ENMv2Daten daten = getService.get(id);
+			final ENMv2Daten daten = getService.get(id, null);
 			final byte[] encoded = JSONMapper.gzipByteArrayFromObject(daten);
 			return Responses.okFile(encoded, "enm.json.gz");
 		} catch (final CompressionException ce) {

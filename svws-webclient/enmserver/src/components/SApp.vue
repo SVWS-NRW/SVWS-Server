@@ -92,7 +92,16 @@
 				</div>
 			</template>
 			<template v-else>
-				<router-view :key="app.name" name="liste" />
+				<div class="h-full flex flex-col">
+					<div class="pt-8">
+						<ui-select v-if="optionsAuswahlAnsicht().size > 1" label="Ansicht"
+							:model-value="auswahlAnsicht()" @update:model-value="f => setAnsicht(f ?? ENMLehrerFunktion.FACHLEHRER)"
+							:manager="auswahlSelectManager" :nullable="false" />
+					</div>
+					<div class="flex-1 relative min-h-0">
+						<router-view :key="app.name" name="liste" />
+					</div>
+				</div>
 			</template>
 		</template>
 		<template #main>
@@ -124,10 +133,12 @@
 
 	import { useActivityState } from "@wenom/states/ActivityState";
 	import { useAuthState } from "@wenom/states/AuthState";
-	import { onMounted, onUnmounted, ref } from "vue";
+	import { computed, onMounted, onUnmounted, ref } from "vue";
 
+	import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 	import { githash } from "@githash";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
+	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { version } from "@version";
 
@@ -142,6 +153,8 @@
 
 	const pendingSetApp = ref('');
 	const copied = ref<boolean | null>(null);
+
+	const auswahlSelectManager = computed(() => new SelectManager({ options: props.optionsAuswahlAnsicht(), optionDisplayText: f => f.text, selectionDisplayText: f => f.text }));
 
 	async function copyToClipboard() {
 		try {

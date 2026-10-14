@@ -1,6 +1,7 @@
 import { PairNN } from "@core/asd/adt/PairNN";
 import { Note } from "@core/asd/types/Note";
 import { HashMap2D } from "@core/core/adt/map/HashMap2D";
+import { ENMLehrerFunktion } from "@core/core/data/enm/ENMLehrerFunktion";
 import type { ENMv2Abteilung } from "@core/core/data/enm/v2/ENMv2Abteilung";
 import type { ENMv2Ankreuzkompetenz } from "@core/core/data/enm/v2/ENMv2Ankreuzkompetenz";
 import type { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
@@ -58,6 +59,9 @@ export class EnmManager {
 	/** Die ENM-Daten, welche diesem Manager zugrunde liegen */
 	readonly daten: ENMv2Daten;
 
+	/** Die Lehrer-Funktion, mit welcher auf die Daten zugegriffen wird */
+	readonly lehrerFunktion: ENMLehrerFunktion;
+
 	/** Eine Referenz auf die ID des Lehrers, für welchen die ENM-Daten in diesem Manager verwaltet werden */
 	readonly idLehrer: number | null;
 
@@ -78,6 +82,9 @@ export class EnmManager {
 
 	/** Eine Map mit den Abteilungen */
 	readonly mapAbteilungen: JavaMap<number, ENMv2Abteilung> = new HashMap<number, ENMv2Abteilung>();
+
+	/** Eine Map mit den Zuordnungen der Menge der IDs der Abteilungsleiter zu den IDs der Klassen */
+	readonly mapKlassenAbteilungsleiter: JavaMap<number, JavaSet<number>> = new HashMap<number, JavaSet<number>>;
 
 	/** Eine Map von der ID der Klassen auf deren Objekte */
 	readonly mapKlassen: JavaMap<number, ENMv2Klasse> = new HashMap<number, ENMv2Klasse>();
@@ -124,8 +131,11 @@ export class EnmManager {
 	/** Eine Map mit den Zuordnungen von Leistungen zu Pairs mit Leistung und Schueler */
 	readonly mapLerngruppeLeistungen: JavaMap<number, List<PairNN<ENMv2Leistung, ENMv2Schueler>>> = new HashMap();
 
-	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
+	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Lehrer zum Lesen berechtigt ist. */
 	readonly setLerngruppenLehrer: JavaSet<number> = new HashSet<number>();
+
+	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
+	readonly setLerngruppenFachlehrer: JavaSet<number> = new HashSet<number>();
 
 	/** Die Auswahlliste für die Lerngruppen */
 	readonly mapLerngruppenAuswahl: JavaMap<number, EnmLerngruppenAuswahlEintrag> = new HashMap<number, EnmLerngruppenAuswahlEintrag>();
@@ -143,7 +153,7 @@ export class EnmManager {
 	readonly setKursartenZulaessigFuerNeuzuweisung: JavaSet<string> = new HashSet<string>(Arrays.asList(['DK', 'G', 'E']));
 
 	/** Der Manager für die Konfiguration der Sperrung der Noteneingabe */
-	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]");
+	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]", ENMLehrerFunktion.FACHLEHRER);
 
 	/** Der Manager für die Konfiguration der Spalten der Noteneingabe */
 	private managerSpalten: EnmSpaltenManager = new EnmSpaltenManager("[]");
@@ -151,10 +161,11 @@ export class EnmManager {
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
 	 *
-	 * @param daten      die ENM-Daten
-	 * @param idLehrer   die ID des Lehrers, für welchen die ENM-Daten verwaltet werden
+	 * @param daten            die ENM-Daten
+	 * @param lehrerFunktion   die Lehrer-Funktion für die Anzeige / Verwaltung der Daten
 	 */
-	public constructor(daten: ENMv2Daten) {
+	public constructor(daten: ENMv2Daten, lehrerFunktion: ENMLehrerFunktion) {
+		this.lehrerFunktion = lehrerFunktion;
 		this.daten = daten;
 		this.idLehrer = daten.lehrerID;
 		this.schuljahr = daten.schuljahr;
@@ -165,14 +176,23 @@ export class EnmManager {
 			this.mapJahrgaenge.put(j.id, j);
 		}
 
-		for (const a of daten.abteilungen) {
-			this.mapAbteilungen.put(a.id, a);
-		}
-
 		for (const k of daten.klassen) {
 			this.mapKlassen.put(k.id, k);
 			this.mapKlassenSchueler.put(k.id, new ArrayList());
-			if ((this.idLehrer === null) || k.klassenlehrer.contains(this.idLehrer)) {
+			this.mapKlassenAbteilungsleiter.put(k.id, new HashSet<number>());
+		}
+
+		for (const a of daten.abteilungen) {
+			this.mapAbteilungen.put(a.id, a);
+			for (const idKlasse of a.klassenzuordnungen) {
+				const setLehrer = this.mapKlassenAbteilungsleiter.get(idKlasse);
+				setLehrer?.add(a.idAbteilungsleiter);
+			}
+		}
+
+		for (const k of daten.klassen) {
+			if ((this.idLehrer === null) || (lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG) || k.klassenlehrer.contains(this.idLehrer)
+				|| (this.mapKlassenAbteilungsleiter.get(k.id)?.contains(this.idLehrer) ?? false)) {
 				this.listKlassenKlassenlehrer.add(k);
 			}
 		}
@@ -263,13 +283,19 @@ export class EnmManager {
 			}
 			listJahrgaenge.sort(this.comparatorJahrgaenge);
 			this.mapLerngruppeJahrgaenge.put(l.id, listJahrgaenge);
-			if ((this.idLehrer === null) || l.idsLehrer.contains(this.idLehrer)) {
+
+			// Bestimme die Lerngruppen, wo die Daten der Lerngruppen angezeigt werden sollen
+			if (this.checkLehrerFunktionsberechtigungAufLerngruppeAnsehen(l)) {
 				this.setLerngruppenLehrer.add(l.id);
+			}
+			if (this.checkLehrerFachlehrerRecht(l)) {
+				this.setLerngruppenFachlehrer.add(l.id);
 			}
 		}
 		daten.lerngruppen.sort(this.comparatorLerngruppen);
 		for (const l of daten.lerngruppen) {
-			if ((this.idLehrer === null) || l.idsLehrer.contains(this.idLehrer)) {
+			// Bestimme die Lerngruppen für die Auswahlliste
+			if (this.checkLehrerFunktionsberechtigungAufLerngruppeAnsehen(l)) {
 				this.mapLerngruppenAuswahl.put(l.id, {
 					id: l.id,
 					bezeichnung: this.lerngruppeGetBezeichnung(l.id),
@@ -303,6 +329,53 @@ export class EnmManager {
 		}
 		this.listKlassenMitAnkreuzkompetenzen.sort(this.comparatorKlassen);
 	}
+
+	private checkLehrerFachlehrerRecht(lerngruppe: ENMv2Lerngruppe): boolean {
+		// Notenmodul-Administration oder echte Fachlehrer-Berechtigung
+		return (this.idLehrer === null) || (lerngruppe.idsLehrer.contains(this.idLehrer));
+	}
+
+	private checkLehrerFunktionsberechtigungAufLerngruppeAnsehen(lerngruppe: ENMv2Lerngruppe): boolean {
+		// Notenmodul-Administration -> Lerngruppe ist sichtbar
+		if (this.idLehrer === null) {
+			return true;
+		}
+
+		// Fachlehrer-Berechtigung -> Lerngruppe ist sichtbar
+		if (lerngruppe.idsLehrer.contains(this.idLehrer)) {
+			return true;
+		}
+
+		// Schulleitung -> Lerngruppe ist sichtbar
+		if (this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG) {
+			return true;
+		}
+
+		// Abteilungsleitung -> nur wenn die Klasse zur Abteilung des Lehrers gehört (oder er Fachlehrer ist, s.o.)
+		const listKlassen = this.mapLerngruppeKlassen.get(lerngruppe.id);
+		if ((this.lehrerFunktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG) && (listKlassen !== null)) {
+			for (const k of listKlassen) {
+				if (this.mapKlassenAbteilungsleiter.get(k.id)?.contains(this.idLehrer) ?? false) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Klassenleitung -> nur wenn der Lehrer die Klassenleitung hat (oder er Fachlehrer ist, s.o.)
+		if ((this.lehrerFunktion === ENMLehrerFunktion.KLASSENLEITUNG) && (listKlassen !== null)) {
+			for (const k of listKlassen) {
+				if (k.klassenlehrer.contains(this.idLehrer)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Sonst -> Lerngruppe ist nicht sichtbar
+		return false;
+	}
+
 
 	/**
 	 * Vergleicht zwei Lerngruppen miteinander und sortiert diese anhand der Jahrgänge als erstes Kriterium und
@@ -632,6 +705,129 @@ export class EnmManager {
 
 
 	/**
+	 * Gibt zurück, ob der angemeldete Lehrer zur Schulleitung gehört oder nicht.
+	 *
+	 * @returns true, wenn der angemeldete Lehrer zur Schulleitung gehört, und ansonsten false
+	 */
+	public istSchulleitung(): boolean {
+		return (this.idLehrer === this.daten.idSchulleitung) || (this.idLehrer === this.daten.idSchulleitungStv);
+	}
+
+
+	/**
+	 * Gibt zurück, ob der angemeldete Lehrer Abteilungsleiter für die übergene Klasse ist oder nicht.
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @returns true, wenn der Lehrer Abteilungsleiter ist, und ansonsten false
+	 */
+	public klasseIstAbteilungsleitung(idKlasse: number): boolean {
+		return this.mapKlassenAbteilungsleiter.get(idKlasse)?.contains(this.idLehrer) ?? false;
+	}
+
+
+	/**
+	 * Gibt zurück, ob der angemeldete Lehrer Klassenlehrer für die übergene Klasse ist oder nicht.
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @returns true, wenn der Lehrer Klassenlehrer ist, und ansonsten false
+	 */
+	public klasseIstKlassenleitung(idKlasse: number): boolean {
+		const klasse = this.mapKlassen.get(idKlasse);
+		if (klasse === null) {
+			return false;
+		}
+		for (const kl of klasse.klassenlehrer) {
+			if (kl === this.idLehrer) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Gibt zurück, mit welchen Lehrer-Funktionen der angemeldete Lehrer eine Berechtigung bei der Klasse hat.
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @returns die Lehrer-Funktionen über welche die Berechtigung erlangt wurde
+	 */
+	public klasseIstBerechtigt(idKlasse: number): Set<ENMLehrerFunktion> {
+		const result = new Set<ENMLehrerFunktion>();
+		// Ohne Lehrer-ID sind die Daten schulweit für die Administration geladen, sonst wären alle Eingaben gesperrt
+		if (this.idLehrer === null) {
+			result.add(ENMLehrerFunktion.NOTENMODULADMIN);
+			return result;
+		}
+		if (this.klasseIstKlassenleitung(idKlasse)) {
+			result.add(ENMLehrerFunktion.KLASSENLEITUNG);
+		}
+		if (((this.lehrerFunktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG) || (this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG)) &&
+			this.klasseIstAbteilungsleitung(idKlasse)) {
+			result.add(ENMLehrerFunktion.ABTEILUNGSLEITUNG);
+		}
+		if ((this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG) && this.istSchulleitung()) {
+			result.add(ENMLehrerFunktion.SCHULLEITUNG);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt zurück, mit welchen Lehrer-Funktionen der angemeldete Lehrer eine Berechtigung für den Schüler bei der Lerngruppe erhalten hat
+	 *
+	 * @param idLerngruppe   die ID der Lerngruppe
+	 * @param idSchueler     die ID des Schülers
+	 *
+	 * @returns die Lehrer-Funktionen über welche die Berechtigung erlangt wurde
+	 */
+	public leistungsdatenIstBerechtigt(idLerngruppe: number, idSchueler: number): Set<ENMLehrerFunktion> {
+		const schueler = this.mapSchueler.get(idSchueler);
+		return this.leistungsdatenKlasseIstBerechtigt(idLerngruppe, (schueler === null) ? null : schueler.klasseID);
+	}
+
+
+	/**
+	 * Gibt zurück, mit welchen Lehrer-Funktionen der angemeldete Lehrer eine Berechtigung für die Leistungsdaten
+	 * der Lerngruppe in der Klasse erhalten hat. Die Sperranzeige je Klasse braucht dies ohne Bezug auf einen Schüler.
+	 *
+	 * @param idLerngruppe   die ID der Lerngruppe
+	 * @param idKlasse       die ID der Klasse oder null, falls diese nicht bekannt ist
+	 *
+	 * @returns die Lehrer-Funktionen über welche die Berechtigung erlangt wurde
+	 */
+	public leistungsdatenKlasseIstBerechtigt(idLerngruppe: number, idKlasse: number | null): Set<ENMLehrerFunktion> {
+		const result = new Set<ENMLehrerFunktion>();
+		// Ohne Lehrer-ID sind die Daten schulweit für die Administration geladen
+		if (this.idLehrer === null) {
+			result.add(ENMLehrerFunktion.NOTENMODULADMIN);
+			return result;
+		}
+		if (this.lerngruppeIstFachlehrer(idLerngruppe)) {
+			result.add(ENMLehrerFunktion.FACHLEHRER);
+		}
+		if (idKlasse === null) {
+			return result;
+		}
+
+		if (this.klasseIstKlassenleitung(idKlasse) && (this.lehrerFunktion !== ENMLehrerFunktion.FACHLEHRER)) {
+			result.add(ENMLehrerFunktion.KLASSENLEITUNG);
+		}
+
+		if (this.klasseIstAbteilungsleitung(idKlasse) && ((this.lehrerFunktion === ENMLehrerFunktion.ABTEILUNGSLEITUNG) || (this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG))) {
+			result.add(ENMLehrerFunktion.ABTEILUNGSLEITUNG);
+		}
+
+		if ((this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG) && this.istSchulleitung()) {
+			result.add(ENMLehrerFunktion.SCHULLEITUNG);
+		}
+		return result;
+	}
+
+
+	/**
 	 * Bestimmt die Lerngruppe anhand der übergebenen ID
 	 *
 	 * @param id   die ID der Lerngruppe
@@ -689,7 +885,7 @@ export class EnmManager {
 	 * @returns true, falls er Fachlehrer ist, und ansonsten false
 	 */
 	public lerngruppeIstFachlehrer(id: number): boolean {
-		return this.setLerngruppenLehrer.contains(id);
+		return this.setLerngruppenFachlehrer.contains(id);
 	}
 
 	/**

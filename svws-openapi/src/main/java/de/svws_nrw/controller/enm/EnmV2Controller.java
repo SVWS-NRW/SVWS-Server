@@ -11,12 +11,13 @@ public interface EnmV2Controller {
 	/**
 	 * Aggregiert die ENM-Daten aus der SVWS-DB und gibt diese als Response zurück.
 	 *
-	 * @param id   eine ID, falls die ENM-Daten für einen speziellen Lehrer erstellt werden sollen,
-	 *             und null, falls die ENM-Daten für die ganze Schule erstellt werden sollen
+	 * @param id        eine ID, falls die ENM-Daten für einen speziellen Lehrer erstellt werden sollen,
+	 *                  und null, falls die ENM-Daten für die ganze Schule erstellt werden sollen
+	 * @param funktion  die Funktion des Lehres, in welcher die Abfrage ausgeführt wird
 	 *
 	 * @return die Response
 	 */
-	Response get(Long id);
+	Response get(Long id, Integer funktion);
 
 	/**
 	 * Aggregiert die ENM-Daten aus der SVWS-DB und gibt diese als Response mit einer GZIP-komprimierten Datei zurück.
