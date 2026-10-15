@@ -223,1264 +223,1324 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	public static readonly DB: Fach = new Fach("DB", 39);
 
 	/**
+	 * Fach Deutsche Gebärdensprache
+	 */
+	public static readonly DG: Fach = new Fach("DG", 40);
+
+	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Rumänisch
 	 */
-	public static readonly DH: Fach = new Fach("DH", 40);
+	public static readonly DH: Fach = new Fach("DH", 41);
 
 	/**
 	 * Fach Didaktik u. Methodik der soz.päd. Praxis mit Übungen
 	 */
-	public static readonly DM: Fach = new Fach("DM", 41);
+	public static readonly DM: Fach = new Fach("DM", 42);
 
 	/**
 	 * Fach Darstellen und Gestalten
 	 */
-	public static readonly DS: Fach = new Fach("DS", 42);
+	public static readonly DS: Fach = new Fach("DS", 43);
 
 	/**
 	 * Fach Datenverarbeitung
 	 */
-	public static readonly DV: Fach = new Fach("DV", 43);
+	public static readonly DV: Fach = new Fach("DV", 44);
 
 	/**
 	 * Fach Englisch
 	 */
-	public static readonly E: Fach = new Fach("E", 44);
+	public static readonly E: Fach = new Fach("E", 45);
 
 	/**
 	 * Fach Erweitertes Bildungsangebot
 	 */
-	public static readonly EB: Fach = new Fach("EB", 45);
+	public static readonly EB: Fach = new Fach("EB", 46);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Serbisch
 	 */
-	public static readonly EH: Fach = new Fach("EH", 46);
+	public static readonly EH: Fach = new Fach("EH", 47);
 
 	/**
 	 * Fach Erdkunde/ Geographie
 	 */
-	public static readonly EK: Fach = new Fach("EK", 47);
+	public static readonly EK: Fach = new Fach("EK", 48);
 
 	/**
 	 * Fach Ernährungslehre
 	 */
-	public static readonly EL: Fach = new Fach("EL", 48);
+	public static readonly EL: Fach = new Fach("EL", 49);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Serbisch
 	 */
-	public static readonly EM: Fach = new Fach("EM", 49);
+	public static readonly EM: Fach = new Fach("EM", 50);
 
 	/**
 	 * Fach Evangelische Religionslehre (konfessionell kooperativ)
 	 */
-	public static readonly EN: Fach = new Fach("EN", 50);
+	public static readonly EN: Fach = new Fach("EN", 51);
 
 	/**
 	 * Fach Evangelische Religionslehre
 	 */
-	public static readonly ER: Fach = new Fach("ER", 51);
+	public static readonly ER: Fach = new Fach("ER", 52);
 
 	/**
 	 * Fach Französisch
 	 */
-	public static readonly F: Fach = new Fach("F", 52);
+	public static readonly F: Fach = new Fach("F", 53);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly F0: Fach = new Fach("F0", 53);
+	public static readonly F0: Fach = new Fach("F0", 54);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly F1: Fach = new Fach("F1", 54);
+	public static readonly F1: Fach = new Fach("F1", 55);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly F5: Fach = new Fach("F5", 55);
+	public static readonly F5: Fach = new Fach("F5", 56);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly F6: Fach = new Fach("F6", 56);
+	public static readonly F6: Fach = new Fach("F6", 57);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly F7: Fach = new Fach("F7", 57);
+	public static readonly F7: Fach = new Fach("F7", 58);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly F8: Fach = new Fach("F8", 58);
+	public static readonly F8: Fach = new Fach("F8", 59);
 
 	/**
 	 * Fach Französisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly F9: Fach = new Fach("F9", 59);
+	public static readonly F9: Fach = new Fach("F9", 60);
 
 	/**
 	 * Fach Fächer des berufsbezogenen Bereichs
 	 */
-	public static readonly FB: Fach = new Fach("FB", 60);
+	public static readonly FB: Fach = new Fach("FB", 61);
 
 	/**
 	 * Fach Fremdsprachliche Kommunikation
 	 */
-	public static readonly FK: Fach = new Fach("FK", 61);
+	public static readonly FK: Fach = new Fach("FK", 62);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Französisch
 	 */
-	public static readonly FM: Fach = new Fach("FM", 62);
+	public static readonly FM: Fach = new Fach("FM", 63);
 
 	/**
 	 * Fach Fachpraxis
 	 */
-	public static readonly FP: Fach = new Fach("FP", 63);
+	public static readonly FP: Fach = new Fach("FP", 64);
 
 	/**
 	 * Fach Französisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly FQ: Fach = new Fach("FQ", 64);
+	public static readonly FQ: Fach = new Fach("FQ", 65);
 
 	/**
 	 * Fach Förderunterricht
 	 */
-	public static readonly FU: Fach = new Fach("FU", 65);
+	public static readonly FU: Fach = new Fach("FU", 66);
+
+	/**
+	 * Fach Sonderpädagogische Förderung im Rahmen von sonderpädagogischen Fördergruppen
+	 */
+	public static readonly FX: Fach = new Fach("FX", 67);
 
 	/**
 	 * Fach Griechisch
 	 */
-	public static readonly G: Fach = new Fach("G", 66);
+	public static readonly G: Fach = new Fach("G", 68);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly G0: Fach = new Fach("G0", 67);
+	public static readonly G0: Fach = new Fach("G0", 69);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly G1: Fach = new Fach("G1", 68);
+	public static readonly G1: Fach = new Fach("G1", 70);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly G5: Fach = new Fach("G5", 69);
+	public static readonly G5: Fach = new Fach("G5", 71);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly G6: Fach = new Fach("G6", 70);
+	public static readonly G6: Fach = new Fach("G6", 72);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly G7: Fach = new Fach("G7", 71);
+	public static readonly G7: Fach = new Fach("G7", 73);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly G8: Fach = new Fach("G8", 72);
+	public static readonly G8: Fach = new Fach("G8", 74);
 
 	/**
 	 * Fach Griechisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly G9: Fach = new Fach("G9", 73);
+	public static readonly G9: Fach = new Fach("G9", 75);
 
 	/**
 	 * Fach Geräte- und Maschinenlehre
 	 */
-	public static readonly GA: Fach = new Fach("GA", 74);
+	public static readonly GA: Fach = new Fach("GA", 76);
 
 	/**
 	 * Fach Grundbildung
 	 */
-	public static readonly GB: Fach = new Fach("GB", 75);
+	public static readonly GB: Fach = new Fach("GB", 77);
 
 	/**
 	 * Fach Geschichte
 	 */
-	public static readonly GE: Fach = new Fach("GE", 76);
+	public static readonly GE: Fach = new Fach("GE", 78);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Neugriechisch
 	 */
-	public static readonly GH: Fach = new Fach("GH", 77);
+	public static readonly GH: Fach = new Fach("GH", 79);
 
 	/**
 	 * Fach Gesellschaftslehre
 	 */
-	public static readonly GL: Fach = new Fach("GL", 78);
+	public static readonly GL: Fach = new Fach("GL", 80);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Neugriechisch
 	 */
-	public static readonly GM: Fach = new Fach("GM", 79);
+	public static readonly GM: Fach = new Fach("GM", 81);
 
 	/**
 	 * Fach Geologie (Oberstufenkolleg Bielefeld)
 	 */
-	public static readonly GO: Fach = new Fach("GO", 80);
+	public static readonly GO: Fach = new Fach("GO", 82);
 
 	/**
 	 * Fach Geschichte / Politik
 	 */
-	public static readonly GP: Fach = new Fach("GP", 81);
+	public static readonly GP: Fach = new Fach("GP", 83);
 
 	/**
 	 * Fach Altgriechisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly GQ: Fach = new Fach("GQ", 82);
+	public static readonly GQ: Fach = new Fach("GQ", 84);
 
 	/**
 	 * Fach Gestaltungslehre
 	 */
-	public static readonly GS: Fach = new Fach("GS", 83);
+	public static readonly GS: Fach = new Fach("GS", 85);
 
 	/**
 	 * Fach Gesamtunterricht (nur für Förderschulkindergarten)
 	 */
-	public static readonly GU: Fach = new Fach("GU", 84);
+	public static readonly GU: Fach = new Fach("GU", 86);
 
 	/**
 	 * Fach Geschichte und Sozialwissenschaft
 	 */
-	public static readonly GW: Fach = new Fach("GW", 85);
+	public static readonly GW: Fach = new Fach("GW", 87);
+
+	/**
+	 * Fach Sonderpädagogische Förderung im Rahmen des gemeinsamen Unterrichts
+	 */
+	public static readonly GX: Fach = new Fach("GX", 88);
 
 	/**
 	 * Fach Hebräisch
 	 */
-	public static readonly H: Fach = new Fach("H", 86);
+	public static readonly H: Fach = new Fach("H", 89);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly H0: Fach = new Fach("H0", 87);
+	public static readonly H0: Fach = new Fach("H0", 90);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly H1: Fach = new Fach("H1", 88);
+	public static readonly H1: Fach = new Fach("H1", 91);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly H5: Fach = new Fach("H5", 89);
+	public static readonly H5: Fach = new Fach("H5", 92);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly H6: Fach = new Fach("H6", 90);
+	public static readonly H6: Fach = new Fach("H6", 93);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly H7: Fach = new Fach("H7", 91);
+	public static readonly H7: Fach = new Fach("H7", 94);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly H8: Fach = new Fach("H8", 92);
+	public static readonly H8: Fach = new Fach("H8", 95);
 
 	/**
 	 * Fach Hebräisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly H9: Fach = new Fach("H9", 93);
+	public static readonly H9: Fach = new Fach("H9", 96);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Kroatisch
 	 */
-	public static readonly HH: Fach = new Fach("HH", 94);
+	public static readonly HH: Fach = new Fach("HH", 97);
 
 	/**
 	 * Fach Hebräisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly HQ: Fach = new Fach("HQ", 95);
+	public static readonly HQ: Fach = new Fach("HQ", 98);
 
 	/**
 	 * Fach Jüdische Religionslehre
 	 */
-	public static readonly HR: Fach = new Fach("HR", 96);
+	public static readonly HR: Fach = new Fach("HR", 99);
 
 	/**
 	 * Fach Hausunterricht
 	 */
-	public static readonly HU: Fach = new Fach("HU", 97);
+	public static readonly HU: Fach = new Fach("HU", 100);
 
 	/**
 	 * Fach Hauswirtschaft
 	 */
-	public static readonly HW: Fach = new Fach("HW", 98);
+	public static readonly HW: Fach = new Fach("HW", 101);
 
 	/**
 	 * Fach Hygiene
 	 */
-	public static readonly HY: Fach = new Fach("HY", 99);
+	public static readonly HY: Fach = new Fach("HY", 102);
 
 	/**
 	 * Fach Italienisch
 	 */
-	public static readonly I: Fach = new Fach("I", 100);
+	public static readonly I: Fach = new Fach("I", 103);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly I0: Fach = new Fach("I0", 101);
+	public static readonly I0: Fach = new Fach("I0", 104);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly I1: Fach = new Fach("I1", 102);
+	public static readonly I1: Fach = new Fach("I1", 105);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly I5: Fach = new Fach("I5", 103);
+	public static readonly I5: Fach = new Fach("I5", 106);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly I6: Fach = new Fach("I6", 104);
+	public static readonly I6: Fach = new Fach("I6", 107);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly I7: Fach = new Fach("I7", 105);
+	public static readonly I7: Fach = new Fach("I7", 108);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly I8: Fach = new Fach("I8", 106);
+	public static readonly I8: Fach = new Fach("I8", 109);
 
 	/**
 	 * Fach Italienisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly I9: Fach = new Fach("I9", 107);
+	public static readonly I9: Fach = new Fach("I9", 110);
 
 	/**
 	 * Fach Individuelles Lernen (Ergänzungsstunden, Ganztag- und Betreuungsangebote)
 	 */
-	public static readonly IE: Fach = new Fach("IE", 108);
+	public static readonly IE: Fach = new Fach("IE", 111);
 
 	/**
 	 * Fach Informatik
 	 */
-	public static readonly IF: Fach = new Fach("IF", 109);
+	public static readonly IF: Fach = new Fach("IF", 112);
 
 	/**
 	 * Fach Ingenieurwissenschaften / Ingenieurtechnik
 	 */
-	public static readonly IG: Fach = new Fach("IG", 110);
+	public static readonly IG: Fach = new Fach("IG", 113);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Italienisch
 	 */
-	public static readonly IH: Fach = new Fach("IH", 111);
+	public static readonly IH: Fach = new Fach("IH", 114);
 
 	/**
 	 * Fach Individuelles Lernen (dem Kernstundenkontingent entnommen)
 	 */
-	public static readonly IK: Fach = new Fach("IK", 112);
+	public static readonly IK: Fach = new Fach("IK", 115);
 
 	/**
 	 * Fach Islamische Religionslehre
 	 */
-	public static readonly IL: Fach = new Fach("IL", 113);
+	public static readonly IL: Fach = new Fach("IL", 116);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Italienisch
 	 */
-	public static readonly IM: Fach = new Fach("IM", 114);
+	public static readonly IM: Fach = new Fach("IM", 117);
 
 	/**
 	 * Fach Instrumentalpraktischer Grundkurs
 	 */
-	public static readonly IN: Fach = new Fach("IN", 115);
+	public static readonly IN: Fach = new Fach("IN", 118);
 
 	/**
 	 * Fach Italienisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly IQ: Fach = new Fach("IQ", 116);
+	public static readonly IQ: Fach = new Fach("IQ", 119);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Niederländisch
 	 */
-	public static readonly JH: Fach = new Fach("JH", 117);
+	public static readonly JH: Fach = new Fach("JH", 120);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Japanisch
 	 */
-	public static readonly JM: Fach = new Fach("JM", 118);
+	public static readonly JM: Fach = new Fach("JM", 121);
 
 	/**
 	 * Fach Japanisch
 	 */
-	public static readonly K: Fach = new Fach("K", 119);
+	public static readonly K: Fach = new Fach("K", 122);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly K0: Fach = new Fach("K0", 120);
+	public static readonly K0: Fach = new Fach("K0", 123);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly K1: Fach = new Fach("K1", 121);
+	public static readonly K1: Fach = new Fach("K1", 124);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly K5: Fach = new Fach("K5", 122);
+	public static readonly K5: Fach = new Fach("K5", 125);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly K6: Fach = new Fach("K6", 123);
+	public static readonly K6: Fach = new Fach("K6", 126);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly K7: Fach = new Fach("K7", 124);
+	public static readonly K7: Fach = new Fach("K7", 127);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly K8: Fach = new Fach("K8", 125);
+	public static readonly K8: Fach = new Fach("K8", 128);
 
 	/**
 	 * Fach Japanisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly K9: Fach = new Fach("K9", 126);
+	public static readonly K9: Fach = new Fach("K9", 129);
 
 	/**
 	 * Fach Katholische Religionslehre (konfessionell kooperativ)
 	 */
-	public static readonly KN: Fach = new Fach("KN", 127);
+	public static readonly KN: Fach = new Fach("KN", 130);
 
 	/**
 	 * Fach Kommunikation
 	 */
-	public static readonly KO: Fach = new Fach("KO", 128);
+	public static readonly KO: Fach = new Fach("KO", 131);
 
 	/**
 	 * Fach Japanisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly KQ: Fach = new Fach("KQ", 129);
+	public static readonly KQ: Fach = new Fach("KQ", 132);
 
 	/**
 	 * Fach Katholische Religionslehre
 	 */
-	public static readonly KR: Fach = new Fach("KR", 130);
+	public static readonly KR: Fach = new Fach("KR", 133);
 
 	/**
 	 * Fach Kurzschrift
 	 */
-	public static readonly KS: Fach = new Fach("KS", 131);
+	public static readonly KS: Fach = new Fach("KS", 134);
 
 	/**
 	 * Fach Kunst
 	 */
-	public static readonly KU: Fach = new Fach("KU", 132);
+	public static readonly KU: Fach = new Fach("KU", 135);
 
 	/**
 	 * Fach Lateinisch
 	 */
-	public static readonly L: Fach = new Fach("L", 133);
+	public static readonly L: Fach = new Fach("L", 136);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly L0: Fach = new Fach("L0", 134);
+	public static readonly L0: Fach = new Fach("L0", 137);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly L1: Fach = new Fach("L1", 135);
+	public static readonly L1: Fach = new Fach("L1", 138);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly L5: Fach = new Fach("L5", 136);
+	public static readonly L5: Fach = new Fach("L5", 139);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly L6: Fach = new Fach("L6", 137);
+	public static readonly L6: Fach = new Fach("L6", 140);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly L7: Fach = new Fach("L7", 138);
+	public static readonly L7: Fach = new Fach("L7", 141);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly L8: Fach = new Fach("L8", 139);
+	public static readonly L8: Fach = new Fach("L8", 142);
 
 	/**
 	 * Fach Lateinisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly L9: Fach = new Fach("L9", 140);
+	public static readonly L9: Fach = new Fach("L9", 143);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Albanisch
 	 */
-	public static readonly LH: Fach = new Fach("LH", 141);
+	public static readonly LH: Fach = new Fach("LH", 144);
 
 	/**
 	 * Fach Literatur
 	 */
-	public static readonly LI: Fach = new Fach("LI", 142);
+	public static readonly LI: Fach = new Fach("LI", 145);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Albanisch
 	 */
-	public static readonly LM: Fach = new Fach("LM", 143);
+	public static readonly LM: Fach = new Fach("LM", 146);
 
 	/**
 	 * Fach Lateinisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly LQ: Fach = new Fach("LQ", 144);
+	public static readonly LQ: Fach = new Fach("LQ", 147);
 
 	/**
 	 * Fach Mathematik
 	 */
-	public static readonly M: Fach = new Fach("M", 145);
+	public static readonly M: Fach = new Fach("M", 148);
 
 	/**
 	 * Fach Religionsunterricht der mennonitischen Brüdergemeinden in NRW als Schulversuch
 	 */
-	public static readonly MB: Fach = new Fach("MB", 146);
+	public static readonly MB: Fach = new Fach("MB", 149);
 
 	/**
 	 * Fach Medienerziehung
 	 */
-	public static readonly MD: Fach = new Fach("MD", 147);
+	public static readonly MD: Fach = new Fach("MD", 150);
 
 	/**
 	 * Fach Mechanik
 	 */
-	public static readonly ME: Fach = new Fach("ME", 148);
+	public static readonly ME: Fach = new Fach("ME", 151);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Mazedonisch
 	 */
-	public static readonly MH: Fach = new Fach("MH", 149);
+	public static readonly MH: Fach = new Fach("MH", 152);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Mazedonisch
 	 */
-	public static readonly MM: Fach = new Fach("MM", 150);
+	public static readonly MM: Fach = new Fach("MM", 153);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Ungarisch
 	 */
-	public static readonly MN: Fach = new Fach("MN", 151);
+	public static readonly MN: Fach = new Fach("MN", 154);
 
 	/**
 	 * Fach Meß- und Prüftechnik
 	 */
-	public static readonly MP: Fach = new Fach("MP", 152);
+	public static readonly MP: Fach = new Fach("MP", 155);
 
 	/**
 	 * Fach Musik
 	 */
-	public static readonly MU: Fach = new Fach("MU", 153);
+	public static readonly MU: Fach = new Fach("MU", 156);
 
 	/**
 	 * Fach Methodik des wissenschaftl. orientierten Arbeitens
 	 */
-	public static readonly MW: Fach = new Fach("MW", 154);
+	public static readonly MW: Fach = new Fach("MW", 157);
 
 	/**
 	 * Fach Spezielle sonderpädagogische Maßnahme
 	 */
-	public static readonly MX: Fach = new Fach("MX", 155);
+	public static readonly MX: Fach = new Fach("MX", 158);
 
 	/**
 	 * Fach Fächerübergreifender Unterricht in SI und SII (Berufspraxisstufe)
 	 */
-	public static readonly MY: Fach = new Fach("MY", 156);
+	public static readonly MY: Fach = new Fach("MY", 159);
 
 	/**
 	 * Fach Niederländisch
 	 */
-	public static readonly N: Fach = new Fach("N", 157);
+	public static readonly N: Fach = new Fach("N", 160);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly N0: Fach = new Fach("N0", 158);
+	public static readonly N0: Fach = new Fach("N0", 161);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly N1: Fach = new Fach("N1", 159);
+	public static readonly N1: Fach = new Fach("N1", 162);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly N5: Fach = new Fach("N5", 160);
+	public static readonly N5: Fach = new Fach("N5", 163);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly N6: Fach = new Fach("N6", 161);
+	public static readonly N6: Fach = new Fach("N6", 164);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly N7: Fach = new Fach("N7", 162);
+	public static readonly N7: Fach = new Fach("N7", 165);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly N8: Fach = new Fach("N8", 163);
+	public static readonly N8: Fach = new Fach("N8", 166);
 
 	/**
 	 * Fach Niederländisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly N9: Fach = new Fach("N9", 164);
+	public static readonly N9: Fach = new Fach("N9", 167);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Polnisch
 	 */
-	public static readonly NH: Fach = new Fach("NH", 165);
+	public static readonly NH: Fach = new Fach("NH", 168);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Niederländisch
 	 */
-	public static readonly NM: Fach = new Fach("NM", 166);
+	public static readonly NM: Fach = new Fach("NM", 169);
 
 	/**
 	 * Fach Niederländisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly NQ: Fach = new Fach("NQ", 167);
+	public static readonly NQ: Fach = new Fach("NQ", 170);
 
 	/**
 	 * Fach Naturwissenschaften
 	 */
-	public static readonly NW: Fach = new Fach("NW", 168);
+	public static readonly NW: Fach = new Fach("NW", 171);
 
 	/**
 	 * Fach Portugiesisch
 	 */
-	public static readonly O: Fach = new Fach("O", 169);
+	public static readonly O: Fach = new Fach("O", 172);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly O0: Fach = new Fach("O0", 170);
+	public static readonly O0: Fach = new Fach("O0", 173);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly O1: Fach = new Fach("O1", 171);
+	public static readonly O1: Fach = new Fach("O1", 174);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly O5: Fach = new Fach("O5", 172);
+	public static readonly O5: Fach = new Fach("O5", 175);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly O6: Fach = new Fach("O6", 173);
+	public static readonly O6: Fach = new Fach("O6", 176);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly O7: Fach = new Fach("O7", 174);
+	public static readonly O7: Fach = new Fach("O7", 177);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly O8: Fach = new Fach("O8", 175);
+	public static readonly O8: Fach = new Fach("O8", 178);
 
 	/**
 	 * Fach Portugiesisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly O9: Fach = new Fach("O9", 176);
+	public static readonly O9: Fach = new Fach("O9", 179);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Portugiesisch
 	 */
-	public static readonly OH: Fach = new Fach("OH", 177);
+	public static readonly OH: Fach = new Fach("OH", 180);
 
 	/**
 	 * Fach Organisationslehre/Büroorganisation
 	 */
-	public static readonly OL: Fach = new Fach("OL", 178);
+	public static readonly OL: Fach = new Fach("OL", 181);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Portugiesisch
 	 */
-	public static readonly OM: Fach = new Fach("OM", 179);
+	public static readonly OM: Fach = new Fach("OM", 182);
 
 	/**
 	 * Fach Portugiesisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly OQ: Fach = new Fach("OQ", 180);
+	public static readonly OQ: Fach = new Fach("OQ", 183);
 
 	/**
 	 * Fach Orthodoxe Religionslehre
 	 */
-	public static readonly OR: Fach = new Fach("OR", 181);
+	public static readonly OR: Fach = new Fach("OR", 184);
 
 	/**
 	 * Fach Pädagogik/ Erziehungswissenschaft
 	 */
-	public static readonly PA: Fach = new Fach("PA", 182);
+	public static readonly PA: Fach = new Fach("PA", 185);
 
 	/**
 	 * Fach Physik
 	 */
-	public static readonly PH: Fach = new Fach("PH", 183);
+	public static readonly PH: Fach = new Fach("PH", 186);
 
 	/**
 	 * Fach Politik
 	 */
-	public static readonly PK: Fach = new Fach("PK", 184);
+	public static readonly PK: Fach = new Fach("PK", 187);
 
 	/**
 	 * Fach Philosophie
 	 */
-	public static readonly PL: Fach = new Fach("PL", 185);
+	public static readonly PL: Fach = new Fach("PL", 188);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Polnisch
 	 */
-	public static readonly PM: Fach = new Fach("PM", 186);
+	public static readonly PM: Fach = new Fach("PM", 189);
 
 	/**
 	 * Fach Praktische Philosophie
 	 */
-	public static readonly PP: Fach = new Fach("PP", 187);
+	public static readonly PP: Fach = new Fach("PP", 190);
 
 	/**
 	 * Fach Psychologie
 	 */
-	public static readonly PS: Fach = new Fach("PS", 188);
+	public static readonly PS: Fach = new Fach("PS", 191);
 
 	/**
 	 * Fach Fachübergreifender Unterricht
 	 */
-	public static readonly PU: Fach = new Fach("PU", 189);
+	public static readonly PU: Fach = new Fach("PU", 192);
 
 	/**
 	 * Fach Personalwirtschaft und Soziologie/Politik
 	 */
-	public static readonly PW: Fach = new Fach("PW", 190);
+	public static readonly PW: Fach = new Fach("PW", 193);
 
 	/**
 	 * Fach Projektkurs (mit einem oder zwei Leitfächern)
 	 */
-	public static readonly PX: Fach = new Fach("PX", 191);
+	public static readonly PX: Fach = new Fach("PX", 194);
 
 	/**
 	 * Fach Politik/Ökonomische Grundbildung
 	 */
-	public static readonly POE: Fach = new Fach("POE", 192);
+	public static readonly POE: Fach = new Fach("POE", 195);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Farsi
 	 */
-	public static readonly QH: Fach = new Fach("QH", 193);
+	public static readonly QH: Fach = new Fach("QH", 196);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Farsi
 	 */
-	public static readonly QM: Fach = new Fach("QM", 194);
+	public static readonly QM: Fach = new Fach("QM", 197);
 
 	/**
 	 * Fach Russisch
 	 */
-	public static readonly R: Fach = new Fach("R", 195);
+	public static readonly R: Fach = new Fach("R", 198);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly R0: Fach = new Fach("R0", 196);
+	public static readonly R0: Fach = new Fach("R0", 199);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly R1: Fach = new Fach("R1", 197);
+	public static readonly R1: Fach = new Fach("R1", 200);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly R5: Fach = new Fach("R5", 198);
+	public static readonly R5: Fach = new Fach("R5", 201);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly R6: Fach = new Fach("R6", 199);
+	public static readonly R6: Fach = new Fach("R6", 202);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly R7: Fach = new Fach("R7", 200);
+	public static readonly R7: Fach = new Fach("R7", 203);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly R8: Fach = new Fach("R8", 201);
+	public static readonly R8: Fach = new Fach("R8", 204);
 
 	/**
 	 * Fach Russisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly R9: Fach = new Fach("R9", 202);
+	public static readonly R9: Fach = new Fach("R9", 205);
 
 	/**
 	 * Fach Rechnungswesen
 	 */
-	public static readonly RE: Fach = new Fach("RE", 203);
+	public static readonly RE: Fach = new Fach("RE", 206);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Russisch
 	 */
-	public static readonly RH: Fach = new Fach("RH", 204);
+	public static readonly RH: Fach = new Fach("RH", 207);
 
 	/**
 	 * Fach Rechtskunde
 	 */
-	public static readonly RK: Fach = new Fach("RK", 205);
+	public static readonly RK: Fach = new Fach("RK", 208);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Russisch
 	 */
-	public static readonly RM: Fach = new Fach("RM", 206);
+	public static readonly RM: Fach = new Fach("RM", 209);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Romanes
 	 */
-	public static readonly RN: Fach = new Fach("RN", 207);
+	public static readonly RN: Fach = new Fach("RN", 210);
 
 	/**
 	 * Fach Russisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly RQ: Fach = new Fach("RQ", 208);
+	public static readonly RQ: Fach = new Fach("RQ", 211);
 
 	/**
 	 * Fach Recht und Verwaltung
 	 */
-	public static readonly RW: Fach = new Fach("RW", 209);
+	public static readonly RW: Fach = new Fach("RW", 212);
 
 	/**
 	 * Fach Spanisch
 	 */
-	public static readonly S: Fach = new Fach("S", 210);
+	public static readonly S: Fach = new Fach("S", 213);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly S0: Fach = new Fach("S0", 211);
+	public static readonly S0: Fach = new Fach("S0", 214);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly S1: Fach = new Fach("S1", 212);
+	public static readonly S1: Fach = new Fach("S1", 215);
 
 	/**
 	 * Fach Sport für Jungen
 	 */
-	public static readonly S3: Fach = new Fach("S3", 213);
+	public static readonly S3: Fach = new Fach("S3", 216);
 
 	/**
 	 * Fach Sport für Mädchen
 	 */
-	public static readonly S4: Fach = new Fach("S4", 214);
+	public static readonly S4: Fach = new Fach("S4", 217);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly S5: Fach = new Fach("S5", 215);
+	public static readonly S5: Fach = new Fach("S5", 218);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly S6: Fach = new Fach("S6", 216);
+	public static readonly S6: Fach = new Fach("S6", 219);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly S7: Fach = new Fach("S7", 217);
+	public static readonly S7: Fach = new Fach("S7", 220);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly S8: Fach = new Fach("S8", 218);
+	public static readonly S8: Fach = new Fach("S8", 221);
 
 	/**
 	 * Fach Spanisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly S9: Fach = new Fach("S9", 219);
+	public static readonly S9: Fach = new Fach("S9", 222);
 
 	/**
 	 * Fach Softwareentwicklung und -engineering
 	 */
-	public static readonly SE: Fach = new Fach("SE", 220);
+	public static readonly SE: Fach = new Fach("SE", 223);
 
 	/**
 	 * Fach sonderpädag. Förderung für Schüler/-innen mit sonderpädag. Förderbedarf
 	 */
-	public static readonly SG: Fach = new Fach("SG", 221);
+	public static readonly SG: Fach = new Fach("SG", 224);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Spanisch
 	 */
-	public static readonly SH: Fach = new Fach("SH", 222);
+	public static readonly SH: Fach = new Fach("SH", 225);
 
 	/**
 	 * Fach Spiel
 	 */
-	public static readonly SI: Fach = new Fach("SI", 223);
+	public static readonly SI: Fach = new Fach("SI", 226);
 
 	/**
 	 * Fach Soziologie
 	 */
-	public static readonly SL: Fach = new Fach("SL", 224);
+	public static readonly SL: Fach = new Fach("SL", 227);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Spanisch
 	 */
-	public static readonly SM: Fach = new Fach("SM", 225);
+	public static readonly SM: Fach = new Fach("SM", 228);
 
 	/**
 	 * Fach Sport
 	 */
-	public static readonly SP: Fach = new Fach("SP", 226);
+	public static readonly SP: Fach = new Fach("SP", 229);
 
 	/**
 	 * Fach Spanisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly SQ: Fach = new Fach("SQ", 227);
+	public static readonly SQ: Fach = new Fach("SQ", 230);
 
 	/**
 	 * Fach Sonstige Fremdsprachen
 	 */
-	public static readonly SR: Fach = new Fach("SR", 228);
+	public static readonly SR: Fach = new Fach("SR", 231);
 
 	/**
 	 * Fach Sachunterricht
 	 */
-	public static readonly SU: Fach = new Fach("SU", 229);
+	public static readonly SU: Fach = new Fach("SU", 232);
 
 	/**
 	 * Fach Sozialwissenschaften
 	 */
-	public static readonly SW: Fach = new Fach("SW", 230);
+	public static readonly SW: Fach = new Fach("SW", 233);
 
 	/**
 	 * Fach Sozialwissenschaften/Wirtschaft
 	 */
-	public static readonly SZ: Fach = new Fach("SZ", 231);
+	public static readonly SZ: Fach = new Fach("SZ", 234);
 
 	/**
 	 * Fach Türkisch
 	 */
-	public static readonly T: Fach = new Fach("T", 232);
+	public static readonly T: Fach = new Fach("T", 235);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly T0: Fach = new Fach("T0", 233);
+	public static readonly T0: Fach = new Fach("T0", 236);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly T1: Fach = new Fach("T1", 234);
+	public static readonly T1: Fach = new Fach("T1", 237);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly T5: Fach = new Fach("T5", 235);
+	public static readonly T5: Fach = new Fach("T5", 238);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly T6: Fach = new Fach("T6", 236);
+	public static readonly T6: Fach = new Fach("T6", 239);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly T7: Fach = new Fach("T7", 237);
+	public static readonly T7: Fach = new Fach("T7", 240);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly T8: Fach = new Fach("T8", 238);
+	public static readonly T8: Fach = new Fach("T8", 241);
 
 	/**
 	 * Fach Türkisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly T9: Fach = new Fach("T9", 239);
+	public static readonly T9: Fach = new Fach("T9", 242);
 
 	/**
 	 * Fach Technik
 	 */
-	public static readonly TC: Fach = new Fach("TC", 240);
+	public static readonly TC: Fach = new Fach("TC", 243);
 
 	/**
 	 * Fach Technische Grundbildung
 	 */
-	public static readonly TG: Fach = new Fach("TG", 241);
+	public static readonly TG: Fach = new Fach("TG", 244);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Türkisch
 	 */
-	public static readonly TH: Fach = new Fach("TH", 242);
+	public static readonly TH: Fach = new Fach("TH", 245);
 
 	/**
 	 * Fach Technische Informatik
 	 */
-	public static readonly TI: Fach = new Fach("TI", 243);
+	public static readonly TI: Fach = new Fach("TI", 246);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Türkisch
 	 */
-	public static readonly TM: Fach = new Fach("TM", 244);
+	public static readonly TM: Fach = new Fach("TM", 247);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Thai
 	 */
-	public static readonly TN: Fach = new Fach("TN", 245);
+	public static readonly TN: Fach = new Fach("TN", 248);
 
 	/**
 	 * Fach Türkisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly TQ: Fach = new Fach("TQ", 246);
+	public static readonly TQ: Fach = new Fach("TQ", 249);
 
 	/**
 	 * Fach Textverarbeitung
 	 */
-	public static readonly TV: Fach = new Fach("TV", 247);
+	public static readonly TV: Fach = new Fach("TV", 250);
 
 	/**
 	 * Fach Textilgestaltung
 	 */
-	public static readonly TX: Fach = new Fach("TX", 248);
+	public static readonly TX: Fach = new Fach("TX", 251);
 
 	/**
 	 * Fach Technisches Zeichnen / Fachzeichnen
 	 */
-	public static readonly TZ: Fach = new Fach("TZ", 249);
+	public static readonly TZ: Fach = new Fach("TZ", 252);
+
+	/**
+	 * Fach Rumänisch
+	 */
+	public static readonly U: Fach = new Fach("U", 253);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in der Einführungsphase
+	 */
+	public static readonly U0: Fach = new Fach("U0", 254);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 11
+	 */
+	public static readonly U1: Fach = new Fach("U1", 255);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 5
+	 */
+	public static readonly U5: Fach = new Fach("U5", 256);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 6
+	 */
+	public static readonly U6: Fach = new Fach("U6", 257);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 7
+	 */
+	public static readonly U7: Fach = new Fach("U7", 258);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 8
+	 */
+	public static readonly U8: Fach = new Fach("U8", 259);
+
+	/**
+	 * Fach Rumänisch, regulärer Beginn in Jahrgang 9
+	 */
+	public static readonly U9: Fach = new Fach("U9", 260);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Russisch
 	 */
-	public static readonly UH: Fach = new Fach("UH", 250);
+	public static readonly UH: Fach = new Fach("UH", 261);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Rumänisch
 	 */
-	public static readonly UM: Fach = new Fach("UM", 251);
+	public static readonly UM: Fach = new Fach("UM", 262);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Ukrainisch
 	 */
-	public static readonly UN: Fach = new Fach("UN", 252);
+	public static readonly UN: Fach = new Fach("UN", 263);
 
 	/**
 	 * Fach fächerübergreifender Unterricht (Sprache/Sachunt./Mathematik/Förderunt.)
 	 */
-	public static readonly UU: Fach = new Fach("UU", 253);
+	public static readonly UU: Fach = new Fach("UU", 264);
 
 	/**
 	 * Fach Unterweisung
 	 */
-	public static readonly UW: Fach = new Fach("UW", 254);
+	public static readonly UW: Fach = new Fach("UW", 265);
 
 	/**
 	 * Fach Verwaltungskunde
 	 */
-	public static readonly VE: Fach = new Fach("VE", 255);
+	public static readonly VE: Fach = new Fach("VE", 266);
 
 	/**
 	 * Fach Fächer im genehmigten Schulversuch und sonstige Fächer
 	 */
-	public static readonly VF: Fach = new Fach("VF", 256);
+	public static readonly VF: Fach = new Fach("VF", 267);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Bulgarisch
 	 */
-	public static readonly VH: Fach = new Fach("VH", 257);
+	public static readonly VH: Fach = new Fach("VH", 268);
 
 	/**
 	 * Fach Verkaufskunde
 	 */
-	public static readonly VK: Fach = new Fach("VK", 258);
+	public static readonly VK: Fach = new Fach("VK", 269);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Bulgarisch
 	 */
-	public static readonly VM: Fach = new Fach("VM", 259);
+	public static readonly VM: Fach = new Fach("VM", 270);
 
 	/**
 	 * Fach vokalpraktischer Grundkurs
 	 */
-	public static readonly VO: Fach = new Fach("VO", 260);
+	public static readonly VO: Fach = new Fach("VO", 271);
 
 	/**
 	 * Fach Volkswirtschaftslehre/Politik
 	 */
-	public static readonly VP: Fach = new Fach("VP", 261);
+	public static readonly VP: Fach = new Fach("VP", 272);
 
 	/**
 	 * Fach Verfahrenstechnik
 	 */
-	public static readonly VT: Fach = new Fach("VT", 262);
+	public static readonly VT: Fach = new Fach("VT", 273);
 
 	/**
 	 * Fach Volkswirtschaftslehre
 	 */
-	public static readonly VW: Fach = new Fach("VW", 263);
+	public static readonly VW: Fach = new Fach("VW", 274);
 
 	/**
 	 * Fach Vertiefungsfach
 	 */
-	public static readonly VX: Fach = new Fach("VX", 264);
+	public static readonly VX: Fach = new Fach("VX", 275);
 
 	/**
 	 * Fach Werken
 	 */
-	public static readonly W: Fach = new Fach("W", 265);
+	public static readonly W: Fach = new Fach("W", 276);
+
+	/**
+	 * Fach Wirtschaft und Arbeitswelt (nur Wahlpflichtunterricht) - Wirtschaft, Hauswirtschaft und Technik
+	 */
+	public static readonly WA: Fach = new Fach("WA", 277);
 
 	/**
 	 * Fach Wirtschaftsgeographie
 	 */
-	public static readonly WG: Fach = new Fach("WG", 266);
+	public static readonly WG: Fach = new Fach("WG", 278);
 
 	/**
 	 * Fach Wirtschaftsinformatik/Organisationslehre
 	 */
-	public static readonly WI: Fach = new Fach("WI", 267);
+	public static readonly WI: Fach = new Fach("WI", 279);
 
 	/**
 	 * Fach Wirtschaft-Politik
 	 */
-	public static readonly WP: Fach = new Fach("WP", 268);
+	public static readonly WP: Fach = new Fach("WP", 280);
 
 	/**
 	 * Fach Wirtschaftslehre
 	 */
-	public static readonly WW: Fach = new Fach("WW", 269);
+	public static readonly WW: Fach = new Fach("WW", 281);
 
 	/**
 	 * Fach Wirtschaft und Arbeitswelt - Schwerpunkt Hauswirtschaft
 	 */
-	public static readonly WX: Fach = new Fach("WX", 270);
+	public static readonly WX: Fach = new Fach("WX", 282);
 
 	/**
 	 * Fach Wirtschaft und Arbeitswelt - Schwerpunkt Technik
 	 */
-	public static readonly WY: Fach = new Fach("WY", 271);
+	public static readonly WY: Fach = new Fach("WY", 283);
 
 	/**
 	 * Fach Wirtschaft und Arbeitswelt - Schwerpunkt Wirtschaft
 	 */
-	public static readonly WZ: Fach = new Fach("WZ", 272);
+	public static readonly WZ: Fach = new Fach("WZ", 284);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - sonstige Sprache
 	 */
-	public static readonly XH: Fach = new Fach("XH", 273);
+	public static readonly XH: Fach = new Fach("XH", 285);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - sonstige Sprache
 	 */
-	public static readonly XM: Fach = new Fach("XM", 274);
+	public static readonly XM: Fach = new Fach("XM", 286);
 
 	/**
 	 * Fach Sonstige Fächer ohne Fremdsprachen (kein Import nach ASDPC)
 	 */
-	public static readonly XX: Fach = new Fach("XX", 275);
+	public static readonly XX: Fach = new Fach("XX", 287);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Koreanisch
 	 */
-	public static readonly YH: Fach = new Fach("YH", 276);
+	public static readonly YH: Fach = new Fach("YH", 288);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Koreanisch
 	 */
-	public static readonly YM: Fach = new Fach("YM", 277);
+	public static readonly YM: Fach = new Fach("YM", 289);
 
 	/**
 	 * Fach orthodoxe Religionslehre (Syrisch)
 	 */
-	public static readonly YR: Fach = new Fach("YR", 278);
+	public static readonly YR: Fach = new Fach("YR", 290);
 
 	/**
 	 * Fach Neugriechisch
 	 */
-	public static readonly Z: Fach = new Fach("Z", 279);
+	public static readonly Z: Fach = new Fach("Z", 291);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in der Einführungsphase
 	 */
-	public static readonly Z0: Fach = new Fach("Z0", 280);
+	public static readonly Z0: Fach = new Fach("Z0", 292);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 11
 	 */
-	public static readonly Z1: Fach = new Fach("Z1", 281);
+	public static readonly Z1: Fach = new Fach("Z1", 293);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 5
 	 */
-	public static readonly Z5: Fach = new Fach("Z5", 282);
+	public static readonly Z5: Fach = new Fach("Z5", 294);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 6
 	 */
-	public static readonly Z6: Fach = new Fach("Z6", 283);
+	public static readonly Z6: Fach = new Fach("Z6", 295);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 7
 	 */
-	public static readonly Z7: Fach = new Fach("Z7", 284);
+	public static readonly Z7: Fach = new Fach("Z7", 296);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 8
 	 */
-	public static readonly Z8: Fach = new Fach("Z8", 285);
+	public static readonly Z8: Fach = new Fach("Z8", 297);
 
 	/**
 	 * Fach Neugriechisch, regulärer Beginn in Jahrgang 9
 	 */
-	public static readonly Z9: Fach = new Fach("Z9", 286);
+	public static readonly Z9: Fach = new Fach("Z9", 298);
 
 	/**
 	 * Fach Zusätzliche Förderung
 	 */
-	public static readonly ZF: Fach = new Fach("ZF", 287);
+	public static readonly ZF: Fach = new Fach("ZF", 299);
 
 	/**
 	 * Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Kurdische Sprachen
 	 */
-	public static readonly ZH: Fach = new Fach("ZH", 288);
+	public static readonly ZH: Fach = new Fach("ZH", 300);
 
 	/**
 	 * Fach Unterricht in der Herkunftssprache - Kurdische Sprachen (Sorani, Komanci, Zaza)
 	 */
-	public static readonly ZM: Fach = new Fach("ZM", 289);
+	public static readonly ZM: Fach = new Fach("ZM", 301);
 
 	/**
 	 * Fach Neugriechisch, außerhalb des regulären Fachunterrichts
 	 */
-	public static readonly ZQ: Fach = new Fach("ZQ", 290);
+	public static readonly ZQ: Fach = new Fach("ZQ", 302);
 
 	/**
 	 * Fach Zeichnen / Werken
 	 */
-	public static readonly ZW: Fach = new Fach("ZW", 291);
+	public static readonly ZW: Fach = new Fach("ZW", 303);
 
 	/**
 	 * Eine Liste mit allen atomaren Kürzeln von Fremdsprachen
