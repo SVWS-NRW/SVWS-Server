@@ -137,6 +137,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Datenbanken */
 	DB,
 
+	/** Fach Deutsche Gebärdensprache */
+	DG,
+
 	/** Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Rumänisch */
 	DH,
 
@@ -215,6 +218,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Förderunterricht */
 	FU,
 
+	/** Fach Sonderpädagogische Förderung im Rahmen von sonderpädagogischen Fördergruppen */
+	FX,
+
 	/** Fach Griechisch */
 	G,
 
@@ -274,6 +280,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Geschichte und Sozialwissenschaft */
 	GW,
+
+	/** Fach Sonderpädagogische Förderung im Rahmen des gemeinsamen Unterrichts */
+	GX,
 
 	/** Fach Hebräisch */
 	H,
@@ -767,6 +776,30 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Technisches Zeichnen / Fachzeichnen */
 	TZ,
 
+	/** Fach Rumänisch */
+	U,
+
+	/** Fach Rumänisch, regulärer Beginn in der Einführungsphase */
+	U0,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 11 */
+	U1,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 5 */
+	U5,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 6 */
+	U6,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 7 */
+	U7,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 8 */
+	U8,
+
+	/** Fach Rumänisch, regulärer Beginn in Jahrgang 9 */
+	U9,
+
 	/** Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Russisch */
 	UH,
 
@@ -814,6 +847,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Werken */
 	W,
+
+	/** Fach Wirtschaft und Arbeitswelt (nur Wahlpflichtunterricht) - Wirtschaft, Hauswirtschaft und Technik */
+	WA,
 
 	/** Fach Wirtschaftsgeographie */
 	WG,

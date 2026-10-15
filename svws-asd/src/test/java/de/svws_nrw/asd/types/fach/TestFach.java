@@ -37,7 +37,7 @@ class TestFach {
 	@Test
 	@DisplayName("Teste CoreType Fach: Anzahl der vorhandenen Fächer.")
 	void testFach_AnzahlEintraege() {
-		assertEquals(292, Fach.data().getWerte().size());
+		assertEquals(304, Fach.data().getWerte().size());
 	}
 
 }
