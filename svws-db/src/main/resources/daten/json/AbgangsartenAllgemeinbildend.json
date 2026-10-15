@@ -76,7 +76,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["09","10"] },
 				{ "schulform": "SR", "jahrgaenge": ["09"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10"] },
-				{ "schulform": "WB", "jahrgaenge": ["R1","R2","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R1","R2","S2","S3"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": 2022,
@@ -172,7 +172,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10"] },
-				{ "schulform": "WB", "jahrgaenge": ["R2","R3","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R2","R3","R4","S2","S3"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": 2022,
@@ -200,7 +200,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10"] },
-				{ "schulform": "WB", "jahrgaenge": ["R4","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R4","S3"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
@@ -219,7 +219,7 @@
 				{ "schulform": "GY", "jahrgaenge": ["Q1","Q2"] },
 				{ "schulform": "SB", "jahrgaenge": ["01","02","03"] },
 				{ "schulform": "SG", "jahrgaenge": ["Q1","Q2"] },
-				{ "schulform": "WB", "jahrgaenge": ["S4","S5"] },
+				{ "schulform": "WB", "jahrgaenge": ["S4","S5","S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
 			],
 			"gueltigVon": null,
@@ -276,7 +276,7 @@
 				{ "schulform": "SK", "jahrgaenge": ["10"] },
 				{ "schulform": "SR", "jahrgaenge": ["10"] },
 				{ "schulform": "V", "jahrgaenge": ["10"] },
-				{ "schulform": "WB", "jahrgaenge": ["R4","S2"] },
+				{ "schulform": "WB", "jahrgaenge": ["R4","S3","S4","S5","S6"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
