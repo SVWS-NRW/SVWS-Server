@@ -9,7 +9,7 @@ test.use({
 
 const targetHost = frontendURL;
 
-test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page }) => {
+test('Admins können entsprechende Schüler Tabs im DEV Mode einsehen', async ({ page }) => {
 	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 
@@ -123,7 +123,7 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page
 	await expect(page.getByText('Stundenplan 2. Halbjahr')).toBeVisible();
 });
 
-test('Admins können entsprechende Bereiche bei den Lehrern im DEV Mode sehen', async ({ page }) => {
+test('Admins können entsprechende Lehrer Tabs im DEV Mode sehen', async ({ page }) => {
 	const { loginAdmin } = useLoginUtilsClient(targetHost, page);
 	await loginAdmin();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();

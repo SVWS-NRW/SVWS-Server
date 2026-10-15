@@ -8,7 +8,7 @@ test.use({
 
 const targetHost = frontendURL;
 
-test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode einsehen', async ({ page }) => {
+test('Nicht privilegierte Nutzer können nur entsprechende Schüler Tabs im DEV Mode einsehen', async ({ page }) => {
 	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 
@@ -105,7 +105,7 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode 
 
 });
 
-test('Nicht privilegierte Nutzer können nur entsprechende Bereiche bei den Lehrern im DEV Mode sehen', async ({ page }) => {
+test('Nicht privilegierte Nutzer können nur entsprechende Lehrern Tabs im DEV Mode sehen', async ({ page }) => {
 	const { loginBISZ } = useLoginUtilsClient(targetHost, page);
 	await loginBISZ();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();

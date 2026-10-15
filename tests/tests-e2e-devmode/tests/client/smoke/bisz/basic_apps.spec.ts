@@ -8,7 +8,7 @@ test.use({
 
 const targetHost = frontendURL;
 
-test('Smoke-Test - Basic', async ({ page }) => {
+test('Alle Apps — Sidebar-Navigation Komplett @smoke', async ({ page }) => {
 	const { loginBISZ, logout } = useLoginUtilsClient(targetHost, page);
 
 	await loginBISZ();

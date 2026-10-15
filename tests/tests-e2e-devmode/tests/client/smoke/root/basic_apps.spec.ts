@@ -7,7 +7,7 @@ test.use({
 
 const targetHost = frontendURL;
 
-test('Smoke-Test - Basic', async ({ page }) => {
+test('Alle Apps — Sidebar-Navigation Komplett @smoke', async ({ page }) => {
 	await page.goto(targetHost);
 	await page.waitForURL(/#\/login(\/[^?]*)?\?redirect=\/.*/, { timeout: 20_000 });
 	await page.getByLabel('Benutzername').click();
