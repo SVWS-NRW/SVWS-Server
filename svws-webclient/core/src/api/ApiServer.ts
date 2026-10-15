@@ -207,6 +207,7 @@ import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SchulwechselAbgang } from '../core/data/schule/SchulwechselAbgang';
 import { SchulwechselDokument } from '../core/data/schule/SchulwechselDokument';
+import { SchulwechselErfolgreicheBewerbung } from '../core/data/schule/SchulwechselErfolgreicheBewerbung';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SMTPServerKonfiguration } from '../core/data/email/SMTPServerKonfiguration';
 import { Sprachbelegung } from '../asd/data/schueler/Sprachbelegung';
@@ -19733,22 +19734,22 @@ export class ApiServer extends BaseApi {
 	 * Erstellt einen Wechselvorgang für den Abgang eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu erstellen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Wechselvorgang wurde erfolgreich erstellt.
+	 *   Code 201: Wechselvorgang wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: String
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
 	 *
-	 * @param {SchulwechselAbgang} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<SchulwechselAbgang>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Wechselvorgang wurde erfolgreich erstellt.
 	 */
-	public async createSchulwechselAbgang(data: SchulwechselAbgang, schema: string): Promise<string> {
+	public async createSchulwechselAbgang(data: Partial<SchulwechselAbgang>, schema: string): Promise<string> {
 		const path = "/db/{schema}/schulwechsel/abgaenge/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = SchulwechselAbgang.transpilerToJSON(data);
+		const body: string = SchulwechselAbgang.transpilerToJSONPatch(data);
 		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return JSON.parse(text).toString();
@@ -19849,22 +19850,22 @@ export class ApiServer extends BaseApi {
 	 * Erstellt ein Wechseldokument für den Wechselvorgang eines Schülers. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechseldokumente zu erstellen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Wechseldokument wurde erfolgreich erstellt.
+	 *   Code 201: Wechseldokument wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchulwechselDokument
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente zu erstellen.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
 	 *
-	 * @param {SchulwechselDokument} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<SchulwechselDokument>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Wechseldokument wurde erfolgreich erstellt.
 	 */
-	public async createSchulwechselDokument(data: SchulwechselDokument, schema: string): Promise<SchulwechselDokument> {
+	public async createSchulwechselDokument(data: Partial<SchulwechselDokument>, schema: string): Promise<SchulwechselDokument> {
 		const path = "/db/{schema}/schulwechsel/dokumente/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = SchulwechselDokument.transpilerToJSON(data);
+		const body: string = SchulwechselDokument.transpilerToJSONPatch(data);
 		const result: string = await super.postJSON(path, body);
 		const text = result;
 		return SchulwechselDokument.transpilerFromJSON(text);
@@ -19954,6 +19955,198 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body: string = SchulwechselDokument.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselErfolgreicheBewerbungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/
+	 *
+	 * Erstellt eine Liste aller erfolgreichen Bewerbungen und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste aller erfolgreichen Bewerbungen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulwechselErfolgreicheBewerbung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Liste aller erfolgreichen Bewerbungen.
+	 */
+	public async getSchulwechselErfolgreicheBewerbungen(schema: string): Promise<List<SchulwechselErfolgreicheBewerbung>> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulwechselErfolgreicheBewerbung>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulwechselErfolgreicheBewerbung.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createSchulwechselErfolgreicheBewerbung für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/
+	 *
+	 * Erstellt eine neue erfolgreiche Bewerbung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu erstellen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die erfolgreiche Bewerbung wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselErfolgreicheBewerbung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchulwechselErfolgreicheBewerbung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erfolgreiche Bewerbung wurde erfolgreich erstellt.
+	 */
+	public async createSchulwechselErfolgreicheBewerbung(data: Partial<SchulwechselErfolgreicheBewerbung>, schema: string): Promise<SchulwechselErfolgreicheBewerbung> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = SchulwechselErfolgreicheBewerbung.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return SchulwechselErfolgreicheBewerbung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulwechselErfolgreicheBewerbungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/
+	 *
+	 * Entfernt die erfolgreichen Bewerbungen mit den übergebenen IDs. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu entfernen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die erfolgreichen Bewerbungen wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat nicht die erforderlichen Rechte, um Wechselvorgänge zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die erfolgreichen Bewerbungen wurden erfolgreich entfernt.
+	 */
+	public async deleteSchulwechselErfolgreicheBewerbungen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselErfolgreicheBewerbung für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/{id : \d+}
+	 *
+	 * Liest die Daten der erfolgreichen Bewerbung zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die erfolgreiche Bewerbung mit der übergebenen ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselErfolgreicheBewerbung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.
+	 *   Code 404: Keine erfolgreiche Bewerbung mit der angegebenen ID gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die erfolgreiche Bewerbung mit der übergebenen ID.
+	 */
+	public async getSchulwechselErfolgreicheBewerbung(schema: string, id: number): Promise<SchulwechselErfolgreicheBewerbung> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return SchulwechselErfolgreicheBewerbung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulwechselErfolgreicheBewerbung für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/{id : \d+}/
+	 *
+	 * Passt die Daten der erfolgreichen Bewerbung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Wechselvorgängen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulwechselErfolgreicheBewerbung
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu ändern.
+	 *   Code 404: Keine erfolgreiche Bewerbung mit der angegebenen ID gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchulwechselErfolgreicheBewerbung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
+	 */
+	public async patchSchulwechselErfolgreicheBewerbung(data: Partial<SchulwechselErfolgreicheBewerbung>, schema: string, id: number): Promise<SchulwechselErfolgreicheBewerbung> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/{id : \\d+}/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = SchulwechselErfolgreicheBewerbung.transpilerToJSONPatch(data);
+		const result: string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return SchulwechselErfolgreicheBewerbung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode syncSchulwechselErfolgreicheBewerbungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/sync
+	 *
+	 * Holt die Liste der erfolgreichen Bewerbungen vom Remote-Server und legt neue Einträge in der Datenbank an. Bereits vorhandene Einträge werden übersprungen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Synchronisation wurde erfolgreich durchgeführt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.
+	 *   Code 409: Eine erfolgreiche Bewerbung existiert bereits.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async syncSchulwechselErfolgreicheBewerbungen(schema: string): Promise<void> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/sync"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulwechselErfolgreicheBewerbungenSyncPreview für den Zugriff auf die URL https://{hostname}/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/sync/preview
+	 *
+	 * Ruft die Liste der erfolgreichen Bewerbungen vom Remote-Server ab und vergleicht sie mit den bereits in der Datenbank vorhandenen Einträgen. Legt keine neuen Einträge an.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Anzahl neuer erfolgreicher Bewerbungen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Integer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Anzahl neuer erfolgreicher Bewerbungen.
+	 */
+	public async getSchulwechselErfolgreicheBewerbungenSyncPreview(schema: string): Promise<number> {
+		const path = "/db/{schema}/schulwechsel/erfolgreiche-bewerbungen/sync/preview"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const text = result;
+		return Number.parseInt(JSON.parse(text));
 	}
 
 

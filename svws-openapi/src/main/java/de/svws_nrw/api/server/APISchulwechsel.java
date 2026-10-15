@@ -6,10 +6,13 @@ import de.svws_nrw.controller.schulwechsel.SchulwechselControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.SchulwechselAbgang;
 import de.svws_nrw.core.data.schule.SchulwechselDokument;
+import de.svws_nrw.core.data.schule.SchulwechselErfolgreicheBewerbung;
 import de.svws_nrw.service.schulwechsel.abgang.SchulwechselAbgangCreateRequest;
 import de.svws_nrw.service.schulwechsel.abgang.SchulwechselAbgangPatchRequest;
 import de.svws_nrw.service.schulwechsel.dokument.SchulwechselDokumentCreateRequest;
 import de.svws_nrw.service.schulwechsel.dokument.SchulwechselDokumentPatchRequest;
+import de.svws_nrw.service.schulwechsel.erfolgreiche_bewerbung.SchulwechselErfolgreicheBewerbungCreateRequest;
+import de.svws_nrw.service.schulwechsel.erfolgreiche_bewerbung.SchulwechselErfolgreicheBewerbungPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -102,7 +105,7 @@ public class APISchulwechsel {
 	@Operation(summary = "Erstellt einen Wechselvorgang für den Abgang eines Schülers",
 			description = "Erstellt einen Wechselvorgang für den Abgang eines Schülers."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu erstellen.")
-	@ApiResponse(responseCode = "200", description = "Wechselvorgang wurde erfolgreich erstellt.",
+	@ApiResponse(responseCode = "201", description = "Wechselvorgang wurde erfolgreich erstellt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft.")
@@ -240,7 +243,7 @@ public class APISchulwechsel {
 	@Operation(summary = "Erstellt ein Wechseldokument zum Wechselvorgang eines Schülers",
 			description = "Erstellt ein Wechseldokument für den Wechselvorgang eines Schülers. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechseldokumente zu erstellen.")
-	@ApiResponse(responseCode = "200", description = "Wechseldokument wurde erfolgreich erstellt.",
+	@ApiResponse(responseCode = "201", description = "Wechseldokument wurde erfolgreich erstellt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulwechselDokument.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechseldokumente zu erstellen.")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft.")
@@ -318,5 +321,193 @@ public class APISchulwechsel {
 		return SchulwechselControllerFactory.withDeleteAccess(request)
 				.getSchulwechselDokumentController()
 				.delete(ids);
+	}
+
+	/**
+	 *  * Die OpenAPI-Methode für die Abfrage aller erfolgreichen Bewerbungen.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der erfolgreichen Bewerbungen
+	 */
+	@GET
+	@Path("/erfolgreiche-bewerbungen/")
+	@Operation(summary = "Gibt eine Übersicht aller erfolgreichen Bewerbungen.",
+			description = "Erstellt eine Liste aller erfolgreichen Bewerbungen und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.")
+	@ApiResponse(responseCode = "200", description = "Die Liste aller erfolgreichen Bewerbungen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.")
+	public Response getSchulwechselErfolgreicheBewerbungen(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withReadAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.getAll();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer erfolgreichen Bewerbung anhand ihrer ID.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id      die Datenbank-ID zur Identifikation der erfolgreichen Bewerbung
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die erfolgreiche Bewerbung mit der übergebenen ID
+	 */
+	@GET
+	@Path("/erfolgreiche-bewerbungen/{id : \\d+}")
+	@Operation(summary = "Liefert zur übergebenen ID die zugehörige erfolgreiche Bewerbung.",
+			description = "Liest die Daten der erfolgreichen Bewerbung zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt, um Wechselvorgänge anzusehen.")
+	@ApiResponse(responseCode = "200", description = "Die erfolgreiche Bewerbung mit der übergebenen ID.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine erfolgreiche Bewerbung mit der angegebenen ID gefunden.")
+	public Response getSchulwechselErfolgreicheBewerbung(@PathParam("schema") final String schema,
+			@PathParam("id") final long id, @Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withReadAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.getById(id);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen erfolgreichen Bewerbung.
+	 *
+	 * @param schema  das Datenbankschema, in welchem die erfolgreiche Bewerbung erstellt wird
+	 * @param dto     das Request-Objekt mit den benötigten Informationen
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten erfolgreichen Bewerbung
+	 */
+	@POST
+	@Path("/erfolgreiche-bewerbungen/")
+	@Operation(summary = "Erstellt eine neue erfolgreiche Bewerbung.",
+			description = "Erstellt eine neue erfolgreiche Bewerbung. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu erstellen.")
+	@ApiResponse(responseCode = "201", description = "Die erfolgreiche Bewerbung wurde erfolgreich erstellt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response createSchulwechselErfolgreicheBewerbung(@PathParam("schema") final String schema,
+			@RequestBody(description = "Initiale Daten der erfolgreichen Bewerbung", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class)))
+			final SchulwechselErfolgreicheBewerbungCreateRequest dto,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withWriteAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.create(dto);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Ändern einer erfolgreichen Bewerbung.
+	 *
+	 * @param schema  das Datenbankschema, in welchem die erfolgreiche Bewerbung geändert wird
+	 * @param id      die Datenbank-ID zur Identifikation der erfolgreichen Bewerbung
+	 * @param dto     das partielle Update
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Änderungsoperation
+	 */
+	@PATCH
+	@Path("/erfolgreiche-bewerbungen/{id : \\d+}/")
+	@Operation(summary = "Passt die zur ID der erfolgreichen Bewerbung zugehörigen Daten an.",
+			description = "Passt die Daten der erfolgreichen Bewerbung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Wechselvorgängen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class)))
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine erfolgreiche Bewerbung mit der angegebenen ID gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response patchSchulwechselErfolgreicheBewerbung(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@RequestBody(description = "Der Patch für die erfolgreiche Bewerbung", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchulwechselErfolgreicheBewerbung.class)))
+			final SchulwechselErfolgreicheBewerbungPatchRequest dto,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withWriteAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.patch(id, dto);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer erfolgreicher Bewerbungen.
+	 *
+	 * @param schema  das Datenbankschema, aus welchem die erfolgreichen Bewerbungen entfernt werden
+	 * @param ids     die Datenbank-IDs der zu löschenden Einträge
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operation
+	 */
+	@DELETE
+	@Path("/erfolgreiche-bewerbungen/")
+	@Operation(summary = "Entfernt mehrere erfolgreiche Bewerbungen.",
+			description = "Entfernt die erfolgreichen Bewerbungen mit den übergebenen IDs. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung hat, um Wechselvorgänge zu entfernen.")
+	@ApiResponse(responseCode = "200", description = "Die erfolgreichen Bewerbungen wurden erfolgreich entfernt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat nicht die erforderlichen Rechte, um Wechselvorgänge zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response deleteSchulwechselErfolgreicheBewerbungen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden erfolgreichen Bewerbungen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+			final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withDeleteAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.delete(ids);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Vorschau neuer erfolgreicher Bewerbungen vom Remote-Server.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Anzahl neuer erfolgreicher Bewerbungen
+	 */
+	@GET
+	@Path("/erfolgreiche-bewerbungen/sync/preview")
+	@Operation(summary = "Prüft wie viele neue erfolgreiche Bewerbungen vom Remote-Server verfügbar sind.",
+			description = "Ruft die Liste der erfolgreichen Bewerbungen vom Remote-Server ab und vergleicht sie mit den bereits "
+					+ "in der Datenbank vorhandenen Einträgen. Legt keine neuen Einträge an.")
+	@ApiResponse(responseCode = "200", description = "Die Anzahl neuer erfolgreicher Bewerbungen.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Integer.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge anzusehen.")
+	public Response getSchulwechselErfolgreicheBewerbungenSyncPreview(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withReadAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.syncPreview();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Synchronisation erfolgreicher Bewerbungen vom Remote-Server.
+	 *
+	 * @param schema  das Datenbankschema, in welchem die Einträge angelegt werden
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Synchronisation
+	 */
+	@POST
+	@Path("/erfolgreiche-bewerbungen/sync")
+	@Operation(summary = "Synchronisiert erfolgreiche Bewerbungen vom Remote-Server.",
+			description = "Holt die Liste der erfolgreichen Bewerbungen vom Remote-Server und legt neue Einträge in der Datenbank an. "
+					+ "Bereits vorhandene Einträge werden übersprungen.")
+	@ApiResponse(responseCode = "204", description = "Die Synchronisation wurde erfolgreich durchgeführt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Wechselvorgänge zu erstellen.")
+	@ApiResponse(responseCode = "409", description = "Eine erfolgreiche Bewerbung existiert bereits.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response syncSchulwechselErfolgreicheBewerbungen(@PathParam("schema") final String schema,
+			@Context final HttpServletRequest request) {
+		return SchulwechselControllerFactory.withWriteAccess(request)
+				.getSchulwechselErfolgreicheBewerbungController()
+				.sync();
 	}
 }

@@ -59,6 +59,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:' + version);
+		project.dependencies.add('jackson', 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:' + version);
 	}
 
 

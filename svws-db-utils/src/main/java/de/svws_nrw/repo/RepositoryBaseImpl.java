@@ -169,6 +169,24 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 		return this.update(entities);
 	}
 
+	/**
+	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
+	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
+	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs
+	 * in derselben Reihenfolge wie bei der Eingabe.
+	 *
+	 * @param <C>        der Typ der List
+	 * @param entities   die zu persistierenden Datenbank-Entitäten
+	 *
+	 * @return die persistierten Datenbank-Entitäten in derselben Reihenfolge wie bei der Eingabe
+	 *
+	 * @throws RepositoryException im Fehlerfall
+	 */
+	@Override
+	public <C extends List<T>> C create(final C entities) throws RepositoryException {
+		return this.update(entities);
+	}
+
 
 	/**
 	 * Speichert bzw. aktualisiert die übergebene Datenbank-Entität.

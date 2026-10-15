@@ -66,6 +66,23 @@ public class SchulwechselDokumentService {
 		});
 	}
 
+	/**
+	 * Erstellt mehrere neue SchulwechselDokumente in einem Bulk-Insert.
+	 *
+	 * @param dtos die Daten für die neuen Dokumente
+	 * @return die erstellten Dokumente als API-Modelle, in derselben Reihenfolge wie die Eingabe
+	 */
+	public List<SchulwechselDokument> createAll(final List<SchulwechselDokumentCreateRequest> dtos) {
+		return TransactionSupport.transactional(() -> {
+			final var entities = dtos.stream()
+					.map(this.mapper::toDomain)
+					.toList();
+			final var created = this.repository.create(entities);
+			return created.stream()
+					.map(this.mapper::toApi)
+					.toList();
+		});
+	}
 
 	/**
 	 * Aktualisiert ein bestehendes SchulwechselDokument teilweise (PATCH).

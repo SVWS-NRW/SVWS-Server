@@ -15,9 +15,9 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	public static readonly WENOM: OAuthServiceDomain = new OAuthServiceDomain("WENOM", 0, "WENOM");
 
 	/**
-	 *  Schüler Online
+	 *  Schnittstelle schulbewerbung.de
 	 */
-	public static readonly SCHUELER_ONLINE: OAuthServiceDomain = new OAuthServiceDomain("SCHUELER_ONLINE", 1, "SCHUELER_ONLINE");
+	public static readonly SCHULBEWERBUNG: OAuthServiceDomain = new OAuthServiceDomain("SCHULBEWERBUNG", 1, "SCHULBEWERBUNG");
 
 	/**
 	 *  IT NRW
@@ -54,18 +54,18 @@ export class OAuthServiceDomain extends JavaEnum<OAuthServiceDomain> {
 	 * @return die OAuth Domaine
 	 */
 	public static getByDbValue(dbValue: string | null): OAuthServiceDomain | null {
-		let _sevar_238503942;
-		const _seexpr_238503942 = (dbValue);
-		if (_seexpr_238503942 === "WENOM") {
-			_sevar_238503942 = OAuthServiceDomain.WENOM;
-		} else if (_seexpr_238503942 === "SCHUELER_ONLINE") {
-			_sevar_238503942 = OAuthServiceDomain.SCHUELER_ONLINE;
-		} else if (_seexpr_238503942 === "IT_NRW") {
-			_sevar_238503942 = OAuthServiceDomain.IT_NRW;
+		let _sevar_39850074;
+		const _seexpr_39850074 = (dbValue);
+		if (_seexpr_39850074 === "WENOM") {
+			_sevar_39850074 = OAuthServiceDomain.WENOM;
+		} else if (_seexpr_39850074 === "SCHULBEWERBUNG") {
+			_sevar_39850074 = OAuthServiceDomain.SCHULBEWERBUNG;
+		} else if (_seexpr_39850074 === "IT_NRW") {
+			_sevar_39850074 = OAuthServiceDomain.IT_NRW;
 		} else {
-			_sevar_238503942 = null;
+			_sevar_39850074 = null;
 		}
-		return _sevar_238503942;
+		return _sevar_39850074;
 	}
 
 	/**

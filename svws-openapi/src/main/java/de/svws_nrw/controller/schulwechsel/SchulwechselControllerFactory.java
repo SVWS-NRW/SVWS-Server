@@ -2,6 +2,7 @@ package de.svws_nrw.controller.schulwechsel;
 
 import de.svws_nrw.controller.schulwechsel.abgang.SchulwechselAbgangControllerImpl;
 import de.svws_nrw.controller.schulwechsel.dokument.SchulwechselDokumentControllerImpl;
+import de.svws_nrw.controller.schulwechsel.erfolgreiche_bewerbung.SchulwechselErfolgreicheBewerbungControllerImpl;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -75,5 +76,14 @@ public final class SchulwechselControllerFactory {
 	 */
 	public SchulwechselDokumentControllerImpl getSchulwechselDokumentController() {
 		return new SchulwechselDokumentControllerImpl(this.serviceFactory.getSchulwechselDokumentService());
+	}
+
+	/**
+	 * Erstellt einen neuen {@link SchulwechselErfolgreicheBewerbungControllerImpl}.
+	 *
+	 * @return ein neuer Controller
+	 */
+	public SchulwechselErfolgreicheBewerbungControllerImpl getSchulwechselErfolgreicheBewerbungController() {
+		return new SchulwechselErfolgreicheBewerbungControllerImpl(this.serviceFactory.getSchulwechselErfolgreicheBewerbungService());
 	}
 }

@@ -11,9 +11,9 @@ public enum OAuthServiceDomain {
 	WENOM("WENOM"),
 
 	/**
-	 * Schüler Online
+	 * Schnittstelle schulbewerbung.de
 	 */
-	SCHUELER_ONLINE("SCHUELER_ONLINE"),
+	SCHULBEWERBUNG("SCHULBEWERBUNG"),
 	/**
 	 * IT NRW
 	 */
@@ -51,7 +51,7 @@ public enum OAuthServiceDomain {
 	public static OAuthServiceDomain getByDbValue(final String dbValue) {
 		return switch (dbValue) {
 			case "WENOM" -> OAuthServiceDomain.WENOM;
-			case "SCHUELER_ONLINE" -> OAuthServiceDomain.SCHUELER_ONLINE;
+			case "SCHULBEWERBUNG" -> OAuthServiceDomain.SCHULBEWERBUNG;
 			case "IT_NRW" -> OAuthServiceDomain.IT_NRW;
 			default -> null;
 		};

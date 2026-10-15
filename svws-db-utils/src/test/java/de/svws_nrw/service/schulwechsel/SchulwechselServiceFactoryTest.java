@@ -5,6 +5,7 @@ import de.svws_nrw.repo.schulwechsel.SchulwechselRepositoryFactory;
 import de.svws_nrw.repo.schulwechsel.abgang.SchulwechselAbgangRepository;
 import de.svws_nrw.repo.schulwechsel.dokument.SchulwechselDokumentRepository;
 import de.svws_nrw.service.schulwechsel.abgang.SchulwechselAbgangService;
+import de.svws_nrw.service.schulwechsel.client.SchulbewerbungClientFactory;
 import de.svws_nrw.service.schulwechsel.dokument.SchulwechselDokumentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,10 +28,13 @@ class SchulwechselServiceFactoryTest {
 	@Mock
 	private SchuelerRepositoryFactory schuelerRepoFactory;
 
+	@Mock
+	private SchulbewerbungClientFactory clientFactory;
+
 	@Test
 	@DisplayName("getNewInstance | Erfolg")
 	void getNewInstance_success() {
-		assertThat(SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory))
+		assertThat(SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory, clientFactory))
 				.isNotNull()
 				.isInstanceOf(SchulwechselServiceFactory.class);
 	}
@@ -39,7 +43,7 @@ class SchulwechselServiceFactoryTest {
 	@DisplayName("getSchulwechselAbgangService | Erfolg")
 	void getSchulwechselAbgangService_success() {
 		final var repository = mock(SchulwechselAbgangRepository.class);
-		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory);
+		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory, clientFactory);
 
 		when(repoFactory.getSchulwechselAbgangRepository()).thenReturn(repository);
 
@@ -54,7 +58,7 @@ class SchulwechselServiceFactoryTest {
 	@DisplayName("getSchulwechselAbgangService | Mehrfache Aufrufe erstellen neue Instanzen")
 	void getSchulwechselAbgangService_multipleCallsCreateNewInstances() {
 		final var repository = mock(SchulwechselAbgangRepository.class);
-		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory);
+		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory, clientFactory);
 
 		when(repoFactory.getSchulwechselAbgangRepository()).thenReturn(repository);
 
@@ -71,7 +75,7 @@ class SchulwechselServiceFactoryTest {
 	@DisplayName("getSchulwechselDokumentService | Erfolg")
 	void getSchulwechselDokumentService_success() {
 		final var repository = mock(SchulwechselDokumentRepository.class);
-		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory);
+		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory, clientFactory);
 
 		when(repoFactory.getSchulwechselDokumentRepository()).thenReturn(repository);
 
@@ -86,7 +90,7 @@ class SchulwechselServiceFactoryTest {
 	@DisplayName("getSchulwechselDokumentService | Mehrfache Aufrufe erstellen neue Instanzen")
 	void getSchulwechselDokumentService_multipleCallsCreateNewInstances() {
 		final var repository = mock(SchulwechselDokumentRepository.class);
-		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory);
+		final var factory = SchulwechselServiceFactory.getNewInstance(repoFactory, schuelerRepoFactory, clientFactory);
 
 		when(repoFactory.getSchulwechselDokumentRepository()).thenReturn(repository);
 

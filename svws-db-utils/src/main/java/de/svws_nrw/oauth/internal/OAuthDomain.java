@@ -4,8 +4,8 @@ public enum OAuthDomain {
 	/** Web Noten Manager */
 	WENOM,
 
-	/** Schüler Online */
-	SCHUELER_ONLINE,
+	/** Schnittstelle schulbewerbung.de */
+	SCHULBEWERBUNG,
 
 	/**
 	 * IT.NRW

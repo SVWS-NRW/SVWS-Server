@@ -7,7 +7,11 @@ public enum OAuthScope {
 	/**
 	 * Signierdienst
 	 */
-	IT_NRW_SIGNIER_DIENST("svwp:signierdienst");
+	IT_NRW_SIGNIER_DIENST("svwp:signierdienst"),
+	/**
+	 * Schnittstelle schulbewerbung.de
+	 */
+	SCHULBEWERBUNG("abgaenge erfolgreiche-bewerbungen");
 
 	private final String text;
 

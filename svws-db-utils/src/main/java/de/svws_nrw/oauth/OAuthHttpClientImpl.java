@@ -1,6 +1,5 @@
 package de.svws_nrw.oauth;
 
-import de.svws_nrw.oauth.internal.OAuthDomain;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.oauth.internal.AccessToken;
+import de.svws_nrw.oauth.internal.OAuthDomain;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.jetty.http.HttpHeader;
 
@@ -23,7 +23,7 @@ import org.eclipse.jetty.http.HttpHeader;
  */
 public final class OAuthHttpClientImpl implements OAuthHttpClient {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().findAndRegisterModules();
 
 	private final HttpClient delegate;
 	private final TokenProvider tokenProvider;

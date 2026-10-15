@@ -97,6 +97,19 @@ public interface RepositoryBase<T, P> {
 	<C extends Collection<T>> C create(C entities);
 
 	/**
+	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
+	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
+	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs
+	 * in derselben Reihenfolge wie bei der Eingabe.
+	 *
+	 * @param <C>        der Typ der List
+	 * @param entities   die zu persistierenden Datenbank-Entitäten
+	 *
+	 * @return die persistierten Datenbank-Entitäten
+	 */
+	<C extends List<T>> C create(C entities);
+
+	/**
 	 * Speichert bzw. aktualisiert die übergebene Datenbank-Entität.
 	 *
 	 * @param entity   die zu persistierende Datenbank-Entität
