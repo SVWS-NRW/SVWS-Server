@@ -124,6 +124,33 @@ public class BenutzerKompetenzService {
 	}
 
 	/**
+	 * Prüft, ob der Benutzer die Leistungsdaten der übergebenen Klassen ändern darf. Besitzt der Benutzer nur die
+	 * funktionsbezogene Kompetenz, so muss er für jede der Klassen zuständig sein (z.B. als Klassenlehrer). Ist dies
+	 * nicht der Fall, so wird eine {@link ApiOperationException} mit dem Status FORBIDDEN erzeugt.
+	 *
+	 * @param idsKlassen die IDs der Klassen, für welche die Kompetenz geprüft werden soll
+	 *
+	 * @throws ApiOperationException wenn der Benutzer keine Kompetenz für eine der Klassen besitzt
+	 */
+	public void pruefeKompetenzLeistungsdatenAendernKlassen(final Long... idsKlassen) throws ApiOperationException {
+		if (!hatBenutzerNurFunktionsbezogeneKompetenz(Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN),
+				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
+			return;
+		}
+		final Set<Long> klassenDesBenutzers = benutzerRepository.getAktuellerBenutzer().getKlassenIDs();
+		for (final Long idKlasse : idsKlassen) {
+			if (idKlasse == null) {
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
+			}
+			if (!klassenDesBenutzers.contains(idKlasse)) {
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse mit der ID %d.".formatted(idKlasse));
+			}
+		}
+	}
+
+	/**
 	 * Prüft, ob der aktuelle Benutzer die übergebene Kompetenz hat.
 	 *
 	 * @param kompetenz die zu prüfende Kompetenz

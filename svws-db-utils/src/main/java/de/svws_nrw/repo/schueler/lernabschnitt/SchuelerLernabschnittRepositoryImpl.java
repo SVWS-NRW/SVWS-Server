@@ -37,6 +37,25 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	}
 
 	@Override
+	public List<DTOSchuelerLernabschnittsdaten> findListBySchuelerAndSchuljahresabschnitt(final long idSchueler,
+			final long idSchuljahresabschnitt) {
+		return conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID",
+				DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt);
+	}
+
+	@Override
+	public List<DTOSchuelerLernabschnittsdaten> findListBySchuelerIDs(final Collection<Long> idsSchueler) {
+		if ((idsSchueler == null) || idsSchueler.isEmpty()) {
+			return Collections.emptyList();
+		}
+		return conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 "
+						+ "ORDER BY e.Schueler_ID, e.Schuljahresabschnitts_ID, e.WechselNr",
+				DTOSchuelerLernabschnittsdaten.class, idsSchueler);
+	}
+
+	@Override
 	public Map<Long, List<Long>> getMapKlassenSchueler(final Collection<Long> idsKlassen) {
 		if ((idsKlassen == null) || (idsKlassen.isEmpty())) {
 			return Collections.emptyMap();

@@ -43,7 +43,6 @@ import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
@@ -56,6 +55,8 @@ import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
@@ -276,7 +277,7 @@ public class APISchueler {
 					final var schuelerServiceFactory = SchuelerServiceFactory.getNewInstance();
 					final var schuelerstammdatenService = schuelerServiceFactory.getSchuelerStammdatenService();
 					final var schulbesuchService = schuelerServiceFactory.getSchulbesuchService();
-					return new DataSchuelerNeu(schuelerstammdatenService, new DataSchuelerLernabschnittsdaten(conn), schulbesuchService,
+					return new DataSchuelerNeu(schuelerstammdatenService, schuelerServiceFactory.getSchuelerLernabschnittService(), schulbesuchService,
 							new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
 							new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is);
 				},
@@ -371,34 +372,6 @@ public class APISchueler {
 				.withDeleteAccess(request)
 				.getSchuelerStammdatenController()
 				.softDelete(ids);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
-	 *
-	 * @param schema    das Datenbankschema
-	 * @param ids       die Liste von zu löschenden IDs
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
-	 */
-	@DELETE
-	@Path("/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Schüler.",
-			description = "Entfernt mehrere Schüler. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
-					+ "der Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
-	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchueler(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
-			@Context final HttpServletRequest request) {
-		return SchuelerControllerFactory
-				.withDeleteAccess(request)
-				.getSchuelerStammdatenController()
-				.delete(ids);
 	}
 
 	/**
@@ -669,34 +642,6 @@ public class APISchueler {
 	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
 	 *
 	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id          die Datenbank-ID zur Identifikation des Schülers
-	 * @param abschnitt   der Schuljahresabschnitt des auszulesenden Lernabschnitts
-	 * @param request     die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Lernabschnittsdaten des Schülers
-	 */
-	@GET
-	@Path("/{id : \\d+}/abschnitt/{abschnitt : \\d+}/lernabschnittsdaten")
-	@Operation(summary = "Liefert zu der ID des Schülers und dem Schuljahresabschnitt die zugehörigen Lernabschnittsdaten.",
-			description = "Liest die Lernabschnittsdaten des Schülers zu der angegebenen ID und dem angegeben Schuljahresabschnitt aus der Datenbank "
-					+ "und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Lernabschnittsdaten des Schülers", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-	public Response getSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).get(id, abschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
-	 *
-	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param abschnitt   die ID des Schülerlernabschnitts
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
@@ -713,17 +658,17 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
 	public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).getByIdAsResponse(abschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+		return SchuelerControllerFactory.withLeistungsdatenReadAccess(request)
+				.getSchuelerLernabschnittController()
+				.get(abschnitt);
 	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
 	 *
 	 * @param schema                   das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param idSchueler               die ID des Schülerlernabschnitts
-	 * @param idSchuljahresabschnitt   die ID des Schülerlernabschnitts
+	 * @param idSchueler               die ID des Schülers
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 * @param request                  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Lernabschnittsdaten des Schülers
@@ -740,10 +685,9 @@ public class APISchueler {
 			@PathParam("idSchueler") final long idSchueler,
 			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn)
-						.getAbschnittsdatenByIdSchuelerAndIdJahresabschnitt(idSchueler, idSchuljahresabschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+		return SchuelerControllerFactory.withLeistungsdatenReadAccess(request)
+				.getSchuelerLernabschnittController()
+				.getListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
 	}
 
 
@@ -752,7 +696,7 @@ public class APISchueler {
 	 *
 	 * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param abschnitt   die ID des Schülerlernabschnitts
-	 * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param dto         die zu ändernden Felder der Schülerlernabschnittsdaten
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -766,18 +710,15 @@ public class APISchueler {
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@RequestBody(description = "Der Patch für die Schülerlernabschnittsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerLernabschnittsdaten.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerLernabschnittsdaten.class))) final SchuelerLernabschnittsdatenPatchRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).patchAsResponse(abschnitt, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLernabschnittController()
+				.patch(abschnitt, dto);
 	}
 
 
@@ -786,7 +727,7 @@ public class APISchueler {
 	 *
 	 * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param abschnitt   die ID des Schülerlernabschnitts
-	 * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param dto         die zu ändernden Bemerkungen
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -796,22 +737,19 @@ public class APISchueler {
 	@Operation(summary = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an.",
 			description = "Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchSchuelerLernabschnittsdatenBemerkungen(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@RequestBody(description = "Der Patch für die Schülerlernabschnittsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerLernabschnittBemerkungen.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerLernabschnittBemerkungen.class))) final SchuelerLernabschnittBemerkungenPatchRequest dto,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).patchBemerkungen(abschnitt, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
-				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLernabschnittController()
+				.patchBemerkungen(abschnitt, dto);
 	}
 
 

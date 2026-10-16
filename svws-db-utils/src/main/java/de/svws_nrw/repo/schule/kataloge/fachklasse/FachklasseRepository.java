@@ -28,4 +28,10 @@ public interface FachklasseRepository extends ReferencedBulkDeletionRepository<D
 	 */
 	boolean kuerzelIsAlreadyUsedPatch(String kuerzel, long id);
 
+	/**
+	 * @param idFachklasse {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idFachklasse);
+
 }

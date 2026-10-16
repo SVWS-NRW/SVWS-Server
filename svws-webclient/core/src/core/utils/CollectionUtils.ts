@@ -73,6 +73,17 @@ export class CollectionUtils extends JavaObject {
 		return set;
 	}
 
+	/**
+	 * Prüft, ob eine Collection leer ist oder nicht existiert.
+	 *
+	 * @param collection die zu prüfende Collection, darf null sein
+	 *
+	 * @return true, wenn die Collection null oder leer ist, sonst false
+	 */
+	public static isEmpty(collection: Collection<any> | null): boolean {
+		return (collection === null) || collection.isEmpty();
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.CollectionUtils';
 	}

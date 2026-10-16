@@ -1,7 +1,6 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
@@ -12,6 +11,8 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
@@ -23,7 +24,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 public final class DataSchuelerNeu {
 
 	private final SchuelerStammdatenService schuelerStammdatenService;
-	private final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
+	private final SchuelerLernabschnittService schuelerLernabschnittService;
 	private final SchuelerSchulbesuchService schuelerSchulbesuchService;
 	private final DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
 	private final DataSchuelerLernplattformen dataSchuelerLernplattformen;
@@ -36,7 +37,7 @@ public final class DataSchuelerNeu {
 	 * Erstellt einen neuen {@link DataSchuelerNeu} für das Core-DTO {@link SchuelerNeu}
 	 *
 	 * @param schuelerStammdatenService			DataSchuelerStammdaten
-	 * @param dataSchuelerLernabschnittsdaten	DataSchuelerLernabschnittsdaten
+	 * @param schuelerLernabschnittService		SchuelerLernabschnittService
 	 * @param schuelerSchulbesuchService				SchulbesuchService
 	 * @param dataSchuelerEinwilligungen		DataSchuelerEinwilligungen
 	 * @param dataSchuelerLernplattformen		DataSchuelerLernplattformen
@@ -45,14 +46,14 @@ public final class DataSchuelerNeu {
 	 */
 	public DataSchuelerNeu(
 			final SchuelerStammdatenService schuelerStammdatenService,
-			final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten,
+			final SchuelerLernabschnittService schuelerLernabschnittService,
 			final SchuelerSchulbesuchService schuelerSchulbesuchService,
 			final DataSchuelerEinwilligungen dataSchuelerEinwilligungen,
 			final DataSchuelerLernplattformen dataSchuelerLernplattformen,
 			final DataLernplattformen dataLernplattformen,
 			final DataEinwilligungsarten dataEinwilligungsarten) {
 		this.schuelerStammdatenService = schuelerStammdatenService;
-		this.dataSchuelerLernabschnittsdaten = dataSchuelerLernabschnittsdaten;
+		this.schuelerLernabschnittService = schuelerLernabschnittService;
 		this.schuelerSchulbesuchService = schuelerSchulbesuchService;
 		this.dataSchuelerEinwilligungen = dataSchuelerEinwilligungen;
 		this.dataSchuelerLernplattformen = dataSchuelerLernplattformen;
@@ -101,12 +102,11 @@ public final class DataSchuelerNeu {
 	}
 
 	private void addLernabschnitt(final Map<String, Object> initAttributes, final long idSchueler) {
-		final Map<String, Object> lernabschnittAttributes = new HashMap<>();
-		putIfPresent(lernabschnittAttributes, "schuljahresabschnitt", initAttributes.get(ID_SCHULJAHRESABSCHNITT));
-		putIfPresent(lernabschnittAttributes, "jahrgangID", initAttributes.get("idJahrgang"));
-		putIfPresent(lernabschnittAttributes, "klassenID", initAttributes.get("idKlasse"));
-		lernabschnittAttributes.put("schuelerID", idSchueler);
-		this.dataSchuelerLernabschnittsdaten.add(lernabschnittAttributes);
+		final long idSchuljahresabschnitt = JSONMapper.convertToLong(initAttributes.get(ID_SCHULJAHRESABSCHNITT), false, ID_SCHULJAHRESABSCHNITT);
+		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get("idKlasse"), true, "idKlasse");
+		final Long idJahrgang = JSONMapper.convertToLong(initAttributes.get("idJahrgang"), true, "idJahrgang");
+		final var lernabschnitt = new SchuelerLernabschnittCreateRequest(idSchueler, idSchuljahresabschnitt, idKlasse, idJahrgang);
+		this.schuelerLernabschnittService.create(lernabschnitt);
 	}
 
 	private void patchSchulbesuch(final Map<String, Object> initAttributes, final long idSchueler) {
@@ -135,19 +135,6 @@ public final class DataSchuelerNeu {
 					final Map<String, Object> einwilligungAttributes = Map.of("idSchueler", idSchueler, "idEinwilligungsart", id);
 					this.dataSchuelerEinwilligungen.add(einwilligungAttributes);
 				});
-	}
-
-	/**
-	 * Adds the key-value pair to the target map if the value is not {@code null}.
-	 *
-	 * @param target the target map
-	 * @param key the key to insert
-	 * @param value the value to insert; ignored if {@code null}
-	 */
-	private void putIfPresent(final Map<String, Object> target, final String key, final Object value) {
-		if (value != null) {
-			target.put(key, value);
-		}
 	}
 
 }

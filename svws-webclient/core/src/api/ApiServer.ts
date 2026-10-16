@@ -13019,35 +13019,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerLernabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/abschnitt/{abschnitt : \d+}/lernabschnittsdaten
-	 *
-	 * Liest die Lernabschnittsdaten des Schülers zu der angegebenen ID und dem angegeben Schuljahresabschnitt aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lernabschnittsdaten des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerLernabschnittsdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
-	 *
-	 * @returns Die Lernabschnittsdaten des Schülers
-	 */
-	public async getSchuelerLernabschnittsdaten(schema: string, id: number, abschnitt: number): Promise<SchuelerLernabschnittsdaten> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/abschnitt/{abschnitt : \\d+}/lernabschnittsdaten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result: string = await super.getJSON(path);
-		const text = result;
-		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/erzieher
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-IDdes Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Erzieherdaten besitzt.
@@ -14187,38 +14158,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteSchueler für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/delete/multiple
-	 *
-	 * Entfernt mehrere Schüler. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernender Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Lösch-Operationen wurden ausgeführt.
-	 */
-	public async deleteSchueler(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/schueler/delete/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result: string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode addSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/erzieher/new/{idSchueler : \d+}/{pos : [12]}
 	 *
 	 * Erstellt einen neuen Erziehereintrag einen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
@@ -14635,7 +14574,6 @@ export class ApiServer extends BaseApi {
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerLernabschnittsdaten>} data - der Request-Body für die HTTP-Methode
@@ -14657,11 +14595,10 @@ export class ApiServer extends BaseApi {
 	 * Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
 	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<SchuelerLernabschnittBemerkungen>} data - der Request-Body für die HTTP-Methode

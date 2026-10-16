@@ -10,6 +10,7 @@ import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuelerSchwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
@@ -25,6 +26,8 @@ import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepositoryImpl;
+import de.svws_nrw.repo.schule.kataloge.schuelerschwerpunkt.SchuelerschwerpunktRepository;
+import de.svws_nrw.repo.schule.kataloge.schuelerschwerpunkt.SchuelerschwerpunktRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepository;
 import de.svws_nrw.repo.schule.kataloge.schule.SchuleRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.teilleistungsart.TeilleistungsartRepository;
@@ -94,6 +97,16 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	 */
 	public FoerderschwerpunktRepository getFoerderschwerpunktRepository() {
 		return getOrCreate(FoerderschwerpunktRepository.class, () -> new FoerderschwerpunktRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerSchwerpunkt}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerschwerpunktRepository getSchuelerschwerpunktRepository() {
+		return getOrCreate(SchuelerschwerpunktRepository.class, () -> new SchuelerschwerpunktRepositoryImpl(conn));
 	}
 
 

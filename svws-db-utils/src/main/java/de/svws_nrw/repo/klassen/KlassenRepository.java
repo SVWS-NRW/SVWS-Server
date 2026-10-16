@@ -29,4 +29,10 @@ public interface KlassenRepository extends Repository<DTOKlassen> {
 	 */
 	Map<Long, DTOKlassen> getMapBySchuljahresabschnitt(long idSchuljahresabschnitt);
 
+	/**
+	 * @param idKlasse {@link Long}
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idKlasse);
+
 }

@@ -21,12 +21,10 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerTelefon;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
-import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.diagnose.ReportingAuswahlergebnis;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemSchluessel;
 import de.svws_nrw.module.reporting.diagnose.ReportingProblemauswirkung;
@@ -478,8 +476,8 @@ public class ReportingRepositorySchueler {
 		return mapLernabschnittsdaten.get1(idSchueler);
 	}
 
-	private List<SchuelerLernabschnittsdaten> ladeLernabschnitte(final List<Long> idsSchueler) throws ApiOperationException {
-		return new DataSchuelerLernabschnittsdaten(this.reportingContext.conn()).getListFromSchuelerIDs(idsSchueler, false, false);
+	private List<SchuelerLernabschnittsdaten> ladeLernabschnitte(final List<Long> idsSchueler) {
+		return SchuelerServiceFactory.getNewInstance().getSchuelerLernabschnittService().getListBySchuelerIDsOhneLeistungsdaten(idsSchueler);
 	}
 
 	/**

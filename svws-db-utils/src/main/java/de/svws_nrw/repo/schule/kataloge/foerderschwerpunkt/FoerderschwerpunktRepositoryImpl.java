@@ -18,4 +18,9 @@ public final class FoerderschwerpunktRepositoryImpl extends RepositoryImpl<DTOFo
 		super(conn, DTOFoerderschwerpunkt.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
+	@Override
+	public boolean existsById(final Long idFoerderschwerpunkt) {
+		return conn.existsBy(DTOFoerderschwerpunkt.QUERY_BY_ID, DTOFoerderschwerpunkt.class, idFoerderschwerpunkt);
+	}
+
 }

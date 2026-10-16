@@ -32,4 +32,9 @@ public final class KlassenRepositoryImpl extends RepositoryImpl<DTOKlassen> impl
 		return this.getListBySchuljahresabschnitt(idSchuljahresabschnitt).stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
+	@Override
+	public boolean existsById(final Long idKlasse) {
+		return conn.existsBy(DTOKlassen.QUERY_BY_ID, DTOKlassen.class, idKlasse);
+	}
+
 }

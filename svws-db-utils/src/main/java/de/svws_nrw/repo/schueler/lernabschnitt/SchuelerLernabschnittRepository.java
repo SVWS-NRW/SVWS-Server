@@ -23,6 +23,27 @@ public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerL
 	List<DTOSchuelerLernabschnittsdaten> findListByKlasseAndSchuljahresabschnitt(long idKlasse, long idSchuljahresabschnitt);
 
 	/**
+	 * Ermittelt alle Lernabschnittsdaten eines Schülers in einem Schuljahresabschnitt. Dabei werden
+	 * auch die Lernabschnitte vor einem Wechsel (WechselNr ungleich 0) berücksichtigt.
+	 *
+	 * @param idSchueler die ID des Schülers
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @return die zugehörigen Lernabschnittsdaten sortiert nach ihrer ID oder eine leere Liste, wenn keine gefunden wurden
+	 */
+	List<DTOSchuelerLernabschnittsdaten> findListBySchuelerAndSchuljahresabschnitt(long idSchueler, long idSchuljahresabschnitt);
+
+	/**
+	 * Ermittelt alle Lernabschnittsdaten der Schüler mit den übergebenen IDs über alle Schuljahresabschnitte. Dabei werden
+	 * auch die Lernabschnitte vor einem Wechsel (WechselNr ungleich 0) berücksichtigt.
+	 *
+	 * @param idsSchueler   die IDs der Schüler
+	 *
+	 * @return die Lernabschnittsdaten sortiert nach Schüler-ID, Schuljahresabschnitt und Wechsel-Nr. oder eine leere Liste,
+	 *         wenn keine IDs übergeben oder keine Lernabschnitte gefunden wurden
+	 */
+	List<DTOSchuelerLernabschnittsdaten> findListBySchuelerIDs(Collection<Long> idsSchueler);
+
+	/**
 	 * Bestimmt die Zuordnung der Schüler-IDs zu den Klassen mit den übergebenen IDs.
 	 *
 	 * @param idsKlassen   die IDs der Klassen

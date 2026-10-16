@@ -12,6 +12,8 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
@@ -28,7 +30,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -48,7 +52,7 @@ class DataSchuelerNeuTest {
 	private SchuelerStammdatenService schuelerStammdatenService;
 
 	@Mock
-	private DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
+	private SchuelerLernabschnittService schuelerLernabschnittService;
 
 	@Mock
 	private SchuelerSchulbesuchService schuelerSchulbesuchService;
@@ -99,11 +103,7 @@ class DataSchuelerNeuTest {
 		assertThat(response.getEntity()).isEqualTo(created);
 
 		verify(schuelerStammdatenService, times(1)).create(any(SchuelerImportData.class));
-		verify(dataSchuelerLernabschnittsdaten).add(argThat(map ->
-				map.get("schuelerID").equals(100L)
-						&& (((Number) map.get("schuljahresabschnitt")).longValue() == 8L)
-						&& (((Number) map.get("jahrgangID")).longValue() == 5L)
-		));
+		verify(schuelerLernabschnittService).create(new SchuelerLernabschnittCreateRequest(100L, 8L, null, 5L));
 		verify(schuelerSchulbesuchService, times(1)).patch(anyLong(), any());
 		verify(dataSchuelerLernplattformen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
 		verify(dataSchuelerEinwilligungen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
@@ -129,6 +129,7 @@ class DataSchuelerNeuTest {
 
 		try (MockedStatic<JSONMapper> mocked = mockStatic(JSONMapper.class)) {
 			mocked.when(() -> JSONMapper.toMap(any())).thenReturn(schuelerNeu);
+			mocked.when(() -> JSONMapper.convertToLong(any(), anyBoolean(), anyString())).thenReturn(8L);
 
 			data.add(mock(InputStream.class));
 

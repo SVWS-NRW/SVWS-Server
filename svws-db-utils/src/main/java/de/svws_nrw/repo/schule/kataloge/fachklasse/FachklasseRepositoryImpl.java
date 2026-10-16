@@ -46,4 +46,9 @@ public final class FachklasseRepositoryImpl extends RepositoryImpl<DTOFachklasse
 				.getResultList());
 	}
 
+	@Override
+	public boolean existsById(final Long idFachklasse) {
+		return conn.existsBy(DTOFachklassen.QUERY_BY_ID, DTOFachklassen.class, idFachklasse);
+	}
+
 }

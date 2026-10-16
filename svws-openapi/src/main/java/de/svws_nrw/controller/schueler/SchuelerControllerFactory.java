@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
+import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
@@ -22,7 +24,7 @@ public final class SchuelerControllerFactory {
 		this.schuelerServiceFactory = schuelerServiceFactory;
 	}
 
-	private static SchuelerControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz benutzerKompetenz) {
+	private static SchuelerControllerFactory getNewInstance(final HttpServletRequest request, final BenutzerKompetenz... benutzerKompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, benutzerKompetenz);
 		final var serviceFactory = SchuelerServiceFactory.getNewInstance();
 		return new SchuelerControllerFactory(serviceFactory);
@@ -81,6 +83,35 @@ public final class SchuelerControllerFactory {
 	}
 
 	/**
+	 * Erstellt eine Factory-Instanz mit Leseberechtigung für Leistungsdaten.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#SCHUELER_LEISTUNGSDATEN_ANSEHEN}.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerControllerFactory-Instanz mit Leseberechtigung für Leistungsdaten
+	 */
+	public static SchuelerControllerFactory withLeistungsdatenReadAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+	}
+
+	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung für Leistungsdaten.
+	 * <p>
+	 * Erfordert eine der Kompetenzen {@link BenutzerKompetenz#SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN} oder
+	 * {@link BenutzerKompetenz#SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN}. Bei der funktionsbezogenen
+	 * Kompetenz erfolgt die Prüfung der Klassen zusätzlich im Service.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerControllerFactory-Instanz mit Schreibberechtigung für Leistungsdaten
+	 */
+	public static SchuelerControllerFactory withLeistungsdatenWriteAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
+				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+	}
+
+	/**
 	 * Erstellt eine neue BisherigeSchulenController-Instanz.
 	 *
 	 * @return ein neuer BisherigeSchulenController mit dem konfigurierten BisherigeSchulenService
@@ -114,6 +145,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerStammdatenController getSchuelerStammdatenController() {
 		return new SchuelerStammdatenControllerImpl(schuelerServiceFactory.getSchuelerStammdatenService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerLernabschnittController-Instanz.
+	 *
+	 * @return ein neuer SchuelerLernabschnittController mit dem konfigurierten SchuelerLernabschnittService
+	 */
+	public SchuelerLernabschnittController getSchuelerLernabschnittController() {
+		return new SchuelerLernabschnittControllerImpl(schuelerServiceFactory.getSchuelerLernabschnittService());
 	}
 
 }

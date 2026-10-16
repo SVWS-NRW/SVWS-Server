@@ -244,4 +244,66 @@ class SchuelerLernabschnittRepositoryImplTest {
 		verify(conn).queryList(query, DTOSchuelerLernabschnittsdaten.class, idsSchueler);
 	}
 
+	@Test
+	@DisplayName("Test: findListBySchuelerAndSchuljahresabschnitt liefert alle Lernabschnitte inkl. Wechsel in der Reihenfolge der DB.")
+	void testFindListBySchuelerAndSchuljahresabschnitt() {
+		final long idSchueler = testSchuelerLernabschnitt1.Schueler_ID;
+		final long idSchuljahresabschnitt = testSchuelerLernabschnitt1.Schuljahresabschnitts_ID;
+		final var lernabschnittVorWechsel = new DTOSchuelerLernabschnittsdaten(9L, idSchueler, idSchuljahresabschnitt, false, false);
+		lernabschnittVorWechsel.WechselNr = 1;
+		final String query =
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID";
+
+		when(conn.queryList(query, DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt))
+				.thenReturn(List.of(lernabschnittVorWechsel, testSchuelerLernabschnitt1));
+
+		final List<DTOSchuelerLernabschnittsdaten> result = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(lernabschnittVorWechsel, result.get(0));
+		assertEquals(testSchuelerLernabschnitt1, result.get(1));
+
+		verify(conn).queryList(query, DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt);
+	}
+
+	@Test
+	@DisplayName("Test: findListBySchuelerAndSchuljahresabschnitt liefert bei leerem DB-Ergebnis eine leere Liste.")
+	void testFindListBySchuelerAndSchuljahresabschnitt_EmptyDbResult() {
+		final long idSchueler = 999L;
+		final long idSchuljahresabschnitt = 42L;
+		final String query =
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 ORDER BY e.ID";
+
+		when(conn.queryList(query, DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt)).thenReturn(Collections.emptyList());
+
+		final List<DTOSchuelerLernabschnittsdaten> result = repository.findListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
+
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+		verify(conn).queryList(query, DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt);
+	}
+
+	@Test
+	@DisplayName("Test: findListBySchuelerIDs liefert bei null/leer eine leere Liste ohne DB-Interaktion.")
+	void testFindListBySchuelerIDsEmptyInputs() {
+		assertTrue(repository.findListBySchuelerIDs(null).isEmpty());
+		assertTrue(repository.findListBySchuelerIDs(Collections.emptyList()).isEmpty());
+		verifyNoInteractions(conn);
+	}
+
+	@Test
+	@DisplayName("Test: findListBySchuelerIDs liefert alle Lernabschnitte der Schüler in der Reihenfolge der DB.")
+	void testFindListBySchuelerIDs() {
+		final List<Long> idsSchueler = Arrays.asList(100L, 101L);
+		final String query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 "
+				+ "ORDER BY e.Schueler_ID, e.Schuljahresabschnitts_ID, e.WechselNr";
+		when(conn.queryList(query, DTOSchuelerLernabschnittsdaten.class, idsSchueler))
+				.thenReturn(List.of(testSchuelerLernabschnitt1, testSchuelerLernabschnitt2));
+
+		final List<DTOSchuelerLernabschnittsdaten> result = repository.findListBySchuelerIDs(idsSchueler);
+
+		assertEquals(List.of(testSchuelerLernabschnitt1, testSchuelerLernabschnitt2), result);
+		verify(conn).queryList(query, DTOSchuelerLernabschnittsdaten.class, idsSchueler);
+	}
 }

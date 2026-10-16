@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerSchulbesuchController;
@@ -81,6 +82,28 @@ class SchuelerControllerFactoryTest {
 	}
 
 	@Test
+	@DisplayName("withLeistungsdatenReadAccess | Factory wird erstellt und DBBenutzerUtils mit SCHUELER_LEISTUNGSDATEN_ANSEHEN aufgerufen")
+	void withLeistungsdatenReadAccess() {
+		final var factory = SchuelerControllerFactory.withLeistungsdatenReadAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withLeistungsdatenWriteAccess | Factory wird erstellt und DBBenutzerUtils mit SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN und SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN aufgerufen")
+	void withLeistungsdatenWriteAccess() {
+		final var factory = SchuelerControllerFactory.withLeistungsdatenWriteAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), any(ServerMode.class),
+				eq(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN),
+				eq(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
 	@DisplayName("withNoAccess | Factory wird erstellt und DBBenutzerUtils mit KEINE aufgerufen")
 	void withNoAccess() {
 		final var factory = SchuelerControllerFactory.withNoAccess(request);
@@ -127,6 +150,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerStammdatenController controller = factory.getSchuelerStammdatenController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withLeistungsdatenReadAccess | getSchuelerLernabschnittController gibt einen Controller zurück")
+	void getSchuelerLernabschnittController() {
+		final var factory = SchuelerControllerFactory.withLeistungsdatenReadAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerLernabschnittController controller = factory.getSchuelerLernabschnittController();
 		assertNotNull(controller);
 	}
 }
