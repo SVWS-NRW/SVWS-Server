@@ -311,14 +311,11 @@ public final class SchuelerSchulbesuchResolver {
 	 *
 	 * @param entity    die Schüler-Entity mit den Quellfeldern {@code LSSchulNr}, {@code LSSchulform} und {@code LSSchulformSIM}
 	 * @param target    das Zielobjekt, in dem {@code idHerkunftSonstigeVorherigeSchule} gesetzt wird
-	 * @param schuljahr das Schuljahr, für das der CoreType-Eintrag aufgelöst wird;
-	 *                  ist {@code null}, wird kein Mapping vorgenommen
 	 */
-	public static void mapHerkunftSonstige(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target, final Integer schuljahr) {
-		if (keinSchulbesuch(entity) && (schuljahr != null)) {
+	public static void mapHerkunftSonstige(final DTOSchueler entity, final SchuelerSchulbesuchsdaten target) {
+		if (keinSchulbesuch(entity)) {
 			target.idHerkunftSonstigeVorherigeSchule = Optional.ofNullable(HerkunftSonstige.data().getWertByKuerzel(entity.LSSchulformSIM))
-					.map(h -> h.daten(schuljahr))
-					.map(h -> h.id)
+					.map(h -> h.historie().getLast().id)
 					.orElse(null);
 		}
 	}

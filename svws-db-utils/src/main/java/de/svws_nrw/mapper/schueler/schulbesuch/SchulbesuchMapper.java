@@ -101,15 +101,13 @@ public interface SchulbesuchMapper {
 	 * wird die id des CoreTypes HerkunftSonstige.json gemapped
 	 *
 	 * @param entity die Schüler-Entity mit dem Quellfeld
-	 * @param ctx    der Kontext
 	 * @param target das bereits gemappte Zielobjekt
 	 */
 	@AfterMapping
 	default void mapHerkunftSonstige(
 			final DTOSchueler entity,
-			@Context final SchulbesuchMappingContext ctx,
 			@MappingTarget final SchuelerSchulbesuchsdaten target) {
-		SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, ctx.jahrEntlassungVorherigeSchule());
+		SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 	}
 
 	/**

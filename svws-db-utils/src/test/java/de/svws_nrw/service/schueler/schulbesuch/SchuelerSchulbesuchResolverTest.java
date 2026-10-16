@@ -568,7 +568,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idHerkunftSonstigeVorherigeSchule = 99L;
 
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, 2024);
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(99L);
 		}
@@ -583,7 +583,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idHerkunftSonstigeVorherigeSchule = 99L;
 
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, 2024);
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(99L);
 		}
@@ -598,7 +598,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idHerkunftSonstigeVorherigeSchule = 99L;
 
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, 2024);
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(99L);
 		}
@@ -613,7 +613,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var target = new SchuelerSchulbesuchsdaten();
 			target.idHerkunftSonstigeVorherigeSchule = 99L;
 
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, 2024);
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isNull();
 		}
@@ -622,8 +622,8 @@ class SchuelerSchulbesuchResolverTest {
 		@DisplayName("Kein Schulbesuch, gültiger HerkunftSonstige-Schluessel - setzt id")
 		void keinSchulbesuch_gueltigerSIM_setztId() {
 			final var schuljahr = 2024;
-			final var wert = HerkunftSonstige.data().getWerte().getFirst();
-			final var eintrag = wert.historie().getFirst();
+			final var wert = HerkunftSonstige.data().getWerte().getLast();
+			final var eintrag = wert.historie().getLast();
 			final var erwartetId = wert.daten(schuljahr).id;
 
 			final var entity = new DTOSchueler(1L, "123", true);
@@ -632,25 +632,11 @@ class SchuelerSchulbesuchResolverTest {
 			entity.LSSchulformSIM = eintrag.kuerzel;
 			final var target = new SchuelerSchulbesuchsdaten();
 
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, schuljahr);
+			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target);
 
 			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(erwartetId);
 		}
 
-		@Test
-		@DisplayName("schuljahr null - kein Mapping")
-		void schuljahrNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
-			entity.LSSchulNr = null;
-			entity.LSSchulform = null;
-			entity.LSSchulformSIM = "AS";
-			final var target = new SchuelerSchulbesuchsdaten();
-			target.idHerkunftSonstigeVorherigeSchule = 99L;
-
-			SchuelerSchulbesuchResolver.mapHerkunftSonstige(entity, target, null);
-
-			assertThat(target.idHerkunftSonstigeVorherigeSchule).isEqualTo(99L);
-		}
 	}
 
 	// =========================================================================

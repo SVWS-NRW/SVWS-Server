@@ -163,7 +163,13 @@ export class SchuelerSchulbesuchModelProxy extends ModelProxy<SchuelerSchulbesuc
 	});
 
 	abschlussartAllgemeinbildendVorherigeSchule = computed<SchulabschlussAllgemeinbildendKatalogEintrag | null>({
-		get: () => SchulabschlussAllgemeinbildend.data().getEintragBySchuljahrUndSchluessel(this.manager().schuljahr, this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule ?? ''),
+		get: () => {
+			const abschluss = SchulabschlussAllgemeinbildend.data().getWertBySchluessel(this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule ?? '');
+			if (abschluss === null) {
+				return null;
+			}
+			return abschluss.historie().getLast();
+		},
 		set: (v: SchulabschlussAllgemeinbildendKatalogEintrag | null) => this.proxy.schluesselAbschlussartAllgemeinbildendVorherigeSchule = v?.schluessel ?? null,
 	});
 

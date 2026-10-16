@@ -54,9 +54,10 @@
 				:manager="fachklasseManager"
 				v-model="model.fachklasseVorherigeSchule.value"
 				:readonly statistics />
-			<svws-ui-text-input :placeholder="labelEntlassdatum" type="date"
+			<svws-ui-text-input placeholder="Entlassen am" type="date" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
 				v-model="model.proxy.entlassdatumVorherigeSchule"
 				statistics :readonly />
+			<div v-else />
 			<ui-select label="Entlassjahrgang" v-if="currentMode !== Schulauswahl.KEIN_SCHULBESUCH"
 				:manager="vorherigeEntlassjahrgaengeManager"
 				v-model="model.kuerzelEntlassjahrgangVorherigeSchule.value"
@@ -237,13 +238,6 @@
 		return '';
 	});
 
-	const labelEntlassdatum = computed(() => {
-		if (currentMode.value === Schulauswahl.KEIN_SCHULBESUCH) {
-			return 'Datum';
-		}
-		return 'Entlassen am';
-	});
-
 	const vorherigeSchuleManager = new SelectManager<SchulEintrag>({
 		filters: [vorherigeSchuleFilter],
 		options: computed(() => herkunftschulenState.herkunftschulen.list),
@@ -294,7 +288,6 @@
 
 	const abschlussartAllgemeinbildendVorherigeSchuleManager = new CoreTypeSelectManager({
 		clazz: SchulabschlussAllgemeinbildend.class,
-		schuljahr: schuljahr,
 		optionDisplayText: "kuerzelText",
 		selectionDisplayText: "kuerzelText",
 	});

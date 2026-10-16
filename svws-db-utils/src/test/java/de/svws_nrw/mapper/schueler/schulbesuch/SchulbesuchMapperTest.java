@@ -5,6 +5,7 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
+import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
@@ -132,15 +133,14 @@ class SchulbesuchMapperTest {
 		}
 
 		@Test
-		@DisplayName("map | idSchulformVorherigeschule")
-		void toApi_idSchulformVorherigeSchule() {
+		@DisplayName("map | idHerkunftSonstigeVorherigeschule")
+		void toApi_idHerkunftSonstigeVorherigeSchule() {
 			final var entity = createEntity(1L);
 			entity.LSSchulformSIM = "AS";
-			entity.LSSchulEntlassDatum = "2020-06-30";
 
 			final var result = mapper.toApi(entity, emptyContext());
 
-			assertThat(result.idHerkunftSonstigeVorherigeSchule).isEqualTo(1000);
+			assertThat(result.idHerkunftSonstigeVorherigeSchule).isEqualTo(HerkunftSonstige.data().getWertByKuerzel("AS").historie().getLast().id);
 		}
 
 		@Test
