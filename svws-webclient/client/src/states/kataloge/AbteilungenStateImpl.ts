@@ -53,7 +53,6 @@ export class AbteilungenStateImpl extends StateManager<AbteilungenReactiveState>
 	}
 
 	override reset() {
-		super.reset();
 		this._abschnittWatcher = null;
 	}
 

@@ -1,8 +1,8 @@
 <template>
 	<div class="flex flex-col">
 		<template v-if="sperrenVorhanden.size > 0">
-			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base">
-				{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.
+			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base flex gap-2 items-center">
+				<span class="icon i-ri-lock-2-line icon-ui-danger" /> <span>{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.</span>
 			</div>
 		</template>
 		<ui-table-grid name="Klassenleitung" :header-count="1" :footer-count="0" :manager="() => gridManager">
@@ -65,7 +65,7 @@
 			</template>
 			<template #default="{ row: pair, index }">
 				<td>
-					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID, enmManager().klasseIstBerechtigt(pair.a.id))" class="flex items-center h-full">
+					<div v-if="sperrenVorhanden.has(pair.b.klasseID)" class="flex items-center h-full">
 						<svws-ui-tooltip>
 							<span class="icon i-ri-lock-2-line icon-ui-danger" />
 							<template #content>Die Eingabe für diese Klasse ist gesperrt</template>
@@ -350,10 +350,10 @@
 	}
 
 	const sperrenVorhanden = computed(() => {
-		const set = new Set<ENMv2Klasse>();
+		const set = new Set<number>();
 		for (const klasse of props.auswahl()) {
 			if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id, props.enmManager().klasseIstBerechtigt(klasse.id))) {
-				set.add(klasse);
+				set.add(klasse.id);
 			}
 		}
 		return set;
@@ -373,7 +373,8 @@
 	const gesperrteKlassen = computed(() => {
 		let str = "";
 		for (const k of sperrenVorhanden.value) {
-			str += `${k.kuerzelAnzeige}, `;
+			const klasse = props.enmManager().mapKlassen.get(k);
+			str += `${klasse?.kuerzelAnzeige ?? "Klassenbezeichnung fehlt"}, `;
 		}
 		return str.slice(0, -2);
 	});

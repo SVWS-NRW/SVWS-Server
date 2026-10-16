@@ -101,13 +101,13 @@ export class NotenmodulConfigManagerSperrungen {
 	private readonly _mapDefaultConfigKlasseSpalte: JavaMap<number | string, ENMConfigKlasseSpalte>;
 
 	private readonly _listKlassen = new ArrayList<ENMConfigKlasse>();
-	private readonly _mapKlassenSpalte = new HashMap2D<number, string, ENMConfigKlasseSpalte>();
+	private readonly _mapKlassenSpalte = shallowRef(new HashMap2D<number, string, ENMConfigKlasseSpalte>());
 
 	private readonly _listJahrgaenge = new ArrayList<ENMv2Jahrgang>();
 	private readonly _mapJahrgangKlassen = new HashMap<number, List<ENMConfigKlasse>>();
 	private readonly _showJahrgangsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapJahrgangGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
-	private readonly _mapJahrgangSpalte = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
+	private readonly _mapJahrgangSpalte = shallowRef(new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>());
 	private readonly _mapKlassenToJahrgang = new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>();
 	private readonly _mapSpaltenKlassenToJahrgang = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 
@@ -115,12 +115,12 @@ export class NotenmodulConfigManagerSperrungen {
 	private readonly _mapAbteilungKlassen = new HashMap<number, List<ENMConfigKlasse>>();
 	private readonly _showAbteilungsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapAbteilungGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
-	private readonly _mapAbteilungSpalte = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
+	private readonly _mapAbteilungSpalte = shallowRef(new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>());
 	private readonly _mapKlassenToAbteilung = new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>();
 	private readonly _mapSpaltenKlassenToAbteilung = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 
 	private readonly _configAlleKlassen = shallowRef(new NotenmodulConfigManagerSperrungenGruppe());
-	private readonly _mapAlleKlassenSpalte = new HashMap<string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
+	private readonly _mapAlleKlassenSpalte = shallowRef(new HashMap<string, NotenmodulConfigManagerSperrungenGruppeSpalte>());
 
 	/** Eine Callback-Methode, die bei einem Update der Konfiguration aufgerufen wird. */
 	private readonly writeConfig: () => Promise<void>;
@@ -155,7 +155,7 @@ export class NotenmodulConfigManagerSperrungen {
 		for (const item of this._listKlassen) {
 			this._mapConfigKlassen.put(item.id, item);
 			for (const spalte of item.spalten) {
-				this._mapKlassenSpalte.put(item.id, spalte.name, spalte);
+				this._mapKlassenSpalte.value.put(item.id, spalte.name, spalte);
 			}
 		}
 
@@ -197,15 +197,16 @@ export class NotenmodulConfigManagerSperrungen {
 				this._mapKlassenToJahrgang.put(idKlasse, gruppe);
 			}
 			for (const spalte of gruppe.spalten) {
-				this._mapJahrgangSpalte.put(jg.id, spalte.name, spalte);
+				this._mapJahrgangSpalte.value.put(jg.id, spalte.name, spalte);
 				for (const idKlasse of gruppe.klassenzuordnungen) {
-					const kl = this._mapKlassenSpalte.getOrNull(idKlasse, spalte.name);
+					const kl = this._mapKlassenSpalte.value.getOrNull(idKlasse, spalte.name);
 					if (kl !== null) {
 						this._mapSpaltenKlassenToJahrgang.put(idKlasse, spalte.name, spalte);
 					}
 				}
 			}
 		}
+		triggerRef(this._mapJahrgangSpalte);
 	}
 
 	/**
@@ -221,15 +222,17 @@ export class NotenmodulConfigManagerSperrungen {
 				this._mapKlassenToAbteilung.put(idKlasse, gruppe);
 			}
 			for (const spalte of gruppe.spalten) {
-				this._mapAbteilungSpalte.put(a.id, spalte.name, spalte);
+				this._mapAbteilungSpalte.value.put(a.id, spalte.name, spalte);
 				for (const idKlasse of gruppe.klassenzuordnungen) {
-					const kl = this._mapKlassenSpalte.getOrNull(idKlasse, spalte.name);
+					const kl = this._mapKlassenSpalte.value.getOrNull(idKlasse, spalte.name);
 					if (kl !== null) {
 						this._mapSpaltenKlassenToAbteilung.put(idKlasse, spalte.name, spalte);
 					}
 				}
 			}
 		}
+		triggerRef(this._mapKlassenSpalte);
+		triggerRef(this._mapAbteilungSpalte);
 	}
 
 	/**
@@ -238,8 +241,9 @@ export class NotenmodulConfigManagerSperrungen {
 	private initAlleKlassen() {
 		this._configAlleKlassen.value = this.genGruppe(-1, this._listKlassen);
 		for (const spalte of this._configAlleKlassen.value.spalten) {
-			this._mapAlleKlassenSpalte.put(spalte.name, spalte);
+			this._mapAlleKlassenSpalte.value.put(spalte.name, spalte);
 		}
+		triggerRef(this._mapAlleKlassenSpalte);
 	}
 
 
@@ -611,7 +615,7 @@ export class NotenmodulConfigManagerSperrungen {
 			for (const colGruppe of gruppe.spalten) {
 				colGruppe.gesperrt = 0;
 				for (const idKlasse of gruppe.klassenzuordnungen) {
-					const col = this._mapKlassenSpalte.getOrNull(idKlasse, colGruppe.name);
+					const col = this._mapKlassenSpalte.value.getOrNull(idKlasse, colGruppe.name);
 					if (col === null) {
 						continue;
 					}
@@ -670,14 +674,14 @@ export class NotenmodulConfigManagerSperrungen {
 	public getColumn(row: NotenmodulConfigManagerSperrungenZeile, colname: string): NotenmodulConfigManagerSperrungenZelle | null {
 		const rowIstGruppe = 'klassenzuordnungen' in row;
 		if (!rowIstGruppe) {
-			return this._mapKlassenSpalte.getOrNull(row.id, colname);
+			return this._mapKlassenSpalte.value.getOrNull(row.id, colname);
 		}
 		if (this._gruppierung.value === 'Jahrgang') {
-			return this._mapJahrgangSpalte.getOrNull(row.id, colname);
+			return this._mapJahrgangSpalte.value.getOrNull(row.id, colname);
 		} else if (this._gruppierung.value === 'Abteilung') {
-			return this._mapAbteilungSpalte.getOrNull(row.id, colname);
+			return this._mapAbteilungSpalte.value.getOrNull(row.id, colname);
 		}
-		return this._mapAlleKlassenSpalte.get(colname);
+		return this._mapAlleKlassenSpalte.value.get(colname);
 	}
 
 	/**
@@ -1497,6 +1501,14 @@ export class NotenmodulConfigManagerSperrungen {
 		});
 	}
 
+	/**
+	 * Gibt an, ob eine Noteneingabe, die Sperrdaten eingetragen hat, möglich ist durch Vergleich der Daten
+	 *
+	 * @param datetime   erstes Datum
+	 * @param datetime2  zweites Datum
+	 *
+	 * @returns true, wenn die Noteneingabe aufgrund der eingetragenen Daten nicht mehr möglich ist
+	 */
 	public istNoteneingabeZeitlichUnmoeglich(datetime: string | null, datetime2: string | null): boolean {
 		if (datetime === null || datetime2 === null) {
 			return false;
@@ -1519,6 +1531,44 @@ export class NotenmodulConfigManagerSperrungen {
 			return true;
 		}
 		return (typeof col.gesperrt === "number") ? (col.gesperrt > 0) : col.gesperrt;
+	}
+
+	/**
+	 * Gibt zurück, ob bei der Spalte eine Sperrung aller Teilnoten vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile
+	 *
+	 * @returns true, wenn eine Sperrung vorliegt und ansonsten false
+	 */
+	public hatSperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile): boolean {
+		let geperrt = false;
+		for (const col of row.spalten) {
+			if (col.idTeilleistung !== null) {
+				geperrt = (typeof col.gesperrt === "number") ? (col.gesperrt > 0) : col.gesperrt;
+			}
+		}
+		return geperrt;
+	}
+
+	/**
+	 * Gibt zurück, ob Teilsperrung aller Teilnoten vorliegt oder nicht.
+	 *
+	 * @param row   die Zeile
+	 *
+	 * @returns true, wenn eine Sperrung vorliegt und ansonsten false
+	 */
+	public hatTeilsperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile): boolean {
+		let geperrt = 0;
+		let teilnoten = 0;
+		for (const col of row.spalten) {
+			if (col.idTeilleistung !== null) {
+				teilnoten++;
+				if ((typeof col.gesperrt === "number") ? (col.gesperrt > 0) : col.gesperrt) {
+					geperrt++;
+				}
+			}
+		}
+		return !((geperrt === 0) || (geperrt === teilnoten));
 	}
 
 	/**
@@ -1597,10 +1647,11 @@ export class NotenmodulConfigManagerSperrungen {
 		}
 		const newState = col.gesperrt === 0;
 		for (const klasse of klassen) {
-			const colKlasse = this._mapKlassenSpalte.getOrException(klasse.id, col.name);
+			const colKlasse = this._mapKlassenSpalte.value.getOrException(klasse.id, col.name);
 			colKlasse.gesperrt = newState;
 		}
 		col.gesperrt = newState ? klassen.size() : 0;
+		triggerRef(this._mapKlassenSpalte);
 		await this.writeConfig();
 	}
 
@@ -1632,14 +1683,14 @@ export class NotenmodulConfigManagerSperrungen {
 			triggerRef(this._mapAbteilungGruppe);
 		}
 		// Aktualisiere ggf. bei der Gruppe für Alle den Counter für die Anzahl Sperrungen...
-		const gruppeAlleKlassen = this._mapAlleKlassenSpalte.get(col.name);
+		const gruppeAlleKlassen = this._mapAlleKlassenSpalte.value.get(col.name);
 		if (gruppeAlleKlassen !== null) {
 			if (col.gesperrt) {
 				gruppeAlleKlassen.gesperrt++;
 			} else {
 				gruppeAlleKlassen.gesperrt--;
 			}
-			triggerRef(this._configAlleKlassen);
+			triggerRef(this._mapAlleKlassenSpalte);
 		}
 		await this.writeConfig();
 	}
@@ -1668,6 +1719,27 @@ export class NotenmodulConfigManagerSperrungen {
 				await this.toggleSperrungAlleKlassen(row, col);
 			}
 		}
+	}
+
+	/**
+	 * Toggelt die Teilnoten als Ganzes
+	 *
+	 * @param row   die Zeile
+	 */
+	public async toggleSperrungTeilnoten(row: NotenmodulConfigManagerSperrungenZeile) {
+		const teilnoten = this.getColumn(row, 'Teilnoten');
+		if (teilnoten === null) {
+			return;
+		}
+		await this.toggleSperrung(row, "Teilnoten");
+		const gesperrt = (typeof teilnoten.gesperrt === "number") ? (teilnoten.gesperrt > 0) : teilnoten.gesperrt;
+		for (const col of row.spalten) {
+			if (col.idTeilleistung !== null) {
+				col.gesperrt = gesperrt;
+				console.log(col.name, gesperrt);
+			}
+		}
+		triggerRef(this._mapKlassenSpalte);
 	}
 
 }

@@ -1,8 +1,8 @@
 <template>
 	<div class="flex flex-col">
 		<template v-if="sperrenVorhanden.size > 0">
-			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base">
-				{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.
+			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base flex gap-2 items-center">
+				<span class="icon i-ri-lock-2-line icon-ui-danger" /> <span>{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.</span>
 			</div>
 		</template>
 		<div class="flex overflow-hidden gap-6">

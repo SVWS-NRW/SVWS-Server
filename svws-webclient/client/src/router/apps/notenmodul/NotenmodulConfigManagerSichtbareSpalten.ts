@@ -1,3 +1,5 @@
+import { computed, shallowRef, triggerRef } from "vue";
+
 import { ENMConfigSpalte } from "@core/core/data/enm/ENMConfigSpalte";
 import type { ENMv2Teilleistungsart } from "@core/core/data/enm/v2/ENMv2Teilleistungsart";
 import { ArrayList } from "@core/java/util/ArrayList";
@@ -31,10 +33,10 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 
 	/** Die Map für den Zugriff auf die einzelnen Spalten der Konfiguration. Der Key kann entweder der Name einer ausblendbaren Spalte sein
 	 *  oder die ID im Falle von Teilleistungen auch die ID einer einzelnen Teilleistung, die ausgeblendet werden soll. */
-	private readonly mapConfigSpalte: JavaMap<number | string, ENMConfigSpalte>;
+	private readonly mapConfigSpalte = shallowRef(new HashMap<number | string, ENMConfigSpalte>());
 
 	/** Die Map für den Zugriff auf die Konfiguration anhand des Spaltennamens - auch bei Teilleistungen */
-	private readonly mapConfigSpalteByName: JavaMap<string, ENMConfigSpalte>;
+	private readonly mapConfigSpalteByName = shallowRef(new HashMap<string, ENMConfigSpalte>());
 
 	/** Eine Callback-Methode, die bei einem Update der Spaltenkonfiguration aufgerufen wird. */
 	private readonly writeConfig: () => Promise<void>;
@@ -49,8 +51,6 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 */
 	constructor(list: List<ENMConfigSpalte>, mapTeilleistungsarten: JavaMap<number, ENMv2Teilleistungsart>, writeConfig: () => Promise<void>) {
 		this.mapTeilleistungsarten = mapTeilleistungsarten;
-		this.mapConfigSpalte = new HashMap<number | string, ENMConfigSpalte>();
-		this.mapConfigSpalteByName = new HashMap<string, ENMConfigSpalte>();
 		this.importConfig(list);
 		this.writeConfig = writeConfig;
 	}
@@ -65,48 +65,50 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	private importConfig(list: List<ENMConfigSpalte>): void {
 		for (const spalte of list) {
 			if (spalte.idTeilleistung === null) {
-				this.mapConfigSpalte.put(spalte.name, spalte);
-				this.mapConfigSpalteByName.put(spalte.name, spalte);
+				this.mapConfigSpalte.value.put(spalte.name, spalte);
 			} else {
 				const art = this.mapTeilleistungsarten.get(spalte.idTeilleistung);
 				if (art !== null) {
 					spalte.name = art.bezeichnung ?? '—';
-					this.mapConfigSpalte.put(art.id, spalte);
-					this.mapConfigSpalteByName.put(spalte.name, spalte);
+					this.mapConfigSpalte.value.put(art.id, spalte);
+					this.mapConfigSpalteByName.value.put(spalte.name, spalte);
 				}
 			}
 		}
 		for (const art of this.mapTeilleistungsarten.values()) {
-			if (!this.mapConfigSpalte.containsKey(art.id)) {
+			if (!this.mapConfigSpalte.value.containsKey(art.id)) {
 				const spalte = new ENMConfigSpalte();
 				spalte.name = art.bezeichnung ?? '—';
 				spalte.idTeilleistung = art.id;
-				this.mapConfigSpalte.put(art.id, spalte);
-				this.mapConfigSpalteByName.put(spalte.name, spalte);
+				this.mapConfigSpalte.value.put(art.id, spalte);
+				this.mapConfigSpalteByName.value.put(spalte.name, spalte);
 			}
 		}
 		for (const art of this.spaltenAusblendbar) {
-			if (!this.mapConfigSpalte.containsKey(art)) {
+			if (!this.mapConfigSpalte.value.containsKey(art)) {
 				const spalte = new ENMConfigSpalte();
 				spalte.name = art;
-				this.mapConfigSpalte.put(art, spalte);
-				this.mapConfigSpalteByName.put(spalte.name, spalte);
+				this.mapConfigSpalte.value.put(art, spalte);
+				this.mapConfigSpalteByName.value.put(spalte.name, spalte);
 			}
 		}
+		triggerRef(this.mapConfigSpalteByName);
+		triggerRef(this.mapConfigSpalte);
 	}
 
 	/**
 	 * Wechselt die Sichtbarkeit für die übergebene Spalte. Anschließend wird die Callback-Methode zum
 	 * Speichern der Konfiguration aufgerufen.
 	 *
-	 * @param spalte   die geänderte Spaltenkonfiguration
+	 * @param spalte   der Spaltenname
 	 */
 	public async toggle(spaltenname: string) {
-		const spalte = this.mapConfigSpalteByName.get(spaltenname);
+		const spalte = this.mapConfigSpalteByName.value.get(spaltenname);
 		if (spalte === null) {
 			return;
 		}
 		spalte.anzeigen = !spalte.anzeigen;
+		triggerRef(this.mapConfigSpalteByName);
 		await this.writeConfig();
 	}
 
@@ -115,41 +117,32 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 * @param colname		Der Name der Spalte
 	 */
 	public async toggleTeilleistung(colname: string) {
-		const istSichtbar = this.istSichtbar(this.spalteTeilleistungen);
 		await this.toggle(colname);
-		const teilleistungIstSichtbar = this.istSichtbar(colname);
-		if (!istSichtbar && teilleistungIstSichtbar) {
-			await this.toggle(this.spalteTeilleistungen);
-		}
 	}
 
 	/**
-	 * Prüft, ob nur eine Teilmende der Spalten sichtbar ist
+	 * Prüft, ob nur eine Teilmenge der Spalten sichtbar ist
 	 * @returns true, wenn nur teilweise sichtbar, um den intermediate State zu erzeugen
 	 */
-	public hatNurMancheTeilleistungen(): boolean {
-		const istSichtbar = this.istSichtbar(this.spalteTeilleistungen);
-		for (const col of this.spaltenTeilleistungen) {
-			if (this.istSichtbar(col) !== istSichtbar) {
-				return true;
+	mengeSichtbareTeilleistungen = computed(() => {
+		let anzahlSichtbar = 0;
+		for (const col of this.spaltenTeilleistungen.value) {
+			if (this.istSichtbar(col)) {
+				anzahlSichtbar++;
 			}
 		}
-		return false;
-	}
+		return anzahlSichtbar;
+	});
 
 	/**
 	 * Wechselt die Sichtbarkeit für alle Teilleistungsspalten. Anschließend wird die Callback-Methode
 	 * zum Speichern der Konfiguration aufgerufen.
 	 */
 	public async toggleAlleTeilleistungen() {
-		const spalte = this.mapConfigSpalteByName.get("Teilnoten");
-		if (spalte === null) {
-			return;
-		}
-		spalte.anzeigen = !spalte.anzeigen;
-		for (const col of this.mapConfigSpalte.values()) {
-			if (col.idTeilleistung !== null) {
-				col.anzeigen = spalte.anzeigen;
+		const sichtbar = this.mengeSichtbareTeilleistungen.value !== 0;
+		for (const col of this.mapConfigSpalte.value.values()) {
+			if ((col.idTeilleistung !== null) && (col.anzeigen === sichtbar)) {
+				await this.toggleTeilleistung(col.name);
 			}
 		}
 		await this.writeConfig();
@@ -163,18 +156,18 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 * @returns true, wenn die Spalte sichtbar ist, und ansonsten false
 	 */
 	public istSichtbar(spalte: string): boolean {
-		return (this.mapConfigSpalteByName.get(spalte)?.anzeigen === true);
+		return (this.mapConfigSpalteByName.value.get(spalte)?.anzeigen === true);
 	}
 
 	/** Liefert die Spaltenkonfigurationen */
 	get spalten(): Collection<ENMConfigSpalte> {
-		return this.mapConfigSpalte.values();
+		return this.mapConfigSpalte.value.values();
 	}
 
 	/** Liefert die Spaltenkonfigurationen für die Teilleistungen */
-	get spaltenTeilleistungen(): List<string> {
+	spaltenTeilleistungen = computed(() => {
 		const list = new ArrayList<string>();
-		for (const col of this.mapConfigSpalte.values()) {
+		for (const col of this.mapConfigSpalte.value.values()) {
 			if (col.idTeilleistung !== null) {
 				list.add(col.name);
 			}
@@ -185,7 +178,7 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 			return s1 < s2 ? -1 : 1;
 		} });
 		return list;
-	}
+	});
 
 	/** Liefert die Spaltenkonfiguration als JSON-String */
 	get json(): string {

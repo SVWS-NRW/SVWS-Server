@@ -100,6 +100,11 @@
 										:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(manager().zeileAlleKlassen())"
 										@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(manager().zeileAlleKlassen())" />
 								</template>
+								<template v-else-if="col.kuerzel === 'Teilnoten'">
+									<svws-ui-checkbox :model-value="!manager().hatSperrungTeilnoten(manager().zeileAlleKlassen())"
+										:indeterminate="manager().hatTeilsperrungTeilnoten(manager().zeileAlleKlassen())"
+										@update:model-value="manager().toggleSperrungTeilnoten(manager().zeileAlleKlassen())" />
+								</template>
 								<template v-else-if="manager().istSperrbar(manager().zeileAlleKlassen(), col.name)">
 									<svws-ui-checkbox :model-value="!manager().hatSperrung(manager().zeileAlleKlassen(), col.name)"
 										:indeterminate="manager().hatTeilsperrung(manager().zeileAlleKlassen(), col.name)"
@@ -117,7 +122,7 @@
 							'text-left': (col.kuerzel === 'Gruppe')
 						}">
 							<template v-if="(col.kuerzel === 'Gruppe') && manager().istGruppe(row)">
-								<div @click.stop="manager().toggleZeigeGruppenKlassen(row)" class="cursor-pointer">
+								<div @click.stop="manager().toggleZeigeGruppenKlassen(row)" class="cursor-pointer flex items-center">
 									<span class="icon-ui-brand icon"
 										:class="[manager().zeigeGruppenKlassen(row) ? 'i-ri-arrow-down-s-line' : 'i-ri-arrow-right-s-line']" />
 									{{ manager().getGruppenBezeichnung(row) }}
@@ -166,6 +171,11 @@
 								<svws-ui-checkbox :model-value="!manager().hatFehlstundeneingabeKlassenweise(row)"
 									:indeterminate="manager().hatFehlstundeneingabeKlassenweiseTeilweise(row)"
 									@update:model-value="manager().toggleFehlstundeneingabeKlassenweise(row)" />
+							</template>
+							<template v-else-if="col.kuerzel === 'Teilnoten'">
+								<svws-ui-checkbox :model-value="!manager().hatSperrungTeilnoten(row)"
+									:indeterminate="manager().hatTeilsperrungTeilnoten(row)"
+									@update:model-value="manager().toggleSperrungTeilnoten(row)" />
 							</template>
 							<template v-else-if="manager().istSperrbar(row, col.name)">
 								<svws-ui-checkbox :model-value="!manager().hatSperrung(row, col.name)"

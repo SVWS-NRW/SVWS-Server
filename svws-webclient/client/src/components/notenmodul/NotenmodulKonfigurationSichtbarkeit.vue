@@ -26,16 +26,16 @@
 					</svws-ui-checkbox>
 				</div>
 			</div>
-			<div v-if="!manager().spaltenTeilleistungen.isEmpty()" class="w-full">
+			<div v-if="!manager().spaltenTeilleistungen.value.isEmpty()" class="w-full">
 				<div class="text-headline-sm">Teilleistungen</div>
 				<div>
-					<svws-ui-checkbox :model-value="manager().istSichtbar(manager().spalteTeilleistungen)"
-						:indeterminate="manager().hatNurMancheTeilleistungen()"
+					<svws-ui-checkbox :model-value="manager().mengeSichtbareTeilleistungen.value !== 0"
+						:indeterminate="(manager().mengeSichtbareTeilleistungen.value > 0) && (manager().mengeSichtbareTeilleistungen.value < manager().spaltenTeilleistungen.value.size())"
 						@update:model-value="manager().toggleAlleTeilleistungen()">
 						Alle
 					</svws-ui-checkbox>
 				</div>
-				<div v-for="col of manager().spaltenTeilleistungen" :key="col" class="pl-6">
+				<div v-for="col of manager().spaltenTeilleistungen.value" :key="col" class="pl-6">
 					<svws-ui-checkbox :model-value="manager().istSichtbar(col)" @update:model-value="manager().toggleTeilleistung(col)">
 						{{ col }}
 					</svws-ui-checkbox>
