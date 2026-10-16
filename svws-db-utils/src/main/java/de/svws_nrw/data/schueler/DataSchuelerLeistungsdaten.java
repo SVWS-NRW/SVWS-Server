@@ -183,7 +183,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			}
 			case "abifach" -> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);
-				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4)) {
+				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4) && (abiFach != 5)) {
 					throw new ApiOperationException(Status.CONFLICT);
 				}
 				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);

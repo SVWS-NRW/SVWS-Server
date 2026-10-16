@@ -23,7 +23,7 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 		schuljahr: () => number,
 		patchLeistung?: (data: Partial<SchuelerLeistungsdaten>) => Promise<boolean>
 	) {
-		const listOfAutopatchProps: Iterable<keyof SchuelerLeistungsdaten> = ['kursart', 'lehrerID', 'note', 'noteQuartal'];
+		const listOfAutopatchProps: Iterable<keyof SchuelerLeistungsdaten> = ['lehrerID', 'note', 'noteQuartal'];
 		super({ data, patch: patchLeistung, listOfAutopatchProps });
 		this.schuelerLernabschnittManager = schuelerLernabschnittManager;
 		this.schuljahr = schuljahr;
@@ -43,7 +43,7 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 
 	kursart = computed<ZulaessigeKursart | undefined>({
 		get: () => (this.proxy.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(this.proxy.kursart) ?? undefined,
-		set: (value: ZulaessigeKursart | undefined) => this.proxy.kursart = value?.daten(this.schuljahr())?.kuerzel ?? null,
+		set: (value: ZulaessigeKursart | undefined) => void this.patchKursart(value, this.proxy),
 	});
 
 	lehrer = computed<LehrerListeEintrag | undefined>({
@@ -84,14 +84,28 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 			this.proxy.kursart = ZulaessigeKursart.PJK.daten(this.schuljahr())?.kuerzel ?? null;
 		} else { // Allgemeiner Fall: Entfernen des Kurses und setzen einer speziellen Kursart, wenn die kursart der Leistung null ist
 			let kursart = (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
-			if (kursart === null) {
-				kursart = ZulaessigeKursart.PUK;
-			}
+			kursart ??= ZulaessigeKursart.PUK;
 			this.proxy.kursart = kursart.daten(this.schuljahr())?.kuerzel ?? null;
 		}
 
 		this.proxy.fachID = fach.id;
 		this.proxy.kursID = null;
+		await this.patch();
+	};
+
+	patchKursart = async (kursart: ZulaessigeKursart | undefined, leistung: SchuelerLeistungsdaten) => {
+		this.proxy.kursart = kursart?.daten(this.schuljahr())?.kuerzel ?? null;
+		if ((kursart === ZulaessigeKursart.GKM) || (kursart === ZulaessigeKursart.GKS) || (kursart === ZulaessigeKursart.EFSP)) {
+			this.proxy.abifach = null;
+		} else if (kursart === ZulaessigeKursart.LK1) {
+			this.proxy.abifach = 1;
+		} else if (kursart === ZulaessigeKursart.LK2) {
+			this.proxy.abifach = 2;
+		} else if (kursart === ZulaessigeKursart.AB3) {
+			this.proxy.abifach = 3;
+		} else if (kursart === ZulaessigeKursart.AB4) {
+			this.proxy.abifach = 4;
+		}
 		await this.patch();
 	};
 
