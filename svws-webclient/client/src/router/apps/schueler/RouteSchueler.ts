@@ -111,7 +111,7 @@ export class RouteSchueler extends RouteTabNode<RouteDataSchueler, RouteApp> {
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const schuelerAuswahlState = useSchuelerAuswahlState();
 			const idNeu = await schuelerAuswahlState.init(idSchuljahresabschnitt, isEntering);
-			if ((idNeu !== null) && (idNeu !== id)) {
+			if ((idNeu !== null) && (idNeu !== id) && (id === undefined)) {
 				return this.data.defaultView.getRoute({ id: idNeu });
 			}
 
