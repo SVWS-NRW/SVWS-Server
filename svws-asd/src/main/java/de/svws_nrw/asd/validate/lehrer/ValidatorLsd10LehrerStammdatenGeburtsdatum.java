@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator {
 
 	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull Supplier<String> daten;
+	private final @NotNull Supplier<@NotNull String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -23,7 +23,7 @@ public final class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator 
 	 * @param daten     das Geburtsdatum des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsd10LehrerStammdatenGeburtsdatum(final @NotNull Supplier<String> daten,
+	public ValidatorLsd10LehrerStammdatenGeburtsdatum(final @NotNull Supplier<@NotNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;

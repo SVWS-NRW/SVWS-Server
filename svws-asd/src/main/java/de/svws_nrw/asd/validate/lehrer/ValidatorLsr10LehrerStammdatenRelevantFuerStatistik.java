@@ -21,8 +21,6 @@ public final class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends V
 	/** Relevant für Statistik */
 	private final @NotNull Supplier<@AllowNull Boolean> _istRelevantFuerStatistik;
 
-	private @NotNull ValidatorKontext _kontextNeu;
-
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
@@ -34,7 +32,6 @@ public final class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends V
 		super(kontext);
 		_istRelevantFuerStatistik = istRelevantFuerStatistik;
 		_abgangsdatum = abgangsdatum;
-		_kontextNeu = kontext;
 	}
 
 	@Override
@@ -61,7 +58,7 @@ public final class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends V
 
 
 		if (istRelevantFuerStatistik) {
-			 if ((abgangsdatum.getJahr() < _kontextNeu.getSchuljahr()) || (((abgangsdatum.getJahr() == _kontextNeu.getSchuljahr())) && ((abgangsdatum.getMonat() < 8)))) {
+			 if ((abgangsdatum.getJahr() < kontext().getSchuljahr()) || (((abgangsdatum.getJahr() == kontext().getSchuljahr())) && ((abgangsdatum.getMonat() < 8)))) {
 				addFehler(1, "Statistikrelevanz des Lehrers: Das Feld 'Ist relevant für Statistik' darf nicht ausgewählt sein, wenn die Lehrkraft im vorherigen Schuljahr abgegangen ist." + errorMsg);
 				return false;
 			}

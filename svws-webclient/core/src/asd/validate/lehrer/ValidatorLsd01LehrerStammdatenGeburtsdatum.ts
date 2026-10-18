@@ -22,7 +22,7 @@ export class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorLsd10LehrerStammdatenGeburtsdatum(this.getNotNullSupplier(daten), kontext));
+		this._validatoren.add(new ValidatorLsd10LehrerStammdatenGeburtsdatum(daten, kontext));
 	}
 
 	protected pruefe(): boolean {

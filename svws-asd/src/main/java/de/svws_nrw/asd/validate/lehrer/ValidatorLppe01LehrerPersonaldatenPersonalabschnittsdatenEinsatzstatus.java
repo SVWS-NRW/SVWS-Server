@@ -30,8 +30,7 @@ public final class ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEins
 
 
 		_validatoren.add(
-				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(getNotNullSupplierLong(idEinsatzstatus),
-						kontext));
+				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
 
 	}
 

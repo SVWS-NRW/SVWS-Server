@@ -16,8 +16,6 @@ export class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends Validat
 	 */
 	private readonly _istRelevantFuerStatistik: Supplier<boolean | null>;
 
-	private _kontextNeu: ValidatorKontext;
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -30,7 +28,6 @@ export class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends Validat
 		super(kontext);
 		this._istRelevantFuerStatistik = istRelevantFuerStatistik;
 		this._abgangsdatum = abgangsdatum;
-		this._kontextNeu = kontext;
 	}
 
 	protected pruefe(): boolean {
@@ -49,7 +46,7 @@ export class ValidatorLsr10LehrerStammdatenRelevantFuerStatistik extends Validat
 			return true;
 		}
 		if (istRelevantFuerStatistik) {
-			if ((abgangsdatum.getJahr() < this._kontextNeu.getSchuljahr()) || (((abgangsdatum.getJahr() === this._kontextNeu.getSchuljahr())) && ((abgangsdatum.getMonat() < 8)))) {
+			if ((abgangsdatum.getJahr() < this.kontext().getSchuljahr()) || (((abgangsdatum.getJahr() === this.kontext().getSchuljahr())) && ((abgangsdatum.getMonat() < 8)))) {
 				this.addFehler(1, "Statistikrelevanz des Lehrers: Das Feld 'Ist relevant für Statistik' darf nicht ausgewählt sein, wenn die Lehrkraft im vorherigen Schuljahr abgegangen ist." + errorMsg);
 				return false;
 			}

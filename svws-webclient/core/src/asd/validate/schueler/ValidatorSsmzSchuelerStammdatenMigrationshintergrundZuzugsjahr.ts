@@ -10,8 +10,6 @@ export class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr exte
 
 	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
 
-	private readonly _kontextNeu: ValidatorKontext;
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -25,9 +23,8 @@ export class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr exte
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this._kontextNeu = kontext;
 		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = this._kontextNeu.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
 			if (sja === null) {
 				throw new NullPointerException();
 			}

@@ -28,10 +28,10 @@ public final class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
-			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@NotNull Long> idRechtsverhaeltnis,
-			final @NotNull Supplier<DateManager> geburtsdatum,
+			final @NotNull Supplier<@NotNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);

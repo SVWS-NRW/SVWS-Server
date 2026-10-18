@@ -27,11 +27,6 @@ export class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 	 */
 	private _geburtsdatum: Supplier<string>;
 
-	/**
-	 * Der Kontext
-	 */
-	private _kontextNeu: ValidatorKontext;
-
 	private static readonly FEHLERTEXT: string = "Zuzugsjahr des Schülers: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Zuzugsjahr' besetzt sein.";
 
 
@@ -50,7 +45,6 @@ export class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 		this._zuzugsjahr = zuzugsjahr;
 		this._geburtsdatum = geburtsdatum;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._kontextNeu = kontext;
 	}
 
 	protected pruefe(): boolean {
@@ -62,9 +56,9 @@ export class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 				this.addFehler(0, ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr.FEHLERTEXT);
 				return false;
 			}
-			this._validatoren.add(new ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsjahr(this._schuljahr, { get: () => zuzugsjahr }, this._geburtsdatum, { get: () => hatMigrationshintergrund }, this._kontextNeu));
+			this._validatoren.add(new ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsjahr(this._schuljahr, { get: () => zuzugsjahr }, this._geburtsdatum, { get: () => hatMigrationshintergrund }, this.kontext()));
 		} else {
-			this._validatoren.add(new ValidatorSsmz12SchuelerStammdatenMigrationshintergrundZuzugsjahr({ get: () => zuzugsjahr }, this._kontextNeu));
+			this._validatoren.add(new ValidatorSsmz12SchuelerStammdatenMigrationshintergrundZuzugsjahr({ get: () => zuzugsjahr }, this.kontext()));
 		}
 		return true;
 	}

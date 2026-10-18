@@ -15,8 +15,6 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr extends Validator {
 
 	private final @NotNull Supplier<@AllowNull Long> _idSchuljahresabschnitt;
-	private final @NotNull ValidatorKontext _kontextNeu;
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -36,10 +34,9 @@ public final class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjah
 		super(kontext);
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
-		_kontextNeu = kontext;
 
 		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
-			final @AllowNull Schuljahresabschnitt sja =  _kontextNeu.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
 			if (sja == null) {
 				throw new NullPointerException();
 			}

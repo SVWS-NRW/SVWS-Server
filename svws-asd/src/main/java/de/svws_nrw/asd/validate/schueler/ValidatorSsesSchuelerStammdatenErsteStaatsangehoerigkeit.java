@@ -15,7 +15,6 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit extends Validator {
 
 	private final @NotNull Supplier<@AllowNull Long> _idSchuljahresabschnitt;
-	private final @NotNull ValidatorKontext _kontextNeu;
 
 	/**
 	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
@@ -32,22 +31,21 @@ public final class ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit exte
 		super(kontext);
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
-		_kontextNeu = kontext;
 
 		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
-			final @AllowNull Schuljahresabschnitt sja =  _kontextNeu.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
 			if (sja == null) {
 				throw new NullPointerException();
 			}
 			return sja.schuljahr;
 		};
-		_validatoren.add(new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+		_validatoren.add(new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 
-		final Schuljahresabschnitt sja =  _kontextNeu.getSchuljahresabschnittByID(getNotNullSupplierLong(_idSchuljahresabschnitt).get());
+		final Schuljahresabschnitt sja =  kontext().getSchuljahresabschnittByID(getNotNullSupplierLong(_idSchuljahresabschnitt).get());
 		if (sja == null) {
 			addFehler(0, "Dem Schüler ist kein Schuljahresabschnitt zugeordnet");
 			return false;

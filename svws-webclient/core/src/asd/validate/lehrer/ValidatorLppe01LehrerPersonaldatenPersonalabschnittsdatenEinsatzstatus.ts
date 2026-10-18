@@ -24,7 +24,7 @@ export class ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzsta
 	public constructor(idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idEinsatzstatus = idEinsatzstatus;
-		this._validatoren.add(new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(this.getNotNullSupplierLong(idEinsatzstatus), kontext));
+		this._validatoren.add(new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

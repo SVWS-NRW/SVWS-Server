@@ -32,7 +32,7 @@ public final class ValidatorSses01SchuelerStammdatenErsteStaatsangehoerigkeit ex
 		super(kontext);
 		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 
-		_validatoren.add(new ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+		_validatoren.add(new ValidatorSses02SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, idStaatsangehoerigkeit, kontext));
 
 	}
 

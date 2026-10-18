@@ -73,7 +73,7 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 		// Hinzufügen der fachspezifischen Validatoren
 		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
-		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart),
+		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart,
 				getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
 
 		validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll,

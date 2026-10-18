@@ -29,10 +29,10 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
-			final @NotNull Supplier<Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@NotNull Long> idRechtsverhaeltnis,
-			final @NotNull Supplier<DateManager> geburtsdatum,
+			final @NotNull Supplier<@NotNull DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
@@ -43,10 +43,10 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 		final @NotNull Supplier<@NotNull String> staatsangehoerigkeitSchluessel =
 				getNotNullSupplier(() -> Nationalitaeten.data().getSchluesselByIDOrNull(idStaatsangehoerigkeit.get()));
 
-		_validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		_validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		_validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		_validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel, rechtsverhaeltnisNotNull, kontext));
 
 	}
