@@ -21,9 +21,11 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Datum von" type="date"
 					v-model="model.proxy.datumAnfang"
+					:validation="() => model.getFehler('datumAnfang')"
 					:disabled="!hatUpdateKompetenz" />
 				<svws-ui-text-input placeholder="Datum bis" type="date"
 					v-model="model.proxy.datumEnde"
+					:validation="() => model.getFehler('datumEnde')"
 					:disabled="!hatUpdateKompetenz" />
 				<svws-ui-spacing />
 				<div>

@@ -25,6 +25,7 @@ import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
+import { ValidatorSchuelerLernabschnittDatumVonBis } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/validation/ValidatorSchuelerLernabschnittDatumVonBis";
 import { ValidatorSchuelerLernabschnittKlasseUndJahrgang } from "~/components/schueler/lernabschnitte/allgemein/modelproxy/validation/ValidatorSchuelerLernabschnittKlasseUndJahrgang";
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
@@ -70,6 +71,14 @@ export class SchuelerLernabschnittAllgemeinModelProxy extends ModelProxy<Schuele
 			() => this.proxy.jahrgangID,
 			this.manager),
 		"jahrgangID", "klassenID");
+		this.addBlockingValidator(new ValidatorSchuelerLernabschnittDatumVonBis(
+			() => this.proxy.datumAnfang,
+			() => this.proxy.datumEnde),
+		"datumAnfang", "datumEnde");
+		this.addBlockingValidator(new ValidatorSchuelerLernabschnittDatumVonBis(
+			() => this.proxy.datumAnfang,
+			() => this.proxy.datumEnde),
+		"datumEnde", "datumAnfang");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idEpJahre), "idEpJahre");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idSchulgliederung), "idSchulgliederung");
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.pruefungsOrdnung), "pruefungsOrdnung");
