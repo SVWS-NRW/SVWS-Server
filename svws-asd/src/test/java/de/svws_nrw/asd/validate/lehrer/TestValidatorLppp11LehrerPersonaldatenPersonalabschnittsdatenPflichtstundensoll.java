@@ -18,15 +18,13 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * Testklasse für den Validator LehrerStammdaten
  *
- * Testdaten 2: de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json
- *
  * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
  *
  * CoreType: LehrerPersonalabschnittsdaten
  */
 
-@DisplayName("Teste den Validator zu Lpp03LehrerPersonalabschnittsdatenPflichtstundensoll")
-class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
+@DisplayName("Teste ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll")
+class TestValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll {
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -38,7 +36,6 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 		1.5, 'A', 'WT'  , true
 		0, 'X', 'WT'  , true
 		0, 'A', 'XX'  , true
-		0, 'X', 'XX'  , false
 		0, 'X', 'XX'  , false
 		0, 'X', 'wr'  , false
 		""";
@@ -55,7 +52,7 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 	}
 
 	/**
-	 * Test von ValidatorLehrerStammdatenPflichtstundensoll
+	 * Test von ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
@@ -64,10 +61,10 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 	 * @param beschaeftigungsart
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll")
+	@DisplayName("Tests für ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPP03)
-	void testValidatorLpp3LehrerPersonalabschnittsdaten(final double pflichtstundensoll, final String einsatzstatus, final String beschaeftigungsart,
+	void testValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(final double pflichtstundensoll, final String einsatzstatus, final String beschaeftigungsart,
 			final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
