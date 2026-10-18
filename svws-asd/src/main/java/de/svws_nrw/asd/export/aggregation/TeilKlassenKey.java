@@ -116,10 +116,10 @@ public class TeilKlassenKey {
 			klassenKuerzel = aktJahrgang.concat(parallelitaet);
 		}
 
-		final Schulgliederung schulgliederung = Schulgliederung.data().getWertByIDOrNull(lernabschnitt.idSchulgliederung);
+		final String schulgliederung = Schulgliederung.data().getSchluesselByIDOrNull(lernabschnitt.idSchulgliederung);
 
 		if (schulgliederung != null) {
-			gliederung = schulgliederung.name();
+			gliederung = "***".equals(schulgliederung) ? "" : schulgliederung;
 		} else {
 			gliederung = "";
 			fehlermeldungen.add("Beim Schüler mit der ID: " + schueler.id + " ist die Schulgliederung NULL.");

@@ -560,15 +560,16 @@ public class AggregationKlassenStatistikExport {
 			String herkunftsschulform = "";
 			String herkunftsSchulNr = "";
 			String kuerzelGrundschuleUebergangsempfehlung = "";
+			String vorigeAllgHerkunft = "";
 
 			final SchuelerLernabschnittStatistikGesamt lernabschnitt = schueler.lernabschnitte.getLast();
 			final SchuelerStatus schuelerStatus = SchuelerStatus.data().getWertByIDOrNull((long) schueler.status);
 			if (schueler.idHerkunftSonstigeVorherigeSchule == null) {
 				fehlermeldungen.add(this.getClass().getSimpleName()
 						+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idHerkunftSonstigeVorherigeSchule von Null: " + schueler.id);
-				return;
+			} else {
+				vorigeAllgHerkunft = HerkunftSonstige.data().getWertByIDOrNull(schueler.idHerkunftSonstigeVorherigeSchule).name();
 			}
-			final String vorigeAllgHerkunft = HerkunftSonstige.data().getWertByIDOrNull(schueler.idHerkunftSonstigeVorherigeSchule).name();
 			final SchuelerLernabschnittStatistikGesamt vorjahresLernabschnitt =
 					AggregationUtils.ermittelnLernabschnitt(schueler, vorjahresAbschnitte);
 
@@ -584,7 +585,7 @@ public class AggregationKlassenStatistikExport {
 					* STRANG 1 -EINSCHULUNG
 					* ============================================================
 					*/
-					if (einschulung(lernabschnitt)
+					if (einschulung(lernabschnitt, schueler)
 							&& ("ES".equals(vorigeAllgHerkunft) || "AS".equals(vorigeAllgHerkunft) || "XS".equals(vorigeAllgHerkunft))) {
 
 						herkunftsSchulNr = String.valueOf(statistikGesamt.schule.schulNr);
@@ -859,16 +860,23 @@ public class AggregationKlassenStatistikExport {
 
 	}
 
-	private boolean einschulung(final SchuelerLernabschnittStatistikGesamt lernabschnitt) {
+	private boolean einschulung(final SchuelerLernabschnittStatistikGesamt lernabschnitt, final SchuelerStatistikGesamt schueler) {
 
+		Long idJahrgang = lernabschnitt.idJahrgang;
+		if (idJahrgang == null) {
+			fehlermeldungen.add(this.getClass().getSimpleName()
+					+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idJahrgang von Null: " + schueler.id);
+
+			idJahrgang = 0L;
+		}
 		final boolean ersteJahrgangsstufe =
-				Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_01)
+				(Jahrgaenge.JAHRGANG_01 == Jahrgaenge.data().getWertByIDOrNull(jahrgangIdMap.get(idJahrgang)))
 						&& (PrimarstufeSchuleingangsphaseBesuchsjahre.E1 == PrimarstufeSchuleingangsphaseBesuchsjahre.data()
 								.getWertByIDOrNull(lernabschnitt.idEpJahre));
 
-		final boolean hausfrueherziehung =
-				Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.HAUSFRUEHERZIEHUNG);
-		final boolean jahrgang00 = Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_00);
+		final boolean hausfrueherziehung = Jahrgaenge.HAUSFRUEHERZIEHUNG == Jahrgaenge.data().getWertByIDOrNull(jahrgangIdMap.get(idJahrgang));
+		final boolean jahrgang00 = Jahrgaenge.JAHRGANG_00 == Jahrgaenge.data().getWertByIDOrNull(jahrgangIdMap.get(idJahrgang));
+
 		final boolean einschlung = ersteJahrgangsstufe || hausfrueherziehung || jahrgang00;
 		return einschlung;
 	}
