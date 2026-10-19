@@ -4,17 +4,18 @@
 		@update:show="closeModal"
 		:auto-close="false">
 		<template #modalTitle>
-			<span>{{ logoModel()?.proxy.bezeichnung }}</span>
+			<span>{{ logoModel.proxy.bezeichnung }}</span>
 		</template>
 		<template #modalDescription>
 			<div class="flex justify-center">
 				<div class="flex flex-col gap-2 w-full">
-					<div ref="previewContainerRef" class="w-full flex justify-center items-center">
-						<div class="flex items-center justify-center rounded-md border border-ui-50 bg-ui-neutral-25 p-2"
-							:style="{ height: previewHeight, width: previewWidth }">
-							<logo-image :logo-base64="uploadedFileSrc"
-								alt="Vorschau des neuen Bildes"
-								mode="inline" />
+					<div class="w-full flex justify-center items-center @container">
+						<div class="rounded-md border border-ui-50 bg-ui-neutral-25 p-2">
+							<div :style="previewStyle">
+								<logo-image :logo-base64="uploadedFileSrc"
+									alt="Vorschau des neuen Bildes"
+									mode="inline" />
+							</div>
 						</div>
 					</div>
 					<input type="file"
@@ -91,17 +92,16 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, useTemplateRef } from "vue";
+	import { computed, ref } from "vue";
 
 	import { OpenApiError } from "@core/api/OpenApiError";
 	import type { ValidatorFehler } from "@core/asd/validate/ValidatorFehler";
 	import type { Logo } from "@core/core/data/schule/Logo";
-	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { ValidationResult } from "@ui/validation/ValidationResult";
 
 	import LogoImage from "../LogoImage.vue";
-	import { getImageRestrictions, parseBase64, readFileAsBase64, setModelImageInfo, SUPPORTED_IMAGE_TYPES } from "../LogoUtils";
+	import { getCssLogoSize, getImageRestrictions, parseBase64, readFileAsBase64, setModelImageInfo, SUPPORTED_IMAGE_TYPES } from "../LogoUtils";
 	import type { LogoModelProxy } from "../modelProxy/LogoModelProxy";
 	import { ValidatorLogoImageAspectRatio } from "../modelProxy/ValidatorLogoImageAspectRatio";
 	import { ValidatorLogoImageFileSize } from "../modelProxy/ValidatorLogoImageFileSize";
@@ -111,7 +111,7 @@
 
 	const props = defineProps<{
 		isOpen: boolean;
-		logoModel: () => LogoModelProxy | undefined;
+		logoModel: LogoModelProxy;
 		add: (logo: Partial<Logo>) => Promise<Logo>;
 	}>();
 
@@ -120,14 +120,14 @@
 	}>();
 
 	const hasImage = computed(() =>
-		(props.logoModel()?.proxy.base64 !== '') && (props.logoModel()?.proxy.base64 !== undefined)
+		(props.logoModel.proxy.base64 !== '')
 	);
 
 	const newImageUploaded = computed(() =>
-		'base64' in (props.logoModel()?.pending ?? {})
+		'base64' in props.logoModel.pending
 	);
 
-	const imageRestrictions = computed(() => getImageRestrictions(props.logoModel()?.proxy.kennung ?? ""));
+	const imageRestrictions = computed(() => getImageRestrictions(props.logoModel.proxy.kennung));
 
 	const getRatioText = computed(() => {
 		const hasSize = (imageRestrictions.value.hoeheInMM > -1) && (imageRestrictions.value.breiteInMM > -1);
@@ -143,18 +143,18 @@
 	);
 
 	const uploadedFileSrc = computed(() => {
-		return props.logoModel()?.proxy.base64 ?? "";
+		return props.logoModel.proxy.base64;
 	});
 
 	const hinzugefuegtAm = computed(() => {
-		return (newImageUploaded.value) ? "jetzt" : formatToLocalDate(props.logoModel()?.proxy.hinzugefuegtAm ?? null, "/");
+		return (newImageUploaded.value) ? "jetzt" : formatToLocalDate(props.logoModel.proxy.hinzugefuegtAm, "/");
 	});
 
 	async function onFileChanged(event: Event): Promise<void> {
 		backendValidationResult.value = null;
 		const target = event.target as HTMLInputElement;
-		const logoModel = props.logoModel();
-		if ((!target.files) || (logoModel === undefined)) {
+		const logoModel = props.logoModel;
+		if ((!target.files)) {
 			return;
 		}
 		const file = target.files[0];
@@ -165,10 +165,7 @@
 
 	async function uploadLogoImage(): Promise<void> {
 		backendValidationResult.value = null;
-		const logoModel = props.logoModel();
-		if ((logoModel === undefined)) {
-			return;
-		}
+		const logoModel = props.logoModel;
 		try {
 			if (logoModel.proxy.id === -1) {
 				await props.add({ kennung: logoModel.proxy.kennung, logoBase64: logoModel.proxy.base64 });
@@ -184,14 +181,10 @@
 	}
 
 	async function closeModal(): Promise<void> {
-		const logoModel = props.logoModel();
-		if (logoModel === undefined) {
-			emit("closeModal");
-			return;
-		}
+		const logoModel = props.logoModel;
 		const fileType = parseBase64(logoModel.data.base64)?.mimeType ?? null;
 		await setModelImageInfo(logoModel, logoModel.data.base64, fileType, null);
-		logoModel.pending = {};
+		logoModel.reset();
 		emit("closeModal");
 	}
 
@@ -200,24 +193,14 @@
 	 */
 
 	const MAX_PREVIEW_HEIGHT_PX = 200;
-	const previewContainerRef = useTemplateRef("previewContainerRef");
-	const previewDimensions = computed(() => {
-		const kennung = props.logoModel()?.proxy.kennung;
-		const definition = (kennung !== undefined) ? ReportingBildDefinition.getByKennung(kennung) : null;
-		if (definition === null || previewContainerRef.value === null) {
-			return { height: `${MAX_PREVIEW_HEIGHT_PX}px`, width: '100%' };
-		}
-		const availableWidth = previewContainerRef.value.clientWidth;
-		const ratio = definition.getBreite() / definition.getHoehe();
-		const heightFromWidth = availableWidth / ratio;
-		if (heightFromWidth <= MAX_PREVIEW_HEIGHT_PX) {
-			return { height: `${heightFromWidth}px`, width: '100%' };
-		}
-		return { height: `${MAX_PREVIEW_HEIGHT_PX}px`, width: `${MAX_PREVIEW_HEIGHT_PX * ratio}px` };
+	const previewStyle = computed(() => {
+		const logoModel = props.logoModel;
+		return getCssLogoSize(
+			logoModel.proxy.kennung,
+			"calc(100cqw - 1rem - 2px)",
+			`calc(${MAX_PREVIEW_HEIGHT_PX}px - 1rem - 2px)`
+		);
 	});
-
-	const previewHeight = computed(() => previewDimensions.value.height);
-	const previewWidth = computed(() => previewDimensions.value.width);
 
 	/**
 	 * Validierung
@@ -225,7 +208,7 @@
 
 	const backendValidationResult = ref<string | null>(null);
 	const validierungsFehler = computed(() => {
-		return props.logoModel()?.getAlleFehler() ?? new ArrayList<ValidatorFehler>();
+		return props.logoModel.getAlleFehler();
 	});
 
 	const fileTypeValidationResult = computed(() => {

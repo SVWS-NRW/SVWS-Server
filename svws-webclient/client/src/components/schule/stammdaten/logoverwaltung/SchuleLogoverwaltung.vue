@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col w-full h-full overflow-hidden">
-		<div class="page page-grid-cards">
+		<div class="page flex page-grid-cards">
 			<svws-ui-content-card title="Logos">
 				<ui-table-grid name="Logos" :manager="() => gridManager">
 					<template #header>
@@ -28,9 +28,9 @@
 						<td class="flex justify-center text-left group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
 							{{ logoModel.proxy.beschreibung }}
 						</td>
-						<td class="flex items-center justify-center text-left max-w-full group-hover:bg-ui-selected" :class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
-							<div class="relative p-1"
-								:style="{ height: `${LOGO_PREVIEW_HEIGHT_REM}rem`, aspectRatio: getCssAspectRatio(logoModel.proxy.kennung) }">
+						<td class="flex items-center justify-center text-left group-hover:bg-ui-selected min-h-30 @container-size"
+							:class="{ 'bg-ui-selected': logoModel === previewLogoModel}">
+							<div class="relative p-1" :style="getCssLogoSize(logoModel.proxy.kennung, '100cqw', '100cqh')">
 								<logo-image mode="tooltip"
 									:logo-base64="logoModel.proxy.base64"
 									:alt="`Kleine Vorschau des Bildes für das Logo '${logoModel.proxy.bezeichnung}'`"
@@ -53,19 +53,14 @@
 					</template>
 				</ui-table-grid>
 			</svws-ui-content-card>
-			<svws-ui-content-card title="Vorschau" v-if="previewLogoModel !== null" class="w-[50%]">
-				<div class="p-1"
-					:style="previewStyle">
-					<logo-image mode="tooltip"
-						:logo-base64="previewLogoModel.proxy.base64"
-						:alt="`Große Vorschau des Bildes für das Logo '${previewLogoModel.proxy.bezeichnung}'`" />
-				</div>
-			</svws-ui-content-card>
 		</div>
-		<logo-image-upload-modal v-if="uploadModalIsOpen"
+		<logo-image-preview-modal v-if="previewLogoModel !== null"
+			:logo-model="previewLogoModel"
+			@close="closePreview" />
+		<logo-image-upload-modal v-if="uploadModalIsOpen && (logoModelForUpload !== undefined)"
 			:is-open="uploadModalIsOpen"
 			:add="addLogo"
-			:logo-model="() => logoModelForUpload"
+			:logo-model="logoModelForUpload"
 			@close-modal="closeUploadModal()" />
 		<logo-image-delete-modal :is-open="deleteModalIsOpen"
 			:logo-models="logoModelToDeleteImage"
@@ -88,13 +83,12 @@
 	import { ValidationResult } from "@ui/validation/ValidationResult";
 
 	import LogoImage from "./LogoImage.vue";
-	import { base64ToBlob, getCssAspectRatio, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
+	import { base64ToBlob, getCssLogoSize, getExtension, parseBase64, setModelImageInfo, type TableLogo } from "./LogoUtils";
 	import LogoImageDeleteModal from "./modals/LogoImageDeleteModal.vue";
 	import LogoImageUploadModal from "./modals/LogoImageUploadModal.vue";
 	import { LogoModelProxy } from "./modelProxy/LogoModelProxy";
 	import type { SchuleLogoverwaltungProps } from "./SchuleLogoverwaltungProps";
 
-	const LOGO_PREVIEW_HEIGHT_REM = 5.5;
 	const props = defineProps<SchuleLogoverwaltungProps>();
 	const schuleState = useSchuleState();
 
@@ -138,21 +132,6 @@
 		}
 	}, { immediate: true });
 
-	function getImageColumnWitdh(): string {
-		const bildDefinitions = [...ReportingBildDefinition.getBySchulform(schuleState.schulform)];
-		const maxRatio = Math.max(
-			1,
-			...bildDefinitions.map(definition => {
-				const hoehe = definition.getHoehe();
-				const breite = definition.getBreite();
-
-				return (hoehe > 0) ? breite / hoehe : 1;
-			})
-		);
-
-		return `${Math.ceil(LOGO_PREVIEW_HEIGHT_REM * maxRatio)}rem`;
-	}
-
 	function getTableLogo(definition: ReportingBildDefinition, dbLogo: Logo | undefined): TableLogo {
 		const id = dbLogo?.id ?? -1;
 		const kennung = definition.getKennung() ?? '';
@@ -177,10 +156,10 @@
 		getRowKey: row => row.proxy.kennung,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
-			{ kuerzel: "Bezeichnung", name: "Bezeichnung", width: "1fr" },
-			{ kuerzel: "Beschreibung", name: "Beschreibung", width: '1fr' },
-			{ kuerzel: "Bild", name: "Bild", width: getImageColumnWitdh() },
-			{ kuerzel: "", name: "Row-Actions", width: '8.5em' },
+			{ kuerzel: "Bezeichnung", name: "Bezeichnung", width: "minmax(10rem, 1fr)" },
+			{ kuerzel: "Beschreibung", name: "Beschreibung", width: 'minmax(10rem, 1fr)' },
+			{ kuerzel: "Bild", name: "Bild", width: '30%' },
+			{ kuerzel: "", name: "Row-Actions", width: '5.5em' },
 		],
 	}));
 
@@ -204,22 +183,12 @@
 	const previewLogoModel = shallowRef<LogoModelProxy | null>(null);
 
 	function selectPreviewLogo(logoModel: LogoModelProxy): void {
-		if (previewLogoModel.value?.proxy.kennung === logoModel.proxy.kennung) {
-			// Zweiter Klick auf dasselbe Bild → schließt die Preview
-			previewLogoModel.value = null;
-			return;
-		}
 		previewLogoModel.value = logoModel;
 	}
 
-	const previewStyle = computed((): { aspectRatio: string } | undefined => {
-		if (previewLogoModel.value === null) {
-			return undefined;
-		}
-		return (previewLogoModel.value.proxy.base64 !== '')
-			? { aspectRatio: getCssAspectRatio(previewLogoModel.value.proxy.kennung) }
-			: undefined;
-	});
+	function closePreview(): void {
+		previewLogoModel.value = null;
+	}
 
 	/**
 	 * Bulk-Selektion
