@@ -197,7 +197,7 @@ Alle Repositories liegen unter `module.reporting.repositories`. Jedes ist verant
 | `ReportingRepositorySchueler`            | Schüler-Stammdaten, Lernabschnitte, Erzieher, Leistungsdaten, Sprachenfolgen |
 | `ReportingRepositoryLerngruppen`         | Klassen und Kurse |
 | `ReportingRepositoryStundenplan`         | Stundenpläne inkl. Pausen, Räume und Aufsichten |
-| `ReportingRepositoryGost`                | Allgemeine Daten der gymnasialen Oberstufe: Abiturjahrgänge, Jahrgangsdaten und FächerManager, Laufbahn-Beratungsdaten, Abiturdaten, Fachwahlstatistik |
+| `ReportingRepositoryGost`                | Allgemeine Daten der gymnasialen Oberstufe: Abiturjahrgänge, Jahrgangsdaten und FächerManager, Laufbahn-Beratungsdaten, Abiturdaten, Fachwahlstatistik, GKL-Wahlen |
 | `ReportingRepositoryGostKlausurplanung`  | GOSt-Klausurplanung: Klausurplan-Manager und die daraus abgeleiteten Objekte |
 | `ReportingRepositoryGostKursplanung`     | GOSt-Kursplanung: Blockungsergebnis-Manager und die daraus abgeleiteten Objekte |
 
