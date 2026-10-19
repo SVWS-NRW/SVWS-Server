@@ -8,12 +8,15 @@
 		<template #modalDescription>
 			<div class="text-left">
 				<div class="mb-8 text-headline-md">Möchten Sie {{ logoModels.length === 1 ? 'das Bild dieses' : 'die Bilder dieser' }} Logos wirklich löschen:</div>
-				<div v-for="(logoModel, index) in logoModels" :key="logoModel.proxy.kennung" class="p-3 m-2 grid grid-cols-[1fr_8rem] border-b border-ui-50 gap-2 w-full">
+				<div v-for="logoModel in logoModels" :key="logoModel.proxy.kennung" class="p-3 m-2 grid grid-cols-[1fr_8rem] border-b border-ui-50 gap-2 w-full">
 					<div class="flex items-center">{{ logoModel.proxy.bezeichnung }}</div>
-					<div ref="previewContainerRef" class="flex items-center justify-center" :style="{ height: getPreviewDimensions(index, logoModel.proxy.kennung).height, width: getPreviewDimensions(index, logoModel.proxy.kennung).width }">
-						<logo-image mode="tooltip"
-							:logo-base64="logoModel.proxy.base64"
-							:alt="`Vorschau des Bildes für das Logo '${logoModel.proxy.bezeichnung}'`" />
+					<div class="flex items-center justify-center">
+						<div class="flex w-full items-center justify-center @container">
+							<logo-image mode="tooltip"
+								:style="getCssLogoSize(logoModel.proxy.kennung, '100cqw', `${LOGO_PREVIEW_MAX_HEIGHT_REM}rem`)"
+								:logo-base64="logoModel.proxy.base64"
+								:alt="`Vorschau des Bildes für das Logo '${logoModel.proxy.bezeichnung}'`" />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -34,11 +37,11 @@
 
 <script setup lang="ts">
 
-	import { useTemplateRef } from "vue";
-
-	import { ReportingBildDefinition } from "@core/core/types/reporting/ReportingBildDefinition";
-
+	import LogoImage from "../LogoImage.vue";
+	import { getCssLogoSize } from "../LogoUtils";
 	import type { LogoModelProxy } from "../modelProxy/LogoModelProxy";
+
+	const LOGO_PREVIEW_MAX_HEIGHT_REM = 10;
 
 	const { isOpen, logoModels } = defineProps<{
 		isOpen: boolean;
@@ -49,27 +52,6 @@
 		(e: "cancel"): void;
 		(e: "confirm", logos: LogoModelProxy[]): void;
 	}>();
-
-
-	const previewContainerRef = useTemplateRef("previewContainerRef");
-	function getPreviewDimensions(index: number, kennung: string): { height: string; width: string } {
-		const previewContainer = previewContainerRef.value?.[index];
-		const maxHeight = 96;
-		const definition = ReportingBildDefinition.getByKennung(kennung);
-
-		if ((definition === null) || (previewContainer === undefined)) {
-			return { height: `${maxHeight}px`, width: "100%" };
-		}
-		const availableWidth = previewContainer.clientWidth;
-		const ratio = definition.getBreite() / definition.getHoehe();
-		const heightFromWidth = availableWidth / ratio;
-
-		if (heightFromWidth <= maxHeight) {
-			return { height: `${heightFromWidth}px`, width: "100%" };
-		}
-
-		return { height: `${maxHeight}px`, width: `${maxHeight * ratio}px` };
-	}
 
 	function onUpdateOpen(value: boolean): void {
 		if (!value) {

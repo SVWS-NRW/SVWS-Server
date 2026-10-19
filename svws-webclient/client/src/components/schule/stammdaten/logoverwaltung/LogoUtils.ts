@@ -91,21 +91,28 @@ export function getAspectRatio(hoehe: number, breite: number): string {
 	return `1:${normalizedHeight}`;
 }
 
-export function getCssAspectRatio(kennung: string | null): string {
-	if (kennung === null) {
-		return "1 / 1";
-	}
-
+/**
+ * Berechnet die CSS-Größe (Breite und Höhe) einer Box, die das Seitenverhältnis der Bilddefinition einhält
+ * und dabei maximal die übergebene Breite und Höhe ausnutzt.
+ *
+ * @param kennung     die Kennung der Bilddefinition
+ * @param maxWidth    die maximale Breite
+ * @param maxHeight   die maximale Höhe
+ *
+ * @returns die Größe als Style-Objekt oder undefined, wenn keine gültige Definition existiert
+ */
+export function getCssLogoSize(kennung: string, maxWidth: string, maxHeight: string): { width: string, height: string } | undefined {
 	const definition = ReportingBildDefinition.getByKennung(kennung);
 	if (definition === null) {
-		return "1 / 1";
+		return undefined;
 	}
-
-	const height = definition.getHoehe();
-	const width = definition.getBreite();
-	const normalizedHeight = getNormalizedAspectRatio(height, width);
-
-	return `1 / ${normalizedHeight}`;
+	const hoehe = definition.getHoehe();
+	const breite = definition.getBreite();
+	if ((hoehe <= 0) || (breite <= 0)) {
+		return undefined;
+	}
+	const ratio = breite / hoehe;
+	return { width: `min(${maxWidth}, calc(${maxHeight} * ${ratio}))`, height: `min(calc(${maxWidth} / ${ratio}), ${maxHeight})` };
 }
 
 /**
