@@ -109,8 +109,7 @@
 				</thead>
 				<tbody>
 					<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}"
-						th:with="belegung = ${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id())},
-								 geschlechtIcon = ${Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (Kursschueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))}"
+						th:with="belegung = ${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id())}"
 						th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
 						<td class="bo-b-grey p-tb-0 p-lr-1 c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 icon-text" th:utext="${Kursschueler.nachname() + ', ' + Kursschueler.vorname() + #icon.getExtern(9, Kursschueler, VorlageParameter.get('mitExternerSchuleKuerzel'), ' ', '')}">Mustermann, Max</td>
@@ -118,7 +117,7 @@
 							th:text="${(belegung != null && belegung.hatGueltigeFachwahl()) ? belegung.kuerzelSchriftlichkeit() : 'Fachwahl prüfen'}">S</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="${(belegung != null && belegung.hatGueltigeFachwahl()) ? ((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('E', ergebnisHalbjahr.kuerzel.charAt(0))) ? '' : (belegung.abiturfach() + (((ergebnisHalbjahr != null && #strings.equalsIgnoreCase('1', ergebnisHalbjahr.kuerzel.charAt(1)) && belegung.abiturfach() > 2) ? '<span style=\'font-size: 0.6em;\'> (Planung)</span>'  : '')))) : ''}">3</td>
 						<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
-						<td class="bo-b-grey p-tb-0 p-lr-1 ta-cm icon-block" th:utext="${Kursschueler.geschlecht() != null ? #icon.get(geschlechtIcon, 10) : ''}">w</td>
+						<td class="bo-b-grey p-tb-0 p-lr-1 ta-cm icon-block" th:utext="${Kursschueler.geschlecht() != null ? #icon.getGeschlecht(10, Kursschueler) : ''}">w</td>
 					</tr>
 				</tbody>
 			</table>

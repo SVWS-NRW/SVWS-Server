@@ -101,8 +101,7 @@
 
 		<tbody>
 		<tr th:each="lehrer,iterationVarLehrer : ${Lehrer}"
-			th:with="geschlechtIcon = ${lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))},
-					 lehrerName = ${lehrer.nachnameMitTitel() + (lehrer.vorname().isEmpty() ? '' : (', ' + lehrer.vorname()))},
+			th:with="lehrerName = ${lehrer.nachnameMitTitel() + (lehrer.vorname().isEmpty() ? '' : (', ' + lehrer.vorname()))},
 					 lehrerGebDatStaat = ${'' + (mitLehrerGebDat ? #convert.toDateDE(lehrer.geburtsdatum()) : '') + ((mitLehrerGebDat && mitLehrerStaat) ? ', ' : '') + (mitLehrerStaat && (lehrer.staatsangehoerigkeit() != null) && (lehrer.staatsangehoerigkeit().daten(schuljahr) != null) ? lehrer.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}"
 			th:classappend="${iterationVarLehrer.even} ? 'bg-lightgrey'">
 			<!-- Spalte für das Kürzel, bei aktivem Foto steht die Amtsbezeichnung darunter, sonst in der eigenen Spalte anstelle des Fotos -->
@@ -132,7 +131,7 @@
 							<td class="mp-0 ta-lt" th:text="${lehrerName}">
 								Dr. Mustermann, Erika
 							</td>
-							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.getGeschlecht(10, lehrer) : ''}"></td>
 						</tr>
 						<tr th:if="${!fallNurBasisdaten && (mitLehrerGebDat || mitLehrerStaat)}" >
 							<td colspan="2" class="mp-0 bo-t-grey"
@@ -173,7 +172,7 @@
 								<td class="mp-0 ta-lt" th:text="${lehrerName}">
 									Dr. Mustermann, Erika
 								</td>
-								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.getGeschlecht(10, lehrer) : ''}"></td>
 							</tr>
 							<tr th:if="${!fallNurBasisdaten && (mitLehrerGebDat || mitLehrerStaat)}" >
 								<td colspan="2" class="mp-0 bo-t-grey"
@@ -208,7 +207,7 @@
 								<td class="mp-0 ta-lt" th:text="${lehrerName}">
 									Dr. Mustermann, Erika
 								</td>
-								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitLehrerGeschlecht ? #icon.getGeschlecht(10, lehrer) : ''}"></td>
 							</tr>
 							<tr th:if="${mitLehrerGebDat || mitLehrerStaat}" >
 								<td colspan="2" class="mp-0 bo-t-grey"

@@ -632,8 +632,8 @@ public class ReportingPerson extends ReportingBaseType {
 	 */
 	public String geschlechtDruckSymbolHtml() {
 		return switch (geschlecht) {
-			case Geschlecht.M -> "&#9792;";
-			case Geschlecht.W -> "&#9794;";
+			case Geschlecht.M -> "&#9794;";
+			case Geschlecht.W -> "&#9792;";
 			case Geschlecht.D -> Geschlecht.D.kuerzel;
 			case Geschlecht.X -> "-";
 			case null -> "";

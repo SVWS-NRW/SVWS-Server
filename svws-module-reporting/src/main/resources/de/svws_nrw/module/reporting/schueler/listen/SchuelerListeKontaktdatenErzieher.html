@@ -103,7 +103,6 @@
 		<tbody>
 		<tr th:each="schueler,iterationVarSchueler : ${Schueler}"
 			th:with="istExtern = ${schueler.status() != null && schueler.status().name() == 'EXTERN'},
-					 geschlechtIcon = ${schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))},
 					 zeigeExterneSchule = ${istExtern && mitExternerSchuleKuerzel && !schueler.externesSchulKuerzel().isEmpty()},
 					 schuelerKlasseKuerzel = ${(mitSchuelerKlasse && (schueler.auswahlLernabschnitt() != null) && (schueler.auswahlLernabschnitt().klasse() != null)) ? schueler.auswahlLernabschnitt().klasse().kuerzel() : ''},
 					 schuelerGebDatStaat = ${'' + (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '') + ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '') + (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) && (schueler.staatsangehoerigkeit().daten(schuljahr) != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}"
@@ -132,7 +131,7 @@
 								Mustermann, Maximilian Moritz
 							</td>
 							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td>
-							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}"></td>
 							<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:text="${schuelerKlasseKuerzel}">
 								06C
 							</td>
@@ -178,7 +177,7 @@
 									Mustermann, Maximilian Moritz
 								</td>
 								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td>
-								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}"></td>
 								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:text="${schuelerKlasseKuerzel}">
 									06C
 								</td>
@@ -218,7 +217,7 @@
 									Mustermann, Maximilian Moritz
 								</td>
 								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td>
-								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}"></td>
+								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}"></td>
 								<td class="mp-0 ta-rt p-l-1" style="width: 1%;" th:text="${schuelerKlasseKuerzel}">
 									06C
 								</td>
