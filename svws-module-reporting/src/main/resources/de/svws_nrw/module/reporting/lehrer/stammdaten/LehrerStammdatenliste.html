@@ -66,13 +66,12 @@
 			</thead>
 			<tbody>
 				<tr style="page-break-inside: avoid;" th:each="lehrer,iterationVarLehrer : ${Lehrer}"
-					th:with="geschlechtIcon = ${lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (lehrer.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))}"
 					th:classappend="${iterationVarLehrer.odd} ? 'bg-lightgrey'">
 					<td class="ta-r bo-t-grey p-tb-0 p-lr-1" th:text="${iterationVarLehrer.count + '. '}">1. </td>
 					<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.nachname()}">Mustermann</td>
 					<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.vorname()}">Maximilian Moritz</td>
 					<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.amtsbezeichnung()}">OStR</td>
-					<td class="bo-t-grey p-tb-0 p-lr-1 ta-cm icon-block" th:utext="${lehrer.geschlecht() != null ? #icon.get(geschlechtIcon, 10) : ''}">m</td>
+					<td class="bo-t-grey p-tb-0 p-lr-1 ta-cm icon-block" th:utext="${lehrer.geschlecht() != null ? #icon.getGeschlecht(10, lehrer) : ''}">m</td>
 					<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${#convert.toDateDE(lehrer.geburtsdatum())}">07.08.2010</td>
 					<td class="bo-t-grey p-tb-0 p-lr-1" th:text="${lehrer.strassennameHausnummer()}">Musterstraße 13a</td>
 					<td class="bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${lehrer.plz()}">12345</td>

@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 /**
@@ -93,6 +95,27 @@ public class IconExpressionHelper {
 			}
 		}
 		return result.isBlank() ? "" : (escapeXml(fuehrenderText) + result + escapeXml(folgenderText));
+	}
+
+	/**
+	 * Liefert das Geschlechts-Icon der Person in der angegebenen Größe. Ohne Angabe zum Geschlecht erscheint das Icon {@code "nogender"}.
+	 *
+	 * @param groessePx Die Kantenlänge des Icons in Pixeln.
+	 * @param person    Die Person, deren Geschlecht das Icon zeigt.
+	 *
+	 * @return Das {@code <img>}-Element als String oder ein leerer String, falls keine Person übergeben wird.
+	 */
+	public String getGeschlecht(final int groessePx, final ReportingPerson person) {
+		if (person == null) {
+			return "";
+		}
+		final String name = switch (person.geschlecht()) {
+			case Geschlecht.M -> "male";
+			case Geschlecht.W -> "female";
+			case Geschlecht.D -> "diverse";
+			case null, default -> "nogender";
+		};
+		return get(name, groessePx);
 	}
 
 

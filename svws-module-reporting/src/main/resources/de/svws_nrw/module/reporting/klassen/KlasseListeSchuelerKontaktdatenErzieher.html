@@ -103,8 +103,7 @@
 				<tbody>
 					<tr th:each="schueler,iterationVarSchueler : ${klasse.schueler()}"
 						th:with="istExtern = ${schueler.status() != null && schueler.status().name() == 'EXTERN'},
-								 geschlechtIcon = ${schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@M ? 'male' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@W ? 'female' : (schueler.geschlecht() == @de.svws_nrw.asd.types.Geschlecht@D ? 'diverse' : 'nogender'))},
-				 zeigeExterneSchule = ${istExtern && mitExternerSchuleKuerzel && !schueler.externesSchulKuerzel().isEmpty()},
+								 zeigeExterneSchule = ${istExtern && mitExternerSchuleKuerzel && !schueler.externesSchulKuerzel().isEmpty()},
 						 schuelerGebDatStaat = ${'' + (mitSchuelerGebDat ? #convert.toDateDE(schueler.geburtsdatum()) : '') + ((mitSchuelerGebDat && mitSchuelerStaat) ? ', ' : '') + (mitSchuelerStaat && (schueler.staatsangehoerigkeit() != null) && (schueler.staatsangehoerigkeit().daten(schuljahr) != null) ? schueler.staatsangehoerigkeit().daten(schuljahr).staatsangehoerigkeit : '')}"
 						th:classappend="${iterationVarSchueler.even} ? 'bg-lightgrey'">
 						<!-- Spalte für laufende Nummer -->
@@ -130,7 +129,7 @@
 										<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 											Mustermann, Maximilian Moritz
 										</td>
-										<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}">
+										<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}">
 										</td>
 									</tr>
 									<tr th:if="${!fallNurBasisdaten && (mitSchuelerGebDat || mitSchuelerStaat)}" >
@@ -173,7 +172,7 @@
 											<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}">
+											<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}">
 											</td>
 										</tr>
 										<tr th:if="${!fallNurBasisdaten && (mitSchuelerGebDat || mitSchuelerStaat)}" >
@@ -210,7 +209,7 @@
 											<td class="mp-0 ta-lt" style="width: 100%;" th:text="${mitSchuelerAlleVornamen ? schueler.nachnameVornamen() : schueler.nachnameVorname()}">
 												Mustermann, Maximilian Moritz
 											</td>
-											<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.get(geschlechtIcon, 10) : ''}">
+											<td class="mp-0 ta-rt p-l-1" th:utext="${#icon.getExtern(10, schueler, false, '', '')}"></td><td class="mp-0 ta-rt p-l-1" th:utext="${mitSchuelerGeschlecht ? #icon.getGeschlecht(10, schueler) : ''}">
 											</td>
 										</tr>
 										<tr th:if="${!fallNurBasisdaten && (mitSchuelerGebDat || mitSchuelerStaat)}" >
