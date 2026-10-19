@@ -1,17 +1,20 @@
 package de.svws_nrw.module.reporting.repositories;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerGKLWahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DataGostAbiturdaten;
@@ -44,6 +47,7 @@ public class ReportingRepositoryGost {
 	private final Map<Integer, List<GostStatistikFachwahl>> mapFachwahlen = new HashMap<>();
 	private final Map<Long, GostSchuelerGKLWahl> mapGklWahlen = new HashMap<>();
 	private final Map<Long, GostKlausurvorgabe> mapKlausurvorgaben = new HashMap<>();
+	private final Map<Integer, Map<Long, GostKlausurvorgabe>> mapKlausurvorgabenAbiturjahrgang = new HashMap<>();
 
 	/**
 	 * Die Fehler gescheiterter Ladevorgänge je Cache und Schüler-ID. Sie leben so lange wie die Caches selbst, weil deren Fehler-Marker jeden weiteren
@@ -57,6 +61,7 @@ public class ReportingRepositoryGost {
 
 	/** Die Fehler gescheiterter Ladevorgänge der Fachwahlstatistik je Abiturjahr; die Lebensdauer folgt derselben Regel wie bei den Maps oben. */
 	private final Map<Integer, Exception> ladefehlerFachwahlen = new HashMap<>();
+	private final Map<Integer, Exception> ladefehlerKlausurvorgabenAbiturjahrgang = new HashMap<>();
 
 	/** Zwischenspeicher für die Liste der vorhandenen Abiturjahrgänge. */
 	private List<Integer> abiturjahrgaenge = null;
@@ -473,10 +478,90 @@ public class ReportingRepositoryGost {
 	}
 
 	/**
+	 * Prüft, ob für den Schüler im Fach und Halbjahr eines Abiturjahrgangs ein GKL eingetragen ist. In der EF zählen nur die EF-Wahlen, in der Q-Phase nur
+	 * die Q-Wahlen, und nur Vorgaben des Abiturjahrgangs. Kursart und Schriftlichkeit der Belegung prüft die Belegprüfung, nicht diese Methode.
+	 *
+	 * @param idSchueler      Die ID des Schülers.
+	 * @param abiturjahrgang  Der Abiturjahrgang, in dem das Fach belegt ist, z. B. der Jahrgang einer Blockung.
+	 * @param halbjahr        Das GOSt-Halbjahr der Belegung.
+	 * @param idFach          Die ID des Faches.
+	 *
+	 * @return true, wenn eine passende GKL-Wahl vorliegt; false auch dann, wenn die Wahl oder die Vorgaben nicht geladen werden konnten.
+	 */
+	public boolean hatGkl(final long idSchueler, final int abiturjahrgang, final GostHalbjahr halbjahr, final long idFach) {
+		if (!AbiturdatenManager.istAbitur2030(abiturjahrgang) || (halbjahr == null)) {
+			return false;
+		}
+		final List<Long> idsKlausurvorgaben = idsKlausurvorgaben(gklWahl(idSchueler), halbjahr);
+		if (idsKlausurvorgaben.isEmpty()) {
+			return false;
+		}
+		final Map<Long, GostKlausurvorgabe> vorgaben = klausurvorgabenAbiturjahrgang(abiturjahrgang);
+		for (final Long id : idsKlausurvorgaben) {
+			final GostKlausurvorgabe vorgabe = vorgaben.get(id);
+			if ((vorgabe != null) && (vorgabe.halbjahr == halbjahr.id) && (vorgabe.idFach == idFach)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Liefert alle Klausurvorgaben des Abiturjahrgangs. Sie werden mit einer Abfrage geladen, statt je Schüler die gewählten Vorgaben einzeln anzufragen.
+	 * Ein gescheiterter Ladevorgang wird als Ausgabeproblem gemeldet und nicht wiederholt.
+	 *
+	 * @param abiturjahrgang Der Abiturjahrgang.
+	 *
+	 * @return Map mit der ID der Klausurvorgabe als Schlüssel; leer, wenn der Jahrgang keine Vorgaben hat oder das Laden gescheitert ist.
+	 */
+	private Map<Long, GostKlausurvorgabe> klausurvorgabenAbiturjahrgang(final int abiturjahrgang) {
+		if (!mapKlausurvorgabenAbiturjahrgang.containsKey(abiturjahrgang)) {
+			try {
+				mapKlausurvorgabenAbiturjahrgang.put(abiturjahrgang, gostKlausurenVorgabeService().getListByAbiturjahr(abiturjahrgang, -1, false).stream()
+						.collect(Collectors.toMap(vorgabe -> vorgabe.id, vorgabe -> vorgabe)));
+			} catch (final Exception e) {
+				mapKlausurvorgabenAbiturjahrgang.put(abiturjahrgang, null);
+				ladefehlerKlausurvorgabenAbiturjahrgang.put(abiturjahrgang, e);
+			}
+		}
+		final Map<Long, GostKlausurvorgabe> vorgaben = mapKlausurvorgabenAbiturjahrgang.get(abiturjahrgang);
+		if (vorgaben == null) {
+			// Ohne ID im Schlüssel: Die Klausurvorgaben melden ihre Ladefehler sonst je Vorgaben-ID, und ein Abiturjahrgang könnte mit einer solchen ID
+			// zusammenfallen.
+			ReportingRepositoryUtils.meldeTeildatenLadefehler(this.reportingContext, ReportingProblemSchluessel.fuer(GostKlausurvorgabe.class),
+					"Die GOSt-Klausurvorgaben des Abiturjahrgangs %d".formatted(abiturjahrgang), ladefehlerKlausurvorgabenAbiturjahrgang.get(abiturjahrgang));
+			return Map.of();
+		}
+		return vorgaben;
+	}
+
+	/**
+	 * Liefert die IDs der Klausurvorgaben, die in der GKL-Wahl für die Phase des Halbjahres gesetzt sind.
+	 *
+	 * @param wahl     Die GKL-Wahl eines Schülers.
+	 * @param halbjahr Das GOSt-Halbjahr, dessen Phase die Wahlfelder bestimmt.
+	 *
+	 * @return Die gesetzten IDs; leer, wenn in der Phase keine GKL gewählt ist.
+	 */
+	private static List<Long> idsKlausurvorgaben(final GostSchuelerGKLWahl wahl, final GostHalbjahr halbjahr) {
+		final List<Long> ids = new ArrayList<>();
+		final List<Long> wahlfelder = halbjahr.istEinfuehrungsphase()
+				? Arrays.asList(wahl.idKlausurvorgabeEF_Sprachen, wahl.idKlausurvorgabeEF_GW, wahl.idKlausurvorgabeEF_NW)
+				: Arrays.asList(wahl.idKlausurvorgabeQ_Sprachen, wahl.idKlausurvorgabeQ_GW, wahl.idKlausurvorgabeQ_NW);
+		for (final Long id : wahlfelder) {
+			if (id != null) {
+				ids.add(id);
+			}
+		}
+		return ids;
+	}
+
+	/**
 	 * Erstellt einen neuen Service für den Zugriff auf die GOSt-Klausurvorgaben. Anders als die übrigen GOSt-Services in
 	 * dieser Klasse wird dieser Service nicht über {@link GostServiceFactoryBuilder} bezogen, da dessen
-	 * {@code GostServiceFactory} ihn nicht anbietet — stattdessen wird dieselbe {@link GostKlausurenServiceFactory}
-	 * genutzt, über die auch der Klausurplanungs-Controller den Service erzeugt.
+	 * {@code GostServiceFactory} ihn nicht anbietet — stattdessen wird dieselbe
+	 * {@link de.svws_nrw.service.gost.klausuren.GostKlausurenServiceFactory} genutzt, über die auch der Klausurplanungs-Controller
+	 * den Service erzeugt.
 	 *
 	 * @return der Service
 	 */

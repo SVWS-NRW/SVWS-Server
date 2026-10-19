@@ -526,7 +526,7 @@ public class ReportingRepositoryGostKursplanung {
 			kurseListe.add(reportingKurs);
 
 			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
-				ergaenzeKursbelegung(idKursschueler, kurs.id, reportingKurs, mapSchueler, ergebnisManager);
+				ergaenzeKursbelegung(idKursschueler, kurs, reportingKurs, mapSchueler, ergebnisManager, blockungsdaten.abijahrgang, gostHalbjahr);
 			}
 
 			reportingKurs.schienen().forEach(s -> mapSchienen.get(s.id()).kurse().add(reportingKurs));
@@ -537,19 +537,20 @@ public class ReportingRepositoryGostKursplanung {
 		proxy.setKurse(kurseListe);
 	}
 
-	private void ergaenzeKursbelegung(final long idKursschueler, final long kursId,
+	private void ergaenzeKursbelegung(final long idKursschueler, final GostBlockungKurs kurs,
 			final ReportingGostKursplanungKurs reportingKurs, final Map<Long, ReportingSchueler> mapSchueler,
-			final GostBlockungsergebnisManager ergebnisManager) {
+			final GostBlockungsergebnisManager ergebnisManager, final int abiturjahrgang, final GostHalbjahr gostHalbjahr) {
 		final ReportingSchueler schueler = mapSchueler.get(idKursschueler);
 		if (schueler == null) {
 			// Bewusst still: Hier fehlen nur Schüler, die der Benutzerfilter des zentralen Schüler-Repositorys ausgeschlossen hat - eine
 			// Auswahlentscheidung des Anwenders und kein Ausgabeproblem.
 			return;
 		}
-		final FachwahlDaten fachwahl = fachwahlDatenOderMelde(ergebnisManager, idKursschueler, kursId);
+		final FachwahlDaten fachwahl = fachwahlDatenOderMelde(ergebnisManager, idKursschueler, kurs.id);
+		final boolean hatGkl = reportingContext.repositoryGost().hatGkl(idKursschueler, abiturjahrgang, gostHalbjahr, kurs.fach_id);
 
 		schueler.gostKursplanungKursbelegungen().add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
-				fachwahl.abiturfach(), fachwahl.gueltig(), fachwahl.schriftlich(), reportingKurs));
+				fachwahl.abiturfach(), hatGkl, fachwahl.gueltig(), fachwahl.schriftlich(), reportingKurs));
 	}
 
 	/**

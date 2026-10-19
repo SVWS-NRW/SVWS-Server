@@ -114,6 +114,7 @@ class TestReportingRepositoryGostKursplanungKursbelegungen {
 		final ReportingRepositorySchueler repositorySchueler = mock(ReportingRepositorySchueler.class);
 		when(repositorySchueler.schueler(any())).thenReturn(new ArrayList<>(List.of(schueler)));
 		when(reportingContext.repositorySchueler()).thenReturn(repositorySchueler);
+		when(reportingContext.repositoryGost()).thenReturn(mock(ReportingRepositoryGost.class));
 
 		// Die Lehrkraft des zweiten Kurses lässt den Aufbau scheitern, nachdem der erste Kurs seine Kursbelegung angehängt hat.
 		final ReportingRepositoryLehrer repositoryLehrer = mock(ReportingRepositoryLehrer.class);
