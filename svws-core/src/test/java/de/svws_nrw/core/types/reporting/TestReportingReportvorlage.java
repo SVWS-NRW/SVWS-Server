@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -294,6 +295,76 @@ class TestReportingReportvorlage {
 		}
 
 		assertTrue(verstoesse.isEmpty(), "Diese Vorlagen an Lehrkräfte lassen die private E-Mail-Adresse zu: " + verstoesse);
+	}
+
+	/** Die Suche nach einer Nutzung liefert genau die Vorlagen, die diese Nutzung nennen. */
+	@Test
+	void testGetByUiNutzungLiefertGenauDieVorlagenMitDieserNutzung() {
+		for (final ReportingReportvorlageUiNutzung uiNutzung : ReportingReportvorlageUiNutzung.values()) {
+			final List<ReportingReportvorlage> erwartet = new ArrayList<>();
+			for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+				if (reportvorlage.getUiNutzungen().contains(uiNutzung)) {
+					erwartet.add(reportvorlage);
+				}
+			}
+			final List<ReportingReportvorlage> ergebnis = ReportingReportvorlage.getByUiNutzung(uiNutzung);
+			assertEquals(erwartet.size(), ergebnis.size(), uiNutzung.name());
+			assertEquals(Set.copyOf(erwartet), Set.copyOf(ergebnis), uiNutzung.name());
+		}
+	}
+
+	/** Die Suche nach einer Nutzung liefert die Vorlagen nach Titel sortiert, ohne Beachtung der Groß- und Kleinschreibung. */
+	@Test
+	void testGetByUiNutzungSortiertNachTitel() {
+		for (final ReportingReportvorlageUiNutzung uiNutzung : ReportingReportvorlageUiNutzung.values()) {
+			final List<ReportingReportvorlage> ergebnis = ReportingReportvorlage.getByUiNutzung(uiNutzung);
+			for (int i = 1; i < ergebnis.size(); i++) {
+				final String vorher = ergebnis.get(i - 1).getUiTitel();
+				final String nachher = ergebnis.get(i).getUiTitel();
+				assertTrue(vorher.compareToIgnoreCase(nachher) <= 0, uiNutzung.name() + ": '" + vorher + "' steht vor '" + nachher + "'");
+			}
+		}
+	}
+
+	/** Eine Vorlage nennt jede Nutzung höchstens einmal, sonst erzeugt der Client die Card doppelt. */
+	@Test
+	void testUiNutzungenEinerVorlageSindEindeutig() {
+		for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.values()) {
+			assertEquals(reportvorlage.getUiNutzungen().size(), Set.copyOf(reportvorlage.getUiNutzungen()).size(), reportvorlage.name());
+		}
+	}
+
+	/**
+	 * Jeder Bereich im Client liefert nur IDs bestimmter Art, z. B. der Bereich Klassen Klassen- und Schüler-IDs. Eine Vorlage passt nur in einen
+	 * Bereich, dessen IDs ihr Datenaufbau erwartet.
+	 */
+	@Test
+	void testVorlagenEinerUiNutzungHabenEinenPassendenDatenContext() {
+		final Map<ReportingReportvorlageUiNutzung, Set<ReportingReportvorlageDatenContext>> zulaessig = new EnumMap<>(ReportingReportvorlageUiNutzung.class);
+		zulaessig.put(ReportingReportvorlageUiNutzung.SCHUELER,
+				Set.of(ReportingReportvorlageDatenContext.SCHUELER, ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER));
+		zulaessig.put(ReportingReportvorlageUiNutzung.KLASSEN,
+				Set.of(ReportingReportvorlageDatenContext.KLASSEN, ReportingReportvorlageDatenContext.SCHUELER, ReportingReportvorlageDatenContext.STUNDENPLANUNG_KLASSEN));
+		zulaessig.put(ReportingReportvorlageUiNutzung.KURSE, Set.of(ReportingReportvorlageDatenContext.KURSE));
+		zulaessig.put(ReportingReportvorlageUiNutzung.LEHRER,
+				Set.of(ReportingReportvorlageDatenContext.LEHRER, ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER));
+		zulaessig.put(ReportingReportvorlageUiNutzung.FAECHER, Set.of(ReportingReportvorlageDatenContext.STUNDENPLANUNG_FACH));
+
+		final List<String> verstoesse = new ArrayList<>();
+		for (final ReportingReportvorlageUiNutzung uiNutzung : ReportingReportvorlageUiNutzung.values()) {
+			final Set<ReportingReportvorlageDatenContext> contexte = zulaessig.get(uiNutzung);
+			if (contexte == null) {
+				verstoesse.add(uiNutzung.name() + ": keine zulässigen Daten-Contexte hinterlegt");
+				continue;
+			}
+			for (final ReportingReportvorlage reportvorlage : ReportingReportvorlage.getByUiNutzung(uiNutzung)) {
+				if (!contexte.contains(reportvorlage.getReportingReportvorlageDatenContext())) {
+					verstoesse.add(uiNutzung.name() + ": " + reportvorlage.name() + " mit " + reportvorlage.getReportingReportvorlageDatenContext());
+				}
+			}
+		}
+
+		assertTrue(verstoesse.isEmpty(), "Vorlagen in Bereichen ohne passende IDs: " + verstoesse);
 	}
 
 	/**

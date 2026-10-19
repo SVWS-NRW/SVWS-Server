@@ -1,41 +1,7 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper class="flex flex-col gap-4">
-			<ui-card v-if="hatKompetenzDruckenLehrerdaten" icon="i-ri-printer-line" title="Lehrerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Lehrkräfte."
-				:is-open="currentAction === 'druckLehrerListeKontaktdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeKontaktdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_KONTAKTDATEN"
-					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
-				:is-open="currentAction === 'druckLehrerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplan', isOpen)">
-				<div>
-					<div class="flex flex-col">
-						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
-					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-				</div>
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Kombinierten Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Lehrkräfte in einer kombinierten Ansicht."
-				:is-open="currentAction === 'druckLehrerStundenplanKombiniert'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplanKombiniert', isOpen)">
-				<div>
-					<div class="flex flex-col">
-						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
-					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-				</div>
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte drucken"
-				:is-open="currentAction === 'druckLehrerListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeSchuelerLeistungsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN"
-					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenNotenmodulZugangsdaten" icon="i-ri-printer-line" title="Zugangsdaten für den WebNotenManager drucken oder versenden" subtitle="Drucke oder versende je ausgewählter Lehrkraft ein Anschreiben mit dem Initialkennwort für den WebNotenManager."
-				:is-open="currentAction === 'druckLehrerNotenmodulZugangsdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerNotenmodulZugangsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_NOTENMODUL_ANSCHREIBEN_ZUGANGSDATEN"
-					:ids-hauptdaten="[...lehrerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
+			<report-cards :ui-nutzung="ReportingReportvorlageUiNutzung.LEHRER" :ids="idsJeDatenContext" :stundenplaene v-model:current-action="currentAction" />
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
@@ -66,29 +32,21 @@
 
 	import { computed, ref } from "vue";
 
-	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
-	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ReportingReportvorlageDatenContext } from "@core/core/types/reporting/ReportingReportvorlageDatenContext";
+	import { ReportingReportvorlageUiNutzung } from "@core/core/types/reporting/ReportingReportvorlageUiNutzung";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { useCurrentAction } from "@ui/ui/composables/useCurrentAction";
 
 	import { useLehrerAuswahlState } from "~/states/lehrer/LehrerAuswahlState";
 
 	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 
-	type Action = 'druckLehrerListeKontaktdaten' | 'druckLehrerStundenplan' | 'druckLehrerStundenplanKombiniert' | 'druckLehrerListeSchuelerLeistungsdaten' | 'druckLehrerNotenmodulZugangsdaten' | 'delete' | '';
-
 	const props = defineProps<LehrerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
-	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenLehrerdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenNotenmodulZugangsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.NOTENMODUL_ADMINISTRATION) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
@@ -96,40 +54,14 @@
 	const selectedAllowedToDelete = computed<boolean>(() => lehrerAuswahlState.deleteCheck()[0]);
 	const isDeleteConditionSectionVisible = computed<boolean>(() => (lehrerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
 
-	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
+	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
+		[ReportingReportvorlageDatenContext.LEHRER, () => lehrerAuswahlState.manager.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_LEHRER, () => lehrerAuswahlState.manager.liste.auswahlKeyList()],
+	]);
 
-	const stundenplanOptions = computed(() => lehrerAuswahlState.mapStundenplaene.values());
-	const stundenplanModel = computed({
-		get: () => {
-			if (stundenplanAuswahl.value === undefined) {
-				if (lehrerAuswahlState.mapStundenplaene.size > 0) {
-					const [first] = lehrerAuswahlState.mapStundenplaene.values();
-					return first;
-				}
-				return undefined;
-			}
-			return stundenplanAuswahl.value;
-		},
-		set: value => stundenplanAuswahl.value = value,
-	});
+	const stundenplaene = computed(() => [...lehrerAuswahlState.mapStundenplaene.values()]);
 
-	const stundenplanSelectManager = new SelectManager({
-		options: stundenplanOptions.value,
-		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
-		selectionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
-	});
-
-	function toDateStr(iso: string): string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return wochentag[date[3] % 7] + " " + date[2] + "." + date[1] + "." + date[0];
-	}
-
-	function toKW(iso: string): string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return "" + date[5];
-	}
-
-	const currentAction = ref<Action>('');
+	const { currentAction, setCurrentAction } = useCurrentAction();
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const statusAction = ref<boolean | undefined>();
@@ -140,20 +72,10 @@
 		loading.value = false;
 	}
 
-	function setCurrentAction(newAction: Action, open: boolean) {
-		if ((newAction !== currentAction.value) && !open) {
-			return;
-		}
-
-		currentAction.value = open ? newAction : "";
-	}
-
 	function clearLog() {
 		loading.value = false;
 		logs.value = undefined;
 		statusAction.value = undefined;
 	}
-
-	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.'];
 
 </script>

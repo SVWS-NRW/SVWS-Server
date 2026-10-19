@@ -42,11 +42,11 @@ Vorlage, welche IDs, welche Optionen) und das gewünschte Ausgabeformat.
 liegt ein Eintrag im Enum `ReportingReportvorlage` — der liegt im Modul `svws-core`, nicht hier:
 
 ```java
-KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN("Klasse-Liste-Schueler-Fotos-Namen",
-        "Fotoübersicht klassenweise",
-        ...,
-        ReportingReportvorlageDatenContext.KLASSEN,      // welcher Datenaufbau
-        "klassen/KlasseListeSchuelerFotosNamen.html",    // welche HTML-Datei
+KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN(new ReportingReportvorlageDefinition("Klasse-Liste-Schueler-Fotos-Namen")
+        .setUiTitel("Fotoübersicht klassenweise")
+        ...
+        .setDatenContext(ReportingReportvorlageDatenContext.KLASSEN)          // welcher Datenaufbau
+        .setPfadHtmlTemplate("klassen/KlasseListeSchuelerFotosNamen.html")    // welche HTML-Datei
         ...)
 ```
 
