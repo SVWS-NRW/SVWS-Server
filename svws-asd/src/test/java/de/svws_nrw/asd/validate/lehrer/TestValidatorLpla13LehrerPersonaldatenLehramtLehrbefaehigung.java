@@ -26,12 +26,15 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung {
 
 	private static final String TESTDATEN_LEHRAMTLEHRBEFAEHIGUNG = """
-			'30',   'AE', true
+			'30',   'AE', false
 			'04',   'AE', true
 			'08',   'MG', true
 			'90',   'NG', true
 			'98',   'SB', true
-			'04',   'MU', false
+			'04',   'MU', true
+			'01',   'SB', false
+			null,   'BE', true
+			null,   'SB', false
 		""";
 
 	/** Stammdaten der Schule mit Lehrerpersonaldaten->Lehrämtern-Lehrbefähigungen*/
@@ -68,7 +71,7 @@ class TestValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung {
 
 		final ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung validator = new ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung(
 				() -> LehrerLehrbefaehigung.data().getWertBySchluessel(lehrbefaehigung),
-				() -> LehrerLehramt.data().getWertBySchluessel(lehramt),
+				() -> lehramt == null ? null : LehrerLehramt.data().getWertBySchluessel(lehramt),
 				kontext);
 		assertEquals(result, validator.pruefe());
 	}

@@ -38,8 +38,8 @@ export class ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	}
 
 	protected pruefe(): boolean {
-		if (ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._lehrerLehramt.get())) {
-			if (!ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zuPruefendeLehrbefaehigungen.contains(this._lehrbefaehigung.get())) {
+		if (this._lehrerLehramt.get() === null || !ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zulaessigeLehraemter.contains(this._lehrerLehramt.get())) {
+			if (ValidatorLpla13LehrerPersonaldatenLehramtLehrbefaehigung.zuPruefendeLehrbefaehigungen.contains(this._lehrbefaehigung.get())) {
 				this.addFehler(0, "Bei den Lehrbefähigungen 'AE - Ästhetische Erziehung', 'MG - Mathematische Grundbildung', 'NG - Natur- und Gesellschaftswissenschaften' und 'SB - Sprachliche Grundbildung' muss das Lehramt 'Grundschule' oder 'Sonderpädagogische Förderung' bzw. die Lehramtseinträge 'Studierende' oder 'Lehramtsanwärter/-in / Studienreferendar/-in' angegeben werden.");
 				return false;
 			}
