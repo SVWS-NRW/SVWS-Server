@@ -136,6 +136,16 @@ export interface ReportingState {
 	istServerModeZulaessig(vorlage: ReportingReportvorlage): boolean;
 
 	/**
+	 * Eine Vorlage wird angeboten, wenn der Benutzer Berichte drucken darf, eine der Kompetenzen der Vorlage besitzt und Schulform und ServerMode passen.
+	 * Die Kompetenzen stammen aus der Vorlagendefinition, damit der Client keine Vorlage anbietet, die der Server ablehnt.
+	 *
+	 * @param vorlage   die zu prüfende Reportvorlage
+	 *
+	 * @returns true, wenn die Vorlage angeboten wird
+	 */
+	istVorlageZulaessig(vorlage: ReportingReportvorlage): boolean;
+
+	/**
 	 * Erzeuge die Parameter für die übergebene Vorlage, zusammengestellt aus neuen und gespeicherten Daten
 	 *
 	 * @param vorlage   die Vorlage, für die die Parameter erzeugt werden sollen

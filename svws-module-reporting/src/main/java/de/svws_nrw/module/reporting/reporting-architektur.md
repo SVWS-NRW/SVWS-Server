@@ -330,7 +330,7 @@ Pfad: `module.reporting.factories.HtmlFactory`
 
 Aufgaben:
 
-1. Validiert die HTML-Vorlage und hält sie gegen die Anfrage: die Benutzer-Kompetenzen gegen die in der Vorlage hinterlegten Pflicht-Kompetenzen, und die Schulform der Schule gegen die Schulformen der Vorlage. Nennt die Vorlage keine Schulform, so gilt sie überall und die Schulform wird gar nicht erst ermittelt — eine Schule ohne auflösbares Kürzel in den Stammdaten könnte sonst überhaupt nichts mehr drucken. Eine fehlende Kompetenz ergibt `403`, eine nicht vorgesehene Schulform `400`: Sie gehört der Schule und nicht dem Benutzer, und keine zusätzliche Berechtigung ändert daran etwas.
+1. Validiert die HTML-Vorlage und hält sie gegen die Anfrage: die Benutzer-Kompetenzen gegen die in der Vorlage hinterlegten Pflicht-Kompetenzen, und die Schulform der Schule gegen die Schulformen der Vorlage. Nennt die Vorlage keine Schulform, so gilt sie überall und die Schulform wird gar nicht erst ermittelt — eine Schule ohne auflösbares Kürzel in den Stammdaten könnte sonst überhaupt nichts mehr drucken. Eine fehlende Kompetenz ergibt `403`, eine nicht vorgesehene Schulform `400`: Sie gehört der Schule und nicht dem Benutzer, und keine zusätzliche Berechtigung ändert daran etwas. Ebenso ergibt `400`, wenn der ServerMode des Servers den in der Vorlage verlangten ServerMode nicht erfüllt.
 2. Baut über `erzeugeContexts()` eine Map `mapHtmlContexts: String → HtmlContext<?>`. Die Schlüssel sind interne Bezeichnungen der Context-Map und dienen insbesondere dem Nachschlagen und Ersetzen des Haupt-Contexts bei der Einzelausgabe. Sie sind nicht mit den Thymeleaf-Variablennamen gleichzusetzen und stehen als Konstanten in `HtmlContextSchluessel` (Paket `html.contexts.initializer`), auf die sowohl die `HtmlFactory` als auch die Registry zugreifen.
 3. Holt sich über die `HtmlContextInitializerRegistry` den zum `ReportingReportvorlageDatenContext` gehörenden Initializer und stößt dessen Aufbau an — die Factory kennt die einzelnen Datenaufbauten nicht mehr. Jeder Wert des `ReportingReportvorlageDatenContext` benennt genau einen Ablauf des Datenaufbaus; mehrere Reportvorlagen teilen sich denselben Wert, so dass zu einer Vorlage eindeutig feststeht, welche Daten geladen und welche Prüfungen durchgeführt werden. Details siehe Abschnitt 6.2.
 4. Erzeugt mit `createHtmlBuilders()` bzw. `createHtmlResponse()` die `ReportBuilderHtml`-Instanzen und liefert das HTML als Response. Ein ZIP entsteht ausschließlich im PDF-Pfad; die HTML-Ausgabe liefert stets genau eine Datei.
@@ -345,7 +345,7 @@ Die `HtmlFactory` unterstützt zwei Modi:
 
 ### 6.2 Der Aufbau der Daten-Contexts (`html/contexts/initializer/`)
 
-Welche Daten ein Report lädt und welche Prüfungen dabei laufen, hängt nicht an der Reportvorlage, sondern an ihrem **Datenaufbau** (`ReportingReportvorlageDatenContext`). Mehrere Vorlagen teilen sich denselben Datenaufbau, und mehrere Datenaufbauten teilen sich dasselbe **Ablaufmuster**. Neue Vorlagen mit bekanntem Datenaufbau brauchen deshalb kein Java.
+Welche Daten ein Report lädt und welche Prüfungen dabei laufen, hängt nicht an der Reportvorlage, sondern an ihrem **Datenaufbau** (`ReportingReportvorlageDatenContext`). Mehrere Vorlagen teilen sich denselben Datenaufbau, und mehrere Datenaufbauten teilen sich dasselbe **Ablaufmuster**. Neue Vorlagen mit bekanntem Datenaufbau brauchen deshalb kein Java im Reporting-Modul, nur den Eintrag und die Konfiguration in `svws-core`.
 
 ```mermaid
 flowchart TD

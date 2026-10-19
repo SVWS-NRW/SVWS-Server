@@ -3,21 +3,9 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-else class="flex flex-col gap-4">
-			<!-- Karte: Kursliste Schüler-Kontaktdaten/Erzieher drucken/versenden -->
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Kursliste drucken oder versenden" subtitle="Eine Liste mit den Daten der Schülerinnen und Schüler der ausgewählten Kurse drucken oder versenden."
-				:is-open="currentAction === 'druckKursListeSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerKontaktdatenErzieher', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER" :ids-hauptdaten="[...kurseAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<!-- Karte: Kursliste Schüler-Fotos drucken/versenden -->
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Kursliste mit Fotos drucken oder versenden" subtitle="Eine Liste mit den Fotos der Schülerinnen und Schüler der ausgewählten Kurse drucken oder versenden."
-				:is-open="currentAction === 'druckKursListeSchuelerFotos'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerFotos', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN" :ids-hauptdaten="[...kurseAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Kurse drucken"
-				:is-open="currentAction === 'druckKursListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerLeistungsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN" :ids-hauptdaten="[...kurseAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
+		<div class="flex flex-col gap-4">
+			<report-cards :ui-nutzung="ReportingReportvorlageUiNutzung.KURSE" :ids="idsJeDatenContext"
+				v-model:current-action="currentAction" @update:hat-vorlagen="hatVorlagen => hatReportCards = hatVorlagen" />
 			<!-- Karte: Löschen (bestehende Funktionalität, DEV) -->
 			<ui-card v-if="serverState.hasDev && hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kurse werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
@@ -35,7 +23,7 @@
 					</svws-ui-button>
 				</template>
 			</ui-card>
-			<log-box :logs :status>
+			<log-box v-if="hatIrgendwelcheKompetenzen" :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
 				</template>
@@ -48,34 +36,36 @@
 	import { computed, ref } from "vue";
 
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
+	import { ReportingReportvorlageDatenContext } from "@core/core/types/reporting/ReportingReportvorlageDatenContext";
+	import { ReportingReportvorlageUiNutzung } from "@core/core/types/reporting/ReportingReportvorlageUiNutzung";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useServerState } from "@ui/states/ServerState";
+	import { useCurrentAction } from "@ui/ui/composables/useCurrentAction";
 
 	import { useKurseAuswahlState } from "~/states/kurse/KurseAuswahlState";
 
 	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
-
-	type Action = 'druckKursListeSchuelerKontaktdatenErzieher' | 'druckKursListeSchuelerFotos' | 'druckKursListeSchuelerLeistungsdaten' | 'delete' | '';
 
 	const props = defineProps<KurseGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
 	const serverState = useServerState();
 	const kurseAuswahlState = useKurseAuswahlState();
 
-	const currentAction = ref<Action>('');
+	const { currentAction, setCurrentAction } = useCurrentAction();
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
-	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
+	const hatReportCards = ref<boolean>(false);
+	const hatIrgendwelcheKompetenzen = computed(() => hatReportCards.value || hatKompetenzLoeschen.value);
+
+	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
+		[ReportingReportvorlageDatenContext.KURSE, () => kurseAuswahlState.manager.liste.auswahlKeyList()],
+	]);
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete') {
@@ -83,14 +73,6 @@
 		}
 		return { success: false, logs: new ArrayList<string>() };
 	});
-
-	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction !== currentAction.value && !open) {
-			return;
-		}
-
-		currentAction.value = open ? newAction : '';
-	}
 
 	function clearLog() {
 		loading.value = false;

@@ -3,32 +3,9 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<svws-ui-input-wrapper v-else class="flex flex-col gap-4">
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schülerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Schülerinnen und Schüler."
-				:is-open="currentAction === 'druckSchuelerListeKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckSchuelerListeKontaktdatenErzieher', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER"
-					:ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schulbescheinigung drucken" subtitle="Drucke eine Schulbescheinigung für die ausgewählten Schülerinnen und Schüler."
-				:is-open="currentAction === 'druckSchuelerSchulbescheinigung'" @update:is-open="isOpen => setCurrentAction('druckSchuelerSchulbescheinigung', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG"
-					:ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="zeigeGrundschulzeugnis" icon="i-ri-printer-line" title="Grundschulzeugnis Klasse 4 drucken" subtitle="Drucke ein Grundschulzeugnis der Klasse 4 für die ausgewählten Schülerinnen und Schüler."
-				:is-open="currentAction === 'druckSchuelerGrundschulzeugnisKlasse4'" @update:is-open="isOpen => setCurrentAction('druckSchuelerGrundschulzeugnisKlasse4', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4"
-					:ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (schuelerAuswahlState.mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Schüler."
-				:is-open="currentAction === 'druckSchuelerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckSchuelerStundenplan', isOpen)">
-				<div>
-					<div class="flex flex-col">
-						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
-					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN"
-						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...schuelerAuswahlState.manager.liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" />
-				</div>
-			</ui-card>
+		<svws-ui-input-wrapper class="flex flex-col gap-4">
+			<report-cards :ui-nutzung="ReportingReportvorlageUiNutzung.SCHUELER" :ids="idsJeDatenContext" :stundenplaene
+				v-model:current-action="currentAction" @update:hat-vorlagen="hatVorlagen => hatReportCards = hatVorlagen" />
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Schülern." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
@@ -59,72 +36,39 @@
 
 	import { computed, ref } from "vue";
 
-	import type { StundenplanListeEintrag } from "@core/core/data/stundenplan/StundenplanListeEintrag";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
-	import { ReportingReportvorlage } from "@core/core/types/reporting/ReportingReportvorlage";
-	import { DateUtils } from "@core/core/utils/DateUtils";
+	import { ReportingReportvorlageDatenContext } from "@core/core/types/reporting/ReportingReportvorlageDatenContext";
+	import { ReportingReportvorlageUiNutzung } from "@core/core/types/reporting/ReportingReportvorlageUiNutzung";
 	import type { List } from "@core/java/util/List";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { useReportingState } from "@ui/states/ReportingState";
-	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
+	import { useCurrentAction } from "@ui/ui/composables/useCurrentAction";
 
 	import { useSchuelerAuswahlState } from "~/states/schueler/SchuelerAuswahlState";
 
 	import type { SSchuelerAllgemeinesGruppenprozesseProps } from "./SSchuelerAllgemeinesGruppenprozesseProps";
 
-	type Action = 'druckSchuelerListeKontaktdatenErzieher' | 'druckSchuelerSchulbescheinigung' | 'druckSchuelerGrundschulzeugnisKlasse4' | 'druckSchuelerStundenplan' | 'delete' | '';
-
 	const props = defineProps<SSchuelerAllgemeinesGruppenprozesseProps>();
 	const benutzerState = useBenutzerState();
-	const reportingState = useReportingState();
 	const schuelerAuswahlState = useSchuelerAuswahlState();
 
-	const hatKompetenzDrucken = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || benutzerState.benutzerHatKompetenz(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-	const hatKompetenzDruckenStundenplan = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
-	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
-	const zeigeGrundschulzeugnis = computed(() => hatKompetenzDruckenSchuelerIndividualdaten.value
-		&& reportingState.istSchulformZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4)
-		&& reportingState.istServerModeZulaessig(ReportingReportvorlage.SCHUELER_V_GRUNDSCHULZEUGNIS_KLASSE_4));
-	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
+
+	const hatReportCards = ref<boolean>(false);
+	const hatIrgendwelcheKompetenzen = computed(() => hatReportCards.value || hatKompetenzLoeschen.value);
+
+	const idsJeDatenContext = new Map<ReportingReportvorlageDatenContext, () => List<number>>([
+		[ReportingReportvorlageDatenContext.SCHUELER, () => schuelerAuswahlState.manager.liste.auswahlKeyList()],
+		[ReportingReportvorlageDatenContext.STUNDENPLANUNG_SCHUELER, () => schuelerAuswahlState.manager.liste.auswahlKeyList()],
+	]);
+
+	const stundenplaene = computed(() => [...schuelerAuswahlState.mapStundenplaene.values()]);
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !schuelerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
 	const deleteCheckErrors = computed<List<string>>(() => schuelerAuswahlState.deleteSchuelerCheck()[1]);
 	const selectedAllowedToDelete = computed(() => schuelerAuswahlState.deleteSchuelerCheck()[0]);
 	const isDeleteConditionSectionVisible = computed<boolean>(() => (schuelerAuswahlState.manager.liste.auswahlExists() || (statusAction.value === undefined)));
 
-	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
-	const stundenplanModel = computed({
-		get: () => {
-			if (stundenplanAuswahl.value === undefined) {
-				if (schuelerAuswahlState.mapStundenplaene.size > 0) {
-					const [first] = schuelerAuswahlState.mapStundenplaene.values();
-					return first;
-				}
-			}
-			return stundenplanAuswahl.value;
-		},
-		set: value => stundenplanAuswahl.value = value,
-	});
-
-	const stundenplanOptions = computed(() => schuelerAuswahlState.mapStundenplaene.values());
-	const stundenplanSelectManager = new SelectManager({
-		options: stundenplanOptions.value,
-		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
-		selectionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
-	});
-
-	function toDateStr(iso: string): string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return wochentag[date[3] % 7] + " " + date[2] + "." + date[1] + "." + date[0];
-	}
-
-	function toKW(iso: string): string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return "" + date[5];
-	}
-
-	const currentAction = ref<Action>('');
+	const { currentAction, setCurrentAction } = useCurrentAction();
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const statusAction = ref<boolean | undefined>();
@@ -133,15 +77,6 @@
 		loading.value = true;
 		[statusAction.value, logs.value] = await schuelerAuswahlState.delete();
 		loading.value = false;
-	}
-
-	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.'];
-
-	function setCurrentAction(newAction: Action, open: boolean) {
-		if ((newAction !== currentAction.value) && !open) {
-			return;
-		}
-		currentAction.value = open ? newAction : "";
 	}
 
 	function clearLog() {

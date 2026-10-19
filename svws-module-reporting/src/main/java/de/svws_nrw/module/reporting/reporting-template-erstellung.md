@@ -57,7 +57,7 @@ Die Daten kommen aus sogenannten **Contexts** (Datenquellen). Welche Contexts ge
 | `MeinReport.css` | Eigene Styles nur für diese Vorlage | empfohlen |
 | `MeinReport.name.tpl` | Bestimmt den Dateinamen der Ausgabedatei | ✅ ja |
 
-Dazu kommt **ein** Java-Eintrag, der die Vorlage im System bekannt macht (siehe Schritt 1).
+Dazu kommt Java-Code in `svws-core`: der Enum-Eintrag, der die Vorlage bekannt macht (Schritt 1), und die Konfigurationsmethode für ihre Optionen (Schritt 5).
 
 ---
 
@@ -87,38 +87,43 @@ Die folgenden Schritte erklären jeden Bestandteil – auch, wenn du kopiert has
 
 ## 4. Schritt 1 – Die Vorlage registrieren (Java)
 
-Damit der SVWS-Client die Vorlage anbieten kann, muss sie in einer **Java-Enum** eingetragen werden. Das ist die einzige Java-Stelle – sie folgt einem festen Muster.
+Damit der SVWS-Client die Vorlage anbieten kann, muss sie in einer **Java-Enum** eingetragen werden. Die Registrierung folgt einem festen Java-Muster.
 
 **Datei:** `svws-core/src/main/java/de/svws_nrw/core/types/reporting/ReportingReportvorlage.java`
 
-Füge einen neuen Enum-Eintrag hinzu. Orientiere dich an einem vorhandenen Eintrag aus demselben Bereich. Ein Eintrag sieht so aus:
+Füge einen neuen Enum-Eintrag hinzu. Orientiere dich an einem vorhandenen Eintrag aus demselben Bereich. Jeder Eintrag übergibt seine Angaben über eine `ReportingReportvorlageDefinition`. Ihre Setter lassen sich verketten, so steht jede Angabe in einer eigenen Zeile:
 
 ```java
 /** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
-KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
-        "Klassenliste mit Kontaktdaten",                          // uiTitel: Titel im Client
-        "Eine Liste mit den Kontaktdaten ... erzeugen.",          // uiBeschreibung: Text im Client
-        ReportingReportvorlageDatenContext.KLASSEN,               // welcher Datenaufbau? -> bestimmt die Contexts
-        "klassen/KlasseListeSchuelerKontaktdatenErzieher.html",   // Pfad zur HTML-Datei (relativ zum resources-Ordner)
-        "Klasse-Liste-Schueler-Kontaktdaten-Erzieher",            // statischer Dateiname (Fallback ohne .name.tpl)
-        List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), // wer darf das? (mind. eine dieser Kompetenzen)
-        ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher() // Optionen (Schritt 5)
-),
+KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER(new ReportingReportvorlageDefinition("Klasse-Liste-Schueler-Kontaktdaten-Erzieher")
+        .setUiTitel("Klassenliste mit Kontaktdaten")                       // Titel im Client
+        .setUiBeschreibung("Eine Liste mit den Kontaktdaten ... erzeugen.")  // Text im Client
+        .setUiNutzungen(List.of(ReportingReportvorlageUiNutzung.KLASSEN))  // wo der Client die Vorlage anbietet
+        .setDatenContext(ReportingReportvorlageDatenContext.KLASSEN)       // welcher Datenaufbau? -> bestimmt die Contexts
+        .setPfadHtmlTemplate("klassen/KlasseListeSchuelerKontaktdatenErzieher.html") // Pfad zur HTML-Datei
+        .setDateiname("Klasse-Liste-Schueler-Kontaktdaten-Erzieher")       // statischer Dateiname (Fallback ohne .name.tpl)
+        .setBenutzerKompetenzen(List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) // wer darf das?
+        .setReportingParameter(ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher())), // Optionen (Schritt 5)
 ```
 
-Die Parameter im Einzelnen:
+Die Angaben im Einzelnen:
 
-| Parameter | Bedeutung |
-|-----------|-----------|
-| **Enum-Name** (`KLASSEN_V_…`) | Technischer Name nach dem Schema `HAUPTDATEN_V_DETAILDATEN`. Nur Großbuchstaben, Ziffern und `_`. |
-| **bezeichnung** (1. String) | Eindeutige technische Bezeichnung. **Keine Leerzeichen**, nur Buchstaben/Ziffern/`-`/`_`. |
-| **uiTitel** | Wird dem Nutzer im Client als Titel angezeigt. |
-| **uiBeschreibung** | Erklärtext im Client. |
-| **datenContext** | **Wichtig:** Wählt den Datenaufbau aus `ReportingReportvorlageDatenContext` und entscheidet, **welche Contexts gefüllt und welche Prüfungen durchgeführt werden** (siehe [Abschnitt 13](#13-referenz-verfügbare-daten-contexts)). |
-| **pfadHtmlTemplate** | Pfad zur HTML-Datei relativ zu `…/module/reporting/`. |
-| **dateiname** | Statischer Dateiname (ohne Endung) als Rückfallebene, falls keine `.name.tpl` greift. |
-| **benutzerKompetenzen** | Liste von `BenutzerKompetenz`. Der Nutzer braucht **mindestens eine** davon (ODER-Verknüpfung). |
-| **reportingParameter / Konfiguration** | Verweist auf die Methode, die die Nutzer-Optionen (VorlageParameter) definiert – siehe Schritt 5. |
+| Angabe | Pflicht? | Bedeutung |
+|--------|----------|-----------|
+| **Enum-Name** (`KLASSEN_V_…`) | ja | Technischer Name nach dem Schema `HAUPTDATEN_V_DETAILDATEN`. Nur Großbuchstaben, Ziffern und `_`. |
+| **bezeichnung** (im Konstruktor der Definition) | ja | Eindeutige technische Bezeichnung. **Keine Leerzeichen**, nur Buchstaben/Ziffern/`-`/`_`. |
+| **setUiTitel** | ja | Wird dem Nutzer im Client als Titel angezeigt, z. B. als Titel der Card. |
+| **setUiBeschreibung** | ja | Erklärtext im Client, z. B. als Untertitel der Card. |
+| **setUiNutzungen** | nein | Die Bereiche im Client, in denen die Vorlage als Card erscheint (siehe unten). Ohne Angabe erscheint sie nur dort, wo der Client sie ausdrücklich einbindet, und unter **Schule → Reporting**. |
+| **setDatenContext** | ja | **Wichtig:** Wählt den Datenaufbau aus `ReportingReportvorlageDatenContext` und entscheidet, **welche Contexts gefüllt und welche Prüfungen durchgeführt werden** (siehe [Abschnitt 13](#13-referenz-verfügbare-daten-contexts)). |
+| **setPfadHtmlTemplate** | ja | Pfad zur HTML-Datei relativ zu `…/module/reporting/`. |
+| **setDateiname** | ja | Statischer Dateiname (ohne Endung) als Rückfallebene, falls keine `.name.tpl` greift. |
+| **setBenutzerKompetenzen** | ja | Liste von `BenutzerKompetenz`. Der Nutzer braucht **mindestens eine** davon (ODER-Verknüpfung). |
+| **setSchulformen** | nein | Beschränkt die Vorlage auf bestimmte Schulformen, z. B. `ReportingReportvorlageSchulformen.GRUNDSCHULE`. Ohne Angabe gilt sie für alle Schulformen. |
+| **setErforderlicherServerMode** | nein | Der ServerMode, ab dem die Vorlage nutzbar ist, z. B. `ServerMode.ALPHA` für eine Vorlage in Entwicklung. Ohne Angabe gilt `STABLE`, also alle Modi. |
+| **setReportingParameter** | ja | Verweist auf die Methode, die die Nutzer-Optionen (VorlageParameter) definiert – siehe Schritt 5. |
+
+Fehlt eine Pflichtangabe, lässt sich das Enum nicht laden. Der Fehler nennt Vorlage und fehlende Angabe und fällt schon im ersten Test auf.
 
 > **Mögliche Werte für `datenContext`:** `SCHUELER`, `SCHUELER_GOST_LAUFBAHNPLANUNG`, `SCHUELER_GOST_ABITUR`, `LEHRER`, `KLASSEN`, `KURSE`,
 > `GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG`, `GOST_KURSPLANUNG_KURSE`, `GOST_KURSPLANUNG_SCHUELER`, `GOST_KLAUSURPLANUNG_SCHUELER`,
@@ -127,6 +132,29 @@ Die Parameter im Einzelnen:
 >
 > Jeder Wert benennt genau einen Ablauf des Datenaufbaus — welche Daten geladen und welche Prüfungen dabei durchgeführt werden. Wähle den Wert,
 > der zu den Daten deiner Vorlage passt; einen neuen Wert brauchst du nur, wenn keiner der bestehenden Abläufe deine Daten liefert.
+
+### Wo die Vorlage im Client erscheint
+
+Mit `setUiNutzungen` legst du fest, in welchen Bereichen des Clients die Vorlage angeboten wird. Die Werte stammen aus `ReportingReportvorlageUiNutzung`: `SCHUELER`, `KLASSEN`, `KURSE`, `LEHRER` und `FAECHER`. Eine Vorlage darf mehrere Bereiche nennen. Das Grundschulzeugnis erscheint zum Beispiel bei den Schülern und bei den Klassen.
+
+In diesen Bereichen erzeugt die Komponente `ReportCards` für jede passende Vorlage eine Card. Am Client musst du dafür nichts ändern. Die Cards stehen nach Titel sortiert. Eine Card erscheint nur, wenn
+
+- der Nutzer Berichte drucken darf und eine der Kompetenzen der Vorlage besitzt,
+- Schulform und ServerMode der Vorlage passen,
+- der Bereich IDs für den Daten-Context der Vorlage liefert und die Auswahl nicht leer ist,
+- bei Stundenplan-Vorlagen mindestens ein Stundenplan vorhanden ist.
+
+Welche Daten-Contexte ein Bereich bedienen kann, steht in dieser Tabelle:
+
+| Bereich | Daten-Contexte |
+|---------|----------------|
+| `SCHUELER` | `SCHUELER`, `STUNDENPLANUNG_SCHUELER` |
+| `KLASSEN` | `KLASSEN`, `SCHUELER` (Schüler der gewählten Klassen), `STUNDENPLANUNG_KLASSEN` |
+| `KURSE` | `KURSE` |
+| `LEHRER` | `LEHRER`, `STUNDENPLANUNG_LEHRER` |
+| `FAECHER` | `STUNDENPLANUNG_FACH` |
+
+Der Test `TestReportingReportvorlage` prüft diese Zuordnung. Nennst du einen Bereich, der den Daten-Context deiner Vorlage nicht bedienen kann, schlägt er fehl. Soll ein Bereich eine neue Art von IDs liefern, ergänzt du die Tabelle im Test und übergibst die IDs im Client.
 
 ---
 
@@ -716,7 +744,8 @@ Aufruf im Template: `#convert.<methode>(<argumente>)`. Die Methoden stehen in `h
 
 ## 16. Checkliste für eine neue Vorlage
 
-- [ ] **Enum-Eintrag** in `ReportingReportvorlage.java` angelegt (Name nach `HAUPTDATEN_V_DETAILDATEN`, korrekter `datenContext`, Pfad, Kompetenzen).
+- [ ] **Enum-Eintrag** in `ReportingReportvorlage.java` über eine `ReportingReportvorlageDefinition` angelegt (Name nach `HAUPTDATEN_V_DETAILDATEN`, korrekter `datenContext`, Pfad, Kompetenzen, bei Bedarf Schulformen und ServerMode).
+- [ ] **Bereiche im Client** über `setUiNutzungen` festgelegt, falls die Vorlage als Card in einem Gruppenprozess erscheinen soll.
 - [ ] **Konfigurationsmethode** im passenden `ReportingReportvorlageKonfiguration…` angelegt und im Enum-Eintrag referenziert (auch wenn es keine Optionen gibt).
 - [ ] **Drei Dateien** im richtigen Themenordner: `.html`, `.css`, `.name.tpl` – gleicher Basisname.
 - [ ] **HTML-Grundgerüst** mit `reportHtmlHead`- und `reportPageHeaderFooter`-Fragment übernommen.

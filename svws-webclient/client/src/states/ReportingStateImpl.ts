@@ -18,6 +18,7 @@ import { StateManager } from "@ui/ui/StateManager";
 import { api } from "~/router/Api";
 
 import { abschnittStateImpl } from "./AbschnittStateImpl";
+import { benutzerStateImpl } from "./BenutzerStateImpl";
 import { configStateImpl } from "./ConfigStateImpl";
 import { schuleStateImpl } from "./SchuleStateImpl";
 import { serverStateImpl } from "./ServerStateImpl";
@@ -100,20 +101,19 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 		return ServerMode.getByText(erforderlicherServerMode).checkServerMode(serverStateImpl.mode);
 	}
 
-	/** Prüft, ob der Benutzer mindestens eine der erforderlichen Kompetenzen besitzt (leere übergebene Liste liefert true).
-	 *  AKTUELL: Die Funktion liefert immer true für jede korrekt übergebene Kompetenz, da BenutzerState für Kompetenz-Prüfung noch nicht implementiert ist. */
+	/** Prüft, ob der Benutzer mindestens eine der erforderlichen Kompetenzen besitzt. Eine leere Liste stellt keine Anforderung. */
 	private hatKompetenz(erforderlicheKompetenzen: List<number>): boolean {
 		if (erforderlicheKompetenzen.isEmpty()) {
 			return true;
 		}
+		const kompetenzen: BenutzerKompetenz[] = [];
 		for (const id of erforderlicheKompetenzen) {
 			const kompetenz = BenutzerKompetenz.getByID(id);
-			// TODO: Wenn BenutzerState implementiert wurde, dann mittels '(kompetenz !== null) && benutzerState.benutzerKompetenzen.has(kompetenz)' prüfen.
 			if (kompetenz !== null) {
-				return true;
+				kompetenzen.push(kompetenz);
 			}
 		}
-		return false;
+		return benutzerStateImpl.benutzerHatEineKompetenz(kompetenzen);
 	}
 
 	/** Liefert die Bezeichnungen der Kompetenzen, die dem Benutzer für diese Anforderung fehlen (leer, wenn die Anforderung erfüllt ist). */
@@ -146,6 +146,13 @@ export class ReportingStateImpl extends StateManager<ReportingReactiveState> imp
 
 	public istServerModeZulaessig(vorlage: ReportingReportvorlage): boolean {
 		return vorlage.giltFuerServerMode(serverStateImpl.mode);
+	}
+
+	public istVorlageZulaessig(vorlage: ReportingReportvorlage): boolean {
+		return benutzerStateImpl.benutzerHatEineKompetenz([BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN])
+			&& benutzerStateImpl.benutzerHatEineKompetenz(vorlage.getBenutzerKompetenzen())
+			&& this.istSchulformZulaessig(vorlage)
+			&& this.istServerModeZulaessig(vorlage);
 	}
 
 	public istParameterSichtbar(gruppe: ReportingReportvorlageParameterGruppe, vp: ReportingReportvorlageParameter): boolean {
