@@ -167,7 +167,7 @@
 				<!-- ### Es werden nur Daten der Lehrkraft gewünscht, daher Hochformat mit Daten nebeneinander, soweit möglich. -->
 				<th:block th:if="${!mitSpalteLehrerKontaktdaten && !mitSpalteLehrerLehraemter && !mitSpalteLehrerBeschaeftigung}">
 					<td class="p-tb-05 p-lr-1 bo-b-grey">
-						<table class="fixed-100 mp-0">
+						<table class="auto-100 mp-0">
 							<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
 							<tr>
 								<td class="mp-0 ta-lt" th:text="${lehrerName}">
