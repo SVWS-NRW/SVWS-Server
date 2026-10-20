@@ -42,7 +42,7 @@ def jdk_win_url = (base_url == null)
 
 def mariadb_version = "12.3.2"
 def mariadb_win_url = (base_url == null)
-		? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
+		? "https://archive.mariadb.org/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
 		: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
 
 def innosetup_version = "7.0.2"

@@ -77,7 +77,7 @@ tasks.register('collectJars', Copy) {
 	into(this.layout.buildDirectory.dir('libs'))
 
 	from(configurations.runtimeClasspath) {
-		include "svws-*.jar"
+		include "*.jar"
 	}
 }
 
