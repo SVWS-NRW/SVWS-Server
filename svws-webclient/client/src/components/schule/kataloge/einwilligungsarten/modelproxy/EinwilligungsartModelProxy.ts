@@ -12,7 +12,7 @@ import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
 import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
 
-import { ValidatorEinwilligungsartBezeichnungIsUniqueInList } from "./validation/ValidatorEinwilligungsartBezeichnungIsUniqueInList";
+import { ValidatorEinwilligungsartBezeichnungAndPersonTypIsUniqueInList } from "./validation/ValidatorEinwilligungsartBezeichnungAndPersonTypIsUniqueInList";
 
 
 /**
@@ -47,7 +47,7 @@ export class EinwilligungsartModelProxy extends ModelProxy<Einwilligungsart> {
 
 
 	private addValidatoren() {
-		this.addBlockingValidator(new ValidatorEinwilligungsartBezeichnungIsUniqueInList(() => this.proxy.bezeichnung, this.manager), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorEinwilligungsartBezeichnungAndPersonTypIsUniqueInList(() => this.proxy, this.manager), 'bezeichnung', 'idPersonTyp');
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 250), 'bezeichnung');
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
 		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
