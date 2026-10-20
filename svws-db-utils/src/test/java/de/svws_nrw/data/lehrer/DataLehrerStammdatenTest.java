@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,6 +41,7 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
@@ -47,6 +49,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -99,13 +102,40 @@ class DataLehrerStammdatenTest {
 		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
 		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
 		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
+		when(this.dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
 
 		this.dataLehrerStammdaten.addAsResponse(is);
 
 		verify(this.dataLernplattformen).getAll();
-		verify(this.dataEinwilligungsarten).getAll();
+		verify(this.dataEinwilligungsarten).getAllIdsByPersonTyp(PersonTyp.LEHRER);
+		verify(this.dataEinwilligungsarten, never()).getAll();
 
 		verify(this.conn, times(2)).transactionPersistAll(any(Collection.class));
+	}
+
+	@Test
+	@DisplayName("add | es werden nur Einwilligungen der Personenart Lehrer angelegt")
+	void addLehrerTest_nurEinwilligungenFuerLehrer() throws ApiOperationException {
+		final HashMap<String, Object> coreDtoLehrer = getCoreDtoLehrerMap();
+		final DTOLehrer mockedLehrer = getDtoLehrer();
+		final InputStream is = TestUtils.fromObject(coreDtoLehrer);
+		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
+		when(this.conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
+		when(this.conn.transactionPersistAll(anyList())).thenReturn(true);
+		when(this.dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER)).thenReturn(List.of(5L, 7L));
+
+		this.dataLehrerStammdaten.addAsResponse(is);
+
+		@SuppressWarnings("unchecked")
+		final ArgumentCaptor<Collection<Object>> captor = ArgumentCaptor.forClass(Collection.class);
+		verify(this.conn, times(2)).transactionPersistAll(captor.capture());
+		final List<Long> idsEinwilligungsarten = captor.getAllValues().stream()
+				.flatMap(Collection::stream)
+				.filter(DTOLehrerDatenschutz.class::isInstance)
+				.map(DTOLehrerDatenschutz.class::cast)
+				.map(d -> d.DatenschutzID)
+				.toList();
+		assertThat(idsEinwilligungsarten).containsExactlyInAnyOrder(5L, 7L);
 	}
 
 	@Test

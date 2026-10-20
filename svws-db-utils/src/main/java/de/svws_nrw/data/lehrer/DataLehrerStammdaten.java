@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
-import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -82,7 +82,8 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	/**
-	 * Legt einen Lehrer an und initialisiert die nötigen Lernplattformen.
+	 * Legt einen Lehrer an und initialisiert die nötigen Lernplattformen sowie die Einwilligungen
+	 * für die Einwilligungsarten der Personenart Lehrer.
 	 * @param initAttributes initialer Payload as Map
 	 * @return {@link LehrerStammdaten}
 	 * @throws ApiOperationException - im Fehlerfall
@@ -108,10 +109,10 @@ public final class DataLehrerStammdaten extends DataManagerRevised<Long, DTOLehr
 	}
 
 	private void createLehrerDatenschutz(final LehrerStammdaten newLehrer) {
-		final List<Einwilligungsart> availableEinwilligungsarten = dataEinwilligungsarten.getAll();
+		final List<Long> idsEinwilligungsarten = dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.LEHRER);
 
-		final List<DTOLehrerDatenschutz> initialLehrerDatenschutzSaetze = availableEinwilligungsarten.stream()
-				.map(e -> new DTOLehrerDatenschutz(newLehrer.id, e.id, false, false))
+		final List<DTOLehrerDatenschutz> initialLehrerDatenschutzSaetze = idsEinwilligungsarten.stream()
+				.map(id -> new DTOLehrerDatenschutz(newLehrer.id, id, false, false))
 				.toList();
 
 		conn.transactionPersistAll(initialLehrerDatenschutzSaetze);
