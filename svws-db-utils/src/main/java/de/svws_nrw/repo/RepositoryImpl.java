@@ -148,5 +148,27 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 		return super.create(entities);
 	}
 
+	/**
+	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
+	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
+	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs.
+	 *
+	 * @param <C>        der Typ der Collection
+	 * @param entities   die zu persistierenden Datenbank-Entitäten
+	 *
+	 * @return die persistierten Datenbank-Entitäten
+	 *
+	 * @throws RepositoryException im Fehlerfall
+	 */
+	@Override
+	public <C extends List<T>> C create(final C entities) throws RepositoryException {
+		// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und ergänze die fehlenden IDs bei den Entitäten
+		long firstId = this.getNextID();
+		for (final T entity : entities) {
+			setId.accept(entity, firstId++);
+		}
+		// und persistiere die Entitäten
+		return super.create(entities);
+	}
 
 }
