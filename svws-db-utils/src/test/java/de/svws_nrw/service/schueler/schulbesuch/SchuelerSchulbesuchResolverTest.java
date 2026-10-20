@@ -78,7 +78,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("id null - setzt LSSchulform=null und LSSchulformSIM=null")
 		void idNull_setztBeideNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulform = "vorher";
 			entity.LSSchulformSIM = "vorher";
 
@@ -91,7 +91,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("unbekannte id - wirft BAD_REQUEST")
 		void unbekannteId_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			assertThatException()
 					.isThrownBy(() -> SchuelerSchulbesuchResolver.patchHerkunftSonstigeVorherigeSchule(entity, 99999L))
@@ -103,7 +103,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("gueltige id - setzt LSSchulform=null und LSSchulformSIM=kuerzel")
 		void gueltigeId_setztFelder() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulform = "vorher";
 			entity.LSSchulformSIM = "vorher";
 			final var eintrag = HerkunftSonstige.data()
@@ -127,7 +127,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("id null - setzt LSSchulformSIM=null")
 		void idNull_setztNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulformSIM = "vorher";
 
 			SchuelerSchulbesuchResolver.patchHerkunftbildungsgang(entity, null);
@@ -138,7 +138,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("unbekannte id - wirft BAD_REQUEST")
 		void unbekannteId_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			assertThatException()
 					.isThrownBy(() -> SchuelerSchulbesuchResolver.patchHerkunftbildungsgang(entity, 99999L))
@@ -150,7 +150,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("gueltige id - setzt LSSchulformSIM=schluessel")
 		void gueltigeId_setztSchluessel() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulformSIM = "vorher";
 			final var eintrag = HerkunftBildungsgang.data()
 					.getWerte().getFirst().historie().getFirst();
@@ -172,7 +172,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("idSchule null - setzt alle drei Felder auf null")
 		void idSchuleNull_setztAlleNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "vorher";
 			entity.LSSchulform = "vorher";
 			entity.LSSchulformSIM = "vorher";
@@ -187,7 +187,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schule ohne Schulnummer - wirft BAD_REQUEST")
 		void schuleOhneSchulnummer_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW(null, ID_SCHULFORM_GY_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -200,7 +200,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schule mit ungültiger Schulnummer (nicht 1... oder 2...) - wirft BAD_REQUEST")
 		void schuleUngueltigeSchulnummer_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("999999", ID_SCHULFORM_GY_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -213,7 +213,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schule ohne Schulform - wirft BAD_REQUEST")
 		void schuleOhneSchulform_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", null);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -230,7 +230,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("NRW-Schule, Schulform GY (kein BK/WB/SB) - LSSchulform=GY, LSSchulformSIM=GY")
 		void nrwSchule_schulformGY_setztBeideFelder() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", ID_SCHULFORM_GY_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -244,7 +244,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("NRW-Schule, Schulform BK - LSSchulform=BK, LSSchulformSIM=null")
 		void nrwSchule_schulformBK_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", ID_SCHULFORM_BK_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -258,7 +258,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("NRW-Schule, Schulform WB - LSSchulform=WB, LSSchulformSIM=null")
 		void nrwSchule_schulformWB_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", ID_SCHULFORM_WB_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -272,7 +272,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("NRW-Schule, Schulform SB - LSSchulform=SB, LSSchulformSIM=null")
 		void nrwSchule_schulformSB_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", ID_SCHULFORM_SB_NRW);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -286,7 +286,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("NRW-Schule, unbekannte Schulform-ID - wirft BAD_REQUEST")
 		void nrwSchule_unbekannteSchulformId_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("100001", 99999L);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -303,7 +303,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Sonstige Schule, Schulform GY (kein BK/WB/SB/SF) - LSSchulform=GY, LSSchulformSIM=GY")
 		void sonstigeSchule_schulformGY_setztBeideFelder() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("200001", ID_HERKUNFT_SCHULFORM_GY);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -317,7 +317,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Sonstige Schule, Schulform BK - LSSchulform=BK, LSSchulformSIM=null")
 		void sonstigeSchule_schulformBK_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("200001", ID_HERKUNFT_SCHULFORM_BK);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -331,7 +331,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Sonstige Schule, Schulform SF - LSSchulform=null, LSSchulformSIM=SF")
 		void sonstigeSchule_schulformSF_setztSchulformNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("200001", ID_HERKUNFT_SCHULFORM_SF);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -345,7 +345,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Sonstige Schule, unbekannte Schulform-ID - wirft BAD_REQUEST")
 		void sonstigeSchule_unbekannteSchulformId_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			final var schule = schuleNRW("200001", 99999L);
 			when(dataSchulen.getById(42L)).thenReturn(schule);
 
@@ -367,7 +367,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("idSchulform null - setzt LSSchulform=null und LSSchulformSIM=null")
 		void idSchulformNull_setztBeideNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulform = "vorher";
 			entity.LSSchulformSIM = "vorher";
 
@@ -380,7 +380,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("unbekannte id - wirft BAD_REQUEST")
 		void unbekannteId_wirftBadRequest() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			assertThatException()
 					.isThrownBy(() -> SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, 99999L))
@@ -392,7 +392,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schulform GY (kein BK/WB/SB/SF) - LSSchulform=GY, LSSchulformSIM=GY")
 		void schulformGY_setztBeideFelder() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, ID_HERKUNFT_SCHULFORM_GY);
 
@@ -403,7 +403,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schulform BK - LSSchulform=BK, LSSchulformSIM=null")
 		void schulformBK_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, ID_HERKUNFT_SCHULFORM_BK);
 
@@ -414,7 +414,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schulform WB - LSSchulform=WB, LSSchulformSIM=null")
 		void schulformWB_setztSimNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 
 			SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, ID_HERKUNFT_SCHULFORM_WB);
 
@@ -425,7 +425,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Schulform SF - LSSchulform=null, LSSchulformSIM=SF")
 		void schulformSF_setztSchulformNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulform = "vorher";
 
 			SchuelerSchulbesuchResolver.patchSchulformSonstigeVorherigeSchule(entity, ID_HERKUNFT_SCHULFORM_SF);
@@ -446,7 +446,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr null - kein Mapping")
 		void lsSchulNrNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulform = KUERZEL_BK;
 			entity.LSSchulformSIM = "BK1";
@@ -461,7 +461,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulform null - kein Mapping")
 		void lsSchulformNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = "BK1";
@@ -476,7 +476,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulformSIM null - kein Mapping")
 		void lsSchulformSIMNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_BK;
 			entity.LSSchulformSIM = null;
@@ -491,7 +491,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulform GY (kein BK/WB/SB) - kein Mapping")
 		void lsSchulformGY_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_GY;
 			entity.LSSchulformSIM = KUERZEL_GY;
@@ -506,7 +506,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulform BK, LSSchulformSIM unbekannter Schluessel - setzt null")
 		void lsSchulformBK_unbekannterSIM_setztNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_BK;
 			entity.LSSchulformSIM = "UNBEKANNT";
@@ -523,7 +523,7 @@ class SchuelerSchulbesuchResolverTest {
 		void lsSchulformBK_gueltigerSIM_setztId() {
 			final var eintrag = HerkunftBildungsgang.data()
 					.getWerte().getFirst().historie().getFirst();
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_BK;
 			entity.LSSchulformSIM = eintrag.schluessel;
@@ -537,7 +537,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("schuljahr null - kein Mapping")
 		void schuljahrNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = KUERZEL_BK;
 			entity.LSSchulformSIM = "BK1";
@@ -561,7 +561,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr gesetzt - kein Mapping (kein Kein-Schulbesuch)")
 		void lsSchulNrGesetzt_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = "AS";
@@ -576,7 +576,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulform gesetzt - kein Mapping (kein Kein-Schulbesuch)")
 		void lsSchulformGesetzt_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulform = KUERZEL_GY;
 			entity.LSSchulformSIM = "AS";
@@ -591,7 +591,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulformSIM null - kein Mapping")
 		void lsSchulformSIMNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = null;
@@ -606,7 +606,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("Kein Schulbesuch, unbekannter SIM-Schluessel - setzt null")
 		void keinSchulbesuch_unbekannterSIM_setztNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = "UNBEKANNT";
@@ -626,7 +626,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var eintrag = wert.historie().getLast();
 			final var erwartetId = wert.daten(schuljahr).id;
 
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = eintrag.kuerzel;
@@ -650,7 +650,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr null - kein Mapping (keine sonstige Schule)")
 		void lsSchulNrNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = null;
 			entity.LSSchulformSIM = KUERZEL_GY;
 			final var target = new SchuelerSchulbesuchsdaten();
@@ -664,7 +664,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr beginnt mit '1' (NRW) - kein Mapping")
 		void lsSchulNrNRW_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "100001";
 			entity.LSSchulformSIM = KUERZEL_GY;
 			final var target = new SchuelerSchulbesuchsdaten();
@@ -678,7 +678,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr beginnt mit '2', LSSchulform und LSSchulformSIM null - kein Mapping")
 		void sonstigeSchule_beideNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = null;
@@ -693,7 +693,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("LSSchulNr beginnt mit '2', unbekannter LSSchulform-Schluessel - setzt null")
 		void sonstigeSchule_unbekannterSchulform_setztNull() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = "UNBEKANNT";
 			entity.LSSchulformSIM = null;
@@ -713,7 +713,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var eintrag = wert.historie().getFirst();
 			final var erwartetId = wert.daten(schuljahr).id;
 
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = eintrag.kuerzel;
 			entity.LSSchulformSIM = null;
@@ -731,7 +731,7 @@ class SchuelerSchulbesuchResolverTest {
 			final var wert = HerkunftSchulform.data().getWertByKuerzel(KUERZEL_SF);
 			final var erwartetId = wert.daten(schuljahr).id;
 
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = null;
 			entity.LSSchulformSIM = KUERZEL_SF;
@@ -745,7 +745,7 @@ class SchuelerSchulbesuchResolverTest {
 		@Test
 		@DisplayName("schuljahr null - kein Mapping")
 		void schuljahrNull_keinMapping() {
-			final var entity = new DTOSchueler(1L, "123", true);
+			final var entity = new DTOSchueler(1L, "123", 1, true);
 			entity.LSSchulNr = "200001";
 			entity.LSSchulform = KUERZEL_GY;
 			entity.LSSchulformSIM = null;

@@ -216,7 +216,7 @@ class DataSchuelerBetriebTest {
 	void patchIdSchueler() {
 		final var dto = new DTOSchuelerBetrieb(1L, 1L, 1L);
 		when(this.conn.queryByKey(DTOSchuelerBetrieb.class, 1L)).thenReturn(dto);
-		when(this.conn.queryByKey(DTOSchueler.class, 2L)).thenReturn(new DTOSchueler(2L, "123", true));
+		when(this.conn.queryByKey(DTOSchueler.class, 2L)).thenReturn(new DTOSchueler(2L, "123", 1, true));
 
 		this.data.patch(1L, Map.of("idSchueler", 2L));
 

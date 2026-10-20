@@ -53,7 +53,7 @@ class SchuelerStammdatenMapperTest {
 	// -------------------------------------------------------------------------
 
 	private DTOSchueler createEntity(final long id) {
-		final var entity = new DTOSchueler(id, "GU-" + id, false);
+		final var entity = new DTOSchueler(id, "GU-" + id, 1, false);
 		entity.Geschlecht = Geschlecht.fromValue(GESCHLECHT_M);
 		return entity;
 	}

@@ -116,7 +116,7 @@ class SchuelerStammdatenServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		entity = new DTOSchueler(1L, "{test-guid}", false);
+		entity = new DTOSchueler(1L, "{test-guid}", STATUS_NEUAUFNAHME, false);
 		apiModel = new SchuelerStammdaten();
 		apiModel.id = 1L;
 
@@ -212,7 +212,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("getList - zwei Einträge")
 	void getList() {
-		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", STATUS_NEUAUFNAHME, false);
 		final var apiModel2 = new SchuelerStammdaten();
 		apiModel2.id = 2L;
 
@@ -246,7 +246,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("getListOhneFotos - zwei Einträge")
 	void getListOhneFotos() {
-		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", STATUS_NEUAUFNAHME, false);
 		final var apiModel2 = new SchuelerStammdaten();
 		apiModel2.id = 2L;
 
@@ -620,7 +620,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("patchMultiple - erfolgreich")
 	void patchMultiple_erfolgreich() {
-		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", STATUS_NEUAUFNAHME, false);
 		final var apiModel2 = new SchuelerStammdaten();
 		apiModel2.id = 2L;
 
@@ -702,7 +702,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("softDelete - Ergebnis ist aufsteigend nach ID sortiert")
 	void softDelete_sortiertNachId() {
-		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", STATUS_NEUAUFNAHME, false);
 		when(repository.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity2, entity));
 
 		final var result = service.softDelete(List.of(2L, 1L));
@@ -758,7 +758,7 @@ class SchuelerStammdatenServiceTest {
 	@Test
 	@DisplayName("delete - Ergebnis ist aufsteigend nach ID sortiert")
 	void delete_sortiertNachId() {
-		final var entity2 = new DTOSchueler(2L, "{guid-2}", false);
+		final var entity2 = new DTOSchueler(2L, "{guid-2}", STATUS_NEUAUFNAHME, false);
 		when(repository.findListByIds(List.of(2L, 1L))).thenReturn(List.of(entity, entity2));
 		when(repository.delete(anyList())).thenReturn(List.of(entity, entity2));
 

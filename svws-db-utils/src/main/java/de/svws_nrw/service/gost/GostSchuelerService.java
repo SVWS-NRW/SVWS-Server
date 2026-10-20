@@ -107,7 +107,7 @@ public class GostSchuelerService {
 				continue;
 			}
 			// Filtere Schüler, die vor der Oberstufe die Schule verlassen haben
-			final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID(schueler.idStatus == null ? null : schueler.idStatus.longValue());
+			final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID((long) schueler.idStatus);
 			if ((schuljahresabschnitt.schuljahr < schuleSchuljahresabschnitt.schuljahr)
 					&& !"EF".equals(jahrgang.ASDJahrgang) && !"Q1".equals(jahrgang.ASDJahrgang) && !"Q2".equals(jahrgang.ASDJahrgang)
 					&& ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE)
