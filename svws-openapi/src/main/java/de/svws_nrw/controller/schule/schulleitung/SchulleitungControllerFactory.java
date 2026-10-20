@@ -1,7 +1,6 @@
 package de.svws_nrw.controller.schule.schulleitung;
 
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
-import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.service.schule.schulleitung.SchulleitungService;
 import de.svws_nrw.core.types.ServerMode;
@@ -28,9 +27,8 @@ public final class SchulleitungControllerFactory {
 			final BenutzerKompetenz kompetenz) {
 		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var repoFactory = EigeneSchuleRepositoryFactory.getNewInstance();
-		final var leitungsfunktionRepoFactory = LehrerRepositoryFactory.getNewInstance();
 		final var mapper = SchulleitungMapper.INSTANCE;
-		final var serviceFactory = SchulleitungServiceFactory.getNewInstance(repoFactory, leitungsfunktionRepoFactory, mapper);
+		final var serviceFactory = SchulleitungServiceFactory.getNewInstance(repoFactory, mapper);
 
 		return new SchulleitungControllerFactory(serviceFactory);
 	}

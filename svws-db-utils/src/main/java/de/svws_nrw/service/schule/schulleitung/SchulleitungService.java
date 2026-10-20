@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.data.TransactionSupport;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
@@ -21,22 +21,18 @@ import jakarta.ws.rs.core.Response;
 public final class SchulleitungService {
 
 	private final SchulleitungRepository repository;
-	private final LehrerLeitungsfunktionRepository lehrerLeitungsfunktionRepository;
 	private final SchulleitungMapper mapper;
 
 	/**
 	 * Erstellt einen neuen SchulleitungService.
 	 *
 	 * @param repository                  das Repository für den Datenbankzugriff auf Merkmale
-	 * @param lehrerLeitungsfunktionRepository  das Repository für den Datenbankzugriff auf Leitungsfunktionen
 	 * @param mapper                      der Mapper zur Konvertierung zwischen Domain- und API-Modellen
 	 */
 	public SchulleitungService(
 			final SchulleitungRepository repository,
-			final LehrerLeitungsfunktionRepository lehrerLeitungsfunktionRepository,
 			final SchulleitungMapper mapper) {
 		this.repository = repository;
-		this.lehrerLeitungsfunktionRepository = lehrerLeitungsfunktionRepository;
 		this.mapper = mapper;
 	}
 
@@ -118,21 +114,21 @@ public final class SchulleitungService {
 	}
 
 	private void validateCreate(final SchulleitungCreateRequest dto) {
-		this.validateLeitungsfunktion(dto.idLeitungsfunktion);
+		this.validateLehrerLeitungsfunktion(dto.idLeitungsfunktion);
 		this.validateDatumBis(dto.datumEndeLeitungsfunktion, dto.datumBeginnLeitungsfunktion);
 	}
 
 	private void validateAndResolvePatch(final DTOSchulleitung entity,
 			final SchulleitungPatchRequest dto) {
-		dto.idLeitungsfunktion.ifPresent(this::validateLeitungsfunktion);
+		dto.idLeitungsfunktion.ifPresent(this::validateLehrerLeitungsfunktion);
 
 		final var effectiveDatumVon = dto.datumBeginnLeitungsfunktion.orElse(entity.Von);
 		final var effectiveDatumBis = dto.datumEndeLeitungsfunktion.orElse(entity.Bis);
 		this.validateDatumBis(effectiveDatumBis, effectiveDatumVon);
 	}
 
-	private void validateLeitungsfunktion(final long idLeitungsfunktion) {
-		if (this.lehrerLeitungsfunktionRepository.findById(idLeitungsfunktion).isEmpty()) {
+	private void validateLehrerLeitungsfunktion(final long idLeitungsfunktion) {
+		if (LehrerLeitungsfunktion.data().getEintragByID(idLeitungsfunktion) == null) {
 			throw new ApiOperationException(
 					Response.Status.BAD_REQUEST,
 					"Die Leitungsfunktion mit der ID %d existiert nicht".formatted(idLeitungsfunktion)

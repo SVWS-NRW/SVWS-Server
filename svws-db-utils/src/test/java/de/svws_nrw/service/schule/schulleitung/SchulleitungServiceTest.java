@@ -1,16 +1,14 @@
 package de.svws_nrw.service.schule.schulleitung;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.schule.schulleitung.SchulleitungMapper;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +25,6 @@ import org.openapitools.jackson.nullable.JsonNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -37,11 +34,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SchulleitungServiceTest {
 
-	@Mock
-	private SchulleitungRepository repository;
+	private static final long ID_LEITUNGSFUNKTION_GUELTIG = LehrerLeitungsfunktion.SL.historie().getLast().id;
+	private static final long ID_LEITUNGSFUNKTION_GUELTIG_2 = LehrerLeitungsfunktion.SL_STV.historie().getLast().id;
+	private static final long ID_LEITUNGSFUNKTION_UNGUELTIG = 999L;
 
 	@Mock
-	private LehrerLeitungsfunktionRepository lehrerLeitungsfunktionRepository;
+	private SchulleitungRepository repository;
 
 	@Mock
 	private SchulleitungMapper mapper;
@@ -53,7 +51,7 @@ class SchulleitungServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		service = new SchulleitungService(repository, lehrerLeitungsfunktionRepository, mapper);
+		service = new SchulleitungService(repository, mapper);
 		transactionSupportMock.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
 				.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 	}
@@ -142,7 +140,7 @@ class SchulleitungServiceTest {
 	@DisplayName("create | Erfolg")
 	void create_success() {
 		final var dto = new SchulleitungCreateRequest();
-		dto.idLeitungsfunktion = 1L;
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_GUELTIG;
 		dto.idLehrer = 42L;
 		dto.bezeichnung = "Schulleitung";
 		dto.datumBeginnLeitungsfunktion = "2023-08-01";
@@ -151,7 +149,6 @@ class SchulleitungServiceTest {
 		final var entity = new DTOSchulleitung(1L, dto.idLeitungsfunktion, dto.bezeichnung, dto.idLehrer);
 		final var apiModel = mock(Schulleitung.class);
 
-		when(lehrerLeitungsfunktionRepository.findById(dto.idLeitungsfunktion)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
 		when(mapper.toDomain(dto)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity)).thenReturn(apiModel);
@@ -159,7 +156,6 @@ class SchulleitungServiceTest {
 		final var result = service.create(dto);
 
 		assertThat(result).isNotNull().isEqualTo(apiModel);
-		verify(lehrerLeitungsfunktionRepository, times(1)).findById(dto.idLeitungsfunktion);
 		verify(repository, times(1)).create(entity);
 	}
 
@@ -167,7 +163,7 @@ class SchulleitungServiceTest {
 	@DisplayName("create | Erfolg ohne Datumsangaben")
 	void create_successWithoutDates() {
 		final var dto = new SchulleitungCreateRequest();
-		dto.idLeitungsfunktion = 1L;
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_GUELTIG;
 		dto.idLehrer = 42L;
 		dto.bezeichnung = "Schulleitung";
 		dto.datumBeginnLeitungsfunktion = null;
@@ -176,7 +172,6 @@ class SchulleitungServiceTest {
 		final var entity = new DTOSchulleitung(1L, dto.idLeitungsfunktion, dto.bezeichnung, dto.idLehrer);
 		final var apiModel = mock(Schulleitung.class);
 
-		when(lehrerLeitungsfunktionRepository.findById(dto.idLeitungsfunktion)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
 		when(mapper.toDomain(dto)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity)).thenReturn(apiModel);
@@ -188,11 +183,10 @@ class SchulleitungServiceTest {
 	@DisplayName("create | Leitungsfunktion nicht gefunden")
 	void create_leitungsfunktionNotFound_throwsBadRequest() {
 		final var dto = new SchulleitungCreateRequest();
-		dto.idLeitungsfunktion = 999L;
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_UNGUELTIG;
 		dto.idLehrer = 42L;
 		dto.bezeichnung = "Unbekannt";
 
-		when(lehrerLeitungsfunktionRepository.findById(999L)).thenReturn(Optional.empty());
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -207,13 +201,12 @@ class SchulleitungServiceTest {
 	@DisplayName("create | datumBis vor datumVon")
 	void create_datumBisBeforeDatumVon_throwsBadRequest() {
 		final var dto = new SchulleitungCreateRequest();
-		dto.idLeitungsfunktion = 1L;
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_GUELTIG;
 		dto.idLehrer = 42L;
 		dto.bezeichnung = "Schulleitung";
 		dto.datumBeginnLeitungsfunktion = "2023-06-01";
 		dto.datumEndeLeitungsfunktion = "2022-01-01";
 
-		when(lehrerLeitungsfunktionRepository.findById(dto.idLeitungsfunktion)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
 
 		assertThatThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
@@ -228,7 +221,7 @@ class SchulleitungServiceTest {
 	@DisplayName("create | datumVon gleich datumBis")
 	void create_datumVonEqualsDatumBis_success() {
 		final var dto = new SchulleitungCreateRequest();
-		dto.idLeitungsfunktion = 1L;
+		dto.idLeitungsfunktion = ID_LEITUNGSFUNKTION_GUELTIG;
 		dto.idLehrer = 42L;
 		dto.bezeichnung = "Schulleitung";
 		dto.datumBeginnLeitungsfunktion = "2023-06-01";
@@ -237,7 +230,6 @@ class SchulleitungServiceTest {
 		final var entity = new DTOSchulleitung(1L, dto.idLeitungsfunktion, dto.bezeichnung, dto.idLehrer);
 		final var apiModel = mock(Schulleitung.class);
 
-		when(lehrerLeitungsfunktionRepository.findById(dto.idLeitungsfunktion)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
 		when(mapper.toDomain(dto)).thenReturn(entity);
 		when(repository.create(entity)).thenReturn(entity);
 		when(mapper.toApi(entity)).thenReturn(apiModel);
@@ -250,7 +242,7 @@ class SchulleitungServiceTest {
 	void patch_success_allFieldsSet() {
 		final var id = 1L;
 		final var dto = new SchulleitungPatchRequest();
-		dto.idLeitungsfunktion = JsonNullable.of(2L);
+		dto.idLeitungsfunktion = JsonNullable.of(ID_LEITUNGSFUNKTION_GUELTIG_2);
 		dto.bezeichnung = JsonNullable.of("Koordination");
 		dto.datumBeginnLeitungsfunktion = JsonNullable.of("2023-09-01");
 		dto.datumEndeLeitungsfunktion = JsonNullable.of("2024-06-30");
@@ -259,14 +251,12 @@ class SchulleitungServiceTest {
 		final var apiModel = mock(Schulleitung.class);
 
 		when(repository.getById(id)).thenReturn(entity);
-		when(lehrerLeitungsfunktionRepository.findById(2L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
 		when(mapper.toApi(entity)).thenReturn(apiModel);
 
 		final var result = service.patch(id, dto);
 
 		assertThat(result).isNotNull().isEqualTo(apiModel);
 		verify(repository, times(1)).getById(id);
-		verify(lehrerLeitungsfunktionRepository, times(1)).findById(2L);
 		verify(mapper, times(1)).patch(dto, entity);
 	}
 
@@ -285,7 +275,6 @@ class SchulleitungServiceTest {
 		when(mapper.toApi(entity)).thenReturn(apiModel);
 
 		assertThat(service.patch(id, dto)).isEqualTo(apiModel);
-		verify(lehrerLeitungsfunktionRepository, never()).findById(anyLong());
 		verify(mapper, times(1)).patch(dto, entity);
 	}
 
@@ -294,12 +283,11 @@ class SchulleitungServiceTest {
 	void patch_leitungsfunktionNotFound_throwsBadRequest() {
 		final var id = 1L;
 		final var dto = new SchulleitungPatchRequest();
-		dto.idLeitungsfunktion = JsonNullable.of(999L);
+		dto.idLeitungsfunktion = JsonNullable.of(ID_LEITUNGSFUNKTION_UNGUELTIG);
 
 		final var entity = new DTOSchulleitung(id, 1L, "Schulleitung", 42L);
 
 		when(repository.getById(id)).thenReturn(entity);
-		when(lehrerLeitungsfunktionRepository.findById(999L)).thenReturn(Optional.empty());
 
 		assertThatThrownBy(() -> service.patch(id, dto))
 				.isInstanceOf(ApiOperationException.class)

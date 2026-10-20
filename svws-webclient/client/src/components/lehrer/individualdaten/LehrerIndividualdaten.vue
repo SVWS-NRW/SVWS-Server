@@ -200,12 +200,13 @@
 
 	import { computed, ref } from "vue";
 
+	import type { LehrerLeitungsfunktionKatalogEintrag } from "@core/asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag";
 	import type { NationalitaetenKatalogEintrag } from "@core/asd/data/schule/NationalitaetenKatalogEintrag";
 	import { Schulleitung } from "@core/asd/data/schule/Schulleitung";
 	import { Geschlecht } from "@core/asd/types/Geschlecht";
+	import { LehrerLeitungsfunktion } from "@core/asd/types/lehrer/LehrerLeitungsfunktion";
 	import { Nationalitaeten } from "@core/asd/types/schule/Nationalitaeten";
 	import type { OrtsteilKatalogEintrag } from "@core/core/data/kataloge/OrtsteilKatalogEintrag";
-	import type { Leitungsfunktion } from "@core/core/data/schule/Leitungsfunktion";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { PersonalTyp } from "@core/core/types/PersonalTyp";
 	import { ServerMode } from "@core/core/types/ServerMode";
@@ -213,7 +214,6 @@
 	import { JavaString } from "@core/java/lang/JavaString";
 	import { ArrayList } from "@core/java/util/ArrayList";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
-	import { useLeitungsfunktionenState } from "@ui/states/kataloge/LeitungsfunktionenState";
 	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { useSchuleState } from "@ui/states/SchuleState";
 	import { useServerState } from "@ui/states/ServerState";
@@ -233,7 +233,6 @@
 	const serverState = useServerState();
 	const orteState = useOrteState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
-	const leitungsfunktionenState = useLeitungsfunktionenState();
 
 	const dataNotPatched = () => lehrerAuswahlState.manager.daten();
 	const modelProxy = new LehrerIndividualdatenModelProxy(
@@ -254,7 +253,7 @@
 	const showModalLeitungsfunktion = ref<boolean>(false);
 
 	function getBezeichnungLeitungsfunktion(idLeitungsfunktion: number): string {
-		return leitungsfunktionenState.leitungsfunktionen.byId.get(idLeitungsfunktion)?.bezeichnung ?? '-';
+		return LehrerLeitungsfunktion.data().getEintragByID(idLeitungsfunktion)?.text ?? '-';
 	}
 
 	function formatDatum(value: string | null): string {
@@ -268,15 +267,15 @@
 		{ key: "datumEndeLeitungsfunktion", label: "Bis", span: 1 },
 	];
 
-	const leitungsfunktionManager = new SelectManager({
-		options: computed(() => [...leitungsfunktionenState.leitungsfunktionen.list]),
-		optionDisplayText: i => i.bezeichnung,
-		selectionDisplayText: i => i.bezeichnung,
+	const leitungsfunktionManager = new CoreTypeSelectManager({
+		clazz: LehrerLeitungsfunktion.class,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
 	});
 
-	const selectedFunktion = computed<Leitungsfunktion | null>({
-		get: () => leitungsfunktionenState.leitungsfunktionen.byId.get(leitungsfunktionEntry.value.idLeitungsfunktion) ?? null,
-		set: (selected) => leitungsfunktionEntry.value.idLeitungsfunktion = selected?.id ?? -1,
+	const selectedFunktion = computed<LehrerLeitungsfunktionKatalogEintrag | null>({
+		get: () => LehrerLeitungsfunktion.data().getEintragByID(leitungsfunktionEntry.value.idLeitungsfunktion) ?? null,
+		set: (selected: LehrerLeitungsfunktionKatalogEintrag | null) => leitungsfunktionEntry.value.idLeitungsfunktion = selected?.id ?? -1,
 	});
 
 	const datumLeitungsfunktionValid = computed<boolean>(() => {
