@@ -62,6 +62,16 @@ class OrtsteilControllerImplTest {
 	}
 
 	@Test
+	@DisplayName("create | Erfolg - Ortsteilname mit Leerzeichen in der Mitte")
+	void create_ortsteilnameMitLeerzeichen() {
+		when(ortsteilService.create(any(OrtsteilCreateRequest.class))).thenReturn(new OrtsteilKatalogEintrag());
+
+		try (var result = ortsteilControllerImpl.create(createRequest("Bad Godesberg", 42L))) {
+			assertApplicationJsonResponse(result, 201);
+		}
+	}
+
+	@Test
 	@DisplayName("create | Failed - Ortsteilname leer")
 	void create_ortsteilnameInvalid() {
 		assertThat(catchThrowable(() -> ortsteilControllerImpl.create(createRequest("", 42L))))
@@ -87,6 +97,16 @@ class OrtsteilControllerImplTest {
 		when(ortsteilService.patch(anyLong(), any(OrtsteilPatchRequest.class))).thenReturn(new OrtsteilKatalogEintrag());
 
 		try (var result = ortsteilControllerImpl.patch(1L, createPatchWithOrtsteilname("Sieglar"))) {
+			assertApplicationJsonResponse(result, 200);
+		}
+	}
+
+	@Test
+	@DisplayName("patch | Erfolg - Ortsteilname mit Leerzeichen in der Mitte")
+	void patch_ortsteilnameMitLeerzeichen() {
+		when(ortsteilService.patch(anyLong(), any(OrtsteilPatchRequest.class))).thenReturn(new OrtsteilKatalogEintrag());
+
+		try (var result = ortsteilControllerImpl.patch(1L, createPatchWithOrtsteilname("Bad Godesberg"))) {
 			assertApplicationJsonResponse(result, 200);
 		}
 	}

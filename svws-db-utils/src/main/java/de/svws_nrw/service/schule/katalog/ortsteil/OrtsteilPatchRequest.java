@@ -1,7 +1,7 @@
 package de.svws_nrw.service.schule.katalog.ortsteil;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import de.svws_nrw.validation.constraints.NoWhitespaces;
+import de.svws_nrw.validation.constraints.NoLeadingOrTrailingWhitespaces;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -14,7 +14,7 @@ public class OrtsteilPatchRequest {
 
 	/** Der Name des Ortsteils. */
 	@Schema(description = "der Name des Ortsteils", example = "Sieglar")
-	public JsonNullable<@NotBlank @Size(max = 30) @NoWhitespaces String> ortsteil = JsonNullable.undefined();
+	public JsonNullable<@NotBlank @Size(max = 30) @NoLeadingOrTrailingWhitespaces String> ortsteil = JsonNullable.undefined();
 
 	/** Die ID des zugehörigen Ortes. */
 	@Schema(description = "die ID des zugehörigen Ortes", example = "4711")
