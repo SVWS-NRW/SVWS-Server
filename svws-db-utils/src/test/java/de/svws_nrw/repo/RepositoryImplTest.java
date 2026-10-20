@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -45,7 +44,7 @@ class RepositoryImplTest {
 
 	/**
 	 * Standardimplementierung des abstrakten {@link RepositoryImpl} für Tests.
-	 * {@link #autoAssignId()} gibt {@code true} zurück (Standardverhalten).
+	 * Der Consumer für setId übernimmt die neu ermittelte ID (Standardverhalten).
 	 */
 	private static class TestRepository extends RepositoryImpl<TestEntity> {
 		protected TestRepository(final DBEntityManager conn) {
@@ -55,16 +54,11 @@ class RepositoryImplTest {
 
 	/**
 	 * Implementierung des abstrakten {@link RepositoryImpl} für Tests mit FK-als-PK-Verhalten.
-	 * {@link #autoAssignId()} gibt {@code false} zurück.
+	 * Der Consumer für setId ist bewusst leer, da die ID vom Aufrufer gesetzt wird.
 	 */
 	private static class TestRepositoryFkAlsPk extends RepositoryImpl<TestEntity> {
 		protected TestRepositoryFkAlsPk(final DBEntityManager conn) {
-			super(conn, TestEntity.class, o -> o.id, (o, id) -> o.id = id);
-		}
-
-		@Override
-		protected boolean autoAssignId() {
-			return false;
+			super(conn, TestEntity.class, o -> o.id, (o, id) -> { /* bewusst leer: die ID wird vom Aufrufer gesetzt */ });
 		}
 	}
 
@@ -96,25 +90,6 @@ class RepositoryImplTest {
 
 
 	@Nested
-	@DisplayName("autoAssignId()")
-	class AutoAssignIdTests {
-
-		@Test
-		@DisplayName("Gibt standardmäßig true zurück.")
-		void testAutoAssignIdStandardTrue() {
-			assertThat(repository.autoAssignId()).isTrue();
-		}
-
-		@Test
-		@DisplayName("Gibt false zurück, wenn von Subklasse mit false überschrieben.")
-		void testAutoAssignIdFkAlsPkFalse() {
-			final var fkAlsPkRepository = new TestRepositoryFkAlsPk(conn);
-			assertThat(fkAlsPkRepository.autoAssignId()).isFalse();
-		}
-	}
-
-
-	@Nested
 	@DisplayName("create(entity)")
 	class CreateSingleTests {
 
@@ -133,8 +108,8 @@ class RepositoryImplTest {
 		}
 
 		@Test
-		@DisplayName("Überschreibt die ID nicht, wenn autoAssignId() false zurückgibt.")
-		void testCreateUeberschreibtIdNichtBeiAutoAssignIdFalse() {
+		@DisplayName("Behält die gesetzte ID, wenn der Consumer für setId bewusst leer ist (FK als PK).")
+		void testCreateBehaeltIdBeiLeeremSetIdConsumer() {
 			final var fkAlsPkRepository = new TestRepositoryFkAlsPk(conn);
 			final var entity = new TestEntity();
 			entity.id = 9296L;
@@ -143,7 +118,6 @@ class RepositoryImplTest {
 			fkAlsPkRepository.create(entity);
 
 			assertEquals(9296L, entity.id);
-			verify(conn, never()).transactionGetNextID(TestEntity.class);
 			verify(conn).transactionPersist(entity);
 		}
 

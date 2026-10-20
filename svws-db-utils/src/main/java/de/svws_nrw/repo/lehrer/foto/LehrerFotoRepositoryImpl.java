@@ -12,21 +12,8 @@ public class LehrerFotoRepositoryImpl extends RepositoryImpl<DTOLehrerFoto> impl
 	 * @param conn die zu verwendende {@link DBEntityManager}-Verbindung
 	 */
 	public LehrerFotoRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerFoto.class, f -> f.idLehrer, (f, id) -> f.idLehrer = id);
+		super(conn, DTOLehrerFoto.class, f -> f.idLehrer, (f, id) -> { /* bewusst leer: idLehrer wird vom Aufrufer gesetzt */ });
 	}
 
-	/**
-	 * Gibt an, dass beim Anlegen eines neuen LehrerFotos keine automatische ID-Vergabe erfolgt.
-	 * <p>
-	 * {@link DTOLehrerFoto#idLehrer} ist kein Auto-Increment-Primärschlüssel, sondern ein
-	 * Fremdschlüssel auf {@code K_Lehrer.ID}. Die ID wird daher bereits vor dem Persistieren
-	 * korrekt gesetzt und darf nicht durch {@code getNextID()} überschrieben werden.
-	 *
-	 * @return stets {@code false}
-	 */
-	@Override
-	protected boolean autoAssignId() {
-		return false;
-	}
 
 }

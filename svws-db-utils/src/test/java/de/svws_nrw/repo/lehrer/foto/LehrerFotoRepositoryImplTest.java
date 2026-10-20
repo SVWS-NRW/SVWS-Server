@@ -61,10 +61,5 @@ class LehrerFotoRepositoryImplTest {
 		verify(conn, times(1)).queryByKey(DTOLehrerFoto.class, id);
 	}
 
-	@Test
-	@DisplayName("autoAssignId | gibt false zurück")
-	void autoAssignId_returnsFalse() {
-		assertThat(repository.autoAssignId()).isFalse();
-	}
 
 }

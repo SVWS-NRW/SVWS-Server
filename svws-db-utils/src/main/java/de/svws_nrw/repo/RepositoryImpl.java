@@ -104,27 +104,11 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 		return conn.transactionGetNextID(entityClass);
 	}
 
-	/**
-	 * Gibt an, ob beim Anlegen einer neuen Entität automatisch eine neue ID vergeben werden soll.
-	 * <p>
-	 * Der Standardwert ist {@code true} und eignet sich für Entitäten mit eigenem Auto-Increment-PK.
-	 * Subklassen, deren Primärschlüssel gleichzeitig ein Fremdschlüssel ist (FK-als-PK-Muster,
-	 * z. B. 1:1-Erweiterungstabellen), überschreiben diese Methode mit {@code false},
-	 * damit die bereits gesetzte ID nicht durch {@link #getNextID()} überschrieben wird.
-	 *
-	 * @return {@code true}, wenn eine neue ID per {@link #getNextID()} vergeben werden soll,
-	 *         {@code false}, wenn die ID der Entität unverändert übernommen wird
-	 */
-	protected boolean autoAssignId() {
-		return true;
-	}
 
 	/**
-	 * Persistiert die Datenbank-Entität in der Datenbank.
-	 * <p>
-	 * Gibt {@link #autoAssignId()} {@code true} zurück, wird vor dem Persistieren
-	 * eine neue ID per {@link #getNextID()} ermittelt und an der Entität gesetzt.
-	 * Andernfalls wird die bereits an der Entität gesetzte ID unverändert übernommen.
+	 * Persistiert die Datenbank-Entität in der Datenbank. Für den Fall,
+	 * dass IDs automatisch vergeben werden, wird eine neue ID bei der
+	 * Entität vergeben. Die Rückgabe enthält dann die Entität mit der ID.
 	 *
 	 * @param entity   die zu persistierende Datenbank-Entität
 	 *
@@ -134,9 +118,9 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	 */
 	@Override
 	public T create(final T entity) throws RepositoryException {
-		if (autoAssignId()) {
-			setId.accept(entity, this.getNextID());
-		}
+		// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und setzt diese bei der Entität über den übergebenen Consumer
+		setId.accept(entity, this.getNextID());
+		// und persistiere die Entität
 		return super.create(entity);
 	}
 
@@ -164,34 +148,5 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 		return super.create(entities);
 	}
 
-
-	/**
-	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
-	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
-	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs
-	 * in derselben Reihenfolge wie bei der Eingabe.
-	 * <p>
-	 * Gibt {@link #autoAssignId()} {@code false} zurück, werden die bereits an den
-	 * Entitäten gesetzten IDs unverändert übernommen.
-	 *
-	 * @param <C>        der Typ der List
-	 * @param entities   die zu persistierenden Datenbank-Entitäten
-	 *
-	 * @return die persistierten Datenbank-Entitäten in derselben Reihenfolge wie bei der Eingabe
-	 *
-	 * @throws RepositoryException im Fehlerfall
-	 */
-	@Override
-	public <C extends List<T>> C create(final C entities) throws RepositoryException {
-		if (autoAssignId()) {
-			// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und ergänze die fehlenden IDs bei den Entitäten
-			long firstId = this.getNextID();
-			for (final T entity : entities) {
-				setId.accept(entity, firstId++);
-			}
-		}
-		// und persistiere die Entitäten
-		return super.create(entities);
-	}
 
 }
