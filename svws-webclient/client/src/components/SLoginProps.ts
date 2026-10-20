@@ -6,4 +6,5 @@ export interface LoginProps {
 	login: (schema: string, username: string, password: string) => Promise<void>;
 	connectTo: () => Promise<List<DBSchemaListeEintrag>>;
 	schemaPrevious: string | null;
+	loggedOut: boolean;
 }

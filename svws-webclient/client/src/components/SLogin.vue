@@ -146,6 +146,15 @@
 		// 	username.value = lastUsername;
 		connection_failed.value = false;
 		connecting.value = false;
+
+		// Für Lokale Entwicklung: Mit VITE_DEV_USERNAME/VITE_DEV_PASSWORD in .env.local automatisch anmelden, außer nach einem aktiven Logout
+		if (import.meta.env.DEV && !props.loggedOut && (import.meta.env.VITE_DEV_USERNAME !== undefined) && (import.meta.env.VITE_DEV_PASSWORD !== undefined)) {
+			username.value = import.meta.env.VITE_DEV_USERNAME;
+			password.value = import.meta.env.VITE_DEV_PASSWORD;
+			await doLogin();
+			return;
+		}
+
 		await nextTick(() => {
 			refUsername.value?.doFocus();
 		});

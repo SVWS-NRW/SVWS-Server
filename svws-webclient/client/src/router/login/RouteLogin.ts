@@ -25,6 +25,9 @@ export class RouteLogin extends RouteNode<any, any> {
 	public routepath = "/";
 	protected schema = ref<string | null>(null);
 
+	// Markiert, dass der letzte Wechsel zu dieser Route durch einen aktiven Logout ausgelöst wurde
+	private loggedOut = false;
+
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KEINE], "login", "/login/:schema?", SLogin);
 		super.mode = ServerMode.STABLE;
@@ -65,6 +68,7 @@ export class RouteLogin extends RouteNode<any, any> {
 	public logout = async () => {
 		this.routepath = "/";
 		this.schema.value = api.schema;
+		this.loggedOut = true;
 		await RouteManager.doRoute(this.getRoute());
 		await api.logout();
 		RouteManager.resetRouteState();
@@ -75,11 +79,14 @@ export class RouteLogin extends RouteNode<any, any> {
 	};
 
 	public getProps(): LoginProps {
+		const loggedOut = this.loggedOut;
+		this.loggedOut = false;
 		return {
 			setSchema: this.setSchema,
 			login: this.login,
 			connectTo: api.connectTo,
 			schemaPrevious: this.schema.value,
+			loggedOut,
 		};
 	}
 
