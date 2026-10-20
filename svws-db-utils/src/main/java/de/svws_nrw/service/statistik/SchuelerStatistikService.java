@@ -218,6 +218,7 @@ public final class SchuelerStatistikService {
 		final var ctx = new SchulbesuchMappingContext(new HashMap<>(), schulenBySchulnummer, new ArrayList<>(), new ArrayList<>(), letztesSchuljahr);
 
 		final SchuelerSchulbesuchsdaten schulbesuchsdaten = mapper.toApi(dtoSchueler, ctx);
+		daten.idVorherigeSchule = schulbesuchsdaten.idVorherigeSchule;
 		daten.idHerkunftSchulformVorherigeSchule = schulbesuchsdaten.idHerkunftSchulformVorherigeSchule;
 		daten.idHerkunftSonstigeVorherigeSchule = schulbesuchsdaten.idHerkunftSonstigeVorherigeSchule;
 		daten.berufsabschlussVorhandenVorherigeSchule = schulbesuchsdaten.berufsabschlussVorhandenVorherigeSchule;

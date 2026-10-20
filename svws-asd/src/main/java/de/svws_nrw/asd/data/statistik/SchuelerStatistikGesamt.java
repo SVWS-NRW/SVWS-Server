@@ -103,6 +103,10 @@ public class SchuelerStatistikGesamt {
 
 	// **** Informationen zu der Schule, die vor der Aufnahme besucht wurde
 
+	/** Die ID der zuvor besuchten Schule. */
+	@Schema(description = "die ID der zuvor besuchten Schule", example = "12")
+	public Long idVorherigeSchule;
+
 	/** Die Schulnr der vorher besuchten Schule. */
 	@Schema(description = "Die Schulnr der vorher besuchten Schule", example = "123456")
 	public String vorherigeSchuleNr;

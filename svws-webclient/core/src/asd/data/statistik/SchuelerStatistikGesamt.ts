@@ -108,6 +108,11 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public lernabschnitte: List<SchuelerLernabschnittStatistikGesamt> = new ArrayList<SchuelerLernabschnittStatistikGesamt>();
 
 	/**
+	 * Die ID der zuvor besuchten Schule.
+	 */
+	public idVorherigeSchule: number | null = null;
+
+	/**
 	 * Die Schulnr der vorher besuchten Schule.
 	 */
 	public vorherigeSchuleNr: string | null = null;
@@ -257,6 +262,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 				result.lernabschnitte.add(SchuelerLernabschnittStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		result.idVorherigeSchule = (obj.idVorherigeSchule === undefined) ? null : obj.idVorherigeSchule === null ? null : obj.idVorherigeSchule;
 		result.vorherigeSchuleNr = (obj.vorherigeSchuleNr === undefined) ? null : obj.vorherigeSchuleNr === null ? null : obj.vorherigeSchuleNr;
 		result.vorherigeSchuleSchulnummerStatistik = (obj.vorherigeSchuleSchulnummerStatistik === undefined) ? null : obj.vorherigeSchuleSchulnummerStatistik === null ? null : obj.vorherigeSchuleSchulnummerStatistik;
 		result.idHerkunftSchulformVorherigeSchule = (obj.idHerkunftSchulformVorherigeSchule === undefined) ? null : obj.idHerkunftSchulformVorherigeSchule === null ? null : obj.idHerkunftSchulformVorherigeSchule;
@@ -312,6 +318,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
 		result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';
 		result += '"vorherigeSchuleSchulnummerStatistik" : ' + ((obj.vorherigeSchuleSchulnummerStatistik === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleSchulnummerStatistik)) + ',';
 		result += '"idHerkunftSchulformVorherigeSchule" : ' + ((obj.idHerkunftSchulformVorherigeSchule === null) ? 'null' : obj.idHerkunftSchulformVorherigeSchule.toString()) + ',';
@@ -404,6 +411,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
+		}
+		if (obj.idVorherigeSchule !== undefined) {
+			result += '"idVorherigeSchule" : ' + ((obj.idVorherigeSchule === null) ? 'null' : obj.idVorherigeSchule.toString()) + ',';
 		}
 		if (obj.vorherigeSchuleNr !== undefined) {
 			result += '"vorherigeSchuleNr" : ' + ((obj.vorherigeSchuleNr === null) ? 'null' : JSON.stringify(obj.vorherigeSchuleNr)) + ',';

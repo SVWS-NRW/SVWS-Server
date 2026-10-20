@@ -6,6 +6,7 @@ import { ReligionStatistikGesamt } from '../../../asd/data/statistik/ReligionSta
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuleStatistikGesamt } from '../../../asd/data/statistik/SchuleStatistikGesamt';
 import { JahrgaengeStatistikGesamt } from '../../../asd/data/statistik/JahrgaengeStatistikGesamt';
+import { SchulKatalogStatistikGesamt } from '../../../asd/data/statistik/SchulKatalogStatistikGesamt';
 import { OrteStatistikGesamt } from '../../../asd/data/statistik/OrteStatistikGesamt';
 import { FoerderschwerpunktStatistikGesamt } from '../../../asd/data/statistik/FoerderschwerpunktStatistikGesamt';
 import { LehrerStatistikGesamt } from '../../../asd/data/statistik/LehrerStatistikGesamt';
@@ -64,6 +65,11 @@ export class StatistikGesamt extends JavaObject {
 	 * Der Katalog der Kurse.
 	 */
 	public kurse: List<KursStatistikGesamt> = new ArrayList<KursStatistikGesamt>();
+
+	/**
+	 * Der Schuleigene Katalog der Schulen.
+	 */
+	public schulkatalog: List<SchulKatalogStatistikGesamt> = new ArrayList<SchulKatalogStatistikGesamt>();
 
 
 	/**
@@ -132,6 +138,11 @@ export class StatistikGesamt extends JavaObject {
 		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
 				result.kurse.add(KursStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.schulkatalog !== undefined) {
+			for (const elem of obj.schulkatalog) {
+				result.schulkatalog.add(SchulKatalogStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -209,6 +220,14 @@ export class StatistikGesamt extends JavaObject {
 			const elem = obj.kurse.get(i);
 			result += KursStatistikGesamt.transpilerToJSON(elem);
 			if (i < obj.kurse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schulkatalog" : [ ';
+		for (let i = 0; i < obj.schulkatalog.size(); i++) {
+			const elem = obj.schulkatalog.get(i);
+			result += SchulKatalogStatistikGesamt.transpilerToJSON(elem);
+			if (i < obj.schulkatalog.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -308,6 +327,16 @@ export class StatistikGesamt extends JavaObject {
 				const elem = obj.kurse.get(i);
 				result += KursStatistikGesamt.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.schulkatalog !== undefined) {
+			result += '"schulkatalog" : [ ';
+			for (let i = 0; i < obj.schulkatalog.size(); i++) {
+				const elem = obj.schulkatalog.get(i);
+				result += SchulKatalogStatistikGesamt.transpilerToJSON(elem);
+				if (i < obj.schulkatalog.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

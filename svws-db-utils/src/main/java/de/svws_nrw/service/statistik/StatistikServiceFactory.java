@@ -222,6 +222,15 @@ public final class StatistikServiceFactory {
 		return new SchuelerStatistikService(repositories, new SchulbesuchMapperImpl());
 	}
 
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf die Daten zu dem Schuleigenen Katalog der Schulen
+	 *
+	 * @return der Service für den Zugriff auf die Daten zu dem Schuleigenen Katalog der Schulen
+	 */
+	public SchulKatalogStatistikService getSchulKatalogStatistikService() {
+		return new SchulKatalogStatistikService(eigeneSchuleRepositoryFactory.getSchuleRepository(),
+				eigeneSchuleServiceFactory.getSchuljahresabschnittService(), katalogRepositoryFactory.getSchuleRepository());
+	}
 
 	/**
 	 * Erstellt einen neuen Service für den Zugriff auf die Schuldaten für die Statistik
@@ -249,7 +258,8 @@ public final class StatistikServiceFactory {
 				getOrteStatistikService(),
 				getFoerderschwerpunkteStatistikService(),
 				getReligionStatistikService(),
-				getFachStatistikService()
+				getFachStatistikService(),
+				getSchulKatalogStatistikService()
 		);
 	}
 

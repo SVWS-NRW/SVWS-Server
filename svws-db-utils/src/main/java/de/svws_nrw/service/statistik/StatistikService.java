@@ -41,6 +41,8 @@ public final class StatistikService {
 	/** Der Service für den Zugriff auf die Statistikdaten zu den Fächern */
 	private final FachStatistikService fachStatistikService;
 
+	/** Der Service für den Zugriff auf den Schuleigenen Katalog der Schulen */
+	private final SchulKatalogStatistikService schulKatalogStatistikService;
 
 	/**
 	 * Erstellt einen neuen Service.
@@ -55,6 +57,7 @@ public final class StatistikService {
 	 * @param foerderschwerpunktStatistikService   der Service für den Datenbank-Zugriff auf die Förderschwerpunkte
 	 * @param religionStatistikService             der Service für den Datenbank-Zugriff auf die Religionen
 	 * @param fachStatistikService                 der Service für den Datenbank-Zugriff auf die Fächer
+	 * @param schulKatalogStatistikService         der Service für den Datenbank-Zugriff auf die Schulen
 	 */
 	public StatistikService(final SchuleStatistikService schuleStatistikService,
 			final LehrerStatistikService lehrerStatistikService,
@@ -65,7 +68,8 @@ public final class StatistikService {
 			final OrteStatistikService orteStatistikService,
 			final FoerderschwerpunkteStatistikService foerderschwerpunktStatistikService,
 			final ReligionStatistikService religionStatistikService,
-			final FachStatistikService fachStatistikService) {
+			final FachStatistikService fachStatistikService,
+			final SchulKatalogStatistikService schulKatalogStatistikService) {
 		this.schuleStatistikService = schuleStatistikService;
 		this.lehrerStatistikService = lehrerStatistikService;
 		this.klassenStatistikService = klassenStatistikService;
@@ -76,6 +80,7 @@ public final class StatistikService {
 		this.foerderschwerpunktStatistikService = foerderschwerpunktStatistikService;
 		this.religionStatistikService = religionStatistikService;
 		this.fachStatistikService = fachStatistikService;
+		this.schulKatalogStatistikService = schulKatalogStatistikService;
 	}
 
 
@@ -97,6 +102,7 @@ public final class StatistikService {
 			daten.foederschwerpunkte = foerderschwerpunktStatistikService.getList();
 			daten.religionen = religionStatistikService.getList();
 			daten.faecher = fachStatistikService.getList();
+			daten.schulkatalog = schulKatalogStatistikService.getList();
 			return daten;
 		});
 	}

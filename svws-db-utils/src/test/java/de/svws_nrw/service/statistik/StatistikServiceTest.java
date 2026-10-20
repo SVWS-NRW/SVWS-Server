@@ -60,6 +60,9 @@ class StatistikServiceTest {
 	@Mock
 	private FachStatistikService serviceFach;
 
+	@Mock
+	private SchulKatalogStatistikService serviceSchulKatalog;
+
 	@InjectMocks
 	private StatistikService statistikService;
 
@@ -102,6 +105,7 @@ class StatistikServiceTest {
 		when(serviceFoerderschwerpunkt.getList()).thenReturn(new ArrayList<>());
 		when(serviceReligion.getList()).thenReturn(new ArrayList<>());
 		when(serviceFach.getList()).thenReturn(new ArrayList<>());
+		when(serviceSchulKatalog.getList()).thenReturn(new ArrayList<>());
 
 		final StatistikGesamt result = statistikService.get();
 		assertNotNull(result, "Das Ergebnis-Objekt darf nicht null sein.");

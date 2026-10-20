@@ -67,6 +67,11 @@ public class StatistikGesamt {
 			description = "Ein Array mit den Kursen."))
 	public @NotNull List<KursStatistikGesamt> kurse = new ArrayList<>();
 
+	/** Der Schuleigene Katalog der Schulen. */
+	@ArraySchema(schema = @Schema(implementation = SchulKatalogStatistikGesamt.class,
+			description = "Ein Array mit den Schulen."))
+	public @NotNull List<SchulKatalogStatistikGesamt> schulkatalog = new ArrayList<>();
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
