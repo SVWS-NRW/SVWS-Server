@@ -176,7 +176,7 @@ public class APIGostKlausuren {
 	public Response patchGostKlausurenVorgabenMultiple(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Patches für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(
-							schema = @Schema(implementation = GostKlausurvorgabe.class)))) @Valid final List<GostKlausurenVorgabePatchRequest> patches,
+							schema = @Schema(implementation = GostKlausurvorgabe.class)))) final List<@Valid GostKlausurenVorgabePatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenVorgabeController().patchMultiple(patches);
@@ -337,7 +337,7 @@ public class APIGostKlausuren {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenPatchResponseData.class)))
 	public Response patchGostKlausurenKursklausurenMultiple(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Patches für die Kursklausur-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class)))) @Valid final List<GostKlausurenKursklausurPatchRequest> patchRequests,
+					array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class)))) final List<@Valid GostKlausurenKursklausurPatchRequest> patchRequests,
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenKursklausurWorkflowController().patchMultiple(patchRequests);
@@ -577,7 +577,7 @@ public class APIGostKlausuren {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(
 							schema = @Schema(
-									implementation = GostSchuelerklausur.class)))) @Valid final List<GostKlausurenSchuelerklausurCreateRequest> createRequests,
+									implementation = GostSchuelerklausur.class)))) final List<@Valid GostKlausurenSchuelerklausurCreateRequest> createRequests,
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenSchuelerklausurWorkflowController().createMultiple(createRequests);
@@ -1043,7 +1043,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Die Patches für die GostSchuelerklausurtermine", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = GostSchuelerklausurtermin.class)))) @Valid final List<GostKlausurenSchuelerklausurterminPatchRequest> patchRequests,
+									schema = @Schema(implementation = GostSchuelerklausurtermin.class)))) final List<@Valid GostKlausurenSchuelerklausurterminPatchRequest> patchRequests,
 			@Context final HttpServletRequest request) {
 		return GostKlausurenControllerFactory.withWriteAccess(request)
 				.getGostKlausurenSchuelerklausurterminWorkflowController().patchMultiple(patchRequests);

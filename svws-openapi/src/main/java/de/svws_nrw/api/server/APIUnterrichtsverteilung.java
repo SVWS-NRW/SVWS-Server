@@ -307,7 +307,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Patch-Daten für mehrere UvPlanungsabschnitt-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvPlanungsabschnitt.class)))) final @Valid Collection<UvPlanungsabschnittPatchRequest> patches,
+									implementation = UvPlanungsabschnitt.class)))) final Collection<@Valid UvPlanungsabschnittPatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvPlanungsabschnittController().patchMultiple(patches);
 	}
@@ -427,7 +427,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvSchuelergruppen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvSchuelergruppe.class)))) final @Valid Collection<UvSchuelergruppePatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvSchuelergruppe.class)))) final Collection<@Valid UvSchuelergruppePatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvSchuelergruppeController().patchMultiple(patches);
 	}
@@ -529,7 +529,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Die Liste der Zuordnungsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvSchuelergruppeSchueler.class)))) final @Valid Collection<UvSchuelergruppeSchuelerCreateRequest> createRequests)
+									implementation = UvSchuelergruppeSchueler.class)))) final Collection<@Valid UvSchuelergruppeSchuelerCreateRequest> createRequests)
 			throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvSchuelergruppeSchuelerController().createMultiple(createRequests);
 	}
@@ -656,7 +656,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvKlassen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvKlasse.class)))) final @Valid Collection<UvKlassePatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvKlasse.class)))) final Collection<@Valid UvKlassePatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvKlasseController().patchMultiple(patches);
 	}
@@ -888,7 +888,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvKurse", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvKurs.class)))) final @Valid java.util.List<UvKursPatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvKurs.class)))) final java.util.List<@Valid UvKursPatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvKursController().patchMultiple(patches);
 	}
@@ -1065,7 +1065,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Patch für die UvStundentafeln", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = UvStundentafel.class)))) final @Valid Collection<UvStundentafelPatchRequest> patches,
+									schema = @Schema(implementation = UvStundentafel.class)))) final Collection<@Valid UvStundentafelPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvStundentafelController().patchMultiple(patches);
 	}
@@ -1161,7 +1161,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Post für die UvFach-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = UvFach.class)))) final @Valid Collection<UvFachCreateRequest> createRequests) {
+									schema = @Schema(implementation = UvFach.class)))) final Collection<@Valid UvFachCreateRequest> createRequests) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvFachController().createMultiple(createRequests);
 	}
 
@@ -1213,7 +1213,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Patch-Daten für mehrere UvFach-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvFach.class)))) final @Valid Collection<UvFachPatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvFach.class)))) final Collection<@Valid UvFachPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvFachController().patchMultiple(patches);
 	}
@@ -1348,7 +1348,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Patch für die UvStundentafelFach-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvStundentafelFach.class)))) final @Valid Collection<UvStundentafelFachPatchRequest> patches,
+									implementation = UvStundentafelFach.class)))) final Collection<@Valid UvStundentafelFachPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvStundentafelFachController().patchMultiple(patches);
 	}
@@ -1492,7 +1492,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvSchienen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvSchiene.class)))) final @Valid Collection<UvSchienePatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvSchiene.class)))) final Collection<@Valid UvSchienePatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvSchieneController().patchMultiple(patches);
 	}
@@ -1662,7 +1662,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvLerngruppen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvLerngruppe.class)))) final @Valid Collection<UvLerngruppePatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvLerngruppe.class)))) final Collection<@Valid UvLerngruppePatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvLerngruppeController().patchMultiple(patches);
 	}
@@ -1804,7 +1804,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Patch für die UvRaumgruppen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = UvRaumgruppe.class)))) final @Valid Collection<UvRaumgruppePatchRequest> patches,
+									schema = @Schema(implementation = UvRaumgruppe.class)))) final Collection<@Valid UvRaumgruppePatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvRaumgruppeController().patchMultiple(patches);
 	}
@@ -1918,7 +1918,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Post für die UvRaum-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = UvRaum.class)))) final @Valid Collection<UvRaumCreateRequest> createRequests) {
+									schema = @Schema(implementation = UvRaum.class)))) final Collection<@Valid UvRaumCreateRequest> createRequests) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvRaumController().createMultiple(createRequests);
 	}
 
@@ -1974,7 +1974,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Patch für die UvRaeume", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvRaum.class)))) final @Valid Collection<UvRaumPatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvRaum.class)))) final Collection<@Valid UvRaumPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvRaumController().patchMultiple(patches);
 	}
@@ -2087,7 +2087,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Der Post für die UvLehrer-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvLehrer.class)))) final @Valid Collection<UvLehrerCreateRequest> patch,
+							array = @ArraySchema(schema = @Schema(implementation = UvLehrer.class)))) final Collection<@Valid UvLehrerCreateRequest> patch,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvLehrerController().createMultiple(patch);
 	}
@@ -2229,7 +2229,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Die Liste der Zuordnungsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvPlanungsabschnittLehrer.class)))) final @Valid Collection<UvPlanungsabschnittLehrerCreateRequest> createRequests)
+									implementation = UvPlanungsabschnittLehrer.class)))) final Collection<@Valid UvPlanungsabschnittLehrerCreateRequest> createRequests)
 			throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvPlanungsabschnittLehrerController().createMultiple(createRequests);
 	}
@@ -2350,7 +2350,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Die Liste der Zuordnungsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvPlanungsabschnittZeitraster.class)))) final @Valid Collection<UvPlanungsabschnittZeitrasterCreateRequest> createRequests)
+									implementation = UvPlanungsabschnittZeitraster.class)))) final Collection<@Valid UvPlanungsabschnittZeitrasterCreateRequest> createRequests)
 			throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvPlanungsabschnittZeitrasterController().createMultiple(createRequests);
 	}
@@ -2501,7 +2501,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Die Liste der Zuordnungsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = UvPlanungsabschnittSchueler.class))))
-			@Valid final Collection<UvPlanungsabschnittSchuelerCreateRequest> createRequests) throws ApiOperationException {
+			final Collection<@Valid UvPlanungsabschnittSchuelerCreateRequest> createRequests) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvPlanungsabschnittSchuelerController().createMultiple(createRequests);
 	}
 
@@ -3050,7 +3050,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Post für mehrere UvLerngruppenLehrer-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvLerngruppenLehrer.class)))) final @Valid Collection<UvLerngruppenLehrerCreateRequest> createRequests)
+									implementation = UvLerngruppenLehrer.class)))) final Collection<@Valid UvLerngruppenLehrerCreateRequest> createRequests)
 			throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvLerngruppenLehrerController().createMultiple(createRequests);
 	}
@@ -3106,7 +3106,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Patch für mehrere UvLerngruppenLehrer-Zuordnungen", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = UvLerngruppenLehrer.class)))) final @Valid Collection<UvLerngruppenLehrerPatchRequest> patches,
+									implementation = UvLerngruppenLehrer.class)))) final Collection<@Valid UvLerngruppenLehrerPatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvLerngruppenLehrerController().patchMultiple(patches);
 	}
@@ -3509,7 +3509,7 @@ public class APIUnterrichtsverteilung {
 			@RequestBody(description = "Der Patch für die UvZeitraster", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
-									schema = @Schema(implementation = UvZeitraster.class)))) final @Valid Collection<UvZeitrasterPatchRequest> patches,
+									schema = @Schema(implementation = UvZeitraster.class)))) final Collection<@Valid UvZeitrasterPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvZeitrasterController().patchMultiple(patches);
 	}
@@ -3619,7 +3619,7 @@ public class APIUnterrichtsverteilung {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
 									schema = @Schema(
-											implementation = UvZeitrasterEintrag.class)))) final @Valid Collection<UvZeitrasterEintragCreateRequest> createRequests) {
+											implementation = UvZeitrasterEintrag.class)))) final Collection<@Valid UvZeitrasterEintragCreateRequest> createRequests) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvZeitrasterEintragController().createMultiple(createRequests);
 	}
 
@@ -3675,7 +3675,7 @@ public class APIUnterrichtsverteilung {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(
 									schema = @Schema(
-											implementation = UvZeitrasterEintrag.class)))) final @Valid Collection<UvZeitrasterEintragPatchRequest> patches,
+											implementation = UvZeitrasterEintrag.class)))) final Collection<@Valid UvZeitrasterEintragPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return UvGrunddatenControllerFactory.withWriteAccess(request).getUvZeitrasterEintragController().patchMultiple(patches);
 	}
@@ -3807,7 +3807,7 @@ public class APIUnterrichtsverteilung {
 			@PathParam("schema") final String schema,
 			@RequestBody(description = "Patch-Daten für mehrere Unterrichtseinheiten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = UvUnterricht.class)))) final @Valid Collection<UvUnterrichtPatchRequest> patches,
+							array = @ArraySchema(schema = @Schema(implementation = UvUnterricht.class)))) final Collection<@Valid UvUnterrichtPatchRequest> patches,
 			@Context final HttpServletRequest request) throws ApiOperationException {
 		return UvPlanungsabschnittControllerFactory.withWriteAccess(request).getUvUnterrichtController().patchMultiple(patches);
 	}

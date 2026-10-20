@@ -1293,10 +1293,10 @@ public class APILehrer {
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerPersonalabschnittsdatenMehrleistungen(@PathParam("schema") final String schema,
-			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
+			@RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerMehrleistungPatchRequest> patches,
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<@Valid LehrerMehrleistungPatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory.withWriteAccess(request)
 				.getLehrerMehrleistungController()
@@ -1449,10 +1449,10 @@ public class APILehrer {
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerPersonalabschnittsdatenAllgemeineAnrechnungen(@PathParam("schema") final String schema,
-			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
+			@RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(
-									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<LehrerAnrechnungsstundePatchRequest> patches,
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))) final List<@Valid LehrerAnrechnungsstundePatchRequest> patches,
 			@Context final HttpServletRequest request) {
 		return LehrerControllerFactory.withWriteAccess(request)
 				.getLehrerAnrechnungsstundenController()
