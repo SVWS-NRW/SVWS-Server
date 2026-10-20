@@ -2941,6 +2941,18 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_IGNORIEREN} bei der Blockung ignoriert wird.
+	 *
+	 * @param idSchueler   die Datenbank-ID des Schülers
+	 *
+	 * @return true, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_IGNORIEREN} ignoriert wird
+	 */
+	public boolean schuelerGetIstIgnoriert(final long idSchueler) {
+		final @NotNull LongArrayKey key = new LongArrayKey(new long[] { GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ, idSchueler });
+		return regelByMultikey.containsKey(key);
+	}
+
+	/**
 	 * Gibt die ID der Blockung zurück.
 	 *
 	 * @return die ID der Blockung

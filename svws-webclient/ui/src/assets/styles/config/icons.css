@@ -1027,6 +1027,13 @@
 	mask-position: center;
 }
 
+@utility i-ri-user-unfollow-line {
+	mask-image: url(@icons/User%20&%20Faces/user-unfollow-line.svg);
+	-webkit-mask-image: url(@icons/User%20&%20Faces/user-unfollow-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 @utility i-ri-vidicon-line {
 	mask-image: url(@icons/Media/vidicon-line.svg);
 	-webkit-mask-image: url(@icons/Media/vidicon-line.svg);

@@ -70,6 +70,10 @@
 										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-spam-3-line" /> Nichtverteilung</span>
 										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-error-warning-fill" /> Kollision und Nichtverteilung</span>
 									</li>
+									<li class="flex flex-col">
+										<span class="font-bold mb-0.5">Regel</span>
+										<span class="inline-flex gap-0.5 items-center"><span class="icon-sm i-ri-user-unfollow-line bg-ui-caution" /> Schüler ignorieren</span>
+									</li>
 								</ul>
 							</template>
 						</svws-ui-tooltip>
@@ -143,6 +147,16 @@
 									<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 								</template>
 							</div>
+						</div>
+						<div v-if="hatIgnorierte" role="cell" class="svws-ui-td svws-align-center pl-0">
+							<svws-ui-tooltip v-if="getDatenmanager().schuelerGetIstIgnoriert(s.id)">
+								<span class="icon-sm i-ri-user-unfollow-line bg-ui-caution" />
+								<template #content>
+									<b>Regel „Schüler ignorieren“</b>
+									<br>Die Blockung verteilt diesen Schüler nicht auf Kurse.
+									<br>Fachwahlen ohne Kurs zählen bei ihm nicht als Nichtverteilung.
+								</template>
+							</svws-ui-tooltip>
 						</div>
 						<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
 							<span class="w-full text-center">{{ Geschlecht.fromValue(s.geschlecht)?.kuerzel }}</span>
@@ -275,12 +289,18 @@
 		return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, idFach).istSchriftlich ? 's' : 'm';
 	}
 
+	// Die Spalte erscheint nur, wenn die Blockung Schüler ignoriert, damit die Liste sonst nicht breiter wird
+	const hatIgnorierte = computed<boolean>(() => !props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_IGNORIEREN).isEmpty());
+
 	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [
 			{ key: 'status', label: '  ', fixedWidth: 1.75 },
 			{ key: 'fixiert', label: 'F', tooltip: "Kursfixierung", fixedWidth: 2, align: "center" },
 			{ key: 'schuelerAuswahl', label: 'Schüler', span: 1 },
 		];
+		if (hatIgnorierte.value) {
+			cols.push({ key: 'ignoriert', label: 'I', tooltip: "Regel „Schüler ignorieren“", fixedWidth: 2, align: "center" });
+		}
 		if (props.showGeschlecht()) {
 			cols.push({ key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center" });
 		}
@@ -290,7 +310,8 @@
 		return cols;
 	});
 
-	const gridTemplateColumns = computed<string>(() => "grid-template-columns: 1.75rem 2rem minmax(4rem, 1fr)" + (props.showGeschlecht() ? " 2rem" : "") +
+	const gridTemplateColumns = computed<string>(() => "grid-template-columns: 1.75rem 2rem minmax(4rem, 1fr)" + (hatIgnorierte.value ? " 2rem" : "")
+		+ (props.showGeschlecht() ? " 2rem" : "") +
 		(((fach.value !== undefined) || (props.schuelerFilter().kurs !== undefined)) ? " 2rem" : ""));
 
 	const fixierRegeln = computed(() => {

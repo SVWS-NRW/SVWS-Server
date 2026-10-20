@@ -2946,6 +2946,23 @@ class GostBlockungsdatenManagerTest {
 		assertEquals(REGEL_ID_1, regel.id);
 	}
 
+	@Test
+	@DisplayName("testSchuelerGetIstIgnoriert")
+	void testSchuelerGetIstIgnoriert() {
+		final GostBlockungsdatenManager manager = createManagerFuerRegelTests();
+		addDefaultFachwahlen(manager);
+
+		// Ohne Regel: nicht ignoriert
+		assertFalse(manager.schuelerGetIstIgnoriert(SCHUELER_1_ID));
+
+		// Mit Regel: nur der angegebene Schüler wird ignoriert
+		final GostBlockungRegel regel = createRegel(REGEL_ID_1, GostKursblockungRegelTyp.SCHUELER_IGNORIEREN.typ);
+		regel.parameter.add(SCHUELER_1_ID);
+		manager.regelAdd(regel);
+		assertTrue(manager.schuelerGetIstIgnoriert(SCHUELER_1_ID));
+		assertFalse(manager.schuelerGetIstIgnoriert(SCHUELER_2_ID));
+	}
+
 
 	// #########################################################################
 	// ##########              Ergebnis-Tests                        ##########
