@@ -24,7 +24,7 @@ export class ValidatorSsn00SchuelerStammdatenNachname extends Validator {
 
 	protected pruefe(): boolean {
 		const nachname: string | null = this._nachname.get();
-		if ((nachname === null) || JavaString.isBlank(nachname)) {
+		if ((nachname === null) || JavaString.isEmpty(nachname)) {
 			this.addFehler(0, "Nachname des Schülers: Kein Wert vorhanden.");
 			return false;
 		}

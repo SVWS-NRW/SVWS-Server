@@ -31,7 +31,7 @@ public final class ValidatorSsn00SchuelerStammdatenNachname extends Validator {
 	@Override
 	protected boolean pruefe() {
 		final String nachname = _nachname.get();
-		if ((nachname == null) || nachname.isBlank()) {
+		if ((nachname == null) || nachname.isEmpty()) {
 			this.addFehler(0, "Nachname des Schülers: Kein Wert vorhanden.");
 			return false;
 		}

@@ -22,7 +22,7 @@ class TestValidatorSsn00SchuelerStammdatenNachname {
 	private static final String TESTDATEN_NACHNAME_PFLICHT = """
             null         , false
             ''           , false
-            ' '          , false
+            ' '          , true
             'Mustermann' , true
             """;
 

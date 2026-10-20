@@ -27,7 +27,7 @@ export class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 
 	protected pruefe(): boolean {
 		const vorname: string | null = this.daten.get();
-		if (vorname === null || JavaString.isBlank(vorname)) {
+		if (vorname === null || JavaString.isEmpty(vorname)) {
 			this.addFehler(0, "Vorname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
 		}

@@ -25,12 +25,13 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * CoreType: LehrerStammdaten
  */
-@DisplayName("Test ValidatorLsv00LehrerStammdaten")
+@DisplayName("Test ValidatorLsv00LehrerStammdatenVorname")
 class TestValidatorLsv00LehrerStammdatenVorname {
 
 	private static final String TESTDATEN_VORNAME = """
 			null            , false
 			''              , false
+			'  '            , true
 			'Frank'         , true
 		""";
 
