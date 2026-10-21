@@ -71,6 +71,10 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		}
 	}
 
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
+	}
+
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const id = (this.data.auswahl === undefined) ? undefined : this.data.auswahl.id;
 		return { id };

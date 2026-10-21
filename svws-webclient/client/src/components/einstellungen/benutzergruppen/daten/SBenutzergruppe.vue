@@ -17,8 +17,7 @@
 				:benutzer-in-benutzergruppe
 				:add-benutzer-to-benutzergruppe
 				:remove-benutzer-from-benutzergruppe
-				:goto-benutzer
-				:map-benutzergruppen />
+				:goto-benutzer />
 		</div>
 	</div>
 </template>
