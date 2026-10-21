@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSls01SchuelerLernabschnittsdatenSchulgliederung",
+    "historie" : [ {
+      "praefix" : "SLS01",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Lernabschnittsdaten-Schulgliederung",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "Feld 'Schulgliederung'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLS00"] ,
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Schulgliederung des Schülers: Das Feld 'Schulgliederung' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.idSchulgliederung ≠ einer id eines Eintrages in Schulgliederung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
