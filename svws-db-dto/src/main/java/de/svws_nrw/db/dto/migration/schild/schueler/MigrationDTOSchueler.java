@@ -1855,10 +1855,9 @@ public final class MigrationDTOSchueler {
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchueler ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param GU_ID   der Wert für das Attribut GU_ID
-	 * @param idStatus   der Wert für das Attribut idStatus
 	 * @param NeuZugewandert   der Wert für das Attribut NeuZugewandert
 	 */
-	public MigrationDTOSchueler(final Long ID, final String GU_ID, final Integer idStatus, final Boolean NeuZugewandert) {
+	public MigrationDTOSchueler(final Long ID, final String GU_ID, final Boolean NeuZugewandert) {
 		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
@@ -1867,10 +1866,6 @@ public final class MigrationDTOSchueler {
 			throw new NullPointerException("GU_ID must not be null");
 		}
 		this.GU_ID = GU_ID;
-		if (idStatus == null) {
-			throw new NullPointerException("idStatus must not be null");
-		}
-		this.idStatus = idStatus;
 		if (NeuZugewandert == null) {
 			throw new NullPointerException("NeuZugewandert must not be null");
 		}

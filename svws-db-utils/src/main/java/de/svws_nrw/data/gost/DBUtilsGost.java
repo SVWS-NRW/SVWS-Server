@@ -309,7 +309,7 @@ public final class DBUtilsGost {
 		}
 
 		// In dem Fall, dass der Schüler bereits abgegangen ist, wird das Entlassdatum und der Schuljahresabschnitt mit dem Schuljahresabschnitt des GOSt-Halbjahres abgegleichen
-		final SchuelerStatus status = SchuelerStatus.data().getWertByID((long) dto.idStatus);
+		final SchuelerStatus status = SchuelerStatus.data().getWertByID(dto.idStatus == null ? null : dto.idStatus.longValue());
 		if ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE)) {
 			final int blockungSchuljahr = halbjahr.getSchuljahrFromAbiturjahr(abijahrgang);
 			final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);

@@ -102,6 +102,7 @@ public final class GostKursBelegungService {
 		return (schueler != null)
 				&& (schuljahresabschnitt != null)
 				&& !schueler.hatLoeschvermerk
+				&& (schueler.idStatus != null)
 				&& validStatus.contains(schueler.idStatus)
 				&& istKursartSchriftlich(leistung.Kursart, lernabschnitt.ASDJahrgang, schuljahresabschnitt.Abschnitt);
 	}

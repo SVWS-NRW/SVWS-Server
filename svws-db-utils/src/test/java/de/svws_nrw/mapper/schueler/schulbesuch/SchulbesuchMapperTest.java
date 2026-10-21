@@ -36,7 +36,7 @@ class SchulbesuchMapperTest {
 	// -------------------------------------------------------------------------
 
 	private DTOSchueler createEntity(final long id) {
-		return new DTOSchueler(id, "GU-" + id, 1, false);
+		return new DTOSchueler(id, "GU-" + id, false);
 	}
 
 	private SchulbesuchMappingContext emptyContext() {

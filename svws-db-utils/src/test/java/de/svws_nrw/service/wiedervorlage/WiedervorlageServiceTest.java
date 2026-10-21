@@ -249,7 +249,7 @@ class WiedervorlageServiceTest {
 		final long idPerson = 2L;
 		final var request = buildCreateRequest(typPerson, idPerson);
 
-		final var schueler = new DTOSchueler(2L, "ABC", 1, false);
+		final var schueler = new DTOSchueler(2L, "ABC", false);
 		schueler.Vorname = "Max";
 		schueler.Nachname = "Mustermann";
 

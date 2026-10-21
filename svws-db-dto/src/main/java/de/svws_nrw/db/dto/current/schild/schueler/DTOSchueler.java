@@ -824,7 +824,7 @@ public final class DTOSchueler {
 	/** Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw. */
 	@Column(name = "Status")
 	@JsonProperty
-	public int idStatus;
+	public Integer idStatus;
 
 	/** Name des Schülers PAuswG vom 21.6.2019 §5 Abs. 2 */
 	@Column(name = "Name")
@@ -1555,16 +1555,14 @@ public final class DTOSchueler {
 	 * Erstellt ein neues Objekt der Klasse DTOSchueler ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param GU_ID   der Wert für das Attribut GU_ID
-	 * @param idStatus   der Wert für das Attribut idStatus
 	 * @param NeuZugewandert   der Wert für das Attribut NeuZugewandert
 	 */
-	public DTOSchueler(final long ID, final String GU_ID, final int idStatus, final Boolean NeuZugewandert) {
+	public DTOSchueler(final long ID, final String GU_ID, final Boolean NeuZugewandert) {
 		this.ID = ID;
 		if (GU_ID == null) {
 			throw new NullPointerException("GU_ID must not be null");
 		}
 		this.GU_ID = GU_ID;
-		this.idStatus = idStatus;
 		this.NeuZugewandert = NeuZugewandert;
 	}
 

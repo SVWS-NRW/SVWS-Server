@@ -40,20 +40,22 @@ class SchuelerRepositoryImplTest {
 	private final DTOSchueler testSchueler1 = getTestSchueler1();
 
 	private static DTOSchueler getTestSchueler1() {
-		final var testSchueler = new DTOSchueler(1L, "Fake-GU-ID 1", 2, false);
+		final var testSchueler = new DTOSchueler(1L, "Fake-GU-ID 1", false);
 		testSchueler.Vorname = "Vorname 1";
 		testSchueler.Nachname = "Nachname 1";
 		testSchueler.Schuljahresabschnitts_ID = 42L;
+		testSchueler.idStatus = 2;
 		return testSchueler;
 	}
 
 	private final DTOSchueler testSchueler2 = getTestSchueler2();
 
 	private static DTOSchueler getTestSchueler2() {
-		final var testSchueler = new DTOSchueler(2L, "Fake-GU-ID 2", 2, false);
+		final var testSchueler = new DTOSchueler(2L, "Fake-GU-ID 2", false);
 		testSchueler.Vorname = "Vorname 2";
 		testSchueler.Nachname = "Nachname 2";
 		testSchueler.Schuljahresabschnitts_ID = 42L;
+		testSchueler.idStatus = 2;
 		return testSchueler;
 	}
 
@@ -148,7 +150,7 @@ class SchuelerRepositoryImplTest {
 	@Test
 	@DisplayName("Test: Prüfe, ob die ID korrekt gesetzt wird.")
 	void testCreate() {
-		final DTOSchueler neu = new DTOSchueler(1L, "Fake-GU-ID 1", 1, false);
+		final DTOSchueler neu = new DTOSchueler(1L, "Fake-GU-ID 1", false);
 		final long neueId = 999L;
 
 		when(conn.transactionGetNextID(DTOSchueler.class)).thenReturn(neueId);

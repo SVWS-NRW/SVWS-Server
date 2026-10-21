@@ -56,7 +56,6 @@ import de.svws_nrw.db.schema.revisionen.Revision72Updates;
 import de.svws_nrw.db.schema.revisionen.Revision74Updates;
 import de.svws_nrw.db.schema.revisionen.Revision77Updates;
 import de.svws_nrw.db.schema.revisionen.Revision80Updates;
-import de.svws_nrw.db.schema.revisionen.Revision81Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -380,24 +379,21 @@ public enum SchemaRevisionen {
 	REV_79(79, "2026-09-23"),
 
 	/** Ergänzen einer Spalte istInitialkennwort bei der Tabelle Notenmodul_Credentials */
-	REV_80(80, "2026-10-06"),
-
-	/** Die Spalte Status in der Tabelle Schueler ist nun NOT NULL mit dem Default-Wert 0 */
-	REV_81(81, "2026-10-20");
+	REV_80(80, "2026-10-06");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_81;
+	public static final SchemaRevisionen maxRevision = REV_80;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_81;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_80;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -511,7 +507,6 @@ public enum SchemaRevisionen {
 				case REV_74 -> new Revision74Updates();
 				case REV_77 -> new Revision77Updates();
 				case REV_80 -> new Revision80Updates();
-				case REV_81 -> new Revision81Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

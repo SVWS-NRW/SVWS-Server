@@ -47,8 +47,6 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Status */
 	public final SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
-			.setDefault("0")
-			.setNotNull()
 			.setJavaName("idStatus")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.");

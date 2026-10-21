@@ -94,7 +94,7 @@ class SchuelerSchulbesuchServiceTest {
 	@BeforeEach
 	void setUpEach() {
 		idSchueler = 1L;
-		schueler = new DTOSchueler(idSchueler, "123", 1, true);
+		schueler = new DTOSchueler(idSchueler, "123", true);
 		schule = new DTOSchuleNRW(1L, "123");
 		entlassart = new DTOEntlassarten(1L, "entlassart");
 		apiModel = mock(SchuelerSchulbesuchsdaten.class);
@@ -174,9 +174,9 @@ class SchuelerSchulbesuchServiceTest {
 	@DisplayName("getByIds")
 	void getByIds() {
 		final var ids = List.of(3L, 1L, 2L);
-		final var schueler1 = new DTOSchueler(1L, "a", 1, true);
-		final var schueler2 = new DTOSchueler(2L, "b", 1, true);
-		final var schueler3 = new DTOSchueler(3L, "c", 1, true);
+		final var schueler1 = new DTOSchueler(1L, "a", true);
+		final var schueler2 = new DTOSchueler(2L, "b", true);
+		final var schueler3 = new DTOSchueler(3L, "c", true);
 
 		final var apiModel1 = new SchuelerSchulbesuchsdaten();
 		apiModel1.id = 1L;
