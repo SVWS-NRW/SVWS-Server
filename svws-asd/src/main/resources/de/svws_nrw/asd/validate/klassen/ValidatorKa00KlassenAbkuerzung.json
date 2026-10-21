@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKa00KlassenAbkuerzung",
+    "historie" : [ {
+      "praefix" : "KA00",
+      "zweig" : "Klassen-Abkuerzung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Kürzel'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Kürzel der Klasse: Der eingetragene Wert darf nicht leer sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.kuerzel = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

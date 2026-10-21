@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKa11KlassenAbkuerzung",
+    "historie" : [ {
+      "praefix" : "KA11",
+      "zweig" : "Klassen-Abkuerzung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Kürzel'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KA00"],
+      "muss" : ["BK", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Kürzel der Klasse: Das eingetragene Kürzel darf maximal 15 Stellen besitzen.",
+      "erlaeuterung" : "",
+      "bedingung" : "KlassenDaten.kuerzel einer Klasse > fünfzehnstellig",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+  	} ]
+  }  

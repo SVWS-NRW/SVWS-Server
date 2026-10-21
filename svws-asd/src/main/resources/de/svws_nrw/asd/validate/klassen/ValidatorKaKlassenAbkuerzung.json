@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKaKlassenAbkuerzung",
+    "historie" : [ {
+      "praefix" : "KA",
+      "zweig" : "Klassen-Abkuerzung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Kürzel'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "",
+      "erlaeuterung" : "",
+      "bedingung" : "",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

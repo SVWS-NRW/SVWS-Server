@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.klassen.ValidatorKa10KlassenAbkuerzung",
+    "historie" : [ {
+      "praefix" : "KA10",
+      "zweig" : "Klassen-Abkuerzung",
+      "dtos" : "KlassenDaten",
+      "ausfuehrungsbereich_ui" : "Klassen",
+      "anzeigebereich_ui" : "Feld 'Kürzel'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["KA00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Kürzel der Klasse: Das eingetragene Kürzel kommt mehrfach vor.",
+      "erlaeuterung" : "Es muss mit dem Kürzel der Klassenliste abgeglichen werden. Ein Kürzel darf dort nicht zweimal vorkommen. Das eingetragene Kürzel ist darin bereits enthalten ",
+      "bedingung" : "ANZAHL(KlassenDaten.kuerzel) > 1 in Liste der Klassen",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+   } ]
+  }
