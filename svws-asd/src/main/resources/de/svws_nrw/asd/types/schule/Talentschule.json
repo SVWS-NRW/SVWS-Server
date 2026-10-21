@@ -1,0 +1,40 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINE_TALENTSCHULE",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "keine Talentschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TALENTSCHULE",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "Talentschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "TALENTSCHULE_AUSLAUFEND",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Talentschule auslaufend",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
+}

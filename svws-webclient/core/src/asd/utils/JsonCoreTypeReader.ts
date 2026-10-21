@@ -147,6 +147,10 @@ import { OrteKatalogEintrag } from "../data/schule/OrteKatalogEintrag";
 import { Orte } from "../types/schule/Orte";
 import { Hochschulabschluss } from "../types/schueler/Hochschulabschluss";
 import { HochschulabschlussKatalogEintrag } from "../data/schueler/HochschulabschlussKatalogEintrag";
+import { FormGebundenerGanztagKatalogEintrag } from "../data/schule/FormGebundenerGanztagKatalogEintrag";
+import { FormGebundenerGanztag } from "../types/schule/FormGebundenerGanztag";
+import { Talentschule } from "../types/schule/Talentschule";
+import { TalentschuleKatalogEintrag } from "../data/schule/TalentschuleKatalogEintrag";
 
 /**
  * Die Klasse dient dem Einlesen der Daten für Core-Types und der Fehlerart-Kontexte von Validatoren.
@@ -233,6 +237,8 @@ export class JsonCoreTypeReader {
 		{ key: "Laender", entry: LaenderKatalogEintrag, type: Laender },
 		{ key: "Orte", entry: OrteKatalogEintrag, type: Orte, simple: true },
 		{ key: "Hochschulabschluss", entry: HochschulabschlussKatalogEintrag, type: Hochschulabschluss },
+		{ key: "FormGebundenerGanztag", entry: FormGebundenerGanztagKatalogEintrag, type: FormGebundenerGanztag },
+		{ key: "Talentschule", entry: TalentschuleKatalogEintrag, type: Talentschule },
 	];
 
 	/**

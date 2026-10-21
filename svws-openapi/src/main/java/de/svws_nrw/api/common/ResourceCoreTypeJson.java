@@ -98,7 +98,9 @@ public final class ResourceCoreTypeJson {
 			Map.entry("AnrechnungsantragBKAZVO", "de/svws_nrw/asd/types/schueler/AnrechnungsantragBKAZVO.json"),
 			Map.entry("Laender", "de/svws_nrw/asd/types/schule/Laender.json"),
 			Map.entry("Orte", "de/svws_nrw/asd/types/schule/Orte.json"),
-			Map.entry("Hochschulabschluss", "de/svws_nrw/asd/types/schueler/Hochschulabschluss.json")
+			Map.entry("Hochschulabschluss", "de/svws_nrw/asd/types/schueler/Hochschulabschluss.json"),
+			Map.entry("FormGebundenerGanztag", "de/svws_nrw/asd/types/schule/FormGebundenerGanztag.json"),
+			Map.entry("Talentschule", "de/svws_nrw/asd/types/schule/Talentschule.json")
 	);
 
 

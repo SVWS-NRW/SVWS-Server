@@ -1,0 +1,52 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "OHNE_GANZTAG",
+		"idStatistik": "1",
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "Schule ohne Ganztagsbetrieb",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GANZTAG_GENEHMIGT",
+		"idStatistik": "2",
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "Genehmigte Ganztagsschule",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GANZTAG_NICHT_GENEHMIGT",
+		"idStatistik": "3",
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Schule mit Ganztagsbetrieb (ohne Genehmigung)",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	}, {
+		"bezeichner": "GANZTAG_ERWEITERT",
+		"idStatistik": "4",
+		"historie": [ {
+			"id": 4,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "Schule mit erweitertem Ganztagsbetrieb",
+			"gueltigVon": null,
+			"gueltigBis": null,
+			"auslaufdauer": 0
+		} ]
+	} ]
+}

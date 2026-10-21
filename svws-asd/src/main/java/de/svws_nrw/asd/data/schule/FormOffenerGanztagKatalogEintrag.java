@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert die gültigen Statistikwerte für den Katalog der Form der offenen Ganztagsbetreuung.
  */
 @XmlRootElement
-@Schema(description = "ein Eintrag in dem Katalog der Form der offenen Ganztagsbetreuung.")
+@Schema(description = "ein Eintrag in dem Katalog der Formen der offenen Ganztagsbetreuung.")
 @TranspilerDTO
 public class FormOffenerGanztagKatalogEintrag extends CoreTypeDataNurSchulformen {
 

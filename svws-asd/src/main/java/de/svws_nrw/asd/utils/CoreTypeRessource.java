@@ -64,6 +64,7 @@ import de.svws_nrw.asd.data.schule.FachklasseKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormBilingualerUnterrichtKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FormGebundenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
 import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
@@ -76,6 +77,7 @@ import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.TalentschuleKatalogEintrag;
 import de.svws_nrw.asd.data.schule.TerminKatalogEintrag;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
@@ -139,6 +141,7 @@ import de.svws_nrw.asd.types.schule.Fachklasse;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.FormBilingualerUnterricht;
+import de.svws_nrw.asd.types.schule.FormGebundenerGanztag;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
 import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
@@ -151,6 +154,7 @@ import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Talentschule;
 import de.svws_nrw.asd.types.schule.Termin;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp;
@@ -530,6 +534,10 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 				"de/svws_nrw/asd/types/schueler/Versetzungsvermerk.json");
 		add(Hochschulabschluss.class, HochschulabschlussKatalogEintrag.class, Hochschulabschluss.values(),
 				"de/svws_nrw/asd/types/schueler/Hochschulabschluss.json");
+		add(FormGebundenerGanztag.class, FormGebundenerGanztagKatalogEintrag.class, FormGebundenerGanztag.values(),
+				"de/svws_nrw/asd/types/schule/FormGebundenerGanztag.json");
+		add(Talentschule.class, TalentschuleKatalogEintrag.class, Talentschule.values(),
+				"de/svws_nrw/asd/types/schule/Talentschule.json");
 		addSimple(Einschulungsart.class, EinschulungsartKatalogEintrag.class,
 				"de/svws_nrw/asd/types/schueler/Einschulungsart.json");
 		addSimple(LehrerAnrechnungsgrund.class, LehrerAnrechnungsgrundKatalogEintrag.class,
