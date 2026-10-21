@@ -55,10 +55,10 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 	}
 
 	@Test
-	@DisplayName("setAttributesRequiredOnCreation: kuerzel")
+	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
 	void setAttributesRequiredOnCreationTest() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("kuerzel", "test")))
+				.isThrownBy(() -> this.data.add(Map.of("bezeichnung", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es werden weitere Attribute (kuerzelStatistik) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -148,9 +148,10 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 	@Test
 	@DisplayName("getAll | Erfolg")
 	void getAll() {
-		final var dto1 = new DTOFoerderschwerpunkt(1L, "kuerzel1");
-		final var dto2 = new DTOFoerderschwerpunkt(2L, "kuerzel2");
+		final var dto1 = new DTOFoerderschwerpunkt(1L, "bezeichnung1");
+		final var dto2 = new DTOFoerderschwerpunkt(2L, "bezeichnung2");
 		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
 		when(queryMock.getResultList()).thenReturn(List.of(1L));
@@ -162,12 +163,12 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 						f1 -> assertThat(f1)
 								.isInstanceOf(FoerderschwerpunktEintrag.class)
 								.hasFieldOrPropertyWithValue("id", 1L)
-								.hasFieldOrPropertyWithValue("kuerzel", "kuerzel1")
+								.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung1")
 								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
 						f2 -> assertThat(f2)
 								.isInstanceOf(FoerderschwerpunktEintrag.class)
 								.hasFieldOrPropertyWithValue("id", 2L)
-								.hasFieldOrPropertyWithValue("kuerzel", "kuerzel2")
+								.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung2")
 								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
 				);
 	}
@@ -192,7 +193,7 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 		assertThat(this.data.map(dto))
 				.isInstanceOf(FoerderschwerpunktEintrag.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
-				.hasFieldOrPropertyWithValue("kuerzel", "bezeichnung")
+				.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung")
 				.hasFieldOrPropertyWithValue("kuerzelStatistik", fs.schluessel)
 				.hasFieldOrPropertyWithValue("istSichtbar", true)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung);
@@ -206,7 +207,7 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 
 		assertThat(this.data.map(dto))
 				.isInstanceOf(FoerderschwerpunktEintrag.class)
-				.hasFieldOrPropertyWithValue("kuerzel", "");
+				.hasFieldOrPropertyWithValue("bezeichnung", "");
 	}
 
 	@Test
@@ -261,125 +262,125 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel")
-	void patchKuerzel() throws ApiOperationException {
+	@DisplayName("patch | bezeichnung")
+	void patchBezeichnung() throws ApiOperationException {
 		final var dto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("kuerzel", "neu"));
+		this.data.patch(1L, Map.of("bezeichnung", "neu"));
 
 		assertThat(dto.Bezeichnung).isEqualTo("neu");
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel > 50 Zeichen")
-	void patchKuerzelIsTooLong() {
+	@DisplayName("patch | bezeichnung > 50 Zeichen")
+	void patchBezeichnungIsTooLong() {
 		final var dto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", RandomStringUtils.insecure().nextAscii(51))))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(51))))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut kuerzel: Die Länge des Strings ist auf 50 Zeichen limitiert.")
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 50 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel Null")
-	void patchKuerzelIsNull() {
+	@DisplayName("patch | bezeichnung Null")
+	void patchBezeichnungIsNull() {
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(mock(DTOFoerderschwerpunkt.class));
 		final var map = new HashMap<String, Object>();
-		map.put("kuerzel", null);
+		map.put("bezeichnung", null);
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut kuerzel: Der Wert null ist nicht erlaubt.")
+				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel empty")
-	void patchKuerzelIsEmpty() {
+	@DisplayName("patch | bezeichnung empty")
+	void patchBezeichnungIsEmpty() {
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(mock(DTOFoerderschwerpunkt.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", "")))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut kuerzel: Ein leerer String ist hier nicht erlaubt.")
+				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel is blank")
-	void patchKuerzelIsBlank() throws ApiOperationException {
+	@DisplayName("patch | bezeichnung is blank")
+	void patchBezeichnungIsBlank() throws ApiOperationException {
 		final var dto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("kuerzel", "    "));
+		this.data.patch(1L, Map.of("bezeichnung", "    "));
 
 		verify(this.conn, never()).queryAll(DTOFoerderschwerpunkt.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel doesn't change")
-	void patchKuerzelDoesNotChange() throws ApiOperationException {
+	@DisplayName("patch | bezeichnung doesn't change")
+	void patchBezeichnungDoesNotChange() throws ApiOperationException {
 		final var dto = new DTOFoerderschwerpunkt(1L, "bezeichnung");
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("kuerzel", "bezeichnung"));
+		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
 
 		verify(this.conn, never()).queryAll(DTOFoerderschwerpunkt.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel already used")
-	void patchKuerzelAlreadyUsed() {
+	@DisplayName("patch | bezeichnung already used")
+	void patchBezeichnungAlreadyUsed() {
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(mock(DTOFoerderschwerpunkt.class));
 		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(new DTOFoerderschwerpunkt(2L, "test")));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", "test")))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Das Kürzel test darf nicht doppelt vergeben werden")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel already used different case")
-	void patchKuerzelAlreadyUsedWithDifferentCase() {
+	@DisplayName("patch | bezeichnung already used different case")
+	void patchBezeichnungAlreadyUsedWithDifferentCase() {
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(mock(DTOFoerderschwerpunkt.class));
 		when(this.conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(new DTOFoerderschwerpunkt(2L, "TEST")));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", "test")))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Das Kürzel test darf nicht doppelt vergeben werden")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("patch | kuerzel change case in same object")
-	void patchKuerzelChangeCase() throws ApiOperationException {
+	@DisplayName("patch | bezeichnung change case in same object")
+	void patchBezeichnungChangeCase() throws ApiOperationException {
 		final var dto = new DTOFoerderschwerpunkt(1L, "test");
 		when(conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(dto));
 		final var newDto = new DTOFoerderschwerpunkt(2L, "abc");
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(2L, Map.of("kuerzel", "ABC"));
+		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
 
 		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
 	}
 
 	@Test
 	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
-	void patchKuerzelInDtoISNull() {
+	void patchBezeichnungInDtoISNull() {
 		final var dto = new DTOFoerderschwerpunkt(1L, "123");
 		dto.Bezeichnung = null;
 		when(conn.queryAll(DTOFoerderschwerpunkt.class)).thenReturn(List.of(dto));
@@ -388,7 +389,7 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		assertThatNoException()
-				.isThrownBy(() -> this.data.patch(2L, Map.of("kuerzel", "test")));
+				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
 	}
 
 	@Test

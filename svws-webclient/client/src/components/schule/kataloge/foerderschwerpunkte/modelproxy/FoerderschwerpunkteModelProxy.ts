@@ -43,10 +43,10 @@ export class FoerderschwerpunkteModelProxy extends ModelProxy<Foerderschwerpunkt
 	}
 
 	private addValidatoren() {
-		this.addBlockingValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: FoerderschwerpunktEintrag) => data.id, (data: FoerderschwerpunktEintrag) => data.kuerzel, () => this.manager().liste.list(), false), 'kuerzel');
-		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.kuerzel, null, 50), 'kuerzel');
-		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzel), 'kuerzel');
-		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.kuerzel, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'kuerzel');
+		this.addBlockingValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: FoerderschwerpunktEintrag) => data.id, (data: FoerderschwerpunktEintrag) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 50), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
 		// asd
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// sortierung

@@ -14,8 +14,8 @@
 						:manager="foerderschwerpunktTextManager"
 						searchable :removable="false" statistics required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
-						v-model="model.proxy.kuerzel"
-						:validation="() => model.getFehler('kuerzel')"
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
 						:max-len="50" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>

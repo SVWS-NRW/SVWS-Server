@@ -104,7 +104,6 @@
 	import { BilingualeSprache } from '@core/asd/types/fach/BilingualeSprache';
 	import { PrimarstufeSchuleingangsphaseBesuchsjahre } from '@core/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre';
 	import { Klassenart } from '@core/asd/types/klassen/Klassenart';
-	import { Foerderschwerpunkt } from '@core/asd/types/schule/Foerderschwerpunkt';
 	import { Schulform } from '@core/asd/types/schule/Schulform';
 	import { Schulgliederung } from '@core/asd/types/schule/Schulgliederung';
 	import type { JahrgangsDaten } from '@core/core/data/jahrgang/JahrgangsDaten';
@@ -201,8 +200,8 @@
 
 	const foerderschwerpunktManager = new SelectManager<FoerderschwerpunktEintrag>({
 		options: foerderschwerpunkte,
-		optionDisplayText: textFoerderschwerpunkt,
-		selectionDisplayText: textFoerderschwerpunkt,
+		optionDisplayText: f => f.bezeichnung,
+		selectionDisplayText: f => f.bezeichnung,
 	});
 
 	const gliederungManager = new CoreTypeSelectManager({
@@ -231,13 +230,6 @@
 
 	function getLehrerText(lehrer: LehrerListeEintrag): string {
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
-	}
-
-	function textFoerderschwerpunkt(value: FoerderschwerpunktEintrag | null): string {
-		if (value === null) {
-			return "";
-		}
-		return Foerderschwerpunkt.data().getEintragBySchuljahrUndSchluessel(schuljahr.value, value.kuerzelStatistik)?.text ?? "";
 	}
 
 </script>

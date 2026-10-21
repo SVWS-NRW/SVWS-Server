@@ -57,7 +57,7 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 	}
 
 	protected deleteMessage(id: number, foerderschwerpunkt: FoerderschwerpunktEintrag | null): string {
-		return `Förderschwerpunkt ${foerderschwerpunkt?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
+		return `Förderschwerpunkt ${foerderschwerpunkt?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
 	addFoerderschwerpunkt = async (data: Partial<FoerderschwerpunktEintrag>): Promise<void> => {
@@ -86,7 +86,7 @@ export class RouteDataFoerderschwerpunkte extends RouteDataAuswahl<Foerderschwer
 		for (const id of this.manager.getIdsReferencedFoerderschwerpunkte()) {
 			const foerderschwerpunkt = this.manager.liste.get(id);
 			if (foerderschwerpunkt) {
-				errorMessage += `- ${foerderschwerpunkt.kuerzelStatistik}: ${foerderschwerpunkt.kuerzel} \n`;
+				errorMessage += `- ${foerderschwerpunkt.kuerzelStatistik}: ${foerderschwerpunkt.bezeichnung} \n`;
 			}
 		}
 		return errorMessage;

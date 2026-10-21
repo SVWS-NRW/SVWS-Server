@@ -28,7 +28,7 @@ export class FoerderschwerpunkteListeManager extends AuswahlManager<number, Foer
 		if (cmp !== 0) {
 			return cmp;
 		}
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
 		if (cmp !== 0) {
 			return cmp;
 		}

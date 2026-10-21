@@ -85,9 +85,9 @@
 					<td class="ta-lt f-tiny"
 					    th:text="${(mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null))
 					        ? 'Förderschwerpunkt: '
-								+ ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().kuerzel : '')
+								+ ((lernabschnitt.foerderschwerpunkt1() != null) ? lernabschnitt.foerderschwerpunkt1().bezeichnung : '')
 								+ ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '')
-								+ ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().kuerzel : '')
+								+ ((lernabschnitt.foerderschwerpunkt2() != null) ? lernabschnitt.foerderschwerpunkt2().bezeichnung : '')
 					        : ''}">Förderschwerpunkt
 					</td>
 					<td class="ta-rt f-tiny" th:with="schulbesuch = ${schueler.schulbesuch()}"

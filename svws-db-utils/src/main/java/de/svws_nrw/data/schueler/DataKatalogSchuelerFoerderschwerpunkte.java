@@ -81,7 +81,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	protected FoerderschwerpunktEintrag map(final DTOFoerderschwerpunkt dto) {
 		final FoerderschwerpunktEintrag foerderschwerpunkt = new FoerderschwerpunktEintrag();
 		foerderschwerpunkt.id = dto.ID;
-		foerderschwerpunkt.kuerzel = Objects.requireNonNullElse(dto.Bezeichnung, "");
+		foerderschwerpunkt.bezeichnung = Objects.requireNonNullElse(dto.Bezeichnung, "");
 		foerderschwerpunkt.kuerzelStatistik = Objects.requireNonNullElse(dto.StatistikKrz, "");
 		foerderschwerpunkt.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		foerderschwerpunkt.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
@@ -93,7 +93,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
-			case "kuerzel" -> updateBezeichnung(dto, value, name);
+			case "bezeichnung" -> updateBezeichnung(dto, value, name);
 			case "kuerzelStatistik" -> updateKuerzelStatistik(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, name, value);
 			case "sortierung" -> updateSortierung(dto, name, value);

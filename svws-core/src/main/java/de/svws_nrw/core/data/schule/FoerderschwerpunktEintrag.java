@@ -20,7 +20,7 @@ public class FoerderschwerpunktEintrag {
 
 	/** Das Kürzel des Eintrags. */
 	@Schema(description = "das Kürzel des Eintrags", example = "EZ")
-	public @NotNull String kuerzel = "";
+	public @NotNull String bezeichnung = "";
 
 	/** Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatistik. */
 	@Schema(description = "das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik", example = "EZ")

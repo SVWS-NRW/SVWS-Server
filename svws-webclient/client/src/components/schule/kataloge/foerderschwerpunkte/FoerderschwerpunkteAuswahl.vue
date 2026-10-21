@@ -67,7 +67,7 @@
 		const arr = [];
 		for (const e of props.manager().filtered()) {
 			if ((isNumber && (e.id.toString().includes(term)))
-				|| e.kuerzel.toLocaleLowerCase().includes(termLower)
+				|| e.bezeichnung.toLocaleLowerCase().includes(termLower)
 				|| e.kuerzelStatistik.toLocaleLowerCase().includes(term)) {
 				arr.push(e);
 			}
@@ -98,7 +98,7 @@
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzelStatistik", label: "Statistik-Kürzel", defaultSort: 'asc', sortable: true },
-		{ key: "kuerzel", label: "interne Bezeichnung", sortable: true, span: 2 },
+		{ key: "bezeichnung", label: "interne Bezeichnung", sortable: true, span: 2 },
 	];
 
 	function setAuswahl(foerderschwerpunkte: FoerderschwerpunktEintrag[]): void {

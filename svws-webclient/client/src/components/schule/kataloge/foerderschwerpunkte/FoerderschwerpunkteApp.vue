@@ -6,7 +6,7 @@
 					<template v-if="activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
 							<span>
-								{{ manager().auswahl().kuerzel }}
+								{{ manager().auswahl().bezeichnung }}
 							</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								ID: {{ manager().daten().id }}
@@ -51,7 +51,7 @@
 		if (list.size() > 5) {
 			return `${list.size()} Förderschwerpunkte ausgewählt`;
 		}
-		return [...list].map(k => k.kuerzel).join(', ');
+		return [...list].map(k => k.bezeichnung).join(', ');
 	});
 
 </script>
