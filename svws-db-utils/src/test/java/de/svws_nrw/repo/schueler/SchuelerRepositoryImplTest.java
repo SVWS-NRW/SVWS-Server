@@ -163,4 +163,28 @@ class SchuelerRepositoryImplTest {
 		verify(conn).transactionPersist(neu);
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getAllIds die IDs aller Schüler über die Datenbank-Verbindung bestimmt.")
+	void testGetAllIds() {
+		when(conn.queryList("SELECT e.ID FROM DTOSchueler e ORDER BY e.ID", Long.class)).thenReturn(List.of(1L, 2L, 3L));
+
+		assertThat(repository.getAllIds()).containsExactly(1L, 2L, 3L);
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob existsById true liefert, wenn der Schüler existiert.")
+	void testExistsByIdFound() {
+		when(conn.existsBy(DTOSchueler.QUERY_BY_ID, DTOSchueler.class, 1L)).thenReturn(true);
+
+		assertThat(repository.existsById(1L)).isTrue();
+	}
+
+	@Test
+	@DisplayName("Test: Prüfe, ob existsById false liefert, wenn der Schüler nicht existiert.")
+	void testExistsByIdNotFound() {
+		when(conn.existsBy(DTOSchueler.QUERY_BY_ID, DTOSchueler.class, 1L)).thenReturn(false);
+
+		assertThat(repository.existsById(1L)).isFalse();
+	}
+
 }

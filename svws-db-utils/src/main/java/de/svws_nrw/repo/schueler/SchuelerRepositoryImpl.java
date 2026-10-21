@@ -65,4 +65,14 @@ public final class SchuelerRepositoryImpl extends RepositoryImpl<DTOSchueler> im
 		return getListByStatusAndSchuljahresabschnitte(idsSchuljahresabschnitte, status).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
+	@Override
+	public List<Long> getAllIds() {
+		return conn.queryList("SELECT e.ID FROM DTOSchueler e ORDER BY e.ID", Long.class);
+	}
+
+	@Override
+	public boolean existsById(final Long idSchueler) {
+		return conn.existsBy(DTOSchueler.QUERY_BY_ID, DTOSchueler.class, idSchueler);
+	}
+
 }

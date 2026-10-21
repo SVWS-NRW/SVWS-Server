@@ -8,11 +8,11 @@ import de.svws_nrw.asd.data.schueler.SchuelerNeu;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
+import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
@@ -26,9 +26,8 @@ public final class DataSchuelerNeu {
 	private final SchuelerStammdatenService schuelerStammdatenService;
 	private final SchuelerLernabschnittService schuelerLernabschnittService;
 	private final SchuelerSchulbesuchService schuelerSchulbesuchService;
+	private final SchuelerLernplattformService schuelerLernplattformService;
 	private final DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
-	private final DataSchuelerLernplattformen dataSchuelerLernplattformen;
-	private final DataLernplattformen dataLernplattformen;
 	private final DataEinwilligungsarten dataEinwilligungsarten;
 
 	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
@@ -39,25 +38,22 @@ public final class DataSchuelerNeu {
 	 * @param schuelerStammdatenService			DataSchuelerStammdaten
 	 * @param schuelerLernabschnittService		SchuelerLernabschnittService
 	 * @param schuelerSchulbesuchService				SchulbesuchService
+	 * @param schuelerLernplattformService		SchuelerLernplattformService
 	 * @param dataSchuelerEinwilligungen		DataSchuelerEinwilligungen
-	 * @param dataSchuelerLernplattformen		DataSchuelerLernplattformen
-	 * @param dataLernplattformen				DataLernplattformen
 	 * @param dataEinwilligungsarten			DataEinwilligungsarten
 	 */
 	public DataSchuelerNeu(
 			final SchuelerStammdatenService schuelerStammdatenService,
 			final SchuelerLernabschnittService schuelerLernabschnittService,
 			final SchuelerSchulbesuchService schuelerSchulbesuchService,
+			final SchuelerLernplattformService schuelerLernplattformService,
 			final DataSchuelerEinwilligungen dataSchuelerEinwilligungen,
-			final DataSchuelerLernplattformen dataSchuelerLernplattformen,
-			final DataLernplattformen dataLernplattformen,
 			final DataEinwilligungsarten dataEinwilligungsarten) {
 		this.schuelerStammdatenService = schuelerStammdatenService;
 		this.schuelerLernabschnittService = schuelerLernabschnittService;
 		this.schuelerSchulbesuchService = schuelerSchulbesuchService;
+		this.schuelerLernplattformService = schuelerLernplattformService;
 		this.dataSchuelerEinwilligungen = dataSchuelerEinwilligungen;
-		this.dataSchuelerLernplattformen = dataSchuelerLernplattformen;
-		this.dataLernplattformen = dataLernplattformen;
 		this.dataEinwilligungsarten = dataEinwilligungsarten;
 	}
 
@@ -78,7 +74,7 @@ public final class DataSchuelerNeu {
 		addLernabschnitt(initAttributes, idSchueler);
 		patchSchulbesuch(initAttributes, idSchueler);
 		addEinwilligungen(idSchueler);
-		addLernplattformen(idSchueler);
+		schuelerLernplattformService.addForSchueler(idSchueler);
 
 		return Response.status(Response.Status.CREATED).entity(createdSchueler).build();
 	}
@@ -117,15 +113,6 @@ public final class DataSchuelerNeu {
 		final var dto = new SchuelerSchulbesuchPatchRequest();
 		dto.idEinschulungsartGrundschule = JsonNullable.of(idGrundschuleEinschulungsart);
 		this.schuelerSchulbesuchService.patch(idSchueler, dto);
-	}
-
-	private void addLernplattformen(final long idSchueler) {
-		this.dataLernplattformen
-				.getAllIds()
-				.forEach(id -> {
-					final Map<String, Object> lernplattformAttributes = Map.of("idSchueler", idSchueler, "idLernplattform", id);
-					this.dataSchuelerLernplattformen.add(lernplattformAttributes);
-				});
 	}
 
 	private void addEinwilligungen(final long idSchueler) {

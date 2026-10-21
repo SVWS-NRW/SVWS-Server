@@ -6,6 +6,7 @@ import de.svws_nrw.mapper.schueler.foto.SchuelerFotoMapper;
 import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittBemerkungenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMapper;
+import de.svws_nrw.mapper.schueler.lernplattform.SchuelerLernplattformMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerBisherigeSchuleMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchuelerMerkmalMapper;
 import de.svws_nrw.mapper.schueler.schulbesuch.SchulbesuchMapper;
@@ -21,6 +22,7 @@ import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenRepos;
+import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
@@ -252,4 +254,20 @@ public final class SchuelerServiceFactory {
 				this.getSchuelerFotoService()
 		);
 	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerLernplattformService}.
+	 *
+	 * @return ein neuer {@code SchuelerLernplattformService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerLernplattformService getSchuelerLernplattformService() {
+		return new SchuelerLernplattformService(
+				schuelerRepositoryFactory.getSchuelerLernplattformRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				katalogRepositoryFactory.getLernplattformRepository(),
+				katalogRepositoryFactory.getLernplattformCredentialRepository(),
+				SchuelerLernplattformMapper.INSTANCE
+		);
+	}
+
 }

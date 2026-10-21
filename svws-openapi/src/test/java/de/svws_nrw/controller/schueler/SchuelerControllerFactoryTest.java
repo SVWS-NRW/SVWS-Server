@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.schueler;
 
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
+import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerSchulbesuchController;
@@ -130,6 +131,16 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerMerkmalController controller = factory.getSchuelerMerkmalController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withReadAccess | getSchuelerLernplattformController gibt einen Controller zurück")
+	void getSchuelerLernplattformController() {
+		final var factory = SchuelerControllerFactory.withReadAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerLernplattformController controller = factory.getSchuelerLernplattformController();
 		assertNotNull(controller);
 	}
 

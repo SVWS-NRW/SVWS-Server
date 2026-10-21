@@ -15,6 +15,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
+import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
+import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.repo.RepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryImpl;
@@ -22,6 +24,10 @@ import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepositor
 import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepository;
 import de.svws_nrw.repo.schule.kataloge.haltestelle.HaltestelleRepositoryImpl;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepository;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepositoryImpl;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
+import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepository;
 import de.svws_nrw.repo.schule.kataloge.merkmal.MerkmalRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.ortsteil.OrtsteilRepository;
@@ -216,6 +222,24 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	 */
 	public MerkmalRepository getMerkmalRepository() {
 		return this.getOrCreate(MerkmalRepository.class, () -> new MerkmalRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOLernplattformen}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public LernplattformRepository getLernplattformRepository() {
+		return this.getOrCreate(LernplattformRepository.class, () -> new LernplattformRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOCredentialsLernplattformen}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public LernplattformCredentialRepository getLernplattformCredentialRepository() {
+		return this.getOrCreate(LernplattformCredentialRepository.class, () -> new LernplattformCredentialRepositoryImpl(this.conn));
 	}
 
 	/**

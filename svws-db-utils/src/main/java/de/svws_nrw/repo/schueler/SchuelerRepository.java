@@ -80,4 +80,20 @@ public interface SchuelerRepository extends Repository<DTOSchueler> {
 	 */
 	Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitte(Collection<Long> idsSchuljahresabschnitte, Collection<Long> status);
 
+	/**
+	 * Gibt die IDs aller Schüler zurück, unabhängig von Status und Löschvermerk.
+	 *
+	 * @return die aufsteigend sortierten IDs aller Schüler
+	 */
+	List<Long> getAllIds();
+
+	/**
+	 * Prüft, ob ein Schüler mit der übergebenen ID existiert.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return {@code true}, wenn ein Eintrag gefunden wurde, sonst {@code false}
+	 */
+	boolean existsById(Long idSchueler);
+
 }

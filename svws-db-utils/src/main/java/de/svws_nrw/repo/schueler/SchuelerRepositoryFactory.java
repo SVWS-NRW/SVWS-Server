@@ -6,6 +6,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
@@ -35,6 +36,8 @@ import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenTimestampsRepositoryImpl;
+import de.svws_nrw.repo.schueler.lernplattform.SchuelerLernplattformRepository;
+import de.svws_nrw.repo.schueler.lernplattform.SchuelerLernplattformRepositoryImpl;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepositoryImpl;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittKursartZuweisungenRepository;
@@ -271,6 +274,15 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerMerkmalRepository getSchuelerMerkmaleRepository() {
 		return this.getOrCreate(SchuelerMerkmalRepository.class, () -> new SchuelerMerkmalRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerLernplattform}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerLernplattformRepository getSchuelerLernplattformRepository() {
+		return this.getOrCreate(SchuelerLernplattformRepository.class, () -> new SchuelerLernplattformRepositoryImpl(this.conn));
 	}
 
 	/**

@@ -9,11 +9,11 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
+import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerImportData;
 import de.svws_nrw.service.schueler.stammdaten.SchuelerStammdatenService;
@@ -61,10 +61,7 @@ class DataSchuelerNeuTest {
 	private DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
 
 	@Mock
-	private DataSchuelerLernplattformen dataSchuelerLernplattformen;
-
-	@Mock
-	private DataLernplattformen dataLernplattformen;
+	private SchuelerLernplattformService schuelerLernplattformService;
 
 	@Mock
 	private DataEinwilligungsarten dataEinwilligungsarten;
@@ -94,7 +91,6 @@ class DataSchuelerNeuTest {
 		created.id = 100L;
 
 		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
-		when(dataLernplattformen.getAllIds()).thenReturn(List.of(1L, 2L));
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of(10L, 20L));
 
 		final var response = data.add(TestUtils.fromObject(schuelerNeu));
@@ -105,7 +101,7 @@ class DataSchuelerNeuTest {
 		verify(schuelerStammdatenService, times(1)).create(any(SchuelerImportData.class));
 		verify(schuelerLernabschnittService).create(new SchuelerLernabschnittCreateRequest(100L, 8L, null, 5L));
 		verify(schuelerSchulbesuchService, times(1)).patch(anyLong(), any());
-		verify(dataSchuelerLernplattformen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
+		verify(schuelerLernplattformService).addForSchueler(100L);
 		verify(dataSchuelerEinwilligungen, times(2)).add(argThat(map -> map.get("idSchueler").equals(100L)));
 	}
 
@@ -124,7 +120,6 @@ class DataSchuelerNeuTest {
 		created.id = 100L;
 
 		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
-		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of());
 
 		try (MockedStatic<JSONMapper> mocked = mockStatic(JSONMapper.class)) {
@@ -167,7 +162,6 @@ class DataSchuelerNeuTest {
 		created.id = 100L;
 
 		when(schuelerStammdatenService.create(any(SchuelerImportData.class))).thenReturn(created);
-		when(dataLernplattformen.getAllIds()).thenReturn(List.of());
 		when(dataEinwilligungsarten.getAllIdsByPersonTyp(PersonTyp.SCHUELER)).thenReturn(List.of());
 
 		data.add(TestUtils.fromObject(schuelerNeu));

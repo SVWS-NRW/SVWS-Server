@@ -2,6 +2,8 @@ package de.svws_nrw.controller.schueler;
 
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
+import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
+import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleControllerImpl;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerMerkmalController;
@@ -154,6 +156,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerLernabschnittController getSchuelerLernabschnittController() {
 		return new SchuelerLernabschnittControllerImpl(schuelerServiceFactory.getSchuelerLernabschnittService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerLernplattformController-Instanz.
+	 *
+	 * @return ein neuer SchuelerLernplattformController mit dem konfigurierten SchuelerLernplattformService
+	 */
+	public SchuelerLernplattformController getSchuelerLernplattformController() {
+		return new SchuelerLernplattformControllerImpl(schuelerServiceFactory.getSchuelerLernplattformService());
 	}
 
 }

@@ -44,7 +44,6 @@ import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
-import de.svws_nrw.data.schueler.DataSchuelerLernplattformen;
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
 import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
@@ -53,10 +52,10 @@ import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
-import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
+import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchulePatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerMerkmalCreateRequest;
@@ -278,8 +277,8 @@ public class APISchueler {
 					final var schuelerstammdatenService = schuelerServiceFactory.getSchuelerStammdatenService();
 					final var schulbesuchService = schuelerServiceFactory.getSchulbesuchService();
 					return new DataSchuelerNeu(schuelerstammdatenService, schuelerServiceFactory.getSchuelerLernabschnittService(), schulbesuchService,
-							new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
-							new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is);
+							schuelerServiceFactory.getSchuelerLernplattformService(), new DataSchuelerEinwilligungen(conn),
+							new DataEinwilligungsarten(conn)).add(is);
 				},
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -1762,9 +1761,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Lernplattform für den Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn).getAllByIdSchueler(idSchueler),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+		return SchuelerControllerFactory
+				.withReadAccess(request)
+				.getSchuelerLernplattformController()
+				.getListByIdSchueler(idSchueler);
 	}
 
 	/**
@@ -1773,7 +1773,7 @@ public class APISchueler {
 	 * @param schema            das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param idSchueler        die Schüler-ID
 	 * @param idLernplattform   die ID der Lernplattform, zu welcher die zu patchende Einwilligung gehört
-	 * @param is                der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch             das partielle Update als {@link SchuelerLernplattformPatchRequest}
 	 * @param request           die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1794,13 +1794,12 @@ public class APISchueler {
 			@PathParam("idLernplattform") final long idLernplattform,
 			@RequestBody(description = "Der Patch für die Lernplattformen eines Schülers", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerLernplattform.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerLernplattform.class))) final SchuelerLernplattformPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerLernplattformen(conn).patchAsResponse(new Long[] { idSchueler, idLernplattform },
-						is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+		return SchuelerControllerFactory
+				.withWriteAccess(request)
+				.getSchuelerLernplattformController()
+				.patch(idSchueler, idLernplattform, patch);
 	}
 
 	/**
