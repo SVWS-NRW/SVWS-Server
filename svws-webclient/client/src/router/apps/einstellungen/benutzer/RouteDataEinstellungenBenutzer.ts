@@ -73,7 +73,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	}
 
 	public async setBenutzer(benutzer: BenutzerListeEintrag | undefined) {
-		if (benutzer?.id === this._state.value.auswahl?.id) {
+		if ((benutzer?.id === this._state.value.auswahl?.id) && this.hatDaten) {
 			return;
 		}
 		if ((benutzer === undefined) || (this.mapBenutzer.size === 0)) {

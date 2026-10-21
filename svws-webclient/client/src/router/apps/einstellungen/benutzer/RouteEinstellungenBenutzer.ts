@@ -71,6 +71,10 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 
 	}
 
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
+	}
+
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzerAuswahlProps {
 		return {
 			auswahl: () => this.data.auswahl,
