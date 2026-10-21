@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -221,7 +223,7 @@ class RepositoryBaseImplTest {
 
 
 	@Test
-	@DisplayName("Test: create(entities) delegiert an update(entities) und gibt die erstellten Objekt zurück.")
+	@DisplayName("Test: create(entities) delegiert an update(entities) und gibt dieselbe Instanz wie die Eingabe zurück.")
 	void testCreateList() {
 		final List<TestEntity> entities = List.of(new TestEntity(), new TestEntity());
 
@@ -229,7 +231,23 @@ class RepositoryBaseImplTest {
 		when(conn.transactionPersistAll(entities)).thenReturn(true);
 		final List<TestEntity> result = repository.create(entities);
 		assertNotNull(result);
-		assertEquals(entities, result);
+		assertSame(entities, result);
+		verify(conn).transactionPersistAll(entities);
+
+		// Fehlerfall
+		when(conn.transactionPersistAll(entities)).thenReturn(false);
+		assertThrows(RepositoryException.class, () -> repository.create(entities));
+	}
+
+	@Test
+	@DisplayName("Test: create(entities) gibt bei einer Collection, die keine List ist, dieselbe Instanz wie die Eingabe zurück.")
+	void testCreateSet() {
+		final LinkedHashSet<TestEntity> entities = new LinkedHashSet<>(List.of(new TestEntity(), new TestEntity()));
+
+		// Erfolgsfall
+		when(conn.transactionPersistAll(entities)).thenReturn(true);
+		final LinkedHashSet<TestEntity> result = repository.create(entities);
+		assertSame(entities, result);
 		verify(conn).transactionPersistAll(entities);
 
 		// Fehlerfall

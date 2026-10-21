@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -152,6 +154,33 @@ class RepositoryImplTest {
 					.extracting(e -> e.id)
 					.containsExactly(42L, 43L, 44L, 45L);
 			verify(conn).transactionGetNextID(TestEntity.class);
+			verify(conn).transactionPersistAll(entities);
+		}
+
+		@Test
+		@DisplayName("Gibt dieselbe Instanz wie die Eingabe zurück.")
+		void testCreateMultipleGibtDieselbeInstanzZurueck() {
+			final var entities = Arrays.asList(new TestEntity(), new TestEntity());
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(1L);
+			when(conn.transactionPersistAll(entities)).thenReturn(true);
+
+			assertSame(entities, repository.create(entities));
+		}
+
+		@Test
+		@DisplayName("Vergibt die IDs bei einer Collection, die keine List ist, in Iterationsreihenfolge.")
+		void testCreateMultipleVergibtIdsInIterationsreihenfolgeBeiSet() {
+			final var first = new TestEntity();
+			final var second = new TestEntity();
+			final var third = new TestEntity();
+			final var entities = new LinkedHashSet<TestEntity>(List.of(first, second, third));
+			when(conn.transactionGetNextID(TestEntity.class)).thenReturn(10L);
+			when(conn.transactionPersistAll(entities)).thenReturn(true);
+
+			final var result = repository.create(entities);
+
+			assertSame(entities, result);
+			assertThat(List.of(first.id, second.id, third.id)).containsExactly(10L, 11L, 12L);
 			verify(conn).transactionPersistAll(entities);
 		}
 

@@ -127,41 +127,22 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 
 	/**
 	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
-	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
-	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs.
+	 * dass IDs automatisch vergeben werden, werden die neuen IDs in der Iterationsreihenfolge
+	 * der Collection fortlaufend bei den Entitäten vergeben. Die Rückgabe ist dieselbe Instanz
+	 * wie die Eingabe und enthält die Entitäten mit den neuen IDs.
+	 * <p>
+	 * Hinweis: Bei Sets, deren hashCode() von der ID abhängt, ist Vorsicht geboten, da das Setzen der ID
+	 * den Hash-Wert der Entität nachträglich verändert.
 	 *
 	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu persistierenden Datenbank-Entitäten
 	 *
-	 * @return die persistierten Datenbank-Entitäten
+	 * @return die persistierten Datenbank-Entitäten (dieselbe Instanz wie die Eingabe)
 	 *
 	 * @throws RepositoryException im Fehlerfall
 	 */
 	@Override
 	public <C extends Collection<T>> C create(final C entities) throws RepositoryException {
-		// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und ergänze die fehlenden IDs bei den Entitäten
-		long firstId = this.getNextID();
-		for (final T entity : entities) {
-			setId.accept(entity, firstId++);
-		}
-		// und persistiere die Entitäten
-		return super.create(entities);
-	}
-
-	/**
-	 * Persistiert die Datenbank-Entitäten in der Datenbank. Für den Fall,
-	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
-	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs.
-	 *
-	 * @param <C>        der Typ der Collection
-	 * @param entities   die zu persistierenden Datenbank-Entitäten
-	 *
-	 * @return die persistierten Datenbank-Entitäten
-	 *
-	 * @throws RepositoryException im Fehlerfall
-	 */
-	@Override
-	public <C extends List<T>> C create(final C entities) throws RepositoryException {
 		// Bestimme ggf. zunächst die nächste freie ID in der Datenbank und ergänze die fehlenden IDs bei den Entitäten
 		long firstId = this.getNextID();
 		for (final T entity : entities) {
