@@ -3,7 +3,7 @@
 		<svws-ui-input-wrapper class="flex flex-col gap-4">
 			<report-cards :ui-nutzung="ReportingReportvorlageUiNutzung.LEHRER" :ids="idsJeDatenContext" :stundenplaene v-model:current-action="currentAction" />
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
-				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
+				subtitle="Ausgewählte Lehrkräfte werden gelöscht." :is-open="currentAction === 'delete'"
 				@update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div v-if="isDeleteConditionSectionVisible">
 					<span v-if="selectedAllowedToDelete">Bereit zum Löschen.</span>
@@ -47,7 +47,7 @@
 	const benutzerState = useBenutzerState();
 	const lehrerAuswahlState = useLehrerAuswahlState();
 
-	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.SCHUELER_LOESCHEN));
+	const hatKompetenzLoeschen = computed(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.LEHRERDATEN_LOESCHEN));
 
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !lehrerAuswahlState.manager.liste.auswahlExists() || !selectedAllowedToDelete.value || loading.value);
 	const deleteCheckErrors = computed<Iterable<string>>(() => lehrerAuswahlState.deleteCheck()[1]);
