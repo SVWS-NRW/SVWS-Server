@@ -1,5 +1,5 @@
 {
-	"version": 5,
+	"version": 6,
 	"daten": [ {
 		"bezeichner": "AB3",
 		"idStatistik": "1",
@@ -121,6 +121,42 @@
 			"kuerzel": "AB4",
 			"text": "4. Abiturfach",
 			"gueltigVon": 2023,
+			"gueltigBis": null,
+			"auslaufdauer": 0,
+			"zulaessig": [ {
+				"schulform": "BK",
+				"gliederung": null
+			}, {
+				"schulform": "GE",
+				"gliederung": null
+			}, {
+				"schulform": "GY",
+				"gliederung": null
+			}, {
+				"schulform": "SB",
+				"gliederung": null
+			}, {
+				"schulform": "SG",
+				"gliederung": null
+			}, {
+				"schulform": "WB",
+				"gliederung": null
+			} ],
+			"nummer": "71",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true
+		} ]
+	}, {
+		"bezeichner": "AB5",
+		"idStatistik": "77",
+		"historie": [ {
+			"id": 76000,
+			"schluessel": "AB5",
+			"kuerzel": "AB5",
+			"text": "5. Abiturfach",
+			"gueltigVon": 2028,
 			"gueltigBis": null,
 			"auslaufdauer": 0,
 			"zulaessig": [ {
