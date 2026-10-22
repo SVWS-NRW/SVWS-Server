@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlb01SchuelerLernabschnittsdatenFachklassen",
+    "historie" : [ {
+      "praefix" : "SLB01",
+      "zweig" : "Schueler-Lernabschnittsdaten-Fachklassen",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "'Allgemein', Feld 'Fachklassen'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLB00"],
+      "muss" : ["BK","SB"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "text" : "Fachklasse des Schülers: Das Feld 'Fachklasse' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.fachklasseID ≠ einer id eines Eintrags in Fachklasse.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

@@ -16,7 +16,7 @@
       "hinweis" : [ ],
       "text" : "Schüler Klassenart: Der eingetragene Wert für das Feld 'Klassenart' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
       "erlaeuterung" : "Hier soll geprüft werden, ob der ausgewählte Katalogeintrag zum Zeitpunkt der Prüfung zeitlich gültig ist, über gueltigVon und gueltigBis im Katalog",
-      "bedingung" : "LehrerPersonalabschnittsdaten.idEinsatzstatus ≙ einem zeitlich gültigen Historieneintrag in Klassenart.json",
+      "bedingung" : "LehrerPersonalabschnittsdaten.idEinsatzstatus ≠ einem zeitlich gültigen Historieneintrag in Klassenart.json",
       "gueltigVon" : null,
       "gueltigBis" : null
     } ]
