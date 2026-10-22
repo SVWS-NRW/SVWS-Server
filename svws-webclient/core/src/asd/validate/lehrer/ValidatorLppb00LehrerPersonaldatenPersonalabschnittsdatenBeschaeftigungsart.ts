@@ -18,15 +18,16 @@ export class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr              Schuljahr
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param einsatzstatus          der Einsatzstatus
 	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(idBeschaeftigungsart: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idBeschaeftigungsart: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		this._validatoren.add(new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, this.getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	public pruefe(): boolean {

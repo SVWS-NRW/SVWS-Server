@@ -63,7 +63,6 @@ class TestValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater
 		final ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater validator =
 				new ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(
 						() -> idGeburtslandVater,
-						() -> true, //spielt keine Rolle bei dem Test, wird aber im Konstuktor benötigt.
 						kontext);
 
 		assertEquals(result, validator.pruefe());

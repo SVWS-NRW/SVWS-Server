@@ -83,7 +83,7 @@ export class LehrerIndividualdatenModelProxy extends ModelProxy<LehrerStammdaten
 		// Staatsangehörigkeit
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idStaatsangehoerigkeit), "idStaatsangehoerigkeit");
 		this.addValidator(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(
-			{ get: () => this.proxy.idStaatsangehoerigkeit }, validatorKontext()), "idStaatsangehoerigkeit");
+			{ get: () => this.proxy.idStaatsangehoerigkeit }, { get: () => validatorKontext().getSchuljahresabschnitt()?.id ?? null }, validatorKontext()), "idStaatsangehoerigkeit");
 
 		// Akademischer Grad
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.titel, null, 20), "titel");

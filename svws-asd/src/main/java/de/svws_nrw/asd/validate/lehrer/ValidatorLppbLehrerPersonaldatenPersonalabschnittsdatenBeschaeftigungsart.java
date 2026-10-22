@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -14,22 +15,38 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
+	private final @NotNull Supplier<@AllowNull Long> _idSchuljahresabschnitt;
+
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idBeschaeftigungsart    die Beschäftigungsart
-	 * @param idEinsatzstatus     	der Einsatzstatus
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param kontext   			der Kontext des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param idEinsatzstatus     	   der Einsatzstatus
+	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param kontext   			   der Kontext des Validators
 	 */
 	public ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
+
+		_idSchuljahresabschnitt = idSchuljahresabschnitt;
+
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
+			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja == null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		};
+
 		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
-		_validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll, einsatzstatus,
+
+		_validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, idBeschaeftigungsart, pflichtstundensoll, einsatzstatus,
 				kontext));
 	}
 

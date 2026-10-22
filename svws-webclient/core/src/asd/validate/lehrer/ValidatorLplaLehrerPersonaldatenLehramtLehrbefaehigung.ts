@@ -1,26 +1,44 @@
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
+
+	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
-	 * @param lehrerLehramt       das Lehramt des Lehrers
-	 * @param kontext             der Kontext des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idLehrbefaehigung        eine idLehrbefaehigung des Lehrers
+	 * @param lehrerLehramt            das Lehramt des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, lehrerLehramt, kontext));
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		const schuljahr: Supplier<number> = { get: () => {
+			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja === null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		} };
+		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(schuljahr, idLehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	protected pruefe(): boolean {
+		const sja: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this.getNotNullSupplierLong(this._idSchuljahresabschnitt).get());
+		if (sja === null) {
+			this.addFehler(0, "Dem Lehrer ist kein Schuljahresabschnitt zugeordnet");
+			return false;
+		}
 		return true;
 	}
 

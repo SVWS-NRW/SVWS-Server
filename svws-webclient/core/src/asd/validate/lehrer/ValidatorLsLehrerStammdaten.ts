@@ -15,22 +15,23 @@ export class ValidatorLsLehrerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param nachname                 die Daten des Validators
-	 * @param vorname                  die Daten des Validators
-	 * @param geburtsdatum             die Daten des Validators
-	 * @param geschlecht               die Daten des Validators
-	 * @param kuerzel                  die Daten des Validators
-	 * @param idStaatsangehoerigkeit   die Daten des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt
+	 * @param nachname                 der Nachname
+	 * @param vorname                  der Vorname
+	 * @param geburtsdatum             das Geburtsdatum
+	 * @param geschlecht               das Geschlecht
+	 * @param kuerzel                  das Lehrerkürzel
+	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(nachname: Supplier<string | null>, vorname: Supplier<string | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, kuerzel: Supplier<string | null>, idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, nachname: Supplier<string | null>, vorname: Supplier<string | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, kuerzel: Supplier<string | null>, idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname(nachname, kontext));
 		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname(vorname, kontext));
 		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(geschlecht, kontext));
 		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(kuerzel, kontext));
-		this._validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
+		this._validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, idSchuljahresabschnitt, kontext));
 	}
 
 	protected pruefe(): boolean {

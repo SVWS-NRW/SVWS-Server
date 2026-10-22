@@ -1,7 +1,6 @@
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
-import { ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter } from '../../../asd/validate/schueler/ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -31,7 +30,6 @@ export class ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburtslandMu
 		super(kontext);
 		this._idGeburtslandMutter = idGeburtslandMutter;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter(idGeburtslandMutter, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

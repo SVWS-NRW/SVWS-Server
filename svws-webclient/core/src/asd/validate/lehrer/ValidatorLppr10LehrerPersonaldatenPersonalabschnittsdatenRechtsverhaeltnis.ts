@@ -4,7 +4,6 @@ import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
@@ -15,9 +14,9 @@ export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	private readonly _geburtsdatum: Supplier<DateManager>;
 
 	/**
-	 * Die ID des Schuljahresabschnittes
+	 * Das aktuelle Schuljahr des Lehrers
 	 */
-	private readonly _idSchuljahresabschnitt: Supplier<number>;
+	private readonly _schuljahr: Supplier<number>;
 
 	/**
 	 * Das Rechtsverhältnis
@@ -28,24 +27,20 @@ export class ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnisNotNull        das Rechtsverhältnis
-	 * @param geburtsdatum             das Geburtsdatum des Lehrers
-	 * @param kontext                  der Kontext des Validators
+	 * @param schuljahr                  Schuljahr
+	 * @param rechtsverhaeltnisNotNull   das Rechtsverhältnis
+	 * @param geburtsdatum               das Geburtsdatum des Lehrers
+	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._schuljahr = schuljahr;
 		this._rechtsverhaeltnis = rechtsverhaeltnisNotNull;
 		this._geburtsdatum = geburtsdatum;
 	}
 
 	protected pruefe(): boolean {
-		const schuljahresabschnitt: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
-		if (schuljahresabschnitt === null) {
-			return false;
-		}
-		const schuljahr: number = schuljahresabschnitt.schuljahr;
+		const schuljahr: number = this._schuljahr.get().valueOf();
 		if (JavaObject.equalsTranspiler(this._rechtsverhaeltnis.get(), (LehrerRechtsverhaeltnis.L))) {
 			const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
 			const maxJahr: number = schuljahr - 27;

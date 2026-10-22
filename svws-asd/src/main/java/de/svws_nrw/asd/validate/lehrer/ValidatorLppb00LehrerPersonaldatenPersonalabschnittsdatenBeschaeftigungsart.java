@@ -21,12 +21,14 @@ public final class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr              Schuljahr
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param einsatzstatus          der Einsatzstatus
 	 * @param idBeschaeftigungsart   die ID der Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
@@ -35,7 +37,7 @@ public final class ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBesc
 		_idBeschaeftigungsart = idBeschaeftigungsart;
 
 		_validatoren.add(
-				new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus,
+				new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, getNotNullSupplierLong(idBeschaeftigungsart), pflichtstundensoll, einsatzstatus,
 						kontext));
 
 	}

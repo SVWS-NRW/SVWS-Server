@@ -19,16 +19,16 @@ public final class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjah
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-     * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+     * @param idSchuljahresabschnitt    Schuljahresabschnitt ID
 	 * @param zuzugsjahr                das Zuzugsjahr des Schülers
-	 * @param geburtsdatum             das Geburtsjahr des Schülers
+	 * @param geburtsdatum              das Geburtsjahr des Schülers
 	 * @param hatMigrationshintergrund  Gibt an, ob ein Migrationshintergrund vorhanden ist
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr(
 			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Integer> zuzugsjahr,
-			final @NotNull Supplier<String> geburtsdatum,
+			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@NotNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);

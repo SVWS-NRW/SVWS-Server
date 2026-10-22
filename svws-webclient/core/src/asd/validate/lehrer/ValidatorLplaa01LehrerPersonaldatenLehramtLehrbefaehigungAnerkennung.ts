@@ -16,13 +16,14 @@ export class ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr           Schuljahr
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(idAnerkennungsgrund: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idAnerkennungsgrund: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idAnerkennungsgrund = idAnerkennungsgrund;
-		this._validatoren.add(new ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(idAnerkennungsgrund, kontext));
+		this._validatoren.add(new ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(schuljahr, idAnerkennungsgrund, kontext));
 	}
 
 	protected pruefe(): boolean {

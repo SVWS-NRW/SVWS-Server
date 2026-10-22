@@ -18,14 +18,18 @@ public final class ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung extends
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr        Schuljahr
 	 * @param idFachrichtung   die Katalog-ID der Fachrichtung
 	 * @param kontext          der Kontext des Validators
 	 */
-	public ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(final @NotNull Supplier<Long> idFachrichtung, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
+			final @NotNull Supplier<Long> idFachrichtung,
+			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._idFachrichtung = idFachrichtung;
 
-		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(getNotNullSupplierLong(idFachrichtung), kontext));
+		_validatoren.add(new ValidatorLplf01LehrerPersonaldatenLehramtFachrichtung(schuljahr, getNotNullSupplierLong(idFachrichtung), kontext));
 
 	}
 

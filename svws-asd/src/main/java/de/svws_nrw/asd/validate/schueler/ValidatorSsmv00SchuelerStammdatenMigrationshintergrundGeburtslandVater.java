@@ -37,21 +37,27 @@ public final class ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburts
 		_idGeburtslandVater = idGeburtslandVater;
 		_hatMigrationshintergrund = hatMigrationshintergrund;
 
-		_validatoren.add(
-				new ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(idGeburtslandVater, hatMigrationshintergrund, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final @AllowNull Long idGeburtslandVater = _idGeburtslandVater.get();
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
-		final boolean hatMigrationshintergrund = (hatMigrationshintergrundZwisch != null) && hatMigrationshintergrundZwisch;
+		final @NotNull Boolean hatMigrationshintergrund = hatMigrationshintergrundZwisch == null ? false : hatMigrationshintergrundZwisch;
 
-		if (hatMigrationshintergrund && (idGeburtslandVater == null)) {
-			addFehler(0, FEHLERTEXT);
-			return false;
+		_validatoren.clear();
+		if (hatMigrationshintergrund) {
+			if (idGeburtslandVater == null) {
+				addFehler(0, FEHLERTEXT);
+				return false;
+			}
+			_validatoren.add(
+					new ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(getNotNullSupplierLong(_idGeburtslandVater), this.kontext()));
+		} else {
+			_validatoren.add(
+					new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(getNotNullSupplierLong(_idGeburtslandVater), _hatMigrationshintergrund, this.kontext()));
 		}
-
 		return true;
+
 	}
 }

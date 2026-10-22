@@ -16,15 +16,18 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param nachname                 die Daten des Validators
-	 * @param vorname                  die Daten des Validators
-	 * @param geburtsdatum             die Daten des Validators
-	 * @param geschlecht               die Daten des Validators
-	 * @param kuerzel                  die Daten des Validators
-	 * @param idStaatsangehoerigkeit   die Daten des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt
+	 * @param nachname                 der Nachname
+	 * @param vorname                  der Vorname
+	 * @param geburtsdatum             das Geburtsdatum
+	 * @param geschlecht               das Geschlecht
+	 * @param kuerzel                  das Lehrerkürzel
+	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLsLehrerStammdaten(final @NotNull Supplier<@AllowNull String> nachname,
+	public ValidatorLsLehrerStammdaten(
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
+			final @NotNull Supplier<@AllowNull String> nachname,
 			final @NotNull Supplier<@AllowNull String> vorname,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@AllowNull Integer> geschlecht,
@@ -37,7 +40,7 @@ public final class ValidatorLsLehrerStammdaten extends Validator {
 		_validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		_validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(kuerzel, kontext));
-		_validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
+		_validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, idSchuljahresabschnitt, kontext));
 	}
 
 	@Override

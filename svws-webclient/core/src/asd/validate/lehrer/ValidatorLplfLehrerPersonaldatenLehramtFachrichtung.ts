@@ -1,24 +1,42 @@
 import { ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung } from '../../../asd/validate/lehrer/ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLplfLehrerPersonaldatenLehramtFachrichtung extends Validator {
+
+	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
-	 * @param idFachrichtung        die Katalog-ID der Fachrichtung
-	 * @param kontext               der Kontext des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idFachrichtung           die Katalog-ID der Fachrichtung
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(idFachrichtung, kontext));
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		const schuljahr: Supplier<number> = { get: () => {
+			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja === null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		} };
+		this._validatoren.add(new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(schuljahr, idFachrichtung, kontext));
 	}
 
 	protected pruefe(): boolean {
+		const sja: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this.getNotNullSupplierLong(this._idSchuljahresabschnitt).get());
+		if (sja === null) {
+			this.addFehler(0, "Dem Lehrer ist kein Schuljahresabschnitt zugeordnet");
+			return false;
+		}
 		return true;
 	}
 

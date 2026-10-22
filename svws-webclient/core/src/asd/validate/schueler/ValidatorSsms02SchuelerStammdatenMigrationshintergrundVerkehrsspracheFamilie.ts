@@ -8,6 +8,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Schülers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die ID der Verkehrssprache der Familie des Schülers
 	 */
 	private readonly _idVerkehrsspracheFamilie: Supplier<number>;
@@ -18,20 +23,21 @@ export class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr                 Schuljahr
 	 * @param idVerkehrsspracheFamilie  die ID der Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 		this._validatoren.add(new ValidatorSsms03SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const idVerkehrsspracheFamilie: number = this._idVerkehrsspracheFamilie.get();
-		const schuljahr: number = this.kontext().getSchuljahr();
-		if (!Verkehrssprache.data().isGueltig(idVerkehrsspracheFamilie, schuljahr)) {
+		if (!Verkehrssprache.data().isGueltig(idVerkehrsspracheFamilie, this._schuljahr.get())) {
 			this.addFehler(0, ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
 			return false;
 		}

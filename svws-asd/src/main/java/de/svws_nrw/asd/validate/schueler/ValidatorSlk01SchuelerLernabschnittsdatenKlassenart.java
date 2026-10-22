@@ -14,24 +14,27 @@ import jakarta.validation.constraints.NotNull;
 
 public final class ValidatorSlk01SchuelerLernabschnittsdatenKlassenart extends Validator {
 
-	/** Das Geburtsland */
+	/** Die Klassenart */
 	private final @NotNull Supplier<@NotNull Long> _idKlassenart;
+
 	private static final @NotNull String FEHLERTEXT = "Klassenart des Schülers: Das Feld 'Klassenart' muss zulässig sein.";
 
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Klassenart im Katalog.
 	 *
+	 * @param schuljahr      Schuljahr
 	 * @param idKlassenart   die Klassenart ID
 	 * @param kontext        der Kontext des Validators
 	 */
 	public ValidatorSlk01SchuelerLernabschnittsdatenKlassenart(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idKlassenart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idKlassenart = idKlassenart;
 
 		_validatoren.add(
-				new ValidatorSlk02SchuelerLernabschnittsdatenKlassenart(idKlassenart, kontext));
+				new ValidatorSlk02SchuelerLernabschnittsdatenKlassenart(schuljahr, idKlassenart, kontext));
 
 	}
 

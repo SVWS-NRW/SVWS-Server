@@ -26,7 +26,7 @@ public final class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsj
 	private @NotNull Supplier<@AllowNull Integer> _schuljahr;
 
 	/** Das Geburtsdatum des Schülers */
-	private @NotNull Supplier<String> _geburtsdatum;
+	private @NotNull Supplier<@AllowNull String> _geburtsdatum;
 
 	private static final @NotNull String FEHLERTEXT =
 			"Zuzugsjahr des Schülers: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Zuzugsjahr' besetzt sein.";
@@ -43,7 +43,7 @@ public final class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsj
 	public ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr(
 			final @NotNull Supplier<@AllowNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Integer> zuzugsjahr,
-			final @NotNull Supplier<String> geburtsdatum,
+			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);

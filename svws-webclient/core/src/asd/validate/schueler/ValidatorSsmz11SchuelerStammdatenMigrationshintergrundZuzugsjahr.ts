@@ -19,7 +19,7 @@ export class ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 	/**
 	 * Das Geburtsdatumm des Schülers
 	 */
-	private readonly _geburtsdatum: Supplier<string>;
+	private readonly _geburtsdatum: Supplier<string | null>;
 
 	/**
 	 * Gibt an, ob ein Migrationshintergrund vorhanden ist
@@ -38,7 +38,7 @@ export class ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._zuzugsjahr = zuzugsjahr;

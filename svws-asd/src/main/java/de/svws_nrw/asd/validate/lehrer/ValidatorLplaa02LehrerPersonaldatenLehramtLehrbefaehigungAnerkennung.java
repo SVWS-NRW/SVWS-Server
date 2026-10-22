@@ -13,29 +13,33 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung extends Validator {
 
+	/** Das aktuelle Schuljahr des Lehrers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die Katalog-ID des Anerkennungsgrunds. */
 	private final @NotNull Supplier<@AllowNull Long> _idAnerkennungsgrund;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr             Schuljahr
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idAnerkennungsgrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idAnerkennungsgrund = idAnerkennungsgrund;
+		_schuljahr = schuljahr;
+		_idAnerkennungsgrund = idAnerkennungsgrund;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final Long idAnerkennungsgrund = _idAnerkennungsgrund.get();
 
-		final int schuljahr = kontext().getSchuljahr();
-
-		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, schuljahr)) {
+		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, _schuljahr.get())) {
 			addFehler(0, "Der eingetragene Wert für das Feld 'Anerkennung Lehramt' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

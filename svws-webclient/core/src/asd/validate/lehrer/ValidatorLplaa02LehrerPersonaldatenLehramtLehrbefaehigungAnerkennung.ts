@@ -7,6 +7,11 @@ import { LehrerLehramtAnerkennung } from '../../../asd/types/lehrer/LehrerLehram
 export class ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die Katalog-ID des Anerkennungsgrunds.
 	 */
 	private readonly _idAnerkennungsgrund: Supplier<number | null>;
@@ -15,18 +20,19 @@ export class ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennun
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr             Schuljahr
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
 	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(idAnerkennungsgrund: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idAnerkennungsgrund: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idAnerkennungsgrund = idAnerkennungsgrund;
 	}
 
 	protected pruefe(): boolean {
 		const idAnerkennungsgrund: number | null = this._idAnerkennungsgrund.get();
-		const schuljahr: number = this.kontext().getSchuljahr();
-		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, schuljahr)) {
+		if (!LehrerLehramtAnerkennung.data().isGueltig(idAnerkennungsgrund, this._schuljahr.get())) {
 			this.addFehler(0, "Der eingetragene Wert für das Feld 'Anerkennung Lehramt' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

@@ -25,11 +25,13 @@ public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehr
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param verkehrsspracheFamilie    die Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> verkehrsspracheFamilie,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
@@ -38,7 +40,7 @@ public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehr
 		_hatMigrationshintergrund = hatMigrationshintergrund;
 
 		_validatoren.add(
-				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
+				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
 	}
 
 	@Override

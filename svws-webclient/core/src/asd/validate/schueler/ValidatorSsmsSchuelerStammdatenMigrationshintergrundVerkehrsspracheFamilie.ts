@@ -1,22 +1,35 @@
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 import { ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie } from '../../../asd/validate/schueler/ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie';
 
 export class ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
+	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idVerkehrsspracheFamilie    die Verkehrssprache der Familie
+	 * @param idSchuljahresabschnitt    Schuljahresabschnitt ID
+	 * @param idVerkehrsspracheFamilie  die Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Gibt an, ob ein Migrationshintergrund vorhanden ist
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idVerkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		const schuljahr: Supplier<number> = { get: () => {
+			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja === null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		} };
+		this._validatoren.add(new ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

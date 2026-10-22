@@ -65,10 +65,10 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
-		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, this.getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
+		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idSchuljahresabschnitt, idBeschaeftigungsart, this.getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
 		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
-		this.validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
+		this.validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idSchuljahresabschnitt, idEinsatzstatus, kontext));
 		this.validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
 		this._validatoren.add(new ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnisBeschaeftigungsart(idRechtsverhaeltnis, idBeschaeftigungsart, kontext));
 	}

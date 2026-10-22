@@ -18,15 +18,16 @@ export class ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 	/**
 	 * Erstellt einen neuen Validator für die Pflichtfeldprüfung der Anrechnungsgründe.
 	 *
+	 * @param schuljahr          Schuljahr
 	 * @param anrechnungen       die Liste der Anrechnungsstunden
 	 * @param lehraemter         die Liste der Lehrämter
 	 * @param pflichtstundensoll das Pflichtstundensoll
 	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.anrechnungen = anrechnungen;
-		this._validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		this._validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {

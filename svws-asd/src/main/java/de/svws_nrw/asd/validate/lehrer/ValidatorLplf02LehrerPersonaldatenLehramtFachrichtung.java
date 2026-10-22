@@ -13,25 +13,33 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung extends Validator {
 
+	/** Das aktuelle Schuljahr des Lehrers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die Katalog-ID der Fachrichtung. */
 	private final @NotNull Supplier<Long> _idFachrichtung;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr        Schuljahr
 	 * @param idFachrichtung   die Katalog-ID der Fachrichtung
 	 * @param kontext          der Kontext des Validators
 	 */
-	public ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(final @NotNull Supplier<Long> idFachrichtung, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
+			final @NotNull Supplier<Long> idFachrichtung,
+			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this._idFachrichtung = idFachrichtung;
+		_schuljahr = schuljahr;
+		_idFachrichtung = idFachrichtung;
 	}
 
 	@Override
 	protected boolean pruefe() {
 
 		// Prüft auf fehlende Werte, inaktive Schuljahre und falsche Historien-IDs
-		if (!LehrerFachrichtung.data().isGueltig(_idFachrichtung.get(), kontext().getSchuljahr())) {
+		if (!LehrerFachrichtung.data().isGueltig(_idFachrichtung.get(), _schuljahr.get())) {
 			addFehler(0,
 					"Lehrer Fachrichtung: Der eingetragene Wert für das Feld 'Fachrichtung' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;

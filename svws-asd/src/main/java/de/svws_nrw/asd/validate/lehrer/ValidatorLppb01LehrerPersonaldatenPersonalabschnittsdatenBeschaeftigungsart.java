@@ -21,12 +21,14 @@ public final class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
-	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param schuljahr              Schuljahr
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param einsatzstatus          der Einsatzstatus
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
@@ -34,11 +36,8 @@ public final class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBesc
 		super(kontext);
 		_idBeschaeftigungsart = idBeschaeftigungsart;
 
-		final @NotNull Integer schuljahr2 = kontext.getSchuljahr();
-		final @NotNull Supplier<Integer> schuljahr = () -> schuljahr2;
-
 		_validatoren.add(
-				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll,
+				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, idBeschaeftigungsart, pflichtstundensoll,
 						einsatzstatus,
 						kontext));
 

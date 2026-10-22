@@ -19,17 +19,16 @@ export class ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
-	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param schuljahr              Schuljahr
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param einsatzstatus          der Einsatzstatus
 	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idBeschaeftigungsart = idBeschaeftigungsart;
-		const schuljahr2: number = kontext.getSchuljahr();
-		const schuljahr: Supplier<number> = { get: () => schuljahr2 };
-		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	public pruefe(): boolean {

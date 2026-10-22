@@ -10,6 +10,11 @@ import { ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigung
 export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die Beschaeftigungsart
 	 */
 	private readonly _idBeschaeftigungsart: Supplier<number>;
@@ -20,13 +25,15 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param idBeschaeftigungsart     die Beschäftigungsart
 	 * @param pflichtstundensoll       das Pflichtstundensoll
 	 * @param einsatzstatus            der Einsatzstatus
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idBeschaeftigungsart: Supplier<number>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<LehrerEinsatzstatus | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idBeschaeftigungsart = idBeschaeftigungsart;
 		const beschaeftigungsartNotNull: Supplier<LehrerBeschaeftigungsart> = { get: () => LehrerBeschaeftigungsart.data().getWertByID(this.getNotNullSupplierLong(idBeschaeftigungsart).get()) };
 		this._validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsartNotNull, einsatzstatus, kontext));
@@ -34,7 +41,7 @@ export class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 	}
 
 	public pruefe(): boolean {
-		if (!LehrerBeschaeftigungsart.data().isGueltig(this._idBeschaeftigungsart.get(), this.kontext().getSchuljahr())) {
+		if (!LehrerBeschaeftigungsart.data().isGueltig(this._idBeschaeftigungsart.get(), this._schuljahr.get())) {
 			this.addFehler(0, ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}

@@ -34,9 +34,8 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 	 * Spalte 2: Erwartetes Ergebnis (true = gültig im Schuljahr, false = ungültig/Fehler)
 	 */
 	private static final String LPPA02_TESTDATEN = """
-			310000, true
-			500000, true
-			999999, false
+			310000, 2010, true
+			310000, 2009, false
 			""";
 
 	/**
@@ -48,9 +47,9 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 	}
 
 	@DisplayName("LPPA02: Prüfung der zeitlichen Gültigkeit")
-	@ParameterizedTest(name = "ID {0} ergibt {1}")
+	@ParameterizedTest(name = "ID {0} und Jahr {1} ergibt {2}")
 	@CsvSource(textBlock = LPPA02_TESTDATEN, nullValues = { "null" })
-	void testValidatorLppa02AnrechnungsstundenZeitlicheGueltigkeit(final Long idGrund, final boolean expectedResult) {
+	void testValidatorLppa02AnrechnungsstundenZeitlicheGueltigkeit(final Long idGrund, final int schuljahr, final boolean expectedResult) {
 		final ValidatorKontext kontext = new ValidatorKontext(
 				testdaten_001.schule.schulNr,
 				Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
@@ -69,6 +68,7 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 
 		final ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+						() -> schuljahr,
 						() -> anrechnungenListe,
 						() -> lehraemter,
 						() -> soll,

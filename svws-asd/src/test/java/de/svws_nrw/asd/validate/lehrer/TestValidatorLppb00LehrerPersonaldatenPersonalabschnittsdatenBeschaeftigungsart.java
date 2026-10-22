@@ -64,7 +64,7 @@ class TestValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> beschaeftigungsart, null, null, kontext);
+						() -> 0, () -> beschaeftigungsart, null, null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

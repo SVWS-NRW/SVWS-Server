@@ -20,18 +20,20 @@ public final class ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung exte
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
 	 * @param lehrerLehramt       das Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idLehrbefaehigung,
 			final @NotNull Supplier<@AllowNull LehrerLehramt> lehrerLehramt,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this._idLehrbefaehigung = idLehrbefaehigung;
 
-		_validatoren.add(new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(idLehrbefaehigung, lehrerLehramt, kontext));
+		_validatoren.add(new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(schuljahr, idLehrbefaehigung, lehrerLehramt, kontext));
 	}
 
 	@Override

@@ -34,12 +34,12 @@ public final class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPfli
 		super(kontext);
 		_pflichtstundensoll = pflichtstundensoll;
 		final @NotNull Supplier<@NotNull Double> pflichtstundensollNotNull = getNotNullSupplierDouble(pflichtstundensoll);
-		_validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, kontext));
 		_validatoren
 				.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, kontext));
 		_validatoren.add(
 				new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, beschaeftigungsart,
 						kontext));
+		_validatoren.add(new ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, kontext));
 	}
 
 

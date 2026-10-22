@@ -22,12 +22,14 @@ public final class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnre
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
+	 * @param schuljahr          Schuljahr
 	 * @param anrechnungen       die Liste der Anrechnungsstunden
 	 * @param lehraemter         die Liste der Lehrämter
 	 * @param pflichtstundensoll das Pflichtstundensoll
 	 * @param kontext            der Kontext des Validators
 	 */
 	public ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
@@ -35,7 +37,7 @@ public final class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnre
 		super(kontext);
 		this.anrechnungen = anrechnungen;
 
-		_validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		_validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
 	}
 

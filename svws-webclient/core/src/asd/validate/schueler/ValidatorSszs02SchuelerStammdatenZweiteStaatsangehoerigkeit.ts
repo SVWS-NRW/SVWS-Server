@@ -7,7 +7,12 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit extends Validator {
 
 	/**
-	 * Die Staatsangehoerigkeit des Schuelers
+	 * Das aktuelle Schuljahr des Schülers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
+	 * Die zweite Staatsangehoerigkeit des Schuelers
 	 */
 	private readonly _idStaatsangehoerigkeit2: Supplier<number>;
 
@@ -17,16 +22,18 @@ export class ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit extends
 	/**
 	 * Erstellt einen neuen Validator für die Prüfung der Staatsangehörigkeit.
 	 *
+	 * @param schuljahr                 Schuljahr
 	 * @param idStaatsangehoerigkeit2   Staatsangehörigkeit2ID
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit2: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit2: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idStaatsangehoerigkeit2 = idStaatsangehoerigkeit2;
 	}
 
 	protected pruefe(): boolean {
-		if (!Nationalitaeten.data().isGueltig(this._idStaatsangehoerigkeit2.get(), this.kontext().getSchuljahr())) {
+		if (!Nationalitaeten.data().isGueltig(this._idStaatsangehoerigkeit2.get(), this._schuljahr.get())) {
 			this.addFehler(0, ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit.FEHLERTEXT);
 			return false;
 		}

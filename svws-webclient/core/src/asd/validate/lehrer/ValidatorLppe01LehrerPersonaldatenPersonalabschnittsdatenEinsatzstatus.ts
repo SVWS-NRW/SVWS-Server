@@ -18,13 +18,14 @@ export class ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzsta
 	/**
 	 * Erstellt einen neuen Validator für das vorhandensein des Einsatzstatus im Katalog.
 	 *
+	 * @param schuljahr         Schuljahr
 	 * @param idEinsatzstatus   der Einsatzstatus
 	 * @param kontext           der Kontext des Validators
 	 */
-	public constructor(idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idEinsatzstatus = idEinsatzstatus;
-		this._validatoren.add(new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(schuljahr, idEinsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

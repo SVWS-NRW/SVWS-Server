@@ -101,6 +101,7 @@ public final class ValidatorGesamt extends Validator {
 			// Erzeuge die Liste der Subvalidatoren für den Lehrer
 			final @NotNull List<Validator> list = new ArrayList<>();
 			list.add(new ValidatorLsLehrerStammdaten(
+					() -> gesamt.schule.idSchuljahresabschnitt,
 					() -> lehrer.nachname,
 					() -> lehrer.vorname,
 					() -> lehrer.geburtsdatum,
@@ -126,15 +127,18 @@ public final class ValidatorGesamt extends Validator {
 			for (final LehrerLehramtEintrag lehraemter : lehrer.lehraemter) {
 				for (final LehrerLehrbefaehigungEintrag lehrbefaehigungen : lehraemter.lehrbefaehigungen) {
 					list.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung(
+							() -> gesamt.schule.idSchuljahresabschnitt,
 							() -> lehrbefaehigungen.idLehrbefaehigung,
 							() -> LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt),
 							this.kontext()));
 					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(
+							() -> gesamt.schule.idSchuljahresabschnitt,
 							() -> lehrbefaehigungen.idAnerkennungsgrund,
 							this.kontext()));
 				}
 				for (final LehrerFachrichtungEintrag fachrichtungen : lehraemter.fachrichtungen) {
 					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung(
+							() -> gesamt.schule.idSchuljahresabschnitt,
 							() -> fachrichtungen.idFachrichtung,
 							this.kontext()));
 				}
@@ -165,6 +169,7 @@ public final class ValidatorGesamt extends Validator {
 		for (final SchuelerStatistikGesamt schueler : gesamt.schueler) {
 			// Erzeuge die Liste der Subvalidatoren für den Schüler
 			final @NotNull List<Validator> list = new ArrayList<>();
+
 			list.add(new ValidatorSsSchuelerStammdaten(
 					() -> schueler.idSchuljahresabschnitt,
 					() -> schueler.geschlecht,
@@ -175,9 +180,13 @@ public final class ValidatorGesamt extends Validator {
 					() -> schueler.hatMigrationshintergrund,
 					() -> schueler.idStaatsangehoerigkeit,
 					() -> schueler.idStaatsangehoerigkeit2,
+					() -> schueler.idVerkehrspracheFamilie,
+					() -> schueler.zuzugsjahr,
 					this.kontext()));
 			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
+
 				list.add(new ValidatorSlSchuelerLernabschnittsdaten(
+						() -> lernabschnitt.idSchuljahresabschnitt,
 						() -> lernabschnitt.idKlassenart,
 						() -> lernabschnitt.idEpJahre,
 						this.kontext()));

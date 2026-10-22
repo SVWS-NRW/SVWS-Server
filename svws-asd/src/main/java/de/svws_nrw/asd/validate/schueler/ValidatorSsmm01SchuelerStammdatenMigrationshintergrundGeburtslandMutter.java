@@ -38,8 +38,6 @@ public final class ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburts
 		_idGeburtslandMutter = idGeburtslandMutter;
 		_hatMigrationshintergrund = hatMigrationshintergrund;
 
-		_validatoren.add(
-				new ValidatorSsmm02SchuelerStammdatenMigrationshintergrundGeburtslandMutter(idGeburtslandMutter, hatMigrationshintergrund, kontext));
 	}
 
 	@Override

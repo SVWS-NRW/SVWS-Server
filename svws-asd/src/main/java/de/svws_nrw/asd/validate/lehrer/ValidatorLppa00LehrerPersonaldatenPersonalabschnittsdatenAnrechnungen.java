@@ -21,12 +21,14 @@ public final class ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnre
 	/**
 	 * Erstellt einen neuen Validator für die Pflichtfeldprüfung der Anrechnungsgründe.
 	 *
+	 * @param schuljahr          Schuljahr
 	 * @param anrechnungen       die Liste der Anrechnungsstunden
 	 * @param lehraemter         die Liste der Lehrämter
 	 * @param pflichtstundensoll das Pflichtstundensoll
 	 * @param kontext            der Kontext des Validators
 	 */
 	public ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
@@ -34,7 +36,7 @@ public final class ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnre
 		super(kontext);
 		this.anrechnungen = anrechnungen;
 
-		_validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		_validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(schuljahr, anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	@Override

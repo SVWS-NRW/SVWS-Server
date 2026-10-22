@@ -71,6 +71,7 @@ class TestValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 
 		final ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
+						() -> 0,
 						() -> anrechnungenListe,
 						() -> lehraemter,
 						() -> soll,

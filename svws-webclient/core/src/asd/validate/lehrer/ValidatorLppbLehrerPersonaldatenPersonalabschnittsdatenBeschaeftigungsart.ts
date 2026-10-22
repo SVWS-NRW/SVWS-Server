@@ -1,25 +1,38 @@
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { Class } from '../../../java/lang/Class';
 import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
+
+	private readonly _idSchuljahresabschnitt: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idBeschaeftigungsart    die Beschäftigungsart
-	 * @param idEinsatzstatus     	der Einsatzstatus
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param kontext   			der Kontext des Validators
+	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param idEinsatzstatus     	   der Einsatzstatus
+	 * @param pflichtstundensoll       das Pflichtstundensoll
+	 * @param kontext   			   der Kontext des Validators
 	 */
-	public constructor(idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		const schuljahr: Supplier<number> = { get: () => {
+			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja === null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		} };
 		const einsatzstatus: Supplier<LehrerEinsatzstatus | null> = { get: () => LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get()) };
-		this._validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(schuljahr, idBeschaeftigungsart, pflichtstundensoll, einsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

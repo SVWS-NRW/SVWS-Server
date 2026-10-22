@@ -7,6 +7,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Der Einsatzstatus
 	 */
 	private readonly _idEinsatzstatus: Supplier<number>;
@@ -15,16 +20,18 @@ export class ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzsta
 	/**
 	 * Erstellt einen neuen Validator für das vorhandensein des Einsatzstatus im Katalog.
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param idEinsatzstatus   der Einsatzstatus
 	 * @param kontext           der Kontext des Validators
 	 */
-	public constructor(idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idEinsatzstatus: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idEinsatzstatus = idEinsatzstatus;
 	}
 
 	protected pruefe(): boolean {
-		if (!LehrerEinsatzstatus.data().isGueltig(this._idEinsatzstatus.get(), this.kontext().getSchuljahr())) {
+		if (!LehrerEinsatzstatus.data().isGueltig(this._idEinsatzstatus.get(), this._schuljahr.get())) {
 			this.addFehler(0, "Lehrer Einsatzstatus: Der eingetragene Wert für das Feld 'Einsatzstatus' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

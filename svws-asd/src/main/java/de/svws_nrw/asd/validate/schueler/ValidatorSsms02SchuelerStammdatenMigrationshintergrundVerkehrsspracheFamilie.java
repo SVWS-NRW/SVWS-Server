@@ -14,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
+	/** Das aktuelle Schuljahr des Schülers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die ID der Verkehrssprache der Familie des Schülers */
 	private final @NotNull Supplier<@NotNull Long> _idVerkehrsspracheFamilie;
 
@@ -23,15 +26,20 @@ public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehr
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr                 Schuljahr
 	 * @param idVerkehrsspracheFamilie  die ID der Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idVerkehrsspracheFamilie,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
+
 		super(kontext);
+
+		_schuljahr = schuljahr;
 		_idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 
 		_validatoren.add(
@@ -42,10 +50,8 @@ public final class ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehr
 	protected boolean pruefe() {
 		final @NotNull Long idVerkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
 
-		final int schuljahr = kontext().getSchuljahr();
-
 		// Prüft über den CoreTypeDataManager, ob die ID im übergebenen Schuljahr eine gültige Historie hat
-		if (!Verkehrssprache.data().isGueltig(idVerkehrsspracheFamilie, schuljahr)) {
+		if (!Verkehrssprache.data().isGueltig(idVerkehrsspracheFamilie, _schuljahr.get())) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}

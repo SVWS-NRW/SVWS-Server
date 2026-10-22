@@ -71,15 +71,15 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 		// Hinzufügen der fachspezifischen Validatoren
-		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(idSchuljahresabschnitt, anrechnungen, lehraemter, pflichtstundensoll, kontext));
 
-		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart,
+		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idSchuljahresabschnitt, idBeschaeftigungsart,
 				getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
 
 		validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll,
 				idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 
-		validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
+		validatoren.add(new ValidatorLppeLehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idSchuljahresabschnitt, idEinsatzstatus, kontext));
 
 		validatoren.add(
 				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,

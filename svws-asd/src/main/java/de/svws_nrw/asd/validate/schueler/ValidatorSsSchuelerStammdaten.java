@@ -25,6 +25,8 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param idStaatsangehoerigkeit    Staatsangehörigkeit
 	 * @param idStaatsangehoerigkeit2   Staatsangehörigkeit2
+	 * @param idVerkehrspracheFamilie   Verkehrsspreache in der Familie
+	 * @param zuzugsjahr                Jahr des Zuzugs
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsSchuelerStammdaten(
@@ -37,13 +39,15 @@ public final class ValidatorSsSchuelerStammdaten extends Validator {
 			final @NotNull Supplier<@NotNull Boolean> hatMigrationshintergrund,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
 			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit2,
+			final @NotNull Supplier<@AllowNull Long> idVerkehrspracheFamilie,
+			final @NotNull Supplier<@AllowNull Integer> zuzugsjahr,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
 		_validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
-		_validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, kontext));
+		_validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idSchuljahresabschnitt, geburtsdatum, idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, idVerkehrspracheFamilie, zuzugsjahr, kontext));
 		_validatoren.add(new ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit(idSchuljahresabschnitt, idStaatsangehoerigkeit, kontext));
-		_validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
+		_validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idSchuljahresabschnitt, idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
 	}
 
 	@Override

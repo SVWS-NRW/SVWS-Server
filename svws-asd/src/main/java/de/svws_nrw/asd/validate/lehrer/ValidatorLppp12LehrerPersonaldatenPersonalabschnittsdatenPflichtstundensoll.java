@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Pflichtstundensoll der Abschnittsdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
+public final class ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/** Das Pflichtstundensoll */
 	private final @NotNull Supplier<@NotNull Double> _pflichtstundensoll;
@@ -27,7 +27,7 @@ public final class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPfli
 	 * @param einsatzstatus       der Einsatzstatus
 	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
+	public ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@NotNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {

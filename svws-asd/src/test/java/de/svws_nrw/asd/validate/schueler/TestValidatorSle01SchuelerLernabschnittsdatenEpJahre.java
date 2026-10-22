@@ -68,7 +68,10 @@ class TestValidatorSle01SchuelerLernabschnittsdatenEpJahre {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSle01SchuelerLernabschnittsdatenEpJahre validator =
-				new ValidatorSle01SchuelerLernabschnittsdatenEpJahre(() -> idEpJahre, kontext);
+				new ValidatorSle01SchuelerLernabschnittsdatenEpJahre(
+						() -> 0,
+						() -> idEpJahre,
+						kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

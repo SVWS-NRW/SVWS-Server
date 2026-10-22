@@ -22,8 +22,8 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLplf02LehrerPersonaldatenLehramtFachrichtung {
 
 	private static final String TESTDATEN_FACHRICHTUNG = """
-			78   , true
-			999  , false
+			186   ,2022 ,  true
+			186   ,2021 , false
 		""";
 
 	/** Stammdaten der Schule */
@@ -41,18 +41,19 @@ class TestValidatorLplf02LehrerPersonaldatenLehramtFachrichtung {
 	/**
 	 * Test von ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung.
 	 *
+	 * @param schuljahr        das Schuljahr
 	 * @param idFachrichtung   die Katalog-ID der Fachrichtung
 	 * @param result           gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_FACHRICHTUNG, nullValues = { "null" })
-	void testValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(final Long idFachrichtung, final boolean result) {
+	void testValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(final Long idFachrichtung, final int schuljahr, final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung validator =
-				new ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(() -> idFachrichtung, kontext);
+				new ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung(() -> schuljahr, () -> idFachrichtung, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

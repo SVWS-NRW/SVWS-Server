@@ -2,7 +2,6 @@ import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater } from '../../../asd/validate/schueler/ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater extends Validator {
@@ -12,11 +11,6 @@ export class ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVa
 	 */
 	private readonly _idGeburtslandVater: Supplier<number | null>;
 
-	/**
-	 * Gibt an, ob ein Migrationshintergrund vorhanden ist
-	 */
-	private readonly _hatMigrationshintergrund: Supplier<boolean | null>;
-
 	private static readonly FEHLERTEXT: string = "Geburtsland des Vaters: Das Feld muss zulässig sein.";
 
 
@@ -24,14 +18,11 @@ export class ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVa
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idGeburtslandVater        die ID des Geburtslandes des Vaters
-	 * @param hatMigrationshintergrund   Migrationshintergrund vorhanden
 	 * @param kontext                    der Kontext des Validators
 	 */
-	public constructor(idGeburtslandVater: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(idGeburtslandVater: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idGeburtslandVater = idGeburtslandVater;
-		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater(idGeburtslandVater, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

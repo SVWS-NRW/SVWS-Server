@@ -65,7 +65,10 @@ class TestValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheF
 
 		final ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie validator =
 				new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
-						() -> idVerkehrsspracheFamilie, () -> null, kontext);
+						() -> kontext.getSchuljahr(),
+						() -> idVerkehrsspracheFamilie,
+						() -> null,
+						kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

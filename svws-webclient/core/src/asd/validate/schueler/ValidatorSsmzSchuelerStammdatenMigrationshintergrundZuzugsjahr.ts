@@ -14,13 +14,13 @@ export class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr exte
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt   Schuljahresabschnitt ID
+	 * @param idSchuljahresabschnitt    Schuljahresabschnitt ID
 	 * @param zuzugsjahr                das Zuzugsjahr des Schülers
-	 * @param geburtsdatum             das Geburtsjahr des Schülers
+	 * @param geburtsdatum              das Geburtsjahr des Schülers
 	 * @param hatMigrationshintergrund  Gibt an, ob ein Migrationshintergrund vorhanden ist
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
 		const schuljahr: Supplier<number> = { get: () => {

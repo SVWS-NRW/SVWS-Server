@@ -13,12 +13,13 @@ export class ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
+	 * @param schuljahr                das zu prüfende Schuljahr des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idStaatsangehoerigkeit: Supplier<number | null>, schuljahr: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		this._validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(this.getNotNullSupplierLong(idStaatsangehoerigkeit), kontext));
+		this._validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(this.getNotNullSupplierLong(idStaatsangehoerigkeit), schuljahr, kontext));
 	}
 
 	protected pruefe(): boolean {

@@ -23,15 +23,17 @@ export class ValidatorSsSchuelerStammdaten extends Validator {
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param idStaatsangehoerigkeit    Staatsangehörigkeit
 	 * @param idStaatsangehoerigkeit2   Staatsangehörigkeit2
+	 * @param idVerkehrspracheFamilie   Verkehrsspreache in der Familie
+	 * @param zuzugsjahr                Jahr des Zuzugs
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, geschlecht: Supplier<number | null>, geburtsdatum: Supplier<string | null>, idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, idStaatsangehoerigkeit: Supplier<number | null>, idStaatsangehoerigkeit2: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, geschlecht: Supplier<number | null>, geburtsdatum: Supplier<string | null>, idGeburtsland: Supplier<number | null>, idGeburtslandMutter: Supplier<number | null>, idGeburtslandVater: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean>, idStaatsangehoerigkeit: Supplier<number | null>, idStaatsangehoerigkeit2: Supplier<number | null>, idVerkehrspracheFamilie: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorSsgSchuelerStammdatenGeschlecht(geschlecht, kontext));
 		this._validatoren.add(new ValidatorSsdSchuelerStammdatenGeburtsdatum(geburtsdatum, kontext));
-		this._validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, kontext));
+		this._validatoren.add(new ValidatorSsmSchuelerStammdatenMigrationshintergrund(idSchuljahresabschnitt, geburtsdatum, idGeburtsland, idGeburtslandMutter, idGeburtslandVater, hatMigrationshintergrund, idVerkehrspracheFamilie, zuzugsjahr, kontext));
 		this._validatoren.add(new ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit(idSchuljahresabschnitt, idStaatsangehoerigkeit, kontext));
-		this._validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
+		this._validatoren.add(new ValidatorSszsSchuelerStammdatenZweiteStaatsangehoerigkeit(idSchuljahresabschnitt, idStaatsangehoerigkeit2, idStaatsangehoerigkeit, kontext));
 	}
 
 	protected pruefe(): boolean {

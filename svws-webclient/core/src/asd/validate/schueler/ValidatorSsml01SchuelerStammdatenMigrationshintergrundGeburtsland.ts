@@ -1,4 +1,3 @@
-import { ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland';
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -34,7 +33,6 @@ export class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland e
 			this.addFehler(0, ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland.FEHLERTEXT);
 			return false;
 		}
-		this._validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(this._idGeburtsland, this.kontext()));
 		return true;
 	}
 

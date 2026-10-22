@@ -1,6 +1,6 @@
 import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
-import { ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID';
 import type { Supplier } from '../../../java/util/function/Supplier';
+import { ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -14,12 +14,13 @@ export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
+	 * @param schuljahr                das zu prüfende Schuljahr des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idStaatsangehoerigkeit: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(idStaatsangehoerigkeit: Supplier<number>, schuljahr: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
-		this._validatoren.add(new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, kontext));
+		this._validatoren.add(new ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, schuljahr, kontext));
 	}
 
 	protected pruefe(): boolean {

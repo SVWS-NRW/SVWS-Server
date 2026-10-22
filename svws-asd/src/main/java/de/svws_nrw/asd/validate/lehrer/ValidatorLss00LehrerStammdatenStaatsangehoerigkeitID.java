@@ -19,16 +19,19 @@ public final class ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID extends 
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
+	 * @param schuljahr                das zu prüfende Schuljahr des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
+	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(
+			final @NotNull Supplier<@AllowNull Long> idStaatsangehoerigkeit,
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
 
 		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 
-		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplierLong(idStaatsangehoerigkeit),
+		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplierLong(idStaatsangehoerigkeit), schuljahr,
 				kontext));
 	}
 

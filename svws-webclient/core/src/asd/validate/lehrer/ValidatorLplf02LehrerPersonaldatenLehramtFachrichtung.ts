@@ -7,6 +7,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die Katalog-ID der Fachrichtung.
 	 */
 	private readonly _idFachrichtung: Supplier<number>;
@@ -15,16 +20,18 @@ export class ValidatorLplf02LehrerPersonaldatenLehramtFachrichtung extends Valid
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr        Schuljahr
 	 * @param idFachrichtung   die Katalog-ID der Fachrichtung
 	 * @param kontext          der Kontext des Validators
 	 */
-	public constructor(idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idFachrichtung: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idFachrichtung = idFachrichtung;
 	}
 
 	protected pruefe(): boolean {
-		if (!LehrerFachrichtung.data().isGueltig(this._idFachrichtung.get(), this.kontext().getSchuljahr())) {
+		if (!LehrerFachrichtung.data().isGueltig(this._idFachrichtung.get(), this._schuljahr.get())) {
 			this.addFehler(0, "Lehrer Fachrichtung: Der eingetragene Wert für das Feld 'Fachrichtung' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

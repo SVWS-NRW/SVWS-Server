@@ -75,6 +75,7 @@ class TestValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit {
 
 		final ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit validator =
 				new ValidatorSszs02SchuelerStammdatenZweiteStaatsangehoerigkeit(
+						() -> schuljahr,
 						() -> idStaatsangehoerigkeit,
 						kontext);
 

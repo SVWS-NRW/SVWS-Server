@@ -7,7 +7,7 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorSlk00SchuelerLernabschnittsdatenKlassenart extends Validator {
 
 	/**
-	 * Geburtsland
+	 * Klassenart
 	 */
 	private readonly _idKlassenart: Supplier<number | null>;
 
@@ -17,13 +17,14 @@ export class ValidatorSlk00SchuelerLernabschnittsdatenKlassenart extends Validat
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr     Schuljahr
 	 * @param idKlassenart  die Klassenart ID
 	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(idKlassenart: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idKlassenart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idKlassenart = idKlassenart;
-		this._validatoren.add(new ValidatorSlk01SchuelerLernabschnittsdatenKlassenart(this.getNotNullSupplierLong(idKlassenart), kontext));
+		this._validatoren.add(new ValidatorSlk01SchuelerLernabschnittsdatenKlassenart(schuljahr, this.getNotNullSupplierLong(idKlassenart), kontext));
 	}
 
 	protected pruefe(): boolean {

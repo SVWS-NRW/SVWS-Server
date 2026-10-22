@@ -25,7 +25,7 @@ export class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 	/**
 	 * Das Geburtsdatum des Schülers
 	 */
-	private _geburtsdatum: Supplier<string>;
+	private _geburtsdatum: Supplier<string | null>;
 
 	private static readonly FEHLERTEXT: string = "Zuzugsjahr des Schülers: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Zuzugsjahr' besetzt sein.";
 
@@ -39,7 +39,7 @@ export class ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr ex
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(schuljahr: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._schuljahr = schuljahr;
 		this._zuzugsjahr = zuzugsjahr;

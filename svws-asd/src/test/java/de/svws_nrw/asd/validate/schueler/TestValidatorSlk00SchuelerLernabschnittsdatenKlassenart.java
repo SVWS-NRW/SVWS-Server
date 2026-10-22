@@ -62,7 +62,9 @@ class TestValidatorSlk00SchuelerLernabschnittsdatenKlassenart {
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSlk00SchuelerLernabschnittsdatenKlassenart validator =
 				new ValidatorSlk00SchuelerLernabschnittsdatenKlassenart(
-						() -> idKlassenart, kontext);
+						() -> 0,
+						() -> idKlassenart,
+						kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

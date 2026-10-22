@@ -22,8 +22,8 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus {
 
 	private static final String TESTDATEN = """
-			2   , true
-			999  , false
+			2    , 2018 , true
+			999  , 2018 , false
 		""";
 
 	/** Stammdaten der Schule */
@@ -41,18 +41,19 @@ class TestValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus
 	/**
 	 * Test von ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus.
 	 *
+	 * @param schuljahr         Schuljahr
 	 * @param idEinsatzstatus   die Katalog-ID des Einsatzstatus
 	 * @param result            gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(final Long idEinsatzstatus, final boolean result) {
+	void testValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(final Long idEinsatzstatus, final int schuljahr, final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus validator =
-				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(() -> idEinsatzstatus, kontext);
+				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(() -> schuljahr, () -> idEinsatzstatus, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

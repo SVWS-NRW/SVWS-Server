@@ -1,5 +1,5 @@
 import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
-import { ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
+import { ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
 import { ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -28,9 +28,9 @@ export class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 		super(kontext);
 		this._pflichtstundensoll = pflichtstundensoll;
 		const pflichtstundensollNotNull: Supplier<number> = this.getNotNullSupplierDouble(pflichtstundensoll);
-		this._validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, kontext));
 		this._validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, kontext));
 		this._validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, beschaeftigungsart, kontext));
+		this._validatoren.add(new ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensollNotNull, einsatzstatus, kontext));
 	}
 
 	protected pruefe(): boolean {

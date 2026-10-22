@@ -16,14 +16,15 @@ export class ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr           Schuljahr
 	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
 	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idLehrbefaehigung = idLehrbefaehigung;
-		this._validatoren.add(new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(this.getNotNullSupplierLong(idLehrbefaehigung), lehrerLehramt, kontext));
+		this._validatoren.add(new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(schuljahr, this.getNotNullSupplierLong(idLehrbefaehigung), lehrerLehramt, kontext));
 	}
 
 	protected pruefe(): boolean {

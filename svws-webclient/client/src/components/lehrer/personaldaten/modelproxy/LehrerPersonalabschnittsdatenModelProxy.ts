@@ -72,6 +72,7 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 		// Beschäftigungsart
 		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.idBeschaeftigungsart), "idBeschaeftigungsart");
 		this.addValidator(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			{ get: () => validatorKontext().getSchuljahresabschnitt()?.id ?? null },
 			{ get: () => this.proxy.idBeschaeftigungsart ?? -1 },
 			{ get: () => this.proxy.idEinsatzstatus ?? -1 },
 			{ get: () => this.proxy.pflichtstundensoll },

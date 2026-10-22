@@ -3,6 +3,7 @@ import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland';
 
 export class ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVater extends Validator {
 
@@ -30,16 +31,21 @@ export class ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVa
 		super(kontext);
 		this._idGeburtslandVater = idGeburtslandVater;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(idGeburtslandVater, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const idGeburtslandVater: number | null = this._idGeburtslandVater.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
-		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (hatMigrationshintergrund && (idGeburtslandVater === null)) {
-			this.addFehler(0, ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVater.FEHLERTEXT);
-			return false;
+		const hatMigrationshintergrund: boolean = hatMigrationshintergrundZwisch === null ? false : hatMigrationshintergrundZwisch;
+		this._validatoren.clear();
+		if (hatMigrationshintergrund) {
+			if (idGeburtslandVater === null) {
+				this.addFehler(0, ValidatorSsmv00SchuelerStammdatenMigrationshintergrundGeburtslandVater.FEHLERTEXT);
+				return false;
+			}
+			this._validatoren.add(new ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(this.getNotNullSupplierLong(this._idGeburtslandVater), this.kontext()));
+		} else {
+			this._validatoren.add(new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(this._idGeburtslandVater), this._hatMigrationshintergrund, this.kontext()));
 		}
 		return true;
 	}

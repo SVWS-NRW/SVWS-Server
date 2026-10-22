@@ -52,7 +52,7 @@ class TestValidatorLplf00LehrerPersonaldatenLehramtFachrichtung {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung validator =
-				new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(() -> idFachrichtung, kontext);
+				new ValidatorLplf00LehrerPersonaldatenLehramtFachrichtung(() -> 0, () -> idFachrichtung, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

@@ -11,7 +11,10 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf die StaatsangehoerigkeitID bei den Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Validator {
+public final class ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID extends Validator {
+
+	/** Das aktuelle Schuljahr des Lehrers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
 
 	private final @NotNull Supplier<@NotNull Long> _idStaatsangehoerigkeit;
 	private static final @NotNull String FEHLERTEXT =
@@ -21,20 +24,23 @@ public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends 
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idStaatsangehoerigkeit   ID der Staatsangehörigkeit des Lehrers
+	 * @param schuljahr                das zu prüfende Schuljahr des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(
+	public ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID(
 			final @NotNull Supplier<@NotNull Long> idStaatsangehoerigkeit,
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull ValidatorKontext kontext) {
 
 		super(kontext);
 
-		this._idStaatsangehoerigkeit = idStaatsangehoerigkeit;
+		_schuljahr = schuljahr;
+		_idStaatsangehoerigkeit = idStaatsangehoerigkeit;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		if (!Nationalitaeten.data().isGueltig(_idStaatsangehoerigkeit.get(), kontext().getSchuljahr())) {
+		if (!Nationalitaeten.data().isGueltig(_idStaatsangehoerigkeit.get(), _schuljahr.get())) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}

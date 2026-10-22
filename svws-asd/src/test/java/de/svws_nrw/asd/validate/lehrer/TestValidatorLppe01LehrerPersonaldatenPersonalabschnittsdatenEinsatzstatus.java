@@ -52,7 +52,7 @@ class TestValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus validator =
-				new ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(() -> idEinsatzstatus, kontext);
+				new ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(() -> 0, () -> idEinsatzstatus, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

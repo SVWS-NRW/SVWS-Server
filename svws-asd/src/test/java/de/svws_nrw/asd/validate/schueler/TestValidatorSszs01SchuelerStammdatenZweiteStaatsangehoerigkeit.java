@@ -69,7 +69,10 @@ class TestValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit {
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit validator =
-				new ValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit(() -> idStaatsangehoerigkeit, kontext);
+				new ValidatorSszs01SchuelerStammdatenZweiteStaatsangehoerigkeit(
+						() -> 0,
+						() -> idStaatsangehoerigkeit,
+						kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

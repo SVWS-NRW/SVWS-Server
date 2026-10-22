@@ -43,7 +43,6 @@ public final class ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburts
 			return false;
 		}
 
-		_validatoren.add(new ValidatorSsml02SchuelerStammdatenMigrationshintergrundGeburtsland(_idGeburtsland, this.kontext()));
 		return true;
 	}
 }

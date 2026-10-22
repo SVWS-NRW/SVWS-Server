@@ -21,7 +21,7 @@ public final class ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsj
 	private final @NotNull Supplier<@AllowNull Integer> _zuzugsjahr;
 
 	/** Das Geburtsdatumm des Schülers */
-	private final @NotNull Supplier<String> _geburtsdatum;
+	private final @NotNull Supplier<@AllowNull String> _geburtsdatum;
 
 	/** Gibt an, ob ein Migrationshintergrund vorhanden ist */
 	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;
@@ -41,7 +41,7 @@ public final class ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsj
 	public ValidatorSsmz11SchuelerStammdatenMigrationshintergrundZuzugsjahr(
 			final @NotNull Supplier<@AllowNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Integer> zuzugsjahr,
-			final @NotNull Supplier<String> geburtsdatum,
+			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);

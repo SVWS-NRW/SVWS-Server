@@ -17,13 +17,14 @@ export class ValidatorSle00SchuelerLernabschnittsdatenEpJahre extends Validator 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der EP-Jahre.
 	 *
+	 * @param schuljahr   Schuljahr
 	 * @param idEpJahre   EPJahreID
 	 * @param kontext     der Kontext des Validators
 	 */
-	public constructor(idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idEpJahre = idEpJahre;
-		this._validatoren.add(new ValidatorSle01SchuelerLernabschnittsdatenEpJahre(this.getNotNullSupplierLong(idEpJahre), kontext));
+		this._validatoren.add(new ValidatorSle01SchuelerLernabschnittsdatenEpJahre(schuljahr, this.getNotNullSupplierLong(idEpJahre), kontext));
 	}
 
 	protected pruefe(): boolean {

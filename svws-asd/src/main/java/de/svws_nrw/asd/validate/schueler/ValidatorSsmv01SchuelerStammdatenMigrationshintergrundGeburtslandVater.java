@@ -17,9 +17,6 @@ public final class ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburts
 	/** Geburtsland des Vaters */
 	private final @NotNull Supplier<@AllowNull Long> _idGeburtslandVater;
 
-	/** Gibt an, ob ein Migrationshintergrund vorhanden ist */
-	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;
-
 	private static final @NotNull String FEHLERTEXT =
 			"Geburtsland des Vaters: Das Feld muss zulässig sein.";
 
@@ -27,19 +24,13 @@ public final class ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburts
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param idGeburtslandVater        die ID des Geburtslandes des Vaters
-	 * @param hatMigrationshintergrund   Migrationshintergrund vorhanden
 	 * @param kontext                    der Kontext des Validators
 	 */
 	public ValidatorSsmv01SchuelerStammdatenMigrationshintergrundGeburtslandVater(
 			final @NotNull Supplier<@AllowNull Long> idGeburtslandVater,
-			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idGeburtslandVater = idGeburtslandVater;
-		_hatMigrationshintergrund = hatMigrationshintergrund;
-
-		_validatoren.add(
-				new ValidatorSsmv02SchuelerStammdatenMigrationshintergrundGeburtslandVater(idGeburtslandVater, hatMigrationshintergrund, kontext));
 	}
 
 	@Override

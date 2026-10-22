@@ -13,6 +13,9 @@ import jakarta.validation.constraints.NotNull;
 
 public final class ValidatorSle02SchuelerLernabschnittsdatenEpJahre extends Validator {
 
+	/** Das aktuelle Schuljahr des Lernabschnitts */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** EP - Jahre */
 	private final @NotNull Supplier<@NotNull Long> _idEpJahre;
 
@@ -22,20 +25,24 @@ public final class ValidatorSle02SchuelerLernabschnittsdatenEpJahre extends Vali
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der EP-Jahre.
 	 *
+	 * @param schuljahr   Schuljahr
 	 * @param idEpJahre   EPJahreID
 	 * @param kontext     der Kontext des Validators
 	 */
 	public ValidatorSle02SchuelerLernabschnittsdatenEpJahre(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idEpJahre,
 			final @NotNull ValidatorKontext kontext) {
-		super(kontext);
-		_idEpJahre = idEpJahre;
 
+		super(kontext);
+
+		_schuljahr = schuljahr;
+		_idEpJahre = idEpJahre;
 	}
 
 	@Override
 	protected boolean pruefe() {
-		if (!PrimarstufeSchuleingangsphaseBesuchsjahre.data().isGueltig(_idEpJahre.get(), kontext().getSchuljahr())) {
+		if (!PrimarstufeSchuleingangsphaseBesuchsjahre.data().isGueltig(_idEpJahre.get(), _schuljahr.get())) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}

@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -13,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
  * der Abschnittsdaten eines Lehrers einer Schule aus.
  */
 public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
+
+	private final @NotNull Supplier<@AllowNull Long> _idSchuljahresabschnitt;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -29,12 +32,31 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
+
 		super(kontext);
-		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
+
+		_idSchuljahresabschnitt = idSchuljahresabschnitt;
+
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
+			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja == null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		};
+
+		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
+
+		final Schuljahresabschnitt sja =  kontext().getSchuljahresabschnittByID(getNotNullSupplierLong(_idSchuljahresabschnitt).get());
+		if (sja == null) {
+			addFehler(0, "Dem Lehrer ist kein Schuljahresabschnitt zugeordnet");
+			return false;
+		}
+
 		return true;
 	}
 

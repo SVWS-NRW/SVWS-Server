@@ -91,15 +91,15 @@ export class ValidatorGesamt extends Validator {
 		this.mapValidatorenLehrer.put(-1, allgemein);
 		for (const lehrer of gesamt.lehrer) {
 			const list: List<Validator> = new ArrayList<Validator>();
-			list.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, this.kontext()));
+			list.add(new ValidatorLsLehrerStammdaten({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.idStaatsangehoerigkeit }, this.kontext()));
 			list.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idStaatsangehoerigkeit }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
 			for (const lehraemter of lehrer.lehraemter) {
 				for (const lehrbefaehigungen of lehraemter.lehrbefaehigungen) {
-					list.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => lehrbefaehigungen.idLehrbefaehigung }, { get: () => LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt) }, this.kontext()));
-					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung({ get: () => lehrbefaehigungen.idAnerkennungsgrund }, this.kontext()));
+					list.add(new ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrbefaehigungen.idLehrbefaehigung }, { get: () => LehrerLehramt.data().getWertByIDOrNull(lehraemter.idKatalogLehramt) }, this.kontext()));
+					list.add(new ValidatorLplaaLehrerPersonaldatenLehramtLehrbefaehigungAnerkennung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrbefaehigungen.idAnerkennungsgrund }, this.kontext()));
 				}
 				for (const fachrichtungen of lehraemter.fachrichtungen) {
-					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung({ get: () => fachrichtungen.idFachrichtung }, this.kontext()));
+					list.add(new ValidatorLplfLehrerPersonaldatenLehramtFachrichtung({ get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => fachrichtungen.idFachrichtung }, this.kontext()));
 				}
 			}
 			this._validatoren.addAll(list);
@@ -120,9 +120,9 @@ export class ValidatorGesamt extends Validator {
 		this.mapValidatorenSchueler.put(-1, allgemein);
 		for (const schueler of gesamt.schueler) {
 			const list: List<Validator> = new ArrayList<Validator>();
-			list.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.idSchuljahresabschnitt }, { get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, this.kontext()));
+			list.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.idSchuljahresabschnitt }, { get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, { get: () => schueler.idVerkehrspracheFamilie }, { get: () => schueler.zuzugsjahr }, this.kontext()));
 			for (const lernabschnitt of schueler.lernabschnitte) {
-				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
+				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idSchuljahresabschnitt }, { get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
 			}
 			this._validatoren.addAll(list);
 			this.mapValidatorenSchueler.put(schueler.id, list);

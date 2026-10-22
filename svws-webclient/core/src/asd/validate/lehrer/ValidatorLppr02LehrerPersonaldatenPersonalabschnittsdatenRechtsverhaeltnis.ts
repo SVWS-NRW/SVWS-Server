@@ -15,6 +15,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Der Einsatzstatus
 	 */
 	private readonly _idRechtsverhaeltnis: Supplier<number>;
@@ -23,26 +28,27 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Erstellt einen neuen Validator für das vorhandensein des Einsatzstatus im Katalog.
 	 *
-	 * @param idSchuljahresabschnitt   der Schuljahresabschnitt
+	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   die Staatsangehoerigkeit
 	 * @param idRechtsverhaeltnis      das Rechtsverhaeltnis
 	 * @param geburtsdatum             das Geburtsdatum
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 		const rechtsverhaeltnisNotNull: Supplier<LehrerRechtsverhaeltnis> = { get: () => LehrerRechtsverhaeltnis.data().getWertByID(this.getNotNullSupplierLong(idRechtsverhaeltnis).get()) };
 		const staatsangehoerigkeitSchluessel: Supplier<string> = this.getNotNullSupplier({ get: () => Nationalitaeten.data().getSchluesselByIDOrNull(idStaatsangehoerigkeit.get()) });
-		this._validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this.getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		this._validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this.getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		this._validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this.getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
-		this._validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this.getNotNullSupplierLong(idSchuljahresabschnitt), rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr10LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr12LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr13LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr14LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(staatsangehoerigkeitSchluessel, rechtsverhaeltnisNotNull, kontext));
 	}
 
 	public pruefe(): boolean {
-		if (!LehrerEinsatzstatus.data().isGueltig(this._idRechtsverhaeltnis.get(), this.kontext().getSchuljahr())) {
+		if (!LehrerEinsatzstatus.data().isGueltig(this._idRechtsverhaeltnis.get(), this._schuljahr.get())) {
 			this.addFehler(0, "Lehrer Rechtsverhältnis: Der eingetragene Wert für das Feld 'Rechtsverhältnis' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

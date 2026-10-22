@@ -70,11 +70,11 @@ class TestValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
 			final LehrerRechtsverhaeltnis rechtsverhaeltnis = LehrerRechtsverhaeltnis.P;
-			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
+			final int schuljahr = kontext.getSchuljahresabschnitt().schuljahr;
 
 			final ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
 					new ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
-							() -> idSchuljahresabschnitt,
+							() -> schuljahr,
 							() -> rechtsverhaeltnis,
 							() -> geburtsdatum,
 							kontext);

@@ -23,15 +23,16 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr                 Schuljahr
 	 * @param idVerkehrsspracheFamilie  die Katalog-ID der Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
-	public constructor(idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
+		this._validatoren.add(new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {

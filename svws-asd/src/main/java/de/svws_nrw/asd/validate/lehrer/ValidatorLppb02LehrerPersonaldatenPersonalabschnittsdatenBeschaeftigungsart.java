@@ -14,6 +14,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
 
+	/** Das aktuelle Schuljahr des Lehrers */
+	private final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die Beschaeftigungsart */
 	private final @NotNull @NotNull @NotNull Supplier<@NotNull Long> _idBeschaeftigungsart;
 
@@ -23,17 +26,20 @@ public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBesc
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
+	 * @param schuljahr                Schuljahr
 	 * @param idBeschaeftigungsart     die Beschäftigungsart
 	 * @param pflichtstundensoll       das Pflichtstundensoll
 	 * @param einsatzstatus            der Einsatzstatus
 	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull @NotNull Supplier<@NotNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
+		_schuljahr = schuljahr;
 		_idBeschaeftigungsart = idBeschaeftigungsart;
 
 		final @NotNull Supplier<@NotNull LehrerBeschaeftigungsart> beschaeftigungsartNotNull =
@@ -48,7 +54,7 @@ public final class ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 	@Override
 	public boolean pruefe() {
-		if (!LehrerBeschaeftigungsart.data().isGueltig(_idBeschaeftigungsart.get(), kontext().getSchuljahr())) {
+		if (!LehrerBeschaeftigungsart.data().isGueltig(_idBeschaeftigungsart.get(), _schuljahr.get())) {
 			addFehler(0, FEHLERTEXT);
 			return false;
 		}

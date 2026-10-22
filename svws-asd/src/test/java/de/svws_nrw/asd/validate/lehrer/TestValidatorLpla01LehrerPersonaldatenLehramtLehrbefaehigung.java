@@ -59,7 +59,7 @@ class TestValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung {
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		final ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung validator = new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(() -> idLehrbefaehigung, null, kontext);
+		final ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung validator = new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(() -> 0, () -> idLehrbefaehigung, null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

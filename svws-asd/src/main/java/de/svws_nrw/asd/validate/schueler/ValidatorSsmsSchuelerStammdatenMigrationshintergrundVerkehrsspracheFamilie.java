@@ -2,6 +2,7 @@ package de.svws_nrw.asd.validate.schueler;
 
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -13,23 +14,35 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
-
+	private final @NotNull Supplier<@AllowNull Long> _idSchuljahresabschnitt;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idVerkehrsspracheFamilie    die Verkehrssprache der Familie
+	 * @param idSchuljahresabschnitt    Schuljahresabschnitt ID
+	 * @param idVerkehrsspracheFamilie  die Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Gibt an, ob ein Migrationshintergrund vorhanden ist
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public ValidatorSsmsSchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(
+			final @NotNull Supplier<@AllowNull Long> idSchuljahresabschnitt,
 			final @NotNull Supplier<@AllowNull Long> idVerkehrsspracheFamilie,
 			final @NotNull Supplier<@NotNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
+		_idSchuljahresabschnitt = idSchuljahresabschnitt;
+
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
+			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
+			if (sja == null) {
+				throw new NullPointerException();
+			}
+			return sja.schuljahr;
+		};
+
 		_validatoren.add(
-				new ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(idVerkehrsspracheFamilie, hatMigrationshintergrund,
+				new ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, idVerkehrsspracheFamilie, hatMigrationshintergrund,
 						kontext)
 		);
 	}

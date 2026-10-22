@@ -16,16 +16,16 @@ export class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param schuljahr                Schuljahr
 	 * @param idStaatsangehoerigkeit   die idStaatsangehoerigkeit des Lehrers
 	 * @param idRechtsverhaeltnis      die ID des Rechtsverhältnis
 	 * @param geburtsdatum             das Geburtsdatum des Lehrers
 	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idStaatsangehoerigkeit: Supplier<number | null>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
-		this._validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, idStaatsangehoerigkeit, this.getNotNullSupplierLong(idRechtsverhaeltnis), geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, this.getNotNullSupplierLong(idRechtsverhaeltnis), geburtsdatum, kontext));
 	}
 
 	public pruefe(): boolean {

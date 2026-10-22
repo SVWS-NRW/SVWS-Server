@@ -1,8 +1,8 @@
 {
   "version" : 1,
-  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID",
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID",
   "historie" : [ {
-    "praefix" : "LSS10",
+    "praefix" : "LSS02",
     "altes_kuerzel" : "",
     "zweig" : "Lehrer-Stammdaten-StaatsangehoerigkeitID",
     "dtos" : "LehrerStammdaten",

@@ -4,7 +4,7 @@ import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstat
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
+export class ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/**
 	 * Das Pflichtstundensoll
@@ -41,17 +41,17 @@ export class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static readonly class = new Class<ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll');
+	public static readonly class = new Class<ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(obj: unknown): ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll {
-	return obj as ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(obj: unknown): ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll {
+	return obj as ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll;
 }

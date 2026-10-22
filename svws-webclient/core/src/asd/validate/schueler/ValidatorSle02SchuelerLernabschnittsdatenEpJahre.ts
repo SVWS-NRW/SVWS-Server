@@ -7,6 +7,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorSle02SchuelerLernabschnittsdatenEpJahre extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lernabschnitts
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * EP - Jahre
 	 */
 	private readonly _idEpJahre: Supplier<number>;
@@ -17,16 +22,18 @@ export class ValidatorSle02SchuelerLernabschnittsdatenEpJahre extends Validator 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der EP-Jahre.
 	 *
+	 * @param schuljahr   Schuljahr
 	 * @param idEpJahre   EPJahreID
 	 * @param kontext     der Kontext des Validators
 	 */
-	public constructor(idEpJahre: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idEpJahre: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idEpJahre = idEpJahre;
 	}
 
 	protected pruefe(): boolean {
-		if (!PrimarstufeSchuleingangsphaseBesuchsjahre.data().isGueltig(this._idEpJahre.get(), this.kontext().getSchuljahr())) {
+		if (!PrimarstufeSchuleingangsphaseBesuchsjahre.data().isGueltig(this._idEpJahre.get(), this._schuljahr.get())) {
 			this.addFehler(0, ValidatorSle02SchuelerLernabschnittsdatenEpJahre.FEHLERTEXT);
 			return false;
 		}

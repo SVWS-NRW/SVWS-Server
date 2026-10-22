@@ -26,6 +26,7 @@ class TestValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung {
 	//idTest (laufende Nr./id der Lehrbefähigung), idLehramtTest, idLehrbefaehigungTest (id des Lehrbefähigungskatalogeintrages), idAnerkennungsgrundTest, result
 	// Für den zweiten Fall gilt: Wert gueltigBis = 2017 => false
 	private static final String TESTDATEN_LEHRAMTLEHRBEFAEHIGUNG = """
+        ID ,  Jahr, RESULT
 		216,  2018, true
 		253,  2012, true
 		253,  2026, false
@@ -56,17 +57,14 @@ class TestValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung {
 	 */
 	@DisplayName("Tests für ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_LEHRAMTLEHRBEFAEHIGUNG, nullValues = { "null" })
+	@CsvSource(useHeadersInDisplayName = true, textBlock = TESTDATEN_LEHRAMTLEHRBEFAEHIGUNG, nullValues = { "null" })
 	void testValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(final long idLehrbefaehigung, final int schuljahr, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-//		Setzen Schuljahr
-		kontext.getSchuljahresabschnitt().schuljahr = schuljahr;
-
-		final ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung validator = new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(() -> idLehrbefaehigung, null, kontext);
+		final ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung validator = new ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung(() -> schuljahr, () -> idLehrbefaehigung, null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

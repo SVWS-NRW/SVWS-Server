@@ -30,15 +30,15 @@ public final class ValidatorLpprbLehrerPersonaldatenPersonalabschnittsdatenRecht
 		super(kontext);
 
 		// setzen eines beliebigen Datums für die Übergabe eine DateManagers
-		@NotNull Supplier<@NotNull DateManager> datumUebergabe = getNotNullSupplierObject(getDateManagerSupplier(() -> "1980-01-01"));
+		final @NotNull Supplier<@NotNull DateManager> datumUebergabe = getNotNullSupplierObject(getDateManagerSupplier(() -> "1980-01-01"));
 
-		// Hier kann nicht nur die Vorbedingung 02 geprüft werden, da die ID's "null" sein könnten, muss vorher auch 00 und 01 geprüft werden
-		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(idBeschaeftigungsart, () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
-				&& new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> null, () -> null, idRechtsverhaeltnis, datumUebergabe, kontext).pruefe()
-				&& new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> null, () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
-				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> null, () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
+		// Hier kann nicht nur die Vorbedingung 02 geprüft werden, da die ID's "null" sein könnten, muss vorher auch jeweils die 00 und 01 geprüft werden
+		if (new ValidatorLppb00LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, idBeschaeftigungsart, () -> null, () -> null, kontext).pruefe()
+				&& new ValidatorLppb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> 0, getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
+				&& new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(() -> kontext.getSchuljahr(), getNotNullSupplierLong(idBeschaeftigungsart), () -> null, () -> null, kontext).pruefe()
+				&& new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, idRechtsverhaeltnis, datumUebergabe, kontext).pruefe()
+				&& new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> 0, () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
+				&& new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> kontext.getSchuljahr(), () -> null, getNotNullSupplierLong(idRechtsverhaeltnis), datumUebergabe, kontext).pruefe()
 				) {
 
 			final @NotNull Supplier<@AllowNull LehrerRechtsverhaeltnis> lehrerRechtsverhaeltnis =

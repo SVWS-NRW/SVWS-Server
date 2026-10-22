@@ -11,14 +11,15 @@ export class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idKlassenart  die Klassenart ID
-	 * @param idEpJahre     die EPJahre ID
-	 * @param kontext       der Kontext des Validators
+	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnitts
+	 * @param idKlassenart            die Klassenart ID
+	 * @param idEpJahre               die EPJahre ID
+	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idKlassenart, kontext));
-		this._validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idEpJahre, kontext));
+		this._validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idSchuljahresabschnitt, idKlassenart, kontext));
+		this._validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idSchuljahresabschnitt, idEpJahre, kontext));
 	}
 
 	protected pruefe(): boolean {

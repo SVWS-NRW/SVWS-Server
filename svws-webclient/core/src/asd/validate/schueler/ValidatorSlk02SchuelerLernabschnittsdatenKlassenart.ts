@@ -7,6 +7,11 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorSlk02SchuelerLernabschnittsdatenKlassenart extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lernabschnitts
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Klassenart
 	 */
 	private readonly _idKlassenart: Supplier<number>;
@@ -17,16 +22,18 @@ export class ValidatorSlk02SchuelerLernabschnittsdatenKlassenart extends Validat
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Klassenart im Katalog.
 	 *
+	 * @param schuljahr     Schuljahr
 	 * @param idKlassenart  die Klassenart ID
 	 * @param kontext       der Kontext des Validators
 	 */
-	public constructor(idKlassenart: Supplier<number>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idKlassenart: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idKlassenart = idKlassenart;
 	}
 
 	protected pruefe(): boolean {
-		if (!Klassenart.data().isGueltig(this._idKlassenart.get(), this.kontext().getSchuljahr())) {
+		if (!Klassenart.data().isGueltig(this._idKlassenart.get(), this._schuljahr.get())) {
 			this.addFehler(0, ValidatorSlk02SchuelerLernabschnittsdatenKlassenart.FEHLERTEXT);
 			return false;
 		}

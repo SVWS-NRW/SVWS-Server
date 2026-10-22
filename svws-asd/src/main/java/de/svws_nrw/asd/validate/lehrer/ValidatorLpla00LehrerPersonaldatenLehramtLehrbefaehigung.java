@@ -20,17 +20,19 @@ public final class ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung exte
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param schuljahr           Schuljahr
 	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
 	 * @param lehrerLehramt       Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
 	public ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idLehrbefaehigung,
 			final @NotNull Supplier<@AllowNull LehrerLehramt> lehrerLehramt,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idLehrbefaehigung = idLehrbefaehigung;
-		_validatoren.add(new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(getNotNullSupplierLong(idLehrbefaehigung), lehrerLehramt, kontext));
+		_validatoren.add(new ValidatorLpla01LehrerPersonaldatenLehramtLehrbefaehigung(schuljahr, getNotNullSupplierLong(idLehrbefaehigung), lehrerLehramt, kontext));
 	}
 
 	@Override

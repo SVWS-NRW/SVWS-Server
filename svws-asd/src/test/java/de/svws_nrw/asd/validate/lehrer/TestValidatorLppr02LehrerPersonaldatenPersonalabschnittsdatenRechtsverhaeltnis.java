@@ -22,9 +22,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis {
 
 	private static final String TESTDATEN = """
-			2    , true
-			999  , false
-			-1   , false
+			2    , 2018 , true
+			999  , 2018 , false
+			-1   , 2018 , false
 		""";
 
 	/** Stammdaten der Schule */
@@ -42,18 +42,19 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 	/**
 	 * Test von ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis.
 	 *
+	 * @param schuljahr             Schuljahr
 	 * @param idRechtsverhaeltnis   die Katalog-ID des Rechtsverhaeltnisses
 	 * @param result                gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final Long idRechtsverhaeltnis, final boolean result) {
+	void testValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(final Long idRechtsverhaeltnis, final int schuljahr, final boolean result) {
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator =
-				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> null, () -> null, () -> idRechtsverhaeltnis, () -> null, kontext);
+				new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(() -> schuljahr, () -> null, () -> idRechtsverhaeltnis, () -> null, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

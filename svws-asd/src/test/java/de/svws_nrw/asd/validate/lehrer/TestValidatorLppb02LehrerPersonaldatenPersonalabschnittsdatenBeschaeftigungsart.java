@@ -73,9 +73,9 @@ class TestValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		kontext.getSchuljahresabschnitt().schuljahr = schuljahr;
 		final ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb02LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
+						() -> schuljahr,
 						() -> idBeschaeftigungsart,
 						null,
 						null,

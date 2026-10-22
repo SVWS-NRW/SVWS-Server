@@ -1,8 +1,8 @@
 {
   "version" : 1,
-  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll",
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppp12LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll",
   "historie" : [ {
-    "praefix" : "LPPP02",
+    "praefix" : "LPPP12",
     "altes_kuerzel" : "BG",
     "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Pflichtstundensoll",
     "dtos" : "LehrerPersonalabschnittsdaten",

@@ -11,6 +11,11 @@ import { ValidatorLpla11LehrerPersonaldatenLehramtLehrbefaehigung } from '../../
 export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Lehrers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * IDLehrbefähigung
 	 */
 	private readonly _idLehrbefaehigung: Supplier<number>;
@@ -24,12 +29,14 @@ export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der Lehrbefähigungseinträge.
 	 *
+	 * @param schuljahr           Schuljahr
 	 * @param idLehrbefaehigung   eine idLehrbefaehigung des Lehrers
 	 * @param lehrerLehramt       das Lehramt des Lehrers
 	 * @param kontext             der Kontext des Validators
 	 */
-	public constructor(idLehrbefaehigung: Supplier<number>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, idLehrbefaehigung: Supplier<number>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idLehrbefaehigung = idLehrbefaehigung;
 		this._lehrbefaehigung = { get: () => LehrerLehrbefaehigung.data().getWertByID(idLehrbefaehigung.get()) };
 		this._validatoren.add(new ValidatorLpla10LehrerPersonaldatenLehramtLehrbefaehigung(this._lehrbefaehigung, lehrerLehramt, kontext));
@@ -38,7 +45,7 @@ export class ValidatorLpla02LehrerPersonaldatenLehramtLehrbefaehigung extends Va
 	}
 
 	protected pruefe(): boolean {
-		if (!LehrerLehrbefaehigung.data().isGueltig(this._idLehrbefaehigung.get(), this.kontext().getSchuljahr())) {
+		if (!LehrerLehrbefaehigung.data().isGueltig(this._idLehrbefaehigung.get(), this._schuljahr.get())) {
 			this.addFehler(0, "Der eingetragene Wert für das Feld 'Lehrbefähigungen' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}

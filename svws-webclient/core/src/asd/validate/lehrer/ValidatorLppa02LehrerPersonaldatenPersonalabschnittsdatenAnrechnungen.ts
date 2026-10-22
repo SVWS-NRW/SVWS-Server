@@ -12,33 +12,40 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen extends Validator {
 
 	/**
+	 * Das aktuelle Schuljahr des Schülers
+	 */
+	private readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die Liste der Anrechnungsstunden.
 	 */
-	private readonly anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
+	private readonly _anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
 
 
 	/**
 	 * Erstellt einen neuen Validator für die zeitliche Gültigkeit der Anrechnungsgründe.
 	 *
+	 * @param schuljahr          Schuljahr
 	 * @param anrechnungen       die Liste der Anrechnungsstunden
 	 * @param lehraemter         die Liste der Lehrämter
 	 * @param pflichtstundensoll das Pflichtstundensoll
 	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(schuljahr: Supplier<number>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.anrechnungen = anrechnungen;
+		this._schuljahr = schuljahr;
+		this._anrechnungen = anrechnungen;
 		this._validatoren.add(new ValidatorLppa10LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, kontext));
 		this._validatoren.add(new ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
+		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this._anrechnungen.get();
 		if (liste === null) {
 			return true;
 		}
 		for (const eintrag of liste) {
-			if (!LehrerAnrechnungsgrund.data().isGueltig(eintrag.idGrund, this.kontext().getSchuljahr())) {
+			if (!LehrerAnrechnungsgrund.data().isGueltig(eintrag.idGrund, this._schuljahr.get())) {
 				this.addFehler(0, "Der eingetragene Wert für das Feld 'Anrechnungsgründe' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 				return false;
 			}

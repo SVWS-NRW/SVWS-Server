@@ -1,8 +1,10 @@
+import { ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburtslandMutter } from '../../../asd/validate/schueler/ValidatorSsmm01SchuelerStammdatenMigrationshintergrundGeburtslandMutter';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland } from '../../../asd/validate/schueler/ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland';
 
 export class ValidatorSsmm00SchuelerStammdatenMigrationshintergrundGeburtslandMutter extends Validator {
 
@@ -37,9 +39,15 @@ export class ValidatorSsmm00SchuelerStammdatenMigrationshintergrundGeburtslandMu
 		const idGeburtslandMutter: number | null = this._idGeburtslandMutter.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
 		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (hatMigrationshintergrund && (idGeburtslandMutter === null)) {
-			this.addFehler(0, ValidatorSsmm00SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
-			return false;
+		this._validatoren.clear();
+		if (hatMigrationshintergrund) {
+			if (idGeburtslandMutter === null) {
+				this.addFehler(0, ValidatorSsmm00SchuelerStammdatenMigrationshintergrundGeburtslandMutter.FEHLERTEXT);
+				return false;
+			}
+			this._validatoren.add(new ValidatorSsml01SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(this._idGeburtslandMutter), this.kontext()));
+		} else {
+			this._validatoren.add(new ValidatorSsml03SchuelerStammdatenMigrationshintergrundGeburtsland(this.getNotNullSupplierLong(this._idGeburtslandMutter), this._hatMigrationshintergrund, this.kontext()));
 		}
 		return true;
 	}

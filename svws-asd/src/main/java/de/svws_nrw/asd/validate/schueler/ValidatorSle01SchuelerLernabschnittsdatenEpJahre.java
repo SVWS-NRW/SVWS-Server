@@ -21,17 +21,19 @@ public final class ValidatorSle01SchuelerLernabschnittsdatenEpJahre extends Vali
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung der EP-Jahre.
 	 *
+	 * @param schuljahr   Schuljahr
 	 * @param idEpJahre   EPJahreID
 	 * @param kontext     der Kontext des Validators
 	 */
 	public ValidatorSle01SchuelerLernabschnittsdatenEpJahre(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idEpJahre,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idEpJahre = idEpJahre;
 
 		_validatoren.add(
-				new ValidatorSle02SchuelerLernabschnittsdatenEpJahre(idEpJahre, kontext));
+				new ValidatorSle02SchuelerLernabschnittsdatenEpJahre(schuljahr, idEpJahre, kontext));
 
 	}
 

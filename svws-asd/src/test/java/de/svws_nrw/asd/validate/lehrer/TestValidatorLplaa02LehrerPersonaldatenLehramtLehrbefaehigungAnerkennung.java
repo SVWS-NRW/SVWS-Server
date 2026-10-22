@@ -25,11 +25,12 @@ class TestValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung {
 	// 2      -> true (ID 2 "AL" ist im Schuljahr 2018 historisch gültig)
 	// 5      -> true (ID 5 "OH" ist im Schuljahr 2018 historisch gültig)
 	// 99999  -> false (Ungültige/Nicht-existente ID schlägt bei der Historienprüfung fehl)
+	// zur Zeit (2026) noch keine zeitlich beschränkten Werte in LehrerLehramtAnerkennung.json
 	private static final String TESTDATEN = """
-            ID     , RESULT
-            2      , true
-            5      , true
-            99999  , false
+            ID     , Jahr, RESULT
+            2      , 2018, true
+            5      , 2018, true
+            99999  , 2018, false
         """;
 
 	/** Stammdaten der Schule */
@@ -48,19 +49,20 @@ class TestValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung {
 	 * Test von ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung.
 	 *
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
+	 * @param schuljahr             das Schuljahr
 	 * @param result                gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung")
 	@ParameterizedTest
 	@CsvSource(useHeadersInDisplayName = true, textBlock = TESTDATEN, nullValues = { "null" })
-	void testValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(final Long idAnerkennungsgrund, final boolean result) {
+	void testValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(final Long idAnerkennungsgrund, final int schuljahr, final boolean result) {
 
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		final ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung validator =
-				new ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(() -> idAnerkennungsgrund, kontext);
+				new ValidatorLplaa02LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(() -> schuljahr, () -> idAnerkennungsgrund, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

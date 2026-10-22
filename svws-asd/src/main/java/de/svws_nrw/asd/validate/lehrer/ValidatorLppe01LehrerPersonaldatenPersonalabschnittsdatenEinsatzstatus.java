@@ -19,10 +19,12 @@ public final class ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEins
 	/**
 	 * Erstellt einen neuen Validator für das vorhandensein des Einsatzstatus im Katalog.
 	 *
+	 * @param schuljahr         Schuljahr
 	 * @param idEinsatzstatus   der Einsatzstatus
 	 * @param kontext           der Kontext des Validators
 	 */
 	public ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@NotNull Long> idEinsatzstatus,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
@@ -30,7 +32,7 @@ public final class ValidatorLppe01LehrerPersonaldatenPersonalabschnittsdatenEins
 
 
 		_validatoren.add(
-				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(idEinsatzstatus, kontext));
+				new ValidatorLppe02LehrerPersonaldatenPersonalabschnittsdatenEinsatzstatus(schuljahr, idEinsatzstatus, kontext));
 
 	}
 

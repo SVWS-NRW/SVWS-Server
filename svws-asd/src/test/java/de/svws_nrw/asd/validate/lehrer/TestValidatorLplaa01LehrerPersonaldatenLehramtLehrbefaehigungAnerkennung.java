@@ -60,7 +60,7 @@ class TestValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung {
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
 		final ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung validator =
-				new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(() -> idAnerkennungsgrund, kontext);
+				new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(() -> 0, () -> idAnerkennungsgrund, kontext);
 
 		assertEquals(result, validator.pruefe());
 	}

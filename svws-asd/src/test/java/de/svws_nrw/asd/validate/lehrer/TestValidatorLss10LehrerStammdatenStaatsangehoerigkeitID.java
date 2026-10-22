@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für die Validatoren
  * <ul>
- *   <li> {@link ValidatorLss10LehrerStammdatenStaasangehoerigkeitID}
+ *   <li> {@link ValidatorLss02LehrerStammdatenStaasangehoerigkeitID}
  * </ul>
  * </p>
 
@@ -27,8 +27,8 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * CoreType: LehrerStammdaten
  */
-@DisplayName("Tests ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID")
-class TestValidatorLss10LehrerStammdatenStaatsangehoerigkeitID {
+@DisplayName("Tests ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID")
+class TestValidatorLss02LehrerStammdatenStaatsangehoerigkeitID {
 
 	private static final String TESTDATEN_STAATSANGEOERIGKEITID = """
 		68090065, 2018, true
@@ -54,29 +54,26 @@ class TestValidatorLss10LehrerStammdatenStaatsangehoerigkeitID {
 	}
 
 	/**
-	 * Test von ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID
+	 * Test von ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID
 	 *
 	 * CoreType: LehrerStammdaten
 	 *
 	 * @param staatsangehoerigkeitID   die staatsangehoerigkeitID, welche bei den eingelesenen Testdaten ersetzt wird
-	 * @param schuljahr  	          das Schuljahr
+	 * @param schuljahr  	           das Schuljahr
 	 * @param result                   gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
-	@DisplayName("Tests für ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID")
+	@DisplayName("Tests für ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_STAATSANGEOERIGKEITID, nullValues = { "null" })
-	void testValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(final Long staatsangehoerigkeitID, final Integer schuljahr, final boolean result) {
+	void testValidatorLss02LehrerStammdatenStaatsangehoerigkeitID(final Long staatsangehoerigkeitID, final Integer schuljahr, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 
-		//		Setzen Schuljahr
-		kontext.getSchuljahresabschnitt().schuljahr = schuljahr;
-
-		final ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID validator =
-				new ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID(() -> staatsangehoerigkeitID, kontext);
+		final ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID validator =
+				new ValidatorLss02LehrerStammdatenStaatsangehoerigkeitID(() -> staatsangehoerigkeitID, () -> schuljahr, kontext);
 		assertEquals(result, validator.pruefe());
 	}
 

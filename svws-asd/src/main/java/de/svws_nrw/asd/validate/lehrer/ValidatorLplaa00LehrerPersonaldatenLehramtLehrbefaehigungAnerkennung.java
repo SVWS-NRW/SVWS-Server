@@ -18,16 +18,18 @@ public final class ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAner
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext.
 	 *
+	 * @param schuljahr             Schuljahr
 	 * @param idAnerkennungsgrund   die Katalog-ID des Anerkennungsgrunds
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLplaa00LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(
+			final @NotNull Supplier<@NotNull Integer> schuljahr,
 			final @NotNull Supplier<@AllowNull Long> idAnerkennungsgrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idAnerkennungsgrund = idAnerkennungsgrund;
 
-		_validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(getNotNullSupplierLong(idAnerkennungsgrund), kontext));
+		_validatoren.add(new ValidatorLplaa01LehrerPersonaldatenLehramtLehrbefaehigungAnerkennung(schuljahr, getNotNullSupplierLong(idAnerkennungsgrund), kontext));
 	}
 
 	@Override
