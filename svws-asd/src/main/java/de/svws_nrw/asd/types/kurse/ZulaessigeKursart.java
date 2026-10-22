@@ -25,6 +25,9 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 	/** Kursart 4. Abiturfach */
 	AB4,
 
+	/** Kursart 5. Abiturfach */
+	AB5,
+
 	/** Kursart Arbeitsgemeinschaft gemäß APO SI */
 	AG,
 
