@@ -5,7 +5,6 @@ import type { LehrerPersonaldaten } from "@core/asd/data/lehrer/LehrerPersonalda
 import type { LehrerZugangsgrundKatalogEintrag } from "@core/asd/data/lehrer/LehrerZugangsgrundKatalogEintrag";
 import { LehrerAbgangsgrund } from "@core/asd/types/lehrer/LehrerAbgangsgrund";
 import { LehrerZugangsgrund } from "@core/asd/types/lehrer/LehrerZugangsgrund";
-import type { ValidatorKontext } from "@core/asd/validate/ValidatorKontext";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import type { LehrerListeManager } from "@ui/ui/manager/lehrer/LehrerListeManager";
 import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
@@ -29,15 +28,15 @@ export class LehrerPersonaldatenModelProxy extends ModelProxy<LehrerPersonaldate
 	 * @param patch              ggf. die Methode zum Patchen der einzelnen Attribute, sofern das automatische Patchen
 	 *                           bei Änderungen gewünscht ist
 	 */
-	constructor(data: () => LehrerPersonaldaten, validatorKontext: () => ValidatorKontext, manager: () => LehrerListeManager,
+	constructor(data: () => LehrerPersonaldaten, manager: () => LehrerListeManager,
 		patch?: (data: Partial<LehrerPersonaldaten>) => Promise<boolean>) {
 		super({ data, patch, listOfAutopatchProps: ["zugangsgrund", "abgangsgrund"] });
 		this.manager = manager;
-		this.addValidatoren(validatorKontext);
+		this.addValidatoren();
 		this.validate();
 	}
 
-	private addValidatoren(validatorKontext: () => ValidatorKontext) {
+	private addValidatoren() {
 		// Identnummer
 		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.identNrTeil1, null, 10), "identNrTeil1");
 		this.addBlockingValidator(

@@ -139,14 +139,16 @@
 		}
 		return true;
 	}
-	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id), () => schuleState.validatorKontext, () => lehrerAuswahlState.manager, patchMethodLehrerPersonalabschnittsdaten);
-	const personaldatenModelProxy = computed(() =>
-		new LehrerPersonaldatenModelProxy(
-			() => lehrerAuswahlState.manager.hasPersonalDaten() ? lehrerAuswahlState.manager.personalDaten() : new LehrerPersonaldaten(),
-			() => schuleState.validatorKontext,
-			() => lehrerAuswahlState.manager,
-			(data) => lehrerAuswahlState.patchPersonaldaten(data)
-		)
+	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(
+		() => lehrerAuswahlState.manager.getAbschnittBySchuljahresabschnittsId(abschnittState.auswahl.id),
+		() => schuleState.validatorKontext,
+		() => lehrerAuswahlState.manager,
+		patchMethodLehrerPersonalabschnittsdaten
+	);
+	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(
+		() => lehrerAuswahlState.manager.hasPersonalDaten() ? lehrerAuswahlState.manager.personalDaten() : new LehrerPersonaldaten(),
+		() => lehrerAuswahlState.manager,
+		(data) => lehrerAuswahlState.patchPersonaldaten(data)
 	);
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
