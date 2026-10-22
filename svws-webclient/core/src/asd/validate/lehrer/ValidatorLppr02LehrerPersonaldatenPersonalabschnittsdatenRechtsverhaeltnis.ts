@@ -8,7 +8,6 @@ import { Nationalitaeten } from '../../../asd/types/schule/Nationalitaeten';
 import { ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr11LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
-import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -48,7 +47,7 @@ export class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	}
 
 	public pruefe(): boolean {
-		if (!LehrerEinsatzstatus.data().isGueltig(this._idRechtsverhaeltnis.get(), this._schuljahr.get())) {
+		if (!LehrerRechtsverhaeltnis.data().isGueltig(this._idRechtsverhaeltnis.get(), this._schuljahr.get())) {
 			this.addFehler(0, "Lehrer Rechtsverhältnis: Der eingetragene Wert für das Feld 'Rechtsverhältnis' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;
 		}
