@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.validate.DateManager;
@@ -58,7 +57,7 @@ public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRech
 
 	@Override
 	public boolean pruefe() {
-		if (!LehrerEinsatzstatus.data().isGueltig(_idRechtsverhaeltnis.get(), _schuljahr.get())) {
+		if (!LehrerRechtsverhaeltnis.data().isGueltig(_idRechtsverhaeltnis.get(), _schuljahr.get())) {
 			addFehler(0,
 					"Lehrer Rechtsverhältnis: Der eingetragene Wert für das Feld 'Rechtsverhältnis' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");
 			return false;

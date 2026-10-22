@@ -23,8 +23,8 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 
 	private static final String TESTDATEN = """
 			2    , 2018 , true
-			999  , 2018 , false
-			-1   , 2018 , false
+			1    , 2000 , true
+			1    , 2018 , false
 		""";
 
 	/** Stammdaten der Schule */
