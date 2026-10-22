@@ -35,6 +35,7 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Herkunftsarten;
 import de.svws_nrw.asd.types.schueler.Hochschulabschluss;
@@ -560,7 +561,7 @@ public class AggregationKlassenStatistikExport {
 			String herkunftsschulform = "";
 			String herkunftsSchulNr = "";
 			String kuerzelGrundschuleUebergangsempfehlung = "";
-			String vorigeAllgHerkunft = "";
+			String herkunftSonstigeVorherigeSchule = "";
 
 			final SchuelerLernabschnittStatistikGesamt lernabschnitt = schueler.lernabschnitte.getLast();
 			final SchuelerStatus schuelerStatus = SchuelerStatus.data().getWertByIDOrNull((long) schueler.status);
@@ -568,7 +569,7 @@ public class AggregationKlassenStatistikExport {
 				fehlermeldungen.add(this.getClass().getSimpleName()
 						+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idHerkunftSonstigeVorherigeSchule von Null: " + schueler.id);
 			} else {
-				vorigeAllgHerkunft = HerkunftSonstige.data().getWertByIDOrNull(schueler.idHerkunftSonstigeVorherigeSchule).name();
+				herkunftSonstigeVorherigeSchule = HerkunftSonstige.data().getWertByIDOrNull(schueler.idHerkunftSonstigeVorherigeSchule).name();
 			}
 			final SchuelerLernabschnittStatistikGesamt vorjahresLernabschnitt =
 					AggregationUtils.ermittelnLernabschnitt(schueler, vorjahresAbschnitte);
@@ -586,7 +587,8 @@ public class AggregationKlassenStatistikExport {
 					* ============================================================
 					*/
 					if (einschulung(lernabschnitt, schueler)
-							&& ("ES".equals(vorigeAllgHerkunft) || "AS".equals(vorigeAllgHerkunft) || "XS".equals(vorigeAllgHerkunft))) {
+							&& ("ES".equals(herkunftSonstigeVorherigeSchule) || "AS".equals(herkunftSonstigeVorherigeSchule)
+									|| "XS".equals(herkunftSonstigeVorherigeSchule))) {
 
 						herkunftsSchulNr = String.valueOf(statistikGesamt.schule.schulNr);
 						herkunftsschulform = "ES";
@@ -612,25 +614,25 @@ public class AggregationKlassenStatistikExport {
 						 * ============================================================
 						 *
 						 */
-					} else if (Arrays.asList(sonstigeHerkunftList).contains(vorigeAllgHerkunft)) {
+					} else if (Arrays.asList(sonstigeHerkunftList).contains(herkunftSonstigeVorherigeSchule)) {
 						/*
 						 * herkunftsSchulNr
 						 */
 						if (Schulform.WB.equals(schulform)) {
 							// bleibt leer
 							herkunftsSchulNr = "";
-						} else if ("AS".equals(vorigeAllgHerkunft)) {
+						} else if ("AS".equals(herkunftSonstigeVorherigeSchule)) {
 							herkunftsSchulNr = "999000";
-						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_1).contains(vorigeAllgHerkunft)) {
+						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_1).contains(herkunftSonstigeVorherigeSchule)) {
 							herkunftsSchulNr = "980500";
-						} else if ("UN".equals(vorigeAllgHerkunft)) {
+						} else if ("UN".equals(herkunftSonstigeVorherigeSchule)) {
 							herkunftsSchulNr = "999500";
 						}
 
 						/*
 						 * herkunftsschulform
 						 */
-						if ("AS".equals(vorigeAllgHerkunft)) {
+						if ("AS".equals(herkunftSonstigeVorherigeSchule)) {
 
 							final String staatsangehoerigkeit = Nationalitaeten.data().getSchluesselByIDOrNull(schueler.idStaatsangehoerigkeit);
 							final String staatsangehoerigkeit2 = Nationalitaeten.data().getSchluesselByIDOrNull(schueler.idStaatsangehoerigkeit2);
@@ -641,16 +643,16 @@ public class AggregationKlassenStatistikExport {
 								herkunftsschulform = "XS";
 							}
 
-						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_2).contains(vorigeAllgHerkunft)) {
+						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_2).contains(herkunftSonstigeVorherigeSchule)) {
 
-							herkunftsschulform = HerkunftSonstige.data().getWertByBezeichnerOrNull(vorigeAllgHerkunft).name();
+							herkunftsschulform = HerkunftSonstige.data().getWertByBezeichnerOrNull(herkunftSonstigeVorherigeSchule).name();
 
 						}
 
 						/*
 						 * herkunftsart
 						 */
-						if ("AS".equals(vorigeAllgHerkunft)) {
+						if ("AS".equals(herkunftSonstigeVorherigeSchule)) {
 
 							if (Schulform.WB.equals(schulform) || Schulform.BK.equals(schulform) || Schulform.SB.equals(schulform)) {
 								herkunftsart = "X";
@@ -658,17 +660,17 @@ public class AggregationKlassenStatistikExport {
 								herkunftsart = "99";
 							}
 
-						} else if ("XS".equals(vorigeAllgHerkunft)) {
+						} else if ("XS".equals(herkunftSonstigeVorherigeSchule)) {
 
 							if (!Schulform.WB.equals(schulform) && !Schulform.BK.equals(schulform) && !Schulform.SB.equals(schulform)) {
 								herkunftsart = "11";
 							}
 
-						} else if ("UN".equals(vorigeAllgHerkunft)) {
+						} else if ("UN".equals(herkunftSonstigeVorherigeSchule)) {
 
 							herkunftsart = "U";
 
-						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_1).contains(vorigeAllgHerkunft)) {
+						} else if (Arrays.asList(vorigeAllgHerkunftBezeichner_1).contains(herkunftSonstigeVorherigeSchule)) {
 
 							if (istWB_BK_SB) {
 								final String herkunftsart_1_Stelle = schueler.idVorigeAbschlussart == null ? "" : schueler.idVorigeAbschlussart;
@@ -699,27 +701,81 @@ public class AggregationKlassenStatistikExport {
 						/*
 						 * herkunftsschulform
 						 */
-						if ("SK".equals(vorigeAllgHerkunft)) {
+						if (schueler.idHerkunftSchulformVorherigeSchule != null) {
+							final String herkunftSchulformVorherigeSchule =
+									HerkunftSchulform.data().getWertByIDOrNull(schueler.idHerkunftSchulformVorherigeSchule).name();
+							if ("SK".equals(herkunftSchulformVorherigeSchule)) {
 
-							herkunftsschulform = "SE";
+								herkunftsschulform = "SE";
 
-						} else if ("V".equals(vorigeAllgHerkunft)) {
+							} else if ("V".equals(herkunftSchulformVorherigeSchule)) {
 
-							final boolean jahrgangGrundschule =
-									Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_01)
-											|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_02)
-											|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_03)
-											|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_04);
+								final boolean jahrgangGrundschule =
+										Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_01)
+												|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_02)
+												|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_03)
+												|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_04);
 
-							if (jahrgangGrundschule) {
-								herkunftsschulform = "G";
+								if (jahrgangGrundschule) {
+									herkunftsschulform = "G";
+								} else {
+									herkunftsschulform = "H";
+								}
+
+							} else if ("SF".equals(herkunftSchulformVorherigeSchule)) {
+								herkunftsschulform = "XS";
 							} else {
-								herkunftsschulform = "H";
+								herkunftsschulform = HerkunftSchulform.data().getSchluesselByIDOrNull(schueler.idHerkunftSchulformVorherigeSchule);
 							}
 
-						} else {
-							herkunftsschulform = vorigeAllgHerkunft;
+						} else if ((schueler.idHerkunftSchulformVorherigeSchule == null) && (schueler.idVorherigeSchule != null)) {
+							final Long idSchulform = statistikGesamt.schulkatalog.stream()
+									.filter(schule -> schule.id == schueler.idVorherigeSchule)
+									.findFirst()
+									.map(schule -> schule.idSchulform)
+									.orElse(null);
+							if (idSchulform != null) {
+								final String schulform_Bezeichner =
+										HerkunftSchulform.data().getWertByIDOrNull(idSchulform) == null ? null
+												: HerkunftSchulform.data().getWertByIDOrNull(idSchulform).name();
+								if (schulform_Bezeichner != null) {
+									if ("SK".equals(schulform_Bezeichner)) {
+										herkunftsschulform = "SE";
+									} else if ("V".equals(schulform_Bezeichner)) {
+
+										final boolean jahrgangGrundschule =
+												Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang)).equals(Jahrgaenge.JAHRGANG_01)
+														|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang))
+																.equals(Jahrgaenge.JAHRGANG_02)
+														|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang))
+																.equals(Jahrgaenge.JAHRGANG_03)
+														|| Jahrgaenge.data().getWertByID(jahrgangIdMap.get(lernabschnitt.idJahrgang))
+																.equals(Jahrgaenge.JAHRGANG_04);
+
+										if (jahrgangGrundschule) {
+											herkunftsschulform = "G";
+										} else {
+											herkunftsschulform = "H";
+										}
+
+									} else {
+										herkunftsschulform = HerkunftSchulform.data().getSchluesselByIDOrNull(idSchulform);
+									}
+								} else {
+									herkunftsschulform = "";
+									fehlermeldungen.add(this.getClass().getSimpleName()
+											+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine HerkunftSchulform von Null: " + schueler.id);
+								}
+
+							} else {
+								herkunftsschulform = "";
+								fehlermeldungen.add(this.getClass().getSimpleName()
+										+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine Schulkatalog-idSchulform von Null: " + schueler.id);
+							}
+
+
 						}
+
 
 						/*
 						 * herkunftsart
@@ -741,7 +797,8 @@ public class AggregationKlassenStatistikExport {
 							final boolean jahrgang05 = Jahrgaenge.JAHRGANG_05.name().equals(jahrgangBezeichner);
 							final boolean jahrgang06 = Jahrgaenge.JAHRGANG_06.name().equals(jahrgangBezeichner);
 							final boolean relevanteHerkunft =
-									"G".equals(vorigeAllgHerkunft) || "V".equals(vorigeAllgHerkunft) || "PS".equals(vorigeAllgHerkunft);
+									"G".equals(herkunftSonstigeVorherigeSchule) || "V".equals(herkunftSonstigeVorherigeSchule)
+											|| "PS".equals(herkunftSonstigeVorherigeSchule);
 							final String vorigeArtLetzteVersetzung = schueler.vorigeArtLetzteVersetzung;
 							final boolean versetzt = "VERSETZT".equals(vorigeArtLetzteVersetzung);
 							final boolean vorversetzt = "VORVERSETZT".equals(vorigeArtLetzteVersetzung);
@@ -804,7 +861,8 @@ public class AggregationKlassenStatistikExport {
 
 						// Normalfall
 						herkunftsschulform = Schulform.SK.equals(schulform) ? "SE" : schulform.name();
-						herkunftsart = ermittelnHerkunftsart(Versetzungsvermerk.data().getSchluesselByIDOrNull(vorjahresLernabschnitt.idVersetzungsvermerk));
+						herkunftsart = istWB_BK_SB ? ermittelnHerkunftsart_BK_Schulen(vorjahresLernabschnitt.idVersetzungsvermerk, schueler)
+								: ermittelnHerkunftsart_A_Schulen(vorjahresLernabschnitt.idVersetzungsvermerk);
 					}
 
 					/*
@@ -883,24 +941,25 @@ public class AggregationKlassenStatistikExport {
 
 
 
-	private String ermittelnHerkunftsart(final String schluessel) {
+	private static String ermittelnHerkunftsart_A_Schulen(final Long idVersetzungsvermerk) {
+		final String schluessel = Versetzungsvermerk.data().getSchluesselByIDOrNull(idVersetzungsvermerk);
+		return schluessel == null ? "" : schluessel;
+	}
 
-		if (schluessel == null) {
-			return "";
+	private String ermittelnHerkunftsart_BK_Schulen(final Long idVersetzungsvermerk, final SchuelerStatistikGesamt schueler) {
+		String bezeichner = "";
+		if ((idVersetzungsvermerk == null) || (Versetzungsvermerk.data().getWertByIDOrNull(idVersetzungsvermerk) == null)) {
+			fehlermeldungen.add(this.getClass().getSimpleName()
+					+ ": Der SchuelerStatistikGesamt-Satz mit folgender ID hat eine idVersetzungsvermerk von Null: " + schueler.id);
+		} else {
+			bezeichner = Versetzungsvermerk.data().getWertByIDOrNull(idVersetzungsvermerk).name();
 		}
+		return switch (bezeichner) {
+			case "VERSETZT", "VERSETZT_ANFORERUNGEN_UNERFUELLT", "VORVERSETZT", "ABSCHLUSS" -> "V";
+			case "FREIWILLIG_ZURUECK", "NICHT_VERSETZT", "NICHT_VERSETZT_NACHPRUEFUNG" -> "W";
+			default -> "";
+		};
 
-		if (Schulform.WB.equals(schulform)
-				|| Schulform.BK.equals(schulform)
-				|| Schulform.SB.equals(schulform)) {
-
-			return switch (schluessel) {
-				case "A", "V", "VN", "VV" -> "V";
-				case "FR", "N", "NP" -> "W";
-				default -> "";
-			};
-		}
-
-		return schluessel;
 	}
 
 	private void erstellenKlassenWohnorteStatistikExport(final List<SchuelerStatistikGesamt> value,
