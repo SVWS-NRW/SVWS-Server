@@ -23,4 +23,11 @@ public interface LehrerRepository extends Repository<DTOLehrer> {
 	 */
 	boolean existsById(Long idLehrer);
 
+	/**
+	 * Gibt die IDs aller Lehrer zurück.
+	 *
+	 * @return die aufsteigend sortierten IDs aller Lehrer
+	 */
+	List<Long> getAllIds();
+
 }

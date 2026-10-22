@@ -6,6 +6,7 @@ import de.svws_nrw.controller.lehrer.fachrichtung.LehrerFachrichtungController;
 import de.svws_nrw.controller.lehrer.funktion.LehrerFunktionController;
 import de.svws_nrw.controller.lehrer.lehramt.LehrerLehramtController;
 import de.svws_nrw.controller.lehrer.lehrbefaehigung.LehrerLehrbefaehigungController;
+import de.svws_nrw.controller.lehrer.lernplattform.LehrerLernplattformController;
 import de.svws_nrw.controller.lehrer.mehrleistung.LehrerMehrleistungController;
 import de.svws_nrw.controller.lehrer.minderleistung.LehrerMinderleistungController;
 import de.svws_nrw.controller.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenController;
@@ -69,7 +70,7 @@ class LehrerControllerFactoryTest {
 	@Test
 	@DisplayName("withReadAccess | DBBenutzerUtils wird mit STABLE und LEHRER_PERSONALDATEN_ANSEHEN aufgerufen")
 	void withReadAccess() {
-		final var factory = LehrerControllerFactory.withReadAccess(request);
+		final var factory = LehrerControllerFactory.withReadAccessStable(request);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
 				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN)), times(1));
@@ -79,10 +80,30 @@ class LehrerControllerFactoryTest {
 	@Test
 	@DisplayName("withWriteAccess | DBBenutzerUtils wird mit STABLE und LEHRER_PERSONALDATEN_AENDERN aufgerufen")
 	void withWriteAccess() {
-		final var factory = LehrerControllerFactory.withWriteAccess(request);
+		final var factory = LehrerControllerFactory.withWriteAccessStable(request);
 
 		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
 				eq(request), eq(ServerMode.STABLE), eq(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withReadAccessDev | DBBenutzerUtils wird mit DEV und LEHRERDATEN_ANSEHEN aufgerufen")
+	void withReadAccessDev() {
+		final var factory = LehrerControllerFactory.withReadAccessDev(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withWriteAccessDev | DBBenutzerUtils wird mit DEV und LEHRERDATEN_AENDERN aufgerufen")
+	void withWriteAccessDev() {
+		final var factory = LehrerControllerFactory.withWriteAccessDev(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), eq(ServerMode.DEV), eq(BenutzerKompetenz.LEHRERDATEN_AENDERN)), times(1));
 		assertNotNull(factory);
 	}
 
@@ -94,7 +115,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerUnterrichtsfachController | gibt einen Controller zurück")
 	void getLehrerUnterrichtsfachController() {
 		final LehrerUnterrichtsfachController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerUnterrichtsfachController();
 
 		assertNotNull(controller);
@@ -104,7 +125,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerAnrechnungsstundenController | gibt einen Controller zurück")
 	void getLehrerAnrechnungsstundenController() {
 		final LehrerAnrechnungsstundenController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerAnrechnungsstundenController();
 
 		assertNotNull(controller);
@@ -114,7 +135,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerMehrleistungController | gibt einen Controller zurück")
 	void getLehrerMehrleistungController() {
 		final LehrerMehrleistungController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerMehrleistungController();
 
 		assertNotNull(controller);
@@ -124,7 +145,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerMinderleistungController | gibt einen Controller zurück")
 	void getLehrerMinderleistungController() {
 		final LehrerMinderleistungController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerMinderleistungController();
 
 		assertNotNull(controller);
@@ -134,7 +155,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerPersonalabschnittsdatenController | gibt einen Controller zurück")
 	void getLehrerPersonalabschnittsdatenController() {
 		final LehrerPersonalabschnittsdatenController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerPersonalabschnittsdatenController();
 
 		assertNotNull(controller);
@@ -144,7 +165,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerFunktionController | gibt einen Controller zurück")
 	void getLehrerFunktionController() {
 		final LehrerFunktionController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerFunktionController();
 
 		assertNotNull(controller);
@@ -154,7 +175,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerFachrichtungController | gibt einen Controller zurück")
 	void getLehrerFachrichtungController() {
 		final LehrerFachrichtungController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerFachrichtungController();
 
 		assertNotNull(controller);
@@ -164,7 +185,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerLehrbefaehigungController | gibt einen Controller zurück")
 	void getLehrerLehrbefaehigungController() {
 		final LehrerLehrbefaehigungController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerLehrbefaehigungController();
 
 		assertNotNull(controller);
@@ -174,7 +195,7 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerLehramtController | gibt einen Controller zurück")
 	void getLehrerLehramtController() {
 		final LehrerLehramtController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerLehramtController();
 
 		assertNotNull(controller);
@@ -184,8 +205,18 @@ class LehrerControllerFactoryTest {
 	@DisplayName("getLehrerPersonaldatenController | gibt einen Controller zurück")
 	void getLehrerPersonaldatenController() {
 		final LehrerPersonaldatenController controller = LehrerControllerFactory
-				.withReadAccess(request)
+				.withReadAccessStable(request)
 				.getLehrerPersonaldatenController();
+
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("getLehrerLernplattformController | gibt einen Controller zurück")
+	void getLehrerLernplattformController() {
+		final LehrerLernplattformController controller = LehrerControllerFactory
+				.withReadAccessDev(request)
+				.getLehrerLernplattformController();
 
 		assertNotNull(controller);
 	}

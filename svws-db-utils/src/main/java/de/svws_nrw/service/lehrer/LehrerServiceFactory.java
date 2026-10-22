@@ -7,6 +7,7 @@ import de.svws_nrw.mapper.lehrer.foto.LehrerFotoMapper;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.mapper.lehrer.lehramt.LehrerLehramtMapper;
 import de.svws_nrw.mapper.lehrer.lehrbefaehigung.LehrerLehrbefaehigungMapper;
+import de.svws_nrw.mapper.lehrer.lernplattform.LehrerLernplattformMapper;
 import de.svws_nrw.mapper.lehrer.mehrleistung.LehrerMehrleistungMapper;
 import de.svws_nrw.mapper.lehrer.minderleistung.LehrerMinderleistungMapper;
 import de.svws_nrw.mapper.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenMapper;
@@ -22,6 +23,7 @@ import de.svws_nrw.service.lehrer.foto.LehrerFotoService;
 import de.svws_nrw.service.lehrer.funktion.LehrerFunktionService;
 import de.svws_nrw.service.lehrer.lehramt.LehrerLehramtService;
 import de.svws_nrw.service.lehrer.lehrbefaehigung.LehrerLehrbefaehigungService;
+import de.svws_nrw.service.lehrer.lernplattform.LehrerLernplattformService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungService;
 import de.svws_nrw.service.lehrer.mehrleistung.LehrerMehrleistungServiceKontext;
 import de.svws_nrw.service.lehrer.minderleistung.LehrerMinderleistungService;
@@ -250,6 +252,21 @@ public final class LehrerServiceFactory {
 				LehrerPersonaldatenMapper.INSTANCE,
 				this.getLehrerPersonalabschnittsdatenService(),
 				this.getLehrerLehramtService()
+		);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link LehrerLernplattformService}.
+	 *
+	 * @return ein neuer {@code LehrerLernplattformService}
+	 */
+	public LehrerLernplattformService getLehrerLernplattformService() {
+		return new LehrerLernplattformService(
+				lehrerRepositoryFactory.getLehrerLernplattformRepository(),
+				lehrerRepositoryFactory.getLehrerRepository(),
+				katalogRepositoryFactory.getLernplattformRepository(),
+				katalogRepositoryFactory.getLernplattformCredentialRepository(),
+				LehrerLernplattformMapper.INSTANCE
 		);
 	}
 

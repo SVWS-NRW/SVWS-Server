@@ -149,4 +149,16 @@ class LehrerServiceFactoryTest {
 		assertNotNull(service);
 	}
 
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerLernplattformService den Service korrekt erstellt")
+	void getLehrerLernplattformService() {
+		final var service = serviceFactory.getLehrerLernplattformService();
+		assertNotNull(service);
+
+		verify(repoLehrerFactory).getLehrerLernplattformRepository();
+		verify(repoLehrerFactory).getLehrerRepository();
+		verify(katalogRepositoryFactory).getLernplattformRepository();
+		verify(katalogRepositoryFactory).getLernplattformCredentialRepository();
+	}
+
 }

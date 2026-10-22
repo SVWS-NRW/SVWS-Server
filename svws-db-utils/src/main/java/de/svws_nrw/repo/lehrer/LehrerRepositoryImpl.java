@@ -36,4 +36,9 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 		return conn.existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, idLehrer);
 	}
 
+	@Override
+	public List<Long> getAllIds() {
+		return conn.queryList("SELECT e.ID FROM DTOLehrer e ORDER BY e.ID", Long.class);
+	}
+
 }

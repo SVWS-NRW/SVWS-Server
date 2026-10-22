@@ -53,6 +53,7 @@ class LehrerRepositoryFactoryTest {
 		assertNotNull(factory.getLehrerPersonaldatenLehramtFachrichtungRepository());
 		assertNotNull(factory.getLehrerPersonaldatenLehramtLehrbefaehigungenRepository());
 		assertNotNull(factory.getLeitungsfunktionRepository());
+		assertNotNull(factory.getLehrerLernplattformRepository());
 		assertNotNull(factory.getLehrerFunktionRepository());
 	}
 

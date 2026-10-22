@@ -25,6 +25,8 @@ import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepos
 import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepositoryImpl;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
 import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepositoryImpl;
+import de.svws_nrw.repo.lehrer.lernplattform.LehrerLernplattformRepository;
+import de.svws_nrw.repo.lehrer.lernplattform.LehrerLernplattformRepositoryImpl;
 import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
 import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepositoryImpl;
 import de.svws_nrw.repo.lehrer.minderleistung.LehrerMinderleistungRepository;
@@ -159,6 +161,13 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 */
 	public LehrerFotoRepository getLehrerFotoRepository() {
 		return this.getOrCreate(LehrerFotoRepository.class, () -> new LehrerFotoRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * @return {@link LehrerLernplattformRepository}
+	 */
+	public LehrerLernplattformRepository getLehrerLernplattformRepository() {
+		return this.getOrCreate(LehrerLernplattformRepository.class, () -> new LehrerLernplattformRepositoryImpl(this.conn));
 	}
 
 }

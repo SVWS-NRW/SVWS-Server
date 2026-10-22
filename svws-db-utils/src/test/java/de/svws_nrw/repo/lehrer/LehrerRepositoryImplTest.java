@@ -168,4 +168,12 @@ class LehrerRepositoryImplTest {
 		verify(conn).existsBy(DTOLehrer.QUERY_BY_ID, DTOLehrer.class, id);
 	}
 
+	@Test
+	@DisplayName("getAllIds | liefert die IDs aller Lehrer")
+	void testGetAllIds() {
+		when(conn.queryList("SELECT e.ID FROM DTOLehrer e ORDER BY e.ID", Long.class)).thenReturn(List.of(1L, 2L, 3L));
+
+		assertEquals(List.of(1L, 2L, 3L), repository.getAllIds());
+	}
+
 }
