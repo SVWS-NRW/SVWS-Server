@@ -7,6 +7,7 @@ import { AdressenUtils } from "@core/core/utils/AdressenUtils";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
 import { ModelProxy } from "@ui/model/ModelProxy";
 import { useBetriebsartenState } from "@ui/states/kataloge/BetriebsartenState";
+import { useOrteState } from "@ui/states/kataloge/OrteState";
 import type { BetriebeListeManager } from "@ui/ui/manager/kataloge/BetriebeListeManager";
 import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
 import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
@@ -22,6 +23,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 
 	private readonly manager: () => BetriebeListeManager;
 	private useBetriebsartenState = useBetriebsartenState();
+	private useOrteState = useOrteState();
 
 	constructor(
 		data: () => Betrieb,
@@ -77,7 +79,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 	});
 
 	wohnort = computed<OrtKatalogEintrag | null>({
-		get: () => this.manager().orteById.get(this.proxy.idOrt ?? -1) ?? null,
+		get: () => this.useOrteState.orte.byId.get(this.proxy.idOrt ?? -1) ?? null,
 		set: (v: OrtKatalogEintrag | null) => this.proxy.idOrt = v?.id ?? null,
 	});
 

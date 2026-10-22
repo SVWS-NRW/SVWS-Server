@@ -17,12 +17,14 @@ import { routeBetriebeNeu } from "~/router/apps/schule/kataloge/betriebe/RouteBe
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { abschnittStateImpl } from "~/states/AbschnittStateImpl";
 import { benutzerStateImpl } from "~/states/BenutzerStateImpl";
+import { betriebsartenStateImpl } from "~/states/kataloge/BetriebsartenStateImpl";
+import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { schuleStateImpl } from "~/states/SchuleStateImpl";
 
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
+	manager: new BetriebeListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeBetriebeDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -40,14 +42,14 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BetriebeListeManager>>> {
-		// TODO refactor katalog to work with orteState, ...
-		const [betriebe, orte] = await Promise.all([
+		const [betriebe] = await Promise.all([
 			api.server.getBetriebe(api.schema),
-			api.server.getOrte(api.schema),
+			betriebsartenStateImpl.init(),
+			orteStateImpl.init(),
 		]);
 
 		const manager = new BetriebeListeManager(schuleStateImpl.abschnitt.id, schuleStateImpl.abschnitt.id, abschnittStateImpl.alle,
-			schuleStateImpl.schulform, betriebe, orte);
+			schuleStateImpl.schulform, betriebe);
 		return { manager };
 	}
 

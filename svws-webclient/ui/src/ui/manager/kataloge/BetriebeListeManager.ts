@@ -1,6 +1,5 @@
 import type { Schuljahresabschnitt } from "@core/asd/data/schule/Schuljahresabschnitt";
 import type { Schulform } from "@core/asd/types/schule/Schulform";
-import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
 import type { Betrieb } from "@core/core/data/schule/Betrieb";
 import type { BetriebeAnsprechpartner } from "@core/core/data/schule/BetriebeAnsprechpartner";
 import { JavaInteger } from "@core/java/lang/JavaInteger";
@@ -18,7 +17,6 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	private readonly _idsOfReferencedBetriebe: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
-	private readonly _orteById: Map<number, OrtKatalogEintrag> = new Map();
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Betrieben.
@@ -48,20 +46,11 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	 * @param schuljahresabschnitte           	die Liste der Schuljahresabschnitte
 	 * @param schulform     				  	die Schulform der Schule
 	 * @param betriebe							die Liste der Betriebe
-	 * @param betriebsarten						die Liste der Betriebsarten
-	 * @param orte								die Liste der Orte
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, betriebe: List<Betrieb>, orte: List<OrtKatalogEintrag>) {
+		schulform: Schulform | null, betriebe: List<Betrieb>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, betriebe,
 			BetriebeListeManager.comparator, BetriebeListeManager._betriebToId, BetriebeListeManager._betriebToId, []);
-		this.mapOrte(orte);
-	}
-
-	private mapOrte(orte: List<OrtKatalogEintrag>) {
-		for (const ort of orte) {
-			this._orteById.set(ort.id, ort);
-		}
 	}
 
 	/**
@@ -157,9 +146,5 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 			}
 			index++;
 		}
-	}
-
-	get orteById(): Map<number, OrtKatalogEintrag> {
-		return this._orteById;
 	}
 }

@@ -118,11 +118,10 @@
 
 	import { computed } from "vue";
 
-	import type { OrtKatalogEintrag } from "@core/core/data/kataloge/OrtKatalogEintrag";
-	import type { Betriebsart } from "@core/core/data/schule/Betriebsart";
 	import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 	import { useBenutzerState } from "@ui/states/BenutzerState";
 	import { useBetriebsartenState } from "@ui/states/kataloge/BetriebsartenState";
+	import { useOrteState } from "@ui/states/kataloge/OrteState";
 	import { SelectManager } from "@ui/ui/controls/select/manager/SelectManager";
 
 	import type { BetriebeDatenProps } from "~/components/schule/kataloge/betriebe/daten/BetriebeDatenProps";
@@ -131,23 +130,20 @@
 	const props = defineProps<BetriebeDatenProps>();
 	const benutzerState = useBenutzerState();
 	const betriebsartenState = useBetriebsartenState();
+	const orteState = useOrteState();
 
 	const hatKompetenzUpdate = computed<boolean>(() => benutzerState.benutzerHatKompetenz(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const model = new BetriebModelProxy(() => props.manager().daten(), () => props.manager(), props.patch);
 	const readonly = computed(() => !hatKompetenzUpdate.value);
-	const betriebsartenById = computed<Map<number, Betriebsart>>(() => betriebsartenState.betriebsarten.byId);
-	const orteById = computed<Map<number, OrtKatalogEintrag>>(() => props.manager().orteById);
-	const betriebsarten = computed(() => betriebsartenById.value.values());
-	const orte = computed(() => orteById.value.values());
 
 	const betriebsartenManager = new SelectManager({
-		options: betriebsarten,
+		options: computed(() => betriebsartenState.betriebsarten.list),
 		optionDisplayText: v => v.bezeichnung,
 		selectionDisplayText: v => v.bezeichnung,
 	});
 
 	const wohnortManager = new SelectManager({
-		options: orte,
+		options: computed(() => orteState.orte.list),
 		optionDisplayText: v => v.plz + ' ' + v.ortsname,
 		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
 	});
