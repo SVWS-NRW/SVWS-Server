@@ -1,3 +1,5 @@
+import { shallowRef, triggerRef } from "vue";
+
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { List } from "@core/java/util/List";
 import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
@@ -7,8 +9,8 @@ import type { PendingStateManager } from "@ui/ui/wrapper/PendingStateManager";
  */
 export class PendingStateManagerRegistry {
 
-	/** Eine Liste, um Instanzen von {@link PendingStateManager} zu halten */
-	protected pendingStateManagers: List<PendingStateManager<any>> = new ArrayList();
+	/** Eine Liste, um Instanzen von {@link PendingStateManager} zu halten. Sie ist reaktiv, damit auch spät hinzugefügte Manager zu einer Neuauswertung führen. */
+	protected pendingStateManagers = shallowRef<List<PendingStateManager<any>>>(new ArrayList());
 
 	/**
 	 * Prüft, ob es mindestens einen PendingState gibt der Pending Values bzw. ausstehende Änderungen hat
@@ -16,7 +18,7 @@ export class PendingStateManagerRegistry {
 	 * @return Liefert <code>true</code> wenn es ausstehende Änderungen gibt, ansonsten <code>false</code>
 	 */
 	public pendingStateExists(): boolean {
-		for (const ps of this.pendingStateManagers) {
+		for (const ps of this.pendingStateManagers.value) {
 			if (ps.pendingStateExists()) {
 				return true;
 			}
@@ -28,14 +30,16 @@ export class PendingStateManagerRegistry {
 	 * Entfernt alle {@link PendingStateManager} Objekte im Register.
 	 */
 	public removeAllPendingStateManager(): void {
-		this.pendingStateManagers.clear();
+		this.pendingStateManagers.value.clear();
+		triggerRef(this.pendingStateManagers);
 	}
 
 	/**
 	 * Fügt ein {@link PendingStateManager} Objekt zum Register hinzu.
 	 */
 	public addPendingStateManager(pendingStateManager: PendingStateManager<any>): void {
-		this.pendingStateManagers.add(pendingStateManager);
+		this.pendingStateManagers.value.add(pendingStateManager);
+		triggerRef(this.pendingStateManagers);
 	}
 
 }

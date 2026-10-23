@@ -30,19 +30,23 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 	await expect(headlineLocator).toContainText('Eleonora Externa');
 	await expect(subheadlineLocator).toBeHidden();
 
-	await startGruppenprozessMitSchuelern(page, ['09a Ankel Matthias', '09a Bechtel Kerstin']);
+	await startGruppenprozessMitSchuelern(page, ['09a Ankel Matthias', '09a Bechtel Kerstin'], false);
 
 	// Prüfen, ob Mehrfachauswahl mit Schülern im Titel erscheint
 	await expect(headlineLocator).toContainText('Mehrfachauswahl');
 	await expect(subheadlineLocator).toContainText('Matthias Ankel, Kerstin Bechtel');
 
 	// Prüfe richtige URL
-	await expect(page).toHaveURL(/.*\/schueler\/gruppenprozesse\/daten/);
+	await expect(page).toHaveURL(/.*\/schueler\/gruppenprozesse\/allgemeines/);
 
 	// Prüfen, ob alle Tabs angezeigt werden und der richtige Tab als Default selektiert wurde
 	const tabsLocator = page.locator('.svws-ui-tab-button');
 	await expect(tabsLocator).toContainText(['Allgemeines', 'Individualdaten']);
-	await expect(tabsLocator.locator(':scope.svws-active')).toContainText('Individualdaten');
+	await expect(tabsLocator.locator(':scope.svws-active')).toContainText('Allgemeines');
+
+	// Auf Individualdaten wechseln
+	await tabsLocator.filter({ hasText: 'Individualdaten' }).click();
+	await expect(page).toHaveURL(/.*\/schueler\/gruppenprozesse\/daten/);
 
 	// Prüfen ob alle Individualdaten Content-Cards angezeigt werden
 	await expect(page.locator('.content-card--header'))
