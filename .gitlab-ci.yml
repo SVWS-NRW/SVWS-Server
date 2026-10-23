@@ -224,12 +224,17 @@ package:installer:win:snapshot:
     needs:
         - build
         - test:integration-tests
+    variables:
+        # Wine soll keine Wine-Mono/Gecko-Installation anbieten (der Dialog würde den Lauf blockieren)
+        WINEDLLOVERRIDES: "mscoree,mshtml="
     before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - mkdir artifacts_windows
+        # Der Inno-Setup-Installer (Task extractInnoSetup) legt auch bei /VERYSILENT ein Fenster an. Der Wine-Container hat kein Display, daher wird ein virtuelles Display (Xvfb) bereitgestellt.
+        - apt-get update -qq && apt-get install -y -qq xvfb
     script:
-        - ./gradlew :deployment:windows-installer:doZip
+        - xvfb-run -a ./gradlew :deployment:windows-installer:doZip
     after_script:
         - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
     cache:
@@ -249,12 +254,17 @@ package:installer:win:release:
     stage: package
     needs:
         - build
+    variables:
+        # Wine soll keine Wine-Mono/Gecko-Installation anbieten (der Dialog würde den Lauf blockieren)
+        WINEDLLOVERRIDES: "mscoree,mshtml="
     before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - mkdir artifacts_windows
+        # Der Inno-Setup-Installer (Task extractInnoSetup) legt auch bei /VERYSILENT ein Fenster an. Der Wine-Container hat kein Display, daher wird ein virtuelles Display (Xvfb) bereitgestellt.
+        - apt-get update -qq && apt-get install -y -qq xvfb
     script:
-        - ./gradlew :deployment:windows-installer:doZip
+        - xvfb-run -a ./gradlew :deployment:windows-installer:doZip
     after_script:
         - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
     cache:

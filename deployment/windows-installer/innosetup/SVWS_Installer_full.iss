@@ -71,6 +71,7 @@ Source: "files\adminclient\*"; DestDir: "{code:GetDataDir}\adminclient"; Flags: 
 Source: "files\jar\*"; DestDir: "{app}/svws-server"; Flags: recursesubdirs
 Source: "check_port.cmd"; DestDir: "{app}"
 Source: "files/run_server.cmd"; DestDir: "{app}"
+Source: "files/svws_server.args"; DestDir: "{app}"
 Source: "files/config_writer.cmd"; DestDir: "{app}"
 Source: "firewall_add.cmd"; DestDir: "{app}"
 Source: "firewall_remove.cmd"; DestDir: "{app}"

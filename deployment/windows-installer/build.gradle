@@ -93,25 +93,32 @@ task downloadSVWSClient(type: Copy) {
 }
 
 
-task downloadJarsAll(type: Copy) {
+// Sync statt Copy: im Zielverzeichnis dürfen nur die aktuellen Jars liegen (keine Reste älterer Versionen aus früheren Builds)
+task downloadJarsAll(type: Sync) {
 	dependsOn(':svws-server-app:collectJars')
 	dependsOn downloadSVWSClient
 	dependsOn downloadSVWSAdminClient
+	def confImplementationServerApp = configurations.extendedImplementation
 	into("download/svws-" + project.version + "/jar/")
 	into("/") {
+		// Nur Jars, die auch im generierten Classpath (run_server.cmd) stehen. Der Dateiname enthält die Version.
 		from(project(':svws-server-app').layout.buildDirectory.dir('libs')) {
-			include '*.jar'
+			include { f -> !f.isDirectory() && confImplementationServerApp.collect { t -> t.getName() }.contains(f.name) }
 		}
 	}
 
 	def fileRunServer_Win = file(downloadDir + "/run_server.cmd")
 	def fileRunServer_Linux = file(downloadDir + "/run_server.sh")
 	def fileConfigWriter_Win = file(downloadDir + "/config_writer.cmd")
-	def confImplementationServerApp = configurations.extendedImplementation
+	// Der Classpath steht in einer Java-Argumentdatei (@-Datei). Dadurch ist die Befehlszeile in den cmd-Dateien kurz und das Limit von 8191 Zeichen
+	// der Eingabeaufforderung spielt keine Rolle. In Argumentdateien ist der Backslash in Anführungszeichen ein Escape-Zeichen, daher nur "/" verwenden.
+	def fileServerArgs = file(downloadDir + "/svws_server.args")
 	doLast {
+		fileServerArgs.text =
+			'--class-path "' + confImplementationServerApp.collect{ t -> 'svws-server/' + t.getName() }.join(';') + '"' + System.lineSeparator()
 		fileRunServer_Win.text =
 			'@echo off' + System.lineSeparator() +
-			'.\\java\\bin\\java.exe --class-path "' + confImplementationServerApp.collect{ t -> 'svws-server/' + t.getName() }.join(';') + '" de.svws_nrw.server.jetty.Main' +
+			'.\\java\\bin\\java.exe @svws_server.args de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator() +
 			'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
 			'IF %exitcode% EQU 42 (' + System.lineSeparator() +
@@ -137,7 +144,7 @@ task downloadJarsAll(type: Copy) {
 			"set keystorepassword=%7" + System.lineSeparator() +
 			"set dbhost=%8" + System.lineSeparator() +
 			"set dbport=%9" + System.lineSeparator() +
-			".\\java\\bin\\java.exe --class-path " + confImplementationServerApp.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
+			".\\java\\bin\\java.exe @svws_server.args de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
 	}
 }
 
@@ -227,10 +234,21 @@ task download {
 	dependsOn "downloadJDK"
 }
 
-task copyJARs(type: Copy) {
+// Sync statt Copy: im Installer dürfen nur die aktuellen Jars liegen
+task copyJARs(type: Sync) {
 	dependsOn "download"
 	from "download/svws-" + project.version + "/jar/"
 	into "${buildDir}/installer/files/jar/"
+
+	// Alle Jars aus dem Classpath von run_server.cmd und config_writer.cmd müssen im Installer enthalten sein, sonst startet der Dienst nicht.
+	def confImplementationServerApp = configurations.extendedImplementation
+	def jarDir = file("${buildDir}/installer/files/jar")
+	doLast {
+		def missing = confImplementationServerApp.collect { t -> t.getName() }.findAll { n -> !new File(jarDir, n).exists() }
+		if (!missing.isEmpty()) {
+			throw new GradleException("Jars aus dem Classpath fehlen im Installer (${jarDir}): ${missing.join(', ')}")
+		}
+	}
 }
 
 
@@ -253,6 +271,7 @@ task extract(type: Copy) {
 	from file("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
 	from file("${downloadDir}/run_server.cmd")
 	from file("${downloadDir}/config_writer.cmd")
+	from file("${downloadDir}/svws_server.args")
 	into "${buildDir}/installer/files/"
 }
 

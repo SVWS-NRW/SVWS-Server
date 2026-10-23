@@ -74,6 +74,8 @@ task createScripts {
 }
 
 tasks.register('collectJars', Copy) {
+	// Das Jar dieses Moduls (mit der Main-Klasse) ist nicht Teil der runtimeClasspath, muss aber im Zielverzeichnis vorhanden sein.
+	dependsOn tasks.named('jar')
 	into(this.layout.buildDirectory.dir('libs'))
 
 	from(configurations.runtimeClasspath) {
