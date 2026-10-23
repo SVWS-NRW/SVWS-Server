@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSlob00SchuelerLernabschnittsdatenOrganisationsformBerufsbildend",
+    "historie" : [ {
+      "praefix" : "SLOB00",
+      "zweig" : "Schueler-Lernabschnittsdaten-Organisationsform-Berufsbildend",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Klassen, Reiter 'Klasse'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["BK", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Organisationsform des Schülers: Kein Wert vorhanden.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.idOrganisationsform = @",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
