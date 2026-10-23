@@ -906,7 +906,7 @@ public class AggregationUvdStatistikExport {
 			if (durchlaeufe > 1) {
 				uvdExportStammsatz.folgezeilenmerkmal = "2"; // Stammsatz mit Schuelerfolgezeile
 				uvdExportStammsatz.kopplungsnummer = "001"; // Folgezeilenmerkmal und Kopplungsnummer werden fest überschrieben.
-
+				uvdExportStammsatz.schuelerInsgesamt = (kursEntry.getValue() != null) ? kursEntry.getValue().size() : 0;
 				kopplungsnr = schreibenSchuelersatz(kursMapEntry.getKey(), kursEntry, kopplungsnr, schuelerzahlenWeiblichProKursIdUndKey, firstStammItem,
 						uvdExportStammsatz, uvdExportList);
 			}
@@ -936,14 +936,6 @@ public class AggregationUvdStatistikExport {
 		uvdexportKursSchueler.folgezeilenmerkmal = "3"; // Schuelerfolgezeile
 		uvdexportKursSchueler.kopplungsnummer = String.format("%03d", kopplungsnr++);
 		uvdexportKursSchueler.schuelerInsgesamt = (kursEntry.getValue() != null) ? kursEntry.getValue().size() : 0;
-
-		final HashMap<String, Long> keyMap = schuelerzahlenWeiblichProKursIdUndKey.get(kursId);
-		if (keyMap != null) {
-			final Long count = keyMap.get(kursEntry.getKey());
-			uvdexportKursSchueler.schuelerWeiblich = (count != null) ? count.intValue() : 0;
-		} else {
-			uvdexportKursSchueler.schuelerWeiblich = 0;
-		}
 
 		if (istBK(schulform)) {
 			fuellenSchluesselFelderSchulformB(kursEntry, uvdexportKursSchueler);
