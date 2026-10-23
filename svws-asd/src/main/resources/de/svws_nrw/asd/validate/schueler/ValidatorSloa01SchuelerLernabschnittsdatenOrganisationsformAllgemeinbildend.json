@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSloa01SchuelerLernabschnittsdatenOrganisationsformAllgemeinbildend",
+    "historie" : [ {
+      "praefix" : "SLOA01",
+      "zweig" : "Schueler-Lernabschnittsdaten-Organisationsform-Allgemeinbildend",
+      "dtos" : "SchuelerLernabschnittsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Lernabschnitte', 'Allgemein'",
+      "anzeigebereich_ui" : "Feld 'Organisationsform'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SLOA00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "SR", "SG"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+	  "text" : "Organisationsform des Schülers: Das Feld 'Organisationsform' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerLernabschnittsdaten.idOrganisationsform ≠ einer id eines Eintrages in AllgemeinbildendOrganisationsformen.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
