@@ -788,7 +788,7 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss (Fachoberschulreife  mit Berechtigung z. Besuch d. gymn. Oberstufe -Qualifikationsphase-);§41(1);-10-;null;null;99;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/MSAQ-E;G;null;A;null;A;MSAQ-E:  Mittlerer Schulabschluss (Fachoberschulreife mit Berecht. zum Besuch der gymnas. Oberstufe -Einführungsphase-);§41(1);-10-;null;null;10;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_OHSA10;C;null;A;null;A;Abgangszeugnis ohne Gleichstellung zum Hauptschulabschluss nach Kl. 10;null;-10-;null;null;0;null;null
--R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/ESA;C;null;A;null;A;ESA: gleichwertiger Abschluss zum Ersten Schulabschluss;§38(4);-09-10-;null;null;0;null;null
+-R-SR-GE-H-;R/APO-SI05/5-10;R/APO-SI05/ESA;C;null;A;null;A;ESA: gleichwertiger Abschluss zum Ersten Schulabschluss;§38(4);-09-10-;null;null;0;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_OEESA;C;null;A;null;A;Abgangszeugnis ohne Gleichstellung zum Erweiterten Ersten Schulabschluss;null;-10-;null;null;0;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/HA;C;null;A;null;A;HA: gleichwertiger Abschluss zum Hauptschulabschluss;§38(4);-09-10-;null;null;0;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/FOR;F;null;A;null;A;FOR: Mittlerer Schulabschluss (Fachoberschulreife ohne Berecht. zum Besuch der gymnas. Oberstufe);§40(1);-10-;null;null;0;null;null
@@ -802,8 +802,8 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_MESA_MV;C;null;A;null;A;Abgangszeugnis mit Gleichstellung zum Ersten Schulabschluss (mit Versetzungsvermerk);null;-09-;null;null;0;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/KV5;null;null;V;null;A;Keine Versetzung von Kl. 5 nach Kl. 6;§10(1);-05-;null;null;1;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_MHSA10;D;null;A;null;A;Abgangszeugnis mit Gleichstellung zum Hauptschulabschluss nach Kl. 10;null;-10-;null;null;0;null;null
--R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/V7-9;null;null;V;null;A;Besondere Vers.-Best. für Kl. 7 bis Kl. 9;§25(1,2);-07-08-09-;null;null;1;null;null
--R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/EESA;D;null;A;null;A;EESA: gleichwertiger Abschluss zum Erweiterten Ersten Schulabschluss;§39(3);-10-;null;null;6;null;null
+-R-SR-GE-H-;R/APO-SI05/5-10;R/APO-SI05/V7-9;null;null;V;null;A;Besondere Vers.-Best. für Kl. 7 bis Kl. 9;§25(1,2);-07-08-09-;null;null;1;null;null
+-R-SR-GE-H-;R/APO-SI05/5-10;R/APO-SI05/EESA;D;null;A;null;A;EESA: gleichwertiger Abschluss zum Erweiterten Ersten Schulabschluss;§39(3);-10-;null;null;6;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_OESA;A;null;A;null;A;Abgangszeugnis ohne Gleichstellung zum Ersten Schulabschluss;null;-09-;null;null;0;null;null
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_MEESA;D;null;A;null;A;Abgangszeugnis mit Gleichstellung zum Erweiterten Ersten Schulabschluss;null;-10-;null;null;0;null;null
 -Rinaktiv-SRinaktiv-;R/APO-SI05/5-10;R/APO-SI05/MSAQ-Q;G;null;A;null;A;MSAQ-Q: Mittlerer Schulabschluss mit Berechtigung z. Besuch d. gymn. Oberstufe (Qual.Phase), APO-SI 05;§41(2);-10-;null;null;3;null;null
