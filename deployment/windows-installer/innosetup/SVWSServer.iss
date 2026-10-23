@@ -595,36 +595,45 @@ procedure DestroyServiceSVWSServer;
 
 
 
-{ Passt den Classpath in run_server.cmd und für den Windows-Service so an, dass die Konfigurationsdatei für den Server auch in commmonappdata/svws-server gefunden wird. }
+{ Passt den Classpath in der Argumentdatei svws_server.args so an, dass die Konfigurationsdatei und der Keystore des Servers auch in commmonappdata/svws-server gefunden werden.
+  Die Datei wird von run_server.cmd (Windows-Dienst) und config_writer.cmd per @svws_server.args an Java übergeben. Zusätzlich wird in run_server.cmd das Arbeitsverzeichnis gesetzt,
+  da die Classpath-Einträge relativ zum Programmverzeichnis angegeben sind. }
 procedure AdjustClasspathSVWSServer();
   var
-    codeAnsi: AnsiString;
-    code: String;
-    codeService: String;
-    filename: String;
+    argsAnsi: AnsiString;
+    cmdAnsi: AnsiString;
+    args: String;
+    cmd: String;
+    resPath: String;
+    argsFilename: String;
+    cmdFilename: String;
   begin
     Log('Ergänze ' + SVWSDataDir + '\res zum Java-Classpath des SVWS-Servers');
-    filename := ExpandConstant('{app}/run_server.cmd');
-    if LoadStringFromFile(filename, codeAnsi) then
+    argsFilename := ExpandConstant('{app}/svws_server.args');
+    cmdFilename := ExpandConstant('{app}/run_server.cmd');
+
+    // In Java-Argumentdateien ist der Backslash ein Escape-Zeichen. Daher wird der Pfad mit "/" geschrieben (Java akzeptiert das auch unter Windows).
+    resPath := SVWSDataDir + '\res';
+    StringChangeEx(resPath, '\', '/', False);
+
+    // Ergänze das Datenverzeichnis res in der Argumentdatei (nur, falls es dort nicht bereits steht)
+    if LoadStringFromFile(argsFilename, argsAnsi) then
       begin
-        code := String(codeAnsi);
-        codeService := code;
-        Log('  -> Datei zum Ergänzen geladen:' + code);
-        // Anpassungen für die Datei run_server.cmd
-        if StringChangeEx(code, '--class-path "', ExpandConstant('--class-path "' + SVWSDataDir + '\res;'), false) = 1 then
+        args := String(argsAnsi);
+        Log('  -> Datei zum Ergänzen geladen: ' + args);
+        if Pos('--class-path "' + resPath + ';', args) > 0 then
+          begin
+            Log('  -> Ergänzung ist bereits vorhanden');
+          end
+        else if StringChangeEx(args, '--class-path "', '--class-path "' + resPath + ';', False) = 1 then
           begin
             Log('  -> Ergänzung hinzugefügt');
-            code := ExpandConstant('cd {app}') + #13#10 + code;
-            codeAnsi := AnsiString(code);
-            if SaveStringToFile(filename, codeAnsi, false) then
-              begin
-                Log('  -> Fertig: Datei wieder gespeichert.');
-              end
+            argsAnsi := AnsiString(args);
+            if SaveStringToFile(argsFilename, argsAnsi, False) then
+              Log('  -> Fertig: Datei wieder gespeichert.')
             else
-              begin
-                Log('  -> Fehler beim Speichern der Datei!');
-                // TODO error
-              end;
+              Log('  -> Fehler beim Speichern der Datei!');
+              // TODO error
           end
         else
           begin
@@ -635,6 +644,31 @@ procedure AdjustClasspathSVWSServer();
     else
       begin
         Log('  -> Datei konnte nicht gelesen werden!');
+        // TODO error
+      end;
+
+    // Setze in run_server.cmd das Arbeitsverzeichnis auf das Programmverzeichnis (nur, falls es dort nicht bereits steht)
+    if LoadStringFromFile(cmdFilename, cmdAnsi) then
+      begin
+        cmd := String(cmdAnsi);
+        if Pos('cd /d "', cmd) = 1 then
+          begin
+            Log('  -> Arbeitsverzeichnis ist in run_server.cmd bereits gesetzt');
+          end
+        else
+          begin
+            cmd := ExpandConstant('cd /d "{app}"') + #13#10 + cmd;
+            cmdAnsi := AnsiString(cmd);
+            if SaveStringToFile(cmdFilename, cmdAnsi, False) then
+              Log('  -> Fertig: Arbeitsverzeichnis in run_server.cmd gesetzt.')
+            else
+              Log('  -> Fehler beim Speichern der Datei run_server.cmd!');
+              // TODO error
+          end;
+      end
+    else
+      begin
+        Log('  -> Datei run_server.cmd konnte nicht gelesen werden!');
         // TODO error
       end;
   end;

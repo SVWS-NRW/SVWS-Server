@@ -15,10 +15,12 @@ task clearAppFolder(type: Delete) {
  für die Integration in der tar.gz des SVWSs.
  */
 
-task copyArtifacts(type: Copy) {
+// Sync statt Copy: im Zielverzeichnis dürfen nur die aktuellen Artefakte liegen (keine Reste älterer Versionen)
+task copyArtifacts(type: Sync) {
 	dependsOn clearAppFolder
 	dependsOn(':svws-server-app:collectJars')
 	description = 'Kopieren der aktuellen Artefakte'
+	def classpathJars = configurations.runtimeClasspath
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:client:doZip')
 	mustRunAfter(':svws-webclient:admin:doZip')
@@ -29,10 +31,20 @@ task copyArtifacts(type: Copy) {
 		}
 	}
 	into("/") {
+		// Nur die svws-Jars der aktuellen Version, die auch zur Classpath des Moduls gehören
 		from(project(':svws-server-app').layout.buildDirectory.dir('libs')) {
-			include 'svws-*.jar'
+			include { f -> !f.isDirectory() && f.name.startsWith('svws-') && classpathJars.collect { t -> t.getName() }.contains(f.name) }
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
+	}
+	// Alle Jars des Classpaths (svws-*.jar im App-Ordner, übrige in lib/) müssen enthalten sein, sonst startet der Server nicht.
+	doLast {
+		def missing = classpathJars.collect { t -> t.getName() }.findAll { n ->
+			!new File(n.startsWith('svws-') ? file(linuxfileAppDir) : file("${linuxfileAppDir}/lib"), n).exists()
+		}
+		if (!missing.isEmpty()) {
+			throw new GradleException("Jars aus dem Classpath fehlen im Linux-Installer (${linuxfileAppDir}): ${missing.join(', ')}")
+		}
 	}
 }
 

@@ -11,9 +11,12 @@ task dockerPushAllDockerhub() {
 
 
 /* Vorbereitung der Dateien im build-Ordner, um das SVWS-Docker-Image zu bauen. */
-task copyDockerClientArtifacts(type: Copy) {
+// Sync statt Copy: im Docker-Kontext dürfen nur die aktuellen Artefakte liegen (der Server startet mit Wildcards auf dem Classpath)
+task copyDockerClientArtifacts(type: Sync) {
 	description = 'Kopieren der aktuellen Artefakte'
 	group = "docker"
+	def classpathJars = configurations.runtimeClasspath
+	def dockerAppDir = "$projectDir/build/svws/app"
 	doFirst {
 		mkdir "$projectDir/build/svws/app/lib"
 	}
@@ -31,13 +34,23 @@ task copyDockerClientArtifacts(type: Copy) {
 		}
 	}
 	into("app/") {
+		// Nur die svws-Jars der aktuellen Version, die auch zur Classpath des Moduls gehören
 		from(project(':svws-server-app').layout.buildDirectory.dir('libs')) {
-			include 'svws-*.jar'
+			include { f -> !f.isDirectory() && f.name.startsWith('svws-') && classpathJars.collect { t -> t.getName() }.contains(f.name) }
 		}
 		from "../../svws-webclient/client/build/SVWS-Client.zip", "../../svws-webclient/admin/build/SVWS-Admin-Client.zip"
 	}
 	into("/") {
 		from "$projectDir/svws/Dockerfile", "$projectDir/svws/startup.sh", "$projectDir/svws/svwsconfig-template.json", "$projectDir/svws/svwsconfig-template-nodb.json"
+	}
+	// Alle Jars des Classpaths (svws-*.jar in app/, übrige in app/lib/) müssen enthalten sein, sonst startet der Server im Container nicht.
+	doLast {
+		def missing = classpathJars.collect { t -> t.getName() }.findAll { n ->
+			!new File(n.startsWith('svws-') ? file(dockerAppDir) : file("${dockerAppDir}/lib"), n).exists()
+		}
+		if (!missing.isEmpty()) {
+			throw new GradleException("Jars aus dem Classpath fehlen im Docker-Kontext (${dockerAppDir}): ${missing.join(', ')}")
+		}
 	}
 }
 
