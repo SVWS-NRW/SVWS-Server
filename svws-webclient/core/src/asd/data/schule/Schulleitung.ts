@@ -9,7 +9,7 @@ export class Schulleitung extends JavaObject {
 	public id: number = -1;
 
 	/**
-	 * Die ID der Leitungsfunktion des Lehrers.
+	 * Die ID der Leitungsfunktion des Lehrers aus dem Core-Type LehrerLeitungsfunktion (1 = Schulleitung, 2 = Stellvertretende Schulleitung).
 	 */
 	public idLeitungsfunktion: number = 0;
 

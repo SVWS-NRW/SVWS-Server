@@ -1,0 +1,48 @@
+import type { SchulinterneFunktion } from "@core/core/data/schule/SchulinterneFunktion";
+import { JavaInteger } from "@core/java/lang/JavaInteger";
+import { ModelProxy } from "@ui/model/ModelProxy";
+import type { SchulinterneFunktionenListeManager } from "@ui/ui/manager/kataloge/SchulinterneFunktionenListeManager";
+import { ValidatorInputRequired } from "@ui/validation/common/ValidatorInputRequired";
+import { ValidatorNumberRange } from "@ui/validation/common/ValidatorNumberRange";
+import { ValidatorStringIsUniqueInList } from "@ui/validation/common/ValidatorStringIsUniqueInList";
+import { ValidatorStringLength } from "@ui/validation/common/ValidatorStringLength";
+import { StringPattern, ValidatorStringMatchesPattern } from "@ui/validation/common/ValidatorStringMatchesPattern";
+
+/**
+ * ModelProxy für schulinterne Funktionen
+ */
+export class SchulinterneFunktionenModelProxy extends ModelProxy<SchulinterneFunktion> {
+
+	private readonly manager: () => SchulinterneFunktionenListeManager;
+
+	/**
+	 * ModelProxy für schulinterne Funktionen
+	 *
+	 * @param data 			Lambda für den Zugriff auf die Original-Daten
+	 * @param manager 		Manager
+	 * @param patch 		Methode zum Patchen einzelner Attribute
+	 */
+	constructor(
+		data: () => SchulinterneFunktion,
+		manager: () => SchulinterneFunktionenListeManager,
+		patch?: (data: Partial<SchulinterneFunktion>) => Promise<boolean>
+	) {
+		const listOfAutopatchProps: Iterable<keyof SchulinterneFunktion> = ['istSichtbar'];
+		super({ data, patch, listOfAutopatchProps });
+		this.manager = manager;
+		this.addValidatoren();
+		this.validate();
+	}
+
+	private addValidatoren() {
+		this.addBlockingValidator(new ValidatorStringIsUniqueInList(() => this.proxy, (data: SchulinterneFunktion) => data.id, (data: SchulinterneFunktion) => data.bezeichnung, () => this.manager().liste.list(), false), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringLength(() => this.proxy.bezeichnung, null, 50), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorInputRequired(() => this.proxy.bezeichnung), 'bezeichnung');
+		this.addBlockingValidator(new ValidatorStringMatchesPattern(() => this.proxy.bezeichnung, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'bezeichnung');
+		// sortierung
+		this.addBlockingValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+		this.addBlockingValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, JavaInteger.MAX_VALUE), "sortierung");
+	}
+
+
+}

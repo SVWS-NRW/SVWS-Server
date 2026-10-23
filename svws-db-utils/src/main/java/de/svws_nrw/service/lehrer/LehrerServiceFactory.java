@@ -201,7 +201,7 @@ public final class LehrerServiceFactory {
 		return new LehrerFunktionService(
 				lehrerRepositoryFactory.getLehrerFunktionRepository(),
 				lehrerRepositoryFactory.getLehrerPersonalabschnittsdatenRepository(),
-				lehrerRepositoryFactory.getLeitungsfunktionRepository(),
+				eigeneSchuleRepositoryFactory.getSchulinterneFunktionRepository(),
 				LehrerFunktionMapper.INSTANCE
 		);
 	}

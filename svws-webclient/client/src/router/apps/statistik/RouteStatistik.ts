@@ -21,11 +21,11 @@ import { haltestellenStateImpl } from "~/states/kataloge/HaltestellenStateImpl";
 import { herkunftschulenStateImpl } from "~/states/kataloge/HerkunftschulenStateImpl";
 import { jahrgaengeStateImpl } from "~/states/kataloge/JahrgaengeStateImpl";
 import { kindergaertenStateImpl } from "~/states/kataloge/KindergaertenStateImpl";
-import { leitungsfunktionenStateImpl } from "~/states/kataloge/LeitungsfunktionenStateImpl";
 import { lernplattformenStateImpl } from "~/states/kataloge/LernplattformenStateImpl";
 import { merkmaleStateImpl } from "~/states/kataloge/MerkmaleStateImpl";
 import { orteStateImpl } from "~/states/kataloge/OrteStateImpl";
 import { religionenStateImpl } from "~/states/kataloge/ReligionenStateImpl";
+import { schulinterneFunktionenStateImpl } from "~/states/kataloge/SchulinterneFunktionenStateImpl";
 import { telefonartenStateImpl } from "~/states/kataloge/TelefonartenStateImpl";
 import { vermerkartenStateImpl } from "~/states/kataloge/VermerkartenStateImpl";
 import { statistikStateImpl } from "~/states/statistik/StatistikStateImpl";
@@ -69,7 +69,7 @@ export class RouteStatistik extends RouteNode<RouteDataStatistik, RouteApp> {
 				haltestellenStateImpl.init(),
 				jahrgaengeStateImpl.init(),
 				kindergaertenStateImpl.init(),
-				leitungsfunktionenStateImpl.init(),
+				schulinterneFunktionenStateImpl.init(),
 				lernplattformenStateImpl.init(),
 				merkmaleStateImpl.init(),
 				orteStateImpl.init(),

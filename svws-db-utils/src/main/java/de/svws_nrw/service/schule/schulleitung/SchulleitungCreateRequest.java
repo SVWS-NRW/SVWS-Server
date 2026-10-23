@@ -16,8 +16,8 @@ public class SchulleitungCreateRequest {
 	@NotNull
 	public Long idLehrer;
 
-	/** Die ID der Leitungsfunktion aus dem Katalog K_Schulfunktionen (z. B. 1 = Schulleitung, 2 = Koordination, 3 = Schulverwaltung). */
-	@Schema(description = "Die ID der Leitungsfunktion aus dem Katalog der Leitungsfunktionen (K_Schulfunktionen).", example = "1")
+	/** Die ID der Leitungsfunktion aus dem Core-Type LehrerLeitungsfunktion (1 = Schulleitung, 2 = Stellvertretende Schulleitung). */
+	@Schema(description = "Die ID der Leitungsfunktion aus dem Core-Type LehrerLeitungsfunktion (1 = Schulleitung, 2 = Stellvertretende Schulleitung).", example = "1")
 	@NotNull
 	public Long idLeitungsfunktion;
 

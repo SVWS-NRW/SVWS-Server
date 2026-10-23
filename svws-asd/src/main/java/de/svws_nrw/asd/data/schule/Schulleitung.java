@@ -18,8 +18,8 @@ public class Schulleitung {
 	@Schema(description = "die ID des Eintrags für die Schulleitungsfunktion", example = "4711")
 	public long id = -1;
 
-	/** Die ID der Leitungsfunktion des Lehrers. */
-	@Schema(description = "die ID der Leitungsfunktion des Lehrers", example = "1")
+	/** Die ID der Leitungsfunktion des Lehrers aus dem Core-Type LehrerLeitungsfunktion (1 = Schulleitung, 2 = Stellvertretende Schulleitung). */
+	@Schema(description = "die ID der Leitungsfunktion des Lehrers aus dem Core-Type LehrerLeitungsfunktion (1 = Schulleitung, 2 = Stellvertretende Schulleitung)", example = "1")
 	public long idLeitungsfunktion;
 
 	/** Die Bezeichnung der Leitungsfunktion (max. 255 Zeichen) */

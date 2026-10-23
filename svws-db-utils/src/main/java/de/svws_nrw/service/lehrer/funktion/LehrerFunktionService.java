@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchulinterneFunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import de.svws_nrw.service.utils.BulkDeleteUtils;
 import jakarta.ws.rs.core.Response;
@@ -26,24 +26,24 @@ public final class LehrerFunktionService {
 	private static final String LEHRERFUNKTION_NOT_FOUND_BY_ID = "Keine Lehrerfunktion mit der ID %d gefunden.";
 	private final LehrerFunktionRepository repo;
 	private final LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo;
-	private final LehrerLeitungsfunktionRepository leitungsfunktionRepo;
+	private final SchulinterneFunktionRepository schulinterneFunktionRepo;
 	private final LehrerFunktionMapper mapper;
 
 	/**
 	 * Erstellt einen neuen {@code LehrerFunktionService}.
 	 *
-	 * @param repo                  das Repository für {@link DTOLehrerFunktion}-Einträge
-	 * @param abschnittsdatenRepo   das Repository für {@link DTOLehrerAbschnittsdaten}-Einträge
-	 * @param leitungsfunktionRepo  das Repository für {@link DTOLeitungsfunktion}-Einträge
-	 * @param mapper                der Mapper zur Konvertierung zwischen Entity und API-Modell
+	 * @param repo                      das Repository für {@link DTOLehrerFunktion}-Einträge
+	 * @param abschnittsdatenRepo       das Repository für {@link DTOLehrerAbschnittsdaten}-Einträge
+	 * @param schulinterneFunktionRepo  das Repository für {@link DTOSchulinterneFunktion}-Einträge
+	 * @param mapper                    der Mapper zur Konvertierung zwischen Entity und API-Modell
 	 */
 	public LehrerFunktionService(final LehrerFunktionRepository repo,
 			final LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo,
-			final LehrerLeitungsfunktionRepository leitungsfunktionRepo,
+			final SchulinterneFunktionRepository schulinterneFunktionRepo,
 			final LehrerFunktionMapper mapper) {
 		this.repo = repo;
 		this.abschnittsdatenRepo = abschnittsdatenRepo;
-		this.leitungsfunktionRepo = leitungsfunktionRepo;
+		this.schulinterneFunktionRepo = schulinterneFunktionRepo;
 		this.mapper = mapper;
 	}
 
@@ -120,9 +120,9 @@ public final class LehrerFunktionService {
 			throw new ApiOperationException(Response.Status.NOT_FOUND,
 					"Keine Lehrerabschnittsdaten mit der ID %d gefunden.".formatted(dto.idAbschnittsdaten));
 		}
-		if (this.leitungsfunktionRepo.findById(dto.idFunktion).isEmpty()) {
+		if (this.schulinterneFunktionRepo.findById(dto.idFunktion).isEmpty()) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND,
-					"Keine Leitungsfunktion mit der ID %d gefunden.".formatted(dto.idFunktion));
+					"Keine schulinterne Funktion mit der ID %d gefunden.".formatted(dto.idFunktion));
 		}
 		if (this.repo.existsByIdAbschnittAndIdFunktion(dto.idAbschnittsdaten, dto.idFunktion)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST,
@@ -179,9 +179,9 @@ public final class LehrerFunktionService {
 
 	private void validatePatch(final DTOLehrerFunktion entity, final LehrerFunktionPatchRequest dto) {
 		dto.idFunktion.ifPresent(idFunktion -> {
-			if (this.leitungsfunktionRepo.findById(idFunktion).isEmpty()) {
+			if (this.schulinterneFunktionRepo.findById(idFunktion).isEmpty()) {
 				throw new ApiOperationException(Response.Status.NOT_FOUND,
-						"Keine Leitungsfunktion mit der ID %d gefunden.".formatted(idFunktion));
+						"Keine schulinterne Funktion mit der ID %d gefunden.".formatted(idFunktion));
 			}
 			if (this.repo.existsByIdAbschnittAndIdFunktionExcludingId(entity.idAbschnittsdaten, idFunktion, entity.id)) {
 				throw new ApiOperationException(Response.Status.BAD_REQUEST,

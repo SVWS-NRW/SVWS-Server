@@ -149,7 +149,6 @@ import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/Lehrer
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
 import { LehrerUnterrichtsfach } from '../core/data/lehrer/LehrerUnterrichtsfach';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
-import { Leitungsfunktion } from '../core/data/schule/Leitungsfunktion';
 import { Lernplattform } from '../core/data/schule/Lernplattform';
 import { List } from '../java/util/List';
 import { Logo } from '../core/data/schule/Logo';
@@ -203,6 +202,7 @@ import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag
 import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag } from '../asd/data/schule/SchulformKatalogEintrag';
 import { SchulgliederungKatalogEintrag } from '../asd/data/schule/SchulgliederungKatalogEintrag';
+import { SchulinterneFunktion } from '../core/data/schule/SchulinterneFunktion';
 import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SchulwechselAbgang } from '../core/data/schule/SchulwechselAbgang';
@@ -17731,122 +17731,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLeitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktionen
-	 *
-	 * Gibt die Leitungsfunktionen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste der Leitungsfunktionen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Leitungsfunktion>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste der Leitungsfunktionen.
-	 */
-	public async getLeitungsfunktionen(schema: string): Promise<List<Leitungsfunktion>> {
-		const path = "/db/{schema}/schule/leitungsfunktionen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result: string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Leitungsfunktion>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(Leitungsfunktion.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchLeitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktionen/{id : \d+}
-	 *
-	 * Patched die Leitungsfunktion mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Der Patch wurde erfolgreich integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Leitungsfunktion>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchLeitungsfunktion(data: Partial<Leitungsfunktion>, schema: string, id: number): Promise<void> {
-		const path = "/db/{schema}/schule/leitungsfunktionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body: string = Leitungsfunktion.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addLeitungsfunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktionen/create
-	 *
-	 * Erstellt eine neue Leitungsfunktion, insofern die notwendigen Berechtigungen vorliegen
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Die Leitungsfunktion wurde erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Leitungsfunktion
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktionen anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Leitungsfunktion>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Leitungsfunktion wurde erfolgreich hinzugefügt.
-	 */
-	public async addLeitungsfunktion(data: Partial<Leitungsfunktion>, schema: string): Promise<Leitungsfunktion> {
-		const path = "/db/{schema}/schule/leitungsfunktionen/create"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = Leitungsfunktion.transpilerToJSONPatch(data);
-		const result: string = await super.postJSON(path, body);
-		const text = result;
-		return Leitungsfunktion.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteLeitungsfunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/leitungsfunktionen/delete/multiple
-	 *
-	 * Entfernt mehrere Leitungsfunktionen, insofern die notwendigen Berechtigungen vorhanden sind.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktionen zu entfernen.
-	 *   Code 404: Leitungsfunktionen nicht vorhanden
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Lösch-Operationen wurden ausgeführt.
-	 */
-	public async deleteLeitungsfunktionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/schule/leitungsfunktionen/delete/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result: string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => {
-			const text: string = JSON.stringify(elem);
-			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
-		});
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattformen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lernplattformen unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -18968,6 +18852,122 @@ export class ApiServer extends BaseApi {
 		obj.forEach((elem: any) => {
 			const text: string = JSON.stringify(elem);
 			ret.add(SchulEintrag.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulinterneFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulinterne-funktionen
+	 *
+	 * Gibt die schulinternen Funktionen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der schulinternen Funktionen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulinterneFunktion>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der schulinternen Funktionen.
+	 */
+	public async getSchulinterneFunktionen(schema: string): Promise<List<SchulinterneFunktion>> {
+		const path = "/db/{schema}/schule/schulinterne-funktionen"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result: string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulinterneFunktion>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SchulinterneFunktion.transpilerFromJSON(text));
+		});
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchulinterneFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulinterne-funktionen/{id : \d+}
+	 *
+	 * Patched die schulinterne Funktion mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchulinterneFunktion>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchulinterneFunktion(data: Partial<SchulinterneFunktion>, schema: string, id: number): Promise<void> {
+		const path = "/db/{schema}/schule/schulinterne-funktionen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body: string = SchulinterneFunktion.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchulinterneFunktion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulinterne-funktionen/create
+	 *
+	 * Erstellt eine neue schulinterne Funktion, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die schulinterne Funktion wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulinterneFunktion
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um schulinterne Funktionen anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchulinterneFunktion>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die schulinterne Funktion wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchulinterneFunktion(data: Partial<SchulinterneFunktion>, schema: string): Promise<SchulinterneFunktion> {
+		const path = "/db/{schema}/schule/schulinterne-funktionen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = SchulinterneFunktion.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return SchulinterneFunktion.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulinterneFunktionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulinterne-funktionen/delete/multiple
+	 *
+	 * Entfernt mehrere schulinterne Funktionen, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um schulinterne Funktionen zu entfernen.
+	 *   Code 404: Schulinterne Funktionen nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteSchulinterneFunktionen(data: List<number>, schema: string): Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/schulinterne-funktionen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result: string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => {
+			const text: string = JSON.stringify(elem);
+			ret.add(SimpleOperationResponse.transpilerFromJSON(text));
 		});
 		return ret;
 	}

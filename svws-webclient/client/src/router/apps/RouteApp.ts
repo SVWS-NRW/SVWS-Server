@@ -42,11 +42,11 @@ import { routeHaltestellen } from "~/router/apps/schule/kataloge/haltestellen/Ro
 import { routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJahrgaenge";
 import { routeKindergaerten } from "~/router/apps/schule/kataloge/kindergaerten/RouteKindergaerten";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
-import { routeLeitungsfunktionen } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionen";
 import { routeLernplattformen } from "~/router/apps/schule/kataloge/lernplattformen/RouteLernplattformen";
 import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
+import { routeSchulinterneFunktionen } from "~/router/apps/schule/kataloge/schulinternefunktionen/RouteSchulinterneFunktionen";
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
 import { routeTeilleistungsarten } from "~/router/apps/schule/kataloge/teilleistungsarten/RouteTeilleistungsarten";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
@@ -213,11 +213,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeJahrgaenge,
 			routeKindergaerten,
 			routeKonfessionen,
-			routeLeitungsfunktionen,
 			routeLernplattformen,
 			routeOrte,
 			routeOrtsteile,
 			routeSchulen,
+			routeSchulinterneFunktionen,
 			routeSchwerpunkte,
 			routeTeilleistungsarten,
 			routeTelefonarten,

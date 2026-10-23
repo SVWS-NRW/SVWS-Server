@@ -13,19 +13,23 @@ public class Tabelle_K_Schulfunktionen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
+			.setJavaName("id")
 			.setNotNull()
 			.setJavaComment("ID der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
+			.setJavaName("bezeichnung")
 			.setJavaComment("Bezeichnung der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
+			.setJavaName("sortierung")
 			.setJavaComment("Sortierung der schulinternen Funktion");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+			.setJavaName("istSichtbar")
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 			.setJavaComment("Sichbarkeit der schulinternen Funktion");
@@ -46,8 +50,8 @@ public class Tabelle_K_Schulfunktionen extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOLeitungsfunktion");
-		setJavaComment("frei definierbarer Katalog für Schulfunktionen, die dann im Lehrerkatalog den Lehrern zugewiesen werden können");
+		setJavaClassName("DTOSchulinterneFunktion");
+		setJavaComment("frei definierbarer Katalog für schulinterne Funktionen, die dann im Lehrerkatalog den Lehrern zugewiesen werden können");
 	}
 
 }

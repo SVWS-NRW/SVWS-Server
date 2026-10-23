@@ -1,6 +1,5 @@
 package de.svws_nrw.repo.lehrer;
 
-import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
@@ -23,8 +22,6 @@ import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepository;
 import de.svws_nrw.repo.lehrer.fachrichtung.LehrerLehramtFachrichtungRepositoryImpl;
 import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepository;
 import de.svws_nrw.repo.lehrer.lehrbefaehigung.LehrerLehramtLehrbefaehigungRepositoryImpl;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepositoryImpl;
 import de.svws_nrw.repo.lehrer.lernplattform.LehrerLernplattformRepository;
 import de.svws_nrw.repo.lehrer.lernplattform.LehrerLernplattformRepositoryImpl;
 import de.svws_nrw.repo.lehrer.mehrleistung.LehrerMehrleistungRepository;
@@ -138,15 +135,6 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 */
 	public LehrerLehramtLehrbefaehigungRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
 		return getOrCreate(LehrerLehramtLehrbefaehigungRepository.class, () -> new LehrerLehramtLehrbefaehigungRepositoryImpl(conn));
-	}
-
-	/**
-	 * Erstellt ein neues Repository für {@link DTOLeitungsfunktion}.
-	 *
-	 * @return das Repository-Objekt
-	 */
-	public LehrerLeitungsfunktionRepository getLeitungsfunktionRepository() {
-		return this.getOrCreate(LehrerLeitungsfunktionRepository.class, () -> new LehrerLeitungsfunktionRepositoryImpl(this.conn));
 	}
 
 	/**

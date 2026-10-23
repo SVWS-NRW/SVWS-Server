@@ -32,7 +32,7 @@ const KATALOGE = [
 	{ name: 'Schulen', path: '/schule/schulen' },
 	{ name: 'Orte', path: '/schule/orte' },
 	{ name: 'Ortsteile', path: '/schule/ortsteile' },
-	{ name: 'Leitungsfunktionen', path: '/schule/leitungsfunktionen' },
+	{ name: 'Schulinterne Funktionen', path: '/schule/schulinternefunktionen' },
 	{ name: 'Teilleistungsarten', path: '/schule/teilleistungsarten' },
 	{ name: 'Fächer', path: '/schule/faecher' },
 ] as const;
@@ -861,15 +861,15 @@ test.describe('Kataloge — Smoke', () => {
 		expect(errors, `JS-Fehler: ${errors.join(' | ')}`).toHaveLength(0);
 	});
 
-	test('Leitungsfunktionensuche filtert die Liste @smoke', async ({ page }) => {
+	test('Suche in schulinternen Funktionen filtert die Liste @smoke', async ({ page }) => {
 		await login(page);
 		const errors = collectErrors(page);
 
-		await page.goto(`${getAufgeloesteBasis(page)}/schule/leitungsfunktionen`, { waitUntil: 'networkidle' });
-		await expect(page.getByRole('heading', { name: 'Leitungsfunktionen', exact: true })).toBeVisible({ timeout: 8000 });
+		await page.goto(`${getAufgeloesteBasis(page)}/schule/schulinternefunktionen`, { waitUntil: 'networkidle' });
+		await expect(page.getByRole('heading', { name: 'Schulinterne Funktionen', exact: true })).toBeVisible({ timeout: 8000 });
 
 		// Auf die konkrete Detailansicht warten, bevor Suche/Filter bedient werden.
-		await page.waitForURL(/\/schule\/leitungsfunktionen\/[^/]+\/daten$/, { timeout: 8000 });
+		await page.waitForURL(/\/schule\/schulinternefunktionen\/[^/]+\/daten$/, { timeout: 8000 });
 		await page.waitForLoadState('networkidle');
 
 		const zeilen = page.getByRole('row');
@@ -887,15 +887,15 @@ test.describe('Kataloge — Smoke', () => {
 		expect(errors, `JS-Fehler: ${errors.join(' | ')}`).toHaveLength(0);
 	});
 
-	test('Leitungsfunktionenfilter reagiert @smoke', async ({ page }) => {
+	test('Filter der schulinternen Funktionen reagiert @smoke', async ({ page }) => {
 		await login(page);
 		const errors = collectErrors(page);
 
-		await page.goto(`${getAufgeloesteBasis(page)}/schule/leitungsfunktionen`, { waitUntil: 'networkidle' });
-		await expect(page.getByRole('heading', { name: 'Leitungsfunktionen', exact: true })).toBeVisible({ timeout: 8000 });
+		await page.goto(`${getAufgeloesteBasis(page)}/schule/schulinternefunktionen`, { waitUntil: 'networkidle' });
+		await expect(page.getByRole('heading', { name: 'Schulinterne Funktionen', exact: true })).toBeVisible({ timeout: 8000 });
 
 		// Auf die konkrete Detailansicht warten, bevor Suche/Filter bedient werden.
-		await page.waitForURL(/\/schule\/leitungsfunktionen\/[^/]+\/daten$/, { timeout: 8000 });
+		await page.waitForURL(/\/schule\/schulinternefunktionen\/[^/]+\/daten$/, { timeout: 8000 });
 		await page.waitForLoadState('networkidle');
 
 		const filterPanel = page.locator('.svws-ui-table-filter');

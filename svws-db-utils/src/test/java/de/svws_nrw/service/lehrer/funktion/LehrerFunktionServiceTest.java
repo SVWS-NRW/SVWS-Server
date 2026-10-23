@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.lehrer.LehrerFunktion;
 import de.svws_nrw.data.TransactionSupport;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchulinterneFunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.mapper.lehrer.funktion.LehrerFunktionMapper;
 import de.svws_nrw.repo.RepositoryException;
 import de.svws_nrw.repo.lehrer.funktion.LehrerFunktionRepository;
-import de.svws_nrw.repo.lehrer.leitungsfunktion.LehrerLeitungsfunktionRepository;
+import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionRepository;
 import de.svws_nrw.repo.lehrer.personalabschnittsdaten.LehrerPersonalabschnittsdatenRepository;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
@@ -50,7 +50,7 @@ class LehrerFunktionServiceTest {
 	private LehrerPersonalabschnittsdatenRepository abschnittsdatenRepo;
 
 	@Mock
-	private LehrerLeitungsfunktionRepository leitungsfunktionRepo;
+	private SchulinterneFunktionRepository schulinterneFunktionRepo;
 
 	@Mock
 	private LehrerFunktionMapper mapper;
@@ -204,7 +204,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = 20L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 20L)).thenReturn(true);
 
 		assertThatException()
@@ -222,7 +222,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = 20L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 20L)).thenReturn(false);
 		when(mapper.toDomain(dto)).thenReturn(entity);
 		when(repo.create(entity)).thenReturn(entity);
@@ -250,19 +250,19 @@ class LehrerFunktionServiceTest {
 	}
 
 	@Test
-	@DisplayName("create - Leitungsfunktion nicht gefunden")
-	void create_leitungsfunktionNotFound() {
+	@DisplayName("create - Schulinterne Funktion nicht gefunden")
+	void create_schulinterneFunktionNotFound() {
 		final var dto = new LehrerFunktionCreateRequest();
 		dto.idAbschnittsdaten = 10L;
 		dto.idFunktion = 20L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.empty());
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.empty());
 
 		assertThatException()
 				.isThrownBy(() -> service.create(dto))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Keine Leitungsfunktion mit der ID 20 gefunden.")
+				.withMessage("Keine schulinterne Funktion mit der ID 20 gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
@@ -278,7 +278,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = 20L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 20L)).thenReturn(true);
 
 		assertThatException()
@@ -299,7 +299,7 @@ class LehrerFunktionServiceTest {
 		dto2.idFunktion = 20L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 20L)).thenReturn(false);
 
 		assertThatException()
@@ -324,8 +324,8 @@ class LehrerFunktionServiceTest {
 		apiModel2.id = 2L;
 
 		when(abschnittsdatenRepo.findById(10L)).thenReturn(Optional.of(mock(DTOLehrerAbschnittsdaten.class)));
-		when(leitungsfunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
-		when(leitungsfunktionRepo.findById(21L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(20L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
+		when(schulinterneFunktionRepo.findById(21L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 20L)).thenReturn(false);
 		when(repo.existsByIdAbschnittAndIdFunktion(10L, 21L)).thenReturn(false);
 		when(mapper.toDomain(dto1)).thenReturn(entity);
@@ -362,7 +362,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = JsonNullable.of(99L);
 
 		when(repo.getById(1L)).thenReturn(entity);
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 99L, 1L)).thenReturn(true);
 
 		assertThatException()
@@ -394,7 +394,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = JsonNullable.of(99L);
 
 		when(repo.getById(1L)).thenReturn(entity);
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 99L, 1L)).thenReturn(false);
 		when(mapper.toApi(entity)).thenReturn(apiModel);
 
@@ -405,18 +405,18 @@ class LehrerFunktionServiceTest {
 	}
 
 	@Test
-	@DisplayName("patch - Leitungsfunktion nicht gefunden")
-	void patch_leitungsfunktionNotFound() {
+	@DisplayName("patch - Schulinterne Funktion nicht gefunden")
+	void patch_schulinterneFunktionNotFound() {
 		final var dto = new LehrerFunktionPatchRequest();
 		dto.idFunktion = JsonNullable.of(99L);
 
 		when(repo.getById(1L)).thenReturn(entity);
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.empty());
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.empty());
 
 		assertThatException()
 				.isThrownBy(() -> service.patch(1L, dto))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Keine Leitungsfunktion mit der ID 99 gefunden.")
+				.withMessage("Keine schulinterne Funktion mit der ID 99 gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
@@ -432,7 +432,7 @@ class LehrerFunktionServiceTest {
 		dto.idFunktion = JsonNullable.of(99L);
 
 		when(repo.findMapByIds(List.of(1L))).thenReturn(Map.of(1L, entity));
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 99L, 1L)).thenReturn(true);
 
 		assertThatException()
@@ -454,7 +454,7 @@ class LehrerFunktionServiceTest {
 		dto2.idFunktion = JsonNullable.of(99L);
 
 		when(repo.findMapByIds(List.of(1L, 2L))).thenReturn(Map.of(1L, entity, 2L, entity2));
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 99L, 1L)).thenReturn(false);
 
 		assertThatException()
@@ -478,8 +478,8 @@ class LehrerFunktionServiceTest {
 		apiModel2.id = 2L;
 
 		when(repo.findMapByIds(List.of(1L, 2L))).thenReturn(Map.of(1L, entity, 2L, entity2));
-		when(leitungsfunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
-		when(leitungsfunktionRepo.findById(98L)).thenReturn(Optional.of(mock(DTOLeitungsfunktion.class)));
+		when(schulinterneFunktionRepo.findById(99L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
+		when(schulinterneFunktionRepo.findById(98L)).thenReturn(Optional.of(mock(DTOSchulinterneFunktion.class)));
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 99L, 1L)).thenReturn(false);
 		when(repo.existsByIdAbschnittAndIdFunktionExcludingId(10L, 98L, 2L)).thenReturn(false);
 		when(mapper.toApi(entity)).thenReturn(apiModel);

@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.schule;
 
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchulinterneFunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
@@ -10,6 +11,8 @@ import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepository;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungKlasseRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungenRepository;
 import de.svws_nrw.repo.schule.kataloge.abteilung.AbteilungenRepositoryImpl;
+import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionRepository;
+import de.svws_nrw.repo.schule.schulinternefunktion.SchulinterneFunktionRepositoryImpl;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepository;
 import de.svws_nrw.repo.schule.schulleitung.SchulleitungRepositoryImpl;
 
@@ -45,6 +48,16 @@ public final class EigeneSchuleRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchulleitungRepository getSchulleitungRepository() {
 		return getOrCreate(SchulleitungRepository.class, () -> new SchulleitungRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchulinterneFunktion}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchulinterneFunktionRepository getSchulinterneFunktionRepository() {
+		return getOrCreate(SchulinterneFunktionRepository.class, () -> new SchulinterneFunktionRepositoryImpl(conn));
 	}
 
 
