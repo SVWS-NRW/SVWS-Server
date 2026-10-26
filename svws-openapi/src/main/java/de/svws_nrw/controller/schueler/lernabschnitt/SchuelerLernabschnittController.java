@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.schueler.lernabschnitt;
 
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import jakarta.ws.rs.core.Response;
 
@@ -28,6 +29,15 @@ public interface SchuelerLernabschnittController {
 	 * @return die Response
 	 */
 	Response getListBySchuelerAndSchuljahresabschnitt(long idSchueler, long idSchuljahresabschnitt);
+
+	/**
+	 * Legt einen neuen Schülerlernabschnitt an.
+	 *
+	 * @param dto   die Daten des neuen Lernabschnitts
+	 *
+	 * @return die Response (201 Created) mit den angelegten Schülerlernabschnittsdaten
+	 */
+	Response create(SchuelerLernabschnittCreateRequest dto);
 
 	/**
 	 * Passt die Schülerlernabschnittsdaten mit der angegebenen ID an.

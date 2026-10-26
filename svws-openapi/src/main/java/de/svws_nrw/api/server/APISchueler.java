@@ -53,6 +53,7 @@ import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformPatchRequest;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerBisherigeSchuleCreateRequest;
@@ -716,6 +717,36 @@ public class APISchueler {
 		return SchuelerControllerFactory.withLeistungsdatenReadAccess(request)
 				.getSchuelerLernabschnittController()
 				.getListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Anlegen eines neuen Schülerlernabschnitts.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Operation ausgeführt werden soll
+	 * @param dto       die Daten des neuen Schülerlernabschnitts
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die angelegten Schülerlernabschnittsdaten
+	 */
+	@POST
+	@Path("/lernabschnittsdaten")
+	@Operation(summary = "Legt einen neuen Schülerlernabschnitt an.",
+			description = "Legt einen neuen Schülerlernabschnitt für den Schüler im angegebenen Schuljahresabschnitt an. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Der Schülerlernabschnitt wurde erfolgreich angelegt.", content = @Content(mediaType = "application/json",
+			schema = @Schema(implementation = SchuelerLernabschnittsdaten.class)))
+	@ApiResponse(responseCode = "400", description = "Die Eingabedaten sind fehlerhaft.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerlernabschnittsdaten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response createSchuelerLernabschnittsdaten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des neuen Schülerlernabschnitts", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerLernabschnittsdaten.class))) final SchuelerLernabschnittCreateRequest dto,
+			@Context final HttpServletRequest request) {
+		return SchuelerControllerFactory.withLeistungsdatenWriteAccess(request)
+				.getSchuelerLernabschnittController()
+				.create(dto);
 	}
 
 

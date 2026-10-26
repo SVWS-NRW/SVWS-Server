@@ -96,7 +96,15 @@ public final class DataSchuelerNeu {
 		final long idSchuljahresabschnitt = JSONMapper.convertToLong(initAttributes.get(ID_SCHULJAHRESABSCHNITT), false, ID_SCHULJAHRESABSCHNITT);
 		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get("idKlasse"), true, "idKlasse");
 		final Long idJahrgang = JSONMapper.convertToLong(initAttributes.get("idJahrgang"), true, "idJahrgang");
-		final var lernabschnitt = new SchuelerLernabschnittCreateRequest(idSchueler, idSchuljahresabschnitt, idKlasse, idJahrgang);
+		final var lernabschnitt = new SchuelerLernabschnittCreateRequest();
+		lernabschnitt.schuelerID = idSchueler;
+		lernabschnitt.schuljahresabschnitt = idSchuljahresabschnitt;
+		if (idKlasse != null) {
+			lernabschnitt.klassenID = JsonNullable.of(idKlasse);
+		}
+		if (idJahrgang != null) {
+			lernabschnitt.jahrgangID = JsonNullable.of(idJahrgang);
+		}
 		this.schuelerLernabschnittService.create(lernabschnitt);
 	}
 

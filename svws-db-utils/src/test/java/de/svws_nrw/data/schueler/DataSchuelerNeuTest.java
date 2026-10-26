@@ -9,7 +9,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
-import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
 import de.svws_nrw.service.schueler.schulbesuch.SchuelerSchulbesuchService;
@@ -24,6 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -92,7 +93,10 @@ class DataSchuelerNeuTest {
 		assertThat(response.getEntity()).isEqualTo(created);
 
 		verify(schuelerStammdatenService, times(1)).create(any(SchuelerImportData.class));
-		verify(schuelerLernabschnittService).create(new SchuelerLernabschnittCreateRequest(100L, 8L, null, 5L));
+		verify(schuelerLernabschnittService).create(argThat(request -> request.schuelerID.equals(100L)
+				&& request.schuljahresabschnitt.equals(8L)
+				&& !request.klassenID.isPresent()
+				&& request.jahrgangID.equals(JsonNullable.of(5L))));
 		verify(schuelerSchulbesuchService, times(1)).patch(anyLong(), any());
 		verify(schuelerLernplattformService).addForSchueler(100L);
 		verify(schuelerEinwilligungService).addForSchueler(100L);

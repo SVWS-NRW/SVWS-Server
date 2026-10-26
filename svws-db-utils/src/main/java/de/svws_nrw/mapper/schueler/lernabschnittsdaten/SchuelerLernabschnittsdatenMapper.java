@@ -297,13 +297,17 @@ public interface SchuelerLernabschnittsdatenMapper {
 	}
 
 	/**
-	 * Mappt einen {@link SchuelerLernabschnittCreateRequest} auf eine neue {@link DTOSchuelerLernabschnittsdaten}-Entity.
-	 * @param dto {@link SchuelerLernabschnittCreateRequest}
+	 * Mappt einen {@link SchuelerLernabschnittCreateRequest} auf eine neue {@link DTOSchuelerLernabschnittsdaten}-Entity
+	 * mit den Standardwerten. Es werden nur die IDs des Schülers und des Schuljahresabschnitts übernommen. Die
+	 * weiteren Attribute des Requests werden anschließend über {@link #patch} angewendet.
+	 *
+	 * @param dto   {@link SchuelerLernabschnittCreateRequest}
+	 *
 	 * @return {@link DTOSchuelerLernabschnittsdaten}
 	 */
 	@Mapping(target = "ID", ignore = true)
-	@Mapping(target = "Schueler_ID", source = "idSchueler")
-	@Mapping(target = "Schuljahresabschnitts_ID", source = "idSchuljahresabschnitt")
+	@Mapping(target = "Schueler_ID", source = "schuelerID")
+	@Mapping(target = "Schuljahresabschnitts_ID", source = "schuljahresabschnitt")
 	@Mapping(target = "FachPraktAnteilAusr", constant = "true")
 	@Mapping(target = "meldungBAN", constant = "false")
 	@Mapping(target = "WechselNr", constant = "0")
@@ -313,8 +317,6 @@ public interface SchuelerLernabschnittsdatenMapper {
 	@Mapping(target = "Autist", constant = "false")
 	@Mapping(target = "ZieldifferentesLernen", constant = "false")
 	@Mapping(target = "Wiederholung", constant = "false")
-	@Mapping(target = "Klassen_ID", source = "idKlasse")
-	@Mapping(target = "Jahrgang_ID", source = "idJahrgang")
 	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	DTOSchuelerLernabschnittsdaten toDomain(SchuelerLernabschnittCreateRequest dto);
 

@@ -216,6 +216,7 @@ public final class SchuelerServiceFactory {
 	public SchuelerLernabschnittService getSchuelerLernabschnittService() {
 		final var repos = new SchuelerLernabschnittsdatenRepos(
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
 				eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),

@@ -25,6 +25,7 @@ import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdat
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMappingContext;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
@@ -69,6 +70,9 @@ class SchuelerLernabschnittServiceTest {
 
 	@Mock
 	private SchuelerLernabschnittRepository repository;
+
+	@Mock
+	private SchuelerRepository schuelerRepository;
 
 	@Mock
 	private SchuelerLernabschnittBemerkungRepository bemerkungRepository;
@@ -129,7 +133,7 @@ class SchuelerLernabschnittServiceTest {
 		entity = createEntity(ID_LERNABSCHNITT, ID_SCHULJAHRESABSCHNITT);
 		apiModel = createApiModel(ID_LERNABSCHNITT);
 
-		repos = new SchuelerLernabschnittsdatenRepos(repository, bemerkungRepository,
+		repos = new SchuelerLernabschnittsdatenRepos(repository, schuelerRepository, bemerkungRepository,
 				schuljahresabschnitteRepo, leistungsdatenRepository,
 				lehrerRepository, klassenRepository, foerderschwerpunktRepository, fachklasseRepository, jahrgangRepository,
 				schuelerschwerpunktRepository);
@@ -1015,20 +1019,43 @@ class SchuelerLernabschnittServiceTest {
 
 		@BeforeEach
 		void setUp() {
-			// führt den Task direkt aus, ohne echte Datenbank-Transaktion (Runnable-Variante, da ohne Rückgabe)
+			// führt den Task direkt aus, ohne echte Datenbank-Transaktion
 			transactionSupport = mockStatic(TransactionSupport.class);
-			transactionSupport.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Runnable>any()))
-					.thenAnswer(invocation -> {
-						invocation.getArgument(0, Runnable.class).run();
-						return null;
-					});
+			transactionSupport.when(() -> TransactionSupport.transactional(ArgumentMatchers.<Supplier<Object>>any()))
+					.thenAnswer(invocation -> invocation.getArgument(0, Supplier.class).get());
 			lenient().when(schuljahresabschnitteRepo.findListByIds(anyCollection()))
 					.thenReturn(List.of(createSchuljahresabschnitt(ID_SCHULJAHRESABSCHNITT)));
+			lenient().when(schuelerRepository.existsById(ID_SCHUELER)).thenReturn(true);
 		}
 
 		@AfterEach
 		void tearDown() {
 			transactionSupport.close();
+		}
+
+		private static SchuelerLernabschnittCreateRequest createRequest(final long idSchueler, final long idSchuljahresabschnitt) {
+			final var dto = new SchuelerLernabschnittCreateRequest();
+			dto.schuelerID = idSchueler;
+			dto.schuljahresabschnitt = idSchuljahresabschnitt;
+			return dto;
+		}
+
+		/**
+		 * Stellt das Verhalten des echten Mappers nach, da der Mapper in diesem Test ein Mock ist.
+		 */
+		private void stubMapper() {
+			when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
+					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
+			lenient().doAnswer(invocation -> {
+				SchuelerLernabschnittsdatenMapper.INSTANCE.patch(invocation.getArgument(0), invocation.getArgument(1),
+						invocation.getArgument(2, Integer.class), invocation.getArgument(3, Schulform.class));
+				return null;
+			}).when(mapper).patch(any(), any(), anyInt(), any());
+			lenient().when(repository.create(any(DTOSchuelerLernabschnittsdaten.class)))
+					.thenAnswer(invocation -> invocation.getArgument(0));
+			lenient().when(mapper.toApi(any(DTOSchuelerLernabschnittsdaten.class), anyInt(), any(Schulform.class),
+					any(SchuelerLernabschnittsdatenMappingContext.class)))
+					.thenReturn(new SchuelerLernabschnittsdaten());
 		}
 
 		@Test
@@ -1039,10 +1066,12 @@ class SchuelerLernabschnittServiceTest {
 			when(jahrgangRepository.existsById(18L)).thenReturn(true);
 			when(jahrgangRepository.findById(18L)).thenReturn(Optional.of(createJahrgang(18L, "05")));
 			when(jahrgangRepository.findById(17L)).thenReturn(Optional.of(createJahrgang(17L, "05")));
-			when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
-					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.klassenID = JsonNullable.of(46L);
+			dto.jahrgangID = JsonNullable.of(18L);
 
-			service.create(new SchuelerLernabschnittCreateRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT, 46L, 18L));
+			service.create(dto);
 
 			final ArgumentCaptor<DTOSchuelerLernabschnittsdaten> captor = ArgumentCaptor.forClass(DTOSchuelerLernabschnittsdaten.class);
 			verify(repository).create(captor.capture());
@@ -1065,13 +1094,72 @@ class SchuelerLernabschnittServiceTest {
 		}
 
 		@Test
+		@DisplayName("Mit weiteren Feldern des Patch-Requests - die Felder werden übernommen, die übrigen behalten ihre Defaults")
+		void create_mitWeiterenFeldern() {
+			when(lehrerRepository.existsById(12L)).thenReturn(true);
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.datumAnfang = JsonNullable.of("2024-08-01");
+			dto.datumEnde = JsonNullable.of("2025-01-31");
+			dto.istWiederholung = JsonNullable.of(true);
+			dto.fehlstundenGesamt = JsonNullable.of(10);
+			dto.fehlstundenUnentschuldigt = JsonNullable.of(2);
+			dto.tutorID = JsonNullable.of(12L);
+
+			service.create(dto);
+
+			final ArgumentCaptor<DTOSchuelerLernabschnittsdaten> captor = ArgumentCaptor.forClass(DTOSchuelerLernabschnittsdaten.class);
+			verify(repository).create(captor.capture());
+			final var neu = captor.getValue();
+			assertThat(neu.DatumVon).isEqualTo("2024-08-01");
+			assertThat(neu.DatumBis).isEqualTo("2025-01-31");
+			assertThat(neu.Wiederholung).isTrue();
+			assertThat(neu.SumFehlStd).isEqualTo(10);
+			assertThat(neu.SumFehlStdU).isEqualTo(2);
+			assertThat(neu.Tutor_ID).isEqualTo(12L);
+			assertThat(neu.Klassen_ID).isNull();
+			assertThat(neu.SemesterWertung).isTrue();
+			assertThat(neu.Schwerbehinderung).isFalse();
+			verify(benutzerKompetenzService).pruefeKompetenzLeistungsdatenAendernKlassen((Long) null);
+		}
+
+		@Test
+		@DisplayName("Ohne weitere Felder - Lernabschnitt wird mit den Defaults angelegt und als API-Modell zurückgegeben")
+		void create_nurPflichtfelder() {
+			stubMapper();
+
+			final var result = service.create(createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT));
+
+			final ArgumentCaptor<DTOSchuelerLernabschnittsdaten> captor = ArgumentCaptor.forClass(DTOSchuelerLernabschnittsdaten.class);
+			verify(repository).create(captor.capture());
+			assertThat(captor.getValue().Klassen_ID).isNull();
+			assertThat(captor.getValue().Jahrgang_ID).isNull();
+			assertThat(captor.getValue().ASDJahrgang).isNull();
+			assertThat(result).isNotNull();
+		}
+
+		@Test
 		@DisplayName("Schuljahresabschnitt existiert nicht - BAD_REQUEST, es wird nichts angelegt")
 		void create_schuljahresabschnittNichtVorhanden() {
 			when(schuljahresabschnitteRepo.findListByIds(anyCollection())).thenReturn(List.of());
+			final var dto = createRequest(ID_SCHUELER, 99L);
 
-			assertThatThrownBy(() -> service.create(new SchuelerLernabschnittCreateRequest(ID_SCHUELER, 99L, null, null)))
+			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
+		@DisplayName("Schüler existiert nicht - BAD_REQUEST, es wird nichts angelegt")
+		void create_schuelerNichtVorhanden() {
+			when(schuelerRepository.existsById(ID_SCHUELER)).thenReturn(false);
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+					.hasMessage("Es existiert kein Schüler mit der ID %d.".formatted(ID_SCHUELER));
 			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
 		}
 
@@ -1080,8 +1168,11 @@ class SchuelerLernabschnittServiceTest {
 		void create_klasseAndererSchuljahresabschnitt() {
 			when(klassenRepository.existsById(46L)).thenReturn(true);
 			when(klassenRepository.findById(46L)).thenReturn(Optional.of(createKlasse(46L, 21L, null)));
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.klassenID = JsonNullable.of(46L);
 
-			assertThatThrownBy(() -> service.create(new SchuelerLernabschnittCreateRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT, 46L, null)))
+			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
 					.hasMessage("Die Klasse mit der ID 46 gehört nicht zum Schuljahresabschnitt des Lernabschnitts.");
@@ -1096,13 +1187,44 @@ class SchuelerLernabschnittServiceTest {
 			when(jahrgangRepository.existsById(18L)).thenReturn(true);
 			when(jahrgangRepository.findById(18L)).thenReturn(Optional.of(createJahrgang(18L, "06")));
 			when(jahrgangRepository.findById(17L)).thenReturn(Optional.of(createJahrgang(17L, "05")));
-			when(mapper.toDomain(any(SchuelerLernabschnittCreateRequest.class)))
-					.thenAnswer(invocation -> SchuelerLernabschnittsdatenMapper.INSTANCE.toDomain(invocation.getArgument(0)));
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.klassenID = JsonNullable.of(46L);
+			dto.jahrgangID = JsonNullable.of(18L);
 
-			assertThatThrownBy(() -> service.create(new SchuelerLernabschnittCreateRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT, 46L, 18L)))
+			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
 					.hasMessage("Der Jahrgang mit der ID 18 ist für die Klasse mit der ID 46 nicht zulässig.");
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
+		@DisplayName("Tutor existiert nicht - BAD_REQUEST, es wird nichts angelegt")
+		void create_tutorNichtVorhanden() {
+			when(lehrerRepository.existsById(99L)).thenReturn(false);
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.tutorID = JsonNullable.of(99L);
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+					.hasMessage("Es existiert kein Lehrer mit der ID 99.");
+			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
+		}
+
+		@Test
+		@DisplayName("Enddatum liegt vor dem Anfangsdatum - BAD_REQUEST")
+		void create_enddatumVorAnfangsdatum() {
+			stubMapper();
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.datumAnfang = JsonNullable.of("2025-01-31");
+			dto.datumEnde = JsonNullable.of("2024-08-01");
+
+			assertThatThrownBy(() -> service.create(dto))
+					.isInstanceOf(ApiOperationException.class)
+					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));
 		}
 
@@ -1111,8 +1233,10 @@ class SchuelerLernabschnittServiceTest {
 		void create_keineKompetenz() {
 			doThrow(new ApiOperationException(Response.Status.FORBIDDEN, "keine Kompetenz"))
 					.when(benutzerKompetenzService).pruefeKompetenzLeistungsdatenAendernKlassen(46L);
+			final var dto = createRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT);
+			dto.klassenID = JsonNullable.of(46L);
 
-			assertThatThrownBy(() -> service.create(new SchuelerLernabschnittCreateRequest(ID_SCHUELER, ID_SCHULJAHRESABSCHNITT, 46L, null)))
+			assertThatThrownBy(() -> service.create(dto))
 					.isInstanceOf(ApiOperationException.class)
 					.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
 			verify(repository, never()).create(any(DTOSchuelerLernabschnittsdaten.class));

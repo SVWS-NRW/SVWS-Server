@@ -29,6 +29,7 @@ import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdat
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittsdatenMappingContext;
 import de.svws_nrw.repo.klassen.KlassenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
+import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittBemerkungRepository;
 import de.svws_nrw.repo.schueler.lernabschnitt.SchuelerLernabschnittRepository;
@@ -49,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class SchuelerLernabschnittService {
 
 	private final SchuelerLernabschnittRepository repository;
+	private final SchuelerRepository schuelerRepository;
 	private final SchuelerLernabschnittBemerkungRepository bemerkungRepository;
 	private final SchuljahresabschnitteRepository schuljahresabschnitteRepo;
 	private final SchuelerLeistungsdatenRepository leistungsdatenRepository;
@@ -84,6 +86,7 @@ public final class SchuelerLernabschnittService {
 			final EigeneSchuleService eigeneSchuleService,
 			final BenutzerKompetenzService benutzerKompetenzService) {
 		this.repository = repos.repository();
+		this.schuelerRepository = repos.schuelerRepository();
 		this.bemerkungRepository = repos.bemerkungRepository();
 		this.schuljahresabschnitteRepo = repos.schuljahresabschnitteRepo();
 		this.leistungsdatenRepository = repos.leistungsdatenRepository();
@@ -153,27 +156,33 @@ public final class SchuelerLernabschnittService {
 	}
 
 	/**
-	 * Erstellt einen neuen Lernabschnitt (Wechsel-Nr. 0) für den Schüler im angegebenen Schuljahresabschnitt. Klasse und
-	 * Jahrgang sind optional. Die Existenz des Schülers wird nicht geprüft, da diese Methode bei der Neuanlage eines
-	 * Schülers direkt nach dessen Erstellung aufgerufen wird.
+	 * Erstellt einen neuen Lernabschnitt (Wechsel-Nr. 0) für den Schüler im angegebenen Schuljahresabschnitt. Alle weiteren
+	 * Attribute des Requests sind optional, nicht angegebene Attribute werden mit ihren Standardwerten angelegt.
 	 *
-	 * @param schuelerLernabschnitt   ImportData des SchuelerLernabschnitts
+	 * @param dto   der Request mit den Daten des neuen Lernabschnitts
 	 *
-	 * @throws ApiOperationException   BAD_REQUEST, wenn Schuljahresabschnitt, Klasse oder Jahrgang nicht existieren, die Klasse
-	 *                                 nicht zum Schuljahresabschnitt gehört oder Klasse und Jahrgang nicht zueinander passen,
-	 *                                 FORBIDDEN, wenn der Benutzer keine Rechte auf die Klasse hat
+	 * @return der neu angelegte {@link SchuelerLernabschnittsdaten}
+	 *
+	 * @throws ApiOperationException   FORBIDDEN, wenn der Benutzer keine Rechte auf die Klasse hat,
+	 *                                 BAD_REQUEST, wenn der Schüler, der Schuljahresabschnitt oder eine referenzierte ID (z. B. Lehrer, Klasse,
+	 *                                 Jahrgang, Förderschwerpunkt, Schwerpunkt, Fachklasse) oder ein Katalogwert nicht existiert,
+	 *                                 die Klasse nicht zum Schuljahresabschnitt oder nicht zum Jahrgang passt, das Enddatum
+	 *                                 vor dem Anfangsdatum liegt oder die unentschuldigten Fehlstunden die gesamten
+	 *                                 Fehlstunden übersteigen
 	 */
-	public void create(final SchuelerLernabschnittCreateRequest schuelerLernabschnitt) {
-		TransactionSupport.transactional(() -> {
-			getSchuljahrByIdAbschnitt(List.of(schuelerLernabschnitt.idSchuljahresabschnitt()));
-			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(schuelerLernabschnitt.idKlasse());
-			validateIdKlasse(schuelerLernabschnitt.idKlasse());
-			validateIdJahrgang(schuelerLernabschnitt.idJahrgang());
-			validateKlasseImSchuljahresabschnitt(schuelerLernabschnitt.idKlasse(), schuelerLernabschnitt.idSchuljahresabschnitt());
-			final var entity = mapper.toDomain(schuelerLernabschnitt);
-			entity.ASDJahrgang = getASDJahrgang(entity.Jahrgang_ID);
-			validateKlasseUndJahrgangKompatibel(entity);
-			repository.create(entity);
+	public SchuelerLernabschnittsdaten create(final SchuelerLernabschnittCreateRequest dto) {
+		return TransactionSupport.transactional(() -> {
+			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(dto.schuljahresabschnitt)).get(dto.schuljahresabschnitt);
+			benutzerKompetenzService.pruefeKompetenzLeistungsdatenAendernKlassen(dto.klassenID.orElse(null));
+			validateIdSchueler(dto.schuelerID);
+			final Schulform schulform = eigeneSchuleService.getSchulform();
+			final var entity = mapper.toDomain(dto);
+			validateRequest(dto, schuljahr, schulform, entity);
+			// Der Create-Request erbt vom PatchRequest: toDomain setzt nur IDs und Standardwerte,
+			// die optionalen Felder werden hier mit der Patch-Logik auf die neue Entity angewendet.
+			mapper.patch(dto, entity, schuljahr, schulform);
+			validateAndResolveASDJahrgang(dto, entity);
+			return toApi(repository.create(entity));
 		});
 	}
 
@@ -201,7 +210,7 @@ public final class SchuelerLernabschnittService {
 			pruefeKompetenz(dto, entity);
 			final int schuljahr = getSchuljahrByIdAbschnitt(List.of(entity.Schuljahresabschnitts_ID)).get(entity.Schuljahresabschnitts_ID);
 			final Schulform schulform = eigeneSchuleService.getSchulform();
-			validatePatch(dto, schuljahr, schulform, entity);
+			validateRequest(dto, schuljahr, schulform, entity);
 			mapper.patch(dto, entity, schuljahr, schulform);
 			validateAndResolveASDJahrgang(dto, entity);
 			return toApi(entity);
@@ -232,6 +241,12 @@ public final class SchuelerLernabschnittService {
 				));
 		validateAbschnitteForAllIdsWhereFound(uniqueSchuljahresabschnittIds, result);
 		return result;
+	}
+
+	private void validateIdSchueler(final Long idSchueler) {
+		if (!schuelerRepository.existsById(idSchueler)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein Schüler mit der ID %d.".formatted(idSchueler));
+		}
 	}
 
 	private void validateIdKlasse(final Long idKlasse) {
@@ -308,7 +323,7 @@ public final class SchuelerLernabschnittService {
 				|| dto.versetzungsentscheidung.isPresent();
 	}
 
-	private void validatePatch(
+	private void validateRequest(
 			final SchuelerLernabschnittsdatenPatchRequest dto,
 			final int schuljahr,
 			final Schulform schulform,

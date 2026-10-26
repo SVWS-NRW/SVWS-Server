@@ -6,6 +6,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,6 +91,70 @@ class SchuelerLernabschnittControllerImplTest {
 				.isEqualTo(daten);
 
 		verify(service, times(1)).getListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt);
+	}
+
+	private static SchuelerLernabschnittCreateRequest createRequest() {
+		final var dto = new SchuelerLernabschnittCreateRequest();
+		dto.schuelerID = 10L;
+		dto.schuljahresabschnitt = 20L;
+		return dto;
+	}
+
+	@Test
+	@DisplayName("create | Erfolg - CREATED mit den angelegten Lernabschnittsdaten")
+	void create_erfolg() {
+		final var dto = createRequest();
+		dto.fehlstundenGesamt = JsonNullable.of(10);
+		final var daten = mock(SchuelerLernabschnittsdaten.class);
+
+		when(service.create(dto)).thenReturn(daten);
+
+		assertThat(controller.create(dto))
+				.isInstanceOf(Response.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.CREATED.getStatusCode())
+				.extracting(Response::getEntity)
+				.isEqualTo(daten);
+
+		verify(service, times(1)).create(dto);
+	}
+
+	@Test
+	@DisplayName("create | BeanValidation - BAD_REQUEST ohne Schüler-ID, Service wird nicht aufgerufen")
+	void create_validierungIdSchuelerFehlt() {
+		final var dto = createRequest();
+		dto.schuelerID = null;
+
+		assertThatThrownBy(() -> controller.create(dto))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+		verifyNoInteractions(service);
+	}
+
+	@Test
+	@DisplayName("create | BeanValidation - BAD_REQUEST ohne Schuljahresabschnitt-ID, Service wird nicht aufgerufen")
+	void create_validierungIdSchuljahresabschnittFehlt() {
+		final var dto = createRequest();
+		dto.schuljahresabschnitt = null;
+
+		assertThatThrownBy(() -> controller.create(dto))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+		verifyNoInteractions(service);
+	}
+
+	@Test
+	@DisplayName("create | BeanValidation - Felder des Patch-Requests werden geprüft, BAD_REQUEST bei negativen Fehlstunden")
+	void create_validierungFehlstundenNegativ() {
+		final var dto = createRequest();
+		dto.fehlstundenGesamt = JsonNullable.of(-1);
+
+		assertThatThrownBy(() -> controller.create(dto))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+
+		verifyNoInteractions(service);
 	}
 
 	@Test

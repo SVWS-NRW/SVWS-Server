@@ -14570,6 +14570,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createSchuelerLernabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten
+	 *
+	 * Legt einen neuen Schülerlernabschnitt für den Schüler im angegebenen Schuljahresabschnitt an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Schülerlernabschnitt wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerLernabschnittsdaten
+	 *   Code 400: Die Eingabedaten sind fehlerhaft.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerlernabschnittsdaten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerLernabschnittsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Schülerlernabschnitt wurde erfolgreich angelegt.
+	 */
+	public async createSchuelerLernabschnittsdaten(data: Partial<SchuelerLernabschnittsdaten>, schema: string): Promise<SchuelerLernabschnittsdaten> {
+		const path = "/db/{schema}/schueler/lernabschnittsdaten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body: string = SchuelerLernabschnittsdaten.transpilerToJSONPatch(data);
+		const result: string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerLernabschnittsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerLernabschnittsdatenByID für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}
 	 *
 	 * Liest die Schüler-Lernabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.

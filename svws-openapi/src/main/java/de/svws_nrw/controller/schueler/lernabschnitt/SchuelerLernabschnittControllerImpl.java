@@ -3,6 +3,7 @@ package de.svws_nrw.controller.schueler.lernabschnitt;
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
+import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import de.svws_nrw.validation.BeanValidator;
 import jakarta.ws.rs.core.Response;
@@ -31,6 +32,12 @@ public final class SchuelerLernabschnittControllerImpl implements SchuelerLernab
 	@Override
 	public Response getListBySchuelerAndSchuljahresabschnitt(final long idSchueler, final long idSchuljahresabschnitt) {
 		return Responses.ok(service.getListBySchuelerAndSchuljahresabschnitt(idSchueler, idSchuljahresabschnitt));
+	}
+
+	@Override
+	public Response create(final SchuelerLernabschnittCreateRequest dto) {
+		BeanValidator.validate(dto);
+		return Responses.created(service.create(dto));
 	}
 
 	@Override
