@@ -122,7 +122,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Methoden für den Import und Export von Untis-Daten
- * zur Vefügung.
+ * zur Verfügung.
  */
 public final class DataUntis {
 
@@ -133,13 +133,13 @@ public final class DataUntis {
 	private static void _importGPU001(final Logger logger, final DBEntityManager conn, final long idSchuljahresabschnitt,
 			final String beginn, final String beschreibung, final List<UntisGPU001> unterrichte, final int wochentyp, final boolean ignoreMissing)
 			throws ApiOperationException {
-		// Prüfe die ID des Schuljahreabschnitts
+		// Prüfe die ID des Schuljahresabschnitts
 		logger.logLn("-> Prüfe, ob der Schuljahresabschnitt existiert... ");
 		final Schuljahresabschnitt schuljahresabschnitt;
 		try {
 			schuljahresabschnitt = new DataSchuljahresabschnitte(conn).getByID(idSchuljahresabschnitt);
 		} catch (final ApiOperationException e) {
-			logger.logLn(2, "[Fehler] - Die ID des Schuljahresabschnitt %d ist ungültig.".formatted(idSchuljahresabschnitt));
+			logger.logLn(2, "[Fehler] - Die ID des Schuljahresabschnitts %d ist ungültig.".formatted(idSchuljahresabschnitt));
 			throw e;
 		}
 		// Bestimme die Lehrer
@@ -267,7 +267,7 @@ public final class DataUntis {
 				if (mapUnterrichte.containsKey(key)) {
 					if (lehrer == null) {
 						logger.logLn(2,
-								"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt und es wurde kein Lehrer eingetragen."
+								"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und die Stunde %d mit Wochentyp %d hinzugefügt und es wurde kein Lehrer eingetragen."
 										.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt)
 										+ " Überspringe diesen Eintrag...");
 						continue;
@@ -283,9 +283,9 @@ public final class DataUntis {
 						conn.transactionFlush();
 						continue;
 					}
-					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
+					// Wenn der Lehrer bereits vorhanden ist, dann verwerfe den Eintrag
 					logger.logLn(2,
-							"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
+							"Unterricht mit der ID %d wurde für das Fach '%s' der Klasse '%s' mit der ID %d bereits für den Wochentag %d und die Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
 									.formatted(u.idUnterricht, fach.kuerzel, klasse.Klasse, klasse.ID, u.wochentag, u.stunde, wt, lehrer.id)
 									+ " Überspringe diesen Eintrag...");
 					continue;
@@ -328,7 +328,7 @@ public final class DataUntis {
 				if (mapUnterrichte.containsKey(key)) {
 					if (lehrer == null) {
 						logger.logLn(2,
-								"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d und es wurde kein Lehrer eingetragen."
+								"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und die Stunde %d mit Wochentyp %d und es wurde kein Lehrer eingetragen."
 										.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
 						continue;
 					}
@@ -343,9 +343,9 @@ public final class DataUntis {
 						conn.transactionFlush();
 						continue;
 					}
-					// Wenn der Lehrer bereits vorhanden ist, dann gibt verwerfe den Eintrag
+					// Wenn der Lehrer bereits vorhanden ist, dann verwerfe den Eintrag
 					logger.logLn(2,
-							"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
+							"Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und die Stunde %d mit Wochentyp %d mit dem Lehrer mit der ID %d hinzugefügt."
 									.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt, lehrer.id) + " Überspringe diesen Eintrag...");
 					continue;
 				}
@@ -393,8 +393,11 @@ public final class DataUntis {
 							.stream().map(z -> z.ID).toList();
 			if (!idsZeitraster.isEmpty()) {
 				if (maxWochentyp == 1) {
-					// Es müssen einfach alle Unterrichte auf Wochentyp 0 umgestellt werden
-					conn.transactionExecuteUpdate("UPDATE DTOStundenplanUnterricht SET Wochentyp = 0 WHERE Wochentyp = 1");
+					// Es müssen alle Unterrichte des neuen Stundenplans auf Wochentyp 0 umgestellt werden
+					final String zeitrasterIDs =
+							idsZeitraster.stream().map(String::valueOf).collect(Collectors.joining(","));
+					conn.transactionExecuteUpdate("UPDATE DTOStundenplanUnterricht SET Wochentyp = 0 WHERE Wochentyp = 1 AND Zeitraster_ID IN ("
+							+ zeitrasterIDs + ")");
 				} else {
 					// TODO Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
 				}
@@ -407,7 +410,7 @@ public final class DataUntis {
 	 * Importiert die in dem Multipart übergebene Datei.
 	 *
 	 * @param conn        die Datenbank-Verbindung
-	 * @param multipart   der Multipart-Body mmit der Datei
+	 * @param multipart   der Multipart-Body mit der Datei
 	 * @param ignoreMissing   wenn true, dann werden fehlende Klassen und Kurse ignoriert
 	 *                        und protokolliert, es wird aber kein Fehler erzeugt.
 	 *
@@ -448,7 +451,7 @@ public final class DataUntis {
 	 * Importiert die in dem Multipart übergebene Datei.
 	 *
 	 * @param conn        die Datenbank-Verbindung
-	 * @param multipart   der Multipart-Body mmit der Datei
+	 * @param multipart   der Multipart-Body mit der Datei
 	 *
 	 * @return die HTTP-Response mit dem Log
 	 */
@@ -523,7 +526,7 @@ public final class DataUntis {
 			long id = conn.transactionGetNextID(DTOKatalogRaum.class);
 			for (final UntisGPU005 raum : raeume) {
 				if (raum.kuerzel == null) {
-					logger.logLn("[Fehler] - Konnte die Informationen zur Schule nicht aus der Datenbank lesen");
+					logger.logLn("[Fehler] - Jeder Raum muss ein gültiges Kürzel haben.");
 					logger.modifyIndent(-2);
 					throw new ApiOperationException(Status.BAD_REQUEST, "Jeder Raum muss ein gültiges Kürzel haben.");
 				}
@@ -547,7 +550,7 @@ public final class DataUntis {
 			return true;
 		} catch (final UnrecognizedPropertyException upe) {
 			LogUtils.logStacktrace(logger, upe);
-			logger.logLn("[Fehler] Konnte die Datei GPU005.txt nicht einlesen. Prüfen sie ggf. auch die Zeichenkodierung der Datei."
+			logger.logLn("[Fehler] Konnte die Datei GPU005.txt nicht einlesen. Prüfen Sie ggf. auch die Zeichenkodierung der Datei."
 					+ " Diese muss UTF-8 (ohne BOM) sein.");
 			logger.modifyIndent(-2);
 			return false;
@@ -831,7 +834,7 @@ public final class DataUntis {
 	 */
 	private static @NotNull String getGPU004(final @NotNull Logger logger, final @NotNull List<DTOLehrer> lehrer,
 			final @NotNull Map<Long, DTOLehrerAbschnittsdaten> mapAbschnitte) throws ApiOperationException {
-		logger.logLn("-> Erstelle Liste der Klassen für GPU004.txt");
+		logger.logLn("-> Erstelle Liste der Lehrer für GPU004.txt");
 		logger.modifyIndent(2);
 		try {
 			final List<UntisGPU004> gpu004 = getListGPU004(lehrer, mapAbschnitte);
@@ -984,7 +987,7 @@ public final class DataUntis {
 	 */
 	private static @NotNull String getGPU006(final @NotNull Logger logger, final @NotNull List<DTOFach> faecher, final @NotNull List<DTOKurs> kurse,
 			final @NotNull Map<String, FachgruppeKatalogEintrag> mapFachgruppe) throws ApiOperationException {
-		logger.logLn("-> Erstelle Liste der Klassen für GPU006.txt");
+		logger.logLn("-> Erstelle Liste der Fächer bzw. Kurse für GPU006.txt");
 		logger.modifyIndent(2);
 		try {
 			final List<UntisGPU006> gpu006 = getListGPU006(faecher, kurse, mapFachgruppe);
@@ -1054,7 +1057,7 @@ public final class DataUntis {
 
 
 	/**
-	 * Erzeugt den Export der Fächer- bzw- Kursliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU006.txt)
+	 * Erzeugt den Export der Fächer- bzw. Kursliste des angegebenen Schuljahresabschnittes für Untis (Datei GPU006.txt)
 	 * und gibt diese als Response zurück.
 	 *
 	 * @param conn                     die Datenbank-Verbindung
@@ -1072,10 +1075,10 @@ public final class DataUntis {
 
 
 	/**
-	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schüler die
+	 * Bestimmt anhand der übergebenen Schülerliste und der übergebenen Klasseninformationen zu den Schülern die
 	 * Liste der zugehörigen Schülereinträge für die GPU010.TXT-Datei von Untis.
 	 *
-	 * @param schueler    die Liste der schüler
+	 * @param schueler    die Liste der Schüler
 	 * @param mapKlasse   die Klassen der Schüler anhand der jeweiligen Schüler-ID
 	 * @param idVariante  die Variante für den Schüler-Bezeichner (1, 2 oder 3 - siehe {@link UntisSchuelerBezeichner})
 	 *
@@ -1368,7 +1371,7 @@ public final class DataUntis {
 						DTOSchuelerLernabschnittsdaten.class, idsSchueler, schuljahresabschnitt.id)
 						.stream().collect(Collectors.toMap(la -> la.Schueler_ID, la -> la));
 		if (mapLernabschnitte.isEmpty()) {
-			final String error = "Keine Lernabschnitt zu den Schülern in den Kursen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
+			final String error = "Keine Lernabschnitte zu den Schülern in den Kursen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
 			throw new ApiOperationException(Status.NOT_FOUND, error);
 		}
@@ -1392,7 +1395,7 @@ public final class DataUntis {
 		final Map<Long, DTOKlassen> mapKlassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt)
 				.stream().collect(Collectors.toMap(kl -> kl.ID, kl -> kl));
 		if (mapKlassen.isEmpty()) {
-			final String error = "Keine Klassen in dem Schuljahresabschnitt %s gefunden.".formatted(strSchuljahresabschnitt);
+			final String error = "Keine Klassen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
 			throw new ApiOperationException(Status.NOT_FOUND, error);
 		}
@@ -1658,7 +1661,7 @@ public final class DataUntis {
 	}
 
 	/**
-	 * Erzeugt den Export die Klausurdaten des angegebenen Schuljahresabschnittes für Untis (Datei GPU017.txt)
+	 * Erzeugt den Export der Klausurdaten des angegebenen Schuljahresabschnittes für Untis (Datei GPU017.txt)
 	 * und gibt diese als Response zurück.
 	 *
 	 * @param conn                     die Datenbank-Verbindung
@@ -1705,7 +1708,7 @@ public final class DataUntis {
 			if (kurs.idJahrgaenge.isEmpty()) {
 				// Fall 1: Schulweiter Kurs
 				for (final long unterricht : mapUnterrichte.getEntrySet().stream().flatMap(m -> m.getValue().entrySet().stream())
-						.flatMap(e -> e.getValue().stream()).map(u -> u.idUnterricht).toList()) {
+						.filter(e -> kurs.kuerzel.equals(e.getKey())).flatMap(e -> e.getValue().stream()).map(u -> u.idUnterricht).toList()) {
 					for (final int schienenNr : kurs.schienen) {
 						final UntisGPU019 dto = new UntisGPU019();
 						dto.name = "Schiene " + schienenNr;
@@ -1806,13 +1809,13 @@ public final class DataUntis {
 		}
 		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
 		if (faecher.isEmpty()) {
-			final String error = "Keine Klassen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
+			final String error = "Keine Fächer in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
 			throw new ApiOperationException(Status.NOT_FOUND, error);
 		}
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, idSchuljahresabschnitt);
 		if (klassen.isEmpty()) {
-			final String error = "Keine Klassen in dem Schuljahresabschnitt %s gefunden.".formatted(strSchuljahresabschnitt);
+			final String error = "Keine Klassen in dem %s gefunden.".formatted(strSchuljahresabschnitt);
 			logger.logLn("-> " + error);
 			throw new ApiOperationException(Status.NOT_FOUND, error);
 		}
@@ -1948,6 +1951,9 @@ public final class DataUntis {
 			final UntisGPU019 dto = new UntisGPU019();
 			// TODO evtl. Multi-Schienen-Kurse unterstützen
 			final Set<GostBlockungsergebnisSchiene> schienen = ergebnisManager.getOfKursSchienenmenge(kurs.id);
+			if (schienen.isEmpty()) {
+				continue;
+			}
 			final GostBlockungsergebnisSchiene schiene = schienen.iterator().next();
 			dto.name = datenManager.schieneGet(schiene.id).bezeichnung;
 			dto.art = "2";
@@ -1961,7 +1967,7 @@ public final class DataUntis {
 
 	/**
 	 * Erzeugt den Export eines Blockungsergebnisses für Untis, indem die Dateien GPU002.txt, GPU015.txt und GPU019.txt
-	 * erzeugt werden und in einem Liste von Strings in dieser Reihenfolge in der Response zurückgegeben werden.
+	 * erzeugt werden und in einer Liste von Strings in dieser Reihenfolge in der Response zurückgegeben werden.
 	 *
 	 * @param conn                     die Datenbank-Verbindung
 	 * @param logger                   der Logger
@@ -2005,7 +2011,7 @@ public final class DataUntis {
 		for (final Long idBlockungsergebnis : params.numbers) {
 			if (idBlockungsergebnis == null) {
 				logger.logLn("[Fehler] Null ist für IDs von Blockungsergebnissen unzulässig.");
-				throw new ApiOperationException(Status.BAD_REQUEST, "Null-Werte sind für IDs von Bloockungsergebnissen nicht zulässig.");
+				throw new ApiOperationException(Status.BAD_REQUEST, "Null-Werte sind für IDs von Blockungsergebnissen nicht zulässig.");
 			}
 
 			// Lade die Blockungsergebnisse aus der Datenbank
