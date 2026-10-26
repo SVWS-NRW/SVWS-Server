@@ -65,6 +65,11 @@ export class ValidatorGesamt extends Validator {
 	 */
 	protected readonly mapValidatorenKurse: JavaMap<number, List<Validator>> = new HashMap<number, List<Validator>>();
 
+	/**
+	 * Eine Map zur Umwandlung der Foerderschwerpunkt ID des schulinternen Kataloges auf die zugehörige ID des Core-Types
+	 */
+	private readonly mapFoerderschwerpunkte: JavaMap<number, number> = new HashMap<number, number>();
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -122,7 +127,7 @@ export class ValidatorGesamt extends Validator {
 			const list: List<Validator> = new ArrayList<Validator>();
 			list.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.idSchuljahresabschnitt }, { get: () => schueler.geschlecht }, { get: () => schueler.geburtsdatum }, { get: () => schueler.idGeburtsland }, { get: () => schueler.idGeburtslandMutter }, { get: () => schueler.idGeburtslandVater }, { get: () => schueler.hatMigrationshintergrund }, { get: () => schueler.idStaatsangehoerigkeit }, { get: () => schueler.idStaatsangehoerigkeit2 }, { get: () => schueler.idVerkehrspracheFamilie }, { get: () => schueler.zuzugsjahr }, this.kontext()));
 			for (const lernabschnitt of schueler.lernabschnitte) {
-				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => lernabschnitt.idSchuljahresabschnitt }, { get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
+				list.add(new ValidatorSlSchuelerLernabschnittsdaten({ get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt1) }, { get: () => this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt2) }, { get: () => lernabschnitt.idSchuljahresabschnitt }, { get: () => lernabschnitt.idKlassenart }, { get: () => lernabschnitt.idEpJahre }, this.kontext()));
 			}
 			this._validatoren.addAll(list);
 			this.mapValidatorenSchueler.put(schueler.id, list);
@@ -350,10 +355,18 @@ export class ValidatorGesamt extends Validator {
 		return Validator.getFehlerOfListen(this.mapValidatorenKurse.values());
 	}
 
+	private buildMapFoerderschwerpunkte(gesamt: StatistikGesamt): void {
+		this.mapFoerderschwerpunkte.clear();
+		for (const fsp of gesamt.foederschwerpunkte) {
+			this.mapFoerderschwerpunkte.put(fsp.id, fsp.idKatalog);
+		}
+	}
+
 	protected pruefe(): boolean {
 		this._validatoren.clear();
 		this._validatoren.addAll(this.validatoren);
 		const gesamt: StatistikGesamt = this.daten.get();
+		this.buildMapFoerderschwerpunkte(gesamt);
 		this.addSubvalidatorenLehrer(gesamt);
 		this.addSubvalidatorenSchueler(gesamt);
 		this.addSubvalidatorenKlassen(gesamt);

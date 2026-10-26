@@ -67,6 +67,9 @@ public final class ValidatorGesamt extends Validator {
 	/** Eine Map mit allen Sub-Validatoren, welche direkt auf Kursdatensätzen arbeiten, zugeordnet zu ihrer ID */
 	protected final @NotNull Map<Long, List<Validator>> mapValidatorenKurse = new HashMap<>();
 
+	/** Eine Map zur Umwandlung der Foerderschwerpunkt ID des schulinternen Kataloges auf die zugehörige ID des Core-Types */
+	private final @NotNull Map<Long, Long> mapFoerderschwerpunkte = new HashMap<>();
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -184,8 +187,9 @@ public final class ValidatorGesamt extends Validator {
 					() -> schueler.zuzugsjahr,
 					this.kontext()));
 			for (final SchuelerLernabschnittStatistikGesamt lernabschnitt : schueler.lernabschnitte) {
-
 				list.add(new ValidatorSlSchuelerLernabschnittsdaten(
+						() -> this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt1),
+						() -> this.mapFoerderschwerpunkte.get(lernabschnitt.idFoerderschwerpunkt2),
 						() -> lernabschnitt.idSchuljahresabschnitt,
 						() -> lernabschnitt.idKlassenart,
 						() -> lernabschnitt.idEpJahre,
@@ -505,14 +509,23 @@ public final class ValidatorGesamt extends Validator {
 		return Validator.getFehlerOfListen(mapValidatorenKurse.values());
 	}
 
+	private void buildMapFoerderschwerpunkte(final @NotNull StatistikGesamt gesamt) {
+		this.mapFoerderschwerpunkte.clear();
+		for (final @NotNull FoerderschwerpunktStatistikGesamt fsp : gesamt.foederschwerpunkte) {
+			this.mapFoerderschwerpunkte.put(fsp.id, fsp.idKatalog);
+		}
+	}
 
 	@Override
 	protected boolean pruefe() {
 		_validatoren.clear();
 		_validatoren.addAll(validatoren);
 
-		// Erzeuge dynamisch Subvalidatoren anhand der übergebenen Daten zur späteren Ausführung in diesem Validator
 		final @NotNull StatistikGesamt gesamt = daten.get();
+
+		buildMapFoerderschwerpunkte(gesamt);
+
+		// Erzeuge dynamisch Subvalidatoren anhand der übergebenen Daten zur späteren Ausführung in diesem Validator
 		this.addSubvalidatorenLehrer(gesamt);
 		this.addSubvalidatorenSchueler(gesamt);
 		this.addSubvalidatorenKlassen(gesamt);

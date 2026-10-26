@@ -1,3 +1,4 @@
+import { ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt } from '../../../asd/validate/schueler/ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt';
 import { ValidatorSleSchuelerLernabschnittsdatenEpJahre } from '../../../asd/validate/schueler/ValidatorSleSchuelerLernabschnittsdatenEpJahre';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -11,15 +12,18 @@ export class ValidatorSlSchuelerLernabschnittsdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param idFoerderschwerpunkt1   die ID des ersten Förderschwerpunktes
+	 * @param idFoerderschwerpunkt2   die ID des zweiten Förderschwerpunktes
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnitts
 	 * @param idKlassenart            die Klassenart ID
 	 * @param idEpJahre               die EPJahre ID
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(idFoerderschwerpunkt1: Supplier<number | null>, idFoerderschwerpunkt2: Supplier<number | null>, idSchuljahresabschnitt: Supplier<number | null>, idKlassenart: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idSchuljahresabschnitt, idKlassenart, kontext));
 		this._validatoren.add(new ValidatorSleSchuelerLernabschnittsdatenEpJahre(idSchuljahresabschnitt, idEpJahre, kontext));
+		this._validatoren.add(new ValidatorSlfSchuelerLernabschnittsdatenFoerderschwerpunkt(idFoerderschwerpunkt1, idFoerderschwerpunkt2, kontext));
+		this._validatoren.add(new ValidatorSlkSchuelerLernabschnittsdatenKlassenart(idSchuljahresabschnitt, idKlassenart, kontext));
 	}
 
 	protected pruefe(): boolean {
