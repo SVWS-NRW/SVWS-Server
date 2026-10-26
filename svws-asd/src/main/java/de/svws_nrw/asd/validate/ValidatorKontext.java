@@ -3,9 +3,11 @@ package de.svws_nrw.asd.validate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -54,6 +56,7 @@ public class ValidatorKontext {
 		_validatorManager = ValidatorManager.getManager(schulform, zebras);
 	}
 
+
 	/**
 	 * Gibt die Schulform der Schule anhand der Information aus den
 	 * Stammdaten der Schule zurück.
@@ -63,6 +66,7 @@ public class ValidatorKontext {
 	public @NotNull Schulform getSchulform() {
 		return _schulform;
 	}
+
 
 	/**
 	 * Gibt das aktuelle Schuljahr der Schule zurück.
@@ -80,6 +84,23 @@ public class ValidatorKontext {
 
 
 	/**
+	 * Gibt das aktuelle Schuljahr anhand des Schuljahresabschnitts der Schule zurück.
+	 *
+	 * @param idSchuljahresabschnitt   das entsprechende Schuljahr
+	 *
+	 * @return das aktuelle Schuljahr
+	 */
+	public int getSchuljahrBySchuljahresabschnitt(final @NotNull Supplier<@NotNull Long> idSchuljahresabschnitt) {
+
+		final @AllowNull Schuljahresabschnitt sja =  getSchuljahresabschnittByID(idSchuljahresabschnitt.get());
+		if (sja == null) {
+			throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt");
+		}
+		return sja.schuljahr;
+	}
+
+
+	/**
 	 * Gibt den aktuellen Schuljahresabschnitt der Schule zurück.
 	 *
 	 * @return der Schuljahresabschnitt oder null, wenn dieser nicht korrekt gesetzt ist
@@ -87,7 +108,6 @@ public class ValidatorKontext {
 	public Schuljahresabschnitt getSchuljahresabschnitt() {
 		return _mapSchuljahresabschnitte.get(_idSchuljahresabsbschnittAktuell);
 	}
-
 
 	/**
 	 * Gibt den Schuljahresabschnitt der Schule für die übergebene ID zurück.

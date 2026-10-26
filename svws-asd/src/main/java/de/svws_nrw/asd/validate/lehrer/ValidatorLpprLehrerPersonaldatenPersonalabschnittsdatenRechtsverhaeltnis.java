@@ -37,13 +37,7 @@ public final class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechts
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
 
-		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
-			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja == null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		};
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
 		_validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(schuljahr, idStaatsangehoerigkeit, idRechtsverhaeltnis, geburtsdatum, kontext));
 	}

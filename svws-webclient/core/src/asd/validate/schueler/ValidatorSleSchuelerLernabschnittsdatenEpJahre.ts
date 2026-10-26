@@ -1,9 +1,7 @@
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorSle00SchuelerLernabschnittsdatenEpJahre } from '../../../asd/validate/schueler/ValidatorSle00SchuelerLernabschnittsdatenEpJahre';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSleSchuelerLernabschnittsdatenEpJahre extends Validator {
@@ -21,13 +19,7 @@ export class ValidatorSleSchuelerLernabschnittsdatenEpJahre extends Validator {
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idEpJahre: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja === null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		} };
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
 		this._validatoren.add(new ValidatorSle00SchuelerLernabschnittsdatenEpJahre(schuljahr, idEpJahre, kontext));
 	}
 

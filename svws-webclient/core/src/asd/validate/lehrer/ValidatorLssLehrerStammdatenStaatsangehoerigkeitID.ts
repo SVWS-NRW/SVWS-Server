@@ -1,4 +1,3 @@
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -21,13 +20,7 @@ export class ValidatorLssLehrerStammdatenStaatsangehoerigkeitID extends Validato
 	public constructor(idStaatsangehoerigkeit: Supplier<number | null>, idSchuljahresabschnitt: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja === null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		} };
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
 		this._validatoren.add(new ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(idStaatsangehoerigkeit, schuljahr, kontext));
 	}
 

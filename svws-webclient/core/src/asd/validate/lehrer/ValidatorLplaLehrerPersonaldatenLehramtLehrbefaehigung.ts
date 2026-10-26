@@ -1,5 +1,4 @@
 import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung } from '../../../asd/validate/lehrer/ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -23,13 +22,7 @@ export class ValidatorLplaLehrerPersonaldatenLehramtLehrbefaehigung extends Vali
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idLehrbefaehigung: Supplier<number | null>, lehrerLehramt: Supplier<LehrerLehramt | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja === null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		} };
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
 		this._validatoren.add(new ValidatorLpla00LehrerPersonaldatenLehramtLehrbefaehigung(schuljahr, idLehrbefaehigung, lehrerLehramt, kontext));
 	}
 

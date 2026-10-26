@@ -12,11 +12,6 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	 */
 	private readonly _idVerkehrsspracheFamilie: Supplier<number>;
 
-	/**
-	 * Gibt an, ob ein Migrationshintergrund vorhanden ist
-	 */
-	private readonly _hatMigrationshintergrund: Supplier<boolean | null>;
-
 	private static readonly FEHLERTEXT: string = "Verkehrssprache: Das Feld muss zulässig sein.";
 
 
@@ -31,7 +26,6 @@ export class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	public constructor(schuljahr: Supplier<number>, idVerkehrsspracheFamilie: Supplier<number>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
-		this._hatMigrationshintergrund = hatMigrationshintergrund;
 		this._validatoren.add(new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));
 	}
 

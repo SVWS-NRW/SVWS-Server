@@ -1,9 +1,7 @@
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr } from '../../../asd/validate/schueler/ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr extends Validator {
@@ -23,13 +21,7 @@ export class ValidatorSsmzSchuelerStammdatenMigrationshintergrundZuzugsjahr exte
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, zuzugsjahr: Supplier<number | null>, geburtsdatum: Supplier<string | null>, hatMigrationshintergrund: Supplier<boolean>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja === null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		} };
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
 		this._validatoren.add(new ValidatorSsmz00SchuelerStammdatenMigrationshintergrundZuzugsjahr(schuljahr, zuzugsjahr, geburtsdatum, hatMigrationshintergrund, kontext));
 	}
 

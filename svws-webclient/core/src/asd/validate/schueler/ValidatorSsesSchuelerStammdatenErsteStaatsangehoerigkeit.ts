@@ -1,4 +1,3 @@
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit } from '../../../asd/validate/schueler/ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -21,13 +20,7 @@ export class ValidatorSsesSchuelerStammdatenErsteStaatsangehoerigkeit extends Va
 	public constructor(idSchuljahresabschnitt: Supplier<number | null>, idStaatsangehoerigkeit: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
-		const schuljahr: Supplier<number> = { get: () => {
-			const sja: Schuljahresabschnitt | null = kontext.getSchuljahresabschnittByID(this.getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja === null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		} };
+		const schuljahr: Supplier<number> = { get: () => kontext.getSchuljahrBySchuljahresabschnitt(this.getNotNullSupplierLong(idSchuljahresabschnitt)) };
 		this._validatoren.add(new ValidatorSses00SchuelerStammdatenErsteStaatsangehoerigkeit(schuljahr, idStaatsangehoerigkeit, kontext));
 	}
 

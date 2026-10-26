@@ -15,7 +15,6 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorUf01UnterrichtsverteilungsdatenFach extends Validator {
 
 	private final @NotNull Supplier<@NotNull Long> _idFach;
-	private static final @NotNull String FEHLERTEXT = "Fach des Kurses: Das Feld 'Fach' muss zulässig sein.";
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung des Fachs.
@@ -40,7 +39,7 @@ public final class ValidatorUf01UnterrichtsverteilungsdatenFach extends Validato
 		final @AllowNull Fach fach = Fach.data().getWertByIDOrNull(idFach);
 
 		if (fach == null) {
-			addFehler(0, FEHLERTEXT);
+			addFehler(0, "Fach des Kurses: Das Feld 'Fach' muss zulässig sein. ");
 			return false;
 		}
 

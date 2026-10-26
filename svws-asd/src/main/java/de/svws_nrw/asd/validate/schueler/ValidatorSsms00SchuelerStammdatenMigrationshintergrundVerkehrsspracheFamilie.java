@@ -13,6 +13,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
+	/** Das Schuljahr des Schülers */
+	final @NotNull Supplier<@NotNull Integer> _schuljahr;
+
 	/** Die Verkehrssprache der Familie des Schülers */
 	private final @NotNull Supplier<@AllowNull Long> _idVerkehrsspracheFamilie;
 
@@ -25,7 +28,7 @@ public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehr
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param schuljahr                Schuljahr
+	 * @param schuljahr                 Schuljahr
 	 * @param verkehrsspracheFamilie    die Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
@@ -36,24 +39,30 @@ public final class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehr
 			final @NotNull Supplier<@AllowNull Boolean> hatMigrationshintergrund,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
+		_schuljahr = schuljahr;
 		_idVerkehrsspracheFamilie = verkehrsspracheFamilie;
 		_hatMigrationshintergrund = hatMigrationshintergrund;
-
-		_validatoren.add(
-				new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final @AllowNull Long verkehrsspracheFamilie = _idVerkehrsspracheFamilie.get();
 		final @AllowNull Boolean hatMigrationshintergrundZwisch = _hatMigrationshintergrund.get();
-		final boolean hatMigrationshintergrund = (hatMigrationshintergrundZwisch != null) && hatMigrationshintergrundZwisch;
+		final boolean hatMigrationshintergrund = hatMigrationshintergrundZwisch == null ? false : hatMigrationshintergrundZwisch;
 
-		if (hatMigrationshintergrund && (verkehrsspracheFamilie == null)) {
-			addFehler(0, FEHLERTEXT);
-			return false;
+
+		_validatoren.clear();
+		if (hatMigrationshintergrund) {
+			if (verkehrsspracheFamilie == null) {
+				addFehler(0, FEHLERTEXT);
+				return false;
+			}
+			_validatoren.add(
+					new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(_schuljahr, getNotNullSupplierLong(_idVerkehrsspracheFamilie), () -> hatMigrationshintergrund, kontext()));
+		} else {
+//			schüler hat keinen migrationshintergrund - keine prüfung
 		}
-
 		return true;
+
 	}
 }

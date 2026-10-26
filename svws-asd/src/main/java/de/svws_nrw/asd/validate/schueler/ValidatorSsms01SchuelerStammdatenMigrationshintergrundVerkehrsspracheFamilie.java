@@ -17,9 +17,6 @@ public final class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehr
 	/** Die ID der Verkehrssprache der Familie des Schülers */
 	private final @NotNull Supplier<@NotNull Long> _idVerkehrsspracheFamilie;
 
-	/** Gibt an, ob ein Migrationshintergrund vorhanden ist */
-	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;
-
 	private static final @NotNull String FEHLERTEXT =
 			"Verkehrssprache: Das Feld muss zulässig sein.";
 
@@ -38,7 +35,6 @@ public final class ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehr
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_idVerkehrsspracheFamilie = idVerkehrsspracheFamilie;
-		_hatMigrationshintergrund = hatMigrationshintergrund;
 
 		_validatoren.add(
 				new ValidatorSsms02SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, idVerkehrsspracheFamilie, hatMigrationshintergrund, kontext));

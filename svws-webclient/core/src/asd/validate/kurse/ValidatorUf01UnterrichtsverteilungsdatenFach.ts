@@ -9,8 +9,6 @@ export class ValidatorUf01UnterrichtsverteilungsdatenFach extends Validator {
 
 	private readonly _idFach: Supplier<number>;
 
-	private static readonly FEHLERTEXT: string = "Fach des Kurses: Das Feld 'Fach' muss zulässig sein.";
-
 
 	/**
 	 * Erstellt einen neuen Validator zur Überprüfung des Fachs.
@@ -28,7 +26,7 @@ export class ValidatorUf01UnterrichtsverteilungsdatenFach extends Validator {
 		const idFach: number = this._idFach.get();
 		const fach: Fach | null = Fach.data().getWertByIDOrNull(idFach);
 		if (fach === null) {
-			this.addFehler(0, ValidatorUf01UnterrichtsverteilungsdatenFach.FEHLERTEXT);
+			this.addFehler(0, "Fach des Kurses: Das Feld 'Fach' muss zulässig sein. ");
 			return false;
 		}
 		return true;

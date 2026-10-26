@@ -5,6 +5,7 @@ import { ValidatorException } from '../../asd/validate/ValidatorException';
 import { HashMap } from '../../java/util/HashMap';
 import { Schulform } from '../../asd/types/schule/Schulform';
 import type { List } from '../../java/util/List';
+import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../asd/data/schule/Schuljahresabschnitt';
@@ -79,6 +80,21 @@ export class ValidatorKontext extends JavaObject {
 			return abschnitt.schuljahr;
 		}
 		throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt");
+	}
+
+	/**
+	 * Gibt das aktuelle Schuljahr anhand des Schuljahresabschnitts der Schule zurück.
+	 *
+	 * @param idSchuljahresabschnitt   das entsprechende Schuljahr
+	 *
+	 * @return das aktuelle Schuljahr
+	 */
+	public getSchuljahrBySchuljahresabschnitt(idSchuljahresabschnitt: Supplier<number>): number {
+		const sja: Schuljahresabschnitt | null = this.getSchuljahresabschnittByID(idSchuljahresabschnitt.get());
+		if (sja === null) {
+			throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt");
+		}
+		return sja.schuljahr;
 	}
 
 	/**

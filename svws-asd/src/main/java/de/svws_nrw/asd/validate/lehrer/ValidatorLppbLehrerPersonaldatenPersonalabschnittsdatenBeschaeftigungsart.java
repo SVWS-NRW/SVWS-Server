@@ -2,7 +2,6 @@ package de.svws_nrw.asd.validate.lehrer;
 
 import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -36,13 +35,7 @@ public final class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBescha
 
 		_idSchuljahresabschnitt = idSchuljahresabschnitt;
 
-		final @NotNull Supplier<@NotNull Integer> schuljahr = () -> {
-			final @AllowNull Schuljahresabschnitt sja =  kontext.getSchuljahresabschnittByID(getNotNullSupplierLong(idSchuljahresabschnitt).get());
-			if (sja == null) {
-				throw new NullPointerException();
-			}
-			return sja.schuljahr;
-		};
+		final @NotNull Supplier<@NotNull Integer> schuljahr = () ->  kontext.getSchuljahrBySchuljahresabschnitt(getNotNullSupplierLong(idSchuljahresabschnitt));
 
 		final @NotNull Supplier<@AllowNull LehrerEinsatzstatus> einsatzstatus = () -> LehrerEinsatzstatus.data().getWertByIDOrNull(idEinsatzstatus.get());
 

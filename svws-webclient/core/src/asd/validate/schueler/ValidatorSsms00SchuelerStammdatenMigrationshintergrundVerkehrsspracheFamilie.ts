@@ -7,6 +7,11 @@ import { ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFa
 export class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie extends Validator {
 
 	/**
+	 * Das Schuljahr des Schülers
+	 */
+	readonly _schuljahr: Supplier<number>;
+
+	/**
 	 * Die Verkehrssprache der Familie des Schülers
 	 */
 	private readonly _idVerkehrsspracheFamilie: Supplier<number | null>;
@@ -22,25 +27,31 @@ export class ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrssprac
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param schuljahr                Schuljahr
+	 * @param schuljahr                 Schuljahr
 	 * @param verkehrsspracheFamilie    die Verkehrssprache der Familie
 	 * @param hatMigrationshintergrund  Migrationshintergrund vorhanden
 	 * @param kontext                   der Kontext des Validators
 	 */
 	public constructor(schuljahr: Supplier<number>, verkehrsspracheFamilie: Supplier<number | null>, hatMigrationshintergrund: Supplier<boolean | null>, kontext: ValidatorKontext) {
 		super(kontext);
+		this._schuljahr = schuljahr;
 		this._idVerkehrsspracheFamilie = verkehrsspracheFamilie;
 		this._hatMigrationshintergrund = hatMigrationshintergrund;
-		this._validatoren.add(new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(schuljahr, this.getNotNullSupplierLong(verkehrsspracheFamilie), hatMigrationshintergrund, kontext));
 	}
 
 	protected pruefe(): boolean {
 		const verkehrsspracheFamilie: number | null = this._idVerkehrsspracheFamilie.get();
 		const hatMigrationshintergrundZwisch: boolean | null = this._hatMigrationshintergrund.get();
-		const hatMigrationshintergrund: boolean = (hatMigrationshintergrundZwisch !== null) && hatMigrationshintergrundZwisch;
-		if (hatMigrationshintergrund && (verkehrsspracheFamilie === null)) {
-			this.addFehler(0, ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
-			return false;
+		const hatMigrationshintergrund: boolean = hatMigrationshintergrundZwisch === null ? false : hatMigrationshintergrundZwisch;
+		this._validatoren.clear();
+		if (hatMigrationshintergrund) {
+			if (verkehrsspracheFamilie === null) {
+				this.addFehler(0, ValidatorSsms00SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie.FEHLERTEXT);
+				return false;
+			}
+			this._validatoren.add(new ValidatorSsms01SchuelerStammdatenMigrationshintergrundVerkehrsspracheFamilie(this._schuljahr, this.getNotNullSupplierLong(this._idVerkehrsspracheFamilie), { get: () => hatMigrationshintergrund }, this.kontext()));
+		} else {
+			// empty block
 		}
 		return true;
 	}

@@ -16,6 +16,7 @@ public final class ValidatorSsml00SchuelerStammdatenMigrationshintergrundGeburts
 	private final @NotNull Supplier<@AllowNull Long> _idGeburtsland;
 	/** hat Migrationshintergrund */
 	private final @NotNull Supplier<@AllowNull Boolean> _hatMigrationshintergrund;
+
 	private static final @NotNull String FEHLERTEXT = "Geburtsland des Schülers: Wenn ein Migrationshintergrund vorhanden ist, muss das Feld 'Geburtsland' besetzt sein.";
 
 	/**
