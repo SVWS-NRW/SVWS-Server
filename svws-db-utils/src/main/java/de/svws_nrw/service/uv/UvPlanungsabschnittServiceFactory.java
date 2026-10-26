@@ -2,6 +2,7 @@ package de.svws_nrw.service.uv;
 
 import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.repo.uv.UvGrunddatenRepositoryFactory;
@@ -111,7 +112,7 @@ public final class UvPlanungsabschnittServiceFactory {
 	 */
 	public UvPlanungsabschnittSchuelerImportService getUvPlanungsabschnittSchuelerImportService() {
 		return new UvPlanungsabschnittSchuelerImportService(
-				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository()),
+				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE),
 				schuelerRepositoryFactory.getSchuelerRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				klassenRepositoryFactory.getKlassenRepository(),
@@ -149,7 +150,7 @@ public final class UvPlanungsabschnittServiceFactory {
 	public UvLerngruppeKlassenImportService getUvLerngruppeKlassenImportService() {
 		return new UvLerngruppeKlassenImportService(
 				getUvKlasseService(),
-				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository()),
+				new SchuljahresabschnittService(schuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE),
 				new UvStundentafelFachService(grunddatenRepositoryFactory.getUvStundentafelFachRepository()),
 				planungsabschnittRepositoryFactory.getUvLerngruppeRepository(),
 				getUvLerngruppeService());

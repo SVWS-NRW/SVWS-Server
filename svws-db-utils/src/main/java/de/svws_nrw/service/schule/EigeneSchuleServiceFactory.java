@@ -1,5 +1,6 @@
 package de.svws_nrw.service.schule;
 
+import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 
 /**
@@ -46,12 +47,12 @@ public final class EigeneSchuleServiceFactory {
 	}
 
 	/**
-	 * Erstellt einen neuen Statistik-Service für den Zugriff auf Schuljahresabschnitte.
+	 * Erstellt einen neuen Service für den Zugriff auf Schuljahresabschnitte.
 	 *
 	 * @return der Service für die Schuljahresabschnitte
 	 */
 	public SchuljahresabschnittService getSchuljahresabschnittService() {
-		return new SchuljahresabschnittService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository());
+		return new SchuljahresabschnittService(eigeneSchuleRepositoryFactory.getSchuljahresabschnitteRepository(), SchuljahresabschnittMapper.INSTANCE);
 	}
 
 

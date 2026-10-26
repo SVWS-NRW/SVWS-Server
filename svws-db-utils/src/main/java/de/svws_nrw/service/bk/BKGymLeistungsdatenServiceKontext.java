@@ -31,6 +31,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.mapper.schule.SchuljahresabschnittMapper;
 import de.svws_nrw.repo.schule.kataloge.fach.FachRepository;
 import de.svws_nrw.repo.schule.kataloge.jahrgang.JahrgangRepository;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
@@ -40,7 +41,6 @@ import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import de.svws_nrw.service.lehrer.anrechnung.LehrerAnrechnungsstundeService;
 import de.svws_nrw.service.schueler.sprachenfolge.SchuelerSprachenfolgeService;
 import de.svws_nrw.service.schueler.sprachpruefung.SchuelerSprachpruefungService;
-import de.svws_nrw.service.schule.SchuljahresabschnittService;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -162,7 +162,7 @@ public final class BKGymLeistungsdatenServiceKontext {
 		// Bestimme zunächst die Schulspezifischen Informationen, insbesondere zum Schuljahresabschnitt
 		final long idSchuljahresabschnitt = eigeneSchuleRepository.getFirst().Schuljahresabschnitts_ID;
 		schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
-		final Schuljahresabschnitt schuljahresabschnittApi = SchuljahresabschnittService.toApi(schuljahresabschnitt);
+		final Schuljahresabschnitt schuljahresabschnittApi = SchuljahresabschnittMapper.INSTANCE.toApi(schuljahresabschnitt);
 
 		// Lade die Schuljahresabschnitte in den Cache, damit diese für die Sortierung der Lernabschnitte zur Verfügung stehen.
 		mapSchuljahresabschnitte = schuljahresabschnitteRepository.getMap();
