@@ -37,7 +37,7 @@
 				</template>
 			</template>
 
-			<template #default="{ row: leistungModel }">
+			<template #default="{ row: leistungModel, index }">
 				<td class="cursor-pointer flex items-center justify-center text-uistatic"
 					:style="getCellStyle(leistungModel.proxy)">
 					<svws-ui-checkbox :model-value="selectedLeistungenIds.has(leistungModel.proxy.id)"
@@ -82,9 +82,11 @@
 						{{ leistungModel.proxy.abifach ?? "" }}
 					</td>
 				</template>
-				<td :style="getCellStyle(leistungModel.proxy)" class="text-uistatic">
-					{{ leistungModel.proxy.wochenstunden ?? "" }}
-				</td>
+				<td :ref="inputWochenstunden(leistungModel, 6, index)" :style="getCellStyle(leistungModel.proxy)" class="text-uistatic ui-table-grid-input"
+					:class="{
+						'bg-ui-selected': (gridManager.focusColumn === 6),
+						'contentFocusField': gridManager.isFocusLast(6, index),
+					}" />
 				<td :style="getCellStyle(leistungModel.proxy)">
 					<ui-select title="Lehrer"
 						:manager="lehrerSelectManager"
@@ -166,7 +168,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watch } from "vue";
+	import { type ComponentPublicInstance, computed, ref, watch } from "vue";
 
 	import type { SchuelerLeistungsdaten } from "@core/asd/data/schueler/SchuelerLeistungsdaten";
 	import type { SchuelerLernabschnittsdaten } from "@core/asd/data/schueler/SchuelerLernabschnittsdaten";
@@ -438,5 +440,16 @@
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
+
+	function inputWochenstunden(row: SchuelerLeistungsdatenModelProxy, col: number, index: number) {
+		const key = `WS_${row.data.id}`;
+		const setter = (value: number | null) => row.proxy.wochenstunden = value ?? 0;
+		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 99, setter);
+			if (input !== null) {
+				gridManager.update(key, row.proxy.wochenstunden);
+			}
+		};
+	}
 
 </script>

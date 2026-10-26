@@ -23,7 +23,7 @@ export class SchuelerLeistungsdatenModelProxy extends ModelProxy<SchuelerLeistun
 		schuljahr: () => number,
 		patchLeistung?: (data: Partial<SchuelerLeistungsdaten>) => Promise<boolean>
 	) {
-		const listOfAutopatchProps: Iterable<keyof SchuelerLeistungsdaten> = ['lehrerID', 'note', 'noteQuartal'];
+		const listOfAutopatchProps: Iterable<keyof SchuelerLeistungsdaten> = ['lehrerID', 'note', 'noteQuartal', 'wochenstunden'];
 		super({ data, patch: patchLeistung, listOfAutopatchProps });
 		this.schuelerLernabschnittManager = schuelerLernabschnittManager;
 		this.schuljahr = schuljahr;
