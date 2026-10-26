@@ -4,6 +4,7 @@ import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
@@ -30,6 +31,8 @@ import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzReposi
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzRepositoryImpl;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepository;
 import de.svws_nrw.repo.schueler.ankreuzkompetenz.SchuelerAnkreuzkompetenzTimestampRepositoryImpl;
+import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
+import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepositoryImpl;
 import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepository;
 import de.svws_nrw.repo.schueler.foto.SchuelerFotoRepositoryImpl;
 import de.svws_nrw.repo.schueler.leistungsdaten.SchuelerLeistungsdatenRepository;
@@ -68,6 +71,7 @@ import de.svws_nrw.repo.schueler.zp10.SchuelerZP10TimestampsRepositoryImpl;
 /**
  * Eine Factory zum Erstellen von Repositories für den Schüler-Bereich.
  */
+@SuppressWarnings("java:S6539") // Alle Schüler-Repositories sind bewusst in einer Factory gebündelt
 public final class SchuelerRepositoryFactory extends RepositoryFactory {
 
 	/**
@@ -283,6 +287,15 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerLernplattformRepository getSchuelerLernplattformRepository() {
 		return this.getOrCreate(SchuelerLernplattformRepository.class, () -> new SchuelerLernplattformRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerDatenschutz}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerEinwilligungRepository getSchuelerEinwilligungRepository() {
+		return this.getOrCreate(SchuelerEinwilligungRepository.class, () -> new SchuelerEinwilligungRepositoryImpl(this.conn));
 	}
 
 	/**

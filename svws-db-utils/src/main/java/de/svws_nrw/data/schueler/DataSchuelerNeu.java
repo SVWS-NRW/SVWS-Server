@@ -5,11 +5,10 @@ import java.util.Map;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerNeu;
-import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittCreateRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformService;
@@ -27,8 +26,7 @@ public final class DataSchuelerNeu {
 	private final SchuelerLernabschnittService schuelerLernabschnittService;
 	private final SchuelerSchulbesuchService schuelerSchulbesuchService;
 	private final SchuelerLernplattformService schuelerLernplattformService;
-	private final DataSchuelerEinwilligungen dataSchuelerEinwilligungen;
-	private final DataEinwilligungsarten dataEinwilligungsarten;
+	private final SchuelerEinwilligungService schuelerEinwilligungService;
 
 	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
 
@@ -39,22 +37,19 @@ public final class DataSchuelerNeu {
 	 * @param schuelerLernabschnittService		SchuelerLernabschnittService
 	 * @param schuelerSchulbesuchService				SchulbesuchService
 	 * @param schuelerLernplattformService		SchuelerLernplattformService
-	 * @param dataSchuelerEinwilligungen		DataSchuelerEinwilligungen
-	 * @param dataEinwilligungsarten			DataEinwilligungsarten
+	 * @param schuelerEinwilligungService		SchuelerEinwilligungService
 	 */
 	public DataSchuelerNeu(
 			final SchuelerStammdatenService schuelerStammdatenService,
 			final SchuelerLernabschnittService schuelerLernabschnittService,
 			final SchuelerSchulbesuchService schuelerSchulbesuchService,
 			final SchuelerLernplattformService schuelerLernplattformService,
-			final DataSchuelerEinwilligungen dataSchuelerEinwilligungen,
-			final DataEinwilligungsarten dataEinwilligungsarten) {
+			final SchuelerEinwilligungService schuelerEinwilligungService) {
 		this.schuelerStammdatenService = schuelerStammdatenService;
 		this.schuelerLernabschnittService = schuelerLernabschnittService;
 		this.schuelerSchulbesuchService = schuelerSchulbesuchService;
 		this.schuelerLernplattformService = schuelerLernplattformService;
-		this.dataSchuelerEinwilligungen = dataSchuelerEinwilligungen;
-		this.dataEinwilligungsarten = dataEinwilligungsarten;
+		this.schuelerEinwilligungService = schuelerEinwilligungService;
 	}
 
 	/**
@@ -73,7 +68,7 @@ public final class DataSchuelerNeu {
 		final long idSchueler = createdSchueler.id;
 		addLernabschnitt(initAttributes, idSchueler);
 		patchSchulbesuch(initAttributes, idSchueler);
-		addEinwilligungen(idSchueler);
+		schuelerEinwilligungService.addForSchueler(idSchueler);
 		schuelerLernplattformService.addForSchueler(idSchueler);
 
 		return Response.status(Response.Status.CREATED).entity(createdSchueler).build();
@@ -113,15 +108,6 @@ public final class DataSchuelerNeu {
 		final var dto = new SchuelerSchulbesuchPatchRequest();
 		dto.idEinschulungsartGrundschule = JsonNullable.of(idGrundschuleEinschulungsart);
 		this.schuelerSchulbesuchService.patch(idSchueler, dto);
-	}
-
-	private void addEinwilligungen(final long idSchueler) {
-		this.dataEinwilligungsarten
-				.getAllIdsByPersonTyp(PersonTyp.SCHUELER)
-				.forEach(id -> {
-					final Map<String, Object> einwilligungAttributes = Map.of("idSchueler", idSchueler, "idEinwilligungsart", id);
-					this.dataSchuelerEinwilligungen.add(einwilligungAttributes);
-				});
 	}
 
 }

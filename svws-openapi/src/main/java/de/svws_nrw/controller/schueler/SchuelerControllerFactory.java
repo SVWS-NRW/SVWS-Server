@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
+import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungControllerImpl;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittControllerImpl;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
@@ -114,6 +116,19 @@ public final class SchuelerControllerFactory {
 	}
 
 	/**
+	 * Erstellt eine Factory-Instanz mit Schreibberechtigung für Einwilligungen.
+	 * <p>
+	 * Erfordert die Kompetenz {@link BenutzerKompetenz#SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN}.
+	 * </p>
+	 *
+	 * @param request die HTTP-Anfrage zur Initialisierung der Datenbankverbindung
+	 * @return eine SchuelerControllerFactory-Instanz mit Schreibberechtigung für Einwilligungen
+	 */
+	public static SchuelerControllerFactory withEinwilligungenWriteAccess(final HttpServletRequest request) {
+		return getNewInstance(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN);
+	}
+
+	/**
 	 * Erstellt eine neue BisherigeSchulenController-Instanz.
 	 *
 	 * @return ein neuer BisherigeSchulenController mit dem konfigurierten BisherigeSchulenService
@@ -165,6 +180,15 @@ public final class SchuelerControllerFactory {
 	 */
 	public SchuelerLernplattformController getSchuelerLernplattformController() {
 		return new SchuelerLernplattformControllerImpl(schuelerServiceFactory.getSchuelerLernplattformService());
+	}
+
+	/**
+	 * Erstellt eine neue SchuelerEinwilligungController-Instanz.
+	 *
+	 * @return ein neuer SchuelerEinwilligungController mit dem konfigurierten SchuelerEinwilligungService
+	 */
+	public SchuelerEinwilligungController getSchuelerEinwilligungController() {
+		return new SchuelerEinwilligungControllerImpl(schuelerServiceFactory.getSchuelerEinwilligungService());
 	}
 
 }

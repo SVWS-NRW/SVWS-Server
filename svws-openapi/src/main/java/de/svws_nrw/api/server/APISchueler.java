@@ -39,7 +39,6 @@ import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogHerkuenfte;
 import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
-import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.data.schueler.DataSchuelerFoerderempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
@@ -51,8 +50,8 @@ import de.svws_nrw.data.schueler.DataSchuelerTelefon;
 import de.svws_nrw.data.schueler.DataSchuelerVermerke;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
-import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.service.schueler.SchuelerServiceFactory;
+import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittBemerkungenPatchRequest;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenPatchRequest;
 import de.svws_nrw.service.schueler.lernplattform.SchuelerLernplattformPatchRequest;
@@ -276,9 +275,10 @@ public class APISchueler {
 					final var schuelerServiceFactory = SchuelerServiceFactory.getNewInstance();
 					final var schuelerstammdatenService = schuelerServiceFactory.getSchuelerStammdatenService();
 					final var schulbesuchService = schuelerServiceFactory.getSchulbesuchService();
+					final var lernplattformService = schuelerServiceFactory.getSchuelerLernplattformService();
+					final var einwilligungService = schuelerServiceFactory.getSchuelerEinwilligungService();
 					return new DataSchuelerNeu(schuelerstammdatenService, schuelerServiceFactory.getSchuelerLernabschnittService(), schulbesuchService,
-							schuelerServiceFactory.getSchuelerLernplattformService(), new DataSchuelerEinwilligungen(conn),
-							new DataEinwilligungsarten(conn)).add(is);
+							lernplattformService, einwilligungService).add(is);
 				},
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
@@ -1285,9 +1285,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Einwilligungen für den Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn).getAllByIdSchueler(idSchueler),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+		return SchuelerControllerFactory
+				.withReadAccess(request)
+				.getSchuelerEinwilligungController()
+				.getListByIdSchueler(idSchueler);
 	}
 
 	/**
@@ -1296,7 +1297,7 @@ public class APISchueler {
 	 * @param schema               das Datenbankschema, auf welchem der Patch ausgeführt werden soll
 	 * @param idSchueler           die Schüler-ID
 	 * @param idEinwilligungsart   die ID der Einwilligungsart, zu welcher die zu patchende Einwilligung gehört
-	 * @param is                   der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch                das partielle Update als {@link SchuelerEinwilligungPatchRequest}
 	 * @param request              die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1317,13 +1318,12 @@ public class APISchueler {
 			@PathParam("idEinwilligungsart") final long idEinwilligungsart,
 			@RequestBody(description = "Der Patch für die Einwilligung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = SchuelerEinwilligung.class))) final InputStream is,
+							schema = @Schema(implementation = SchuelerEinwilligung.class))) final SchuelerEinwilligungPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerEinwilligungen(conn).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
-						is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN);
+		return SchuelerControllerFactory
+				.withEinwilligungenWriteAccess(request)
+				.getSchuelerEinwilligungController()
+				.patch(idSchueler, idEinwilligungsart, patch);
 	}
 
 	/**

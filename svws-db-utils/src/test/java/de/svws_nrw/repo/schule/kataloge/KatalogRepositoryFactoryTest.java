@@ -59,6 +59,7 @@ class KatalogRepositoryFactoryTest {
 		assertNotNull(factory.getTeilleistungsartRepository());
 		assertNotNull(factory.getFachklasseRepository());
 		assertNotNull(factory.getMerkmalRepository());
+		assertNotNull(factory.getEinwilligungsartRepository());
 		assertNotNull(factory.getLernplattformRepository());
 		assertNotNull(factory.getLernplattformCredentialRepository());
 		assertNotNull(factory.getSchuleRepository());

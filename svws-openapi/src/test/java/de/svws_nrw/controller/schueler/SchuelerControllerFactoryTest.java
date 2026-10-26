@@ -1,5 +1,6 @@
 package de.svws_nrw.controller.schueler;
 
+import de.svws_nrw.controller.schueler.einwilligung.SchuelerEinwilligungController;
 import de.svws_nrw.controller.schueler.lernabschnitt.SchuelerLernabschnittController;
 import de.svws_nrw.controller.schueler.lernplattform.SchuelerLernplattformController;
 import de.svws_nrw.controller.schueler.schulbesuch.SchuelerBisherigeSchuleController;
@@ -141,6 +142,26 @@ class SchuelerControllerFactoryTest {
 		assertNotNull(factory);
 
 		final SchuelerLernplattformController controller = factory.getSchuelerLernplattformController();
+		assertNotNull(controller);
+	}
+
+	@Test
+	@DisplayName("withEinwilligungenWriteAccess | DBBenutzerUtils wird mit SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN aufgerufen")
+	void withEinwilligungenWriteAccess() {
+		final var factory = SchuelerControllerFactory.withEinwilligungenWriteAccess(request);
+
+		dbBenutzerUtilsMock.verify(() -> DBBenutzerUtils.getDBConnection(
+				eq(request), any(ServerMode.class), eq(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN)), times(1));
+		assertNotNull(factory);
+	}
+
+	@Test
+	@DisplayName("withReadAccess | getSchuelerEinwilligungController gibt einen Controller zurück")
+	void getSchuelerEinwilligungController() {
+		final var factory = SchuelerControllerFactory.withReadAccess(request);
+		assertNotNull(factory);
+
+		final SchuelerEinwilligungController controller = factory.getSchuelerEinwilligungController();
 		assertNotNull(controller);
 	}
 

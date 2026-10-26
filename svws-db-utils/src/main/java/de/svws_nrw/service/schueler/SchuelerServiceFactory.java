@@ -2,6 +2,7 @@ package de.svws_nrw.service.schueler;
 
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.schule.DataSchulen;
+import de.svws_nrw.mapper.schueler.einwilligung.SchuelerEinwilligungMapper;
 import de.svws_nrw.mapper.schueler.foto.SchuelerFotoMapper;
 import de.svws_nrw.mapper.schueler.leistungsdaten.SchuelerLeistungsdatenMapper;
 import de.svws_nrw.mapper.schueler.lernabschnittsdaten.SchuelerLernabschnittBemerkungenMapper;
@@ -19,6 +20,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
 import de.svws_nrw.service.benutzer.BenutzerServiceFactory;
+import de.svws_nrw.service.schueler.einwilligung.SchuelerEinwilligungService;
 import de.svws_nrw.service.schueler.foto.SchuelerFotoService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittService;
 import de.svws_nrw.service.schueler.lernabschnitt.SchuelerLernabschnittsdatenRepos;
@@ -267,6 +269,20 @@ public final class SchuelerServiceFactory {
 				katalogRepositoryFactory.getLernplattformRepository(),
 				katalogRepositoryFactory.getLernplattformCredentialRepository(),
 				SchuelerLernplattformMapper.INSTANCE
+		);
+	}
+
+	/**
+	 * Erstellt eine neue Instanz des {@link SchuelerEinwilligungService}.
+	 *
+	 * @return ein neuer {@code SchuelerEinwilligungService} mit allen erforderlichen Abhängigkeiten
+	 */
+	public SchuelerEinwilligungService getSchuelerEinwilligungService() {
+		return new SchuelerEinwilligungService(
+				schuelerRepositoryFactory.getSchuelerEinwilligungRepository(),
+				schuelerRepositoryFactory.getSchuelerRepository(),
+				katalogRepositoryFactory.getEinwilligungsartRepository(),
+				SchuelerEinwilligungMapper.INSTANCE
 		);
 	}
 

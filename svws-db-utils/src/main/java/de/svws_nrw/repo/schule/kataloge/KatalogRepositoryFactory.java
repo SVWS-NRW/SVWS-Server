@@ -7,6 +7,7 @@ import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOReligion;
@@ -18,6 +19,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.repo.RepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepository;
 import de.svws_nrw.repo.schule.kataloge.fachklasse.FachklasseRepositoryImpl;
 import de.svws_nrw.repo.schule.kataloge.fahrschuelerart.FahrschuelerartRepository;
@@ -64,6 +67,7 @@ import de.svws_nrw.repo.schule.kataloge.religion.ReligionRepositoryImpl;
 /**
  * Eine Factory zum Erstellen von Repositories für Datenbank-Entitäten und ggf. auch komplexere Abfragen.
  */
+@SuppressWarnings("java:S6539") // Alle Katalog-Repositories sind bewusst in einer Factory gebündelt
 public final class KatalogRepositoryFactory extends RepositoryFactory {
 
 	/**
@@ -240,6 +244,15 @@ public final class KatalogRepositoryFactory extends RepositoryFactory {
 	 */
 	public LernplattformCredentialRepository getLernplattformCredentialRepository() {
 		return this.getOrCreate(LernplattformCredentialRepository.class, () -> new LernplattformCredentialRepositoryImpl(this.conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOKatalogEinwilligungsart}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public EinwilligungsartRepository getEinwilligungsartRepository() {
+		return this.getOrCreate(EinwilligungsartRepository.class, () -> new EinwilligungsartRepositoryImpl(this.conn));
 	}
 
 	/**

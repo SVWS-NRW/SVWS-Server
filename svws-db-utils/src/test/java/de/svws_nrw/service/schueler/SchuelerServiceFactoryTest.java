@@ -15,9 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.svws_nrw.repo.benutzer.BenutzerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schueler.einwilligung.SchuelerEinwilligungRepository;
 import de.svws_nrw.repo.schueler.lernplattform.SchuelerLernplattformRepository;
 import de.svws_nrw.repo.schule.EigeneSchuleRepositoryFactory;
 import de.svws_nrw.repo.schule.kataloge.KatalogRepositoryFactory;
+import de.svws_nrw.repo.schule.kataloge.einwilligungsart.EinwilligungsartRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformCredentialRepository;
 import de.svws_nrw.repo.schule.kataloge.lernplattform.LernplattformRepository;
 import de.svws_nrw.service.schule.EigeneSchuleServiceFactory;
@@ -80,6 +82,24 @@ class SchuelerServiceFactoryTest {
 		verify(schuelerRepositoryFactory).getSchuelerRepository();
 		verify(katalogRepositoryFactory).getLernplattformRepository();
 		verify(katalogRepositoryFactory).getLernplattformCredentialRepository();
+	}
+
+	@Test
+	@DisplayName("getSchuelerEinwilligungService | Erstellt den Service und ruft alle benötigten Repositories ab")
+	void getSchuelerEinwilligungService_success() {
+		final var schuelerEinwilligungRepository = mock(SchuelerEinwilligungRepository.class);
+		final var schuelerRepository = mock(SchuelerRepository.class);
+		final var einwilligungsartRepository = mock(EinwilligungsartRepository.class);
+		when(schuelerRepositoryFactory.getSchuelerEinwilligungRepository()).thenReturn(schuelerEinwilligungRepository);
+		when(schuelerRepositoryFactory.getSchuelerRepository()).thenReturn(schuelerRepository);
+		when(katalogRepositoryFactory.getEinwilligungsartRepository()).thenReturn(einwilligungsartRepository);
+
+		final var service = factory.getSchuelerEinwilligungService();
+
+		assertThat(service).isNotNull();
+		verify(schuelerRepositoryFactory).getSchuelerEinwilligungRepository();
+		verify(schuelerRepositoryFactory).getSchuelerRepository();
+		verify(katalogRepositoryFactory).getEinwilligungsartRepository();
 	}
 
 }
