@@ -276,6 +276,31 @@ package:installer:win:release:
     rules:
         - *rule_release
 
+package:installer:linux:snapshot:
+    stage: package
+    needs:
+        - build
+        - test:integration-tests
+    before_script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - mkdir artifacts_linux
+    script:
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+    after_script:
+        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
+    cache:
+        <<: *global_cache
+        policy: pull
+    artifacts:
+        paths:
+            - artifacts_linux/
+    rules:
+        - *rule_no_tag
+        - *rule_no_branch_if_open_mr
+        - *rule_manual
+    allow_failure: true
+
 package:installer:linux:release:
     stage: package
     needs:
