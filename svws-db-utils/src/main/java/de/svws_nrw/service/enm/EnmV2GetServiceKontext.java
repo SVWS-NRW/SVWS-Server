@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
@@ -209,6 +210,9 @@ public final class EnmV2GetServiceKontext {
 
 	/** Die ID der stellvertretenden Schulleitung in der Lehrer-Tabelle */
 	private Long idSchulleitungStv;
+
+	/** Die IDs aller Lehrer mit der Leitungsfunktion Schulleitung oder stellvertretende Schulleitung im Schuljahresabschnitt */
+	private Set<Long> idsLehrerSchulleitung = Set.of();
 
 	/** Der Schuljahresabschnitt, für welchen die ENM-Daten erzeugt wurden */
 	private DTOSchuljahresabschnitte schuljahresabschnitt;
@@ -584,7 +588,7 @@ public final class EnmV2GetServiceKontext {
 		if (lehrerFunktion != ENMLehrerFunktion.SCHULLEITUNG) {
 			return true;
 		}
-		return Objects.equals(idSchulleitung, idLehrer) || Objects.equals(idSchulleitungStv, idLehrer);
+		return idsLehrerSchulleitung.contains(idLehrer);
 	}
 
 
@@ -616,6 +620,7 @@ public final class EnmV2GetServiceKontext {
 		this.idSchulleitung = (schulleitung == null) ? null : schulleitung.LehrerID;
 		final var schulleitungStv = result.get(LehrerLeitungsfunktion.SL_STV.historie().getLast().id);
 		this.idSchulleitungStv = (schulleitungStv == null) ? null : schulleitungStv.LehrerID;
+		this.idsLehrerSchulleitung = schulleitungRepository.getIdsLehrerByDates(abschnittVon, abschnittBis);
 
 		// Bestimme dann die Klassen für den Schuljahresabschnitt (wird für die Abfrage der Klassenleitungen gebraucht
 		this.mapKlassen = klassenRepository.getMapBySchuljahresabschnitt(idSchuljahresabschnitt);
