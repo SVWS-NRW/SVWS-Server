@@ -283,16 +283,18 @@ apt -y install temurin-21-jdk
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
 if [ "$CREATE_MARIADB" = "j" ] || [ "$CREATE_MARIADB" = "J" ]; then
-    echo "Lade MariaDB 11.7 ..."
+    # Release-Serie der MariaDB (das Repository liefert daraus den aktuellen Patch-Stand)
+    MARIADB_VERSION=12.3
+    echo "Lade MariaDB $MARIADB_VERSION ..."
 
     # Herunterladen des Skripts zum Einrichten des MariaDB-Repositorys und Ausführen des Skripts
-    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=11.7 --skip-maxscale --skip-tools
+    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=$MARIADB_VERSION --skip-maxscale --skip-tools
 
     # Installieren der MariaDB-Datenbank
     apt-get -y install mariadb-server
 
     # Ausgabe der Erfolgsmeldung
-    echo "MariaDB 11.7 erfolgreich installiert."
+    echo "MariaDB $MARIADB_VERSION erfolgreich installiert."
 fi
 
 # SVWS laden und auspacken
