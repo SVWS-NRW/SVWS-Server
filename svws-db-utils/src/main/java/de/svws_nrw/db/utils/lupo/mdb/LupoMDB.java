@@ -141,7 +141,7 @@ public class LupoMDB {
 			fehlermeldungen = ABPSchuelerFehlermeldungen.read(db);
 			schuelerSprachenfolge = ABPSchuelerSprachenfolge.read(db);
 		}
-		// Prüfe, die eingelesen Daten, ob diese weiter verarbeitet werden können.
+		// Prüfe die eingelesenen Daten, ob diese weiter verarbeitet werden können.
 		for (final ABPSchueler s : schueler) {
 			if (s.Schild_ID == null) {
 				throw new IOException("Fehler beim Einlesen der Schüler-Daten. Alle Schüler der LuPO-Datei müssen gültige IDs zugewiesen haben.");
@@ -287,7 +287,7 @@ public class LupoMDB {
 
 	/**
 	 * Schreibt die Jahrgangs-bezogenen Daten aus diesem Objekt in die zugehörigen LUPO-Tabellen
-	 * für den angegeben Jahrgang.
+	 * für den angegebenen Jahrgang.
 	 *
 	 * @param conn          die Datenbank-Verbindung
 	 * @param abschnitt     der aktuelle Schuljahresabschnitt
@@ -318,7 +318,7 @@ public class LupoMDB {
 		conn.transactionFlush();
 
 		// Schreibe jahrgangsbezogene Daten in die LuPO-Tabelle
-		logger.logLn("* Schreibe Jahrgangebezogene LuPO-Daten in die DB...");
+		logger.logLn("* Schreibe jahrgangsbezogene LuPO-Daten in die DB...");
 		logger.modifyIndent(2);
 		logger.logLn("- allgemeine Daten für den Jahrgang...");
 		final ABPSchuldaten abpSchule = schuldaten.get(0);
@@ -369,14 +369,14 @@ public class LupoMDB {
 			}
 			final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
 			if (fach == null) {
-				logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+				logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekannten Statistik-Kürzel %s zugeordnet."
 						.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
 				continue;
 			}
 			final FachKatalogEintrag fke = fach.daten(abiJahrgang - 1);
 			if (fke == null) {
 				logger.logLn(0,
-						"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+						"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist."
 								.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
 				continue;
 			}
@@ -409,14 +409,14 @@ public class LupoMDB {
 				}
 				final Fach fach1 = Fach.data().getWertBySchluessel(dtoFach1.StatistikKuerzel);
 				if (fach1 == null) {
-					logger.logLn(0, "FEHLER - Das erste Fach %s in der Fächerkombination ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+					logger.logLn(0, "FEHLER - Das erste Fach %s in der Fächerkombination ist einem unbekannten Statistik-Kürzel %s zugeordnet."
 							.formatted(dtoFach1.Kuerzel, dtoFach1.StatistikKuerzel));
 					continue;
 				}
 				final FachKatalogEintrag fke1 = fach1.daten(abiJahrgang - 1);
 				if (fke1 == null) {
 					logger.logLn(0,
-							"FEHLER - Das erste Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+							"FEHLER - Das erste Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist."
 									.formatted(dtoFach1.Kuerzel, dtoFach1.StatistikKuerzel));
 					continue;
 				}
@@ -431,14 +431,14 @@ public class LupoMDB {
 				}
 				final Fach fach2 = Fach.data().getWertBySchluessel(dtoFach2.StatistikKuerzel);
 				if (fach2 == null) {
-					logger.logLn(0, "FEHLER - Das zweite Fach %s in der Fächerkombination ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+					logger.logLn(0, "FEHLER - Das zweite Fach %s in der Fächerkombination ist einem unbekannten Statistik-Kürzel %s zugeordnet."
 							.formatted(dtoFach2.Kuerzel, dtoFach2.StatistikKuerzel));
 					continue;
 				}
 				final FachKatalogEintrag fke2 = fach2.daten(abiJahrgang - 1);
 				if (fke2 == null) {
 					logger.logLn(0,
-							"FEHLER - Das zweite Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+							"FEHLER - Das zweite Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist."
 									.formatted(dtoFach2.Kuerzel, dtoFach2.StatistikKuerzel));
 					continue;
 				}
@@ -446,8 +446,15 @@ public class LupoMDB {
 				if (nmk.Typ != null) {
 					typ = ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN);
 				}
+				final String phase = (nmk.Phase == null) ? "" : nmk.Phase.trim();
+				final boolean istPhaseQ1 = "Q1Q2".equals(phase) || "Q1Q4".equals(phase);
+				final boolean istPhaseQ2 = "Q3Q4".equals(phase) || "Q1Q4".equals(phase);
+				final boolean istPhaseUnbekannt = !"Q1Q2".equals(phase) && !"Q3Q4".equals(phase) && !"Q1Q4".equals(phase);
+				final boolean ef = istPhaseUnbekannt;
+				final boolean q11 = istPhaseQ1 || istPhaseUnbekannt;
+				final boolean q21 = istPhaseQ2 || istPhaseUnbekannt;
 				final DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
-						dtoFach1.ID, dtoFach2.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,
+						dtoFach1.ID, dtoFach2.ID, ef, ef, q11, q11, q21, q21,
 						typ, "");
 				lupoNMK.Abi_Jahrgang = abiJahrgang;
 				lupoNMK.Kursart1 = nmk.Kursart1;
@@ -455,7 +462,7 @@ public class LupoMDB {
 				conn.transactionPersist(lupoNMK);
 				conn.transactionFlush();
 				final DTOGostJahrgangFachkombinationen lupoNMK2 = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
-						dtoFach2.ID, dtoFach1.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,
+						dtoFach2.ID, dtoFach1.ID, ef, ef, q11, q11, q21, q21,
 						typ, "");
 				lupoNMK2.Abi_Jahrgang = abiJahrgang;
 				lupoNMK2.Kursart1 = nmk.Kursart2;
@@ -488,9 +495,9 @@ public class LupoMDB {
 		logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
 		DTOGostSchueler lupoSchueler = conn.queryByKey(DTOGostSchueler.class, dtoSchueler.ID);
 		if (lupoSchueler == null) {
-			lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, (abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)));
+			lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, "J".equals(abpSchueler.Sportattest));
 		} else {
-			lupoSchueler.HatSportattest = (abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest));
+			lupoSchueler.HatSportattest = "J".equals(abpSchueler.Sportattest);
 		}
 		lupoSchueler.DatumBeratung = (abpSchueler.DatumBeratung == null) ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
 		lupoSchueler.DatumRuecklauf = (abpSchueler.DatumRuecklauf == null) ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
@@ -518,14 +525,14 @@ public class LupoMDB {
 				}
 				final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
 				if (fach == null) {
-					logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+					logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekannten Statistik-Kürzel %s zugeordnet."
 							.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
 					continue;
 				}
 				final FachKatalogEintrag fke = fach.daten(abiJahrgang - 1);
 				if (fke == null) {
 					logger.logLn(0,
-							"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+							"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist."
 									.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
 					continue;
 				}
@@ -692,7 +699,7 @@ public class LupoMDB {
 					} else if (Integer.compare(lupoAbijahrgang, abiJahrgang) == 0) {
 						logger.logLn(0, "Ja");
 					} else {
-						throw new UserNotificationException("Fehler: Es dürfen für den Import nicht Schüler aus mehreren Abiturjahrgänge in einer LuPO-Datei"
+						throw new UserNotificationException("Fehler: Es dürfen für den Import nicht Schüler aus mehreren Abiturjahrgängen in einer LuPO-Datei"
 								+ " vorkommen. Bitte passen Sie die LuPO-Datei für den Import an.");
 					}
 
@@ -752,7 +759,7 @@ public class LupoMDB {
 
 	/**
 	 * Ermittelt die Liste der Fächer der gymnasialen Oberstufe aus der LuPO-Datei.
-	 * Die Informationen können dabei gegegenüber Daten aus einer SVWS-DB
+	 * Die Informationen können dabei gegenüber Daten aus einer SVWS-DB
 	 * unvollständig sein!
 	 *
 	 * @return die Liste der Fächer der gymnasialen Oberstufe
@@ -809,7 +816,7 @@ public class LupoMDB {
 
 	/**
 	 * Ermittelt die Abiturdaten der Schüler aus der LuPO-MDB-Datei. Die
-	 * Informationen können dabei gegegenüber Daten aus einer SVWS-DB
+	 * Informationen können dabei gegenüber Daten aus einer SVWS-DB
 	 * unvollständig sein!
 	 *
 	 * @return die Liste der Abiturdaten der Schüler
@@ -820,7 +827,7 @@ public class LupoMDB {
 		for (final ABPSchueler lupoSchueler : schueler) {
 			final Abiturdaten abidaten = new Abiturdaten();
 			abidaten.schuelerID = lupoSchueler.ID;
-			abidaten.abiturjahr = 2020; // fiktives Schuljahr (in der Lupo-MDB nicht vorhanden
+			abidaten.abiturjahr = 2020; // fiktives Schuljahr (in der LuPO-MDB nicht vorhanden)
 			abidaten.schuljahrAbitur = 2021; // s.o.
 
 			abidaten.bilingualeSprache = lupoSchueler.Bilingual;
