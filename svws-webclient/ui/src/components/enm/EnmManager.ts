@@ -705,12 +705,15 @@ export class EnmManager {
 
 
 	/**
-	 * Gibt zurück, ob der angemeldete Lehrer zur Schulleitung gehört oder nicht.
+	 * Gibt zurück, ob der angemeldete Lehrer zur Schulleitung gehört oder nicht. Es können mehrere Lehrer zur Schulleitung
+	 * gehören. Die ENM-Daten enthalten aber nur die ID einer Schulleitung und der Stellvertretung. Daher gilt auch ein Lehrer
+	 * als Mitglied der Schulleitung, für den die Daten mit der Funktion Schulleitung geladen wurden, da dies vom Server geprüft wird.
 	 *
 	 * @returns true, wenn der angemeldete Lehrer zur Schulleitung gehört, und ansonsten false
 	 */
 	public istSchulleitung(): boolean {
-		return (this.idLehrer === this.daten.idSchulleitung) || (this.idLehrer === this.daten.idSchulleitungStv);
+		return (this.lehrerFunktion === ENMLehrerFunktion.SCHULLEITUNG) || (this.idLehrer === this.daten.idSchulleitung)
+			|| (this.idLehrer === this.daten.idSchulleitungStv);
 	}
 
 

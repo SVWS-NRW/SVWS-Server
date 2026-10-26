@@ -2,6 +2,7 @@ package de.svws_nrw.repo.schule.schulleitung;
 
 import java.util.List;
 
+import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import org.junit.jupiter.api.DisplayName;
@@ -102,5 +103,40 @@ class SchulleitungRepositoryImplTest {
 
 		assertThat(result).isNotNull().isEmpty();
 		verify(conn, times(1)).queryList(DTOSchulleitung.QUERY_BY_LEITUNGSFUNKTIONID, DTOSchulleitung.class, idLeitungsfunktion);
+	}
+
+	private static DTOSchulleitung eintrag(final long id, final long idFunktion, final long idLehrer, final String von, final String bis) {
+		final var dto = new DTOSchulleitung(id, idFunktion, "", idLehrer);
+		dto.Von = von;
+		dto.Bis = bis;
+		return dto;
+	}
+
+	@Test
+	@DisplayName("getIdsLehrerByDates | Mehrere Lehrer mit SL oder Stv. SL im Zeitraum werden alle geliefert")
+	void getIdsLehrerByDates_mehrereLehrer() throws Exception {
+		when(conn.queryAll(DTOSchulleitung.class)).thenReturn(List.of(
+				eintrag(1L, 1L, 10L, "2025-08-01", null),
+				eintrag(2L, 1L, 20L, "2025-08-01", null),
+				eintrag(3L, 2L, 30L, "2025-08-01", null),
+				eintrag(4L, 2L, 40L, "2025-08-01", null)));
+
+		final var result = repository.getIdsLehrerByDates(DateManager.fromValues(2025, 8, 1), DateManager.fromValues(2026, 1, 31));
+
+		assertThat(result).containsExactlyInAnyOrder(10L, 20L, 30L, 40L);
+	}
+
+	@Test
+	@DisplayName("getIdsLehrerByDates | Einträge außerhalb des Zeitraums und andere Leitungsfunktionen werden ignoriert")
+	void getIdsLehrerByDates_ausserhalbUndAndereFunktion() throws Exception {
+		when(conn.queryAll(DTOSchulleitung.class)).thenReturn(List.of(
+				eintrag(1L, 1L, 10L, "2025-08-01", null),
+				eintrag(2L, 1L, 20L, "2020-08-01", "2024-07-31"),
+				eintrag(3L, 1L, 30L, "2026-02-01", null),
+				eintrag(4L, 3L, 40L, "2025-08-01", null)));
+
+		final var result = repository.getIdsLehrerByDates(DateManager.fromValues(2025, 8, 1), DateManager.fromValues(2026, 1, 31));
+
+		assertThat(result).containsExactly(10L);
 	}
 }
