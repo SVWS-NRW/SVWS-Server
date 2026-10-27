@@ -1,0 +1,18 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSbgSchuelerSchulbesuchsdatenUebergangsempfehlung",
+    "historie" : [ {
+      "praefix" : "SBG",
+      "zweig" : "Schueler-Schulbesuchsdaten-Uebergangsempfehlung",
+      "dtos" : "SchuelerSchulbesuchsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Schulbesuch'",
+      "anzeigebereich_ui" : "Feld 'Übergangsempfehlung Jg. 5'",
+      "svws" : true,
+      "zebras" : true,
+      "muss": ["H", "V", "KS", "R", "PS", "SK", "GE", "FW", "HI", "GY"],
+      "kann" : [ ],
+      "hinweis": [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

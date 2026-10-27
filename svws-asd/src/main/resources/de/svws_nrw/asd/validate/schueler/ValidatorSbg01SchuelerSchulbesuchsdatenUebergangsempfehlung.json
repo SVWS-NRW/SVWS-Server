@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSbg01SchuelerSchulbesuchsdatenUebergangsempfehlung",
+    "historie" : [ {
+      "praefix" : "SBG01",
+      "altes_kuerzel" : "FA6",
+      "zweig" : "Schueler-Schulbesuchsdaten-Uebergangsempfehlung",
+      "dtos" : "SchuelerSchulbesuchsdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Schulbesuch'",
+      "anzeigebereich_ui" : "Feld 'Übergangsempfehlung Jg. 5'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SBG00"],
+      "muss" : ["H", "V", "KS", "R", "PS", "SK", "GE", "FW", "HI", "GY"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Übergangsempfehlung des Schülers: Das Feld 'Übergangsempfehlung Jg. 5' muss zulässig sein.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerSchulbesuchsdaten.idUebergangsempfehlungGrundschule ≠ einer id eines Eintrags in Uebergangsempfehlung.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
