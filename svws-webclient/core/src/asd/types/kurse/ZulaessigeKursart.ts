@@ -418,6 +418,8 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 
 	private static readonly _mapBySchuljahrAndAllgemeinerKursart: JavaMap<number, JavaMap<string, List<ZulaessigeKursart>>> = new HashMap<number, JavaMap<string, List<ZulaessigeKursart>>>();
 
+	private static readonly _setAlleVorhandenenKuerzelAllg: JavaSet<string> = new HashSet<string>();
+
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
 		ZulaessigeKursart.all_values_by_ordinal.push(this);
@@ -434,8 +436,10 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		ZulaessigeKursart._mapSchulformenByID.clear();
 		ZulaessigeKursart._mapBySchuljahrAndSchulform.clear();
 		ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.clear();
+		ZulaessigeKursart._setAlleVorhandenenKuerzelAllg.clear();
 		for (const ct of ZulaessigeKursart.data().getWerte()) {
 			for (const e of ct.historie()) {
+				ZulaessigeKursart._setAlleVorhandenenKuerzelAllg.add(e.kuerzelAllg);
 				const tmpSet: JavaSet<Schulform> | null = new HashSet<Schulform>();
 				for (const s of e.zulaessig) {
 					tmpSet.add(Schulform.data().getWertByBezeichner(s.schulform));
@@ -443,6 +447,18 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 				ZulaessigeKursart._mapSchulformenByID.put(e.id, tmpSet);
 			}
 		}
+	}
+
+	/**
+	 * Gibt zurück, ob eine Kursart IRGENDWO in den Einträgen vorkommt.
+	 * Benötigt für ValidatorUK01
+	 *
+	 * @param kuerzelAllg   das zu suchende Kürzel
+	 *
+	 * @return boolean
+	 */
+	public static isKursartAllgVorhanden(kuerzelAllg: string | null): boolean {
+		return ZulaessigeKursart._setAlleVorhandenenKuerzelAllg.contains(kuerzelAllg);
 	}
 
 	/**

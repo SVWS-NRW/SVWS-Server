@@ -260,6 +260,8 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 
 	private static final @NotNull Map<Integer, Map<String, List<ZulaessigeKursart>>> _mapBySchuljahrAndAllgemeinerKursart = new HashMap<>();
 
+	private static final @NotNull  Set<String> _setAlleVorhandenenKuerzelAllg = new HashSet<>();
+
 
 
 
@@ -273,8 +275,10 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 		_mapSchulformenByID.clear();
 		_mapBySchuljahrAndSchulform.clear();
 		_mapBySchuljahrAndAllgemeinerKursart.clear();
+		_setAlleVorhandenenKuerzelAllg.clear();
 		for (final var ct : data().getWerte()) {
 			for (final var e : ct.historie()) {
+				_setAlleVorhandenenKuerzelAllg.add(e.kuerzelAllg);
 				final Set<Schulform> tmpSet = new HashSet<>();
 				for (final var s : e.zulaessig) {
 					tmpSet.add(Schulform.data().getWertByBezeichner(s.schulform));
@@ -282,6 +286,19 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 				_mapSchulformenByID.put(e.id, tmpSet);
 			}
 		}
+	}
+
+
+	/**
+	 * Gibt zurück, ob eine Kursart IRGENDWO in den Einträgen vorkommt.
+	 * Benötigt für ValidatorUK01
+	 *
+	 * @param kuerzelAllg   das zu suchende Kürzel
+	 *
+	 * @return boolean
+	 */
+	public static @NotNull Boolean isKursartAllgVorhanden(final String kuerzelAllg) {
+		return _setAlleVorhandenenKuerzelAllg.contains(kuerzelAllg);
 	}
 
 

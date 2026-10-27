@@ -1,0 +1,22 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.kurse.ValidatorUk01UnterrichtsverteilungsdatenKursart",
+    "historie" : [ {
+      "praefix" : "UK01",
+      "zweig" : "Unterrichtsverteilungsdaten-Kursart",
+      "dtos" : "KursDaten",
+      "ausfuehrungsbereich_ui" : "Kurse",
+      "anzeigebereich_ui" : "Feld 'Kursart'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["UK00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Kursart der Unterrichtsverteilungsdaten: Das Feld 'Kursart' muss zulässig sein.",
+      "erlaeuterung" : "Vorsicht: Der 01er Validator funktioniert  anders, als normalerweise. In dem Feld kursartAllg wird ein String gespeichert, nicht die id. In dem zugehörigen JSON ist dieser String mit dem Attribut 'kuerzelAllg' verbunden, nicht mit der id",
+      "bedingung" : "KursDaten.kursartAllg ≠ einem String im Attribut 'kursartAllg' von einem beliebigen Eintrag in ZulaessigeKursart.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
